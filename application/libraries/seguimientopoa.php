@@ -1,0 +1,1406 @@
+<?php if (!defined('BASEPATH')) exit('No se permite el acceso directo al script');
+
+class Seguimientopoa extends CI_Controller{
+        public function __construct (){
+            parent::__construct();
+            $this->load->model('programacion/model_proyecto');
+            $this->load->model('mantenimiento/model_entidad_tras');
+            $this->load->model('mantenimiento/model_partidas');
+            $this->load->model('mantenimiento/model_ptto_sigep');
+            $this->load->model('modificacion/model_modrequerimiento');
+            $this->load->model('programacion/insumos/minsumos');
+            $this->load->model('ejecucion/model_seguimientopoa');
+            $this->load->model('programacion/model_componente');
+            $this->load->model('ejecucion/model_notificacion');
+            $this->load->model('programacion/model_producto');
+            $this->load->model('ejecucion/model_evaluacion');
+            $this->load->model('menu_modelo');
+            $this->load->library('security');
+            $this->gestion = $this->session->userData('gestion');
+            $this->adm = $this->session->userData('adm');
+            //$this->rol = $this->session->userData('rol_id');
+            $this->dist = $this->session->userData('dist');
+            //$this->dist_tp = $this->session->userData('dist_tp');
+            $this->tmes = $this->session->userData('trimestre');
+            $this->fun_id = $this->session->userData('fun_id');
+           // $this->tp_adm = $this->session->userData('tp_adm');
+            $this->verif_mes=$this->session->userData('mes_actual');
+            $this->resolucion=$this->session->userdata('rd_poa');
+    }
+
+    /// Cabecera Reporte de Seguimiento POA Mensual 2021
+    public function cabecera($componente,$proyecto){
+      $tabla='';
+      $tabla.=' <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                    <tr>
+                      <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b>'.$this->session->userdata('entidad').'</b></td>
+                    </tr>
+                    <tr style="font-size: 8pt;">
+                      <td style="width:10%; height: 1.2%;"><b>DIR. ADM.</b></td>
+                      <td style="width:90%;">: '.$proyecto[0]['dep_cod'].' '.strtoupper($proyecto[0]['dep_departamento']).'</td>
+                    </tr>
+                    <tr style="font-size: 8pt;">
+                      <td style="width:10%; height: 1.2%;"><b>UNI. EJEC.</b></td>
+                      <td style="width:90%;">: '.$proyecto[0]['dist_cod'].' '.strtoupper($proyecto[0]['dist_distrital']).'</td>
+                    </tr>
+                    <tr style="font-size: 8pt;">';
+                        if($proyecto[0]['tp_id']==1){ /// Proyecto de Inversion
+                            $tabla.='
+                            <td style="width:10%;"><b>PROY. INV.</b></td>
+                            <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'].'</td>';
+                        }
+                        else{ /// Gasto Corriente
+                            $tabla.='
+                            <td style="width:10%;"><b>ACTIVIDAD</b></td>
+                            <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td>';
+                        }
+
+                    $tabla.='
+                    </tr>
+                    <tr style="font-size: 8pt;">
+                        <td style="height: 1.2%; width:10%;"><b>';
+                          if($proyecto[0]['tp_id']==1){
+                            $tabla.='UNI. RESP. ';
+                          }
+                          else{
+                            $tabla.='SUBACT. ';
+                          }
+                        $tabla.='</b></td>
+                        <td style="width:90%;">: '.strtoupper($componente[0]['serv_cod']).' '.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_descripcion']).'</td>
+                    </tr>
+                </table>';
+      return $tabla;
+    }
+
+      /*------- CABECERA REPORTE SEGUIMIENTO POA ------*/
+    function cabecera_seguimiento($establecimiento,$subactividad,$tipo_titulo){
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
+      /// tipo_titulo 1 : Seguimiento Mensual
+      /// tipo_titulo 2 : Evaluacion por Trimestre
+      /// tipo_titulo 3 : Evaluacion POA Gestion
+      $tabla='';
+      $tabla.='
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                <tr>
+                  <td style="width:15%;height:1000% "  align="center">
+                    <img src="'.base_url().'assets/ifinal/cns_logo.JPG" style="width:35%;"/></br>
+                  </td>
+                  <td style="width:85%;">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                        <tr>
+                          <td colspan="2" style="width:100%; height: 1%; font-size: 16pt;"><b>'.$this->session->userdata('entidad').'</b></td>
+                        </tr>
+                        <tr style="font-size: 8pt;">
+                          <td style="width:10%; height: 20%;"><b>UNI. EJEC.</b></td>
+                          <td style="width:90%;">: '.$establecimiento[0]['dist_cod'].' '.strtoupper($establecimiento[0]['dist_distrital']).'</td>
+                        </tr>
+                        <tr style="font-size: 8pt;">
+                          <td style="width:10%;"><b>ACTIVIDAD</b></td>
+                          <td style="width:90%;">: '.$establecimiento[0]['aper_programa'].' '.$establecimiento[0]['aper_proyecto'].' '.$establecimiento[0]['aper_actividad'].' - '.strtoupper($establecimiento[0]['act_descripcion']).' '.$establecimiento[0]['abrev'].'</td>
+                        </tr>
+                        <tr style="font-size: 8pt;">
+                          <td style="width:10%;"><b>SUBACTIVIDAD</b></td>
+                          <td style="width:90%;">: '.$subactividad[0]['serv_cod'].' '.$subactividad[0]['tipo_subactividad'].' '.strtoupper($subactividad[0]['serv_descripcion']).'</td>
+                        </tr>';
+                        if($tipo_titulo==1){
+                          $tabla.='
+                          <tr style="font-size: 8pt;">
+                            <td style="width:10%;"><b>REPORTE</b></td>
+                            <td style="width:90%;">: CUADRO DE SEGUIMIENTO POA AL MES DE '.$this->verif_mes[2].' DE '.$this->gestion.'</td>
+                          </tr>';
+                        }
+                        elseif ($tipo_titulo==2) {
+                          $tabla.='
+                          <tr style="font-size: 8pt;">
+                            <td style="width:10%;"><b>REPORTE</b></td>
+                            <td style="width:90%;">: CUADRO DE EVALUACI&Oacute;N POA ACUMULADO A '.$trimestre[0]['trm_descripcion'].' - '.$this->gestion.'</td>
+                          </tr>';
+                        }
+                        elseif ($tipo_titulo==3) {
+                          $tabla.='
+                          <tr style="font-size: 8pt;">
+                            <td style="width:10%;"><b>REPORTE</b></td>
+                            <td style="width:90%;">: CUADRO DE EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</td>
+                          </tr>';
+                        }
+                        $tabla.='
+                        
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+                ';
+
+      return $tabla;
+    }
+
+    /// Reporte formulario de Seguimiento POA Mensual
+    public function tabla_form_seguimientopoa_subactividad($com_id,$mes_id){
+      $verif_mes=$this->update_mes_gestion($mes_id);
+      $tabla='';
+        $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
+        $tabla='';
+        $tabla.='
+            <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+                <thead>
+                  <tr bgcolor=#f8f2f2 align=center>
+                    <th style="font-size: 7px; height:17px;" colspan=9>DATOS POA (OPERACIONES)</th>
+                    <th colspan=3>DATOS SEGUIMIENTO</th>
+                  </tr>   
+                  <tr style="font-size: 7px; height:17px;" bgcolor=#f8f2f2 align=center>
+                    <th style="width:1%;"></th>
+                    <th style="width:3%;"><b>COD. OR.</b></th>
+                    <th style="width:3%;"><b>COD. OPE.</b></th>
+                    <th style="width:20%;">OPERACI&Oacute;N</th>
+                    <th style="width:16%;">MEDIO DE VERIFICACI&Oacute;N</th>
+                    <th style="width:4%;">META ANUAL</th>
+                    <th style="width:4%;">PROG. MES '.$verif_mes[2].'</th>
+                    <th style="width:4%;">EJEC. MES '.$verif_mes[2].'</th>
+                    <th style="width:4%;">%EFI.</th>
+                    <th style="width:13%;">MEDIO DE VERIFICACIÓN</th> 
+                    <th style="width:13%;">PROBLEMAS PRESENTADOS</th>
+                    <th style="width:13%;">ACCIONES REALIZADOS</th> 
+                  </tr>
+                </thead>
+                <tbody>';
+                $nro=0;
+                foreach($operaciones as $row){
+                  $indi_id='';
+                  if($row['indi_id']==2 & $row['mt_id']==1){
+                    $indi_id='%';
+                  }
+                  $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$verif_mes[1]);
+                  
+                  if($diferencia[1]!=0 || $diferencia[2]!=0){
+                    $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($row['prod_id'],$verif_mes[1]);
+                    $efi=0;
+                    if($diferencia[1]!=0){
+                      $efi=round((($diferencia[3]/($diferencia[1]+$diferencia[2]))*100),2);
+                    }
+                    else{
+                      $efi=round((($diferencia[3]/$diferencia[2])*100),2);
+                    }
+
+                    $color='';
+                    $nro++;
+                    $tabla.=
+                    '<tr style="height:15px; font-size: 6.5px;" bgcolor="'.$color.'">
+                        <td style="height:15px;  width: 1%; text-align: center;" >'.$nro.'</td>
+                        <td style="width: 3%; text-align: center; font-size: 9px;"><b>'.$row['or_codigo'].'</b></td>
+                        <td style="width: 3%; text-align: center; font-size: 9px;"><b>'.$row['prod_cod'].'</b></td>
+                        <td style="width: 20%;">'.$row['prod_producto'].'</td>
+                        <td style="width: 16%;">'.$row['prod_fuente_verificacion'].'</td>
+                        <td align=right>'.round($row['prod_meta'],2).''.$indi_id.'</td>
+                        <td style="width: 4%; text-align: right;">'.$diferencia[2].''.$indi_id.'</td>';
+                        if(count($ejec)!=0){
+                            $tabla.='
+                            <td style="width: 4%; text-align: right;">'.$diferencia[3].''.$indi_id.'</td>
+                            <td style="width: 4%; text-align: right;">'.$efi.' %</td>
+                            <td style="width: 13%;">'.$ejec[0]['medio_verificacion'].'</td>
+                            <td style="width: 13%;">'.$ejec[0]['observacion'].'</td>
+                            <td style="width: 13%;">'.$ejec[0]['acciones'].'</td>';
+                          }
+                        else{
+                          $tabla.='<td style="width: 3%; text-align: right;">0</td>';
+                          $no_ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($row['prod_id'],$verif_mes[1]);
+                          if(count($no_ejec)!=0){
+                            $tabla.='
+                            <td style="width: 4%; text-align: right;"></td>
+                            <td style="width: 13%;">'.$no_ejec[0]['medio_verificacion'].'</td>
+                            <td style="width: 13%;">'.$no_ejec[0]['observacion'].'</td>
+                            <td style="width: 13%;">'.$no_ejec[0]['acciones'].'</td>';
+                          }
+                          else{
+                            $tabla.='
+                            <td style="width: 4%; text-align: right;"></td>
+                            <td style="width: 13%;"></td>
+                            <td style="width: 13%;"></td>
+                            <td style="width: 13%;"></td>';
+                          }
+                        }
+                        $tabla.='
+                    </tr>';
+                  }
+
+                }
+                $tabla.='
+                </tbody>
+              </table>';
+
+      return $tabla;
+    }
+
+  /// Temporalidad de todas las operaciones de la Subactividad 2021 (Vista)
+  public function temporalidad_operacion($com_id){
+    $tabla='';
+    $operaciones=$this->model_producto->list_operaciones_subactividad($com_id);
+
+    $tabla.=' <hr>
+              <div class="table-responsive">
+              <table class="table table-bordered" width="100%" align=center>
+                <thead>
+                 <tr style="font-size: 7px;" align=center>
+                    <th style="width:1%;height:15px;">#</th>
+                    <th style="width:1%;">COD.<br>OR.</th>
+                    <th style="width:1%;">COD.<br>OPE.</th> 
+                    <th style="width:7%;">OPERACI&Oacute;N</th>
+                    <th style="width:7%;">RESULTADO</th>
+                    <th style="width:7%;">INDICADOR</th>
+                    <th style="width:2%;">META</th>
+                    <th style="width:2.5%;">ENE.</th>
+                    <th style="width:2.5%;">FEB.</th>
+                    <th style="width:2.5%;">MAR.</th>
+                    <th style="width:2.5%;">ABR.</th>
+                    <th style="width:2.5%;">MAY.</th>
+                    <th style="width:2.5%;">JUN.</th>
+                    <th style="width:2.5%;">JUL.</th>
+                    <th style="width:2.5%;">AGO.</th>
+                    <th style="width:2.5%;">SEPT.</th>
+                    <th style="width:2.5%;">OCT.</th>
+                    <th style="width:2.5%;">NOV.</th>
+                    <th style="width:2.5%;">DIC.</th>
+                </tr>
+                </thead>
+                <tbody>';
+                  $nro=0;
+                  foreach($operaciones as $rowp){
+                    $indi_id='';
+                    if($rowp['indi_id']==2 & $rowp['mt_id']==1){
+                      $indi_id='%';
+                    }
+                    $temp=$this->temporalizacion_productos($rowp['prod_id']);
+                    $nro++;
+                    $tabla .='
+                    <tr >
+                      <td style="width: 1%; text-align: center; height:50px;" title='.$rowp['prod_id'].'>'.$nro.'</td>
+                      <td style="width: 1%; text-align: center;"><b>'.$rowp['or_codigo'].'</b></td>
+                      <td style="width: 1%; text-align: center;"><b>'.$rowp['prod_cod'].'</b></td>
+                      <td style="width: 7%; text-align: left;">'.$rowp['prod_producto'].'</td>
+                      <td style="width: 7%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                      <td style="width: 7%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                      <td style="width: 2%; text-align: right;">'.round($rowp['prod_meta'],2).''.$indi_id.'</td>';
+                      
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $color='';
+                        if($i<=$this->verif_mes[1]){
+                          $color='#e9f5e3';
+                        }
+
+                        $tabla.='
+                        <td style="width: 2.5%; text-align: center;font-size: 7px;" bgcolor='.$color.'>
+                          <table class="table table-bordered" align=center>
+                            <tr><td style="width:50%;"><b>P:</b></td><td style="width:50%;">'.round($temp[1][$i],2).''.$indi_id.'</td></tr>
+                            <tr><td style="width:50%;"><b>E:</b></td><td style="width:50%;">'.round($temp[4][$i],2).''.$indi_id.'</td></tr>
+                          </table>
+                        </td>';
+                      }
+                      $tabla.='
+                    </tr>';
+                  }
+                $tabla.='
+                </tbody>
+              </table>
+              </div>';
+
+    return $tabla;
+  }
+
+
+  /// Temporalidad por Operacion
+  public function get_temporalidad_operacion($producto){
+    $tabla='';
+    $tabla.=' <hr>
+              <div class="table-responsive">
+              <table class="table table-bordered" width="100%" align=center>
+                <thead>
+                 <tr style="font-size: 7px;" align=center>
+                    <th style="width:1%;">COD.<br>OPE.</th> 
+                    <th style="width:7%;">OPERACI&Oacute;N</th>
+                    <th style="width:2%;">META</th>
+                    <th style="width:2.5%;">ENE.</th>
+                    <th style="width:2.5%;">FEB.</th>
+                    <th style="width:2.5%;">MAR.</th>
+                    <th style="width:2.5%;">ABR.</th>
+                    <th style="width:2.5%;">MAY.</th>
+                    <th style="width:2.5%;">JUN.</th>
+                    <th style="width:2.5%;">JUL.</th>
+                    <th style="width:2.5%;">AGO.</th>
+                    <th style="width:2.5%;">SEPT.</th>
+                    <th style="width:2.5%;">OCT.</th>
+                    <th style="width:2.5%;">NOV.</th>
+                    <th style="width:2.5%;">DIC.</th>
+                </tr>
+                </thead>
+                <tbody>';
+                  $nro=0;
+                    $indi_id='';
+                    if($producto[0]['indi_id']==2 & $producto[0]['mt_id']==1){
+                      $indi_id='%';
+                    }
+                    $temp=$this->temporalizacion_productos($producto[0]['prod_id']);
+                    $nro++;
+                    $tabla .='
+                    <tr>
+                      <td style="width: 1%; text-align: center;"><b>'.$producto[0]['prod_cod'].'</b></td>
+                      <td style="width: 7%; text-align: left;">'.$producto[0]['prod_producto'].'</td>
+                      <td style="width: 2%; text-align: right;">'.round($producto[0]['prod_meta'],2).''.$indi_id.'</td>';
+                      
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $color='';
+                        if($i<=$this->verif_mes[1]){
+                          $color='#e9f5e3';
+                        }
+
+                        $tabla.='
+                        <td style="width: 2.5%; text-align: center;font-size: 7px;" bgcolor='.$color.'>
+                          <table class="table table-bordered" align=center>
+                            <tr><td style="width:50%;"><b>P:</b></td><td style="width:50%;">'.round($temp[1][$i],2).''.$indi_id.'</td></tr>
+                            <tr><td style="width:50%;"><b>E:</b></td><td style="width:50%;">'.round($temp[4][$i],2).''.$indi_id.'</td></tr>
+                          </table>
+                        </td>';
+                      }
+                      $tabla.='
+                    </tr>
+                  </tbody>
+              </table>
+              </div>';
+
+    return $tabla;
+  }
+
+  /// Nivel de cumplimiento de meta al mes actual
+  public function get_grado_cumplimiento_meta_mensual($producto){
+    $tabla='';
+    $programado=$this->model_evaluacion->rango_programado_trimestral_productos($producto[0]['prod_id'],$this->verif_mes[1]); /// Suma programado al mes vigente
+    $ejecutado=$this->model_evaluacion->rango_ejecutado_trimestral_productos($producto[0]['prod_id'],$this->verif_mes[1]); /// Suma ejecutado al mes vigente
+
+    $mes_programado=$this->model_evaluacion->get_meta_mensual_programado_operacion($producto[0]['prod_id'],$this->verif_mes[1]);
+    $mes_ejecutado=$this->model_evaluacion->get_meta_mensual_ejecutado_operacion($producto[0]['prod_id'],$this->verif_mes[1]);
+
+    
+    $meta_prog=0;
+    $meta_ejec=0;
+
+    if($producto[0]['indi_id']==1){ /// Absoluto
+      if(count($programado)!=0){
+        $meta_prog=$programado[0]['trimestre'];
+      }
+
+      if(count($ejecutado)!=0){
+        $meta_ejec=$ejecutado[0]['trimestre'];
+      }
+    }
+    else{ /// Relativo
+      if(count($mes_programado)!=0){
+        $meta_prog=$mes_programado[0]['meta_mensual'];
+      }
+
+      if(count($mes_ejecutado)!=0){
+        $meta_ejec=$mes_ejecutado[0]['meta_mensual'];
+      }
+    }
+
+    $cumplimiento_mensual=0;
+    if($meta_ejec==$meta_prog){
+      $tabla.='<h2 class="alert alert-success"><center>% CUMPLIMIENTO DE META AL MES '.$this->verif_mes[2].' : 100 %</center></h2>';
+    }
+    elseif($meta_ejec<$meta_prog & $meta_ejec!=0){
+      $cumplimiento_mensual=round((($meta_ejec/$meta_prog)*100),2);
+      $tabla.='<h2 class="alert alert-warning"><center>% CUMPLIMIENTO DE META AL MES '.$this->verif_mes[2].' : '.$cumplimiento_mensual.' %</center></h2>';
+    }
+    else{
+      $tabla.='<h2 class="alert alert-danger"><center>% CUMPLIMIENTO DE META AL MES '.$this->verif_mes[2].' : '.$cumplimiento_mensual.' %</center></h2>';
+    }
+
+    return $tabla;
+  }
+
+
+
+  /// Temporalidad de todas las operaciones de la SUbactividad 2021 (Reporte)
+  public function tabla_reporte_consolidado_temporalidad($com_id){
+    $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
+    $tabla='';
+    $tabla.=' 
+          <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+            <thead>
+             <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
+                <th style="width:1%;height:15px;">#</th>
+                <th style="width:2%;">COD.<br>OR.</th>
+                <th style="width:2%;">COD.<br>OPE.</th> 
+                <th style="width:10%;">OPERACI&Oacute;N</th>
+                <th style="width:10%;">RESULTADO</th>
+                <th style="width:10%;">INDICADOR</th>
+                <th style="width:2%;">L.B.</th>
+                <th style="width:3%;">META</th>
+                <th style="width:3.5%;">PROG. '.$this->verif_mes[2].'</th>
+                <th style="width:3.5%;">EJEC. '.$this->verif_mes[2].'</th>
+                <th style="width:3.5%;">%EFI. '.$this->verif_mes[2].'</th>
+                <th style="width:5%;"></th>
+
+                
+                <th style="width:3.5%;">ENE.</th>
+                <th style="width:3.5%;">FEB.</th>
+                <th style="width:3.5%;">MAR.</th>
+                <th style="width:3.5%;">ABR.</th>
+                <th style="width:3.5%;">MAY.</th>
+                <th style="width:3.5%;">JUN.</th>
+                <th style="width:3.5%;">JUL.</th>
+                <th style="width:3.5%;">AGO.</th>
+                <th style="width:3.5%;">SEPT.</th>
+                <th style="width:3.5%;">OCT.</th>
+                <th style="width:3.5%;">NOV.</th>
+                <th style="width:3.5%;">DIC.</th>
+            </tr>
+            </thead>
+            <tbody>';
+              $nro=0;
+              foreach($operaciones as $rowp){
+                $programado=$this->model_producto->suma_prog_trimestre($rowp['prod_id'],$this->verif_mes[1]);
+                $ejecutado=$this->model_producto->suma_ejec_trimestre($rowp['prod_id'],$this->verif_mes[1]);
+                $prog=0;
+                if(count($programado)!=0){
+                  $prog=$programado[0]['meta'];
+                }
+
+                $ejec=0;
+                if(count($ejecutado)!=0){
+                  $ejec=$ejecutado[0]['meta'];
+                }
+
+                $efi=0;
+                $tit='';
+                if($prog!=0){
+                  $tit='<p style="color:red"><b>NO CUMPLIDO</b></p>';
+                  if($ejec==$prog){
+                    $tit='<p style="color:green"><b>CUMPLIDO</b></p>';
+                  }
+                  elseif ($ejec<$prog & $ejec!=0) {
+                    $tit='<p style="color:orange"><b>EN PROCESO</b></p>';
+                  }
+
+                  $efi=(($ejec/$prog)*100);
+                }
+
+                  $indi_id='';
+                  if($rowp['indi_id']==2 & $rowp['mt_id']==1){
+                      $indi_id='%';
+                  }
+
+                  $nro++;
+                  $tabla .='
+                  <tr >
+                    <td style="width: 1%; text-align: center; height:50px; font-size: 3px;" title='.$rowp['prod_id'].'>'.$nro.'</td>
+                    <td style="width: 2%; text-align: center;">'.$rowp['or_codigo'].'</td>
+                    <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
+                    <td style="width: 7%; text-align: left;">'.$rowp['prod_producto'].'</td>
+                    <td style="width: 7%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                    <td style="width: 7%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                    <td style="width: 2%; text-align: right;">'.round($rowp['prod_linea_base'],2).'</td>
+                    <td style="width: 2%; text-align: right;">'.round($rowp['prod_meta'],2).''.$indi_id.'</td>
+                    <td style="width: 3.5%; text-align: center; font-size: 9px;" bgcolor="#eceaea"><b>'.round($prog,2).''.$indi_id.'</b></td>
+                    <td style="width: 3.5%; text-align: center; font-size: 9px;" bgcolor="#eceaea"><b>'.round($ejec,2).''.$indi_id.'</b></td>
+                    <td style="width: 3.5%; text-align: center; font-size: 9px;" bgcolor="#e9f7e9"><b>'.round($efi,2).'%</b></td>
+                    <td style="width: 5%; text-align: left;">'.$tit.'</td>';
+                    $temp=$this->temporalizacion_productos($rowp['prod_id']);
+
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $color='';
+                        if($i<=$this->verif_mes[1]){
+                          $color='#f0fffd';
+                      }
+
+                      $tabla.='
+                      <td style="width: 3.5%; text-align: center;font-size: 7px;" bgcolor='.$color.'>
+                        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:90%;" align=center>
+                          <tr><td style="width:50%;"><b>P:</b></td><td style="width:50%;">'.round($temp[1][$i],2).'</td></tr>
+                          <tr><td style="width:50%;"><b>E:</b></td><td style="width:50%;">'.round($temp[4][$i],2).'</td></tr>
+                        </table>
+                      </td>';
+                    }
+                    $tabla.='
+                  </tr>';
+              }
+            $tabla.='
+            </tbody>
+          </table>';
+      return $tabla;
+  }
+    
+
+ /*------ TABLA TEMPORALIDAD COMPONENTE -----*/
+    public function tabla_temporalidad_componente($matriz,$tip_rep){
+      $tabla='';
+      if($tip_rep==1){ /// Normal
+        $tab='class="table table-bordered" align=center style="width:100%;"';
+      } 
+      else{ /// Impresion
+        $tab='class="change_order_items" border=1 style="width:100%;"';
+      }
+
+      $tabla.='
+      <table '.$tab.'>
+        <thead>
+          <tr style="font-size: 10px;">
+            <th></th>';
+            for ($i=1; $i <=12 ; $i++) { 
+              $tabla.='<th>'.$matriz[1][$i].'</th>';
+            }
+          $tabla.='
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="font-size: 10px;">
+            <td ><b>SUMA META PROGRAMADO</b></td>';
+          for ($i=1; $i <=12 ; $i++) { 
+              $color='';
+              if($i<=$this->verif_mes[1]){
+                $color='#e4f0fd';
+              }
+
+            $tabla.='<td align="right" bgcolor='.$color.'>'.$matriz[2][$i].'</td>';
+          }
+        $tabla.='
+          </tr>
+          <tr style="font-size: 10px;">
+            <td><b>SUMA META EJECUTADO</b></td>';
+          for ($i=1; $i <=12 ; $i++) { 
+            $color='';
+              if($i<=$this->verif_mes[1]){
+                $color='#e4f0fd';
+              }
+
+            $tabla.='<td align="right" bgcolor='.$color.'>'.$matriz[3][$i].'</td>';
+          }
+        $tabla.='
+          </tr>
+          <tr style="font-size: 10px;">
+            <td><b>CUMPLIMIENTO (%)</b></td>';
+          for ($i=1; $i <=12 ; $i++) { 
+            $color='';
+              if($i<=$this->verif_mes[1]){
+                $color='#e4f0fd';
+              }
+
+            $tabla.='<td align="right" bgcolor='.$color.'><b>'.$matriz[4][$i].'%</b></td>';
+          }
+        $tabla.='
+          </tr>';
+      $tabla.='
+        </tbody>
+      </table><br>
+      <b><font color=blue size=1.5 >GRADO DE CUMPLIMIENTO DE META AL MES DE '.$this->verif_mes[2].' : '.$matriz[4][$this->verif_mes[1]].'%</font></b>';
+
+      return $tabla;
+    }  
+
+
+    /// Matrix temporalidad componente
+  public function temporalizacion_x_componente($com_id){
+      $mes=$this->mes_nombre();
+      $programado=$this->model_componente->componente_temporalidad_programado($com_id);
+      $ejecutado=$this->model_componente->componente_temporalidad_ejecutado($com_id);
+
+      for ($i=1; $i <=12 ; $i++) { 
+        $temp[1][$i]=0; /// mes
+        $temp[2][$i]=0; /// Programado
+        $temp[3][$i]=0; /// Ejecutado
+        $temp[4][$i]=0; /// Eficacia
+      }
+
+     if(count($programado)!=0){
+        if(count($ejecutado)!=0){
+          for ($i=1; $i <=12 ; $i++) { 
+            $temp[3][$i]=round($ejecutado[0]['m'.$i],2);
+          }
+       }
+
+        for ($i=1; $i <=12 ; $i++) { 
+          $temp[1][$i]=$mes[$i];
+          $temp[2][$i]=round($programado[0]['m'.$i],2);
+          
+/*          if($temp[2][$i]!=0){
+            $temp[4][$i]=round((($temp[3][$i]/$temp[2][$i])*100),2);
+          }*/
+        }
+     }
+     
+     $sum_prog=0; $sum_eval=0;
+     for ($i=1; $i <=12 ; $i++) { 
+       $sum_prog=$sum_prog+$temp[2][$i]; // sum programado
+       $sum_eval=$sum_eval+$temp[3][$i]; // sum evaluado
+
+       if($sum_prog!=0){
+        $temp[4][$i]=round((($sum_eval/$sum_prog)*100),2);
+       }
+     }
+
+      return $temp;
+    }
+
+
+
+
+
+
+    ///// SEGUIMIENTO POA 
+    /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE -------*/
+    public function tabla_regresion_lineal_servicio($com_id){
+      $m[0]='';
+      $m[1]='I TRIMESTRE.';
+      $m[2]='II TRIMESTRE';
+      $m[3]='III TRIMESTRE';
+      $m[4]='IV TRIMESTRE';
+
+      for ($i=0; $i <=$this->tmes; $i++){ 
+        $tr[1][$i]=$m[$i]; /// Trimestre
+        $tr[2][$i]=0; /// Prog
+        $tr[3][$i]=0; /// cumplidas
+        $tr[4][$i]=0; /// no cumplidas
+        $tr[5][$i]=0; /// eficacia %
+        $tr[6][$i]=0; /// no eficacia %
+        $tr[7][$i]=0; /// en proceso
+      }
+
+      for ($i=1; $i <=$this->tmes; $i++) {
+        $valor=$this->obtiene_datos_evaluacíon($com_id,$i,1);
+        $tr[2][$i]=$valor[1]; /// Prog
+        $tr[3][$i]=$valor[2]; /// cumplidas
+        $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
+        if($tr[2][$i]!=0){
+          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+        }
+        $tr[6][$i]=(100-$tr[5][$i]);
+        $proceso=$this->obtiene_datos_evaluacíon($com_id,$i,2);
+        $tr[7][$i]=$proceso[2]; /// En Proceso
+      }
+
+    return $tr;
+    }
+
+
+
+    /*------ OBTIENE DATOS DE EVALUACIÓN 2020 -------*/
+    public function obtiene_datos_evaluacíon($com_id,$trimestre,$tipo_evaluacion){
+      $nro_ope_eval=0; $nro_cumplidas=0; $total_programado=0; $total_ejecutado=0;
+      for ($i=1; $i <=$trimestre; $i++) {
+        $programadas=$this->model_evaluacion->nro_operaciones_programadas($com_id,$i); //// Nro de Operaciones
+        $suma_programado=$this->model_evaluacion->suma_operaciones_programadas($com_id,$i); /// suma meta trimestral
+        
+        if(count($programadas)!=0){
+          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
+        }
+
+        if(count($suma_programado)!=0){
+          $total_programado=$total_programado+$suma_programado[0]['suma_programado'];
+        }
+
+        if(count($this->model_evaluacion->list_operaciones_evaluadas_servicio_trimestre_tipo($com_id,$i,$tipo_evaluacion))!=0){
+          $nro_cumplidas=$nro_cumplidas+count($this->model_evaluacion->list_operaciones_evaluadas_servicio_trimestre_tipo($com_id,$i,$tipo_evaluacion));
+        }
+      
+        $suma_evaluado=$this->model_evaluacion->suma_operaciones_ejecutadas($com_id,$i);
+
+        if(count($suma_evaluado)!=0){
+          $total_ejecutado=$total_ejecutado+$suma_evaluado[0]['suma_evaluado'];
+        }
+
+      }
+
+      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
+      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
+
+      $vtrimestre[3]=$total_programado; /// suma meta trimestre Programado
+      $vtrimestre[4]=$total_ejecutado; /// suma meta trimestre Ejecutado
+
+      return $vtrimestre;
+    }
+
+
+
+
+ /*--- REGRESIÓN LINEAL PORCENTAJE PROGRAMADO A LA GESTIÓN ---*/
+    public function tabla_regresion_lineal_servicio_total($com_id){
+      $m[0]='';
+      $m[1]='I TRIMESTRE.';
+      $m[2]='II TRIMESTRE';
+      $m[3]='III TRIMESTRE';
+      $m[4]='IV TRIMESTRE';
+
+      $total=0; //// total Actividades
+      for ($i=1; $i <=4 ; $i++) {
+        $programado=$this->model_evaluacion->nro_operaciones_programadas($com_id,$i);
+        if(count($programado)!=0){
+          $total=$total+$programado[0]['total'];
+        }
+      }
+
+      for ($i=0; $i <=4; $i++){ 
+        $tr[1][$i]=$m[$i]; /// Trimestre
+        $tr[2][$i]=0; /// Prog
+        $tr[3][$i]=0; /// cumplidas
+
+        /* Numero de Act. Prog y Evaluados */
+        $tr[4][$i]=0; /// % Act. Programado 
+        $tr[5][$i]=0; /// % Act. Cumplido
+      }
+
+      for ($i=1; $i <=4; $i++) {
+        $valor=$this->obtiene_datos_evaluacíon($com_id,$i,1);
+        
+        $tr[2][$i]=$valor[1]; /// Prog
+        $tr[3][$i]=$valor[2]; /// cumplidas
+
+        /* Numero de Act. Prog y Evaluados */
+        if($total!=0){
+          $tr[4][$i]=round((($valor[1]/$total)*100),2); /// % Act. Programado 
+          $tr[5][$i]=round((($valor[2]/$total)*100),2); /// % Act. Cumplido
+        }
+      }
+
+    return $tr;
+    }
+
+
+
+
+    /// GRAFICOS DE EVALUACION POA 
+ public function tabla_acumulada_evaluacion_servicio($regresion,$tp_graf,$tip_rep){
+      $tabla='';
+      $tit[2]='<b>NRO. ACT. PROGRAMADOS EN EL TRIMESTRE</b>';
+      $tit[3]='<b>NRO. ACT. CUMPLIDOS EN EL TRIMESTRE</b>';
+      $tit[4]='<b>NRO. ACT. NO CUMPLIDOS</b>';
+      $tit[5]='<b>% CUMPLIDOS</b>';
+      $tit[6]='<b>% NO CUMPLIDOS</b>';
+
+      $tit_total[2]='<b>NRO. ACT. PROGRAMADOS AL TRIMESTRE</b>';
+      $tit_total[3]='<b>NRO. ACT. CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[4]='<b>% ACT. PROGRAMADOS AL TRIMESTRE</b>';
+      $tit_total[5]='<b>% ACT. CUMPLIDOS AL TRIMESTRE</b>';
+
+      if($tip_rep==1){ /// Normal
+        $tab='class="table table-bordered" align=center style="width:100%;"';
+      } 
+      else{ /// Impresion
+        $tab='class="change_order_items" border=1 style="width:100%;"';
+      }
+
+
+
+      if($tp_graf==1){ // pastel : Programado-Cumplido
+        $tabla.='
+        <table '.$tab.'>
+          <thead>
+              <tr align=center>
+                <th>NRO. ACT. PROGRAMADAS</th>
+                <th>METAS EVALUADAS</th>
+                <th>ACT. CUMPLIDAS</th>
+                <th>ACT. NO CUMPLIDAS</th>
+                <th>% CUMPLIDAS</th>
+                <th>% NO CUMPLIDAS</th>
+                </tr>
+              </thead>
+            <tbody>
+              <tr align=right>
+                <td><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td><b>'.$regresion[4][$this->tmes].'</b></td>
+                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
+                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
+              </tr>
+            </tbody>
+        </table>';
+      }
+      elseif($tp_graf==2){ /// Regresion Acumulado al Trimestre
+        $tabla.='
+        <table '.$tab.'>
+          <thead>
+              <tr >
+                <th></th>';
+                for ($i=1; $i <=$this->tmes; $i++) { 
+                  $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
+                }
+              $tabla.='
+              </tr>
+              </thead>
+            <tbody>';
+              $color=''; $por='';
+              for ($i=2; $i <=6; $i++) {
+                if($i==5){
+                  $por='%';
+                  $color='#9de9f3';
+                }
+                elseif ($i==6) {
+                  $por='%';
+                  $color='#f7d3d0';
+                }
+                $tabla.='<tr bgcolor='.$color.' >
+                  <td>'.$tit[$i].'</td>';
+                  for ($j=1; $j <=$this->tmes; $j++) { 
+                    $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
+                  }
+                $tabla.='</tr>';
+              }
+            $tabla.='
+            </tbody>
+        </table><br>
+        <b><font color=blue size=1.5>% CUMPLIMIENTO DE ACTIVIDADES ACUMULADOS AL '.$regresion[1][$this->tmes].' '.$this->gestion.' : '.$regresion[5][$this->tmes].'%</font></b>';
+      }
+      elseif($tp_graf==3){ /// Regresion Gestion
+        $tabla.='
+        <table '.$tab.'>
+          <thead>
+              <tr>
+                <th></th>';
+                for ($i=1; $i <=4; $i++) { 
+                  $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
+                }
+              $tabla.='
+              </tr>
+              </thead>
+            <tbody>';
+              $color=''; $por='';
+              for ($i=2; $i <=5; $i++) {
+                if($i==4 || $i==5){
+                  $por='%';
+                  $color='#9de9f3';
+                }
+                $tabla.='<tr bgcolor='.$color.'>
+                  <td>'.$tit_total[$i].'</td>';
+                  for ($j=1; $j <=4; $j++) { 
+                    $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
+                  }
+                $tabla.='</tr>';
+              }
+            $tabla.='
+            </tbody>
+        </table><br>
+        <b><font color=blue size=1.5>EVALUACIÓN POA CORRESPONDIENTE AL '.$regresion[1][$this->tmes].' CON RESPECTO A LA GESTIÓN '.$this->gestion.' : '.$regresion[5][$this->tmes].'% CUMPLIMIENTO</font></b>';
+      }
+      else{
+        $tabla.='
+        <table '.$tab.'>
+          <thead>
+              <tr align=center >
+                <th>NRO. ACT. PROGRAMADAS</th>
+                <th>NRO. ACT. EVALUADAS</th>
+                <th>NRO. ACT. CUMPLIDAS</th>
+                <th>NRO. ACT. EN PROCESO</th>
+                <th>NRO. ACT. NO CUMPLIDAS</th>
+                <th>% CUMPLIDAS</th>
+                <th>% NO CUMPLIDAS</th>
+              </tr>
+              </thead>
+            <tbody>
+              <tr align=right>
+                <td><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td><b>'.$regresion[7][$this->tmes].'</b></td>
+                <td><b>'.($regresion[2][$this->tmes]-($regresion[7][$this->tmes]+$regresion[3][$this->tmes])).'</b></td>
+                <td><b>'.$regresion[5][$this->tmes].'%</b></td>
+                <td><b>'.$regresion[6][$this->tmes].'%</b></td>
+              </tr>
+            </tbody>
+        </table>';
+      }
+
+      return $tabla;
+    }
+
+
+
+    //// Cabecera Notificacion
+    public function cuerpo_nota_notificacion($proy_id){
+      $mes = $this->mes_nombre();//    $this->mes_nombre();
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
+      $tabla='';
+      $tabla.='
+      <page backtop="40mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
+      <page_header>
+          <br><div class="verde"></div>
+          <table class="page_header" border="0" style="width:100%;">
+              <tr>
+                <td style="width:15%; text-align:center;">
+                  <img src="'.base_url().'assets/ifinal/cns_logo.JPG" alt="" style="width:46%;">
+                </td>
+                  <td style="width: 70%; text-align: left">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr>
+                        <td style="width:100%; font-size:30px;" align=center>
+                          <b>'.$this->session->userdata('entidad').'</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width:100%; font-size:15px;" align=center>
+                          DEPARTAMENTO NACIONAL DE PLANIFICACI&Oacute;N
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                <td style="width:15%;font-size: 8px;" align=center>
+                </td>
+              </tr>
+          </table>
+      </page_header>
+      
+      <page_footer>
+          <hr>
+          <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;" align="center">
+              <tr>
+                  <td colspan="3"><br><br></td>
+              </tr>
+              <tr>
+                  <td style="width: 33%; text-align: left">
+                    POA - '.$this->gestion.' '.$this->resolucion.'
+                  </td>
+                  <td style="width: 33%; text-align: center">
+                  
+                  </td>
+                  <td style="width: 33%; text-align: right">
+                  '.$this->session->userdata('sistema').'    
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="3"><br><br></td>
+              </tr>
+          </table>
+      </page_footer>
+
+        <table border=0 style="width:100%;" align=center>
+          <tr>
+            <td style="width:95%;font-size: 10px;" align=right>'.strtoupper($proyecto[0]['dep_departamento']).' '.$mes[ltrim(date("m"), "0")]. " de " . date("Y").',</td>
+          </tr>
+        </table><br><br>
+
+        <table border=0 style="width:95%;" align=center>
+            <tr>
+                <td style="width:95%;"><b>Señor : </b><br>'.$proyecto[0]['tipo'].' '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td>
+            </tr>
+            <tr>
+                <td style="width:95%;font-size: 13px;">Presente.-</td>
+            </tr>
+            <tr>
+                <td style="width:95%;"><br><br></td>
+            </tr>
+            <tr>
+                <td style="width:95%; font-size: 17px;font-family: Arial;" align=right><b>REF. NOTIFICACI&Oacute;N PARA SEGUIMIENTO POA '.$this->verif_mes[2].' '.$this->gestion.'</b></td>
+            </tr>
+            <tr>
+                <td style="width:95%;"><br></td>
+            </tr>
+            <tr>
+                <td style="width:95%;font-size: 15px;font-family: Arial;">
+                El Departamento Nacional de Planificaci&oacute;n en el marco de sus competencias viene fortaleciendo las tareas de monitoreo y supervisi&oacute;n 
+                a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar el seguimiento al cumplimiento del POA <b>'.$this->verif_mes[2].' '.$this->gestion.'</b>, de la 
+                <b>'.$proyecto[0]['tipo'].' '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</b> a su cargo, haciendo enfasis en la programaci&oacute;n mensual y periodo de ejecuci&oacute;n de cada operaci&oacute;n.
+                </td>
+            </tr>
+        </table><br>
+
+        <table border=0 style="width:95%;" align=center>
+              <tr>
+                  <td style="width:95%;font-size: 15px;font-family: Arial;">
+                  En el mismo sentido, efectuar las gestiones en el plazo programado para la ejecuci&oacute;n de la Solicitud de <b>CERTIFICACI&Oacute;N POA</b>
+                  <b>'.$this->verif_mes[2].'</b> '.$this->gestion.'. Recordar que en ambos casos para fines de control y gestión por resultados la 
+                  responsabilidad del cumplimiento corresponde a su autoridad.
+                  </td>
+              </tr>
+          </table>
+  </page>';
+
+      return $tabla;
+    }
+
+    /// ACTUALIZAR INFORMACION DE EVALUACION POA (TRIMESTRAL)
+
+
+
+  /*---- FUNCION PARA ACTUALIZAR EVALUACION POA ----*/
+    public function update_evaluacion_operaciones($com_id){
+      $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
+
+      foreach($operaciones as $row){
+        ///------- Eliminamos el registro anterior
+        $this->eliminando_registro_evaluacion($row['prod_id'],$this->tmes);
+        /// ----------
+        $temporalidad=$this->obtiene_suma_temporalidad_prog_ejec($row['prod_id']);
+
+        /*----- Temporalidad Programado / Ejecutado -----*/
+        if($temporalidad[1]!=0 & $temporalidad[4]<$row['prod_meta'] & $temporalidad[2]>0){
+          if($temporalidad[3]==$temporalidad[4]){
+            $tp=2;
+            $activo=0;
+            $obs='';
+            if($temporalidad[1]==$temporalidad[2]){
+              $tp=1;
+              $activo=1;
+              $obs='Trimestre Cumplido';
+            }
+           // echo "prod id : ".$row['prod_id']." --> ".$row['prod_producto']." ----Solo un registro<br><br>";
+            $this->insertando_datos($row['prod_id'],$this->tmes,$tp,$activo,$obs);
+          }
+          elseif($temporalidad[1]==$temporalidad[2]){
+            for ($i=1; $i <=$this->tmes; $i++) { 
+              //$verif_prog=$this->model_seguimientopoa->programado_trimestral_productos($i,$row['prod_id']);
+              if(count($this->model_evaluacion->programado_trimestral_productos($i,$row['prod_id']))!=0){
+                
+                ///------- Eliminamos el registro anterior
+                $this->eliminando_registro_evaluacion($row['prod_id'],$i);
+                /// ----------
+
+                //// recorrer trimestres anteriores
+                if($i==$this->tmes){
+                  $this->insertando_datos($row['prod_id'],$i,1,1,'Trimestre Cumplido');
+                }
+                else{
+                  $this->insertando_datos($row['prod_id'],$i,1,0,'Actualizado Trimestre Cumplido '.$i);  
+                }
+                
+              }
+            }
+
+          }
+          else{
+            $this->insertando_datos($row['prod_id'],$this->tmes,2,0,'');
+          }
+          
+        }    
+      }
+    
+    }
+
+
+
+    /*--- Obtiene Sumatoria de temporalidad Programado/ejecutado ---*/
+    function obtiene_suma_temporalidad_prog_ejec($prod_id){
+        /*----- Temporalidad Programado / Ejecutado -----*/
+        $prog_actual=$this->model_seguimientopoa->rango_programado_trimestral_productos($prod_id,$this->tmes); /// Suma rango trimestre - Programado Actual
+        $eval_actual=$this->model_seguimientopoa->rango_ejecutado_trimestral_productos($prod_id,$this->tmes); /// Suma rango trimestre - Ejecutado Actual
+
+        $acu_prog_actual=0;
+        $acu_ejec_actual=0;
+        if(count($prog_actual)!=0){
+          $acu_prog_actual=$prog_actual[0]['trimestre'];
+        }
+        if(count($eval_actual)!=0){
+          $acu_ejec_actual=$eval_actual[0]['trimestre'];
+        }
+
+        /*----- Temporalidad Programado / Ejecutado (Trimestre anterior)-----*/
+        $prog_anterior=$this->model_seguimientopoa->rango_programado_trimestral_productos($prod_id,($this->tmes-1)); /// Suma rango trimestre - Programado Actual
+        $eval_anterior=$this->model_seguimientopoa->rango_ejecutado_trimestral_productos($prod_id,($this->tmes-1)); /// Suma rango trimestre - Ejecutado Actual
+
+        $acu_prog_anterior=0;
+        $acu_ejec_anterior=0;
+        if(count($prog_anterior)!=0){
+          $acu_prog_anterior=$prog_anterior[0]['trimestre'];
+        }
+        if(count($eval_anterior)!=0){
+          $acu_ejec_anterior=$eval_anterior[0]['trimestre'];
+        }
+
+        $vector[1]=$acu_prog_actual; /// Suma Programado al trimestre Actual 
+        $vector[2]=$acu_ejec_actual; /// Suma Ejecutado al trimestre Actual
+        $vector[3]=$acu_prog_anterior; /// Suma Programado al trimestre Anterior
+        $vector[4]=$acu_ejec_anterior; /// Suma Ejecutado al trimestre Anterior
+
+      return $vector;
+    }
+
+
+
+    /*--- eliminando Registro de Evaluacion ---*/
+    function eliminando_registro_evaluacion($prod_id,$trimestre){
+      $this->db->where('prod_id', $prod_id);
+      $this->db->where('trm_id',$trimestre );
+      $this->db->delete('_productos_trimestral');
+    }
+
+
+    /*--- Insertando datos de Evaluacion ---*/
+    function insertando_datos($prod_id,$trimestre,$tp,$activo,$observacion){
+      $data = array(
+        'prod_id' => $prod_id,
+        'trm_id' => $trimestre,
+        'tp_eval' => $tp,
+        'g_id' => $this->gestion,
+        'fun_id' => $this->fun_id,
+        'testado' => 2,
+        'activo' => $activo,
+        'eval_observacion' => $observacion,
+      );
+      $this->db->insert('_productos_trimestral',$data);
+      $tprod_id=$this->db->insert_id();
+
+      return $tprod_id;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /// TEMPORALIDAD OPERACIONES (PROGRAMADO-EJECUTADO) (Antiguo)
+    public function temporalizacion_productos($prod_id){
+
+      $producto = $this->model_producto->get_producto_id($prod_id);
+      $prod_prog= $this->model_producto->producto_programado($prod_id,$this->gestion);//// Temporalidad Programado
+      $prod_ejec= $this->model_producto->producto_ejecutado($prod_id,$this->gestion); //// Temporalidad ejecutado
+
+      $mp[1]='enero';
+      $mp[2]='febrero';
+      $mp[3]='marzo';
+      $mp[4]='abril';
+      $mp[5]='mayo';
+      $mp[6]='junio';
+      $mp[7]='julio';
+      $mp[8]='agosto';
+      $mp[9]='septiembre';
+      $mp[10]='octubre';
+      $mp[11]='noviembre';
+      $mp[12]='diciembre';
+
+      for ($i=1; $i <=12 ; $i++) { 
+        $matriz[1][$i]=0; /// Programado
+        $matriz[2][$i]=0; /// Programado Acumulado
+        $matriz[3][$i]=0; /// Programado Acumulado %
+        $matriz[4][$i]=0; /// Ejecutado
+        $matriz[5][$i]=0; /// Ejecutado Acumulado
+        $matriz[6][$i]=0; /// Ejecutado Acumulado %
+        $matriz[7][$i]=0; /// Eficacia
+      }
+      
+      $pa=0; $ea=0;
+      if(count($prod_prog)!=0){
+        for ($i=1; $i <=12 ; $i++) { 
+          $matriz[1][$i]=$prod_prog[0][$mp[$i]];
+          $pa=$pa+$prod_prog[0][$mp[$i]];
+
+          if($producto[0]['mt_id']==3){
+            $matriz[2][$i]=$pa;
+          }
+          else{
+            $matriz[2][$i]=$matriz[1][$i];
+          }
+
+          
+          if($producto[0]['prod_meta']!=0){
+            if($producto[0]['tp_id']==1){
+              $matriz[3][$i]=round(((($matriz[2][$i]+$producto[0]['prod_linea_base'])/$producto[0]['prod_meta'])*100),2);
+            }
+            else{
+              $matriz[3][$i]=round((($matriz[2][$i]/$producto[0]['prod_meta'])*100),2);
+            }
+            
+          }
+        }
+      }
+
+      if(count($prod_ejec)!=0){
+        for ($i=1; $i <=12 ; $i++) { 
+          $matriz[4][$i]=$prod_ejec[0][$mp[$i]];
+
+          if($producto[0]['mt_id']==3){
+            $ea=$ea+$prod_ejec[0][$mp[$i]];
+          }
+          else{
+            $ea=$matriz[4][$i];
+          }
+
+          $matriz[5][$i]=$ea;
+          if($producto[0]['prod_meta']!=0){
+            if($producto[0]['tp_id']==1){
+              $matriz[6][$i]=round(((($matriz[5][$i]+$producto[0]['prod_linea_base'])/$producto[0]['prod_meta'])*100),2);
+            }
+            else{
+              $matriz[6][$i]=round((($matriz[5][$i]/$producto[0]['prod_meta'])*100),2);
+            }
+            
+          }
+
+          if($matriz[2][$i]!=0){
+            $matriz[7][$i]=round((($matriz[5][$i]/$matriz[2][$i])*100),2);  
+          }
+          
+        }
+      }
+      
+      return $matriz;
+    }
+
+
+
+    /*---VERIFICANDO VALORES NO EJECUTADOS EN MESES ANTERIORES (OPERACIONES)--*/
+    function verif_valor_no_ejecutado($prod_id,$mes){
+      $producto=$this->model_producto->get_producto_id($prod_id);
+      $diferencia[1]=0;$diferencia[2]=0;$diferencia[3]=0;
+      $sum_prog=0;
+      $sum_ejec=0;
+      for ($i=1; $i <=$mes-1; $i++) { 
+        $prog=$this->model_seguimientopoa->get_programado_poa_mes($prod_id,$i); /// Programado meses anteriores
+        if(count($prog)!=0){
+          $sum_prog=$sum_prog+$prog[0]['pg_fis'];
+        }
+
+        $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$i); /// Ejecutado meses anteriores
+        if(count($ejec)!=0){
+          $sum_ejec=$sum_ejec+$ejec[0]['pejec_fis'];
+        }
+      }
+
+
+
+      $prog=$this->model_seguimientopoa->get_programado_poa_mes($prod_id,$mes); /// Programado mes actual
+      $diferencia[2]=0;
+      if(count($prog)!=0){
+        $diferencia[2]=round($prog[0]['pg_fis'],2);
+      }
+
+      $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$mes); /// Ejecutado mes actual
+      $diferencia[3]=0;
+      if(count($ejec)!=0){
+        $diferencia[3]=round($ejec[0]['pejec_fis'],2);
+      }
+
+      $diferencia[1]=($sum_prog-$sum_ejec); /// no ejecutado en el mes anterior
+      if($producto[0]['indi_id']==2 & $producto[0]['mt_id']==1){
+        $diferencia[1]=0;
+      }
+      
+      return $diferencia;
+    }
+
+    /*------ NOMBRE MES -------*/
+    public function mes_nombre_completo(){
+        $mes[1] = 'ENERO';
+        $mes[2] = 'FEBRERO';
+        $mes[3] = 'MARZO';
+        $mes[4] = 'ABRIL';
+        $mes[5] = 'MAYO';
+        $mes[6] = 'JUNIO';
+        $mes[7] = 'JULIO';
+        $mes[8] = 'AGOSTO';
+        $mes[9] = 'SEPTIEMBRE';
+        $mes[10] = 'OCTUBRE';
+        $mes[11] = 'NOVIEMBRE';
+        $mes[12] = 'DICIEMBRE';
+
+      return $mes;
+    }
+
+    /*------ NOMBRE MES -------*/
+    public function mes_nombre(){
+      $mes[1] = 'ENE.';
+      $mes[2] = 'FEB.';
+      $mes[3] = 'MAR.';
+      $mes[4] = 'ABR.';
+      $mes[5] = 'MAY.';
+      $mes[6] = 'JUN.';
+      $mes[7] = 'JUL.';
+      $mes[8] = 'AGOS.';
+      $mes[9] = 'SEPT.';
+      $mes[10] = 'OCT.';
+      $mes[11] = 'NOV.';
+      $mes[12] = 'DIC.';
+
+      return $mes;
+    }
+
+    /*--- Actualiza mes ---*/
+    public function update_mes_gestion($mes_id){
+      $valor=$mes_id;
+      
+      $mes=$this->mes_nombre_completo($valor);
+      $datos[1]=$valor; // numero del mes
+      $datos[2]=$mes[$valor]; // mes
+      $datos[3]=$this->gestion; // Gestion
+
+      return $datos;
+    }
+
+    /*------- TIPO DE RESPONSABLE ----------*/
+    public function tp_resp(){
+      $ddep = $this->model_proyecto->dep_dist($this->dist);
+      if($this->adm==1){
+        $titulo='RESPONSABLE NACIONAL';
+      }
+      elseif($this->adm==2){
+        $titulo='RESPONSABLE '.strtoupper($ddep[0]['dist_distrital']);
+      }
+
+      return $titulo;
+    }
+
+    public function menu($mod){
+        $enlaces=$this->menu_modelo->get_Modulos($mod);
+        for($i=0;$i<count($enlaces);$i++){
+          $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
+        }
+
+        $tabla ='';
+        for($i=0;$i<count($enlaces);$i++){
+            if(count($subenlaces[$enlaces[$i]['o_child']])>0){
+                $tabla .='<li>';
+                    $tabla .='<a href="#">';
+                        $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
+                        $tabla .='<ul>';    
+                            foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
+                            $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
+                        }
+                        $tabla .='</ul>';
+                $tabla .='</li>';
+            }
+        }
+
+        return $tabla;
+    }
+
+    public function menu_segpoa(){
+      $tabla='';
+      $tabla.='
+      <nav>
+        <ul>
+            <li class="">
+            <a href="#" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+            </li>
+            <li class="text-center">
+                <a href="#" title="REGISTRO DE SEGUIMIENTO POA"> <span class="menu-item-parent">SEGUIMIENTO POA</span></a>
+            </li>
+        </ul>
+      </nav>';
+    }
+}
+?>

@@ -1,0 +1,28 @@
+.cuadradito{
+  background-color: #f00;
+  height: 50px; 
+  width: 50px;
+  margin:3px;
+  z-index: -1;
+}
+
+.tooltip{
+  height: 14px; 
+  width: 14px;
+  margin-bottom:3px;
+  margin-right:5px;
+  z-index: -1;
+  float:left;
+}
+
+#divmensaje {
+   background-color: #FFFF80;
+   position: absolute; 
+   padding: 5px;
+   width:250px;
+   left:120px;
+   top:100px;
+   border:1px solid #99bbe8;
+  z-index: 100;
+  display: none;
+}

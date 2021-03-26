@@ -1,0 +1,132 @@
+body{font-size:10px; zoom: 80%;}
+
+
+/*////////////////parte de botones //////////////////*/
+
+.botones{  transition-duration: 0.5s;  font-size: 30px; border: 5px;  background-color: transparent !important; outline: none;}
+
+#eliminar{transition-duration: 0.5s; width:40px; height:40px; margin:3px; }
+#modificar{transition-duration: 0.5s; width:40px; height:40px;  margin:3px; }
+#pdf{transition-duration: 0.5s; width:40px; height:40px; margin:3px;}
+#efec{ transition-duration: 0.5s; width:40px;}
+
+#eliminar:hover{ -webkit-transform: scale(1.2); -moz-transform: scale(1.2); -o-transform: scale(1.2);width:40px;   }
+#modificar:hover{ -webkit-transform: scale(1.2); -moz-transform: scale(1.2); -o-transform: scale(1.2);width:40px;    }
+#pdf:hover{-webkit-transform: scale(1.2); -moz-transform: scale(1.2); -o-transform: scale(1.2);width:40px;  }
+#asignar:hover{-webkit-transform: scale(1.2); -moz-transform: scale(1.2); -o-transform: scale(1.2);width:35px; }
+#efec:hover{ -webkit-transform: scale(1.2); -moz-transform: scale(1.2); -o-transform: scale(1.2);width:40px;}
+
+
+
+
+
+
+/*/////////////////////////////////////////////*/
+/*model conten*/
+.textos{ color: #000; font-size: 15px;}
+.modal-content{ 
+		
+		border-radius: 18px 18px 18px 18px;
+		-moz-border-radius: 18px 18px 18px 18px;
+		-webkit-border-radius: 18px 18px 18px 18px;
+		border: 11px solid #3A3633;
+ }
+.graf {		width: 100%;
+		height: 400px; 
+		min-width: 550px; 
+		max-width: 860px;
+		margin: 0 auto;
+			}
+.des{ height: 40px; color: #A8A8A8; padding: 5px; font-size: 18px; background: #3A3633}
+/*fin de modal*/
+/*botones folder globla*/
+.glyphicon-folder-open{color: #f0ad4e; font-size: 25px;}
+.glyphicon-folder-open:hover{ color: #000000; }
+.glyphicon-th{color: #3399ff; font-size: 25px;}
+.glyphicon-th:hover{ color: #000000;}
+.glyphicon-globe{color:#00cc00; font-size: 25px;}
+.glyphicon-globe:hover{color:#000000; font-size: 26px;}
+/*fin de folder*/
+/*franja de arriba*/
+.breadcrumb{background: #1c7368; color: #fff; height: 40px;
+		font-size: 14px;}
+/*fin de la franja de arriba*/
+
+/* cuadro derecha*/
+.texto{ color: #000000; font-size: 12px;  padding: 20px;}			
+.glyphicon-list-alt{ font-size: 40px;}
+
+/*folder de color azul*/
+h1{ font-size:15px;}
+
+/*////////////////////////MENU PRINCIPAL////////////////////////////////////////////////////////*/
+.texto-menu{text-align: center; font-size: 10px; color: #000;}
+.color{color: #474544; font-size: 12px; font-family: 'Russo One', sans-serif;}
+
+.social:hover {
+     -webkit-transform: scale(1.1);
+     -moz-transform: scale(1.1);
+     -o-transform: scale(1.1);
+ }
+ .social {
+ padding-left: 8px;
+	/* color: #008B8B; */
+ 	font-size: 40px;
+     -webkit-transform: scale(0.8);
+     /* Browser Variations: */
+     
+     -moz-transform: scale(0.8);
+     -o-transform: scale(0.8);
+     -webkit-transition-duration: 0.5s;
+     -moz-transition-duration: 0.5s;
+     -o-transition-duration: 0.5s;
+ }
+
+/*
+    Multicoloured colores Variations
+*/
+#social-f:{color: #000;}
+#social-tw{color: #E6941C;}
+#social-gp{ color: #DD4B39; }
+#social-em{ color: #00ACEE; }
+ /*hover*/
+ #social-fb:hover {
+     color: #3B5998; 
+ }
+ #social-tw:hover {
+     color: #d34836; 
+ }
+ #social-gp:hover {
+     color: #4099FF;
+ }
+ #social-em:hover {
+     color: #f39c12;
+ }
+@media (max-width: 1420px) {
+  	#menu{
+     display: none;  
+ 	 }
+ 	.social{display: none;
+ 		padding-left: 0px;
+ 	 }
+}
+
+ /*tred-tooltip*/
+ .tooltip-arrow,
+.red-tooltip + .tooltip > .tooltip-inner {background-color:#fff; color: #000; font-size: 12px; }
+
+
+/*////scroll tablas/////*/
+    #dt_basic{
+  display: inline-block;
+width:100%;
+max-width:1350px;;
+    overflow-x: scroll;
+    
+
+}
+
+
+.efecto-btn{transition-duration: 0.5s;}
+.efecto-btn:hover{ transform: scale(1.2);}
+

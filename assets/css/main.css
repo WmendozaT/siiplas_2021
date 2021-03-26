@@ -1,0 +1,31 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+body{color:#FFF;}
+footer{position:absolute;bottom: 0; width:100%;}
+
+
+
+
+
+footer li {
+    float: left;
+    font-size: 12px;
+    margin-right: 20px;
+}
+#copyright{clear:both;}
+
+@media (max-width: 767px) {footer{position:relative;bottom: 0; width:100%;}}
+
+
+
+
+
+
+
+
+
+

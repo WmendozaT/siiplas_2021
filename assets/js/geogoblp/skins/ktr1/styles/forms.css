@@ -1,0 +1,408 @@
+/* Styles */
+.kpanel
+{
+	overflow: auto;
+	border: 1px solid #99BBE8;
+}
+
+.formTbl {
+	background-color:#FFF;
+	border:1px solid #3F89C3;
+	border-spacing:0px;
+/*
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-topleft : 3px;
+	-moz-border-radius-topright : 3px;
+	padding-bottom:0.25em;
+	background:transparent url(/images/default/panel/white-top-bottom.gif) repeat-x 0 -1px;
+	*/
+}
+
+#containerForm 
+{
+	background-color:#d9e8fa;
+	font: 11px tahoma,arial,helvetica,sans-serif;	  
+	color:#000;	
+	padding:15px;
+}
+
+fieldset {
+	border: 1px solid #ccc;
+}
+
+legend {
+	padding: 0 .5em;
+	color: #036;
+	background: transparent;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#containerForm label {
+	float: left;
+	padding: 0 1em;
+	text-align: right;
+	font: 11px tahoma,arial,helvetica,sans-serif;
+	/*font-size: 10pt;*/
+}
+
+#containerForm p {
+	float: left;
+	padding: 0 1em;
+	text-align: right;
+	font: 10px tahoma,arial,helvetica,sans-serif;	      
+	font-size: 10pt;
+}
+
+#containerForm span {
+	float: left;
+	padding: 0 1em;
+	text-align: right;
+	font: 10px tahoma,arial,helvetica,sans-serif;
+	font-size: 10pt;
+}
+
+#containerForm fieldset div {
+	/*margin-bottom: .1em;*/
+	padding: 1px 3px;
+	display: block;
+	font: 10px tahoma,arial,helvetica,sans-serif;
+}
+
+.select_large
+{
+	width:300px;
+}
+
+#containerForm fieldset div input, fieldset div textarea {
+/*	width: 100px;*/
+	border-top: 1px solid #555;
+	border-left: 1px solid #555;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	padding: 1px;
+	color: #333;
+	font: 11px tahoma,arial,helvetica,sans-serif;
+  /*font-size: 10pt;	*/
+}
+
+fieldset div select {
+	/*padding: 1px;*/
+	font: 11px tahoma,arial,helvetica,sans-serif;
+  /*font-size: 10pt;	*/
+  height:14pt;
+}
+
+div.fm-multi div {
+	margin: 5px 0;
+}
+
+div.fm-multi input {
+	width: 1em;
+}
+
+div.fm-multi label {
+	display: block;
+	width: 200px;
+	padding-left: 5em;
+	text-align: left;
+}
+
+#fm-submit {
+	clear: both;
+	padding-top: 1em;
+	text-align: center;
+}
+
+#fm-submit input {
+	border: 1px solid #333;
+	padding: 2px 1em;
+	background: #555;
+	color: #fff;
+	font-size: 100%;
+}
+
+#containerForm input:focus, textarea:focus {
+	background: #efefef;
+	color: #000;
+}
+	
+/* required fields - does not work in IE */
+fieldset div.fm-req {
+	display: block;
+	font-weight: bold;
+}
+
+fieldset div.fm-req label:after {
+	content: "* "; /* does not work in IE */
+	color: #FF0000;
+}
+
+#containerForm {
+	margin: 0 auto;
+	/*padding: 1em;*/
+	width: auto;
+	font: 12px arial,verdana,sans-serif;
+	text-align: left;
+}
+
+.titleSis {
+	width: 100%;
+	color:#15428b;
+	font:bold 11px tahoma,arial,verdana,sans-serif;
+	line-height:25px;
+	background:transparent url("/images/fondo1.PNG") repeat-x top left;
+	/*background:transparent url("/images/corner_top_left.PNG") repeat-x top left;	*/
+	text-align: left;
+	border-bottom:1px solid #3F89C3;
+}
+
+.subtitle
+{
+	margin: 0 auto;
+	width:100%;
+	float:left;
+	font-weight: bold;	
+}
+
+.subtitle label
+{
+	width:18%;
+	text-align: left;
+	text-decoration:none;
+	font-weight: normal;
+}
+
+.labelLong
+{
+	margin: 0 auto;
+	width:100%;
+	float:left;
+	padding-bottom:5px;
+
+}
+
+.monocolumn
+{
+	display:block;
+	width:100%;
+}
+.monocolumn label
+{
+	width:17%;
+	float:left;
+	padding-left:13.3em;	
+	text-align: left;
+}
+
+.monocolumnLong
+{
+	width:70%;
+	float:left;
+}
+
+.monocolumnLong #divUpload1{
+	padding-bottom: 10px;
+	padding-left: 15px;
+}
+
+.monocolumnLong #divUpload2{
+	padding-bottom: 10px;
+	padding-left: 15px;
+}
+
+.monocolumnLong #loading{
+	padding-bottom: 5px;
+	padding-left: 15px;
+}
+
+.monocolumnLong label
+{
+	width:32%;
+	float:left;	
+}
+
+.monocolumnRight
+{
+	display:block;
+	margin: 0 auto;
+	width:100%;
+}
+
+.monocolumnRight label
+{
+	width:40%;
+	float:left;	
+	text-align: right;	
+}
+
+.monocolumnRight_k label
+{
+	width:70%;
+	float:left;	
+	text-align: right;	
+}
+
+.bicolumn
+{
+	float:left;
+	margin: 0 auto;
+	width:45%;
+}
+.bicolumn label
+{
+	margin: 0 auto;
+	width:35%;
+}
+
+.bicolumn input
+{
+	width:45%;
+}
+
+.bicolumn select
+{
+	margin: 0 auto;
+	width:58%;
+}
+
+.addRecurso select
+{
+	margin: 0 auto;
+	width:50px;
+}
+
+.tricolumn
+{
+	margin: 0 auto;
+	width:33%;
+	float:left;
+}
+
+.tricolumn label
+{
+	width:35%;
+}
+
+.tricolumn input
+{
+	width:50%;
+}
+
+.tricolumn select
+{
+	width:50%;
+}
+
+.tetracolumn
+{
+	width:25%;
+	float:left;
+}
+
+.tetracolumn label
+{
+	width:25%;
+}
+
+.tetracolumn input
+{
+	width:60%;
+}
+
+.date
+{
+	margin: 0 auto;
+	/*padding: 1em;*/
+	width: 50%;
+}
+
+#cuerpo
+{
+	/*margin: 10px auto 5px;*/
+	color:#000;
+	position: relative;
+  text-align: center;
+  height:100%;
+}
+
+.contForm {
+	margin: 0 auto;
+	/*padding: 1em;*/
+	width: 100%;
+	font: 12px arial,verdana,sans-serif;
+	text-align: left;
+}
+
+.buttonMedium
+{
+	padding-top:0px;
+	height:24px;
+	width:24px;
+}
+
+.buttonMedium IMG
+{
+	padding-bottom:2px;
+}
+
+.buttonBarDiv
+{
+	background-color:#FFF;
+}
+
+.monocolumnLongLev1
+{
+	display:block;
+	margin-left:30px;
+	width:100%;
+}
+
+.monocolumnLongLev2
+{
+	display:block;
+	margin-left: 25px;
+	width:100%;
+}
+.celda_blanca1
+{
+	background-color: #fff;
+}
+
+.boton_icon
+{
+	padding-top:0px;	
+	padding-right: 1px;	
+	padding-bottom:1px;	
+	padding-left:0px;	
+	margin-top:-10px;
+	width:28px;	
+	height:26px;
+	}
+.msj_alerta
+{
+	color: red;
+   	font: tahoma,arial,helvetica,sans-serif;
+	font-size: 10pt;
+}
+
+.k_etiqueta_largo
+{
+	float:left;
+	padding-bottom:3px;	
+}
+
+.label_r
+{
+	text-align: left;
+}
+.klabel
+{
+	float: left;
+	padding: 0 1em;
+	text-align: right;
+	font: 10px tahoma,arial,helvetica,sans-serif;	      
+	font-weight: bold;	
+	font-size: 10pt;	
+	}

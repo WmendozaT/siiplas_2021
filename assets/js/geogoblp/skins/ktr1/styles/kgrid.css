@@ -1,0 +1,344 @@
+/*
+Theme: inphecthyuz
+Author: Infected-FX
+*/
+/******************Estilo para los titulos******************/
+.kgrid_contenedor
+{
+	width:100%;
+	background-color:#FFF;
+}
+
+.kgrid_panel_title
+{
+	/*position : relative;*/
+	background:transparent url("/images/fondo_3.png") repeat-x top left;
+	height: 26px;
+	border-top: 1px solid #99BBE8;	
+	border-bottom: 1px solid #99BBE8;
+	width:100%;
+}
+   
+.kgrid_title 
+{
+	float:left;
+	position : relative;
+	height : 26px;	
+	top : 50%;
+	margin-top: -6px;	
+	padding-left : 5px;
+	font: 11px tahoma,arial,helvetica,sans-serif;
+	font-weight: bold;
+	color:#27537A;
+	text-align: left;
+}
+
+.page_buttons
+{
+	position : relative;
+	float:right;
+	height : 26px;	
+	top : 50%;
+	margin-top: -11px;	
+	padding-right : 5px;
+	font: 11px tahoma,arial,helvetica,sans-serif;
+	font-weight: bold;
+	color:#27537A; 	
+}
+
+.page_buttons select, .kgrid_title select
+{
+	border: 1px solid #99BBE8;
+	font: 11px tahoma,arial,helvetica,sans-serif;	
+}
+
+.input_search
+{
+	border: 1px solid #99BBE8;
+	padding: 2px;
+	background:#FFF url("/images/buscar3sm.png") no-repeat top right;
+	font: 11px tahoma,arial,helvetica,sans-serif;	
+	width: 200px;
+}
+
+.link-kgrid:hover{ cursor: pointer;  text-decoration: underline;  }
+
+.input_search_2
+{
+	border: 1px solid #99BBE8;
+	padding: 2px;
+	background:#FFF url("/images/buscar3sm.png") no-repeat top right;
+	font: 11px tahoma,arial,helvetica,sans-serif;	
+	width: 200px;
+	display:none;
+}
+
+.input_search_box
+{
+	padding-right:5px;
+}
+
+/*************Estilo para el cuerpo de la tabla*********************/
+.ktable {
+	/*
+	font-family:Verdana, Arial, Helvetica, sans-serif;	
+	font-size:10px;	
+	background-color:#E7E7E7;	
+	color: #b7b7b7;
+	*/
+	color:#000; 
+	font: 11px tahoma,arial,verdana,sans-serif;
+	table-layout:fixed;	
+}
+
+.ktable tr {
+	background-color:#FFF; 	
+	text-align:left;
+	}
+	
+.ktable tr.row1:hover {
+	background:#E6F1F8;	
+	}
+	
+.ktable tr.row2:hover {
+	background:#E6F1F8;	
+	}	
+
+.ktable td a:link, .ktable td a:visited {
+	color: #000;	
+	text-decoration: none;
+}
+
+.ktable td a:hover {
+	color: #000;	
+	border-bottom:1px solid #000;	
+	text-decoration: none ;
+
+}
+
+.ktable tr.row_title
+{
+	height:23px;
+}
+
+.ktable tr.row1 {
+	background-color: #F5F5F5;	
+	font-weight: normal;	
+	color: #000;	
+	border-bottom: 5px solid #EDEDED;	
+	height:20px;	
+	/*
+	padding-left: 3px;	
+	padding-right: 5px;
+	*/
+}
+
+.ktable tr.row2 {
+	color: #000;	
+	font-weight: normal;	
+	/*border: 1px solid #EDEDED;	*/
+	height:20px;	
+}	
+
+.ktable tr.row3 {
+	background-color: #E6F1F8;	
+	font-weight: normal;	
+	color: #000;	
+	border: 1px solid #FFF;	
+	height:20px;	
+	padding-left: 3px;	
+	padding-right: 5px;
+}
+
+.ktable tr.row4 {
+	background-color: #FFFFD3;	
+	font-weight: normal;	
+	color: #000;	
+	border: 1px solid #FFF;	
+	height:20px;	
+	padding-left: 3px;	
+	padding-right: 5px;
+}
+
+.ktable tr.row1 td, 
+.ktable tr.row2 td,
+.ktable tr.row3 td,
+.ktable tr.row4 td,
+.ktable tr.rowSt td {
+	padding: 2px 3px;
+}
+	
+.ktable_th {
+	/*text-align: center;	*/
+	/*background:#F9F9F9 url(/images/default/grid/grid3-hrow.gif) repeat-x;*/
+	background:#F9F9F9 url(/images/fondo_4.gif) repeat-x;
+	padding: 2px 3px;	
+}
+
+.ktable_th_ord {
+	/*text-align: center;	*/	
+	/*background:#F9F9F9 url(/images/default/grid/grid3-hrow.gif) repeat-x;	*/
+	background:#F9F9F9 url(/images/fondo_4.gif) repeat-x;	
+	padding:2px 3px;	
+}
+
+.ktable_hidden {
+	text-align: center;	
+	background: #F5F5F5;	
+	color: #616161;	
+	border: 1px solid #FFF;	
+	text-transform:uppercase;	
+	height:20px;
+	display:none;
+}
+
+.ktable_th_ord a:hover, .ktable_th a:hover {
+	border-bottom:1px solid #000;	
+	text-decoration: none ;
+}
+
+.ktable_th_ord a:link, .ktable_th_ord a:visited
+{
+	color: #000;		
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.ktable_th a:link, .ktable_th a:visited {
+	color: #000;		
+	text-decoration: none;
+}
+
+.kTableTitle
+{
+	text-transform:uppercase;
+	overflow:hidden;color:#15428b;font:bold 11px tahoma,arial,verdana,sans-serif;
+	padding:5px 3px 4px 5px;
+}
+
+.kbuttonImg
+{
+	padding:0 1px 1px 0;	
+	width:28px;	
+	height:23px;
+	border: 0px;
+	background-color: transparent;
+}
+
+.kbuttonImg:hover
+{
+		border: 1px solid #CCCCCC;
+}
+
+.kbuttonImg IMG.centered {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+}
+
+.rowSt td {
+	background:#F9F9F9 url(/images/default/grid/grid3-hrow.gif) repeat-x scroll 0 bottom;
+	color: #000;
+	font-family:Verdana, Arial, Helvetica, sans-serif;	
+	font-size:10px;		
+	height:20px;
+}
+
+.rowTotal td {
+	background-color: #DDDDDD;	
+	font-weight: normal;	
+	color: #000;	
+	border-top: 1px solid #FFF;
+	height:20px;	
+	padding-left: 3px;	
+	padding-right: 5px;
+}
+
+/*************Estilo para el cuerpo de la tabla*********************/
+.ktableGrid {
+	border-spacing:1px;	
+	font-family:Verdana, Arial, Helvetica, sans-serif;	
+	font-size:10px;	
+	/*background-color:#E7E7E7;	*/
+	color: #b7b7b7;
+}
+
+.ktableGrid tr {
+	background-color:#FFF; 	
+	text-align:left;
+	}
+
+.ktableGrid caption
+{
+	font-family:Verdana, Arial, Helvetica, sans-serif;	
+	font-size:11px;	
+	background-color:#FFF;	
+	color: #000;
+}
+
+.ktableGrid caption a
+{
+	font-family:Verdana, Arial, Helvetica, sans-serif;	
+	font-size:11px;	
+	background-color:#FFF;	
+	color: #15428b;
+}
+	
+.grid_contenedor	
+{
+	/*border:0px solid #99bbe8;*/
+	border-bottom: 1px solid #CCCCCC;
+	width:100%;
+	overflow: auto;
+	/*padding: 1px;	*/
+}
+
+.grid_contenedor select, input
+{
+	border: 1px solid #99BBE8;
+	font: 11px tahoma,arial,helvetica,sans-serif;	
+}
+
+.grid_contenedor input
+{
+	height:15px;
+	line-height: 15px;
+}
+
+.contiene_datos
+{
+	overflow-x:auto; 
+	overflow-y:visible;
+}
+
+.kgrid_a
+{
+	text-decoration:none;
+	outline-color:-moz-use-text-color;
+	outline-style:none;
+	outline-width:0;	
+}
+
+.kgrid_a img
+{
+	border: 0;
+}
+
+.titles_vi
+{
+	visibility:visible; 	
+}
+
+.titles_nd
+{
+	display:none;
+}
+
+.nuevo_registro_kgrid
+{
+	border-bottom:1px solid #A0A0A0;
+	overflow-x:none;
+	/*position:relative;*/
+}
+
+.icon_header_grid:hover{ cursor: pointer  }
