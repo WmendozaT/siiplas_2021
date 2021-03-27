@@ -99,7 +99,7 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="<?php echo base_url(); ?>index.php/admin/logout" title="CERRAR SESI&Oacute;N"><b>SALIR</b></a></li>
+            <li class="active"><a href="<?php echo base_url(); ?>index.php/admin/logout" title="CERRAR SESI&Oacute;N"><b>SALIRrrr</b></a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
