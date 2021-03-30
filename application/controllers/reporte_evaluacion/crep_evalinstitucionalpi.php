@@ -37,7 +37,13 @@ class Crep_evalinstitucionalpi extends CI_Controller {
       if($this->gestion>2019){
         $data['menu']=$this->menu(7); //// genera menu
         $data['regional']=$this->regionales();
-        $this->load->view('admin/reportes_cns/repevaluacion_institucional_pi/rep_menu', $data);
+       // $this->load->view('admin/reportes_cns/repevaluacion_institucional_pi/rep_menu', $data);
+        $this->eficacia_proyecto_distrital_regional(9,0);
+        /*$proyectos=$this->model_evalinstitucional->list_proyectos_departamento(9);
+        foreach($proyectos as $row){
+          echo "proy_id : ".$row['proy_id']."<br>";
+          $tabla=$this->componentes($row['proy_id']);
+        }*/
       }
       else{
         redirect('regionales'); // Rideccionando a Evaluacion anterior 2019
