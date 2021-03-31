@@ -352,6 +352,22 @@
         <!-- END MAIN PANEL -->
     </div>
     <!-- ========================================================================================================= -->
+        <div class="modal fade" id="modal_nuevo_ff2" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" style="width:85%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="calificacion"></div>
+                        <div class="row">
+                            <div id="temporalidad"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
