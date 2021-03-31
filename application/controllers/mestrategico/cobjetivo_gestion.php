@@ -546,6 +546,10 @@ class Cobjetivo_gestion extends CI_Controller {
               $ppto_gc=$presupuesto_gc[0]['presupuesto'];
             }
 
+            $prc='';
+            if($row['indi_id']==2){
+              $prc='%';
+            }
           $nro++;
           $tabla .='<tr style="font-size: 7px;">';
             $tabla .='<td style="width:1%; height:15px;" align=center>'.$nro.'</td>';
@@ -557,12 +561,12 @@ class Cobjetivo_gestion extends CI_Controller {
             $tabla .='<td style="width:11%;">'.$row['og_resultado'].'</td>';
             $tabla .='<td style="width:10%;">'.$row['og_indicador'].'</td>';
             $tabla .='<td style="width:3.3%;" align=center>'.round($row['og_linea_base'],2).'</td>';
-            $tabla .='<td style="width:3.3%;" align=center>'.round($row['og_meta'],2).'</td>';
+            $tabla .='<td style="width:3.3%;" align=center>'.round($row['og_meta'],2).''.$prc.'</td>';
             
             for ($i=1; $i <=10 ; $i++) { 
               $dep=$this->model_objetivogestion->get_ogestion_regional($row['og_id'],$i);
               if(count($dep)!=0){
-                $tabla.='<td style="width:3.3%;" bgcolor="#f5f5f5" align=center>'.round($dep[0]['prog_fis'],2).'</td>';
+                $tabla.='<td style="width:3.3%;" bgcolor="#f5f5f5" align=center>'.round($dep[0]['prog_fis'],2).''.$prc.'</td>';
               }
               else{
                 $tabla.='<td style="width:3.3%;" bgcolor="#f5f5f5" align=center>0</td>';

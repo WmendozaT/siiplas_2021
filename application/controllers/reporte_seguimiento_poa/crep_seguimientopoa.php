@@ -51,7 +51,6 @@ class Crep_seguimientopoa extends CI_Controller {
       $data['menu']=$this->menu(7);
       $data['list']=$this->menu_nacional();
 
-      //echo $this->seguimiento_operaciones_xsubactividad(2021);
       $this->load->view('admin/reportes_cns/seguimiento_poa/menu_seguimiento_poa', $data);
     }
 

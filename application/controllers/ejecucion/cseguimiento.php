@@ -284,7 +284,6 @@ class Cseguimiento extends CI_Controller {
       }
       
       $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1);
-      $data['operaciones_programados']=$this->lista_operaciones_programados($com_id,$this->verif_mes[1]); /// Lista de Operaciones programados en el mes
       $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($com_id); /// temporalidad Programado-Ejecutado Subactividad
       $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($com_id); /// grafico
       $data['titulo']=$titulo; /// Titulo de la cabecera
@@ -313,6 +312,7 @@ class Cseguimiento extends CI_Controller {
       $data['update_eval']=$this->button_update_($com_id);
 
     //  $this->seguimientopoa->update_evaluacion_operaciones($com_id);
+      $data['operaciones_programados']=$this->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
       $data['formularios_seguimiento']=$this->formularios_mensual($com_id);
       $this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
     }
@@ -332,8 +332,8 @@ class Cseguimiento extends CI_Controller {
       if($this->tp_adm==1){
         $tabla.='   <div id="row">
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="alert alert-success" role="alert">
-                              <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-success update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR EVALUACI&Oacute;N POA</a>    
+                            <div class="alert alert-info" role="alert">
+                              <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-info update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR EVALUACI&Oacute;N POA</a>    
                             </div>
                         </article>
                     </div>';
@@ -371,15 +371,30 @@ class Cseguimiento extends CI_Controller {
     }
 
 
+    /*------ Parametro de eficacia ------*/
+    public function calificacion_eficacia($eficacia){
+      $tabla='';
+      $tp='danger';
+      $titulo='ERROR EN LOS VALORES';
+      if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
+      if ($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
+      if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
+      if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+
+      $tabla.='<h2 class="alert alert-'.$tp.'" align="center"><b>'.$titulo.'</b></h2>';
+
+      return $tabla;
+    }
+
     /*--- LISTA DE  OPERACIONES PROGRAMADOS EN EL MES ACTUAL 2021 ---*/
-    function lista_operaciones_programados($com_id,$mes_id){
+    function lista_operaciones_programados($com_id,$mes_id,$regresion){
       $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
       $tabla='';
       $tabla.=' 
       <form class="smart-form" method="post">
         <input name="mes_activo" type="hidden" value='.$this->verif_mes[1].'>
         <input name="base" type="hidden" value="'.base_url().'">
-        
+        <fieldset> '.$this->calificacion_eficacia($regresion[5][$this->tmes]).'</fieldset> 
         <fieldset>          
           <div class="row">
             <section class="col col-3">
@@ -977,7 +992,6 @@ class Cseguimiento extends CI_Controller {
         
 
         $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1);
-        $data['operaciones_programados']=$this->lista_operaciones_programados($this->com_id,$this->verif_mes[1]); /// Lista de Operaciones programados en el mes
        // $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($this->com_id); /// temporalidad Programado-Ejecutado Subactividad
         $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($this->com_id); /// grafico
         
@@ -1003,6 +1017,8 @@ class Cseguimiento extends CI_Controller {
 
         $data['formularios_poa']=$this->formularios_poa($this->com_id,$data['componente'][0]['proy_id']);
         $data['formularios_seguimiento']=$this->formularios_mensual($this->com_id);
+
+        $data['operaciones_programados']=$this->lista_operaciones_programados($this->com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
         $data['update_eval']=$this->button_update_($this->com_id);
         $this->load->view('admin/evaluacion/seguimiento_poa_subactividad/formulario_seguimiento_subact', $data);
       }
