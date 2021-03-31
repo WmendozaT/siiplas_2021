@@ -309,11 +309,11 @@ class Cseguimiento extends CI_Controller {
       $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
       $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
 
-      $data['update_eval']=$this->button_update_($com_id);
+      $data['update_eval']=$this->seguimientopoa->button_update_($com_id);
 
     //  $this->seguimientopoa->update_evaluacion_operaciones($com_id);
-      $data['operaciones_programados']=$this->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
-      $data['formularios_seguimiento']=$this->formularios_mensual($com_id);
+      $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
+      $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($com_id);
       $this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
     }
     else{
@@ -321,26 +321,6 @@ class Cseguimiento extends CI_Controller {
     }
   }
 
-
-
-    /*--- UPDATE DATOS DE EVALUACION POA 2021 ---*/
-    function button_update_($com_id){
-      $componente = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
-      $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      $tabla='';
-
-      if($this->tp_adm==1){
-        $tabla.='   <div id="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="alert alert-info" role="alert">
-                              <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-info update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR EVALUACI&Oacute;N POA</a>    
-                            </div>
-                        </article>
-                    </div>';
-      }
-
-      return $tabla;
-    }
 
 
     /*---- FUNCION ACTUALIZA INFORMACION EVALUACION POA AL TRIMESTRE --------*/
@@ -371,221 +351,6 @@ class Cseguimiento extends CI_Controller {
     }
 
 
-    /*------ Parametro de eficacia ------*/
-    public function calificacion_eficacia($eficacia){
-      $tabla='';
-      $tp='danger';
-      $titulo='ERROR EN LOS VALORES';
-      if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
-      if ($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
-      if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
-      if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
-
-      $tabla.='<h2 class="alert alert-'.$tp.'" align="center"><b>'.$titulo.'</b></h2>';
-
-      return $tabla;
-    }
-
-    /*--- LISTA DE  OPERACIONES PROGRAMADOS EN EL MES ACTUAL 2021 ---*/
-    function lista_operaciones_programados($com_id,$mes_id,$regresion){
-      $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
-      $tabla='';
-      $tabla.=' 
-      <form class="smart-form" method="post">
-        <input name="mes_activo" type="hidden" value='.$this->verif_mes[1].'>
-        <input name="base" type="hidden" value="'.base_url().'">
-        <fieldset> '.$this->calificacion_eficacia($regresion[5][$this->tmes]).'</fieldset> 
-        <fieldset>          
-          <div class="row">
-            <section class="col col-3">
-              <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
-            </section>';
-            if($this->tp_adm==1){
-              $meses = $this->model_configuracion->get_mes();
-              $tabla.='
-              <section class="col col-3">
-                <select class="form-control" id="mes_id" name="mes_id" title="SELECCIONE MES">';
-                foreach($meses as $row){
-                  if($row['m_id']<=ltrim(date("m"), "0")){
-                    if($row['m_id']==$this->verif_mes[1]){ 
-                      $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
-                    }
-                    else{ 
-                      $tabla.='<option value="'.$row['m_id'].'" >'.$row['m_descripcion'].'</option>';
-                    } 
-                  }                     
-                }
-               $tabla.='
-                </select>
-              </section>';
-            }
-            $tabla.='
-          </div>
-        </fieldset>
-        <fieldset>
-          <div class="table-responsive">
-          <table class="table table-bordered"width="100%" id="datos">
-              <thead>                 
-                <tr>
-                  <th style="width:1%;"></th>
-                  <th style="width:1%;"><b>COD. OR.</b></th>
-                  <th style="width:1%;"><b>COD. OPE.</b></th>
-                  <th style="width:13%;">OPERACI&Oacute;N</th>
-                  <th style="width:8%;">INDICADOR</th>
-                  <th style="width:3%;">META</th>
-                  <th style="width:5%;">META NO EJECUTADO</th>
-                  <th style="width:5%;">PROGRAMADO MES '.$this->verif_mes[2].'</th>
-                  <th style="width:5%;">EJECUTADO MES '.$this->verif_mes[2].'</th>
-                  <th style="width:8%;">MEDIO DE VERIFICACI&Oacute;N</th>
-                  <th style="width:8%;">PROBLEMAS PRESENTADOS</th>
-                  <th style="width:8%;">ACCIONES REALIZADOS</th>
-                  <th style="width:2%;"></th>
-                  <th style="width:3%;"></th>
-                </tr>
-              </thead>
-              <tbody>';
-              $nro=0;
-              foreach($operaciones as $row){
-                $indi_id='';
-                if($row['indi_id']==2 & $row['mt_id']==1){
-                  $indi_id='%';
-                }
-                $diferencia=$this->seguimientopoa->verif_valor_no_ejecutado($row['prod_id'],$mes_id);
-                if($diferencia[1]!=0 || $diferencia[2]!=0){
-                  $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($row['prod_id'],$mes_id);
-                  $nro++;
-                  $tabla.='
-                  <tr>
-                    <td align=center bgcolor="#f6fbf4">
-                      '.$nro.'
-                    </td>
-                    <td style="width:1%;" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
-                    <td style="width:1%;" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
-                    <td bgcolor="#f6fbf4">'.$row['prod_producto'].'</td>
-                    <td bgcolor="#f6fbf4">'.$row['prod_indicador'].'</td>
-                    <td align=right bgcolor="#f6fbf4"><b>'.round($row['prod_meta'],2).''.$indi_id.'</b></td>
-                    <td align=center bgcolor="#f7e1e2">'.$diferencia[1].'</td>
-                    <td align=center bgcolor="#f6fbf4">'.$diferencia[2].''.$indi_id.' <input type="hidden" name="pg_fis[]" value="'.($diferencia[1]+$diferencia[2]).'"></td>';
-                    if(count($ejec)!=0){
-                      $tabla.='
-                      <td>
-                        <label class="input">
-                          <i class="icon-append fa fa-tag"></i>
-                          <input type="text" id=ejec'.$nro.' value="'.round($ejec[0]['pejec_fis'],2).'" onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$nro.');" title="'.($diferencia[1]+$diferencia[2]).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
-                        </label>
-                      </td>
-                      <td>
-                        <label class="textarea">
-                          <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN">'.$ejec[0]['medio_verificacion'].'</textarea>
-                        </label>
-                      </td>
-                      <td>
-                        <label class="textarea">
-                          <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS">'.$ejec[0]['observacion'].'</textarea>
-                        </label>
-                      </td>
-                      <td>
-                        <label class="textarea">
-                          <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="3" id=acc'.$nro.' title="ACCIONES REALIZADOS">'.$ejec[0]['acciones'].'</textarea>
-                        </label>
-                      </td>
-                      <td align=center title="MODIFICAR SEGUIMIENTO POA">
-                        <div id="but'.$nro.'"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/drive_disk.png" WIDTH="40" HEIGHT="40"/><br>MODIFICAR</button></div>
-                      </td>';
-                    }
-                    else{
-                      $tabla.='
-                      <td>
-                        <label class="input">
-                          <i class="icon-append fa fa-tag"></i>
-                          <input type="text" id=ejec'.$nro.' value="0" onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$nro.');" title="'.($diferencia[1]+$diferencia[2]).'"  onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
-                        </label>
-                      </td>';
-                      $no_ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($row['prod_id'],$mes_id);
-                      if(count($no_ejec)!=0){
-                        $tabla.='
-                          <td>
-                            <label class="textarea">
-                              <i class="icon-append fa fa-tag"></i>
-                              <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN">'.$no_ejec[0]['medio_verificacion'].'</textarea>
-                            </label>
-                          </td>
-                          <td>
-                            <label class="textarea">
-                              <i class="icon-append fa fa-tag"></i>
-                              <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS">'.$no_ejec[0]['observacion'].'</textarea>
-                            </label>
-                          </td>
-                          <td>
-                            <label class="textarea">
-                              <i class="icon-append fa fa-tag"></i>
-                              <textarea rows="3" id=acc'.$nro.' title="ACCIONES REALIZADOS">'.$no_ejec[0]['acciones'].'</textarea>
-                            </label>
-                          </td>';
-                      }
-                      else{
-                        $tabla.='
-                        <td>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN"></textarea>
-                          </label>
-                        </td>
-                        <td>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS"></textarea>
-                          </label>
-                        </td>
-                        <td>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" id=acc'.$nro.' title="ACCIONES REALIZADOS"></textarea>
-                          </label>
-                        </td>';
-                      }
-                      $tabla.='
-                      <td align=center title="GUARDAR SEGUIMIENTO POA">
-                        <div id="but'.$nro.'" style="display:none;"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="37" HEIGHT="37"/><br>GUARDAR</button></div>
-                      </td>';
-                    }
-                    $tabla.='
-                    <td align="center"><br>'.$this->calificacion_operacion($row['prod_id'],$diferencia).'</td>
-                  </tr>';
-                }
-              }
-              $tabla.='
-              </tbody>
-          </table>
-          </div>
-        </fieldset>   
-        </form>';
-
-      return $tabla;
-    }
-
-
-    /*---- CALIFICACIÓN POR CADA OPERACION ----*/
-    public function calificacion_operacion($prod_id,$valor){
-      $programado=($valor[1]+$valor[2]);
-      $ejecutado=$valor[3];
-
-      $titulo='<button type="button" data-toggle="modal" data-target="#modal_nuevo_ff2" class="btn btn-danger enlace" name="'.$prod_id.'" style="width:80%; height:30px">No Cumplido...</button>';
-      if($ejecutado==$programado){
-        $titulo='<button type="button" data-toggle="modal" data-target="#modal_nuevo_ff2" class="btn btn-success enlace" name="'.$prod_id.'" style="width:80%; height:30px">Cumplido....</button>';
-      }
-      elseif($ejecutado<$programado & $ejecutado!=0){
-        $titulo='<button type="button" data-toggle="modal" data-target="#modal_nuevo_ff2" class="btn btn-warning enlace" name="'.$prod_id.'" style="width:80%; height:30px">En Proceso...</button>';
-      }
-
-      return $titulo;
-
-    }
-
-
     /*-------- GET DATOS POA --------*/
     public function get_temporalidad(){
       if($this->input->is_ajax_request() && $this->input->post()){
@@ -609,8 +374,6 @@ class Cseguimiento extends CI_Controller {
 
 
     
-
-
 
     /*---- VALIDA ADD SEGUIMIENTO POA ----*/
     public function guardar_seguimiento(){
@@ -1015,11 +778,11 @@ class Cseguimiento extends CI_Controller {
         $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
         $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
 
-        $data['formularios_poa']=$this->formularios_poa($this->com_id,$data['componente'][0]['proy_id']);
-        $data['formularios_seguimiento']=$this->formularios_mensual($this->com_id);
+        $data['formularios_poa']=$this->seguimientopoa->formularios_poa($this->com_id,$data['componente'][0]['proy_id']);
+        $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($this->com_id);
 
-        $data['operaciones_programados']=$this->lista_operaciones_programados($this->com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
-        $data['update_eval']=$this->button_update_($this->com_id);
+        $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($this->com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
+        $data['update_eval']=$this->seguimientopoa->button_update_($this->com_id);
         $this->load->view('admin/evaluacion/seguimiento_poa_subactividad/formulario_seguimiento_subact', $data);
       }
       else{
@@ -1028,54 +791,6 @@ class Cseguimiento extends CI_Controller {
 
     }
 
-    /*-- FORMULARIOS POA ACTUALIZADOS --*/
-    public function formularios_poa($com_id,$proy_id){
-      $tabla='';
-      $meses = $this->model_configuracion->get_mes();
-
-      $tabla.='<div class="btn-group" >
-                  <a class="btn btn-default"  >FORMULARIOS POA - '.$this->gestion.'</a>
-                  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" ><span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4/'.$com_id.'\');" >FORMULARIO N°4 (OPERACIONES)</a>
-                    </li>
-                    <li>
-                      <a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$proy_id.'/'.$com_id.'\');">FORMULARIO N°5 (REQUERIMIENTOS)</a>
-                    </li>
-                    <hr>
-                    <li>
-                      <a href="javascript:abreVentana(\''.site_url("").'/rep/rep_requerimientos_ejecucion_servicio/'.$com_id.'\');">FORMULARIO N°5 (EJECUCIÓN POA)</a>
-                    </li>
-                  </ul>
-                </div>';
-
-      return $tabla;
-    }
-
-    /*-- LISTA DE FORMULARIOS DE SEGUIMIENTO POA --*/
-    public function formularios_mensual($com_id){
-      $tabla='';
-      $meses = $this->model_configuracion->get_mes();
-
-      $tabla.='<div class="btn-group">
-                  <a class="btn btn-default">FORMULARIO SEGUIMIENTO POA (MESES)</a>
-                  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
-                  <ul class="dropdown-menu">';
-                    foreach($meses as $rowm){
-                    if($rowm['m_id']<=ltrim(date("m"), "0")){
-                      $tabla.='
-                      <li>
-                        <a href="'.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$com_id.'/'.$rowm['m_id'].'" target="_blank">REPORTE SEGUIMIENTO - '.$rowm['m_descripcion'].'</a>
-                      </li>';
-                    }                     
-                  }
-                  $tabla.='
-                  </ul>
-                </div>';
-
-      return $tabla;
-    }
 
     /*----- REPORTE SEGUIMIENTO POA PDF 2021 MENSUAL POR SUBACTIVIDAD POR MES-------*/
     public function reporte_formulario_subactividad_mes($com_id,$mes_id){

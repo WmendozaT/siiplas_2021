@@ -31,34 +31,74 @@ class Cseguimiento_establecimiento extends CI_Controller {
         }
     }
 
-    /*----- FORMULARIO SEGUIMIENTO POA ESTABLECIMIENTOS ------*/
-    public function formulario_establecimiento(){
-        $data['establecimiento']=$this->establecimiento;
-        $data['gestiones']=$this->list_gestiones();
-        $data['tmes']=$this->model_evaluacion->trimestre();
-        $data['operaciones_programados']=$this->lista_operaciones_programados($this->establecimiento[0]['com_id'],$this->verif_mes[1]); /// Lista de Operaciones programados en el mes
-        $data['nota']=$this->notificacion();
 
-        $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($data['establecimiento'],$this->model_componente->get_componente($this->establecimiento[0]['com_id']),1);
-        $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($this->establecimiento[0]['com_id']); /// grafico
-        $data['matriz_temporalidad_subactividad']=$matriz_temporalidad_subactividad;
-        $data['tabla_temporalidad_componente']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],0);
+  /*----- FORMULARIO SEGUIMIENTO POA ESTABLECIMIENTOS ------*/
+  public function formulario_establecimiento(){
+    $com_id=$this->establecimiento[0]['com_id'];
+    $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+    $data['menu'] = $this->seguimientopoa->menu(4);
+    $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+    $data['com_id']=$com_id;
+    $data['proy_id']=$this->establecimiento[0]['proy_id'];
 
-        /*--- Regresion lineal trimestral ---*/
-        $data['cabecera2']=$this->seguimientopoa->cabecera_seguimiento($data['establecimiento'],$this->model_componente->get_componente($this->establecimiento[0]['com_id']),2);
-        $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($this->establecimiento[0]['com_id']); /// Tabla para el grafico al trimestre
-        $data['tabla_regresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion
+    if(count($data['componente'])!=0){
 
-        /*--- Regresion lineal Gestion */
-        $data['cabecera3']=$this->seguimientopoa->cabecera_seguimiento($data['establecimiento'],$this->model_componente->get_componente($this->establecimiento[0]['com_id']),3);
-        $data['tabla_gestion']=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($this->establecimiento[0]['com_id']); /// Tabla para el grafico Total Gestion
-        $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion 
+      $data['datos_mes'] = $this->verif_mes;
+      $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
+      $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
+      $titulo=
+      '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>ACTIVIDAD : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
+      <h1><small>SUBACTIVIDAD : </small> '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h1>
+      <h1><small>TRIMESTRE VIGENTE : </small> '.$data['tmes'][0]['trm_descripcion'].'</h1>';
+
+      if($data['proyecto'][0]['tp_id']==1){
+        $titulo=
+        '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROYECTO : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
+        <h1><small>UNIDAD. RESP. : </small> '.$data['componente'][0]['serv_descripcion'].'</h1>
+        <h1><small>TRIMESTRE VIGENTE : </small> '.$data['tmes'][0]['trm_descripcion'].'</h1>';
+      }
+      
+      $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1);
+      $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($com_id); /// temporalidad Programado-Ejecutado Subactividad
+      $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($com_id); /// grafico
+      $data['titulo']=$titulo; /// Titulo de la cabecera
+      
+      $data['matriz_temporalidad_subactividad']=$matriz_temporalidad_subactividad;
+      $data['tabla_temporalidad_componente']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],1); /// Vista 
+      $data['tabla_temporalidad_componente_impresion']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],0); /// Impresion 
 
 
-        $this->load->view('admin/evaluacion/seguimiento_establecimiento/menu_seguimiento_establecimiento', $data);
+      /*--- Regresion lineal trimestral ---*/
+      $data['cabecera2']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],2);
+      $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id); /// Tabla para el grafico al trimestre
+      $data['tabla_regresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion Vista
+      $data['tabla_regresion_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
+
+      /*--- grafico Pastel trimestral ---*/
+      $data['tabla_pastel_todo']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
+      $data['tabla_pastel_todo_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
+
+      /*--- Regresion lineal Gestion */
+      $data['cabecera3']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],3);
+      $data['tabla_gestion']=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($com_id); /// Matriz para el grafico Total Gestion
+      $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
+      $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
+
+      $data['calificacion']=$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]);
+      $data['nota']=$this->notificacion();
+      $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
+      $data['formularios_poa']=$this->seguimientopoa->formularios_poa($com_id,$this->establecimiento[0]['proy_id']);
+      $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($com_id);
+
+      $this->load->view('admin/evaluacion/seguimiento_establecimiento/formulario_seguimiento_establecimiento', $data);
     }
+    else{
+      echo "Error !!!";
+    }
+  }
 
-    
+
+
 
 
     /*------- NOTIFICACION POA ------*/
@@ -87,132 +127,6 @@ class Cseguimiento_establecimiento extends CI_Controller {
     }
 
 
-    /*------- LISTA DE  OPERACIONES 2021 ------*/
-    function lista_operaciones_programados($com_id,$mes_id){
-      $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
-      $tabla='';
-      $tabla.='
-        <div class="table-responsive">
-          <table class="table table-bordered" style="width:100%;">
-             <thead>
-                <tr>
-                  <th colspan=4 style="width:40%;"><input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/></th>
-                  <th colspan=8 style="width:60%;"></th>
-                </tr> 
-                </thead>
-          </table>
-          <table class="table table-bordered" style="width:100%;" id="datos">
-             <thead>               
-                <tr>
-                  <th style="width:1%;"></th>
-                  <th style="width:1%;"><b>COD. OR.</b></th>
-                  <th style="width:1%;"><b>COD. OPE.</b></th>
-                  <th style="width:12%;">OPERACI&Oacute;N</th>
-                  <th style="width:10%;">INDICADOR</th>
-                  <th style="width:3%;">META</th>
-                  <th style="width:5%;">MES ANTERIOR NO EJECUTADO</th>
-                  <th style="width:5%;">PROGRAMADO MES '.$this->verif_mes[2].'</th>
-                  <th style="width:5%;">EJECUTADO MES '.$this->verif_mes[2].'</th>
-                  <th style="width:13%;">MEDIO DE VERIFICACI&Oacute;N</th>
-                  <th style="width:13%;">PROBLEMAS PRESENTADOS</th>
-                  <th style="width:13%;">ACCIONES REALIZADOS</th>
-                  <th style="width:2%;"></th>
-                </tr>
-              </thead>
-              <tbody>';
-              $nro=0;
-              foreach($operaciones as $row){
-                $indi_id='';
-                if($row['indi_id']==2 & $row['mt_id']==1){
-                  $indi_id='%';
-                }
-                $diferencia=$this->seguimientopoa->verif_valor_no_ejecutado($row['prod_id'],$mes_id);
-                if($diferencia[1]!=0 || $diferencia[2]!=0){
-                  $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($row['prod_id'],$mes_id);
-                  $nro++;
-                  $tabla.='
-                  <tr>
-                    <td style="width:1%;" align=center bgcolor="#f6fbf4">
-                      '.$nro.'
-                    </td>
-                    <td style="width:1%;" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
-                    <td style="width:1%;" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
-                    <td style="width:15%;" bgcolor="#f6fbf4">'.$row['prod_producto'].'</td>
-                    <td style="width:10%;" bgcolor="#f6fbf4">'.$row['prod_indicador'].'</td>
-                    <td style="width:3%;" align=right bgcolor="#f6fbf4"><b>'.round($row['prod_meta'],2).''.$indi_id.'</b></td>
-                    <td style="width:5%;" align=center bgcolor="#f7e1e2">'.$diferencia[1].'</td>
-                    <td style="width:5%;" align=center bgcolor="#f6fbf4">'.$diferencia[2].''.$indi_id.' <input type="hidden" name="pg_fis[]" value="'.($diferencia[1]+$diferencia[2]).'"></td>';
-                    if(count($ejec)!=0){
-                      $tabla.='
-                      <td style="width:5%;">
-                        <input type="text" id=ejec'.$nro.' class="form-control" value="'.round($ejec[0]['pejec_fis'],2).'" onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$nro.');" title="'.($diferencia[1]+$diferencia[2]).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
-                      </td>
-                      <td style="width:10%;">
-                        <textarea rows="3" id=mv'.$nro.' class="form-control" title="MEDIO DE VERIFICACIÓN">'.$ejec[0]['medio_verificacion'].'</textarea>
-                      </td>
-                      <td style="width:10%;">
-                        <textarea rows="3" id=obs'.$nro.' class="form-control"  title="PROBLEMAS PRESENTADOS">'.$ejec[0]['observacion'].'</textarea>
-                      </td>
-                      <td style="width:10%;">
-                        <textarea rows="3" id=acc'.$nro.' class="form-control"  title="ACCIONES REALIZADOS">'.$ejec[0]['acciones'].'</textarea>
-                      </td>
-                      <td style="width:2%;" align=center title="MODIFICAR SEGUIMIENTO POA">
-                        <div id="but'.$nro.'"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/drive_disk.png" WIDTH="40" HEIGHT="40"/><br>MODIFICAR</button></div>
-                      </td>';
-                    }
-                    else{
-                      $tabla.='
-                      <td>
-                        <input type="text" id=ejec'.$nro.' value="0" class="form-control"  onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$nro.');" title="'.($diferencia[1]+$diferencia[2]).'"  onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
-                      </td>';
-                      $no_ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($row['prod_id'],$mes_id);
-                      if(count($no_ejec)!=0){
-                        $tabla.='
-                          <td style="width:10%;">
-                            <textarea rows="3" id=mv'.$nro.' class="form-control" title="MEDIO DE VERIFICACIÓN">'.$no_ejec[0]['medio_verificacion'].'</textarea>
-                          </td>
-                          <td style="width:10%;">
-                            <textarea rows="3" id=obs'.$nro.' class="form-control" title="PROBLEMAS PRESENTADOS">'.$no_ejec[0]['observacion'].'</textarea>
-                          </td>
-                          <td style="width:10%;">
-                            <textarea rows="3" id=acc'.$nro.' class="form-control" title="ACCIONES REALIZADOS">'.$no_ejec[0]['acciones'].'</textarea>
-                          </td>';
-                      }
-                      else{
-                        $tabla.='
-                        <td style="width:10%;">
-                          <textarea rows="3" class="form-control" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN"></textarea>
-                        </td>
-                        <td style="width:10%;">
-                          <textarea rows="3" class="form-control" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS"></textarea>
-                        </td>
-                        <td style="width:10%;">
-                          <textarea rows="3" class="form-control" id=acc'.$nro.' title="ACCIONES REALIZADOS"></textarea>
-                        </td>';
-                      }
-                      $tabla.='
-                      <td style="width:2%;" align=center title="GUARDAR SEGUIMIENTO POA">
-                        <div id="but'.$nro.'" style="display:none;"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="37" HEIGHT="37"/><br>GUARDAR</button></div>
-                      </td>';
-                    }
-                    $tabla.='
-                    
-                  </tr>';
-                }
-              }
-              $tabla.='
-              </tbody>
-          </table>
-          <div align=right>
-            <a href="javascript:abreVentana(\''.site_url("").'/seg/ver_reporte_evaluacionpoa_es/'.$com_id.'\');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
-              <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR SEGUIMIENTO PLAN OPERATIVO ANUAL POA</b>
-            </a>
-          </div>
-        </div>';
-
-      return $tabla;
-    }
-
 
     /*----- REPORTE SEGUIMIENTO POA PDF 2021 MENSUAL POR SUBACTIVIDAD-------*/
     public function ver_reporte_seguimientopoa_esalud($com_id){
@@ -240,7 +154,7 @@ class Cseguimiento_establecimiento extends CI_Controller {
     }
 
     /*---- VALIDA ADD SEGUIMIENTO POA ----*/
-    public function guardar_seguimiento(){
+/*    public function guardar_seguimiento(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $prod_id = $this->security->xss_clean($post['prod_id']);
@@ -280,7 +194,7 @@ class Cseguimiento_establecimiento extends CI_Controller {
       }else{
           show_404();
       }
-    }
+    }*/
 
     /*----- Lista de Gestiones Disponibles ----*/
     public function list_gestiones(){

@@ -210,6 +210,7 @@ function abreVentana(PDF){
                   alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
                       if (e) {
                           window.location.reload(true);
+                          alertify.success("REGISTRO EXITOSO ...");
                       }
                   });
               }

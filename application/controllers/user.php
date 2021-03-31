@@ -735,6 +735,7 @@ class User extends CI_Controller{
             'fun_id' => 399,
             'dep_id' => $actividad[0]['dep_id'],
             'img' => $actividad[0]['img'],
+            'tp_adm' => 0,
             'gestion' => $gestion[0]['ide'],
             'mes' => $gestion[0]['conf_mes'],
             'entidad' => $gestion[0]['conf_nombre_entidad'],
