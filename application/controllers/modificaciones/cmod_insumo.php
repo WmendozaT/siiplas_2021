@@ -920,19 +920,19 @@ class Cmod_insumo extends CI_Controller {
       $data['cite']=$this->model_modrequerimiento->get_cite_insumo($cite_id);
       if(count($data['cite'])!=0){
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); 
-        $data['titulo']='<tr style="font-size: 8pt;">
+                           if($this->gestion>2020){ // gestion 2021
+                            $titulo='
+                            <tr style="font-size: 8pt;">
                               <td style="height: 1.2%"><b>PROYECTO</b></td>
                               <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</td>
-                           </tr>';
-                           if($this->gestion>2020){ // gestion 2021
-                            $data['titulo']='
+                           </tr>
                            <tr style="font-size: 8pt;">
                               <td style="height: 1.2%"><b>UNIDAD RESPONSABLE</b></td>
                               <td style="width:90%;">: '.$data['cite'][0]['serv_cod'].' '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].'</td>
                            </tr>';
                            }
                            else{
-                            $data['titulo']='
+                            $titulo='
                            <tr style="font-size: 8pt;">
                               <td style="height: 1.2%"><b>COMPONENTE</b></td>
                               <td style="width:90%;">: '.$data['cite'][0]['com_componente'].'</td>
@@ -942,7 +942,10 @@ class Cmod_insumo extends CI_Controller {
 
         if($data['cite'][0]['tp_id']==4){
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
-          $data['titulo']='
+          $titulo='       <tr style="font-size: 8pt;">
+                              <td style="height: 1.2%"><b>PROYECTO</b></td>
+                              <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</td>
+                           </tr>
                           <tr style="font-size: 8pt;">
                             <td style="height: 1.2%"><b>ACTIVIDAD </b></td>
                             <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' '.$data['proyecto'][0]['tipo'].'   '.strtoupper($data['proyecto'][0]['act_descripcion']).' '.$data['proyecto'][0]['abrev'].'</td>
@@ -953,6 +956,7 @@ class Cmod_insumo extends CI_Controller {
                            </tr>';
         }
 
+        $data['titulo']=$titulo;
         $data['mes'] = $this->mes_nombre();
         $data['requerimientos']=$this->rep_requerimiento($cite_id);
         $this->load->view('admin/modificacion/requerimientos/reporte_modificacion_requerimientos', $data);
