@@ -37,13 +37,7 @@ class Crep_evalinstitucionalpi extends CI_Controller {
       if($this->gestion>2019){
         $data['menu']=$this->menu(7); //// genera menu
         $data['regional']=$this->regionales();
-       // $this->load->view('admin/reportes_cns/repevaluacion_institucional_pi/rep_menu', $data);
-       // $this->eficacia_proyecto_distrital_regional(9,0);
-        /*$proyectos=$this->model_evalinstitucional->list_proyectos_departamento(9);
-        foreach($proyectos as $row){
-          echo "proy_id : ".$row['proy_id']."<br>";
-          $tabla=$this->componentes($row['proy_id']);
-        }*/
+        $this->load->view('admin/reportes_cns/repevaluacion_institucional_pi/rep_menu', $data);
       }
       else{
         redirect('regionales'); // Rideccionando a Evaluacion anterior 2019
@@ -381,10 +375,10 @@ class Crep_evalinstitucionalpi extends CI_Controller {
     /*--- Consolidado Proyecto de Inversión Distrital ---*/
     public function eficacia_proyecto_distrital_regional($id,$tp_regional){
       if($tp_regional==0){ /// Regional
-        $proyectos=$this->model_evalinstitucional->list_proyectos_departamento($id);
+        $proyectos=$this->model_evalinstitucional->list_pinversion_regional($id);
       }
       else{ /// Distrital
-        $proyectos=$this->model_evalinstitucional->list_proyectos_distrital($id);
+        $proyectos=$this->model_evalinstitucional->list_pinversion_distrital($id);
       }
       
         $m[1]='Ene.';
@@ -415,7 +409,7 @@ class Crep_evalinstitucionalpi extends CI_Controller {
         $porcentaje=round((100/count($proyectos)),2);
 
         foreach($proyectos as $rowp){
-          $tabla=$this->componentes($rowp['proy_id']);
+          $tabla=$this->componentes($rowp['proy_id'],$rowp['pfec_id']);
           for ($i=1; $i <=12 ; $i++) { 
             $p[1][$i]=$p[1][$i]+round((($tabla[1][$i]*$porcentaje)/100),2);
             if(($p[1][$i]>=100 & $p[1][$i]<=102) || $p[1][$i]>=99.90){
@@ -441,10 +435,8 @@ class Crep_evalinstitucionalpi extends CI_Controller {
 
 
  /*------ Componentes ------*/
-    public function componentes($proy_id){
-      $proyectos=$this->model_proyecto->get_id_proyecto($proy_id);;
-      $fase = $this->model_faseetapa->get_id_fase($proy_id);
-      $componente=$this->model_componente->componentes_id($fase[0]['id'],$proyectos[0]['tp_id']);
+    public function componentes($proy_id,$pfec_id){
+      $componente=$this->model_componente->componentes_id($pfec_id,1);
 
       for($i=1; $i <=12 ; $i++) { 
         $p[1][$i]=0;$p[2][$i]=0;
@@ -455,7 +447,7 @@ class Crep_evalinstitucionalpi extends CI_Controller {
         //  echo "-- COMPONENTE : ".$rowc['com_id']." : ---".$rowc['com_componente']." -> ".$rowc['com_ponderacion']."%<br>";
           $productos = $this->model_producto->list_prod($rowc['com_id']);
           if(count($productos)!=0){
-            $tabla=$this->productos($rowc['com_id'],$proyectos[0]['proy_act']);
+            $tabla=$this->productos($rowc['com_id']);
             
             for ($i=1; $i <=12 ; $i++) { 
               $p[1][$i]=$p[1][$i]+round((($tabla[1][$i]*$rowc['com_ponderacion'])/100),2);
@@ -469,7 +461,7 @@ class Crep_evalinstitucionalpi extends CI_Controller {
     }
 
     /*---------- Productos ---------*/
-    public function productos($com_id,$act){
+    public function productos($com_id){
       for($i=1; $i <=12 ; $i++) { 
         $p[1][$i]=0;$p[2][$i]=0;
       }

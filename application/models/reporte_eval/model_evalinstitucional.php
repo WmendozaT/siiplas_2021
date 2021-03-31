@@ -691,7 +691,7 @@ class Model_evalinstitucional extends CI_Model{
 
 /////// PROYECTOS DE INVERSIÓN
 
-    /*----- Lista de Proyectos por Departamento ----*/
+    /*----- Lista de Proyectos por Departamento (ANTERIOR)----*/
     public function list_proyectos_departamento($dep_id){
         $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
                 apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
@@ -708,7 +708,7 @@ class Model_evalinstitucional extends CI_Model{
         return $query->result_array();
     }
 
-    /*----- Lista de Proyectos por Distrital ----*/
+    /*----- Lista de Proyectos por Distrital (ANTERIOR)----*/
     public function list_proyectos_distrital($dist_id){
         $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
                 apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
@@ -720,6 +720,24 @@ class Model_evalinstitucional extends CI_Model{
                 Inner Join _distritales as ds On ds.dist_id=p.dist_id
                 where p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and p.tp_id=\'1\' and p.dist_id='.$dist_id.' and apg.aper_proy_estado=\'4\' and apg.aper_estado!=\'3\'
                 ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc';        
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+    ///----------------------------------
+
+    public function list_pinversion_regional($dep_id){
+        $sql = 'select *
+                from lista_poa_pinversion_regional('.$dep_id.','.$this->gestion.')';        
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+    public function list_pinversion_distrital($dist_id){
+        $sql = 'select *
+                from lista_poa_pinversion_distrital('.$dist_id.','.$this->gestion.')';        
         $query = $this->db->query($sql);
 
         return $query->result_array();
