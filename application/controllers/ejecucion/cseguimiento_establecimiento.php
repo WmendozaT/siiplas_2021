@@ -153,48 +153,6 @@ class Cseguimiento_establecimiento extends CI_Controller {
       }
     }
 
-    /*---- VALIDA ADD SEGUIMIENTO POA ----*/
-/*    public function guardar_seguimiento(){
-      if($this->input->is_ajax_request() && $this->input->post()){
-        $post = $this->input->post();
-        $prod_id = $this->security->xss_clean($post['prod_id']);
-        $ejec = $this->security->xss_clean($post['ejec']);
-        $mv = $this->security->xss_clean($post['mv']);
-        $obs = $this->security->xss_clean($post['obs']);
-        $acc = $this->security->xss_clean($post['acc']);
-        
-        /// ----- Eliminando Registro --------
-          $this->db->where('prod_id', $prod_id);
-          $this->db->where('m_id', $this->verif_mes[1]);
-          $this->db->where('g_id', $this->gestion);
-          $this->db->delete('prod_ejecutado_mensual');
-        /// -----------------------------------
-
-          if($ejec!=0){
-            $this->model_producto->add_prod_ejec_gest($prod_id,$this->gestion,$this->verif_mes[1],$ejec,$mv,$obs,$acc);
-          }
-          else{
-            $no_ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($prod_id,$this->verif_mes[1]);
-            if(count($no_ejec)!=0){
-              if(($no_ejec[0]['medio_verificacion']!=$mv) || ($no_ejec[0]['observacion']!=$obs)){
-                $this->model_producto->add_no_ejec_prod($prod_id,$this->verif_mes[1],$mv,$obs,$acc); 
-              }
-            }
-            else{
-              $this->model_producto->add_no_ejec_prod($prod_id,$this->verif_mes[1],$mv,$obs,$acc);  
-            }
-            
-          }
-
-        $result = array(
-          'respuesta' => 'correcto',
-        );
-  
-        echo json_encode($result);
-      }else{
-          show_404();
-      }
-    }*/
 
     /*----- Lista de Gestiones Disponibles ----*/
     public function list_gestiones(){
