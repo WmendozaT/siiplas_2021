@@ -59,6 +59,17 @@ class Model_configuracion extends CI_Model {
         return $query->result_array();
     }
 
+
+    public function list_mes_trimestre($trimestre){
+         $sql = '
+         select * 
+         from mes
+         where trm_id='.$trimestre.'
+         order by m_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     public function get_mes_trimestre(){
          $sql = 'select * 
                 from trimestre_mes

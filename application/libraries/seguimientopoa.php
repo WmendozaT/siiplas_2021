@@ -1233,6 +1233,54 @@ class Seguimientopoa extends CI_Controller{
     }
 
 
+    /*-------- Verif Boton Evaluacion ---------*/
+    function verif_btn_evaluacionpoa(){
+      $tabla='';
+
+      $dia_actual=ltrim(date("d"), "0");
+      $mes_actual=ltrim(date("m"), "0");
+
+      $fecha_actual = date('Y-m-d');
+
+      $get_fecha_evaluacion=$this->model_configuracion->get_datos_fecha_evaluacion($this->gestion);
+      if(count($get_fecha_evaluacion)!=0){
+          $configuracion=$this->model_configuracion->get_configuracion_session();
+          $date_actual = strtotime($fecha_actual); //// fecha Actual
+          $date_inicio = strtotime($configuracion[0]['eval_inicio']); /// Fecha Inicio
+          $date_final = strtotime($configuracion[0]['eval_fin']); /// Fecha Final
+          $date_trimestre = $configuracion[0]['conf_mes_otro']; /// Trimestre
+          $meses=$this->model_configuracion->list_mes_trimestre($date_trimestre);
+        //  $tabla.='Datos : '.$date_actual.'--'.$date_inicio.'--'.$date_actual.'--'.$date_final;
+
+          if (($date_actual >= $date_inicio) && ($date_actual <= $date_final) || $this->tp_adm==1){
+            if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0 || $this->tp_adm==1){
+
+              $tabla.='
+              <section class="col col-3">
+                <select class="form-control" id="mes_id" name="mes_id" title="SELECCIONE MES A EVALUAR">
+                  <option value="0" selected>Seleccione mes ...</option>';
+                foreach($meses as $row){
+                  if($row['m_id']<=ltrim(date("m"), "0")){
+                    if($row['m_id']==$this->verif_mes[1]){ 
+                      $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
+                    }
+                    else{ 
+                      $tabla.='<option value="'.$row['m_id'].'" >'.$row['m_descripcion'].'</option>';
+                    } 
+                  }                     
+                }
+               $tabla.='
+                </select>
+              </section>';
+            }
+          }
+      }
+
+      return $tabla;
+    }
+
+
+
 
 
     /*--- LISTA DE  OPERACIONES PROGRAMADOS EN EL MES ACTUAL 2021 ---*/
@@ -1248,8 +1296,9 @@ class Seguimientopoa extends CI_Controller{
           <div class="row">
             <section class="col col-3">
               <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
-            </section>';
-            if($this->tp_adm==1){
+            </section>
+            '.$this->verif_btn_evaluacionpoa().'';
+/*            if($this->tp_adm==1){
               $meses = $this->model_configuracion->get_mes();
               $tabla.='
               <section class="col col-3">
@@ -1267,9 +1316,10 @@ class Seguimientopoa extends CI_Controller{
                $tabla.='
                 </select>
               </section>';
-            }
+            }*/
             $tabla.='
           </div>
+          
         </fieldset>
         <fieldset>
           <div class="table-responsive">
