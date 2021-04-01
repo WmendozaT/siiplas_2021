@@ -203,10 +203,10 @@ class User extends CI_Controller{
                 }
             }
             else{
-                $data['mensaje']=$this->mensaje_sistema();
+                
                 $data['seguimiento_poa']='';
             }
-            
+            $data['mensaje']=$this->mensaje_sistema();
             $this->load->view('admin/dashboard',$data);
         } else{
             $this->session->sess_destroy();
@@ -250,7 +250,7 @@ class User extends CI_Controller{
     public function mensaje_sistema(){
         $conf = $this->model_configuracion->get_configuracion_session();
         $tabla='';
-        
+
         if($conf[0]['tp_msn']==1){ 
             $tabla.='
             <div class="alert alert-danger" align="center">
