@@ -186,8 +186,12 @@
                                                     <div style="font-size: 13pt;font-family:Verdana;"><b>FORMULARIO DE SEGUIMIENTO POA - <?php echo $datos_mes[2].' '.$this->session->userData('gestion');?></b></div>
                                                     <hr>
                                                         <div align="right">
-                                                            <a href="javascript:abreVentana('<?php echo base_url().'index.php/seg/ver_reporte_evaluacionpoa/'.$com_id;?>');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
+                                                            <a href="javascript:abreVentana('<?php echo base_url().'index.php/seg/ver_reporte_seguimientopoa/'.$com_id;?>');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
                                                                 <img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR SEGUIMIENTO PLAN OPERATIVO ANUAL POA</b>
+                                                            </a>
+
+                                                            <a href="javascript:abreVentana('<?php echo base_url().'index.php/seg/ver_reporte_evaluacionpoa/'.$com_id;?>');" class="btn btn-default" title="IMPRIMIR EVALUACIÓN POA">
+                                                                <img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR EVALUACI&Oacute;N PLAN OPERATIVO ANUAL POA</b>
                                                             </a>
                                                         </div>
                                                     <div class="jarviswidget jarviswidget-color-darken" >

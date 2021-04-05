@@ -225,22 +225,12 @@ class Cseguimiento extends CI_Controller {
                         <tr>
                           <td><b>'.$rowc['serv_cod'].'</b></td>
                           <td><b>'.$rowc['tipo_subactividad'].' '.$rowc['serv_descripcion'].'</b></td>
-                          <td>'.$rowc['com_ponderacion'].'%</td>';
-                             $tabla.='<td>';
-                              if(count($verif)!=0){
-                                  $tabla.='
-                                  <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-default" title="MODIFICAR SEGUIMIENTO">
-                                     VER SEGUIMIENTO
-                                  </a>';
-                              }
-                              else{
-                                  $tabla.='
-                                  <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">
-                                     REALIZAR SEGUIMIENTO
-                                  </a>';
-                              }
-                              $tabla.='</td>';
-                          $tabla.='
+                          <td>'.$rowc['com_ponderacion'].'%</td>
+                          <td>
+                            <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">
+                              '.$this->btn_seguimiento_evaluacion_poa().'
+                            </a>
+                          </td>
                           <td align=center><img id="load'.$rowc['com_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="25" height="25" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO.."></td>
                         </tr>';
                         $tabla.=' <script>
@@ -257,6 +247,40 @@ class Cseguimiento extends CI_Controller {
 
       return $tabla;
     }
+
+
+  /*----  Boton de Seguimiento / Evaluacion POA ----*/
+  public function btn_seguimiento_evaluacion_poa(){
+    $tabla='';
+    $tabla='REALIZAR SEGUIMIENTO POA';
+    $dia_actual=ltrim(date("d"), "0");
+    $mes_actual=ltrim(date("m"), "0");
+
+    $fecha_actual = date('Y-m-d');
+
+    $get_fecha_evaluacion=$this->model_configuracion->get_datos_fecha_evaluacion($this->gestion);
+    if(count($get_fecha_evaluacion)!=0){
+        $configuracion=$this->model_configuracion->get_configuracion_session();
+        $date_actual = strtotime($fecha_actual); //// fecha Actual
+        $date_inicio = strtotime($configuracion[0]['eval_inicio']); /// Fecha Inicio
+        $date_final = strtotime($configuracion[0]['eval_fin']); /// Fecha Final
+
+        if (($date_actual >= $date_inicio) && ($date_actual <= $date_final)){
+          if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0){
+
+            $tabla='REALIZAR EVALUACI&Oacute;N POA';
+          }
+        }
+    }
+
+    return $tabla;
+  }
+
+
+
+
+
+
 
 
   /*------ EVALUAR OPERACION (Gasto Corriente-Proyecto de Inversion) 2021 ------*/
@@ -419,8 +443,8 @@ class Cseguimiento extends CI_Controller {
     }
 
 
-    /*----- REPORTE SEGUIMIENTO POA PDF 2021 MENSUAL POR SUBACTIVIDAD-------*/
-    public function ver_reporteevalpoa($com_id){
+    /*----- REPORTE SEGUIMIENTO POA PDF 2021 MENSUAL POR SUBACTIVIDAD (MENSUAL)-------*/
+    public function ver_reportesegpoa($com_id){
       
       $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
@@ -439,6 +463,33 @@ class Cseguimiento extends CI_Controller {
 
         $data['operaciones']=$tabla; /// Reporte Gasto Corriente, Proyecto de Inversion 2020
         $this->load->view('admin/evaluacion/seguimiento_poa/reporte_seguimiento_poa', $data);
+      }
+      else{
+        echo "Error !!!";
+      }
+    }
+
+    /*----- REPORTE EVALUACION POA PDF 2021 MENSUAL POR SUBACTIVIDAD (TRIMESTRAL)-------*/
+    public function ver_reporteevalpoa($com_id){
+      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      if(count($data['componente'])!=0){
+        $data['mes'] = $this->seguimientopoa->mes_nombre();
+        $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
+        $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['fase'][0]['proy_id']); //// DATOS PROYECTO
+        $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+        if($data['proyecto'][0]['tp_id']==4){
+          $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['fase'][0]['proy_id']); /// PROYECTO
+        }
+        $data['cabecera']=$this->seguimientopoa->cabecera($data['componente'],$data['proyecto']); /// Cabecera
+        $data['verif_mes'] = $this->verif_mes;
+        $data['titulo_formulario']='<b>FORMULARIO EVALUACIÓN POA</b> - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'';
+        /// ----------------------------------------------------
+        $tabla=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$this->verif_mes[1]);
+        /// -----------------------------------------------------
+
+        $data['operaciones']=$tabla; /// Reporte Gasto Corriente, Proyecto de Inversion 2020
+        echo $data['operaciones'];
+        //$this->load->view('admin/evaluacion/seguimiento_poa/reporte_seguimiento_poa', $data);
       }
       else{
         echo "Error !!!";

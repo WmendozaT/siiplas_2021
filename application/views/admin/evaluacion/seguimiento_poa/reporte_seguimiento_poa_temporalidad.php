@@ -15,7 +15,7 @@ ob_start();
         }
     </style>
 
-<page backtop="42mm" backbottom="20mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="45mm" backbottom="20mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <table class="page_header" border="0" style="width:100%;">
@@ -37,7 +37,7 @@ ob_start();
                 </td>
             </tr>
         </table><br>
-        <div align="center"><b>SEGUIMIENTO A LA EVALUACI&Oacute;N POA</b> - <?php echo "GESTI&Oacute;N " .$this->session->userdata('gestion')?>
+        <div align="center"><b>SEGUIMIENTO A LA EVALUACI&Oacute;N POA</b> - <?php echo "GESTI&Oacute;N " .$this->session->userdata('gestion')?><br>(Reporte ayuda Memoria, no imprimir para Evaluación POA)
         </div><br>
     </page_header>
     <page_footer>

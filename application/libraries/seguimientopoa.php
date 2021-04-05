@@ -531,6 +531,112 @@ class Seguimientopoa extends CI_Controller{
   }
     
 
+  /// Evaluación POA por Trimestre 2021
+  public function tabla_reporte_evaluacion_poa($com_id){
+    $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
+    $tabla='';
+
+    $vi=0; $vf=0;
+      if($this->tmes==1){ $vi = 1;$vf = 3; }
+      elseif ($this->tmes==2){ $vi = 4;$vf = 6; }
+      elseif ($this->tmes==3){ $vi = 7;$vf = 9; }
+      elseif ($this->tmes==4){ $vi = 10;$vf = 12; }
+
+      $vfinal=0;
+      if($this->tmes==1){$vfinal=3;}
+      elseif ($this->tmes==2) {$vfinal=6;}
+      elseif ($this->tmes==3) {$vfinal=9;}
+      elseif ($this->tmes==4) {$vfinal=12;}
+
+    $tabla.=' 
+          <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+            <thead>
+             <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
+                <th style="width:1%;height:15px;">#</th>
+                <th style="width:2%;">COD.<br>OR.</th>
+                <th style="width:2%;">COD.<br>OPE.</th> 
+                <th style="width:10%;">OPERACI&Oacute;N</th>
+                <th style="width:10%;">RESULTADO</th>
+                <th style="width:10%;">INDICADOR</th>
+                <th style="width:2%;">L.B.</th>
+                <th style="width:3%;">META</th>
+                <th style="width:3.5%;">META PROG.</th>
+                <th style="width:3.5%;">META EJEC.</th>
+                <th style="width:3.5%;">%EFI.</th>
+                <th style="width:14%;">MEDIO DE VERIFICACIÓN</th>
+                <th style="width:14%;">PROBLEMAS PRESENTADOS</th>
+                <th style="width:14%;">ACCIONES REALIZADOS</th>
+                <th style="width:5%;"></th>
+            </tr>
+            </thead>
+            <tbody>';
+              $nro=0;
+              foreach($operaciones as $rowp){
+
+                    $trimestre_prog = $this->model_evaluacion->programado_trimestral_productos($this->tmes,$rowp['prod_id']); /// Trimestre Programado
+                    $trimestre_ejec = $this->model_evaluacion->ejecutado_trimestral_productos($this->tmes,$rowp['prod_id']); /// Trimestre Ejecutado
+                    $trimestre=$this->model_evaluacion->get_trimestral_prod($rowp['prod_id'],$this->gestion,$this->tmes);
+                    $prog_actual=0; 
+                    if(count($trimestre_prog)!=0){
+                      $prog_actual=$trimestre_prog[0]['trimestre'];
+                    }
+                    $ejec_actual=0; 
+                    if(count($trimestre_ejec)!=0){
+                      $ejec_actual=$trimestre_ejec[0]['trimestre'];
+                    }
+
+                    $prog=$this->model_evaluacion->rango_programado_trimestral_productos($rowp['prod_id'],$vfinal);
+                    $eval=$this->model_evaluacion->rango_ejecutado_trimestral_productos($rowp['prod_id'],$vfinal);
+
+                    $acu_prog=0;
+                    $acu_ejec=0;
+                    if(count($prog)!=0){
+                      $acu_prog=$prog[0]['trimestre'];
+                    }
+                    if(count($eval)!=0){
+                      $acu_ejec=$eval[0]['trimestre'];
+                    }
+
+
+                  
+                 if(($prog_actual!=0 || $ejec_actual!=0) || ($prog_actual!=0 || ($acu_prog-$acu_ejec)!=0)){
+                  $nro++;
+                  $tabla .='
+                  <tr >
+                    <td style="width: 1%; text-align: center; height:50px; font-size: 3px;" title='.$rowp['prod_id'].'>'.$nro.'</td>
+                    <td style="width: 2%; text-align: center;">'.$rowp['or_codigo'].'</td>
+                    <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
+                    <td style="width: 7%; text-align: left;">'.$rowp['prod_producto'].'</td>
+                    <td style="width: 7%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                    <td style="width: 7%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                    <td style="width: 2%; text-align: right;">'.round($rowp['prod_linea_base'],2).'</td>
+                    <td style="width: 2%; text-align: right;">'.round($rowp['prod_meta'],2).'</td>
+                    <td style="width: 3.5%; text-align: center; font-size: 9px;" bgcolor="#eceaea"><b>'.round($prog_actual,2).'</b></td>
+                    <td style="width: 3.5%; text-align: center; font-size: 9px;" bgcolor="#eceaea"><b>'.round($ejec_actual,2).'</b></td>
+                    <td style="width: 3.5%; text-align: center; font-size: 9px;" bgcolor="#e9f7e9"><b>%</b></td>
+                    <td style="width: 14%; text-align: left;">';
+                    $tabla.='
+                    
+                    </td>
+                    <td style="width: 14%; text-align: left;">';
+                    $tabla.='
+                    
+                    </td>
+                    <td style="width: 14%; text-align: left;">';
+                    $tabla.='
+                    
+                    </td>
+                    <td style="width: 5%; text-align: left;">'.$prog_actual.'--'.$ejec_actual.'--'.$prog_actual.'--'.($acu_prog-$acu_ejec).'</td>
+                  </tr>';
+                }
+              }
+            $tabla.='
+            </tbody>
+          </table>';
+      return $tabla;
+  }
+
+
  /*------ TABLA TEMPORALIDAD COMPONENTE -----*/
     public function tabla_temporalidad_componente($matriz,$tip_rep){
       $tabla='';
@@ -1160,7 +1266,7 @@ class Seguimientopoa extends CI_Controller{
 
 
 
-    /*-- LISTA DE FORMULARIOS DE SEGUIMIENTO POA --*/
+    /*-- LISTA DE FORMULARIOS REPORTE DE SEGUIMIENTO POA --*/
     public function formularios_mensual($com_id){
       $tabla='';
       $meses = $this->model_configuracion->get_mes();
@@ -1189,17 +1295,33 @@ class Seguimientopoa extends CI_Controller{
     /*--- UPDATE DATOS DE EVALUACION POA 2021 ---*/
     function button_update_($com_id){
       $componente = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
-      $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
       $tabla='';
 
-      if($this->tp_adm==1){
-        $tabla.='   <div id="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="alert alert-info" role="alert">
-                              <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-info update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR EVALUACI&Oacute;N POA</a>    
-                            </div>
-                        </article>
-                    </div>';
+      $dia_actual=ltrim(date("d"), "0");
+      $mes_actual=ltrim(date("m"), "0");
+
+      $fecha_actual = date('Y-m-d');
+
+      $get_fecha_evaluacion=$this->model_configuracion->get_datos_fecha_evaluacion($this->gestion);
+      if(count($get_fecha_evaluacion)!=0){
+          $configuracion=$this->model_configuracion->get_configuracion_session();
+          $date_actual = strtotime($fecha_actual); //// fecha Actual
+          $date_inicio = strtotime($configuracion[0]['eval_inicio']); /// Fecha Inicio
+          $date_final = strtotime($configuracion[0]['eval_fin']); /// Fecha Final
+
+          if (($date_actual >= $date_inicio) && ($date_actual <= $date_final) || $this->tp_adm==1){
+            if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0 || $this->tp_adm==1){
+
+              $tabla.='   
+                <div id="row">
+                  <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="alert alert-info" role="alert">
+                      <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-info update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR EVALUACI&Oacute;N POA</a>    
+                    </div>
+                  </article>
+                </div>';
+            }
+          }
       }
 
       return $tabla;
@@ -1258,7 +1380,7 @@ class Seguimientopoa extends CI_Controller{
               $tabla.='
               <section class="col col-3">
                 <select class="form-control" id="mes_id" name="mes_id" title="SELECCIONE MES A EVALUAR">
-                  <option value="0" selected>Seleccione mes ...</option>';
+                  <option value="0" selected>Seleccione mes para Evaluacion POA ...</option>';
                 foreach($meses as $row){
                   if($row['m_id']<=ltrim(date("m"), "0")){
                     if($row['m_id']==$this->verif_mes[1]){ 
