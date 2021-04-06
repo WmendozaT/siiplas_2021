@@ -11,6 +11,17 @@ class Model_evaluacion extends CI_Model{
         $this->tmes = $this->session->userData('trimestre');
     }
     
+
+    /*------- DATOS MES --------*/
+    public function get_mes($m_id){
+        $sql = 'select *
+                from mes
+                where m_id='.$m_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*------- DEPARTAMENTO - DISTRITAL --------*/
     public function get_componente($com_id){
         $sql = 'select *
@@ -142,17 +153,21 @@ class Model_evaluacion extends CI_Model{
 
     /*--- Get Meta Mensual Ejecutado Producto ---*/
     public function get_meta_mensual_ejecutado_operacion($prod_id,$mes_id){
-        $sql = 'select prod_id,pejec_fis as meta_mensual, g_id
+        $sql = 'select prod_id,pejec_fis as meta_mensual, g_id,observacion,medio_verificacion,acciones
                 from prod_ejecutado_mensual
                 where prod_id='.$prod_id.' and m_id='.$mes_id.' and g_id='.$this->gestion.'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
-
-
-
-
+    /*--- Get Meta Mensual No Ejecutado Producto ---*/
+    public function get_meta_mensual_no_ejecutado_operacion($prod_id,$mes_id){
+        $sql = 'select *
+                from prod_no_ejecutado_mensual
+                where prod_id='.$prod_id.' and m_id='.$mes_id.' and g_id='.$this->gestion.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
 
     /*---------------------GET PRODUCTO TRIMESTRE ---------------------*/
@@ -656,6 +671,14 @@ class Model_evaluacion extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+
+
+
+
+
+
 
     ////// NUMERO DE CERTIFICACIONES REALIZADAS POR TRIMESTRE
     

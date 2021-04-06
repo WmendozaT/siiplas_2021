@@ -258,7 +258,11 @@ class Funcionario extends CI_Controller {
                                 '.$this->roles_html($row['id']).'
                             </ul>
                         </td>';
-                $tabla .='<td><b>'.$subactividad[0]['serv_cod'].' '.$subactividad[0]['tipo_subactividad'].' '.$subactividad[0]['serv_descripcion'].' - '.$row['abrev'].'</b></td>';
+                $tabla .='<td><b>'.$row['cm_id'].'->';
+                    if(count($subactividad)!=0){
+                        $tabla.=$subactividad[0]['serv_cod'].' '.$subactividad[0]['tipo_subactividad'].' '.$subactividad[0]['serv_descripcion'].' - '.$row['abrev'].'';
+                    }
+                $tabla.='</b></td>';
             $tabla .='</tr>';
         }
 

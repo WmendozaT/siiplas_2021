@@ -190,9 +190,7 @@
                                                                 <img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR SEGUIMIENTO PLAN OPERATIVO ANUAL POA</b>
                                                             </a>
 
-                                                            <a href="javascript:abreVentana('<?php echo base_url().'index.php/seg/ver_reporte_evaluacionpoa/'.$com_id;?>');" class="btn btn-default" title="IMPRIMIR EVALUACIÓN POA">
-                                                                <img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR EVALUACI&Oacute;N PLAN OPERATIVO ANUAL POA</b>
-                                                            </a>
+                                                            <?php echo $boton_evaluacion_poa;?>
                                                         </div>
                                                     <div class="jarviswidget jarviswidget-color-darken" >
                                                       <?php echo $operaciones_programados;?>

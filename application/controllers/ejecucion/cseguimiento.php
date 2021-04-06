@@ -334,6 +334,7 @@ class Cseguimiento extends CI_Controller {
       $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
 
       $data['update_eval']=$this->seguimientopoa->button_update_($com_id);
+      $data['boton_evaluacion_poa']=$this->seguimientopoa->button_rep_evaluacion($com_id);
 
     //  $this->seguimientopoa->update_evaluacion_operaciones($com_id);
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
@@ -470,13 +471,13 @@ class Cseguimiento extends CI_Controller {
     }
 
     /*----- REPORTE EVALUACION POA PDF 2021 MENSUAL POR SUBACTIVIDAD (TRIMESTRAL)-------*/
-    public function ver_reporteevalpoa($com_id){
+    public function ver_reporteevalpoa($com_id,$trm_id){
       $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
         $data['mes'] = $this->seguimientopoa->mes_nombre();
         $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['fase'][0]['proy_id']); //// DATOS PROYECTO
-        $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+        $trimestre=$this->model_evaluacion->get_trimestre($trm_id); /// Datos del Trimestre
         if($data['proyecto'][0]['tp_id']==4){
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['fase'][0]['proy_id']); /// PROYECTO
         }
@@ -484,12 +485,12 @@ class Cseguimiento extends CI_Controller {
         $data['verif_mes'] = $this->verif_mes;
         $data['titulo_formulario']='<b>FORMULARIO EVALUACIÓN POA</b> - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'';
         /// ----------------------------------------------------
-        $tabla=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$this->verif_mes[1]);
+        $this->seguimientopoa->update_evaluacion_operaciones($com_id);
+        $tabla=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$trm_id);
         /// -----------------------------------------------------
 
         $data['operaciones']=$tabla; /// Reporte Gasto Corriente, Proyecto de Inversion 2020
-        echo $data['operaciones'];
-        //$this->load->view('admin/evaluacion/seguimiento_poa/reporte_seguimiento_poa', $data);
+        $this->load->view('admin/evaluacion/seguimiento_poa/reporte_seguimiento_poa', $data);
       }
       else{
         echo "Error !!!";

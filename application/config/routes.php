@@ -420,7 +420,7 @@ $route['seg/tipo_seguimiento/(:any)'] = 'ejecucion/cseguimiento/tipo_seguimiento
 $route['seg/formulario_seguimiento_poa/(:any)'] = 'ejecucion/cseguimiento/formulario_segpoa/$1'; ///// formulario de seguimiento
 $route['seg/ver_seguimientopoa/(:any)'] = 'ejecucion/cseguimiento/ver_evaluacion_poa/$1'; ///// Ver Evaluacion POA
 $route['seg/ver_reporte_seguimientopoa/(:any)'] = 'ejecucion/cseguimiento/ver_reportesegpoa/$1'; ///// Ver Reporte Seguimiento POA Mensual
-$route['seg/ver_reporte_evaluacionpoa/(:any)'] = 'ejecucion/cseguimiento/ver_reporteevalpoa/$1'; ///// Ver Reporte Evaluacion POA Trimestral
+$route['seg/ver_reporte_evaluacionpoa/(:any)'] = 'ejecucion/cseguimiento/ver_reporteevalpoa/$1/$2'; ///// Ver Reporte Evaluacion POA Trimestral
 $route['seg/ver_reporte_evaluacionpoa_temporalidad/(:any)'] = 'ejecucion/cseguimiento/ver_reporteevalpoa_consolidado_temporalidad/$1'; ///// Ver Reporte Evaluacion POA Consolidado de todos los meses
 
 $route['seg/notificacion_operaciones_mensual/(:any)'] = 'ejecucion/cseguimiento/reporte_notificacion_operaciones_mensual/$1'; ///// Reporte Notificacion Seguimiento POA Mensual

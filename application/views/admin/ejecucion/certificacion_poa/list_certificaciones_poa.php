@@ -136,6 +136,13 @@
                                         <a class="btn btn-warning" href="<?php echo base_url().'index.php/cert/list_poas'?>"  title="GENERAR NUEVA CERTIFICACI&Oacute;N POA"><i class="fa fa-folder-o"></i> GENERAR NUEVA CERTIFICACI&Oacute;N POA</a>
                                         <?php
                                     }
+                                    else{
+                                        if($this->session->userData('fun_id')==592){
+                                            ?>
+                                        <a class="btn btn-warning" href="<?php echo base_url().'index.php/cert/list_poas'?>"  title="GENERAR NUEVA CERTIFICACI&Oacute;N POA"><i class="fa fa-folder-o"></i> GENERAR NUEVA CERTIFICACI&Oacute;N POA</a>
+                                        <?php
+                                        }
+                                    }
                                 ?>
                                 </div>
                             </div>
