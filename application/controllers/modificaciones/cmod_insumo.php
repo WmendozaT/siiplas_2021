@@ -716,13 +716,19 @@ class Cmod_insumo extends CI_Controller {
                 }
               }
 
-            if($id!=$id_anterior){
               $update_proy = array(
                 'prod_id' => $id,
               );
               $this->db->where('ins_id', $ins_id);
               $this->db->update('_insumoproducto', $update_proy);
-            }
+              
+            /*if($id!=$id_anterior){
+              $update_proy = array(
+                'prod_id' => $id,
+              );
+              $this->db->where('ins_id', $ins_id);
+              $this->db->update('_insumoproducto', $update_proy);
+            }*/
 
             $this->session->set_flashdata('success','EL REQUERIMIENTO SE MODIFICO CORRECTAMENTE :)');
             redirect(site_url("").'/mod/list_requerimientos/'.$cite_id.'');
