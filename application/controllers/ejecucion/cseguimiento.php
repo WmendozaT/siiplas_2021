@@ -278,11 +278,6 @@ class Cseguimiento extends CI_Controller {
 
 
 
-
-
-
-
-
   /*------ EVALUAR OPERACION (Gasto Corriente-Proyecto de Inversion) 2021 ------*/
   public function formulario_segpoa($com_id){
     $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
@@ -334,7 +329,7 @@ class Cseguimiento extends CI_Controller {
       $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
 
       $data['update_eval']=$this->seguimientopoa->button_update_($com_id);
-      $data['boton_evaluacion_poa']=$this->seguimientopoa->button_rep_evaluacion($com_id);
+      $data['boton_evaluacion_poa']=$this->seguimientopoa->button_rep_evaluacion($com_id); /// Reporte Evaluacion POA
 
     //  $this->seguimientopoa->update_evaluacion_operaciones($com_id);
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
@@ -440,6 +435,38 @@ class Cseguimiento extends CI_Controller {
         echo json_encode($result);
       }else{
           show_404();
+      }
+    }
+
+
+
+
+    /*------ ELIMINAR SEGUIMIENTO POA DEL MES ------*/
+    function delete_seguimiento_operacion(){
+      if ($this->input->is_ajax_request() && $this->input->post()) {
+         $post = $this->input->post();
+          $prod_id = $post['prod_id']; /// Producto Id
+          $mes_id = $post['mes_id']; /// Mes Id
+          $producto=$this->model_producto->get_producto_id($prod_id);
+
+
+          /// Eliminar producto ejecutado en el mes
+          $this->db->where('prod_id', $prod_id);
+          $this->db->where('m_id', $mes_id);
+          $this->db->delete('prod_ejecutado_mensual');
+
+          /// Eliminar producto no ejecutado en el mes
+          $this->db->where('prod_id', $prod_id);
+          $this->db->where('m_id', $mes_id);
+          $this->db->delete('prod_no_ejecutado_mensual');
+
+          $this->seguimientopoa->update_evaluacion_operaciones($producto[0]['com_id']);
+
+          $result = array(
+            'respuesta' => 'correcto'
+          );
+
+          echo json_encode($result);
       }
     }
 

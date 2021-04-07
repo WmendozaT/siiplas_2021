@@ -210,6 +210,7 @@ function abreVentana(PDF){
                   alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
                       if (e) {
                           window.location.reload(true);
+                          document.getElementById("loading").style.display = 'block';
                           alertify.success("REGISTRO EXITOSO ...");
                       }
                   });
@@ -348,4 +349,75 @@ function abreVentana(PDF){
                 }
               });
           });
+        });
+
+
+        /// Eliminar Seguimiento Mensual
+        $(function () {
+            function reset() {
+              $("#toggleCSS").attr("href", base+"assets/themes_alerta/alertify.default.css");
+              alertify.set({
+                  labels: {
+                      ok: "ACEPTAR",
+                      cancel: "CANCELAR"
+                  },
+                  delay: 5000,
+                  buttonReverse: false,
+                  buttonFocus: "ok"
+              });
+            }
+
+          $(".del_ope").on("click", function (e) {
+            reset();
+            var prod_id = $(this).attr('name'); // prod id
+            var mes_id = $(this).attr('id'); // mes id
+          
+            var request;
+            alertify.confirm("ESTA SEGURO DE ELIMINAR EL SEGUIMIENTO POA ?", function (a) {
+              if (a) {
+                  url = base+"index.php/ejecucion/cseguimiento/delete_seguimiento_operacion";
+                  if (request) {
+                      request.abort();
+                  }
+                  request = $.ajax({
+                      url: url,
+                      type: "POST",
+                      dataType: "json",
+                      data: "prod_id="+prod_id+"&mes_id="+mes_id
+                  });
+
+                  request.done(function (response, textStatus, jqXHR) { 
+                    reset();
+                    if (response.respuesta == 'correcto') {
+                        alertify.alert("EL SEGUIMIENTO SE ELIMINO CORRECTAMENTE ", function (e) {
+                          if (e) {
+                            document.getElementById("loading").style.display = 'block';
+                            window.location.reload(true);
+                            alertify.success("Función Ejecutada Exitosamente ...");
+                          }
+                        });
+                    } else {
+                        alertify.alert("ERROR AL ELIMINAR SEGUIMIENTO POA !!!", function (e) {
+                          if (e) {
+                              window.location.reload(true);
+                          }
+                        });
+                    }
+                  });
+                  request.fail(function (jqXHR, textStatus, thrown) {
+                      console.log("ERROR: " + textStatus);
+                  });
+                  request.always(function () {
+                      //console.log("termino la ejecuicion de ajax");
+                  });
+
+                  e.preventDefault();
+
+              } else {
+                  alertify.error("Opcion cancelada");
+              }
+            });
+            return false;
+          });
+
         });

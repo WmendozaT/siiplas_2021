@@ -1544,7 +1544,7 @@ class Seguimientopoa extends CI_Controller{
             <section class="col col-3">
               <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
             </section>
-            '.$this->verif_btn_evaluacionpoa().'';
+            '.$this->verif_btn_evaluacionpoa().''; /// Meses del trimestre
 /*            if($this->tp_adm==1){
               $meses = $this->model_configuracion->get_mes();
               $tabla.='
@@ -1565,6 +1565,9 @@ class Seguimientopoa extends CI_Controller{
               </section>';
             }*/
             $tabla.='
+            <div id="loading" style="display:none;" style="width:20%;">
+              <img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%">
+            </div>
           </div>
           
         </fieldset>
@@ -1586,6 +1589,7 @@ class Seguimientopoa extends CI_Controller{
                   <th style="width:8%;">PROBLEMAS PRESENTADOS</th>
                   <th style="width:8%;">ACCIONES REALIZADOS</th>
                   <th style="width:2%;"></th>
+                  <th style="width:2%;">ELIMINAR</th>
                   <th style="width:3%;"></th>
                 </tr>
               </thead>
@@ -1640,6 +1644,12 @@ class Seguimientopoa extends CI_Controller{
                       </td>
                       <td align=center title="MODIFICAR SEGUIMIENTO POA">
                         <div id="but'.$nro.'"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/drive_disk.png" WIDTH="40" HEIGHT="40"/><br>MODIFICAR</button></div>
+                      </td>
+                      <td align="center">
+                        <br>
+                        <a href="#" data-toggle="modal" data-target="#modal_del_ope" class="btn btn-default del_ope" title="ELIMINAR EVALUACIÓN POA"  name="'.$row['prod_id'].'" id="'.$mes_id.'">
+                          <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
+                        </a>
                       </td>';
                     }
                     else{
@@ -1696,6 +1706,8 @@ class Seguimientopoa extends CI_Controller{
                       $tabla.='
                       <td align=center title="GUARDAR SEGUIMIENTO POA">
                         <div id="but'.$nro.'" style="display:none;"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="37" HEIGHT="37"/><br>GUARDAR</button></div>
+                      </td>
+                      <td align="center">
                       </td>';
                     }
                     $tabla.='
@@ -1730,12 +1742,6 @@ class Seguimientopoa extends CI_Controller{
       return $titulo;
 
     }
-
-
-
-
-
-
 
 
 
