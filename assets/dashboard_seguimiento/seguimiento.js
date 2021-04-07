@@ -71,7 +71,7 @@ function abreVentana(PDF){
 
 
       //// Seguimiento POA
-      function imprimirSeguimiento(grafico,cabecera,tabla) {
+      function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
 
       var ventana = window.open('Seguimiento Evaluacion POA ', 'PRINT', 'height=800,width=1000');
       ventana.document.write('<html><head><title>SEGUIMIENTO POA</title>');
@@ -84,6 +84,7 @@ function abreVentana(PDF){
       ventana.document.write('<hr>');
       ventana.document.write(cabecera.innerHTML);
       ventana.document.write('<hr>');
+      ventana.document.write(eficacia.innerHTML);
       ventana.document.write(grafico.innerHTML);
       ventana.document.write('<hr>');
       ventana.document.write(tabla.innerHTML);
@@ -108,11 +109,13 @@ function abreVentana(PDF){
       document.getElementById("cabecera").style.display = 'block';
       var cabecera = document.querySelector("#cabecera");
 
+      var eficacia = document.querySelector("#efi");
+
       document.getElementById("tabla_componente_impresion").style.display = 'block';
       document.getElementById("tabla_componente_vista").style.display = 'none';
       var tabla = document.querySelector("#tabla_componente_impresion");
 
-      imprimirSeguimiento(grafico,cabecera,tabla);
+      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
       document.getElementById("cabecera").style.display = 'none';
       
       document.getElementById("tabla_componente_vista").style.display = 'block';
@@ -125,12 +128,14 @@ function abreVentana(PDF){
       
       document.getElementById("cabecera2").style.display = 'block';
       var cabecera = document.querySelector("#cabecera2");
+
+      var eficacia = document.querySelector("#eficacia");
       
       document.getElementById("tabla_regresion_impresion").style.display = 'block';
       document.getElementById("tabla_regresion_vista").style.display = 'none';
       var tabla = document.querySelector("#tabla_regresion_impresion");
 
-      imprimirSeguimiento(grafico,cabecera,tabla);
+      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
       document.getElementById("cabecera2").style.display = 'none';
 
       document.getElementById("tabla_regresion_vista").style.display = 'block';
@@ -144,11 +149,13 @@ function abreVentana(PDF){
       document.getElementById("cabecera2").style.display = 'block';
       var cabecera = document.querySelector("#cabecera2");
       
+      var eficacia = document.querySelector("#eficacia");
+
       document.getElementById("tabla_pastel_impresion").style.display = 'block';
       document.getElementById("tabla_pastel_vista").style.display = 'none';
       var tabla = document.querySelector("#tabla_pastel_impresion");
 
-      imprimirSeguimiento(grafico,cabecera,tabla);
+      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
       document.getElementById("cabecera2").style.display = 'none';
 
       document.getElementById("tabla_pastel_vista").style.display = 'block';
@@ -164,11 +171,13 @@ function abreVentana(PDF){
       document.getElementById("cabecera3").style.display = 'block';
       var cabecera = document.querySelector("#cabecera3");
       
+      var eficacia = document.querySelector("#efi");
+
       document.getElementById("tabla_regresion_total_impresion").style.display = 'block';
       document.getElementById("tabla_regresion_total_vista").style.display = 'none';
       var tabla = document.querySelector("#tabla_regresion_total_impresion");
 
-      imprimirSeguimiento(grafico,cabecera,tabla);
+      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
       document.getElementById("cabecera3").style.display = 'none';
 
       document.getElementById("tabla_regresion_total_vista").style.display = 'block';

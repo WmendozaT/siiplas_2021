@@ -1037,11 +1037,11 @@ class Seguimientopoa extends CI_Controller{
               }
             $tabla.='
             </tbody>
-        </table><br>
-        <b><font color=blue size=1.5>% CUMPLIMIENTO DE ACTIVIDADES ACUMULADOS AL '.$regresion[1][$this->tmes].' '.$this->gestion.' : '.$regresion[5][$this->tmes].'%</font></b>';
+        </table>';
       }
       elseif($tp_graf==3){ /// Regresion Gestion
         $tabla.='
+        <h4><b>'.$regresion[5][$this->tmes].'%</b> CUMPLIMIENTO DE '.$regresion[1][$this->tmes].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
         <table '.$tab.'>
           <thead>
               <tr>
@@ -1068,8 +1068,7 @@ class Seguimientopoa extends CI_Controller{
               }
             $tabla.='
             </tbody>
-        </table><br>
-        <b><font color=blue size=1.5>EVALUACIÓN POA CORRESPONDIENTE AL '.$regresion[1][$this->tmes].' CON RESPECTO A LA GESTIÓN '.$this->gestion.' : '.$regresion[5][$this->tmes].'% CUMPLIMIENTO</font></b>';
+        </table>';
       }
       else{
         $tabla.='
@@ -1538,7 +1537,8 @@ class Seguimientopoa extends CI_Controller{
       <form class="smart-form" method="post">
         <input name="mes_activo" type="hidden" value='.$this->verif_mes[1].'>
         <input name="base" type="hidden" value="'.base_url().'">
-        <fieldset> '.$this->calificacion_eficacia($regresion[5][$this->tmes]).'</fieldset> 
+        <fieldset><div id="eficacia">'.$this->calificacion_eficacia($regresion[5][$this->tmes]).'</div></fieldset>
+        <div id="efi"></div> 
         <fieldset>          
           <div class="row">
             <section class="col col-3">
