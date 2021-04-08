@@ -28,10 +28,11 @@ class Cseguimiento extends CI_Controller {
         //$this->tmes = 3;
         $this->fun_id = $this->session->userData('fun_id');
         $this->tp_adm = $this->session->userData('tp_adm');
-        $this->verif_mes=$this->session->userData('mes_actual');
+        
         $this->resolucion=$this->session->userdata('rd_poa');
         $this->com_id=$this->session->userdata('com_id');
        // $this->load->library('menu');
+        $this->verif_mes=$this->session->userdata('mes_actual');
         $this->load->library('seguimientopoa');
 
         }else{
@@ -54,7 +55,7 @@ class Cseguimiento extends CI_Controller {
       $data['proyectos']=$this->list_pinversion(4);
       $data['gasto_corriente']=$this->list_gasto_corriente(4);
       
-      $data['titulo']='SEGUIMIENTO / EVALUACI&Oacute;N POA - '.$this->verif_mes[2].' / '.$this->gestion.'';
+      $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
       $this->load->view('admin/evaluacion/seguimiento_poa/list_poas_aprobados', $data);
 
     }
@@ -329,7 +330,8 @@ class Cseguimiento extends CI_Controller {
       $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
 
       $data['update_eval']=$this->seguimientopoa->button_update_($com_id);
-      $data['boton_evaluacion_poa']=$this->seguimientopoa->button_rep_evaluacion($com_id); /// Reporte Evaluacion POA
+      $data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($com_id); /// Reporte Seguimiento (Mes vigente) POA
+      $data['boton_reporte_evaluacion_poa']=$this->seguimientopoa->button_rep_evaluacion($com_id); /// Reporte Evaluacion (Trimestre vigente) POA
 
     //  $this->seguimientopoa->update_evaluacion_operaciones($com_id);
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
@@ -831,8 +833,6 @@ class Cseguimiento extends CI_Controller {
         <h1><small>SUBACTIVIDAD : </small> '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h1>
         <h1><small>FORMULARIO DE SEGUIMIENTO POA : </small> <b>'.$this->verif_mes[2].' / '.$this->gestion.'</b></h1>';
       
-        
-
         $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1);
        // $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($this->com_id); /// temporalidad Programado-Ejecutado Subactividad
         $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($this->com_id); /// grafico
@@ -861,11 +861,13 @@ class Cseguimiento extends CI_Controller {
         $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($this->com_id);
 
         $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($this->com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
+        $data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($this->com_id); /// Reporte Seguimiento (Mes vigente) POA
         $data['update_eval']=$this->seguimientopoa->button_update_($this->com_id);
         $this->load->view('admin/evaluacion/seguimiento_poa_subactividad/formulario_seguimiento_subact', $data);
       }
       else{
-        echo "No activo";
+        $this->session->sess_destroy();
+        redirect('/','refresh');
       }
 
     }

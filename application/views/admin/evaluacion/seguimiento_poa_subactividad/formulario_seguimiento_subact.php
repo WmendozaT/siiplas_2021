@@ -177,9 +177,7 @@
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
                                                <div class="row">
                                                     <div align="right">
-                                                        <a href="javascript:abreVentana('<?php echo base_url().'index.php/seg/ver_reporte_evaluacionpoa/'.$com_id;?>');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
-                                                            <img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR SEGUIMIENTO PLAN OPERATIVO ANUAL POA</b>
-                                                        </a>
+                                                        <?php echo $boton_reporte_seguimiento_poa;?>
                                                     </div>
                                                     <div class="jarviswidget jarviswidget-color-darken" >
                                                       <?php echo $operaciones_programados;?>

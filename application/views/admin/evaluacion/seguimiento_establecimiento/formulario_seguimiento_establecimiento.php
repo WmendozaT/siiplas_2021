@@ -113,6 +113,7 @@
                 <section id="widget-grid" class="">
                     <div class="row">
                         <article class="col-sm-12">
+                            <?php echo $titulo;?>
                             <!-- new widget -->
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                                 <header>
@@ -198,9 +199,7 @@
                                             <div class="tab-pane fade" id="s1" title="SEGUIMIENTO POA">
                                                <div class="row"><br>
                                                     <div align="right">
-                                                        <a href="javascript:abreVentana('<?php echo base_url().'index.php/seg/ver_reporte_evaluacionpoa/'.$com_id;?>');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
-                                                            <img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR SEGUIMIENTO PLAN OPERATIVO ANUAL POA</b>&nbsp;&nbsp;
-                                                        </a>
+                                                        <?php echo $boton_reporte_seguimiento_poa;?>
                                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                                         <?php echo $formularios_seguimiento;?>&nbsp;&nbsp;
                                                     </div>

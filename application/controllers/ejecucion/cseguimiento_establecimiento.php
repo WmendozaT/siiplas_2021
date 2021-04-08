@@ -22,7 +22,8 @@ class Cseguimiento_establecimiento extends CI_Controller {
         //$this->act = $this->session->userData('act_id');
         $this->tmes = $this->session->userData('trimestre');
         $this->verif_mes=$this->session->userData('mes_actual');
-        $this->establecimiento=$this->model_seguimientopoa->get_unidad_programado_gestion($this->session->userData('act_id'));  
+        $this->establecimiento=$this->model_seguimientopoa->get_unidad_programado_gestion($this->session->userData('act_id'));
+        $this->com_id=$this->session->userdata('com_id');
         $this->load->library('seguimientopoa');
 
         }else{
@@ -87,13 +88,17 @@ class Cseguimiento_establecimiento extends CI_Controller {
       $data['calificacion']=$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]);
       $data['nota']=$this->notificacion();
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
+      
+      $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
+      $data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($com_id); /// Reporte Seguimiento (Mes vigente) POA
       $data['formularios_poa']=$this->seguimientopoa->formularios_poa($com_id,$this->establecimiento[0]['proy_id']);
       $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($com_id);
 
       $this->load->view('admin/evaluacion/seguimiento_establecimiento/formulario_seguimiento_establecimiento', $data);
     }
     else{
-      echo "Error !!!";
+      $this->session->sess_destroy();
+      redirect('/','refresh');
     }
   }
 

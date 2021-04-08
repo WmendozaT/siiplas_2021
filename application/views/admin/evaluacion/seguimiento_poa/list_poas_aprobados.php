@@ -119,7 +119,7 @@
 
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="well well-sm well-light">
-                                <h2 class="alert alert-info"><center><?php echo $titulo;?></center></h2>
+                                <?php echo $titulo;?>
                                 <div id="tabs">
                                     <ul>
                                         <li>

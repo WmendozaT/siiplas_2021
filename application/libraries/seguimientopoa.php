@@ -708,19 +708,6 @@ class Seguimientopoa extends CI_Controller{
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
  /*------ TABLA TEMPORALIDAD COMPONENTE -----*/
     public function tabla_temporalidad_componente($matriz,$tip_rep){
       $tabla='';
@@ -1420,7 +1407,49 @@ class Seguimientopoa extends CI_Controller{
     }
 
 
-    /*--- BOTON REPORTE EVALUACION POA ---*/
+    /*--- BOTON REPORTE SEGUIMIENTO POA (MES VIGENTE)---*/
+    function button_rep_seguimientopoa($com_id){
+      $tabla='';
+        $tabla.='
+                <a href="javascript:abreVentana(\''.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$com_id.'/'.$this->verif_mes[1].'\');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
+                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;&nbsp;<b>IMPRIMIR SEGUIMIENTO POA ('.$this->verif_mes[2].')</b>
+                </a>';
+      return $tabla;
+    }
+
+
+    /*------ TABLA TEMPORALIDAD COMPONENTE -----*/
+    public function aviso_seguimiento_evaluacion_poa(){
+      $tabla='';
+      $dia_actual=ltrim(date("d"), "0");
+      $mes_actual=ltrim(date("m"), "0");
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
+      $fecha_actual = date('Y-m-d');
+
+      $get_fecha_evaluacion=$this->model_configuracion->get_datos_fecha_evaluacion($this->gestion);
+      if(count($get_fecha_evaluacion)!=0){
+          $configuracion=$this->model_configuracion->get_configuracion_session();
+          $date_actual = strtotime($fecha_actual); //// fecha Actual
+          $date_inicio = strtotime($configuracion[0]['eval_inicio']); /// Fecha Inicio
+          $date_final = strtotime($configuracion[0]['eval_fin']); /// Fecha Final
+
+          if (($date_actual >= $date_inicio) && ($date_actual <= $date_final) || $this->tp_adm==1){
+            $tabla.='<h2 class="alert alert-success"><center>PROCESO DE EVALUACIÓN POA - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></h2>';
+          }
+          else{
+            $tabla.='<h2 class="alert alert-info"><center>SEGUIMIENTO POA - MES '.$this->verif_mes[2].' / '.$this->gestion.'</center></h2>';
+          }
+      }
+      else{
+        $tabla.='<h2 class="alert alert-info"><center>SEGUIMIENTO POA - MES '.$this->verif_mes[2].' / '.$this->gestion.'</center></h2>';
+      }
+
+
+      return $tabla;
+    }
+
+
+    /*--- BOTON REPORTE EVALUACION POA (TRIMESTRE VIGENTE)---*/
     function button_rep_evaluacion($com_id){
       $componente = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
       $tabla='';
@@ -1975,6 +2004,19 @@ class Seguimientopoa extends CI_Controller{
             </li>
         </ul>
       </nav>';
+    }
+
+    /*--- verifica datos del mes y año ---*/
+    public function verif_mes_gestion(){
+      $valor=3;
+      //$valor=ltrim(date("m"), "0"); // numero mes
+      $mes=$this->mes_nombre_completo($valor);
+
+      $datos[1]=$valor; // numero del mes
+      $datos[2]=$mes[$valor]; // mes
+      $datos[3]=$this->gestion; // Gestion
+
+      return $datos;
     }
 }
 ?>

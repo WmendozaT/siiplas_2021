@@ -731,6 +731,7 @@ class User extends CI_Controller{
             'estado' => $actividad[0]['act_estado'],
             'dist' => $actividad[0]['dist_id'], /// Distrital
             'name_distrital' => $actividad[0]['dist_distrital'],
+            'com_id' => 0,
             'adm' => 2,
             'fun_id' => 399,
             'dep_id' => $actividad[0]['dep_id'],
