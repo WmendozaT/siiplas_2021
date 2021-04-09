@@ -24,7 +24,7 @@
             function abreVentana(PDF){             
                 var direccion;
                 direccion = '' + PDF;
-                window.open(direccion, "Reporte de Evaluacion" , "width=800,height=650,scrollbars=SI") ;                                                                 
+                window.open(direccion, "Reporte de Evaluacion POA" , "width=800,height=650,scrollbars=SI") ;                                                                 
             }                                            
         </script>
         <meta name="viewport" content="width=device-width">
@@ -61,7 +61,7 @@
               font-size: 8px;
             }
         </style>
-        <script type="text/javascript">
+<!--         <script type="text/javascript">
         function printDiv(nombreDiv) {
             var contenido= document.getElementById(nombreDiv).innerHTML;
             var contenidoOriginal= document.body.innerHTML;
@@ -69,7 +69,7 @@
             window.print();
             document.body.innerHTML = contenidoOriginal;
         }
-        </script>
+        </script> -->
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -177,8 +177,9 @@
                             </section>
                         </article>
                     </div>
-                    <h2 class="alert alert-success"><center>EVALUACI&Oacute;N GASTO CORRIENTE - GESTI&Oacute;N <?php echo $this->session->userData('gestion');?></center></h2>
+                    <h2 class="alert alert-success"><center>EVALUACI&Oacute;N GASTO CORRIENTE - <?php echo $trimestre[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></center></h2>
                     <div class="row">
+                        <?php echo $base; ?>
                         <?php echo $regional;?>
                     </div>
                 </section>
@@ -205,10 +206,8 @@
                 document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
             }
         </script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/modules/exporting.js"></script>
         <!-- IMPORTANT: APP CONFIG -->
+        <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/reporte_evaluacionpoa.js"></script> 
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
@@ -235,106 +234,10 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
         <!-- FastClick: For mobile devices -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <!-- Demo purpose only -->
         <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
-        <script type="text/javascript">
-            $(function () {
-                $(".enlace").on("click", function (e) {
-                    id = $(this).attr('name');
-                    tp = $(this).attr('id');
-                    titulo='Consolidado Regional';
-                    if(tp==1){
-                        titulo='Consolidado Distrital';
-                    }
-                    else{
-                        titulo='Consolidado Nacional';
-                    }
-
-                    $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Evaluaci&oacute;n '+titulo+'</div>');
-                    
-                    var url = "<?php echo site_url("")?>/reporte_evaluacion/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "id="+id+"&tp="+tp
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-
-                    if (response.respuesta == 'correcto') {
-                        $('#content1').fadeIn(1000).html(response.tabla);
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR DATOS");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                  
-                });
-            });
-
-             $(function () {
-                $(".enlaceg").on("click", function (e) {
-                    id = $(this).attr('name');
-                    tp = $(this).attr('id');
-                    titulo='Consolidado Gerencia de Servicios de Salus';
-                    if(tp==1){
-                        titulo='Consolidado Gerencia General';
-                    }
-                    else{
-                        titulo='Consolidado Gerencia Administrativa Financiera';
-                    }
-
-                    $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Evaluaci&oacute;n '+titulo+'</div>');
-                    
-                    var url = "<?php echo site_url("")?>/reporte_evaluacion/crep_evalofinacional/get_cuadro_evaluacion_onacional";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "id="+id+"&tp="+tp
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-
-                    if (response.respuesta == 'correcto') {
-                        $('#content1').fadeIn(1000).html(response.tabla);
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR DATOS");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                  
-                });
-            });
-        </script>
     </body>
 </html>

@@ -26,6 +26,7 @@ class Crep_evalinstitucional extends CI_Controller {
             $this->fun_id = $this->session->userData('fun_id');
             $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->load->library('evaluacionpoa');
         }
         else{
             redirect('/','refresh');
@@ -36,7 +37,9 @@ class Crep_evalinstitucional extends CI_Controller {
     public function menu_eval_poa(){
       if($this->gestion>2019){
         $data['menu']=$this->menu(7); //// genera menu
-        $data['regional']=$this->regionales();
+        $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+        $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
+        $data['regional']=$this->evaluacionpoa->regionales();
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_menu', $data);
       }
       else{
@@ -45,156 +48,7 @@ class Crep_evalinstitucional extends CI_Controller {
     }
 
 
-    //// LISTA DE REGIONALES
-    public function regionales(){
-      $regiones=$this->model_evalinstitucional->regiones();
-      $nro=0;
-      $tabla ='';
-      $tabla.='
-          <article class="col-sm-12 col-md-12 col-lg-2">
 
-            <div class="jarviswidget well transparent" id="wid-id-9" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
-                <header>
-                    <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
-                    <h2>Accordions </h2>
-                </header>
-                <div>
-                    <div class="jarviswidget-editbox">
-                    </div>
-                    <div class="widget-body">
-
-                        <div class="panel-group smart-accordion-default" id="accordion">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> <b>EVALUACI&Oacute;N POA '.$this->gestion.'</b></a></h4>
-                                </div>
-                                <div id="collapseOne" class="panel-collapse collapse in">
-                                    <div class="panel-body no-padding"><br>
-                                        <table class="table table-bordered table-condensed">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="font-size: 10pt;">INSTITUCIONAL</td>
-                                                    <td align=center><a href="#" class="btn btn-info enlace" name="0" id="2">VER</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table><br>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-10" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
-              <header>
-                <span class="widget-icon"> <i class="fa fa-list-alt"></i> </span>
-                <h2><b>EVALUACI&Oacute;N POA '.$this->gestion.'</b></h2>
-              </header>
-              <div>
-
-                <div class="widget-body no-padding">
-                  <div class="panel-group smart-accordion-default" id="accordion-2">';
-                
-                  foreach($regiones as $rowd){
-                    $tabla.='
-                    <div class="panel panel-default">
-                      <div class="panel-heading">';
-                      if($rowd['dep_id']!=10){
-                        $tabla.='<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-2" href="#collapse'.$rowd['dep_id'].'" class="collapsed"> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i> REGIONAL '.strtoupper($rowd['dep_departamento']).'</a></h4>';
-                      }
-                      else{
-                        $tabla.='<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-2" href="#collapse'.$rowd['dep_id'].'" class="collapsed"> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i>'.strtoupper($rowd['dep_departamento']).'</a></h4>';
-                      }
-                      $tabla.='
-                      </div>
-                      <div id="collapse'.$rowd['dep_id'].'" class="panel-collapse collapse">';
-                      if($rowd['dep_id']!=10){
-                        $tabla.='<div class="panel-body">'.$this->list_distrital($rowd['dep_id']).'</div>'; /// Distritales
-                      }
-                      else{
-                        $tabla.='<div class="panel-body">'.$this->list_gerencias($rowd['dep_id']).'</div>'; /// Gerencia General
-                      }
-                      $tabla.='
-                      </div>
-                    </div>';
-                  }
-                $tabla.='
-                  </div>
-      
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
-            <div id="content1"></div>
-          </article>';
-      return $tabla;
-    }
-
-
-
-    /* ---- Lista de Distritales ---*/
-    public function list_distrital($dep_id){
-      $tabla='';
-      $departamento=$this->model_proyecto->get_departamento($dep_id);
-      $distritales=$this->model_evalinstitucional->get_distritales($dep_id);
-
-      $nro=1;
-      $tabla.='<hr><table class="table table-bordered">
-        <tr>
-          <td>'.$nro.'</td>
-          <td><b>CONSOLIDADO - '.strtoupper($departamento[0]['dep_departamento']).'</b></td>
-          <td align=center><a href="#" class="btn btn-info enlace" name="'.$departamento[0]['dep_id'].'" id="0">VER</a></td>
-          </tr>';
-          foreach($distritales as $row){
-            $nro++;
-            $tabla.='
-            <tr>
-              <td>'.$nro.'</td>
-              <td>'.strtoupper($row['dist_distrital']).'</td>
-              <td align=center><a href="#" class="btn btn-info enlace" name="'.$row['dist_id'].'" id="1">VER</a></td>
-            </tr>';
-          }
-        
-      $tabla.='</table>';
-      return $tabla;
-    }
-
-    /* ---- Lista Gerencias ---*/
-    public function list_gerencias($dep_id){
-      $tabla='';
-      $departamento=$this->model_proyecto->get_departamento($dep_id);
-      $distritales=$this->model_evalinstitucional->get_distritales($dep_id);
-
-      $nro=1;
-      $tabla.='
-        <hr>
-        <table class="table table-bordered">
-        <tr>
-          <td bgcolor=#efefef></td>
-          <td bgcolor=#efefef><b>CONSOLIDADO OFN</b></td>
-          <td align=center bgcolor=#efefef><a href="#" class="btn btn-info enlace" name="'.$dep_id.'" id="0">VER</a></td>
-        </tr>
-        <tr>
-          <td>'.($nro+1).'</td>
-          <td>GERENCIA GENERAL</td>
-          <td align=center><a href="#" class="btn btn-info enlaceg" name="1781" id="1">VER</a></td>
-        </tr>
-        <tr>
-          <td>'.($nro+2).'</td>
-          <td>GERENCIA ADMINISTRATIVA FINANCIERA</td>
-          <td align=center><a href="#" class="btn btn-info enlaceg" name="1783" id="2">VER</a></td>
-        </tr>
-        <tr>
-          <td>'.($nro+3).'</td>
-          <td>GERENCIA SERVICIOS DE SALUD</td>
-          <td align=center><a href="#" class="btn btn-info enlaceg" name="1801" id="3">VER</a></td>
-        </tr>
-        </table>';
-      return $tabla;
-    }
 
     /*-------- GET CUADRO EVALUACION REGIONALES --------*/
     public function get_cuadro_evaluacion_institucional(){
@@ -219,6 +73,7 @@ class Crep_evalinstitucional extends CI_Controller {
     //// EVALUACIÓN POA - REGIONAL -DISTRITAL  - IFRAME
     public function evaluacion_poa($id,$tp){
       $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+      $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
       
       if($tp==0){ //// CONSOLIDADO REGIONAL
         $dep_id=$id;
@@ -230,13 +85,13 @@ class Crep_evalinstitucional extends CI_Controller {
          
         $data['titulo']=
         '<h1><b>EVALUACI&Oacute;N POA - CONSOLIDADO REGIONAL '.strtoupper($data['departamento'][0]['dep_departamento']).'</b></h1>
-        <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].'</b></h2>';
+        <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
 
         $data['matriz']=$this->matriz_eficacia_regional($dep_id);
         $data['parametro_eficacia']=$this->parametros_eficacia($data['matriz'],1); /// Parametro de Eficacia
-        $data['print_parametros']=$this->print_parametros($tp,$data['departamento'],$this->parametros_eficacia($data['matriz'],2));
+      //  $data['print_parametros']=$this->print_parametros($tp,$data['departamento'],$this->parametros_eficacia($data['matriz'],2));
 
-        $data['print_evaluacion']=$this->print_evaluacion(0,$data['departamento'],$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,2),$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,2),$data['tabla'][5][$this->tmes]);
+       // $data['print_evaluacion']=$this->print_evaluacion(0,$data['departamento'],$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,2),$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,2),$data['tabla'][5][$this->tmes]);
       }
       elseif($tp==1){ //// CONSOLIDADO DISTRITAL
         $dist_id=$id;
@@ -247,13 +102,13 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['boton']='MOSTRAR INDICADORES POR UNIDADES DEPENDIENTES';
         $data['titulo']=
         '<h1><b>EVALUACI&Oacute;N POA - '.strtoupper($data['distrital'][0]['dist_distrital']).'</b></h1>
-        <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].'</b></h2>';
+        <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
 
         $data['matriz']=$this->matriz_eficacia_distrital($id);
         $data['parametro_eficacia']=$this->parametros_eficacia($data['matriz'],1); /// Parametro de Eficacia
-        $data['print_parametros']=$this->print_parametros($tp,$data['distrital'],$this->parametros_eficacia($data['matriz'],2));
+       // $data['print_parametros']=$this->print_parametros($tp,$data['distrital'],$this->parametros_eficacia($data['matriz'],2));
 
-        $data['print_evaluacion']=$this->print_evaluacion(1,$data['distrital'],$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,2),$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,2),$data['tabla'][5][$this->tmes]);
+       // $data['print_evaluacion']=$this->print_evaluacion(1,$data['distrital'],$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,2),$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,2),$data['tabla'][5][$this->tmes]);
       }
       else{ /// NACIONAL tp:2
         $data['tabla']=$this->tabla_regresion_lineal_nacional(); /// Tabla para el grafico al trimestre
@@ -263,18 +118,18 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['boton']='MOSTRAR INDICADORES POR REGIONALES';
         $data['titulo']=
         '<h1><b>EVALUACI&Oacute;N POA - CONSOLIDADO INSTITUCIONAL</b></h1>
-        <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].'</b></h2>';
+        <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
 
         $data['matriz']=$this->matriz_eficacia_institucional();
         $data['parametro_eficacia']=$this->parametros_eficacia($data['matriz'],1); /// Parametro de Eficacia
-        $data['print_parametros']=$this->print_parametros($tp,'',$this->parametros_eficacia($data['matriz'],2));
+      //  $data['print_parametros']=$this->print_parametros($tp,'',$this->parametros_eficacia($data['matriz'],2));
 
-        $data['print_evaluacion']=$this->print_evaluacion(2,'',$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,2),$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,2),$data['tabla'][5][$this->tmes]);
+      //  $data['print_evaluacion']=$this->print_evaluacion(2,'',$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,2),$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,2),$data['tabla'][5][$this->tmes]);
       }
 
       $data['tabla_regresion']=$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
       $data['tabla_regresion_total']=$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion 
-      $data['tabla_pastel']=$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],1,1); /// Tabla que muestra el acumulado por trimestres Pastel
+    //  $data['tabla_pastel']=$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],1,1); /// Tabla que muestra el acumulado por trimestres Pastel
       $data['tabla_pastel_todo']=$this->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
       $data['id']=$id;
       $data['tp']=$tp;
@@ -869,7 +724,7 @@ class Crep_evalinstitucional extends CI_Controller {
 
 
     /*---- Imprime Evaluacion Consolidado Regional-Distrital -----*/
-    public function print_evaluacion($tp_regional,$regional,$regresion,$regresion_total,$eficacia){
+/*    public function print_evaluacion($tp_regional,$regional,$regresion,$regresion_total,$eficacia){
       $mes = $this->mes_nombre();
       $trimestre=$this->model_evaluacion->trimestre();
       $tr=($this->tmes*3);
@@ -964,10 +819,10 @@ class Crep_evalinstitucional extends CI_Controller {
                 </html>
                 <?php
     return $tabla;
-    } 
+    } */
 
     /*---- Imprime Evaluacion Consolidado Regional-Distrital -----*/
-    public function print_parametros($tp_regional,$regional,$matriz){
+/*    public function print_parametros($tp_regional,$regional,$matriz){
       $mes = $this->mes_nombre();
       $trimestre=$this->model_evaluacion->trimestre();
       $tr=($this->tmes*3);
@@ -1037,7 +892,7 @@ class Crep_evalinstitucional extends CI_Controller {
         </html>
         <?php
     return $tabla;
-    } 
+    } */
 
 
     /*--- TABLA ACUMULADA EVALUACIÓN 2020 - REGIONAL, DISTRITAL ---*/
