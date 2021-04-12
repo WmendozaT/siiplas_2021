@@ -28,7 +28,7 @@ ob_start();
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
                             <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
                               <td width=15%; text-align:center;"">
-                                <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:37%;">
+                                <img src="<?php echo $this->session->userdata('img') ?>" alt="" style="width:37%;">
                               </td>
                               <td width=60%; align=left>
                                 <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">

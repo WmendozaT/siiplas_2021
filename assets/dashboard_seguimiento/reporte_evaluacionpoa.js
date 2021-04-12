@@ -190,7 +190,7 @@ function abreVentana_eficiencia(PDF){
                 $('#lista').fadeIn(1000).html(response.tabla);
                 $('#boton_eficacia').slideUp();
                 $('#print_eficacia').slideDown();
-                $('#eval_poa').slideDown();
+              //  $('#eval_poa').slideDown();
                 $('#par').slideDown();
             }
             else{
@@ -211,25 +211,11 @@ function abreVentana_eficiencia(PDF){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-      //// Seguimiento POA
+    ////// AREA DE IMPRESION 
+      //// Evaluacion POA
       function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
-
-      var ventana = window.open('Seguimiento Evaluacion POA ', 'PRINT', 'height=800,width=1000');
-      ventana.document.write('<html><head><title>SEGUIMIENTO POA</title>');
+      var ventana = window.open('Evaluacion POA ', 'PRINT', 'height=800,width=1000');
+      ventana.document.write('<html><head><title>EVALUACIÓN POA</title>');
       //ventana.document.write('<link rel="stylesheet" href="assets/print_static.css">');
       ventana.document.write('</head><body>');
      // ventana.document.write('<style type="text/css" media="print">div.page { writing-mode: tb-rl;height: 100%;margin: 100% 100%;}</style>');
@@ -257,32 +243,12 @@ function abreVentana_eficiencia(PDF){
       return true;
     }
 
-
-    document.querySelector("#btnImprimir_seguimiento").addEventListener("click", function() {
-      var grafico = document.querySelector("#Seguimiento");
-
-      document.getElementById("cabecera").style.display = 'block';
-      var cabecera = document.querySelector("#cabecera");
-
-      var eficacia = document.querySelector("#efi");
-
-      document.getElementById("tabla_componente_impresion").style.display = 'block';
-      document.getElementById("tabla_componente_vista").style.display = 'none';
-      var tabla = document.querySelector("#tabla_componente_impresion");
-
-      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
-      document.getElementById("cabecera").style.display = 'none';
-      
-      document.getElementById("tabla_componente_vista").style.display = 'block';
-      document.getElementById("tabla_componente_impresion").style.display = 'none';
-    });
-
-
+    /// Impresion grafico 1 (Regresion al trimestre)
     document.querySelector("#btnImprimir_evaluacion_trimestre").addEventListener("click", function() {
       var grafico = document.querySelector("#evaluacion_trimestre");
       
-      document.getElementById("cabecera2").style.display = 'block';
-      var cabecera = document.querySelector("#cabecera2");
+      document.getElementById("cabecera").style.display = 'block';
+      var cabecera = document.querySelector("#cabecera");
 
       var eficacia = document.querySelector("#eficacia");
       
@@ -291,18 +257,19 @@ function abreVentana_eficiencia(PDF){
       var tabla = document.querySelector("#tabla_regresion_impresion");
 
       imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
-      document.getElementById("cabecera2").style.display = 'none';
+      document.getElementById("cabecera").style.display = 'none';
 
       document.getElementById("tabla_regresion_vista").style.display = 'block';
       document.getElementById("tabla_regresion_impresion").style.display = 'none';
     });
 
 
+    /// Impresion grafico 2 (Pastel al trimestre)
     document.querySelector("#btnImprimir_evaluacion_pastel").addEventListener("click", function() {
       var grafico = document.querySelector("#evaluacion_pastel");
       
-      document.getElementById("cabecera2").style.display = 'block';
-      var cabecera = document.querySelector("#cabecera2");
+      document.getElementById("cabecera1").style.display = 'block';
+      var cabecera = document.querySelector("#cabecera1");
       
       var eficacia = document.querySelector("#eficacia");
 
@@ -311,20 +278,18 @@ function abreVentana_eficiencia(PDF){
       var tabla = document.querySelector("#tabla_pastel_impresion");
 
       imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
-      document.getElementById("cabecera2").style.display = 'none';
+      document.getElementById("cabecera1").style.display = 'none';
 
       document.getElementById("tabla_pastel_vista").style.display = 'block';
       document.getElementById("tabla_pastel_impresion").style.display = 'none';
     });
 
-
-
-
+    /// Impresion grafico 3 (Regresion Total)
     document.querySelector("#btnImprimir_evaluacion_gestion").addEventListener("click", function() {
       var grafico = document.querySelector("#evaluacion_gestion");
       
-      document.getElementById("cabecera3").style.display = 'block';
-      var cabecera = document.querySelector("#cabecera3");
+      document.getElementById("cabecera2").style.display = 'block';
+      var cabecera = document.querySelector("#cabecera2");
       
       var eficacia = document.querySelector("#efi");
 
@@ -333,255 +298,9 @@ function abreVentana_eficiencia(PDF){
       var tabla = document.querySelector("#tabla_regresion_total_impresion");
 
       imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
-      document.getElementById("cabecera3").style.display = 'none';
+      document.getElementById("cabecera2").style.display = 'none';
 
       document.getElementById("tabla_regresion_total_vista").style.display = 'block';
       document.getElementById("tabla_regresion_total_impresion").style.display = 'none';
-    });*/
+    });
 
-
-    /// Funcion para guardar datos de seguimiento POA
-/*    function guardar(prod_id,nro){
-      ejec=parseFloat($('[id="ejec'+nro+'"]').val());
-      mverificacion=($('[id="mv'+nro+'"]').val());
-      problemas=($('[id="obs'+nro+'"]').val());
-      accion=($('[id="acc'+nro+'"]').val());
-
-      if(($('[id="mv'+nro+'"]').val())==0){
-          document.getElementById("mv"+nro).style.backgroundColor = "#fdeaeb";
-          alertify.error("REGISTRE MEDIO DE VERIFICACIÓN, Operación "+nro);
-          return 0; 
-      }
-      else{
-          document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
-          alertify.confirm("GUARDAR SEGUIMIENTO POA?", function (a) {
-          if (a) {
-              var url = base+"index.php/ejecucion/cseguimiento/guardar_seguimiento";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "prod_id="+prod_id+"&ejec="+ejec+"&mv="+mverificacion+"&obs="+problemas+"&acc="+accion
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-
-              if (response.respuesta == 'correcto') {
-                  alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
-                      if (e) {
-                          window.location.reload(true);
-                          document.getElementById("loading").style.display = 'block';
-                          alertify.success("REGISTRO EXITOSO ...");
-                      }
-                  });
-              }
-              else{
-                  alertify.error("ERROR AL GUARDAR SEGUIMIENTO POA");
-              }
-
-              });
-          } else {
-              alertify.error("OPCI\u00D3N CANCELADA");
-          }
-        });
-      }
-    }*/
-
-    /// Cambio de mes para el seguimiento 
-/*    $("#mes_id").change(function () {
-        $("#mes_id option:selected").each(function () {
-            mes_id=$(this).val();
-            mes_activo=$('[name="mes_activo"]').val();
-            if(mes_id!=mes_activo){
-              var url = base+"index.php/ejecucion/cseguimiento/get_update_mes";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "mes_id="+mes_id
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-                  if (response.respuesta == 'correcto') {
-                      alertify.alert("SE CAMBIO AL MES CORRECTAMENTE ", function (e) {
-                          if (e) {
-                              window.location.reload(true);
-                          }
-                      })
-                  }
-                  else{
-                      alertify.error("ERROR !!!");
-                  }
-              }); 
-            }
-        });
-      })*/
-
-
-
-/*    $(function () {
-        $(".enlace").on("click", function (e) {
-          prod_id = $(this).attr('name');
-          
-            var url = base+"index.php/ejecucion/cseguimiento/get_temporalidad";
-            var request;
-            if (request) {
-                request.abort();
-            }
-            request = $.ajax({
-                url: url,
-                type: "POST",
-                dataType: 'json',
-                data: "prod_id="+prod_id
-            });
-
-            request.done(function (response, textStatus, jqXHR) {
-            if (response.respuesta == 'correcto') {
-              $('#temporalidad').fadeIn(1000).html(response.tabla);
-              $('#calificacion').fadeIn(1000).html(response.calificacion);
-            }
-            else{
-                alertify.error("ERROR AL RECUPERAR TEMPORALIDAD");
-            }
-
-            });
-            request.fail(function (jqXHR, textStatus, thrown) {
-                console.log("ERROR: " + textStatus);
-            });
-            request.always(function () {
-            });
-            e.preventDefault();
-          
-        });
-    });*/
-
-
-        /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL ------*/
-/*        $(function () {
-          $(".update_eval").on("click", function (e) {
-              com_id = $(this).attr('name');
-              document.getElementById("com_id").value=com_id;
-              $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');
-              $('#but').slideUp();
-
-              var url = base+"index.php/ejecucion/cseguimiento/update_evaluacion_trimestral";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "com_id="+com_id
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-              if (response.respuesta == 'correcto') {
-                  $('#content_valida').fadeIn(1000).html(response.tabla);
-                  $('#but').slideDown();
-              }
-              else{
-                  alertify.error("ERROR AL RECUPERAR DATOS");
-              }
-
-              });
-              request.fail(function (jqXHR, textStatus, thrown) {
-                  console.log("ERROR: " + textStatus);
-              });
-              request.always(function () {
-              });
-              e.preventDefault();
-
-              $("#but_update").on("click", function (e) {
-                var $valid = $("#form_update").valid();
-                if (!$valid) {
-                    $validator.focusInvalid();
-                } else {
-                    window.location.reload(true);
-                    document.getElementById("but").style.display = 'none';
-                    document.getElementById("load").style.display = 'block';
-                    alertify.success("ACTUALIZACIÓN EXITOSA ...");
-                }
-              });
-          });
-        });
-*/
-
-        /// Eliminar Seguimiento Mensual
-/*        $(function () {
-            function reset() {
-              $("#toggleCSS").attr("href", base+"assets/themes_alerta/alertify.default.css");
-              alertify.set({
-                  labels: {
-                      ok: "ACEPTAR",
-                      cancel: "CANCELAR"
-                  },
-                  delay: 5000,
-                  buttonReverse: false,
-                  buttonFocus: "ok"
-              });
-            }
-
-          $(".del_ope").on("click", function (e) {
-            reset();
-            var prod_id = $(this).attr('name'); // prod id
-            var mes_id = $(this).attr('id'); // mes id
-          
-            var request;
-            alertify.confirm("ESTA SEGURO DE ELIMINAR EL SEGUIMIENTO POA ?", function (a) {
-              if (a) {
-                  url = base+"index.php/ejecucion/cseguimiento/delete_seguimiento_operacion";
-                  if (request) {
-                      request.abort();
-                  }
-                  request = $.ajax({
-                      url: url,
-                      type: "POST",
-                      dataType: "json",
-                      data: "prod_id="+prod_id+"&mes_id="+mes_id
-                  });
-
-                  request.done(function (response, textStatus, jqXHR) { 
-                    reset();
-                    if (response.respuesta == 'correcto') {
-                        alertify.alert("EL SEGUIMIENTO SE ELIMINO CORRECTAMENTE ", function (e) {
-                          if (e) {
-                            document.getElementById("loading").style.display = 'block';
-                            window.location.reload(true);
-                            alertify.success("Función Ejecutada Exitosamente ...");
-                          }
-                        });
-                    } else {
-                        alertify.alert("ERROR AL ELIMINAR SEGUIMIENTO POA !!!", function (e) {
-                          if (e) {
-                              window.location.reload(true);
-                          }
-                        });
-                    }
-                  });
-                  request.fail(function (jqXHR, textStatus, thrown) {
-                      console.log("ERROR: " + textStatus);
-                  });
-                  request.always(function () {
-                      //console.log("termino la ejecuicion de ajax");
-                  });
-
-                  e.preventDefault();
-
-              } else {
-                  alertify.error("Opcion cancelada");
-              }
-            });
-            return false;
-          });
-
-        });*/

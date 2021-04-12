@@ -130,9 +130,7 @@ class Seguimientopoa extends CI_Controller{
                     </table>
                   </td>
                 </tr>
-              </table>
-
-                ';
+              </table>';
 
       return $tabla;
     }
@@ -947,16 +945,16 @@ class Seguimientopoa extends CI_Controller{
     /// GRAFICOS DE EVALUACION POA 
  public function tabla_acumulada_evaluacion_servicio($regresion,$tp_graf,$tip_rep){
       $tabla='';
-      $tit[2]='<b>NRO. ACT. PROGRAMADOS EN EL TRIMESTRE</b>';
-      $tit[3]='<b>NRO. ACT. CUMPLIDOS EN EL TRIMESTRE</b>';
-      $tit[4]='<b>NRO. ACT. NO CUMPLIDOS</b>';
+      $tit[2]='<b>NRO. OPE. PROGRAMADOS EN EL TRIMESTRE</b>';
+      $tit[3]='<b>NRO. OPE. CUMPLIDOS EN EL TRIMESTRE</b>';
+      $tit[4]='<b>NRO. OPE. NO CUMPLIDOS</b>';
       $tit[5]='<b>% CUMPLIDOS</b>';
       $tit[6]='<b>% NO CUMPLIDOS</b>';
 
-      $tit_total[2]='<b>NRO. ACT. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[3]='<b>NRO. ACT. CUMPLIDOS AL TRIMESTRE</b>';
-      $tit_total[4]='<b>% ACT. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[5]='<b>% ACT. CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[2]='<b>NRO. OPE. PROGRAMADOS AL TRIMESTRE</b>';
+      $tit_total[3]='<b>NRO. OPE. CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[4]='<b>% OPE. PROGRAMADOS AL TRIMESTRE</b>';
+      $tit_total[5]='<b>% OPE. CUMPLIDOS AL TRIMESTRE</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -972,10 +970,10 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center>
-                <th>NRO. ACT. PROGRAMADAS</th>
+                <th>NRO. OPE. PROGRAMADAS</th>
                 <th>METAS EVALUADAS</th>
-                <th>ACT. CUMPLIDAS</th>
-                <th>ACT. NO CUMPLIDAS</th>
+                <th>OPE. CUMPLIDAS</th>
+                <th>OPE. NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
                 </tr>
@@ -1062,11 +1060,11 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center >
-                <th>NRO. ACT. PROGRAMADAS</th>
-                <th>NRO. ACT. EVALUADAS</th>
-                <th>NRO. ACT. CUMPLIDAS</th>
-                <th>NRO. ACT. EN PROCESO</th>
-                <th>NRO. ACT. NO CUMPLIDAS</th>
+                <th>NRO. OPE. PROGRAMADAS</th>
+                <th>NRO. OPE. EVALUADAS</th>
+                <th>NRO. OPE. CUMPLIDAS</th>
+                <th>NRO. OPE. EN PROCESO</th>
+                <th>NRO. OPE. NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
               </tr>

@@ -341,26 +341,27 @@ class Crep_seguimientopoa extends CI_Controller {
       if($dep_id!=0){
         if($dist_id==0){
           $departamento=$this->model_proyecto->get_departamento($dep_id);
-          $data['titulo_cabecera']='CONSOLIDADO REGIONAL '.strtoupper($departamento[0]['dep_departamento']);
+          $data['titulo']='CONSOLIDADO REGIONAL '.strtoupper($departamento[0]['dep_departamento']);
           $unidades=$this->model_seguimientopoa->list_poa_gacorriente_pinversion_regional($dep_id,$tp_id);
         }
         else{
           $departamento=$this->model_proyecto->dep_dist($dist_id);
-          $data['titulo_cabecera']=strtoupper($departamento[0]['dist_distrital']);
+          $data['titulo']=strtoupper($departamento[0]['dist_distrital']);
           $unidades=$this->model_seguimientopoa->list_poa_gacorriente_pinversion_distrital($dist_id,$tp_id);
         }
-        $tabla.=$this->tabla_seguimiento($unidades,$data['titulo'],1,$tp_id);
+        $tabla=$this->tabla_seguimiento($unidades,$data['titulo'],1,$tp_id);
       }
       else{
         $tabla=$this->tabla_nacional(1,$tp_id);
-        $data['titulo_cabecera']='CONSOLIDADO INSTITUCIONAL C.N.S.';
+        $data['titulo']='CONSOLIDADO NACIONAL';
+      //  $data['titulo_cabecera']='CONSOLIDADO INSTITUCIONAL C.N.S.';
       }
 
       
 
-        $data['titulo']='GASTO CORRIENTE';
+        $data['titulo_cabecera']='GASTO CORRIENTE';
         if($tp_id==1){
-          $data['titulo']='PROYECTO DE INVERSI&Oacute;N';
+          $data['titulo_cabecera']='PROYECTO DE INVERSI&Oacute;N';
         }
 
         
@@ -370,7 +371,6 @@ class Crep_seguimientopoa extends CI_Controller {
         $data['lista']=$tabla;
         $this->load->view('admin/reportes_cns/seguimiento_poa/reporte_seguimiento_poa', $data);
     }
-
 
 
 

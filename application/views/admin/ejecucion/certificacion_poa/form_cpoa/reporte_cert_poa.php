@@ -27,7 +27,7 @@ $msg = $cpoa[0]['cpoa_codigo']." - RESPONSABLE:".$cpoa[0]['fun_nombre']." - NRO.
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:95.6%;">
                         <tr style="width: 100%; border: solid 0px black; text-align: center;">
                           <td style="width:18%; text-align:center;">
-                            <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:40%;">
+                            <img src="<?php echo $this->session->userdata('img') ?>" alt="" style="width:40%;">
                           </td>
                           <td style="width:64%;">
                             <table align="center" border="0" style="width:100%;">
