@@ -230,10 +230,9 @@ class Crep_seguimientopoa extends CI_Controller {
             <th style="width:2%;height:20px;" align="center"></th>
             <th style="width:10%;" align="center">COD. DA.</th>
             <th style="width:30%;" align="center">DIRECCI&Oacute;N ADMINISTRATIVA</th>
-            <th style="width:10%;" align="center">META TOTAL</th>
-            <th style="width:10%;" align="center">META PROG. '.$this->verif_mes[2].'</th>
-            <th style="width:10%;" align="center">EJECUTADO</th>
-            <th style="width:10%;" align="center">EFICACIA</th>
+            <th style="width:15%;" align="center">META PROGRAMADO AL MES DE '.$this->verif_mes[2].'</th>
+            <th style="width:15%;" align="center">META CUMPLIDO AL MES DE '.$this->verif_mes[2].'</th>
+            <th style="width:10%;" align="center">% CUMPLIMIENTO AL MES DE '.$this->verif_mes[2].'</th>
             <th style="width:10%;" align="center"></th>
           </tr>
         </thead>
@@ -247,9 +246,8 @@ class Crep_seguimientopoa extends CI_Controller {
             <td style="width:2%;height:15px;" align=center>'.$nro.'</td>
             <td style="width:10%;" align=center>'.$row['da'].'</td>
             <td style="width:30%;">'.strtoupper($row['dep_departamento']).'</td>
-            <td style="width:10%;" align=right>'.round($row['meta'],2).'</td>
-            <td style="width:10%;" align=right>'.$meta[1].'</td>
-            <td style="width:10%;" align=right>'.$meta[2].'</td>
+            <td style="width:15%;" align=right>'.$meta[1].'</td>
+            <td style="width:15%;" align=right>'.$meta[2].'</td>
             <td style="width:10%;" align=right><b>'.$meta[4].'%</b></td>
             <td style="width:10%;" align=left>'.$meta[5].'</td>
           </tr>';
@@ -284,10 +282,9 @@ class Crep_seguimientopoa extends CI_Controller {
             <th style="width:5%;" align="center">COD. PROY.</th>
             <th style="width:5%;" align="center">COD. ACT.</th>
             <th style="width:30%;" align="center">'.$titulo.'</th>
-            <th style="width:6%;" align="center">META ANUAL</th>
-            <th style="width:6%;" align="center">META PROG. '.$this->verif_mes[2].'</th>
-            <th style="width:6%;" align="center">EJECUTADO</th>
-            <th style="width:6%;" align="center">EFICACIA</th>
+            <th style="width:10%;" align="center">META PROGRAMADO AL MES DE '.$this->verif_mes[2].'</th>
+            <th style="width:10%;" align="center">META EJECUTADO AL MES DE '.$this->verif_mes[2].'</th>
+            <th style="width:6%;" align="center">% CUMPLIMIENTO AL MES DE '.$this->verif_mes[2].'</th>
             <th style="width:10%;" align="center"></th>
           </tr>
         </thead>
@@ -312,9 +309,8 @@ class Crep_seguimientopoa extends CI_Controller {
               $tabla.='<b>'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</b>';
             }
             $tabla.='</td>
-            <td style="width:6%;" align=right>'.round($row['meta'],2).'</td>
-            <td style="width:6%;" align=right>'.$meta[1].'</td>
-            <td style="width:6%;" align=right>'.$meta[2].'</td>
+            <td style="width:10%;" align=right>'.$meta[1].'</td>
+            <td style="width:10%;" align=right>'.$meta[2].'</td>
             <td style="width:6%;" align=right><b>'.$meta[4].'%</b></td>
             <td style="width:10%;" align=left>';
               if($tp_rep==0){
@@ -332,7 +328,7 @@ class Crep_seguimientopoa extends CI_Controller {
       return $tabla;
     }
 
-
+    
 
 
     /*-----REPORTE SEGUIMIENTO POA POR DISTRITAL,REGIONAL 2021-----*/

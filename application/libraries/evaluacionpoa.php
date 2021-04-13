@@ -178,30 +178,48 @@ class Evaluacionpoa extends CI_Controller{
           <td bgcolor=#efefef></td>
           <td bgcolor=#efefef><b>CONSOLIDADO OFN</b></td>
           <td align=center bgcolor=#efefef><a href="#" class="btn btn-info enlace" name="'.$dep_id.'" id="0">VER</a></td>
-        </tr>
-        <tr>
-          <td>'.($nro+1).'</td>
-          <td>GERENCIA GENERAL</td>
-          <td align=center><a href="#" class="btn btn-info enlaceg" name="1781" id="1">VER</a></td>
-        </tr>
-        <tr>
-          <td>'.($nro+2).'</td>
-          <td>GERENCIA ADMINISTRATIVA FINANCIERA</td>
-          <td align=center><a href="#" class="btn btn-info enlaceg" name="1783" id="2">VER</a></td>
-        </tr>
-        <tr>
-          <td>'.($nro+3).'</td>
-          <td>GERENCIA SERVICIOS DE SALUD</td>
-          <td align=center><a href="#" class="btn btn-info enlaceg" name="1801" id="3">VER</a></td>
-        </tr>
-        </table>';
+        </tr>';
+          if($this->gestion==2020){
+            $tabla.='
+            <tr>
+              <td>'.($nro+1).'</td>
+              <td>GERENCIA GENERAL</td>
+              <td align=center><a href="#" class="btn btn-info enlaceg" name="1781" id="1">VER</a></td>
+            </tr>
+            <tr>
+              <td>'.($nro+2).'</td>
+              <td>GERENCIA ADMINISTRATIVA FINANCIERA</td>
+              <td align=center><a href="#" class="btn btn-info enlaceg" name="1783" id="2">VER</a></td>
+            </tr>
+            <tr>
+              <td>'.($nro+3).'</td>
+              <td>GERENCIA SERVICIOS DE SALUD</td>
+              <td align=center><a href="#" class="btn btn-info enlaceg" name="1801" id="3">VER</a></td>
+            </tr>
+            </table>';
+          }
+          elseif($this->gestion==2021){
+            $tabla.='
+            <tr>
+              <td>'.($nro+1).'</td>
+              <td>GERENCIA GENERAL</td>
+              <td align=center><a href="#" class="btn btn-info enlaceg" name="2301" id="1">VER</a></td>
+            </tr>
+            <tr>
+              <td>'.($nro+2).'</td>
+              <td>GERENCIA ADMINISTRATIVA FINANCIERA</td>
+              <td align=center><a href="#" class="btn btn-info enlaceg" name="2300" id="2">VER</a></td>
+            </tr>
+            <tr>
+              <td>'.($nro+3).'</td>
+              <td>GERENCIA SERVICIOS DE SALUD</td>
+              <td align=center><a href="#" class="btn btn-info enlaceg" name="2308" id="3">VER</a></td>
+            </tr>
+            </table>';
+          }
+        
       return $tabla;
     }
-
-
-
-
-
 
 
     /*--- TABLA ACUMULADA EVALUACIÓN 2020 - REGIONAL, DISTRITAL ---*/
@@ -536,12 +554,13 @@ class Evaluacionpoa extends CI_Controller{
             <tr style="font-size: 10px;" align=center bgcolor='.$color.'>
               <th style="width:2%;height:15px;">#</th>
               <th style="width:20%;">REGIONAL</th>
-              <th style="width:10%;">ACT. PROGRAMADAS</th>
-              <th style="width:10%;">ACT. CUMPLIDAS</th>
-              <th style="width:10%;">ACT. NO CUMPLIDAS</th>
-              <th style="width:10%;">% EFICACIA</th>
-              <th style="width:10%;">% ECONOMIA</th>
-              <th style="width:10%;"> EFICIENCIA</th>
+              <th style="width:15%;">OPE. PROGRAMADAS AL TRIMESTRE</th>
+              <th style="width:15%;">OPE. CUMPLIDAS AL TRIMESTRE</th>
+              <th style="width:15%;">OPE. NO CUMPLIDAS AL TRIMESTRE</th>
+              <th style="width:15%;">% EFICACIA</th>
+              <th style="width:15%;">% ECONOMIA</th>';
+            // $tabla.=' <th style="width:10%;">EFICIENCIA</th>';
+             $tabla.='
             </tr>
           </thead>
           <tbody>';
@@ -554,24 +573,25 @@ class Evaluacionpoa extends CI_Controller{
             $tabla.='<tr style="font-size: 10px;">';
             $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
             $tabla.='<td style="width:20%;">'.strtoupper($row['dep_departamento']).'</td>';
-            $tabla.='<td style="width:10%;" align=right>'.$eficacia[2][$this->tmes].'</td>';
-            $tabla.='<td style="width:10%;" align=right>'.$eficacia[3][$this->tmes].'</td>';
-            $tabla.='<td style="width:10%;" align=right>'.$eficacia[4][$this->tmes].'</td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$economia[3].'%</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficiencia.'</b></td>';
+            $tabla.='<td style="width:15%;" align=right>'.$eficacia[2][$this->tmes].'</td>';
+            $tabla.='<td style="width:15%;" align=right>'.$eficacia[3][$this->tmes].'</td>';
+            $tabla.='<td style="width:15%;" align=right>'.$eficacia[4][$this->tmes].'</td>';
+            $tabla.='<td style="width:15%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
+            $tabla.='<td style="width:15%;" align=right><b>'.$economia[3].'%</b></td>';
+            /*$tabla.='<td style="width:10%;" align=right><b>'.$eficiencia.'</b></td>';*/
             $tabla.='</tr>';
           }
       $tabla.='
           <tr style="font-size: 10px;" bgcolor="#d3f8c5">
             <td></td>
             <td ><b>CONSOLIDADO INSTITUCIONAL</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficacia_nacional[2][$this->tmes].'</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficacia_nacional[3][$this->tmes].'</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficacia_nacional[4][$this->tmes].'</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficacia_nacional[5][$this->tmes].'%</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$economia_nacional[3].'%</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficiencia_nacional.'</b></td>
+            <td style="font-size: 15px;" align=right><b>'.$eficacia_nacional[2][$this->tmes].'</b></td>
+            <td style="font-size: 15px;" align=right><b>'.$eficacia_nacional[3][$this->tmes].'</b></td>
+            <td style="font-size: 15px;" align=right><b>'.$eficacia_nacional[4][$this->tmes].'</b></td>
+            <td style="font-size: 15px;" align=right><b>'.$eficacia_nacional[5][$this->tmes].'%</b></td>
+            <td style="font-size: 15px;" align=right><b>'.$economia_nacional[3].'%</b></td>';
+         // $tabla.='  <td style="font-size: 10px;" align=right><b>'.$eficiencia_nacional.'</b></td>';
+          $tabla.='
           </tr>
           </tbody>
         </table>';
