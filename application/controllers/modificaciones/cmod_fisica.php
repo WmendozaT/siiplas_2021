@@ -797,7 +797,7 @@ class Cmod_fisica extends CI_Controller {
                               <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</td>
                            </tr>
                            <tr style="font-size: 8pt;">
-                              <td style="height: 1.2%"><b>SUBACTIVIDAD</b></td>
+                              <td style="height: 1.2%"><b>UNIDAD RESP.</b></td>
                               <td style="width:90%;">: '.$data['cite'][0]['serv_cod'].' '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].'</td>
                            </tr>';
 
