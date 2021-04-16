@@ -705,7 +705,7 @@ class User extends CI_Controller{
             'rd_poa' => $gestion[0]['rd_aprobacion_poa'], /// Resolucion Directorio POA
             'tp_usuario' => 0,
             'img' => base_url().'assets/ifinal/cns_logo.JPG',
-           // 'img' => '/var/www/planificacion.cns.gob.bo/public_html/assets/ifinal/cns_logo.JPG',
+           // 'img' => 'assets/ifinal/cns_logo.JPG',
             'mes_actual'=>$this->verif_mes_gestion(),
             'modulos' => $modulos,
             'desc_mes' => $this->mes_texto($gestion[0]['conf_mes']),
@@ -750,7 +750,7 @@ class User extends CI_Controller{
             'rd_poa' => $gestion[0]['rd_aprobacion_poa'], /// Resolucion Directorio POA
             'tp_usuario' => 1,
             'img' => base_url().'assets/ifinal/cns_logo.JPG',
-           // 'img' => '/var/www/planificacion.cns.gob.bo/public_html/assets/ifinal/cns_logo.JPG',
+           // 'img' => 'assets/ifinal/cns_logo.JPG',
             'mes_actual'=>$this->verif_mes_gestion(),
             'desc_mes' => $this->mes_texto($gestion[0]['conf_mes']),
             'name' => 'SIIPLAS V1.0',

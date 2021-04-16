@@ -199,13 +199,22 @@ class Cevaluacion_pei extends CI_Controller {
               <td style="width:15%;" bgcolor="#dfefe4">'.$evaluado[0]['tprob'].'</td>
               <td style="width:15%;" bgcolor="#dfefe4">'.$evaluado[0]['tacciones'].'</td>
               <td style="width:3%;" align=center>';
-              if($suma_mevaluado<round($row['or_meta'],2) & $this->tp_adm==1) {
+              if($this->gestion==2020){
+                if($suma_mevaluado<round($row['or_meta'],2) & $this->tp_adm==1) {
                   $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff" title="MODIFICAR EVALUACI&Oacute;N META OPERACIÓN" name="'.$evaluado[0]['epog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/evalok.jpg" WIDTH="45" HEIGHT="45"/><br>MOD.EV.OPE.</a>';
                 }
                 else{
                   $tabla.='<b>EVALUADO</b>';
                 }
-                
+              }
+              else{
+                if($suma_mevaluado<round($row['or_meta'],2)) {
+                  $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff" title="MODIFICAR EVALUACI&Oacute;N META OPERACIÓN" name="'.$evaluado[0]['epog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/evalok.jpg" WIDTH="45" HEIGHT="45"/><br>MOD.EV.OPE.</a>';
+                }
+                else{
+                  $tabla.='<b>EVALUADO</b>';
+                }
+              }
               $tabla.='
               </td>';
             }
@@ -224,12 +233,18 @@ class Cevaluacion_pei extends CI_Controller {
                 <td style="width:15%;" bgcolor="#dfefe4">'.$get_ultimo[0]['tprob'].'</td>
                 <td style="width:15%;" bgcolor="#dfefe4">'.$get_ultimo[0]['tacciones'].'</td>
                 <td style="width:3%;" align=center>';
-                  if($this->tp_adm==1){
-                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff" title="MODIFICAR EVALUACI&Oacute;N META OPERACIÓN" name="'.$get_ultimo[0]['epog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/evalok.jpg" WIDTH="45" HEIGHT="45"/><br>MOD.EV.OPE.</a>';
+                  if($this->gestion==2020){
+                    if($this->tp_adm==1){
+                      $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff" title="MODIFICAR EVALUACI&Oacute;N META OPERACIÓN" name="'.$get_ultimo[0]['epog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/evalok.jpg" WIDTH="45" HEIGHT="45"/><br>MOD.EV.OPE.</a>';
+                    }
+                    else{
+                      $tabla.='<b>EVALUADO</b>';
+                    }
                   }
                   else{
                     $tabla.='<b>EVALUADO</b>';
                   }
+                  
                 $tabla.='
                 </td>';
               }
@@ -240,12 +255,17 @@ class Cevaluacion_pei extends CI_Controller {
                 <td style="width:15%;" bgcolor="#dfefe4"></td>
                 <td style="width:15%;" bgcolor="#dfefe4"></td>
                 <td style="width:3%;" align=center>';
+                if($this->gestion==2020){
                   if($this->tp_adm==1){
                     $tabla.='<a href="#" data-toggle="modal" data-target="#modal_add_ff" class="btn btn-xs add_ff" title="EVALUAR META OPERACIÓN" name="'.$row['pog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/eval.jpg" WIDTH="45" HEIGHT="45"/><br>EV. OPE.</a>';
                   }
                   else{
                     $tabla.='<b>EVALUADO</b>';
                   }
+                }
+                else{
+                  $tabla.='<a href="#" data-toggle="modal" data-target="#modal_add_ff" class="btn btn-xs add_ff" title="EVALUAR META OPERACIÓN" name="'.$row['pog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/eval.jpg" WIDTH="45" HEIGHT="45"/><br>EV. OPE.</a>';
+                }
                 $tabla.='
                 </td>';
               }

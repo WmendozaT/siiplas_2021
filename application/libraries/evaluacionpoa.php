@@ -508,7 +508,7 @@ class Evaluacionpoa extends CI_Controller{
               <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                 <tr>
                   <td style="width:15%;height:1000% "  align="center">
-                    <img src="'.$this->session->userdata('img').'" style="width:35%;"/></br>
+                    <img src="'.base_url().'assets/ifinal/cns_logo.JPG" style="width:35%;"/></br>
                   </td>
                   <td style="width:85%;">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">

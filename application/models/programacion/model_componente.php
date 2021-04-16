@@ -40,7 +40,7 @@ class Model_componente extends CI_Model{
     }
 
     /*------------ Relacion Insumo Componente -------*/
-    function imsumo_componente($com_id){
+/*    function imsumo_componente($com_id){
         $sql = 'select *
                 from insumocomponente ic
                 Inner Join insumos as i On i.ins_id=ic.ins_id
@@ -48,7 +48,7 @@ class Model_componente extends CI_Model{
                 where ic.com_id='.$com_id.' and i.ins_estado!=\'3\' and ig.g_id='.$this->gestion.''; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------ LISTA DE SERVICIOS Y COMPONENTES PARA LA EVALUACIÓN -------*/
     function list_servicios_operaciones($pfec_id){

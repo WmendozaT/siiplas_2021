@@ -34,6 +34,8 @@ class Rep_operaciones extends CI_Controller {
         }
     }
     
+
+    
     //// TIPO DE RESPONSABLE
     public function tp_resp(){
       $ddep = $this->model_proyecto->dep_dist($this->dist);
