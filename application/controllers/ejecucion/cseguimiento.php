@@ -414,10 +414,19 @@ class Cseguimiento extends CI_Controller {
           $this->db->delete('prod_ejecutado_mensual');
         /// -----------------------------------
 
+        /// ----- Eliminando Registro --------
+          $this->db->where('prod_id', $prod_id);
+          $this->db->where('m_id', $this->verif_mes[1]);
+          $this->db->where('g_id', $this->gestion);
+          $this->db->delete('prod_no_ejecutado_mensual');
+        /// -----------------------------------
+
           if($ejec!=0){
             $this->model_producto->add_prod_ejec_gest($prod_id,$this->gestion,$this->verif_mes[1],$ejec,$mv,$obs,$acc);
           }
           else{
+            
+
             $no_ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($prod_id,$this->verif_mes[1]);
             if(count($no_ejec)!=0){
               if(($no_ejec[0]['medio_verificacion']!=$mv) || ($no_ejec[0]['observacion']!=$obs)){
@@ -821,7 +830,7 @@ class Cseguimiento extends CI_Controller {
     /*------ Formulario Subactividad-----*/
     public function formulario_subactividad(){
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      $data['menu'] = $this->seguimientopoa->menu_segpoa();
+      $data['menu'] = $this->seguimientopoa->menu_segpoa($this->com_id);
       $data['componente']=$this->model_componente->get_datos_componente($this->com_id,$this->gestion);
       if(count($data['componente'])!=0){
         $data['com_id']=$this->com_id;

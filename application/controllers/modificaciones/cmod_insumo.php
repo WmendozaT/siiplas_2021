@@ -926,8 +926,8 @@ class Cmod_insumo extends CI_Controller {
       $data['cite']=$this->model_modrequerimiento->get_cite_insumo($cite_id);
       if(count($data['cite'])!=0){
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); 
-                           if($this->gestion>2020){ // gestion 2021
-                            $titulo='
+        if($data['proyecto'][0]['tp_id']==1){
+          $titulo='
                             <tr style="font-size: 8pt;">
                               <td style="height: 1.2%"><b>PROYECTO</b></td>
                               <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</td>
@@ -936,22 +936,10 @@ class Cmod_insumo extends CI_Controller {
                               <td style="height: 1.2%"><b>UNIDAD RESPONSABLE</b></td>
                               <td style="width:90%;">: '.$data['cite'][0]['serv_cod'].' '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].'</td>
                            </tr>';
-                           }
-                           else{
-                            $titulo='
-                           <tr style="font-size: 8pt;">
-                              <td style="height: 1.2%"><b>COMPONENTE</b></td>
-                              <td style="width:90%;">: '.$data['cite'][0]['com_componente'].'</td>
-                           </tr>';
-                           }
-                           
-
-        if($data['cite'][0]['tp_id']==4){
+        }
+        else{
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
-          $titulo='       <tr style="font-size: 8pt;">
-                              <td style="height: 1.2%"><b>PROYECTO</b></td>
-                              <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</td>
-                           </tr>
+          $titulo='       
                           <tr style="font-size: 8pt;">
                             <td style="height: 1.2%"><b>ACTIVIDAD </b></td>
                             <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' '.$data['proyecto'][0]['tipo'].'   '.strtoupper($data['proyecto'][0]['act_descripcion']).' '.$data['proyecto'][0]['abrev'].'</td>

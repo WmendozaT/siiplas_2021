@@ -148,7 +148,7 @@ class Evaluacionpoa extends CI_Controller{
           <td style="font-size: 7.8pt;"><b>CONSOLIDADO - '.strtoupper($departamento[0]['dep_departamento']).'</b></td>
           <td align=center><a href="#" class="btn btn-info enlace" name="'.$departamento[0]['dep_id'].'" id="0">VER</a></td>
           </tr>';
-          if(count($distritales)>1){
+        //  if(count($distritales)>1){
             foreach($distritales as $row){
               $nro++;
               $tabla.='
@@ -158,7 +158,7 @@ class Evaluacionpoa extends CI_Controller{
                 <td align=center><a href="#" class="btn btn-info enlace" name="'.$row['dist_id'].'" id="1">VER</a></td>
               </tr>';
             }
-          }
+        //  }
           
       $tabla.='</table>';
       return $tabla;

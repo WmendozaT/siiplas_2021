@@ -31,6 +31,7 @@ class Ccertificacion_poa extends CI_Controller {
       $this->dist_tp = $this->session->userData('dist_tp');
       $this->tp_adm = $this->session->userData('tp_adm');
       $this->fun_id = $this->session->userData('fun_id');
+      $this->load->library('certificacionpoa');
       }
       else{
           $this->session->sess_destroy();
@@ -1417,6 +1418,41 @@ class Ccertificacion_poa extends CI_Controller {
 
       return $tabla;
     }
+
+  //// CERTIFICACION POA POR SUBACTIVIDAD
+
+    /*------ SOLICITAR CERTIFICACION POA  -------*/
+    public function solicitar_certpoa($com_id){
+      echo "Hola mundo : ".$com_id; 
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /*------ NOMBRE MES -------*/

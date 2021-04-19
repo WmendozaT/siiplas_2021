@@ -199,6 +199,7 @@ function abreVentana(PDF){
       }
       else{
           document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
+        //  alert("prod_id="+prod_id+" &ejec="+ejec+" &mv="+mverificacion+" &obs="+problemas+" &acc="+accion)
           alertify.confirm("GUARDAR SEGUIMIENTO POA?", function (a) {
           if (a) {
               var url = base+"index.php/ejecucion/cseguimiento/guardar_seguimiento";

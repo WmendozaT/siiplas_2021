@@ -112,6 +112,7 @@
     <div class="jumbotron">
         <div class="row box-green1">
       <div class="col-md-8">
+        <!-- <?php echo $_SERVER["HTTP_HOST"].''.$_SERVER["REQUEST_URI"].'-----'.base_url(); ?> -->
         <h3>BIENVENIDO : <?php echo $resp; ?></h3>
         <h4><?php echo $res_dep; ?></h4>
         <h4><b>CARGO : </b><?php echo $this->session->userdata("cargo");?></h4>
