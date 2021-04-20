@@ -30,6 +30,27 @@ class Certificacionpoa extends CI_Controller{
             $this->tp_adm = $this->session->userData('tp_adm');
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /// Cabecera Reporte de Seguimiento POA Mensual 2021
     public function cabecera($componente,$proyecto){
       $tabla='';
@@ -2047,19 +2068,6 @@ class Certificacionpoa extends CI_Controller{
       </aside>';
 
       return $tabla;
-    }
-
-    /*--- verifica datos del mes y año ---*/
-    public function verif_mes_gestion(){
-      $valor=3;
-      //$valor=ltrim(date("m"), "0"); // numero mes
-      $mes=$this->mes_nombre_completo($valor);
-
-      $datos[1]=$valor; // numero del mes
-      $datos[2]=$mes[$valor]; // mes
-      $datos[3]=$this->gestion; // Gestion
-
-      return $datos;
     }
 }
 ?>

@@ -1423,7 +1423,24 @@ class Ccertificacion_poa extends CI_Controller {
 
     /*------ SOLICITAR CERTIFICACION POA  -------*/
     public function solicitar_certpoa($com_id){
-      echo "Hola mundo : ".$com_id; 
+      $componente = $this->model_componente->get_componente($com_id);
+      if(count($componente)!=0){
+        $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
+        $operaciones_ppto=$this->model_certificacion->get_operaciones_x_subactividad_ppto($com_id);
+        if(count($operaciones_ppto)>1){
+          echo "Varios";
+        }
+        else{
+          echo "Solo uno";
+        }
+
+
+        $this->load->view('admin/ejecucion/certpoa_unidad/formulario_certificacionpoa', $data);
+      }
+      else{
+        echo "Error !!!";
+      }
+      
     }
 
 

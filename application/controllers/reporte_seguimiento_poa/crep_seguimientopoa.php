@@ -16,6 +16,7 @@ class Crep_seguimientopoa extends CI_Controller {
             $this->load->model('ejecucion/model_seguimientopoa');
             $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
             $this->load->model('reporte_eval/model_evalunidad'); /// Model Evaluacion Unidad
+            $this->load->model('mantenimiento/model_configuracion');
 
             $this->gestion = $this->session->userData('gestion');
             $this->adm = $this->session->userData('adm');
@@ -179,7 +180,7 @@ class Crep_seguimientopoa extends CI_Controller {
         }
       }
       else{
-        $titulo_cabecera='CONSOLIDADO INSITUCIONAL - CNS';
+        $titulo_cabecera='CONSOLIDADO INSTITUCIONAL - CNS';
       }
       
 
@@ -193,31 +194,60 @@ class Crep_seguimientopoa extends CI_Controller {
       <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
         <section id="widget-grid" class="well">
           <div align=right>
-            <a href="'.site_url("").'/rep/get_reporte_seguimientopoa/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="SEGUIMIENTO POA"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR SEGUIMIENTO POA</a>&nbsp;&nbsp;&nbsp;&nbsp;
+           '.$this->formularios_mensual($dep_id,$dist_id,$tp_id).'&nbsp;&nbsp;&nbsp;
           </div>
           <h1><b>SEGUIMIENTO POA al mes de '.$this->verif_mes[2].' de la Gesti&oacute;n '.$this->gestion.'</b></h1>
           <h2><b>'.$titulo_cabecera.' ('.$titulo.')</b></h2>
         </section>';
-        
+
         if($dep_id!=0){
-          $tabla.=$this->tabla_seguimiento($unidades,$titulo,0,$tp_id);
+          $tabla.=$this->tabla_seguimiento($unidades,$titulo,0,$tp_id,$this->verif_mes[1]);
         }
         else{
-          $tabla.=$this->tabla_nacional(0,$tp_id);
+          $tabla.=$this->tabla_nacional(0,$tp_id,$this->verif_mes[1]);
         }
         
-
-      
       return $tabla;
     }
 
 
 
+    /*-- LISTA DE FORMULARIOS REPORTE DE SEGUIMIENTO POA --*/
+    public function formularios_mensual($dep_id,$dist_id,$tp_id){
+      $tabla='';
+      $meses = $this->model_configuracion->get_mes();
+
+      $tabla.='
+        <div class="btn-group">
+          <a class="btn btn-default">FORMULARIO SEGUIMIENTO POA </a>
+          <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+          <ul class="dropdown-menu">';
+            foreach($meses as $rowm){
+            if($rowm['m_id']<=ltrim(date("m"), "0")){
+              $tabla.='
+              <li>
+                <a href="'.site_url("").'/rep/get_reporte_seguimientopoa/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'/'.$rowm['m_id'].'" target="_blank">REPORTE SEGUIMIENTO POA - '.$rowm['m_descripcion'].'</a>
+              </li>';
+            }                     
+          }
+          $tabla.='
+          </ul>
+        </div>';
+
+      return $tabla;
+    }
+
+
+
+
+
+
     /// ---- REGIONALES (SEGUIMIENTO CONSOLIDADO NACIONAL)
-    public function tabla_nacional($tp_rep,$tp_id){
+    public function tabla_nacional($tp_rep,$tp_id,$mes_id){
       $regionales=$this->model_seguimientopoa->get_meta_total_regionales();
       // tp : 0 (Vista)
       // tp : 1 (Reporte)
+      $mes=$this->model_evaluacion->get_mes($mes_id);
       $tab='class="table table-bordered" align=center style="width:50%;"';
       if($tp_rep==1){
         $tab='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:80%;" align=center';
@@ -230,16 +260,16 @@ class Crep_seguimientopoa extends CI_Controller {
             <th style="width:2%;height:20px;" align="center"></th>
             <th style="width:10%;" align="center">COD. DA.</th>
             <th style="width:30%;" align="center">DIRECCI&Oacute;N ADMINISTRATIVA</th>
-            <th style="width:15%;" align="center">META PROGRAMADO AL MES DE '.$this->verif_mes[2].'</th>
-            <th style="width:15%;" align="center">META CUMPLIDO AL MES DE '.$this->verif_mes[2].'</th>
-            <th style="width:10%;" align="center">% CUMPLIMIENTO AL MES DE '.$this->verif_mes[2].'</th>
+            <th style="width:15%;" align="center">META PROGRAMADO AL MES DE '.$mes[0]['m_descripcion'].'</th>
+            <th style="width:15%;" align="center">META CUMPLIDO AL MES DE '.$mes[0]['m_descripcion'].'</th>
+            <th style="width:10%;" align="center">% CUMPLIMIENTO AL MES DE '.$mes[0]['m_descripcion'].'</th>
             <th style="width:10%;" align="center"></th>
           </tr>
         </thead>
         <tbody id="bdi">';
         $nro=0;
         foreach ($regionales as $row){
-          $meta=$this->get_meta_regional($row['dep_id']);
+          $meta=$this->get_meta_regional($row['dep_id'],$mes_id);
           $nro++;
           $tabla.='
           <tr>
@@ -263,9 +293,10 @@ class Crep_seguimientopoa extends CI_Controller {
 
 
     /// ---- UNIDADES DISTRITAL/REGIONAL
-    public function tabla_seguimiento($unidades,$titulo,$tp_rep,$tp_id){
+    public function tabla_seguimiento($unidades,$titulo,$tp_rep,$tp_id,$mes_id){
       // tp : 0 (Vista)
       // tp : 1 (Reporte)
+      $mes=$this->model_evaluacion->get_mes($mes_id);
       $tab='id="dt_basic" class="table table-bordered" style="width:100%;" border=1';
       if($tp_rep==1){
         $tab='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center';
@@ -282,16 +313,16 @@ class Crep_seguimientopoa extends CI_Controller {
             <th style="width:5%;" align="center">COD. PROY.</th>
             <th style="width:5%;" align="center">COD. ACT.</th>
             <th style="width:30%;" align="center">'.$titulo.'</th>
-            <th style="width:10%;" align="center">META PROGRAMADO AL MES DE '.$this->verif_mes[2].'</th>
-            <th style="width:10%;" align="center">META EJECUTADO AL MES DE '.$this->verif_mes[2].'</th>
-            <th style="width:6%;" align="center">% CUMPLIMIENTO AL MES DE '.$this->verif_mes[2].'</th>
+            <th style="width:10%;" align="center">META PROGRAMADO AL MES DE '.$mes[0]['m_descripcion'].'</th>
+            <th style="width:10%;" align="center">META EJECUTADO AL MES DE '.$mes[0]['m_descripcion'].'</th>
+            <th style="width:6%;" align="center">% CUMPLIMIENTO AL MES DE '.$mes[0]['m_descripcion'].'</th>
             <th style="width:10%;" align="center"></th>
           </tr>
         </thead>
         <tbody id="bdi">';
         $nro=0;
         foreach ($unidades as $row){
-          $meta=$this->get_meta_unidad($row['pfec_id']);
+          $meta=$this->get_meta_unidad($row['pfec_id'],$mes_id);
           $nro++;
           $tabla.='
           <tr title="'.$row['aper_id'].'">
@@ -332,8 +363,8 @@ class Crep_seguimientopoa extends CI_Controller {
 
 
     /*-----REPORTE SEGUIMIENTO POA POR DISTRITAL,REGIONAL 2021-----*/
-    public function reporte_seguimiento_poa_unidades($dep_id,$dist_id,$tp_id){
-      
+    public function reporte_seguimiento_poa_unidades($dep_id,$dist_id,$tp_id,$mes_id){
+      $mes=$this->model_evaluacion->get_mes($mes_id);
       if($dep_id!=0){
         if($dist_id==0){
           $departamento=$this->model_proyecto->get_departamento($dep_id);
@@ -345,27 +376,27 @@ class Crep_seguimientopoa extends CI_Controller {
           $data['titulo']=strtoupper($departamento[0]['dist_distrital']);
           $unidades=$this->model_seguimientopoa->list_poa_gacorriente_pinversion_distrital($dist_id,$tp_id);
         }
-        $tabla=$this->tabla_seguimiento($unidades,$data['titulo'],1,$tp_id);
+        $tabla=$this->tabla_seguimiento($unidades,$data['titulo'],1,$tp_id,$mes_id);
       }
       else{
-        $tabla=$this->tabla_nacional(1,$tp_id);
+        $tabla=$this->tabla_nacional(1,$tp_id,$mes_id);
         $data['titulo']='CONSOLIDADO NACIONAL';
       //  $data['titulo_cabecera']='CONSOLIDADO INSTITUCIONAL C.N.S.';
       }
 
       
 
-        $data['titulo_cabecera']='GASTO CORRIENTE';
-        if($tp_id==1){
-          $data['titulo_cabecera']='PROYECTO DE INVERSI&Oacute;N';
-        }
+      $data['titulo_cabecera']='GASTO CORRIENTE';
+      if($tp_id==1){
+        $data['titulo_cabecera']='PROYECTO DE INVERSI&Oacute;N';
+      }
 
-        
-        $data['tit']='<b>SEGUIMIENTO POA al mes de '.$this->verif_mes[2].' de la Gesti&oacute;n '.$this->gestion.'</b>';
-        
-        $data['mes'] = $this->mes_nombre();
-        $data['lista']=$tabla;
-        $this->load->view('admin/reportes_cns/seguimiento_poa/reporte_seguimiento_poa', $data);
+      
+      $data['tit']='<b>SEGUIMIENTO POA al mes de '.$mes[0]['m_descripcion'].' de la Gesti&oacute;n '.$this->gestion.'</b>';
+      
+      $data['mes'] = $this->mes_nombre();
+      $data['lista']=$tabla;
+      $this->load->view('admin/reportes_cns/seguimiento_poa/reporte_seguimiento_poa', $data);
     }
 
 
@@ -502,9 +533,9 @@ class Crep_seguimientopoa extends CI_Controller {
     }
 
     /*------ OBTIENE METAS PROGRAMAS Y EJECUTADAS  --------*/
-    public function get_meta_unidad($pfec_id){
-      $meta_parcial_programado=$this->model_seguimientopoa->get_meta_unidad(1,$pfec_id,$this->verif_mes[1]); /// Programado
-      $meta_parcial_ejecutado=$this->model_seguimientopoa->get_meta_unidad(2,$pfec_id,$this->verif_mes[1]); /// Ejecutado
+    public function get_meta_unidad($pfec_id,$mes_id){
+      $meta_parcial_programado=$this->model_seguimientopoa->get_meta_unidad(1,$pfec_id,$mes_id); /// Programado
+      $meta_parcial_ejecutado=$this->model_seguimientopoa->get_meta_unidad(2,$pfec_id,$mes_id); /// Ejecutado
       for ($i=1; $i <=5 ; $i++) { 
         $meta[$i]=0;
       }
@@ -541,9 +572,9 @@ class Crep_seguimientopoa extends CI_Controller {
     }
 
     /*------ OBTIENE METAS PROGRAMAS Y EJECUTADAS POR REGIONAL --------*/
-    public function get_meta_regional($dep_id){
-      $meta_parcial_programado=$this->model_seguimientopoa->get_meta_regional(1,$dep_id,$this->verif_mes[1]); /// Programado
-      $meta_parcial_ejecutado=$this->model_seguimientopoa->get_meta_regional(2,$dep_id,$this->verif_mes[1]); /// Ejecutado
+    public function get_meta_regional($dep_id,$mes_id){
+      $meta_parcial_programado=$this->model_seguimientopoa->get_meta_regional(1,$dep_id,$mes_id); /// Programado
+      $meta_parcial_ejecutado=$this->model_seguimientopoa->get_meta_regional(2,$dep_id,$mes_id); /// Ejecutado
       for ($i=1; $i <=5 ; $i++) { 
         $meta[$i]=0;
       }

@@ -64,6 +64,18 @@ class Model_certificacion extends CI_Model{
     }
 
 
+    /*------- LISTA OPERACIONES POR SUBACTIVIDAD CON SU PRESUPUESTO (2021) --------*/
+    public function get_operaciones_x_subactividad_ppto($com_id){
+        $sql = '
+            select *
+            from vista_operaciones_por_subactividad_ppto
+            where com_id='.$com_id.' and aper_gestion='.$this->gestion.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
 
     /*------- DATOS UNIDAD,ESTABLECIMIENTO, ATRAVES DE SU PRODUCTO ID (GASTO CORRIENTE)--------*/
     public function get_datos_unidad_prod($prod_id){

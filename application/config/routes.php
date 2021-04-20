@@ -432,7 +432,7 @@ $route['evalpoa/formulario_evaluacion_poa/(:any)'] = 'ejecucion/cevaluacion_poa/
 //====== REPORTE SEGUIMIENTO EVALUACION POA 2021
 $route['rep_seguimiento_poa'] = 'reporte_seguimiento_poa/crep_seguimientopoa/list_regiones';  /// MENU SEGUIMIENTO POA 2021
 $route['rep/get_seguimiento_da'] = 'reporte_seguimiento_poa/crep_seguimientopoa/get_unidades_administrativas'; ////// Combo Unidades Administrativas Seguimiento POA
-$route['rep/get_reporte_seguimientopoa/(:any)'] = 'reporte_seguimiento_poa/crep_seguimientopoa/reporte_seguimiento_poa_unidades/$1'; ////// Reporte Seguimiento POA por Unidades,Distrital,Regional
+$route['rep/get_reporte_seguimientopoa/(:any)'] = 'reporte_seguimiento_poa/crep_seguimientopoa/reporte_seguimiento_poa_unidades/$1/$2/$3/$4'; ////// Reporte Seguimiento POA por Unidades,Distrital,Regional
 
 //====== MENU SEGUIMIENTO A ESTABLECIMIENTOS DE SALUD 2021
 $route['seguimiento_establecimientos'] = 'ejecucion/cseguimiento_establecimiento/formulario_establecimiento';  /// MENU SEGUIMIENTO POA 2021

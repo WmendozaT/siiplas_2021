@@ -2049,17 +2049,5 @@ class Seguimientopoa extends CI_Controller{
       return $tabla;
     }
 
-    /*--- verifica datos del mes y año ---*/
-    public function verif_mes_gestion(){
-      $valor=3;
-      //$valor=ltrim(date("m"), "0"); // numero mes
-      $mes=$this->mes_nombre_completo($valor);
-
-      $datos[1]=$valor; // numero del mes
-      $datos[2]=$mes[$valor]; // mes
-      $datos[3]=$this->gestion; // Gestion
-
-      return $datos;
-    }
 }
 ?>

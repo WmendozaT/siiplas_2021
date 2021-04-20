@@ -1075,7 +1075,7 @@ class User extends CI_Controller{
 
     /*--- verifica datos del mes y año ---*/
     public function verif_mes_gestion(){
-      //$valor=9;
+      //$valor=3;
       $valor=ltrim(date("m"), "0"); // numero mes
       $mes=$this->mes_nombre_completo($valor);
 
