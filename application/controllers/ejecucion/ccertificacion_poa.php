@@ -283,7 +283,7 @@ class Ccertificacion_poa extends CI_Controller {
         $data['titulo']=$this->titulo_cabecera($data['datos']);
         $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
         $this->update_gestion_temporalidad($requerimientos);
-        $data['requerimientos'] = $this->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
+        $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
         $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/form_items_prevista', $data);
 
         /*if(count($requerimientos)>500){
@@ -314,246 +314,10 @@ class Ccertificacion_poa extends CI_Controller {
 
 
 
-  /*------- LISTA DE REQUERIMIENTOS PRE LISTA ------*/
-  public function list_requerimientos_prelista($prod_id){
-    $tabla='';
-    $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
-
-    $tabla.='
-      <table class="table table-bordered" style="width:97%;" align="center" id="datos">
-        <thead >
-          <tr>
-            <th style="width:1%;">#</th>
-            <th style="width:2%;"></th>
-            <th style="width:4%;">PARTIDA</th>
-            <th style="width:16%;">REQUERIMIENTO</th>
-            <th style="width:5%;">UNIDAD DE MEDIDA</th>
-            <th style="width:3%;">CANTIDAD</th>
-            <th style="width:5%;">PRECIO</th>
-            <th style="width:5%;">COSTO TOTAL</th>
-            <th style="width:4.5%;">ENE.</th>
-            <th style="width:4.5%;">FEB.</th>
-            <th style="width:4.5%;">MAR.</th>
-            <th style="width:4.5%;">ABR.</th>
-            <th style="width:4.5%;">MAY.</th>
-            <th style="width:4.5%;">JUN.</th>
-            <th style="width:4.5%;">JUL.</th>
-            <th style="width:4.5%;">AGO.</th>
-            <th style="width:4.5%;">SEPT.</th>
-            <th style="width:4.5%;">OCT.</th>
-            <th style="width:4.5%;">NOV.</th>
-            <th style="width:4.5%;">DIC.</th>
-            <th style="width:8%;">OBSERVACIÓN</th>
-          </tr>
-        </thead>
-        <tbody>';
-        $nro=0;
-        foreach($requerimientos as $row){
-          $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-          $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
-
-          if(count($mcertificado)!=0){
-            $monto_certificado=$mcertificado[0]['certificado'];
-          }
-
-          if($monto_certificado!=$row['ins_costo_total']){
-              $nro++;
-              $tabla.='
-              <tr  title='.$row['ins_id'].' id="tr'.$nro.'" >
-                <td>'.$nro.'</td>
-                <td>';
-                if($this->model_certificacion->get_insumo_programado($row['ins_id'])>1){
-                  $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila(this.value, this.checked);"/><br>';
-                }
-                else{
-                  $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFilacompleta(this.value,'.$nro.',this.checked);"/><br>';
-                }
-                $tabla.='
-                <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
-                </td>
-                <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
-                <td>'.$row['ins_detalle'].'</td>
-                <td>'.$row['ins_unidad_medida'].'</td>
-                <td align=right>'.$row['ins_cant_requerida'].'</td>
-                <td align=right>'.$row['ins_costo_unitario'].'</td>
-                <td align=right>'.$row['ins_costo_total'].'</td>';
-                if($this->model_certificacion->get_insumo_programado($row['ins_id'])>1){
-                  for ($i=1; $i <=12 ; $i++) {
-                    $color=''; 
-                    $m=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
-                    $tabla.='
-                    <td align=right>
-                      <table align=right>
-                        <tr>
-                          <td>
-                            <div id="m'.$i.''.$row['ins_id'].'" style="display: none;">';
-                            if(count($m)!=0){
-                              if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
-                                $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value, this.checked);"/>';
-                              }
-                              else{
-                                $color='green';
-                              }
-                            }
-                    $tabla.='
-                          </td>
-                          <td align=right>';
-                          if(count($m)!=0){
-                            $tabla.='<font color="'.$color.'">'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</font>';
-                          }
-                          else{
-                            $tabla.='0,00';
-                          }
-                    $tabla.='
-                          </td>
-
-                        </tr>
-                      </table>
-                    </td>';
-                  }
-                }
-                else{
-                  $temp=$this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-                  for ($j=1; $j <=12 ; $j++) {
-                    $bgcolor='';
-                    if($temp[0]['mes'.$j.'']!=0){
-                      $bgcolor='#d5f5f0';
-                    }
-                    $tabla.='
-                    <td align="right" bgcolor='.$bgcolor.'>
-                      '.number_format($temp[0]['mes'.$j.''], 2, ',', '.').'
-                    </td>';
-                  }
-                }
-
-                $tabla.='
-                <td align=right>'.$row['ins_observacion'].'</td>
-              </tr>';
-          }
-        }
-      $tabla.='
-        </tbody>
-      </table>';
-
-    return $tabla;
-  }
+  
 
 
-  /*------- LISTA DE REQUERIMIENTOS NORMAL ------*/
-  public function list_requerimientos($prod_id){
-    $tabla='';
-    $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
-
-    $tabla.='
-      <table class="table table-bordered" style="width:97%;" align="center" id="datos">
-        <thead >
-          <tr>
-            <th style="width:1%;">#</th>
-            <th style="width:2%;"></th>
-            <th style="width:4%;">PARTIDA</th>
-            <th style="width:16%;">REQUERIMIENTO</th>
-            <th style="width:5%;">UNIDAD DE MEDIDA</th>
-            <th style="width:3%;">CANTIDAD</th>
-            <th style="width:5%;">COSTO UNITARIO</th>
-            <th style="width:5%;">COSTO TOTAL</th>
-            <th style="width:5%;">MONTO CERTIFICADO</th>
-            <th style="width:4.5%;">ENE.</th>
-            <th style="width:4.5%;">FEB.</th>
-            <th style="width:4.5%;">MAR.</th>
-            <th style="width:4.5%;">ABR.</th>
-            <th style="width:4.5%;">MAY.</th>
-            <th style="width:4.5%;">JUN.</th>
-            <th style="width:4.5%;">JUL.</th>
-            <th style="width:4.5%;">AGO.</th>
-            <th style="width:4.5%;">SEPT.</th>
-            <th style="width:4.5%;">OCT.</th>
-            <th style="width:4.5%;">NOV.</th>
-            <th style="width:4.5%;">DIC.</th>
-          </tr>
-        </thead>
-        <tbody>';
-        $nro=0;
-        foreach($requerimientos as $row){
-          $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-          $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
-
-          if(count($mcertificado)!=0){
-            $monto_certificado=$mcertificado[0]['certificado'];
-            
-
-            if($monto_certificado==$row['ins_costo_total']){
-              $verif=1;
-              $color_tr="#f7d6dc";
-            }
-            elseif($monto_certificado<$row['ins_costo_total']){
-              $color_tr="#f6f7cb";
-            }
-          }
-
-          if($monto_certificado!=$row['ins_costo_total']){
-              $nro++;
-              $tabla.='
-              <tr bgcolor="'.$color_tr.'" title='.$row['ins_id'].'>
-                <td>'.$nro.'</td>
-                <td>';
-                  if($verif==0){
-                    $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila(this.value, this.checked);"/><br>
-                            <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">';
-                  }
-                $tabla.='
-                </td>
-                <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
-                <td>'.$row['ins_detalle'].'</td>
-                <td>'.$row['ins_unidad_medida'].'</td>
-                <td align=right>'.$row['ins_cant_requerida'].'</td>
-                <td align=right>'.$row['ins_costo_unitario'].'</td>
-                <td align=right>'.$row['ins_costo_total'].'</td>
-                <td align=right bgcolor="#e7f5f3">'.number_format($monto_certificado, 2, ',', '.').'</td>';
-
-                for ($i=1; $i <=12 ; $i++) {
-                    $color=''; 
-                    $m=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
-                    $tabla.='
-                    <td align=right>
-                      <table align=right>
-                        <tr>
-                          <td>
-                            <div id="m'.$i.''.$row['ins_id'].'" style="display: none;">';
-                            if(count($m)!=0){
-                              if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
-                                $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value, this.checked);"/>';
-                              }
-                              else{
-                                $color='green';
-                              }
-                            }
-                    $tabla.='
-                          </td>
-                          <td align=right >';
-                          if(count($m)!=0){
-                            $tabla.='<font color="'.$color.'">'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</font>';
-                          }
-                          else{
-                            $tabla.='0,00';
-                          }
-                    $tabla.='
-                          </td>
-                        </tr>
-                      </table>
-                    </td>';
-                  }
-                
-                $tabla.='
-              </tr>';
-          }
-
-        }
-      $tabla.='
-        </tbody>
-      </table>';
-
-    return $tabla;
-  }
+  
 
   /*------ VALIDA CERTIFICACION POA (2020 - 2021) ------*/
   public function valida_cpoa(){
@@ -1421,30 +1185,111 @@ class Ccertificacion_poa extends CI_Controller {
 
   //// CERTIFICACION POA POR SUBACTIVIDAD
 
-    /*------ SOLICITAR CERTIFICACION POA  -------*/
-    public function solicitar_certpoa($com_id){
-      $componente = $this->model_componente->get_componente($com_id);
-      if(count($componente)!=0){
-        $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
-        $operaciones_ppto=$this->model_certificacion->get_operaciones_x_subactividad_ppto($com_id);
-        if(count($operaciones_ppto)>1){
-          echo "Varios";
-        }
-        else{
-          echo "Solo uno";
-        }
+  /*------ SOLICITAR CERTIFICACION POA  -------*/
+  public function solicitar_certpoa($com_id){
+    $componente = $this->model_componente->get_componente($com_id);
+    if(count($componente)!=0){
+      $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
+      $titulo=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].' / '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'];
+      $data['loading']='<div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
+      $data['select_ope']=$this->select_mis_productos($com_id,$titulo);
+      $data['formulario']='';
 
+//      echo $this->certificacionpoa->list_requerimientos_prelista(47652);
 
-        $this->load->view('admin/ejecucion/certpoa_unidad/formulario_certificacionpoa', $data);
-      }
-      else{
-        echo "Error !!!";
-      }
-      
+     $this->load->view('admin/ejecucion/certpoa_unidad/formulario_certificacionpoa', $data);
     }
+    else{
+      echo "Error !!!";
+    }
+    
+  }
+
+  /*-------- GET CUADRO CERTIFICACION POA --------*/
+  public function get_cuadro_certificacionpoa(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $prod_id = $this->security->xss_clean($post['prod_id']); // prod id
+
+/*      $tabla='
+      <section id="widget-grid" class="well" align="center">
+        <iframe id="ipdf" width="100%" height="800px;" src="'.base_url().'index.php/form_certpoa/'.$prod_id.'"></iframe>
+      </section>';*/
+
+      $tabla=$this->formulario_certpoa($prod_id);
+      $result = array(
+        'respuesta' => 'correcto',
+        'requerimientos'=>$tabla,
+      );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+  public function select_mis_productos($com_id,$titulo){
+    $productos=$this->model_certificacion->get_operaciones_x_subactividad_ppto($com_id);
+    $tabla='';
+    $tabla='<form class="form-horizontal">
+              <input name="base" type="hidden" value="'.base_url().'">
+              <fieldset>
+                <legend><b>'.$titulo.'</b></legend>
+                <div class="form-group">
+                  <label class="col-md-2 control-label">SELECCIONE OPERACI&Oacute;N</label>
+                  <div class="col-md-6">
+                    <select class="form-control" name="prod_id" id="prod_id">
+                      <option value="0">Seleccione Operación</option>';
+                     foreach($productos as $row){
+                        $tabla.='<option value="'.$row['prod_id'].'">'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
+                      }
+                     $tabla.='
+                    </select> 
+                  </div>
+                </div>
+              </fieldset>
+            </form>';
+    return $tabla;
+  }
 
 
 
+
+
+  /*------ FORMULARIO CERTIFICACION POA  -------*/
+  public function formulario_certpoa($prod_id){
+     /// para listas mayores a 500
+    $tabla='';
+    $tabla.='
+    <form id="cert_form" name="cert_form" novalidate="novalidate" action="'.site_url().'/ejecucion/ccertificacion_poa/valida_cpoa" method="post" class="smart-form">
+        <fieldset>
+          <section class="col col-6">
+            <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR DE ITEM...."/><br>
+          </section>
+          <div class="row" align="center">
+            <div class="table-responsive" align="center">
+              <center>
+                '.$this->certificacionpoa->list_requerimientos_prelista($prod_id).'
+              </center>
+            </div>
+          </div>
+        </fieldset>
+        <footer>
+          <input type="hidden" name="tot" id="tot" value="0">
+          <input type="hidden" name="tot_temp" id="tot_temp" value="0">
+          <div id="but" style="display:none;">
+            <input type="button" value="GENERAR CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success" title="APROBAR REQUERIMIENTOS PARA CERTIFICACION POA">
+            <a href="'.base_url().'index.php/cert/list_poas" class="btn btn-default" title="MIS OPERACIONES"> CANCELAR </a>
+          </div>
+        </footer>
+        <div id="load" style="display: none" align="center">
+          <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO CERTIFICACI&Oacute;N POA ....</b>
+        </div>
+    </form>';
+    return  $tabla;
+  }
 
 
 

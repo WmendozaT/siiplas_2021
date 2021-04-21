@@ -34,7 +34,6 @@
               font-size: 10px;
             }
         </style>
-
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -91,15 +90,13 @@
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <section id="widget-grid" class="well">
                                 <div class="">
-                            
+                                <?php echo $select_ope; ?>
                                 </div>
                             </section>
                         </article>
-                    </div>
-              
-                    <div class="row">
-                        <article class="col-sm-12">
-
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <?php echo $loading;?>
+                            <div id="lista_requerimientos"></div>
                         </article>
                     </div>
                 </section>
@@ -109,22 +106,6 @@
         <!-- END MAIN PANEL -->
     </div>
     <!-- ========================================================================================================= -->
-        <div class="modal fade" id="modal_nuevo_ff2" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" style="width:85%;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="calificacion"></div>
-                        <div class="row">
-                            <div id="temporalidad"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
 
         <!-- PAGE FOOTER -->
         <div class="page-footer">
@@ -143,11 +124,7 @@
             }
         </script>
         <!-- IMPORTANT: APP CONFIG -->
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
         <!-- BOOTSTRAP JS -->
@@ -177,305 +154,128 @@
         <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/seguimiento.js"></script> 
+        <script src="<?php echo base_url(); ?>mis_js/certificacionpoa/certpoa.js"></script> 
         
-        <!-- REGRESION LINEAL AL TRIMESTRE -->
-        <script type="text/javascript">
-          var chart1;
-          $(document).ready(function() {
-            chart1 = new Highcharts.Chart({
-              chart: {
-                renderTo: 'regresion',
-                defaultSeriesType: 'line'
-              },
-              title: {
-                text: '' 
-              },
-              subtitle: {
-                text: ''
-              },
-              <?php 
-                if($this->session->userdata('trimestre')==1){ ?>
-                    xAxis: {
-                        categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>']
-                    },
-                    <?php
-                }
-                elseif ($this->session->userdata('trimestre')==2) { ?>
-                    xAxis: {
-                        categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][2];?>']
-                    },
-                    <?php
-                }
-                elseif ($this->session->userdata('trimestre')==3) { ?>
-                    xAxis: {
-                        categories: ['p :<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][3];?>']
-                    },
-                    <?php
-                }
-                elseif ($this->session->userdata('trimestre')==4) { ?>
-                    xAxis: {
-                        categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][3];?>', '<?php echo $tabla[1][4];?>']
-                    },
-                    <?php
-                }
-              ?>
-              yAxis: {
-                title: {
-                  text: 'Promedio (%)'
-                }
-              },
-              tooltip: {
-                enabled: false,
-                formatter: function() {
-                  return '<b>'+ this.series.name +'</b><br/>'+
-                    this.x +': '+ this.y +'%';
-                }
-              },
-              plotOptions: {
-                line: {
-                  dataLabels: {
-                    enabled: true
-                  },
-                  enableMouseTracking: false
-                }
-              },
-
-                <?php 
-                    if($this->session->userdata('trimestre')==1){ ?>
-                        series: [
-                            {
-                                name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
-                                data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>]
-                            },
-                            {
-                                name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
-                                data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>]
-                            }
-                        ]
-                        <?php
-                    }
-                    elseif ($this->session->userdata('trimestre')==2) { ?>
-                            series: [
-                                {
-                                    name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>]
-                                },
-                                {
-                                    name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>]
-                                }
-                            ]
-                        <?php
-                    }
-                    elseif ($this->session->userdata('trimestre')==3) { ?>
-                            series: [
-                                {
-                                    name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>]
-                                },
-                                {
-                                    name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>]
-                                }
-                            ]
-                        <?php
-                    }
-                    elseif ($this->session->userdata('trimestre')==4) { ?>
-                            series: [
-                                {
-                                    name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>, <?php echo $tabla[2][4];?>]
-                                },
-                                {
-                                    name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>, <?php echo $tabla[3][4];?>]
-                                }
-                            ]
-                        <?php
-                    }
-                ?>
-            });
-          });
-        </script>
-        <script type="text/javascript">
-            $(document).ready(function() {  
-               Highcharts.chart('pastel_todos', {
-                chart: {
-                    type: 'pie',
-                    options3d: {
-                        enabled: true,
-                        alpha: 45,
-                        beta: 0
-                    }
-                },
-                title: {
-                    text: ''
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        depth: 35,
-                        dataLabels: {
-                            enabled: true,
-                            format: '{point.name}'
-                        }
-                    }
-                },
-                series: [{
-                    type: 'pie',
-                    name: 'Actividades',
-                    data: [
-                        {
-                          name: 'NO CUMPLIDO : <?php echo (100-($tabla[5][$this->session->userData('trimestre')]+round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2)));?> %',
-                          y: <?php echo $tabla[6][$this->session->userData('trimestre')];?>,
-                          color: '#f98178',
-                        },
-
-                        {
-                          name: 'EN PROCESO : <?php echo round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2);?> %',
-                          y: <?php echo round(($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100,2);?>,
-                          color: '#f5eea3',
-                        },
-
-                        {
-                          name: 'CUMPLIDO : <?php echo $tabla[5][$this->session->userData('trimestre')];?> %',
-                          y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>,
-                          color: '#2CC8DC',
-                          sliced: true,
-                          selected: true
-                        }
-                    ]
-                }]
-              });
-            });
-        </script>
-        <script type="text/javascript">
-            Highcharts.chart('container', {
-            chart: {
-                type: 'column',
-                options3d: {
-                    enabled: true,
-                    alpha: 0,
-                    beta: 0,
-                    depth: 100
-                }
-            },
-            title: {
-                text: ''
-            },
-            subtitle: {
-                text: ''
-            },
-            
-            plotOptions: {
-                column: {
-                    depth: 25
-                }
-            },
-            xAxis: {
-                categories: Highcharts.getOptions().lang.shortMonths,
-                labels: {
-                    skew3d: true,
-                    style: {
-                        fontSize: '16px'
-                    }
-                }
-            },
-            yAxis: {
-                title: {
-                  text: 'cumplimiento (%)'
-                }
-            },
-            xAxis: {
-                categories: [
-                    'ENE.', 
-                    'FEB.', 
-                    'MAR.', 
-                    'ABR.', 
-                    'MAY.', 
-                    'JUN.', 
-                    'JUL.', 
-                    'AGO.', 
-                    'SEPT.', 
-                    'OCT.', 
-                    'NOV.', 
-                    'DIC.'
-                ]
-            },
-            series: [{
-                name: 'Eficiencia',
-                data: [
-                    <?php  
-                        for ($i=1; $i <=12 ; $i++) { 
-                            if($i==12){
-                                echo $matriz_temporalidad_subactividad[4][$i];
-                            }
-                            else{
-                               echo $matriz_temporalidad_subactividad[4][$i].','; 
-                            }
-                            
-                        }
-                    ?>
-                ]
-            }]
-        });
-        </script>
 
         <script type="text/javascript">
-          var chart1;
-          $(document).ready(function() {
-            chart1 = new Highcharts.Chart({
-              chart: {
-                renderTo: 'regresion_gestion',
-                defaultSeriesType: 'line'
-              },
-              title: {
-                text: ''
-              },
-              subtitle: {
-                text: ''
-              },
-              xAxis: {
-                        categories: ['<?php echo $tabla_gestion[1][0];?>', '<?php echo $tabla_gestion[1][1];?>', '<?php echo $tabla_gestion[1][2];?>', '<?php echo $tabla_gestion[1][3];?>', '<?php echo $tabla_gestion[1][4];?>']
-                    },
-              yAxis: {
-                title: {
-                  text: 'Promedio (%)'
-                }
-              },
-              tooltip: {
-                enabled: false,
-                formatter: function() {
-                  return '<b>'+ this.series.name +'</b><br/>'+
-                    this.x +': '+ this.y +'%';
-                }
-              },
-              plotOptions: {
-                line: {
-                  dataLabels: {
-                    enabled: true
-                  },
-                  enableMouseTracking: false
-                }
-              },
 
-                series: [
-                    {
-                        name: '% META PROGRAMADAS EN EL TRIMESTRE',
-                        data: [ <?php echo $tabla_gestion[4][0];?> , <?php echo $tabla_gestion[4][1];?>, <?php echo $tabla_gestion[4][2];?>, <?php echo $tabla_gestion[4][3];?>, <?php echo $tabla_gestion[4][4];?>]
-                    },
-                    {
-                        name: '% META CUMPLIDAS EN EL TRIMESTRE',
-                        data: [ <?php echo $tabla_gestion[5][0];?>, <?php echo $tabla_gestion[5][1];?>, <?php echo $tabla_gestion[5][2];?>, <?php echo $tabla_gestion[5][3];?>, <?php echo $tabla_gestion[5][4];?>]
-                    }
-                ]
-            });
-          });
+
+        function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
+          if (estaChequeado == true) { 
+            document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
+          }
+          else{
+            document.getElementById("tr"+nro).style.backgroundColor = "";
+          }
+
+          valf = parseInt($('[name="tot"]').val());
+          valm = parseInt($('[name="tot_temp"]').val());
+          if (estaChequeado == true) {
+            valf = valf + 1;
+            valm = valm + 1;
+          } else {
+            valf = valf - 1;
+            valm = valm - 1;
+          }
+
+          $('[name="tot"]').val((valf).toFixed(0));
+          $('[name="tot_temp"]').val((valm).toFixed(0));
+          
+          totalf = parseFloat($('[name="tot"]').val());
+          total = parseFloat($('[name="tot_temp"]').val());
+          if(total==0 || totalf==0){
+              $('#but').slideUp();
+            }
+            else{
+              $('#but').slideDown();
+            }
+        }
+
+        function seleccionarFila(ins_id, estaChequeado) {
+          if (estaChequeado == true) {            
+            for (var i = 1; i <=12; i++) {
+              document.getElementById("m"+i+""+ins_id).style.display='block';
+            }
+          } 
+          else {
+            for (var i = 1; i <=12; i++) {
+              document.getElementById("m"+i+""+ins_id).style.display='none';
+            }
+          }
+
+          val = parseInt($('[name="tot"]').val());
+          if (estaChequeado == true) {
+            val = val + 1;
+          } else {
+            val = val - 1;
+          }
+          $('[name="tot"]').val((val).toFixed(0));
+          totalf = parseFloat($('[name="tot"]').val());
+          total = parseFloat($('[name="tot_temp"]').val());
+          if(totalf==0 || total==0){
+            $('#but').slideUp();
+          }
+          else{
+            $('#but').slideDown();
+          }
+        }
+
+        function seleccionar_temporalidad(tins_id, estaChequeado) {
+          
+          if (estaChequeado == true) { 
+            val = parseInt($('[name="tot_temp"]').val());
+          var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/verif_mes_certificado";
+            $.ajax({
+              type:"post",
+              url:url,
+              data:{tins_id:tins_id},
+              success:function(datos){
+                if(datos.trim() =='true'){ /// habilitado para certificar
+
+                  val = val + 1;
+                  $('[name="tot_temp"]').val((val).toFixed(0));
+                  total = parseFloat($('[name="tot_temp"]').val());
+                  totalf = parseFloat($('[name="tot"]').val());
+                  if(total==0 || totalf==0){
+                    $('#but').slideUp();
+                  }
+                  else{
+                    $('#but').slideDown();
+                  }
+
+                }else{ /// inhabilitado (ya se certifico anteriormente)
+                   alertify.error("EL MES SELECCIONADO YA FUE CERTIFICADO ANTERIORMENTE !!!");
+                  val = val - 1;
+                  $('[name="tot_temp"]').val((val).toFixed(0));
+                  total = parseFloat($('[name="tot_temp"]').val());
+                  totalf = parseFloat($('[name="tot"]').val());
+                  if(total==0 || totalf==0){
+                    $('#but').slideUp();
+                  }
+                  else{
+                    $('#but').slideDown();
+                  }
+                }
+            }});
+          } 
+          else {
+            val = val - 1;
+            $('[name="tot_temp"]').val((val).toFixed(0));
+            total = parseFloat($('[name="tot_temp"]').val());
+            totalf = parseFloat($('[name="tot"]').val());
+
+            if(total==0 || totalf==0){
+              $('#but').slideUp();
+            }
+            else{
+              $('#but').slideDown();
+            }
+          }
+
+          
+          
+        }
         </script>
+       
     </body>
 </html>

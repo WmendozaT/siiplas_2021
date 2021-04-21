@@ -441,8 +441,8 @@ $route['seg/ver_reporte_evaluacionpoa_es/(:any)'] = 'ejecucion/cseguimiento_esta
 //====== SEGUIMIENTO POA A SUBACTIVIDADES DE LAS AREAS ADMINISTRATIVAS 2021 (MODULO PARA CADA SUBUNIDAD)
 $route['seguimiento_poa'] = 'ejecucion/cseguimiento/formulario_subactividad';  /// FORMULARIO SEGUIMIENTO POA - SUBACTIVIDAD
 $route['seguimiento_poa/reporte_seguimientopoa_mensual/(:any)'] = 'ejecucion/cseguimiento/reporte_formulario_subactividad_mes/$1/$2';  /// REPORTE FORMULARIO SEGUIMIENTO POA - SUBACTIVIDAD
-$route['solicitar_certpoa/(:any)'] = 'ejecucion/ccertificacion_poa/solicitar_certpoa/$1';  /// FORMULARIO CERTIFICACION POA
-
+$route['solicitar_certpoa/(:any)'] = 'ejecucion/ccertificacion_poa/solicitar_certpoa/$1';  /// SOLICITAR CERTIFICACION POA
+$route['form_certpoa/(:any)'] = 'ejecucion/ccertificacion_poa/formulario_certpoa/$1';  /// FORMULARIO CERTIFICACION POA
 
 //====== REPORTE EVALUACION POA 2020
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (GASTO CORRIENTE) 2020 ----------*/
