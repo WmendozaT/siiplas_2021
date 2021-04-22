@@ -96,7 +96,15 @@
                         </article>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <?php echo $loading;?>
-                            <div id="lista_requerimientos"></div>
+                            <form id="cert_form" name="cert_form" novalidate="novalidate" action="<?php echo site_url()?>/ejecucion/ccertificacion_poa/valida_solicitud" method="post" class="smart-form">
+                                <div id="lista_requerimientos"></div>
+                                <footer>
+                                  <div id="but" style="display:none;">
+                                    <input type="button" value="GENERAR SOLICITUD DE CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success" title="SOLICITUD CERTIFICACION POA">
+                                    <a href="<?php echo base_url() ?>index.php/cert/list_poas" class="btn btn-default" title="MIS OPERACIONES"> CANCELAR </a>
+                                  </div>
+                                </footer>
+                            </form>
                         </article>
                     </div>
                 </section>
@@ -155,127 +163,6 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/certificacionpoa/certpoa.js"></script> 
-        
 
-        <script type="text/javascript">
-
-
-        function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
-          if (estaChequeado == true) { 
-            document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
-          }
-          else{
-            document.getElementById("tr"+nro).style.backgroundColor = "";
-          }
-
-          valf = parseInt($('[name="tot"]').val());
-          valm = parseInt($('[name="tot_temp"]').val());
-          if (estaChequeado == true) {
-            valf = valf + 1;
-            valm = valm + 1;
-          } else {
-            valf = valf - 1;
-            valm = valm - 1;
-          }
-
-          $('[name="tot"]').val((valf).toFixed(0));
-          $('[name="tot_temp"]').val((valm).toFixed(0));
-          
-          totalf = parseFloat($('[name="tot"]').val());
-          total = parseFloat($('[name="tot_temp"]').val());
-          if(total==0 || totalf==0){
-              $('#but').slideUp();
-            }
-            else{
-              $('#but').slideDown();
-            }
-        }
-
-        function seleccionarFila(ins_id, estaChequeado) {
-          if (estaChequeado == true) {            
-            for (var i = 1; i <=12; i++) {
-              document.getElementById("m"+i+""+ins_id).style.display='block';
-            }
-          } 
-          else {
-            for (var i = 1; i <=12; i++) {
-              document.getElementById("m"+i+""+ins_id).style.display='none';
-            }
-          }
-
-          val = parseInt($('[name="tot"]').val());
-          if (estaChequeado == true) {
-            val = val + 1;
-          } else {
-            val = val - 1;
-          }
-          $('[name="tot"]').val((val).toFixed(0));
-          totalf = parseFloat($('[name="tot"]').val());
-          total = parseFloat($('[name="tot_temp"]').val());
-          if(totalf==0 || total==0){
-            $('#but').slideUp();
-          }
-          else{
-            $('#but').slideDown();
-          }
-        }
-
-        function seleccionar_temporalidad(tins_id, estaChequeado) {
-          
-          if (estaChequeado == true) { 
-            val = parseInt($('[name="tot_temp"]').val());
-          var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/verif_mes_certificado";
-            $.ajax({
-              type:"post",
-              url:url,
-              data:{tins_id:tins_id},
-              success:function(datos){
-                if(datos.trim() =='true'){ /// habilitado para certificar
-
-                  val = val + 1;
-                  $('[name="tot_temp"]').val((val).toFixed(0));
-                  total = parseFloat($('[name="tot_temp"]').val());
-                  totalf = parseFloat($('[name="tot"]').val());
-                  if(total==0 || totalf==0){
-                    $('#but').slideUp();
-                  }
-                  else{
-                    $('#but').slideDown();
-                  }
-
-                }else{ /// inhabilitado (ya se certifico anteriormente)
-                   alertify.error("EL MES SELECCIONADO YA FUE CERTIFICADO ANTERIORMENTE !!!");
-                  val = val - 1;
-                  $('[name="tot_temp"]').val((val).toFixed(0));
-                  total = parseFloat($('[name="tot_temp"]').val());
-                  totalf = parseFloat($('[name="tot"]').val());
-                  if(total==0 || totalf==0){
-                    $('#but').slideUp();
-                  }
-                  else{
-                    $('#but').slideDown();
-                  }
-                }
-            }});
-          } 
-          else {
-            val = val - 1;
-            $('[name="tot_temp"]').val((val).toFixed(0));
-            total = parseFloat($('[name="tot_temp"]').val());
-            totalf = parseFloat($('[name="tot"]').val());
-
-            if(total==0 || totalf==0){
-              $('#but').slideUp();
-            }
-            else{
-              $('#but').slideDown();
-            }
-          }
-
-          
-          
-        }
-        </script>
-       
     </body>
 </html>

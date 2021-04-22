@@ -48,9 +48,11 @@ function abreVentana(PDF){
     return /\d/.test(String.fromCharCode(keynum));
   }
 
+    ///// Obtiene Lista de requerimientos
     $("#prod_id").change(function () {
         $("#prod_id option:selected").each(function () {
             prod_id=$(this).val();
+           // alert(prod_id)
             if(prod_id!=0){
               document.getElementById("loading").style.display = 'block';
               $('#lista_requerimientos').fadeIn(1000).html('');
@@ -83,256 +85,146 @@ function abreVentana(PDF){
     });
 
 
+      function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
+        if (estaChequeado == true) { 
+          document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
+        }
+        else{
+          document.getElementById("tr"+nro).style.backgroundColor = "";
+        }
 
+        valf = parseInt($('[name="tot"]').val());
+        valm = parseInt($('[name="tot_temp"]').val());
+        if (estaChequeado == true) {
+          valf = valf + 1;
+          valm = valm + 1;
+        } else {
+          valf = valf - 1;
+          valm = valm - 1;
+        }
 
-
-
-
-
-
-    /// Funcion para guardar datos de seguimiento POA
-    function guardar(prod_id,nro){
-      ejec=parseFloat($('[id="ejec'+nro+'"]').val());
-      mverificacion=($('[id="mv'+nro+'"]').val());
-      problemas=($('[id="obs'+nro+'"]').val());
-      accion=($('[id="acc'+nro+'"]').val());
-
-      if(($('[id="mv'+nro+'"]').val())==0){
-          document.getElementById("mv"+nro).style.backgroundColor = "#fdeaeb";
-          alertify.error("REGISTRE MEDIO DE VERIFICACIÓN, Operación "+nro);
-          return 0; 
+        $('[name="tot"]').val((valf).toFixed(0));
+        $('[name="tot_temp"]').val((valm).toFixed(0));
+        
+        totalf = parseFloat($('[name="tot"]').val());
+        total = parseFloat($('[name="tot_temp"]').val());
+        if(total==0 || totalf==0){
+            $('#but').slideUp();
+          }
+          else{
+            $('#but').slideDown();
+          }
       }
-      else{
-          document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
-        //  alert("prod_id="+prod_id+" &ejec="+ejec+" &mv="+mverificacion+" &obs="+problemas+" &acc="+accion)
-          alertify.confirm("GUARDAR SEGUIMIENTO POA?", function (a) {
+
+      function seleccionarFila(ins_id, estaChequeado) {
+        if (estaChequeado == true) {            
+          for (var i = 1; i <=12; i++) {
+            document.getElementById("m"+i+""+ins_id).style.display='block';
+          }
+        } 
+        else {
+          for (var i = 1; i <=12; i++) {
+            document.getElementById("m"+i+""+ins_id).style.display='none';
+          }
+        }
+
+        val = parseInt($('[name="tot"]').val());
+        if (estaChequeado == true) {
+          val = val + 1;
+        } else {
+          val = val - 1;
+        }
+        $('[name="tot"]').val((val).toFixed(0));
+        totalf = parseFloat($('[name="tot"]').val());
+        total = parseFloat($('[name="tot_temp"]').val());
+        if(totalf==0 || total==0){
+          $('#but').slideUp();
+        }
+        else{
+          $('#but').slideDown();
+        }
+      }
+
+      function seleccionar_temporalidad(tins_id, estaChequeado) {
+        if (estaChequeado == true) { 
+          val = parseInt($('[name="tot_temp"]').val());
+        var url = base+"index.php/ejecucion/ccertificacion_poa/verif_mes_certificado";
+          $.ajax({
+            type:"post",
+            url:url,
+            data:{tins_id:tins_id},
+            success:function(datos){
+              if(datos.trim() =='true'){ /// habilitado para certificar
+
+                val = val + 1;
+                $('[name="tot_temp"]').val((val).toFixed(0));
+                total = parseFloat($('[name="tot_temp"]').val());
+                totalf = parseFloat($('[name="tot"]').val());
+                if(total==0 || totalf==0){
+                  $('#but').slideUp();
+                }
+                else{
+                  $('#but').slideDown();
+                }
+
+              }else{ /// inhabilitado (ya se certifico anteriormente)
+                 alertify.error("EL MES SELECCIONADO YA FUE CERTIFICADO ANTERIORMENTE !!!");
+                val = val - 1;
+                $('[name="tot_temp"]').val((val).toFixed(0));
+                total = parseFloat($('[name="tot_temp"]').val());
+                totalf = parseFloat($('[name="tot"]').val());
+                if(total==0 || totalf==0){
+                  $('#but').slideUp();
+                }
+                else{
+                  $('#but').slideDown();
+                }
+              }
+          }});
+        } 
+        else {
+          val = val - 1;
+          $('[name="tot_temp"]').val((val).toFixed(0));
+          total = parseFloat($('[name="tot_temp"]').val());
+          totalf = parseFloat($('[name="tot"]').val());
+
+          if(total==0 || totalf==0){
+            $('#but').slideUp();
+          }
+          else{
+            $('#but').slideDown();
+          }
+        }
+      }
+
+
+
+  function reset() {
+      $("#toggleCSS").attr("href", base+"assets/themes_alerta/alertify.default.css");
+      alertify.set({
+          labels: {
+              ok: "ACEPTAR",
+              cancel: "CANCELAR"
+          },
+          delay: 5000,
+          buttonReverse: false,
+          buttonFocus: "ok"
+      });
+    }
+
+    $(function () {
+      $("#btsubmit").on("click", function (e) {
+
+        alertify.confirm("GENERAR SOLICITUD DE CERTIFICACI&Oacute;N POA ?", function (a) {
           if (a) {
-              var url = base+"index.php/ejecucion/cseguimiento/guardar_seguimiento";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "prod_id="+prod_id+"&ejec="+ejec+"&mv="+mverificacion+"&obs="+problemas+"&acc="+accion
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-
-              if (response.respuesta == 'correcto') {
-                  alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
-                      if (e) {
-                          window.location.reload(true);
-                          document.getElementById("loading").style.display = 'block';
-                          alertify.success("REGISTRO EXITOSO ...");
-                      }
-                  });
-              }
-              else{
-                  alertify.error("ERROR AL GUARDAR SEGUIMIENTO POA");
-              }
-
-              });
+              document.cert_form.submit();
+              document.getElementById("load").style.display = 'block';
+             document.getElementById("but").style.display = 'none';
           } else {
               alertify.error("OPCI\u00D3N CANCELADA");
           }
         });
-      }
-    }
-
-    /// Cambio de mes para el seguimiento 
-    $("#mes_id").change(function () {
-        $("#mes_id option:selected").each(function () {
-            mes_id=$(this).val();
-            mes_activo=$('[name="mes_activo"]').val();
-            if(mes_id!=mes_activo){
-              var url = base+"index.php/ejecucion/cseguimiento/get_update_mes";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "mes_id="+mes_id
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-                  if (response.respuesta == 'correcto') {
-                      alertify.alert("SE CAMBIO AL MES CORRECTAMENTE ", function (e) {
-                          if (e) {
-                              window.location.reload(true);
-                          }
-                      })
-                  }
-                  else{
-                      alertify.error("ERROR !!!");
-                  }
-              }); 
-            }
-        });
-      })
-
-
-
-    $(function () {
-        $(".enlace").on("click", function (e) {
-          prod_id = $(this).attr('name');
-           //$('#temporalidad').html('<div class="loading" align="center"><img src='+base+'"/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando Información</div>');
-            var url = base+"index.php/ejecucion/cseguimiento/get_temporalidad";
-            var request;
-            if (request) {
-                request.abort();
-            }
-            request = $.ajax({
-                url: url,
-                type: "POST",
-                dataType: 'json',
-                data: "prod_id="+prod_id
-            });
-
-            request.done(function (response, textStatus, jqXHR) {
-            if (response.respuesta == 'correcto') {
-              $('#temporalidad').fadeIn(1000).html(response.tabla);
-              $('#calificacion').fadeIn(1000).html(response.calificacion);
-            }
-            else{
-                alertify.error("ERROR AL RECUPERAR TEMPORALIDAD");
-            }
-
-            });
-            request.fail(function (jqXHR, textStatus, thrown) {
-                console.log("ERROR: " + textStatus);
-            });
-            request.always(function () {
-            });
-            e.preventDefault();
-          
-        });
+      });
     });
 
 
-        /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL ------*/
-        $(function () {
-          $(".update_eval").on("click", function (e) {
-              com_id = $(this).attr('name');
-              document.getElementById("com_id").value=com_id;
-              $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');
-              $('#but').slideUp();
-
-              var url = base+"index.php/ejecucion/cseguimiento/update_evaluacion_trimestral";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "com_id="+com_id
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-              if (response.respuesta == 'correcto') {
-                  $('#content_valida').fadeIn(1000).html(response.tabla);
-                  $('#but').slideDown();
-              }
-              else{
-                  alertify.error("ERROR AL RECUPERAR DATOS");
-              }
-
-              });
-              request.fail(function (jqXHR, textStatus, thrown) {
-                  console.log("ERROR: " + textStatus);
-              });
-              request.always(function () {
-              });
-              e.preventDefault();
-
-              $("#but_update").on("click", function (e) {
-                var $valid = $("#form_update").valid();
-                if (!$valid) {
-                    $validator.focusInvalid();
-                } else {
-                    window.location.reload(true);
-                    document.getElementById("but").style.display = 'none';
-                    document.getElementById("load").style.display = 'block';
-                    alertify.success("ACTUALIZACIÓN EXITOSA ...");
-                }
-              });
-          });
-        });
-
-
-        /// Eliminar Seguimiento Mensual
-        $(function () {
-            function reset() {
-              $("#toggleCSS").attr("href", base+"assets/themes_alerta/alertify.default.css");
-              alertify.set({
-                  labels: {
-                      ok: "ACEPTAR",
-                      cancel: "CANCELAR"
-                  },
-                  delay: 5000,
-                  buttonReverse: false,
-                  buttonFocus: "ok"
-              });
-            }
-
-          $(".del_ope").on("click", function (e) {
-            reset();
-            var prod_id = $(this).attr('name'); // prod id
-            var mes_id = $(this).attr('id'); // mes id
-          
-            var request;
-            alertify.confirm("ESTA SEGURO DE ELIMINAR EL SEGUIMIENTO POA ?", function (a) {
-              if (a) {
-                  url = base+"index.php/ejecucion/cseguimiento/delete_seguimiento_operacion";
-                  if (request) {
-                      request.abort();
-                  }
-                  request = $.ajax({
-                      url: url,
-                      type: "POST",
-                      dataType: "json",
-                      data: "prod_id="+prod_id+"&mes_id="+mes_id
-                  });
-
-                  request.done(function (response, textStatus, jqXHR) { 
-                    reset();
-                    if (response.respuesta == 'correcto') {
-                        alertify.alert("EL SEGUIMIENTO SE ELIMINO CORRECTAMENTE ", function (e) {
-                          if (e) {
-                            document.getElementById("loading").style.display = 'block';
-                            window.location.reload(true);
-                            alertify.success("Función Ejecutada Exitosamente ...");
-                          }
-                        });
-                    } else {
-                        alertify.alert("ERROR AL ELIMINAR SEGUIMIENTO POA !!!", function (e) {
-                          if (e) {
-                              window.location.reload(true);
-                          }
-                        });
-                    }
-                  });
-                  request.fail(function (jqXHR, textStatus, thrown) {
-                      console.log("ERROR: " + textStatus);
-                  });
-                  request.always(function () {
-                      //console.log("termino la ejecuicion de ajax");
-                  });
-
-                  e.preventDefault();
-
-              } else {
-                  alertify.error("Opcion cancelada");
-              }
-            });
-            return false;
-          });
-
-        });

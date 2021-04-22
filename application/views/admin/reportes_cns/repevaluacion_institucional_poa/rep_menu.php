@@ -179,7 +179,7 @@
                     </div>
                     <h2 class="alert alert-success"><center>EVALUACI&Oacute;N GASTO CORRIENTE - <?php echo $trimestre[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></center></h2>
                     <div class="row">
-                        <?php echo $base; ?>
+                        <?php echo $base;?>
                         <?php echo $regional;?>
                     </div>
                 </section>

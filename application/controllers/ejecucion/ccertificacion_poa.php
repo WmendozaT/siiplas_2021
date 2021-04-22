@@ -1193,12 +1193,12 @@ class Ccertificacion_poa extends CI_Controller {
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
       $titulo=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].' / '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'];
       $data['loading']='<div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
-      $data['select_ope']=$this->select_mis_productos($com_id,$titulo);
-      $data['formulario']='';
+      $data['select_ope']=$this->certificacionpoa->select_mis_productos($com_id,$titulo); /// Seleccion de productos
+      $data['loading_form']='<div id="load" style="display: none" align="center">
+                              <br><img  src="'.base_url().'/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO SOLICITUD DE CERTIFICACI&Oacute;N POA ....</b>
+                            </div>';
 
-//      echo $this->certificacionpoa->list_requerimientos_prelista(47652);
-
-     $this->load->view('admin/ejecucion/certpoa_unidad/formulario_certificacionpoa', $data);
+      $this->load->view('admin/ejecucion/certpoa_unidad/formulario_certificacionpoa', $data);
     }
     else{
       echo "Error !!!";
@@ -1211,11 +1211,6 @@ class Ccertificacion_poa extends CI_Controller {
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
       $prod_id = $this->security->xss_clean($post['prod_id']); // prod id
-
-/*      $tabla='
-      <section id="widget-grid" class="well" align="center">
-        <iframe id="ipdf" width="100%" height="800px;" src="'.base_url().'index.php/form_certpoa/'.$prod_id.'"></iframe>
-      </section>';*/
 
       $tabla=$this->formulario_certpoa($prod_id);
       $result = array(
@@ -1230,43 +1225,22 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
-  public function select_mis_productos($com_id,$titulo){
-    $productos=$this->model_certificacion->get_operaciones_x_subactividad_ppto($com_id);
-    $tabla='';
-    $tabla='<form class="form-horizontal">
-              <input name="base" type="hidden" value="'.base_url().'">
-              <fieldset>
-                <legend><b>'.$titulo.'</b></legend>
-                <div class="form-group">
-                  <label class="col-md-2 control-label">SELECCIONE OPERACI&Oacute;N</label>
-                  <div class="col-md-6">
-                    <select class="form-control" name="prod_id" id="prod_id">
-                      <option value="0">Seleccione Operación</option>';
-                     foreach($productos as $row){
-                        $tabla.='<option value="'.$row['prod_id'].'">'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
-                      }
-                     $tabla.='
-                    </select> 
-                  </div>
-                </div>
-              </fieldset>
-            </form>';
-    return $tabla;
-  }
-
-
-
-
 
   /*------ FORMULARIO CERTIFICACION POA  -------*/
   public function formulario_certpoa($prod_id){
      /// para listas mayores a 500
     $tabla='';
     $tabla.='
-    <form id="cert_form" name="cert_form" novalidate="novalidate" action="'.site_url().'/ejecucion/ccertificacion_poa/valida_cpoa" method="post" class="smart-form">
+        <input type="hidden" name="tot" id="tot" value="0">
+        <input type="hidden" name="tot_temp" id="tot_temp" value="0">
+        <input type="hidden" name="prod_id" id="prod_id" value="'.$prod_id.'">
         <fieldset>
+          <div class="alert alert-success alert-block">
+            <h4 class="alert-heading">SOLICITAR CERTIFICACIÓN POA!</h4>
+            Seleccione los siguientes Requerimientos Disponibles para su solicitud POA
+          </div>
           <section class="col col-6">
-            <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR DE ITEM...."/><br>
+            <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador de Requerimientos...."/><br>
           </section>
           <div class="row" align="center">
             <div class="table-responsive" align="center">
@@ -1276,22 +1250,60 @@ class Ccertificacion_poa extends CI_Controller {
             </div>
           </div>
         </fieldset>
-        <footer>
-          <input type="hidden" name="tot" id="tot" value="0">
-          <input type="hidden" name="tot_temp" id="tot_temp" value="0">
-          <div id="but" style="display:none;">
-            <input type="button" value="GENERAR CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success" title="APROBAR REQUERIMIENTOS PARA CERTIFICACION POA">
-            <a href="'.base_url().'index.php/cert/list_poas" class="btn btn-default" title="MIS OPERACIONES"> CANCELAR </a>
-          </div>
-        </footer>
-        <div id="load" style="display: none" align="center">
-          <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO CERTIFICACI&Oacute;N POA ....</b>
-        </div>
-    </form>';
+        ';
     return  $tabla;
   }
 
+  /*------ VALIDA SOLICITUD DE CERTIFICACION POA (2020 - 2021) ------*/
+  public function valida_solicitud(){
+    if ($this->input->post()) {
+      $post = $this->input->post();
+      $prod_id = $this->security->xss_clean($post['prod_id']);
+      $total = $this->security->xss_clean($post['tot']);
 
+      echo "Solo";
+
+/*
+
+create table solicitud_cpoa_subactividad(
+  sol_id serial not null,
+  com_id numeric(18,0) NOT NULL,
+  prod_id integer NOT NULL,
+  estado integer DEFAULT 0,
+  fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
+  cite character varying(200),
+  num_ip character varying(50),
+  nom_ip character varying(50),
+  primary key(sol_id)
+ );
+
+*/
+
+
+
+/*      if($tp_id==1){
+        $datos=$this->model_certificacion->get_datos_pi_prod($prod_id); /// Gasto Proyecto de Inversión
+      }
+      else{
+        $datos=$this->model_certificacion->get_datos_unidad_prod($prod_id); /// Gasto Corriente
+      }*/
+      
+
+      /*----- DETALLE CERTIFICACION POA -----*/
+/*      if (!empty($_POST["ins"]) && is_array($_POST["ins"]) ) {
+        foreach ( array_keys($_POST["ins"]) as $como){
+          $_POST["ipm".$i."".$_POST["ins"][$como]]
+        }
+      }
+      else{
+        echo "No ingresa";
+      }*/
+
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
 
 
 

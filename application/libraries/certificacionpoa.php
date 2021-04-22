@@ -34,6 +34,33 @@ class Certificacionpoa extends CI_Controller{
     }
 
 
+    //// SELECCION DE OPERACIONES 
+  public function select_mis_productos($com_id,$titulo){
+    $productos=$this->model_certificacion->get_operaciones_x_subactividad_ppto($com_id);
+    $tabla='';
+    $tabla='
+      <form class="form-horizontal">
+        <input name="base" type="hidden" value="'.base_url().'">
+        <fieldset>
+          <legend><b>'.$titulo.'</b></legend>
+          <div class="form-group">
+            <label class="col-md-2 control-label">SELECCIONE OPERACI&Oacute;N</label>
+            <div class="col-md-6">
+              <select class="form-control" name="prod_id" id="prod_id">
+                <option value="0">Seleccione Operación</option>';
+               foreach($productos as $row){
+                  $tabla.='<option value="'.$row['prod_id'].'">'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
+                }
+               $tabla.='
+              </select> 
+            </div>
+          </div>
+        </fieldset>
+      </form>';
+    return $tabla;
+  }
+
+
 
 
 
@@ -277,6 +304,13 @@ class Certificacionpoa extends CI_Controller{
 
     return $tabla;
   }
+
+
+
+
+
+
+
 
 
 
