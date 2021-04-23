@@ -67,37 +67,6 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-
-
-    /*--- MONTO TOTAL OPERACION - INSUMOACTIVIDAD (2019) ------*/
-/*    function monto_producto_insumoactividad($prod_id){
-        $sql = 'select a.prod_id,SUM(insg_monto_prog) as total
-                from _actividades a
-                Inner Join _insumoactividad as ia On ia.act_id=a.act_id
-                Inner Join insumos as i On ia.ins_id=i.ins_id
-                Inner Join insumo_gestion as ig On ig.ins_id=i.ins_id
-                Inner Join insumo_financiamiento as ifin On ifin.insg_id=ig.insg_id
-                where a.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and ig.g_id='.$this->gestion.'
-                group by a.prod_id'; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*--- MONTO TOTAL OPERACION - INSUMOCOMPONENTE (2018) ------*/
-/*    function monto_producto_insumocomponente($prod_id){
-        $sql = 'select p.prod_id,SUM(insg_monto_prog) total
-                from _productos p
-                Inner Join insumocomponente as ic On ic.com_id=p.com_id
-                Inner Join insumos as i On ic.ins_id=i.ins_id
-                Inner Join insumo_gestion as ig On ig.ins_id=i.ins_id
-                Inner Join insumo_financiamiento as ifin On ifin.insg_id=ig.insg_id
-                where p.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and ig.g_id='.$this->gestion.'
-                group by p.prod_id'; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-
     /*--------- ULTIMO PRODUCTO (2019) ----------*/
     function ult_operacion($com_id){
         $sql = 'select p.*
@@ -137,10 +106,10 @@ class model_producto extends CI_Model {
         $this->db->query($sql);
     }
 
-    function get_producto_archivo($id){
+/*    function get_producto_archivo($id){
         $sql = 'select * from _productos_archivos where id = '.$id.'';   
         $this->db->query($sql);
-    }
+    }*/
 /*------------------------------------------------------------------------------------------*/
 /*=================================== META GESTION ACTUAL PRODUCTO ====================================*/
     public function meta_prod_gest($id_prod){

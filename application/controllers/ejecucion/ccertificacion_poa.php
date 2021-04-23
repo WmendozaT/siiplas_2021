@@ -314,11 +314,6 @@ class Ccertificacion_poa extends CI_Controller {
 
 
 
-  
-
-
-  
-
   /*------ VALIDA CERTIFICACION POA (2020 - 2021) ------*/
   public function valida_cpoa(){
     if ($this->input->post()) {
@@ -1203,7 +1198,6 @@ class Ccertificacion_poa extends CI_Controller {
     else{
       echo "Error !!!";
     }
-    
   }
 
   /*-------- GET CUADRO CERTIFICACION POA --------*/
@@ -1260,44 +1254,63 @@ class Ccertificacion_poa extends CI_Controller {
       $post = $this->input->post();
       $prod_id = $this->security->xss_clean($post['prod_id']);
       $total = $this->security->xss_clean($post['tot']);
+      $producto=$this->model_producto->get_producto_id($post['prod_id']);
 
-      echo "Solo";
-
-/*
-
-create table solicitud_cpoa_subactividad(
-  sol_id serial not null,
-  com_id numeric(18,0) NOT NULL,
-  prod_id integer NOT NULL,
-  estado integer DEFAULT 0,
-  fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
-  cite character varying(200),
-  num_ip character varying(50),
-  nom_ip character varying(50),
-  primary key(sol_id)
- );
-
-*/
+      /*---- insertando solicitud ---*/
+      $data_to_store = array( 
+        'com_id' => $producto[0]['com_id'],
+        'prod_id' => $prod_id,
+        'g_id' => $this->gestion,
+        'num_ip' => $this->input->ip_address(), 
+        'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+      );
+      $this->db->insert('solicitud_cpoa_subactividad', $data_to_store);
+      $sol_id=$this->db->insert_id();
+      /*-----------------------------*/
 
 
+      if (!empty($_POST["ins"])) {
+        foreach (array_keys($_POST["ins"]) as $como){
+         
+          $data_to_store = array( 
+            'sol_id' => $sol_id,
+            'ins_id' => $_POST["ins"][$como],
+          );
+          $this->db->insert('requerimiento_solicitado', $data_to_store);
+          $req_id=$this->db->insert_id();
 
-/*      if($tp_id==1){
-        $datos=$this->model_certificacion->get_datos_pi_prod($prod_id); /// Gasto Proyecto de Inversión
-      }
-      else{
-        $datos=$this->model_certificacion->get_datos_unidad_prod($prod_id); /// Gasto Corriente
-      }*/
-      
-
-      /*----- DETALLE CERTIFICACION POA -----*/
-/*      if (!empty($_POST["ins"]) && is_array($_POST["ins"]) ) {
-        foreach ( array_keys($_POST["ins"]) as $como){
-          $_POST["ipm".$i."".$_POST["ins"][$como]]
+          $lista_temporalidad=$this->model_insumo->lista_prog_fin($_POST["ins"][$como]);
+            if(count($lista_temporalidad)>1){
+              for ($i=1; $i <=12 ; $i++) {
+                if(!empty($_POST["ipm".$i."".$_POST["ins"][$como]])){
+                  /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
+                  $data_to_store = array(
+                    'req_id' => $req_id,
+                    'tins_id' => $_POST["ipm".$i."".$_POST["ins"][$como]],
+                  );
+                  $this->db->insert('temporalidad_req_solicitado', $data_to_store);
+                  /*--------------------------------------------*/
+                } 
+              }
+            }
+            else{
+              /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
+                $data_to_store = array(
+                  'req_id' => $req_id,
+                  'tins_id' => $lista_temporalidad[0]['tins_id'],
+                );
+                $this->db->insert('temporalidad_req_solicitado', $data_to_store);
+              /*--------------------------------------------*/
+            }
         }
+
+        $this->session->set_flashdata('danger','SE GENERO CORRECTAMNETE LA SOLCITUD DE CERTIFICACIÓN POA');
+        redirect('solicitud_poa/'.$sol_id.'');
+      
       }
       else{
         echo "No ingresa";
-      }*/
+      }
 
     }
     else{
@@ -1305,10 +1318,40 @@ create table solicitud_cpoa_subactividad(
     }
   }
 
+  /*------ SOLICITUD CERTIFICACION POA  -------*/
+  public function solicitud_certpoa($sol_id){
+    $solicitud = $this->model_certificacion->get_solicitud_cpoa($sol_id);
+    
+    if(count($solicitud)!=0){
+      $data['menu'] = $this->certificacionpoa->menu_segpoa($solicitud[0]['com_id']);
+      $data['titulo']='<h1><b>SOLICITUD DE CERTIFICACIÓN POA</b></h1>';
+      $data['cuerpo']='
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>
+        </article>';
+
+      $this->load->view('admin/ejecucion/certpoa_unidad/ver_solicitudpoa', $data);
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
 
 
+  /*------ FORMULARIO SOLICITUD CERTIFICACION POA  -------*/
+  public function reporte_solicitud_certpoa($sol_id){
+    $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($sol_id);
+    $data['componente'] = $this->model_componente->get_componente($data['solicitud'][0]['com_id']);
+    $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['componente'][0]['proy_id']);
+    $data['producto']=$this->model_producto->get_producto_id($data['solicitud'][0]['prod_id']);
+
+    $data['formulario']='';
+    $this->load->view('admin/ejecucion/certpoa_unidad/reporte_solicitud_cpoa', $data);
+   /* $tabla='Hola mundo';
 
 
+    return $tabla;*/
+  }
 
 
 

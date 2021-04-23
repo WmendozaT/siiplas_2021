@@ -936,5 +936,15 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    //// ====== SOLICITUD DE CERTIFICACION POA
+
+    /*---- Solicitud de Certificacion POA ----*/
+    public function get_solicitud_cpoa($sol_id){
+        $sql = 'select *
+                from solicitud_cpoa_subactividad s
+                where s.sol_id='.$sol_id.' and g_id='.$this->gestion.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
 }
