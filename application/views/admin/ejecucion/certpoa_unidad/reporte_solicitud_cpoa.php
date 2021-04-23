@@ -148,6 +148,37 @@ ob_start();
             </tr>
         </table>
 
+create table solicitud_cpoa_subactividad(
+  sol_id serial not null,
+  com_id numeric(18,0) NOT NULL,
+  prod_id integer NOT NULL,
+  estado integer DEFAULT 0,
+  g_id integer DEFAULT 0,
+  fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
+  cite character varying(200),
+  num_ip character varying(50),
+  nom_ip character varying(50),
+  primary key(sol_id)
+ );
+
+
+
+create table requerimiento_solicitado(
+  req_id serial not null,
+  sol_id integer NOT NULL,
+  ins_id numeric(18,0),
+  primary key(req_id)
+ );
+
+
+
+ create table temporalidad_req_solicitado(
+  temp_id serial not null,
+  req_id integer not null,
+  tins_id integer not null,
+  primary key(temp_id)
+ );
+ -----------------------
         <br>
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
             <tr style="border: solid 0px;">              
