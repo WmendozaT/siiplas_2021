@@ -22,18 +22,6 @@
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <!-- <link rel="STYLESHEET" href="<?php echo base_url(); ?>assets/print_static.css" type="text/css" /> -->
         <meta name="viewport" content="width=device-width">
-        <style>
-            table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;
-            overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-        </style>
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -79,7 +67,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Certificaci&oacute;n POA</li><li>Solicitar Certificación POA</li>
+                    <li>Certificaci&oacute;n POA</li><li>Solicitar Certificación POA</li><li>Solicitud de Certidicación POA</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -89,23 +77,10 @@
                     <div class="row">
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <section id="widget-grid" class="well">
-                                <div class="">
-                                <?php echo $select_ope; ?>
-                                </div>
+                                <?php echo $titulo;?>
                             </section>
                         </article>
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <?php echo $loading;?>
-                            <form id="cert_form" name="cert_form" novalidate="novalidate" action="<?php echo site_url()?>/ejecucion/ccertificacion_poa/valida_solicitud" method="post" class="smart-form">
-                                <div id="lista_requerimientos"></div>
-                                <footer>
-                                  <div id="but" style="display:none;">
-                                    <input type="button" value="GENERAR SOLICITUD DE CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success" title="SOLICITUD CERTIFICACION POA">
-                                    <a href="<?php echo base_url() ?>index.php/cert/list_poas" class="btn btn-default" title="MIS OPERACIONES"> CANCELAR </a>
-                                  </div>
-                                </footer>
-                            </form>
-                        </article>
+                        <?php echo $cuerpo; ?>
                     </div>
                 </section>
             </div>
