@@ -941,8 +941,29 @@ class Model_certificacion extends CI_Model{
     /*---- Solicitud de Certificacion POA ----*/
     public function get_solicitud_cpoa($sol_id){
         $sql = 'select *
-                from solicitud_cpoa_subactividad s
+                from vista_solicitud_certificacionpoa s
                 where s.sol_id='.$sol_id.' and g_id='.$this->gestion.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*---- Lista requerimientos solicitados a certificar ----*/
+    public function get_lista_requerimientos_solicitados($sol_id){
+        $sql = 'select *
+                from vista_requerimientos_solicitados
+                where sol_id='.$sol_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*---- Lista de meses solicitados por item ----*/
+    public function get_lista_temporalidad_solicitados($req_id){
+        $sql = 'select *
+                from temporalidad_req_solicitado temp_sol
+                Inner Join temporalidad_prog_insumo as ti On ti.tins_id=temp_sol.tins_id
+                Inner Join mes as m On m.m_id=ti.mes_id
+                where temp_sol.req_id='.$req_id.'
+                order by m.m_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

@@ -19,8 +19,7 @@
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <!-- <link rel="STYLESHEET" href="<?php echo base_url(); ?>assets/print_static.css" type="text/css" /> -->
+        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script> 
         <meta name="viewport" content="width=device-width">
     </head>
     <body class="">
@@ -75,12 +74,17 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <article class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
                             <section id="widget-grid" class="well">
                                 <?php echo $titulo;?>
                             </section>
                         </article>
-                        <?php echo $cuerpo; ?>
+                        <article class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                            <section id="widget-grid" class="well">
+                                <?php echo $opcion;?>
+                            </section>
+                        </article>
+                        <?php echo $cuerpo;?>
                     </div>
                 </section>
             </div>
@@ -139,5 +143,83 @@
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/certificacionpoa/certpoa.js"></script> 
 
+        <script language="Javascript"> 
+            function eliminar(id){ 
+
+            if(confirm('Mensaje')){
+                    
+                }
+            }
+
+                    $(function () {
+            function reset() {
+              $("#toggleCSS").attr("href", base+"assets/themes_alerta/alertify.default.css");
+              alertify.set({
+                  labels: {
+                      ok: "ACEPTAR",
+                      cancel: "CANCELAR"
+                  },
+                  delay: 5000,
+                  buttonReverse: false,
+                  buttonFocus: "ok"
+              });
+            }
+
+          $(".del_ope").on("click", function (e) {
+            reset();
+            alert('hola mundo')
+            var prod_id = $(this).attr('name'); // prod id
+            var mes_id = $(this).attr('id'); // mes id
+          
+            var request;
+            alertify.confirm("ESTA SEGURO DE ELIMINAR EL SEGUIMIENTO POA ?", function (a) {
+              if (a) {
+                  url = base+"index.php/ejecucion/cseguimiento/delete_seguimiento_operacion";
+                  if (request) {
+                      request.abort();
+                  }
+                  request = $.ajax({
+                      url: url,
+                      type: "POST",
+                      dataType: "json",
+                      data: "prod_id="+prod_id+"&mes_id="+mes_id
+                  });
+
+                  request.done(function (response, textStatus, jqXHR) { 
+                    reset();
+                    if (response.respuesta == 'correcto') {
+                        alertify.alert("EL SEGUIMIENTO SE ELIMINO CORRECTAMENTE ", function (e) {
+                          if (e) {
+                            document.getElementById("loading").style.display = 'block';
+                            window.location.reload(true);
+                            alertify.success("Función Ejecutada Exitosamente ...");
+                          }
+                        });
+                    } else {
+                        alertify.alert("ERROR AL ELIMINAR SEGUIMIENTO POA !!!", function (e) {
+                          if (e) {
+                              window.location.reload(true);
+                          }
+                        });
+                    }
+                  });
+                  request.fail(function (jqXHR, textStatus, thrown) {
+                      console.log("ERROR: " + textStatus);
+                  });
+                  request.always(function () {
+                      //console.log("termino la ejecuicion de ajax");
+                  });
+
+                  e.preventDefault();
+
+              } else {
+                  alertify.error("Opcion cancelada");
+              }
+            });
+            return false;
+          });
+
+        });
+        </script>
     </body>
 </html>

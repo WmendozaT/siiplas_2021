@@ -1248,6 +1248,7 @@ class Ccertificacion_poa extends CI_Controller {
     return  $tabla;
   }
 
+
   /*------ VALIDA SOLICITUD DE CERTIFICACION POA (2020 - 2021) ------*/
   public function valida_solicitud(){
     if ($this->input->post()) {
@@ -1324,7 +1325,10 @@ class Ccertificacion_poa extends CI_Controller {
     
     if(count($solicitud)!=0){
       $data['menu'] = $this->certificacionpoa->menu_segpoa($solicitud[0]['com_id']);
-      $data['titulo']='<h1><b>SOLICITUD DE CERTIFICACIÓN POA</b></h1>';
+      $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
+      $data['opcion']='<a href="#" data-toggle="modal" data-target="#modal_del_ope" class="btn btn-danger del_ope" style="width:100%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'" id="'.$sol_id.'">
+                          <img src="'.base_url().'assets/img/delete.png" width="20" height="20"/> ANULAR SOLICITUD
+                        </a>';
       $data['cuerpo']='
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>
@@ -1341,35 +1345,15 @@ class Ccertificacion_poa extends CI_Controller {
   /*------ FORMULARIO SOLICITUD CERTIFICACION POA  -------*/
   public function reporte_solicitud_certpoa($sol_id){
     $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($sol_id);
-    $data['componente'] = $this->model_componente->get_componente($data['solicitud'][0]['com_id']);
-    $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['componente'][0]['proy_id']);
-    $data['producto']=$this->model_producto->get_producto_id($data['solicitud'][0]['prod_id']);
+    $data['datos_cite']=$this->certificacionpoa->datos_cite($data['solicitud']);
+    $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']);
+    $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($sol_id);
+    $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']);
 
-    $data['formulario']='';
     $this->load->view('admin/ejecucion/certpoa_unidad/reporte_solicitud_cpoa', $data);
-   /* $tabla='Hola mundo';
-
-
-    return $tabla;*/
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
 
 
     /*------ NOMBRE MES -------*/
