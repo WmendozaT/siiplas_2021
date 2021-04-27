@@ -2037,7 +2037,7 @@ class Seguimientopoa extends CI_Controller{
                     <a href="'.site_url("").'/solicitar_certpoa/'.$com_id.'">Solicitar Certificación POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
                   </li>
                   <li>
-                    <a href="image-editor.html">Mis Certificaciones POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
+                    <a href="'.site_url("").'/mis_solicitudes_cpoa/'.$com_id.'">Mis Solicitudes POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
                   </li>
                 </ul>
               </li>

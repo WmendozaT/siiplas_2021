@@ -66,7 +66,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Certificaci&oacute;n POA</li><li>Solicitar Certificación POA</li><li>Solicitud de Certidicación POA</li>
+                    <li>Certificaci&oacute;n POA</li><?php echo $li;?>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -141,85 +141,10 @@
         <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/certificacionpoa/certpoa.js"></script> 
-
-        <script language="Javascript"> 
-            function eliminar(id){ 
-
-            if(confirm('Mensaje')){
-                    
-                }
-            }
-
-                    $(function () {
-            function reset() {
-              $("#toggleCSS").attr("href", base+"assets/themes_alerta/alertify.default.css");
-              alertify.set({
-                  labels: {
-                      ok: "ACEPTAR",
-                      cancel: "CANCELAR"
-                  },
-                  delay: 5000,
-                  buttonReverse: false,
-                  buttonFocus: "ok"
-              });
-            }
-
-          $(".del_ope").on("click", function (e) {
-            reset();
-            alert('hola mundo')
-            var prod_id = $(this).attr('name'); // prod id
-            var mes_id = $(this).attr('id'); // mes id
-          
-            var request;
-            alertify.confirm("ESTA SEGURO DE ELIMINAR EL SEGUIMIENTO POA ?", function (a) {
-              if (a) {
-                  url = base+"index.php/ejecucion/cseguimiento/delete_seguimiento_operacion";
-                  if (request) {
-                      request.abort();
-                  }
-                  request = $.ajax({
-                      url: url,
-                      type: "POST",
-                      dataType: "json",
-                      data: "prod_id="+prod_id+"&mes_id="+mes_id
-                  });
-
-                  request.done(function (response, textStatus, jqXHR) { 
-                    reset();
-                    if (response.respuesta == 'correcto') {
-                        alertify.alert("EL SEGUIMIENTO SE ELIMINO CORRECTAMENTE ", function (e) {
-                          if (e) {
-                            document.getElementById("loading").style.display = 'block';
-                            window.location.reload(true);
-                            alertify.success("Función Ejecutada Exitosamente ...");
-                          }
-                        });
-                    } else {
-                        alertify.alert("ERROR AL ELIMINAR SEGUIMIENTO POA !!!", function (e) {
-                          if (e) {
-                              window.location.reload(true);
-                          }
-                        });
-                    }
-                  });
-                  request.fail(function (jqXHR, textStatus, thrown) {
-                      console.log("ERROR: " + textStatus);
-                  });
-                  request.always(function () {
-                      //console.log("termino la ejecuicion de ajax");
-                  });
-
-                  e.preventDefault();
-
-              } else {
-                  alertify.error("Opcion cancelada");
-              }
-            });
-            return false;
-          });
-
-        });
-        </script>
+        <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
     </body>
 </html>

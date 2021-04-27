@@ -558,8 +558,11 @@ class Certificacionpoa extends CI_Controller{
                 if($solicitud[0]['estado']==0){
                   $tabla.='<td style="width:100%;height: 2%;color: red;"><b>LA SOLICITUD SE ENCUENTRA EN PROCESO DE APROBACIÓN</b></td>';
                 }
-                else{
+                elseif($solicitud[0]['estado']==1){
                   $tabla.='<td style="width:100%;height: 2%;color: green;"><b>SOLICITUD APROBADO</b></td>';
+                }
+                else{
+                 $tabla.='<td style="width:100%;height: 2%;color: red;"><b>LA SOLICITUD FUE ANULADA</b></td>'; 
                 }
               $tabla.='
             </tr>
@@ -610,7 +613,7 @@ class Certificacionpoa extends CI_Controller{
                     <a href="'.site_url("").'/solicitar_certpoa/'.$com_id.'">Solicitar Certificación POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
                   </li>
                   <li>
-                    <a href="image-editor.html">Mis Certificaciones POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
+                    <a href="'.site_url("").'/mis_solicitudes_cpoa/'.$com_id.'">Mis Solicitudes POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
                   </li>
                 </ul>
               </li>

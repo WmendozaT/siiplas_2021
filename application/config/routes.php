@@ -446,6 +446,10 @@ $route['solicitar_certpoa/(:any)'] = 'ejecucion/ccertificacion_poa/solicitar_cer
 $route['form_certpoa/(:any)'] = 'ejecucion/ccertificacion_poa/formulario_certpoa/$1';  /// FORMULARIO CERTIFICACION POA
 $route['solicitud_poa/(:any)'] = 'ejecucion/ccertificacion_poa/solicitud_certpoa/$1';  /// SOLICITUD CERTIFICACION POA
 $route['reporte_solicitud_poa/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_solicitud_certpoa/$1';  /// FORMULARIO SOLICITUD CERTIFICACION POA
+$route['mis_solicitudes_cpoa/(:any)'] = 'ejecucion/ccertificacion_poa/mis_solicitudes_certificacionespoa/$1';  /// MIS SOLICITUDES CERTIFICACION POA
+
+
+
 
 //====== REPORTE EVALUACION POA 2020
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (GASTO CORRIENTE) 2020 ----------*/
