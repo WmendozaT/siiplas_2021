@@ -128,8 +128,10 @@ class model_producto extends CI_Model {
                 Inner Join meta_relativo as mr On mr.mt_id=p.mt_id
                 Inner Join _componentes as c On c.com_id=p.com_id
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                 Inner Join _proyectos as proy On proy.proy_id=pfe.proy_id
-                where p.prod_id='.$id_prod.' and p.estado!=\'3\''; 
+                Inner Join _distritales as dist On dist.dist_id=proy.dist_id
+                where p.prod_id='.$id_prod.' and p.estado!=\'3\' and pfe.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.''; 
         $query = $this->db->query($sql);
         return $query->result_array();
 

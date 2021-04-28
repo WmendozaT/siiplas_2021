@@ -1256,12 +1256,27 @@ class Ccertificacion_poa extends CI_Controller {
       $prod_id = $this->security->xss_clean($post['prod_id']);
       $total = $this->security->xss_clean($post['tot']);
       $producto=$this->model_producto->get_producto_id($post['prod_id']);
+      $verif_nro_cite=$this->model_modrequerimiento->verif_modificaciones_distrital($producto[0]['dist_id']);
+      $nro_cite='Sin Cite';
+      if(count($verif_nro_cite)!=0){
+        $nro_cite=$producto[0]['abrev'].'-'.($verif_nro_cite[0]['cite_certpoa']+1).'/'.$this->gestion;
+
+        /*---------------------------------------------*/
+          $update_mod = array(
+            'cite_certpoa' => ($verif_nro_cite[0]['cite_certpoa']+1)
+          );
+          $this->db->where('g_id', $this->gestion);
+          $this->db->where('dist_id', $producto[0]['dist_id']);
+          $this->db->update('conf_modificaciones_distrital', $update_mod);
+        /*---------------------------------------------*/
+      }
 
       /*---- insertando solicitud ---*/
       $data_to_store = array( 
         'com_id' => $producto[0]['com_id'],
         'prod_id' => $prod_id,
         'g_id' => $this->gestion,
+        'cite' => $nro_cite,
         'num_ip' => $this->input->ip_address(), 
         'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
       );
@@ -1310,7 +1325,6 @@ class Ccertificacion_poa extends CI_Controller {
                   $this->db->insert('temporalidad_req_solicitado', $data_to_store);
                 /*--------------------------------------------*/
               }
-
         }
 
         $this->session->set_flashdata('danger','SE GENERO CORRECTAMNETE LA SOLCITUD DE CERTIFICACIÓN POA');
@@ -1330,31 +1344,36 @@ class Ccertificacion_poa extends CI_Controller {
   /*------ SOLICITUD CERTIFICACION POA  -------*/
   public function solicitud_certpoa($sol_id){
     $solicitud = $this->model_certificacion->get_solicitud_cpoa($sol_id);
-    $data['menu'] = $this->certificacionpoa->menu_segpoa($solicitud[0]['com_id']);
-    $data['li']='<li>Solicitar Certificación POA</li><li>Solicitud de Certificación POA</li>';
-    if(count($solicitud)!=0 & $solicitud[0]['estado']!=3){
-      
-      $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
-      $data['opcion']='<a href="#" class="btn btn-default del_solicitud" style="width:100%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'">
-                          <img src="'.base_url().'assets/img/delete.png" width="20" height="20"/><b>ANULAR SOLICITUD</b>
-                        </a>';
-      $data['cuerpo']='
-        <input name="base" type="hidden" value="'.base_url().'">
-        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>
-        </article>';
+    if(count($solicitud)!=0){
+        $data['menu'] = $this->certificacionpoa->menu_segpoa($solicitud[0]['com_id']);
+        $data['li']='<li>Solicitar Certificación POA</li><li>Solicitud de Certificación POA</li>';
+        if(count($solicitud)!=0 & $solicitud[0]['estado']!=3){
+          
+          $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
+          $data['opcion']='<a href="#" class="btn btn-default del_solicitud" style="width:100%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'">
+                              <img src="'.base_url().'assets/img/delete.png" width="20" height="20"/><b>ANULAR SOLICITUD</b>
+                            </a>';
+          $data['cuerpo']='
+            <input name="base" type="hidden" value="'.base_url().'">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>
+            </article>';
+        }
+        else{
+          $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
+          $data['opcion']='<a href="'.base_url().'index.php/solicitar_certpoa/'.$solicitud[0]['com_id'].'" title="VOLVER ATRAS" class="btn btn-default" style="width:100%;"><img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;GENERAR SOLICITUD</a>';
+          $data['cuerpo']='<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="alert alert-danger" role="alert">
+                              LA SOLICITUD DE CERTIFICACION POA FUE ANULADA...
+                            </div>
+                          </article>';
+        }
+
+        $this->load->view('admin/ejecucion/certpoa_unidad/ver_solicitudpoa', $data);
     }
     else{
-      $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
-      $data['opcion']='<a href="'.base_url().'index.php/solicitar_certpoa/'.$solicitud[0]['com_id'].'" title="VOLVER ATRAS" class="btn btn-default" style="width:100%;"><img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;GENERAR SOLICITUD</a>';
-      $data['cuerpo']='<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="alert alert-danger" role="alert">
-                          LA SOLICITUD DE CERTIFICACION POA FUE ANULADA...
-                        </div>
-                      </article>';
+      redirect('seguimiento_poa');
     }
-
-    $this->load->view('admin/ejecucion/certpoa_unidad/ver_solicitudpoa', $data);
   }
 
 
@@ -1413,9 +1432,12 @@ class Ccertificacion_poa extends CI_Controller {
       $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
       $data['li']='<li>Mis Solicitudes de Certificación POA</li>';
       $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
-      $data['opcion']='';
-      $data['cuerpo']='<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        '.$this->lista_solicitudes_certificacionespoa($com_id).'
+      $data['opcion']='<a href="'.base_url().'index.php/solicitar_certpoa/'.$com_id.'" title="GENERAR NUEVA SOLICITUD" class="btn btn-default" style="width:100%;"><img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;GENERAR SOLICITUD</a>';
+      $data['cuerpo']='<article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        '.$this->certificacionpoa->lista_solicitudes_certificacionespoa($com_id).'
+                      </article>
+                      <article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="well" id="ver"></div>
                       </article>';
 
       $this->load->view('admin/ejecucion/certpoa_unidad/ver_solicitudpoa', $data);
@@ -1426,42 +1448,43 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
-  /*------ LISTA DE SOLICITUDES CERTIFICACION POA  -------*/
-  public function lista_solicitudes_certificacionespoa($com_id){
-    $tabla='';
-    $tabla.=' <div class="jarviswidget jarviswidget-color-darken" >
-                <header>
-                    <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                    <h2 class="font-md"><strong>MIS SOLICITUDES DE CERTIFICACIÓN POA</strong></h2>  
-                </header>
-                  <div>
-                      <div class="widget-body no-padding">
-                         <table id="dt_basic" class="table table-bordered" style="width:100%;">
-                          <thead>
-                            <tr style="height:35px;">
-                              <th style="width:1%;">#</th>
-                              <th style="width:5%;"></th>
-                              <th style="width:10%;">PROGRAMA '.$this->gestion.'</th>
-                              <th style="width:20%;">ACTIVIDAD</th>
-                              <th style="width:10%;">ESCALON</th>
-                              <th style="width:10%;">NIVEL</th>
-                              <th style="width:10%;">TIPO DE ADMINISTRACI&Oacute;N</th>
-                              <th style="width:10%;">UNIDAD ADMINISTRATIVA</th>
-                              <th style="width:10%;">UNIDAD EJECUTORA</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          </tbody>
-                        </table>
-                      </div>
-                  </div>
-              </div>';
+  /*-------- GET VER REPORTE DE SOLICITUD DE CERTIFICACION POA --------*/
+  public function get_ver_solicitudcpoa(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $sol_id = $this->security->xss_clean($post['sol_id']); // sol id
+      $tp = $this->security->xss_clean($post['tp']); // Tipo
+      $solicitud=$this->model_certificacion->get_solicitud_cpoa($sol_id); // solicitud
+      
+      if(count($solicitud)!=0){
+        if($tp==0){
+          $tabla='
+          <div class="alert alert-warning" role="alert">
+            <b>LA SOLICITUD DE CERTIFICACIÓN POA SE ENCUENTRA EN PROCESO DE EVALUACIÓN</b>
+          </div>
+          <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>';
+        }
+        else{
+          $tabla='MOSTRAR CERTIFICACION POA APROBADO';
+        }
+        
+      }
+      else{
+        $tabla='<div class="alert alert-danger" role="alert">
+                  SOLICTUD DE CERTIFICACION NO DISPONIBLE
+                </div>';
+      }
 
-    return $tabla;
+      $result = array(
+        'respuesta' => 'correcto',
+        'tabla'=> $tabla,
+      );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
   }
-
-
-
 
 
 

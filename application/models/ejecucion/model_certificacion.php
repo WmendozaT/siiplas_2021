@@ -938,11 +938,21 @@ class Model_certificacion extends CI_Model{
 
     //// ====== SOLICITUD DE CERTIFICACION POA
 
-    /*---- Solicitud de Certificacion POA ----*/
+    /*---- Get Solicitud de Certificacion POA ----*/
     public function get_solicitud_cpoa($sol_id){
         $sql = 'select *
                 from vista_solicitud_certificacionpoa s
                 where s.sol_id='.$sol_id.' and g_id='.$this->gestion.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*---- Lista de Solicitud de Certificacion POA ----*/
+    public function lista_solicitudes_cpoa($com_id){
+        $sql = 'select *
+                from vista_solicitud_certificacionpoa s
+                where s.com_id='.$com_id.' and s.estado!=\'3\' and g_id='.$this->gestion.'
+                order by s.sol_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -968,4 +978,13 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*---- Get Requerimiento Solicitado ----*/
+    public function get_items_solicitado($ins_id){
+        $sql = 'select *
+                from requerimiento_solicitado rsol
+                Inner Join solicitud_cpoa_subactividad as sol On sol.sol_id=rsol.sol_id
+                where rsol.ins_id='.$ins_id.' and sol.estado=\'0\'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }

@@ -6,59 +6,6 @@ function abreVentana(PDF){
   window.open(direccion, "CERTIFICACIÓN POA" , "width=800,height=700,scrollbars=NO") ; 
 }
 
-        // DO NOT REMOVE : GLOBAL FUNCTIONS!
-        $(document).ready(function() {
-            
-            pageSetUp();
-            /* BASIC ;*/
-                var responsiveHelper_dt_basic = undefined;
-                var responsiveHelper_datatable_fixed_column = undefined;
-                var responsiveHelper_datatable_col_reorder = undefined;
-                var responsiveHelper_datatable_tabletools = undefined;
-                
-                var breakpointDefinition = {
-                    tablet : 1024,
-                    phone : 480
-                };
-    
-            /* END BASIC */
-            
-            /* COLUMN FILTER  */
-            var otable = $('#datatable_fixed_column').DataTable({
-                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>"+
-                        "t"+
-                        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-                "autoWidth" : true,
-                "preDrawCallback" : function() {
-                    // Initialize the responsive datatables helper once.
-                    if (!responsiveHelper_datatable_fixed_column) {
-                        responsiveHelper_datatable_fixed_column = new ResponsiveDatatablesHelper($('#datatable_fixed_column'), breakpointDefinition);
-                    }
-                },
-                "rowCallback" : function(nRow) {
-                    responsiveHelper_datatable_fixed_column.createExpandIcon(nRow);
-                },
-                "drawCallback" : function(oSettings) {
-                    responsiveHelper_datatable_fixed_column.respond();
-                }       
-            
-            });
-            
-            // custom toolbar
-            $("div.toolbar").html('<div class="text-right"><img src="img/logo.png" alt="SmartAdmin" style="width: 111px; margin-top: 3px; margin-right: 10px;"></div>');
-                   
-            // Apply the filter
-            $("#datatable_fixed_column thead th input[type=text]").on( 'keyup change', function () {
-                
-                otable
-                    .column( $(this).parent().index()+':visible' )
-                    .search( this.value )
-                    .draw();
-                    
-            } );
-            /* END COLUMN FILTER */   
-        })
-        
     function doSearch(){
       var tableReg = document.getElementById('datos');
       var searchText = document.getElementById('searchTerm').value.toLowerCase();
@@ -335,3 +282,43 @@ function abreVentana(PDF){
     });
 
   });
+
+
+
+  //// ver Solicitud de Certificacion POA
+
+    $(".ver_solicitud").on("click", function (e) {
+      reset();
+      var sol_id = $(this).attr('name'); // sol id
+      var tp = $(this).attr('id'); // tp
+      //alert(sol_id)
+      var request;
+        url = base+"index.php/ejecucion/ccertificacion_poa/get_ver_solicitudcpoa";
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: "sol_id="+sol_id+"&tp="+tp
+        });
+
+        request.done(function (response, textStatus, jqXHR) { 
+          reset();
+          if (response.respuesta == 'correcto') {
+            $('#ver').fadeIn(1000).html(response.tabla);
+          } 
+          else {
+            alertify.error("Error al anular la solicitud ...");
+          }
+        });
+
+        request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+        });
+
+        e.preventDefault();
+      return false;
+    });
+
