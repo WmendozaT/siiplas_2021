@@ -448,7 +448,8 @@ $route['solicitud_poa/(:any)'] = 'ejecucion/ccertificacion_poa/solicitud_certpoa
 $route['reporte_solicitud_poa/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_solicitud_certpoa/$1';  /// FORMULARIO SOLICITUD CERTIFICACION POA
 $route['mis_solicitudes_cpoa/(:any)'] = 'ejecucion/ccertificacion_poa/mis_solicitudes_certificacionespoa/$1';  /// MIS SOLICITUDES CERTIFICACION POA
 
-
+/*-- Aprobar Solicitud Certificacion POA ---*/
+$route['ejec/mis_solicitudes_certpoa'] = 'ejecucion/ccertificacion_poa/ver_mis_solicitudes_certpoa';  ///// VER MIS SOLICITUDES DE CERTIFICACION POA
 
 
 //====== REPORTE EVALUACION POA 2020
@@ -484,7 +485,6 @@ $route['rep_eval_obj/evaluacion_objetivos/(:any)'] = 'reporte_evalobjetivos/crep
 
 
 
-
 /*--------- EJECUCION - CERTIFICACION POA (TUE) 2019 -----------*/
 $route['ejec/menu_cpoa'] = 'ejecucion/cert_poa/menu_certificacion_poa'; //// Menu Tecnico de Unidad Ejecutora
 $route['ejec/cpoa/(:any)'] = 'ejecucion/cert_poa/list_certificados_poa/$1'; //// Lista de Certificados POA solicitados, aprobados
@@ -507,6 +507,7 @@ $route['ejec/list_req_cert/(:any)'] = 'ejecucion/cert_poa/list_req_cert/$1'; ///
 $route['ejec/rep_cert_partidas/(:any)'] = 'ejecucion/cert_poa/cuadro_partidas_certificados/$1'; //// Lista Certificados Generados
 
 $route['ejec/get_uadministrativas'] = 'ejecucion/cert_poa/get_unidades_administrativas'; ////// Combo Unidades Administrativas
+
 
 /*-- EVALUACION PEI - OBJETIVOS REGIONALES 2020 ---*/
 $route['eval_obj/objetivos_regionales'] = 'ejecucion/cevaluacion_pei/objetivos_regionales';  ///// Objetivos Estrategicos

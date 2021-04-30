@@ -322,3 +322,44 @@ function abreVentana(PDF){
       return false;
     });
 
+
+    //////// ACEPTAR SOLICITUD DE CERTIFICACION POA
+
+    ///// Obtiene Lista de Solicitudes
+    $("#dep_id").change(function () {
+        $("#dep_id option:selected").each(function () {
+            dep_id=$(this).val();
+
+            alert(dep_id)
+           
+            /*if(prod_id!=0){
+              document.getElementById("loading").style.display = 'block';
+              $('#lista_requerimientos').fadeIn(1000).html('');
+              var url = base+"index.php/ejecucion/ccertificacion_poa/get_cuadro_certificacionpoa";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "prod_id="+prod_id
+              });
+
+              request.done(function (response, textStatus, jqXHR) {
+                  if (response.respuesta == 'correcto') {
+                    document.getElementById("loading").style.display = 'none';
+                    $('#lista_requerimientos').fadeIn(1000).html(response.requerimientos);
+                  }
+                  else{
+                      alertify.error("ERROR AL LISTAR");
+                  }
+              }); 
+            }
+            else{
+              $('#lista_requerimientos').fadeIn(1000).html('');
+            }*/
+        });
+    });
+
