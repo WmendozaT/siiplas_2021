@@ -510,7 +510,9 @@ class Ccertificacion_poa extends CI_Controller {
 
     $data['alert']='<h2 class="alert alert-success"><center>LISTA DE SOLICITUDES DE CERTIFICACIÓN POA '.$this->gestion.'</center></h2>';
     $data['regional']=$this->select_regionales(); /// Lista de regionales
-    $data['cuerpo']='Hola Mundo';
+    $data['loading']='<div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
+    $data['cuerpo']='<div class="well" id="ver"></div>';
+
     $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/mis_solicitudes_cpoa', $data);
   }
 
@@ -530,7 +532,7 @@ class Ccertificacion_poa extends CI_Controller {
             <label class="col-md-2 control-label">SELECCIONE REGIONAL</label>
             <div class="col-md-2">
               <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
-                <option value="">SELECCIONE REGIONAL</option>';
+                <option value="0">SELECCIONE REGIONAL</option>';
                 foreach($regionales as $row){
                   if($row['dep_id']!=0){
                     $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
@@ -545,9 +547,24 @@ class Ccertificacion_poa extends CI_Controller {
     return $tabla;
   }
 
+  /*-------- GET CUADRO SOLICITUDES DE CERTIFICACION POA --------*/
+  public function get_cuadro_solicitudes_certificacionpoa(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $dep_id = $this->security->xss_clean($post['dep_id']); // dep id
 
+      $tabla='<hr>'.$this->certificacionpoa->lista_solicitudes_certificacionespoa_regional($dep_id); /// Lista de Solicitudes POA por Regional
 
+      $result = array(
+        'respuesta' => 'correcto',
+        'tabla'=>$tabla,
+      );
 
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
 
 
 

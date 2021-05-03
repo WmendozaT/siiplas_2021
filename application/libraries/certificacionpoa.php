@@ -1133,24 +1133,197 @@ class Certificacionpoa extends CI_Controller{
     return $tabla;
   }
 
+/*------ LISTA DE SOLICITUDES CERTIFICACION POA REALIZADAS POR REGIONAL -------*/
+  public function lista_solicitudes_certificacionespoa_regionall($dep_id){
+    $tabla='Hola Mundo';
 
-/*------ LISTA DE SOLICITUDES CERTIFICACION POA  -------*/
+    return $tabla;
+  }
+
+/*------ LISTA DE SOLICITUDES CERTIFICACION POA REALIZADAS POR REGIONAL -------*/
+  public function lista_solicitudes_certificacionespoa_regional($dep_id){
+    $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa_regional($dep_id);
+    $tabla='';
+    $tabla.='
+      
+      <style>
+        table{font-size: 10px;
+        width: 100%;
+        max-width:1550px;
+        overflow-x: scroll;
+        }
+        th{
+          padding: 1.4px;
+          text-align: center;
+          font-size: 10px;
+        }
+      </style>
+
+      <div class="jarviswidget" id="wid-id-8" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+        <header>
+          <h2>SOLICITUDES POA</h2>
+          <ul class="nav nav-tabs pull-right in">
+            <li class="active">
+              <a data-toggle="tab" href="#hb1"> <i class="fa fa-lg fa-arrow-circle-o-down"></i> <span class="hidden-mobile hidden-tablet"> SOLICITUDES POA EN PROCESO </span> </a>
+            </li>
+            <li>
+              <a data-toggle="tab" href="#hb2"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class="hidden-mobile hidden-tablet"> CERTIFICACIONES POA APROBADOS </span> </a>
+            </li>
+          </ul>
+        </header>
+      <div>
+    
+      <div class="jarviswidget-editbox"></div>
+          <div class="widget-body">
+            <div class="tab-content">
+              <div class="tab-pane active" id="hb1">
+                  <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
+                  <table id="dt_basic" class="table table-bordered" style="width:100%;">
+                    <thead>
+                      <tr style="height:35px;">
+                        <th style="width:1%;">#</th>
+                        <th style="width:10%;">CITE SOLICITUD</th>
+                        <th style="width:10%;">FECHA SOLICTUD</th>
+                        <th style="width:20%;">OPERACIÓN</th>
+                        <th style="width:10%;">ESTADO</th>
+                        <th style="width:10%;">SOLICITUD</th>
+                        <th style="width:10%;">CERTIFICACIÓN POA</th>
+                        <th style="width:10%;">ANULAR</th>
+                      </tr>
+                    </thead>
+                    <tbody>';
+                    $nro=0;
+                    foreach($solicitudes as $row){
+                      $nro++;
+                      $color='#d9f9f5';
+                      $estado='APROBADO';
+                      if($row['estado']==0){
+                        $color='#f7cbcb';
+                        $estado='NO APROBADO';
+                      }
+                      $tabla.='
+                      <tr bgcolor='.$color.'>
+                        <td title="'.$row['sol_id'].'">'.$nro.'</td>
+                        <td>'.$row['cite'].'</td>
+                        <td>'.date('d-m-Y',strtotime($row['fecha'])).'</td>
+                        <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
+                        <td align=center><b>'.$estado.'</b></td>
+                        <td align=center>
+                          <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'" id="0">
+                            <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
+                          </a>
+                        </td>
+                        <td align=center>';
+                          if($row['estado']==1){
+                            $tabla.='
+                            <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER CERTIFICACION POA" name="'.$row['sol_id'].'" id="1">
+                              <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
+                            </a>';
+                          }
+                        $tabla.='
+                        </td>
+                        <td align=center>';
+                          if($row['estado']==0){
+                            $tabla.='
+                            <a href="#" class="btn btn-default del_solicitud" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
+                              <img src="'.base_url().'assets/img/delete.png" width="22" height="22"/>
+                            </a>';
+                          }
+                        $tabla.='
+                        </td>
+                      </tr>';
+                    }
+                    $tabla.='
+                    </tbody>
+                  </table>
+      
+              </div>
+              <div class="tab-pane" id="hb2">
+
+                  <table id="dt_basic2" class="table2 table-bordered" style="width:100%;">
+                    <thead>
+                      <tr style="height:35px;">
+                        <th style="width:1%;">#</th>
+                        <th style="width:10%;">CITE SOLICITUD</th>
+                        <th style="width:10%;">FECHA SOLICTUD</th>
+                        <th style="width:20%;">OPERACIÓN</th>
+                        <th style="width:10%;">ESTADO</th>
+                        <th style="width:10%;">SOLICITUD</th>
+                        <th style="width:10%;">CERTIFICACIÓN POA</th>
+                        <th style="width:10%;">ANULAR</th>
+                      </tr>
+                    </thead>
+                    <tbody>';
+                    $nro=0;
+    /*                foreach($solicitudes as $row){
+                      $nro++;
+                      $color='#d9f9f5';
+                      $estado='APROBADO';
+                      if($row['estado']==0){
+                        $color='#f7cbcb';
+                        $estado='NO APROBADO';
+                      }
+                      $tabla.='
+                      <tr bgcolor='.$color.'>
+                        <td title="'.$row['sol_id'].'">'.$nro.'</td>
+                        <td>'.$row['cite'].'</td>
+                        <td>'.date('d-m-Y',strtotime($row['fecha'])).'</td>
+                        <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
+                        <td align=center><b>'.$estado.'</b></td>
+                        <td align=center>
+                          <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'" id="0">
+                            <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
+                          </a>
+                        </td>
+                        <td align=center>';
+                          if($row['estado']==1){
+                            $tabla.='
+                            <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER CERTIFICACION POA" name="'.$row['sol_id'].'" id="1">
+                              <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
+                            </a>';
+                          }
+                        $tabla.='
+                        </td>
+                        <td align=center>';
+                          if($row['estado']==0){
+                            $tabla.='
+                            <a href="#" class="btn btn-default del_solicitud" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
+                              <img src="'.base_url().'assets/img/delete.png" width="22" height="22"/>
+                            </a>';
+                          }
+                        $tabla.='
+                        </td>
+                      </tr>';
+                    }*/
+                    $tabla.='
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>';
+
+    return $tabla;
+  }
+
+/*------ LISTA DE SOLICITUDES CERTIFICACION POA REALIZADAS POR SUBACTIVIDAD -------*/
   public function lista_solicitudes_certificacionespoa($com_id){
     $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa($com_id);
     $tabla='';
     $tabla.=' 
-    <style>
-            table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;
-            overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-        </style>
+      <style>
+        table{font-size: 10px;
+        width: 100%;
+        max-width:1550px;
+        overflow-x: scroll;
+        }
+        th{
+          padding: 1.4px;
+          text-align: center;
+          font-size: 10px;
+        }
+      </style>
       <div class="jarviswidget jarviswidget-color-darken" >
         <header>
             <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>

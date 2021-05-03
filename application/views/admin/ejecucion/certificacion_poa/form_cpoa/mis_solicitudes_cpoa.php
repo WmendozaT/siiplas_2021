@@ -92,20 +92,14 @@
                                 </div>
                             </section>
                         </article>
-                        <!-- <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
-                            <div class="well">
-                                <div class="btn-group btn-group-justified">
-                                    <a class="btn btn-default" href="<?php echo base_url().'index.php/ejec/menu_cpoa';?>" title="SALIR A LISTA DE CERTIFICACIONES POA"><i class="fa fa-caret-square-o-left"></i> SALIR</a>
-                                </div>
-                            </div>
-                        </article> -->
 
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="well well-sm well-light">
                                 <?php echo $alert;?>
                                 <?php echo $regional;?>
-
-                                <hr>
+                                <?php echo $loading;?>
+                                <div id="solicitudes"></div>
+                                <?php echo $cuerpo; ?>
                             </div>
                         </article>
                     </div>
@@ -176,5 +170,14 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/certificacionpoa/certpoa.js"></script> 
         <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+        <script type="text/javascript">
+            // DO NOT REMOVE : GLOBAL FUNCTIONS!
+            $(document).ready(function() {
+                pageSetUp();
+                $("#menu").menu();
+                $('.ui-dialog :button').blur();
+                $('#tabs').tabs();
+            })
+        </script>
     </body>
 </html>

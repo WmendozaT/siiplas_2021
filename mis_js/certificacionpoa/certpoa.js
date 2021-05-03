@@ -327,39 +327,37 @@ function abreVentana(PDF){
 
     ///// Obtiene Lista de Solicitudes
     $("#dep_id").change(function () {
-        $("#dep_id option:selected").each(function () {
-            dep_id=$(this).val();
+      $("#dep_id option:selected").each(function () {
+        dep_id=$(this).val();
+       
+        if(dep_id!=0){
+          document.getElementById("loading").style.display = 'block';
+          $('#solicitudes').fadeIn(1000).html('');
+          var url = base+"index.php/ejecucion/ccertificacion_poa/get_cuadro_solicitudes_certificacionpoa";
+          var request;
+          if (request) {
+              request.abort();
+          }
+          request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "dep_id="+dep_id
+          });
 
-            alert(dep_id)
-           
-            /*if(prod_id!=0){
-              document.getElementById("loading").style.display = 'block';
-              $('#lista_requerimientos').fadeIn(1000).html('');
-              var url = base+"index.php/ejecucion/ccertificacion_poa/get_cuadro_certificacionpoa";
-              var request;
-              if (request) {
-                  request.abort();
+          request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                document.getElementById("loading").style.display = 'none';
+                $('#solicitudes').fadeIn(1000).html(response.tabla);
               }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "prod_id="+prod_id
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-                  if (response.respuesta == 'correcto') {
-                    document.getElementById("loading").style.display = 'none';
-                    $('#lista_requerimientos').fadeIn(1000).html(response.requerimientos);
-                  }
-                  else{
-                      alertify.error("ERROR AL LISTAR");
-                  }
-              }); 
-            }
-            else{
-              $('#lista_requerimientos').fadeIn(1000).html('');
-            }*/
-        });
+              else{
+                  alertify.error("ERROR AL LISTAR");
+              }
+          }); 
+        }
+        else{
+          $('#solicitudes').fadeIn(1000).html('');
+        }
+      });
     });
 
