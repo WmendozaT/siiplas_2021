@@ -16,7 +16,10 @@
         <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <!--estiloh-->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css"> 
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
+        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <meta name="viewport" content="width=device-width">
     </head>
     <body class="">
@@ -99,7 +102,6 @@
                                 <?php echo $regional;?>
                                 <?php echo $loading;?>
                                 <div id="solicitudes"></div>
-                                <?php echo $cuerpo; ?>
                             </div>
                         </article>
                     </div>
@@ -169,15 +171,6 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/certificacionpoa/certpoa.js"></script> 
-        <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
-        <script type="text/javascript">
-            // DO NOT REMOVE : GLOBAL FUNCTIONS!
-            $(document).ready(function() {
-                pageSetUp();
-                $("#menu").menu();
-                $('.ui-dialog :button').blur();
-                $('#tabs').tabs();
-            })
-        </script>
+
     </body>
 </html>

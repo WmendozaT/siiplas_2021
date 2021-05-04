@@ -511,7 +511,6 @@ class Ccertificacion_poa extends CI_Controller {
     $data['alert']='<h2 class="alert alert-success"><center>LISTA DE SOLICITUDES DE CERTIFICACIÓN POA '.$this->gestion.'</center></h2>';
     $data['regional']=$this->select_regionales(); /// Lista de regionales
     $data['loading']='<div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
-    $data['cuerpo']='<div class="well" id="ver"></div>';
 
     $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/mis_solicitudes_cpoa', $data);
   }

@@ -1142,10 +1142,10 @@ class Certificacionpoa extends CI_Controller{
 
 /*------ LISTA DE SOLICITUDES CERTIFICACION POA REALIZADAS POR REGIONAL -------*/
   public function lista_solicitudes_certificacionespoa_regional($dep_id){
-    $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa_regional($dep_id);
+    
     $tabla='';
     $tabla.='
-      
+      <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
       <style>
         table{font-size: 10px;
         width: 100%;
@@ -1161,7 +1161,7 @@ class Certificacionpoa extends CI_Controller{
 
       <div class="jarviswidget" id="wid-id-8" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
         <header>
-          <h2>SOLICITUDES POA</h2>
+          <h2></h2>
           <ul class="nav nav-tabs pull-right in">
             <li class="active">
               <a data-toggle="tab" href="#hb1"> <i class="fa fa-lg fa-arrow-circle-o-down"></i> <span class="hidden-mobile hidden-tablet"> SOLICITUDES POA EN PROCESO </span> </a>
@@ -1177,7 +1177,7 @@ class Certificacionpoa extends CI_Controller{
           <div class="widget-body">
             <div class="tab-content">
               <div class="tab-pane active" id="hb1">
-                  <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
+                  
                   <table id="dt_basic" class="table table-bordered" style="width:100%;">
                     <thead>
                       <tr style="height:35px;">
@@ -1193,6 +1193,7 @@ class Certificacionpoa extends CI_Controller{
                     </thead>
                     <tbody>';
                     $nro=0;
+                    $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa_regional($dep_id,0);
                     foreach($solicitudes as $row){
                       $nro++;
                       $color='#d9f9f5';
@@ -1209,18 +1210,14 @@ class Certificacionpoa extends CI_Controller{
                         <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
                         <td align=center><b>'.$estado.'</b></td>
                         <td align=center>
-                          <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'" id="0">
+                          <a href="javascript:abreVentana_sol(\''.site_url("").'/reporte_solicitud_poa/'.$row['sol_id'].'\');" class="btn btn-default" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'" id="0">
                             <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
                           </a>
                         </td>
-                        <td align=center>';
-                          if($row['estado']==1){
-                            $tabla.='
-                            <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER CERTIFICACION POA" name="'.$row['sol_id'].'" id="1">
-                              <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
-                            </a>';
-                          }
-                        $tabla.='
+                        <td align=center>
+                          <a href="#" class="btn btn-default" onclick="aprobar_solicitud('.$row['sol_id'].');" style="width:50%;" title="APROBAR SOLICITUD CERTIFICACION POA">
+                            <img src="'.base_url().'assets/img/ok1.JPG" width="22" height="22"/>
+                          </a>
                         </td>
                         <td align=center>';
                           if($row['estado']==0){
@@ -1255,6 +1252,7 @@ class Certificacionpoa extends CI_Controller{
                     </thead>
                     <tbody>';
                     $nro=0;
+                    $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa_regional($dep_id,1);
     /*                foreach($solicitudes as $row){
                       $nro++;
                       $color='#d9f9f5';

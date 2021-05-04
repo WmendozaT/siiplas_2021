@@ -1,39 +1,46 @@
 base = $('[name="base"]').val();
 
+function abreVentana_sol(PDF){             
+  var direccion;
+  direccion = '' + PDF;
+  window.open(direccion, "SOLICITUD CERTIFICACIÓN POA" , "width=1000,height=900,scrollbars=NO") ; 
+}
+
 function abreVentana(PDF){             
   var direccion;
   direccion = '' + PDF;
-  window.open(direccion, "CERTIFICACIÓN POA" , "width=800,height=700,scrollbars=NO") ; 
+  window.open(direccion, "CERTIFICACIÓN POA" , "width=800,height=750,scrollbars=NO") ; 
 }
 
-    function doSearch(){
-      var tableReg = document.getElementById('datos');
-      var searchText = document.getElementById('searchTerm').value.toLowerCase();
-      var cellsOfRow="";
-      var found=false;
-      var compareWith="";
- 
-      // Recorremos todas las filas con contenido de la tabla
-      for (var i = 1; i < tableReg.rows.length; i++){
-        cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
-        found = false;
-        // Recorremos todas las celdas
-        for (var j = 0; j < cellsOfRow.length && !found; j++){
-          compareWith = cellsOfRow[j].innerHTML.toLowerCase();
-          // Buscamos el texto en el contenido de la celda
-          if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
-            found = true;
-          }
-        }
-        if(found) {
-          tableReg.rows[i].style.display = '';
-        } else {
-          // si no ha encontrado ninguna coincidencia, esconde la
-          // fila de la tabla
-          tableReg.rows[i].style.display = 'none';
+
+  function doSearch(){
+    var tableReg = document.getElementById('datos');
+    var searchText = document.getElementById('searchTerm').value.toLowerCase();
+    var cellsOfRow="";
+    var found=false;
+    var compareWith="";
+
+    // Recorremos todas las filas con contenido de la tabla
+    for (var i = 1; i < tableReg.rows.length; i++){
+      cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+      found = false;
+      // Recorremos todas las celdas
+      for (var j = 0; j < cellsOfRow.length && !found; j++){
+        compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+        // Buscamos el texto en el contenido de la celda
+        if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+          found = true;
         }
       }
+      if(found) {
+        tableReg.rows[i].style.display = '';
+      } else {
+        // si no ha encontrado ninguna coincidencia, esconde la
+        // fila de la tabla
+        tableReg.rows[i].style.display = 'none';
+      }
     }
+  }
 
 
   $( function() {
@@ -361,3 +368,104 @@ function abreVentana(PDF){
       });
     });
 
+
+    /// Aprobar Solicitud
+      function aprobar_solicitud(sol_id) {
+/*        function reset() {
+          $("#toggleCSS").attr("href", base+"assets/themes_alerta/alertify.default.css");
+          alertify.set({
+              labels: {
+                  ok: "ACEPTAR",
+                  cancel: "CANCELAR"
+              },
+              delay: 5000,
+              buttonReverse: false,
+              buttonFocus: "ok"
+          });
+        }*/
+
+        alertify.confirm("ESTA SEGURO DE APROBAR LA SOLICITUD DE CERTIFICACIÓN POA ?", function (a) {
+        if (a) {
+/*            url = base+"index.php/ejecucion/ccertificacion_poa/anula_solicitud_cpoa";
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: "json",
+                data: "sol_id="+sol_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) { 
+              reset();
+              if (response.respuesta == 'correcto') {
+                window.location.reload(true);
+              } 
+              else {
+                alertify.error("Error al anular la solicitud ...");
+              }
+            });
+
+            request.fail(function (jqXHR, textStatus, thrown) {
+              console.log("ERROR: " + textStatus);
+            });
+
+            e.preventDefault();*/
+
+        } else {
+            alertify.error("Opcion cancelada");
+        }
+      });
+
+
+/*        if (estaChequeado == true) { 
+          val = parseInt($('[name="tot_temp"]').val());
+        var url = base+"index.php/ejecucion/ccertificacion_poa/verif_mes_certificado";
+          $.ajax({
+            type:"post",
+            url:url,
+            data:{tins_id:tins_id},
+            success:function(datos){
+              if(datos.trim() =='true'){ /// habilitado para certificar
+
+                val = val + 1;
+                $('[name="tot_temp"]').val((val).toFixed(0));
+                total = parseFloat($('[name="tot_temp"]').val());
+                totalf = parseFloat($('[name="tot"]').val());
+                if(total==0 || totalf==0){
+                  $('#but').slideUp();
+                }
+                else{
+                  $('#but').slideDown();
+                }
+
+              }else{ /// inhabilitado (ya se certifico anteriormente)
+                 alertify.error("EL MES SELECCIONADO YA FUE CERTIFICADO ANTERIORMENTE !!!");
+                val = val - 1;
+                $('[name="tot_temp"]').val((val).toFixed(0));
+                total = parseFloat($('[name="tot_temp"]').val());
+                totalf = parseFloat($('[name="tot"]').val());
+                if(total==0 || totalf==0){
+                  $('#but').slideUp();
+                }
+                else{
+                  $('#but').slideDown();
+                }
+              }
+          }});
+        } 
+        else {
+          val = val - 1;
+          $('[name="tot_temp"]').val((val).toFixed(0));
+          total = parseFloat($('[name="tot_temp"]').val());
+          totalf = parseFloat($('[name="tot"]').val());
+
+          if(total==0 || totalf==0){
+            $('#but').slideUp();
+          }
+          else{
+            $('#but').slideDown();
+          }
+        }*/
+      }
