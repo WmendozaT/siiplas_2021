@@ -864,20 +864,76 @@ class Certificacionpoa extends CI_Controller{
   }
 
 
-
-/*-- DATOS CITE --*/
-  public function datos_cite($solicitud){
+/*-- CABECERA (Solicitud Certificacion POa) --*/
+  public function cabecera_solicitudpoa($solicitud){
     $tabla='';
     $tabla.='
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-          <tr style="font-size: 13px;font-family: Arial;">
-              <td colspan="2" style="width:100%;height: 30%;text-align:right;"><b>FORMULARIO CERT. N° 10&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
-          </tr>
-          <tr style="font-size: 10px;font-family: Arial;">
-              <td style="width:50%;height: 30%;"><b>CITE : </b>'.$solicitud[0]['cite'].'</td>
-              <td style="width:50%;height: 30%"><b>FECHA : </b>'.date('d-m-Y',strtotime($solicitud[0]['fecha'])).'</td>
-          </tr>
-      </table>';
+            <tr style="border: solid 0px;">              
+                <td style="width:70%;height: 2%">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                        <tr style="font-size: 15px;font-family: Arial;">
+                            <td style="width:50%;height: 30%;">&nbsp;&nbsp;<b>CAJA NACIONAL DE SALUD</b></td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%;height: 30%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:30%; height: 2%; font-size: 8px;text-align:center;">
+                    SISTEMA DE PROGRAMACIÓN DE OPERACIONES
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:20%; text-align:center;">
+                </td>
+                <td style="width:60%; height: 5%">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-size: 23px;font-family: Arial;">
+                            <td style="height: 40%;"><b>SOLICITUD DE CERTIFICACI&Oacute;N POA - '.$this->gestion.'</b></td>
+                        </tr>
+                        <tr style="font-size: 10px;font-family: Arial;">
+                            <td style="height: 10%;"><b>(DOCUMENTO NO VALIDO PARA PROCESOS DE EJECUCIÓN POA)</b></td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:20%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px;">              
+                <td style="width:50%;">
+                </td>
+                <td style="width:50%; height: 3%">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 13px;font-family: Arial;">
+                          <td colspan="2" style="width:100%;height: 30%;text-align:right;"><b>FORMULARIO CERT. N° 10&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
+                      </tr>
+                      <tr style="font-size: 10px;font-family: Arial;">
+                          <td style="width:50%;height: 30%;"><b>CITE : </b>'.$solicitud[0]['cite'].'</td>
+                          <td style="width:50%;height: 30%"><b>FECHA : </b>'.date('d-m-Y',strtotime($solicitud[0]['fecha'])).'</td>
+                      </tr>
+                  </table>
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+             <tr>
+                <td style="width:1%;"></td>
+                <td style="height: 3%;">
+                    <div style="width:98%;font-size: 12px; font-family: Arial;">
+                    Se solicita al Departamento Nacional de Planificación o Encargados del POA Regional/Distrital, la emisión de la <b>CERTIFICACIÓN POA GESTIÓN '.$this->gestion.'</b>, 
+                    de los requerimientos programados a favor de la Unidad, mismos se encuentran articulados a los Objetivos de Gestión y Acción Estrategica detallada a continuación.
+                    </div>
+                </td>
+                <td style="width:1%;"></td>
+            </tr>
+        </table>';
 
     return $tabla;
   }

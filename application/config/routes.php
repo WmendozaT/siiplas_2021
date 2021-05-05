@@ -450,7 +450,7 @@ $route['mis_solicitudes_cpoa/(:any)'] = 'ejecucion/ccertificacion_poa/mis_solici
 
 /*-- Aprobar Solicitud Certificacion POA ---*/
 $route['ejec/mis_solicitudes_certpoa'] = 'ejecucion/ccertificacion_poa/ver_mis_solicitudes_certpoa';  ///// VER MIS SOLICITUDES DE CERTIFICACION POA
-
+$route['reporte_solicitud_poa_aprobado/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_solicitud_probado_certpoa/$1';  /// REPORTE SOLICITUD CERTIFICADO POA (APROBADO)
 
 //====== REPORTE EVALUACION POA 2020
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (GASTO CORRIENTE) 2020 ----------*/

@@ -135,7 +135,6 @@
             }
         </script>
         <!-- IMPORTANT: APP CONFIG -->
-        <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
@@ -153,17 +152,9 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
         <!-- JQUERY MASKED INPUT -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-        <!-- JQUERY SELECT2 INPUT -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/select2/select2.min.js"></script>
-        <!-- JQUERY UI + Bootstrap Slider -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
-        <!-- browser msie issue fix -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
         <!-- FastClick: For mobile devices -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <!-- Demo purpose only -->
-        <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->

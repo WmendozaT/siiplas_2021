@@ -371,22 +371,11 @@ function abreVentana(PDF){
 
     /// Aprobar Solicitud
       function aprobar_solicitud(sol_id) {
-/*        function reset() {
-          $("#toggleCSS").attr("href", base+"assets/themes_alerta/alertify.default.css");
-          alertify.set({
-              labels: {
-                  ok: "ACEPTAR",
-                  cancel: "CANCELAR"
-              },
-              delay: 5000,
-              buttonReverse: false,
-              buttonFocus: "ok"
-          });
-        }*/
-
+        reset();
+        var request;
         alertify.confirm("ESTA SEGURO DE APROBAR LA SOLICITUD DE CERTIFICACIÓN POA ?", function (a) {
         if (a) {
-/*            url = base+"index.php/ejecucion/ccertificacion_poa/anula_solicitud_cpoa";
+            url = base+"index.php/ejecucion/ccertificacion_poa/aprobar_solicitud_cpoa";
             if (request) {
                 request.abort();
             }
@@ -400,10 +389,12 @@ function abreVentana(PDF){
             request.done(function (response, textStatus, jqXHR) { 
               reset();
               if (response.respuesta == 'correcto') {
-                window.location.reload(true);
+                $('#solicitudes').fadeIn(1000).html(response.certpoa);
+                  //alert(response.respuesta)
+                //window.location.reload(true);
               } 
               else {
-                alertify.error("Error al anular la solicitud ...");
+                alertify.error("Error ...");
               }
             });
 
@@ -411,7 +402,7 @@ function abreVentana(PDF){
               console.log("ERROR: " + textStatus);
             });
 
-            e.preventDefault();*/
+            e.preventDefault();
 
         } else {
             alertify.error("Opcion cancelada");

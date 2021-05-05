@@ -767,18 +767,38 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
-  /*------ FORMULARIO SOLICITUD CERTIFICACION POA  -------*/
+  /*------ REPORTE SOLICITUD CERTIFICACION POA  -------*/
   public function reporte_solicitud_certpoa($sol_id){
+    /// solicitud: 0 -> revision
+    /// Solicitud: 1 -> Aprobado
     $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($sol_id);
-    $data['datos_cite']=$this->certificacionpoa->datos_cite($data['solicitud']);
-    $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']);
-    $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($sol_id);
-    $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']);
-
+    $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
+    $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
+    $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($sol_id); /// Requerimientos solicitados
+    $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']); /// firma unidad
+    
+    $data['certificacion']=false;
+    $data['pie_reporte']='Solicitud_Certificacion_Poa';
     $this->load->view('admin/ejecucion/certpoa_unidad/reporte_solicitud_cpoa', $data);
   }
 
   
+
+  /*------ REPORTE SOLICITUD CERTIFICACION POA APROBADO -------*/
+  public function reporte_solicitud_probado_certpoa($cpoa_id){
+/*    $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($sol_id);
+    $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
+    $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
+    $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($sol_id); /// Requerimientos solicitados
+    $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']); /// firma unidad
+    
+    $data['certificacion']=false;
+    $data['pie_reporte']='Solicitud_Certificacion_Poa';
+    $this->load->view('admin/ejecucion/certpoa_unidad/reporte_solicitud_cpoa', $data);*/
+
+    echo "GENERAR CERTIFICACION POA";
+  }
+
 
   /*--- ANULA LA SOLICITUD DE CERTIFCACION POA ---*/
   function anula_solicitud_cpoa(){
@@ -877,26 +897,86 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
+  /*--- APROBAR LA SOLICITUD DE CERTIFCACION POA ---*/
+  function aprobar_solicitud_cpoa(){
+    if ($this->input->is_ajax_request() && $this->input->post()) {
+      $post = $this->input->post();
+      $sol_id = $post['sol_id']; /// Solicitud Id
+      $solicitud=$this->model_certificacion->get_solicitud_cpoa($sol_id); // solicitud
+      $requerimientos=$this->model_certificacion->get_lista_requerimientos_solicitados($sol_id); // Requerimientos
+
+      /*------ GUARDANDO CERTIFICADO POA ------*/
+        $data_to_store = array( 
+          'proy_id' => $solicitud[0]['proy_id'],
+          'aper_id' => $solicitud[0]['aper_id'], /// aper del programa padre
+          'cpoa_fecha' => date("d/m/Y H:i:s"),
+          'cpoa_gestion' => $this->gestion,
+          'cpoa_estado' => 0, /// 0 : en proceso, 1 elaborado, 2, modificado, 3 Eliminado
+          'fun_id' => $this->fun_id,
+          'com_id' => $solicitud[0]['com_id'],
+          'cpoa_cite' => $solicitud[0]['cite'],
+          'cite_fecha' => $solicitud[0]['fecha'],
+          'prod_id' => $solicitud[0]['prod_id'],
+          'sol_id' => $solicitud[0]['sol_id'],
+        );
+        $this->db->insert('certificacionpoa', $data_to_store);
+        $cpoa_id=$this->db->insert_id();
+      /*-------------------------------------*/
+
+      foreach($requerimientos as $row){
+        $data_to_store = array( 
+          'cpoa_id' => $cpoa_id,
+          'ins_id' => $row['ins_id'],
+          'ifin_id' => 0,
+          'fun_id' => $this->fun_id,
+        );
+        $this->db->insert('certificacionpoadetalle', $data_to_store);
+        $cpoad_id=$this->db->insert_id();
+
+          /*---- Temporalidad ----*/
+          $temporalidad=$this->model_certificacion->get_lista_temporalidad_solicitados($row['req_id']);
+          foreach($temporalidad as $rowt){
+            $data_to_store = array(
+              'cpoad_id' => $cpoad_id,
+              'tins_id' => $rowt['tins_id'],
+            );
+            $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
+          }
+          /*----------------------*/
+      
+
+          /*--------- Update Req. estado -------*/
+          $update_solreq = array(
+            'req_estado' => 1
+          );
+          $this->db->where('req_id', $row['req_id']);
+          $this->db->update('requerimiento_solicitado', $update_solreq);
+          /*------------------------------------*/
+      }
+
+      /*--------- Update Solicitud -------*/
+        $update_solicitud = array(
+          'estado' => 1,
+          'fecha_proceso' => date("d/m/Y H:i:s")
+        );
+        $this->db->where('sol_id', $sol_id);
+        $this->db->update('solicitud_cpoa_subactividad', $update_solicitud);
+      /*------------------------------------*/
 
 
+      $this->certificacionpoa->generar_certificacion_poa($cpoa_id);
 
 
+      $cert='<hr><iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa_aprobado/'.$sol_id.'"></iframe>';
 
+      $result = array(
+        'respuesta' => 'correcto',
+        'certpoa' => $cert
+      );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      echo json_encode($result);
+    }
+  }
 
 
 
