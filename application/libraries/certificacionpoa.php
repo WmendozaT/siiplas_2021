@@ -863,7 +863,7 @@ class Certificacionpoa extends CI_Controller{
     return $tabla;
   }
 
-
+ //// ======== SOLICITUD DE CERTIFICACION POA ========
 /*-- CABECERA (Solicitud Certificacion POa) --*/
   public function cabecera_solicitudpoa($solicitud){
     $tabla='';
@@ -1188,13 +1188,14 @@ class Certificacionpoa extends CI_Controller{
 
     return $tabla;
   }
+///// ============== END SOLICITUD DE CERTIFICACION POA
 
-/*------ LISTA DE SOLICITUDES CERTIFICACION POA REALIZADAS POR REGIONAL -------*/
-  public function lista_solicitudes_certificacionespoa_regionall($dep_id){
-    $tabla='Hola Mundo';
 
-    return $tabla;
-  }
+
+
+
+  
+
 
 /*------ LISTA DE SOLICITUDES CERTIFICACION POA REALIZADAS POR REGIONAL -------*/
   public function lista_solicitudes_certificacionespoa_regional($dep_id){

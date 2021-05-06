@@ -786,17 +786,24 @@ class Ccertificacion_poa extends CI_Controller {
 
   /*------ REPORTE SOLICITUD CERTIFICACION POA APROBADO -------*/
   public function reporte_solicitud_probado_certpoa($cpoa_id){
-/*    $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($sol_id);
-    $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
-    $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
-    $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($sol_id); /// Requerimientos solicitados
-    $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']); /// firma unidad
+    $certificacion=$this->model_certificacion->get_certificacion_poa($cpoa_id); /// Datos Certificacion
     
-    $data['certificacion']=false;
-    $data['pie_reporte']='Solicitud_Certificacion_Poa';
-    $this->load->view('admin/ejecucion/certpoa_unidad/reporte_solicitud_cpoa', $data);*/
+    if(count($certificacion)!=0){
+      
+      $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($certificacion[0]['sol_id']);
+      $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
+      $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
+      $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($certificacion[0]['sol_id']); /// Requerimientos solicitados
+      $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']); /// firma unidad
 
-    echo "GENERAR CERTIFICACION POA";
+
+      $data['certificacion']=true;
+      $data['pie_reporte']='Certificacion_Poa_Aprobado';
+      $this->load->view('admin/ejecucion/certpoa_unidad/reporte_solicitud_cpoa', $data);
+    }
+    else{
+      echo "Error !!!";
+    }
   }
 
 
