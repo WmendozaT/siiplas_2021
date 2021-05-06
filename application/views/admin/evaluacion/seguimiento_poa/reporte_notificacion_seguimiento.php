@@ -32,7 +32,7 @@ foreach($subactividades as $rowu){ $nro_pag++; ?>
         <table class="page_header" border="0" style="width:100%;">
           <tr>
             <td style="width:15%; text-align:center;">
-              <img src="<?php echo $this->session->userdata('img') ?>" alt="" style="width:58%;">
+              
             </td>
               <td style="width: 70%; text-align: left">
                 <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
@@ -52,7 +52,7 @@ foreach($subactividades as $rowu){ $nro_pag++; ?>
             </td>
           </tr>
         </table><br>
-        <table border=0 style="width:100%;" align=center>
+        <table border=0 style="width:92.5%;" align=center>
           <tr>
             <td style="width:95%;font-size: 10px;" align=right><?php echo strtoupper($proyecto[0]['dep_departamento']).' '.$mes[ltrim(date("m"), "0")]. " de " . date("Y"); ?></td>
           </tr>
@@ -92,7 +92,7 @@ foreach($subactividades as $rowu){ $nro_pag++; ?>
 
         $operaciones=$this->model_seguimientopoa->operaciones_programados_x_mes($rowu['com_id'],$verif_mes[1]); /// lISTA DE OPERACIONES
         echo '
-            <table border=0 style="width:93%;" align=center>
+            <table border=0 style="width:97%;" align=center>
                 <tr>
                     <td style="width:95%;"><b>Señor(es) : </b> <br>'.$titulo1.'<br>Presente .-</td>
                 </tr>
@@ -106,7 +106,7 @@ foreach($subactividades as $rowu){ $nro_pag++; ?>
                     <td style="width:95%;"><br></td>
                 </tr>
                 <tr>
-                    <td style="width:95%;">
+                    <td style="width:95%;text-align: justify;">
                     El Departamento Nacional de Planificaci&oacute;n en el marco de sus competencias viene fortaleciendo las tareas de monitoreo y supervisi&oacute;n 
                     a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar el seguimiento al cumplimiento del POA <b>'.$verif_mes[2].'</b> '.$this->session->userdata('gestion').', de 
                     <b>'.$titulo2.'</b> a su cargo, haciendo enfasis en la programaci&oacute;n mensual y periodo de ejecuci&oacute;n de cada operaci&oacute;n.
@@ -114,13 +114,13 @@ foreach($subactividades as $rowu){ $nro_pag++; ?>
                 </tr>
             </table>';
 
-        echo '<br><table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+        echo '<br><table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:98%;" align=center>
                 <thead>
                   <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
-                    <th style="width:1.5%; height:20px;"></th>
+                    <th style="width:2%; height:20px;"></th>
                     <th style="width:3%;"><b>COD. OR.</b></th>
                     <th style="width:3%;"><b>COD. OPE.</b></th>
-                    <th style="width:25%;">OPERACI&Oacute;N</th>
+                    <th style="width:30%;">OPERACI&Oacute;N</th>
                     <th style="width:20%;">INDICADOR</th>
                     <th style="width:20%;">MEDIO DE VERIFICACI&Oacute;N</th>
                     <th style="width:5%;">META ANUAL</th>
@@ -140,10 +140,10 @@ foreach($subactividades as $rowu){ $nro_pag++; ?>
                     $nro_ope++;
                     echo '
                         <tr>
-                            <td align=center style="height:20px; width:1.5%;">'.$nro_ope.'</td>
+                            <td align=center style="height:20px; width:2%;">'.$nro_ope.'</td>
                             <td align=center style="font-size: 10px; width:3%;">'.$row['or_codigo'].'</td>
                             <td align=center style="font-size: 10px; width:3%;">'.$row['prod_cod'].'</td>
-                            <td style="width:25%;">'.$row['prod_producto'].'</td>
+                            <td style="width:30%;">'.$row['prod_producto'].'</td>
                             <td style="width:20%;">'.$row['prod_indicador'].'</td>
                             <td style="width:20%;">'.$row['prod_fuente_verificacion'].'</td>
                             <td style="width:5%;" align=right>'.round($row['prod_meta'],2).'</td>
@@ -158,23 +158,23 @@ foreach($subactividades as $rowu){ $nro_pag++; ?>
         if(count($requerimientos)!=0){
 
         echo '<br>
-            <table border=0 style="width:93%;" align=center>
+            <table border=0 style="width:97%;" align=center>
                 <tr>
-                    <td style="width:95%;">
-                    En el mismo sentido, efectuar las gestiones en el plazo programado para la ejecuci&oacute;n de la Solicitud de <b>Certificación POA</b>
+                    <td style="width:95%;text-align: justify;">
+                    En el mismo sentido, efectuar las gestiones en el plazo programado para la ejecuci&oacute;n de la Solicitud de CERTIFICACIÓN POA
                     <b>'.$verif_mes[2].' '.$this->session->userdata('gestion').'</b>. Recordar que en ambos casos para fines de control y gestión por resultados la 
                     responsabilidad del cumplimiento corresponde a su autoridad.
                     </td>
                 </tr>
             </table>';
 
-        echo '<br><table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+        echo '<br><table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:98%;" align=center>
                 <thead>
                   <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
                     <th style="width:1.5%; height:20px;">#</th>
                     <th style="width:3%;"><b>COD. OPE.</b></th>
                     <th style="width:7%;"><b>PARTIDA</b></th>
-                    <th style="width:20%;">DETALLE REQUERIMIENTO</th>
+                    <th style="width:25%;">DETALLE REQUERIMIENTO</th>
                     <th style="width:10%;">UNIDAD DE MEDIDA</th>
                     <th style="width:7%;">CANTIDAD</th>
                     <th style="width:8%;">PRECIO UNITARIO</th>
@@ -193,7 +193,7 @@ foreach($subactividades as $rowu){ $nro_pag++; ?>
                             <td align=center style="height:20px; width:1.5%;">'.$nro_req.'</td>
                             <td align=center style="font-size: 10px; width:3%;">'.$row['prod_cod'].'</td>
                             <td align=center style="font-size: 10px; width:7%;">'.$row['par_codigo'].'</td>
-                            <td style="width:20%;">'.$row['ins_detalle'].'</td>
+                            <td style="width:25%;">'.$row['ins_detalle'].'</td>
                             <td style="width:10%;">'.$row['ins_unidad_medida'].'</td>
                             <td style="width:7%;" align=right>'.round($row['ins_cant_requerida'],2).'</td>
                             <td style="width:8%;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>

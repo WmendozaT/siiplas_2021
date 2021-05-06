@@ -1061,6 +1061,328 @@ class Certificacionpoa extends CI_Controller{
 
 
 
+ //// ======== CERTIFICACION POA ========
+/*-- CABECERA (Certificacion POa Aprobado) --*/
+  public function cabecera_certpoa($certpoa){
+    $tabla='';
+    $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+              <td style="width:70%;height: 2%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 15px;font-family: Arial;">
+                          <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                      </tr>
+                      <tr>
+                          <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                      </tr>
+                  </table>
+              </td>
+              <td style="width:30%; height: 2%; font-size: 8px;text-align:center;">
+              </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%; height: 5%">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-size: 23px;font-family: Arial;">
+                            <td style="height: 30%;"><b>CERTIFICACI&Oacute;N DEL PLAN OPERATIVO ANUAL '.$this->gestion.'</b></td>
+                        </tr>
+                        <tr style="font-size: 20px;font-family: Arial;">
+                            <td style="height: 5%;">'.$certpoa[0]['cpoa_codigo'].'</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px;">              
+                <td style="width:50%;">
+                </td>
+                <td style="width:50%; height: 3%">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 10px;font-family: Arial;">
+                          <td style="width:50%;height: 30%;"><b>CITE : </b> '.$certpoa[0]['cpoa_cite'].'</td>
+                          <td style="width:50%;height: 30%"><b>FECHA : </b>'.date('d-m-Y',strtotime($certpoa[0]['cite_fecha'])).'</td>
+                      </tr>
+                  </table>
+                </td>
+            </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 3%;font-size: 11px; font-family: Arial;text-align: justify;">
+                  El presente documento certifica que el item descrito se encuentra registrado en la Programación Físico Financiero, se relaciona y responde a las acciones
+                  de corto plazo y Operaciones establecidas en el Plan Operativo Anual (POA) gestión '.$this->gestion.' de la Caja Nacional de Salud.
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>
+       
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 3%;">
+                 <div style="border: 1px groove #000;font-size: 9px;font-family: Arial;height:25px;" align="center">
+                    <br><b>La presente CERTIFICACI&Oacute;N deber&aacute; ser utilizada para inicio de procesos de compra de bienes y/o contrataci&oacute;n de servicios a ser concretados a partir de la fecha de su emisi&oacute;n.</b>
+                  </div>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 3%;">
+               '.$this->datos_unidad_certpoa($certpoa).'
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;font-size: 10px;">
+                <b>DESCRIPCI&Oacute;N DE LOS SOLICITADO: </b>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>';
+
+    return $tabla;
+  }
+
+  /*-- Datos generales Unidad --*/
+  public function datos_unidad_certpoa($certpoa){
+    $tabla='';
+    $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr>
+              <td style="width:20%;">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>REGIONAL / DEPARTAMENTO</b></td><td style="width:5%;"></td></tr>
+                  </table>
+              </td>
+              <td style="width:80%;">
+                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.strtoupper ($certpoa[0]['dep_departamento']).'</td></tr>
+                  </table>
+              </td>
+          </tr>
+          <tr>
+              <td style="width:20%;">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD EJECUTORA</b></td><td style="width:5%;"></td></tr>
+                  </table>
+              </td>
+              <td style="width:80%;">
+                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.strtoupper ($certpoa[0]['dist_distrital']).'</td></tr>
+                  </table>
+              </td>
+          </tr>
+          <tr>
+              <td style="width:20%;">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                  </table>
+              </td>
+              <td style="width:80%;">
+                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['aper_actividad'].' '.strtoupper ($certpoa[0]['act_descripcion']).' '.$certpoa[0]['abrev'].'</td></tr>
+                  </table>
+              </td>
+          </tr>
+          <tr>
+              <td style="width:20%;">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>SUBACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                  </table>
+              </td>
+              <td style="width:80%;">
+                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                      <tr>
+                          <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['tipo_subactividad'].' '.$certpoa[0]['serv_descripcion'].'</td>
+                      </tr>
+                  </table>
+              </td>
+          </tr>
+          <tr>
+              <td style="width:20%;">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACCI&Oacute;N DE CORTO PLAZO</b></td><td style="width:5%;"></td></tr>
+                  </table>
+              </td>
+              <td style="width:80%;">
+                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                      <tr>
+                          <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['obj_codigo'].' .-'.$certpoa[0]['obj_descripcion'].'</td>
+                      </tr>
+                  </table>
+              </td>
+          </tr>
+          <tr>
+              <td style="width:20%;">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>OPERACI&Oacute;N</b></td><td style="width:5%;"></td></tr>
+                  </table>
+              </td>
+              <td style="width:80%;">
+                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                      <tr>
+                          <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['prod_cod'].' .- '.$certpoa[0]['prod_producto'].'</td>
+                      </tr>
+                  </table>
+              </td>
+          </tr>
+      </table>';
+    return $tabla;
+  }
+
+    /*-- Detalle Requerimientos Certificados--*/
+  public function items_certificados($sol_id){
+    $tabla='';
+
+    $requerimientos=$this->model_certificacion->get_lista_requerimientos_solicitados($sol_id);
+    $tabla.='
+      <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <thead>
+              <tr style="font-size: 8px; font-family: Arial;" align="center" >
+                <th style="width:3%;height: 1.5%;">N°</th>
+                <th style="width:7%;">PARTIDA</th>
+                <th style="width:28.9%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:10%;">UNIDAD DE MEDIDA</th>
+                <th style="width:9%;">CANTIDAD</th>
+                <th style="width:9%;">PRECIO UNITARIO</th>
+                <th style="width:9%;">PRECIO TOTAL</th>
+                <th style="width:9%;">MONTO SOLICITADO</th>
+                <th style="width:15%;">TEMPORALIDAD SELECCIONADO</th>
+              </tr>
+          </thead>
+          <tbody>';
+            $nro=0;$suma_monto=0;
+            foreach($requerimientos as $row){
+              $nro++;
+              $suma_monto=$suma_monto+$row['monto_solicitado'];
+              $tabla.='
+              <tr style="font-size: 8px; font-family: Arial;">
+                <td style="width:3%;height: 3%;" align=center>'.$nro.'</td>
+                <td style="width:7%;" align=center>'.$row['par_codigo'].'</td>
+                <td style="width:28.9%;">'.$row['ins_detalle'].'</td>
+                <td style="width:10%;">'.$row['ins_unidad_medida'].'</td>
+                <td style="width:9%;" align=right>'.round($row['ins_cant_requerida'],2).'</td>
+                <td style="width:9%;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                <td style="width:9%;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>
+                <td style="width:9%;" align=right>'.number_format($row['monto_solicitado'], 2, ',', '.').'</td>
+                <td style="width:15%;" align=center>'.$this->temporalidad_solicitado($row['req_id']).'</td>
+              </tr>';
+            }
+          $tabla.='
+          </tbody>
+            <tr>
+              <td style="height: 3%;"></td>
+              <td colspan=6 align=right><b>MONTO A CERTIFICAR : </b></td>
+              <td style="font-size: 9px;" align=right><b>'.number_format($suma_monto, 2, ',', '.').'</b></td>
+              <td></td>
+            </tr>
+      </table>';
+
+    return $tabla;
+  }
+
+  /*-- Pie de Reporte - Certificacion POa Aprobado --*/
+  public function pie_certificacion_poa($certpoa){
+    $tabla='';
+
+    $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;">
+            <tr>
+                <td style="width: 3%;"></td>
+                <td style="width: 55%;">
+                    <b>RECOMENDACIONES</b><hr>
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                        <tr bgcolor="#cae4fb">
+                            <td style="width: 100%;">
+                                <br>'.$certpoa[0]['cpoa_recomendacion'].'<br><br>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;" align="center">
+          <tr>
+            <td style="width: 40%;">
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                  <tr style="font-size: 10px;font-family: Arial; height:65px;">
+                      <td style="width:100%;" colspan="2"><b>EMITIDO POR<br></b></td>
+                  </tr>
+                  <tr style="font-size: 9px;font-family: Arial; height:65px;">
+                      <td><b>RESPONSABLE</b></td>
+                      <td>'.$certpoa[0]['fun_nombre'].' '.$certpoa[0]['fun_paterno'].' '.$certpoa[0]['fun_materno'].'</td>
+                  </tr>
+                  <tr style="font-size: 9px;font-family: Arial; height:65px;">
+                      <td><b>CARGO</b></td>
+                      <td>'.$certpoa[0]['fun_cargo'].'</td>
+                  </tr>
+                  <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
+                      <td colspan="2"><b><br><br>FIRMA</b></td>
+                  </tr>
+              </table>
+            </td>
+            <td style="width: 40%;">
+            </td>
+            <td style="width: 20%;" align="center">
+                <qrcode value="'.$certpoa[0]['cpoa_codigo'].' | '.$certpoa[0]['cpoa_cite'].'" style="border: none; width: 18mm;"></qrcode>
+            </td>
+          </tr>
+          <tr>
+              <td colspan="3"><br></td>
+          </tr>
+          <tr style="font-size: 7px;font-family: Arial;">
+              <td style="text-align: left" colspan="2">
+                '.$this->session->userdata('sistema').'
+              </td>
+              <td style="width: 20%; text-align: right">
+                '.$this->session->userdata('funcionario').' - pag. [[page_cu]]/[[page_nb]]
+              </td>
+          </tr>
+          <tr>
+              <td colspan="3"><br></td>
+          </tr>
+      </table>';
+    return $tabla;
+  }
+  /// ============================================================
+
+
+
+
+
 
   /*-- III DETALLE DE REQUERIMIENTOS A SOLICITUD --*/
   public function lista_solicitud_requerimientos($sol_id){

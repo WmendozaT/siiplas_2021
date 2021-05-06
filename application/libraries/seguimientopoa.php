@@ -1100,7 +1100,7 @@ class Seguimientopoa extends CI_Controller{
           <table class="page_header" border="0" style="width:100%;">
               <tr>
                 <td style="width:15%; text-align:center;">
-                  <img src="'.base_url().'assets/ifinal/cns_logo.JPG" alt="" style="width:46%;">
+                  
                 </td>
                   <td style="width: 70%; text-align: left">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
@@ -1147,11 +1147,11 @@ class Seguimientopoa extends CI_Controller{
 
         <table border=0 style="width:100%;" align=center>
           <tr>
-            <td style="width:95%;font-size: 10px;" align=right>'.strtoupper($proyecto[0]['dep_departamento']).' '.$mes[ltrim(date("m"), "0")]. " de " . date("Y").',</td>
+            <td style="width:91%;font-size: 10px;" align=right>'.strtoupper($proyecto[0]['dep_departamento']).' '.$mes[ltrim(date("m"), "0")]. " de " . date("Y").'</td>
           </tr>
         </table><br><br>
 
-        <table border=0 style="width:95%;" align=center>
+        <table border=0 style="width:96%;" align=center>
             <tr>
                 <td style="width:95%;"><b>Señor : </b><br>'.$proyecto[0]['tipo'].' '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td>
             </tr>
@@ -1168,7 +1168,7 @@ class Seguimientopoa extends CI_Controller{
                 <td style="width:95%;"><br></td>
             </tr>
             <tr>
-                <td style="width:95%;font-size: 15px;font-family: Arial;">
+                <td style="width:95%;font-size: 15px;font-family: Arial;text-align: justify;">
                 El Departamento Nacional de Planificaci&oacute;n en el marco de sus competencias viene fortaleciendo las tareas de monitoreo y supervisi&oacute;n 
                 a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar el seguimiento al cumplimiento del POA <b>'.$this->verif_mes[2].' '.$this->gestion.'</b>, de la 
                 <b>'.$proyecto[0]['tipo'].' '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</b> a su cargo, haciendo enfasis en la programaci&oacute;n mensual y periodo de ejecuci&oacute;n de cada operaci&oacute;n.
@@ -1176,12 +1176,12 @@ class Seguimientopoa extends CI_Controller{
             </tr>
         </table><br>
 
-        <table border=0 style="width:95%;" align=center>
+        <table border=0 style="width:96%;" align=center>
               <tr>
-                  <td style="width:95%;font-size: 15px;font-family: Arial;">
-                  En el mismo sentido, efectuar las gestiones en el plazo programado para la ejecuci&oacute;n de la Solicitud de <b>CERTIFICACI&Oacute;N POA</b>
-                  <b>'.$this->verif_mes[2].'</b> '.$this->gestion.'. Recordar que en ambos casos para fines de control y gestión por resultados la 
-                  responsabilidad del cumplimiento corresponde a su autoridad.
+                  <td style="width:95%;font-size: 15px;font-family: Arial;text-align: justify;">
+                  En el mismo sentido, efectuar las gestiones en el plazo programado para la ejecuci&oacute;n de la Solicitud de CERTIFICACI&Oacute;N POA
+                  <b>'.$this->verif_mes[2].' '.$this->gestion.'</b>. Recordar que en ambos casos para fines de control y gestión
+                  por resultados la responsabilidad del cumplimiento corresponde a su autoridad.
                   </td>
               </tr>
           </table>

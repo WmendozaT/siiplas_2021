@@ -15,31 +15,16 @@ ob_start();
 </style>
 <?php
     if($certificacion){ ?>
-    <page backtop="142mm" backbottom="60mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+    <page backtop="115mm" backbottom="50mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
         <page_header>
         <br><div class="verde"></div>
-            CERTIFICACION POA
-            <br>
-        
+            <?php echo $cabecera_cpoa; ?>
         </page_header>
 
-            
         <page_footer>
-            
-            <hr>
-            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                <tr style="font-size: 7px;font-family: Arial;">
-                    <td style="width: 50%; text-align: left;" >
-                        &nbsp;&nbsp;<b><?php echo $this->session->userdata('sistema')?></b>
-                    </td>
-                    <td style="width: 50%; text-align: right">
-                       pag. [[page_cu]]/[[page_nb]]
-                    </td>
-                </tr>
-            </table>
-            <br>
+            <?php echo $pie_certpoa;?>
         </page_footer>
-            <?php echo $items;?>
+
     </page>
     <?php
     }

@@ -1,0 +1,2254 @@
+DOCUMENTACION DE AJUSTE AL SISTEMA SIIPLAS PARA LA GESTION 2021
+FUNCIONES SIIPLAS 
+LISTA DE CERTIFICACIONES POR REGIONAL
+CREATE OR REPLACE FUNCTION lista_certificaciones_regional(id_dep numeric, tp numeric, gestion integer) RETURNS TABLE(
+cpoa_id numeric,
+proy_id numeric,
+cpoa_codigo text,
+cpoa_fecha timestamp,
+cpoa_gestion integer,
+cpoa_cite varchar, 
+cite_fecha timestamp,
+cpoa_estado integer,
+cpoa_ref integer,
+aper_programa varchar,
+aper_proyecto varchar,
+aper_actividad varchar,
+proy_nombre varchar, 
+tp_id numeric,
+com_id numeric,
+com_componente varchar,
+tipo_subactividad varchar,
+serv_cod varchar,
+serv_descripcion varchar,
+dep_id numeric,
+dep_departamento varchar,
+dist_id integer,
+dist_distrital varchar,
+abrev varchar,
+act_descripcion varchar, 
+tipo varchar) AS
+
+$$
+select 
+cp.cpoa_id, cp.proy_id,cp.cpoa_codigo,cp.cpoa_fecha,cp.cpoa_gestion,cp.cpoa_cite,cp.cite_fecha,cp.cpoa_estado,cp.cpoa_ref,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,
+p.proy_nombre,p.tp_id,c.com_id,c.com_componente,tpsa.tipo_subactividad,sa.serv_cod,sa.serv_descripcion,d.dep_id,d.dep_departamento,ds.dist_id,ds.dist_distrital,ds.abrev,ua.act_descripcion, te.tipo
+                    from certificacionpoa cp
+                    Inner Join _proyectos as p On p.proy_id=cp.proy_id
+                    Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+                    Inner Join aperturaprogramatica as apg On pfe.aper_id=apg.aper_id
+                    Inner Join _componentes as c On c.com_id=cp.com_id
+                    Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+		    Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                    Inner Join _departamentos as d On d.dep_id=p.dep_id
+                    Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                    Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                    Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                    where cpoa_gestion=gestion and cp.cpoa_estado!=3 and apg.aper_estado!=3 and apg.aper_gestion=gestion and d.dep_id=id_dep and p.tp_id=tp and pfe.pfec_estado=1
+                    order by cp.cpoa_id, ds.dist_id asc;
+
+$$ LANGUAGE sql;
+
+
+LISTA DE CERTIFICACIONES POR DISTRITAL
+Funcion que muestra el listado de las certificaciones POA por distrital
+CREATE OR REPLACE FUNCTION lista_certificaciones_distrital(id numeric, tp numeric, gestion integer) RETURNS TABLE(
+cpoa_id numeric,
+proy_id numeric,
+cpoa_codigo text,
+cpoa_fecha timestamp,
+cpoa_gestion integer,
+cpoa_cite varchar, 
+cite_fecha timestamp,
+cpoa_estado integer,
+cpoa_ref integer,
+aper_programa varchar,
+aper_proyecto varchar,
+aper_actividad varchar,
+proy_nombre varchar, 
+tp_id numeric,
+com_id numeric,
+com_componente varchar,
+dep_id numeric,
+dep_departamento varchar,
+dist_id integer,
+dist_distrital varchar,
+abrev varchar,
+act_descripcion varchar, 
+tipo varchar) AS
+
+$$
+select 
+cp.cpoa_id, cp.proy_id,cp.cpoa_codigo,cp.cpoa_fecha,cp.cpoa_gestion,cp.cpoa_cite,cp.cite_fecha,cp.cpoa_estado,cp.cpoa_ref,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,
+p.proy_nombre,p.tp_id,c.com_id,c.com_componente,d.dep_id,d.dep_departamento,ds.dist_id,ds.dist_distrital,ds.abrev,ua.act_descripcion, te.tipo
+                    from certificacionpoa cp
+                    Inner Join _proyectos as p On p.proy_id=cp.proy_id
+                    Inner Join _componentes as c On c.com_id=cp.com_id
+                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                    Inner Join _departamentos as d On d.dep_id=p.dep_id
+                    Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                    Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                    Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                    where cpoa_gestion=gestion and cp.cpoa_estado!=3 and apg.aper_estado!=3 and apg.aper_gestion=gestion and ds.dist_id=id and p.tp_id=tp
+                    order by cp.cpoa_id asc;
+$$ LANGUAGE sql;
+
+
+FUNCION: LISTA DE REQUERIMIENTOS CERTIFICADOS – DETALLE A NIVEL REGIONAL
+Lista de Certificaciones POA (Detallado) por Regional
+
+CREATE OR REPLACE FUNCTION fnlista_certificaciones_poa_detalle_regional(id_dep numeric, gestion integer) RETURNS TABLE(
+	cpoa_id numeric,
+	proy_id numeric,
+	cpoa_codigo text,
+	cpoa_cite varchar,
+	cite_fecha timestamp,
+	cpoa_gestion integer,
+	da varchar,
+	dep_departamento varchar,
+	ue varchar,
+	dist_distrital varchar,
+	aper_programa varchar,
+	aper_proyecto varchar,
+	proy_sisin varchar,
+	aper_actividad varchar,
+                aper_descripcion varchar,
+                tipo varchar,
+                serv_cod varchar,
+                serv_descripcion varchar,
+	ins_id integer,
+	ins_codigo varchar,
+	cantidad numeric,
+	precio numeric,
+	costo_total numeric,
+	requerimiento varchar,
+	unidad_medida varchar,
+	partida integer,
+	ins_observacion varchar,
+	monto_programado numeric,
+	monto_certificado numeric,
+	saldo numeric,
+	mes1 numeric,
+	mes2 numeric,
+	mes3 numeric,
+	mes4 numeric,
+	mes5 numeric,
+	mes6 numeric,
+	mes7 numeric,
+	mes8 numeric,
+	mes9 numeric,
+	mes10 numeric,
+	mes11 numeric,
+	mes12 numeric,
+	dia_registro double precision,
+	mes_registro double precision,
+	gestion_registro double precision,
+	responsable varchar,
+	paterno varchar) AS
+
+		$$
+                    select 
+                    cp.cpoa_id, 
+                    cp.proy_id,
+                    cp.cpoa_codigo,
+                    cp.cpoa_cite,
+                    cp.cite_fecha,
+                    cp.cpoa_gestion,
+                    d.dep_cod as DA,
+                    d.dep_departamento,
+                    ds.dist_cod as UE,
+                    ds.dist_distrital,
+                    apg.aper_programa,
+                    apg.aper_proyecto,
+                    p.proy_sisin,
+                    apg.aper_actividad,
+                    apg.aper_descripcion,
+                    te.tipo,
+                    serv.serv_cod,
+                    serv.serv_descripcion,
+                    cpoa.ins_id,
+                    cpoa.ins_codigo,
+                    cpoa.ins_cant_requerida as cantidad,
+                    cpoa.ins_costo_unitario as precio,
+                    cpoa.ins_costo_total as costo_total,
+                    cpoa.ins_detalle as requerimiento,
+                    cpoa.ins_unidad_medida as unidad_medida,
+                    cpoa.par_codigo as partida,
+                    cpoa.ins_observacion,
+                    cpoa.monto_programado,
+                    cpoa.monto_certificado,
+                    (cpoa.monto_programado - cpoa.monto_certificado) as saldo,
+                    cpoa.mes1,
+                    cpoa.mes2,
+                    cpoa.mes3,
+                    cpoa.mes4,
+                    cpoa.mes5,
+                    cpoa.mes6,
+                    cpoa.mes7,
+                    cpoa.mes8,
+                    cpoa.mes9,
+                    cpoa.mes10,
+                    cpoa.mes11,
+                    cpoa.mes12,
+                    
+                    EXTRACT(DAY FROM cp.cpoa_fecha) as dia_registro, 
+                    EXTRACT(MONTH FROM cp.cpoa_fecha) as mes_registro, 
+                    EXTRACT(YEAR FROM cp.cpoa_fecha) as gestion_registro,
+                    fun.fun_nombre as responsable,
+                    fun.fun_paterno as paterno
+                    
+                    from certificacionpoa cp
+                    Inner Join _proyectos as p On p.proy_id=cp.proy_id
+                    Inner Join _componentes as c On c.com_id=cp.com_id
+                    Inner Join servicios_actividad as serv On serv.serv_id=c.serv_id
+                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                    Inner Join _departamentos as d On d.dep_id=p.dep_id
+                    Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                    Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                    Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                    Inner Join vrequerimiento_certificado as cpoa On cpoa.cpoa_id=cp.cpoa_id
+                    Inner Join funcionario as fun On fun.fun_id=cp.fun_id
+                    
+                    where cpoa_gestion=gestion and cp.cpoa_estado!=3 and apg.aper_estado!=3 and apg.aper_gestion=gestion and d.dep_id=id_dep 
+                    order by cp.cpoa_id, ds.dist_id, apg.aper_programa,apg.aper_actividad asc;
+
+		    $$ LANGUAGE sql;
+
+
+
+
+FUNCION: LISTA DE CERTIFICACIONES POA DETALLE A NIVEL DISTRITAL
+
+CREATE OR REPLACE FUNCTION fnlista_certificaciones_poa_detalle_distrital(id_dist numeric, gestion integer) RETURNS TABLE(
+	cpoa_id numeric,
+	proy_id numeric,
+	cpoa_codigo text,
+	cpoa_cite varchar,
+	cite_fecha timestamp,
+	cpoa_gestion integer,
+	da varchar,
+	dep_departamento varchar,
+	ue varchar,
+	dist_distrital varchar,
+	aper_programa varchar,
+	aper_proyecto varchar,
+	proy_sisin varchar,
+	aper_actividad varchar,
+        aper_descripcion varchar,
+        tipo varchar,
+        serv_cod varchar,
+        serv_descripcion varchar,
+	ins_id integer,
+	ins_codigo varchar,
+	cantidad numeric,
+	precio numeric,
+	costo_total numeric,
+	requerimiento varchar,
+	unidad_medida varchar,
+	partida integer,
+	ins_observacion varchar,
+	monto_programado numeric,
+	monto_certificado numeric,
+	saldo numeric,
+	mes1 numeric,
+	mes2 numeric,
+	mes3 numeric,
+	mes4 numeric,
+	mes5 numeric,
+	mes6 numeric,
+	mes7 numeric,
+	mes8 numeric,
+	mes9 numeric,
+	mes10 numeric,
+	mes11 numeric,
+	mes12 numeric,
+	dia_registro double precision,
+	mes_registro double precision,
+	gestion_registro double precision,
+	responsable varchar,
+	paterno varchar) AS
+
+		$$
+                    select 
+                    cp.cpoa_id, 
+                    cp.proy_id,
+                    cp.cpoa_codigo,
+                    cp.cpoa_cite,
+                    cp.cite_fecha,
+                    cp.cpoa_gestion,
+                    d.dep_cod as DA,
+                    d.dep_departamento,
+                    ds.dist_cod as UE,
+                    ds.dist_distrital,
+                    apg.aper_programa,
+                    apg.aper_proyecto,
+                    p.proy_sisin,
+                    apg.aper_actividad,
+                    apg.aper_descripcion,
+                    te.tipo,
+                    serv.serv_cod,
+                    serv.serv_descripcion,
+                    cpoa.ins_id,
+                    cpoa.ins_codigo,
+                    cpoa.ins_cant_requerida as cantidad,
+                    cpoa.ins_costo_unitario as precio,
+                    cpoa.ins_costo_total as costo_total,
+                    cpoa.ins_detalle as requerimiento,
+                    cpoa.ins_unidad_medida as unidad_medida,
+                    cpoa.par_codigo as partida,
+                    cpoa.ins_observacion,
+                    cpoa.monto_programado,
+                    cpoa.monto_certificado,
+                    (cpoa.monto_programado - cpoa.monto_certificado) as saldo,
+                    cpoa.mes1,
+                    cpoa.mes2,
+                    cpoa.mes3,
+                    cpoa.mes4,
+                    cpoa.mes5,
+                    cpoa.mes6,
+                    cpoa.mes7,
+                    cpoa.mes8,
+                    cpoa.mes9,
+                    cpoa.mes10,
+                    cpoa.mes11,
+                    cpoa.mes12,
+                    
+                    EXTRACT(DAY FROM cp.cpoa_fecha) as dia_registro, 
+                    EXTRACT(MONTH FROM cp.cpoa_fecha) as mes_registro, 
+                    EXTRACT(YEAR FROM cp.cpoa_fecha) as gestion_registro,
+                    fun.fun_nombre as responsable,
+                    fun.fun_paterno as paterno
+                    
+                    from certificacionpoa cp
+                    Inner Join _proyectos as p On p.proy_id=cp.proy_id
+                    Inner Join _componentes as c On c.com_id=cp.com_id
+                    Inner Join servicios_actividad as serv On serv.serv_id=c.serv_id
+                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                    Inner Join _departamentos as d On d.dep_id=p.dep_id
+                    Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                    Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                    Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                    Inner Join vrequerimiento_certificado as cpoa On cpoa.cpoa_id=cp.cpoa_id
+                    Inner Join funcionario as fun On fun.fun_id=cp.fun_id
+                    
+                    where cpoa_gestion=gestion and cp.cpoa_estado!=3 and apg.aper_estado!=3 and apg.aper_gestion=gestion and ds.dist_id=id_dist 
+                    order by cp.cpoa_id, ds.dist_id, apg.aper_programa,apg.aper_actividad asc;
+
+		    $$ LANGUAGE sql;
+
+
+
+
+FUNCION CERTIFICACION POA (ELABORADO PARA QUE SISTEMAS PUEDA ALIMENTARSE DE LA INFORMACION)
+
+CREATE OR REPLACE FUNCTION fn_certificacionpoa_ue(id_dist numeric, gestion integer) RETURNS TABLE(
+	cpoa_codigo text,
+	cpoa_cite varchar,
+	cite_fecha timestamp,
+	cpoa_gestion integer,
+	da varchar,
+	ue varchar,
+	aper_programa varchar,
+	aper_proyecto varchar,
+	proy_sisin varchar,
+	aper_actividad varchar,
+        aper_descripcion varchar,
+        tipo varchar,
+        serv_cod varchar,
+        serv_descripcion varchar,
+	ins_id integer,
+	ins_codigo varchar,
+	cantidad numeric,
+	precio numeric,
+	costo_total numeric,
+	requerimiento varchar,
+	unidad_medida varchar,
+	partida integer,
+	ins_observacion varchar,
+	monto_programado numeric,
+	monto_certificado numeric,
+	saldo numeric,
+	mes1 numeric,
+	mes2 numeric,
+	mes3 numeric,
+	mes4 numeric,
+	mes5 numeric,
+	mes6 numeric,
+	mes7 numeric,
+	mes8 numeric,
+	mes9 numeric,
+	mes10 numeric,
+	mes11 numeric,
+	mes12 numeric,
+	dia_registro double precision,
+	mes_registro double precision,
+	gestion_registro double precision,
+	responsable varchar,
+	paterno varchar,
+	tp_id numeric) AS
+
+		$$
+                    select 
+                    cp.cpoa_codigo,
+                    cp.cpoa_cite,
+                    cp.cite_fecha,
+                    cp.cpoa_gestion,
+                    d.dep_cod as DA,
+                    ds.dist_cod as UE,
+                    apg.aper_programa,
+                    apg.aper_proyecto,
+                    p.proy_sisin,
+                    apg.aper_actividad,
+                    apg.aper_descripcion,
+                    te.tipo,
+                    serv.serv_cod,
+                    serv.serv_descripcion,
+                    cpoa.ins_id,
+                    cpoa.ins_codigo,
+                    cpoa.ins_cant_requerida as cantidad,
+                    cpoa.ins_costo_unitario as precio,
+                    cpoa.ins_costo_total as costo_total,
+                    cpoa.ins_detalle as requerimiento,
+                    cpoa.ins_unidad_medida as unidad_medida,
+                    cpoa.par_codigo as partida,
+                    cpoa.ins_observacion,
+                    cpoa.monto_programado,
+                    cpoa.monto_certificado,
+                    (cpoa.monto_programado - cpoa.monto_certificado) as saldo,
+                    cpoa.mes1,
+                    cpoa.mes2,
+                    cpoa.mes3,
+                    cpoa.mes4,
+                    cpoa.mes5,
+                    cpoa.mes6,
+                    cpoa.mes7,
+                    cpoa.mes8,
+                    cpoa.mes9,
+                    cpoa.mes10,
+                    cpoa.mes11,
+                    cpoa.mes12,
+                    
+                    EXTRACT(DAY FROM cp.cpoa_fecha) as dia_registro, 
+                    EXTRACT(MONTH FROM cp.cpoa_fecha) as mes_registro, 
+                    EXTRACT(YEAR FROM cp.cpoa_fecha) as gestion_registro,
+                    fun.fun_nombre as responsable,
+                    fun.fun_paterno as paterno,
+                    p.tp_id
+                    
+                    from certificacionpoa cp
+                    Inner Join _proyectos as p On p.proy_id=cp.proy_id
+                    Inner Join _componentes as c On c.com_id=cp.com_id
+                    Inner Join servicios_actividad as serv On serv.serv_id=c.serv_id
+                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                    Inner Join _departamentos as d On d.dep_id=p.dep_id
+                    Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                    Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                    Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                    Inner Join vrequerimiento_certificado as cpoa On cpoa.cpoa_id=cp.cpoa_id
+                    Inner Join funcionario as fun On fun.fun_id=cp.fun_id
+                    
+                    where cpoa_gestion=gestion and cp.cpoa_estado!=3 and apg.aper_estado!=3 and apg.aper_gestion=gestion and ds.dist_id=id_dist 
+                    order by cp.cpoa_id, ds.dist_id, apg.aper_programa,apg.aper_actividad asc;
+
+		    $$ LANGUAGE sql;
+
+
+
+EN EL TRASNCURSO DEL DISEÑO SE HA PODIDO OBSERVAR UN DETALLE AL MOMENTO DE CARGAR LA ANTERIOR FUNCION, DEMORABA DEMASIADO, ES ASI QUE ANTE ESTE PROBLEMA SE A TOMADO UNA OPCION SECUNDARIA EN CASO DE QUE PERSISTA ESTE PROBLEMA, Y ES LA DE CREAR UNA VISTA Y UNA FUNCION PARA ENLISTAR LAS CERTIFICACIONES POA POR DISTRITAL PARA QUE EL DEPARTAMENTO DE SISTEMA PUEDA ALIMENTARSE DE LA INFORMACION.
+
+OPCION 2 (OPCIONAL)
+
+CREATE OR REPLACE VIEW public.vcertificaciones_poa AS 
+ SELECT 
+		    p.tp_id,
+                    cp.cpoa_codigo,
+                    cp.cpoa_cite,
+                    cp.cite_fecha,
+                    cp.cpoa_gestion,
+                    d.dep_cod as DA,
+                    ds.dist_cod as UE,
+                    apg.aper_programa as cod_prog,
+                    apg.aper_proyecto as cod_proy,
+                    p.proy_sisin as cod_sisin,
+                    apg.aper_actividad as cod_act,
+                    apg.aper_descripcion as actividad,
+                    te.tipo as tipo,
+                    serv.serv_cod as cod_subact,
+                    serv.serv_descripcion as subactividad,
+                    cpoa.par_codigo as partida,
+                    cpoa.ins_cant_requerida as cantidad,
+                    cpoa.ins_costo_unitario as precio,
+                    cpoa.ins_costo_total as costo_total,
+                    cpoa.ins_detalle as requerimiento,
+                    cpoa.ins_unidad_medida as unidad_medida,
+                    
+                    cpoa.ins_observacion as observacion,
+                    cpoa.monto_programado,
+                    cpoa.monto_certificado,
+                    (cpoa.monto_programado - cpoa.monto_certificado) as saldo,
+                    cpoa.mes1,
+                    cpoa.mes2,
+                    cpoa.mes3,
+                    cpoa.mes4,
+                    cpoa.mes5,
+                    cpoa.mes6,
+                    cpoa.mes7,
+                    cpoa.mes8,
+                    cpoa.mes9,
+                    cpoa.mes10,
+                    cpoa.mes11,
+                    cpoa.mes12,
+                    
+                    EXTRACT(DAY FROM cp.cpoa_fecha) as dia_registro, 
+                    EXTRACT(MONTH FROM cp.cpoa_fecha) as mes_registro, 
+                    EXTRACT(YEAR FROM cp.cpoa_fecha) as gestion_registro,
+                    fun.fun_nombre as responsable,
+                    fun.fun_paterno as paterno,
+                    ds.dist_id,
+                    d.dep_id,
+                    apg.aper_gestion
+                    
+                    from certificacionpoa cp
+                    Inner Join _proyectos as p On p.proy_id=cp.proy_id
+                    Inner Join _componentes as c On c.com_id=cp.com_id
+                    Inner Join servicios_actividad as serv On serv.serv_id=c.serv_id
+                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                    Inner Join _departamentos as d On d.dep_id=p.dep_id
+                    Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                    Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                    Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                    Inner Join vrequerimiento_certificado as cpoa On cpoa.cpoa_id=cp.cpoa_id
+                    Inner Join funcionario as fun On fun.fun_id=cp.fun_id
+                    
+                    where cp.cpoa_estado!=3 and apg.aper_estado!=3
+                    order by cp.cpoa_id, ds.dist_id, apg.aper_programa,apg.aper_actividad asc;
+
+ALTER TABLE public.vcertificaciones_poa
+  OWNER TO postgres;
+
+
+--------- FUNCION QUE LLAMA A LA VISTA DE CERTIFICACION POA
+
+CREATE OR REPLACE FUNCTION funcion_certificacion_poa_distrital(id_dist numeric, gestion integer) RETURNS TABLE(
+tp_id numeric, 
+cpoa_codigo text, 
+cpoa_cite character varying, 
+cite_fecha timestamp without time zone, 
+cpoa_gestion integer, 
+da character varying, 
+ue character varying, 
+cod_prog character varying, 
+cod_proy character varying, 
+cod_sisin character varying, 
+cod_act character varying, 
+actividad character varying, 
+tipo character varying, 
+cod_subact character varying, 
+subactividad character varying, 
+partida integer, 
+cantidad numeric, 
+precio numeric, 
+costo_total numeric, 
+requerimiento character varying, 
+unidad_medida character varying, 
+observacion character varying, 
+monto_programado numeric, 
+monto_certificado numeric, 
+saldo numeric, 
+mes1 numeric, 
+mes2 numeric, 
+mes3 numeric, 
+mes4 numeric, 
+mes5 numeric, 
+mes6 numeric, 
+mes7 numeric, 
+mes8 numeric, 
+mes9 numeric, 
+mes10 numeric, 
+mes11 numeric, 
+mes12 numeric, 
+dia_registro double precision, 
+mes_registro double precision, 
+gestion_registro double precision, 
+responsable character varying, 
+paterno character varying) AS
+
+$$
+
+select 
+tp_id, 
+cpoa_codigo, 
+cpoa_cite, 
+cite_fecha, 
+cpoa_gestion, 
+da , 
+ue , 
+cod_prog, 
+cod_proy, 
+cod_sisin, 
+cod_act, 
+actividad, 
+tipo, 
+cod_subact, 
+subactividad, 
+partida, 
+cantidad, 
+precio, 
+costo_total, 
+requerimiento, 
+unidad_medida, 
+observacion, 
+monto_programado, 
+monto_certificado , 
+saldo , 
+mes1 , 
+mes2 , 
+mes3 , 
+mes4 , 
+mes5 , 
+mes6 , 
+mes7 , 
+mes8 , 
+mes9 , 
+mes10 , 
+mes11 , 
+mes12 , 
+dia_registro , 
+mes_registro , 
+gestion_registro , 
+responsable , 
+paterno 
+from vcertificaciones_poa
+where cpoa_gestion=gestion and aper_gestion=gestion and dist_id=id_dist;
+$$ LANGUAGE sql;
+
+
+
+
+FUNCION : LISTA DE UNIDADES/ESTABLECIMIENTOS POR REGIONAL
+
+-----?> GASTO CORRIENTE
+Datos Ingreso 
+Id: id de la unidad
+Gestión : gestión activa
+
+CREATE OR REPLACE FUNCTION lista_poa_gastocorriente_regional(id_dep numeric, gestion integer) RETURNS TABLE(
+dep_id numeric,
+dep_departamento varchar,
+da varchar,
+dist_id integer,
+dist_distrital varchar,
+ue varchar,
+abrev varchar,
+prog varchar,
+proy varchar,
+act varchar,
+proy_id numeric,
+proy_estado integer,
+actividad varchar,
+tipo varchar,
+aper_id numeric,
+aper_proy_estado integer,
+pfec_id numeric,
+pfec_estado integer,
+aper_gestion integer) AS
+
+$$
+select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
+from _proyectofaseetapacomponente pfe
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+Inner Join _departamentos as d On d.dep_id=p.dep_id
+Inner Join _distritales as ds On ds.dist_id=p.dist_id
+Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+where p.dep_id=id_dep and p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and p.tp_id=4 and ug.g_id=gestion and pfe.pfec_estado=1
+order by p.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
+
+$$ LANGUAGE sql;
+
+
+FUNCION POA DISTRITAL
+
+
+CREATE OR REPLACE FUNCTION lista_poa_gastocorriente_distrital(id_dist numeric, gestion integer) RETURNS TABLE(
+dep_id numeric,
+dep_departamento varchar,
+da varchar,
+dist_id integer,
+dist_distrital varchar,
+ue varchar,
+abrev varchar,
+prog varchar,
+proy varchar,
+act varchar,
+proy_id numeric,
+proy_estado integer,
+actividad varchar,
+tipo varchar,
+aper_id numeric,
+aper_proy_estado integer,
+pfec_id numeric,
+pfec_estado integer,
+aper_gestion integer) AS
+
+$$
+select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
+from _proyectofaseetapacomponente pfe
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+Inner Join _departamentos as d On d.dep_id=p.dep_id
+Inner Join _distritales as ds On ds.dist_id=p.dist_id
+Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+where p.dist_id=id_dist and p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and p.tp_id=4 and ug.g_id=gestion and pfe.pfec_estado=1
+order by p.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
+
+$$ LANGUAGE sql
+
+
+FUNCION POA NACIONAL (Gasto Corriente)
+CREATE OR REPLACE FUNCTION lista_poa_gastocorriente_nacional(gestion integer) RETURNS TABLE(
+dep_id numeric,
+dep_departamento varchar,
+da varchar,
+dist_id integer,
+dist_distrital varchar,
+ue varchar,
+abrev varchar,
+prog varchar,
+proy varchar,
+act varchar,
+proy_id numeric,
+proy_estado integer,
+actividad varchar,
+tipo varchar,
+aper_id numeric,
+aper_proy_estado integer,
+pfec_id numeric,
+pfec_estado integer,
+aper_gestion integer) AS
+
+$$
+select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
+from _proyectofaseetapacomponente pfe
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+Inner Join _departamentos as d On d.dep_id=p.dep_id
+Inner Join _distritales as ds On ds.dist_id=p.dist_id
+Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+where p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and p.tp_id=4 and ug.g_id=gestion and pfe.pfec_estado=1
+order by p.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
+
+$$ LANGUAGE sql;
+
+-----?> PROYECTO DE INVERSION REGIONAL
+Datos Ingreso 
+Id: id del proyecto de Inversion
+Gestión : gestión activa
+
+
+CREATE OR REPLACE FUNCTION lista_poa_pinversion_regional(id numeric, gestion integer) RETURNS TABLE(
+proy_id numeric,
+aper_id numeric,
+da varchar,
+dep_departamento varchar,
+ue varchar,
+dist_distrital varchar,
+abrev varchar,
+prog varchar,
+proy varchar,
+act varchar,
+proyecto varchar,
+proy_estado integer,
+aper_proy_estado integer,
+pfec_id numeric,
+pfec_estado integer) AS
+
+$$
+		select 
+		p.proy_id,
+		apg.aper_id,
+		d.dep_cod as DA,
+		d.dep_departamento,
+		ds.dist_cod as UE,
+		ds.dist_distrital,
+		ds.abrev,
+		apg.aper_prog as PROG,
+		p.proy_sisin as PROY,
+		apg.aper_act as ACT,
+		p.proy_nombre as PROYECTO,
+		p.proy_estado,
+		apg.aper_proy_estado,
+		pfe.pfec_id,
+		pfe.pfec_estado
+
+                from _proyectofaseetapacomponente pfe
+                        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                        Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                        Inner Join _departamentos as d On d.dep_id=p.dep_id
+                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                        where p.dep_id=id and apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and p.tp_id=1 and apg.aper_estado!=3 and apg.aper_proy_estado=4
+                        order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
+
+$$ LANGUAGE sql;
+
+FUNCION POA DISTRITAL (PROYECTO DE INVERSION)
+
+CREATE OR REPLACE FUNCTION lista_poa_pinversion_distrital(id numeric, gestion integer) RETURNS TABLE(
+proy_id numeric,
+aper_id numeric,
+da varchar,
+dep_departamento varchar,
+ue varchar,
+dist_distrital varchar,
+abrev varchar,
+prog varchar,
+proy varchar,
+act varchar,
+proyecto varchar,
+proy_estado integer,
+aper_proy_estado integer,
+pfec_id numeric,
+pfec_estado integer) AS
+
+$$
+		select 
+		p.proy_id,
+		apg.aper_id,
+		d.dep_cod as DA,
+		d.dep_departamento,
+		ds.dist_cod as UE,
+		ds.dist_distrital,
+		ds.abrev,
+		apg.aper_prog as PROG,
+		p.proy_sisin as PROY,
+		apg.aper_act as ACT,
+		p.proy_nombre as PROYECTO,
+		p.proy_estado,
+		apg.aper_proy_estado,
+		pfe.pfec_id,
+		pfe.pfec_estado
+
+                from _proyectofaseetapacomponente pfe
+                        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                        Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                        Inner Join _departamentos as d On d.dep_id=p.dep_id
+                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                        where p.dist_id=id and apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and p.tp_id=1 and apg.aper_estado!=3 and apg.aper_proy_estado=4
+                        order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
+
+$$ LANGUAGE sql;
+
+
+
+FUNCION POA NACIONAL (PROYECTOS DE INVERSION)
+CREATE OR REPLACE FUNCTION lista_poa_pinversion_nacional(gestion integer) RETURNS TABLE(
+proy_id numeric,
+aper_id numeric,
+da varchar,
+dep_departamento varchar,
+ue varchar,
+dist_distrital varchar,
+abrev varchar,
+prog varchar,
+proy varchar,
+act varchar,
+proyecto varchar,
+proy_estado integer,
+aper_proy_estado integer,
+pfec_id numeric,
+pfec_estado integer,
+aper_gestion integer,
+pfec_descripcion varchar) AS
+
+$$
+
+select 
+p.proy_id,
+apg.aper_id,
+d.dep_cod as DA,
+d.dep_departamento,
+ds.dist_cod as UE,
+ds.dist_distrital,
+ds.abrev,
+apg.aper_programa as PROG,
+p.proy_sisin as PROY,
+apg.aper_actividad as ACT,
+p.proy_nombre as PROYECTO,
+p.proy_estado,
+apg.aper_proy_estado,
+pfe.pfec_id,
+pfe.pfec_estado,
+apg.aper_gestion,
+pfe.pfec_descripcion
+
+                        from _proyectofaseetapacomponente pfe
+                        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                        Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                        Inner Join _departamentos as d On d.dep_id=p.dep_id
+                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                        where apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and p.tp_id=1 and apg.aper_estado!=3 and apg.aper_proy_estado=4
+                        order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
+$$ LANGUAGE sql;
+
+
+
+
+
+
+
+
+
+FUNCION: LISTA DE REQUERIMIENTOS CONSOLIDADO POR REGIONAL (GASTO CORRIENTE Y PROYECTOS DE INVERSION)
+Datos de ingreso  
+
+Id_dep : id de la regional
+Tp : Tipo de Proyecto (1 : proyecto de inversión, 4 : gasto corriente)
+Gestión : Gestion Actual POA
+
+CREATE OR REPLACE FUNCTION lista_requerimientos_regional(id_dep numeric, tp numeric, gestion integer) RETURNS TABLE(
+dep_id numeric,
+dep_cod varchar,
+dep_departamento varchar,
+dist_id integer,
+dist_cod varchar,
+dist_distrital varchar,
+aper_id numeric,
+aper_prog text,
+aper_proy text,
+proy_sisin varchar,
+aper_act text,
+proy_id numeric,
+proy_nombre varchar,
+tp_id numeric,
+abrev varchar,
+act_descripcion varchar,
+tipo varchar,
+serv_id integer,
+serv_cod varchar,
+tipo_subactividad varchar,
+serv_descripcion varchar,
+prod_cod integer,
+prod_producto varchar,
+or_id integer,
+ins_id numeric,
+ins_cant_requerida numeric,
+ins_costo_unitario numeric,
+ins_costo_total numeric,
+ins_detalle varchar,
+ins_unidad_medida varchar,
+ins_gestion integer,
+ins_observacion varchar,
+par_id integer,
+par_codigo integer,
+par_nombre varchar,
+programado_total numeric,
+mes1 numeric,
+mes2 numeric,
+mes3 numeric,
+mes4 numeric,
+mes5 numeric,
+mes6 numeric,
+mes7 numeric,
+mes8 numeric,
+mes9 numeric,
+mes10 numeric,
+mes11 numeric,
+mes12 numeric,
+fun_nombre varchar,
+fun_paterno varchar,
+fun_materno varchar) AS
+
+$$
+
+select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,apg.aper_id,apg.aper_prog,apg.aper_proy,p.proy_sisin,apg.aper_act,p.proy_id,p.proy_nombre,p.tp_id,ds.abrev,ua.act_descripcion, te.tipo,
+	ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_cod,prod.prod_producto,prod.or_id,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,
+	i.ins_gestion,i.ins_observacion,i.par_id,i.par_codigo,i.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
+	itemp.mes11,itemp.mes12,fun.fun_nombre,fun.fun_paterno,fun.fun_materno
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join _departamentos as d On d.dep_id=p.dep_id
+                Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+                Inner Join _componentes as c On pfe.pfec_id=c.pfec_id
+                Inner Join servicios_actividad as ser On ser.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join _productos as prod On prod.com_id=c.com_id
+                Inner Join _insumoproducto as iprod On iprod.prod_id=prod.prod_id
+                Inner Join vlista_insumos as i On i.ins_id=iprod.ins_id
+                Inner Join funcionario as fun On fun.fun_id=i.fun_id
+                Inner Join vista_temporalidad_insumo as itemp On itemp.ins_id=i.ins_id
+                where d.dep_id=id_dep and p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and p.tp_id=tp and pfe.pfec_estado=1 and pfe.estado!=3 and c.estado!=3 and i.ins_gestion=gestion
+                order by apg.aper_prog,apg.aper_proy,apg.aper_act,ser.serv_cod, prod.prod_cod, i.par_codigo, i.ins_id asc;
+ $$ LANGUAGE sql;
+
+FUNCION: LISTA DE REQUERIMIENTOS CONSOLIDADO POR DISTRITAL (GASTO CORRIENTE Y PROYECTOS DE INVERSION)
+Datos de ingreso  
+
+Id_dist : id de la distrital
+Tp : Tipo de Proyecto (1 : proyecto de inversión, 4 : gasto corriente)
+Gestión : Gestion Actual POA
+
+CREATE OR REPLACE FUNCTION lista_requerimientos_distrital(id_dist numeric, tp numeric, gestion integer) RETURNS TABLE(
+dep_id numeric,
+dep_cod varchar,
+dep_departamento varchar,
+dist_id integer,
+dist_cod varchar,
+dist_distrital varchar,
+aper_id numeric,
+aper_prog text,
+aper_proy text,
+proy_sisin varchar,
+aper_act text,
+proy_id numeric,
+proy_nombre varchar,
+tp_id numeric,
+abrev varchar,
+act_descripcion varchar,
+tipo varchar,
+serv_id integer,
+serv_cod varchar,
+tipo_subactividad varchar,
+serv_descripcion varchar,
+prod_cod integer,
+prod_producto varchar,
+or_id integer,
+ins_id numeric,
+ins_cant_requerida numeric,
+ins_costo_unitario numeric,
+ins_costo_total numeric,
+ins_detalle varchar,
+ins_unidad_medida varchar,
+ins_gestion integer,
+ins_observacion varchar,
+par_id integer,
+par_codigo integer,
+par_nombre varchar,
+programado_total numeric,
+mes1 numeric,
+mes2 numeric,
+mes3 numeric,
+mes4 numeric,
+mes5 numeric,
+mes6 numeric,
+mes7 numeric,
+mes8 numeric,
+mes9 numeric,
+mes10 numeric,
+mes11 numeric,
+mes12 numeric,
+fun_nombre varchar,
+fun_paterno varchar,
+fun_materno varchar) AS
+
+$$
+
+select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,apg.aper_id,apg.aper_prog,apg.aper_proy,p.proy_sisin,apg.aper_act,p.proy_id,p.proy_nombre,p.tp_id,ds.abrev,ua.act_descripcion, te.tipo,
+	ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_cod,prod.prod_producto,prod.or_id,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,
+	i.ins_gestion,i.ins_observacion,i.par_id,i.par_codigo,i.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
+	itemp.mes11,itemp.mes12,fun.fun_nombre,fun.fun_paterno,fun.fun_materno
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join _departamentos as d On d.dep_id=p.dep_id
+                Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+                Inner Join _componentes as c On pfe.pfec_id=c.pfec_id
+                Inner Join servicios_actividad as ser On ser.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join _productos as prod On prod.com_id=c.com_id
+                Inner Join _insumoproducto as iprod On iprod.prod_id=prod.prod_id
+                Inner Join vlista_insumos as i On i.ins_id=iprod.ins_id
+                Inner Join funcionario as fun On fun.fun_id=i.fun_id
+                Inner Join vista_temporalidad_insumo as itemp On itemp.ins_id=i.ins_id
+                where ds.dist_id=id_dist and p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and p.tp_id=tp and pfe.pfec_estado=1 and pfe.estado!=3 and c.estado!=3 and i.ins_gestion=gestion
+                order by apg.aper_prog,apg.aper_proy,apg.aper_act,ser.serv_cod, prod.prod_cod, i.par_codigo, i.ins_id asc;
+ $$ LANGUAGE sql;
+
+
+
+CONSOLIDADO REQUERIMIENTOS (relación directa) INSUMO-UNIDAD A NIVEL REGIONAL 
+CREATE OR REPLACE FUNCTION consolidado_requerimiento_regional_tp(id_dep numeric, tp numeric,gestion integer) RETURNS TABLE(
+dep_id numeric,
+dep_cod varchar,
+dep_departamento varchar,
+dist_id integer,
+dist_cod varchar,
+dist_distrital varchar,
+abrev varchar,
+aper_id numeric,
+aper_programa varchar,
+aper_proyecto varchar,
+aper_actividad varchar,
+aper_gestion integer,
+proy_id numeric,
+proy_sisin varchar,
+proy_nombre varchar,
+tp_id numeric,
+proy_estado integer,
+act_descripcion varchar,
+tipo varchar,
+pfec_id numeric,
+ins_id numeric,
+par_codigo integer,
+ins_detalle varchar,
+ins_cant_requerida numeric,
+ins_costo_unitario numeric,
+ins_costo_total numeric,
+ins_unidad_medida varchar,
+ins_estado integer,
+ins_gestion integer,
+ins_observacion varchar,
+programado_total numeric,
+mes1 numeric,
+mes2 numeric,
+mes3 numeric,
+mes4 numeric,
+mes5 numeric,
+mes6 numeric,
+mes7 numeric,
+mes8 numeric,
+mes9 numeric,
+mes10 numeric,
+mes11 numeric,
+mes12 numeric) AS
+
+$$
+
+select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
+p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.ins_id,par.par_codigo,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,
+i.ins_estado,i.ins_gestion,i.ins_observacion,temp.programado_total,temp.mes1,temp.mes2,temp.mes3,temp.mes4,temp.mes5,temp.mes6,temp.mes7,temp.mes8,temp.mes9,temp.mes10,temp.mes11,temp.mes12
+from _proyectofaseetapacomponente pfe
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+Inner Join _departamentos as d On d.dep_id=p.dep_id
+Inner Join _distritales as ds On ds.dist_id=p.dist_id
+
+Inner Join insumos as i On i.aper_id=apg.aper_id
+Inner Join partidas as par On par.par_id=i.par_id
+Inner Join vista_temporalidad_insumo as temp On temp.ins_id=i.ins_id
+
+where p.dep_id=id_dep and apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and apg.aper_estado!=3 and apg.aper_proy_estado=4 and i.aper_id!=0 and i.ins_estado!=3 and apg.aper_gestion=gestion and p.tp_id=tp
+order by ds.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, ds.dist_id, i.ins_id,par.par_codigo asc;
+$$ LANGUAGE sql;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FUNCION : LISTA DE OPERACIONES EVALUADAS  POR DISTRITAL (GASTO CORRIENTE Y PROYECTOS DE INVERSION)
+Datos de ingreso  
+
+Id_dist : id de la distrital
+Gestión : Gestion Actual POA
+
+
+CREATE OR REPLACE FUNCTION lista_operaciones_evaluadas_distrital(id_dist numeric, gestion integer) RETURNS TABLE(
+aper_id numeric,
+aper_programa varchar,
+aper_proyecto varchar,
+proy_sisin varchar,
+aper_actividad varchar,
+aper_gestion integer,
+proy_id numeric,
+proy_nombre varchar,
+tipo varchar,
+act_descripcion varchar,
+tp_id numeric,
+dep_id integer,
+dep_cod varchar,
+dep_departamento varchar,
+dist_id integer,
+dist_distrital varchar,
+dist_cod varchar,
+com_id numeric,
+serv_cod varchar,
+serv_descripcion varchar,
+prod_id numeric,
+prod_cod integer,
+prod_producto varchar,
+prod_indicador varchar,
+prod_meta numeric,
+tprod_id integer,
+trm_id integer,
+trm_descripcion varchar,
+tp_eval integer,
+tpeval_descripcion varchar,
+tmed_verif varchar,
+activo integer,
+eval_observacion varchar,
+fun_nombre varchar,
+fun_paterno varchar,
+fun_materno varchar,
+fecha timestamp) AS
+
+$$
+
+select apg.aper_id, apg.aper_programa, aper_proyecto, p.proy_sisin, apg.aper_actividad, apg.aper_gestion,p.proy_id,p.proy_nombre,te.tipo,
+ua.act_descripcion,p.tp_id,p.dep_id,dep.dep_cod,dep.dep_departamento,dist.dist_id, dist.dist_distrital, dist.dist_cod, c.com_id,ser.serv_cod,ser.serv_descripcion, prod.prod_id,prod.prod_cod,
+prod.prod_producto,prod.prod_indicador,prod.prod_meta,pt.tprod_id,pt.trm_id,trm.trm_descripcion,pt.tp_eval,teval.tpeval_descripcion,pt.tmed_verif,pt.activo,pt.eval_observacion, f.fun_nombre,f.fun_paterno,f.fun_materno, pt.fecha
+from _productos_trimestral pt
+Inner Join _productos as prod On prod.prod_id=pt.prod_id
+Inner Join trimestre_mes as trm On trm.trm_id=pt.trm_id
+Inner Join tipo_evaluacion as teval On teval.tpeval_id=pt.tp_eval
+Inner Join _componentes as c On c.com_id=prod.com_id
+Inner Join servicios_actividad as ser On ser.serv_id=c.serv_id
+Inner Join _proyectofaseetapacomponente as pfec On pfec.pfec_id=c.pfec_id
+Inner Join _proyectos as p On p.proy_id=pfec.proy_id
+Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+Inner Join _distritales as dist On dist.dist_id=p.dist_id
+Inner Join _departamentos as dep On dep.dep_id=p.dep_id
+Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+Inner Join funcionario as f On f.fun_id=pt.fun_id
+where dist.dist_id=id_dist and pfec.pfec_estado=1 and p.estado!=3 and apg.aper_estado!=3 and pfec.estado!=3 and apg.aper_gestion=gestion
+order by apg.aper_programa, aper_proyecto, apg.aper_actividad, prod.prod_cod, pt.trm_id asc;
+$$ LANGUAGE sql;
+
+
+
+
+
+
+
+
+
+
+
+14/12/2020
+
+SE REALIZO EN AJUSTE A LA TABLA DE SERVICIOS (SUBACTIVIDAD) DE LA ACTIVIDAD, A FIN DE NORMALIZAR TODOS LOS CODIGOS Y ASI SINCRONIZAR CON PRESUPUESTOS, EL AJUSTE QUE SE ESTA HACIENDO ES PARA IDENTIFICAR EL TIPO DE SUBACTIVIDAD (DPTO, UNIDAD), SE ESTA CREANDO UNA COLUMNA (TP).
+
+EJEMPLO:
+0036 -> DPTO. SISTEMAS (OFICINA NACIONAL)
+0079 -> UNIDAD DE SISTEMAS (REGIONAL)
+
+PARA NORMALIZAR “SISTEMAS” EN UNO SOLO, SERA 
+0036 -> SISTEMAS (TP: 1 – DPTO., 2 - UNIDAD)
+
+SE CREA LA TABLA tipo_subactividad Y ESTARA RELACIONADO DIRECTAMENTE CON LA TABLA _componente.
+
+create table tipo_subactividad(
+  tp_sact serial not null,
+  tipo_subactividad character varying(100),
+  primary key(tp_sact)
+ );
+
+
+SE REALIZO LA CREACION DE UNA NUEVA VISTA PARA LAS SUBACTIVIDADES, se realiza el listado de las subactividades, la consulta se lo puede realizar por el id del proyecto, id aper.
+
+CREATE OR REPLACE VIEW public.vista_subactividades AS 
+ SELECT pfe.pfec_id,
+    pfe.proy_id,
+    c.com_id,
+    c.com_componente,
+    c.com_ponderacion,
+    sa.serv_id,
+    sa.serv_cod,
+    sa.serv_descripcion,
+    tpsa.tipo_subactividad,
+    apg.aper_id,
+    apg.aper_programa,
+    apg.aper_proyecto,
+    apg.aper_actividad,
+    apg.aper_gestion
+from _proyectofaseetapacomponente pfe
+Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+where pfe.pfec_estado=1 and c.estado!=3 and apg.aper_estado!=3
+order by apg.aper_gestion,sa.serv_cod asc;
+
+ALTER TABLE public.vista_subactividades
+  OWNER TO postgres
+
+
+
+SE REALIZO LA CREACION DE UNA VISTA  vista_operaciones_por_subactividad_ppto, CON EL PROPOSITO DE LISTAR LAS OPERACIONES CON PRESUPUESTO POR SUBACTIVIDAD, ESTO PARA PODER LISTAR EN LAS CERTIFICACIONES POA, LAS CONSULTAS SE LAS PODRIA HACER POR EL ID DEL PROYECTO.
+
+
+CREATE OR REPLACE VIEW public.vista_operaciones_por_subactividad_ppto AS 
+SELECT 
+    pfe.proy_id,
+    c.com_id,
+    c.com_componente,
+    c.com_ponderacion,
+    sa.serv_id,
+    sa.serv_cod,
+    sa.serv_descripcion,
+    tpsa.tipo_subactividad,
+    pr.prod_id,
+    pr.prod_cod,
+    pr.prod_producto,
+    pr.prod_indicador,
+    pr.prod_fuente_verificacion,
+    pr.prod_resultado,
+    SUM(i.ins_costo_total) monto,
+    apg.aper_id,
+    apg.aper_programa,
+    apg.aper_proyecto,
+    apg.aper_actividad,
+    apg.aper_gestion
+from _proyectofaseetapacomponente pfe
+Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _productos as pr On pr.com_id=c.com_id
+Inner Join _insumoproducto as ip On ip.prod_id=pr.prod_id
+Inner Join insumos as i On i.ins_id=ip.ins_id
+
+where pfe.pfec_estado=1 and c.estado!=3 and apg.aper_estado!=3 and pr.estado!=3
+group by pfe.proy_id,c.com_id,c.com_componente,c.com_ponderacion,sa.serv_id,sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad,pr.prod_id,
+pr.prod_cod,pr.prod_producto,pr.prod_indicador,pr.prod_fuente_verificacion,pr.prod_resultado,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion
+order by apg.aper_gestion,sa.serv_cod, pr.prod_cod asc;
+
+ALTER TABLE public.vista_operaciones_por_subactividad_ppto
+  OWNER TO postgres
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MODIFICACION POA
+Lista las modificaciones (requerimientos) realizadas en la gestion
+CREATE OR REPLACE FUNCTION lista_modificacion_requerimiento(id_proy numeric,gestion integer) RETURNS TABLE(
+cite_id integer,
+com_id numeric,
+cite_codigo text,
+cite_nota varchar,
+cite_fecha timestamp,
+fecha_creacion timestamp,
+cite_estado integer,
+fun_id integer,
+fun_nombre varchar,
+fun_paterno varchar,
+fun_materno varchar,
+fun_usuario varchar,
+pfec_id numeric,
+com_componente varchar,
+estado numeric,
+serv_id integer,
+serv_cod varchar,
+serv_descripcion varchar,
+tipo_subactividad varchar,
+proy_id numeric,
+aper_id numeric,
+pfec_estado integer,
+aper_gestion integer) AS
+
+$$
+
+select ci.cite_id,ci.com_id,ci.cite_codigo, ci.cite_nota, ci.cite_fecha, ci.fecha_creacion, ci.cite_estado,f.fun_id,f.fun_nombre, f.fun_paterno,f.fun_materno,f.fun_usuario,
+c.pfec_id,c.com_componente,c.estado,sa.serv_id, sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad, pfe.proy_id,pfe.aper_id,pfe.pfec_estado,apg.aper_gestion
+                from cite_mod_requerimientos ci
+                Inner Join funcionario as f On ci.fun_id=f.fun_id
+                Inner Join _componentes as c On ci.com_id=c.com_id
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On pfe.aper_id=apg.aper_id
+                where pfe.proy_id=id_proy and pfe.pfec_estado=1 and pfe.estado!=3 and ci.cite_estado!=3 and apg.aper_gestion=gestion and c.estado!=3
+                order by ci.cite_id asc;
+$$ LANGUAGE sql;
+
+
+Lista las modificaciones realizadas a los techos presupuestarios
+CREATE OR REPLACE FUNCTION lista_modificacion_techos_unidad(id_proy numeric,gestion integer) RETURNS TABLE(
+cppto_id integer,
+proy_id numeric,
+cppto_cite varchar,
+cppto_fecha timestamp,
+fecha timestamp,
+cppto_estado integer,
+fun_id integer,
+pfec_id numeric,
+pfec_estado integer,
+aper_id numeric,
+aper_gestion integer) AS
+
+$$
+
+select ppto.cppto_id,ppto.proy_id,ppto.cppto_cite,ppto.cppto_fecha,ppto.fecha,ppto.cppto_estado,ppto.fun_id,pfe.pfec_id,pfe.pfec_estado,pfe.aper_id,apg.aper_gestion
+            from ppto_cite ppto
+            Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=ppto.proy_id
+            Inner Join aperturaprogramatica as apg On pfe.aper_id=apg.aper_id
+            where ppto.proy_id=id_proy and ppto.cppto_estado!=3 and apg.aper_gestion=gestion and pfe.pfec_estado=1 and pfe.estado!=3 and apg.aper_estado!=3
+            order by cppto_id asc;
+$$ LANGUAGE sql;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SEGUIMIENTO POA
+
+Para la gestión 2021, se está incorporando el módulo de Seguimiento POA, donde se realizara la evaluación de operaciones programadas mensualmente.
+
+Se crea la siguiente vista, donde se lista las operaciones programadas mensualmente, se tendría que realizar la consulta por el id del componente:
+
+CREATE OR REPLACE VIEW public.v_seguimiento_operaciones_mensual AS 
+	    select 
+	    p.prod_id,
+	    p.com_id,
+                    p.prod_cod,
+	    p.prod_producto,
+	    p.prod_indicador,
+	    p.prod_linea_base,
+	    p.prod_meta,
+	    p.prod_fuente_verificacion,
+	    p.prod_unidades,
+	    p.prod_resultado,
+	    p.acc_id,
+	    ore.or_id,
+                   ore.or_codigo,
+	    ore.or_objetivo,
+	    ore.or_indicador,
+	    ore.or_producto,
+	    ore.or_resultado,
+	    ore.or_verificacion,
+	    prog.pg_id,
+	    prog.m_id,
+	    prog.pg_fis,
+	    prog.g_id
+	    
+            from _productos as p
+            Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
+            Inner Join indicador as tp On p.indi_id=tp.indi_id
+            Inner Join meta_relativo as mt On mt.mt_id=p.mt_id
+            Inner Join prod_programado_mensual as prog On prog.prod_id=p.prod_id
+            where p.estado!=3
+            ORDER BY p.prod_cod asc;
+
+ALTER TABLE public.v_seguimiento_operaciones_mensual
+OWNER TO postgres;
+
+
+CREACION DE LA VISTA : LISTA DE OPERACIONES POA (2021)
+
+CREATE OR REPLACE VIEW public.v_operaciones_subactividad AS 
+	    select 
+	    p.prod_id,
+	    p.com_id,
+            p.prod_cod,
+	    p.prod_producto,
+	    p.indi_id,
+	    mt.mt_id,
+	    p.prod_indicador,
+	    p.prod_linea_base,
+	    p.prod_meta,
+	    p.prod_fuente_verificacion,
+	    p.prod_unidades,
+	    p.prod_resultado,
+	    p.acc_id,
+	    ore.or_id,
+            ore.or_codigo,
+	    ore.or_objetivo,
+	    ore.or_indicador,
+	    ore.or_producto,
+	    ore.or_resultado,
+	    ore.or_verificacion,
+	    mt.mt_tipo,
+	    mt.mt_descripcion
+	    
+            from _productos as p
+            Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
+            Inner Join indicador as tp On p.indi_id=tp.indi_id
+            Inner Join meta_relativo as mt On mt.mt_id=p.mt_id
+            where p.estado!=3
+            ORDER BY p.prod_cod asc;
+
+ALTER TABLE public.v_operaciones_subactividad
+OWNER TO postgres;
+
+
+//// CREACION DE TABLA PARA OPERACIONES NO EJECUTADAS
+Para las Operaciones no ejecutadas en el mes, es necesario realizar el registro de las mismas para asi tener el historial de los antecedentes registrados de las operaciones no cumplidas
+
+create table prod_no_ejecutado_mensual(
+  ne_id serial not null,
+  prod_id integer NOT NULL,
+  m_id integer NOT NULL DEFAULT 0,
+  g_id integer NOT NULL,
+  medio_verificacion text,
+  observacion character varying(2000),
+  primary key(ne_id)
+ );
+
+
+
+SEGUIMIENTO POA LISTA MENSUAL (BASBOARD)
+Lista que muestra las operaciones a ser ejecutadas en el mes, el listado se lo muestra a nivel distrital, para ello se crea la siguiente función SQL.
+
+LISTA DE OPERACIONES PROGRAMADAS EN EL MES ACTUAL POR DISTRITAL
+
+
+CREATE OR REPLACE FUNCTION lista_seguimiento_operaciones_mensual_ue(id_dist numeric, mes integer,gestion integer) RETURNS TABLE(
+aper_id numeric,
+aper_programa varchar,
+aper_proyecto varchar,
+proy_sisin varchar,
+aper_actividad varchar,
+aper_gestion integer,
+proy_id numeric,
+proy_nombre varchar,
+tp_id numeric,
+tipo varchar,
+act_id integer,
+act_descripcion varchar,
+dist_id integer,
+abrev varchar,
+serv_cod varchar,
+com_id numeric,
+tipo_subactividad varchar,
+serv_descripcion varchar,
+prod_id numeric,
+prod_cod integer,
+prod_producto varchar,
+m_id integer,
+m_descripcion varchar,
+pg_fis numeric) AS
+
+$$
+
+select 
+apg.aper_id,apg.aper_programa,apg.aper_proyecto,p.proy_sisin,apg.aper_actividad,apg.aper_gestion,p.proy_id,p.proy_nombre,tp_id,te.tipo,ua.act_id,ua.act_descripcion,p.dist_id,dis.abrev,sa.serv_cod,c.com_id,
+tpsa.tipo_subactividad,sa.serv_descripcion,vope.prod_id,vope.prod_cod,vope.prod_producto,vope.m_id,m.m_descripcion,vope.pg_fis
+from _proyectos p
+Inner Join _distritales as dis On dis.dist_id=p.dist_id
+Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+Inner Join v_seguimiento_operaciones_mensual as vope On vope.com_id=c.com_id
+Inner Join mes as m On m.m_id=vope.m_id
+where p.dist_id=id_dist and m.m_id=mes and pfe.pfec_estado=1 and pfe.estado!=3 and apg.aper_gestion=gestion and c.estado!=3 and vope.g_id=gestion and p.estado!=3 and apg.aper_estado!=3 
+order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, sa.serv_cod, vope.prod_cod asc;
+$$ LANGUAGE sql;
+
+
+LISTA DE OPERACIONES PROGRAMADAS EN EL MES ACTUAL POR REGIONAL
+
+CREATE OR REPLACE FUNCTION lista_seguimiento_operaciones_mensual_regional(id_dep numeric, mes integer,gestion integer) RETURNS TABLE(
+aper_id numeric,
+aper_programa varchar,
+aper_proyecto varchar,
+proy_sisin varchar,
+aper_actividad varchar,
+aper_gestion integer,
+proy_id numeric,
+proy_nombre varchar,
+tp_id numeric,
+tipo varchar,
+act_id integer,
+act_descripcion varchar,
+dist_id integer,
+abrev varchar,
+serv_cod varchar,
+com_id numeric,
+tipo_subactividad varchar,
+serv_descripcion varchar,
+prod_id numeric,
+prod_cod integer,
+prod_producto varchar,
+m_id integer,
+m_descripcion varchar,
+pg_fis numeric) AS
+
+$$
+
+select 
+apg.aper_id,apg.aper_programa,apg.aper_proyecto,p.proy_sisin,apg.aper_actividad,apg.aper_gestion,p.proy_id,p.proy_nombre,tp_id,te.tipo,ua.act_id,ua.act_descripcion,p.dist_id,dis.abrev,sa.serv_cod,c.com_id,
+tpsa.tipo_subactividad,sa.serv_descripcion,vope.prod_id,vope.prod_cod,vope.prod_producto,vope.m_id,m.m_descripcion,vope.pg_fis
+from _proyectos p
+Inner Join _distritales as dis On dis.dist_id=p.dist_id
+Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+Inner Join v_seguimiento_operaciones_mensual as vope On vope.com_id=c.com_id
+Inner Join mes as m On m.m_id=vope.m_id
+where p.dep_id=id_dep and m.m_id=mes and pfe.pfec_estado=1 and pfe.estado!=3 and apg.aper_gestion=gestion and c.estado!=3 and vope.g_id=gestion and p.estado!=3 and apg.aper_estado!=3 
+order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, sa.serv_cod, vope.prod_cod asc;
+$$ LANGUAGE sql;
+
+
+
+
+
+
+
+
+
+FUNCION META TOTAL POR REGIONALES 
+
+CREATE OR REPLACE FUNCTION metatotal_operaciones_regionales(gestion integer) RETURNS TABLE(
+dep_id numeric,
+da varchar,
+dep_departamento varchar,
+meta numeric
+) AS
+
+$$
+
+select dep.dep_id ,dep.da,dep.dep_departamento, SUM(meta) meta
+from lista_poa_gastocorriente_nacional(gestion) dep
+Inner Join (select c.pfec_id,SUM(prod_meta) meta
+from _componentes c
+Inner Join v_operaciones_subactividad as prod On prod.com_id=c.com_id
+where c.estado!=3
+group by c.pfec_id) as dat On dat.pfec_id=dep.pfec_id
+group by dep.dep_id,dep.da,dep.dep_departamento
+order by dep.da asc;
+$$ LANGUAGE sql;
+
+
+FUNCI0N DE LISTA DE REQUERIMIENTOS A EJECUTAR EN EL MES 
+
+CREATE OR REPLACE FUNCTION lista_seguimiento_requerimientos_mensual_unidad(id_proy numeric, mes integer,gestion integer) RETURNS TABLE(
+proy_id numeric,
+aper_id numeric,
+aper_gestion integer,
+pfec_descripcion varchar,
+pfec_estado integer,
+com_id numeric,
+tipo_servicio varchar,
+serv_cod varchar,
+serv_descripcion varchar,
+prod_id numeric,
+prod_cod integer,
+prod_producto varchar,
+ins_id numeric,
+ins_detalle varchar,
+ins_cant_requerida numeric,
+ins_costo_unitario numeric,
+ins_costo_total numeric,
+ins_unidad_medida varchar,
+ins_observacion varchar,
+ins_gestion integer,
+par_codigo integer,
+mes_id integer,
+ipm_fis numeric) AS
+
+$$
+
+select 
+pfe.proy_id,apg.aper_id,apg.aper_gestion,pfe.pfec_descripcion, pfe.pfec_estado,c.com_id,tpsa.tipo_subactividad,ser.serv_cod,ser.serv_descripcion,pr.prod_id,pr.prod_cod,pr.prod_producto,
+i.ins_id,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,i.ins_observacion,i.ins_gestion,par.par_codigo,temp.mes_id,temp.ipm_fis
+from _proyectofaseetapacomponente pfe
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+Inner Join servicios_actividad as ser On ser.serv_id=c.serv_id
+Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+Inner Join _productos as pr On pr.com_id=c.com_id
+Inner Join _insumoproducto as ip On ip.prod_id=pr.prod_id
+Inner Join insumos as i On i.ins_id=ip.ins_id
+Inner Join partidas as par On i.par_id=par.par_id
+Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
+where pfe.proy_id=id_proy and pfe.pfec_estado=1 and temp.mes_id=mes and pfe.estado!=3 and c.estado!=3 and pr.estado!=3 
+and i.ins_estado!=3 and i.aper_id!=0 and par.par_depende!='10000' and apg.aper_gestion=gestion
+order by ser.serv_cod,pr.prod_cod, par.par_codigo asc;
+$$ LANGUAGE sql;
+
+
+
+FUNCION NUMERO DE REQUERIMIENTOS Y PRESUPUESTO TOTAL A EJECUTAR EN EL MES ACTUAL POR CADA DISTRITAL  (NOTIFICACION)
+
+CREATE OR REPLACE FUNCTION seguimiento_numero_requerimientos_ppto_distrital_mensual(id_dist numeric, mes integer,gestion integer) RETURNS TABLE(
+dep_id integer,
+requerimientos bigint,
+monto numeric
+) AS
+
+$$
+
+select p.dep_id,count(i.ins_id) requerimientos,SUM(temp.ipm_fis) monto
+from _proyectofaseetapacomponente pfe
+Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+Inner Join _productos as pr On pr.com_id=c.com_id
+Inner Join _insumoproducto as ip On ip.prod_id=pr.prod_id
+Inner Join insumos as i On i.ins_id=ip.ins_id
+Inner Join partidas as par On i.par_id=par.par_id
+Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
+where p.dist_id=id_dist and pfe.pfec_estado=1 and temp.mes_id=mes and pfe.estado!=3 and c.estado!=3 and pr.estado!=3 
+and i.ins_estado!=3 and i.aper_id!=0 and par.par_depende!='10000' and apg.aper_gestion=gestion 
+group by p.dep_id;
+$$ LANGUAGE sql;
+
+FUNCION NUMERO DE REQUERIMIENTOS Y PRESUPUESTO TOTAL A EJECUTAR EN EL MES ACTUAL POR CADA REGIONAL  (NOTIFICACION)
+
+
+CREATE OR REPLACE FUNCTION seguimiento_numero_requerimientos_ppto_regional_mensual(id_dep numeric, mes integer,gestion integer) RETURNS TABLE(
+dep_id integer,
+requerimientos bigint,
+monto numeric
+) AS
+
+$$
+
+select p.dep_id,count(i.ins_id) requerimientos,SUM(temp.ipm_fis) monto
+from _proyectofaseetapacomponente pfe
+Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+Inner Join _productos as pr On pr.com_id=c.com_id
+Inner Join _insumoproducto as ip On ip.prod_id=pr.prod_id
+Inner Join insumos as i On i.ins_id=ip.ins_id
+Inner Join partidas as par On i.par_id=par.par_id
+Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
+where p.dep_id=id_dep and pfe.pfec_estado=1 and temp.mes_id=mes and pfe.estado!=3 and c.estado!=3 and pr.estado!=3 
+and i.ins_estado!=3 and i.aper_id!=0 and par.par_depende!='10000' and apg.aper_gestion=gestion 
+group by p.dep_id;
+$$ LANGUAGE sql;
+
+
+VISTA TEMPORALIDAD PROGRAMADO POR SUBACTIVIDAD
+CREATE OR REPLACE VIEW public.vista_temporalidad_programado_componente AS 
+select 
+vo.com_id, 
+SUM(vtp.enero) m1,
+SUM(vtp.febrero) m2,
+SUM(vtp.marzo) m3, 
+SUM(vtp.abril) m4, 
+SUM(vtp.mayo) m5,
+SUM(vtp.junio) m6,
+SUM(vtp.julio) m7, 
+SUM(vtp.agosto) m8,
+SUM(vtp.septiembre) m9,
+SUM(vtp.octubre) m10,
+SUM(vtp.noviembre) m11, 
+SUM(vtp.diciembre) m12
+from v_operaciones_subactividad vo
+Inner Join vista_productos_temporalizacion_programado_dictamen as vtp On vtp.prod_id=vo.prod_id
+group by vo.com_id;
+
+ALTER TABLE public.vista_temporalidad_programado_componente
+  OWNER TO postgres;
+
+
+
+VISTA TEMPORALIDAD EJECUTADO POR SUBACTIVIDAD
+CREATE OR REPLACE VIEW public.vista_temporalidad_ejecutado_componente AS 
+select 
+vo.com_id, 
+SUM(vte.enero) m1,
+SUM(vte.febrero) m2,
+SUM(vte.marzo) m3, 
+SUM(vte.abril) m4, 
+SUM(vte.mayo) m5,
+SUM(vte.junio) m6,
+SUM(vte.julio) m7, 
+SUM(vte.agosto) m8,
+SUM(vte.septiembre) m9,
+SUM(vte.octubre) m10,
+SUM(vte.noviembre) m11, 
+SUM(vte.diciembre) m12
+from v_operaciones_subactividad vo
+Inner Join vista_productos_temporalizacion_ejecutado_dictamen as vte On vte.prod_id=vo.prod_id
+group by vo.com_id;
+
+ALTER TABLE public.vista_temporalidad_ejecutado_componente
+  OWNER TO postgres;
+
+
+
+FUNCION LISTA DE ESTABLECIMIENTOS DE SALUD
+CREATE OR REPLACE FUNCTION lista_establecimientos_de_salud(id_dep numeric,gestion integer) RETURNS TABLE(
+dep_id numeric,
+dep_cod varchar,
+dep_departamento varchar,
+dist_id integer,
+dist_distrital varchar,
+dist_cod varchar,
+abrev varchar,
+act_id integer,
+act_cod varchar,
+act_descripcion varchar,
+tipo varchar,
+ta_id integer,
+g_id integer
+) AS
+
+$$
+
+select dep.dep_id,dep.dep_cod,dep.dep_departamento,dist.dist_id,dist.dist_distrital,dist.dist_cod,dist.abrev,ua.act_id,ua.act_cod,ua.act_descripcion,te.tipo,te.ta_id,ug.g_id
+from unidad_actividad ua
+Inner Join _distritales as dist On dist.dist_id=ua.dist_id
+Inner Join _departamentos as dep On dep.dep_id=dist.dep_id
+Inner Join tipo_ubicacion as tu On ua.tu_id=tu.tu_id
+Inner Join v_tp_establecimiento as te On ua.te_id=te.te_id
+Inner Join estado_unidad as eu On ua.eu_id=eu.eu_id
+Inner Join uni_gestion as ug On ug.act_id=ua.act_id
+where dep.dep_id=id_dep and ua.act_estado!=3 and tu.estado!=0 and te.estado!=0 and eu.estado!=0 and ug.g_id=gestion and ua.te_id!=21 and te.ta_id=2
+order by dep.dep_id,dist.dist_id,te.te_id,ua.act_id asc;
+$$ LANGUAGE sql;
+
+
+
+
+
+FUNCION GET UNIDAD/ACTIVIDAD PROGRAMADO (GASTO CORRIENTE) PARA SEGUIMIENTO DE ESTABLECIMIENTOS DE SALUD
+
+CREATE OR REPLACE FUNCTION get_establecimiento_de_salud_gestion(id_act integer,gestion integer) RETURNS TABLE(
+act_id integer,
+dist_id integer,
+dist_distrital varchar,
+dist_cod varchar,
+abrev varchar,
+proy_id numeric,
+aper_id numeric,
+aper_programa varchar,
+aper_proyecto varchar,
+aper_actividad varchar,
+proy_nombre varchar,
+proy_sisin varchar,
+pfec_id numeric,
+tipo varchar,
+act_descripcion varchar,
+com_id numeric,
+com_componente varchar,
+serv_cod varchar,
+serv_descripcion varchar,
+tipo_subactividad varchar,
+aper_gestion integer
+) AS
+$$
+select 
+            ua.act_id,
+            dist.dist_id,
+            dist.dist_distrital,
+            dist.dist_cod,
+            dist.abrev,
+            p.proy_id,
+            apg.aper_id,
+            apg.aper_programa,
+            apg.aper_proyecto,
+            apg.aper_actividad,
+            p.proy_nombre,
+            p.proy_sisin,
+            pfe.pfec_id,
+            te.tipo,
+            ua.act_descripcion,
+            c.com_id,
+            c.com_componente,
+            sa.serv_cod,
+            sa.serv_descripcion,
+            tpsa.tipo_subactividad,
+            apg.aper_gestion
+            
+            from unidad_actividad ua
+            Inner Join tipo_establecimiento as te On ua.te_id=te.te_id
+            Inner Join _proyectos as p On p.act_id=ua.act_id
+            Inner Join _distritales as dist On dist.dist_id=ua.dist_id
+            Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+	    Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+	    Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+	    Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+            Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+            where ua.act_id=id_act and p.estado!=3 and pfe.pfec_estado=1 and apg.aper_gestion=gestion;
+$$ LANGUAGE sql;
+
+
+
+
+SOLICITUD DE CERTIFICACION POA
+Se implemento el modulo de solicitud de Certificacion Poa atraves del modulo de Seguimiento POA para todas las unidades de las gerencias.
+
+CREACION DE TABLAS
+
+create table solicitud_cpoa_subactividad(
+  sol_id serial not null,
+  com_id numeric(18,0) NOT NULL,
+  prod_id integer NOT NULL,
+  estado integer DEFAULT 0,
+  g_id integer DEFAULT 0,
+  fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
+  fecha_proceso timestamp without time zone,
+  cite character varying(200),
+  aclaracion character varying(500),
+  num_ip character varying(50),
+  nom_ip character varying(50),
+  primary key(sol_id)
+ );
+
+
+create table requerimiento_solicitado(
+  req_id serial not null,
+  sol_id integer NOT NULL,
+  ins_id numeric(18,0),
+  req_estado  integer,
+  primary key(req_id)
+ );
+
+
+
+ create table temporalidad_req_solicitado(
+  temp_id serial not null,
+  req_id integer not null,
+  tins_id integer not null,
+  primary key(temp_id)
+ );
+
+
+CREACION DE VISTA – SOLCITIDUDES DE CERTIFICACION  POA
+
+CREATE OR REPLACE VIEW public.vista_solicitud_certificacionpoa AS 
+ SELECT 
+    sol.sol_id,
+    sol.fecha,
+    sol.cite,
+    sol.g_id,
+    sol.estado,
+    sol.fecha_proceso,
+    sol.aclaracion,
+    prod.prod_id,
+    prod.com_id,
+    ore.or_id,
+    ore.or_codigo,
+    ore.or_objetivo,
+    og.og_id,
+    og.og_codigo,
+    og.og_objetivo,
+    ae.acc_id,
+    ae.acc_codigo,
+    ae.acc_descripcion,
+    oe.obj_codigo,
+    oe.obj_descripcion,
+    prod.prod_cod,
+    prod.prod_producto,
+    tpsa.tipo_subactividad,
+    sa.serv_cod,
+    sa.serv_descripcion,
+    apg.aper_id,
+    apg.aper_programa,
+    apg.aper_actividad,
+    p.proy_id,
+    p.proy_nombre,
+    p.tp_id,
+    te.tipo,
+    ua.act_descripcion,
+    p.dep_id,
+    dep.dep_cod,
+    dep.dep_departamento,
+    dist.dist_id,
+    dist.dist_distrital,
+    dist.dist_cod,
+    dist.abrev
+    
+from solicitud_cpoa_subactividad sol
+Inner Join _productos as prod On prod.prod_id=sol.prod_id
+
+Inner Join objetivos_regionales as ore On ore.or_id=prod.or_id
+Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
+Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
+
+Inner Join _componentes as c On c.com_id=prod.com_id
+Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+Inner Join _distritales as dist On dist.dist_id=p.dist_id
+Inner Join _departamentos as dep On dep.dep_id=p.dep_id
+
+where prod.estado!=3 and c.estado!=3 and pfe.pfec_estado=1
+order by c.com_id,sol.sol_id asc;
+
+ALTER TABLE public.vista_solicitud_certificacionpoa
+  OWNER TO postgres
+
+
+
+VISTA DE REQUERIMIENTOS SOLICITADOS
+
+CREATE OR REPLACE VIEW public.vista_requerimientos_solicitados AS 
+ select 
+rsol.req_id,
+rsol.sol_id,
+rsol.ins_id,
+rsol.req_estado, 
+par.par_id,
+par.par_codigo,
+i.ins_detalle,
+i.ins_unidad_medida,
+i.ins_cant_requerida,
+i.ins_costo_unitario,
+i.ins_costo_total,
+i.ins_gestion,
+i.ins_observacion,
+i.ins_mod,
+i.aper_id,
+monto_sol.monto_solicitado
+from requerimiento_solicitado rsol
+Inner Join insumos as i On i.ins_id=rsol.ins_id
+Inner Join partidas as par On par.par_id=i.par_id
+
+Inner Join 
+(
+select temp_sol.req_id,SUM(ti.ipm_fis) monto_solicitado
+from temporalidad_req_solicitado temp_sol
+Inner Join temporalidad_prog_insumo as ti On ti.tins_id=temp_sol.tins_id
+group by temp_sol.req_id
+) as monto_sol On monto_sol.req_id=rsol.req_id
+
+where i.ins_estado!=3
+order by par.par_id,i.ins_id asc;
+
+ALTER TABLE public.vista_requerimientos_solicitados
+  OWNER TO postgres 
+
+
+VISTA OBTIENE DATOS GENERALES DE LA CERTIFICACION POA
+
+CREATE OR REPLACE VIEW public.vista_get_certificacionpoa AS 
+select
+	cpoa.cpoa_id,
+                cpoa.proy_id,
+                cpoa.cpoa_codigo,
+                cpoa.cpoa_fecha,
+                cpoa.cpoa_gestion,
+                cpoa.cpoa_estado,
+                cpoa.fun_id,
+                cpoa.aper_id,
+                cpoa.cpoa_cite,
+                cpoa.cite_fecha,
+cpoa.sol_id,
+cpoa.cpoa_recomendacion,
+cpoa. cpoa_observacion,
+                f.fun_nombre,
+                f.fun_paterno,
+                f.fun_materno,
+	f.fun_cargo,
+                cpoa.com_id,
+                c.com_componente,
+                c.pfec_id,
+                sa.serv_cod,
+                sa.serv_descripcion,
+                tpsa.tipo_subactividad,
+                p.proy_sisin,
+                p.proy_nombre,
+                p.tp_id,
+                te.tipo,
+	ua.act_descripcion,
+	p.dep_id,
+	dep.dep_cod,
+	dep.dep_departamento,
+	dist.dist_id,
+	dist.dist_distrital,
+	dist.dist_cod,
+	dist.abrev,
+                apg.aper_programa,
+                apg.aper_proyecto,
+                apg.aper_actividad,
+                cpoa.prod_id,
+                ore.or_id,
+	ore.or_codigo,
+	ore.or_objetivo,
+	og.og_id,
+	og.og_codigo,
+	og.og_objetivo,
+	ae.acc_id,
+	ae.acc_codigo,
+	ae.acc_descripcion,
+	oe.obj_codigo,
+	oe.obj_descripcion,
+	prod.prod_cod,
+	prod.prod_producto
+
+                from certificacionpoa cpoa
+                Inner Join _componentes as c On c.com_id=cpoa.com_id
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join funcionario as f On f.fun_id=cpoa.fun_id
+                Inner Join _proyectos as p On p.proy_id=cpoa.proy_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                Inner Join _distritales as dist On dist.dist_id=p.dist_id
+	Inner Join _departamentos as dep On dep.dep_id=p.dep_id
+	Inner Join _productos as prod On prod.prod_id=cpoa.prod_id
+	Inner Join objetivos_regionales as ore On ore.or_id=prod.or_id
+	Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+	Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+	Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
+	Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
+
+                where cpoa.cpoa_estado!=3 and c.estado!=3 and pfe.pfec_estado=1 and pfe.estado!=3;
+
+	ALTER TABLE public.vista_get_certificacionpoa
+	OWNER TO postgres
+

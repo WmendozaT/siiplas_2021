@@ -786,10 +786,15 @@ class Ccertificacion_poa extends CI_Controller {
 
   /*------ REPORTE SOLICITUD CERTIFICACION POA APROBADO -------*/
   public function reporte_solicitud_probado_certpoa($cpoa_id){
-    $certificacion=$this->model_certificacion->get_certificacion_poa($cpoa_id); /// Datos Certificacion
+    $certificacion=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Certificacion
     
     if(count($certificacion)!=0){
-      
+      $data['cabecera_cpoa']=$this->certificacionpoa->cabecera_certpoa($certificacion); /// Cabecera Certificacion POA
+      $data['pie_certpoa']=$this->certificacionpoa->pie_certificacion_poa($certificacion); /// Pie Certificacion POA
+
+
+
+
       $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($certificacion[0]['sol_id']);
       $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
       $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
@@ -904,6 +909,9 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
+
+
+
   /*--- APROBAR LA SOLICITUD DE CERTIFCACION POA ---*/
   function aprobar_solicitud_cpoa(){
     if ($this->input->is_ajax_request() && $this->input->post()) {
@@ -974,7 +982,7 @@ class Ccertificacion_poa extends CI_Controller {
       $this->certificacionpoa->generar_certificacion_poa($cpoa_id);
 
 
-      $cert='<hr><iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa_aprobado/'.$sol_id.'"></iframe>';
+      $cert='<hr><iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa_aprobado/'.$cpoa_id.'"></iframe>';
 
       $result = array(
         'respuesta' => 'correcto',

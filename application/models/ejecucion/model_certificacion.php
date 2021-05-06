@@ -253,6 +253,16 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*----- GET DATOS GENERALES CERTIFICACION POA 2021 ----*/
+    public function get_datos_certificacion_poa($cpoa_id){
+        $sql = 'select *
+                from vista_get_certificacionpoa
+                where cpoa_id='.$cpoa_id.' and cpoa_gestion='.$this->gestion.'';
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
     /*-------- GET CERTIFICADO POA DETALLE ----------*/
     public function get_certificado_poa_detalle($cpoa_id,$ins_id){
         $sql = 'select *
