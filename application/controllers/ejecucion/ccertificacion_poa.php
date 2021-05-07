@@ -27,6 +27,7 @@ class Ccertificacion_poa extends CI_Controller {
       $this->gestion = $this->session->userData('gestion');
       $this->adm = $this->session->userData('adm');
       $this->rol = $this->session->userData('rol_id');
+      $this->dep_id = $this->session->userData('dep_id');
       $this->dist = $this->session->userData('dist');
       $this->dist_tp = $this->session->userData('dist_tp');
       $this->tp_adm = $this->session->userData('tp_adm');
@@ -501,7 +502,7 @@ class Ccertificacion_poa extends CI_Controller {
 
 
 
-  //// VALIDAR SOLICITUD DE CERTIFICIÓN POA
+  //// VALIDAR SOLICITUD DE CERTIFICIÓN POA (ADMINISTRADOR)
 
   /*-- VALIDAR SOLICITUD DE CERTIFICACIÓN POA --*/
   public function ver_mis_solicitudes_certpoa(){
@@ -509,7 +510,16 @@ class Ccertificacion_poa extends CI_Controller {
     $data['titulo']='<h1>RESPONSABLE : '.$this->session->userdata('funcionario').' -> <small>'.$this->certificacionpoa->tp_resp().'</small></h1>';
 
     $data['alert']='<h2 class="alert alert-success"><center>LISTA DE SOLICITUDES DE CERTIFICACIÓN POA '.$this->gestion.'</center></h2>';
-    $data['regional']=$this->select_regionales(); /// Lista de regionales
+    if($this->tp_adm==1){ /// Nacional
+      $data['regional']=$this->select_regionales(); /// Lista de regionales
+      $data['items']='';
+    }
+    else{ /// Regional
+      $data['regional']='';
+      $data['items']=$this->certificacionpoa->lista_solicitudes_certificacionespoa_regional($this->dep_id);
+    }
+
+    
     $data['loading']='<div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
 
     $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/mis_solicitudes_cpoa', $data);
@@ -777,8 +787,9 @@ class Ccertificacion_poa extends CI_Controller {
     $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($sol_id); /// Requerimientos solicitados
     $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']); /// firma unidad
     
-    $data['certificacion']=false;
-    $data['pie_reporte']='Solicitud_Certificacion_Poa';
+    $data['verif_solicitud']=true;
+    $data['verif_certificacion']=false;
+    $data['pie_reporte']='Solicitud_Certificacion_Poa '.$data['solicitud'][0]['tipo_subactividad'].' '.$data['solicitud'][0]['serv_descripcion'].' '.$data['solicitud'][0]['abrev'];
     $this->load->view('admin/ejecucion/certpoa_unidad/reporte_solicitud_cpoa', $data);
   }
 
@@ -789,21 +800,23 @@ class Ccertificacion_poa extends CI_Controller {
     $certificacion=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Certificacion
     
     if(count($certificacion)!=0){
+      $data['verif_certificacion']=true;
       $data['cabecera_cpoa']=$this->certificacionpoa->cabecera_certpoa($certificacion); /// Cabecera Certificacion POA
+      $data['items_certificados']=$this->certificacionpoa->items_certificados($cpoa_id); /// Lista de items certificados
       $data['pie_certpoa']=$this->certificacionpoa->pie_certificacion_poa($certificacion); /// Pie Certificacion POA
+      $data['pie_reporte']='Certificacion_Poa'.$certificacion[0]['tipo_subactividad'].' '.$certificacion[0]['serv_descripcion'].' '.$certificacion[0]['abrev'];
+      $data['verif_solicitud']=false;
 
+      if($certificacion[0]['sol_id']!=0){
+        $data['verif_solicitud']=true;
+        $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($certificacion[0]['sol_id']);
+        $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
+        $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
+        $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($certificacion[0]['sol_id']); /// Requerimientos solicitados
+        $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']); /// firma unidad
+        $data['pie_reporte']='Certificacion_Poa_Aprobado '.$data['solicitud'][0]['tipo_subactividad'].' '.$data['solicitud'][0]['serv_descripcion'].' '.$data['solicitud'][0]['abrev'];
+      }
 
-
-
-      $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($certificacion[0]['sol_id']);
-      $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
-      $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
-      $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($certificacion[0]['sol_id']); /// Requerimientos solicitados
-      $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']); /// firma unidad
-
-
-      $data['certificacion']=true;
-      $data['pie_reporte']='Certificacion_Poa_Aprobado';
       $this->load->view('admin/ejecucion/certpoa_unidad/reporte_solicitud_cpoa', $data);
     }
     else{
@@ -875,30 +888,39 @@ class Ccertificacion_poa extends CI_Controller {
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
       $sol_id = $this->security->xss_clean($post['sol_id']); // sol id
-      $tp = $this->security->xss_clean($post['tp']); // Tipo
       $solicitud=$this->model_certificacion->get_solicitud_cpoa($sol_id); // solicitud
-      
+      $resp='error';
+
       if(count($solicitud)!=0){
-        if($tp==0){
+        $resp='correcto';
+        if($solicitud[0]['estado']==0){
           $tabla='
-          <div class="alert alert-warning" role="alert">
-            <b>LA SOLICITUD DE CERTIFICACIÓN POA SE ENCUENTRA EN PROCESO DE EVALUACIÓN</b>
-          </div>
+          <div class="alert alert-warning alert-block">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading">Solicitud e Certificación POA en proceso de Aprobación</h4>
+              </div>
+          <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>';
+        }
+        elseif($solicitud[0]['estado']==1){
+          $tabla='
+          <div class="alert alert-success alert-block">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading">Solicitud e Certificación POA aprobado !!!</h4>
+              </div>
           <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>';
         }
         else{
-          $tabla='MOSTRAR CERTIFICACION POA APROBADO';
+          $tabla='
+              <div class="alert alert-danger alert-block">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading">Solicitud e Certificación POA no encoentrado !!!</h4>
+              </div>';
         }
-        
-      }
-      else{
-        $tabla='<div class="alert alert-danger" role="alert">
-                  SOLICTUD DE CERTIFICACION NO DISPONIBLE
-                </div>';
       }
 
+
       $result = array(
-        'respuesta' => 'correcto',
+        'respuesta' => $resp,
         'tabla'=> $tabla,
       );
 
@@ -959,7 +981,6 @@ class Ccertificacion_poa extends CI_Controller {
           }
           /*----------------------*/
       
-
           /*--------- Update Req. estado -------*/
           $update_solreq = array(
             'req_estado' => 1
@@ -978,7 +999,6 @@ class Ccertificacion_poa extends CI_Controller {
         $this->db->update('solicitud_cpoa_subactividad', $update_solicitud);
       /*------------------------------------*/
 
-
       $this->certificacionpoa->generar_certificacion_poa($cpoa_id);
 
 
@@ -994,6 +1014,62 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
+  /*--- ELIMINAR LA SOLICITUD DE CERTIFCACION POA (Administrador)---*/
+  function anular_solicitud_cpoa(){
+    if ($this->input->is_ajax_request() && $this->input->post()) {
+      $post = $this->input->post();
+      $sol_id = $post['sol_id']; /// Solicitud Id
+      $solicitud=$this->model_certificacion->get_solicitud_cpoa($sol_id); // solicitud
+
+      $titulo=$solicitud[0]['cite'].' de fecha '.date('d-m-Y',strtotime($solicitud[0]['fecha']));
+
+      if($solicitud[0]['estado']==0){ /// a eliminar
+          $requerimientos=$this->model_certificacion->get_lista_requerimientos_solicitados($sol_id); // Requerimientos
+          foreach($requerimientos as $row){
+            $this->db->where('req_id', $row['req_id']);
+            $this->db->delete('temporalidad_req_solicitado');
+
+            $this->db->where('req_id', $row['req_id']);
+            $this->db->delete('requerimiento_solicitado');
+          }
+
+          $this->db->where('sol_id', $sol_id);
+          $this->db->delete('solicitud_cpoa_subactividad');
+
+
+          $mensaje='  
+              <hr>
+              <div class="alert alert-danger alert-block">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading">SOLICITUD ANULADO !!!</h4>
+                La solicitud de Certificación POA '.$titulo.' a sido eliminado correctamente ...
+                <p class="text-align-left">
+                  <br>
+                  <a href="'.site_url("").'/ejec/mis_solicitudes_certpoa"  class="btn btn-sm btn-default"><strong>Cargar Listado</strong></a>
+                </p>
+              </div>';
+
+      }
+      else{ /// nose puede eliminar debido a que esta aprobado
+        $mensaje='
+        <hr>
+        <div class="alert alert-block alert-warning">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading">SOLICITUD APROBADO !!!</h4>
+                la solicitud de Certificación POA '.$titulo.' ya fue aprobado por la unidad/ Depto de Planficación
+              </div>';
+      }
+
+
+      $result = array(
+        'respuesta' => 'correcto',
+        'solpoa' => $mensaje
+      );
+
+      echo json_encode($result);
+
+    }
+  }
 
 
 

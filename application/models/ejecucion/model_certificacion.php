@@ -263,6 +263,19 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*----- GET MES CERTIFICADO POR ITEMS 2021 ----*/
+    public function get_meses_certificacion_items($cpoad_id){
+        $sql = 'select *
+                from cert_temporalidad_prog_insumo temp
+                Inner Join temporalidad_prog_insumo as ti On ti.tins_id=temp.tins_id
+                Inner Join mes as m On m.m_id=ti.mes_id
+                where temp.cpoad_id='.$cpoad_id.'
+                order by m.m_id asc';
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
     /*-------- GET CERTIFICADO POA DETALLE ----------*/
     public function get_certificado_poa_detalle($cpoa_id,$ins_id){
         $sql = 'select *
@@ -967,11 +980,23 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
-    /*---- Lista de Solicitud de Certificacion POA por Regional ----*/
-    public function lista_solicitudes_cpoa_regional($dep_id,$estado){
+    /*---- Lista de Solicitud de Certificacion POA por Regional (SOLICITUDES)----*/
+    public function lista_solicitudes_cpoa_regional($dep_id){
         $sql = 'select *
                 from vista_solicitud_certificacionpoa s
-                where s.dep_id='.$dep_id.' and (s.estado!=\'3\' and s.estado=\''.$estado.'\') and g_id='.$this->gestion.'
+                where s.dep_id='.$dep_id.' and (s.estado!=\'3\' and s.estado=\'0\') and g_id='.$this->gestion.'
+                order by s.sol_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*---- Lista de Solicitud de Certificacion POA por Regional (APROBADOS)----*/
+    public function lista_solicitudes_cpoa_regional_aprobados($dep_id){
+        $sql = 'select *
+                from vista_solicitud_certificacionpoa s
+                Inner Join certificacionpoa as cpoa On cpoa.sol_id=s.sol_id
+                Inner Join funcionario as f On f.fun_id=cpoa.fun_id
+                where s.dep_id='.$dep_id.' and (s.estado!=\'3\' and s.estado=\'1\') and g_id='.$this->gestion.'
                 order by s.sol_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();

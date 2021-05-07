@@ -31,6 +31,7 @@ class Certificacionpoa extends CI_Controller{
             $this->verif_mes=$this->session->userData('mes_actual');
             $this->resolucion=$this->session->userdata('rd_poa');
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->mes = $this->mes_nombre();
     }
 
 //// ADMINISTRADOR 
@@ -356,7 +357,7 @@ class Certificacionpoa extends CI_Controller{
     }
 
 
-/*------ GET PRODUCTOS -----*/
+  /*------ GET PRODUCTOS -----*/
     public function mis_productos($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
       $titulo='UNIDAD RESPONSABLE';
@@ -1064,9 +1065,10 @@ class Certificacionpoa extends CI_Controller{
  //// ======== CERTIFICACION POA ========
 /*-- CABECERA (Certificacion POa Aprobado) --*/
   public function cabecera_certpoa($certpoa){
+
     $tabla='';
     $tabla.='
-      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px;">              
               <td style="width:70%;height: 2%">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
@@ -1078,7 +1080,8 @@ class Certificacionpoa extends CI_Controller{
                       </tr>
                   </table>
               </td>
-              <td style="width:30%; height: 2%; font-size: 8px;text-align:center;">
+              <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+              '.strtoupper($certpoa[0]['dist_distrital']).' '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               </td>
           </tr>
         </table>
@@ -1203,20 +1206,52 @@ class Certificacionpoa extends CI_Controller{
                       <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.strtoupper ($certpoa[0]['dist_distrital']).'</td></tr>
                   </table>
               </td>
-          </tr>
-          <tr>
+          </tr>';
+
+            if($certpoa[0]['tp_id']==1){
+              $tabla.='
+              <tr>
+                <td style="width:20%;">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                        <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>PROY. INVERSI&Oacute;N</b></td><td style="width:5%;"></td></tr>
+                    </table>
+                </td>
+                <td style="width:80%;">
+                    <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                        <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['proy_sisin'].' '.strtoupper ($certpoa[0]['proy_nombre']).'</td></tr>
+                    </table>
+                </td>
+              </tr>
+              <tr>
               <td style="width:20%;">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESP.</b></td><td style="width:5%;"></td></tr>
                   </table>
               </td>
               <td style="width:80%;">
                   <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['aper_actividad'].' '.strtoupper ($certpoa[0]['act_descripcion']).' '.$certpoa[0]['abrev'].'</td></tr>
+                      <tr>
+                          <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['tipo_subactividad'].' '.$certpoa[0]['serv_descripcion'].'</td>
+                      </tr>
                   </table>
               </td>
-          </tr>
-          <tr>
+          </tr>';
+            }
+            else{
+              $tabla.='
+              <tr>
+                <td style="width:20%;">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                        <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                    </table>
+                </td>
+                <td style="width:80%;">
+                    <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                        <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['aper_actividad'].' '.strtoupper ($certpoa[0]['act_descripcion']).' '.$certpoa[0]['abrev'].'</td></tr>
+                    </table>
+                </td>
+              </tr>
+              <tr>
               <td style="width:20%;">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
                       <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>SUBACTIVIDAD</b></td><td style="width:5%;"></td></tr>
@@ -1229,7 +1264,11 @@ class Certificacionpoa extends CI_Controller{
                       </tr>
                   </table>
               </td>
-          </tr>
+          </tr>';
+            }
+          $tabla.='
+          
+          
           <tr>
               <td style="width:20%;">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
@@ -1262,52 +1301,74 @@ class Certificacionpoa extends CI_Controller{
     return $tabla;
   }
 
-    /*-- Detalle Requerimientos Certificados--*/
-  public function items_certificados($sol_id){
+  
+  /*-- Detalle Requerimientos Certificados--*/
+  public function items_certificados($cpoa_id){
     $tabla='';
+    $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Certificacion
+      if($cpoa[0]['cpoa_estado']==3){
+        $requerimientos=$this->model_certificacion->lista_items_certificados_anulados($cpoa_id); /// lista de items certificados Eliminados
+      }
+      else{
+        $requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id); /// lista de items certificados  
+      }
 
-    $requerimientos=$this->model_certificacion->get_lista_requerimientos_solicitados($sol_id);
     $tabla.='
-      <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+        <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;" align=center>
           <thead>
-              <tr style="font-size: 8px; font-family: Arial;" align="center" >
-                <th style="width:3%;height: 1.5%;">N°</th>
+              <tr style="font-size: 8px; font-family: Arial;" align="center" bgcolor="#efefef">
+                <th style="width:3%;height: 4%;">N°</th>
                 <th style="width:7%;">PARTIDA</th>
-                <th style="width:28.9%;">DETALLE REQUERIMIENTO</th>
-                <th style="width:10%;">UNIDAD DE MEDIDA</th>
-                <th style="width:9%;">CANTIDAD</th>
-                <th style="width:9%;">PRECIO UNITARIO</th>
-                <th style="width:9%;">PRECIO TOTAL</th>
-                <th style="width:9%;">MONTO SOLICITADO</th>
-                <th style="width:15%;">TEMPORALIDAD SELECCIONADO</th>
+                <th style="width:35%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:15%;">UNIDAD DE MEDIDA</th>
+                <th style="width:15%;">PRECIO TOTAL</th>
+                <th style="width:15%;">PRESUPUESTO SOLICITADO</th>
+                <th style="width:19%;">TEMPORALIDAD SELECCIONADO</th>
               </tr>
           </thead>
           <tbody>';
             $nro=0;$suma_monto=0;
             foreach($requerimientos as $row){
               $nro++;
-              $suma_monto=$suma_monto+$row['monto_solicitado'];
+              $suma_monto=$suma_monto+$row['monto_certificado'];
               $tabla.='
               <tr style="font-size: 8px; font-family: Arial;">
-                <td style="width:3%;height: 3%;" align=center>'.$nro.'</td>
+                <td style="width:3%;height: 3.5%;" align=center>'.$nro.'</td>
                 <td style="width:7%;" align=center>'.$row['par_codigo'].'</td>
-                <td style="width:28.9%;">'.$row['ins_detalle'].'</td>
-                <td style="width:10%;">'.$row['ins_unidad_medida'].'</td>
-                <td style="width:9%;" align=right>'.round($row['ins_cant_requerida'],2).'</td>
-                <td style="width:9%;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
-                <td style="width:9%;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>
-                <td style="width:9%;" align=right>'.number_format($row['monto_solicitado'], 2, ',', '.').'</td>
-                <td style="width:15%;" align=center>'.$this->temporalidad_solicitado($row['req_id']).'</td>
+                <td style="width:35%;">'.$row['ins_detalle'].'</td>
+                <td style="width:15%;">'.$row['ins_unidad_medida'].'</td>
+                <td style="width:15%;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>
+                <td style="width:15%;" align=right>'.number_format($row['monto_certificado'], 2, ',', '.').'</td>
+                <td style="width:19%;" align=center>'.$this->temporalidad_certificado_items($row['cpoad_id']).'</td>
               </tr>';
             }
           $tabla.='
           </tbody>
             <tr>
-              <td style="height: 3%;"></td>
-              <td colspan=6 align=right><b>MONTO A CERTIFICAR : </b></td>
+              <td style="height: 3.5%;"></td>
+              <td colspan=4 align=right><b>PRESUPUESTO A CERTIFICAR : </b></td>
               <td style="font-size: 9px;" align=right><b>'.number_format($suma_monto, 2, ',', '.').'</b></td>
               <td></td>
             </tr>
+        </table>';
+
+    return $tabla;
+  }
+
+  /*-- Temporalidad de items Certificado --*/
+  public function temporalidad_certificado_items($cpoad_id){
+    $tabla='';
+    $temporalidad=$this->model_certificacion->get_meses_certificacion_items($cpoad_id);
+    $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:80%;" align=center>';
+        foreach($temporalidad as $row){
+          $tabla.='
+          <tr>
+            <td style="width:50%;height: 1%;" align=left>'.$row['m_descripcion'].' : </td>
+            <td style="width:50%;" align=left><b>'.number_format($row['ipm_fis'], 2, ',', '.').'</b></td>
+          </tr>';
+        }
+      $tabla.='
       </table>';
 
     return $tabla;
@@ -1495,7 +1556,7 @@ class Certificacionpoa extends CI_Controller{
                   $tabla.='<td style="width:100%;height: 2%;color: red;"><b>LA SOLICITUD SE ENCUENTRA EN PROCESO DE APROBACIÓN</b></td>';
                 }
                 elseif($solicitud[0]['estado']==1){
-                  $tabla.='<td style="width:100%;height: 2%;color: green;"><b>SOLICITUD APROBADO</b></td>';
+                  $tabla.='<td style="width:100%;height: 2%;color: green;"><b>SOLICITUD APROBADO EN FECHA '.date('d-m-Y',strtotime($solicitud[0]['fecha_proceso'])).'</b></td>';
                 }
                 else{
                  $tabla.='<td style="width:100%;height: 2%;color: red;"><b>LA SOLICITUD FUE ANULADA</b></td>'; 
@@ -1546,7 +1607,7 @@ class Certificacionpoa extends CI_Controller{
               <a data-toggle="tab" href="#hb1"> <i class="fa fa-lg fa-arrow-circle-o-down"></i> <span class="hidden-mobile hidden-tablet"> SOLICITUDES POA EN PROCESO </span> </a>
             </li>
             <li>
-              <a data-toggle="tab" href="#hb2"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class="hidden-mobile hidden-tablet"> CERTIFICACIONES POA APROBADOS </span> </a>
+              <a data-toggle="tab" href="#hb2"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class="hidden-mobile hidden-tablet"> SOLICITUDES POA APROBADOS </span> </a>
             </li>
           </ul>
         </header>
@@ -1555,6 +1616,7 @@ class Certificacionpoa extends CI_Controller{
       <div class="jarviswidget-editbox"></div>
           <div class="widget-body">
             <div class="tab-content">
+            <input name="base" type="hidden" value="'.base_url().'">
               <div class="tab-pane active" id="hb1">
                   
                   <table id="dt_basic" class="table table-bordered" style="width:100%;">
@@ -1562,7 +1624,7 @@ class Certificacionpoa extends CI_Controller{
                       <tr style="height:35px;">
                         <th style="width:1%;">#</th>
                         <th style="width:10%;">CITE SOLICITUD</th>
-                        <th style="width:10%;">FECHA SOLICTUD</th>
+                        <th style="width:10%;">FECHA SOLICITUD</th>
                         <th style="width:20%;">OPERACIÓN</th>
                         <th style="width:10%;">ESTADO</th>
                         <th style="width:10%;">SOLICITUD</th>
@@ -1572,7 +1634,7 @@ class Certificacionpoa extends CI_Controller{
                     </thead>
                     <tbody>';
                     $nro=0;
-                    $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa_regional($dep_id,0);
+                    $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa_regional($dep_id);
                     foreach($solicitudes as $row){
                       $nro++;
                       $color='#d9f9f5';
@@ -1601,7 +1663,7 @@ class Certificacionpoa extends CI_Controller{
                         <td align=center>';
                           if($row['estado']==0){
                             $tabla.='
-                            <a href="#" class="btn btn-default del_solicitud" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
+                            <a href="#" class="btn btn-default" onclick="anular_solicitud('.$row['sol_id'].');" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
                               <img src="'.base_url().'assets/img/delete.png" width="22" height="22"/>
                             </a>';
                           }
@@ -1618,60 +1680,38 @@ class Certificacionpoa extends CI_Controller{
 
                   <table id="dt_basic2" class="table2 table-bordered" style="width:100%;">
                     <thead>
-                      <tr style="height:35px;">
+                      <tr style="height:40px;" bgcolor="#f6f6f6">
                         <th style="width:1%;">#</th>
                         <th style="width:10%;">CITE SOLICITUD</th>
-                        <th style="width:10%;">FECHA SOLICTUD</th>
-                        <th style="width:20%;">OPERACIÓN</th>
-                        <th style="width:10%;">ESTADO</th>
-                        <th style="width:10%;">SOLICITUD</th>
-                        <th style="width:10%;">CERTIFICACIÓN POA</th>
-                        <th style="width:10%;">ANULAR</th>
+                        <th style="width:10%;">FECHA SOLICITUD</th>
+                        <th style="width:10%;">FECHA DE APROBACI&Oacute;N</th>
+                        <th style="width:20%;">CODIGO CERTIFICACI&Oacute;N POA</th>
+                        <th style="width:10%;">RESPONSABLE DE APROBACI&Oacute;N</th>
+                        <th style="width:10%;">SUBACTIVIDAD</th>
+                        <th style="width:10%;">REPORTE CERT. POA</th>
                       </tr>
                     </thead>
                     <tbody>';
                     $nro=0;
-                    $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa_regional($dep_id,1);
-    /*                foreach($solicitudes as $row){
+                    $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa_regional_aprobados($dep_id);
+                    foreach($solicitudes as $row){
                       $nro++;
-                      $color='#d9f9f5';
-                      $estado='APROBADO';
-                      if($row['estado']==0){
-                        $color='#f7cbcb';
-                        $estado='NO APROBADO';
-                      }
                       $tabla.='
-                      <tr bgcolor='.$color.'>
-                        <td title="'.$row['sol_id'].'">'.$nro.'</td>
+                      <tr bgcolor="#f6fbf4">
+                        <td title="'.$row['cpoa_id'].'" style="height:35px;">'.$nro.'</td>
                         <td>'.$row['cite'].'</td>
                         <td>'.date('d-m-Y',strtotime($row['fecha'])).'</td>
-                        <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
-                        <td align=center><b>'.$estado.'</b></td>
+                        <td>'.date('d-m-Y',strtotime($row['cite_fecha'])).'</td>
+                        <td><b>'.$row['cpoa_codigo'].'</b></td>
+                        <td><b>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</b></td>
+                        <td><b>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</b></td>
                         <td align=center>
-                          <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'" id="0">
+                          <a href="javascript:abreVentana_sol(\''.site_url("").'/reporte_solicitud_poa_aprobado/'.$row['cpoa_id'].'\');" class="btn btn-default" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'" id="0">
                             <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
                           </a>
                         </td>
-                        <td align=center>';
-                          if($row['estado']==1){
-                            $tabla.='
-                            <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER CERTIFICACION POA" name="'.$row['sol_id'].'" id="1">
-                              <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
-                            </a>';
-                          }
-                        $tabla.='
-                        </td>
-                        <td align=center>';
-                          if($row['estado']==0){
-                            $tabla.='
-                            <a href="#" class="btn btn-default del_solicitud" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
-                              <img src="'.base_url().'assets/img/delete.png" width="22" height="22"/>
-                            </a>';
-                          }
-                        $tabla.='
-                        </td>
                       </tr>';
-                    }*/
+                    }
                     $tabla.='
                     </tbody>
                   </table>
@@ -1718,7 +1758,6 @@ class Certificacionpoa extends CI_Controller{
                       <th style="width:20%;">OPERACIÓN</th>
                       <th style="width:10%;">ESTADO</th>
                       <th style="width:10%;">SOLICITUD</th>
-                      <th style="width:10%;">CERTIFICACIÓN POA</th>
                       <th style="width:10%;">ANULAR</th>
                     </tr>
                   </thead>
@@ -1740,18 +1779,9 @@ class Certificacionpoa extends CI_Controller{
                       <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
                       <td align=center><b>'.$estado.'</b></td>
                       <td align=center>
-                        <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'" id="0">
+                        <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'">
                           <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
                         </a>
-                      </td>
-                      <td align=center>';
-                        if($row['estado']==1){
-                          $tabla.='
-                          <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER CERTIFICACION POA" name="'.$row['sol_id'].'" id="1">
-                            <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
-                          </a>';
-                        }
-                      $tabla.='
                       </td>
                       <td align=center>';
                         if($row['estado']==0){
@@ -1820,6 +1850,25 @@ class Certificacionpoa extends CI_Controller{
       </aside>';
 
       return $tabla;
+    }
+
+
+
+        /*------ NOMBRE MES -------*/
+    function mes_nombre(){
+        $mes[1] = 'ENE.';
+        $mes[2] = 'FEB.';
+        $mes[3] = 'MAR.';
+        $mes[4] = 'ABR.';
+        $mes[5] = 'MAY.';
+        $mes[6] = 'JUN.';
+        $mes[7] = 'JUL.';
+        $mes[8] = 'AGOS.';
+        $mes[9] = 'SEPT.';
+        $mes[10] = 'OCT.';
+        $mes[11] = 'NOV.';
+        $mes[12] = 'DIC.';
+        return $mes;
     }
 }
 ?>

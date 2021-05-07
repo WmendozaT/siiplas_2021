@@ -297,7 +297,7 @@ function abreVentana(PDF){
     $(".ver_solicitud").on("click", function (e) {
       reset();
       var sol_id = $(this).attr('name'); // sol id
-      var tp = $(this).attr('id'); // tp
+    //  var tp = $(this).attr('id'); // tp
       //alert(sol_id)
       var request;
         url = base+"index.php/ejecucion/ccertificacion_poa/get_ver_solicitudcpoa";
@@ -308,7 +308,7 @@ function abreVentana(PDF){
             url: url,
             type: "POST",
             dataType: "json",
-            data: "sol_id="+sol_id+"&tp="+tp
+            data: "sol_id="+sol_id
         });
 
         request.done(function (response, textStatus, jqXHR) { 
@@ -370,7 +370,7 @@ function abreVentana(PDF){
 
 
     /// Aprobar Solicitud
-      function aprobar_solicitud(sol_id) {
+    function aprobar_solicitud(sol_id) {
         reset();
         var request;
         alertify.confirm("ESTA SEGURO DE APROBAR LA SOLICITUD DE CERTIFICACIÓN POA ?", function (a) {
@@ -390,8 +390,6 @@ function abreVentana(PDF){
               reset();
               if (response.respuesta == 'correcto') {
                 $('#solicitudes').fadeIn(1000).html(response.certpoa);
-                  //alert(response.respuesta)
-                //window.location.reload(true);
               } 
               else {
                 alertify.error("Error ...");
@@ -409,54 +407,44 @@ function abreVentana(PDF){
         }
       });
 
+    }
 
-/*        if (estaChequeado == true) { 
-          val = parseInt($('[name="tot_temp"]').val());
-        var url = base+"index.php/ejecucion/ccertificacion_poa/verif_mes_certificado";
-          $.ajax({
-            type:"post",
-            url:url,
-            data:{tins_id:tins_id},
-            success:function(datos){
-              if(datos.trim() =='true'){ /// habilitado para certificar
+    /// Anular Solicitud de Certificacion POa
+    function anular_solicitud(sol_id) {
+        reset();
+        var request;
+        alertify.confirm("ESTA SEGURO DE APROBAR LA SOLICITUD DE CERTIFICACIÓN POA ?", function (a) {
+        if (a) {
+            url = base+"index.php/ejecucion/ccertificacion_poa/anular_solicitud_cpoa";
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: "json",
+                data: "sol_id="+sol_id
+            });
 
-                val = val + 1;
-                $('[name="tot_temp"]').val((val).toFixed(0));
-                total = parseFloat($('[name="tot_temp"]').val());
-                totalf = parseFloat($('[name="tot"]').val());
-                if(total==0 || totalf==0){
-                  $('#but').slideUp();
-                }
-                else{
-                  $('#but').slideDown();
-                }
-
-              }else{ /// inhabilitado (ya se certifico anteriormente)
-                 alertify.error("EL MES SELECCIONADO YA FUE CERTIFICADO ANTERIORMENTE !!!");
-                val = val - 1;
-                $('[name="tot_temp"]').val((val).toFixed(0));
-                total = parseFloat($('[name="tot_temp"]').val());
-                totalf = parseFloat($('[name="tot"]').val());
-                if(total==0 || totalf==0){
-                  $('#but').slideUp();
-                }
-                else{
-                  $('#but').slideDown();
-                }
+            request.done(function (response, textStatus, jqXHR) { 
+              reset();
+              if (response.respuesta == 'correcto') {
+                $('#solicitudes').fadeIn(1000).html(response.solpoa);
+              } 
+              else {
+                alertify.error("Error ...");
               }
-          }});
-        } 
-        else {
-          val = val - 1;
-          $('[name="tot_temp"]').val((val).toFixed(0));
-          total = parseFloat($('[name="tot_temp"]').val());
-          totalf = parseFloat($('[name="tot"]').val());
+            });
 
-          if(total==0 || totalf==0){
-            $('#but').slideUp();
-          }
-          else{
-            $('#but').slideDown();
-          }
-        }*/
-      }
+            request.fail(function (jqXHR, textStatus, thrown) {
+              console.log("ERROR: " + textStatus);
+            });
+
+            e.preventDefault();
+
+        } else {
+            alertify.error("Opcion cancelada");
+        }
+      });
+
+    }

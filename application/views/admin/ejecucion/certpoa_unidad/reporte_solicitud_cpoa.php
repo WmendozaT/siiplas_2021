@@ -13,8 +13,9 @@ ob_start();
     }
 }
 </style>
+
 <?php
-    if($certificacion){ ?>
+    if($verif_certificacion){ ?>
     <page backtop="115mm" backbottom="50mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
         <page_header>
         <br><div class="verde"></div>
@@ -24,39 +25,40 @@ ob_start();
         <page_footer>
             <?php echo $pie_certpoa;?>
         </page_footer>
-
+        <?php echo $items_certificados;?>
     </page>
     <?php
     }
-?>
 
-<page backtop="142mm" backbottom="60mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
-    <page_header>
-    <br><div class="verde"></div>
-        <?php echo $cabecera; ?>
-        <br>
-        <?php echo $datos_unidad_articulacion;?>
-    </page_header>
+    if($verif_solicitud){ ?>
+         <page backtop="142mm" backbottom="60mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+            <page_header>
+            <br><div class="verde"></div>
+                <?php echo $cabecera; ?>
+                <br>
+                <?php echo $datos_unidad_articulacion;?>
+            </page_header>
 
-        
-    <page_footer>
-        <?php echo $conformidad;?>
-        <hr>
-        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-            <tr style="font-size: 7px;font-family: Arial;">
-                <td style="width: 50%; text-align: left;" >
-                    &nbsp;&nbsp;<b><?php echo $this->session->userdata('sistema')?></b>
-                </td>
-                <td style="width: 50%; text-align: right">
-                   pag. [[page_cu]]/[[page_nb]]
-                </td>
-            </tr>
-        </table>
-        <br>
-    </page_footer>
-        <?php echo $items;?>
-</page>
-<?php
+            <page_footer>
+                <?php echo $conformidad;?>
+                <hr>
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                    <tr style="font-size: 7px;font-family: Arial;">
+                        <td style="width: 50%; text-align: left;" >
+                            &nbsp;&nbsp;<b><?php echo $this->session->userdata('sistema')?></b>
+                        </td>
+                        <td style="width: 50%; text-align: right">
+                           pag. [[page_cu]]/[[page_nb]]
+                        </td>
+                    </tr>
+                </table>
+                <br>
+            </page_footer>
+                <?php echo $items;?>
+        </page>
+        <?php
+    }
+
 $content = ob_get_clean();
 //require_once(dirname(__FILE__).'/../html2pdf.class.php');
 require_once('assets/html2pdf-4.4.0/html2pdf.class.php');
@@ -65,7 +67,7 @@ try{
     $html2pdf = new HTML2PDF('P', 'Letter', 'fr', true, 'UTF-8', 0);
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-    $html2pdf->Output($pie_reporte.'-'.$solicitud[0]['tipo_subactividad'].' '.$solicitud[0]['serv_descripcion'].' '.$solicitud[0]['abrev'].'.pdf');
+    $html2pdf->Output($pie_reporte.'.pdf');
 }
 catch(HTML2PDF_exception $e) {
     echo $e;
