@@ -61,7 +61,7 @@ table.page_footer {width: 100%; border: none; background-color: #739e73; border-
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
                         <tr style="width: 100%; border: solid 0px black; text-align: center;">
                           <td width=18%; text-align:center;">
-                            <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:40%;">
+                            <!-- <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:40%;"> -->
                           </td>
                           <td width=64%;>
                             <table align="center" border="0">

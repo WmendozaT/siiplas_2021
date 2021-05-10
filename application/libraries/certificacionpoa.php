@@ -164,6 +164,8 @@ class Certificacionpoa extends CI_Controller{
     }
   }
 
+
+  
     /*---- Lista de Unidades / Establecimientos de Salud (2020-2021) -----*/
     public function list_unidades_es($proy_estado){
         $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);

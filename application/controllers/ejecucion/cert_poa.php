@@ -34,6 +34,8 @@ class Cert_poa extends CI_Controller {
         $this->tp_adm = $this->session->userData('tp_adm');
         $this->fun_id = $this->session->userData('fun_id');
         $this->fun_adm = $this->session->userData('adm');
+        $this->fecha_entrada = strtotime("09-05-2021 00:00:00");
+
         }
         else{
             $this->session->sess_destroy();
@@ -212,7 +214,14 @@ class Cert_poa extends CI_Controller {
                     $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_cert" title="ELIMINAR CERTIFICACI&Oacute;N"  onclick="eliminar_certpoa('.$row['cpoa_id'].');" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="25"/></a>';
                   }
                 $tabla .='</td>';
-                $tabla .='<td align=center><a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="40" HEIGHT="40"/></a></td>';
+                $tabla.='<td align="center">';
+                if(strtotime($row['cpoa_fecha'])>$this->fecha_entrada){
+                  $tabla .='<a href="javascript:abreVentana(\''. site_url("").'/reporte_solicitud_poa_aprobado/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="28" HEIGHT="28"/></a>';
+                }
+                else{
+                  $tabla .='<a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="40" HEIGHT="40"/></a>';
+                }
+                $tabla.='</td>';
                 $tabla .='<td align=center>';
                   if($row['cpoa_ref']!=0){
                     $cite_mod_poa=$this->model_certificacion->get_certpoa_vigente_modificado($row['cpoa_id']); /// Datos de editado, modificado poa
@@ -362,8 +371,15 @@ class Cert_poa extends CI_Controller {
                     $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_cert" class="btn btn-xs del_cert" title="ELIMINAR CERTIFICACI&Oacute;N" name="'.$row['cpoa_id'].'" id="'.$row['proy_id'].'" class="btn btn-default btn-lg">
                             <img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/><br>ELIMINAR CERT.</a>';
                   }
-                $tabla .='</td>';
-                $tabla .='<td align=center><a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="40" HEIGHT="40"/></a></td>';
+                $tabla.='</td>';
+                $tabla.='<td align="center">';
+                if(strtotime($row['cpoa_fecha'])>$this->fecha_entrada){
+                  $tabla .='<a href="javascript:abreVentana(\''. site_url("").'/reporte_solicitud_poa_aprobado/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="28" HEIGHT="28"/></a>';
+                }
+                else{
+                  $tabla .='<a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="40" HEIGHT="40"/></a>';
+                }
+                $tabla.='</td>';
                 $tabla .='<td align=center>';
                   if($row['cpoa_ref']!=0){
                     $cite_mod_poa=$this->model_certificacion->get_certpoa_vigente_modificado($row['cpoa_id']); /// Datos de editado, modificado poa

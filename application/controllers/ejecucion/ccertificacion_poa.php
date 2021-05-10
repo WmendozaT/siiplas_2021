@@ -33,6 +33,7 @@ class Ccertificacion_poa extends CI_Controller {
       $this->tp_adm = $this->session->userData('tp_adm');
       $this->fun_id = $this->session->userData('fun_id');
       $this->load->library('certificacionpoa');
+      $this->fecha_entrada = strtotime("09-05-2021 00:00:00");
       }
       else{
           $this->session->sess_destroy();
@@ -85,6 +86,59 @@ class Ccertificacion_poa extends CI_Controller {
       echo "Error !!!";
     }
   }
+
+
+/// ACTUALIZA CERTIFICACION POA (para reportes sin Codigo)
+  public function generar_codigo($cpoa_id){
+    $get_cpoa=$this->model_certificacion->get_certificacion_poa($cpoa_id);
+    if(count($get_cpoa)!=0){
+        if($get_cpoa[0]['cpoa_estado']==0){
+          $verificando=$this->model_modrequerimiento->verif_modificaciones_distrital($get_cpoa[0]['dist_id']);
+          $nro_cpoa=$verificando[0]['cert_poa']+1;
+          $nro_cdep='';
+          if($nro_cpoa<10){
+            $nro_cdep='000';
+          }
+          elseif($nro_cpoa<100) {
+            $nro_cdep='00';
+          }
+          elseif($nro_cpoa<1000){
+            $nro_cdep='0';
+          }
+
+          $codigo='CPOA/'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa;
+          
+          if(count($this->model_certificacion->get_codigo_certpoa($codigo))==0){
+              /*---- Update Estado Certificacion POA ----*/
+              $update_cpoa= array(
+                'cpoa_codigo' => $codigo,
+                'cpoa_estado' => 1,
+                'fun_id'=>$this->fun_id
+              );
+              $this->db->where('cpoa_id', $cpoa_id);
+              $this->db->update('certificacionpoa', $this->security->xss_clean($update_cpoa));
+              /*-----------------------------------------*/
+
+              /*----- Update Configuracion Cert distrital -----*/
+              $update_conf= array(
+                'cert_poa' => $nro_cpoa
+              );
+              $this->db->where('mod_id', $verificando[0]['mod_id']);
+              $this->db->update('conf_modificaciones_distrital', $this->security->xss_clean($update_conf));
+              /*----------------------------------------------*/
+          }
+
+          $this->session->set_flashdata('danger','EL CÓDIGO SE GENERO CORRECTAMENTE');
+          redirect('cert/ver_cpoa/'.$cpoa_id.'');
+        }
+    }
+    else{
+      $this->session->set_flashdata('danger','ERROR AL GENERAR CÓDIGO');
+      redirect('ejec/menu_cpoa');
+    }
+
+  }
+
 
   /*------- ACTUALIZA GESTION EN LA TEMPORALIDAD 2021 ------*/
   public function update_gestion_temporalidad($requerimientos){
@@ -357,11 +411,19 @@ class Ccertificacion_poa extends CI_Controller {
           $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cpoa'][0]['prod_id']); // Datos completos hasta apertura
           $data['items']=$this->mis_items_certificados($cpoa_id);
           $data['nro']=count($this->model_certificacion->lista_items_certificados($cpoa_id));
+     
           if($this->gestion!=2021){ /// Gestion 2020
             $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/reporte_cert_poa_2020', $data);
           }
           else{ /// Gestion 2021
-            $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/reporte_cert_poa', $data);
+            
+            if(strtotime($data['cpoa'][0]['cpoa_fecha'])>$this->fecha_entrada){
+              redirect('reporte_solicitud_poa_aprobado/'.$cpoa_id); /// Reporte nuevo
+            }
+            else{
+              $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/reporte_cert_poa', $data);  
+            }
+            
           }
           
       }
