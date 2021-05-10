@@ -33,7 +33,7 @@ ob_start();
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                         <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
                           <td width=18%; text-align:center;"">
-                            <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:45%;">
+                            <!-- <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:45%;"> -->
                           </td>
                           <td width=64%; align=center>
                             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
