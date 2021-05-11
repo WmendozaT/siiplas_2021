@@ -1659,7 +1659,7 @@ class Certificacionpoa extends CI_Controller{
                         </td>
                         <td align=center>
                           <a href="#" class="btn btn-default" onclick="aprobar_solicitud('.$row['sol_id'].');" style="width:50%;" title="APROBAR SOLICITUD CERTIFICACION POA">
-                            <img src="'.base_url().'assets/img/ok1.JPG" width="22" height="22"/>
+                            <img src="'.base_url().'assets/img/ok1.jpg" width="22" height="22"/>
                           </a>
                         </td>
                         <td align=center>';

@@ -58,9 +58,9 @@ function abreVentana(PDF){
     $("#prod_id").change(function () {
         $("#prod_id option:selected").each(function () {
             prod_id=$(this).val();
-           // alert(prod_id)
             if(prod_id!=0){
               document.getElementById("loading").style.display = 'block';
+              document.getElementById("but").style.display = 'none';
               $('#lista_requerimientos').fadeIn(1000).html('');
               var url = base+"index.php/ejecucion/ccertificacion_poa/get_cuadro_certificacionpoa";
               var request;
@@ -92,6 +92,7 @@ function abreVentana(PDF){
 
 
       function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
+
         if (estaChequeado == true) { 
           document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
         }
@@ -152,6 +153,7 @@ function abreVentana(PDF){
       }
 
       function seleccionar_temporalidad(tins_id, estaChequeado) {
+
         if (estaChequeado == true) { 
           val = parseInt($('[name="tot_temp"]').val());
         var url = base+"index.php/ejecucion/ccertificacion_poa/verif_mes_certificado";

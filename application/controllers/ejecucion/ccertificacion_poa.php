@@ -710,6 +710,23 @@ class Ccertificacion_poa extends CI_Controller {
     return  $tabla;
   }
 
+    /*--- VERIFICANDO MES CERTIFICADO ---*/
+    function verif_mes_certificado(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $tins_id = $post['tins_id']; /// tins id
+
+          if(count($this->model_certificacion->get_mes_certificado($tins_id))==0){
+            echo "true"; /////  Se puede certificar el mes
+          }
+          else{
+            echo "false"; //// ya se encuentra certificado
+          }
+ 
+      }else{
+        show_404();
+      }
+    }
 
   /*------ VALIDA SOLICITUD DE CERTIFICACION POA (2020 - 2021) ------*/
   public function valida_solicitud(){
