@@ -62,6 +62,7 @@ cpoa_cite varchar,
 cite_fecha timestamp,
 cpoa_estado integer,
 cpoa_ref integer,
+sol_id integer,
 aper_programa varchar,
 aper_proyecto varchar,
 aper_actividad varchar,
@@ -69,6 +70,10 @@ proy_nombre varchar,
 tp_id numeric,
 com_id numeric,
 com_componente varchar,
+pfec_id numeric,
+serv_cod varchar,
+serv_descripcion varchar,
+tipo_subactividad varchar,
 dep_id numeric,
 dep_departamento varchar,
 dist_id integer,
@@ -79,20 +84,25 @@ tipo varchar) AS
 
 $$
 select 
-cp.cpoa_id, cp.proy_id,cp.cpoa_codigo,cp.cpoa_fecha,cp.cpoa_gestion,cp.cpoa_cite,cp.cite_fecha,cp.cpoa_estado,cp.cpoa_ref,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,
-p.proy_nombre,p.tp_id,c.com_id,c.com_componente,d.dep_id,d.dep_departamento,ds.dist_id,ds.dist_distrital,ds.abrev,ua.act_descripcion, te.tipo
+cp.cpoa_id, cp.proy_id,cp.cpoa_codigo,cp.cpoa_fecha,cp.cpoa_gestion,cp.cpoa_cite,cp.cite_fecha,cp.cpoa_estado,cp.cpoa_ref,cp.sol_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,
+p.proy_nombre,p.tp_id,c.com_id,c.com_componente,c.pfec_id,sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad,d.dep_id,d.dep_departamento,ds.dist_id,ds.dist_distrital,ds.abrev,ua.act_descripcion, te.tipo
                     from certificacionpoa cp
                     Inner Join _proyectos as p On p.proy_id=cp.proy_id
                     Inner Join _componentes as c On c.com_id=cp.com_id
-                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                    Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                    Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+
+                    Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                    Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+
                     Inner Join _departamentos as d On d.dep_id=p.dep_id
                     Inner Join _distritales as ds On ds.dist_id=p.dist_id
                     Inner Join unidad_actividad as ua On ua.act_id=p.act_id
                     Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                    where cpoa_gestion=gestion and cp.cpoa_estado!=3 and apg.aper_estado!=3 and apg.aper_gestion=gestion and ds.dist_id=id and p.tp_id=tp
+                    where cpoa_gestion=gestion and cp.cpoa_estado!=3 and apg.aper_estado!=3 and apg.aper_gestion=gestion and ds.dist_id=id and p.tp_id=tp and pfe.pfec_estado=1 and pfe.pfec_estado!=3 and p.estado!=3
                     order by cp.cpoa_id asc;
 $$ LANGUAGE sql;
+
 
 
 FUNCION: LISTA DE REQUERIMIENTOS CERTIFICADOS – DETALLE A NIVEL REGIONAL
