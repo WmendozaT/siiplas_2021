@@ -1067,6 +1067,11 @@ class Certificacionpoa extends CI_Controller{
  //// ======== CERTIFICACION POA ========
 /*-- CABECERA (Certificacion POa Aprobado) --*/
   public function cabecera_certpoa($certpoa){
+    $codigo='SIN CÓDIGO (Contactese con el Dpto. Nal. de Planificación)';
+    if($certpoa[0]['cpoa_estado']==1){
+      $codigo=$certpoa[0]['cpoa_codigo'];
+    }
+
 
     $tabla='';
     $tabla.='
@@ -1098,7 +1103,7 @@ class Certificacionpoa extends CI_Controller{
                             <td style="height: 30%;"><b>CERTIFICACI&Oacute;N DEL PLAN OPERATIVO ANUAL '.$this->gestion.'</b></td>
                         </tr>
                         <tr style="font-size: 20px;font-family: Arial;">
-                            <td style="height: 5%;">'.$certpoa[0]['cpoa_codigo'].'</td>
+                          <td style="height: 5%;">'.$codigo.'</td>
                         </tr>
                     </table>
                 </td>

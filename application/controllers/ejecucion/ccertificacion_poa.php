@@ -33,7 +33,7 @@ class Ccertificacion_poa extends CI_Controller {
       $this->tp_adm = $this->session->userData('tp_adm');
       $this->fun_id = $this->session->userData('fun_id');
       $this->load->library('certificacionpoa');
-      $this->fecha_entrada = strtotime("09-05-2021 00:00:00");
+      $this->fecha_entrada = strtotime("10-05-2021 00:00:00");
       }
       else{
           $this->session->sess_destroy();
@@ -59,13 +59,13 @@ class Ccertificacion_poa extends CI_Controller {
         $data['proyectos']=$this->certificacionpoa->list_pinversion(4);
         $data['operacion']=$this->certificacionpoa->list_unidades_es(4);
 
-        //echo $this->mis_productos(1609);
         $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/list_poas_aprobados', $data);
       }
       else{
         redirect('admin/dashboard');
       }   
     }
+
 
 
 
@@ -94,7 +94,7 @@ class Ccertificacion_poa extends CI_Controller {
     if(count($get_cpoa)!=0){
         if($get_cpoa[0]['cpoa_estado']==0){
           $verificando=$this->model_modrequerimiento->verif_modificaciones_distrital($get_cpoa[0]['dist_id']);
-          $nro_cpoa=$verificando[0]['cert_poa']+1;
+          $nro_cpoa=$verificando[0]['cert_poa']+2;
           $nro_cdep='';
           if($nro_cpoa<10){
             $nro_cdep='000';
@@ -505,7 +505,7 @@ class Ccertificacion_poa extends CI_Controller {
       if(count($data['cert_editado'])!=0 & $data['cert_editado'][0]['cpoa_estado']!=3){
         $cpoa=$this->model_certificacion->get_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
 
-        $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cert_editado'][0]['prod_id']); /// Datos completos de la Unidad/ Proyectos de Inversión
+          $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cert_editado'][0]['prod_id']); /// Datos completos de la Unidad/ Proyectos de Inversión
           $data['menu']=$this->certificacionpoa->menu(4);
           $data['resp']=$this->session->userdata('funcionario');
           $data['res_dep']=$this->certificacionpoa-> tp_resp();
@@ -586,8 +586,6 @@ class Ccertificacion_poa extends CI_Controller {
 
     $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/mis_solicitudes_cpoa', $data);
   }
-
-
 
 
 
