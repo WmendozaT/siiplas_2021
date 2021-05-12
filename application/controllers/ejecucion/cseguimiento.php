@@ -156,7 +156,7 @@ class Cseguimiento extends CI_Controller {
                   <td align=center>';
                   if($row['pfec_estado']==1){
                     $tabla.='<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).'">
-                    <i class="glyphicon glyphicon-list"></i> MIS SUBACTIVIDADES</a>';
+                    <i class="glyphicon glyphicon-list"></i> MIS COMPONENTES</a>';
                   }
                   else{
                     $tabla.='FASE NO ACTIVA';
@@ -204,12 +204,18 @@ class Cseguimiento extends CI_Controller {
     /*------ GET SUBACTIVIDADES 2021 -----*/
     public function mis_subactividades($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); ////// DATOS DEL PROYECTO
+      $titulo='SUBACTIVIDAD';
+      
+      if($proyecto[0]['tp_id']==1){
+        $titulo='UNIDAD RESPONSABLE';  
+      }
+
       $tabla='';
       $tabla.=' <table class="table table-bordered">
                   <thead>
                   <tr>
                     <th style="width:3%;" bgcolor="#474544"> COD.</th>
-                    <th style="width:50%;" bgcolor="#474544"> SUBACTIVIDAD</th>
+                    <th style="width:50%;" bgcolor="#474544"> '.$titulo.'</th>
                     <th style="width:10%;" bgcolor="#474544">PONDERACI&Oacute;N</th>
                     <th style="width:10%;" bgcolor="#474544"></th>
                     <th style="width:1%;" bgcolor="#474544"></th>

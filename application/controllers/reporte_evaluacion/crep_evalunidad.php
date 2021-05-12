@@ -36,12 +36,13 @@ class Crep_evalunidad extends CI_Controller {
     public function evaluacion_poa_unidad($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
       if(count($proyecto)!=0){
-        if($proyecto[0]['tp_id']==1){ //// Proyecto de Inversion
+        redirect('eval/eval_unidad_gcorriente/'.$proy_id.'');
+/*        if($proyecto[0]['tp_id']==1){ //// Proyecto de Inversion
           redirect('eval/eval_unidad_pinversion/'.$proy_id.'');
         }
         else{ //// Gasto Corriente
           redirect('eval/eval_unidad_gcorriente/'.$proy_id.'');
-        }
+        }*/
       }
       else{
         echo "Error !!!";
@@ -59,11 +60,28 @@ class Crep_evalunidad extends CI_Controller {
 
         $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
         $data['titulo']=
-          '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small><b>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</b></h1>
+          '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small><b>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</b></h1>
           <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>';
+
+        if($data['proyecto'][0]['tp_id']==1){
+          $data['titulo']=
+          '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROYECTO : </small><b>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' 000 - '.$data['proyecto'][0]['proy_nombre'].'</b></h1>
+          <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>';
+        }
+        
         $data['tit']='<li>Evaluaci&oacute;n POA</li><li>Actividad</li>';
 
         $data['tabla']=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
+        
+        $data['no_cumplido']=0;
+        $data['en_proceso']=0;
+
+        if($data['tabla'][2][$this->session->userData('trimestre')]!=0){
+          $data['no_cumplido']=(100-($data['tabla'][5][$this->session->userData('trimestre')]+round((($data['tabla'][7][$this->session->userData('trimestre')]/$data['tabla'][2][$this->session->userData('trimestre')])*100),2)));
+          $data['en_proceso']=round((($data['tabla'][7][$this->session->userData('trimestre')]/$data['tabla'][2][$this->session->userData('trimestre')])*100),2);
+        }
+        
+        
         $data['tabla_gestion']=$this->tabla_regresion_lineal_unidad_total($proy_id); /// Tabla para el grafico Total Gestion
 
         $data['tabla_regresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion

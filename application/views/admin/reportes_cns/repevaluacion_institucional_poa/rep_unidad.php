@@ -844,14 +844,14 @@
                     name: 'Actividades',
                     data: [
                         {
-                          name: 'NO CUMPLIDO : <?php echo (100-($tabla[5][$this->session->userData('trimestre')]+round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2)));?> %',
+                          name: 'NO CUMPLIDO : <?php echo $no_cumplido;?> %',
                           y: <?php echo $tabla[6][$this->session->userData('trimestre')];?>,
                           color: '#f98178',
                         },
 
                         {
-                          name: 'EN PROCESO : <?php echo round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2);?> %',
-                          y: <?php echo round(($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100,2);?>,
+                          name: 'EN PROCESO : <?php echo $en_proceso;?> %',
+                          y: <?php echo $tabla[6][$this->session->userData('trimestre')];?>,
                           color: '#f5eea3',
                         },
 
