@@ -66,6 +66,36 @@ class Model_evalunidad extends CI_Model{
         return $query->result_array();
     }
 
+    /// Verif Operaciones al trimestre por unidad
+    public function nro_operaciones_programadas_acumulado($proy_id,$trimestre){
+        if($trimestre==1){
+            $vf=3;
+        }
+        elseif($trimestre==2){
+            $vf=6;   
+        }
+        elseif($trimestre==3){
+            $vf=9;   
+        }
+        elseif($trimestre==4){
+            $vf=12;   
+        }
+
+        $sql = 'select c.proy_id,count(*) total
+                from vista_componentes_dictamen c
+                Inner Join _productos as prod On prod.com_id=c.com_id
+                Inner Join (
+                        select prod_id
+                        from prod_programado_mensual
+                        where g_id='.$this->gestion.' and (m_id>=\'0\' and m_id<='.$vf.') and pg_fis!=\'0\'
+                        group by prod_id
+                    ) as pprog On pprog.prod_id=prod.prod_id
+                where c.proy_id='.$proy_id.' and prod.estado!=\'3\'
+                group by c.proy_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*----- SUMA TEMPORALIDAD PROGRAMADAS POR TRIMESTRE ----------------------*/
     public function suma_operaciones_programadas($proy_id,$trimestre){
         if($trimestre==1){

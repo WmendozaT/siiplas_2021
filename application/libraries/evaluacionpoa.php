@@ -791,12 +791,14 @@ class Evaluacionpoa extends CI_Controller{
 
       $nro_1=0;$nro_2=0;$nro_3=0;$nro_4=0;
       foreach($unidades as $row){
-        $eval=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
-        $eficacia=$eval[5][$this->tmes];
-        if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
-        if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
-        if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
-        if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+        if(count($this->model_evalunidad->nro_operaciones_programadas_acumulado($row['proy_id'],$this->tmes))!=0){
+          $eval=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
+          $eficacia=$eval[5][$this->tmes];
+          if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+          if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
+          if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
+          if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+        }
       }
 
       for ($i=1; $i <=4 ; $i++) { 
@@ -805,6 +807,7 @@ class Evaluacionpoa extends CI_Controller{
 
       return $par;
     }
+
 
     /*---- matriz parametros de eficacia Regional ----*/
     public function matriz_eficacia_regional($dep_id){
@@ -819,13 +822,14 @@ class Evaluacionpoa extends CI_Controller{
 
       $nro_1=0;$nro_2=0;$nro_3=0;$nro_4=0;
       foreach($distritales as $row){
-        $eval=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
-        //$eval=$this->tabla_regresion_lineal_distrital($row['dist_id']); /// Eficacia
-        $eficacia=$eval[5][$this->tmes];
-        if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
-        if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
-        if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
-        if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+        if(count($this->model_evalunidad->nro_operaciones_programadas_acumulado($row['proy_id'],$this->tmes))!=0){
+          $eval=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
+          $eficacia=$eval[5][$this->tmes];
+          if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+          if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
+          if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
+          if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+        }
       }
 
       for ($i=1; $i <=4 ; $i++) { 
@@ -834,11 +838,6 @@ class Evaluacionpoa extends CI_Controller{
 
       return $par;
     }
-
-
-
-
-
 
 
     /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE -------*/
