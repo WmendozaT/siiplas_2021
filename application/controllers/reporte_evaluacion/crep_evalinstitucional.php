@@ -40,6 +40,7 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
         $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
         $data['regional']=$this->evaluacionpoa->regionales();
+
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_menu', $data);
       }
       else{
