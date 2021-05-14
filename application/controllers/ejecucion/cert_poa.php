@@ -484,6 +484,7 @@ class Cert_poa extends CI_Controller {
       }
     }
 
+
     /*----- VALIDA MODIFICACIÓN CPOA 2020 (En uso) -----*/
     public function valida_anulacion_certpoa(){
       if ($this->input->post()) {

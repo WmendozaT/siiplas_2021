@@ -73,6 +73,7 @@ class Ccertificacion_poa extends CI_Controller {
   public function list_items_cert($prod_id){
     $data['datos']=$this->model_certificacion->get_datos_unidad_prod($prod_id);
     if(count($data['datos'])!=0){
+        $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
         $data['menu']=$this->certificacionpoa->menu(4);
         $data['resp']=$this->session->userdata('funcionario');
         $data['res_dep']=$this->certificacionpoa->tp_resp();
@@ -264,60 +265,60 @@ class Ccertificacion_poa extends CI_Controller {
       $cpoa=$this->model_certificacion->get_certificacion_poa($cert_anulado[0]['cpoa_id']); /// Datos de la Certificación POA
       $cite_mod_req = $this->model_modrequerimiento->get_cite_insumo($cert_anulado[0]['cite_id']); // Datos Cite Modificación de requerimiento
 
-          $this->delete_certificacion_item($cert_anulado[0]['cpoa_id']); // Eliminando anterior Registro Certificación POA
-          if (!empty($_POST["ins"]) && is_array($_POST["ins"])) {
-            foreach ( array_keys($_POST["ins"]) as $como){
+        $this->delete_certificacion_item($cert_anulado[0]['cpoa_id']); // Eliminando anterior Registro Certificación POA
+        if (!empty($_POST["ins"]) && is_array($_POST["ins"])) {
+          foreach ( array_keys($_POST["ins"]) as $como){
 
-            /*--- verifica el numero de meses Certificados ---*/
-            $nro_mes=0;
-            for ($i=1; $i <=12 ; $i++) {
-              if(!empty($_POST["ipm".$i."".$_POST["ins"][$como]])){
-                
-                if(count($this->model_certificacion->get_mes_certificado($_POST["ipm".$i."".$_POST["ins"][$como]]))==0){
-                  $nro_mes++;
-                }
-              } 
-            }
-            /*------------------------------------------------*/
-
-            /*---------- GUARDANDO ITEMS CERTIFICADOS ---------*/
-              if($nro_mes!=0){
-
-                $data_to_store = array( 
-                  'cpoa_id' => $cert_anulado[0]['cpoa_id'],
-                  'ins_id' => $_POST["ins"][$como],
-                  'fun_id' => $this->fun_id,
-                );
-                $this->db->insert('certificacionpoadetalle', $data_to_store);
-                $cpoad_id=$this->db->insert_id();
-
-                for ($i=1; $i <=12 ; $i++) {
-                  if(!empty($_POST["ipm".$i."".$_POST["ins"][$como]])){
-
-                    if(count($this->model_certificacion->get_mes_certificado($_POST["ipm".$i."".$_POST["ins"][$como]]))==0){
-                      /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
-                      $data_to_store = array(
-                        'cpoad_id' => $cpoad_id,
-                        'tins_id' => $_POST["ipm".$i."".$_POST["ins"][$como]],
-                      );
-                      $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
-                      /*--------------------------------------------*/
-                    }
-                  } 
-                }
+          /*--- verifica el numero de meses Certificados ---*/
+          $nro_mes=0;
+          for ($i=1; $i <=12 ; $i++) {
+            if(!empty($_POST["ipm".$i."".$_POST["ins"][$como]])){
+              
+              if(count($this->model_certificacion->get_mes_certificado($_POST["ipm".$i."".$_POST["ins"][$como]]))==0){
+                $nro_mes++;
               }
-            /*-----------------------------------------------*/
-            }
+            } 
+          }
+          /*------------------------------------------------*/
 
-            if(count($this->model_modrequerimiento->list_requerimientos_modificados($cite_mod_req[0]['cite_id']))!=0){
-              $this->genera_codigo_modreq($cite_mod_req,$cert_anulado[0]['justificacion']);
+          /*---------- GUARDANDO ITEMS CERTIFICADOS ---------*/
+            if($nro_mes!=0){
+
+              $data_to_store = array( 
+                'cpoa_id' => $cert_anulado[0]['cpoa_id'],
+                'ins_id' => $_POST["ins"][$como],
+                'fun_id' => $this->fun_id,
+              );
+              $this->db->insert('certificacionpoadetalle', $data_to_store);
+              $cpoad_id=$this->db->insert_id();
+
+              for ($i=1; $i <=12 ; $i++) {
+                if(!empty($_POST["ipm".$i."".$_POST["ins"][$como]])){
+
+                  if(count($this->model_certificacion->get_mes_certificado($_POST["ipm".$i."".$_POST["ins"][$como]]))==0){
+                    /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
+                    $data_to_store = array(
+                      'cpoad_id' => $cpoad_id,
+                      'tins_id' => $_POST["ipm".$i."".$_POST["ins"][$como]],
+                    );
+                    $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
+                    /*--------------------------------------------*/
+                  }
+                } 
+              }
             }
-            
-            redirect('cert/ver_cpoa/'.$cert_anulado[0]['cpoa_id'].'');
+          /*-----------------------------------------------*/
           }
-          else{
-            redirect('ejec/menu_cpoa'); /// Error al Reformular
+
+          if(count($this->model_modrequerimiento->list_requerimientos_modificados($cite_mod_req[0]['cite_id']))!=0){
+            $this->genera_codigo_modreq($cite_mod_req,$cert_anulado[0]['justificacion']);
           }
+          
+          redirect('cert/ver_cpoa/'.$cert_anulado[0]['cpoa_id'].'');
+        }
+        else{
+          redirect('ejec/menu_cpoa'); /// Error al Reformular
+        }
     }
     else{
       redirect('ejec/menu_cpoa'); /// Error al Reformular
@@ -499,12 +500,12 @@ class Ccertificacion_poa extends CI_Controller {
     }
 
 
-    /*-------- EDICION DE CERTIFICACIÓN POA 2020 -------*/
+    /*-------- FORMULARIO EDICION DE CERTIFICACIÓN POA 2020 -------*/
     public function modificar_cpoa($cpoaa_id){
       $data['cert_editado']=$this->model_certificacion->get_cert_poa_editado($cpoaa_id);
       if(count($data['cert_editado'])!=0 & $data['cert_editado'][0]['cpoa_estado']!=3){
         $cpoa=$this->model_certificacion->get_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
-
+          $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
           $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cert_editado'][0]['prod_id']); /// Datos completos de la Unidad/ Proyectos de Inversión
           $data['menu']=$this->certificacionpoa->menu(4);
           $data['resp']=$this->session->userdata('funcionario');
@@ -513,6 +514,12 @@ class Ccertificacion_poa extends CI_Controller {
           $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_certificados($data['cert_editado'][0]['cpoa_id']); /// Lista de Items Certificados
           $data['nro_cert'] = count($this->model_certificacion->lista_items_certificados($data['cert_editado'][0]['cpoa_id'])); // Nro de Items Certificados
           $data['nro_meses'] = $this->model_certificacion->get_nro_mes_certificado_cpoa($data['cert_editado'][0]['cpoa_id']); // Nro de Meses
+          
+          $data['display']='';
+          if($data['nro_cert']==0){
+            $data['display']='style="display: none"';
+          }
+
           $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/form_items_edit_cert', $data);
       }
       else{

@@ -216,6 +216,16 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*----- GET REQUERIMIENTO CERTIFICADO  ----*/
+    public function get_item_certificados($ins_id,$cpoa_id){
+        $sql = 'select *
+                from vrequerimiento_certificado
+                where ins_id='.$ins_id.' and cpoa_id='.$cpoa_id.'';
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
     /*----- LISTA DE ITEMS CERTIFICADOS PARA REPORTE FINAL (ELIMINADOS) ----*/
     public function lista_items_certificados_anulados($cpoa_id){
         $sql = 'select *
@@ -420,7 +430,7 @@ class Model_certificacion extends CI_Model{
     
     /*========= CERTIFICACION ANULADO =========*/
     public function certificado_anulado($cpoa_id){
-        $sql = 'select ca.*, cp.proy_id,cp.aper_id,cp.com_id,f.*
+        $sql = 'select ca.*, cp.proy_id,cp.aper_id,cp.com_id,f.*,cp.sol_id
                 from certificacionpoa_anulado ca
                 Inner Join certificacionpoa as cp On cp.cpoa_id=ca.cpoa_id
                 Inner Join funcionario as f On f.fun_id=ca.fun_id
@@ -432,7 +442,7 @@ class Model_certificacion extends CI_Model{
 
     /*----- GET DATOS CERTIFICADO A EDITAR CON ID ANULADO ----*/
     public function get_cert_poa_editado($cpoaa_id){
-        $sql = 'select ca.cpoaa_id,ca.cite as cite_cert_mod, ca.justificacion,ca.cpoa_id,ca.tp_anulado,cp.proy_id,cp.cpoa_codigo,cp.cpoa_gestion,cp.cpoa_estado,cp.aper_id,cp.com_id,cp.cpoa_cite,cp.cite_fecha,cp.prod_id,mod.cite_id
+        $sql = 'select ca.cpoaa_id,ca.cite as cite_cert_mod, ca.justificacion,ca.cpoa_id,ca.tp_anulado,cp.proy_id,cp.cpoa_codigo,cp.cpoa_gestion,cp.cpoa_estado,cp.aper_id,cp.com_id,cp.cpoa_cite,cp.cite_fecha,cp.prod_id,mod.cite_id,cp.sol_id
                 from certificacionpoa_anulado ca
                 Inner Join certificacionpoa as cp On cp.cpoa_id=ca.cpoa_id
                 Inner Join cite_mod_requerimientos as mod On mod.cpoaa_id=ca.cpoaa_id
@@ -444,7 +454,7 @@ class Model_certificacion extends CI_Model{
 
     /*----- GET DATOS CERTIFICADO A EDITAR CON ID DE LA CERTIFICACION POA  ----*/
     public function get_certpoa_vigente_modificado($cpoa_id){
-        $sql = 'select ca.cpoaa_id,ca.cite as cite_cert_mod, ca.justificacion,ca.cpoa_id,ca.tp_anulado,cp.proy_id,cp.cpoa_codigo,cp.cpoa_gestion,cp.cpoa_estado,cp.aper_id,cp.com_id,cp.cpoa_cite,cp.cite_fecha,cp.prod_id,mod.cite_id
+        $sql = 'select ca.cpoaa_id,ca.cite as cite_cert_mod, ca.justificacion,ca.cpoa_id,ca.tp_anulado,cp.proy_id,cp.cpoa_codigo,cp.cpoa_gestion,cp.cpoa_estado,cp.aper_id,cp.com_id,cp.cpoa_cite,cp.cite_fecha,cp.prod_id,mod.cite_id,cp.sol_id
                 from certificacionpoa_anulado ca
                 Inner Join certificacionpoa as cp On cp.cpoa_id=ca.cpoa_id
                 Inner Join cite_mod_requerimientos as mod On mod.cpoaa_id=ca.cpoaa_id

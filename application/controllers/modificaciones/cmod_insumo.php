@@ -743,7 +743,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-    /*----- VALIDA DATOS DEL REQUERIMIENTO CERTIFICADO (2020) -----*/
+    /*--- VALIDA DATOS DEL REQUERIMIENTO CERTIFICADO (2020) ---*/
     public function valida_update_insumo_cpoa(){
       if ($this->input->post()) {
           $post = $this->input->post();
@@ -830,7 +830,6 @@ class Cmod_insumo extends CI_Controller {
           else{
             echo "Error al Copiar Datos ...";
           }
-
 
       } else {
           show_404();

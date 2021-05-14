@@ -645,3 +645,467 @@
       });
 
     }
+
+
+    //// Valida formulario de Modificacion POA
+      $(function () {
+          $(".mod_ins").on("click", function (e) {
+            ins_id = $(this).attr('name');
+            document.getElementById("ins_id").value=ins_id;
+            cpoaa_id=document.getElementById("cpoaa_id").value;
+
+            var url = base+"index.php/ejecucion/cert_poa/get_requerimiento_cert";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "ins_id="+ins_id+"&cpoaa_id="+cpoaa_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+            if (response.respuesta == 'correcto') {
+              if(response.verif_cert==1){
+               
+                $( "#detalle" ).prop( "disabled", true );
+                $( "#umedida" ).prop( "disabled", true );
+              }
+              else{
+            
+                $( "#detalle" ).prop( "disabled", false );
+                $( "#umedida" ).prop( "disabled", false );
+              }
+
+               document.getElementById("saldo").value = parseFloat(response.monto_saldo).toFixed(2);
+               document.getElementById("sal").value = parseFloat(response.monto_saldo).toFixed(2);
+               document.getElementById("monto_dif").value = parseFloat(response.saldo_dif).toFixed(2);
+               document.getElementById("detalle").value = response.insumo[0]['ins_detalle'];
+               document.getElementById("cantidad").value = response.insumo[0]['ins_cant_requerida'];
+               document.getElementById("costou").value = parseFloat(response.insumo[0]['ins_costo_unitario']).toFixed(2);
+               document.getElementById("costot").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
+               document.getElementById("costot2").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
+               document.getElementById("umedida").value = response.insumo[0]['ins_unidad_medida'];
+               document.getElementById("mtot").value = response.prog[0]['programado_total'];
+               document.getElementById("monto_cert").value = response.monto_certificado;
+               $('#monto').html('<span class="label bg-color-blueDark pull-right" style="color: #fff;">MONTO YA CERTIFICADO : '+response.monto_certificado+' Bs. &nbsp;&nbsp;| &nbsp;&nbsp; MONTO SELECCIONADO : '+response.monto_certificado_item+' Bs.</span>');
+              // $('#mbut').slideDown();
+
+               if(response.prog[0]['programado_total']!=response.insumo[0]['ins_costo_total']){
+                $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
+                $('#mbut').slideUp();
+               }
+
+               for (var i = 1; i <=12; i++) {
+                mes=mes_texto(i);
+               
+                document.getElementById("mm"+i).value = response.prog[0]['mes'+i];
+             
+                if(response.verif_mes['verf_mes'+i]==1){
+                  document.getElementById("mm"+i).disabled = true;
+                  $('#mess'+i).html('<font color=red><b>'+mes+'</b> (Ya Certificado)</font>');
+                }
+                else{
+                  if(response.verif_mes['verf_mes'+i]==2){
+                    $('#mess'+i).html('<font color=blue><b>'+mes+'</b> (Editable)</font>');
+                  }
+                  else{
+                    $('#mess'+i).html('<b>'+mes+'</b> (Editable)');
+                  }
+                  document.getElementById("mm"+i).disabled = false;
+                }
+               }
+
+               if(response.monto_certificado==response.prog[0]['programado_total']){
+                $('#titulo_req').html('<center><h2 class="alert alert-danger">REQUERIMIENTO CERTIFICADO</h2></center>');
+                $('#mbut').slideUp();
+               }
+               else{
+                $('#titulo_req').html('<center><h2 class="alert alert-info">MODIFICAR REQUERIMIENTO</h2></center>');
+                $('#mbut').slideDown();
+               }
+
+              if(response.prog[0]['programado_total']>response.monto_saldo){
+                $('#amtit').html('<center><div class="alert alert-danger alert-block">COSTO TOTAL ES MAYOR AL SALDO, VERIFIQUE MONTOS</div></center>');
+                $('#mbut').slideUp();
+              }
+              else{
+                  if(response.monto_certificado==response.prog[0]['programado_total']){
+                      $('#titulo_req').html('<center><h2 class="alert alert-danger">REQUERIMIENTO CERTIFICADO</h2></center>');
+                      $('#mbut').slideUp();
+                  }
+                  else{
+                    $('#amtit').html('');
+                    $('#mbut').slideDown();
+                  }
+              }
+            }
+            else{
+                alertify.error("ERROR AL RECUPERAR DATOS DEL REQUERIMIENTO");
+            }
+
+            });
+            request.fail(function (jqXHR, textStatus, thrown) {
+                console.log("ERROR: " + textStatus);
+            });
+            request.always(function () {
+                //console.log("termino la ejecuicion de ajax");
+            });
+            e.preventDefault();
+            // =======VALIDAR EL FORMULARIO DE MODIFICACION
+            $("#subir_mins").on("click", function (e) {
+                var $validator = $("#form_mod").validate({
+                     rules: {
+                      ins_id: { //// Insumo
+                      required: true,
+                      },
+                      detalle: { //// Detalle
+                          required: true,
+                      },
+                      umedida: { //// unidad medida
+                          required: true,
+                      }
+                    },
+                    messages: {
+                        detalle: "<font color=red>REGISTRE DETALLE DEL REQUERIMIENTO</font>", 
+                        umedida: "<font color=red>REGISTRE UNIDAD DE MEDIDA</font>",                    
+                    },
+                    highlight: function (element) {
+                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    unhighlight: function (element) {
+                        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                    },
+                    errorElement: 'span',
+                    errorClass: 'help-block',
+                    errorPlacement: function (error, element) {
+                        if (element.parent('.input-group').length) {
+                            error.insertAfter(element.parent());
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                  });
+                  var $valid = $("#form_mod").valid();
+                  if (!$valid) {
+                      $validator.focusInvalid();
+                  } else {
+                    saldo=document.getElementById("sal").value;
+                    programado=document.getElementById("mtot").value;
+                    dif=saldo-programado;
+              
+                    if(dif>=0){
+                        alertify.confirm("MODIFICAR DATO DEL REQUERIMIENTO ?", function (a) {
+                            if (a) {
+                                document.getElementById("loadm").style.display = 'block';
+                                document.forms['form_mod'].submit();
+                                document.getElementById("mbut").style.display = 'none';
+
+                            } else {
+                                alertify.error("OPCI\u00D3N CANCELADA");
+                            }
+                        });
+                    }
+                    else{
+                      $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO, VERIFIQUE DATOS</div></center>');
+                      alertify.error("EL MONTO PROGRAMADO NO PUEDE SER MAYO AL MONTO SALDO DE LA OPERACIÓN, VERIFIQUE MONTOS");
+                    }
+                  }
+              });
+          });
+      });
+  
+      function suma_programado_modificado(){ 
+        sum=0;
+        for (var i = 1; i <=12; i++) {
+          sum=parseFloat(sum)+parseFloat($('[name="mm'+i+'"]').val());
+        }
+
+        $('[name="mtot"]').val((sum).toFixed(2));
+        programado = parseFloat($('[name="mtot"]').val()); //// programado total
+        ctotal = parseFloat($('[name="costot"]').val()); //// Costo Total
+        saldo = parseFloat($('[name="sal"]').val()); //// saldo
+
+        if(programado!=ctotal){
+          $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO, VERIFIQUE DATOS</div></center>');
+              $('#mbut').slideUp();
+        }
+        else{
+          if(ctotal>saldo){
+            $('#amtit').html('<center><div class="alert alert-danger alert-block">COSTO TOTAL SUPERA AL SALDO DE LA PARTIDA, VERIFIQUE MONTOS</div></center>');
+                $('#mbut').slideUp();
+          }
+          else{
+            $('#amtit').html('');
+            $('#mbut').slideDown();
+          }
+        }
+      }
+
+       function seleccionar_temporalidad_edit(tins_id,cpoa_id,ins_id,nro,estaChequeado){
+
+          if (estaChequeado == true) {
+          //  val = val + 1;
+            document.getElementById("tr"+nro).style.backgroundColor = "#f2fded";
+          //  mes = parseFloat($('[name="tot_temp"]').val());
+            total = parseFloat($('[name="tot_temp"]').val());
+            $('[name="tot_temp"]').val((total+1).toFixed(0));
+            total = parseFloat($('[name="tot_temp"]').val());
+            if(total==0){
+              $('#but').slideUp();
+            }
+            else{
+              $('#but').slideDown();
+            }
+          }
+
+          else {
+            $('[name="tot_temp"]').val(($('[name="tot_temp"]').val()-1).toFixed(0));
+            var url = base+"index.php/ejecucion/ccertificacion_poa/get_programado_temporalidad";
+            var request;
+            if (request) {
+              request.abort();
+            }
+            request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "ins_id="+ins_id+"&cpoa_id="+cpoa_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                var nro_check=0;
+                  for (var i = 1; i <=12; i++) {
+                    if(response.temporalidad['verf_mes'+i]!=3 & response.temporalidad['verf_mes'+i]!=2){
+                      if((document.getElementById("ipmm"+i+""+ins_id).checked) == true){
+                        nro_check=nro_check+1;
+                      }
+                    }
+                  }
+
+                  if(nro_check==0){
+                    document.getElementById("tr"+nro).style.backgroundColor = "#f59787";
+                  }
+              }
+              else{
+                alertify.error("ERROR AL RECUPERAR DATOS DE TEMPORALIDAD");
+              }
+            }); 
+          }
+
+          fila = parseFloat($('[name="tot"]').val());
+          mes = parseFloat($('[name="tot_temp"]').val());
+          if(fila!=0 && mes!=0){
+            $('#but').slideDown();
+          }
+          else{
+            $('#but').slideUp();
+          }
+          
+        }
+
+
+        function seleccionarFila_edit(ins_id,nro,cpoa_id,estaChequeado) {
+          if (estaChequeado == true) { 
+            for (var i = 1; i <=12; i++) {
+              document.getElementById("m"+i+""+ins_id).style.display='block';
+            }
+            var url = base+"index.php/ejecucion/ccertificacion_poa/get_programado_temporalidad";
+            var request;
+            if (request) {
+              request.abort();
+            }
+            request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "ins_id="+ins_id+"&cpoa_id="+cpoa_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                  if(response.verif_cert==1){
+                    document.getElementById("tr"+nro).style.backgroundColor = "#f2fded";
+                  }
+              }
+              else{
+                alertify.error("ERROR AL RECUPERAR DATOS DE TEMPORALIDAD");
+              }
+            }); 
+          } 
+          else {
+        
+            for (var i = 1; i <=12; i++) {
+              document.getElementById("m"+i+""+ins_id).style.display='none';
+             // document.getElementById("ipmm"+i+""+ins_id).style.checked='false';
+             // $('input.checkbox').prop('checked',false);
+            }
+
+            var url = base+"index.php/ejecucion/ccertificacion_poa/get_programado_temporalidad";
+            var request;
+            if (request) {
+              request.abort();
+            }
+            request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "ins_id="+ins_id+"&cpoa_id="+cpoa_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                if(response.verif_cert==0){
+                  val = parseInt($('[name="tot_temp"]').val());
+                  for (var i = 1; i <=12; i++) {
+                    if(response.temporalidad['verf_mes'+i]==0 & response.temporalidad['verf_mes'+i]!=3 & response.temporalidad['verf_mes'+i]!=2){
+                      if((document.getElementById("ipmm"+i+""+ins_id).checked) == true){
+                    
+                        document.getElementById("ipmm"+i+""+ins_id).checked = false;
+                        val = val - 1;
+                  
+                        $('[name="tot_temp"]').val((val).toFixed(0));
+                        total = parseFloat($('[name="tot_temp"]').val());
+                       // total = parseFloat($('[name="tot_temp"]').val());
+                      
+                        if(total==0){
+                          $('#but').slideUp();
+                        }
+                        else{
+                          $('#but').slideDown();
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              else{
+                alertify.error("ERROR AL RECUPERAR DATOS DE TEMPORALIDAD");
+              }
+            }); 
+
+          }
+
+          val = parseInt($('[name="tot"]').val());
+          if (estaChequeado == true) {
+            val = val + 1;
+            document.getElementById("tr"+nro).style.backgroundColor = "#f5c9c2";
+          } else {
+            val = val - 1;
+            document.getElementById("tr"+nro).style.backgroundColor = "#f59787";
+          }
+          $('[name="tot"]').val((val).toFixed(0));
+
+          fila = parseFloat($('[name="tot"]').val());
+          mes = parseFloat($('[name="tot_temp"]').val());
+          if(fila!=0 && mes!=0){
+            $('#but').slideDown();
+          }
+          else{
+            $('#but').slideUp();
+          }
+        }
+
+      
+      $(function () {
+        $("#btsubmit_edit").on("click", function (e) {
+          var $validator = $("#cert_form").validate({
+              rules: {
+                cite_cpoa: {
+                    required: true,
+                },
+                rec: {
+                    required: true,
+                },
+                cite_fecha: {
+                    required: true,
+                }
+              },
+              messages: {
+                cite_cpoa: {required: "<font color=red size=1>REGISTRE NRO. DE CITE</font>"},
+                rec: {required: "<font color=red size=1>REGISTRE RECOMENDACI&Oacute;N</font>"},
+                cite_fecha: {required: "<font color=red size=1>REGISTRE FECHA CITE</font>"}
+              },
+              highlight: function (element) {
+                  $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+              },
+              unhighlight: function (element) {
+                  $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+              },
+              errorElement: 'span',
+              errorClass: 'help-block',
+              errorPlacement: function (error, element) {
+                  if (element.parent('.input-group').length) {
+                      error.insertAfter(element.parent());
+                  } else {
+                      error.insertAfter(element);
+                  }
+              }
+          });
+          var $valid = $("#cert_form").valid();
+          if (!$valid) {
+              $validator.focusInvalid();
+          } 
+          else {
+            reset();
+              alertify.confirm("GENERAR EDICIÓN DE CERTIFICACI&Oacute;N POA sss?", function (a) {
+                  if (a) {
+                      //document.getElementById('btsubmit').disabled = true;
+                      document.cert_form.submit();
+                      document.getElementById("load").style.display = 'block';
+                     document.getElementById("but").style.display = 'none';
+                  } else {
+                      alertify.error("OPCI\u00D3N CANCELADA");
+                  }
+              });
+          }
+      });
+    });
+
+    function mes_texto(mes){
+      switch (mes) {
+          case 1:
+              texto = 'ENERO';
+              break;
+          case 2:
+              texto = 'FEBRERO';
+              break;
+          case 3:
+              texto = 'MARZO';
+              break;
+          case 4:
+              texto = 'ABRIL';
+              break;
+          case 5:
+              texto = 'MAYO';
+              break;
+          case 6:
+              texto = 'JUNIO';
+              break;
+          case 7:
+              texto = 'JULIO';
+              break;
+          case 8:
+              texto = 'AGOSTO';
+              break;
+          case 9:
+              texto = 'SEPTIEMBRE';
+              break;
+          case 10:
+              texto = 'OCTUBRE';
+              break;
+          case 11:
+              texto = 'NOVIEMBRE';
+              break;
+          case 12:
+              texto = 'DICIEMBRE';
+              break;
+          default:
+              texto = 'SIN REGISTRO';
+              break;
+      }
+      return texto;
+    }

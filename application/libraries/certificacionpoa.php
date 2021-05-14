@@ -480,14 +480,37 @@ class Certificacionpoa extends CI_Controller{
     
  /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION) ------*/
   public function list_requerimientos_certificados($cpoa_id){
-    $tabla='';
+    $tabla='<style>
+            table{font-size: 9.5px;
+            width: 100%;
+            max-width:1550px;
+            overflow-x: scroll;
+            font-family: Copperplate;
+            }
+            th{
+              padding: 1.4px;
+              text-align: center;
+              font-size: 9.5px;
+            }
+            input[type="checkbox"] {
+              display:inline-block;
+              width:20px;
+              height:20px;
+              margin:-1px 6px 0 0;
+              vertical-align:middle;
+              cursor:pointer;
+            }
+            #mdialTamanio{
+              width: 70% !important;
+            }
+          </style>';
     $requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
 
     $tabla.='
       <table class="table table-bordered" style="width:97%;" align="center" id="datos">
         <thead >
           <tr>
-            <th style="width:1%;">#</th>
+            <th style="width:1%;">'.$cpoa_id.'</th>
             <th style="width:2%;"></th>
             <th style="width:2%;"></th>
             <th style="width:4%;">PARTIDA</th>
@@ -515,9 +538,14 @@ class Certificacionpoa extends CI_Controller{
         $nro=0;
         foreach($requerimientos as $row){
           $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-          $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
-          if(count($mcertificado)!=0){
-            $monto_certificado=$mcertificado[0]['certificado'];
+        //  $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
+          $get_item_cert=$this->model_certificacion->get_item_certificados($row['ins_id'],$cpoa_id);
+          $display='style="display: none"';
+          $check='';
+          if(count($get_item_cert)!=0){
+            $display='';
+            $check='checked="checked"';
+            $monto_certificado=$get_item_cert[0]['monto_certificado'];
           }
 
           $bgcolor='#f2fded';
@@ -530,7 +558,7 @@ class Certificacionpoa extends CI_Controller{
           <tr bgcolor='.$bgcolor.' title='.$row['ins_id'].' id="tr'.$nro.'" >
             <td>'.$nro.'</td>
             <td>
-              <input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila(this.value,'.$nro.','.$cpoa_id.',this.checked);" checked="checked"/><br>
+              <input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila_edit(this.value,'.$nro.','.$cpoa_id.',this.checked);" '.$check.'/><br>
               <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
             </td>
             <td>
@@ -551,13 +579,13 @@ class Certificacionpoa extends CI_Controller{
                 <table align=right>
                   <tr>
                     <td>
-                      <div id="m'.$i.''.$row['ins_id'].'">';
+                      <div id="m'.$i.''.$row['ins_id'].'" '.$display.'>';
                       if(count($m)!=0){
                         if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
-                          $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" id="ipmm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value,'.$cpoa_id.','.$row['ins_id'].','.$nro.',this.checked);"/>';
+                          $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" id="ipmm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad_edit(this.value,'.$cpoa_id.','.$row['ins_id'].','.$nro.',this.checked);"/>';
                         }
                         elseif(count($this->model_certificacion->get_mes_certificado_cpoa($cpoa_id,$m[0]['tins_id']))==1){
-                          $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" id="ipmm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value,'.$cpoa_id.','.$row['ins_id'].','.$nro.',this.checked);" checked="checked"/>';
+                          $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" id="ipmm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad_edit(this.value,'.$cpoa_id.','.$row['ins_id'].','.$nro.',this.checked);" checked="checked"/>';
                           $color='green';
                         }
                       }
