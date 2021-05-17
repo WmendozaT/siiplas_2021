@@ -24,25 +24,6 @@
         <!-- HEADER -->
         <header id="header">
             <div id="logo-group">
-              <!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-            </div>
-            <div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-              <span>
-                &nbsp;&nbsp;&nbsp; 
-                <div class="badge bg-color-blue">
-                  <span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-                </div>
-              </span>
-              <div class="project-context hidden-xs">
-                <span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-                  <i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-                </span>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-                  </li>
-                </ul>
-              </div>
             </div>
             <div class="pull-right">
                 <div id="hide-menu" class="btn-header pull-right">
@@ -98,7 +79,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Evaluaci&oacute;n POA</li><li>...</li><li>Mis Certificaciones POA</li><li>....</li><li>Ver Certificado POA</li>
+                    <li>Evaluaci&oacute;n POA</li><li>Mis Certificaciones POA</li><li>....</li><li>Ver Certificado POA</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -108,22 +89,19 @@
                     <div class="row">
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
                             <section id="widget-grid" class="well">
-                                <div class="">
-                                    <h1><b>RESPONSABLE : <?php echo $resp; ?> -> </b><small><?php echo $res_dep;?></small>
-                                </div>
+                                <?php echo $titulo;?>
                             </section>
                         </article>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                             <div class="well">
                                 <div class="btn-group btn-group-justified">
-                                    <a class="btn btn-default" href="<?php echo base_url();?>index.php/cert/form_items/<?php echo $cpoa[0]['prod_id'];?>" target="_blank" title="NUEVA CERTIFICACI&Oacute;N"><i class="fa fa-rotate-left"></i> NUEVA CERTIFICACI&Oacute;N</a>
-                                    <a class="btn btn-default" href="<?php echo base_url();?>index.php/ejec/menu_cpoa" title="SALIR"><i class="fa fa-caret-square-o-left"></i> SALIR</a>
+                                    <?php echo $opciones ?>
                                 </div>
                             </div>
                         </article>
                        
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <iframe id="ipdf" width="100%"  height="1000px;" src="<?php echo base_url().'index.php/cert/rep_cert_poa/'.$cpoa[0]['cpoa_id']; ?>"></iframe>
+                            <?php echo $cuerpo; ?>
                         </article>
                     </div>
                 </section>

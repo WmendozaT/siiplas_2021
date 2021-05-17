@@ -428,12 +428,42 @@ class Model_certificacion extends CI_Model{
 
     /*================= EDICION PARCIAL Y TOTAL DE LA CERTIFICACIÓN POA ================*/
     
+    /*========= DATOS DE EDICION Y MODIFICACION CERTIFICACION ANULADO =========*/
+    public function get_datos_certificado_anulado($cpoa_id){
+        $sql = 'select
+        ca.cpoa_id,
+        ca.cpoaa_id,
+        ca.cite as cite_edicion,
+        ca.justificacion as cite_justificacion,
+        ca.cpoa_codigo as codigo_cert_anterior,
+        ca.cpoa_fecha as fecha_cert_anterior,
+        ca.cpoa_recomendacion as recomendacion_anterior,
+        ca.fun_id as fun_id_certpoa,
+        ca.tp_anulado as tipo_edicion,
+        cp.proy_id,
+        cp.aper_id,
+        cp.com_id,
+        cp.sol_id,
+        cp.fun_id as fun_id_edicion,
+        mod.cite_id
+                from certificacionpoa_anulado ca
+                Inner Join certificacionpoa as cp On cp.cpoa_id=ca.cpoa_id
+                Inner Join cite_mod_requerimientos as mod On mod.cpoaa_id=ca.cpoaa_id
+                where ca.cpoa_id='.$cpoa_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
     /*========= CERTIFICACION ANULADO =========*/
     public function certificado_anulado($cpoa_id){
-        $sql = 'select ca.*, cp.proy_id,cp.aper_id,cp.com_id,f.*,cp.sol_id
+        $sql = 'select ca.*, cp.proy_id,cp.aper_id,cp.com_id,f.*,cp.sol_id,mod.*
                 from certificacionpoa_anulado ca
                 Inner Join certificacionpoa as cp On cp.cpoa_id=ca.cpoa_id
                 Inner Join funcionario as f On f.fun_id=ca.fun_id
+                Inner Join cite_mod_requerimientos as mod On mod.cpoaa_id=ca.cpoaa_id
                 where ca.cpoa_id='.$cpoa_id.'';
 
         $query = $this->db->query($sql);
