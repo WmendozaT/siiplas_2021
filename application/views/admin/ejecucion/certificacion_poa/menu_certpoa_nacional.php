@@ -138,7 +138,7 @@
         </div>
         <!-- ========================================================================================================= -->
         <!-- ===== EDITAR CERTIFICACION ===== -->
-        <div class="modal fade" id="modal_anular_cert" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="modal_anular_cert" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
 
@@ -182,13 +182,13 @@
         </div>
         <!-- =============================== -->
         <!-- ===== ELIMINAR CERIFICACION POA ===== -->
-        <div class="modal fade" id="modal_del_cert" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="modal_del_cert" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
 
                   <div class="modal-body">
                     <form action="<?php echo site_url().'/ejecucion/cert_poa/valida_eliminacion_certpoa'?>" id="form_delete" name="form_delete" class="form-horizontal" method="post">
-                        <input type="hidden" name="cpoa_id" id="cpoa_id">
+                        <input type="text" name="cpoa_id" id="cpoa_id">
                         <div id="titulo_del"></div>
                         <fieldset>
                             <div class="form-group">

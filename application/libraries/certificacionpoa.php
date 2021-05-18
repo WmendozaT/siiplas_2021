@@ -20,6 +20,7 @@ class Certificacionpoa extends CI_Controller{
             $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
             $this->load->model('menu_modelo');
             $this->load->library('security');
+
             $this->gestion = $this->session->userData('gestion');
             $this->adm = $this->session->userData('adm');
             //$this->rol = $this->session->userData('rol_id');
@@ -1095,19 +1096,6 @@ class Certificacionpoa extends CI_Controller{
  //// ======== CERTIFICACION POA ========
 /*-- CABECERA (Certificacion POa Aprobado) --*/
   public function cabecera_certpoa($certpoa,$codigo){
-/*    $codigo='SIN CÓDIGO (Contactese con el Dpto. Nal. de Planificación)';
-    if($certpoa[0]['cpoa_estado']!=0){
-      if($certpoa[0]['cpoa_estado']==2){
-        $cert_edit=$this->model_certificacion->get_datos_certificado_anulado($certpoa[0]['cpoa_id']);
-        $codigo=$cert_edit[0]['codigo_cert_anterior'];
-      }
-      else{
-        $codigo=$certpoa[0]['cpoa_codigo'];
-      }
-      
-    }*/
-
-
     $tabla='';
     $tabla.='
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
@@ -1344,17 +1332,11 @@ class Certificacionpoa extends CI_Controller{
   }
 
   
-  /*-- Detalle Requerimientos Certificados--*/
+  /*-- Detalle Requerimientos Certificados Final --*/
   public function items_certificados($cpoa_id){
     $tabla='';
     $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Certificacion
-      if($cpoa[0]['cpoa_estado']==3){
-        $requerimientos=$this->model_certificacion->lista_items_certificados_anulados($cpoa_id); /// lista de items certificados Eliminados
-      }
-      else{
-        $requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id); /// lista de items certificados  
-      }
-
+    $requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id); /// lista de items certificados  
     $tabla.='
         <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;" align=center>
           <thead>
@@ -1388,7 +1370,7 @@ class Certificacionpoa extends CI_Controller{
           </tbody>
             <tr>
               <td style="height: 3.5%;"></td>
-              <td colspan=4 align=right><b>PRESUPUESTO A CERTIFICAR : </b></td>
+              <td colspan=4 align=right><b>MONTO TOTAL CERTIFICADO : </b></td>
               <td style="font-size: 9px;" align=right><b>'.number_format($suma_monto, 2, ',', '.').'</b></td>
               <td></td>
             </tr>
@@ -1420,10 +1402,6 @@ class Certificacionpoa extends CI_Controller{
   public function pie_certificacion_poa($certpoa,$tp){
     /// tp : 1 (Normal), 2 (Editado)
     $tabla='';
-
-
-
-
 
     $tabla.='
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;">
@@ -1494,6 +1472,80 @@ class Certificacionpoa extends CI_Controller{
       </table>';
     return $tabla;
   }
+
+
+
+  /*-- Detalle Requerimientos Certificados Editados (son los originales antes de su modificacion) --*/
+  public function items_certificados_original_guardados($cpoa_id,$tp){
+    $tabla='';
+    $requerimientos=$this->model_certificacion->lista_items_certificados_anulados($cpoa_id); /// lista de items certificados Eliminados
+     /// Items guardados
+     $tit='MONTO TOTAL CERTIFICADO'; 
+    if($tp==0){
+      $tit='MONTO SOLICITADO A CERTIFICAR'; 
+    }
+
+    $tabla.='
+        <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;" align=center>
+          <thead>
+              <tr style="font-size: 8px; font-family: Arial;" align="center" bgcolor="#efefef">
+                <th style="width:3%;height: 4%;">N°</th>
+                <th style="width:7%;">PARTIDA</th>
+                <th style="width:35%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:15%;">UNIDAD DE MEDIDA</th>
+                <th style="width:15%;">PRECIO TOTAL</th>
+                <th style="width:15%;">PRESUPUESTO SOLICITADO</th>
+                <th style="width:19%;">TEMPORALIDAD SELECCIONADO</th>
+              </tr>
+          </thead>
+          <tbody>';
+            $nro=0;$suma_monto=0;
+            foreach($requerimientos as $row){
+              $nro++;
+              $suma_monto=$suma_monto+$row['monto_certificado'];
+              $tabla.='
+              <tr style="font-size: 8px; font-family: Arial;">
+                <td style="width:3%;height: 3.5%;" align=center>'.$nro.'</td>
+                <td style="width:7%;" align=center>'.$row['par_codigo'].'</td>
+                <td style="width:35%;">'.$row['ins_detalle'].'</td>
+                <td style="width:15%;">'.$row['ins_unidad_medida'].'</td>
+                <td style="width:15%;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>
+                <td style="width:15%;" align=right>'.number_format($row['monto_certificado'], 2, ',', '.').'</td>
+                <td style="width:19%;" align=center>'.$this->temporalidad_certificado_items_editados_original($row['cpoaad_id']).'</td>
+              </tr>';
+            }
+          $tabla.='
+          </tbody>
+            <tr>
+              <td style="height: 3.5%;"></td>
+              <td colspan=4 align=right><b>'.$tit.' : </b></td>
+              <td style="font-size: 9px;" align=right><b>'.number_format($suma_monto, 2, ',', '.').'</b></td>
+              <td></td>
+            </tr>
+        </table>';
+
+    return $tabla;
+  }
+
+  /*-- Temporalidad de items Certificado Editados Guardados--*/
+  public function temporalidad_certificado_items_editados_original($cpoaad_id){
+    $tabla='';
+    $temporalidad=$this->model_certificacion->get_meses_certificacion_items_editados_guardados($cpoaad_id);
+    $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:80%;" align=center>';
+        foreach($temporalidad as $row){
+          $tabla.='
+          <tr>
+            <td style="width:50%;height: 1%;" align=left>'.$row['m_descripcion'].' : </td>
+            <td style="width:50%;" align=left><b>'.number_format($row['ipma_fis'], 2, ',', '.').'</b></td>
+          </tr>';
+        }
+      $tabla.='
+      </table>';
+
+    return $tabla;
+  }
+
   /// ============================================================
 
 
@@ -1543,7 +1595,7 @@ class Certificacionpoa extends CI_Controller{
           </tbody>
             <tr>
               <td style="height: 3%;"></td>
-              <td colspan=6 align=right><b>MONTO A CERTIFICAR : </b></td>
+              <td colspan=6 align=right><b>MONTO SOLICITADO A CERTIFICAR : </b></td>
               <td style="font-size: 9px;" align=right><b>'.number_format($suma_monto, 2, ',', '.').'</b></td>
               <td></td>
             </tr>
@@ -1860,8 +1912,372 @@ class Certificacionpoa extends CI_Controller{
     return $tabla;
   }
 
+//// REPORTE MODIFICACION POA
+  //// Cabecera Modifcacion poa
+    public function cabecera_modpoa($cite){
+      $tabla='';
+      $codigo='Sin Codigo ... debbe cerra la modificación poa ';
+      if($cite[0]['cite_codigo']!=''){
+        $codigo=$cite[0]['cite_codigo'];
+      }
 
 
+      $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+              <td style="width:70%;height: 2%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 15px;font-family: Arial;">
+                          <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                      </tr>
+                      <tr>
+                          <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                      </tr>
+                  </table>
+              </td>
+              <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+                '.strtoupper($cite[0]['dist_distrital']).' '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%; height: 5%">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-size: 23px;font-family: Arial;">
+                            <td style="height: 30%;"><b>MODIFICACIÓN POA '.$this->gestion.' - REQUERIMIENTOS</b></td>
+                        </tr>
+                        <tr style="font-size: 20px;font-family: Arial;">
+                          <td style="height: 5%;">'.$codigo.'</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px;">              
+                <td style="width:50%;">
+                </td>
+                <td style="width:50%; height: 3%">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 15px;font-family: Arial;">
+                          <td colspan=2 align=center style="width:100%;height: 40%;"><b>FORMULARIO MOD. N° 8 </b></td>
+                      </tr>
+                      <tr style="font-size: 10px;font-family: Arial;">
+                          <td style="width:47%;height: 30%;"><b>CITE : '.$cite[0]['cite_nota'].'</b></td>
+                          <td style="width:47%;height: 30%"><b>FECHA : '.date('d-m-Y',strtotime($cite[0]['cite_fecha'])).'</b></td>
+                      </tr>
+                  </table>
+                </td>
+            </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 3%;">
+               
+                      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                        <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>REGIONAL / DEPARTAMENTO</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.strtoupper ($cite[0]['dep_departamento']).'</td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD EJECUTORA</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.strtoupper ($cite[0]['dist_distrital']).'</td></tr>
+                                </table>
+                            </td>
+                        </tr>';
+
+                          if($cite[0]['tp_id']==1){
+                            $tabla.='
+                            <tr>
+                              <td style="width:20%;">
+                                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>PROY. INVERSI&Oacute;N</b></td><td style="width:5%;"></td></tr>
+                                  </table>
+                              </td>
+                              <td style="width:80%;">
+                                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['proy_sisin'].' '.strtoupper ($cite[0]['proy_nombre']).'</td></tr>
+                                  </table>
+                              </td>
+                            </tr>
+                            <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESP.</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr>
+                                        <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>';
+                          }
+                          else{
+                            $tabla.='
+                            <tr>
+                              <td style="width:20%;">
+                                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                  </table>
+                              </td>
+                              <td style="width:80%;">
+                                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['aper_actividad'].' '.strtoupper ($cite[0]['act_descripcion']).' '.$cite[0]['abrev'].'</td></tr>
+                                  </table>
+                              </td>
+                            </tr>
+                            <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>SUBACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr>
+                                        <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>';
+                          }
+                        $tabla.='
+                    </table>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>';
+      return $tabla;
+    }
+
+
+  //// Lista de Items Modificados en la Edicion
+  public function items_modificados_edicionpoa($cite_id){
+    $tabla='';
+      $tabla.='
+      <table border=0 style="width:100%;">
+        <tr>
+          <td style="width:1%;"></td>
+          <td style="width:98%;">';
+
+            $requerimientos_mod = $this->model_modrequerimiento->list_requerimientos_modificados($cite_id);
+            if(count($requerimientos_mod)!=0){
+              $tabla.='<div style="font-size: 10px;height:16px;"><b>ITEMS MODIFICADOS ('.count($requerimientos_mod).')</b></div>';
+              $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
+              $tabla.='<thead>';
+              $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
+                $tabla.='<th style="width:1.3%;height:20px;">#</th>';
+                $tabla.='<th style="width:2.5%;">COD.<br>OPE.</th>';
+                $tabla.='<th style="width:3.5%;">PARTIDA</th>';
+                $tabla.='<th style="width:12%;">DETALLE REQUERIMIENTO</th>';
+                $tabla.='<th style="width:4%;">UNIDAD<br>MEDIDA</th>';
+                $tabla.='<th style="width:4.5%;">CANTIDAD</th>';
+                $tabla.='<th style="width:4.5%;">UNITARIO</th>';
+                $tabla.='<th style="width:6%;">COSTO TOTAL</th>';
+                $tabla.='<th style="width:4.5%;">ENE.</th>';
+                $tabla.='<th style="width:4.5%;">FEB.</th>';
+                $tabla.='<th style="width:4.5%;">MAR.</th>';
+                $tabla.='<th style="width:4.5%;">ABR.</th>';
+                $tabla.='<th style="width:4.5%;">MAY.</th>';
+                $tabla.='<th style="width:4.5%;">JUN.</th>';
+                $tabla.='<th style="width:4.5%;">JUL.</th>';
+                $tabla.='<th style="width:4.5%;">AGO.</th>';
+                $tabla.='<th style="width:4.5%;">SEPT.</th>';
+                $tabla.='<th style="width:4.5%;">OCT.</th>';
+                $tabla.='<th style="width:4.5%;">NOV.</th>';
+                $tabla.='<th style="width:4.5%;">DIC.</th>';
+                $tabla.='<th style="width:7.5%;">OBSERVACIONES</th>';
+              $tabla.='</tr>';
+              $tabla.='</thead>';
+              $tabla.='<tbody>';
+              $nro=0;
+              $monto=0;
+              foreach ($requerimientos_mod as $row){
+                $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                $nro++;
+                $tabla.='<tr class="modo1">';
+                  $tabla.='<td style="width: 1.3%; text-align: center;" style="height:16px;">'.$nro.'</td>';
+                  $tabla.='<td style="width: 2.5%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>';
+                  $tabla.='<td style="width: 3.5%; text-align: center;">'.$row['par_codigo'].'</td>';
+                  $tabla.='<td style="width: 12%; text-align: left;">'.$row['ins_detalle'].'</td>';
+                  $tabla.='<td style="width: 4%; text-align: left;">'.$row['ins_unidad_medida'].'</td>';
+                  $tabla.='<td style="width: 4.5%; text-align: right;">'.$row['ins_cant_requerida'].'</td>';
+                  $tabla.='<td style="width: 4.5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+                  $tabla.='<td style="width: 6%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                  if(count($prog)!=0){
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes1'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes2'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes3'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes4'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes5'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes6'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes7'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes8'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes9'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes10'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes11'], 2, ',', '.') . '</td>';
+                    $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes12'], 2, ',', '.') . '</td>';
+                  }
+                  else{
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+                  }
+                  $tabla.='<td style="width: 7.5%; text-align: left;">'.$row['ins_observacion'].'</td>';
+                $tabla.='</tr>';
+                $monto=$monto+$row['ins_costo_total'];
+              }
+              $tabla.='</tbody>
+                <tr class="modo1">
+                  <td style="height:10px;" colspan=7></td>
+                  <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
+                  <td colspan=13></td>
+                </tr>
+              </table><br>';
+            }
+          $tabla.='
+            <div style="font-size: 8px;font-family: Arial;">
+              En atención a requerimiento de su unidad, comunicamos a usted que se ha procedido a efectivizar la modificación solicitada, toda vez que:<br>
+
+              &nbsp;&nbsp;&nbsp;a)&nbsp;&nbsp;No compromete u obstaculiza el cumplimiento de los objetivos previstos en la gestión fiscal.<br>
+              &nbsp;&nbsp;&nbsp;b)&nbsp;&nbsp;No vulnera o contraviene disposiciones legales.<br>
+              &nbsp;&nbsp;&nbsp;c)&nbsp;&nbsp;No genera obligaciones o deudas por las modificaciones efectuadas.<br>
+              &nbsp;&nbsp;&nbsp;d)&nbsp;&nbsp;No compromete el pago de obligaciones previstas en el presupuesto.
+            </div>
+          </td>
+          <td style="width:1%;"></td>
+        </tr>
+      </table>';
+    
+    return $tabla;
+  }
+
+
+  //// Pie de Modificacion POA
+  public function pie_modpoa($cite,$codigo_certificacion){
+    $tabla='';
+    $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;">
+        <tr>
+          <td style="width: 1%;"></td>
+          <td style="width: 55%;">
+              <b>OBSERVACIÓN</b><hr>
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                <tr bgcolor="#cae4fb">
+                  <td style="width: 100%;height: 2%;">
+                    MODIFICACIÓN POS SEGUN NOTA CITE : '.$cite[0]['cite_nota'].' EN FECHA '.date('d-m-Y',strtotime($cite[0]['cite_fecha'])).' CON LA SIGUIENTE JUSTIFICACIÓN TECNICA : '.$cite[0]['cite_observacion'].', QUE CORRESPONDE A LA SIGUIENTE CERTIFICACIÓN POA <b>'.$codigo_certificacion.'</b>
+                  </td>
+                </tr>
+              </table>
+          </td>
+        </tr>
+      </table>
+      <hr>
+      <table border=0 style="width:100%;">
+        <tr>
+          <td style="width:1%;"></td>
+          <td style="width:98%;">
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <tr>
+                  <td style="width:45%;">
+                       <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr style="font-size: 10px;font-family: Arial;">
+                            <td style="width:100%;height:13px;"><b>ELABORADO POR<br></b></td>
+                        </tr>
+                       
+                        <tr style="font-size: 8.5px;font-family: Arial; height:65px;">
+                            <td><br><br><br>
+                                <table>
+                                    <tr style="font-size: 8px;font-family: Arial; height:65px;">
+                                        <td><b>RESPONSABLE : </b></td>
+                                        <td>'.$cite[0]['fun_nombre'].' '.$cite[0]['fun_paterno'].' '.$cite[0]['fun_materno'].'</td>
+                                    </tr>
+                                    <tr style="font-size: 8px;font-family: Arial; height:65px;">
+                                        <td><b>CARGO : </b></td>
+                                        <td>'.$cite[0]['fun_cargo'].'</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                  </td>
+                  <td style="width:45%;">
+
+                    <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr style="font-size: 10px;font-family: Arial;">
+                            <td style="width:100%;height:13px;"><b>FIRMA / SELLO DE RECEPCION DE LA UNIDAD SOLICITANTE (FECHA)<br></b></td>
+                        </tr>
+                       
+                        <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                            <td><b><br><br><br><br><br>FIRMA</b></td>
+                        </tr>
+                    </table>
+
+                  </td>
+                  <td style="width:10%;" align=center>
+                    <qrcode value="'.$cite[0]['cite_codigo'].' | '.$codigo_certificacion.'" style="border: none; width: 18mm;"></qrcode>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan=2 style="height:18px;">'.$this->session->userdata('sistema').'</td>
+                  <td align=right>'.$cite[0]['fun_paterno'].' - pag. [[page_cu]]/[[page_nb]]</td>
+                </tr>
+              </table>
+          </td>
+          <td style="width:1%;"></td>
+        </tr>
+      </table>';
+
+    return $tabla;
+  }
 
   /// Menu Seguimiento POA (Sub Actividad)
     public function menu_segpoa($com_id){

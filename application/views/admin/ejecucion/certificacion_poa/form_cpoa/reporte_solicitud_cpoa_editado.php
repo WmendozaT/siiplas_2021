@@ -30,8 +30,24 @@ ob_start();
     <?php
     }
 
+    if($verif_modificacion){ ?>
+    <page orientation="paysage"  backtop="75mm" backbottom="40mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+        <page_header>
+        <br><div class="verde"></div>
+            <?php echo $cabecera_modpoa; ?> 
+        </page_header>
+
+        <page_footer>
+         <?php echo $pie_mod;?>
+        </page_footer>
+        <?php echo $items_modificados;?>
+    </page>
+    <?php
+    }
+
+
     if($verif_certificacion_original){ ?>
-    <page backtop="115mm" backbottom="50mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+    <page orientation="portrait" backtop="115mm" backbottom="50mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
         <page_header>
         <br><div class="verde"></div>
             <?php echo $cabecera_cpoa_original; ?>
@@ -41,26 +57,12 @@ ob_start();
             <?php echo $pie_certpoa_original;?>
         </page_footer>
         <?php echo $items_certificados_original;?>
+        <br>
+        <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"  ><b>DOCUMENTO NO VALIDO PARA PROCESOS ADMINISTRATIVOS !!!</b></div>
     </page>
     <?php
     }
 
-
-    if($verif_modificacion){ ?>
-    <page orientation="paysage"  backtop="115mm" backbottom="50mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
-        <page_header>
-        <br><div class="verde"></div>
-        MODIFICACION POA
-           <!--  <?php echo $cabecera_cpoa_original; ?> -->
-        </page_header>
-
-        <page_footer>
-         <!--    <?php echo $pie_certpoa_original;?> -->
-        </page_footer>
-        <!-- <?php echo $items_certificados_original;?> -->
-    </page>
-    <?php
-    }
 
     if($verif_solicitud){ ?>
          <page backtop="142mm" backbottom="60mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
@@ -87,6 +89,8 @@ ob_start();
                 <br>
             </page_footer>
                 <?php echo $items;?>
+                <br>
+                <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"  ><b>DOCUMENTO NO VALIDO PARA PROCESOS ADMINISTRATIVOS !!!</b></div>
         </page>
         <?php
     }

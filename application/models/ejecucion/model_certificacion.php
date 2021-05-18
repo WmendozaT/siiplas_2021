@@ -286,6 +286,19 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*----- GET MES CERTIFICADO POR ITEMS 2021 EDITADOS GUARDADOS----*/
+    public function get_meses_certificacion_items_editados_guardados($cpoaad_id){
+        $sql = 'select *
+                from cert_prog_mes_anulados temp
+                Inner Join mes as m On m.m_id=temp.mes_id
+                where temp.cpoaad_id='.$cpoaad_id.'
+                order by m.m_id asc';
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+
     /*-------- GET CERTIFICADO POA DETALLE ----------*/
     public function get_certificado_poa_detalle($cpoa_id,$ins_id){
         $sql = 'select *

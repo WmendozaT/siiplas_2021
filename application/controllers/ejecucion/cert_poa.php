@@ -197,7 +197,7 @@ class Cert_poa extends CI_Controller {
             <thead>
               <tr style="background-color: #66b2e8">
                   <th style="width:1%;"></th>
-                  <th style="width:12%;">C&Oacute;DIGO CERTIFICACIÓN POA</th>
+                  <th style="width:10%;">C&Oacute;DIGO CERTIFICACIÓN POA</th>
                   <th style="width:10%;">CITE </th>
                   <th style="width:10%;">CITE FECHA </th>
                   <th style="width:10%;">PROGRAMA</th>
@@ -206,8 +206,7 @@ class Cert_poa extends CI_Controller {
                   <th style="width:5%;">GESTI&Oacute;N</th>
                   <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">MODIFICAR CERTIFICACIÓN</th>
                   <th style="width:7%;" title="ELIMINAR CERTIFICACI&Oacute;N">ELIMINAR CERTIFICACIÓN</th>
-                  <th style="width:5%;">VER CERTIFICADO POA</th>
-                  <th style="width:5%;">VER MOD. POA.</th>';
+                  <th style="width:5%;">VER CERTIFICADO POA</th>';
                   if($this->tp_adm==1){
                     $tabla.='
                     <th></th>
@@ -288,8 +287,7 @@ class Cert_poa extends CI_Controller {
                   <th style="width:5%;">GESTI&Oacute;N</th>
                   <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">EDICI&Oacute;N PARCIAL</th>
                   <th style="width:7%;" title="ELIMINAR CERTIFICACI&Oacute;N">EDICI&Oacute;N TOTAL</th>
-                  <th style="width:5%;">VER CERTIFICADO POA</th>
-                  <th style="width:5%;">VER MOD. POA.</th>';
+                  <th style="width:5%;">VER CERTIFICADO POA</th>';
                   if($this->tp_adm==1){
                     $tabla.='
                     <th></th>
@@ -368,22 +366,6 @@ class Cert_poa extends CI_Controller {
                             $tabla .='<a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="40" HEIGHT="40"/></a>';
                           }
                         $tabla.='
-                        </td>
-                        <td align=center>';
-                          if($row['cpoa_ref']!=0){
-                            $cite_mod_poa=$this->model_certificacion->get_certpoa_vigente_modificado($row['cpoa_id']); /// Datos de editado, modificado poa
-                            if(count($cite_mod_poa)!=0){
-
-                              if(count($this->model_modrequerimiento->list_requerimientos_modificados($cite_mod_poa[0]['cite_id']))!=0){
-                                $tabla.='<a href="javascript:abreVentana(\''. site_url("").'/mod/rep_mod_financiera/'.$cite_mod_poa[0]['cite_id'].'\');" title="REPORTE MODIFICACIÓN POA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/><br>MOD. POA</a>';
-                              
-                              }
-                            }
-                            else{
-                              $tabla.='Sin Reporte';
-                            }
-                          }
-                        $tabla .='
                         </td>';
 
                       if($this->tp_adm==1){
@@ -566,12 +548,12 @@ class Cert_poa extends CI_Controller {
                 /*----- INSERT CITES MODIFICACIONES INSUMOS ------*/
                   $data_to_store = array(
                     'com_id' => $cpoa[0]['com_id'],
-                    'cite_nota' => $cpoa[0]['cpoa_cite'],
-                    'cite_fecha' => $cpoa[0]['cite_fecha'],
+                    'cite_nota' => $cite,
+                    'cite_fecha' => $cpoa[0]['cpoa_fecha'],
                     'fun_id' => $this->fun_id,
                     'g_id' => $this->gestion,
                     'cpoaa_id' => $cpoaa_id,
-
+                    'cite_observacion' => $justificacion,
                     'num_ip' => $this->input->ip_address(), 
                     'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
                     );
@@ -676,7 +658,7 @@ class Cert_poa extends CI_Controller {
                 }
 
                 /*------ ELIMINANDO CERTIFICACIÓN POA  -----*/
-                  $this->delete_certificacion_item($cpoa_id);
+                  $this->delete_certificacion_item($cpoa_id); //// eliminando items certificados
                   if(count($this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id))==0){
                       /*------ UPDATE CERTIFICACION POA -----*/
                         $update_cpoa = array( 

@@ -55,6 +55,8 @@ ob_start();
                 <br>
             </page_footer>
                 <?php echo $items;?>
+                <br>
+                <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"  ><b>DOCUMENTO NO VALIDO PARA PROCESOS ADMINISTRATIVOS !!!</b></div>
         </page>
         <?php
     }

@@ -2190,6 +2190,7 @@ select
                 cpoa.cpoa_codigo,
                 cpoa.cpoa_fecha,
                 cpoa.cpoa_gestion,
+                cpoa.cpoa_ref,
                 cpoa.cpoa_estado,
                 cpoa.fun_id,
                 cpoa.aper_id,
