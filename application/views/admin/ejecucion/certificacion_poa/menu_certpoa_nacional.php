@@ -144,7 +144,7 @@
 
               <div class="modal-body">
                 <form action="<?php echo site_url().'/ejecucion/cert_poa/valida_anulacion_certpoa'?>" id="form_anular" name="form_anular" class="form-horizontal" method="post">
-                    <input type="text" name="cert_id" id="cert_id">
+                    <input type="hidden" name="cert_id" id="cert_id">
                     <div id="titulo_edit"></div>
                     <fieldset>
                         <div class="form-group">

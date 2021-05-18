@@ -435,6 +435,7 @@ class Model_certificacion extends CI_Model{
         ca.cpoaa_id,
         ca.cite as cite_edicion,
         ca.justificacion as cite_justificacion,
+        ca.cpoaa_fecha as cite_fecha,
         ca.cpoa_codigo as codigo_cert_anterior,
         ca.cpoa_fecha as fecha_cert_anterior,
         ca.cpoa_recomendacion as recomendacion_anterior,

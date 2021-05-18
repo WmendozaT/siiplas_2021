@@ -525,7 +525,8 @@ $route['ejec/certifica'] = 'ejecucion/cert_poa/valida_cpoa_operacion_requerimien
 $route['cert/list_poas'] = 'ejecucion/ccertificacion_poa/list_poas_aprobados'; //// Lista POA Aprobados 2020
 $route['cert/form_items/(:any)'] = 'ejecucion/ccertificacion_poa/list_items_cert/$1'; //// Lista Items a Certificar 2020
 $route['cert/ver_cpoa/(:any)'] = 'ejecucion/ccertificacion_poa/ver_certificacion_poa/$1'; //// Ver Certificacion POA 2020
-$route['cert/rep_cert_poa/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_cpoa/$1'; //// reporte Certificado POA 2020
+$route['cert/rep_cert_poa/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_cpoa/$1'; //// reporte Certificado POA 2021
+$route['cert/rep_cert_poa_editado/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_cpoa_editado/$1'; //// reporte Certificado POA Editado 2021
 $route['cert/generar_codigo/(:any)'] = 'ejecucion/ccertificacion_poa/generar_codigo/$1'; //// Generar Codigo Cert POA 2020
 $route['cert/eliminar_certificacion/(:any)'] = 'ejecucion/cert_poa/eliminar_certificacion/$1'; //// Eliminar Certificacion POA
 

@@ -1094,11 +1094,18 @@ class Certificacionpoa extends CI_Controller{
 
  //// ======== CERTIFICACION POA ========
 /*-- CABECERA (Certificacion POa Aprobado) --*/
-  public function cabecera_certpoa($certpoa){
-    $codigo='SIN CÓDIGO (Contactese con el Dpto. Nal. de Planificación)';
-    if($certpoa[0]['cpoa_estado']==1){
-      $codigo=$certpoa[0]['cpoa_codigo'];
-    }
+  public function cabecera_certpoa($certpoa,$codigo){
+/*    $codigo='SIN CÓDIGO (Contactese con el Dpto. Nal. de Planificación)';
+    if($certpoa[0]['cpoa_estado']!=0){
+      if($certpoa[0]['cpoa_estado']==2){
+        $cert_edit=$this->model_certificacion->get_datos_certificado_anulado($certpoa[0]['cpoa_id']);
+        $codigo=$cert_edit[0]['codigo_cert_anterior'];
+      }
+      else{
+        $codigo=$certpoa[0]['cpoa_codigo'];
+      }
+      
+    }*/
 
 
     $tabla='';
@@ -1410,8 +1417,13 @@ class Certificacionpoa extends CI_Controller{
   }
 
   /*-- Pie de Reporte - Certificacion POa Aprobado --*/
-  public function pie_certificacion_poa($certpoa){
+  public function pie_certificacion_poa($certpoa,$tp){
+    /// tp : 1 (Normal), 2 (Editado)
     $tabla='';
+
+
+
+
 
     $tabla.='
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;">
@@ -1421,8 +1433,17 @@ class Certificacionpoa extends CI_Controller{
                     <b>RECOMENDACIONES</b><hr>
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                         <tr bgcolor="#cae4fb">
-                            <td style="width: 100%;">
-                                <br>'.$certpoa[0]['cpoa_recomendacion'].'<br><br>
+                            <td style="width: 100%;height: 2%;">';
+                              if($tp==1){
+                                $tabla.=''.$certpoa[0]['cpoa_recomendacion'].'';
+                              }
+                              elseif($tp==2){
+                                $cert_edit=$this->model_certificacion->get_datos_certificado_anulado($certpoa[0]['cpoa_id']);
+                                if(count($cert_edit)!=0){
+                                  $tabla.='<b>EL PRESENTE DOCUMENTO YA NO PODRA SER MODIFICADO, DEBIDO A UNA RECIENTE EDICIÓN CON EL NRO. DE CITE : '.$cert_edit[0]['cite_edicion'].' EN FECHA '.date('d-m-Y',strtotime($cert_edit[0]['cite_fecha'])).' CON LA SIGUIENTE JUSTIFICACIÓN TECNICA : '.$cert_edit[0]['cite_justificacion'].'</b>';
+                                }
+                              }
+                            $tabla.='
                             </td>
                         </tr>
                     </table>
