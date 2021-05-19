@@ -166,6 +166,7 @@ $route['rep/rep_requerimientos_ejecucion_servicio/(:any)'] = 'reportes_cns/expor
 //$route['rep/ver_partida_consolidado_uni/(:any)'] = 'reportes_cns/exporting_datos/consolidado_nacional_partidas_unidad/$1'; ///// Exportar Consolidado Nacional de partidas de cada unidad/Establecimiento por REGIONAL
 
 $route['rep/comparativo_unidad_ppto/(:any)'] = 'reportes_cns/rep_operaciones/comparativo_presupuesto_distrital/$1/$2'; ///// cuadro comparativo pto asig. poa - Partidas por unidad (DISTRITAL) 2020-2021
+$route['rep/establecimientos/(:any)'] = 'reportes_cns/rep_operaciones/establecimientos_salud/$1'; ///// cuadro Establecimientos de salud (DISTRITAL) 2020-2021
 $route['rep/print_modificaciones_poa/(:any)'] = 'reportes_cns/rep_operaciones/rep_cuadro_modificacion_poa/$1/$2'; ///// cuadro Modificacion poa (DISTRITAL) 2020-2021
 $route['rep/comparativo_xsl/(:any)'] = 'reportes_cns/exporting_datos/comparativo_presupuesto_xls/$1/$2'; ///// cuadro comparativo pto asig. poa - Partidas Xcel
 
@@ -524,9 +525,11 @@ $route['ejec/certifica'] = 'ejecucion/cert_poa/valida_cpoa_operacion_requerimien
 /*-- CERTIFICACIÓN POA 2020 ---*/
 $route['cert/list_poas'] = 'ejecucion/ccertificacion_poa/list_poas_aprobados'; //// Lista POA Aprobados 2020
 $route['cert/form_items/(:any)'] = 'ejecucion/ccertificacion_poa/list_items_cert/$1'; //// Lista Items a Certificar 2020
-$route['cert/ver_cpoa/(:any)'] = 'ejecucion/ccertificacion_poa/ver_certificacion_poa/$1'; //// Ver Certificacion POA 2020
+$route['cert/ver_cpoa/(:any)'] = 'ejecucion/ccertificacion_poa/ver_certificacion_poa/$1'; //// Ver Certificacion Modificado POA 2020
+$route['cert/ver_cpoa_anulado/(:any)'] = 'ejecucion/ccertificacion_poa/ver_certificacion_poa_anulado/$1'; //// Ver Certificacion Modificado POA 2020
 $route['cert/rep_cert_poa/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_cpoa/$1'; //// reporte Certificado POA 2021
 $route['cert/rep_cert_poa_editado/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_cpoa_editado/$1'; //// reporte Certificado POA Editado 2021
+$route['cert/rep_cert_poa_anulado/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_cpoa_anulado/$1'; //// reporte Certificado POA Anulado 2021
 $route['cert/generar_codigo/(:any)'] = 'ejecucion/ccertificacion_poa/generar_codigo/$1'; //// Generar Codigo Cert POA 2020
 $route['cert/eliminar_certificacion/(:any)'] = 'ejecucion/cert_poa/eliminar_certificacion/$1'; //// Eliminar Certificacion POA
 

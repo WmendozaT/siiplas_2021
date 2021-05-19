@@ -273,6 +273,16 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+        /*----- GET DATOS GENERALES CERTIFICACION ANULADOS Y GUARDADOS  ----*/
+    public function get_datos_certificacion_poa_anulados($cpoa_id){
+        $sql = 'select *
+                from vista_get_certificacionpoa_anulado_original
+                where cpoa_id='.$cpoa_id.' and cpoa_gestion='.$this->gestion.'';
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
     /*----- GET MES CERTIFICADO POR ITEMS 2021 ----*/
     public function get_meses_certificacion_items($cpoad_id){
         $sql = 'select *
@@ -429,7 +439,7 @@ class Model_certificacion extends CI_Model{
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
                         Inner Join unidad_actividad as ua On ua.act_id=p.act_id
                         Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                        where p.dep_id='.$dep[0]['dep_id'].' and p.dist_id='.$this->dist.'and cpoa_gestion='.$this->gestion.' and cp.cpoa_estado!=\'3\' apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
+                        where p.dep_id='.$dep[0]['dep_id'].' and p.dist_id='.$this->dist.'and cpoa_gestion='.$this->gestion.' and cp.cpoa_estado!=\'3\' and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
                         order by cpoa_id asc';
             }
         }
@@ -457,6 +467,7 @@ class Model_certificacion extends CI_Model{
         cp.proy_id,
         cp.aper_id,
         cp.com_id,
+        cp.prod_id,
         cp.sol_id,
         cp.fun_id as fun_id_edicion,
         mod.cite_id
@@ -469,6 +480,32 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*========= DATOS DE ELIMINACIÓN CERTIFICACION ORIGINAL=========*/
+/*    public function get_datos_certificado_eliminado($cpoa_id){
+        $sql = 'select
+        ca.cpoa_id,
+        ca.cpoaa_id,
+        ca.cite as cite_edicion,
+        ca.justificacion as cite_justificacion,
+        ca.cpoaa_fecha as cite_fecha,
+        ca.cpoa_codigo as codigo_cert_anterior,
+        ca.cpoa_fecha as fecha_cert_anterior,
+        ca.cpoa_recomendacion as recomendacion_anterior,
+        ca.fun_id as fun_id_certpoa,
+        ca.tp_anulado as tipo_edicion,
+        cp.proy_id,
+        cp.aper_id,
+        cp.com_id,
+        cp.prod_id,
+        cp.sol_id,
+        cp.fun_id as fun_id_edicion
+                from certificacionpoa_anulado ca
+                Inner Join certificacionpoa as cp On cp.cpoa_id=ca.cpoa_id
+                where ca.cpoa_id='.$cpoa_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }*/
 
 
     /*========= CERTIFICACION ANULADO =========*/

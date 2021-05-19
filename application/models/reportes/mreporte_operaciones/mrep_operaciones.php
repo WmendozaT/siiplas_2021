@@ -14,6 +14,20 @@ class Mrep_operaciones extends CI_Model {
         return $query->result_array();
     }
 
+
+    /*------ Lista Establecimientos de Salud 2021 ------*/
+    public function establecimientos_salud_distrital($dist_id){
+         $sql = 'select *
+                from vlista_establecimientos_salud es
+                Inner Join _proyectos as p On p.act_id=es.act_id
+                Inner Join aperturaproyectos as pp On pp.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pp.aper_id
+                where es.dist_id='.$dist_id.' and es.g_id='.$this->gestion.' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*------ LISTA DE UNIDADES/PROYECTOS  (Todos) ------*/
     public function list_unidades_proyectos($tp_id){
          $sql = '
@@ -1562,81 +1576,6 @@ class Mrep_operaciones extends CI_Model {
                         order by c.com_id, par.par_codigo,i.ins_id asc';
         }
 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
-
-    /*-- Lista de Unidades e insumos Consolidado Nacional (2020) --*/
-    public function unidades_insumos_nacional($tp_id){
-        if($this->gestion==2019){ /// Gestion 2018-2019
-            $sql = '
-            select *
-                from _proyectos p
-                Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _departamentos as d On d.dep_id=p.dep_id
-                Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-
-                Inner Join insumos as i On i.aper_id=apg.aper_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                Inner Join insumo_gestion as ig On ig.ins_id=i.ins_id
-                Inner Join vifin_prog_mes as vprog On vprog.insg_id=ig.insg_id
-
-                where p.estado!=\'3\' and p.tp_id='.$tp_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and ig.g_id='.$this->gestion.' and i.ins_estado!=\'3\' and ig.g_id='.$this->gestion.' and i.aper_id!=\'0\'
-                order by p.dep_id,ds.dist_id,p.tp_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, i.ins_id asc';
-            }
-        else{ /// Gestion 2020
-
-            if($tp_id==4){
-                $sql = '
-                select *
-                    from _proyectos p
-                    Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                    Inner Join _departamentos as d On d.dep_id=p.dep_id
-                    Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                    Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                    Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-
-                    Inner Join insumos as i On i.aper_id=apg.aper_id
-                    Inner Join partidas as par On par.par_id=i.par_id
-                    Inner Join vista_temporalidad_insumo as iprog On iprog.ins_id=i.ins_id
-                    Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                    
-                    where p.estado!=\'3\' and p.tp_id='.$tp_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and i.aper_id!=\'0\' and ug.g_id='.$this->gestion.'
-                    order by p.dep_id,ds.dist_id,p.tp_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, par.par_codigo asc';
-            }
-            else{
-                $sql = '
-                select *
-                from _proyectos p
-                Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _departamentos as d On d.dep_id=p.dep_id
-                Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
-                Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
-                Inner Join _productos as pr On c.com_id=pr.com_id
-                Inner Join _actividades as a On pr.prod_id=a.prod_id
-                Inner Join _insumoactividad as ia On ia.act_id=a.act_id
-                Inner Join insumos as i On i.ins_id=ia.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                Inner Join vista_temporalidad_insumo as iprog On iprog.ins_id=i.ins_id
-                where pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and c.estado!=\'3\' and pr.estado!=\'3\' and a.estado!=\'3\'
-                and p.tp_id='.$tp_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and i.aper_id!=\'0\'
-
-                order by p.dep_id,ds.dist_id,p.tp_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, par.par_codigo asc';
-            }
-            
-        }
-        
         $query = $this->db->query($sql);
         return $query->result_array();
     }

@@ -30,7 +30,7 @@ ob_start();
                                     <td style="width:100%; height: 1.2%; font-size: 16pt;"><b><?php echo $this->session->userdata('entidad')?></b></td>
                                 </tr>
                                 <tr>
-                                <td style="width:100%; height: 1.2%; font-size: 9pt;">CUADRO COMPARATIVO - <?php echo $titulo_ppto;?> Vs MONTO POA <?php echo $this->session->userdata('gestion')?></td>
+                                <td style="width:100%; height: 1.2%; font-size: 9pt;"><?php echo $titulo_reporte;?></td>
                                 </tr>
                             </table>
                           </td>

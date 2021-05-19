@@ -267,7 +267,6 @@ class Cert_poa extends CI_Controller {
                   </th>
                   <th></th>
                   <th></th>
-                  <th></th>
                   <th></th>';
                   if($this->tp_adm==1){
                     $tabla.='
@@ -599,7 +598,7 @@ class Cert_poa extends CI_Controller {
               $cite = $this->security->xss_clean($post['cite']); /// Cite
               $justificacion = $this->security->xss_clean($post['justificacion']); /// Justificacion
 
-              $cpoa=$this->model_certificacion->get_certificacion_poa($cpoa_id); /// Datos Generales de la Certificacion POA
+              $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Generales de la Certificacion POA
               $items=$this->model_certificacion->lista_items_certificados($cpoa_id); /// Lista de items Certificados
 
               for ($i=1; $i <=12 ; $i++) { 
@@ -657,13 +656,32 @@ class Cert_poa extends CI_Controller {
                   }
                 }
 
-                /*------ ELIMINANDO CERTIFICACIÓN POA  -----*/
-                  $this->delete_certificacion_item($cpoa_id); //// eliminando items certificados
-                  if(count($this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id))==0){
+                
+                  if($cpoa[0]['sol_id']!=0){ /// Tiene solicitud
+                    /*------- Eliminando la Solicitud POA ------*/
+                    $requerimientos=$this->model_certificacion->get_lista_requerimientos_solicitados($cpoa[0]['sol_id']); // Requerimientos
+                    foreach($requerimientos as $row){
+                      $this->db->where('req_id', $row['req_id']);
+                      $this->db->delete('temporalidad_req_solicitado');
+
+                      $this->db->where('req_id', $row['req_id']);
+                      $this->db->delete('requerimiento_solicitado');
+                    }
+
+                    $this->db->where('sol_id', $cpoa[0]['sol_id']);
+                    $this->db->delete('solicitud_cpoa_subactividad');
+                    /*------------------------------------------*/
+                  }
+
+                    /*------ ELIMINANDO CERTIFICACIÓN POA  -----*/
+                    $this->delete_certificacion_item($cpoa_id); //// eliminando items certificados
+
+                    if(count($this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id))==0){
                       /*------ UPDATE CERTIFICACION POA -----*/
                         $update_cpoa = array( 
                           'cpoa_estado' => 3, 
-                          'cpoa_ref' => 1, /// 0: A editar, 1: Editado
+                          'cpoa_ref' => 1, /// 0: A editar, 1: Editado y anulado
+                          'sol_id' => 0, /// 0 anulando la solicitud poa 
                         );
                         $this->db->where('cpoa_id', $cpoa_id);
                         $this->db->update('certificacionpoa', $update_cpoa);
@@ -680,8 +698,9 @@ class Cert_poa extends CI_Controller {
                         $this->db->update('conf_modificaciones_distrital', $this->security->xss_clean($update_conf));
                       /*----------------------------------------------*/
 
+
                       /// Redireccionando a un reporte de eliminación
-                      redirect('cert/rep_cert_poa/'.$cpoa_id);
+                      redirect('cert/ver_cpoa_anulado/'.$cpoa_id);
                   }
                   else{
                     $this->session->set_flashdata('danger','NOSE PUEDO ELIMINAR !!!');

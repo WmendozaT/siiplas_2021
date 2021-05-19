@@ -396,8 +396,7 @@ class Ccertificacion_poa extends CI_Controller {
       $data['titulo']='<h1><b>RESPONSABLE : '.$this->session->userdata('funcionario').' -> </b><small>'.$this->certificacionpoa->tp_resp().'</small>';
       $data['opciones']=' <a class="btn btn-default" href="'.base_url().'index.php/cert/form_items/'.$certificacion[0]['prod_id'].'" target="_blank" title="NUEVA CERTIFICACI&Oacute;N"><i class="fa fa-rotate-left"></i> NUEVA CERTIFICACI&Oacute;N</a>
                 <a class="btn btn-default" href="'.base_url().'index.php/ejec/menu_cpoa" title="SALIR"><i class="fa fa-caret-square-o-left"></i> SALIR</a>';
-      $data['verif_certificacion']=true;
-      $data['verif_solicitud']=true;
+
       if(strtotime($certificacion[0]['cpoa_fecha'])>$this->fecha_entrada){
         $data['cuerpo']='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/cert/rep_cert_poa_editado/'.$certificacion[0]['cpoa_id'].'"></iframe>'; /// nuevo
       }
@@ -413,12 +412,7 @@ class Ccertificacion_poa extends CI_Controller {
     }
   }
 
-
-  
-
-
-
-      /*----- REPORTE CERTIFICADO POA EDITADO/MODIFICADO PDF -------*/
+    /*----- REPORTE CERTIFICADO POA EDITADO/MODIFICADO PDF -------*/
     public function reporte_cpoa_editado($cpoa_id){
       $certificacion=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Certificacion
       if (count($certificacion)!=0) {
@@ -463,13 +457,51 @@ class Ccertificacion_poa extends CI_Controller {
         }
 
 
-          $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/reporte_solicitud_cpoa_editado', $data); 
+        $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/reporte_solicitud_cpoa_editado', $data); 
           
       }
       else{
         echo "Error !!!";
       }
     }
+
+
+  /*---- VER CERTIFICACION POA ELIMINADO ----*/
+  public function ver_certificacion_poa_anulado($cpoa_id){
+    $data['menu']=$this->certificacionpoa->menu(4);
+    $cert_edit=$this->model_certificacion->get_datos_certificacion_poa_anulados($cpoa_id);
+    $data['titulo']='<h1><b>RESPONSABLE : '.$this->session->userdata('funcionario').' -> </b><small>'.$this->certificacionpoa->tp_resp().'</small>';
+    $data['opciones']=' <a class="btn btn-default" href="'.base_url().'index.php/cert/form_items/'.$cert_edit[0]['prod_id'].'" target="_blank" title="NUEVA CERTIFICACI&Oacute;N"><i class="fa fa-rotate-left"></i> NUEVA CERTIFICACI&Oacute;N</a>
+                <a class="btn btn-default" href="'.base_url().'index.php/ejec/menu_cpoa" title="SALIR"><i class="fa fa-caret-square-o-left"></i> SALIR</a>';
+
+    $data['cuerpo']='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/cert/rep_cert_poa_anulado/'.$cpoa_id.'"></iframe>'; /// nuevo
+    $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/ver_certificado_poa', $data);
+  }
+
+  
+    /*----- REPORTE CERTIFICADO POA ELIMINADO PDF -------*/
+    public function reporte_cpoa_anulado($cpoa_id){
+      $cert_edit=$this->model_certificacion->get_datos_certificacion_poa_anulados($cpoa_id);
+
+      if(count($cert_edit)!=0){
+        $data['verif_certificacion_final']=false;
+        $data['verif_certificacion_original']=true; /// Certificado original editado
+        $data['verif_modificacion']=false; //// modificacion poa
+        $data['verif_solicitud']=false; /// Solicitud POA
+
+        $data['cabecera_cpoa_original']=$this->certificacionpoa->cabecera_certpoa($cert_edit,$cert_edit[0]['cpoa_codigo']); /// Cabecera Certificacion POA Original
+        $data['items_certificados_original']=$this->certificacionpoa->items_certificados_original_guardados($cpoa_id,1); /// Lista de items certificados Original
+        $data['pie_certpoa_original']=$this->certificacionpoa->pie_certificacion_poa($cert_edit,1); /// Pie Certificacion POA
+        $data['pie_reporte']='Certificacion_Poa_anulado'.$cert_edit[0]['tipo_subactividad'].' '.$cert_edit[0]['serv_descripcion'].' '.$cert_edit[0]['abrev'];
+        
+        $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/reporte_solicitud_cpoa_editado', $data); 
+      }
+      else{
+        echo "Error !!!";
+      }
+      
+    }
+
 
 
 

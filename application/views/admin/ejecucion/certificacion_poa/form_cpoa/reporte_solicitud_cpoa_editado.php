@@ -58,7 +58,7 @@ ob_start();
         </page_footer>
         <?php echo $items_certificados_original;?>
         <br>
-        <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"  ><b>DOCUMENTO NO VALIDO PARA PROCESOS ADMINISTRATIVOS !!!</b></div>
+        <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"  ><b>CERTIFICACIÓN ANULADA, EL PRESENTE DOCUMENTO NO TIENE VALIDES PARA PROCESOS ADMINISTRATIVOS !!!</b></div>
     </page>
     <?php
     }

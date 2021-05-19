@@ -188,7 +188,7 @@
 
                   <div class="modal-body">
                     <form action="<?php echo site_url().'/ejecucion/cert_poa/valida_eliminacion_certpoa'?>" id="form_delete" name="form_delete" class="form-horizontal" method="post">
-                        <input type="text" name="cpoa_id" id="cpoa_id">
+                        <input type="hidden" name="cpoa_id" id="cpoa_id">
                         <div id="titulo_del"></div>
                         <fieldset>
                             <div class="form-group">

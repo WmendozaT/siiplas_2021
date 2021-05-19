@@ -104,7 +104,7 @@ class Rep_operaciones extends CI_Controller {
                       <div id="unidad" style="display:none;">
                         <section class="col col-2">
                           <label class="label">ACTIVIDAD / PROYECTO DE INVERSI&Oacute;N</label>
-                          <select class="select2" id="proy_id" name="proy_id" title="SELECCIONE ACTIVIDAD/PROYECTO DE INVERSION">
+                          <select class="form-control" id="proy_id" name="proy_id" title="SELECCIONE ACTIVIDAD/PROYECTO DE INVERSION">
                             <option value="0">SELECCIONE ACTIVIDAD/ PROYECTO</option>
                           </select>
                         </section>
@@ -264,9 +264,10 @@ class Rep_operaciones extends CI_Controller {
       $tabla='';
       $tabla.='
       <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
-      <br>
+        <br>
         <div align=right>
           <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR UNIDADES / PROYECTOS DE INVERSI&Oacute;N</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/establecimientos/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <br>
       <div class="alert alert-warning">
@@ -379,6 +380,56 @@ class Rep_operaciones extends CI_Controller {
         return $salida;
     }*/
 
+    /*-----REPORTE ESTABLECIMIENTOS DE SALUD (DISTRITAL) 2020-2021-----*/
+    public function establecimientos_salud($dist_id){
+      $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
+      $establecimientos=$this->mrep_operaciones->establecimientos_salud_distrital($dist_id);
+        $tabla='';
+        $tabla.='
+          <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+            <thead>
+              <tr style="font-size: 7px;" align=center bgcolor="#f5f7f8">
+                <th style="width:1%;height:15px;">#</th>
+                <th style="width:8%;">COD. DA.</th>
+                <th style="width:8%;">COD. ACT.</th>
+                <th style="width:50%;">ESTABLECIMIENTO DE SALUD</th>
+                <th style="width:15%;" title="">PPTO. ASIGNADO '.$this->gestion.'</th>
+              </tr>
+            </thead>
+            <tbody>';
+             $nro=0;
+              foreach ($establecimientos as $row){
+                $ppto=$this->genera_informacion->ppto_actividad($row,4);
+                $color='';
+                if($ppto[3]<0){
+                  $color='#f3d8d7';
+                }
+                elseif($ppto[3]>0){
+                  $color='#e4f7f4'; 
+                }
+                
+                $nro++;
+                $tabla.='
+                <tr bgcolor="'.$color.'" >
+                  <td style="width:1%;height:15px;" align=center>'.$nro.'</td>
+                  <td style="width:8;" align=center>'.$row['dep_cod'].'</td>
+                  <td style="width:8%;" align=center>'.$row['act_cod'].'</td>
+                  <td style="width:50%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
+                  <td style="width:15%;" align=right>'.number_format($ppto[1], 2, ',', '.').'</td>
+                </tr>';
+              }
+              $tabla.='
+            </tbody>
+          </table>';
+
+          $data['titulo_reporte']='ESTABLECIMIENTOS DE SALUD';
+          $data['mes'] = $this->mes_nombre();
+          $data['titulo']='';
+          $data['lista']=$tabla;
+          $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_comparativo', $data);
+    }
+
+    
 
     /*-----REPORTE COMPARATIVO PRESUPUESTO ASIG-POA (DISTRITAL) 2020-2021-----*/
     public function comparativo_presupuesto_distrital($dist_id,$tp_id){
@@ -473,6 +524,7 @@ class Rep_operaciones extends CI_Controller {
               </table>';
 
           $data['titulo_ppto']=$titulo_ppto;
+          $data['titulo_reporte']='CUADRO COMPARATIVO - '.$titulo_ppto.' '.$this->gestion.' Vs MONTO PROGRAMADO '.$this->gestion.'';
           
           $data['lista']=$tabla;
           $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_comparativo', $data);
