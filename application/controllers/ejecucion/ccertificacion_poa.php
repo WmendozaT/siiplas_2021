@@ -3,7 +3,7 @@ class Ccertificacion_poa extends CI_Controller {
   public $rol = array('1' => '3','2' => '4');
   public function __construct (){
       parent::__construct();
-      if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3 & $this->session->userdata('tp_usuario')==0){
+    //  if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3 & $this->session->userdata('tp_usuario')==0){
       $this->load->library('pdf2');
       $this->load->model('programacion/model_proyecto');
       $this->load->model('programacion/model_faseetapa');
@@ -35,11 +35,11 @@ class Ccertificacion_poa extends CI_Controller {
       $this->load->library('certificacionpoa');
 
       $this->fecha_entrada = strtotime("10-05-2021 00:00:00");
-      }
+   /*   }
       else{
           $this->session->sess_destroy();
           redirect('/','refresh');
-      }
+      }*/
     }
 
 

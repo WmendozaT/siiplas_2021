@@ -37,7 +37,7 @@ class Cseguimiento_establecimiento extends CI_Controller {
   public function formulario_establecimiento(){
     $com_id=$this->establecimiento[0]['com_id'];
     $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-    $data['menu'] = $this->seguimientopoa->menu(4);
+    $data['menu'] = $this->seguimientopoa->menu_segpoa($com_id);
     $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
     $data['com_id']=$com_id;
     $data['proy_id']=$this->establecimiento[0]['proy_id'];

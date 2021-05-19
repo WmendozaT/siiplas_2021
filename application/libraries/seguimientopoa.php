@@ -2002,9 +2002,7 @@ class Seguimientopoa extends CI_Controller{
         return $tabla;
     }
 
-
-
-    /// Menu Seguimiento POA (Sub Actividad)
+  /// Menu Seguimiento POA (Sub Actividad)
     public function menu_segpoa($com_id){
       $tabla='';
       $tabla.='
@@ -2048,6 +2046,7 @@ class Seguimientopoa extends CI_Controller{
 
       return $tabla;
     }
+
 
 }
 ?>

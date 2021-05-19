@@ -67,31 +67,7 @@
         </header>
         <!-- END HEADER -->
         <!-- Left panel : Navigation area -->
-        <aside id="left-panel">
-            <!-- User info -->
-            <div class="login-info">
-                <span> <!-- User image size is adjusted inside CSS, it should stay as is --> 
-                    <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                            <span>
-                                <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
-                            </span>
-                        <i class="fa fa-angle-down"></i>
-                    </a>
-                </span>
-            </div>
-            <nav>
-                <ul>
-                    <li class="">
-                    <a href="#" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-                    </li>
-                    <li class="text-center">
-                        <a href="#" title="REGISTRO DE SEGUIMIENTO POA"> <span class="menu-item-parent">SEGUIMIENTO POA</span></a>
-                    </li>
-                    
-                </ul>
-            </nav>
-            <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
-        </aside>
+        <?php echo $menu;?>
 
         <!-- MAIN PANEL -->
         <div id="main" role="main">
