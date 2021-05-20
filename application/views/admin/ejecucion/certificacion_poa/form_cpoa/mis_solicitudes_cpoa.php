@@ -113,6 +113,41 @@
     </div>
     <!-- ========================================================================================================= -->
 
+        <!-- ===== MI SOLICITUD ===== -->
+        <div class="modal fade" id="modal_aprobar_cert" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+
+              <div class="modal-body">
+                <form action="<?php echo site_url().'/ejecucion/cert_poa/valida_anulacion_certpoa'?>" id="form_anular" name="form_anular" class="form-horizontal" method="post">
+                    <input type="hidden" name="sol_id" id="sol_id">
+                    <div id="titulo_sol"></div>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" id="error2">RECOMENDACIÓN</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" name="recomendacion" id="recomendacion" placeholder="Recomendacion y/o Observacion a la Solicitud ..." rows="4"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>                    
+                    <div class="form-actions">
+                        <div class="row">
+                            <div id="but" style="display: block;">
+                                <button class="btn btn-default" data-dismiss="modal" id="mcl_edit" title="CANCELAR">CANCELAR</button>
+                                <button type="button" name="generar_cert" id="generar_cert" class="btn btn-info">APROBAR SOLICITUD</button>
+                            </div>
+                        </div>
+                        <div id="loads" style="display: none" align="center">
+                            <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO CERTIFICACIÓN POA .....</b>
+                        </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- =============================== -->
+
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">

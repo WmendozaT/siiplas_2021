@@ -3,7 +3,7 @@ class Ccertificacion_poa extends CI_Controller {
   public $rol = array('1' => '3','2' => '4');
   public function __construct (){
       parent::__construct();
-    //  if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3 & $this->session->userdata('tp_usuario')==0){
+      if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
       $this->load->library('pdf2');
       $this->load->model('programacion/model_proyecto');
       $this->load->model('programacion/model_faseetapa');
@@ -35,11 +35,11 @@ class Ccertificacion_poa extends CI_Controller {
       $this->load->library('certificacionpoa');
 
       $this->fecha_entrada = strtotime("10-05-2021 00:00:00");
-   /*   }
+      }
       else{
           $this->session->sess_destroy();
           redirect('/','refresh');
-      }*/
+      }
     }
 
 
@@ -1121,6 +1121,31 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
+  /*---- Obtiene Datos la solicitud de Certificacion POA ---*/
+  public function get_datos_solicitud(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $sol_id = $this->security->xss_clean($post['sol_id']);
+
+        $sol_poa=$this->model_certificacion->get_solicitud_cpoa($sol_id);
+
+        if(count($sol_poa)!=0){
+          $result = array(
+            'respuesta' => 'correcto',
+            'solicitud' => $sol_poa
+          );
+        }
+        else{
+          $result = array(
+              'respuesta' => 'error'
+          );
+        }
+
+        echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
 
 
 

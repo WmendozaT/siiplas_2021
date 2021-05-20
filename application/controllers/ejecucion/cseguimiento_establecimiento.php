@@ -47,22 +47,17 @@ class Cseguimiento_establecimiento extends CI_Controller {
       $data['datos_mes'] = $this->verif_mes;
       $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
-      $titulo=
-      '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>ACTIVIDAD : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
-      <h1><small>SUBACTIVIDAD : </small> '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h1>
-      <h1><small>TRIMESTRE VIGENTE : </small> '.$data['tmes'][0]['trm_descripcion'].'</h1>';
 
-      if($data['proyecto'][0]['tp_id']==1){
-        $titulo=
-        '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROYECTO : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
-        <h1><small>UNIDAD. RESP. : </small> '.$data['componente'][0]['serv_descripcion'].'</h1>
-        <h1><small>TRIMESTRE VIGENTE : </small> '.$data['tmes'][0]['trm_descripcion'].'</h1>';
-      }
-      
+      $data['titulo']=
+        '
+      <h2 title='.$data['proyecto'][0]['aper_id'].'>BIENVENIDO : '.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h2>
+      <h1><small>TRIMESTRE VIGENTE : </small> '.$data['tmes'][0]['trm_descripcion'].'</h1>
+      <h1><small>FORMULARIO DE SEGUIMIENTO MES : </small> '.$this->verif_mes[2].' / '.$this->gestion.'</h1>';
+
       $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1);
       $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($com_id); /// temporalidad Programado-Ejecutado Subactividad
       $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($com_id); /// grafico
-      $data['titulo']=$titulo; /// Titulo de la cabecera
+    //  $data['titulo']=$titulo; /// Titulo de la cabecera
       
       $data['matriz_temporalidad_subactividad']=$matriz_temporalidad_subactividad;
       $data['tabla_temporalidad_componente']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],1); /// Vista 
@@ -89,7 +84,7 @@ class Cseguimiento_establecimiento extends CI_Controller {
       $data['nota']=$this->notificacion();
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
       
-      $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
+    //  $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
       $data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($com_id); /// Reporte Seguimiento (Mes vigente) POA
       $data['formularios_poa']=$this->seguimientopoa->formularios_poa($com_id,$this->establecimiento[0]['proy_id']);
       $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($com_id);

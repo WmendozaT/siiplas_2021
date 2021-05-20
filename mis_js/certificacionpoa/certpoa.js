@@ -566,8 +566,78 @@
     });
 
 
-    /// Aprobar Solicitud
+    /// ---- Aprobar Solcitud Certificacion POA
     function aprobar_solicitud(sol_id) {
+      document.getElementById("sol_id").value = sol_id;
+      var url = base+"index.php/ejecucion/ccertificacion_poa/get_datos_solicitud";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "sol_id="+sol_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) { 
+        if (response.respuesta == 'correcto') {
+            $('#titulo_sol').html('<h2 class="alert alert-success"><center>APROBAR SOLICITUD : '+response.solicitud[0]['cite']+'</center></h2>');
+            $('#error2').html('RECOMENDACIÓN');
+        } else {
+            alertify.error("ERROR AL RECUPERAR DATOS, PORFAVOR CONTACTESE CON EL ADMINISTRADOR"); 
+        }
+      });
+
+      request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+      });
+      request.always(function () {
+          //console.log("termino la ejecuicion de ajax");
+      });
+
+        // ===VALIDAR LA SOLICITUD
+        $("#generar_cert").on("click", function () {
+            var error='false';
+            var justificacion=document.getElementById('recomendacion').value;
+            if(!cite){
+                $('#error1').html('<font color="red" size="1">NRO CITE (*)</font>');
+                document.form_anular.cite_edit.focus() 
+                return 0;
+            }
+            if(!justificacion){
+                $('#error1').html('NRO CITE');
+                $('#error2').html('<font color="red" size="1">JUSTIFICACIÓN (*)</font>');
+                document.form_anular.justificacion_edit.focus() 
+                return 0;
+            }
+         
+            if(cite.length!=0 & justificacion.length!=0){
+                $('#error1').html('NRO CITE');
+                $('#error2').html('JUSTIFICACIÓN');
+                 alertify.confirm("DESEA REALIZAR LA MODIFICACIÓN DE LA CERTIFICACI&Oacute;N ?", function (a) {
+                    if (a) {
+                        document.getElementById("loads").style.display = 'block';
+                        document.forms['form_anular'].submit(); /// id del formulario
+                        document.getElementById("but").style.display = 'none';
+                    } else {
+                        alertify.error("OPCI\u00D3N CANCELADA");
+                    }
+                });
+            }
+            else{
+                alertify.error("REGISTRE DATOS");
+            }
+        });
+    }
+
+
+
+
+
+    /// Aprobar Solicitud
+/*    function aprobar_solicitud(sol_id) {
         reset();
         var request;
         alertify.confirm("ESTA SEGURO DE APROBAR LA SOLICITUD DE CERTIFICACIÓN POA ?", function (a) {
@@ -603,8 +673,7 @@
             alertify.error("Opcion cancelada");
         }
       });
-
-    }
+    }*/
 
     /// Anular Solicitud de Certificacion POa
     function anular_solicitud(sol_id) {

@@ -2347,3 +2347,44 @@ SELECT
 
 ALTER TABLE public.vista_get_certificacionpoa_anulado_original
   OWNER TO postgres;
+
+
+
+  ////// VISTA ESTABLECIMIENTO DE SALUD
+
+CREATE OR REPLACE VIEW public.vlista_establecimientos_salud AS 
+SELECT dep.dep_id,
+    dep.dep_cod,
+    dep.dep_departamento,
+    dist.dist_id,
+    dist.dist_distrital,
+    dist.dist_cod,
+    dist.abrev,
+    ua.act_id,
+    ua.act_cod,
+    ua.act_descripcion,
+    ua.img,
+    ua.dato_ingreso,
+    ua.clave,
+    te.tipo,
+    te.ta_id,
+    te.establecimiento,
+    nivel,
+    apg.aper_id,
+    apg.aper_gestion
+   FROM unidad_actividad ua
+     JOIN _distritales dist ON dist.dist_id = ua.dist_id
+     JOIN _departamentos dep ON dep.dep_id = dist.dep_id
+     JOIN tipo_ubicacion tu ON ua.tu_id = tu.tu_id
+     JOIN v_tp_establecimiento te ON ua.te_id = te.te_id
+     JOIN estado_unidad eu ON ua.eu_id = eu.eu_id
+
+     JOIN _proyectos p ON p.act_id = ua.act_id
+     JOIN _proyectofaseetapacomponente pfe ON pfe.proy_id = p.proy_id
+     JOIN aperturaprogramatica apg ON apg.aper_id = pfe.aper_id
+     
+  WHERE ua.act_estado != 3 AND tu.estado != 0 AND te.estado != 0 AND eu.estado != 0 AND ua.te_id != 21 AND te.ta_id = 2 and p.estado!=3 and pfe.pfec_estado=1
+  ORDER BY dep.dep_id, dist.dist_id, ua.act_id;
+
+ALTER TABLE public.vlista_establecimientos_salud
+  OWNER TO postgres;

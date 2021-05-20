@@ -80,7 +80,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Seguimiento y Evaluaci&oacute;n POA</li><li>Mis Operaciones</li>
+                    <li>Seguimiento y Evaluaci&oacute;n POA - FORM. N° 4</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -88,8 +88,22 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
+                            <section id="widget-grid" class="well">
+                                <div class="">
+                                    <?php echo $titulo;?>
+                                </div>
+                            </section>
+                        </article>
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
+                            <section id="widget-grid" class="well" align="center">
+                                <?php echo $formularios_poa;?>
+                            </section>
+                            <section id="widget-grid" class="well" align="center">
+                                <?php echo $formularios_seguimiento;?>
+                            </section>
+                        </article>
                         <article class="col-sm-12">
-                            <?php echo $titulo;?>
                             <!-- new widget -->
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                                 <header>
@@ -98,9 +112,6 @@
 
                                     <ul class="nav nav-tabs pull-right in" id="myTab">
                                         <li class="active">
-                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">DATOS GENERALES</span></a>
-                                        </li>
-                                        <li>
                                             <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">FORMULARIO SEGUIMIENTO POA</span></a>
                                         </li>
                                         <li>
@@ -125,59 +136,11 @@
                                     <div class="widget-body">
                                         <!-- content -->
                                         <div id="myTabContent" class="tab-content">
-                                            <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s2" title="SEGUIMIENTO POA">
-                                                <div class="row no-space">
-                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 show-stats">
-                                                        <?php echo $calificacion;?>
-                                                    </div>
 
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 show-stats">
-                                                        <div class="row">
-                                                            <div style="font-size: 53px;"><b>BIENVENIDO : <?php echo $this->session->userdata("usuario");?></b></div>
-                                                            <hr>
-                                                            <table class="table table-bordered">
-                                                              <tbody>
-                                                                <tr>
-                                                                  <td style="font-size: 16px;"><b>GESTI&Oacute;N ACTUAL :</b></td>
-                                                                  <td style="font-size: 15px;"><?php echo $this->session->userdata("gestion");?></td>
-                                                                </tr>
-                                                                <tr>
-                                                                  <td style="font-size: 16px;"><b>TRIMESTRE VIGENTE :</b></td>
-                                                                  <td style="font-size: 15px;"><?php echo $tmes[0]['trm_descripcion'];?></td>
-                                                                </tr>
-                                                                <tr>
-                                                                  <td style="font-size: 16px;"><b>MES DE SEGUIMIENTO :</b></td>
-                                                                  <td style="font-size: 15px;"><?php echo $this->session->userData('mes_actual')[2];?></td>
-                                                                </tr>
-                                                              </tbody>
-                                                            </table>
-
-                                                            <hr>
-                                                            <span class="show-stat-buttons"> 
-                                                                <span class="col-xs-12 col-sm-4 col-md-4 col-lg-4"> <a href="javascript:abreVentana('<?php echo base_url().'index.php/prog/reporte_form4/'.$com_id;?>');" class="btn btn-default btn-block hidden-xs" title="FORMULARIO N 4 (OPERACIONES)" ><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;REPORTE FORMULARIO N° 4</a> </span> 
-                                                                <span class="col-xs-12 col-sm-4 col-md-4 col-lg-4"> <a href="javascript:abreVentana('<?php echo base_url().'index.php/proy/orequerimiento_proceso/'.$proy_id.'/'.$com_id;?>');"class="btn btn-default btn-block hidden-xs" title="FORMULARIO N 5 (REQUERIMIENTOS)"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;REPORTE FORMULARIO N° 5</a> </span> 
-                                                                <span class="col-xs-12 col-sm-4 col-md-4 col-lg-4"> <a href="javascript:abreVentana('<?php echo base_url().'index.php/rep/rep_requerimientos_ejecucion_servicio/'.$com_id;?>');" class="btn btn-default btn-block hidden-xs" title="FORMULARIO N 5 (EJECUCION POA REQUERIMIENTOS)"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;REPORTE FORMULARIO N° 5 (EJECUCIÓN)</a> </span> 
-                                                            </span>
-                                                        </div>
-                                                        <hr>
-                                                            <div class="alert alert-success" role="alert">
-                                                                <?php echo $nota;?>
-                                                            </div>
-                                                    </div>
-
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" align="center">
-                                                        <hr><img src="<?php echo base_url('fotos/'.$this->session->userdata("img").'');?>" style="width:60%;"><hr>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- end s1 tab pane -->
-
-                                            <div class="tab-pane fade" id="s1" title="SEGUIMIENTO POA">
+                                            <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
                                                <div class="row"><br>
                                                     <div align="right">
                                                         <?php echo $boton_reporte_seguimiento_poa;?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <?php echo $formularios_seguimiento;?>&nbsp;&nbsp;
                                                     </div>
                                                     <div class="jarviswidget jarviswidget-color-darken" >
                                                       <?php echo $operaciones_programados;?>

@@ -16,6 +16,7 @@ class Cunidad_organizacional extends CI_Controller {
     $this->dist_tp = $this->session->userData('dist_tp');
     $this->fun_id = $this->session->userdata("fun_id");
     $this->tp_adm = $this->session->userdata("tp_adm"); // 1: Privilegios, 0: sin Privilegios
+    $this->load->library('genera_informacion');
     }else{
         redirect('/','refresh');
     }
@@ -230,31 +231,30 @@ class Cunidad_organizacional extends CI_Controller {
 
       if($tp==1){ // (PDF)
         $tabla.=
-        '<table cellpadding="0" cellspacing="0" class="tabla" border=0.4 style="width:100%;" align=center>
+        '<table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
           <thead>
             <tr style="font-size: 8px;" bgcolor="#d8d8d8">
               <th style="width:2%; text-align: center;height:20px;">#</th>
-              <th style="width:10%; text-align: center;">DEPARTAMENTO</th>
-              <th style="width:20%; text-align: center;">TIPO DE ADMINISTRACI&Oacute;N</th>
+              <th style="width:15%; text-align: center;">D.A.</th>
+              <th style="width:20%; text-align: center;">U.E.</th>
               <th style="width:10%; text-align: center;">NIVEL</th>
-              <th style="width:20%; text-align: center;">TIPO DE ESTABLECIMIENTO</th>
-              <th style="width:5%; text-align: center;">COD. ES.</th>
-              <th style="width:25%; text-align: center;">ESTABLECIMIENTO DE SALUD</th>
+              <th style="width:30%; text-align: center;">ESTABLECIMIENTO DE SALUD</th>
+              <th style="width:10%; text-align: center;">PPTO. '.$this->gestion.'</th>
             </tr>
           </thead>
           <tbody>';
           $nro=0;
             foreach ($unidades as $row){
+            $ppto=$this->genera_informacion->ppto_actividad($row,4);
             $nro++;
             $tabla.=
             '<tr style="font-size: 7px;">
-              <td style="width:2%;height:13px;">'.$nro.'</td>
-              <td style="width:10%;">'.strtoupper($row['dep_departamento']).'</td>
-              <td style="width:20%;">'.strtoupper($row['dist_distrital']).'</td>
+              <td style="width:2%;height:13px;" align=center>'.$nro.'</td>
+              <td style="width:15%;">'.$row['dep_cod'].' '.strtoupper($row['dep_departamento']).'</td>
+              <td style="width:20%;">'.$row['dist_cod'].' '.strtoupper($row['dist_distrital']).'</td>
               <td style="width:10%;">'.$row['nivel'].'</td>
-              <td style="width:20%;">'.$row['establecimiento'].'</td>
-              <td style="width:5%;">'.$row['act_cod'].'</td>
-              <td style="width:25%;font-size: 6pt;"><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>
+              <td style="width:30%;font-size: 6pt;"><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>
+              <td style="width:10%;font-size: 6pt;" align=right><b>'.number_format($ppto[1], 2, ',', '.').'</b></td>
             </tr>';
           }
           $tabla.='
@@ -268,37 +268,26 @@ class Cunidad_organizacional extends CI_Controller {
             <thead>
               <tr style="font-size: 9px;" bgcolor="#d8d8d8" class="modo1">
                 <th style="width:2%; text-align: center;height:25px;">#</th>
-                <th style="width:4%; text-align: center;">DEPARTAMENTO</th>
-                <th style="width:7%; text-align: center;">TIPO DE ADMINISTRACI&Oacute;N</th>
-                <th style="width:5%; text-align: center;">NIVEL</th>
-                <th style="width:7%; text-align: center;">TIPO DE ESTABLECIMIENTO</th>
-                <th style="width:2%; text-align: center;">COD. ES.</th>
-                <th style="width:7%; text-align: center;">ESTABLECIMIENTO DE SALUD</th>
-                <th style="width:3%; text-align: center;">FOTO ESTABLECIMIENTO</th>
+                <th style="width:15%; text-align: center;">D.A.</th>
+                <th style="width:20%; text-align: center;">U.E.</th>
+                <th style="width:10%; text-align: center;">NIVEL</th>
+                <th style="width:30%; text-align: center;">ESTABLECIMIENTO DE SALUD</th>
+                <th style="width:10%; text-align: center;">PPTO. '.$this->gestion.'</th>
               </tr>
             </thead>
             <tbody>';
             $nro=0;
               foreach ($unidades as $row){
+              $ppto=$this->genera_informacion->ppto_actividad($row,4);
               $nro++;
               $tabla.=
               '<tr style="font-size: 9px;" class="modo1">
                 <td style="width:2%;height:22px;">'.$nro.'</td>
-                <td style="width:4%;">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:7%;">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:5%;">'.$row['nivel'].'</td>
-                <td style="width:7%;">'.mb_convert_encoding($row['establecimiento'], 'cp1252', 'UTF-8').'</td>
-                <td style="width:2%;">'.$row['act_cod'].'</td>
-                <td style="width:7%;font-size: 10pt;"><b>'.$row['tipo'].' '.mb_convert_encoding($row['act_descripcion'], 'cp1252', 'UTF-8').' - '.$row['abrev'].'</b></td>
-                <td style="width:3%;text-align: center;">';
-                  if($row['img']!=''){
-                    $tabla.='<b>SI</b>';
-                  }
-                  else{
-                    $tabla.='<FONT color=red>NO</FONT>';
-                  }
-                  $tabla.='
-                </td>
+                <td style="width:15%;">'.$row['dep_cod'].' '.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:20%;">'.$row['dist_cod'].' '.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:10%;">'.$row['nivel'].'</td>
+                <td style="width:30%;font-size: 10pt;"><b>'.$row['tipo'].' '.mb_convert_encoding($row['act_descripcion'], 'cp1252', 'UTF-8').' - '.$row['abrev'].'</b></td>
+                <td style="width:10%;" align=right>'.round($ppto[1],2).'</td>
               </tr>';
             }
             $tabla.='

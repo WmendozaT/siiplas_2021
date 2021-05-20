@@ -128,7 +128,11 @@ class model_estructura_org extends CI_Model {
 
     /*------------ get lista de Unidades/Servicios consolidado -------------*/
     public function get_unidades_regionales_consolidado(){
-        $sql = '
+        $sql = 'select *
+                from vlista_establecimientos_salud
+                where aper_gestion='.$this->gestion.'';
+
+/*        $sql = '
                 select *
                 from unidad_actividad ua
                 Inner Join _distritales as dist On dist.dist_id=ua.dist_id
@@ -136,8 +140,11 @@ class model_estructura_org extends CI_Model {
                 Inner Join tipo_ubicacion as tu On ua.tu_id=tu.tu_id
                 Inner Join v_tp_establecimiento as te On ua.te_id=te.te_id
                 Inner Join uni_gestion as ug On ug.act_id=ua.act_id
+                Inner Join _proyectos as p On p.act_id=es.act_id
+                Inner Join aperturaproyectos as pp On pp.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pp.aper_id
                 where ua.act_estado!=\'3\' and tu.estado!=\'0\' and te.estado!=\'0\' and te.ta_id=\'2\' and ug.g_id='.$this->gestion.' 
-                order by dep.dep_id,dist.dist_id, te.te_id,ua.act_id asc';
+                order by dep.dep_id,dist.dist_id, te.te_id,ua.act_id asc';*/
 
         $query = $this->db->query($sql);
         return $query->result_array();

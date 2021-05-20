@@ -1684,10 +1684,6 @@ class Certificacionpoa extends CI_Controller{
 
 
 
-
-  
-
-
 /*------ LISTA DE SOLICITUDES CERTIFICACION POA REALIZADAS POR REGIONAL -------*/
   public function lista_solicitudes_certificacionespoa_regional($dep_id){
     
@@ -1764,7 +1760,7 @@ class Certificacionpoa extends CI_Controller{
                           </a>
                         </td>
                         <td align=center>
-                          <a href="#" class="btn btn-default" onclick="aprobar_solicitud('.$row['sol_id'].');" style="width:50%;" title="APROBAR SOLICITUD CERTIFICACION POA">
+                          <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modal_aprobar_cert" onclick="aprobar_solicitud('.$row['sol_id'].');" style="width:50%;" title="APROBAR SOLICITUD CERTIFICACION POA">
                             <img src="'.base_url().'assets/img/ok1.jpg" width="22" height="22"/>
                           </a>
                         </td>
@@ -2302,8 +2298,15 @@ class Certificacionpoa extends CI_Controller{
               <li class="text-center">
                   <a href="#" title="REGISTRO DE SEGUIMIENTO, EVALUACIÓN Y CERTIFICACIÓN POA"> <span class="menu-item-parent">SEG. EVAL. POA</span></a>
               </li>
-              <li>
-                <a href="'.site_url("").'/seguimiento_poa"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Seg. y eval. POA</span></a>
+              <li>';
+              if($this->session->userData('tp_usuario')==0){
+                $tabla.='<a href="'.site_url("").'/seguimiento_poa"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Seg. y eval. POA</span></a>';
+              }
+              elseif($this->session->userData('tp_usuario')==1){
+                $tabla.='<a href="'.site_url("").'/seguimiento_establecimientos"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Seg. y eval. POA</span></a>';
+              }
+              $tabla.='
+              
               </li>
               <li>
                 <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Certificación POA</span></a>
