@@ -598,7 +598,7 @@
       });
 
         // ===VALIDAR LA SOLICITUD  DE CERTIFICACION POA
-        $("#generar_cert").on("click", function () {
+        $("#generar_cert").on("click", function (e) {
             var error='false';
             var recomendacion=document.getElementById('recomendacion').value;
             if(!recomendacion){
@@ -628,6 +628,8 @@
                       request.done(function (response, textStatus, jqXHR) { 
                         reset();
                         if (response.respuesta == 'correcto') {
+                          $("#modal_aprobar_cert").modal("hide");
+
                           $('#solicitudes').fadeIn(1000).html(response.certpoa);
                         } 
                         else {
@@ -653,47 +655,6 @@
     }
 
 
-
-
-
-    /// Aprobar Solicitud
-/*    function aprobar_solicitudd(sol_id) {
-        reset();
-        var request;
-        alertify.confirm("ESTA SEGURO DE APROBAR LA SOLICITUD DE CERTIFICACIÓN POA ?", function (a) {
-        if (a) {
-            url = base+"index.php/ejecucion/ccertificacion_poa/aprobar_solicitud_cpoa";
-            if (request) {
-                request.abort();
-            }
-            request = $.ajax({
-                url: url,
-                type: "POST",
-                dataType: "json",
-                data: "sol_id="+sol_id
-            });
-
-            request.done(function (response, textStatus, jqXHR) { 
-              reset();
-              if (response.respuesta == 'correcto') {
-                $('#solicitudes').fadeIn(1000).html(response.certpoa);
-              } 
-              else {
-                alertify.error("Error ...");
-              }
-            });
-
-            request.fail(function (jqXHR, textStatus, thrown) {
-              console.log("ERROR: " + textStatus);
-            });
-
-            e.preventDefault();
-
-        } else {
-            alertify.error("Opcion cancelada");
-        }
-      });
-    }*/
 
     /// Anular Solicitud de Certificacion POa
     function anular_solicitud(sol_id) {

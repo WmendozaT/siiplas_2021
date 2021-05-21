@@ -1727,8 +1727,9 @@ class Certificacionpoa extends CI_Controller{
                     <thead>
                       <tr style="height:35px;">
                         <th style="width:1%;">#</th>
-                        <th style="width:10%;">CITE SOLICITUD</th>
-                        <th style="width:10%;">FECHA SOLICITUD</th>
+                        <th style="width:7%;">CITE SOLICITUD</th>
+                        <th style="width:7%;">FECHA SOLICITUD</th>
+                        <th style="width:10%;">UNIDAD SOLICITANTE</th>
                         <th style="width:20%;">OPERACIÓN</th>
                         <th style="width:10%;">ESTADO</th>
                         <th style="width:10%;">SOLICITUD</th>
@@ -1752,6 +1753,7 @@ class Certificacionpoa extends CI_Controller{
                         <td title="'.$row['sol_id'].'">'.$nro.'</td>
                         <td>'.$row['cite'].'</td>
                         <td>'.date('d-m-Y',strtotime($row['fecha'])).'</td>
+                        <td>'.$row['serv_cod'].'.- '.$row['serv_descripcion'].' '.$row['abrev'].'</td>
                         <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
                         <td align=center><b>'.$estado.'</b></td>
                         <td align=center>
@@ -1786,9 +1788,10 @@ class Certificacionpoa extends CI_Controller{
                     <thead>
                       <tr style="height:40px;" bgcolor="#f6f6f6">
                         <th style="width:1%;">#</th>
-                        <th style="width:10%;">CITE SOLICITUD</th>
-                        <th style="width:10%;">FECHA SOLICITUD</th>
-                        <th style="width:10%;">FECHA DE APROBACI&Oacute;N</th>
+                        <th style="width:12%;">UNIDAD SOLICITANTE</th>
+                        <th style="width:8%;">CITE SOLICITUD</th>
+                        <th style="width:8%;">FECHA SOLICITUD</th>
+                        <th style="width:8%;">FECHA DE APROBACI&Oacute;N</th>
                         <th style="width:20%;">CODIGO CERTIFICACI&Oacute;N POA</th>
                         <th style="width:10%;">RESPONSABLE DE APROBACI&Oacute;N</th>
                         <th style="width:10%;">SUBACTIVIDAD</th>
@@ -1803,6 +1806,7 @@ class Certificacionpoa extends CI_Controller{
                       $tabla.='
                       <tr bgcolor="#f6fbf4">
                         <td title="'.$row['cpoa_id'].'" style="height:35px;">'.$nro.'</td>
+                        <td>'.$row['serv_cod'].'.- '.$row['serv_descripcion'].' '.$row['abrev'].'</td>
                         <td>'.$row['cite'].'</td>
                         <td>'.date('d-m-Y',strtotime($row['fecha'])).'</td>
                         <td>'.date('d-m-Y',strtotime($row['cite_fecha'])).'</td>

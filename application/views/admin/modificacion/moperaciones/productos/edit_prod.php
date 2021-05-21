@@ -174,19 +174,29 @@
 														<section>
 															<div class="col-sm-3">
 																<label class="label" id="col"><b>TIPO DE INDICADOR </b></label>
-									                            <select class="form-control" id="tipo_i" name="tipo_i" title="Seleccione Tipo de Indicador">
-			                                                        <?php 
-													                    foreach($indi as $row){
-													                    	if($row['indi_id']==$producto[0]['indi_id']){ ?>
-															                    <option value="<?php echo $row['indi_id']; ?>" selected><?php echo $row['indi_descripcion']; ?></option>
-															                    <?php 
-													                    	}
-													                    	else{ ?>
-															                    <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
-															                    <?php 
-													                    	}	
-													                    } ?>        
-			                                                  	</select>
+																<?php 
+																	if($this->session->userdata('trimestre')>1){?>
+																		<input type="hidden" name="tipo_i" id="tipo_i" value="<?php echo $producto[0]['indi_id'];?>">
+																		<input type="text" class="form-control" value="<?php echo $producto[0]['indi_descripcion'];?>" disabled>
+																		<?php
+																	}
+																	else{?>
+																		<select class="form-control" id="tipo_i" name="tipo_i" title="Seleccione Tipo de Indicador">
+					                                                        <?php 
+															                    foreach($indi as $row){
+															                    	if($row['indi_id']==$producto[0]['indi_id']){ ?>
+																	                    <option value="<?php echo $row['indi_id']; ?>" selected><?php echo $row['indi_descripcion']; ?></option>
+																	                    <?php 
+															                    	}
+															                    	else{ ?>
+																	                    <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
+																	                    <?php 
+															                    	}	
+															                    } ?>        
+					                                                  	</select>
+																		<?php
+																	}
+																?>
 															</div>
 															
 															<?php
@@ -250,7 +260,19 @@
 														
 															<div class="col-sm-4">
 																<label class="label" id="col"><b>META</b></label>
-																<input class="form-control" type="text" name="met" id="met" value="<?php echo round($producto[0]['prod_meta'],2);?>" placeholder="0 %" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" title="REGISTRE META DE LA OPERACIÓN">
+																<?php
+																	if($this->session->userdata('trimestre')>1 & $producto[0]['indi_id']==2 & $producto[0]['mt_id']==1){ 
+																		?>
+																		<input type="hidden" name="met" id="met" value="<?php echo $producto[0]['prod_meta'];?>">
+																		<input type="text" class="form-control" value="<?php echo round($producto[0]['prod_meta'],2);?>" disabled>
+																		<?php
+																	}
+																	else{
+																		?>
+																		<input class="form-control" type="text" name="met" id="met" value="<?php echo round($producto[0]['prod_meta'],2);?>" placeholder="0 %" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" title="REGISTRE META DE LA OPERACIÓN">
+																		<?php
+																	}
+																?>
 															</div>
 
 															<div class="col-sm-4">
@@ -274,51 +296,61 @@
 													</div>
 													<fieldset>
 														<?php
-															if($producto[0]['indi_id']==2){ ?>
-																<div id="trep">
-																	<section>
-																		<label class="label" id="col"><b>TIPO DE META</b></label>
-											                            <select class="form-control" id="tp_met" name="tp_met" title="SELECCIONE TIPO DE META">
-					                                                        <option value="">Seleccione Tipo de Meta</option>
-					                                                        <?php 
-															                    foreach($metas as $row){ 
-															                    	if($row['mt_id']==$producto[0]['mt_id']){ ?>
-															                    		<option value="<?php echo $row['mt_id']; ?>" selected><?php echo $row['mt_tipo']; ?></option>
-															                    		<?php
-															                    	}
-															                    	else{ ?>
-															                    		<option value="<?php echo $row['mt_id']; ?>"><?php echo $row['mt_tipo']; ?></option>
-															                    		<?php
-															                    	}
-															                    }
-															                ?>
-					                                                  	</select>
-																	</section><br>	
-																</div>
+															if($this->session->userdata('trimestre')>1){ ?>
+																<section>
+																<label class="label" id="col"><b>TIPO DE META</b></label>
+																	<input type="hidden" name="tp_met" id="tp_met" value="<?php echo $producto[0]['mt_id'];?>">
+																	<input type="text" class="form-control" value="<?php echo $producto[0]['mt_tipo'];?>" disabled>
+																</section><br>
 																<?php
 															}
-															else{ ?>
-																<div id="trep" style="display:none;" >
-																	<section>
-																		<label class="label" id="col"><b>TIPO DE META</b></label>
-											                            <select class="form-control" id="tp_met" name="tp_met" title="SELECCIONE TIPO DE META">
-					                                                        <option value="">Seleccione Tipo de Meta</option>
-					                                                        <?php 
-															                    foreach($metas as $row){ 
-															                    	if($row['mt_id']==3){ ?>
-															                    		<option value="<?php echo $row['mt_id']; ?>" selected><?php echo $row['mt_tipo']; ?></option>
-															                    		<?php
-															                    	}
-															                    	else{ ?>
-															                    		<option value="<?php echo $row['mt_id']; ?>"><?php echo $row['mt_tipo']; ?></option>
-															                    		<?php
-															                    	}
-															                    }
-															                ?>
-					                                                  	</select>
-																	</section><br>	
-																</div>
-																<?php
+															else{
+																if($producto[0]['indi_id']==2){ ?>
+																	<div id="trep">
+																		<section>
+																			<label class="label" id="col"><b>TIPO DE META</b></label>
+												                            <select class="form-control" id="tp_met" name="tp_met" title="SELECCIONE TIPO DE META">
+						                                                        <option value="">Seleccione Tipo de Meta</option>
+						                                                        <?php 
+																                    foreach($metas as $row){ 
+																                    	if($row['mt_id']==$producto[0]['mt_id']){ ?>
+																                    		<option value="<?php echo $row['mt_id']; ?>" selected><?php echo $row['mt_tipo']; ?></option>
+																                    		<?php
+																                    	}
+																                    	else{ ?>
+																                    		<option value="<?php echo $row['mt_id']; ?>"><?php echo $row['mt_tipo']; ?></option>
+																                    		<?php
+																                    	}
+																                    }
+																                ?>
+						                                                  	</select>
+																		</section><br>	
+																	</div>
+																	<?php
+																}
+																else{ ?>
+																	<div id="trep" style="display:none;" >
+																		<section>
+																			<label class="label" id="col"><b>TIPO DE META</b></label>
+												                            <select class="form-control" id="tp_met" name="tp_met" title="SELECCIONE TIPO DE META">
+						                                                        <option value="">Seleccione Tipo de Meta</option>
+						                                                        <?php 
+																                    foreach($metas as $row){ 
+																                    	if($row['mt_id']==3){ ?>
+																                    		<option value="<?php echo $row['mt_id']; ?>" selected><?php echo $row['mt_tipo']; ?></option>
+																                    		<?php
+																                    	}
+																                    	else{ ?>
+																                    		<option value="<?php echo $row['mt_id']; ?>"><?php echo $row['mt_tipo']; ?></option>
+																                    		<?php
+																                    	}
+																                    }
+																                ?>
+						                                                  	</select>
+																		</section><br>	
+																	</div>
+																	<?php
+																}
 															}
 														?>
 														<section>
@@ -660,10 +692,12 @@
 		            $validator.focusInvalid();
 		        } 
 		        else {
+
 		        	if(document.formulario.tp_id.value==1){
 		        		meta = parseFloat($('[name="met"]').val());
 		        		linea = parseFloat($('[name="lb"]').val());
 		        		total = parseFloat($('[name="total"]').val());
+
 
 		        		if(document.formulario.tp_id.value==1){
 		        			if(parseFloat(meta)!=(parseFloat(total)+parseFloat(linea))){
@@ -741,7 +775,7 @@
      				$('[name="total"]').val((suma+linea).toFixed(2));
 	     		}
 	     		else{
-	     			alert('hola')
+	     			
 	     			$('[name="total"]').val((suma).toFixed(2));
 	     		}
      		}

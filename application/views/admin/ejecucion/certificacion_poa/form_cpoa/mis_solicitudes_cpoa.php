@@ -88,11 +88,16 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <article class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
                             <section id="widget-grid" class="well">
                                 <div class="">
                                     <?php echo $titulo;?>
                                 </div>
+                            </section>
+                        </article>
+                        <article class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                            <section id="widget-grid" class="well">
+                                
                             </section>
                         </article>
 
@@ -136,9 +141,6 @@
                                 <button class="btn btn-default" data-dismiss="modal" id="mcl_edit" title="CANCELAR">CANCELAR</button>
                                 <button type="button" name="generar_cert" id="generar_cert" class="btn btn-info">APROBAR SOLICITUD</button>
                             </div>
-                        </div>
-                        <div id="loads" style="display: none" align="center">
-                            <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO CERTIFICACIÓN POA .....</b>
                         </div>
                     </div>
                 </form>

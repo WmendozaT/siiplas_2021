@@ -666,9 +666,6 @@ class Ccertificacion_poa extends CI_Controller {
 
 
 
-  
-
-
 
   //// VALIDAR SOLICITUD DE CERTIFICIÓN POA (ADMINISTRADOR)
 
@@ -678,6 +675,7 @@ class Ccertificacion_poa extends CI_Controller {
     $data['titulo']='<h1>RESPONSABLE : '.$this->session->userdata('funcionario').' -> <small>'.$this->certificacionpoa->tp_resp().'</small></h1>';
 
     $data['alert']='<h2 class="alert alert-success"><center>LISTA DE SOLICITUDES DE CERTIFICACIÓN POA '.$this->gestion.'</center></h2>';
+    $data['opcion']='Hola Mundo';
     if($this->tp_adm==1){ /// Nacional
       $data['regional']=$this->select_regionales(); /// Lista de regionales
       $data['items']='';
@@ -687,7 +685,6 @@ class Ccertificacion_poa extends CI_Controller {
       $data['items']=$this->certificacionpoa->lista_solicitudes_certificacionespoa_regional($this->dep_id);
     }
 
-    
     $data['loading']='<div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
 
     $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/mis_solicitudes_cpoa', $data);
@@ -933,9 +930,16 @@ class Ccertificacion_poa extends CI_Controller {
         if(count($solicitud)!=0 & $solicitud[0]['estado']!=3){
           
           $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
-          $data['opcion']='<a href="#" class="btn btn-default del_solicitud" style="width:100%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'">
-                              <img src="'.base_url().'assets/img/delete.png" width="20" height="20"/><b>ANULAR SOLICITUD</b>
-                            </a>';
+          $data['opcion']='
+            <div class="btn-group btn-group-justified">
+              <a href="'.site_url("").'/solicitar_certpoa/'.$solicitud[0]['com_id'].'" class="btn btn-default" style="width:50%;" title="NUEVA SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'">
+                <img src="'.base_url().'assets/img/add_icon.png" width="20" height="20"/>&nbsp;&nbsp;<b>NUEVA SOLICITUD</b>
+              </a>
+         
+              <a href="#" class="btn btn-default del_solicitud" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'">
+                <img src="'.base_url().'assets/img/delete.png" width="20" height="20"/>&nbsp;&nbsp;<b>ANULAR SOLICITUD</b>
+              </a>
+            </div>';
           $data['cuerpo']='
             <input name="base" type="hidden" value="'.base_url().'">
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -1269,8 +1273,8 @@ class Ccertificacion_poa extends CI_Controller {
       }
       else{ /// nose puede eliminar debido a que esta aprobado
         $mensaje='
-        <hr>
-        <div class="alert alert-block alert-warning">
+              <hr>
+              <div class="alert alert-block alert-warning">
                 <a class="close" data-dismiss="alert" href="#">×</a>
                 <h4 class="alert-heading">SOLICITUD APROBADO !!!</h4>
                 la solicitud de Certificación POA '.$titulo.' ya fue aprobado por la unidad/ Depto de Planficación
@@ -1287,9 +1291,6 @@ class Ccertificacion_poa extends CI_Controller {
 
     }
   }
-
-
-
 
     /*------ NOMBRE MES -------*/
     function mes_nombre(){

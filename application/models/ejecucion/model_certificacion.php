@@ -1090,6 +1090,16 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*---- Lista de Solicitud de Certificacion POA por Distrital (SOLICITUDES)----*/
+    public function lista_solicitudes_cpoa_distrital($dist_id){
+        $sql = 'select *
+                from vista_solicitud_certificacionpoa s
+                where s.dist_id='.$dist_id.' and (s.estado!=\'3\' and s.estado=\'0\') and g_id='.$this->gestion.'
+                order by s.sol_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*---- Lista de Solicitud de Certificacion POA por Regional (APROBADOS)----*/
     public function lista_solicitudes_cpoa_regional_aprobados($dep_id){
         $sql = 'select *

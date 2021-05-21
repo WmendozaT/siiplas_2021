@@ -13,6 +13,7 @@ class User extends CI_Controller{
         $this->load->model('ejecucion/model_notificacion');
         $this->load->model('mantenimiento/model_estructura_org');
         $this->load->model('programacion/model_componente');
+        $this->load->model('ejecucion/model_certificacion');
         
         $this->load->model('model_control_menus');
         $this->load->library('session');
@@ -217,6 +218,7 @@ class User extends CI_Controller{
 
     /*---- LISTA DE OPERACIONES A SER EJECUTADAS EN EL MES ----*/
     public function mensaje_ejecucion_operaciones_mes($nro){
+        $tabla='';
         if($this->fun_id==592){ /// Exclusivo La paz
             $req=$this->model_notificacion->nro_requerimientos_acertificar_mensual_x_mes_regional($this->dep_id,$this->verif_mes[1]);
         }
@@ -226,20 +228,30 @@ class User extends CI_Controller{
 
         
         $ddep = $this->model_proyecto->dep_dist($this->dist_id);
+        $nro_sol=count($this->model_certificacion->lista_solicitudes_cpoa_distrital($this->dist_id));
+        $solicitudes_cpoa='';
+        if($nro_sol!=0){
+            $solicitudes_cpoa='<a href="'.site_url("").'/ejec/mis_solicitudes_certpoa" class="btn btn-primary" target="_blanck" title="LISTA DE SOLICITUDES POA"><img src="'.base_url().'assets/Iconos/email_attach.png" width="20" height="20"/>&nbsp;('.$nro_sol.') Solicitud(es) de Certificación POA</a>';
+        }
+
+
         $tit_requerimiento='';
         
         if(count($req)!=0){
             $tit_requerimiento='y '.$req[0]['requerimientos'].' Requerimientos con un monto de Bs. '.number_format($req[0]['monto'], 2, ',', '.').' que debe ser certificados ';
         }
 
-        $tabla='';
+        
         $tabla.='
-            <div class="alert alert-success" role="alert">
-                <h4 class="alert-heading">SEGUIMIENTO y CERTIFICACI&Oacute;N POA '.$this->gestion.'!</h4>
+            <div class="alert alert-success" role="alert" title='.$this->dist_id.'>
+                <h4 class="alert-heading"><b>SEGUIMIENTO y SOLICITUD CERTIFICACIÓN POA '.$this->gestion.' !!</b></h4>
                 <p>Hola '.$this->session->userdata('funcionario').', la '.strtoupper($ddep[0]['dist_distrital']).' tiene programado en su POA '.$this->gestion.' para el mes de '.$this->verif_mes[2].' : '.$nro.' Operaciones a ser ejecutados '.$tit_requerimiento.',
                 las mismas se las deben realizar a traves del modulo de EVALUACI&Oacute;N y CERTIFICACI&Oacute;N POA. </p>
                 <hr>
-                <p class="mb-0"><a href="#" data-toggle="modal" data-target="#modal_ope_mes" id="'.$this->dist_id.'" class="ope_mes" title="">Ver Operaciones Programadas</a></p>
+                <p class="mb-0">
+                    <a data-toggle="modal" data-target="#modal_ope_mes" id="'.$this->dist_id.'" class="btn btn-success ope_mes" title=""><img src="'.base_url().'assets/Iconos/application_cascade.png" width="20" height="20"/>&nbsp;Ver Operaciones Programadas</a>
+                    '.$solicitudes_cpoa.'
+                </p>
             </div>';
 
         return $tabla;

@@ -30,6 +30,8 @@ class Cmod_fisica extends CI_Controller {
             $this->dist = $this->session->userData('dist');
             $this->dist_tp = $this->session->userData('dist_tp');
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->verif_mes=$this->session->userdata('mes_actual');
+            $this->tmes = $this->session->userData('trimestre');
 
             }else{
                 redirect('admin/dashboard');
@@ -359,31 +361,34 @@ class Cmod_fisica extends CI_Controller {
         }
 
         ///------- verif evaluacion trimestral
-        $mes=0;
-        for ($i=1; $i <=4 ; $i++) {
-          if(count($this->model_evaluacion->get_trimestral_prod($prod_id,$this->gestion,$i))!=0){
-            for ($j=1; $j <=3 ; $j++) { 
-              $mes++;
-              $eval[$mes]=1;
-              $disabled[$mes]="disabled='true'";
+        if($this->tmes==1){
+          for ($i=1; $i <=12 ; $i++) { 
+              $eval[$i]=0;
+              $disabled[$i]="";
+            }
+        }
+        else{
+          if($data['producto'][0]['indi_id']==2 & $data['producto'][0]['mt_id']==1){
+            for ($i=1; $i <=12 ; $i++) { 
+              $eval[$i]=1;
+              $disabled[$i]="disabled='true'";
             }
           }
           else{
-            for ($j=1; $j <=3 ; $j++) { 
-              $mes++;
-              if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$mes))!=0){
-                $eval[$mes]=1;
-                $disabled[$mes]="disabled='true'";
+            for ($i=1; $i <=12 ; $i++) { 
+              if($i<$this->verif_mes[1]){ /// Meses ejecutados
+                $eval[$i]=1;
+                $disabled[$i]="disabled='true'";
               }
               else{
-                $eval[$mes]=0;
-                $disabled[$mes]="";
+                $eval[$i]=0;
+                $disabled[$i]="";
               }
             }
           }
         }
-        ///-----------------------------------
-       // $data['eval']=$eval;
+
+
         $data['disabled']=$disabled;
        
         $inptus='';
@@ -392,6 +397,7 @@ class Cmod_fisica extends CI_Controller {
         }
 
         $data['inputs']=$inptus;
+      //  echo $this->verif_mes[1];
         $this->load->view('admin/modificacion/moperaciones/productos/edit_prod', $data);
       }
       else{
