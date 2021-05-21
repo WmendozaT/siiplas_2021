@@ -2350,7 +2350,7 @@ ALTER TABLE public.vista_get_certificacionpoa_anulado_original
 
 
 
-  ////// VISTA ESTABLECIMIENTO DE SALUD
+  ////// VISTA ESTABLECIMIENTO DE SALUDDDDDD
 
 CREATE OR REPLACE VIEW public.vlista_establecimientos_salud AS 
 SELECT dep.dep_id,
