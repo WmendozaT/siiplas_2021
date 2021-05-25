@@ -751,8 +751,18 @@ class Ccertificacion_poa extends CI_Controller {
       $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
       $titulo=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].' / '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'];
+      
+      $presupuesto=$this->model_certificacion->saldo_presupuesto_unidad($componente[0]['proy_id']);
+      if(($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0){
+        $data['select_ope']=$this->certificacionpoa->select_mis_productos($com_id,$titulo); /// Seleccion de productos
+      }
+      else{
+        $data['select_ope']='<div class="alert alert-danger" role="alert">
+                  SE DEBE AJUSTAR EL PRESUPUESTO POA DEBIDO A QUE EXISTE UN SOBREGIRO NEGATIVO : '.number_format($presupuesto[0]['saldo'], 2, ',', '.').' Bs.
+                </div>';
+      }
+
       $data['loading']='<div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
-      $data['select_ope']=$this->certificacionpoa->select_mis_productos($com_id,$titulo); /// Seleccion de productos
       $data['loading_form']='<div id="load" style="display: none" align="center">
                               <br><img  src="'.base_url().'/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO SOLICITUD DE CERTIFICACI&Oacute;N POA ....</b>
                             </div>';

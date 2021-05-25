@@ -240,52 +240,20 @@ class Cert_poa extends CI_Controller {
           </style>';
           $certificados = $this->model_certificacion->list_certificados();
           $tabla.='
-          <table id="datatable_fixed_column" class="table table-bordered" width="100%">
+          <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
+            <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
             <thead>
-              <tr>
-                  <th></th>
-                  <th class="hasinput">
-                      <input type="text" class="form-control" placeholder="C&oacute;digo"/>
-                  </th>
-                  <th class="hasinput">
-                      <input type="text" class="form-control" placeholder="Cite"/>
-                  </th>
-                  <th class="hasinput">
-                      <input type="text" class="form-control" placeholder="Fecha de Certificaci&oacute;n"/>
-                  </th>
-                  <th class="hasinput">
-                      <input type="text" class="form-control" placeholder="Programa"/>
-                  </th>
-                  <th class="hasinput">
-                      <input type="text" class="form-control" placeholder="Desccripci&oacute;n"/>
-                  </th>
-                  <th class="hasinput">
-                      <input type="text" class="form-control" placeholder="Servicio - Componente"/>
-                  </th>
-                  <th class="hasinput">
-                      <input type="text" class="form-control" placeholder="Gesti&oacute;n"/>
-                  </th>
-                  <th></th>
-                  <th></th>
-                  <th></th>';
-                  if($this->tp_adm==1){
-                    $tabla.='
-                    <th></th>
-                    <th></th>';
-                  }
-                  $tabla.='
-              </tr>
               <tr style="background-color: #66b2e8">
                   <th style="width:1%;"></th>
-                  <th style="width:10%;">C&Oacute;DIGO</th>
-                  <th style="width:10%;">CITE</th>
-                  <th style="width:10%;">FECHA CITE</th>
-                  <th style="width:10%;">APERTURA PROGRAM&Aacute;TICA</th>
-                  <th style="width:20%;">UNIDAD, ESTABLECIMIENTO, PROYECTO DE INVERSI&Oacute;N</th>
-                  <th style="width:10%;">SERVICIO/COMPONENTE</th>
+                  <th style="width:10%;">C&Oacute;DIGO CERTIFICACIÓN POA</th>
+                  <th style="width:10%;">CITE </th>
+                  <th style="width:10%;">CITE FECHA </th>
+                  <th style="width:10%;">PROGRAMA</th>
+                  <th style="width:20%;">DESCRIPCI&Oacute;N</th>
+                  <th style="width:10%;">UNIDAD RESPONSABLE</th>
                   <th style="width:5%;">GESTI&Oacute;N</th>
-                  <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">EDICI&Oacute;N PARCIAL</th>
-                  <th style="width:7%;" title="ELIMINAR CERTIFICACI&Oacute;N">EDICI&Oacute;N TOTAL</th>
+                  <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">MODIFICAR CERTIFICACIÓN</th>
+                  <th style="width:7%;" title="ELIMINAR CERTIFICACI&Oacute;N">ELIMINAR CERTIFICACIÓN</th>
                   <th style="width:5%;">VER CERTIFICADO POA</th>';
                   if($this->tp_adm==1){
                     $tabla.='

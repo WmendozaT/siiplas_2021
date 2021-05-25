@@ -653,7 +653,16 @@ class Certificacionpoa extends CI_Controller{
   public function list_requerimientos_prelista($prod_id){
     $tabla='';
     $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
-
+    $tabla='<style>
+            input[type="checkbox"] {
+              display:inline-block;
+              width:20px;
+              height:20px;
+              margin:-1px 6px 0 0;
+              vertical-align:middle;
+              cursor:pointer;
+            }
+          </style>';
     $tabla.='
       <table class="table table-bordered" style="width:97%;" align="center" id="datos">
         <thead >
