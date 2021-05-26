@@ -979,14 +979,36 @@ class Ccertificacion_poa extends CI_Controller {
     /// solicitud: 0 -> revision
     /// Solicitud: 1 -> Aprobado
     $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($sol_id);
-    $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
-    $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
-    $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($sol_id); /// Requerimientos solicitados
-    $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']); /// firma unidad
+    if($data['solicitud'][0]['estado']==0){ /// Revision
+        $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
+        $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
+        $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($sol_id); /// Requerimientos solicitados
+        $data['conformidad']=$this->certificacionpoa->conformidad_solicitud($data['solicitud']); /// firma unidad
+        
+        $data['verif_solicitud']=true;
+        $data['verif_certificacion']=false;
+        $data['pie_reporte']='Solicitud_Certificacion_Poa '.$data['solicitud'][0]['tipo_subactividad'].' '.$data['solicitud'][0]['serv_descripcion'].' '.$data['solicitud'][0]['abrev'];
+    }
+    else{ /// Aprobado
+        $certpoa=$this->model_certificacion->get_solicitud_certificado($sol_id);
+        $certificacion=$this->model_certificacion->get_datos_certificacion_poa($certpoa[0]['cpoa_id']); /// Datos Certificacion
+        if(count($certificacion)!=0){
+            $data['verif_solicitud']=false;
+            $data['verif_certificacion']=true;
+            
+            $data['cabecera_cpoa']=$this->certificacionpoa->cabecera_certpoa($certificacion,$certificacion[0]['cpoa_codigo']); /// Cabecera Certificacion POA
+            $data['items_certificados']=$this->certificacionpoa->items_certificados($certpoa[0]['cpoa_id']); /// Lista de items certificados
+            $data['pie_certpoa']=$this->certificacionpoa->pie_certificacion_poa($certificacion,1); /// Pie Certificacion POA
+            $data['pie_reporte']='Certificacion_Poa'.$certificacion[0]['tipo_subactividad'].' '.$certificacion[0]['serv_descripcion'].' '.$certificacion[0]['abrev'];
+        }
+        else{ /// No aparece la certificacion poa
+            $data['verif_solicitud']=false;
+            $data['verif_certificacion']=false;
+            $data['pie_reporte']='Certificacion_Poa no encontrada !!!';
+        }
+    }
     
-    $data['verif_solicitud']=true;
-    $data['verif_certificacion']=false;
-    $data['pie_reporte']='Solicitud_Certificacion_Poa '.$data['solicitud'][0]['tipo_subactividad'].' '.$data['solicitud'][0]['serv_descripcion'].' '.$data['solicitud'][0]['abrev'];
+   
     $this->load->view('admin/ejecucion/certpoa_unidad/reporte_solicitud_cpoa', $data);
   }
 
@@ -1072,10 +1094,10 @@ class Ccertificacion_poa extends CI_Controller {
       $data['li']='<li>Mis Solicitudes de Certificación POA</li>';
       $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
       $data['opcion']='<a href="'.base_url().'index.php/solicitar_certpoa/'.$com_id.'" title="GENERAR NUEVA SOLICITUD" class="btn btn-default" style="width:100%;"><img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;GENERAR SOLICITUD</a>';
-      $data['cuerpo']='<article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      $data['cuerpo']='<article class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
                         '.$this->certificacionpoa->lista_solicitudes_certificacionespoa($com_id).'
                       </article>
-                      <article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                      <article class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                         <div class="well" id="ver"></div>
                       </article>';
 
@@ -1117,7 +1139,7 @@ class Ccertificacion_poa extends CI_Controller {
           $tabla='
               <div class="alert alert-danger alert-block">
                 <a class="close" data-dismiss="alert" href="#">×</a>
-                <h4 class="alert-heading">Solicitud e Certificación POA no encoentrado !!!</h4>
+                <h4 class="alert-heading">Solicitud e Certificación POA no encontrado !!!</h4>
               </div>';
         }
       }

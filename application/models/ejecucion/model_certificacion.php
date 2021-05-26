@@ -464,6 +464,7 @@ class Model_certificacion extends CI_Model{
         ca.cpoa_recomendacion as recomendacion_anterior,
         ca.fun_id as fun_id_certpoa,
         ca.tp_anulado as tipo_edicion,
+        ca.marca_original,
         cp.proy_id,
         cp.aper_id,
         cp.com_id,
@@ -1139,6 +1140,15 @@ class Model_certificacion extends CI_Model{
                 from requerimiento_solicitado rsol
                 Inner Join solicitud_cpoa_subactividad as sol On sol.sol_id=rsol.sol_id
                 where rsol.ins_id='.$ins_id.' and sol.estado=\'0\'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*---- Get Solicitud ya certificado ----*/
+    public function get_solicitud_certificado($sol_id){
+        $sql = 'select *
+                from certificacionpoa
+                where sol_id='.$sol_id.' and cpoa_gestion='.$this->gestion.' and cpoa_estado!=\'3\'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

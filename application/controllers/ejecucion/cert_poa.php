@@ -462,6 +462,7 @@ class Cert_poa extends CI_Controller {
                       'cpoa_fecha' => $cpoa[0]['cpoa_fecha'],
                       'fun_id' => $cpoa[0]['fun_id'],
                       'cpoa_recomendacion' => $cpoa[0]['cpoa_recomendacion'],
+                      'marca_original' => $cpoa[0]['cpoa_sello'], /// sello de Aprobacion 1, sin sello :0
                       'tp_anulado' => 2, /// 2 : Modificado, 3 : Eliminado
                     );
                     $this->db->insert('certificacionpoa_anulado',$data);
@@ -507,6 +508,7 @@ class Cert_poa extends CI_Controller {
                     'cpoa_codigo' => $cpoa[0]['cpoa_codigo'].'-CE', //// Codigo Certificacion POA
                     'fun_id' => $this->fun_id,
                     'cpoa_ref' => 1, /// 0: A editar, 1: Editado
+                    'cpoa_sello' => 0, /// 0: sin sello para proceso administrativo
                   );
                   $this->db->where('cpoa_id', $cpoa_id);
                   $this->db->update('certificacionpoa', $update_cpoa);

@@ -1105,6 +1105,16 @@ class Certificacionpoa extends CI_Controller{
  //// ======== CERTIFICACION POA ========
 /*-- CABECERA (Certificacion POa Aprobado) --*/
   public function cabecera_certpoa($certpoa,$codigo){
+    $fechas='
+      <td style="width:50%;height: 33%;"><b>CITE : </b> '.$certpoa[0]['cpoa_cite'].'</td>
+      <td style="width:50%;height: 33%"><b>FECHA : </b>'.date('d-m-Y',strtotime($certpoa[0]['cite_fecha'])).'</td>';
+    if($certpoa[0]['sol_id']!=0){
+      $solicitud=$this->model_certificacion->get_solicitud_cpoa($certpoa[0]['sol_id']);
+      $fechas='
+      <td style="width:33%;height: 33%;"><b>CITE SOL.: </b> '.$solicitud[0]['cite'].'</td>
+      <td style="width:33%;height: 33%"><b>FECHA SOL.: </b>'.date('d-m-Y',strtotime($solicitud[0]['fecha'])).'</td>
+      <td style="width:33%;height: 33%"><b>FECHA APROB.: </b>'.date('d-m-Y',strtotime($certpoa[0]['cite_fecha'])).'</td>';
+    }
     $tabla='';
     $tabla.='
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
@@ -1145,13 +1155,12 @@ class Certificacionpoa extends CI_Controller{
         </table>
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
             <tr style="border: solid 0px;">              
-                <td style="width:50%;">
+                <td style="width:40%;">
                 </td>
-                <td style="width:50%; height: 3%">
+                <td style="width:60%; height: 3%">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                       <tr style="font-size: 10px;font-family: Arial;">
-                          <td style="width:50%;height: 30%;"><b>CITE : </b> '.$certpoa[0]['cpoa_cite'].'</td>
-                          <td style="width:50%;height: 30%"><b>FECHA : </b>'.date('d-m-Y',strtotime($certpoa[0]['cite_fecha'])).'</td>
+                        '.$fechas.'
                       </tr>
                   </table>
                 </td>
@@ -1417,21 +1426,21 @@ class Certificacionpoa extends CI_Controller{
             <tr>
                 <td style="width: 3%;"></td>
                 <td style="width: 55%;">
-                    <b>RECOMENDACIONES</b><hr>
+                    <b>RECOMENDACIONES </b><hr>
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                         <tr bgcolor="#cae4fb">
-                            <td style="width: 100%;height: 2%;">';
-                              if($tp==1){
-                                $tabla.=''.$certpoa[0]['cpoa_recomendacion'].'';
+                          <td style="width: 100%;height: 2%;">';
+                            if($tp==1){
+                              $tabla.=''.$certpoa[0]['cpoa_recomendacion'].'';
+                            }
+                            elseif($tp==2){
+                              $cert_edit=$this->model_certificacion->get_datos_certificado_anulado($certpoa[0]['cpoa_id']);
+                              if(count($cert_edit)!=0){
+                                $tabla.='<b>EL PRESENTE DOCUMENTO YA NO PODRA SER MODIFICADO, DEBIDO A UNA RECIENTE EDICIÓN CON EL NRO. DE CITE : '.$cert_edit[0]['cite_edicion'].' EN FECHA '.date('d-m-Y',strtotime($cert_edit[0]['cite_fecha'])).' CON LA SIGUIENTE JUSTIFICACIÓN TECNICA : '.$cert_edit[0]['cite_justificacion'].'</b>';
                               }
-                              elseif($tp==2){
-                                $cert_edit=$this->model_certificacion->get_datos_certificado_anulado($certpoa[0]['cpoa_id']);
-                                if(count($cert_edit)!=0){
-                                  $tabla.='<b>EL PRESENTE DOCUMENTO YA NO PODRA SER MODIFICADO, DEBIDO A UNA RECIENTE EDICIÓN CON EL NRO. DE CITE : '.$cert_edit[0]['cite_edicion'].' EN FECHA '.date('d-m-Y',strtotime($cert_edit[0]['cite_fecha'])).' CON LA SIGUIENTE JUSTIFICACIÓN TECNICA : '.$cert_edit[0]['cite_justificacion'].'</b>';
-                                }
-                              }
-                            $tabla.='
-                            </td>
+                            }
+                          $tabla.='
+                          </td>
                         </tr>
                     </table>
                 </td>
@@ -1440,32 +1449,24 @@ class Certificacionpoa extends CI_Controller{
         <hr>
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;" align="center">
           <tr>
-            <td style="width: 40%;">
-              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                  <tr style="font-size: 10px;font-family: Arial; height:65px;">
-                      <td style="width:100%;" colspan="2"><b>EMITIDO POR<br></b></td>
-                  </tr>
-                  <tr style="font-size: 9px;font-family: Arial; height:65px;">
-                      <td><b>RESPONSABLE</b></td>
-                      <td>'.$certpoa[0]['fun_nombre'].' '.$certpoa[0]['fun_paterno'].' '.$certpoa[0]['fun_materno'].'</td>
-                  </tr>
-                  <tr style="font-size: 9px;font-family: Arial; height:65px;">
-                      <td><b>CARGO</b></td>
-                      <td>'.$certpoa[0]['fun_cargo'].'</td>
-                  </tr>
-                  <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
-                      <td colspan="2"><b><br><br>FIRMA</b></td>
-                  </tr>
-              </table>
-            </td>
             <td style="width: 40%;">';
               $color='';
-              if($certpoa[0]['cpoa_sello']==1){
-                $color='color: #3276b1';
-                $tabla.='<barcode  value="'.$certpoa[0]['fun_nombre'].' '.$certpoa[0]['fun_paterno'].' '.$certpoa[0]['fun_materno'].'" style="border: none; width: 70mm;color: #3276b1">CERTIFICACION POA EN LINEA : '.$certpoa[0]['cpoa_codigo'].' - DPTO. NAL. DE PLANIFICACION</barcode>';
+              if($tp==1){
+                  $cert_edit=$this->model_certificacion->get_datos_certificado_anulado($certpoa[0]['cpoa_id']);
+                  if(count($cert_edit)!=0){
+                    $tabla.=$this->pie_certificado($certpoa,$cert_edit[0]['marca_original']);
+                  }
+                  else{
+                    $tabla.=$this->pie_certificado($certpoa,$certpoa[0]['cpoa_sello']);
+                  }
               }
-            $tabla.='
+              elseif($tp==2){ /// si se ha editado 
+                $tabla.=$this->pie_certificado($certpoa,$certpoa[0]['cpoa_sello']);
+              }
+
+            $tabla.='  
             </td>
+            <td style="width: 40%;"></td>
             <td style="width: 20%;" align="center">
                 <qrcode value="'.$certpoa[0]['cpoa_codigo'].' | '.$certpoa[0]['cpoa_cite'].'" style="border: none; width: 18mm; '.$color.'"></qrcode>
             </td>
@@ -1487,6 +1488,52 @@ class Certificacionpoa extends CI_Controller{
       </table>';
     return $tabla;
   }
+
+
+
+  /*--- pie de reporte cert poa normal  */
+  public function pie_certificado($certpoa,$cpoa_sello){
+    $tabla='';
+    $color='';
+      if($cpoa_sello==1){
+        $color='color: #3276b1';
+        $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+          <tr style="font-size: 10px;font-family: Arial;">
+            <td style="width:100%;height:20px;"><b>APROBADO POR</b></td>
+          </tr>
+          <tr style="font-size: 9px;font-family: Arial; height:65px;">
+            <td align="center">
+              <barcode  value="'.$certpoa[0]['fun_nombre'].' '.$certpoa[0]['fun_paterno'].' '.$certpoa[0]['fun_materno'].'" style="border: none; width: 80mm;color: #3276b1"></barcode>
+            </td>
+          </tr>
+        </table>';
+      }
+      else{
+        $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+          <tr style="font-size: 10px;font-family: Arial; height:65px;">
+              <td style="width:100%;" colspan="2"><b>EMITIDO POR<br></b></td>
+          </tr>
+          <tr style="font-size: 9px;font-family: Arial; height:65px;">
+              <td><b>RESPONSABLE</b></td>
+              <td>'.$certpoa[0]['fun_nombre'].' '.$certpoa[0]['fun_paterno'].' '.$certpoa[0]['fun_materno'].'</td>
+          </tr>
+          <tr style="font-size: 9px;font-family: Arial; height:65px;">
+              <td><b>CARGO</b></td>
+              <td>'.$certpoa[0]['fun_cargo'].'</td>
+          </tr>
+          <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
+              <td colspan="2"><b><br><br>FIRMA</b></td>
+          </tr>
+        </table>';
+      }
+    return $tabla;
+  }
+
+
+
+
 
 
 
@@ -1876,23 +1923,28 @@ class Certificacionpoa extends CI_Controller{
                   <thead>
                     <tr style="height:35px;">
                       <th style="width:1%;">#</th>
-                      <th style="width:10%;">CITE SOLICITUD</th>
-                      <th style="width:10%;">FECHA SOLICTUD</th>
+                      <th style="width:8%;">CITE SOLICITUD</th>
+                      <th style="width:8%;">FECHA SOLICTUD</th>
                       <th style="width:20%;">OPERACIÓN</th>
-                      <th style="width:10%;">ESTADO</th>
-                      <th style="width:10%;">SOLICITUD</th>
-                      <th style="width:10%;">ANULAR</th>
+                      <th style="width:6%;">ESTADO</th>
+                      <th style="width:10%;">CERTIFICACIÓN POA</th>
+                      <th style="width:6%;">SOLICITUD</th>
+                      <th style="width:6%;">ANULAR</th>
                     </tr>
                   </thead>
                   <tbody>';
                   $nro=0;
                   foreach($solicitudes as $row){
                     $nro++;
-                    $color='#d9f9f5';
-                    $estado='APROBADO';
-                    if($row['estado']==0){
-                      $color='#f7cbcb';
-                      $estado='NO APROBADO';
+                    $codigo_cpoa='';
+                    $color='#f7cbcb';
+                    $estado='NO APROBADO';
+
+                    if($row['estado']==1){
+                      $certpoa=$this->model_certificacion->get_solicitud_certificado($row['sol_id']);
+                      $codigo_cpoa=$certpoa[0]['cpoa_codigo'];
+                      $color='#d9f9f5';
+                      $estado='APROBADO';
                     }
                     $tabla.='
                     <tr bgcolor='.$color.'>
@@ -1901,15 +1953,16 @@ class Certificacionpoa extends CI_Controller{
                       <td>'.date('d-m-Y',strtotime($row['fecha'])).'</td>
                       <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
                       <td align=center><b>'.$estado.'</b></td>
+                      <td><b>'.$codigo_cpoa.'</b></td>
                       <td align=center>
-                        <a href="#" class="btn btn-default ver_solicitud" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'">
+                        <a href="#" class="btn btn-default ver_solicitud" style="width:100%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'">
                           <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
                         </a>
                       </td>
                       <td align=center>';
                         if($row['estado']==0){
                           $tabla.='
-                          <a href="#" class="btn btn-default del_solicitud" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
+                          <a href="#" class="btn btn-default del_solicitud" style="width:100%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
                             <img src="'.base_url().'assets/img/delete.png" width="22" height="22"/>
                           </a>';
                         }
@@ -1935,7 +1988,6 @@ class Certificacionpoa extends CI_Controller{
       if($cite[0]['cite_codigo']!=''){
         $codigo=$cite[0]['cite_codigo'];
       }
-
 
       $tabla.='
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">

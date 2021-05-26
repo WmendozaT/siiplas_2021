@@ -2272,6 +2272,7 @@ SELECT
     canulado.cite,
     canulado.justificacion,
     canulado.tp_anulado,
+    canulado.marca_original,
     cpoa.cpoa_id,
     cpoa.proy_id,
     cpoa.cpoa_codigo,
