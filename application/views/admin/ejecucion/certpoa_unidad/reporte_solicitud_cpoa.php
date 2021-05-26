@@ -58,7 +58,7 @@ ob_start();
                 <br>
                 <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"  ><b>DOCUMENTO NO VALIDO PARA PROCESOS ADMINISTRATIVOS !!!</b></div>
         </page>
-        <barcode  value="Wilmer Mendoza" style="border: none; width: 50mm;"></barcode>
+        
         <?php
     }
 

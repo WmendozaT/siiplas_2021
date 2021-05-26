@@ -1458,10 +1458,16 @@ class Certificacionpoa extends CI_Controller{
                   </tr>
               </table>
             </td>
-            <td style="width: 40%;">
+            <td style="width: 40%;">';
+              $color='';
+              if($certpoa[0]['cpoa_sello']==1){
+                $color='color: #3276b1';
+                $tabla.='<barcode  value="'.$certpoa[0]['fun_nombre'].' '.$certpoa[0]['fun_paterno'].' '.$certpoa[0]['fun_materno'].'" style="border: none; width: 70mm;color: #3276b1">CERTIFICACION POA EN LINEA : '.$certpoa[0]['cpoa_codigo'].' - DPTO. NAL. DE PLANIFICACION</barcode>';
+              }
+            $tabla.='
             </td>
             <td style="width: 20%;" align="center">
-                <qrcode value="'.$certpoa[0]['cpoa_codigo'].' | '.$certpoa[0]['cpoa_cite'].'" style="border: none; width: 18mm;"></qrcode>
+                <qrcode value="'.$certpoa[0]['cpoa_codigo'].' | '.$certpoa[0]['cpoa_cite'].'" style="border: none; width: 18mm; '.$color.'"></qrcode>
             </td>
           </tr>
           <tr>

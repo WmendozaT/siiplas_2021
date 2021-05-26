@@ -1167,8 +1167,9 @@ class Ccertificacion_poa extends CI_Controller {
   function aprobar_solicitud_cpoa(){
     if ($this->input->is_ajax_request() && $this->input->post()) {
       $post = $this->input->post();
-      $sol_id = $post['sol_id']; /// Solicitud Id
-      $recomendacion = $post['recomendacion']; /// Recomendacion
+      $sol_id = $this->security->xss_clean($post['sol_id']); /// Solicitud Id
+      $recomendacion = $this->security->xss_clean($post['recomendacion']); /// Recomendacion
+      $sello = $this->security->xss_clean($post['sello']); /// sello
       $solicitud=$this->model_certificacion->get_solicitud_cpoa($sol_id); // solicitud
       $requerimientos=$this->model_certificacion->get_lista_requerimientos_solicitados($sol_id); // Requerimientos
 
@@ -1186,6 +1187,7 @@ class Ccertificacion_poa extends CI_Controller {
           'prod_id' => $solicitud[0]['prod_id'],
           'sol_id' => $solicitud[0]['sol_id'],
           'cpoa_recomendacion' => $recomendacion,
+          'cpoa_sello' => $sello,
         );
         $this->db->insert('certificacionpoa', $data_to_store);
         $cpoa_id=$this->db->insert_id();

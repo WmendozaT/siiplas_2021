@@ -2198,6 +2198,7 @@ select
                 cpoa.cite_fecha,
 cpoa.sol_id,
 cpoa.cpoa_recomendacion,
+cpoa.cpoa_sello,
 cpoa. cpoa_observacion,
                 f.fun_nombre,
                 f.fun_paterno,
@@ -2258,7 +2259,7 @@ cpoa. cpoa_observacion,
 	Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
 	Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
 
-                where cpoa.cpoa_estado!=3 and c.estado!=3 and pfe.pfec_estado=1 and pfe.estado!=3;
+     where cpoa.cpoa_estado!=3 and c.estado!=3 and pfe.pfec_estado=1 and pfe.estado!=3;
 
 	ALTER TABLE public.vista_get_certificacionpoa
 	OWNER TO postgres
@@ -2350,7 +2351,7 @@ ALTER TABLE public.vista_get_certificacionpoa_anulado_original
 
 
 
-  ////// VISTA ESTABLECIMIENTO DE SALUD 2021
+  ////// VISTA ESTABLECIMIENTO DE SALUDd 2021
 
 CREATE OR REPLACE VIEW public.vlista_establecimientos_salud AS 
 SELECT dep.dep_id,

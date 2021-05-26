@@ -601,6 +601,8 @@
         $("#generar_cert").on("click", function (e) {
             var error='false';
             var recomendacion=document.getElementById('recomendacion').value;
+            var sello=$('[name="sello"]').val();
+          
             if(!recomendacion){
                 $('#error2').html('<font color="red" size="1">REGISTRE RECOMENDACIÓN (*)</font>');
                 document.form_solicitud.recomendacion.focus() 
@@ -622,7 +624,7 @@
                           url: url,
                           type: "POST",
                           dataType: "json",
-                          data: "sol_id="+sol_id+"&recomendacion="+recomendacion
+                          data: "sol_id="+sol_id+"&recomendacion="+recomendacion+"&sello="+sello
                       });
 
                       request.done(function (response, textStatus, jqXHR) { 

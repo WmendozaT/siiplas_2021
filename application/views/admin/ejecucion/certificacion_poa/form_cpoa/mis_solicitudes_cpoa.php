@@ -134,7 +134,20 @@
                                 <textarea class="form-control" name="recomendacion" id="recomendacion" placeholder="Recomendacion y/o Observacion a la Solicitud ..." rows="4"></textarea>
                             </div>
                         </div>
-                    </fieldset>                    
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" id="error2">APROBAR EL LINEA</label>
+                            <div class="col-md-10">
+                                 <select class="form-control" name="sello">
+                                    <option value="0" selected>NO</option>
+                                    <option value="1">SI</option>
+                                  </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                                   
                     <div class="form-actions">
                         <div class="row">
                             <div id="but" style="display: block;">

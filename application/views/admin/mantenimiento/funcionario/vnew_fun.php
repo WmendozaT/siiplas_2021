@@ -237,7 +237,7 @@
                                                                                 }
                                                                                 else{
                                                                                     echo '
-                                                                                    <input type="radio" id="ro_id" name="rol_id" value="'.$row['r_id'].'">
+                                                                                    <input type="radio" id="rol_id" name="rol_id" value="'.$row['r_id'].'">
                                                                                     <label for="male"><b>'.$row['r_nombre'].'</b></label><br>';
                                                                                 }
                                                                                 
