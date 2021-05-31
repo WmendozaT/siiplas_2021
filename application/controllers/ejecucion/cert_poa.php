@@ -34,7 +34,7 @@ class Cert_poa extends CI_Controller {
         $this->tp_adm = $this->session->userData('tp_adm');
         $this->fun_id = $this->session->userData('fun_id');
         $this->fun_adm = $this->session->userData('adm');
-        $this->fecha_entrada = strtotime("10-05-2021 00:00:00");
+        $this->fecha_entrada = strtotime("31-05-2021 00:00:00");
 
         }
         else{

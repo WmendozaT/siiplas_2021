@@ -628,8 +628,9 @@ class Certificacionpoa extends CI_Controller{
         <input name="base" type="hidden" value="'.base_url().'">
         <fieldset>
           <legend><b>'.$titulo.'</b></legend>
+          <span class="badge bg-color-greenLight" style="font-size: 35px;">Paso 1)</span> <span class="badge bg-color-greenLight" style="font-size: 25px;"> Seleccione la Operación donde se encuentre alineado el items a Certificar</span><hr>
           <div class="form-group">
-            <label class="col-md-2 control-label">SELECCIONE OPERACI&Oacute;N</label>
+            <label class="col-md-2 control-label"><b>OPERACI&Oacute;N</b></label>
             <div class="col-md-6">
               <select class="form-control" name="prod_id" id="prod_id">
                 <option value="0">Seleccione Operación</option>';
@@ -1452,7 +1453,7 @@ class Certificacionpoa extends CI_Controller{
             <td style="width: 40%;">';
               $color='';
               if($tp==1){
-                  $cert_edit=$this->model_certificacion->get_datos_certificado_anulado($certpoa[0]['cpoa_id']);
+                  $cert_edit=$this->model_certificacion->get_datos_certificacion_poa_anulados($certpoa[0]['cpoa_id']);
                   if(count($cert_edit)!=0){
                     $tabla.=$this->pie_certificado($certpoa,$cert_edit[0]['marca_original']);
                   }

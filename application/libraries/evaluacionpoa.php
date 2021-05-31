@@ -789,9 +789,10 @@ class Evaluacionpoa extends CI_Controller{
         $par[$i][3]=0;
       }
 
-      $nro_1=0;$nro_2=0;$nro_3=0;$nro_4=0;
+      $nro_1=0;$nro_2=0;$nro_3=0;$nro_4=0;$nro_unidades=0;
       foreach($unidades as $row){
         if(count($this->model_evalunidad->nro_operaciones_programadas_acumulado($row['proy_id'],$this->tmes))!=0){
+          $nro_unidades++;
           $eval=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
           $eficacia=$eval[5][$this->tmes];
           if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
@@ -802,7 +803,7 @@ class Evaluacionpoa extends CI_Controller{
       }
 
       for ($i=1; $i <=4 ; $i++) { 
-        $par[$i][3]=round((($par[$i][2]/count($unidades))*100),2);
+        $par[$i][3]=round((($par[$i][2]/$nro_unidades)*100),2);
       }
 
       return $par;
@@ -820,9 +821,10 @@ class Evaluacionpoa extends CI_Controller{
         $par[$i][3]=0;
       }
 
-      $nro_1=0;$nro_2=0;$nro_3=0;$nro_4=0;
+      $nro_1=0;$nro_2=0;$nro_3=0;$nro_4=0;$nro_dist=0;
       foreach($distritales as $row){
         if(count($this->model_evalunidad->nro_operaciones_programadas_acumulado($row['proy_id'],$this->tmes))!=0){
+          $nro_dist++;
           $eval=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
           $eficacia=$eval[5][$this->tmes];
           if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
@@ -833,7 +835,7 @@ class Evaluacionpoa extends CI_Controller{
       }
 
       for ($i=1; $i <=4 ; $i++) { 
-        $par[$i][3]=round((($par[$i][2]/count($distritales))*100),2);
+        $par[$i][3]=round((($par[$i][2]/$nro_dist)*100),2);
       }
 
       return $par;

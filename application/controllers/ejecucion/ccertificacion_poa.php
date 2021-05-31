@@ -34,7 +34,7 @@ class Ccertificacion_poa extends CI_Controller {
       $this->fun_id = $this->session->userData('fun_id');
       $this->load->library('certificacionpoa');
 
-      $this->fecha_entrada = strtotime("10-05-2021 00:00:00");
+      $this->fecha_entrada = strtotime("31-05-2021 00:00:00");
       }
       else{
           $this->session->sess_destroy();
@@ -493,7 +493,7 @@ class Ccertificacion_poa extends CI_Controller {
         $data['items_certificados_original']=$this->certificacionpoa->items_certificados_original_guardados($cpoa_id,1); /// Lista de items certificados Original
         $data['pie_certpoa_original']=$this->certificacionpoa->pie_certificacion_poa($cert_edit,1); /// Pie Certificacion POA
         $data['pie_reporte']='Certificacion_Poa_anulado'.$cert_edit[0]['tipo_subactividad'].' '.$cert_edit[0]['serv_descripcion'].' '.$cert_edit[0]['abrev'];
-        
+
         $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/reporte_solicitud_cpoa_editado', $data); 
       }
       else{
@@ -750,7 +750,7 @@ class Ccertificacion_poa extends CI_Controller {
 
       $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
-      $titulo=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].' / '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'];
+      $titulo='<div style="font-family: new times roman;">'.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].' / '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'</div>';
       
       $presupuesto=$this->model_certificacion->saldo_presupuesto_unidad($componente[0]['proy_id']);
       if(($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0){
@@ -763,6 +763,7 @@ class Ccertificacion_poa extends CI_Controller {
       }
 
       $data['loading']='<div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
+      
       $data['loading_form']='<div id="load" style="display: none" align="center">
                               <br><img  src="'.base_url().'/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO SOLICITUD DE CERTIFICACI&Oacute;N POA ....</b>
                             </div>';
@@ -794,21 +795,21 @@ class Ccertificacion_poa extends CI_Controller {
 
 
 
-  /*------ FORMULARIO CERTIFICACION POA  -------*/
+  /*------ FORMULARIO CERTIFICACION POA (SOLICITUD) -------*/
   public function formulario_certpoa($prod_id){
      /// para listas mayores a 500
     $tabla='';
     $tabla.='
+        <div class="well">
         <input type="hidden" name="tot" id="tot" value="0">
         <input type="hidden" name="tot_temp" id="tot_temp" value="0">
         <input type="hidden" name="prod_id" id="prod_id" value="'.$prod_id.'">
         <fieldset>
-          <div class="alert alert-success alert-block">
-            <h4 class="alert-heading">SOLICITAR CERTIFICACIÓN POA!</h4>
-            Seleccione los siguientes Requerimientos Disponibles para su solicitud POA
-          </div>
-          <section class="col col-6">
-            <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador de Requerimientos...."/><br>
+          <span class="badge bg-color-greenLight" style="font-size: 35px;">Paso 2)</span> <span class="badge bg-color-greenLight" style="font-size: 25px;"> Seleccione Items a certificar </span><hr>
+        </fieldset>
+        <fieldset>
+          <section class="col col-4">
+            <input id="searchTerm" type="text" onkeyup="doSearch()" style="width:35%;" class="form-control" placeholder="Buscador de Requerimientos...."/><br>
           </section>
           <div class="row" align="center">
             <div class="table-responsive" align="center">
@@ -817,7 +818,8 @@ class Ccertificacion_poa extends CI_Controller {
               </center>
             </div>
           </div>
-        </fieldset>';
+        </fieldset>
+        </div>';
     return  $tabla;
   }
 
@@ -953,6 +955,7 @@ class Ccertificacion_poa extends CI_Controller {
           $data['cuerpo']='
             <input name="base" type="hidden" value="'.base_url().'">
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <span class="badge bg-color-greenLight" style="font-size: 35px;">Paso 4)</span> <span class="badge bg-color-greenLight" style="font-size: 25px;"> Solicitud Generada Exitosamente, comuniquese con el Dpto. o Unidad de Planificación para su aprobación..</span><hr>
               <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>
             </article>';
         }

@@ -89,6 +89,7 @@
                     <div class="row">
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <section id="widget-grid" class="well">
+                                <b><div style="font-size: x-large; font-variant: small-caps;"> GENERAR SOLICITUD DE CERTIFICACIÓN POA</div></b>
                                 <div class="">
                                 <?php echo $select_ope; ?>
                                 </div>
@@ -96,12 +97,18 @@
                         </article>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <?php echo $loading;?>
-                            <form id="cert_form" name="cert_form" novalidate="novalidate" action="<?php echo site_url()?>/ejecucion/ccertificacion_poa/valida_solicitud" method="post" class="smart-form">
+                            <form id="cert_form" name="cert_form" novalidate="novalidate" action="<?php echo site_url()?>/ejecucion/ccertificacion_poa/valida_solicitud" method="post" class="form-horizontal">
                                 <div id="lista_requerimientos"></div>
                                 <footer>
-                                  <div id="but" style="display:none;">
-                                    <input type="button" value="GENERAR SOLICITUD DE CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success" title="SOLICITUD CERTIFICACION POA">
+
+                                  <div class="well" id="but" style="display:none;" align="right">
+                                    <div align="Left">
+                                        <fieldset>
+                                          <span class="badge bg-color-greenLight" style="font-size: 35px;">Paso 3)</span> <span class="badge bg-color-greenLight" style="font-size: 25px;"> verifique el items y la temporalidad y haga click en GENERAR SOLICITUD </span><hr>
+                                        </fieldset>
+                                    </div>
                                     <a href="<?php echo base_url() ?>index.php/cert/list_poas" class="btn btn-default" title="MIS OPERACIONES"> CANCELAR </a>
+                                    <input type="button" value="GENERAR SOLICITUD DE CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success" title="SOLICITUD CERTIFICACION POA">
                                   </div>
                                 </footer>
                             </form>
