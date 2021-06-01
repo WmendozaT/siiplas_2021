@@ -637,46 +637,48 @@ class Cert_poa extends CI_Controller {
                       $this->db->where('req_id', $row['req_id']);
                       $this->db->delete('requerimiento_solicitado');
                     }
-
-                    $this->db->where('sol_id', $cpoa[0]['sol_id']);
-                    $this->db->delete('solicitud_cpoa_subactividad');
                     /*------------------------------------------*/
                   }
 
-                    /*------ ELIMINANDO CERTIFICACIÓN POA  -----*/
-                    $this->delete_certificacion_item($cpoa_id); //// eliminando items certificados
+                  /*------ ELIMINANDO CERTIFICACIÓN POA  -----*/
+                  $this->delete_certificacion_item($cpoa_id); //// eliminando items certificados
 
-                    if(count($this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id))==0){
-                      /*------ UPDATE CERTIFICACION POA -----*/
-                        $update_cpoa = array( 
-                          'cpoa_estado' => 3, 
-                          'cpoa_ref' => 1, /// 0: A editar, 1: Editado y anulado
-                          'sol_id' => 0, /// 0 anulando la solicitud poa 
-                        );
-                        $this->db->where('cpoa_id', $cpoa_id);
-                        $this->db->update('certificacionpoa', $update_cpoa);
-                      /*-----------------------------------------------*/
+                  if(count($this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id))==0){
+                    /*------ UPDATE CERTIFICACION POA -----*/
+                      $update_cpoa = array( 
+                        'cpoa_estado' => 3, 
+                        'cpoa_ref' => 1, /// 0: A editar, 1: Editado y anulado
+                        'sol_id' => 0, /// 0 anulando la solicitud poa 
+                      );
+                      $this->db->where('cpoa_id', $cpoa_id);
+                      $this->db->update('certificacionpoa', $update_cpoa);
+                    /*-----------------------------------------------*/
 
-                      $verificando=$this->model_modrequerimiento->verif_modificaciones_distrital($cpoa[0]['dist_id']);
-                      $nro_mod=$verificando[0]['cert_poa_delete']+1;
+                    if(strtotime($cpoa[0]['cpoa_fecha'])>$this->fecha_entrada){
+                      $this->db->where('sol_id', $cpoa[0]['sol_id']);
+                      $this->db->delete('solicitud_cpoa_subactividad');
+                    }
 
-                      /*----- Update Configuracion mod distrital -----*/
-                        $update_conf= array(
-                          'cert_poa_delete' => $nro_mod
-                        );
-                        $this->db->where('mod_id', $verificando[0]['mod_id']);
-                        $this->db->update('conf_modificaciones_distrital', $this->security->xss_clean($update_conf));
-                      /*----------------------------------------------*/
+                    $verificando=$this->model_modrequerimiento->verif_modificaciones_distrital($cpoa[0]['dist_id']);
+                    $nro_mod=$verificando[0]['cert_poa_delete']+1;
+
+                    /*----- Update Configuracion mod distrital -----*/
+                      $update_conf= array(
+                        'cert_poa_delete' => $nro_mod
+                      );
+                      $this->db->where('mod_id', $verificando[0]['mod_id']);
+                      $this->db->update('conf_modificaciones_distrital', $this->security->xss_clean($update_conf));
+                    /*----------------------------------------------*/
 
 
-                      /// Redireccionando a un reporte de eliminación
-                      redirect('cert/ver_cpoa_anulado/'.$cpoa_id);
-                  }
-                  else{
-                    $this->session->set_flashdata('danger','NOSE PUEDO ELIMINAR !!!');
-                    redirect('ejec/menu_cpoa');
-                  }
-                /*------------------------------------------*/
+                    /// Redireccionando a un reporte de eliminación
+                    redirect('cert/ver_cpoa_anulado/'.$cpoa_id);
+                }
+                else{
+                  $this->session->set_flashdata('danger','NOSE PUEDO ELIMINAR !!!');
+                  redirect('ejec/menu_cpoa');
+                }
+              /*------------------------------------------*/
 
               }
               else{

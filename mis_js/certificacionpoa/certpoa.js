@@ -657,6 +657,37 @@
     }
 
 
+    /// --- seleccion de aprobacion en linea de la certificacion
+    $("#sello").change(function () {
+      $("#sello option:selected").each(function () {
+          elegido=$(this).val();
+          responsable=document.getElementById("resp").value;
+          if(elegido!=''){
+            if(elegido==0){
+              $('#tip_autorizacion').html('<span class="badge bg-color-orange" style="font-size: 15px;"> Para la validez del documento, el mismo debera ser firmado por el Responsable de Planificación.</span><hr>');
+            }
+            else{
+              $('#tip_autorizacion').html('<center><span class="badge bg-color-greenLight" style="font-size: 15px;">Yo '+responsable+' Responsable POA<br> Doy el visto bueno y validez al presente documento para procesos administrativos internos de la institución.</span></center>');
+            }
+
+            document.getElementById("but").style.display = 'block';
+
+          }
+          else{
+            document.getElementById("but").style.display = 'none';
+          }
+      });
+    });
+
+
+
+
+
+
+
+
+
+
 
     /// Anular Solicitud de Certificacion POa
     function anular_solicitud(sol_id) {

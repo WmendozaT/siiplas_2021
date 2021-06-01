@@ -192,7 +192,7 @@ class User extends CI_Controller{
             if($this->gestion>2020){
                 $data['mensaje']='';
                 $data['seguimiento_poa']='';
-                if($this->fun_id==592){ //// Exclusivo para la Regional LA paz
+                if($this->fun_id==592 || $this->fun_id==709){ //// Exclusivo para la Regional LA paz
                     $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));
                 }
                 else{ /// Listado normal
@@ -219,7 +219,7 @@ class User extends CI_Controller{
     /*---- LISTA DE OPERACIONES A SER EJECUTADAS EN EL MES ----*/
     public function mensaje_ejecucion_operaciones_mes($nro){
         $tabla='';
-        if($this->fun_id==592){ /// Exclusivo La paz
+        if($this->fun_id==592 || $this->fun_id==709){ /// Exclusivo La paz
             $req=$this->model_notificacion->nro_requerimientos_acertificar_mensual_x_mes_regional($this->dep_id,$this->verif_mes[1]);
         }
         else{

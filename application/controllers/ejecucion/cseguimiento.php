@@ -589,7 +589,7 @@ class Cseguimiento extends CI_Controller {
 
     /*--- LISTA DE OPERACIONES A EJECUTAR EN EL MES ----*/
     public function seguimiento_operaciones_mes($dist_id){
-      if($this->fun_id==592){ /// Exclusivo La paz
+      if($this->fun_id==592 || $this->fun_id==709){ /// Exclusivo La paz
         $unidades=$this->model_seguimientopoa->get_lista_unidad_operaciones_regional($this->dep_id,$this->verif_mes[1],$this->gestion);
       }
       else{
@@ -611,7 +611,7 @@ class Cseguimiento extends CI_Controller {
                 <div class="panel-group smart-accordion-default" id="accordion">';
                 $nro=0;
                   foreach ($unidades as $rowp) {
-                    if($this->fun_id==592){ /// Exclusivo la paz
+                    if($this->fun_id==592 || $this->fun_id==709){ /// Exclusivo la paz
                       $operaciones=$this->model_seguimientopoa->get_lista_operaciones_programados_regional($this->dep_id,$this->verif_mes[1],$this->gestion,$rowp['proy_id']);
                     }
                     else{

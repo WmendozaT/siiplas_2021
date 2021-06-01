@@ -672,7 +672,8 @@ class Ccertificacion_poa extends CI_Controller {
   /*-- VALIDAR SOLICITUD DE CERTIFICACIÓN POA --*/
   public function ver_mis_solicitudes_certpoa(){
     $data['menu']=$this->certificacionpoa->menu(4);
-    $data['titulo']='<h1>RESPONSABLE : '.$this->session->userdata('funcionario').' -> <small>'.$this->certificacionpoa->tp_resp().'</small></h1>';
+    $data['titulo']='<h1>RESPONSABLE : '.$this->session->userdata('funcionario').' -> <small>'.$this->certificacionpoa->tp_resp().'</small></h1>
+                    <input type="hidden" name="resp" id="resp" value="'.$this->session->userdata('funcionario').'">';
 
     $data['alert']='<h2 class="alert alert-success"><center>LISTA DE SOLICITUDES DE CERTIFICACIÓN POA '.$this->gestion.'</center></h2>';
     $data['opcion']='Hola Mundo';
@@ -1095,7 +1096,7 @@ class Ccertificacion_poa extends CI_Controller {
     if(count($componente)!=0){
       $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
       $data['li']='<li>Mis Solicitudes de Certificación POA</li>';
-      $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
+      $data['titulo']='<div style="font-size: x-large; font-variant: small-caps;"><b>MIS SOLICITUDES </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
       $data['opcion']='<a href="'.base_url().'index.php/solicitar_certpoa/'.$com_id.'" title="GENERAR NUEVA SOLICITUD" class="btn btn-default" style="width:100%;"><img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;GENERAR SOLICITUD</a>';
       $data['cuerpo']='<article class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
                         '.$this->certificacionpoa->lista_solicitudes_certificacionespoa($com_id).'

@@ -478,9 +478,122 @@ class Certificacionpoa extends CI_Controller{
       return $tabla;
     }
 
-    
- /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION) ------*/
+  
+  /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION) ------*/
   public function list_requerimientos_certificados($cpoa_id){
+    $tabla='<style>
+            table{font-size: 9.5px;
+            width: 100%;
+            max-width:1550px;
+            overflow-x: scroll;
+            font-family: Copperplate;
+            }
+            th{
+              padding: 1.4px;
+              text-align: center;
+              font-size: 9.5px;
+            }
+            input[type="checkbox"] {
+              display:inline-block;
+              width:20px;
+              height:20px;
+              margin:-1px 6px 0 0;
+              vertical-align:middle;
+              cursor:pointer;
+            }
+            #mdialTamanio{
+              width: 70% !important;
+            }
+          </style>';
+    $requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
+   //   $requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id);
+    $tabla.='
+      <table class="table table-bordered" style="width:97%;" align="center" id="datos">
+        <thead >
+          <tr>
+            <th style="width:1%;">'.$cpoa_id.'</th>
+            <th style="width:2%;"></th>
+            <th style="width:2%;"></th>
+            <th style="width:4%;">PARTIDA</th>
+            <th style="width:16%;">REQUERIMIENTO</th>
+            <th style="width:5%;">UNIDAD DE MEDIDA</th>
+            <th style="width:3%;">CANTIDAD</th>
+            <th style="width:5%;">COSTO UNITARIO</th>
+            <th style="width:5%;">COSTO TOTAL</th>
+            <th style="width:5%;">MONTO CERTIFICADO</th>
+            <th style="width:4.5%;">ENE.</th>
+            <th style="width:4.5%;">FEB.</th>
+            <th style="width:4.5%;">MAR.</th>
+            <th style="width:4.5%;">ABR.</th>
+            <th style="width:4.5%;">MAY.</th>
+            <th style="width:4.5%;">JUN.</th>
+            <th style="width:4.5%;">JUL.</th>
+            <th style="width:4.5%;">AGO.</th>
+            <th style="width:4.5%;">SEPT.</th>
+            <th style="width:4.5%;">OCT.</th>
+            <th style="width:4.5%;">NOV.</th>
+            <th style="width:4.5%;">DIC.</th>
+          </tr>
+        </thead>
+        <tbody>';
+        $nro=0;
+        foreach($requerimientos as $row){
+          $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
+        //  $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
+         // $get_item_cert=$this->model_certificacion->get_item_certificados($row['ins_id'],$cpoa_id);
+          $display='style="display: none"';
+          $check='';
+/*          if(count($get_item_cert)!=0){
+            $display='';
+            $check='checked="checked"';
+            $monto_certificado=$get_item_cert[0]['monto_certificado'];
+          }*/
+
+          $bgcolor='#f2fded';
+        /*  if(count($this->model_certificacion->get_insumo_monto_cpoa_certificado($row['ins_id'],$cpoa_id))==0){
+            $bgcolor='#f59787';
+          }*/
+          $nro_mes=count($this->model_certificacion->verif_temporalidad_certificado($row['ins_id']));
+          $nro++;
+          $tabla.='
+          <tr bgcolor='.$bgcolor.' title='.$row['ins_id'].' id="tr'.$nro.'" >
+            <td>'.$nro.'</td>
+            <td>
+              <input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila_edit(this.value,'.$nro.','.$cpoa_id.',this.checked);" '.$check.'/><br>
+              <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
+            </td>
+            <td>
+              <a href="#" data-toggle="modal" data-target="#modal_mod_ins" class="btn-default mod_ins" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>
+            </td>
+            <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
+            <td>'.$row['ins_detalle'].'</td>
+            <td>'.$row['ins_unidad_medida'].'</td>
+            <td align=right>'.$row['ins_cant_requerida'].'</td>
+            <td align=right>'.$row['ins_costo_unitario'].'</td>
+            <td align=right>'.$row['ins_costo_total'].'</td>
+            <td align=right bgcolor="#e7f5f3"><b>'.number_format($row['monto_certificado'], 2, ',', '.').'</b></td>';
+            if($nro_mes==1){
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td align=right>'.$row['mes'.$i].'</td>';
+              }
+            }
+            else{
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td align=right></td>';
+              }
+            }
+            $tabla.='
+          </tr>';
+        }
+      $tabla.='
+        </tbody>
+      </table>';
+
+    return $tabla;
+  }
+
+ /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION anterior) ------*/
+  public function list_requerimientos_certificados_anterior($cpoa_id){
     $tabla='<style>
             table{font-size: 9.5px;
             width: 100%;

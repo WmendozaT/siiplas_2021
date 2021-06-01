@@ -129,7 +129,7 @@
                     <div id="titulo_sol"></div>
                     <fieldset>
                         <div class="form-group">
-                            <label class="col-md-2 control-label" id="error2">RECOMENDACIÓN</label>
+                            <label class="col-md-2 control-label" id="error2"><b>RECOMENDACIÓN</b></label>
                             <div class="col-md-10">
                                 <textarea class="form-control" name="recomendacion" id="recomendacion" placeholder="Recomendacion y/o Observacion a la Solicitud ..." rows="4"></textarea>
                             </div>
@@ -137,20 +137,24 @@
                     </fieldset>
                     <fieldset>
                         <div class="form-group">
-                            <label class="col-md-2 control-label" id="error2">APROBAR EL LINEA</label>
-                            <div class="col-md-10">
-                                 <select class="form-control" name="sello">
-                                    <option value="0" selected>NO</option>
-                                    <option value="1">SI</option>
-                                  </select>
+                            <label class="col-md-2 control-label"><b>TIPO DE APROBACIÓN</b></label>
+                            <div class="col-md-3">
+                                <select class="form-control" name="sello" id="sello">
+                                    <option value="" selected>SELECCIONE OPCIÓN</option>
+                                    <option value="0">FIRMA MANUAL</option>
+                                    <option value="1">AUTORIZACIÓN DIGITAL</option>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
                             </div>
                         </div>
                     </fieldset>
 
+                    <div id="tip_autorizacion"></div>
                                    
                     <div class="form-actions">
                         <div class="row">
-                            <div id="but" style="display: block;">
+                            <div id="but" style="display: none;">
                                 <button class="btn btn-default" data-dismiss="modal" id="mcl_edit" title="CANCELAR">CANCELAR</button>
                                 <button type="button" name="generar_cert" id="generar_cert" class="btn btn-info">APROBAR SOLICITUD</button>
                             </div>
