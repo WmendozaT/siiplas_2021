@@ -991,6 +991,34 @@
         }
 
 
+        function seleccionarFila_cpoa(ins_id,nro,cpoa_id,estaChequeado) {
+          //alert(ins_id+'--'+nro+'--'+cpoa_id+'--'+estaChequeado)
+          
+          //alert(fila+'--'+mes)
+          val = parseInt($('[name="tot"]').val());
+          if (estaChequeado == true) {
+            val=val+1;
+            document.getElementById("tr"+nro).style.backgroundColor = "#f2fded";
+          }
+          else{
+            val=val-1;
+            document.getElementById("tr"+nro).style.backgroundColor = "#f59787";
+          }
+          
+          $('[name="tot_temp"]').val((val).toFixed(0));
+          $('[name="tot"]').val((val).toFixed(0));
+          fila = parseFloat($('[name="tot"]').val());
+          mes = parseFloat($('[name="tot_temp"]').val());
+
+          if(fila!=0 && mes!=0){
+            $('#but').slideDown();
+          }
+          else{
+            $('#but').slideUp();
+          }
+        }
+
+        //// Seleccionar item a certificar (edicion poa)
         function seleccionarFila_edit(ins_id,nro,cpoa_id,estaChequeado) {
           if (estaChequeado == true) { 
             for (var i = 1; i <=12; i++) {

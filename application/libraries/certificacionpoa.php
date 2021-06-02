@@ -480,7 +480,7 @@ class Certificacionpoa extends CI_Controller{
 
   
   /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION) ------*/
-  public function list_requerimientos_certificados($cpoa_id){
+  public function list_requerimientos_certificadosss($cpoa_id){
     $tabla='<style>
             table{font-size: 9.5px;
             width: 100%;
@@ -593,7 +593,7 @@ class Certificacionpoa extends CI_Controller{
   }
 
  /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION anterior) ------*/
-  public function list_requerimientos_certificados_anterior($cpoa_id){
+  public function list_requerimientos_certificados($cpoa_id){
     $tabla='<style>
             table{font-size: 9.5px;
             width: 100%;
@@ -646,6 +646,7 @@ class Certificacionpoa extends CI_Controller{
             <th style="width:4.5%;">OCT.</th>
             <th style="width:4.5%;">NOV.</th>
             <th style="width:4.5%;">DIC.</th>
+            <th style="width:10%;"></th>
           </tr>
         </thead>
         <tbody>';
@@ -667,12 +668,29 @@ class Certificacionpoa extends CI_Controller{
             $bgcolor='#f59787';
           }
 
+
+
+
+          $mes=$this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+          $mod='';
+          $verif_mes=0;
+          if(count($mes)>1){
+            $mod='MODIFICADO';
+            $verif_mes=1;
+          }
           $nro++;
           $tabla.='
           <tr bgcolor='.$bgcolor.' title='.$row['ins_id'].' id="tr'.$nro.'" >
             <td>'.$nro.'</td>
-            <td>
-              <input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila_edit(this.value,'.$nro.','.$cpoa_id.',this.checked);" '.$check.'/><br>
+            <td>';
+              if($verif_mes==0){
+                $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila_cpoa(this.value,'.$nro.','.$cpoa_id.',this.checked);" '.$check.'/><br>';
+              }
+              else{
+                $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila_edit(this.value,'.$nro.','.$cpoa_id.',this.checked);" '.$check.'/><br>';
+              }
+            $tabla.='
+              
               <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
             </td>
             <td>
@@ -685,7 +703,18 @@ class Certificacionpoa extends CI_Controller{
             <td align=right>'.$row['ins_costo_unitario'].'</td>
             <td align=right>'.$row['ins_costo_total'].'</td>
             <td align=right bgcolor="#e7f5f3"><b>'.number_format($monto_certificado, 2, ',', '.').'</b></td>';
-            for ($i=1; $i <=12 ; $i++) {
+            
+            if($verif_mes==0){
+              
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td align=right>'.$mes[0]['mes'.$i].'</td>';
+              }
+            }
+            else{
+              $tabla.='<td></td>';
+            }
+
+/*            for ($i=1; $i <=12 ; $i++) {
               $color=''; 
               $m=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
               $tabla.='
@@ -717,8 +746,9 @@ class Certificacionpoa extends CI_Controller{
                   </tr>
                 </table>
               </td>';
-            }
+            }*/
             $tabla.='
+            <td>'.$mod.'</td>
           </tr>';
         }
       $tabla.='

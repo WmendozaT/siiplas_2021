@@ -254,8 +254,68 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
-  /*------ VALIDA MODIFICACION DE CERTIFICACION POA (2020) ------*/
+/*------ VALIDA MODIFICACION DE CERTIFICACION POA (2020) ------*/
   public function valida_reformulado_cpoa(){
+    if ($this->input->post()) {
+      $post = $this->input->post();
+      $cpoaa_id = $this->security->xss_clean($post['cpoaa_id']); /// Id Certificación poa Anulado
+      $tp_id = $this->security->xss_clean($post['tp_id']); /// Tipo de Anulacion
+      $total = $this->security->xss_clean($post['tot']); /// Total Items
+
+      $cert_anulado=$this->model_certificacion->get_cert_poa_editado($cpoaa_id); /// Datos de la Certificación Anulado
+      $cpoa=$this->model_certificacion->get_certificacion_poa($cert_anulado[0]['cpoa_id']); /// Datos de la Certificación POA
+      $cite_mod_req = $this->model_modrequerimiento->get_cite_insumo($cert_anulado[0]['cite_id']); // Datos Cite Modificación de requerimiento
+
+
+//        $this->delete_certificacion_item($cert_anulado[0]['cpoa_id']); // Eliminando anterior Registro Certificación POA
+        if (!empty($_POST["ins"]) && is_array($_POST["ins"])) {
+          foreach ( array_keys($_POST["ins"]) as $como){
+              $data_to_store = array( 
+                'cpoa_id' => $cert_anulado[0]['cpoa_id'],
+                'ins_id' => $_POST["ins"][$como],
+                'fun_id' => $this->fun_id,
+              );
+              $this->db->insert('certificacionpoadetalle', $data_to_store);
+              $cpoad_id=$this->db->insert_id();
+
+
+            $temp=count($this->model_insumo->lista_prog_fin($_POST["ins"][$como]));
+            if($temp==1){
+                /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
+                $data_to_store = array(
+                  'cpoad_id' => $cpoad_id,
+                  'tins_id' => $temp[0]['tins_id'],
+                );
+                $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
+                /*--------------------------------------------*/
+            }
+            else{
+
+            }
+           
+
+          }
+
+          if(count($this->model_modrequerimiento->list_requerimientos_modificados($cite_mod_req[0]['cite_id']))!=0){
+            $this->genera_codigo_modreq($cite_mod_req,$cert_anulado[0]['justificacion']);
+          }
+          
+          redirect('cert/ver_cpoa/'.$cert_anulado[0]['cpoa_id'].''); /// redireccionar al reporte
+        }
+        else{
+          redirect('ejec/menu_cpoa'); /// Error al Reformular
+        }
+    }
+    else{
+      redirect('ejec/menu_cpoa'); /// Error al Reformular
+    }
+  }
+
+
+
+
+  /*------ VALIDA MODIFICACION DE CERTIFICACION POA (2020) ------*/
+  public function valida_reformulado_cpoa2(){
     if ($this->input->post()) {
       $post = $this->input->post();
       $cpoaa_id = $this->security->xss_clean($post['cpoaa_id']); /// Id Certificación poa Anulado
@@ -627,8 +687,52 @@ class Ccertificacion_poa extends CI_Controller {
     }
 
    
+ /*---COMBO DE UNIDADES / ESTABLECIMIENTOS SEGUN SU REGIONAL (2020)---*/
+  /*  public function get_programado_temporalidad(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        
+        $ins_id = $this->security->xss_clean($post['ins_id']);  /// ins id
+        $cpoa_id = $this->security->xss_clean($post['cpoa_id']); /// cpoa id
+
+        $monto_certificado=$this->model_certificacion->get_insumo_monto_cpoa_certificado($ins_id,$cpoa_id);
+        $verif_cert=0;
+        if(count($monto_certificado)!=0){
+          $verif_cert=1;
+        }
 
 
+        for ($i=1; $i <=12 ; $i++) { 
+          $pmes=$this->model_certificacion->get_insumo_programado_mes($ins_id,$i);
+          if(count($pmes)!=0){
+            if(count($this->model_certificacion->get_mes_certificado_cpoa($cpoa_id,$pmes[0]['tins_id']))!=0){
+              $verf['verf_mes'.$i]=1; /// Mes Certificado Actual formulario
+            }
+            elseif(count($this->model_certificacion->get_mes_certificado($pmes[0]['tins_id']))!=0){
+              $verf['verf_mes'.$i]=2; // Mes que ya fue Certificado en otra certificación
+            }
+            else{
+              $verf['verf_mes'.$i]=0; // Mes disponible a certificar
+            }
+          }
+          else{
+            $verf['verf_mes'.$i]=3; // Mes no Programado
+          }
+        }
+
+
+        $result = array(
+          'respuesta' => "correcto",
+          'temporalidad' => $verf,
+          'verif_cert' => $verif_cert,
+        );
+
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+*/
 
   /*======= FUNCIONES EXTRAS ======*/
     /*-------- GET DATOS OPERACIONES 2021 --------*/
