@@ -928,7 +928,6 @@
       }
 
        function seleccionar_temporalidad_edit(tins_id,cpoa_id,ins_id,nro,estaChequeado){
-
           if (estaChequeado == true) {
           //  val = val + 1;
             document.getElementById("tr"+nro).style.backgroundColor = "#f2fded";
@@ -990,11 +989,8 @@
           
         }
 
-
+        /// nuevo selecciona toda la fila (nuevo)
         function seleccionarFila_cpoa(ins_id,nro,cpoa_id,estaChequeado) {
-          //alert(ins_id+'--'+nro+'--'+cpoa_id+'--'+estaChequeado)
-          
-          //alert(fila+'--'+mes)
           val = parseInt($('[name="tot"]').val());
           if (estaChequeado == true) {
             val=val+1;

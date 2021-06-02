@@ -266,34 +266,48 @@ class Ccertificacion_poa extends CI_Controller {
       $cpoa=$this->model_certificacion->get_certificacion_poa($cert_anulado[0]['cpoa_id']); /// Datos de la Certificación POA
       $cite_mod_req = $this->model_modrequerimiento->get_cite_insumo($cert_anulado[0]['cite_id']); // Datos Cite Modificación de requerimiento
 
-
-//        $this->delete_certificacion_item($cert_anulado[0]['cpoa_id']); // Eliminando anterior Registro Certificación POA
+        $this->delete_certificacion_item($cert_anulado[0]['cpoa_id']); // Eliminando anterior Registro Certificación POA
         if (!empty($_POST["ins"]) && is_array($_POST["ins"])) {
           foreach ( array_keys($_POST["ins"]) as $como){
-              $data_to_store = array( 
-                'cpoa_id' => $cert_anulado[0]['cpoa_id'],
-                'ins_id' => $_POST["ins"][$como],
-                'fun_id' => $this->fun_id,
+            $data_to_store = array( 
+              'cpoa_id' => $cert_anulado[0]['cpoa_id'],
+              'ins_id' => $_POST["ins"][$como],
+              'fun_id' => $this->fun_id,
+            );
+            $this->db->insert('certificacionpoadetalle', $data_to_store);
+            $cpoad_id=$this->db->insert_id();
+
+
+            $temp=$this->model_insumo->lista_prog_fin($_POST["ins"][$como]);
+            if(count($temp)==1){
+              /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
+              $data_to_store = array(
+                'cpoad_id' => $cpoad_id,
+                'tins_id' => $temp[0]['tins_id'],
               );
-              $this->db->insert('certificacionpoadetalle', $data_to_store);
-              $cpoad_id=$this->db->insert_id();
-
-
-            $temp=count($this->model_insumo->lista_prog_fin($_POST["ins"][$como]));
-            if($temp==1){
-                /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
-                $data_to_store = array(
-                  'cpoad_id' => $cpoad_id,
-                  'tins_id' => $temp[0]['tins_id'],
-                );
-                $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
-                /*--------------------------------------------*/
+              $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
+              /*--------------------------------------------*/
             }
             else{
 
+                for ($i=1; $i <=12 ; $i++) {
+                  if(!empty($_POST["ipm".$i."".$_POST["ins"][$como]])){
+
+                //    echo $_POST["ins"][$como].'------'.$_POST["ipm".$i."".$_POST["ins"][$como]]."<br>";
+                    if(count($this->model_certificacion->get_mes_certificado($_POST["ipm".$i."".$_POST["ins"][$como]]))==0){
+
+                      $data_to_store = array(
+                        'cpoad_id' => $cpoad_id,
+                        'tins_id' => $_POST["ipm".$i."".$_POST["ins"][$como]],
+                      );
+                      $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
+                     
+                    }
+                  } 
+                }
+
             }
            
-
           }
 
           if(count($this->model_modrequerimiento->list_requerimientos_modificados($cite_mod_req[0]['cite_id']))!=0){
@@ -688,7 +702,7 @@ class Ccertificacion_poa extends CI_Controller {
 
    
  /*---COMBO DE UNIDADES / ESTABLECIMIENTOS SEGUN SU REGIONAL (2020)---*/
-  /*  public function get_programado_temporalidad(){
+    public function get_programado_temporalidad(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         
@@ -732,7 +746,7 @@ class Ccertificacion_poa extends CI_Controller {
           show_404();
       }
     }
-*/
+
 
   /*======= FUNCIONES EXTRAS ======*/
     /*-------- GET DATOS OPERACIONES 2021 --------*/

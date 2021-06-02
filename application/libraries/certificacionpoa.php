@@ -646,7 +646,6 @@ class Certificacionpoa extends CI_Controller{
             <th style="width:4.5%;">OCT.</th>
             <th style="width:4.5%;">NOV.</th>
             <th style="width:4.5%;">DIC.</th>
-            <th style="width:10%;"></th>
           </tr>
         </thead>
         <tbody>';
@@ -670,12 +669,10 @@ class Certificacionpoa extends CI_Controller{
 
 
 
-
-          $mes=$this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-          $mod='';
+          $mes=$this->model_insumo->lista_prog_fin($row['ins_id']);
+          
           $verif_mes=0;
           if(count($mes)>1){
-            $mod='MODIFICADO';
             $verif_mes=1;
           }
           $nro++;
@@ -705,16 +702,49 @@ class Certificacionpoa extends CI_Controller{
             <td align=right bgcolor="#e7f5f3"><b>'.number_format($monto_certificado, 2, ',', '.').'</b></td>';
             
             if($verif_mes==0){
-              
+              $temp=$this->model_insumo->list_temporalidad_insumo($row['ins_id']);
               for ($i=1; $i <=12 ; $i++) { 
-                $tabla.='<td align=right>'.$mes[0]['mes'.$i].'</td>';
+                $tabla.='<td align=right>'.$temp[0]['mes'.$i].'</td>';
               }
             }
             else{
-              $tabla.='<td></td>';
+
+              for ($i=1; $i <=12 ; $i++) {
+              $color=''; 
+                $m=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
+                $tabla.='
+                <td align=right>
+                  <table align=right>
+                    <tr>
+                      <td>
+                        <div id="m'.$i.''.$row['ins_id'].'" '.$display.'>';
+                        if(count($m)!=0){
+                          if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
+                            $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" id="ipmm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad_edit(this.value,'.$cpoa_id.','.$row['ins_id'].','.$nro.',this.checked);"/>';
+                          }
+                          elseif(count($this->model_certificacion->get_mes_certificado_cpoa($cpoa_id,$m[0]['tins_id']))==1){
+                            $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" id="ipmm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad_edit(this.value,'.$cpoa_id.','.$row['ins_id'].','.$nro.',this.checked);" checked="checked"/>';
+                            $color='green';
+                          }
+                        }
+                $tabla.='
+                      </td>
+                      <td align=right>';
+                      if(count($m)!=0){
+                        $tabla.='<font color="'.$color.'">'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</font>';
+                      }
+                      else{
+                        $tabla.='0,00';
+                      }
+                $tabla.='
+                      </td>
+                    </tr>
+                  </table>
+                </td>';
+              }
             }
 
-/*            for ($i=1; $i <=12 ; $i++) {
+            /*for ($i=1; $i <=12 ; $i++) {
               $color=''; 
               $m=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
               $tabla.='
@@ -747,8 +777,12 @@ class Certificacionpoa extends CI_Controller{
                 </table>
               </td>';
             }*/
+
+
+
+
+
             $tabla.='
-            <td>'.$mod.'</td>
           </tr>';
         }
       $tabla.='
