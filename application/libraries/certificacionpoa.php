@@ -805,7 +805,7 @@ class Certificacionpoa extends CI_Controller{
         <input name="base" type="hidden" value="'.base_url().'">
         <fieldset>
           <legend><b>'.$titulo.'</b></legend>
-          <span class="badge bg-color-greenLight" style="font-size: 35px;">Paso 1)</span> <span class="badge bg-color-greenLight" style="font-size: 25px;"> Seleccione la Operación donde se encuentre alineado el items a Certificar</span><hr>
+          <span class="badge bg-color-green" style="font-size: 35px;">Paso 1)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Seleccione la Operación donde se encuentre alineado el items a Certificar</span><hr>
           <div class="form-group">
             <label class="col-md-2 control-label"><b>OPERACI&Oacute;N</b></label>
             <div class="col-md-6">

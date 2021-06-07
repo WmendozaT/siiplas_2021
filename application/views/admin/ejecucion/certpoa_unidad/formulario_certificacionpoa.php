@@ -101,10 +101,11 @@
                                 <div id="lista_requerimientos"></div>
                                 <footer>
 
+                                  <?php echo $paso3;?>  
                                   <div class="well" id="but" style="display:none;" align="right">
                                     <div align="Left">
                                         <fieldset>
-                                          <span class="badge bg-color-greenLight" style="font-size: 35px;">Paso 3)</span> <span class="badge bg-color-greenLight" style="font-size: 25px;"> verifique el items y la temporalidad y haga click en GENERAR SOLICITUD </span><hr>
+                                          <span class="badge bg-color-green" style="font-size: 35px;">Paso 4)</span> <span class="badge bg-color-green" style="font-size: 25px;"> verifique el items y la temporalidad y haga click en GENERAR SOLICITUD </span><hr>
                                         </fieldset>
                                     </div>
                                     <a href="<?php echo base_url() ?>index.php/cert/list_poas" class="btn btn-default" title="MIS OPERACIONES"> CANCELAR </a>

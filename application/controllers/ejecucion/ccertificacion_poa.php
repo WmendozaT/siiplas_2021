@@ -807,8 +807,20 @@ class Ccertificacion_poa extends CI_Controller {
                 </div>';
       }
 
-      $data['loading']='<div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
+      $data['loading']='
+        <div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
       
+      $data['paso3']='
+        <div class="well" align="Left" id="paso3">
+          <fieldset>
+            <span class="badge bg-color-green" style="font-size: 35px;">Paso 3)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Porfavor verifique los datos de los items seleccionados, como:</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="badge bg-color-greenLight" style="font-size: 25px;">Detalle, Unidad de medida, Precio unitario y Temporalidad,</span><span class="badge bg-color-greenLight" style="font-size: 22px;">&nbsp;Una ves aprobado la solicitud, nose podra modificar ni anular la Certificación generada..  </span><br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="badge bg-color-green" style="font-size: 25px;">ESTA SEGURO EN GENERAR LA SOLICITUD DE CERTIFICACIÓN POA ?</span><hr>
+          </fieldset>
+        </div>';
+
       $data['loading_form']='<div id="load" style="display: none" align="center">
                               <br><img  src="'.base_url().'/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO SOLICITUD DE CERTIFICACI&Oacute;N POA ....</b>
                             </div>';
@@ -850,7 +862,7 @@ class Ccertificacion_poa extends CI_Controller {
         <input type="hidden" name="tot_temp" id="tot_temp" value="0">
         <input type="hidden" name="prod_id" id="prod_id" value="'.$prod_id.'">
         <fieldset>
-          <span class="badge bg-color-greenLight" style="font-size: 35px;">Paso 2)</span> <span class="badge bg-color-greenLight" style="font-size: 25px;"> Seleccione Items a certificar </span><hr>
+          <span class="badge bg-color-green" style="font-size: 35px;">Paso 2)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Seleccione Items a certificar </span><hr>
         </fieldset>
         <fieldset>
           <section class="col col-4">
