@@ -105,11 +105,14 @@
                                   <div class="well" id="but" style="display:none;" align="right">
                                     <div align="Left">
                                         <fieldset>
-                                          <span class="badge bg-color-green" style="font-size: 35px;">Paso 4)</span> <span class="badge bg-color-green" style="font-size: 25px;"> verifique el items y la temporalidad y haga click en GENERAR SOLICITUD </span><hr>
+                                          <span class="badge bg-color-green" style="font-size: 35px;">Paso 4)</span> <span class="badge bg-color-green" style="font-size: 25px;">Haga click en GENERAR SOLICITUD </span><hr>
                                         </fieldset>
                                     </div>
-                                    <a href="<?php echo base_url() ?>index.php/cert/list_poas" class="btn btn-default" title="MIS OPERACIONES"> CANCELAR </a>
-                                    <input type="button" value="GENERAR SOLICITUD DE CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success" title="SOLICITUD CERTIFICACION POA">
+                                    <!-- <a href="#" class="btn btn-default btn-lg" title="CANCELAR"> CANCELAR </a> -->
+                                    <div align="center">
+                                        <input type="button" value="GENERAR SOLICITUD DE CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success btn-lg" title="SOLICITUD CERTIFICACION POA">
+                                    </div>
+                                    
                                   </div>
                                 </footer>
                             </form>
@@ -171,6 +174,18 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/certificacionpoa/certpoa.js"></script> 
-
+        <script type="text/javascript">
+            $(document).ready(function(){
+                    $(".paso3").click(function(evento){
+                        var valor = $(this).val();
+                        if(valor == 'si'){
+                            $("#but").css("display", "block");
+                        }
+                        else{
+                            $("#but").css("display", "none");
+                        }
+                });
+            });
+        </script>
     </body>
 </html>

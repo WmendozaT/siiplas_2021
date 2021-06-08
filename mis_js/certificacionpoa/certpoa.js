@@ -286,7 +286,7 @@
         });
     });
 
-
+      /// === funcion para seleccionar el itema (solo para un mes)
       function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
         if (estaChequeado == true) { 
           document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
@@ -317,7 +317,9 @@
             $('#but').slideDown();
           }
       }
+      /// =====------------------------------
 
+      //// ============= funcion : para items con varios meses programados
       function seleccionarFila(ins_id, estaChequeado) {
         if (estaChequeado == true) {            
           for (var i = 1; i <=12; i++) {
@@ -347,8 +349,8 @@
         }
       }
 
+      /// --- seleccionar el mes programado
       function seleccionar_temporalidad(tins_id, estaChequeado) {
-
         if (estaChequeado == true) { 
           val = parseInt($('[name="tot_temp"]').val());
         var url = base+"index.php/ejecucion/ccertificacion_poa/verif_mes_certificado";
@@ -399,7 +401,7 @@
           }
         }
       }
-
+    /// ==========================================================================
 
 
   function reset() {

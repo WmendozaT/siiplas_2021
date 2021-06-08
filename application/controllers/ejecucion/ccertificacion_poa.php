@@ -813,11 +813,30 @@ class Ccertificacion_poa extends CI_Controller {
       $data['paso3']='
         <div class="well" align="Left" id="paso3">
           <fieldset>
-            <span class="badge bg-color-green" style="font-size: 35px;">Paso 3)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Porfavor verifique los datos de los items seleccionados, como:</span><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span class="badge bg-color-greenLight" style="font-size: 25px;">Detalle, Unidad de medida, Precio unitario y Temporalidad,</span><span class="badge bg-color-greenLight" style="font-size: 22px;">&nbsp;Una ves aprobado la solicitud, nose podra modificar ni anular la Certificación generada..  </span><br><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span class="badge bg-color-green" style="font-size: 25px;">ESTA SEGURO EN GENERAR LA SOLICITUD DE CERTIFICACIÓN POA ?</span><hr>
+            <span class="badge bg-color-green" style="font-size: 35px;">Paso 3)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Porfavor verifique los datos de los items seleccionados, como:</span><br><br>
+            <p class="alert alert-info" style="font-size: 20px;">
+              <strong>
+              Detalle de Requerimiento, Unidad de medida, Precio unitario, Costo Total y Temporalidad. &nbsp;&nbsp; UNA VEZ APROBADO LA PRESENTE SOLICITUD, LA MISMA NO PODRA SER MODIFICADO..
+              </strong>
+            </p>
+          </fieldset>
+
+          <fieldset class="demo-switcher-1">
+            <div class="form-group">
+              <label class="col-md-6 control-label" >
+               <div style="font-family: new times roman; font-size: 19px;"><b>ESTA SEGURO EN GENERAR LA SOLICITUD DE CERTIFICACIÓN POA ?</b></div>
+              </label>
+              <div class="col-md-6">
+                <label class="radio radio-inline" style="font-family: new times roman; font-size: 18px;">
+                  <input type="radio" class="paso3" name="paso3" style="width: 20px; height: 20px" value="si">
+                  <span>&nbsp;SI</span>
+                </label>
+                <label class="radio radio-inline" style="font-family: new times roman; font-size: 18px;">
+                  <input type="radio" class="paso3" name="paso3" style="width: 20px; height: 20px" value="no">
+                  <span>&nbsp;NO</span>  
+                </label>
+              </div>
+            </div>
           </fieldset>
         </div>';
 
