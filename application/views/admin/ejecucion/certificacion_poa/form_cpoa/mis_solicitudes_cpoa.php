@@ -118,11 +118,13 @@
     </div>
     <!-- ========================================================================================================= -->
 
-        <!-- ===== MI SOLICITUD ===== -->
-        <div class="modal fade" id="modal_aprobar_cert" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <!-- ===== MI APROBAR SOLICITUD ===== -->
+        <div class="modal fade" id="modal_aprobar_solcert" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>SALIR</b></span></button>
+                </div>
               <div class="modal-body">
                 <form  id="form_solicitud" name="form_solicitud" class="form-horizontal" method="post">
                     <input type="hidden" name="sol_id" id="sol_id">
@@ -167,6 +169,40 @@
         </div>
         <!-- =============================== -->
 
+        <!-- ===== RECHAZAR SOLICITUD CERT POA ===== -->
+        <div class="modal fade" id="modal_anular_solcert" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>SALIR</b></span></button>
+                </div>
+              <div class="modal-body">
+                <form  id="form_observacion" name="form_observacion" class="form-horizontal" method="post">
+                    <input type="hidden" name="s_id" id="s_id">
+                    <div id="titulo_solicitud"></div>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" id="error_obs"><b>OBSERVACIÓN</b></label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" name="observacion" id="observacion" placeholder="Motivo por el cual se rechza la solicitud ..." rows="4"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                                   
+                    <div class="form-actions">
+                        <div class="row">
+                            <div id="but" >
+                                <button class="btn btn-default" data-dismiss="modal" id="mcl_edit" title="CANCELAR">CANCELAR</button>
+                                <button type="button" name="rechazar_sol" id="rechazar_sol" class="btn btn-info">RECHAZAR SOLICITUD</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- =============================== -->
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">

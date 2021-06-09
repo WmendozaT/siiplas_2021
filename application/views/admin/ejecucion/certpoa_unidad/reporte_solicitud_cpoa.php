@@ -56,9 +56,13 @@ ob_start();
             </page_footer>
                 <?php echo $items;?>
                 <br>
-                <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"  ><b>DOCUMENTO NO VALIDO PARA PROCESOS ADMINISTRATIVOS !!!</b></div>
+                <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;" ><b>DOCUMENTO NO VALIDO PARA PROCESOS ADMINISTRATIVOS !!!</b></div>
+                <?php
+                    if($solicitud[0]['estado']==2){
+                        echo '<br><div style="font-size: 20px;font-family: Arial; color: red; text-align: center;" ><b>SOLICITUD RECHAZADO</b></div>';
+                    }
+                 ?>
         </page>
-        
         <?php
     }
 

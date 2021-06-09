@@ -1091,7 +1091,7 @@ class Model_certificacion extends CI_Model{
     public function lista_solicitudes_cpoa_regional($dep_id){
         $sql = 'select *
                 from vista_solicitud_certificacionpoa s
-                where s.dep_id='.$dep_id.' and (s.estado!=\'3\' and s.estado=\'0\') and g_id='.$this->gestion.'
+                where s.dep_id='.$dep_id.' and (s.estado!=\'3\' and s.estado=\'0\' or s.estado=\'2\') and g_id='.$this->gestion.'
                 order by s.sol_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();

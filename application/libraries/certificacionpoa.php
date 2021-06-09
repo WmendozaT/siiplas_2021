@@ -1761,6 +1761,7 @@ class Certificacionpoa extends CI_Controller{
 
     $requerimientos=$this->model_certificacion->get_lista_requerimientos_solicitados($sol_id);
     $tabla.='
+    <div class="table-responsive">
       <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <thead>
               <tr style="font-size: 8px; font-family: Arial;" align="center" >
@@ -1801,7 +1802,8 @@ class Certificacionpoa extends CI_Controller{
               <td style="font-size: 9px;" align=right><b>'.number_format($suma_monto, 2, ',', '.').'</b></td>
               <td></td>
             </tr>
-      </table>';
+        </table>
+      </div>';
 
     return $tabla;
   }
@@ -1868,6 +1870,9 @@ class Certificacionpoa extends CI_Controller{
                 elseif($solicitud[0]['estado']==1){
                   $tabla.='<td style="width:100%;height: 2%;color: green;"><b>SOLICITUD APROBADO EN FECHA '.date('d-m-Y',strtotime($solicitud[0]['fecha_proceso'])).'</b></td>';
                 }
+                elseif($solicitud[0]['estado']==2){
+                  $tabla.='<td style="width:100%;height: 2%;color: red;"><b>LA SOLICITUD FUE RECHAZADO por </b> '.$solicitud[0]['aclaracion'].'</td>';
+                }
                 else{
                  $tabla.='<td style="width:100%;height: 2%;color: red;"><b>LA SOLICITUD FUE ANULADA</b></td>'; 
                 }
@@ -1924,19 +1929,20 @@ class Certificacionpoa extends CI_Controller{
             <div class="tab-content">
             <input name="base" type="hidden" value="'.base_url().'">
               <div class="tab-pane active" id="hb1">
-                  
+                <div class="table-responsive">  
                   <table id="dt_basic" class="table table-bordered" style="width:100%;">
                     <thead>
                       <tr style="height:35px;">
                         <th style="width:1%;">#</th>
-                        <th style="width:7%;">CITE SOLICITUD</th>
-                        <th style="width:7%;">FECHA SOLICITUD</th>
+                        <th style="width:5%;">CITE SOLICITUD</th>
+                        <th style="width:5%;">FECHA SOLICITUD</th>
                         <th style="width:10%;">UNIDAD SOLICITANTE</th>
-                        <th style="width:20%;">OPERACIÓN</th>
-                        <th style="width:10%;">ESTADO</th>
+                        <th style="width:15%;">OPERACIÓN</th>
+                        <th style="width:5%;">ESTADO</th>
+                        <th style="width:20%;">OBSERVACIÓN</th>
                         <th style="width:10%;">SOLICITUD</th>
-                        <th style="width:10%;">CERTIFICACIÓN POA</th>
-                        <th style="width:10%;">ANULAR</th>
+                        <th style="width:10%;">APROBAR SOLICITUD</th>
+                        <th style="width:10%;">ANULAR SOLICITUD</th>
                       </tr>
                     </thead>
                     <tbody>';
@@ -1947,31 +1953,41 @@ class Certificacionpoa extends CI_Controller{
                       $color='#d9f9f5';
                       $estado='APROBADO';
                       if($row['estado']==0){
-                        $color='#f7cbcb';
-                        $estado='NO APROBADO';
+                        $color='#fdeded';
+                        $estado='EN REVISIÓN';
+                      }
+                      elseif($row['estado']==2){
+                        $color='#fbecdb';
+                        $estado='RECHAZADO';
                       }
                       $tabla.='
                       <tr bgcolor='.$color.'>
                         <td title="'.$row['sol_id'].'">'.$nro.'</td>
                         <td>'.$row['cite'].'</td>
                         <td>'.date('d-m-Y',strtotime($row['fecha'])).'</td>
-                        <td>'.$row['serv_cod'].'.- '.$row['serv_descripcion'].' '.$row['abrev'].'</td>
+                        <td>'.$row['serv_cod'].'.- '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].' '.$row['abrev'].'</td>
                         <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
                         <td align=center><b>'.$estado.'</b></td>
+                        <td><b>'.$row['aclaracion'].'</b></td>
                         <td align=center>
                           <a href="javascript:abreVentana_sol(\''.site_url("").'/reporte_solicitud_poa/'.$row['sol_id'].'\');" class="btn btn-default" style="width:50%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'" id="0">
                             <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
                           </a>
                         </td>
-                        <td align=center>
-                          <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modal_aprobar_cert" onclick="aprobar_solicitud('.$row['sol_id'].');" style="width:50%;" title="APROBAR SOLICITUD CERTIFICACION POA">
-                            <img src="'.base_url().'assets/img/ok1.jpg" width="22" height="22"/>
-                          </a>
+                        <td align=center>';
+                          if($row['estado']==0){
+                            $tabla.='
+                            <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modal_aprobar_solcert" onclick="aprobar_solicitud('.$row['sol_id'].');" style="width:50%;" title="APROBAR SOLICITUD CERTIFICACION POA">
+                              <img src="'.base_url().'assets/img/ok1.jpg" width="22" height="22"/>
+                            </a>';
+                          }
+                        $tabla.='
+                          
                         </td>
                         <td align=center>';
                           if($row['estado']==0){
                             $tabla.='
-                            <a href="#" class="btn btn-default" onclick="anular_solicitud('.$row['sol_id'].');" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
+                            <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modal_anular_solcert"  onclick="anular_solicitud('.$row['sol_id'].');" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
                               <img src="'.base_url().'assets/img/delete.png" width="22" height="22"/>
                             </a>';
                           }
@@ -1982,10 +1998,10 @@ class Certificacionpoa extends CI_Controller{
                     $tabla.='
                     </tbody>
                   </table>
-      
+                </div>
               </div>
               <div class="tab-pane" id="hb2">
-
+                <div class="table-responsive">
                   <table id="dt_basic2" class="table2 table-bordered" style="width:100%;">
                     <thead>
                       <tr style="height:40px;" bgcolor="#f6f6f6">
@@ -2025,6 +2041,7 @@ class Certificacionpoa extends CI_Controller{
                     $tabla.='
                     </tbody>
                   </table>
+                </div>
               </div>
             </div>
           </div>
@@ -2063,11 +2080,12 @@ class Certificacionpoa extends CI_Controller{
                   <thead>
                     <tr style="height:35px;">
                       <th style="width:1%;">#</th>
-                      <th style="width:8%;">CITE SOLICITUD</th>
-                      <th style="width:8%;">FECHA SOLICTUD</th>
-                      <th style="width:20%;">OPERACIÓN</th>
+                      <th style="width:5%;">CITE SOLICITUD</th>
+                      <th style="width:5%;">FECHA SOLICTUD</th>
+                      <th style="width:15%;">OPERACIÓN</th>
                       <th style="width:6%;">ESTADO</th>
-                      <th style="width:10%;">CERTIFICACIÓN POA</th>
+                      <th style="width:8%;">CERTIFICACIÓN POA</th>
+                      <th style="width:12%;">OBSERVACIÓN</th>
                       <th style="width:6%;">SOLICITUD</th>
                       <th style="width:6%;">ANULAR</th>
                     </tr>
@@ -2078,13 +2096,17 @@ class Certificacionpoa extends CI_Controller{
                     $nro++;
                     $codigo_cpoa='';
                     $color='#f7cbcb';
-                    $estado='NO APROBADO';
+                    $estado='EN REVISIÓN';
 
                     if($row['estado']==1){
                       $certpoa=$this->model_certificacion->get_solicitud_certificado($row['sol_id']);
                       $codigo_cpoa=$certpoa[0]['cpoa_codigo'];
                       $color='#d9f9f5';
                       $estado='APROBADO';
+                    }
+                    elseif($row['estado']==2){
+                      $color='#fbecdb';
+                      $estado='RECHAZADO';
                     }
                     $tabla.='
                     <tr bgcolor='.$color.'>
@@ -2094,13 +2116,14 @@ class Certificacionpoa extends CI_Controller{
                       <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
                       <td align=center><b>'.$estado.'</b></td>
                       <td><b>'.$codigo_cpoa.'</b></td>
+                      <td>'.$row['aclaracion'].'</td>
                       <td align=center>
                         <a href="#" class="btn btn-default ver_solicitud" style="width:100%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'">
                           <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
                         </a>
                       </td>
                       <td align=center>';
-                        if($row['estado']==0){
+                        if($row['estado']==0 || $row['estado']==2){
                           $tabla.='
                           <a href="#" class="btn btn-default del_solicitud" style="width:100%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
                             <img src="'.base_url().'assets/img/delete.png" width="22" height="22"/>

@@ -787,7 +787,6 @@ class Ccertificacion_poa extends CI_Controller {
 
 
   //// CERTIFICACION POA POR SUBACTIVIDAD
-
   /*------ SOLICITAR CERTIFICACION POA  -------*/
   public function solicitar_certpoa($com_id){
     $componente = $this->model_componente->get_componente($com_id);
@@ -811,12 +810,12 @@ class Ccertificacion_poa extends CI_Controller {
         <div id="loading" style="display:none;" style="width:20%;"><section id="widget-grid" class="well" align="center"><img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%"></section></div>';
       
       $data['paso3']='
-        <div class="well" align="Left" id="paso3">
+        <div class="well" align="Left" id="paso3" style="display: none">
           <fieldset>
             <span class="badge bg-color-green" style="font-size: 35px;">Paso 3)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Porfavor verifique los datos de los items seleccionados, como:</span><br><br>
             <p class="alert alert-info" style="font-size: 20px;">
               <strong>
-              Detalle de Requerimiento, Unidad de medida, Precio unitario, Costo Total y Temporalidad. &nbsp;&nbsp; UNA VEZ APROBADO LA PRESENTE SOLICITUD, LA MISMA NO PODRA SER MODIFICADO..
+              Detalle de Requerimiento, Unidad de medida, Precio unitario, Costo Total y el mes programado a certificar.
               </strong>
             </p>
           </fieldset>
@@ -828,11 +827,11 @@ class Ccertificacion_poa extends CI_Controller {
               </label>
               <div class="col-md-6">
                 <label class="radio radio-inline" style="font-family: new times roman; font-size: 18px;">
-                  <input type="radio" class="paso3" name="paso3" style="width: 20px; height: 20px" value="si">
+                  <input type="radio" class="paso3" id="check1" name="paso3" style="width: 20px; height: 20px" value="si">
                   <span>&nbsp;SI</span>
                 </label>
                 <label class="radio radio-inline" style="font-family: new times roman; font-size: 18px;">
-                  <input type="radio" class="paso3" name="paso3" style="width: 20px; height: 20px" value="no">
+                  <input type="radio" class="paso3" id="check2" name="paso3" style="width: 20px; height: 20px" value="no">
                   <span>&nbsp;NO</span>  
                 </label>
               </div>
@@ -1031,7 +1030,7 @@ class Ccertificacion_poa extends CI_Controller {
           $data['cuerpo']='
             <input name="base" type="hidden" value="'.base_url().'">
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <span class="badge bg-color-greenLight" style="font-size: 35px;">Paso 4)</span> <span class="badge bg-color-greenLight" style="font-size: 25px;"> Solicitud Generada Exitosamente, comuniquese con el Dpto. o Unidad de Planificación para su aprobación..</span><hr>
+            <span class="badge bg-color-green" style="font-size: 35px;">Paso 5)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Solicitud Generada Exitosamente, comuniquese con el Dpto. o Unidad de Planificación para su aprobación..</span><hr>
               <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>
             </article>';
         }
@@ -1057,8 +1056,9 @@ class Ccertificacion_poa extends CI_Controller {
   public function reporte_solicitud_certpoa($sol_id){
     /// solicitud: 0 -> revision
     /// Solicitud: 1 -> Aprobado
+    /// Solicitud: 2 -> Rechazado
     $data['solicitud'] = $this->model_certificacion->get_solicitud_cpoa($sol_id);
-    if($data['solicitud'][0]['estado']==0){ /// Revision
+    if($data['solicitud'][0]['estado']==0 || $data['solicitud'][0]['estado']==2){ /// Revision o Rechazado
         $data['cabecera']=$this->certificacionpoa->cabecera_solicitudpoa($data['solicitud']);
         $data['datos_unidad_articulacion']=$this->certificacionpoa->datos_unidad_organizacional($data['solicitud']); /// Datos de Articulacion POa
         $data['items']=$this->certificacionpoa->lista_solicitud_requerimientos($sol_id); /// Requerimientos solicitados
@@ -1202,7 +1202,7 @@ class Ccertificacion_poa extends CI_Controller {
           $tabla='
           <div class="alert alert-warning alert-block">
                 <a class="close" data-dismiss="alert" href="#">×</a>
-                <h4 class="alert-heading">Solicitud e Certificación POA en proceso de Aprobación</h4>
+                <h4 class="alert-heading">Solicitud de Certificación POA en proceso de Revisión</h4>
               </div>
           <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>';
         }
@@ -1211,6 +1211,14 @@ class Ccertificacion_poa extends CI_Controller {
           <div class="alert alert-success alert-block">
                 <a class="close" data-dismiss="alert" href="#">×</a>
                 <h4 class="alert-heading">Solicitud e Certificación POA aprobado !!!</h4>
+              </div>
+          <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>';
+        }
+        elseif($solicitud[0]['estado']==2){
+          $tabla='
+          <div class="alert alert-warning alert-block">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading">la Solicitud fue rechazado !!!</h4>
               </div>
           <iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>';
         }
@@ -1348,8 +1356,44 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
+  /*--- RECHAZAR LA SOLICITUD DE CERTIFCACION POA (Administrador)---*/
+  function rechazar_solicitud_cpoa(){
+    if ($this->input->is_ajax_request() && $this->input->post()) {
+      $post = $this->input->post();
+      $sol_id = $post['sol_id']; /// Solicitud Id
+      $observacion = $post['observacion']; /// Observacion
+      $solicitud=$this->model_certificacion->get_solicitud_cpoa($sol_id); // solicitud
+
+      /*--------- Update Solicitud (Rechazar) -------*/
+        // estado : 0 (Solicitud)
+        // estado : 1 (Aprobado)
+        // estado : 2 (Rechazado)
+        // estado : 3 (Eliminado)
+
+        $update_solicitud = array(
+          'estado' => 2,
+          'aclaracion' => $observacion,
+        //  'fun_id' => $this->fun_id,
+          'fecha_proceso' => date("d/m/Y H:i:s")
+        );
+        $this->db->where('sol_id', $sol_id);
+        $this->db->update('solicitud_cpoa_subactividad', $update_solicitud);
+      /*------------------------------------*/
+      $cert='<hr><iframe id="ipdf" width="100%"  height="1000px;" src="'.site_url().'/reporte_solicitud_poa/'.$sol_id.'"></iframe>';
+
+     // $cert='Hola';
+      $result = array(
+        'respuesta' => 'correcto',
+        'certpoa' => $cert
+      );
+
+      echo json_encode($result);
+
+    }
+  }
+
   /*--- ELIMINAR LA SOLICITUD DE CERTIFCACION POA (Administrador)---*/
-  function anular_solicitud_cpoa(){
+/*  function anular_solicitud_cpoa(){
     if ($this->input->is_ajax_request() && $this->input->post()) {
       $post = $this->input->post();
       $sol_id = $post['sol_id']; /// Solicitud Id
@@ -1403,7 +1447,7 @@ class Ccertificacion_poa extends CI_Controller {
       echo json_encode($result);
 
     }
-  }
+  }*/
 
     /*------ NOMBRE MES -------*/
     function mes_nombre(){

@@ -252,71 +252,73 @@
     ////============================= FORMULARIO DE CERTIFICACION POA
     ///// Obtiene Lista de requerimientos
     $("#prod_id").change(function () {
-        $("#prod_id option:selected").each(function () {
-            prod_id=$(this).val();
-            if(prod_id!=0){
-              document.getElementById("loading").style.display = 'block';
-              document.getElementById("but").style.display = 'none';
-              $('#lista_requerimientos').fadeIn(1000).html('');
-              var url = base+"index.php/ejecucion/ccertificacion_poa/get_cuadro_certificacionpoa";
-              var request;
-              if (request) {
-                  request.abort();
+      $("#prod_id option:selected").each(function () {
+        prod_id=$(this).val();
+        if(prod_id!=0){
+          document.getElementById("loading").style.display = 'block';
+          document.getElementById("but").style.display = 'none';
+          $('#lista_requerimientos').fadeIn(1000).html('');
+          var url = base+"index.php/ejecucion/ccertificacion_poa/get_cuadro_certificacionpoa";
+          var request;
+          if (request) {
+              request.abort();
+          }
+          request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "prod_id="+prod_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                document.getElementById("loading").style.display = 'none';
+                $('#lista_requerimientos').fadeIn(1000).html(response.requerimientos);
               }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "prod_id="+prod_id
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-                  if (response.respuesta == 'correcto') {
-                    document.getElementById("loading").style.display = 'none';
-                    $('#lista_requerimientos').fadeIn(1000).html(response.requerimientos);
-                  }
-                  else{
-                      alertify.error("ERROR AL LISTAR");
-                  }
-              }); 
-            }
-            else{
-              $('#lista_requerimientos').fadeIn(1000).html('');
-            }
-        });
-    });
-
-      /// === funcion para seleccionar el itema (solo para un mes)
-      function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
-        if (estaChequeado == true) { 
-          document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
+              else{
+                  alertify.error("ERROR AL LISTAR");
+              }
+          }); 
         }
         else{
-          document.getElementById("tr"+nro).style.backgroundColor = "";
+          $('#lista_requerimientos').fadeIn(1000).html('');
         }
+      });
+    });
 
-        valf = parseInt($('[name="tot"]').val());
-        valm = parseInt($('[name="tot_temp"]').val());
-        if (estaChequeado == true) {
-          valf = valf + 1;
-          valm = valm + 1;
-        } else {
-          valf = valf - 1;
-          valm = valm - 1;
-        }
-
-        $('[name="tot"]').val((valf).toFixed(0));
-        $('[name="tot_temp"]').val((valm).toFixed(0));
-        
-        totalf = parseFloat($('[name="tot"]').val());
-        total = parseFloat($('[name="tot_temp"]').val());
-        if(total==0 || totalf==0){
-            $('#but').slideUp();
-          }
-          else{
-            $('#but').slideDown();
-          }
+    /// === funcion para seleccionar el itema (solo para un mes)
+    function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
+      if (estaChequeado == true) { 
+        document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
       }
+      else{
+        document.getElementById("tr"+nro).style.backgroundColor = "";
+      }
+
+      valf = parseInt($('[name="tot"]').val());
+      valm = parseInt($('[name="tot_temp"]').val());
+      if (estaChequeado == true) {
+        valf = valf + 1;
+        valm = valm + 1;
+      } else {
+        valf = valf - 1;
+        valm = valm - 1;
+      }
+
+      $('[name="tot"]').val((valf).toFixed(0));
+      $('[name="tot_temp"]').val((valm).toFixed(0));
+      
+      totalf = parseFloat($('[name="tot"]').val());
+      total = parseFloat($('[name="tot_temp"]').val());
+      if(total==0 || totalf==0){
+          $('#paso3').slideUp();
+          $('#but').slideUp();
+          $(".check2").attr('checked', 'checked');  
+        }
+        else{
+          $('#paso3').slideDown();
+        }
+    }
       /// =====------------------------------
 
       //// ============= funcion : para items con varios meses programados
@@ -342,10 +344,12 @@
         totalf = parseFloat($('[name="tot"]').val());
         total = parseFloat($('[name="tot_temp"]').val());
         if(totalf==0 || total==0){
+          $('#paso3').slideUp();
           $('#but').slideUp();
+          $("#check2").attr('checked', 'checked');  
         }
         else{
-          $('#but').slideDown();
+          $('#paso3').slideDown();
         }
       }
 
@@ -366,10 +370,12 @@
                 total = parseFloat($('[name="tot_temp"]').val());
                 totalf = parseFloat($('[name="tot"]').val());
                 if(total==0 || totalf==0){
+                  $('#paso3').slideUp();
                   $('#but').slideUp();
+                  $("#check2").attr('checked', 'checked');  
                 }
                 else{
-                  $('#but').slideDown();
+                  $('#paso3').slideDown();
                 }
 
               }else{ /// inhabilitado (ya se certifico anteriormente)
@@ -379,10 +385,12 @@
                 total = parseFloat($('[name="tot_temp"]').val());
                 totalf = parseFloat($('[name="tot"]').val());
                 if(total==0 || totalf==0){
+                  $('#paso3').slideUp();
                   $('#but').slideUp();
+                  $("#check2").attr('checked', 'checked');  
                 }
                 else{
-                  $('#but').slideDown();
+                  $('#paso3').slideDown();
                 }
               }
           }});
@@ -394,13 +402,30 @@
           totalf = parseFloat($('[name="tot"]').val());
 
           if(total==0 || totalf==0){
+            $('#paso3').slideUp();
             $('#but').slideUp();
+            $("#check2").attr('checked', 'checked');  
           }
           else{
-            $('#but').slideDown();
+            $('#paso3').slideDown();
           }
         }
       }
+
+      /// Seleccion de opcion para guardar solicitud
+      $(document).ready(function(){
+          $(".paso3").click(function(evento){
+            var valor = $(this).val();
+            if(valor == 'si'){
+                $("#but").css("display", "block");
+            }
+            else{
+                $("#but").css("display", "none");
+            }
+        });
+      });
+
+
     /// ==========================================================================
 
 
@@ -632,7 +657,7 @@
                       request.done(function (response, textStatus, jqXHR) { 
                         reset();
                         if (response.respuesta == 'correcto') {
-                          $("#modal_aprobar_cert").modal("hide");
+                          $("#modal_aprobar_solcert").modal("hide");
 
                           $('#solicitudes').fadeIn(1000).html(response.certpoa);
                         } 
@@ -683,17 +708,101 @@
 
 
 
-
-
-
-
-
-
-
-
     /// Anular Solicitud de Certificacion POa
     function anular_solicitud(sol_id) {
-        reset();
+      document.getElementById("s_id").value = sol_id;
+      var url = base+"index.php/ejecucion/ccertificacion_poa/get_datos_solicitud";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "sol_id="+sol_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) { 
+        if (response.respuesta == 'correcto') {
+            $('#titulo_solicitud').html('<h2 class="alert alert-danger"><center>RECHAZAR SOLICITUD : '+response.solicitud[0]['cite']+'</center></h2>');
+        } else {
+            alertify.error("ERROR AL RECUPERAR DATOS, PORFAVOR CONTACTESE CON EL ADMINISTRADOR"); 
+        }
+      });
+
+      request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+      });
+      request.always(function () {
+          //console.log("termino la ejecuicion de ajax");
+      });
+
+        // ===VALIDAR LA ANULACION DE SOLICITUD CERTIFICACION POA
+        $("#rechazar_sol").on("click", function (e) {
+            var error='false';
+            var observacion=document.getElementById('observacion').value;
+          
+            if(!observacion){
+                $('#error_obs').html('<font color="red" size="1">REGISTRE OBSERVACIÓN (*)</font>');
+                document.form_observacion.observacion.focus() 
+                return 0;
+            }
+         
+            if(observacion.length!=0){
+                $('#error_obs').html('OBSERVACIÓN');
+              //  alert(sol_id+'---'+observacion)
+                reset();
+                var request;
+                alertify.confirm("RECHAZAR SOLICITUD DE CERTIFICACIÓN POA ?", function (a) {
+                  if (a) {
+
+                    url = base+"index.php/ejecucion/ccertificacion_poa/rechazar_solicitud_cpoa";
+                    if (request) {
+                        request.abort();
+                    }
+                    request = $.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: "json",
+                        data: "sol_id="+sol_id+"&observacion="+observacion
+                    });
+
+                    request.done(function (response, textStatus, jqXHR) { 
+                      reset();
+                      if (response.respuesta == 'correcto') {
+                        $("#modal_anular_solcert").modal("hide");
+                        $('#solicitudes').fadeIn(1000).html(response.certpoa);
+                      } 
+                      else {
+                        alertify.error("Error ...");
+                      }
+                    });
+
+                    request.fail(function (jqXHR, textStatus, thrown) {
+                      console.log("ERROR: " + textStatus);
+                    });
+
+                    e.preventDefault();
+
+                  } else {
+                      alertify.error("OPCI\u00D3N CANCELADA");
+                  }
+                });
+            }
+            else{
+                alertify.error("REGISTRE DATOS");
+            }
+        });
+
+
+
+
+
+
+
+
+/*        reset();
         var request;
         alertify.confirm("ESTA SEGURO DE APROBAR LA SOLICITUD DE CERTIFICACIÓN POA ?", function (a) {
         if (a) {
@@ -727,7 +836,7 @@
         } else {
             alertify.error("Opcion cancelada");
         }
-      });
+      });*/
 
     }
 

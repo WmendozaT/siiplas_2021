@@ -2047,6 +2047,7 @@ create table solicitud_cpoa_subactividad(
   aclaracion character varying(500),
   num_ip character varying(50),
   nom_ip character varying(50),
+  fun_id integer DEFAULT 0
   primary key(sol_id)
  );
 
