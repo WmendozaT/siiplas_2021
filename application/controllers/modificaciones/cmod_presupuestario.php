@@ -37,7 +37,7 @@ class Cmod_presupuestario extends CI_Controller {
     $data['menu'] = $this->menu->genera_menu();
     $data['list_dep']=$this->model_proyecto->list_departamentos();
     $data['lista_cites']=$this->lista_cites_modificados(); /// List.
-
+    $data['list_dep']=$this->model_proyecto->list_departamentos();
     $this->load->view('admin/modificacion/presupuesto/list_modificaciones', $data);
   }
 
@@ -55,6 +55,7 @@ class Cmod_presupuestario extends CI_Controller {
                 <th style="width:10%;" bgcolor="#474544" title="DA">DA</th>
                 <th style="width:10%;" bgcolor="#474544" title="UE">UE</th>
                 <th style="width:10%;" bgcolor="#474544" title="RESOLUCION">RESOLUCI&Oacute;N</th>
+                <th style="width:5%;" bgcolor="#474544" title=""></th>
                 <th style="width:5%;" bgcolor="#474544" title=""></th>
                 <th style="width:5%;" bgcolor="#474544" title=""></th>
                 <th style="width:5%;" bgcolor="#474544" title=""></th>
@@ -83,7 +84,8 @@ class Cmod_presupuestario extends CI_Controller {
                 }
               $tabla.='
               </td>
-              <td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod_ppto/rep_mod_ppto/'.$row['mp_id'].'\');" title="REPORTE MODIFICACIÓN PRESUPUESTARIA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>'; 
+              <td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod_ppto/rep_mod_ppto/'.$row['mp_id'].'\');" title="REPORTE MODIFICACIÓN PRESUPUESTARIA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>
+              <td align=center><a href="#" data-toggle="modal" data-target="#modal_mod_ffsa" class="btn btn-success mod_ffsa" name="'.$row['mp_id'].'" id="'.strtoupper($row['resolucion']).'">VER DETALLE</a></td>'; 
             }
             $tabla.='
             </tbody>
@@ -544,6 +546,7 @@ class Cmod_presupuestario extends CI_Controller {
 
           $data['reduccion']=$this->mis_partidas_modificadas($mp_id,1);
           $data['incremento']=$this->mis_partidas_modificadas($mp_id,0);
+        //  echo $data['incremento'];
           $this->load->view('admin/modificacion/presupuesto/reporte_modificacion_presupuesto', $data);
         }
         else{
@@ -586,17 +589,24 @@ class Cmod_presupuestario extends CI_Controller {
                 <tbody>';
                 $nro=0; $total=0;
                   foreach ($partidas as $row){ 
-                    $nro++;
-                    $total=$total+$row['importe'];
-                    if($row['activo_mpa']==0){
+                    
+                    /*if($row['activo_mpa']==0){
                       $color='';
                       $tit='NO ACTUALIZADO';
                     }
                     else{
                       $color='bgcolor="#ebfdeb"';
                       $tit='ACTUALIZADO';
+                    }*/
+
+                    $tit='NO ACTUALIZADO';
+                    $color='';
+                    if($row['dist_id']==13){
+                      $color='bgcolor="#e2f3da"';
                     }
 
+                    $nro++;
+                    $total=$total+$row['importe'];
 
                     $tabla.=
                     '<tr style="font-size: 6.9px;" '.$color.'>

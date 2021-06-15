@@ -253,6 +253,67 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="modal fade" id="modal_mod_ffsa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	        <div class="modal-dialog" id="mdialTamanio">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+	                </div>
+	                <div class="modal-body">
+	                	
+	                    <div class="row">
+	                    <form action="<?php echo site_url().'/mnt/valida_actividad'?>" id="form_nuevo" name="form_nuevo" class="form-horizontal" method="post">
+                        <h2 class="alert alert-info"><div id="tit_rd" align="center"></div></h2>
+	                	<input type="hidden" name="mp_id" id="mp_id">                         
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">REGIONAL</label>
+                                    <div class="col-md-10">
+                                        <select class="form-control" id="reg_id" name="reg_id" title="Seleccione Regional">
+                                            <option value="">Seleccione Regional</option>
+                                           	<?php 
+                                                foreach($list_dep as $row){ ?>
+                                                    <option value="<?php echo $row['dep_id']; ?>" <?php if(@$_POST['pais']==$row['dep_id']){ echo "selected";} ?>><?php echo $row['dep_departamento']; ?></option>
+                                            <?php } ?>    
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">UNIDAD EJECUTORA</label>
+                                    <div class="col-md-10">
+                                        <select class="form-control" id="uejec_id" name="uejec_id" title="Seleccione Unidad Ejecutora">
+                                            <option value="">No seleccionado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>                    
+                        <div class="form-actions">
+                            <div class="row">
+                                <div id="but">
+                                    <div class="col-md-12">
+                                       <button class="btn btn-default" data-dismiss="modal" id="cl" title="CANCELAR">CANCELAR</button>
+                                       <button type="button" name="subir_form" id="subir_form" class="btn btn-info" >GENERAR REPORTE</button>
+                                        <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+
 		<!-- END PAGE FOOTER -->
 	</div>
 		<!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
@@ -307,6 +368,77 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+		<script type="text/javascript">
+            $(function () {
+                $(".mod_ffsa").on("click", function (e) {
+                    mp_id = $(this).attr('name');
+                    rd = $(this).attr('id');
+                    document.getElementById("mp_id").value=mp_id;
+                    $('#tit_rd').html(''+rd+'');
+                    // =VALIDAR EL FORMULARIO DE MODIFICACION
+                    $("#mod_ffsaenviar").on("click", function (e) {
+                        var $validator = $("#form_modsa").validate({
+                               rules: {
+                                serv_id: { //// Servicio
+                                required: true,
+                                },
+                                sub_cod: { //// Codigo
+                                    required: true,
+                                },
+                                sub_desc: { //// Descripcion
+                                    required: true,
+                                },
+                                tp: { //// Tipo
+                                    required: true,
+                                }
+                            },
+                            messages: {
+                                serv_id: "<font color=red>SERVICIOL</font>",
+                                sub_cod: "<font color=red>REGISTRE CÓDIGO SUB ACTIVIDAD</font>", 
+                                sub_desc: "<font color=red>DESCRIPCIÓN SUB ACTIVIDAD</font>",
+                                tp: "<font color=red>SELECCIONE TIPO</font>",                     
+                            },
+                            highlight: function (element) {
+                                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                            },
+                            unhighlight: function (element) {
+                                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                            },
+                            errorElement: 'span',
+                            errorClass: 'help-block',
+                            errorPlacement: function (error, element) {
+                                if (element.parent('.input-group').length) {
+                                    error.insertAfter(element.parent());
+                                } else {
+                                    error.insertAfter(element);
+                                }
+                            }
+                        });
+                        var $valid = $("#form_modsa").valid();
+                        if (!$valid) {
+                            $validator.focusInvalid();
+                        } else {
+                            alertify.confirm("MODIFICAR DATOS SUB - ACTIVIDAD ?", function (a) {
+                                if (a) {
+                                    document.getElementById("loadsa").style.display = 'block';
+                                    document.getElementById('mod_ffsaenviar').disabled = true;
+                                    document.forms['form_modsa'].submit();
+                                } else {
+                                    alertify.error("OPCI\u00D3N CANCELADA");
+                                }
+                            });
+
+                        }
+                    });
+                });
+            });
+        </script>
+
+
+
+
+
+
 		<script type="text/javascript">
         $(document).ready(function() {
             pageSetUp();
@@ -379,7 +511,7 @@
             });
         });
         </script>
-                <script type="text/javascript">
+        <script type="text/javascript">
             $(function () {
                 function reset() {
                     $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
