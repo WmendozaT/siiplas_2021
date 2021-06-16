@@ -385,7 +385,7 @@ class Model_modrequerimiento extends CI_Model{
         return $query->result_array();
     }
 
-    /*--- Lista de partidas tipo de Modificaciones ---*/
+    /*--- Lista de partidas tipo de Modificaciones Consolidado ---*/
     public function list_tipo_partidas_modificadas($mp_id,$tp){
         $sql = 'select *
                 from partidas_presupuestarias_modificadas mp
@@ -397,6 +397,24 @@ class Model_modrequerimiento extends CI_Model{
                 Inner Join unidad_actividad as ua On ua.act_id=p.act_id
                 Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
                 where mp.mp_id='.$mp_id.' and mp.tipo='.$tp.'
+                order by mp.mpa_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*--- Lista de partidas tipo de Modificaciones clasificado por distrital ---*/
+    public function list_tipo_partidas_modificadas_clasificado_distrital($mp_id,$tp,$dist_id){
+        $sql = 'select *
+                from partidas_presupuestarias_modificadas mp
+                Inner Join partidas as par On par.par_id=mp.par_id
+                Inner Join aperturaproyectos as ap On ap.aper_id=mp.aper_id
+                Inner Join _proyectos as p On p.proy_id=ap.proy_id
+                Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                Inner Join _departamentos as d On d.dep_id=p.dep_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                where mp.mp_id='.$mp_id.' and mp.tipo='.$tp.' and ds.dist_id='.$dist_id.'
                 order by mp.mpa_id asc';
 
         $query = $this->db->query($sql);

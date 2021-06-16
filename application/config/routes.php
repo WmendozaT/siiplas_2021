@@ -601,6 +601,7 @@ $route['mod/rep_mod_techo/(:any)'] = 'modificaciones/cmod_requerimientos/reporte
 $route['mod_ppto/list_mod_ppto'] = 'modificaciones/cmod_presupuestario/lista_mod_ppto'; //// Valida Cite Modificacion Presupuestaria
 $route['mod_ppto/delete_mod_ppto'] = 'modificaciones/cmod_presupuestario/delete_modificacion_presupuestaria';//// Elimina Modificacion Presupuestaria
 $route['mod_ppto/rep_mod_ppto/(:any)'] = 'modificaciones/cmod_presupuestario/reporte_mod_ppto/$1'; //// Reporte Modificacion Presupuestaria
+$route['mod_ppto/rep_mod_ppto_distrital/(:any)'] = 'modificaciones/cmod_presupuestario/reporte_mod_ppto_clasificado/$1/$2'; //// Reporte Modificacion Presupuestaria clasificado por distrital
 $route['mod_ppto/ver_partidas_mod/(:any)'] = 'modificaciones/cmod_presupuestario/partidas_modificadas/$1'; //// Reporte Modificacion Presupuestaria
 
 

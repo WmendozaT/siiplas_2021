@@ -21,34 +21,7 @@ ob_start();
             <table class="page_header" border="0">
                 <tr>
                     <td style="width: 100%; text-align: left">
-                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
-                            <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                              <td width=15%; text-align:center;>
-                                <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:50%;">
-                              </td>
-                              <td width=65%; align=left>
-                                <table>
-                                    <tr>
-                                        <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b><?php echo $this->session->userdata('entidad')?></b></td>
-                                    </tr>
-                                    <tr style="font-size: 8pt;">
-                                        <td style="width:10%; height: 1%"><b>DIR. ADM.</b></td>
-                                        <td style="width:90%;">: <?php echo strtoupper($cite[0]['dep_departamento']);?></td>
-                                    </tr>
-                                    <tr style="font-size: 8pt;">
-                                        <td style="width:10%; height: 1%"><b>UNI. EJEC.</b></td>
-                                        <td style="width:90%;">: <?php echo strtoupper($cite[0]['dist_distrital']);?></td>
-                                    </tr>
-                                    <tr style="font-size: 8pt;">
-                                        <td style="width:10%; height: 1%"><b>No. y FECHA DISPOSICI&Oacute;N</b></td>
-                                        <td style="width:90%;">: <?php echo strtoupper($cite[0]['resolucion']);?></td>
-                                    </tr>
-                                </table>
-                              </td>
-                              <td width=20%; align=left style="font-size: 7.5px;">
-                              </td>
-                            </tr>
-                        </table>
+                        <?php echo $cabecera;?>
                     </td>
                 </tr>
             </table>

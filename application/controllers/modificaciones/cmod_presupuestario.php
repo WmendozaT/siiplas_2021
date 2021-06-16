@@ -19,6 +19,7 @@ class Cmod_presupuestario extends CI_Controller {
             $this->fun_id = $this->session->userData('fun_id'); /// Fun id
             $this->rol_id = $this->session->userData('rol_id'); /// Rol Id
             $this->adm = $this->session->userData('adm');
+            $this->tp_adm = $this->session->userData('tp_adm');
             $this->load->library('menu');
             $this->menu->const_menu(3);
             
@@ -38,6 +39,7 @@ class Cmod_presupuestario extends CI_Controller {
     $data['list_dep']=$this->model_proyecto->list_departamentos();
     $data['lista_cites']=$this->lista_cites_modificados(); /// List.
     $data['list_dep']=$this->model_proyecto->list_departamentos();
+  
     $this->load->view('admin/modificacion/presupuesto/list_modificaciones', $data);
   }
 
@@ -48,6 +50,7 @@ class Cmod_presupuestario extends CI_Controller {
       $tabla='';
 
       $tabla.='
+        <input name="base" type="hidden" value="'.base_url().'">
         <table id="dt_basic" class="table table-bordered" style="width:100%;">
             <thead>
               <tr>
@@ -85,7 +88,9 @@ class Cmod_presupuestario extends CI_Controller {
               $tabla.='
               </td>
               <td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod_ppto/rep_mod_ppto/'.$row['mp_id'].'\');" title="REPORTE MODIFICACIÓN PRESUPUESTARIA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>
-              <td align=center><a href="#" data-toggle="modal" data-target="#modal_mod_ffsa" class="btn btn-success mod_ffsa" name="'.$row['mp_id'].'" id="'.strtoupper($row['resolucion']).'">VER DETALLE</a></td>'; 
+              <td align=center>
+                <a href="#" data-toggle="modal" data-target="#modal_regional" class="btn btn-default" onclick="generar_modppto_regional('.$row['mp_id'].');" >CLASIFICAR POR DISTRITAL</a>
+              </td>'; 
             }
             $tabla.='
             </tbody>
@@ -93,6 +98,53 @@ class Cmod_presupuestario extends CI_Controller {
       
       return $tabla;
     }
+
+
+
+  /*---- Obtiene Datos la solicitud de Certificacion POA ---*/
+  public function get_datos_modificacion_presupuestaria(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $mp_id = $this->security->xss_clean($post['mp_id']);
+
+        $modificacion=$this->model_modrequerimiento->get_cites_mod_presupuestaria($mp_id);
+
+
+        if(count($modificacion)!=0){
+          $distritales=$this->model_proyecto->list_distritales($modificacion[0]['dep_id']);
+          $dist='';
+          $dist.='
+          <select class="form-control" id="uejec_id" name="uejec_id" title="Seleccione Unidad Ejecutora">
+            <option value="">No seleccionado</option>';
+              foreach($distritales as $row){
+                if($modificacion[0]['dist_id']==$row['dist_id']){
+                  $dist.='<option value="'.$row['dist_id'].'" selected>'.$row['dist_distrital'].'</option>';
+                }
+                else{
+                  $dist.='<option value="'.$row['dist_id'].'">'.$row['dist_distrital'].'</option>';
+                }
+                
+              }
+            $dist.='
+          </select>';
+          $result = array(
+            'respuesta' => 'correcto',
+            'modificacion' => $modificacion,
+            'distritales' => $dist
+          );
+        }
+        else{
+          $result = array(
+              'respuesta' => 'error'
+          );
+        }
+
+        echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
 
 
   /*--- LISTA DE PARTIDAS MODIFICADAS 2020-2021 ---*/
@@ -537,16 +589,42 @@ class Cmod_presupuestario extends CI_Controller {
 
 
 
-    /*------- REPORTE MODIFICACION POR PARTIDAS (2020) ------*/
+    /*------- REPORTE MODIFICACION POR PARTIDAS (2020) Consolidado------*/
     public function reporte_mod_ppto($mp_id){
         $data['mes'] = $this->mes_nombre();
         $data['cite'] = $this->model_modrequerimiento->get_cites_mod_presupuestaria($mp_id); /// DATOS CITE MOD PPTO
         
         if(count($data['cite'])!=0){
-
-          $data['reduccion']=$this->mis_partidas_modificadas($mp_id,1);
-          $data['incremento']=$this->mis_partidas_modificadas($mp_id,0);
-        //  echo $data['incremento'];
+          $data['cabecera']='<table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
+                            <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
+                              <td width=15%; text-align:center;>
+                               
+                              </td>
+                              <td width=65%; align=left>
+                                <table>
+                                    <tr>
+                                        <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b>'.$this->session->userdata('entidad').'</b></td>
+                                    </tr>
+                                    <tr style="font-size: 8pt;">
+                                        <td style="width:10%; height: 1%"><b>DIR. ADM.</b></td>
+                                        <td style="width:90%;">: '.strtoupper($data['cite'][0]['dep_departamento']).'</td>
+                                    </tr>
+                                    <tr style="font-size: 8pt;">
+                                        <td style="width:10%; height: 1%"><b>UNI. EJEC.</b></td>
+                                        <td style="width:90%;">: '.strtoupper($data['cite'][0]['dist_distrital']).'</td>
+                                    </tr>
+                                    <tr style="font-size: 8pt;">
+                                        <td style="width:10%; height: 1%"><b>No. y FECHA DISPOSICI&Oacute;N</b></td>
+                                        <td style="width:90%;">: '.strtoupper($data['cite'][0]['resolucion']).'</td>
+                                    </tr>
+                                </table>
+                              </td>
+                              <td width=20%; align=left style="font-size: 7.5px;">
+                              </td>
+                            </tr>
+                        </table>';
+          $data['reduccion']=$this->mis_partidas_modificadas($mp_id,1,0);
+          $data['incremento']=$this->mis_partidas_modificadas($mp_id,0,0);
           $this->load->view('admin/modificacion/presupuesto/reporte_modificacion_presupuesto', $data);
         }
         else{
@@ -556,9 +634,15 @@ class Cmod_presupuestario extends CI_Controller {
 
 
     /*----- REPORTE - MODIFICACION DE PARTIDAS -----*/
-    public function mis_partidas_modificadas($mp_id,$tp){
+    public function mis_partidas_modificadas($mp_id,$tp,$dist_id){
       $cite = $this->model_modrequerimiento->get_cites_mod_presupuestaria($mp_id);
-      $partidas=$this->model_modrequerimiento->list_tipo_partidas_modificadas($mp_id,$tp);
+      if($dist_id==0){
+        $partidas=$this->model_modrequerimiento->list_tipo_partidas_modificadas($mp_id,$tp);
+      }
+      else{
+        $partidas=$this->model_modrequerimiento->list_tipo_partidas_modificadas_clasificado_distrital($mp_id,$tp,$dist_id);
+      }
+      
       $signo='';
       $titulo='INCREMENTADAS';
       if($tp==1){
@@ -590,20 +674,20 @@ class Cmod_presupuestario extends CI_Controller {
                 $nro=0; $total=0;
                   foreach ($partidas as $row){ 
                     
-                    /*if($row['activo_mpa']==0){
+                    if($row['activo_mpa']==0){
                       $color='';
                       $tit='NO ACTUALIZADO';
                     }
                     else{
                       $color='bgcolor="#ebfdeb"';
                       $tit='ACTUALIZADO';
-                    }*/
+                    }
 
-                    $tit='NO ACTUALIZADO';
+                   /* $tit='NO ACTUALIZADO';
                     $color='';
                     if($row['dist_id']==13){
                       $color='bgcolor="#e2f3da"';
-                    }
+                    }*/
 
                     $nro++;
                     $total=$total+$row['importe'];
@@ -635,9 +719,48 @@ class Cmod_presupuestario extends CI_Controller {
 
 
 
+    /*-- REPORTE MODIFICACION PPTO Clasificado por Regional --*/
+    public function reporte_mod_ppto_clasificado($mp_id,$dist_id){
+      $data['mes'] = $this->mes_nombre();
+      $data['cite'] = $this->model_modrequerimiento->get_cites_mod_presupuestaria($mp_id); /// DATOS CITE MOD PPTO
+      
+      if(count($data['cite'])!=0){
+        $distrital=$this->model_proyecto->dep_dist($dist_id);
+        $data['cabecera']='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
+          <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
+            <td width=15%; text-align:center;>
+             
+            </td>
+            <td width=65%; align=left>
+              <table>
+                  <tr>
+                      <td colspan="2" style="width:100%; height: 1.2%; font-size: 16pt;"><b>'.$this->session->userdata('entidad').'</b></td>
+                  </tr>
+                  <tr style="font-size: 8pt;">
+                      <td style="width:10%; height: 1%"><b>No. RESOLUCIÓN : </b></td>
+                      <td style="width:90%;">: '.strtoupper($data['cite'][0]['resolucion']).'</td>
+                  </tr>
+                  <tr style="font-size: 8pt;">
+                      <td style="width:10%; height: 1%"><b>FILTRADO POR : </b></td>
+                      <td style="width:90%;">: '.strtoupper($distrital[0]['dist_distrital']).'</td>
+                  </tr>
+              </table>
+            </td>
+            <td width=20%; align=left style="font-size: 7.5px;">
+            </td>
+          </tr>
+        </table>';
 
-
-
+        $data['reduccion']=$this->mis_partidas_modificadas($mp_id,1,$dist_id);
+        $data['incremento']=$this->mis_partidas_modificadas($mp_id,0,$dist_id);
+      
+        $this->load->view('admin/modificacion/presupuesto/reporte_modificacion_presupuesto', $data);
+      }
+      else{
+          echo "<b>ERROR !!!!!</b>";
+      }
+    }
 
     /*------------------------------*/
     function rolfun($rol){
