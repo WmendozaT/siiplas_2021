@@ -518,23 +518,23 @@ class Cseguimiento extends CI_Controller {
     public function ver_reporteevalpoa($com_id,$trm_id){
       $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
-        $data['mes'] = $this->seguimientopoa->mes_nombre();
+       // $data['mes'] = $this->seguimientopoa->mes_nombre();
         $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['fase'][0]['proy_id']); //// DATOS PROYECTO
         $trimestre=$this->model_evaluacion->get_trimestre($trm_id); /// Datos del Trimestre
         if($data['proyecto'][0]['tp_id']==4){
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['fase'][0]['proy_id']); /// PROYECTO
         }
-        $data['cabecera']=$this->seguimientopoa->cabecera($data['componente'],$data['proyecto']); /// Cabecera
-        $data['verif_mes'] = $this->verif_mes;
-        $data['titulo_formulario']='<b>FORMULARIO EVALUACIÓN POA</b> - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'';
+
+        $data['cabecera']=$this->seguimientopoa->cabecera_evaluacion_trimestral($data['componente'],$data['proyecto'],$trm_id);
+        $data['pie']=$this->seguimientopoa->pie_evaluacionpoa();
         /// ----------------------------------------------------
         $this->seguimientopoa->update_evaluacion_operaciones($com_id);
-        $tabla=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$trm_id);
         /// -----------------------------------------------------
+        $data['operaciones']=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$trm_id); /// Reporte Gasto Corriente, Proyecto de Inversion 2020
 
-        $data['operaciones']=$tabla; /// Reporte Gasto Corriente, Proyecto de Inversion 2020
-        $this->load->view('admin/evaluacion/seguimiento_poa/reporte_seguimiento_poa', $data);
+        $this->load->view('admin/evaluacion/seguimiento_poa/reporte_evaluacion_trimestral', $data);
+
       }
       else{
         echo "Error !!!";

@@ -28,112 +28,408 @@ class Seguimientopoa extends CI_Controller{
             $this->verif_mes=$this->session->userData('mes_actual');
             $this->resolucion=$this->session->userdata('rd_poa');
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->mes = $this->mes_nombre();
     }
 
     /// Cabecera Reporte de Seguimiento POA Mensual 2021
     public function cabecera($componente,$proyecto){
       $tabla='';
-      $tabla.=' <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                    <tr>
-                      <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b>'.$this->session->userdata('entidad').'</b></td>
-                    </tr>
-                    <tr style="font-size: 8pt;">
-                      <td style="width:10%; height: 1.2%;"><b>DIR. ADM.</b></td>
-                      <td style="width:90%;">: '.$proyecto[0]['dep_cod'].' '.strtoupper($proyecto[0]['dep_departamento']).'</td>
-                    </tr>
-                    <tr style="font-size: 8pt;">
-                      <td style="width:10%; height: 1.2%;"><b>UNI. EJEC.</b></td>
-                      <td style="width:90%;">: '.$proyecto[0]['dist_cod'].' '.strtoupper($proyecto[0]['dist_distrital']).'</td>
-                    </tr>
-                    <tr style="font-size: 8pt;">';
-                        if($proyecto[0]['tp_id']==1){ /// Proyecto de Inversion
-                            $tabla.='
-                            <td style="width:10%;"><b>PROY. INV.</b></td>
-                            <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'].'</td>';
-                        }
-                        else{ /// Gasto Corriente
-                            $tabla.='
-                            <td style="width:10%;"><b>ACTIVIDAD</b></td>
-                            <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td>';
-                        }
-
-                    $tabla.='
-                    </tr>
-                    <tr style="font-size: 8pt;">
-                        <td style="height: 1.2%; width:10%;"><b>';
-                          if($proyecto[0]['tp_id']==1){
-                            $tabla.='UNI. RESP. ';
-                          }
-                          else{
-                            $tabla.='SUBACT. ';
-                          }
-                        $tabla.='</b></td>
-                        <td style="width:90%;">: '.strtoupper($componente[0]['serv_cod']).' '.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_descripcion']).'</td>
-                    </tr>
-                </table>';
+      $tabla.=' 
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+          <tr>
+            <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b>'.$this->session->userdata('entidad').'</b></td>
+          </tr>
+          <tr style="font-size: 8pt;">
+            <td style="width:10%; height: 1.2%;"><b>DIR. ADM.</b></td>
+            <td style="width:90%;">: '.$proyecto[0]['dep_cod'].' '.strtoupper($proyecto[0]['dep_departamento']).'</td>
+          </tr>
+          <tr style="font-size: 8pt;">
+            <td style="width:10%; height: 1.2%;"><b>UNI. EJEC.</b></td>
+            <td style="width:90%;">: '.$proyecto[0]['dist_cod'].' '.strtoupper($proyecto[0]['dist_distrital']).'</td>
+          </tr>
+          <tr style="font-size: 8pt;">';
+            if($proyecto[0]['tp_id']==1){ /// Proyecto de Inversion
+                $tabla.='
+                <td style="width:10%;"><b>PROY. INV.</b></td>
+                <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'].'</td>';
+            }
+            else{ /// Gasto Corriente
+                $tabla.='
+                <td style="width:10%;"><b>ACTIVIDAD</b></td>
+                <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td>';
+            }
+          $tabla.='
+          </tr>
+          <tr style="font-size: 8pt;">
+              <td style="height: 1.2%; width:10%;"><b>';
+                if($proyecto[0]['tp_id']==1){
+                  $tabla.='UNI. RESP. ';
+                }
+                else{
+                  $tabla.='SUBACT. ';
+                }
+              $tabla.='</b></td>
+              <td style="width:90%;">: '.strtoupper($componente[0]['serv_cod']).' '.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_descripcion']).'</td>
+          </tr>
+        </table>';
       return $tabla;
     }
 
-      /*------- CABECERA REPORTE SEGUIMIENTO POA ------*/
+      /*------- CABECERA REPORTE SEGUIMIENTO POA (GRAFICO)------*/
     function cabecera_seguimiento($establecimiento,$subactividad,$tipo_titulo){
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
       /// tipo_titulo 1 : Seguimiento Mensual
       /// tipo_titulo 2 : Evaluacion por Trimestre
       /// tipo_titulo 3 : Evaluacion POA Gestion
+      
+      $tit='';
+      if($tipo_titulo==1){
+        $tit='<td style="height: 35px;font-size: 23px;"><center><b>CUADRO DE SEGUIMIENTO POA</b> - '.$this->verif_mes[2].' / '.$this->gestion.'</center></td>';
+      }
+      elseif($tipo_titulo==2){
+        $tit='<td style="height: 35px;font-size: 18px;"><center><b>CUADRO EVALUACIÓN POA ACUMULADO</b> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></td>';
+      }
+      else{
+        $tit='<td style="height: 35px;font-size: 23px;"><center><b>CUADRO EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</b></center></td>';
+      }
+
+
       $tabla='';
       $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+            <td style="width:70%;height: 2%">
               <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                <tr>
-                  <td style="width:15%;height:1000% "  align="center">
-                    <img src="'.base_url().'assets/ifinal/cns_logo.JPG" style="width:35%;"/></br>
-                  </td>
-                  <td style="width:85%;">
-                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                        <tr>
-                          <td colspan="2" style="width:100%; height: 1%; font-size: 16pt;"><b>'.$this->session->userdata('entidad').'</b></td>
+                  <tr style="font-size: 10px;font-family: Arial;">
+                      <td style="width:45%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                  </tr>
+                  <tr>
+                      <td style="width:50%;font-size: 7px;">&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                  </tr>
+              </table>
+            </td>
+            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+              '.strtoupper($establecimiento[0]['dist_distrital']).' '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%;">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-family: Arial;">
+                            '.$tit.'
                         </tr>
-                        <tr style="font-size: 8pt;">
-                          <td style="width:10%; height: 20%;"><b>UNI. EJEC.</b></td>
-                          <td style="width:90%;">: '.$establecimiento[0]['dist_cod'].' '.strtoupper($establecimiento[0]['dist_distrital']).'</td>
-                        </tr>
-                        <tr style="font-size: 8pt;">
-                          <td style="width:10%;"><b>ACTIVIDAD</b></td>
-                          <td style="width:90%;">: '.$establecimiento[0]['aper_programa'].' '.$establecimiento[0]['aper_proyecto'].' '.$establecimiento[0]['aper_actividad'].' - '.strtoupper($establecimiento[0]['act_descripcion']).' '.$establecimiento[0]['abrev'].'</td>
-                        </tr>
-                        <tr style="font-size: 8pt;">
-                          <td style="width:10%;"><b>SUBACTIVIDAD</b></td>
-                          <td style="width:90%;">: '.$subactividad[0]['serv_cod'].' '.$subactividad[0]['tipo_subactividad'].' '.strtoupper($subactividad[0]['serv_descripcion']).'</td>
-                        </tr>';
-                        if($tipo_titulo==1){
-                          $tabla.='
-                          <tr style="font-size: 8pt;">
-                            <td style="width:10%;"><b>REPORTE</b></td>
-                            <td style="width:90%;">: CUADRO DE SEGUIMIENTO POA AL MES DE '.$this->verif_mes[2].' DE '.$this->gestion.'</td>
-                          </tr>';
-                        }
-                        elseif ($tipo_titulo==2) {
-                          $tabla.='
-                          <tr style="font-size: 8pt;">
-                            <td style="width:10%;"><b>REPORTE</b></td>
-                            <td style="width:90%;">: CUADRO DE EVALUACI&Oacute;N POA ACUMULADO A '.$trimestre[0]['trm_descripcion'].' - '.$this->gestion.'</td>
-                          </tr>';
-                        }
-                        elseif ($tipo_titulo==3) {
-                          $tabla.='
-                          <tr style="font-size: 8pt;">
-                            <td style="width:10%;"><b>REPORTE</b></td>
-                            <td style="width:90%;">: CUADRO DE EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</td>
-                          </tr>';
-                        }
-                        $tabla.='
-                        
                     </table>
-                  </td>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr>
+            <td style="width:100%;height: 100%;">
+              <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%; font-size: 10px;font-family: Arial;">
+                <tr>
+                    <td style="width:25%;height: 14px;">
+                      <b>UNIDAD EJECUTORA</b>
+                    </td>
+                    <td style="width:75%;">
+                        &nbsp;'.$establecimiento[0]['dist_cod'].' '.strtoupper($establecimiento[0]['dist_distrital']).'
+                    </td>
                 </tr>
-              </table>';
+                <tr>
+                    <td style="width:25%;height: 14px;">
+                      <b>ACTIVIDAD</b>
+                    </td>
+                    <td style="width:75%;">
+                        &nbsp;'.$establecimiento[0]['aper_actividad'].' '.strtoupper ($establecimiento[0]['act_descripcion']).' '.$establecimiento[0]['abrev'].'
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:25%;height: 14px;">
+                      <b>SUBACTIVIDAD</b>
+                    </td>
+                    <td style="width:75%;">
+                        &nbsp;'.$subactividad[0]['tipo_subactividad'].' '.$subactividad[0]['serv_descripcion'].'
+                    </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>';
+     /* $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+        <tr>
+          <td style="width:15%;height:1000% "  align="center">
+            <img src="'.base_url().'assets/ifinal/cns_logo.JPG" style="width:35%;"/></br>
+          </td>
+          <td style="width:85%;">
+            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                <tr>
+                  <td colspan="2" style="width:100%; height: 1%; font-size: 16pt;"><b>'.$this->session->userdata('entidad').'</b></td>
+                </tr>
+                <tr style="font-size: 8pt;">
+                  <td style="width:10%; height: 20%;"><b>UNI. EJEC.</b></td>
+                  <td style="width:90%;">: '.$establecimiento[0]['dist_cod'].' '.strtoupper($establecimiento[0]['dist_distrital']).'</td>
+                </tr>
+                <tr style="font-size: 8pt;">
+                  <td style="width:10%;"><b>ACTIVIDAD</b></td>
+                  <td style="width:90%;">: '.$establecimiento[0]['aper_programa'].' '.$establecimiento[0]['aper_proyecto'].' '.$establecimiento[0]['aper_actividad'].' - '.strtoupper($establecimiento[0]['act_descripcion']).' '.$establecimiento[0]['abrev'].'</td>
+                </tr>
+                <tr style="font-size: 8pt;">
+                  <td style="width:10%;"><b>SUBACTIVIDAD</b></td>
+                  <td style="width:90%;">: '.$subactividad[0]['serv_cod'].' '.$subactividad[0]['tipo_subactividad'].' '.strtoupper($subactividad[0]['serv_descripcion']).'</td>
+                </tr>';
+                if($tipo_titulo==1){
+                  $tabla.='
+                  <tr style="font-size: 8pt;">
+                    <td style="width:10%;"><b>REPORTE</b></td>
+                    <td style="width:90%;">: CUADRO DE SEGUIMIENTO POA AL MES DE '.$this->verif_mes[2].' DE '.$this->gestion.'</td>
+                  </tr>';
+                }
+                elseif ($tipo_titulo==2) {
+                  $tabla.='
+                  <tr style="font-size: 8pt;">
+                    <td style="width:10%;"><b>REPORTE</b></td>
+                    <td style="width:90%;">: CUADRO DE EVALUACI&Oacute;N POA ACUMULADO A '.$trimestre[0]['trm_descripcion'].' - '.$this->gestion.'</td>
+                  </tr>';
+                }
+                elseif ($tipo_titulo==3) {
+                  $tabla.='
+                  <tr style="font-size: 8pt;">
+                    <td style="width:10%;"><b>REPORTE</b></td>
+                    <td style="width:90%;">: CUADRO DE EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</td>
+                  </tr>';
+                }
+                $tabla.='
+                
+            </table>
+          </td>
+        </tr>
+      </table>';*/
 
       return $tabla;
     }
+
+
+    //// Cabecera Evaluacion Trimestral
+    public function cabecera_evaluacion_trimestral($componente,$proyecto,$trimestre){
+      $trimestre=$this->model_evaluacion->get_trimestre($trimestre);
+      $tabla='';
+      $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+              <td style="width:70%;height: 2%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 15px;font-family: Arial;">
+                          <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                      </tr>
+                      <tr>
+                          <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                      </tr>
+                  </table>
+              </td>
+              <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+                '.strtoupper($proyecto[0]['dist_distrital']).' '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%;">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-size: 23px;font-family: Arial;">
+                            <td style="height: 3%;"><b>EVALUACI&Oacute;N POA</b> - '.$trimestre[0]['trm_descripcion'].'</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 3%;">
+               
+                      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                        <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>REGIONAL / DEPARTAMENTO</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.strtoupper ($proyecto[0]['dep_departamento']).'</td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD EJECUTORA</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.strtoupper ($proyecto[0]['dist_distrital']).'</td></tr>
+                                </table>
+                            </td>
+                        </tr>';
+
+                          if($proyecto[0]['tp_id']==1){
+                            $tabla.='
+                            <tr>
+                              <td style="width:20%;">
+                                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>PROY. INVERSI&Oacute;N</b></td><td style="width:5%;"></td></tr>
+                                  </table>
+                              </td>
+                              <td style="width:80%;">
+                                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$proyecto[0]['proy_sisin'].' '.strtoupper ($proyecto[0]['proy_nombre']).'</td></tr>
+                                  </table>
+                              </td>
+                            </tr>
+                            <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESP.</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr>
+                                        <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>';
+                          }
+                          else{
+                            $tabla.='
+                            <tr>
+                              <td style="width:20%;">
+                                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                  </table>
+                              </td>
+                              <td style="width:80%;">
+                                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$proyecto[0]['aper_actividad'].' '.strtoupper ($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td></tr>
+                                  </table>
+                              </td>
+                            </tr>
+                            <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>SUBACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr>
+                                        <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>';
+                          }
+                        $tabla.='
+                    </table>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>';
+      return $tabla;
+    }
+
+  //// Pie de Evaluacion POA Trimestral
+  public function pie_evaluacionpoa(){
+    $tabla='';
+    $tabla.='
+
+      <table border=0 style="width:100%;">
+        <tr>
+          <td style="width:1%;"></td>
+          <td style="width:98%;">
+          <hr>
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <tr>
+                  <td style="width:33.3%;">
+                    <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="font-size: 7.5px;width:100%;height:10px;font-family: Arial;"><b>JEFATURA DE UNIDAD O AREA / RESP. DE AREA REGIONAL<br></b></td>
+                        </tr>
+                       
+                        <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                            <td><b><br><br><br><br><br>FIRMA</b></td>
+                        </tr>
+                    </table>
+                  </td>
+                  <td style="width:33.3%;">
+                    <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="font-size: 7.5px;width:100%;height:10px;font-family: Arial;"><b>JEFATURA DE DEPARTAMENTOS / SERV. GENERALES REGIONAL / JEFATURA MEDICA<br></b></td>
+                        </tr>
+                       
+                        <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                            <td><b><br><br><br><br><br>FIRMA</b></td>
+                        </tr>
+                    </table>
+                  </td>
+                  <td style="width:33.3%;">
+                    <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="font-size: 7.5px;width:100%;height:10px;font-family: Arial;"><b>GERENCIA GENERAL / GERENCIAS DE AREA / ADMINISTRADOR REGIONAL<br></b></td>
+                        </tr>
+                       
+                        <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                            <td><b><br><br><br><br><br>FIRMA</b></td>
+                        </tr>
+                    </table>  
+                  </td>
+
+                </tr>
+                <tr>
+                  <td style="height:18px;">'.$this->session->userdata('rd_poa').'</td>
+                  <td style="height:18px;">'.$this->session->userdata('sistema').'</td>
+                  <td align=right>'.$this->session->userdata('funcionario').' - pag. [[page_cu]]/[[page_nb]]</td>
+                </tr>
+              </table>
+          </td>
+          <td style="width:1%;"></td>
+        </tr>
+      </table>';
+
+    return $tabla;
+  }   
+
+
 
     /// Reporte formulario de Seguimiento POA Mensual
     public function tabla_form_seguimientopoa_subactividad($com_id,$mes_id){
@@ -550,7 +846,7 @@ class Seguimientopoa extends CI_Controller{
                 <th style="width:15.5%;">MEDIO DE VERIFICACIÓN</th>
                 <th style="width:15.5%;">PROBLEMAS PRESENTADOS</th>
                 <th style="width:15.5%;">ACCIONES REALIZADOS</th>
-                <th style="width:7%;"></th>
+                <th style="width:6%;"></th>
             </tr>
             </thead>
             <tbody>';
@@ -572,15 +868,15 @@ class Seguimientopoa extends CI_Controller{
                     <td style="width: 3.5%; text-align: center; font-size: 9px;" bgcolor="#eceaea"><b>'.round($verif[1],2).'</b></td>
                     <td style="width: 3.5%; text-align: center; font-size: 9px;" bgcolor="#eceaea"><b>'.round($verif[2],2).'</b></td>
                     <td style="width: 15.5%; text-align: left;">
-                      '.$this->verif_medios_verificacion($rowp['prod_id'],1).'
+                      '.$this->verif_medios_verificacion($rowp['prod_id'],1,$trimestre).'
                     </td>
                     <td style="width: 15.5%; text-align: left;">
-                      '.$this->verif_medios_verificacion($rowp['prod_id'],2).'
+                      '.$this->verif_medios_verificacion($rowp['prod_id'],2,$trimestre).'
                     </td>
                     <td style="width: 15.5%; text-align: left;">
-                      '.$this->verif_medios_verificacion($rowp['prod_id'],3).'
+                      '.$this->verif_medios_verificacion($rowp['prod_id'],3,$trimestre).'
                     </td>
-                    <td style="width: 7%; text-align: left;">'.$verif[4].'</td>
+                    <td style="width: 6%; text-align: left;">'.$verif[4].'</td>
                   </tr>';
                 }
               }
@@ -591,14 +887,14 @@ class Seguimientopoa extends CI_Controller{
   }
 
     /*---- VERIFICA OPERACION TRIMESTRAL -----*/
-    public function verif_medios_verificacion($prod_id,$tipo_medio){
+    public function verif_medios_verificacion($prod_id,$tipo_medio,$trimestre){
       $tabla='';
       $mes_inicio=0;
       $mes_final=0;
-      if($this->tmes==1){$mes_inicio=1;$mes_final=3;}
-      if($this->tmes==2){$mes_inicio=4;$mes_final=6;}
-      if($this->tmes==3){$mes_inicio=7;$mes_final=9;}
-      if($this->tmes==4){$mes_inicio=10;$mes_final=12;}
+      if($trimestre==1){$mes_inicio=1;$mes_final=3;}
+      if($trimestre==2){$mes_inicio=4;$mes_final=6;}
+      if($trimestre==3){$mes_inicio=7;$mes_final=9;}
+      if($trimestre==4){$mes_inicio=10;$mes_final=12;}
 
       $tabla.='<ul>';
       for ($i=$mes_inicio; $i <=$mes_final ; $i++) { 
