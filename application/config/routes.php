@@ -477,7 +477,7 @@ $route['rep_eval_poa/rep_eficacia_pi/(:any)'] = 'reporte_evaluacion/crep_evalins
 /*---------- EVALUACION GASTO CORRIENTE - PROGRAMA ----------*/
 $route['menu_eval_prog'] = 'reporte_evaluacion/crep_evalprogramas/menu_eval_programas';  /// MENU EVALUACION PROGRAMA 
 $route['rep_eval_prog/evaluacion_programas/(:any)'] = 'reporte_evaluacion/crep_evalprogramas/evaluacion_programas/$1/$2';  /// REPORTES GRAFICOS REGIONAL
-
+$route['rep_cat_programatica/(:any)'] = 'reporte_evaluacion/crep_evalprogramas/reporte_categoria_programatica/$1/$2';  /// REPORTE POR CATEGORIA PROGRAMATICA
 
 //====== REPORTE EVALUACION OBJETIVOS DE GESTION 2020
 /*---------- EVALUACION DE OBJETIVOS DE GESTION 2020 ----------*/

@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No se permite el acceso directo al script');
 
 ///// EVALUACION POA REGIONAL, DISTRITAL 
-class Evaluacionpoa extends CI_Controller{
+class Evaluacionpoa_programas extends CI_Controller{
     public function __construct (){
         parent::__construct();
         $this->load->model('programacion/model_proyecto');
@@ -36,6 +36,319 @@ class Evaluacionpoa extends CI_Controller{
         $this->tp_adm = $this->session->userData('tp_adm');
         $this->mes = $this->mes_nombre();
     }
+
+
+
+    /*--- TABLA APERTURA PROGRAMATICAS VISTA ---*/
+    public function tabla_apertura_programatica($matriz,$nro,$tip_rep){
+      $tabla='';
+      if($tip_rep==1){ /// Normal
+        $tab='class="table table-bordered" align=center style="width:100%;"';
+        $color='#e9edec';
+      } 
+      else{ /// Impresion
+        $tab='class="change_order_items" border=1 align=center style="width:100%;"';
+        $color='#e9edec';
+      }
+
+      $tabla='
+      <style type="text/css">
+      table{font-size: 9.5px;
+        width: 100%;
+        max-width:1550px;
+        overflow-x: scroll;
+      }
+      th{
+        padding: 1.4px;
+        text-align: center;
+        font-size: 9.5px;
+      }
+      </style>';
+
+      $tabla.='
+        <table '.$tab.'>
+          <thead>
+              <tr align=center bgcolor='.$color.'>
+                <th>#</th>
+                <th>APERTURA PROGRAM&Aacute;TICA</th>
+                <th>DESCRIPCI&Oacute;N</th>
+                <th>TOTAL PROGRAMADAS</th>
+                <th>TOTAL EVALUADAS</th>
+                <th>CUMPLIDAS</th>
+                <th>NO CUMPLIDAS</th>
+                <th>% CUMPLIDAS</th>
+                <th>% NO CUMPLIDAS</th>
+                </tr>
+              </thead>
+            <tbody>';
+              for ($i=1; $i <=$nro+1; $i++) { 
+                $tabla.='<tr>';
+                if($i==$nro+1){
+                  $tabla.='<tr bgcolor=#e5ecef>';
+                }
+                
+                for ($j=1; $j <=9; $j++) {
+                  if($j==8 || $j==9){
+                    if($j==8){
+                      $tabla.='<td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$matriz[$i][$j].'%</b></button></td>';
+                    }
+                    else{
+                      $tabla.='<td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$matriz[$i][$j].'%</b></button></td>';
+                    }
+                    
+                  }
+                  elseif($j==1 || $j==2 || $j==3){
+                    if($j==3){
+                      $tabla.='<td><b>'.$matriz[$i][$j].'</b></td>';
+                    }
+                    else{
+                      $tabla.='<td align=center><b>'.$matriz[$i][$j].'</b></td>';
+                    }
+                  }
+                  else{
+                    $tabla.='<td align=right><b>'.$matriz[$i][$j].'</b></td>';
+                  }
+                  
+                }
+                $tabla.='</tr>';
+              }
+          $tabla.='
+            </tbody>
+          </table>';
+
+      return $tabla;
+    }
+
+
+  /*--- TABLA APERTURA PROGRAMATICAS REPORTE ---*/
+    public function tabla_apertura_programatica_reporte($matriz,$nro){
+      $tabla='';
+
+      $tabla.='
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center">
+            <thead>
+              <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
+                <th style="width:1%;height:15px;">#</th>
+                <th style="width:10%;">APERTURA PROGRAM&Aacute;TICA</th>
+                <th style="width:10%;">DESCRIPCI&Oacute;N</th>
+                <th style="width:10%;">TOTAL PROGRAMADAS</th>
+                <th style="width:10%;">TOTAL EVALUADAS</th>
+                <th style="width:10%;">CUMPLIDAS</th>
+                <th style="width:10%;">NO CUMPLIDAS</th>
+                <th style="width:10%;">% CUMPLIDAS</th>
+                <th style="width:10%;">% NO CUMPLIDAS</th>
+              </tr>
+            </thead>
+            <tbody>';
+              for ($i=1; $i <=$nro+1; $i++) { 
+                
+                if($i==$nro+1){
+                  $tabla.='<tr bgcolor=#e5ecef>';
+                }
+                else{
+                  $tabla.='<tr>';
+                }
+                
+                for ($j=1; $j <=9; $j++) {
+                  if($j==8 || $j==9){
+                    if($j==8){
+                      $tabla.='<td style="width:1%;height:13px;" align=right><b>'.$matriz[$i][$j].'%</b></td>';
+                    }
+                    else{
+                      $tabla.='<td align=right><b>'.$matriz[$i][$j].'%</b></td>';
+                    }
+                    
+                  }
+                  elseif($j==1 || $j==2 || $j==3){
+                    if($j==3){
+                      $tabla.='<td ><b>'.$matriz[$i][$j].'</b></td>';
+                    }
+                    else{
+                      $tabla.='<td align=center><b>'.$matriz[$i][$j].'</b></td>';
+                    }
+                  }
+                  else{
+                    $tabla.='<td align=right><b>'.$matriz[$i][$j].'</b></td>';
+                  }
+                  
+                }
+                $tabla.='</tr>';
+              }
+          $tabla.='
+            </tbody>
+          </table>';
+
+      return $tabla;
+    }
+
+    /*--- BOTON IMPRIME REPORTE POR CATEGORIA PROGRANMTICA---*/
+    function button_rep_catprogramatica($id){
+      $tabla='';
+        $tabla.='
+                <a href="javascript:abreVentana(\''.site_url("").'/rep_cat_programatica/'.$id.'\');" class="btn btn-default" title="IMPRIMIR EVALUACIÓN POA POR PROGRAMA">
+                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;&nbsp;<b>IMPRIMIR EVALUACIÓN POA (PROGRAMAS)</b>
+                </a>';
+      return $tabla;
+    }
+
+
+
+    //// Cabecera Evaluacion Trimestral
+    public function cabecera_evaluacion_trimestral($id,$tp){
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
+
+      if($tp==0){
+        $departamento=$this->model_proyecto->get_departamento($id);
+        $tit='REGIONAL : '.strtoupper($departamento[0]['dep_departamento']);
+      }
+      elseif($tp==1) {
+        $distrital=$this->model_proyecto->dep_dist($id);
+        $tit=''.strtoupper($distrital[0]['dep_departamento']).' / '.strtoupper($distrital[0]['dist_distrital']);
+      }
+      else{
+        $tit='';
+      }
+
+
+
+
+      $tabla='';
+      $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+              <td style="width:70%;height: 2%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 15px;font-family: Arial;">
+                          <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                      </tr>
+                      <tr>
+                          <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                      </tr>
+                  </table>
+              </td>
+              <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+               '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%;">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-size: 23px;font-family: Arial;">
+                            <td style="height: 3%;"><b>EVALUACI&Oacute;N POA POR CATEGORIA PROGRAMATICA </b>  <br> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 3%;font-size: 20px;font-family: Arial">
+               '.$tit.'
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>';
+      return $tabla;
+    }
+
+  //// Pie de Evaluacion POA Trimestral
+  public function pie_evaluacionpoa(){
+    $tabla='';
+    $tabla.='
+
+      <table border=0 style="width:100%;">
+        <tr>
+          <td style="width:1%;"></td>
+          <td style="width:98%;">
+          <hr>
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <tr>
+                  <td style="width:33.3%;">
+                    <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="font-size: 7.5px;width:100%;height:10px;font-family: Arial;"><b>JEFATURA DE UNIDAD O AREA / RESP. DE AREA REGIONAL<br></b></td>
+                        </tr>
+                       
+                        <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                            <td><b><br><br><br><br><br>FIRMA</b></td>
+                        </tr>
+                    </table>
+                  </td>
+                  <td style="width:33.3%;">
+                    <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="font-size: 7.5px;width:100%;height:10px;font-family: Arial;"><b>JEFATURA DE DEPARTAMENTOS / SERV. GENERALES REGIONAL / JEFATURA MEDICA<br></b></td>
+                        </tr>
+                       
+                        <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                            <td><b><br><br><br><br><br>FIRMA</b></td>
+                        </tr>
+                    </table>
+                  </td>
+                  <td style="width:33.3%;">
+                    <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="font-size: 7.5px;width:100%;height:10px;font-family: Arial;"><b>GERENCIA GENERAL / GERENCIAS DE AREA / ADMINISTRADOR REGIONAL<br></b></td>
+                        </tr>
+                       
+                        <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                            <td><b><br><br><br><br><br>FIRMA</b></td>
+                        </tr>
+                    </table>  
+                  </td>
+
+                </tr>
+                <tr>
+                  <td style="height:18px;">'.$this->session->userdata('rd_poa').'</td>
+                  <td style="height:18px;">'.$this->session->userdata('sistema').'</td>
+                  <td align=right>'.$this->session->userdata('funcionario').' - pag. [[page_cu]]/[[page_nb]]</td>
+                </tr>
+              </table>
+          </td>
+          <td style="width:1%;"></td>
+        </tr>
+      </table>';
+
+    return $tabla;
+  }   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     //// LISTA DE REGIONALES

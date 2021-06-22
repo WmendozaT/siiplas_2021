@@ -14,14 +14,14 @@
     <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
-    <script type="text/javascript">
+<!--     <script type="text/javascript">
       function abreVentana_eficiencia(PDF){             
           var direccion;
           direccion = '' + PDF;
           window.open(direccion, "Cuadro Eficiencia-Eficacia por Unidad" , "width=700,height=600,scrollbars=NO") ; 
       }
-    </script>
-    <style type="text/css">
+    </script> -->
+<!--     <style type="text/css">
       #areaImprimir_programas{display:none}
       @media print {
         #areaImprimir_programas {display:block}
@@ -46,7 +46,7 @@
             window.print();
             document.body.innerHTML = contenidoOriginal;
         }
-    </script>
+    </script> -->
 <body>
 
 <div id="content">
@@ -60,75 +60,75 @@
           </section>
         </article>
         <div class="row">
-            <article class="col-sm-12">
-                <!-- new widget -->
-                <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
-                    <header>
-                        <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                        <h2>CUADRO DE EVALUACI&Oacute;N POA POR CATEGORIA PROGRAMÁTICA</h2>
-                        <ul class="nav nav-tabs pull-right in" id="myTab">
-                            <li class="active">
-                                <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">EVALUACI&Oacute;N POA</span></a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EFICACIA</span></a>
-                            </li>
-                        </ul>
-                    </header>
+          <article class="col-sm-12">
+            <!-- new widget -->
+            <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
+                <header>
+                    <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+                    <h2>CUADRO DE EVALUACI&Oacute;N POA POR CATEGORIA PROGRAMÁTICA</h2>
+                    <ul class="nav nav-tabs pull-right in" id="myTab">
+                        <li class="active">
+                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">EVALUACI&Oacute;N POA</span></a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EFICACIA</span></a>
+                        </li>
+                    </ul>
+                </header>
 
-                    <!-- widget div-->
-                    <div class="no-padding">
-                        <!-- widget edit box -->
-                        <div class="jarviswidget-editbox">
-                            test
-                        </div>
-                        <!-- end widget edit box -->
-                        <div class="widget-body">
-                            <!-- content -->
-                            <div id="myTabContent" class="tab-content">
-                                <br>
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                 <?php echo $calificacion;?>
-                                </div>
-                                <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="CUADRO DE EVALUACI&Oacute;N POA">
-                                    <!-- <div align="right" id="eval_poa" style="display:none;"> -->
-                                    <div align="right" id="eval_poa">
-                                      <a href="#" onclick="printDiv('areaImprimir_programas')" title="IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA POR CATEGORIA PROGRAMATICA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </div><hr>
-                                    <div class="row">
-                                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        &nbsp;&nbsp; <b>CUADRO DE EVALUACI&Oacute;N POR CATEGORIA PROGRAM&Aacute;TICA</b><br><br>
-                                        <?php echo $tabla_programa;?>
-                                      </div>
-                                    </div>
-                                </div>
-                                <!-- end s1 tab pane -->
-                                
-                                <div class="tab-pane fade" id="s2" title="CUADRO MIS SERVICIOS">
-                                  <div class="row">
-                                    <br>
-                                        <div class="row">
-                                          <?php echo $tabla_parametros;?>
-                                        </div>
-                                        </div>
-                                    </div>
-                              </div>
-
+                <!-- widget div-->
+                <div class="no-padding">
+                  <!-- widget edit box -->
+                  <div class="jarviswidget-editbox">
+                      test
+                  </div>
+                  <!-- end widget edit box -->
+                  <div class="widget-body">
+                    <!-- content -->
+                    <div id="myTabContent" class="tab-content">
+                      <br>
+                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                       <?php echo $calificacion;?>
+                      </div>
+                      <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="CUADRO DE EVALUACI&Oacute;N POA">
+                          <!-- <div align="right" id="eval_poa" style="display:none;"> -->
+                          <div align="right">
+                            <?php echo $boton_reporte;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <!-- <a href="#" onclick="printDiv('areaImprimir_programas')" title="IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA POR CATEGORIA PROGRAMATICA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA</a>&nbsp;&nbsp;&nbsp;&nbsp; -->
+                          </div><hr>
+                          <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                              &nbsp;<b>CUADRO DE EVALUACI&Oacute;N POR CATEGORIA PROGRAM&Aacute;TICA</b><br><br>
+                              <?php echo $tabla_programa;?>
                             </div>
-                            <!-- end content -->
+                          </div>
+                      </div>
+                      <!-- end s1 tab pane -->
+                      
+                      <div class="tab-pane fade" id="s2" title="CUADRO MIS SERVICIOS">
+                        <div class="row">
+                          <br>
+                          <div class="row">
+                            <?php echo $tabla_parametros;?>
+                          </div>
                         </div>
+                      </div>
+
                     </div>
-                    <!-- end widget div -->
+                    <!-- end content -->
+                  </div>
                 </div>
-                <!-- end widget -->
-            </article>
-        </div>
+                <!-- end widget div -->
+            </div>
+            <!-- end widget -->
+          </article>
+        </div> <!-- end row -->
     </section>
 </div>
 
-<div id="areaImprimir_programas">
+<!-- <div id="areaImprimir_programas">
     <?php echo $print_evaluacion_programas;?>
-</div>
+</div> -->
 
 <script>
 if (!window.jQuery) {
@@ -143,6 +143,7 @@ if (!window.jQuery.ui) {
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/seguimiento.js"></script> 
  <script type="text/javascript">
     $(document).ready(function() {  
        Highcharts.chart('parametro_efi', {

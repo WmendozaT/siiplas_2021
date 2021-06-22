@@ -655,8 +655,10 @@ class Cert_poa extends CI_Controller {
                     /*-----------------------------------------------*/
 
                     if(strtotime($cpoa[0]['cpoa_fecha'])>$this->fecha_entrada){
-                      $this->db->where('sol_id', $cpoa[0]['sol_id']);
-                      $this->db->delete('solicitud_cpoa_subactividad');
+                      if($cpoa[0]['sol_id']!=0){
+                        $this->db->where('sol_id', $cpoa[0]['sol_id']);
+                        $this->db->delete('solicitud_cpoa_subactividad');
+                      }
                     }
 
                     $verificando=$this->model_modrequerimiento->verif_modificaciones_distrital($cpoa[0]['dist_id']);

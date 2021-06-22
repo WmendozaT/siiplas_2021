@@ -162,56 +162,6 @@ class Seguimientopoa extends CI_Controller{
             </td>
           </tr>
         </table>';
-     /* $tabla.='
-      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-        <tr>
-          <td style="width:15%;height:1000% "  align="center">
-            <img src="'.base_url().'assets/ifinal/cns_logo.JPG" style="width:35%;"/></br>
-          </td>
-          <td style="width:85%;">
-            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                <tr>
-                  <td colspan="2" style="width:100%; height: 1%; font-size: 16pt;"><b>'.$this->session->userdata('entidad').'</b></td>
-                </tr>
-                <tr style="font-size: 8pt;">
-                  <td style="width:10%; height: 20%;"><b>UNI. EJEC.</b></td>
-                  <td style="width:90%;">: '.$establecimiento[0]['dist_cod'].' '.strtoupper($establecimiento[0]['dist_distrital']).'</td>
-                </tr>
-                <tr style="font-size: 8pt;">
-                  <td style="width:10%;"><b>ACTIVIDAD</b></td>
-                  <td style="width:90%;">: '.$establecimiento[0]['aper_programa'].' '.$establecimiento[0]['aper_proyecto'].' '.$establecimiento[0]['aper_actividad'].' - '.strtoupper($establecimiento[0]['act_descripcion']).' '.$establecimiento[0]['abrev'].'</td>
-                </tr>
-                <tr style="font-size: 8pt;">
-                  <td style="width:10%;"><b>SUBACTIVIDAD</b></td>
-                  <td style="width:90%;">: '.$subactividad[0]['serv_cod'].' '.$subactividad[0]['tipo_subactividad'].' '.strtoupper($subactividad[0]['serv_descripcion']).'</td>
-                </tr>';
-                if($tipo_titulo==1){
-                  $tabla.='
-                  <tr style="font-size: 8pt;">
-                    <td style="width:10%;"><b>REPORTE</b></td>
-                    <td style="width:90%;">: CUADRO DE SEGUIMIENTO POA AL MES DE '.$this->verif_mes[2].' DE '.$this->gestion.'</td>
-                  </tr>';
-                }
-                elseif ($tipo_titulo==2) {
-                  $tabla.='
-                  <tr style="font-size: 8pt;">
-                    <td style="width:10%;"><b>REPORTE</b></td>
-                    <td style="width:90%;">: CUADRO DE EVALUACI&Oacute;N POA ACUMULADO A '.$trimestre[0]['trm_descripcion'].' - '.$this->gestion.'</td>
-                  </tr>';
-                }
-                elseif ($tipo_titulo==3) {
-                  $tabla.='
-                  <tr style="font-size: 8pt;">
-                    <td style="width:10%;"><b>REPORTE</b></td>
-                    <td style="width:90%;">: CUADRO DE EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</td>
-                  </tr>';
-                }
-                $tabla.='
-                
-            </table>
-          </td>
-        </tr>
-      </table>';*/
 
       return $tabla;
     }
@@ -1623,7 +1573,7 @@ class Seguimientopoa extends CI_Controller{
       if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
       if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
 
-      $tabla.='<h3 class="alert alert-'.$tp.'" align="center"><b>'.$titulo.'</b></h3>';
+      $tabla.='<h4 class="alert alert-'.$tp.'" style="font-family: Arial;" align="center"><b>'.$titulo.'</b></h4>';
 
       return $tabla;
     }
@@ -1861,7 +1811,7 @@ class Seguimientopoa extends CI_Controller{
       <form class="smart-form" method="post">
         <input name="mes_activo" type="hidden" value='.$this->verif_mes[1].'>
         <input name="base" type="hidden" value="'.base_url().'">
-        <fieldset><div id="eficacia">'.$this->calificacion_eficacia($regresion[5][$this->tmes]).'</div></fieldset>
+        <fieldset><div id="eficacia" style="font-family: Arial;font-size: 10%;">'.$this->calificacion_eficacia($regresion[5][$this->tmes]).'</div></fieldset>
         <div id="efi"></div> 
         <fieldset>          
           <div class="row">

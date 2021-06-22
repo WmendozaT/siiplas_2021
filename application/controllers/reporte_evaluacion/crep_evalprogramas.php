@@ -27,6 +27,7 @@ class Crep_evalprogramas extends CI_Controller {
             $this->fun_id = $this->session->userData('fun_id');
             $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->load->library('evaluacionpoa_programas');
         }
         else{
             redirect('/','refresh');
@@ -186,6 +187,7 @@ class Crep_evalprogramas extends CI_Controller {
         $data['departamento']=$this->model_proyecto->get_departamento($dep_id);
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($dep_id,4);
         $data['matriz_programas']=$this->matriz_programas_regional($lista_programas);
+        $data['boton_reporte']=$this->evaluacionpoa_programas->button_rep_catprogramatica($dep_id,$tp);
 
         $data['titulo']=
         '<h1><b>EVALUACI&Oacute;N POA - CONSOLIDADO POR CATEGORIA PROGRAMÁTICA '.$this->gestion.'</b></h1>
@@ -202,6 +204,7 @@ class Crep_evalprogramas extends CI_Controller {
         $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($dist_id,4);
         $data['matriz_programas']=$this->matriz_programas_distrital($lista_programas);
+        $data['boton_reporte']=$this->evaluacionpoa_programas->button_rep_catprogramatica($dist_id,$tp);
 
         $data['titulo']=
         '<h1><b>EVALUACI&Oacute;N POA - CONSOLIDADO POR CATEGORIA PROGRAMÁTICA '.$this->gestion.'</b></h1>
@@ -229,6 +232,7 @@ class Crep_evalprogramas extends CI_Controller {
 
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_institucional(4);
         $data['matriz_programas']=$this->matriz_programas_institucional($lista_programas);
+        $data['boton_reporte']=$this->evaluacionpoa_programas->button_rep_catprogramatica(0,$tp);
       }
 
     
@@ -236,14 +240,42 @@ class Crep_evalprogramas extends CI_Controller {
       $data['tp']=$tp;
 
       $data['calificacion']=$this->calificacion_eficacia($data['matriz_programas'][(count($lista_programas)+1)][8],0); /// Parametros de Eficacia
-      $data['tabla_programa']=$this->tabla_apertura_programatica($data['matriz_programas'],count($lista_programas),1);
+      $data['tabla_programa']=$this->evaluacionpoa_programas->tabla_apertura_programatica($data['matriz_programas'],count($lista_programas),1);
       $data['matriz']=$this->matriz_parametros($data['matriz_programas'],count($lista_programas));
       $data['tabla_parametros']=$this->parametros_eficacia($data['matriz'],1);
 
-      $data['print_evaluacion_programas']=$this->print_evaluacion($titulo_impresion,$this->tabla_apertura_programatica($data['matriz_programas'],count($lista_programas),0),$this->calificacion_eficacia($data['matriz_programas'][(count($lista_programas)+1)][8],1),$this->parametros_eficacia($data['matriz'],0));
+    //  $data['print_evaluacion_programas']=$this->print_evaluacion($titulo_impresion,$this->tabla_apertura_programatica($data['matriz_programas'],count($lista_programas),0),$this->calificacion_eficacia($data['matriz_programas'][(count($lista_programas)+1)][8],1),$this->parametros_eficacia($data['matriz'],0));
       $this->load->view('admin/reportes_cns/repevaluacion_programas/reporte_grafico_eval_consolidado_regional_distrital', $data);
 
     }
+
+
+    
+    /*--- REPORTE EVALUACION POR CATEGORIA PROGRAMATICA ---*/
+    public function reporte_categoria_programatica($id,$tp){
+      if($tp==0){
+        $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($id,4);
+        $matriz_programas=$this->matriz_programas_regional($lista_programas);
+      }
+      elseif($tp==1) {
+        $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($id,4);
+        $matriz_programas=$this->matriz_programas_distrital($lista_programas);
+      }
+      else{
+        $lista_programas=$this->model_evalprograma->lista_apertura_programas_institucional(4);
+        $matriz_programas=$this->matriz_programas_institucional($lista_programas);
+      }
+
+
+      $data['cabecera']=$this->evaluacionpoa_programas->cabecera_evaluacion_trimestral($id,$tp);
+      $data['pie']='Hola';
+      $data['operaciones']=$this->evaluacionpoa_programas->tabla_apertura_programatica_reporte($matriz_programas,count($lista_programas));
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
+      $this->load->view('admin/reportes_cns/repevaluacion_programas/reporte_evaluacion_consolidadoprogramas', $data);
+    }
+
+
+
 
     //// ========= INSTITUCIONAL 
     /*--- MATRIZ EVALUACION PROGRAMA AL TRIMESTRE - INSTITUCIONAL ---*/
@@ -274,7 +306,7 @@ class Crep_evalprogramas extends CI_Controller {
 
         $tr[$nro_prog][1]=''; /// nro
         $tr[$nro_prog][2]=''; /// Apertura Programatica
-        $tr[$nro_prog][3]=' TOTAL INSITUCIONAL : '; /// Descripcion
+        $tr[$nro_prog][3]=' TOTAL INSTITUCIONAL : '; /// Descripcion
         $tr[$nro_prog][4]=$total; /// Total Total
         $tr[$nro_prog][5]=$total; /// Total Evaluado
         $tr[$nro_prog][6]=$cumplido; /// Total Cumplidos
@@ -461,71 +493,7 @@ class Crep_evalprogramas extends CI_Controller {
 
 
 
-    /*--- TABLA APERTURA PROGRAMATICA  ---*/
-    public function tabla_apertura_programatica($matriz,$nro,$tip_rep){
-      $tabla='';
-      if($tip_rep==1){ /// Normal
-        $tab='class="table table-bordered" align=center style="width:100%;"';
-        $color='#e9edec';
-      } 
-      else{ /// Impresion
-        $tab='class="change_order_items" border=1 align=center style="width:100%;"';
-        $color='#e9edec';
-      }
 
-      $tabla.='
-        <table '.$tab.'>
-          <thead>
-              <tr align=center bgcolor='.$color.'>
-                <th>#</th>
-                <th>APERTURA PROGRAM&Aacute;TICA</th>
-                <th>DESCRIPCI&Oacute;N</th>
-                <th>TOTAL PROGRAMADAS</th>
-                <th>TOTAL EVALUADAS</th>
-                <th>CUMPLIDAS</th>
-                <th>NO CUMPLIDAS</th>
-                <th>% CUMPLIDAS</th>
-                <th>% NO CUMPLIDAS</th>
-                </tr>
-              </thead>
-            <tbody>';
-              for ($i=1; $i <=$nro+1; $i++) { 
-                $tabla.='<tr>';
-                if($i==$nro+1){
-                  $tabla.='<tr bgcolor=#e5ecef>';
-                }
-                
-                for ($j=1; $j <=9; $j++) {
-                  if($j==8 || $j==9){
-                    if($j==8){
-                      $tabla.='<td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$matriz[$i][$j].'%</b></button></td>';
-                    }
-                    else{
-                      $tabla.='<td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$matriz[$i][$j].'%</b></button></td>';
-                    }
-                    
-                  }
-                  elseif($j==1 || $j==2 || $j==3){
-                    if($j==3){
-                      $tabla.='<td><b>'.$matriz[$i][$j].'</b></td>';
-                    }
-                    else{
-                      $tabla.='<td align=center><b>'.$matriz[$i][$j].'</b></td>';
-                    }
-                  }
-                  else{
-                    $tabla.='<td align=right><b>'.$matriz[$i][$j].'</b></td>';
-                  }
-                  
-                }
-                $tabla.='</tr>';
-              }
-          $tabla.='
-            </tbody>
-          </table>';
-
-      return $tabla;
-    }
 
 
     /////  PARAMETROS DE EFICACIA 

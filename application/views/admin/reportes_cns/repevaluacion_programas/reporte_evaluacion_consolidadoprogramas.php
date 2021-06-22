@@ -34,7 +34,7 @@ try{
     $html2pdf = new HTML2PDF('L', 'Letter', 'fr', true, 'UTF-8', 0);
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-    $html2pdf->Output('Evaluacion_'.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'.pdf');
+    $html2pdf->Output('Evaluacion_.pdf');
 }
 catch(HTML2PDF_exception $e) {
     echo $e;

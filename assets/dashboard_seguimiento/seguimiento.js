@@ -88,9 +88,9 @@ function abreVentana(PDF){
       ventana.document.write(grafico.innerHTML);
       ventana.document.write('<hr>');
       ventana.document.write(tabla.innerHTML);
-      ventana.document.write("<p>");
+/*      ventana.document.write("<p>");
       ventana.document.write("<div style='font-size: 10px;'>[Copyright]:Departamento Nacional de Planificación - Sistema de Planificación de Salud SIIPLAS V.2</div>");
-      ventana.document.write("<\/p>");
+      ventana.document.write("<\/p>");*/
      // ventana.document.write('</div>');
       ventana.document.write('</body></html>');
       ventana.document.close();
