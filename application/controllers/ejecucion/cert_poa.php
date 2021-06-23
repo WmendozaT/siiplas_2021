@@ -35,7 +35,7 @@ class Cert_poa extends CI_Controller {
         $this->fun_id = $this->session->userData('fun_id');
         $this->fun_adm = $this->session->userData('adm');
         $this->fecha_entrada = strtotime("31-05-2021 00:00:00");
-
+        $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
         }
         else{
             $this->session->sess_destroy();
@@ -305,7 +305,7 @@ class Cert_poa extends CI_Controller {
                         <td>'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
                         <td align=center><b>'.$row['cpoa_gestion'].'</b></td>
                         <td align=center>';
-                          if($row['cpoa_ref']==0 & $row['cpoa_estado']!=0){
+                          if(($row['cpoa_ref']==0 & $row['cpoa_estado']!=0 & $this->conf_estado==1) || $this->tp_adm==1) {
                             $tabla.='<a href="#" data-toggle="modal" data-target="#modal_anular_cert" '.$opcion_edit.' title="EDITAR CERTIFICACI&Oacute;N" name="'.$row['cpoa_id'].'" id="'.$row['proy_id'].'" class="btn btn-default btn-lg">
                                       <img src="'.base_url().'assets/img/neg.jpg" WIDTH="35" HEIGHT="35"/></a>';
 
@@ -319,7 +319,7 @@ class Cert_poa extends CI_Controller {
                         $tabla.='
                         </td>
                         <td align=center>';
-                          if($row['cpoa_ref']==0 & $row['cpoa_estado']!=0){
+                          if(($row['cpoa_ref']==0 & $row['cpoa_estado']!=0 & $this->conf_estado==1) || $this->tp_adm==1){
                             $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_cert" '.$opcion_anulado.' title="ELIMINAR CERTIFICACI&Oacute;N" name="'.$row['cpoa_id'].'" id="'.$row['proy_id'].'" class="btn btn-default btn-lg">
                                     <img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
                           }

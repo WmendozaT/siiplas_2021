@@ -147,9 +147,14 @@
 						</article>
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
 							<div class="well well-sm well-light">
-								<button type="button" class="btn btn-primary" style="width:100%;" data-toggle="modal" data-target="#exampleModalCenter">
-                                	SUBIR PRESUPUESTO MODIFICADO
-                            	</button>
+								<?php
+									if($this->session->userdata('tp_adm')==1){ ?>
+										<button type="button" class="btn btn-primary" style="width:100%;" data-toggle="modal" data-target="#exampleModalCenter">
+		                                	SUBIR MODIFICACI&Oacute;N PRESUPUESTARIA
+		                            	</button>
+										<?php
+									}
+								?>
 							</div>
 						</article>
 					</div>

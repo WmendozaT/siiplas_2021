@@ -88,6 +88,7 @@ class User extends CI_Controller{
          $data = array(
                 'gestion' => $conf[0]['ide'],
                 'mes' => $conf[0]['conf_mes'],
+                'conf_estado' => $conf[0]['conf_estado'], //7 Estado 1: Activo, 0: No activo
                 'trimestre' => $conf[0]['conf_mes_otro'], /// Trimestre 1,2,3,4
                 'tr_id' => ($conf[0]['conf_mes_otro']+$conf[0]['conf_mes_otro']*2), /// Trimestre 3,6,9,12
                 'desc_mes' => $this->mes_texto($conf[0]['conf_mes']),
@@ -105,6 +106,7 @@ class User extends CI_Controller{
 
          $data = array(
                 'gestion' => $conf[0]['ide'],
+                'conf_estado' => $conf[0]['conf_estado'], //7 Estado 1: Activo, 0: No activo
                 'trimestre' => $this->input->post('trimestre_usu'), /// Trimestre 1,2,3,4
                 'tr_id' => ($conf[0]['conf_mes_otro']+$conf[0]['conf_mes_otro']*2), /// Trimestre 3,6,9,12
                 'desc_mes' => $this->mes_texto($conf[0]['conf_mes']),
@@ -715,6 +717,7 @@ class User extends CI_Controller{
             'tp_msn' => $gestion[0]['tp_msn'], /// tipo de mensaje 1: rojo, 2: amarillo, 3: verde
             'mensaje' => $gestion[0]['conf_mensaje'], /// Mensaje
             'rd_poa' => $gestion[0]['rd_aprobacion_poa'], /// Resolucion Directorio POA
+            'conf_estado' => $conf[0]['conf_estado'], /// Estado de la Gestion (1: activo, 0 No activo)
             'tp_usuario' => 0,
             'img' => base_url().'assets/ifinal/cns_logo.JPG',
            // 'img' => 'assets/ifinal/cns_logo.JPG',
