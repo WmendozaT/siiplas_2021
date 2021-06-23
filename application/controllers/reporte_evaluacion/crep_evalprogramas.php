@@ -186,7 +186,7 @@ class Crep_evalprogramas extends CI_Controller {
         $dep_id=$id;
         $data['departamento']=$this->model_proyecto->get_departamento($dep_id);
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($dep_id,4);
-        $data['matriz_programas']=$this->matriz_programas_regional($lista_programas);
+        $data['matriz_programas']=$this->evaluacionpoa_programas->matriz_programas_regional($lista_programas);
         $data['boton_reporte']=$this->evaluacionpoa_programas->button_rep_catprogramatica($dep_id,$tp);
 
         $data['titulo']=
@@ -203,7 +203,7 @@ class Crep_evalprogramas extends CI_Controller {
         $dist_id=$id;
         $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($dist_id,4);
-        $data['matriz_programas']=$this->matriz_programas_distrital($lista_programas);
+        $data['matriz_programas']=$this->evaluacionpoa_programas->matriz_programas_distrital($lista_programas);
         $data['boton_reporte']=$this->evaluacionpoa_programas->button_rep_catprogramatica($dist_id,$tp);
 
         $data['titulo']=
@@ -231,7 +231,7 @@ class Crep_evalprogramas extends CI_Controller {
           </tr>';
 
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_institucional(4);
-        $data['matriz_programas']=$this->matriz_programas_institucional($lista_programas);
+        $data['matriz_programas']=$this->evaluacionpoa_programas->matriz_programas_institucional($lista_programas);
         $data['boton_reporte']=$this->evaluacionpoa_programas->button_rep_catprogramatica(0,$tp);
       }
 
@@ -239,12 +239,12 @@ class Crep_evalprogramas extends CI_Controller {
       $data['id']=$id;
       $data['tp']=$tp;
 
-      $data['calificacion']=$this->calificacion_eficacia($data['matriz_programas'][(count($lista_programas)+1)][8],0); /// Parametros de Eficacia
+      $data['calificacion']=$this->evaluacionpoa_programas->calificacion_eficacia($data['matriz_programas'][(count($lista_programas)+1)][8],0); /// Parametros de Eficacia
       $data['tabla_programa']=$this->evaluacionpoa_programas->tabla_apertura_programatica($data['matriz_programas'],count($lista_programas),1);
-      $data['matriz']=$this->matriz_parametros($data['matriz_programas'],count($lista_programas));
-      $data['tabla_parametros']=$this->parametros_eficacia($data['matriz'],1);
+      $data['matriz']=$this->evaluacionpoa_programas->matriz_parametros($data['matriz_programas'],count($lista_programas));
+      $data['tabla_parametros']=$this->evaluacionpoa_programas->parametros_eficacia($data['matriz'],1);
 
-    //  $data['print_evaluacion_programas']=$this->print_evaluacion($titulo_impresion,$this->tabla_apertura_programatica($data['matriz_programas'],count($lista_programas),0),$this->calificacion_eficacia($data['matriz_programas'][(count($lista_programas)+1)][8],1),$this->parametros_eficacia($data['matriz'],0));
+   
       $this->load->view('admin/reportes_cns/repevaluacion_programas/reporte_grafico_eval_consolidado_regional_distrital', $data);
 
     }
@@ -255,20 +255,20 @@ class Crep_evalprogramas extends CI_Controller {
     public function reporte_categoria_programatica($id,$tp){
       if($tp==0){
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($id,4);
-        $matriz_programas=$this->matriz_programas_regional($lista_programas);
+        $matriz_programas=$this->evaluacionpoa_programas->matriz_programas_regional($lista_programas);
       }
       elseif($tp==1) {
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($id,4);
-        $matriz_programas=$this->matriz_programas_distrital($lista_programas);
+        $matriz_programas=$this->evaluacionpoa_programas->matriz_programas_distrital($lista_programas);
       }
       else{
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_institucional(4);
-        $matriz_programas=$this->matriz_programas_institucional($lista_programas);
+        $matriz_programas=$this->evaluacionpoa_programas->matriz_programas_institucional($lista_programas);
       }
 
 
       $data['cabecera']=$this->evaluacionpoa_programas->cabecera_evaluacion_trimestral($id,$tp);
-      $data['pie']='Hola';
+      $data['pie']=$this->evaluacionpoa_programas->pie_evaluacionpoa();
       $data['operaciones']=$this->evaluacionpoa_programas->tabla_apertura_programatica_reporte($matriz_programas,count($lista_programas));
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
       $this->load->view('admin/reportes_cns/repevaluacion_programas/reporte_evaluacion_consolidadoprogramas', $data);
@@ -277,402 +277,8 @@ class Crep_evalprogramas extends CI_Controller {
 
 
 
-    //// ========= INSTITUCIONAL 
-    /*--- MATRIZ EVALUACION PROGRAMA AL TRIMESTRE - INSTITUCIONAL ---*/
-    public function matriz_programas_institucional($lista_programas){
-      $nro_prog=count($lista_programas)+1;
-      $nro=0;
-      $total=0;$cumplido=0;$ncumplido=0;
-      foreach($lista_programas as $row){
-        $nro++;
-        $tr[$nro][1]=$nro; /// nro
-        $tr[$nro][2]=$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad']; /// Apertura Programatica
-        $tr[$nro][3]=$row['aper_descripcion']; /// Descripcion
-        $datos=$this->obtiene_datos_evaluacíon_programa_institucional($row['aper_programa'],1);
-        $tr[$nro][4]=$datos[1]; /// Total Total
-        $tr[$nro][5]=$datos[1]; /// Total Evaluado
-        $tr[$nro][6]=$datos[2]; /// Total Cumplidos
-        $tr[$nro][7]=($datos[1]-$datos[2]); /// Total No Cumplido
-        $tr[$nro][8]=0; /// Total Cumplido %
-        if($tr[$nro][4]!=0){
-          $tr[$nro][8]=round((($tr[$nro][6]/$tr[$nro][4])*100),2);
-        }
-        $tr[$nro][9]=(100-$tr[$nro][8]); /// Total No cumplido %
-
-        $total=$total+$tr[$nro][4];
-        $cumplido=$cumplido+$tr[$nro][6];
-        $ncumplido=$ncumplido+$tr[$nro][7];
-      }
-
-        $tr[$nro_prog][1]=''; /// nro
-        $tr[$nro_prog][2]=''; /// Apertura Programatica
-        $tr[$nro_prog][3]=' TOTAL INSTITUCIONAL : '; /// Descripcion
-        $tr[$nro_prog][4]=$total; /// Total Total
-        $tr[$nro_prog][5]=$total; /// Total Evaluado
-        $tr[$nro_prog][6]=$cumplido; /// Total Cumplidos
-        $tr[$nro_prog][7]=$ncumplido; /// Total No Cumplido
-        $tr[$nro_prog][8]=0; /// Total Cumplido %
-        if($tr[$nro_prog][4]!=0){
-          $tr[$nro_prog][8]=round((($tr[$nro_prog][6]/$tr[$nro_prog][4])*100),2);
-        }
-        $tr[$nro_prog][9]=(100-$tr[$nro_prog][8]); /// Total No cumplido %
-
-      return $tr;
-    }
-
-    /*--- OBTIENE DATOS DE EVALUACIÓN 2020 - APERTURA REGIONAL ---*/
-    public function obtiene_datos_evaluacíon_programa_institucional($aper_programa,$tipo_evaluacion){
-      $nro_ope_eval=0; $nro_cumplidas=0;
-      for ($i=1; $i <=$this->tmes; $i++) {
-        $programadas=$this->model_evalprograma->nro_operaciones_programadas_institucional($aper_programa,$i,4);
-        if(count($programadas)!=0){
-          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
-        }
-
-        if(count($this->model_evalprograma->list_operaciones_evaluadas_institucional_trimestre($aper_programa,$i,$tipo_evaluacion,4))!=0){
-          $nro_cumplidas=$nro_cumplidas+count($this->model_evalprograma->list_operaciones_evaluadas_institucional_trimestre($aper_programa,$i,$tipo_evaluacion,4));
-        }
-      }
-
-      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
-      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
-
-      return $vtrimestre;
-    }
-    //// ========= END REGIONAL 
-
-    //// ========= REGIONAL 
-    /*--- MATRIZ EVALUACION PROGRAMA AL TRIMESTRE - REGIONAL ---*/
-    public function matriz_programas_regional($lista_programas){
-      $nro_prog=count($lista_programas)+1;
-      $nro=0;
-      $total=0;$cumplido=0;$ncumplido=0;
-      foreach($lista_programas as $row){
-        $nro++;
-        $tr[$nro][1]=$nro; /// nro
-        $tr[$nro][2]=$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad']; /// Apertura Programatica
-        $tr[$nro][3]=$row['aper_descripcion']; /// Descripcion
-        $datos=$this->obtiene_datos_evaluacíon_programa_regional($row['dep_id'],$row['aper_programa'],1);
-        $tr[$nro][4]=$datos[1]; /// Total Total
-        $tr[$nro][5]=$datos[1]; /// Total Evaluado
-        $tr[$nro][6]=$datos[2]; /// Total Cumplidos
-        $tr[$nro][7]=($datos[1]-$datos[2]); /// Total No Cumplido
-        $tr[$nro][8]=0; /// Total Cumplido %
-        if($tr[$nro][4]!=0){
-          $tr[$nro][8]=round((($tr[$nro][6]/$tr[$nro][4])*100),2);
-        }
-        $tr[$nro][9]=(100-$tr[$nro][8]); /// Total No cumplido %
-
-        $total=$total+$tr[$nro][4];
-        $cumplido=$cumplido+$tr[$nro][6];
-        $ncumplido=$ncumplido+$tr[$nro][7];
-      }
-
-        $tr[$nro_prog][1]=''; /// nro
-        $tr[$nro_prog][2]=''; /// Apertura Programatica
-        $tr[$nro_prog][3]=' TOTAL REGIONAL : '; /// Descripcion
-        $tr[$nro_prog][4]=$total; /// Total Total
-        $tr[$nro_prog][5]=$total; /// Total Evaluado
-        $tr[$nro_prog][6]=$cumplido; /// Total Cumplidos
-        $tr[$nro_prog][7]=$ncumplido; /// Total No Cumplido
-        $tr[$nro_prog][8]=0; /// Total Cumplido %
-        if($tr[$nro_prog][4]!=0){
-          $tr[$nro_prog][8]=round((($tr[$nro_prog][6]/$tr[$nro_prog][4])*100),2);
-        }
-        $tr[$nro_prog][9]=(100-$tr[$nro_prog][8]); /// Total No cumplido %
-
-      return $tr;
-    }
-
-    /*--- OBTIENE DATOS DE EVALUACIÓN 2020 - APERTURA REGIONAL ---*/
-    public function obtiene_datos_evaluacíon_programa_regional($dep_id,$aper_programa,$tipo_evaluacion){
-      $nro_ope_eval=0; $nro_cumplidas=0;
-      for ($i=1; $i <=$this->tmes; $i++) {
-        $programadas=$this->model_evalprograma->nro_operaciones_programadas_regional($dep_id,$aper_programa,$i,4);
-        if(count($programadas)!=0){
-          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
-        }
-
-        if(count($this->model_evalprograma->list_operaciones_evaluadas_regional_trimestre($dep_id,$aper_programa,$i,$tipo_evaluacion,4))!=0){
-          $nro_cumplidas=$nro_cumplidas+count($this->model_evalprograma->list_operaciones_evaluadas_regional_trimestre($dep_id,$aper_programa,$i,$tipo_evaluacion,4));
-        }
-      }
-
-      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
-      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
-
-      return $vtrimestre;
-    }
-    //// ========= END REGIONAL 
 
 
-    //// ========= DISTRITAL 
-    /*--- MATRIZ EVALUACION PROGRAMA AL TRIMESTRE - DISTRITAL ---*/
-    public function matriz_programas_distrital($lista_programas){
-      $nro_prog=count($lista_programas)+1;
-      $nro=0;
-      $total=0;$cumplido=0;$ncumplido=0;
-      foreach($lista_programas as $row){
-        $nro++;
-        $tr[$nro][1]=$nro; /// nro
-        $tr[$nro][2]=$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad']; /// Apertura Programatica
-        $tr[$nro][3]=$row['aper_descripcion']; /// Descripcion
-        $datos=$this->obtiene_datos_evaluacíon_programa_distrital($row['dist_id'],$row['aper_programa'],1);
-        $tr[$nro][4]=$datos[1]; /// Total Total
-        $tr[$nro][5]=$datos[1]; /// Total Evaluado
-        $tr[$nro][6]=$datos[2]; /// Total Cumplidos
-        $tr[$nro][7]=($datos[1]-$datos[2]); /// Total No Cumplido
-        $tr[$nro][8]=0; /// Total Cumplido %
-        if($tr[$nro][4]!=0){
-          $tr[$nro][8]=round((($tr[$nro][6]/$tr[$nro][4])*100),2);
-        }
-        $tr[$nro][9]=(100-$tr[$nro][8]); /// Total No cumplido %
-
-        $total=$total+$tr[$nro][4];
-        $cumplido=$cumplido+$tr[$nro][6];
-        $ncumplido=$ncumplido+$tr[$nro][7];
-      }
-
-        $tr[$nro_prog][1]=''; /// nro
-        $tr[$nro_prog][2]=''; /// Apertura Programatica
-        $tr[$nro_prog][3]='TOTAL DISTRITAL '; /// Descripcion
-        $tr[$nro_prog][4]=$total; /// Total Total
-        $tr[$nro_prog][5]=$total; /// Total Evaluado
-        $tr[$nro_prog][6]=$cumplido; /// Total Cumplidos
-        $tr[$nro_prog][7]=$ncumplido; /// Total No Cumplido
-        $tr[$nro_prog][8]=0; /// Total Cumplido %
-        if($tr[$nro_prog][4]!=0){
-          $tr[$nro_prog][8]=round((($tr[$nro_prog][6]/$tr[$nro_prog][4])*100),2);
-        }
-        $tr[$nro_prog][9]=(100-$tr[$nro_prog][8]); /// Total No cumplido %
-
-      return $tr;
-    }
-
-    /*--- OBTIENE DATOS DE EVALUACIÓN 2020 - APERTURA REGIONAL ---*/
-    public function obtiene_datos_evaluacíon_programa_distrital($dist_id,$aper_programa,$tipo_evaluacion){
-      $nro_ope_eval=0; $nro_cumplidas=0;
-      for ($i=1; $i <=$this->tmes; $i++) {
-        $programadas=$this->model_evalprograma->nro_operaciones_programadas_distrital($dist_id,$aper_programa,$i,4);
-        if(count($programadas)!=0){
-          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
-        }
-
-        if(count($this->model_evalprograma->list_operaciones_evaluadas_distrital_trimestre($dist_id,$aper_programa,$i,$tipo_evaluacion,4))!=0){
-          $nro_cumplidas=$nro_cumplidas+count($this->model_evalprograma->list_operaciones_evaluadas_distrital_trimestre($dist_id,$aper_programa,$i,$tipo_evaluacion,4));
-        }
-      }
-
-      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
-      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
-
-      return $vtrimestre;
-    }
-    //// ========= END REGIONAL 
-
-
-    /*------ Parametro de eficacia ------*/
-    public function calificacion_eficacia($eficacia,$tp_rep){
-      //tp_rep : 0 -> Normal, 1 : Impresion
-      $tabla='';
-
-      if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
-      if ($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
-      if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
-      if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
-
-      if($tp_rep==0){
-        $tabla.='<h2 class="alert alert-'.$tp.'" align="center"><b>'.$titulo.'</b></h2>';
-      }
-      else{
-        $tabla.='<center><font size=4.5><b>'.$titulo.'</b></font></center>';
-      }
-      
-      return $tabla;
-    }
-
-
-
-
-
-
-    /////  PARAMETROS DE EFICACIA 
-    /*---- Tabla Parametros -----*/ 
-    public function matriz_parametros($matriz,$nro){
-
-      for ($i=1; $i <=4 ; $i++) { 
-        $par[$i][1]=$i;
-        $par[$i][2]=0;
-        $par[$i][3]=0;
-      }
-
-      for ($i=1; $i <=$nro; $i++) { 
-        $eficacia=$matriz[$i][8];
-        
-        if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
-        if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
-        if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
-        if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
-      }
-
-      for ($i=1; $i <=4 ; $i++) { 
-        $par[$i][3]=round((($par[$i][2]/$nro)*100),2);
-      }
-
-      return $par;
-    }
-
-    /*----- Parametros de Eficacia Concolidado por Unidad -----*/
-    public function parametros_eficacia($matriz,$tp_rep){
-      if($tp_rep==1){ //// Normal
-        $class='class="table table-bordered" align=center style="width:60%;"';
-        $div='<div id="parametro_efi" style="width: 600px; height: 400px; margin: 0 auto"></div>';
-
-      }
-      else{ /// Impresion
-        $class='class="change_order_items" border=1 align=center style="width:100%;"';
-        $div='<div id="parametro_efi_print" style="width: 650px; height: 330px; margin: 0 auto"></div>';
-      }
-     // $nro=$matriz;
-      $tabla='';
-      $tabla .='<table '.$class.'>
-                  <tr>
-                    <td>
-                      '.$div.'
-                    </td>
-                  </tr>
-                  <tr>
-                  <td>
-                      <table '.$class.'>
-                        <thead>
-                          <tr>
-                            <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
-                            <th style="width: 33%"><center><b>PARAMETRO</b></center></th>
-                            <th style="width: 33%"><center><b>NRO DE UNIDADES</b></center></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>INSATISFACTORIO</td>
-                            <td>0% a 75%</td>
-                            <td align="center"><a class="btn btn-danger" style="width: 100%" align="left" title="'.$matriz[1][2].' Unidades/Proyectos">'.$matriz[1][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>REGULAR</td>
-                            <td>75% a 90% </td>
-                            <td align="center"><a class="btn btn-warning" style="width: 100%" align="left" title="'.$matriz[2][2].' Unidades/Proyectos">'.$matriz[2][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>BUENO</td>
-                            <td>90% a 99%</td>
-                            <td align="center"><a class="btn btn-info" style="width: 100%" align="left" title="'.$matriz[3][2].' Unidades/Proyectos">'.$matriz[3][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>OPTIMO </td>
-                            <td>100%</td>
-                            <td align="center"><a class="btn btn-success" style="width: 100%" align="left" title="'.$matriz[4][2].' Unidades/Proyectos">'.$matriz[4][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td colspan=2 align="left"><b>TOTAL: </b></td>
-                            <td align="center"><b>'.($matriz[1][2]+$matriz[2][2]+$matriz[3][2]+$matriz[4][2]).'</b></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </table>';
-
-      return $tabla;
-    }
-
-
-    /*---- Imprime Evaluacion Consolidado Regional-Distrital -----*/
-    public function print_evaluacion($titulo,$tabla_programas,$eficacia,$tabla_parametros){
-      $mes = $this->mes_nombre();
-      $trimestre=$this->model_evaluacion->trimestre();
-      $tr=($this->tmes*3);
-      $calificacion=$this->calificacion_eficacia($eficacia,1); /// Parametros de Eficacia
-      ?>
-      <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-      <head>
-      <title><?php echo $this->session->userData('sistema');?></title>
-      </head>
-      <link rel="STYLESHEET" href="<?php echo base_url(); ?>assets/print_static.css" type="text/css" />
-      <style type="text/css">
-        @page {size: letter;}
-        .verde{ width:100%; height:5px; background-color:#1c7368;}
-        .blanco{ width:100%; height:5px; background-color:#F1F2F1;}
-      </style>
-      <?php
-      $tabla ='';
-      $tabla .='<div class="verde"></div>
-                <div class="blanco"></div>';
-      $tabla .='<table class="page_header" border="0" style="width: 100%;>
-            <tr>
-                <td style="width: 100%; text-align: left">
-                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                        <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td style="width:15%;" text-align:center;>
-                            <br><img src="'.base_url().'assets/ifinal/cns_logo.JPG'.'" alt="" style="width:50%;">
-                          </td>
-                          <td style="width:70%;" align=left>
-                            
-                            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                              <tr>
-                                <td style="width:100%; height: 1.2%; font-size: 19pt;" align=center><b>'.$this->session->userdata('entidad').'</b></td>
-                              </tr>
-                              '.$titulo.'
-                          </table>
-                         
-                          </td>
-                          <td style="width:15%; font-size: 4pt;">
-                          </td>
-                        </tr>
-                  </table>
-                </td>
-            </tr>
-        </table><hr>
-        <div align=center><b>CUADRO DE EVALUACI&Oacute;N POA POR CATEGORIA PROGRAMATICA '.$this->gestion.'</b></div>';
-        $tabla.=$tabla_programas;
-        $tabla .='<div class="saltopagina"></div>';
-
-              $tabla .='<div class="verde"></div>
-                <div class="blanco"></div>';
-      $tabla .='<table class="page_header" border="0" style="width: 100%;>
-            <tr>
-                <td style="width: 100%; text-align: left">
-                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                        <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td style="width:15%;" text-align:center;>
-                            <br><img src="'.base_url().'assets/ifinal/cns_logo.JPG'.'" alt="" style="width:50%;">
-                          </td>
-                          <td style="width:70%;" align=left>
-                            
-                            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                              <tr>
-                                <td style="width:100%; height: 1.2%; font-size: 19pt;" align=center><b>'.$this->session->userdata('entidad').'</b></td>
-                              </tr>
-                              '.$titulo.'
-                          </table>
-                         
-                          </td>
-                          <td style="width:15%; font-size: 4pt;">
-                          </td>
-                        </tr>
-                  </table>
-                </td>
-            </tr>
-        </table><hr>
-        <div align=center><b>CUADRO DE EVALUACI&Oacute;N POA POR CATEGORIA PROGRAMATICA '.$this->gestion.'</b></div>';
-
-
-        $tabla.=$tabla_parametros;
-        ?>
-        </html>
-      <?php
-    return $tabla;
-    }
 
 
 
