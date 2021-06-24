@@ -20,32 +20,7 @@
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>  
-        <script>
-            function abreVentana(PDF){             
-                var direccion;
-                direccion = '' + PDF;
-                window.open(direccion, "Reporte de Evaluacion" , "width=800,height=650,scrollbars=SI") ;                                                                 
-            }                                            
-        </script>
-        <meta name="viewport" content="width=device-width">
         <style>
-            #areaImprimir{display:none}
-        @media print {
-            #areaImprimir {display:block}
-        }
-            #areaImprimir_eval{display:none}
-        @media print {
-            #areaImprimir_eval {display:block}
-        }
-        @media print {
-            #areaImprimir_eficacia {display:block}
-        }
-        </style>
-        <style>
-         hr{ 
-            height:3px;  
-            background-color:#1C7366; 
-            }
             table{font-size: 10px;
             width: 100%;
             max-width:1550px;;
@@ -61,15 +36,6 @@
               font-size: 9px;
             }
         </style>
-        <script type="text/javascript">
-        function printDiv(nombreDiv) {
-            var contenido= document.getElementById(nombreDiv).innerHTML;
-            var contenidoOriginal= document.body.innerHTML;
-            document.body.innerHTML = contenido;
-            window.print();
-            document.body.innerHTML = contenidoOriginal;
-        }
-        </script>
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -141,7 +107,7 @@
                     <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
                     </li>
                     <li class="text-center">
-                        <a href="#" title="REGISTRO DE EJECUCION"> <span class="menu-item-parent"><?php echo $tit_menu; ?></span></a>
+                        <a href="#" title="REGISTRO DE EJECUCION"> <span class="menu-item-parent"><?php echo $tit_menu;?></span></a>
                     </li>
                     <?php echo $menu;?>
                 </ul>
@@ -187,17 +153,20 @@
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                                 <header>
                                     <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                                    <h2 title="<?php echo "aper_id : ".$proyecto[0]['aper_id']." -- proy id : ".$proyecto[0]['proy_id'];?>">EVALUACI&Oacute;N POA POR UNIDAD / PROYECTO</h2>
+                                    <h2 title="<?php echo "aper_id : ".$proyecto[0]['aper_id']." -- proy id : ".$proyecto[0]['proy_id'];?>">EVALUACI&Oacute;N POA POR UNIDAD / PROYECTO DE INVERSI&Oacute;N</h2>
 
                                     <ul class="nav nav-tabs pull-right in" id="myTab">
                                         <li class="active">
-                                            <a data-toggle="tab" href="#s1" title="CUADRO DE AVANCE POR UNIDAD"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO EJECUCI&Oacute;N POR UNIDAD</span></a>
+                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">MIS SUBACTIVIDADES</span></a>
+                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (GESTI&Oacute;N)</span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">PARAMETROS DE EFICACIA</span></a>
+                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">MIS SUBACTIVIDADES</span></a>
+                                        </li>
+                                        <li>
+                                            <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">PARAMETROS DE EFICACIA</span></a>
                                         </li>
                                     </ul>
                                 </header>
@@ -212,94 +181,104 @@
                                     <div class="widget-body">
                                         <!-- content -->
                                         <div id="myTabContent" class="tab-content">
+                                            <br>
+                                            <?php echo $calificacion;?>
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="EFICACIA INSTITUCIONAL A NIVEL UNIDAD">
-                                                <hr>
-                                                    <div align="right">
-                                                        <a href="#" onclick="printDiv('areaImprimir')" title="IMPRIMIR CUADRO DE EFICACIA DE UNIDAD" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA</a>&nbsp;&nbsp;
+                                                <div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div id="cabecera2" style="display: none"><?php echo $cabecera2;?></div>
+                                                        <hr>
+                                                        <table>
+                                                            <tr>
+                                                                <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE AVANCE EVALUACI&Oacute;N POA AL <?php echo $tmes[0]['trm_descripcion'].' DE '.$this->session->userData('gestion');?></b></td>
+                                                            </tr>
+                                                        </table>
+                                                        <hr>
+                                                        <div id="evaluacion_trimestre">
+                                                            <div id="regresion" style="width: 600px; height: 380px; margin: 0 auto"></div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="table-responsive" id="tabla_regresion_vista">
+                                                            <?php echo $tabla_regresion;?>
+                                                        </div>
+                                                        <div id="tabla_regresion_impresion" style="display: none">
+                                                            <?php echo $tabla_regresion_impresion;?>
+                                                        </div>
+                                                        <hr>
+                                                        <div align="right">
+                                                            <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="16" HEIGHT="16"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</b></button>
+                                                        </div>
                                                     </div>
-                                                <hr>
 
-                                                <?php echo $calificacion;?>
-                                                <div class="row">
-                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                          <table class="change_order_items" border=1>
-                                                          <tr>
-                                                            <td>
-                                                                <div id="regresion" style="width: 600px; height: 400px; margin: 0 auto"></div>
-                                                            </td>
-                                                          </tr>
-                                                          <tr>
-                                                            <td>
-                                                            <div class="table-responsive">
-                                                                <?php echo $tabla_regresion;?>
-                                                            </div>
-                                                            </td>
-                                                          </tr>
-                                                          </table>
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div id="cabecera2" style="display: none"><?php echo $cabecera2;?></div>
+                                                        <hr>
+                                                        <table>
+                                                            <tr>
+                                                                <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DETALLE EVALUACI&Oacute;N POA AL <?php echo $tmes[0]['trm_descripcion'].' DE '.$this->session->userData('gestion');?></b></td>
+                                                            </tr>
+                                                        </table>
+                                                        <hr>
+                                                        <div id="evaluacion_pastel">
+                                                            <div id="pastel_todos" style="width: 600px; height: 420px; margin: 0 auto"></div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                          <table class="change_order_items" border=1>
-                                                          <tr>
-                                                            <td>
-                                                                <div id="regresion_gestion" style="width: 600px; height: 400px; margin: 0 auto"></div>
-                                                            </td>
-                                                          </tr>
-                                                          <tr>
-                                                            <td>
-                                                            <div class="table-responsive">
-                                                                <?php echo $tabla_regresion_total;?>
-                                                            </div>
-                                                            </td>
-                                                          </tr>
-                                                          </table>
+                                                        <hr>
+                                                        <div class="table-responsive" id="tabla_pastel_vista">
+                                                            <?php echo $tabla_pastel_todo;?>
+                                                        </div>
+                                                        <div id="tabla_pastel_impresion" style="display: none">
+                                                            <?php echo $tabla_pastel_todo_impresion;?>
+                                                        </div>
+                                                        <hr>
+                                                        <div align="right">
+                                                            <button id="btnImprimir_evaluacion_pastel" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="16" HEIGHT="16"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</b></button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            <hr>
-                                                <div class="row">
-                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                          <table class="change_order_items" border=1>
-                                                            <tr>
-                                                              <td>
-                                                              <div id="pastel" style="width: 600px; height: 400px; margin: 0 auto"></div>
-                                                              </td>
-                                                            </tr>
-                                                            <tr>
-                                                              <td>
-                                                                <?php echo $tabla_pastel;?>
-                                                              </td>
-                                                            </tr>
-                                                          </table>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                          <table class="change_order_items" border=1>
-                                                          <tr>
-                                                            <td>
-                                                                <div id="pastel_todos" style="width: 600px; height: 400px; margin: 0 auto"></div>
-                                                            </td>
-                                                          </tr>
-                                                          <tr>
-                                                            <td>
-                                                            <div class="table-responsive">
-                                                                <?php echo $tabla_pastel_todo;?>
-                                                            </div>
-                                                            </td>
-                                                          </tr>
-                                                          </table>
-                                                        </div>
-                                                    </div>    
-                                                </div>
+                                               </div>
                                             </div>
                                             <!-- end s1 tab pane -->
-                                
-                                            <div class="tab-pane fade" id="s2" title="CUADRO MIS MIS SUBACTIVIDADES">
+                                    
+                                            <div class="tab-pane fade" id="s2" title="CUADRO DE EVALUACIÓN POA GESTIÓN">
+                                               <div class="row">
+                                                <div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                                                        <div id="cabecera3" style="display: none"><?php echo $cabecera3;?></div>
+                                                        <hr>
+                                                        <table>
+                                                            <tr>
+                                                                <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE EVALUACI&Oacute;N POA <?php echo $this->session->userData('gestion');?></b></td>
+                                                            </tr>
+                                                        </table>
+                                                        <hr>
+                                                        <div id="evaluacion_gestion">
+                                                          <div id="regresion_gestion" style="width: 700px; height: 400px; margin: 0 auto"></div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="table-responsive" id="tabla_regresion_total_vista">
+                                                            <?php echo $tabla_regresion_total;?>
+                                                        </div>
+                                                        <div id="tabla_regresion_total_impresion" style="display: none">
+                                                            <?php echo $tabla_regresion_total_impresion;?>
+                                                        </div>
+                                                      <hr>
+                                                        <div align="right">
+                                                            <button id="btnImprimir_evaluacion_gestion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="16" HEIGHT="16"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (GESTIÓN)</b></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                               </div>
+                                            </div>
+
+                                            <div class="tab-pane fade" id="s3" title="CUADRO MIS MIS SUBACTIVIDADES">
                                                 <div class="row">
                                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                       <hr>
                                                         <div align="right">
-                                                          <!-- <a href="#" onclick="printDiv('areaImprimir_eval')" title="IMPRIMIR CUADRO DE EVALUACI&Oacute;N DE OPERACIONES" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA</a>&nbsp;&nbsp;&nbsp;&nbsp; -->
+                                                            <?php echo $boton_reporte_indicadores;?>
                                                         </div>
                                                         <br>
                                                         <div class="row">
@@ -337,7 +316,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="tab-pane fade" id="s3" title="PARAMETROS DE EFICACIA">
+                                            <div class="tab-pane fade" id="s4" title="PARAMETROS DE EFICACIA">
                                                 <hr>
                                                 <div class="row">
                                                 <?php echo $parametro_eficacia;?>
@@ -366,13 +345,6 @@
                     <span class="txt-color-white"><?php echo $this->session->userData('name').' @ '.$this->session->userData('gestion') ?></span>
                 </div>
             </div>
-        </div>
-        <div id="areaImprimir">
-            <?php echo $print_tabla;?>
-        </div>
-        
-        <div id="areaImprimir_eval">
-            <?php echo $eval_unidad;?>
         </div>
         <!-- END PAGE FOOTER -->
         <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
@@ -418,113 +390,9 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
+        <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento_unidad.js"></script> 
 
-        
-        <!-- REGRESION LINEAL A LA GESTIÓN -->
-        <script type="text/javascript">
-          var chart1;
-          $(document).ready(function() {
-            chart1 = new Highcharts.Chart({
-              chart: {
-                renderTo: 'regresion_gestion',
-                defaultSeriesType: 'line'
-              },
-              title: {
-                text: '<?php echo 'EVALUACIÓN POA GESTIÓN '.$this->session->userData('gestion') ;?>'
-              },
-              subtitle: {
-                text: ''
-              },
-              xAxis: {
-                        categories: ['<?php echo $tabla_gestion[1][0];?>', '<?php echo $tabla_gestion[1][1];?>', '<?php echo $tabla_gestion[1][2];?>', '<?php echo $tabla_gestion[1][3];?>', '<?php echo $tabla_gestion[1][4];?>']
-                    },
-              yAxis: {
-                title: {
-                  text: 'Promedio (%)'
-                }
-              },
-              tooltip: {
-                enabled: false,
-                formatter: function() {
-                  return '<b>'+ this.series.name +'</b><br/>'+
-                    this.x +': '+ this.y +'%';
-                }
-              },
-              plotOptions: {
-                line: {
-                  dataLabels: {
-                    enabled: true
-                  },
-                  enableMouseTracking: false
-                }
-              },
-
-                series: [
-                    {
-                        name: '% PROGRAMADAS',
-                        data: [ <?php echo $tabla_gestion[4][0];?> , <?php echo $tabla_gestion[4][1];?>, <?php echo $tabla_gestion[4][2];?>, <?php echo $tabla_gestion[4][3];?>, <?php echo $tabla_gestion[4][4];?>]
-                    },
-                    {
-                        name: '% CUMPLIDAS',
-                        data: [ <?php echo $tabla_gestion[5][0];?>, <?php echo $tabla_gestion[5][1];?>, <?php echo $tabla_gestion[5][2];?>, <?php echo $tabla_gestion[5][3];?>, <?php echo $tabla_gestion[5][4];?>]
-                    }
-                ]
-            });
-          });
-
-        /*--- Regresion Lineal Impresion ---*/
-        var chart1;
-          $(document).ready(function() {
-            chart1 = new Highcharts.Chart({
-              chart: {
-                renderTo: 'regresion_gestion_print',
-                defaultSeriesType: 'line'
-              },
-              title: {
-                text: ''
-              },
-              subtitle: {
-                text: '<?php echo 'EVALUACIÓN POA GESTIÓN '.$this->session->userData('gestion');?>'
-              },
-              xAxis: {
-                        categories: ['<?php echo $tabla_gestion[1][0];?>', '<?php echo $tabla_gestion[1][1];?>', '<?php echo $tabla_gestion[1][2];?>', '<?php echo $tabla_gestion[1][3];?>', '<?php echo $tabla_gestion[1][4];?>']
-                    },
-              yAxis: {
-                title: {
-                  text: 'Promedio (%)'
-                }
-              },
-              tooltip: {
-                enabled: false,
-                formatter: function() {
-                  return '<b>'+ this.series.name +'</b><br/>'+
-                    this.x +': '+ this.y +'%';
-                }
-              },
-              plotOptions: {
-                line: {
-                  dataLabels: {
-                    enabled: true
-                  },
-                  enableMouseTracking: false
-                }
-              },
-
-                series: [
-                    {
-                        name: '% PROGRAMADAS',
-                        data: [ <?php echo $tabla_gestion[4][0];?> , <?php echo $tabla_gestion[4][1];?>, <?php echo $tabla_gestion[4][2];?>, <?php echo $tabla_gestion[4][3];?>, <?php echo $tabla_gestion[4][4];?>]
-                    },
-                    {
-                        name: '% CUMPLIDAS',
-                        data: [ <?php echo $tabla_gestion[5][0];?>, <?php echo $tabla_gestion[5][1];?>, <?php echo $tabla_gestion[5][2];?>, <?php echo $tabla_gestion[5][3];?>, <?php echo $tabla_gestion[5][4];?>]
-                    }
-                ]
-            });
-          });
-        </script>
-
-        <!-- REGRESION LINEAL AL TRIMESTRE -->
+         <!-- REGRESION LINEAL AL TRIMESTRE -->
         <script type="text/javascript">
           var chart1;
           $(document).ready(function() {
@@ -534,7 +402,7 @@
                 defaultSeriesType: 'line'
               },
               title: {
-                text: '<?php echo 'EVALUACIÓN POA '.$this->session->userData('gestion').' AL '.$tmes[0]['trm_descripcion'];?>'
+                text: '' 
               },
               subtitle: {
                 text: ''
@@ -590,11 +458,11 @@
                     if($this->session->userdata('trimestre')==1){ ?>
                         series: [
                             {
-                                name: 'ACTIVIDADES PROGRAMADAS',
+                                name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
                                 data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>]
                             },
                             {
-                                name: 'ACTIVIDADES CUMPLIDAS',
+                                name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
                                 data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>]
                             }
                         ]
@@ -603,11 +471,11 @@
                     elseif ($this->session->userdata('trimestre')==2) { ?>
                             series: [
                                 {
-                                    name: 'ACTIVIDADES PROGRAMADAS',
+                                    name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
                                     data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>]
                                 },
                                 {
-                                    name: 'ACTIVIDADES CUMPLIDAS',
+                                    name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
                                     data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>]
                                 }
                             ]
@@ -616,11 +484,11 @@
                     elseif ($this->session->userdata('trimestre')==3) { ?>
                             series: [
                                 {
-                                    name: 'ACTIVIDADES PROGRAMADAS',
+                                    name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
                                     data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>]
                                 },
                                 {
-                                    name: 'ACTIVIDADES CUMPLIDAS',
+                                    name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
                                     data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>]
                                 }
                             ]
@@ -629,129 +497,11 @@
                     elseif ($this->session->userdata('trimestre')==4) { ?>
                             series: [
                                 {
-                                    name: 'ACTIVIDADES PROGRAMADAS',
+                                    name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
                                     data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>, <?php echo $tabla[2][4];?>]
                                 },
                                 {
-                                    name: 'ACTIVIDADES CUMPLIDAS',
-                                    data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>, <?php echo $tabla[3][4];?>]
-                                }
-                            ]
-                        <?php
-                    }
-                ?>
-            });
-          });
-
-        /*---  REGRESION LINEAL AL TRIMESTRE IMPRESION  ---*/
-        var chart1;
-          $(document).ready(function() {
-            chart1 = new Highcharts.Chart({
-              chart: {
-                renderTo: 'regresion_impresion',
-                defaultSeriesType: 'line'
-              },
-              title: {
-                text: '' 
-              },
-              subtitle: {
-                text: '<?php echo 'EVALUACIÓN POA '.$this->session->userData('gestion').' AL '.$tmes[0]['trm_descripcion'];?>'
-              },
-              <?php 
-                if($this->session->userdata('trimestre')==1){ ?>
-                    xAxis: {
-                        categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>']
-                    },
-                    <?php
-                }
-                elseif ($this->session->userdata('trimestre')==2) { ?>
-                    xAxis: {
-                        categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][2];?>']
-                    },
-                    <?php
-                }
-                elseif ($this->session->userdata('trimestre')==3) { ?>
-                    xAxis: {
-                        categories: ['p :<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][3];?>']
-                    },
-                    <?php
-                }
-                elseif ($this->session->userdata('trimestre')==4) { ?>
-                    xAxis: {
-                        categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][3];?>', '<?php echo $tabla[1][4];?>']
-                    },
-                    <?php
-                }
-              ?>
-              yAxis: {
-                title: {
-                  text: 'Promedio (%)'
-                }
-              },
-              tooltip: {
-                enabled: false,
-                formatter: function() {
-                  return '<b>'+ this.series.name +'</b><br/>'+
-                    this.x +': '+ this.y +'%';
-                }
-              },
-              plotOptions: {
-                line: {
-                  dataLabels: {
-                    enabled: true
-                  },
-                  enableMouseTracking: false
-                }
-              },
-
-                <?php 
-                    if($this->session->userdata('trimestre')==1){ ?>
-                        series: [
-                            {
-                                name: 'ACTIVIDADES PROGRAMADAS',
-                                data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>]
-                            },
-                            {
-                                name: 'ACTIVIDADES CUMPLIDAS',
-                                data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>]
-                            }
-                        ]
-                        <?php
-                    }
-                    elseif ($this->session->userdata('trimestre')==2) { ?>
-                            series: [
-                                {
-                                    name: 'ACTIVIDADES PROGRAMADAS',
-                                    data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>]
-                                },
-                                {
-                                    name: 'ACTIVIDADES CUMPLIDAS',
-                                    data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>]
-                                }
-                            ]
-                        <?php
-                    }
-                    elseif ($this->session->userdata('trimestre')==3) { ?>
-                            series: [
-                                {
-                                    name: 'ACTIVIDADES PROGRAMADAS',
-                                    data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>]
-                                },
-                                {
-                                    name: 'ACTIVIDADES CUMPLIDAS',
-                                    data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>]
-                                }
-                            ]
-                        <?php
-                    }
-                    elseif ($this->session->userdata('trimestre')==4) { ?>
-                            series: [
-                                {
-                                    name: 'ACTIVIDADES PROGRAMADAS',
-                                    data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>, <?php echo $tabla[2][4];?>]
-                                },
-                                {
-                                    name: 'ACTIVIDADES CUMPLIDAS',
+                                    name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
                                     data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>, <?php echo $tabla[3][4];?>]
                                 }
                             ]
@@ -761,57 +511,7 @@
             });
           });
         </script>
-
         <script type="text/javascript">
-            $(document).ready(function() {  
-               Highcharts.chart('pastel', {
-                chart: {
-                    type: 'pie',
-                    options3d: {
-                        enabled: true,
-                        alpha: 45,
-                        beta: 0
-                    }
-                },
-                title: {
-                    text: '<?php echo 'EVALUACIÓN '.$tmes[0]['trm_descripcion'];?>'
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        depth: 35,
-                        dataLabels: {
-                            enabled: true,
-                            format: '{point.name}'
-                        }
-                    }
-                },
-                series: [{
-                    type: 'pie',
-                    name: 'Operaciones',
-                    data: [
-                        {
-                          name: 'NO CUMPLIDO : <?php echo $tabla[6][$this->session->userData('trimestre')];?>%',
-                          y: <?php echo $tabla[6][$this->session->userData('trimestre')];?>,
-                          color: '#f44336',
-                        },
-
-                        {
-                          name: 'CUMPLIDO : <?php echo $tabla[5][$this->session->userData('trimestre')];?>%',
-                          y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>,
-                          color: '#2CC8DC',
-                          sliced: true,
-                          selected: true
-                        }
-                    ]
-                }]
-              });
-            });
-
             $(document).ready(function() {  
                Highcharts.chart('pastel_todos', {
                 chart: {
@@ -823,7 +523,7 @@
                     }
                 },
                 title: {
-                    text: '<?php echo 'EVALUACIÓN '.$tmes[0]['trm_descripcion'];?>'
+                    text: ''
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -844,14 +544,14 @@
                     name: 'Actividades',
                     data: [
                         {
-                          name: 'NO CUMPLIDO : <?php echo $no_cumplido;?> %',
+                          name: 'NO CUMPLIDO : <?php echo (100-($tabla[5][$this->session->userData('trimestre')]+round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2)));?> %',
                           y: <?php echo $tabla[6][$this->session->userData('trimestre')];?>,
                           color: '#f98178',
                         },
 
                         {
-                          name: 'EN PROCESO : <?php echo $en_proceso;?> %',
-                          y: <?php echo $tabla[6][$this->session->userData('trimestre')];?>,
+                          name: 'EN PROCESO : <?php echo round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2);?> %',
+                          y: <?php echo round(($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100,2);?>,
                           color: '#f5eea3',
                         },
 
@@ -868,7 +568,59 @@
             });
         </script>
 
-          <script type="text/javascript">
+        <!-- REGRESION LINEAL A LA GESTIÓN -->
+        <script type="text/javascript">
+          var chart1;
+          $(document).ready(function() {
+            chart1 = new Highcharts.Chart({
+              chart: {
+                renderTo: 'regresion_gestion',
+                defaultSeriesType: 'line'
+              },
+              title: {
+                text: ''
+              },
+              subtitle: {
+                text: ''
+              },
+              xAxis: {
+                        categories: ['<?php echo $tabla_gestion[1][0];?>', '<?php echo $tabla_gestion[1][1];?>', '<?php echo $tabla_gestion[1][2];?>', '<?php echo $tabla_gestion[1][3];?>', '<?php echo $tabla_gestion[1][4];?>']
+                    },
+              yAxis: {
+                title: {
+                  text: 'Promedio (%)'
+                }
+              },
+              tooltip: {
+                enabled: false,
+                formatter: function() {
+                  return '<b>'+ this.series.name +'</b><br/>'+
+                    this.x +': '+ this.y +'%';
+                }
+              },
+              plotOptions: {
+                line: {
+                  dataLabels: {
+                    enabled: true
+                  },
+                  enableMouseTracking: false
+                }
+              },
+
+                series: [
+                    {
+                        name: '% META PROGRAMADAS EN EL TRIMESTRE',
+                        data: [ <?php echo $tabla_gestion[4][0];?> , <?php echo $tabla_gestion[4][1];?>, <?php echo $tabla_gestion[4][2];?>, <?php echo $tabla_gestion[4][3];?>, <?php echo $tabla_gestion[4][4];?>]
+                    },
+                    {
+                        name: '% META CUMPLIDAS EN EL TRIMESTRE',
+                        data: [ <?php echo $tabla_gestion[5][0];?>, <?php echo $tabla_gestion[5][1];?>, <?php echo $tabla_gestion[5][2];?>, <?php echo $tabla_gestion[5][3];?>, <?php echo $tabla_gestion[5][4];?>]
+                    }
+                ]
+            });
+          });
+        </script>
+        <script type="text/javascript">
             $(document).ready(function() {  
                Highcharts.chart('parametro_efi', {
                 chart: {
@@ -929,68 +681,6 @@
                 }]
               });
             });
-
-            $(document).ready(function() {  
-               Highcharts.chart('parametro_efi_print', {
-                chart: {
-                    type: 'pie',
-                    options3d: {
-                        enabled: true,
-                        alpha: 45,
-                        beta: 0
-                    }
-                },
-                title: {
-                    text: 'PARAMETRO DE EFICACIA AL <?php echo $tmes[0]['trm_descripcion'];?>'
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        depth: 35,
-                        dataLabels: {
-                            enabled: true,
-                            format: '{point.name}'
-                        }
-                    }
-                },
-                series: [{
-                    type: 'pie',
-                    name: 'Unidades',
-                    data: [
-                        {
-                          name: 'INSATISFACTORIO : <?php echo $matriz[1][3];?> %',
-                          y: <?php echo $matriz[1][3];?>,
-                          color: '#f95b4f',
-                        },
-
-                        {
-                          name: 'REGULAR : <?php echo $matriz[2][3];?> %',
-                          y: <?php echo $matriz[2][3];?>,
-                          color: '#edd094',
-                        },
-
-                        {
-                         name: 'BUENO : <?php echo $matriz[3][3];?> %',
-                          y: <?php echo $matriz[3][3];?>,
-                          color: '#afd5e5',
-                        },
-
-                        {
-                          name: 'OPTIMO : <?php echo $matriz[4][3];?> %',
-                          y: <?php echo $matriz[4][3];?>,
-                          color: '#4caf50',
-                          sliced: true,
-                          selected: true
-                        }
-                    ]
-                }]
-              });
-            });
         </script>
-        <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
     </body>
 </html>

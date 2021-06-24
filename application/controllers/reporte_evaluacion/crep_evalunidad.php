@@ -25,6 +25,8 @@ class Crep_evalunidad extends CI_Controller {
             $this->fun_id = $this->session->userData('fun_id');
             $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->verif_mes=$this->session->userdata('mes_actual');
+            $this->mes = $this->mes_nombre();
         }
         else{
             redirect('/','refresh');
@@ -56,9 +58,13 @@ class Crep_evalunidad extends CI_Controller {
       if(count($data['proyecto'])!=0){
         $data['menu']=$this->menu(4); //// genera menu  
         $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-        $data['tit_menu']='EVALUACI&oacute;N POA';
 
+        $data['tit_menu']='EVALUACI&oacute;N POA';
+        $data['tit']='<li>Evaluaci&oacute;n POA</li><li>Actividad</li>';
+        
         $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+        
+        /*------ titulo ------*/
         $data['titulo']=
           '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small><b>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</b></h1>
           <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>';
@@ -68,11 +74,39 @@ class Crep_evalunidad extends CI_Controller {
           '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROYECTO : </small><b>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' 000 - '.$data['proyecto'][0]['proy_nombre'].'</b></h1>
           <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>';
         }
+        /*-------------------*/
         
-        $data['tit']='<li>Evaluaci&oacute;n POA</li><li>Actividad</li>';
 
+         /*--- Regresion lineal trimestral ---*/
+        $data['cabecera2']=$this->cabecera_seguimiento($data['proyecto'],2);
         $data['tabla']=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
-        
+        $data['tabla_regresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
+        $data['tabla_regresion_impresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
+
+        /*--- grafico Pastel trimestral ---*/
+        $data['tabla_pastel_todo']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
+        $data['tabla_pastel_todo_impresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
+
+        /*--- Regresion lineal Gestion */
+        $data['cabecera3']=$this->cabecera_seguimiento($data['proyecto'],3);
+        $data['tabla_gestion']=$this->tabla_regresion_lineal_unidad_total($proy_id); /// Matriz para el grafico Total Gestion
+        $data['tabla_regresion_total']=$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
+        $data['tabla_regresion_total_impresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
+
+        $data['calificacion']='<div id="eficacia">'.$this->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div><div id="efi"></div>'; /// calificacion
+
+        /// SERVICIOS
+        $data['mis_servicios']=$this->mis_servicios(1,$proy_id);
+        $data['economia']=$this->economia($data['proyecto']); /// Economia
+        $data['eficiencia']=$this->eficiencia($data['tabla'][5][$this->tmes],$data['economia'][3]); /// Eficiencia
+        $data['matriz']=$this->matriz_eficacia_unidad($proy_id);
+        $data['parametro_eficacia']=$this->parametros_eficacia_unidad($data['matriz'],$proy_id,1); /// Parametro de Eficacia
+
+        $data['boton_reporte_indicadores']='
+                <a href="javascript:abreVentana(\''.site_url("").'/rep_eficacia_unidad/'.$proy_id.'\');" class="btn btn-default" title="IMPRIMIR EVALUACIÓN POA">
+                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR EVALUACI&Oacute;N PLAN OPERATIVO ANUAL POA</b>
+                </a>'; /// Reporte Evaluacion (Trimestre vigente) POA
+
         $data['no_cumplido']=0;
         $data['en_proceso']=0;
 
@@ -80,24 +114,6 @@ class Crep_evalunidad extends CI_Controller {
           $data['no_cumplido']=(100-($data['tabla'][5][$this->session->userData('trimestre')]+round((($data['tabla'][7][$this->session->userData('trimestre')]/$data['tabla'][2][$this->session->userData('trimestre')])*100),2)));
           $data['en_proceso']=round((($data['tabla'][7][$this->session->userData('trimestre')]/$data['tabla'][2][$this->session->userData('trimestre')])*100),2);
         }
-        
-        
-        $data['tabla_gestion']=$this->tabla_regresion_lineal_unidad_total($proy_id); /// Tabla para el grafico Total Gestion
-
-        $data['tabla_regresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
-        $data['tabla_regresion_total']=$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion 
-        $data['tabla_pastel']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],1,1); /// Tabla que muestra el acumulado por trimestres Pastel
-        $data['tabla_pastel_todo']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
-
-        /// SERVICIOS
-        $data['mis_servicios']=$this->mis_servicios(1,$proy_id);
-        $data['economia']=$this->economia($data['proyecto']); /// Economia
-        $data['eficiencia']=$this->eficiencia($data['tabla'][5][$this->tmes],$data['economia'][3]); /// Eficiencia
-        $data['calificacion']=$this->calificacion_eficacia($data['tabla'][5][$this->tmes]); /// calificacion
-        $data['matriz']=$this->matriz_eficacia_unidad($proy_id);
-        $data['parametro_eficacia']=$this->parametros_eficacia_unidad($data['matriz'],$proy_id,1); /// Parametro de Eficacia
-
-        $data['print_tabla']=$this->print_proyectos_unidad($proy_id,$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,2),$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,2),$this->mis_servicios(2,$proy_id),$this->economia($data['proyecto']),$data['tabla'][5][$this->tmes],$data['eficiencia'],$data['calificacion'],$this->parametros_eficacia_unidad($data['matriz'],$proy_id,2));
 
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_unidad', $data);
       }
@@ -106,6 +122,86 @@ class Crep_evalunidad extends CI_Controller {
       }
     }
 
+
+    /*--- REPORTE EVALUACION POR UNIDAD ---*/
+    public function reporte_indicadores_unidad($proy_id){
+      $data['tabla']='Hola';
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
+      echo "Trabajando !!!";
+     // $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_evaluacion_eficiencia_por_unidad', $data);
+    }
+
+
+
+    /*------- CABECERA REPORTE SEGUIMIENTO POA (GRAFICO)------*/
+    function cabecera_seguimiento($proyecto,$tipo_titulo){
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
+      /// tipo_titulo 1 : Seguimiento Mensual
+      /// tipo_titulo 2 : Evaluacion por Trimestre
+      /// tipo_titulo 3 : Evaluacion POA Gestion
+      
+      $nombre_proyecto=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'];
+      if($proyecto[0]['tp_id']==4){
+        $nombre_proyecto=$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev'];
+      }
+
+
+
+      $tit='';
+      if($tipo_titulo==2){
+        $tit='<td style="height: 35px;font-size: 18px;"><center><b>CUADRO EVALUACIÓN POA ACUMULADO</b> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></td>';
+      }
+      else{
+        $tit='<td style="height: 35px;font-size: 23px;"><center><b>CUADRO EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</b></center></td>';
+      }
+
+
+      $tabla='';
+      $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+            <td style="width:70%;height: 2%">
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                  <tr style="font-size: 10px;font-family: Arial;">
+                      <td style="width:45%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                  </tr>
+                  <tr>
+                      <td style="width:50%;font-size: 7px;">&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                  </tr>
+              </table>
+            </td>
+            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+               '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%;">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-family: Arial;">
+                            '.$tit.'
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr>
+            <td style="width:100%;height: 100%;">
+              <div style="font-family: Arial;font-size: 15px;">'.$nombre_proyecto.'</div>
+            </td>
+          </tr>
+        </table>';
+
+      return $tabla;
+    }
 
       
     /*---- matriz parametros de eficacia Unidad ----*/
@@ -209,7 +305,7 @@ class Crep_evalunidad extends CI_Controller {
       if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
       if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
 
-      $tabla.='<h2 class="alert alert-'.$tp.'" align="center"><b>'.$titulo.'</b></h2>';
+      $tabla.='<h4 class="alert alert-'.$tp.'" style="font-family: Arial;" align="center"><b>'.$titulo.'</b></h4>';
 
       return $tabla;
     }
@@ -366,289 +462,38 @@ class Crep_evalunidad extends CI_Controller {
     }
 
 
-    /*--------- Imprime Evaluacion Consolidado Unidad -------------*/
-    public function print_proyectos_unidad($proy_id,$regresion,$regresion_total,$mis_servicios,$economia,$eficacia,$eficiencia,$calificacion,$parametro){
-      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-
-      $mes = $this->mes_nombre();
-      $trimestre=$this->model_evaluacion->trimestre();
-      $tr=($this->tmes*3);
-      //$dist=$this->model_evalregional->get_dist($dist_id);
-      ?>
-      <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-      <head>
-      <title><?php echo $this->session->userData('sistema');?></title>
-      </head>
-      <link rel="STYLESHEET" href="<?php echo base_url(); ?>assets/print_static.css" type="text/css" />
-      <style type="text/css">
-        @page {size: letter;}
-        .verde{ width:100%; height:5px; background-color:#1c7368;}
-        .blanco{ width:100%; height:5px; background-color:#F1F2F1;}
-      </style>
-      <?php
-      $tabla ='';
-      $tabla .='<div class="verde"></div>
-                <div class="blanco"></div>';
-      $tabla .='<table class="page_header" border="0" style="width: 100%;>
-            <tr>
-                <td style="width: 100%; text-align: left">
-                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                        <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td style="width:15%;" text-align:center;>
-                            <br><img src="'.base_url().'assets/ifinal/cns_logo.JPG'.'" alt="" style="width:50%;">
-                          </td>
-                          <td style="width:70%;" align=left>
-                            
-                            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                              <tr>
-                                <td colspan="2" style="width:100%; height: 2.8%; font-size: 14pt;"><b>'.$this->session->userdata('entidad').'</b></td>
-                              </tr>
-                              <tr style="font-size: 8pt;">
-                                <td style="width:20%; height: 2.8%"><b>DIR. ADM.</b></td>
-                                <td style="width:80%;">: '.strtoupper($proyecto[0]['dep_departamento']).'</td>
-                              </tr>
-                              <tr style="font-size: 8pt;">
-                                <td style="width:20%; height: 2.8%"><b>UNI. EJEC.</b></td>
-                                <td style="width:80%;">: '.strtoupper($proyecto[0]['dist_distrital']).'</td>
-                              </tr>
-                              <tr style="font-size: 8pt;">';
-                                $tabla.='<td style="height: 2.8%"><b>';
-                                  if($proyecto[0]['tp_id']==1){
-                                    $tabla.='PROY. INV. ';
-                                  }
-                                  else{
-                                    $tabla.='ACTIVIDAD';
-                                  }
-                                  $tabla.='</b></td>';
-                                  if($proyecto[0]['tp_id']==1){
-                                      $tabla.='<td>: '.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['proy_nombre']).'</td>';
-                                  }
-                                  else{
-                                      $tabla.='<td>: '.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' '.$proyecto[0]['tipo'].' - '.strtoupper($proyecto[0]['act_descripcion']).'-'.$proyecto[0]['abrev'].'</td>';
-                                  }
-                              $tabla.='
-                              </tr>
-                          </table>
-                         
-                          </td>
-                          <td style="width:15%; font-size: 4.5pt;" align=left >
-                            &nbsp; <b>RESP. </b>'.$this->session->userdata('funcionario').'<br>
-                            &nbsp; <b>FECHA DE IMP. : '.date("d").'/'.$mes[ltrim(date("m"), "0")]. "/".date("Y").'<br>
-                          </td>
-                        </tr>
-                  </table>
-                </td>
-            </tr>
-        </table><hr>';
-
-        $tabla.=$calificacion;
-
-        $tabla .='<table class="change_order_items" border=0.5 style="width:100%;">
-                    <tr>
-                      <td>
-                        <div id="regresion_impresion" style="width: 500px; height: 235px; margin: 0 auto"></div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        '.$regresion.'
-                      </td>
-                    </tr>
-                  </table>';
-        $tabla .='<table class="change_order_items" border=0.5 style="width:100%;">
-                    <tr>
-                      <td>
-                        <div id="regresion_gestion_print" style="width: 500px; height: 235px; margin: 0 auto"></div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        '.$regresion_total.'
-                      </td>
-                    </tr>
-                </table>
-
-                <div class="saltopagina"></div>';
-      $tabla .='
-            <div class="verde"></div>
-            <div class="blanco"></div>
-            <table class="page_header" border="0" style="width: 100%;>
-            <tr>
-                <td style="width: 100%; text-align: left">
-                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                        <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td style="width:15%;" text-align:center;>
-                            <br><img src="'.base_url().'assets/ifinal/cns_logo.JPG'.'" alt="" style="width:50%;">
-                          </td>
-                          <td style="width:70%;" align=left>
-                            
-                            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                              <tr>
-                                <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b>'.$this->session->userdata('entidad').'</b></td>
-                              </tr>
-                              <tr style="font-size: 8pt;">
-                                <td style="width:20%; height: 2.5%"><b>DIR. ADM.</b></td>
-                                <td style="width:80%;">: '.strtoupper($proyecto[0]['dep_departamento']).'</td>
-                              </tr>
-                              <tr style="font-size: 8pt;">
-                                <td style="width:20%; height: 2.5%"><b>UNI. EJEC.</b></td>
-                                <td style="width:80%;">: '.strtoupper($proyecto[0]['dist_distrital']).'</td>
-                              </tr>
-                              <tr style="font-size: 8pt;">';
-                                $tabla.='<td style="height: 2.5%"><b>';
-                                  if($proyecto[0]['tp_id']==1){
-                                    $tabla.='PROY. INV. ';
-                                  }
-                                  else{
-                                    $tabla.='ACTIVIDAD';
-                                  }
-                                  $tabla.='</b></td>';
-                                  if($proyecto[0]['tp_id']==1){
-                                      $tabla.='<td>: '.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['proy_nombre']).'</td>';
-                                  }
-                                  else{
-                                      $tabla.='<td>: '.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' '.$proyecto[0]['tipo'].' - '.strtoupper($proyecto[0]['act_descripcion']).'-'.$proyecto[0]['abrev'].'</td>';
-                                  }
-                              $tabla.='
-                              </tr>
-                          </table>
-                         
-                          </td>
-                          <td style="width:15%; font-size: 4pt;" align=left >
-                            &nbsp; <b>RESP. </b>'.$this->session->userdata('funcionario').'<br>
-                            &nbsp; <b>FECHA DE IMP. : '.date("d").'/'.$mes[ltrim(date("m"), "0")]. "/".date("Y").'<br>
-                          </td>
-                        </tr>
-                  </table>
-                </td>
-            </tr>
-        </table><hr>';
-
-        $tabla .='
-          <table class="change_order_items" border=0 style="width:100%;">
-            <tr><td align=center><b><br><div style="font-size: 10pt;">MIS SERVICIOS</div><br>EVALUACI&Oacute;N ACUMULADO AL '.$trimestre[0]['trm_descripcion'].'</b></td></tr>
-            <tr>
-              <td>
-                '.$mis_servicios.'
-              </td>
-            </tr>
-          </table><br>
-
-          <b>CUADRO DE INDICADORES</b>
-          
-          <table class="change_order_items" border=1 style="width:100%;">
-            <thead>
-              <tr>
-                <th style="width:33%;">(%) EFICACIA</th>
-                <th style="width:33%;">(%) ECONOMIA</th>
-                <th style="width:33%;">(%) EFICIENCIA</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><div style="font-size: 30pt;" align=center><b>'.$eficacia.' % </b></div></td>
-                <td><div style="font-size: 30pt;" align=center><b>'.$economia[3].' % </b></div></td>
-                <td><div style="font-size: 30pt;" align=center><b>'.$eficiencia.' % </b></div></td>
-              </tr>
-            </tbody>
-          </table>
-
-
-            <div class="saltopagina"></div>
-
-
-            <div class="verde"></div>
-            <div class="blanco"></div>
-            <table class="page_header" border="0" style="width: 100%;>
-            <tr>
-                <td style="width: 100%; text-align: left">
-                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                        <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td style="width:15%;" text-align:center;>
-                            <br><img src="'.base_url().'assets/ifinal/cns_logo.JPG'.'" alt="" style="width:50%;">
-                          </td>
-                          <td style="width:70%;" align=left>
-                            
-                            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                              <tr>
-                                <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b>'.$this->session->userdata('entidad').'</b></td>
-                              </tr>
-                              <tr style="font-size: 8pt;">
-                                <td style="width:20%; height: 2.5%"><b>DIR. ADM.</b></td>
-                                <td style="width:80%;">: '.strtoupper($proyecto[0]['dep_departamento']).'</td>
-                              </tr>
-                              <tr style="font-size: 8pt;">
-                                <td style="width:20%; height: 2.5%"><b>UNI. EJEC.</b></td>
-                                <td style="width:80%;">: '.strtoupper($proyecto[0]['dist_distrital']).'</td>
-                              </tr>
-                              <tr style="font-size: 8pt;">';
-                                $tabla.='<td style="height: 2.5%"><b>';
-                                  if($proyecto[0]['tp_id']==1){
-                                    $tabla.='PROY. INV. ';
-                                  }
-                                  else{
-                                    $tabla.='ACTIVIDAD';
-                                  }
-                                  $tabla.='</b></td>';
-                                  if($proyecto[0]['tp_id']==1){
-                                      $tabla.='<td>: '.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['proy_nombre']).'</td>';
-                                  }
-                                  else{
-                                      $tabla.='<td>: '.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' '.$proyecto[0]['tipo'].' - '.strtoupper($proyecto[0]['act_descripcion']).'-'.$proyecto[0]['abrev'].'</td>';
-                                  }
-                              $tabla.='
-                              </tr>
-                          </table>
-                         
-                          </td>
-                          <td style="width:15%; font-size: 4pt;" align=left >
-                            &nbsp; <b>RESP. </b>'.$this->session->userdata('funcionario').'<br>
-                            &nbsp; <b>FECHA DE IMP. : '.date("d").'/'.$mes[ltrim(date("m"), "0")]. "/".date("Y").'<br>
-                          </td>
-                        </tr>
-                  </table>
-                </td>
-            </tr>
-        </table><hr>
-        '.$parametro.'';
-          ?>
-          </html>
-          <?php
-    return $tabla;
-    } 
-
-
     /*------ TABLA ACUMULADA EVALUACIÓN 2020 -------*/
     public function tabla_acumulada_evaluacion_unidad($regresion,$tp_graf,$tip_rep){
       $tabla='';
-      $tit[2]='<b>NRO. ACT. PROGRAMADOS EN EL TRIMESTRE</b>';
-      $tit[3]='<b>NRO. ACT. CUMPLIDOS EN EL TRIMESTRE</b>';
-      $tit[4]='<b>NRO. ACT. NO CUMPLIDOS</b>';
+      $tit[2]='<b>NRO. OPE. PROGRAMADOS EN EL TRIMESTRE</b>';
+      $tit[3]='<b>NRO. OPE. CUMPLIDOS EN EL TRIMESTRE</b>';
+      $tit[4]='<b>NRO. OPE. NO CUMPLIDOS</b>';
       $tit[5]='<b>% CUMPLIDOS</b>';
       $tit[6]='<b>% NO CUMPLIDOS</b>';
 
-      $tit_total[2]='<b>NRO. ACT. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[3]='<b>NRO. ACT. CUMPLIDOS AL TRIMESTRE</b>';
-      $tit_total[4]='<b>% ACT. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[5]='<b>% ACT. CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[2]='<b>NRO. OPE. PROGRAMADOS AL TRIMESTRE</b>';
+      $tit_total[3]='<b>NRO. OPE. CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[4]='<b>% OPE. PROGRAMADOS AL TRIMESTRE</b>';
+      $tit_total[5]='<b>% OPE. CUMPLIDOS AL TRIMESTRE</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
       } 
       else{ /// Impresion
-        $tab='class="change_order_items" border=1 align=center style="width:100%;"';
+        $tab='class="change_order_items" border=1 style="width:100%;"';
       }
+
+
 
       if($tp_graf==1){ // pastel : Programado-Cumplido
         $tabla.='
         <table '.$tab.'>
           <thead>
               <tr align=center>
-                <th>NRO. ACT. PROGRAMADAS</th>
+                <th>NRO. OPE. PROGRAMADAS</th>
                 <th>METAS EVALUADAS</th>
-                <th>ACT. CUMPLIDAS</th>
-                <th>ACT. NO CUMPLIDAS</th>
+                <th>OPE. CUMPLIDAS</th>
+                <th>OPE. NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
                 </tr>
@@ -669,7 +514,7 @@ class Crep_evalunidad extends CI_Controller {
         $tabla.='
         <table '.$tab.'>
           <thead>
-              <tr>
+              <tr >
                 <th></th>';
                 for ($i=1; $i <=$this->tmes; $i++) { 
                   $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
@@ -688,7 +533,7 @@ class Crep_evalunidad extends CI_Controller {
                   $por='%';
                   $color='#f7d3d0';
                 }
-                $tabla.='<tr bgcolor='.$color.'>
+                $tabla.='<tr bgcolor='.$color.' >
                   <td>'.$tit[$i].'</td>';
                   for ($j=1; $j <=$this->tmes; $j++) { 
                     $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
@@ -701,6 +546,7 @@ class Crep_evalunidad extends CI_Controller {
       }
       elseif($tp_graf==3){ /// Regresion Gestion
         $tabla.='
+        <h4><b>'.$regresion[5][$this->tmes].'%</b> CUMPLIMIENTO DE '.$regresion[1][$this->tmes].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
         <table '.$tab.'>
           <thead>
               <tr>
@@ -734,11 +580,11 @@ class Crep_evalunidad extends CI_Controller {
         <table '.$tab.'>
           <thead>
               <tr align=center >
-                <th>NRO. ACT. PROGRAMADAS</th>
-                <th>NRO. ACT. EVALUADAS</th>
-                <th>NRO. ACT. CUMPLIDAS</th>
-                <th>NRO. ACT. EN PROCESO</th>
-                <th>NRO. ACT. NO CUMPLIDAS</th>
+                <th>NRO. OPE. PROGRAMADAS</th>
+                <th>NRO. OPE. EVALUADAS</th>
+                <th>NRO. OPE. CUMPLIDAS</th>
+                <th>NRO. OPE. EN PROCESO</th>
+                <th>NRO. OPE. NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
               </tr>
@@ -750,8 +596,8 @@ class Crep_evalunidad extends CI_Controller {
                 <td><b>'.$regresion[3][$this->tmes].'</b></td>
                 <td><b>'.$regresion[7][$this->tmes].'</b></td>
                 <td><b>'.($regresion[2][$this->tmes]-($regresion[7][$this->tmes]+$regresion[3][$this->tmes])).'</b></td>
-                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
-                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
+                <td><b>'.$regresion[5][$this->tmes].'%</b></td>
+                <td><b>'.$regresion[6][$this->tmes].'%</b></td>
               </tr>
             </tbody>
         </table>';
