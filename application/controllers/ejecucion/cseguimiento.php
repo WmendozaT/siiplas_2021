@@ -48,7 +48,7 @@ class Cseguimiento extends CI_Controller {
       $data['menu'] = $this->seguimientopoa->menu(4);
       $data['resp']=$this->session->userdata('funcionario');
       $data['res_dep']=$this->seguimientopoa->tp_resp(); 
-    
+
       $data['proyectos']='No disponible';
       $data['gasto_corriente']='No disponible';
 
@@ -57,74 +57,80 @@ class Cseguimiento extends CI_Controller {
       
       $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
       $this->load->view('admin/evaluacion/seguimiento_poa/list_poas_aprobados', $data);
-
     }
+
 
     /*---- Lista de Unidades / Establecimientos de Salud (2020) -----*/
     public function list_gasto_corriente($proy_estado){
-        $meses = $this->model_configuracion->get_mes();
-        $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);
-        $tabla='';
-        
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
+      $meses = $this->model_configuracion->get_mes();
+      $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);
+      $tabla='';
+      
+      $tabla.='
+      <input name="base" type="hidden" value="'.base_url().'">
+      <table id="dt_basic1" class="table1 table-bordered" style="width:100%;">
+        <thead>
+          <tr style="height:35px;">
+            <th style="width:1%;" bgcolor="#474544">#</th>
+            <th style="width:5%;" bgcolor="#474544">EVALUACI&Oacute;N POA<br>'.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</th>
+            <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR">'.$this->verif_mes[1].'</th>
+            <th style="width:10%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO </th>
+            <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
+            <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">UNIDAD / ESTABLECIMIENTO DE SALUD</th>
+            <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
+            <th style="width:10%;" bgcolor="#474544" title="NIVEL">NIVEL</th>
+            <th style="width:10%;" bgcolor="#474544" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
+            <th style="width:10%;" bgcolor="#474544" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
+            <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
+          </tr>
+        </thead>
+        <tbody>';
+          $nro=0;
+          foreach($unidades as $row){
+            $nro++;
+              $tabla.='
+              <tr style="height:45px;">
+                <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>
+                <td align=center>
+                  <a href="#" data-toggle="modal" data-target="#modal_update_eval_unidad" class="btn btn-info update_eval_unidad" style="width:95%;" name="'.$row['proy_id'].'" id="'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'" title="ACTUALIZAR EVALUACION POA"><i class="glyphicon glyphicon-retweet"></i> ACTUALIZAR</a></a>
+                </td>
+                <td align=center>
+                  <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">
+                  <i class="glyphicon glyphicon-list"></i> MIS SUBACTIVIDADES</a>
+                </td>
+                <td align=center>
+                  <div class="btn-group">
+                    <a class="btn btn-default">FORMULARIO</a>
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
+                    <ul class="dropdown-menu">';
+                      foreach($meses as $rowm){
+                      if($rowm['m_id']<=ltrim(date("m"), "0")){
+                        $tabla.='
+                        <li>
+                          <a href="'.site_url("").'/seg/reporte_consolidado_seguimientopoa_mensual/'.$row['proy_id'].'/'.$rowm['m_id'].'" target="_blank">REPORTE SEG. '.$rowm['m_descripcion'].'</a>
+                        </li>';
+                      }                     
+                    }
+                    $tabla.='
+                    </ul>
+                  </div>
+                </td>
+                <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
+                <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
+                <td>'.$row['escalon'].'</td>
+                <td>'.$row['nivel'].'</td>
+                <td>'.$row['tipo_adm'].'</td>
+                <td>'.strtoupper($row['dep_departamento']).'</td>
+                <td>'.strtoupper($row['dist_distrital']).'</td>
+              </tr>';
+          }
         $tabla.='
-        <table id="dt_basic1" class="table1 table-bordered" style="width:100%;">
-          <thead>
-            <tr style="height:35px;">
-              <th style="width:1%;" bgcolor="#474544">#</th>
-              <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR">'.$this->verif_mes[1].'</th>
-              <th style="width:10%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO </th>
-              <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
-              <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">UNIDAD / ESTABLECIMIENTO DE SALUD</th>
-              <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
-              <th style="width:10%;" bgcolor="#474544" title="NIVEL">NIVEL</th>
-              <th style="width:10%;" bgcolor="#474544" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
-              <th style="width:10%;" bgcolor="#474544" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
-              <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
-            </tr>
-          </thead>
-          <tbody>';
-            $nro=0;
-            foreach($unidades as $row){
-              $nro++;
-                $tabla.='
-                <tr style="height:45px;">
-                  <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>
-                  <td align=center>
-                    <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">
-                    <i class="glyphicon glyphicon-list"></i> MIS SUBACTIVIDADES</a>
-                  </td>
-                  <td align=center>
-                    <div class="btn-group">
-                      <a class="btn btn-default">FORMULARIO</a>
-                      <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
-                      <ul class="dropdown-menu">';
-                        foreach($meses as $rowm){
-                        if($rowm['m_id']<=ltrim(date("m"), "0")){
-                          $tabla.='
-                          <li>
-                            <a href="'.site_url("").'/seg/reporte_consolidado_seguimientopoa_mensual/'.$row['proy_id'].'/'.$rowm['m_id'].'" target="_blank">REPORTE SEG. '.$rowm['m_descripcion'].'</a>
-                          </li>';
-                        }                     
-                      }
-                      $tabla.='
-                      </ul>
-                    </div>
-                  </td>
-                  <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
-                  <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
-                  <td>'.$row['escalon'].'</td>
-                  <td>'.$row['nivel'].'</td>
-                  <td>'.$row['tipo_adm'].'</td>
-                  <td>'.strtoupper($row['dep_departamento']).'</td>
-                  <td>'.strtoupper($row['dist_distrital']).'</td>
-                </tr>';
-            }
-          $tabla.='
-          </tbody>
-            <tr>
-              <td colspan="10" style="height:50px;"></td>
-            </tr>
-        </table>';
+        </tbody>
+          <tr>
+            <td colspan="10" style="height:50px;"></td>
+          </tr>
+      </table>';
       return $tabla;
     }
 
@@ -133,6 +139,7 @@ class Cseguimiento extends CI_Controller {
       $proyectos=$this->model_proyecto->list_pinversion(1,$proy_estado);
       $tabla='';
       $tabla.='
+      <input name="base" type="hidden" value="'.base_url().'">
         <table id="dt_basic" class="table table-bordered" style="width:100%;">
           <thead>
             <tr>

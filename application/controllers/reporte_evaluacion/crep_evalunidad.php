@@ -27,6 +27,7 @@ class Crep_evalunidad extends CI_Controller {
             $this->tp_adm = $this->session->userData('tp_adm');
             $this->verif_mes=$this->session->userdata('mes_actual');
             $this->mes = $this->mes_nombre();
+            $this->load->library('seguimientopoa');
         }
         else{
             redirect('/','refresh');
@@ -96,7 +97,7 @@ class Crep_evalunidad extends CI_Controller {
         $data['calificacion']='<div id="eficacia">'.$this->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div><div id="efi"></div>'; /// calificacion
 
         /// SERVICIOS
-        $data['mis_servicios']=$this->mis_servicios(1,$proy_id);
+        $data['mis_servicios']=$this->mis_servicios(1,$proy_id); /// Lista de Subactividades
         $data['economia']=$this->economia($data['proyecto']); /// Economia
         $data['eficiencia']=$this->eficiencia($data['tabla'][5][$this->tmes],$data['economia'][3]); /// Eficiencia
         $data['matriz']=$this->matriz_eficacia_unidad($proy_id);
@@ -125,13 +126,77 @@ class Crep_evalunidad extends CI_Controller {
 
     /*--- REPORTE EVALUACION POR UNIDAD ---*/
     public function reporte_indicadores_unidad($proy_id){
-      $data['tabla']='Hola';
+      $proyecto=$this->model_proyecto->get_id_proyecto($proy_id);
+      $nombre_proyecto=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'];
+      
+      if($proyecto[0]['tp_id']==4){
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+        $nombre_proyecto=$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev'];
+      }
+
+      $tabla=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
+      $data['cabecera']=$this->cabecera_eficiencia($nombre_proyecto);
+      $data['pie']='<hr>&nbsp;&nbsp;&nbsp;&nbsp;'.$this->session->userData('sistema').'';
+      $data['lista']=$this->mis_servicios(0,$proy_id);
+      $data['eficacia']=$tabla[5][$this->tmes];
+      $data['economia']=$this->economia($proyecto); /// Economia
+      $data['eficiencia']=$this->eficiencia($tabla[5][$this->tmes],$data['economia'][3]); /// Eficiencia
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
-      echo "Trabajando !!!";
-     // $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_evaluacion_eficiencia_por_unidad', $data);
+     
+      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_evaluacion_eficiencia_por_unidad', $data);
     }
 
 
+    /// Cabecera Reporte de eficiencia
+    function cabecera_eficiencia($nombre_proyecto){
+      $tabla='';
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
+    
+      $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+            <td style="width:70%;height: 2%">
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                  <tr style="font-size: 10px;font-family: Arial;">
+                      <td style="width:45%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                  </tr>
+                  <tr>
+                      <td style="width:50%;font-size: 7px;">&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                  </tr>
+              </table>
+            </td>
+            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+               '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px black; text-align: center;">
+            <td style="width:10%; text-align:center;">
+            </td>
+            <td style="width:80%;height: 5%;font-family: Arial;font-size: 20px;">
+              <b>DETALLE DE AVANCE DE EVALUACI&Oacute;N POA</b><br>
+              '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'
+            </td>
+            <td style="width:10%; text-align:center;">
+            </td>
+          </tr>
+
+        </table>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr>
+            <td style="width:1%;"></td>
+            <td style="width:98%;height: 2%;">
+              <div style="font-family: Arial;font-size: 13px;">'.$nombre_proyecto.'</div>
+            </td>
+            <td style="width:1%;"></td>
+          </tr>
+        </table>
+        <hr>';
+
+      return $tabla;
+    }
 
     /*------- CABECERA REPORTE SEGUIMIENTO POA (GRAFICO)------*/
     function cabecera_seguimiento($proyecto,$tipo_titulo){
@@ -145,16 +210,13 @@ class Crep_evalunidad extends CI_Controller {
         $nombre_proyecto=$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev'];
       }
 
-
-
       $tit='';
       if($tipo_titulo==2){
         $tit='<td style="height: 35px;font-size: 18px;"><center><b>CUADRO EVALUACIÓN POA ACUMULADO</b> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></td>';
       }
-      else{
+      elseif($tipo_titulo==3){
         $tit='<td style="height: 35px;font-size: 23px;"><center><b>CUADRO EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</b></center></td>';
       }
-
 
       $tabla='';
       $tabla.='
@@ -204,6 +266,47 @@ class Crep_evalunidad extends CI_Controller {
     }
 
       
+
+
+    /*---- FUNCION ACTUALIZA INFORMACION EVALUACION POA AL TRIMESTRE --------*/
+    public function update_evaluacion_trimestral(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $proy_id = $this->security->xss_clean($post['proy_id']);
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+        $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+        
+        $componentes=$this->model_componente->lista_subactividad($proy_id);
+        foreach($componentes as $rowc){
+          $this->seguimientopoa->update_evaluacion_operaciones($rowc['com_id']);
+        }
+        
+        $tabla='';
+        $tabla.='
+              <hr><h3><b>&nbsp;&nbsp;'.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</b></h3><hr>
+              <div class="alert alert-success alert-block" align=center>
+                <h2> EVALUACI&Oacute;N POA '.$trimestre[0]['trm_descripcion'].' '.$this->gestion.' ACTUALIZADO !!!</2> 
+              </div>';
+
+          $result = array(
+            'respuesta' => 'correcto',
+            'tabla'=>$tabla,
+          );
+
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+
+
+
+
+
+
     /*---- matriz parametros de eficacia Unidad ----*/
     public function matriz_eficacia_unidad($proy_id){
       $componentes=$this->model_componente->proyecto_componente($proy_id); 
@@ -360,9 +463,14 @@ class Crep_evalunidad extends CI_Controller {
       // 1 : normal, 2 : Impresion
       if($tp_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
+        $det='';
       } 
       else{ /// Impresion
-        $tab='class="change_order_items" border=1 align=center style="width:100%;"';
+        $tab='border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align=center';
+        $det='
+        <div style="font-size: 10px;font-family: Arial;height: 2.5%;">
+          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.- DETALLE (%) DE CUMPLIMIENTO DE UNIDADES DEPENDIENTES</b>
+        </div>';
       }
 
       $tit='SUBACTIVIDAD';
@@ -370,11 +478,12 @@ class Crep_evalunidad extends CI_Controller {
         $tit='UNIDAD RESPONSABLE';
       }
       $tabla.='
+        '.$det.'
         <table '.$tab.'>
           <thead>
-          <tr>
-            <th style="width:3%;">#</th>
-            <th style="width:50%;">'.$tit.'</th>
+          <tr align=center bgcolor=#f4f4f4>
+            <th style="width:3%;height:2%;">#</th>
+            <th style="width:25%;">'.$tit.'</th>
             <th style="width:8%;">TOTAL PROGRAMADO</th>
             <th style="width:8%;">TOTAL EVALUADO</th>
             <th style="width:8%;">TOTAL CUMPLIDOS</th>
@@ -390,15 +499,22 @@ class Crep_evalunidad extends CI_Controller {
             $eval=$this->tabla_regresion_lineal_servicio($rowc['com_id']);
             $nro++;
             $tabla.='<tr>';
-              $tabla.='<td>'.$nro.'</td>';
+              $tabla.='<td style="height:2%;" align=center>'.$nro.'</td>';
               $tabla.='<td>'.$rowc['com_componente'].'</td>';
               $tabla.='<td align=right><b>'.$eval[2][$this->tmes].'</b></td>';
               $tabla.='<td align=right><b>'.$eval[2][$this->tmes].'</b></td>';
               $tabla.='<td align=right><b>'.$eval[3][$this->tmes].'</b></td>';
               $tabla.='<td align=right><b>'.$eval[7][$this->tmes].'</b></td>';
               $tabla.='<td align=right><b>'.($eval[2][$this->tmes]-($eval[7][$this->tmes]+$eval[3][$this->tmes])).'</b></td>';
-              $tabla.='<td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$eval[5][$this->tmes].'%</b></button></td>';
-              $tabla.='<td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$eval[6][$this->tmes].'%</b></button></td>';
+              if($tp_rep==1){
+                $tabla.='<td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$eval[5][$this->tmes].'%</b></button></td>';
+                $tabla.='<td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$eval[6][$this->tmes].'%</b></button></td>';
+              }
+              else{
+                $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[5][$this->tmes].'%</b></td>';
+                $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[6][$this->tmes].'%</b></td>';
+              }
+              
             $tabla.='</tr>';
           }
         $tabla.='

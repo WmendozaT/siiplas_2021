@@ -48,6 +48,69 @@ function abreVentana(PDF){
     return /\d/.test(String.fromCharCode(keynum));
   }
 
+
+
+ /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL POR UNIDAD------*/
+        $(function () {
+          $(".update_eval_unidad").on("click", function (e) {
+              proy_id = $(this).attr('name');
+              document.getElementById("proy_id").value=proy_id;
+            
+              $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');
+              $('#butt').slideUp();
+
+              var url = base+"index.php/reporte_evaluacion/crep_evalunidad/update_evaluacion_trimestral";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "proy_id="+proy_id
+              });
+
+              request.done(function (response, textStatus, jqXHR) {
+          
+              if (response.respuesta == 'correcto') {
+                  $('#content_valida').fadeIn(1000).html(response.tabla);
+                  $('#butt').slideDown();
+              }
+              else{
+                  alertify.error("ERROR AL RECUPERAR DATOS");
+              }
+
+              });
+              request.fail(function (jqXHR, textStatus, thrown) {
+                  console.log("ERROR: " + textStatus);
+              });
+              request.always(function () {
+              });
+              e.preventDefault();
+
+              $("#but_update").on("click", function (e) {
+                var $valid = $("#form_update").valid();
+                if (!$valid) {
+                    $validator.focusInvalid();
+                } else {
+                  document.getElementById("butt").style.display = 'none';
+                  $('#content_valida').fadeIn(1000).html('<center><div class="loading" align="center"><h2>Actualizando Evaluaci&oacute;n  POA <br><div id="tit"></div><br><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /></div></center>');
+                  window.open(base+"index.php/rep_eficacia_unidad/"+proy_id, "CUADRO DE AVANCE - EVALUACION POA TRIMESTRAL", "width=800, height=800");
+                  $("#modal_update_eval_unidad").modal("hide");
+                }
+              });
+          });
+        });
+
+
+
+
+
+
+
+
+
       //// Seguimiento POA
       function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
 

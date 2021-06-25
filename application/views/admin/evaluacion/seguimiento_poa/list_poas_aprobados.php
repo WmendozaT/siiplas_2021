@@ -214,6 +214,32 @@
         </div>
     </div>
 
+    <!-- MODAL UPDATE EVALUACION POA   -->
+    <div class="modal fade" id="modal_update_eval_unidad" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" id="mdialTamanio">
+            <div class="modal-content">
+                <form id="form_update" novalidate="novalidate" method="post">
+                    <input type="hidden" name="proy_id" id="proy_id">
+                    <div id="content_valida">
+                        <center>
+                            <div class="loading" align="center"><h2>Actualizando Evaluaci&oacute;n  POA <br>
+                                <div id="tit"></div><br>
+                                <img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /></div>
+                        </center>
+                    </div>
+                   
+                        <p>
+                            <div id="butt" align="right" style="display:none;">
+                                <button type="button" name="but_update" id="but_update" class="btn btn-success">GENERAR CUADRO DETALLE</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </p>
+                </form>
+            </div>
+        </div>
+    </div>
+     <!--  =============== -->
+
+
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
@@ -275,6 +301,7 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+        <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento_unidad.js"></script> 
         <script type="text/javascript">
             $(function () {
                 $(".enlace").on("click", function (e) {

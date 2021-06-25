@@ -13,7 +13,7 @@ ob_start();
     }
 }
 </style>
-    <page backtop="60mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+    <page backtop="49mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
         <page_header>
         <br><div class="verde"></div>
            <?php echo $cabecera; ?>
@@ -22,7 +22,64 @@ ob_start();
         <page_footer>
             <?php echo $pie;?>
         </page_footer>
-        <?php echo $operaciones;?>
+        <?php echo $lista;?><br>
+
+        <div style="font-size: 10px;font-family: Arial;height: 2.5%;">
+          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.- (%) EFICACIA</b>
+        </div>
+        <table border="0" style="width:100%;">
+            <tr>
+                <td style="width:20%;"></td>
+                <td align="center" style="width:60%; height: 4%; ">
+                    <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="width:100%;height: 50%;font-size: 20px;">
+                               <?php echo $eficacia;?>% Cumplimiento de Actividades
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:20%;"></td>
+            </tr>
+        </table>
+    
+        <div style="font-size: 10px;font-family: Arial;height: 2.5%;">
+          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.- (%) ECONOMIA</b>
+        </div>
+        <table border="0" style="width:100%;">
+            <tr>
+                <td style="width:20%;"></td>
+                <td align="center" style="width:60%; height: 4%; ">
+                    <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="width:100%;height: 50%;font-size: 20px;">
+                               <?php echo $economia[3];?>% Presupuesto Ejecutado
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:20%;"></td>
+            </tr>
+        </table>
+
+        <div style="font-size: 10px;font-family: Arial;height: 2.5%;">
+          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.- EFICIENCIA</b>
+        </div>
+        <table border="0" style="width:100%;">
+            <tr>
+                <td style="width:20%;"></td>
+                <td align="center" style="width:60%; height: 4%; ">
+                    <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="width:100%;height: 50%;font-size: 20px;">
+                               <?php echo $eficiencia;?>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:20%;"></td>
+            </tr>
+        </table>
     </page>
 
 <?php
