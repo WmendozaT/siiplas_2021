@@ -103,7 +103,9 @@
                                         </div>
                                         <hr>
                                         <div align="right">
-                                            <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</b></button>
+                                            <button id="renderPdf">DOWNLOAD PDF</button>
+                                            <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/camera.png" WIDTH="25" HEIGHT="25" title="CAPTURA DE PANTALLA"/></button>
+                                            <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25" title="IMPRIMIR GRAFICO"/></button>
                                         </div>
                                     </div>
                                   </div>
@@ -235,6 +237,11 @@ if (!window.jQuery.ui) {
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
+
+<script src="<?php echo base_url(); ?>assets/captura/html2canvas.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/captura/html2canvas.svg.js"></script>
+<script src="<?php echo base_url(); ?>assets/captura/jsPdf.debug.js"></script>
+
 
 
  <!-- REGRESION LINEAL A LA GESTIÓN -->
@@ -527,5 +534,48 @@ if (!window.jQuery.ui) {
       });
     });
 </script>
+ <script type="text/javascript">
+
+      var downPdf = document.getElementById("renderPdf");
+
+      downPdf.onclick = function() {
+        html2canvas(document.body, {
+          onrendered:function(canvas) {
+
+            var contentWidth = canvas.width;
+            var contentHeight = canvas.height;
+
+            var pageHeight = contentWidth / 595.28 * 841.89;
+        
+            var leftHeight = contentHeight;
+         
+            var position = 0;
+      
+            var imgWidth = 555.28;
+            var imgHeight = 555.28/contentWidth * contentHeight;
+
+            var pageData = canvas.toDataURL('image/jpeg', 1.0);
+
+            var pdf = new jsPDF('', 'pt', 'a4');
+        
+           if (leftHeight < pageHeight) {
+                pdf.addImage(pageData, 'JPEG', 20, 0, imgWidth, imgHeight );
+            } else {
+                while(leftHeight > 0) {
+                    pdf.addImage(pageData, 'JPEG', 20, position, imgWidth, imgHeight)
+                    leftHeight -= pageHeight;
+                    position -= 841.89;
+                 
+                    if(leftHeight > 0) {
+                        pdf.addPage();
+                    }
+                }
+            }
+
+            pdf.save('content.pdf');
+          }
+        })
+      }
+    </script>
 </body>
 </html>

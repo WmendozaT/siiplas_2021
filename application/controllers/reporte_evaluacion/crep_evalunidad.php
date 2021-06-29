@@ -182,8 +182,8 @@ class Crep_evalunidad extends CI_Controller {
             <td style="width:10%; text-align:center;">
             </td>
           </tr>
-
         </table>
+        
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr>
             <td style="width:1%;"></td>

@@ -218,13 +218,13 @@ class Evaluacionpoa_programas extends CI_Controller{
           <tr style="border: solid 0px;">              
               <td style="width:70%;height: 2%">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                      <tr style="font-size: 15px;font-family: Arial;">
-                          <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
-                      </tr>
-                      <tr>
-                          <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
-                      </tr>
-                  </table>
+                  <tr style="font-size: 10px;font-family: Arial;">
+                      <td style="width:45%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                  </tr>
+                  <tr>
+                      <td style="width:50%;font-size: 7px;">&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                  </tr>
+              </table>
               </td>
               <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
                '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -238,7 +238,7 @@ class Evaluacionpoa_programas extends CI_Controller{
                 </td>
                 <td style="width:80%;">
                     <table align="center" border="0" style="width:100%;">
-                        <tr style="font-size: 23px;font-family: Arial;">
+                        <tr style="font-size: 20px;font-family: Arial;">
                             <td style="height: 3%;"><b>EVALUACI&Oacute;N POA POR CATEGORIA PROGRAMATICA </b>  <br> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</td>
                         </tr>
                     </table>
@@ -249,28 +249,14 @@ class Evaluacionpoa_programas extends CI_Controller{
         </table>
         
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-           <tr>
-              <td style="width:2%;"></td>
-              <td style="width:96%;height: 1%;">
-                <hr>
-              </td>
-              <td style="width:2%;"></td>
-          </tr>
           <tr>
-              <td style="width:2%;"></td>
-              <td style="width:96%;height: 3%;font-size: 15px;font-family: Arial">
-               '.$tit.'
-              </td>
-              <td style="width:2%;"></td>
+            <td style="width:1%;"></td>
+            <td style="width:98%;height: 2%;">
+              <div style="font-family: Arial;font-size: 13px;">'.$tit.'</div>
+            </td>
+            <td style="width:1%;"></td>
           </tr>
-          <tr>
-              <td style="width:2%;"></td>
-              <td style="width:96%;height: 1%;">
-                <hr>
-              </td>
-              <td style="width:2%;"></td>
-          </tr>
-        </table>';
+        </table><<hr>';
       return $tabla;
     }
 

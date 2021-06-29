@@ -277,11 +277,6 @@ class Crep_evalprogramas extends CI_Controller {
 
 
 
-
-
-
-
-
     /*------ NOMBRE MES -------*/
     function mes_nombre(){
         $mes[1] = 'ENE.';
