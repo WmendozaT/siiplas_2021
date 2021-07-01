@@ -74,7 +74,7 @@ class Crep_evalinstitucional extends CI_Controller {
     //// EVALUACIÓN POA - REGIONAL -DISTRITAL  - IFRAME
     public function evaluacion_poa($id,$tp){
       $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
+      //$data['base']='<input name="base" type="hidden" value="'.base_url().'">';
 
       if($tp==0){ //// CONSOLIDADO REGIONAL
         $dep_id=$id;
@@ -93,6 +93,14 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['departamento'],3);
         $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['departamento'],4);
         $data['matriz']=$this->evaluacionpoa->matriz_eficacia_regional($dep_id);
+
+        $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['departamento'][0]['dep_departamento']);
+      /*for ($i=1; $i <=$this->tmes ; $i++) { 
+        for ($j=1; $j <=8 ; $j++) { 
+            echo "[".$data['tabla'][$j][$i]."]";
+          }  
+          echo "<br>";
+      };*/
       
       }
       elseif($tp==1){ //// CONSOLIDADO DISTRITAL
@@ -111,6 +119,8 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['distrital'],3);
         $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['distrital'],4);
         $data['matriz']=$this->evaluacionpoa->matriz_eficacia_distrital($id);
+
+        $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['distrital'][0]['dist_distrital']);
      
       }
       else{ /// NACIONAL tp:2
@@ -129,6 +139,7 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,'',4);
         $data['matriz']=$this->evaluacionpoa->matriz_eficacia_institucional();
      
+        $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_INSTITUCIONAL';
       }
 
       $data['tabla_regresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
@@ -147,7 +158,19 @@ class Crep_evalinstitucional extends CI_Controller {
       $data['id']=$id;
       $data['tp']=$tp;
 
+      $data['base']='
+        <input name="base" type="hidden" value="'.base_url().'">
+        <input name="tabla2" type="hidden" value="'.$data['tabla'][2][$this->session->userData('trimestre')].'">
+        <input name="tabla3" type="hidden" value="'.$data['tabla'][3][$this->session->userData('trimestre')].'">
+        <input name="tabla4" type="hidden" value="'.$data['tabla'][4][$this->session->userData('trimestre')].'">
+        <input name="tabla5" type="hidden" value="'.$data['tabla'][5][$this->session->userData('trimestre')].'">
+        <input name="tabla6" type="hidden" value="'.$data['tabla'][6][$this->session->userData('trimestre')].'">
+        <input name="tabla7" type="hidden" value="'.$data['tabla'][7][$this->session->userData('trimestre')].'">
+        <input name="tabla8" type="hidden" value="'.$data['tabla'][8][$this->session->userData('trimestre')].'">
+
+        <input name="tit" type="hidden" value="'.$tit.'">';
       $data['calificacion']=$this->evaluacionpoa->calificacion_eficacia($data['tabla'][5][$this->tmes]); /// Parametros de Eficacia
+
 
       $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_grafico_eval_consolidado_regional_distrital', $data);
     }

@@ -92,6 +92,10 @@
                                         </table>
                                         <hr>
                                         <div id="evaluacion_trimestre">
+                                            <div id="chartContainer" style="width: 1000px; height: 390px; margin: 0 auto"></div>
+                                        </div>
+
+                                        <div id="evaluacion_trimestre">
                                             <div id="regresion" style="width: 600px; height: 390px; margin: 0 auto"></div>
                                         </div>
                                         <hr>
@@ -103,8 +107,7 @@
                                         </div>
                                         <hr>
                                         <div align="right">
-                                            <button id="renderPdf">DOWNLOAD PDF</button>
-                                            <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/camera.png" WIDTH="25" HEIGHT="25" title="CAPTURA DE PANTALLA"/></button>
+                                            <button id="btnregresion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/camera.png" WIDTH="25" HEIGHT="25" title="CAPTURA DE PANTALLA"/></button>
                                             <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25" title="IMPRIMIR GRAFICO"/></button>
                                         </div>
                                     </div>
@@ -114,9 +117,9 @@
 
                                 <div class="tab-pane fade" id="s2" title="CUADRO DE EVALUACI&Oacute;N POA">
                                   <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-8">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
                                       <div id="cabecera1" style="display: none"><?php echo $cabecera_pastel;?></div>
                                         <hr>
                                         <table>
@@ -124,9 +127,14 @@
                                                 <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DETALLE EVALUACI&Oacute;N POA AL <?php echo $trimestre[0]['trm_descripcion'].' DE '.$this->session->userData('gestion');?></b></td>
                                             </tr>
                                         </table>
+                                        
                                         <hr>
-                                        <div id="evaluacion_pastel">
-                                            <div id="pastel_todos" style="width: 600px; height: 420px; margin: 0 auto"></div>
+                                        <div id="pastel_canvas">
+                                            <center><div id="pastel_todos" style="width: 600px; height: 420px; margin: 0 auto"></div></center>
+                                        </div>
+                                        
+                                        <div id="evaluacion_pastel" style="display: none">
+                                          <div id="pastel_todosprint" style="width: 600px; height: 420px; margin: 0 auto"></div>
                                         </div>
                                         <hr>
                                         <div class="table-responsive" id="tabla_pastel_vista">
@@ -137,7 +145,8 @@
                                         </div>
                                         <hr>
                                         <div align="right">
-                                            <button id="btnImprimir_evaluacion_pastel" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</b></button>
+                                            <button id="btnpastel" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/camera.png" WIDTH="25" HEIGHT="25" title="CAPTURA DE PANTALLA"/></button>
+                                            <button id="btnImprimir_evaluacion_pastel" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
                                         </div>
                                     </div>          
                                   </div>
@@ -233,15 +242,15 @@ if (!window.jQuery.ui) {
     document.write('<script src="<?php echo base_url(); ?>assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
 }
 </script>
-<script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/reporte_evaluacionpoa.js"></script> 
+
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
 
 <script src="<?php echo base_url(); ?>assets/captura/html2canvas.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/captura/html2canvas.svg.js"></script>
+<script src="<?php echo base_url(); ?>assets/captura/canvasjs.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/captura/jsPdf.debug.js"></script>
-
+<script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/reporte_evaluacionpoa.js"></script> 
 
 
  <!-- REGRESION LINEAL A LA GESTIÓN -->
@@ -416,61 +425,8 @@ if (!window.jQuery.ui) {
       });
     });
   </script>
-  <script type="text/javascript">
-      $(document).ready(function() {  
-         Highcharts.chart('pastel_todos', {
-          chart: {
-              type: 'pie',
-              options3d: {
-                  enabled: true,
-                  alpha: 45,
-                  beta: 0
-              }
-          },
-          title: {
-              text: ''
-          },
-          tooltip: {
-              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-          },
-          plotOptions: {
-              pie: {
-                  allowPointSelect: true,
-                  cursor: 'pointer',
-                  depth: 35,
-                  dataLabels: {
-                      enabled: true,
-                      format: '{point.name}'
-                  }
-              }
-          },
-          series: [{
-              type: 'pie',
-              name: 'Actividades',
-              data: [
-                  {
-                    name: 'NO CUMPLIDO : <?php echo (100-($tabla[5][$this->session->userData('trimestre')]+round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2)));?> %',
-                    y: <?php echo $tabla[6][$this->session->userData('trimestre')];?>,
-                    color: '#f98178',
-                  },
+    <script type="text/javascript">
 
-                  {
-                    name: 'EN PROCESO : <?php echo round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2);?> %',
-                    y: <?php echo round(($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100,2);?>,
-                    color: '#f5eea3',
-                  },
-
-                  {
-                    name: 'CUMPLIDO : <?php echo $tabla[5][$this->session->userData('trimestre')];?> %',
-                    y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>,
-                    color: '#2CC8DC',
-                    sliced: true,
-                    selected: true
-                  }
-              ]
-          }]
-        });
-      });
   </script>
   <script type="text/javascript">
     $(document).ready(function() {  
@@ -533,49 +489,9 @@ if (!window.jQuery.ui) {
         }]
       });
     });
+
+
 </script>
- <script type="text/javascript">
 
-      var downPdf = document.getElementById("renderPdf");
-
-      downPdf.onclick = function() {
-        html2canvas(document.body, {
-          onrendered:function(canvas) {
-
-            var contentWidth = canvas.width;
-            var contentHeight = canvas.height;
-
-            var pageHeight = contentWidth / 595.28 * 841.89;
-        
-            var leftHeight = contentHeight;
-         
-            var position = 0;
-      
-            var imgWidth = 555.28;
-            var imgHeight = 555.28/contentWidth * contentHeight;
-
-            var pageData = canvas.toDataURL('image/jpeg', 1.0);
-
-            var pdf = new jsPDF('', 'pt', 'a4');
-        
-           if (leftHeight < pageHeight) {
-                pdf.addImage(pageData, 'JPEG', 20, 0, imgWidth, imgHeight );
-            } else {
-                while(leftHeight > 0) {
-                    pdf.addImage(pageData, 'JPEG', 20, position, imgWidth, imgHeight)
-                    leftHeight -= pageHeight;
-                    position -= 841.89;
-                 
-                    if(leftHeight > 0) {
-                        pdf.addPage();
-                    }
-                }
-            }
-
-            pdf.save('content.pdf');
-          }
-        })
-      }
-    </script>
 </body>
 </html>

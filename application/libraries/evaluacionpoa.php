@@ -1271,6 +1271,7 @@ class Evaluacionpoa extends CI_Controller{
         $tr[5][$i]=0; /// eficacia %
         $tr[6][$i]=0; /// no eficacia %
         $tr[7][$i]=0; /// en proceso
+        $tr[8][$i]=0; /// en proceso %
       }
 
       for ($i=1; $i <=$this->tmes; $i++) {
@@ -1284,6 +1285,10 @@ class Evaluacionpoa extends CI_Controller{
         $tr[6][$i]=(100-$tr[5][$i]);
         $proceso=$this->obtiene_datos_evaluacíon_regional($dep_id,$i,2);
         $tr[7][$i]=$proceso[2]; /// En Proceso
+      
+        $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
+        
+
       }
 
     return $tr;

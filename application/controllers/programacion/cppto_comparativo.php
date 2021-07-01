@@ -102,7 +102,11 @@ class Cppto_comparativo extends CI_Controller {
             <th style="width:35%; color:#FFF;">DETALLE PARTIDA</th>
             <th style="width:12%; color:#FFF;">'.$titulo.'</th>
             <th style="width:12%; color:#FFF;">PRESUPUESTO POA</th>
-            <th style="width:12%; color:#FFF;">SALDO POA</th>
+            <th style="width:12%; color:#FFF;">SALDO POA</th>';
+            if($this->fun_id==399){
+              $tabla.='<th style="width:10%; color:#FFF; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
+            }
+            $tabla.='
           </tr>
         </thead>
         <tbody>';
@@ -144,7 +148,11 @@ class Cppto_comparativo extends CI_Controller {
                 <td style="width: 35%; text-align: left;">'.$row['nombre'].'</td>
                 <td style="width: 12%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
                 <td style="width: 12%; text-align: right;">'.number_format($prog, 2, ',', '.').'</td>
-                <td style="width: 12%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>
+                <td style="width: 12%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
+                if($this->fun_id==399){
+                  $tabla.='<td style="width: 10%; text-align: right;">'.number_format($row['saldo'], 2, ',', '.').'</td>';
+                }
+                $tabla.='
               </tr>';
             $monto_asig=$monto_asig+($row['monto']+$row['saldo']);
             $monto_prog=$monto_prog+$prog; 
@@ -177,7 +185,11 @@ class Cppto_comparativo extends CI_Controller {
                       <td style="width: 35%; text-align: left;">'.$row['nombre'].'</td>
                       <td style="width: 15%; text-align: right;">'.number_format($asig, 2, ',', '.').'</td>
                       <td style="width: 15%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
-                      <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>
+                      <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
+                if($this->fun_id==399){
+                  $tabla.='<td style="width: 10%; text-align: right;">'.number_format($row['saldo'], 2, ',', '.').'</td>';
+                }
+                $tabla.='
                     </tr>';
           $monto_asig=$monto_asig+$asig;
           $monto_prog=$monto_prog+$row['monto'];
@@ -206,6 +218,7 @@ class Cppto_comparativo extends CI_Controller {
               <td align=right><b>'.number_format($monto_prog, 2, ',', '.').'</b></td>
               <td align=right><b>'.$sig.''.number_format($dif, 2, ',', '.').'</b></td>
               <td align=right></td>
+              <td align=right></td>
             </tr>
         </table>';
 
@@ -231,7 +244,11 @@ class Cppto_comparativo extends CI_Controller {
               <th style="width:35%; color:#FFF;">DETALLE PARTIDA</th>
               <th style="width:15%; color:#FFF;">'.$titulo.'</th>
               <th style="width:15%; color:#FFF;">PRESUPUESTO POA</th>
-              <th style="width:15%; color:#FFF;">SALDO POA</th>
+              <th style="width:15%; color:#FFF;">SALDO POA</th>';
+            if($this->fun_id==399){
+              $tabla.='<th style="width:10%; color:#FFF; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
+            }
+            $tabla.='
             </tr>
           </thead>
           <tbody>';
@@ -266,8 +283,11 @@ class Cppto_comparativo extends CI_Controller {
                     <td style="width: 35%; text-align: left;">'.$row['nombre'].'</td>
                     <td style="width: 15%; text-align: right;">'.number_format($asig, 2, ',', '.').'</td>
                     <td style="width: 15%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
-                    <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>
-                  </tr>';
+                    <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
+                if($this->fun_id==399){
+                  $tabla.='<td style="width: 10%; text-align: right;">'.number_format($part[0]['saldo'], 2, ',', '.').'</td>';
+                }
+                $tabla.='</tr>';
         $monto_asig=$monto_asig+$asig;
         $monto_prog=$monto_prog+$row['monto'];
       }
@@ -292,6 +312,7 @@ class Cppto_comparativo extends CI_Controller {
               <td align=right>'.number_format($monto_asig, 2, ',', '.').'</td>
               <td align=right>'.number_format($monto_prog, 2, ',', '.').'</td>
               <td align=right>'.$sig.''.number_format($dif, 2, ',', '.').'</td>
+              <td></td>
             </tr>
         </table>';
 
