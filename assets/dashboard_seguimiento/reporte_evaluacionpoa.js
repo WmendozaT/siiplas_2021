@@ -252,7 +252,7 @@ function abreVentana_eficiencia(PDF){
     }
 
     /// Impresion grafico 1 (Regresion al trimestre)
-/*    document.querySelector("#btnImprimir_evaluacion_trimestre").addEventListener("click", function() {
+    document.querySelector("#btnImprimir_evaluacion_trimestre").addEventListener("click", function() {
       var grafico = document.querySelector("#evaluacion_trimestre");
       
       document.getElementById("cabecera").style.display = 'block';
@@ -269,7 +269,7 @@ function abreVentana_eficiencia(PDF){
 
       document.getElementById("tabla_regresion_vista").style.display = 'block';
       document.getElementById("tabla_regresion_impresion").style.display = 'none';
-    });*/
+    });
 
 
     /// Impresion grafico 2 (Pastel al trimestre)
@@ -400,41 +400,6 @@ function abreVentana_eficiencia(PDF){
       }
 
     ///// =============== GRAFICO PASTEL HIGTHCARS Y CANVAS
-    window.onload = function () {
-    var chart = new CanvasJS.Chart("pastel_todos", {
-      exportEnabled: true,
-      animationEnabled: true,
-      title:{
-        text: ""
-      },
-      legend:{
-        cursor: "pointer",
-        itemclick: explodePie
-      },
-      data: [{
-        type: "pie",
-        showInLegend: true,
-        toolTipContent: "{name}: <strong>{y} %</strong>",
-        indexLabel: "{name} - {y} %",
-        dataPoints: [
-          { y: tab5, name: "METAS CUMPLIDAS", color: '#57889c', exploded: true },
-          { y: tab8, name: "METAS EN PROCESO",color: '#f5e218' },
-          { y: (tab6-tab8), name: "METAS NO CUMPLIDAS", color: '#a90329'}
-        ]
-      }]
-    });
-    chart.render();
-    }
-
-    function explodePie (e) {
-      if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-        e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-      } else {
-        e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-      }
-      e.chart.render();
-    }
-
 
     $(document).ready(function() {  
      Highcharts.chart('pastel_todosprint', {
@@ -493,58 +458,58 @@ function abreVentana_eficiencia(PDF){
 ////============= ENS PASTEL
 
 
-var chart = new CanvasJS.Chart("chartContainer", {
-  animationEnabled: true,
-  exportEnabled: true,
-  title:{
-    text: "Gold Medals Won in Olympics"             
-  }, 
-  axisY:{
-    title: "Number of Medals"
-  },
-  toolTip: {
-    shared: true
-  },
-  legend:{
-    cursor:"pointer",
-    itemclick: toggleDataSeries
-  },
-  data: [{        
-    type: "line",  
-    name: "US",        
-    showInLegend: true,
-    dataPoints: [
-      { label: "", y: 0 },     
-      { label:"Sydney 2000", y: 37,indexLabel: "\u2191 highest",markerColor: "red", markerType: "triangle" },     
-      { label: "Athens 2004", y: 36 },     
-      { label: "Beijing 2008", y: 36 },     
-      { label: "London 2012", y: 46 },
-      { label: "Rio 2016", y: 46 }
-    ]
-  }, 
-  {        
-    type: "line",
-    name: "China",        
-    showInLegend: true,
-    dataPoints: [
-      { label: "Atlanta 1996" , y: 16 },     
-      { label:"Sydney 2000", y: 28 },     
-      { label: "Athens 2004", y: 32 },     
-      { label: "Beijing 2008", y: 48 },     
-      { label: "London 2012", y: 38 },
-      { label: "Rio 2016", y: 26 }
-    ]
-  }]
-});
+// var chart = new CanvasJS.Chart("chartContainer", {
+//   animationEnabled: true,
+//   exportEnabled: true,
+//   title:{
+//     text: "Gold Medals Won in Olympics"             
+//   }, 
+//   axisY:{
+//     title: "Number of Medals"
+//   },
+//   toolTip: {
+//     shared: true
+//   },
+//   legend:{
+//     cursor:"pointer",
+//     itemclick: toggleDataSeries
+//   },
+//   data: [{        
+//     type: "line",  
+//     name: "US",        
+//     showInLegend: true,
+//     dataPoints: [
+//       { label: "", y: 0 },     
+//       { label:"Sydney 2000", y: 37,indexLabel: "\u2191 highest",markerColor: "red", markerType: "triangle" },     
+//       { label: "Athens 2004", y: 36 },     
+//       { label: "Beijing 2008", y: 36 },     
+//       { label: "London 2012", y: 46 },
+//       { label: "Rio 2016", y: 46 }
+//     ]
+//   }, 
+//   {        
+//     type: "line",
+//     name: "China",        
+//     showInLegend: true,
+//     dataPoints: [
+//       { label: "Atlanta 1996" , y: 16 },     
+//       { label:"Sydney 2000", y: 28 },     
+//       { label: "Athens 2004", y: 32 },     
+//       { label: "Beijing 2008", y: 48 },     
+//       { label: "London 2012", y: 38 },
+//       { label: "Rio 2016", y: 26 }
+//     ]
+//   }]
+// });
 
-chart.render();
+// chart.render();
 
 
-function toggleDataSeries(e) {
-  if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-    e.dataSeries.visible = false;
-  } else {
-    e.dataSeries.visible = true;
-  }
-  e.chart.render();
-}
+// function toggleDataSeries(e) {
+//   if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+//     e.dataSeries.visible = false;
+//   } else {
+//     e.dataSeries.visible = true;
+//   }
+//   e.chart.render();
+// }

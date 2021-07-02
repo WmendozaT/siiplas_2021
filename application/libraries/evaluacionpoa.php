@@ -224,16 +224,16 @@ class Evaluacionpoa extends CI_Controller{
     public function tabla_acumulada_evaluacion_regional_distrital($regresion,$tp_graf,$tip_rep){
       $tabla='';
 
-      $tit[2]='<b>NRO. OPE. PROGRAMADOS EN EL TRIMESTRE</b>';
-      $tit[3]='<b>NRO. OPE. CUMPLIDOS EN EL TRIMESTRE</b>';
-      $tit[4]='<b>NRO. OPE. NO CUMPLIDOS</b>';
+      $tit[2]='<b>NRO. METAS PROGRAMADAS EN EL TRIMESTRE</b>';
+      $tit[3]='<b>NRO. METAS CUMPLIDAS EN EL TRIMESTRE</b>';
+      $tit[4]='<b>NRO. METAS NO CUMPLIDOS</b>';
       $tit[5]='<b>% CUMPLIDOS</b>';
       $tit[6]='<b>% NO CUMPLIDOS</b>';
 
-      $tit_total[2]='<b>NRO. OPE. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[3]='<b>NRO. OPE. CUMPLIDOS AL TRIMESTRE</b>';
-      $tit_total[4]='<b>% OPE. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[5]='<b>% OPE. CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[2]='<b>NRO. METAS PROGRAMADAS AL TRIMESTRE</b>';
+      $tit_total[3]='<b>NRO. METAS CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[4]='<b>% METAS PROGRAMADOS AL TRIMESTRE</b>';
+      $tit_total[5]='<b>% METAS CUMPLIDOS AL TRIMESTRE</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -248,21 +248,21 @@ class Evaluacionpoa extends CI_Controller{
         $tabla.='
         <table '.$tab.'>
           <thead>
-              <tr align=center bgcolor='.$color.'>
-                <th>NRO. OPE. PROGRAMADAS</th>
+              <tr align=center bgcolor='.$color.' style="font-family: Arial;">
+                <th>NRO. METAS PROGRAMADAS</th>
                 <th>METAS EVALUADAS</th>
-                <th>OPE. CUMPLIDAS</th>
-                <th>OPE. NO CUMPLIDAS</th>
+                <th>METAS CUMPLIDAS</th>
+                <th>METAS NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
               </tr>
               </thead>
             <tbody>
-              <tr align=right>
-                <td><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td><b>'.$regresion[3][$this->tmes].'</b></td>
-                <td><b>'.$regresion[4][$this->tmes].'</b></td>
+              <tr align=right >
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[4][$this->tmes].'</b></td>
                 <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
                 <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
               </tr>
@@ -276,7 +276,7 @@ class Evaluacionpoa extends CI_Controller{
               <tr bgcolor='.$color.'>
                 <th></th>';
                 for ($i=1; $i <=$this->tmes; $i++) { 
-                  $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
+                  $tabla.='<th align=center style="font-family: Arial;"><b>'.$regresion[1][$i].'</b></th>';
                 }
               $tabla.='
               </tr>
@@ -293,7 +293,7 @@ class Evaluacionpoa extends CI_Controller{
                   $color='#f7d3d0';
                 }
                 $tabla.='<tr bgcolor='.$color.'>
-                  <td>'.$tit[$i].'</td>';
+                  <td style="font-family: Arial;">'.$tit[$i].'</td>';
                   for ($j=1; $j <=$this->tmes; $j++) { 
                     $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
                   }
@@ -308,7 +308,7 @@ class Evaluacionpoa extends CI_Controller{
         <h4><b>'.$regresion[5][$this->tmes].'%</b> CUMPLIMIENTO DE '.$regresion[1][$this->tmes].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
         <table '.$tab.'>
           <thead>
-              <tr bgcolor='.$color.'>
+              <tr bgcolor='.$color.' >
                 <th></th>';
                 for ($i=1; $i <=4; $i++) { 
                   $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
@@ -323,7 +323,7 @@ class Evaluacionpoa extends CI_Controller{
                   $por='%';
                   $color='#9de9f3';
                 }
-                $tabla.='<tr bgcolor='.$color.'>
+                $tabla.='<tr bgcolor='.$color.' >
                   <td>'.$tit_total[$i].'</td>';
                   for ($j=1; $j <=4; $j++) { 
                     $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
@@ -338,23 +338,23 @@ class Evaluacionpoa extends CI_Controller{
         $tabla.='
         <table '.$tab.'>
             <thead>
-              <tr align=center >
-                <th>NRO. OPE. PROGRAMADAS</th>
-                <th>NRO. OPE. EVALUADAS</th>
-                <th>NRO. OPE. CUMPLIDAS</th>
-                <th>NRO. OPE. EN PROCESO</th>
-                <th>NRO. OPE. NO CUMPLIDAS</th>
+              <tr align=center style="font-family: Arial;" >
+                <th>NRO. METAS PROGRAMADAS</th>
+                <th>NRO. METAS EVALUADAS</th>
+                <th>NRO. METAS CUMPLIDAS</th>
+                <th>NRO. METAS EN PROCESO</th>
+                <th>NRO. METAS NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
               </tr>
             </thead>
             <tbody>
-              <tr align=right>
-                <td><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td><b>'.$regresion[3][$this->tmes].'</b></td>
-                <td><b>'.$regresion[7][$this->tmes].'</b></td>
-                <td><b>'.($regresion[2][$this->tmes]-($regresion[7][$this->tmes]+$regresion[3][$this->tmes])).'</b></td>
+              <tr align=right >
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[7][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.($regresion[2][$this->tmes]-($regresion[7][$this->tmes]+$regresion[3][$this->tmes])).'</b></td>
                 <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
                 <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
               </tr>

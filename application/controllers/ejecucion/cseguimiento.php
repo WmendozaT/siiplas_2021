@@ -882,9 +882,12 @@ class Cseguimiento extends CI_Controller {
         $data['formularios_poa']=$this->seguimientopoa->formularios_poa($this->com_id,$data['componente'][0]['proy_id']);
         $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($this->com_id);
 
+
+
+
         $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($this->com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
         $data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($this->com_id); /// Reporte Seguimiento (Mes vigente) POA
-        $data['update_eval']=$this->seguimientopoa->button_update_($this->com_id);
+        $data['update_eval']=$this->seguimientopoa->button_update_sa($this->com_id);
         $this->load->view('admin/evaluacion/seguimiento_poa_subactividad/formulario_seguimiento_subact', $data);
       }
       else{

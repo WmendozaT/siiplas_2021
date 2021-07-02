@@ -258,7 +258,9 @@ function abreVentana(PDF){
               request.done(function (response, textStatus, jqXHR) {
                   if (response.respuesta == 'correcto') {
                       alertify.alert("SE CAMBIO AL MES CORRECTAMENTE ", function (e) {
+
                           if (e) {
+                              document.getElementById("loading").style.display = 'block';
                               window.location.reload(true);
                           }
                       })

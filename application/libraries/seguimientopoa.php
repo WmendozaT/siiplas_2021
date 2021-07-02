@@ -1616,7 +1616,7 @@ class Seguimientopoa extends CI_Controller{
 
 
 
-    /*--- UPDATE DATOS DE EVALUACION POA 2021 ---*/
+    /*--- UPDATE DATOS DE EVALUACION POA 2021 planificadores ---*/
     function button_update_($com_id){
       $componente = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
       $tabla='';
@@ -1651,6 +1651,38 @@ class Seguimientopoa extends CI_Controller{
       return $tabla;
     }
 
+
+    /*--- UPDATE DATOS DE EVALUACION POA 2021 Unidades, Establecimientos ---*/
+    function button_update_sa($com_id){
+      $componente = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $tabla='';
+
+      $dia_actual=ltrim(date("d"), "0");
+      $mes_actual=ltrim(date("m"), "0");
+
+      $fecha_actual = date('Y-m-d');
+
+      $get_fecha_evaluacion=$this->model_configuracion->get_datos_fecha_evaluacion($this->gestion);
+      if(count($get_fecha_evaluacion)!=0){
+          $configuracion=$this->model_configuracion->get_configuracion_session();
+          $date_actual = strtotime($fecha_actual); //// fecha Actual
+          $date_inicio = strtotime($configuracion[0]['eval_inicio']); /// Fecha Inicio
+          $date_final = strtotime($configuracion[0]['eval_fin']); /// Fecha Final
+
+          if (($date_actual >= $date_inicio) && ($date_actual <= $date_final)){
+            $tabla.='   
+                <div id="row">
+                  <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="alert alert-info" role="alert">
+                      <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-info update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR EVALUACI&Oacute;N POA</a>    
+                    </div>
+                  </article>
+                </div>';
+          }
+      }
+
+      return $tabla;
+    }
 
     /*--- BOTON REPORTE SEGUIMIENTO POA (MES VIGENTE)---*/
     function button_rep_seguimientopoa($com_id){
@@ -1772,8 +1804,10 @@ class Seguimientopoa extends CI_Controller{
           $meses=$this->model_configuracion->list_mes_trimestre($date_trimestre);
         //  $tabla.='Datos : '.$date_actual.'--'.$date_inicio.'--'.$date_actual.'--'.$date_final;
 
-          if (($date_actual >= $date_inicio) && ($date_actual <= $date_final) || $this->tp_adm==1){
-            if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0 || $this->tp_adm==1){
+          /*if (($date_actual >= $date_inicio) && ($date_actual <= $date_final) || $this->tp_adm==1){
+            if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0 || $this->tp_adm==1){*/
+            if (($date_actual >= $date_inicio) && ($date_actual <= $date_final)){
+             // if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0){
 
               $tabla.='
               <section class="col col-3">
@@ -1792,7 +1826,7 @@ class Seguimientopoa extends CI_Controller{
                $tabla.='
                 </select>
               </section>';
-            }
+           // }
           }
       }
 
