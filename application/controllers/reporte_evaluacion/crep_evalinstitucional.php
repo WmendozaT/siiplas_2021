@@ -80,7 +80,7 @@ class Crep_evalinstitucional extends CI_Controller {
         $dep_id=$id;
         $data['departamento']=$this->model_proyecto->get_departamento($dep_id);
         $data['titulo_indicador']='DISTRITALES DEPENDIENTES';
-        $data['boton']='MOSTRAR INDICADORES POR DISTRITALES DEPENDIENTES';
+        $data['boton']='CARGAR INDICADORES';
         $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_regional($dep_id); /// Tabla para el grafico al trimestre
         $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_regional_total($dep_id); /// Tabla para el grafico Total Gestion
          
@@ -92,7 +92,7 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['departamento'],2);
         $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['departamento'],3);
         $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['departamento'],4);
-        $data['matriz']=$this->evaluacionpoa->matriz_eficacia_regional($dep_id);
+      //  $data['matriz']=$this->evaluacionpoa->matriz_eficacia_regional($dep_id);
 
         $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['departamento'][0]['dep_departamento']);
       /*for ($i=1; $i <=$this->tmes ; $i++) { 
@@ -109,7 +109,7 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_distrital($dist_id); /// Tabla para el grafico al trimestre
         $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_distrital_total($dist_id); /// Tabla para el grafico Total Gestion
         $data['titulo_indicador']='UNIDADES DEPENDIENTES';
-        $data['boton']='MOSTRAR INDICADORES POR UNIDADES DEPENDIENTES';
+        $data['boton']='CARGAR INDICADORES';
         $data['titulo']=
         '<h1><b>EVALUACI&Oacute;N POA - '.strtoupper($data['distrital'][0]['dist_distrital']).'</b></h1>
         <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
@@ -118,7 +118,7 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['distrital'],2);
         $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['distrital'],3);
         $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['distrital'],4);
-        $data['matriz']=$this->evaluacionpoa->matriz_eficacia_distrital($id);
+      //  $data['matriz']=$this->evaluacionpoa->matriz_eficacia_distrital($id);
 
         $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['distrital'][0]['dist_distrital']);
      
@@ -126,9 +126,9 @@ class Crep_evalinstitucional extends CI_Controller {
       else{ /// NACIONAL tp:2
         $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_nacional(); /// Tabla para el grafico al trimestre
         $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_nacional_total(); /// Tabla para el grafico Total Gestion
-        $data['boton']='MOSTRAR CUADRO DE REGIONALES';
+       // $data['boton']='MOSTRAR CUADRO DE REGIONALES';
         $data['titulo_indicador']='REGIONALES';
-        $data['boton']='MOSTRAR INDICADORES POR REGIONALES';
+        $data['boton']='CARGAR INDICADORES';
         $data['titulo']=
         '<h1><b>EVALUACI&Oacute;N POA - CONSOLIDADO INSTITUCIONAL</b></h1>
         <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
@@ -137,7 +137,7 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,'',2);
         $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,'',3);
         $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,'',4);
-        $data['matriz']=$this->evaluacionpoa->matriz_eficacia_institucional();
+      //  $data['matriz']=$this->evaluacionpoa->matriz_eficacia_institucional();
      
         $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_INSTITUCIONAL';
       }
@@ -153,7 +153,7 @@ class Crep_evalinstitucional extends CI_Controller {
       $data['tabla_pastel_todo']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
       $data['tabla_pastel_todo_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
       
-      $data['parametro_eficacia']=$this->evaluacionpoa->parametros_eficacia($data['matriz'],1);
+    //  $data['parametro_eficacia']=$this->evaluacionpoa->parametros_eficacia($data['matriz'],1);
 
       $data['id']=$id;
       $data['tp']=$tp;
@@ -181,28 +181,35 @@ class Crep_evalinstitucional extends CI_Controller {
     public function get_unidades_eficiencia(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
-        $tp = $this->security->xss_clean($post['tp']);
-        $id = $this->security->xss_clean($post['id']);
+        $tp = $this->security->xss_clean($post['tp']); // 1: dist, 0: dep
+        $id = $this->security->xss_clean($post['id']); /// id dep, dist
         
-        if($tp==2){
+        if($tp==2){ /// Institucional
+          $matriz=$this->evaluacionpoa->matriz_eficacia_regional($id);
           $tabla=$this->evaluacionpoa->eficacia_regionales(1,$tp,$id); /// Lista de Regionales - Institucional
         }
-        elseif($tp==1){
+        elseif($tp==1){ /// Distrital
+          $matriz=$this->evaluacionpoa->matriz_eficacia_distrital($id);
           $tabla=$this->evaluacionpoa->unidades(1,$tp,$id); //// Lista de Unidades - Distrital
         }
         else{
           if($id==10){
+            $matriz='';
             $tabla=$this->evaluacionpoa->unidades(1,0,$id); //// Lista de Unidades - Distrital
           }
-          else{
+          else{ /// Regional
+            $matriz=$this->evaluacionpoa->matriz_eficacia_regional($id);
             $tabla=$this->evaluacionpoa->list_distritales(1,$id); //// Lista de Distritales - Regional
           }
-          
         }
         
+        $parametro_eficacia=$this->evaluacionpoa->parametros_eficacia($matriz,1);
+        //$parametro_eficacia=$tp.'--'.$id;
+
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
+          'parametro_eficacia'=>$parametro_eficacia,
         );
           
         echo json_encode($result);

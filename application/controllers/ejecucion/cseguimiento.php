@@ -349,7 +349,42 @@ class Cseguimiento extends CI_Controller {
     //  $this->seguimientopoa->update_evaluacion_operaciones($com_id);
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
       $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($com_id);
-      $this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
+      //$this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
+
+
+      $prod_id=51470;
+
+        $prog_actual=$this->model_seguimientopoa->rango_programado_trimestral_productos($prod_id,$this->tmes); /// Suma rango trimestre - Programado Actual
+        $eval_actual=$this->model_seguimientopoa->rango_ejecutado_trimestral_productos($prod_id,$this->tmes); /// Suma rango trimestre - Ejecutado Actual
+
+        $acu_prog_actual=0;
+        $acu_ejec_actual=0;
+        if(count($prog_actual)!=0){
+          $acu_prog_actual=$prog_actual[0]['trimestre'];
+        }
+        if(count($eval_actual)!=0){
+          $acu_ejec_actual=$eval_actual[0]['trimestre'];
+        }
+
+        /*----- Temporalidad Programado / Ejecutado (Trimestre anterior)-----*/
+        $prog_anterior=$this->model_seguimientopoa->rango_programado_trimestral_productos($prod_id,($this->tmes-1)); /// Suma rango trimestre - Programado Actual
+        $eval_anterior=$this->model_seguimientopoa->rango_ejecutado_trimestral_productos($prod_id,($this->tmes-1)); /// Suma rango trimestre - Ejecutado Actual
+
+        $acu_prog_anterior=0;
+        $acu_ejec_anterior=0;
+        if(count($prog_anterior)!=0){
+          $acu_prog_anterior=$prog_anterior[0]['trimestre'];
+        }
+        if(count($eval_anterior)!=0){
+          $acu_ejec_anterior=$eval_anterior[0]['trimestre'];
+        }
+
+        $vector[1]=$acu_prog_actual; /// Suma Programado al trimestre Actual 
+        $vector[2]=$acu_ejec_actual; /// Suma Ejecutado al trimestre Actual
+        $vector[3]=$acu_prog_anterior; /// Suma Programado al trimestre Anterior
+        $vector[4]=$acu_ejec_anterior; /// Suma Ejecutado al trimestre Anterior
+
+        echo "[".$vector[1]."][".$vector[2]."][".$vector[3]."][".$vector[4]."]";
     }
     else{
       echo "Error !!!";

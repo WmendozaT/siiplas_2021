@@ -196,7 +196,10 @@ function abreVentana_eficiencia(PDF){
             request.done(function (response, textStatus, jqXHR) {
             if (response.respuesta == 'correcto') {
                 $('#lista').fadeIn(1000).html(response.tabla);
-                $('#boton_eficacia').slideUp();
+                $('#parametro_eficacia').fadeIn(1000).html(response.parametro_eficacia);
+                document.getElementById("boton_eficacia").style.display = 'none';
+
+                //$('#boton_eficacia').slideUp();
                 $('#print_eficacia').slideDown();
               //  $('#eval_poa').slideDown();
                 $('#par').slideDown();

@@ -1450,6 +1450,13 @@ class Seguimientopoa extends CI_Controller{
         /// ----------
         $temporalidad=$this->obtiene_suma_temporalidad_prog_ejec($row['prod_id']);
 
+        if($row['indi_id']==2 & $row['mt_id']==1){ /// Relativo Recurrente
+
+        }
+        else{
+
+        }
+
         /*----- Temporalidad Programado / Ejecutado -----*/
         if($temporalidad[1]!=0 & $temporalidad[4]<$row['prod_meta'] & $temporalidad[2]>0){
           if($temporalidad[3]==$temporalidad[4]){

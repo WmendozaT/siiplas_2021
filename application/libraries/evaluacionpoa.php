@@ -383,8 +383,61 @@ class Evaluacionpoa extends CI_Controller{
       return $tabla;
     }
 
-    /*----- Parametros de Eficacia Concolidado por Unidad -----*/
+
+        /*----- Parametros de Eficacia Concolidado por Unidad (ANTERIOR) -----*/
     public function parametros_eficacia($matriz,$tp_rep){
+      if($tp_rep==1){ //// Normal
+        $class='class="table table-bordered" align=center style="width:60%;"';
+        $div='<div id="parametro_efi" style="width: 600px; height: 400px; margin: 0 auto"></div>';
+
+      }
+      else{ /// Impresion
+        $class='class="change_order_items" border=1 align=center style="width:100%;"';
+        $div='<div id="parametro_efi_print" style="width: 650px; height: 330px; margin: 0 auto"></div>';
+      }
+     // $nro=$matriz;
+      $tabla='';
+      $tabla .='<table '.$class.'>
+                    <thead>
+                      <tr>
+                        <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
+                        <th style="width: 33%"><center><b>PARAMETRO</b></center></th>
+                        <th style="width: 33%"><center><b>NRO DE UNIDADES</b></center></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>INSATISFACTORIO</td>
+                        <td>0% a 75%</td>
+                        <td align="center"><a class="btn btn-danger" style="width: 100%" align="left" title="'.$matriz[1][2].' Unidades/Proyectos">'.$matriz[1][2].'</a></td>
+                      </tr>
+                      <tr>
+                        <td>REGULAR</td>
+                        <td>75% a 90% </td>
+                        <td align="center"><a class="btn btn-warning" style="width: 100%" align="left" title="'.$matriz[2][2].' Unidades/Proyectos">'.$matriz[2][2].'</a></td>
+                      </tr>
+                      <tr>
+                        <td>BUENO</td>
+                        <td>90% a 99%</td>
+                        <td align="center"><a class="btn btn-info" style="width: 100%" align="left" title="'.$matriz[3][2].' Unidades/Proyectos">'.$matriz[3][2].'</a></td>
+                      </tr>
+                      <tr>
+                        <td>OPTIMO </td>
+                        <td>100%</td>
+                        <td align="center"><a class="btn btn-success" style="width: 100%" align="left" title="'.$matriz[4][2].' Unidades/Proyectos">'.$matriz[4][2].'</a></td>
+                      </tr>
+                      <tr>
+                        <td colspan=2 align="left"><b>TOTAL: </b></td>
+                        <td align="center"><b>'.($matriz[1][2]+$matriz[2][2]+$matriz[3][2]+$matriz[4][2]).'</b></td>
+                      </tr>
+                    </tbody>
+                  </table>';
+
+      return $tabla;
+    }
+
+    /*----- Parametros de Eficacia Concolidado por Unidad (ANTERIOR) -----*/
+    public function parametros_eficacia_ANTERILR($matriz,$tp_rep){
       if($tp_rep==1){ //// Normal
         $class='class="table table-bordered" align=center style="width:60%;"';
         $div='<div id="parametro_efi" style="width: 600px; height: 400px; margin: 0 auto"></div>';
@@ -717,7 +770,7 @@ class Evaluacionpoa extends CI_Controller{
       // 1 : normal, 2 : Impresion
       if($tp_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:90%;"';
-        $tabla.='<h2 align=center>CUADRO DE INDICADORES</h2>';
+        $tabla.='<h2><b>CUADRO DE INDICADORES</b></h2>';
         $color='';
       } 
       else{ /// Impresion

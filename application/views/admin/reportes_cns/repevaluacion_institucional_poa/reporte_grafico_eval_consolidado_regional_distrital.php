@@ -30,108 +30,96 @@
 <div id="content">
 <!-- widget grid -->
     <section id="widget-grid" class="">
-        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <section id="widget-grid" class="well">
-            <div class="">
-              <?php echo $base; ?>
-              <?php echo $titulo;?>
-            </div>
-          </section>
-        </article>
         <div class="row">
-            <article class="col-sm-12">
-                <!-- new widget -->
-                <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
+            <article class="col-sm-12 col-md-12 col-lg-12">
+                <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
                     <header>
-                        <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                        <h2>CUADRO DE EVALUACI&Oacute;N POA </h2>
-                        <ul class="nav nav-tabs pull-right in" id="myTab">
-                            <li class="active">
-                                <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA I (TRIMESTRAL)</span></a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA II (TRIMESTRAL)</span></a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (GESTI&Oacute;N)</span></a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><?php echo $titulo_indicador;?></span></a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#s5"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">PARAMETROS DE EFICACIA</span></a>
-                            </li>
-                        </ul>
+                        <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+                        <h2>Default Tabs with border </h2>
                     </header>
-
-                    <!-- widget div-->
-                    <div class="no-padding">
+                    <div>
                         <!-- widget edit box -->
                         <div class="jarviswidget-editbox">
-                            test
+                            <!-- This area used as dropdown edit box -->
                         </div>
                         <!-- end widget edit box -->
+                        <!-- widget content -->
                         <div class="widget-body">
-                            <!-- content -->
-                            <div id="myTabContent" class="tab-content">
+                            <p>
+                                <?php echo $base; ?>
+                                <?php echo $titulo;?>
+                            </p>
+                            <hr class="simple">
+                            <ul id="myTab1" class="nav nav-tabs bordered">
+                                <li class="active">
+                                    <a href="#s1" data-toggle="tab"> Avance Evaluación POA</a>
+                                </li>
+                                <li>
+                                    <a href="#s2" data-toggle="tab"> Detalle Evaluación POA</a>
+                                </li>
+                            </ul>
+    
+                            <div id="myTabContent1" class="tab-content padding-10">
                                 <br>
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                   <div id="eficacia"><?php echo $calificacion;?></div><div id="efi"></div>
-                                </div>
-                                <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="CUADRO DE EVALUACI&Oacute;N POA">
-                                  <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                        <div id="cabecera" style="display: none"><?php echo $cabecera_regresion;?></div>
-                                        <div id="regresion_canvas">
-                                            <div id="regresion_canvasjs" style="width: 750px; height: 390px; margin: 0 auto"></div>
-                                        </div>
-                                        <hr>
-                                        <div id="evaluacion_trimestre" style="display: none">
-                                            <div id="regresion" style="width: 600px; height: 390px; margin: 0 auto"></div>
-                                        </div>
-                                        <hr>
-                                        <div class="table-responsive" id="tabla_regresion_vista">
-                                            <?php echo $tabla_regresion;?>
-                                        </div>
-                                        <div id="tabla_regresion_impresion" style="display: none">
-                                            <?php echo $tabla_regresion_impresion;?>
-                                        </div>
-                                        <hr>
-                                        <div align="right">
-                                            <button id="btnregresion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/camera.png" WIDTH="25" HEIGHT="25" title="CAPTURA DE PANTALLA"/></button>
-                                            <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25" title="IMPRIMIR GRAFICO"/></button>
-                                        </div>
+                                  <hr>
+                                    <div align="right" title="CAPTURAR PANTALLA">
+                                        <button id="btnregresion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/camera.png" WIDTH="25" HEIGHT="25" title="CAPTURA DE PANTALLA"/></button>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                        <div id="cabecera2" style="display: none"><?php echo $cabecera_regresion_total;?></div>
-                                        <div id="regresion_gestion_canvas">
-                                            <center><div id="regresion_gestion_canvasjs" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
-                                        </div>
-                                        <hr>
-                                        <div id="evaluacion_gestion" style="display: none">
-                                          <div id="regresion_gestion" style="width: 700px; height: 400px; margin: 0 auto"></div>
-                                        </div>
-                                        <hr>
-                                        <div class="table-responsive" id="tabla_regresion_total_vista">
-                                            <?php echo $tabla_regresion_total;?>
-                                        </div>
-                                        <div id="tabla_regresion_total_impresion" style="display: none">
-                                            <?php echo $tabla_regresion_total_impresion;?>
-                                        </div>
-                                      <hr>
-                                        <div align="right">
-                                            <button id="btnImprimir_evaluacion_gestion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
-                                        </div>
-                                    </div>
-                                  </div>
+                                  <hr>
                                 </div>
-                                <!-- end s1 tab pane -->
+                                <div class="tab-pane fade in active" id="s1">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                            <div id="cabecera" style="display: none"><?php echo $cabecera_regresion;?></div>
+                                            <div id="regresion_canvas">
+                                                <div id="regresion_canvasjs" style="width: 750px; height: 390px; margin: 0 auto"></div>
+                                            </div>
+                                            <hr>
+                                            <div id="evaluacion_trimestre" style="display: none">
+                                                <div id="regresion" style="width: 600px; height: 390px; margin: 0 auto"></div>
+                                            </div>
+                                            <hr>
+                                            <div class="table-responsive" id="tabla_regresion_vista">
+                                                <?php echo $tabla_regresion;?>
+                                            </div>
+                                            <div id="tabla_regresion_impresion" style="display: none">
+                                                <?php echo $tabla_regresion_impresion;?>
+                                            </div>
+                                            <hr>
+                                            <div align="right">
+                                                <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25" title="IMPRIMIR GRAFICO"/></button>
+                                            </div>
+                                        </div>
 
-                                <div class="tab-pane fade" id="s2" title="CUADRO DE EVALUACI&Oacute;N POA">
-                                  <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                            <div id="cabecera2" style="display: none"><?php echo $cabecera_regresion_total;?></div>
+                                            <div id="regresion_gestion_canvas">
+                                                <center><div id="regresion_gestion_canvasjs" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
+                                            </div>
+                                            <hr>
+                                            <div id="evaluacion_gestion" style="display: none">
+                                              <div id="regresion_gestion" style="width: 700px; height: 400px; margin: 0 auto"></div>
+                                            </div>
+                                            <hr>
+                                            <div class="table-responsive" id="tabla_regresion_total_vista">
+                                                <?php echo $tabla_regresion_total;?>
+                                            </div>
+                                            <div id="tabla_regresion_total_impresion" style="display: none">
+                                                <?php echo $tabla_regresion_total_impresion;?>
+                                            </div>
+                                          <hr>
+                                            <div align="right">
+                                                <button id="btnImprimir_evaluacion_gestion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                                </div>
+                                <div class="tab-pane fade" id="s2">
+                                
+                                    <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                       <div id="cabecera1" style="display: none"><?php echo $cabecera_pastel;?></div>
 
                                         <div id="pastel_canvas" align="center">
@@ -150,66 +138,40 @@
                                         </div>
                                         <hr>
                                         <div align="right">
-                                            <button id="btnpastel" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/camera.png" WIDTH="25" HEIGHT="25" title="CAPTURA DE PANTALLA"/></button>
                                             <button id="btnImprimir_evaluacion_pastel" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
                                         </div>
-                                    </div>          
-                                  </div>
-                                </div>
-                                <!-- end s2 tab pane -->
-                                
-                                <div class="tab-pane fade" id="s3" title="CUADRO EVALUACIÓN DE OPERACIONES">
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-                                        </div>
-                                        
                                     </div>
-                                </div>
 
-                                <div class="tab-pane fade" id="s4" title="CUADRO EVALUACIÓN DE OPERACIONES">
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                      
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                         <div align="left" id="boton_eficacia">
-                                          <a href="#" class="btn btn-default eficacia" name="<?php echo $id;?>" id="<?php echo $tp;?>" title="CUADRO DE EFICIENCIA Y EFICACIA" style="width:35%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;<?php echo $boton;?></a>
+                                          <a href="#" class="btn btn-default eficacia" name="<?php echo $id;?>" id="<?php echo $tp;?>" title="CUADRO DE EFICIENCIA Y EFICACIA" style="width:30%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;<?php echo $boton;?></a>
                                         </div>
 
-                                        <div align="right" id="print_eficacia" style="display: none">
-                                          <a href="javascript:abreVentana_eficiencia('<?php echo site_url("").'/rep_eval_poa/rep_eficacia/'.$tp.'/'.$id.'' ?>');" class="btn btn-default" title="IMPRIMIR REPORTE DE MODIFICACION FINANCIERA"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR CUADRO DE INDICADOR</a>
-                                        </div>
-                                    <br>
-
+                                        
+                                   
                                         <div class="row">
                                           <div id="lista"></div>
                                         </div>
+
+                                        <div id="parametro_eficacia"></div>
+                                        <div align="right" id="print_eficacia" style="display: none">
+                                          <a href="javascript:abreVentana_eficiencia('<?php echo site_url("").'/rep_eval_poa/rep_eficacia/'.$tp.'/'.$id.'' ?>');" class="btn btn-default" title="IMPRIMIR REPORTE DE MODIFICACION FINANCIERA"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR CUADRO DE INDICADOR</a>
                                         </div>
                                     </div>
 
-                                </div>
-
-                                <div class="tab-pane fade" id="s5" title="CUADRO PARAMETRO DE EFICACIA">
-                                  <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                      <div id="cabecera2" style="display: none"><?php echo $cabecera_eficacia;?></div>
-                                      <hr>
-                                      <table>
-                                          <tr>
-                                              <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO PARAMETRO DE EFICACIA POA AL <?php echo $trimestre[0]['trm_descripcion'].' DE '.$this->session->userData('gestion');?></b></td>
-                                          </tr>
-                                      </table>
-                                      <hr>
-                                      <?php echo $parametro_eficacia;?>
-                                    </div>
                                   </div>
+
                                 </div>
                             </div>
-                            <!-- end content -->
+    
                         </div>
+                        <!-- end widget content -->
                     </div>
                     <!-- end widget div -->
                 </div>
                 <!-- end widget -->
             </article>
+
         </div>
     </section>
 </div>
@@ -455,34 +417,34 @@ chart_gestion.render();
 
 
 
-function explodePastel (e) {
-    if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-        e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-    } else {
-        e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+    function explodePastel (e) {
+        if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+        } else {
+            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+        }
+        e.chart1.render();
     }
-    e.chart1.render();
-}
 
-function toggleDataSeries(e) {
-    if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
-        e.dataSeries.visible = false;
+    function toggleDataSeries(e) {
+        if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
+            e.dataSeries.visible = false;
+        }
+        else {
+            e.dataSeries.visible = true;            
+        }
+        chart.render();
     }
-    else {
-        e.dataSeries.visible = true;            
-    }
-    chart.render();
-}
 
-function toggleDataSeries_gestion(e) {
-    if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
-        e.dataSeries.visible = false;
+    function toggleDataSeries_gestion(e) {
+        if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
+            e.dataSeries.visible = false;
+        }
+        else {
+            e.dataSeries.visible = true;            
+        }
+        chart_gestion.render();
     }
-    else {
-        e.dataSeries.visible = true;            
-    }
-    chart_gestion.render();
-}
 </script>
 
   <!-- REGRESION LINEAL AL TRIMESTRE -->
@@ -607,7 +569,7 @@ function toggleDataSeries_gestion(e) {
     <script type="text/javascript">
 
   </script>
-  <script type="text/javascript">
+<!--   <script type="text/javascript">
     $(document).ready(function() {  
        Highcharts.chart('parametro_efi', {
         chart: {
@@ -668,7 +630,7 @@ function toggleDataSeries_gestion(e) {
         }]
       });
     });
-</script>
+</script> -->
 
 </body>
 </html>
