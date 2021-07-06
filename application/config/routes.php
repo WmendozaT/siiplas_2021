@@ -456,9 +456,12 @@ $route['reporte_solicitud_poa_aprobado/(:any)'] = 'ejecucion/ccertificacion_poa/
 //====== REPORTE EVALUACION POA 2020
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (GASTO CORRIENTE) 2020 ----------*/
 $route['menu_eval_poa'] = 'reporte_evaluacion/crep_evalinstitucional/menu_eval_poa';  /// MENU EVALUACION POA 
-$route['rep_eval_poa/evaluacion_poa/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa/$1/$2';  /// REPORTES GRAFICOS REGIONAL, DISTRITAL
+$route['rep_eval_poa/evaluacion_poa_distrital/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa_distrital/$1/$2';  /// REPORTES GRAFICOS DISTRITAL
+
+//$route['rep_eval_poa/evaluacion_poa/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa/$1/$2';  /// REPORTES GRAFICOS REGIONAL, DISTRITAL
+
 $route['rep_eval_poa/evaluacion_poa_onacional/(:any)'] = 'reporte_evaluacion/crep_evalofinacional/evaluacion_poa_onacional/$1';  /// REPORTES GRAFICOS OFICINA NACIONAL
-$route['rep_eval_poa/rep_eficacia/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/reporte_eficacia/$1/$2';  /// REPORTE EVALUACION GASTO CORRIENTE
+$route['rep_eval_poa/rep_eficacia/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/reporte_parametros/$1/$2/$3';  /// REPORTE EVALUACION GASTO CORRIENTE
 
 /*---------- EVALUACION DE LA OPERACION - UNIDAD, PROYECTO ----------*/
 $route['eval/eval_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/evaluacion_poa_unidad/$1';  /// REDIRECCION EVALUACION POA - UNIDAD, PROY INV.
@@ -469,9 +472,9 @@ $route['rep_eficacia_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/repor
 
 
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (PROYECTOS DE INVERSION) 2020 ----------*/
-$route['menu_eval_pi'] = 'reporte_evaluacion/crep_evalinstitucionalpi/menu_eval_poa';  /// MENU EVALUACION POA PROYECTO DE INVERSION
+/*$route['menu_eval_pi'] = 'reporte_evaluacion/crep_evalinstitucionalpi/menu_eval_poa';  /// MENU EVALUACION POA PROYECTO DE INVERSION
 $route['rep_eval_poa/evaluacion_pi/(:any)'] = 'reporte_evaluacion/crep_evalinstitucionalpi/evaluacion_pi/$1/$2';  /// REPORTES GRAFICOS REGIONAL, DISTRITAL
-$route['rep_eval_poa/rep_eficacia_pi/(:any)'] = 'reporte_evaluacion/crep_evalinstitucionalpi/reporte_eficacia_pi/$1/$2';  /// REPORTES EFICACIA-EFICIENCIA REGIONAL, DISTRITAL
+$route['rep_eval_poa/rep_eficacia_pi/(:any)'] = 'reporte_evaluacion/crep_evalinstitucionalpi/reporte_eficacia_pi/$1/$2';  /// REPORTES EFICACIA-EFICIENCIA REGIONAL, DISTRITAL*/
 
 
 /*---------- EVALUACION GASTO CORRIENTE - PROGRAMA ----------*/

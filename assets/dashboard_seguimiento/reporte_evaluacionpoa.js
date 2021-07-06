@@ -16,16 +16,6 @@ function abreVentana_eficiencia(PDF){
 
 
 
-
-
-
-
-
-
-
-
-
-
   function doSearch(){
     var tableReg = document.getElementById('datos');
     var searchText = document.getElementById('searchTerm').value.toLowerCase();
@@ -74,8 +64,8 @@ function abreVentana_eficiencia(PDF){
       $("#dep_id option:selected").each(function () {
           dist_id=$('[name="dist_id"]').val();
           elegido=$(this).val();
-          alert(elegido)
-          if(elegido!=0){
+          
+          if(elegido!=0){ /// REGIONAL
               $('#ue').slideDown();
               $('#tp').slideDown();
               $.post(base+"index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'distrital' }, function(data){
@@ -84,7 +74,8 @@ function abreVentana_eficiencia(PDF){
                   $("#lista_consolidado").html('');
               });
           }
-          else{
+          else{ //// INSTITUCIONAL NACIONAL
+           
               dep_id=0;
               dist_id=0;
               tp_id=4;
@@ -117,7 +108,51 @@ function abreVentana_eficiencia(PDF){
       });
   });
     
+    $("#dist_id").change(function () {
+      $("#dist_id option:selected").each(function () {
+          elegido=$(this).val();
+          $.post(base+"/index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'tipo' }, function(data){
+              $("#tp_id").html(data);
+              $("#lista_consolidado").html('');
+          });
+      });
+    });
 
+
+    $("#tp_id").change(function () {
+        $("#tp_id option:selected").each(function () {
+            dep_id=$('[name="dep_id"]').val();
+            dist_id=$('[name="dist_id"]').val();
+            tp_id=$(this).val();
+            if(tp_id!=0){
+                $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
+                var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
+                var request;
+                if (request) {
+                    request.abort();
+                }
+                request = $.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: 'json',
+                    data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+                });
+
+                request.done(function (response, textStatus, jqXHR) {
+                    if (response.respuesta == 'correcto') {
+                        $('#lista_consolidado').fadeIn(1000).html(response.tabla);
+                    }
+                    else{
+                        alertify.error("ERROR AL LISTAR");
+                    }
+                }); 
+            }
+            else{
+                $("#lista_consolidado").html('');
+            }
+            
+        });
+      });
 ////----- End menu select
 
 
@@ -241,10 +276,15 @@ function abreVentana_eficiencia(PDF){
     /*---- CUADRO EFICACIA POR UNIDAD-REGIONAL ----*/
     $(function () {
         $(".eficacia").on("click", function (e) {
-            tp = $(this).attr('id');
-            id = $(this).attr('name');
+            dep_id=$('[name="dep_id"]').val();
+            dist_id=$('[name="dist_id"]').val();
+            tp_id=$('[name="tp_id"]').val();
 
-            $('#lista').html('<div class="loadin" align="center"><br><img src="'+base+'/assets/img_v1.1/load.gif" alt="loading" style="width:30%;"/><br/><b>CARGANDO DATOS DE LAS UNIDADES ORGANIZACIONALES ...</b></div>');
+            $('#lista').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
+            $('#parametro_eficacia').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
+            $('#lista_prog').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
+            $('#parametros_prog').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
+            document.getElementById("boton_eficacia").style.display = 'none';
             var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_unidades_eficiencia";
             var request;
             if (request) {
@@ -254,19 +294,21 @@ function abreVentana_eficiencia(PDF){
                 url: url,
                 type: "POST",
                 dataType: 'json',
-                data: "id="+id+"&tp="+tp
+                data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
             });
 
             request.done(function (response, textStatus, jqXHR) {
             if (response.respuesta == 'correcto') {
                 $('#lista').fadeIn(1000).html(response.tabla);
                 $('#parametro_eficacia').fadeIn(1000).html(response.parametro_eficacia);
-                document.getElementById("boton_eficacia").style.display = 'none';
+                $('#lista_prog').fadeIn(1000).html(response.lista_prog);
+                $('#parametros_prog').fadeIn(1000).html(response.parametros_prog);
+                $('#print_eficacia').slideDown();
 
                 //$('#boton_eficacia').slideUp();
-                $('#print_eficacia').slideDown();
+               // 
               //  $('#eval_poa').slideDown();
-                $('#par').slideDown();
+               // $('#par').slideDown();
             }
             else{
                 alertify.error("ERROR AL RECUPERAR DATOS DE EVALUACIÓN POA ");
@@ -386,7 +428,6 @@ function abreVentana_eficiencia(PDF){
 
       //// ----CAPTURA GRAFICOS CANVAS
       var downPdf = document.getElementById("btnregresion");
-      var downPdf2 = document.getElementById("btnpastel");
 
       downPdf.onclick = function() {
         html2canvas(document.body, {
@@ -423,45 +464,6 @@ function abreVentana_eficiencia(PDF){
             }
 
             pdf.save(titulo_evaluacion+'_AVANCE_POA_EVALUACION_TRIMESTRE.pdf');
-          }
-        })
-      }
-
-    downPdf2.onclick = function() {
-        html2canvas(document.body, {
-          onrendered:function(canvas) {
-
-            var contentWidth = canvas.width;
-            var contentHeight = canvas.height;
-
-            var pageHeight = contentWidth / 595.28 * 841.89;
-        
-            var leftHeight = contentHeight;
-         
-            var position = 0;
-      
-            var imgWidth = 555.28;
-            var imgHeight = 555.28/contentWidth * contentHeight;
-
-            var pageData = canvas.toDataURL('image/jpeg', 1.0);
-
-            var pdf = new jsPDF('', 'pt', 'a4');
-        
-           if (leftHeight < pageHeight) {
-                pdf.addImage(pageData, 'JPEG', 20, 0, imgWidth, imgHeight );
-            } else {
-                while(leftHeight > 0) {
-                    pdf.addImage(pageData, 'JPEG', 20, position, imgWidth, imgHeight)
-                    leftHeight -= pageHeight;
-                    position -= 841.89;
-                 
-                    if(leftHeight > 0) {
-                        pdf.addPage();
-                    }
-                }
-            }
-
-            pdf.save(titulo_evaluacion+'_CUADRO DETALLE_EVALUACION_POA.pdf');
           }
         })
       }

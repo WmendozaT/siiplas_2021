@@ -16,6 +16,8 @@ class Evaluacionpoa extends CI_Controller{
         $this->load->model('programacion/model_producto');
         $this->load->model('ejecucion/model_evaluacion');
         $this->load->model('mantenimiento/model_configuracion');
+        $this->load->model('reporte_eval/model_evalprograma'); /// Model Evaluacion Programas
+        $this->load->model('mantenimiento/model_estructura_org');
 
         $this->load->model('reporte_eval/model_evalunidad'); /// Model Evaluacion Unidad
         $this->load->model('reporte_eval/model_evalinstitucional'); /// Model Evaluacion Institucional
@@ -38,187 +40,52 @@ class Evaluacionpoa extends CI_Controller{
     }
 
 
-    //// LISTA DE REGIONALES
-    public function regionales(){
-      $regiones=$this->model_evalinstitucional->regiones();
-      $nro=0;
-      $tabla ='';
+    //// LISTADO DE REGIONALES
+    public function listado_regionales(){
+    $tabla='';
+    $regionales=$this->model_proyecto->list_departamentos();
+    $unidades=$this->model_estructura_org->list_unidades_apertura();
+    $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
       $tabla.='
-          <article class="col-sm-12 col-md-12 col-lg-2">
-            <div class="jarviswidget well transparent" id="wid-id-9" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
-                <header>
-                    <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
-                    <h2>Accordions </h2>
-                </header>
-                <div>
-                    <div class="jarviswidget-editbox">
+          <input name="base" type="hidden" value="'.base_url().'">
+          <article class="col-sm-12">
+            <div class="well">
+              <form class="smart-form">
+                  <header><b>CONSOLIDADO EVALUACI&Oacute;N POA - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
+                  <fieldset>          
+                    <div class="row">
+                      <section class="col col-3">
+                        <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
+                        <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
+                        <option value="">SELECCIONE REGIONAL</option>
+                        <option value="0">0.- INSTITUCIONAL C.N.S.</option>';
+                        foreach($regionales as $row){
+                          if($row['dep_id']!=0){
+                            $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                          }
+                        }
+                        $tabla.='
+                        </select>
+                      </section>
+
+                      <section class="col col-3" id="ue">
+                        <label class="label">UNIDAD EJECUTORA</label>
+                        <select class="form-control" id="dist_id" name="dist_id" title="SELECCIONE DISTRITAL">
+                        </select>
+                      </section>
+
+                      <section class="col col-3" id="tp">
+                        <label class="label">TIPO DE GASTO</label>
+                        <select class="form-control" id="tp_id" name="tp_id" title="SELECCIONE TIPO">
+                        </select>
+                      </section>
                     </div>
-                    <div class="widget-body">
-
-                        <div class="panel-group smart-accordion-default" id="accordion">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> <b>EVALUACI&Oacute;N POA '.$this->gestion.'</b></a></h4>
-                                </div>
-                                <div id="collapseOne" class="panel-collapse collapse in">
-                                    <div class="panel-body no-padding"><br>
-                                        <table class="table table-bordered table-condensed">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="font-size: 10pt;">INSTITUCIONAL</td>
-                                                    <td align=center><a href="#" class="btn btn-info enlace" name="0" id="2">VER</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table><br>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-10" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
-              <header>
-                <span class="widget-icon"> <i class="fa fa-list-alt"></i> </span>
-                <h2><b>EVALUACI&Oacute;N POA '.$this->gestion.'</b></h2>
-              </header>
-              <div>
-
-                <div class="widget-body no-padding">
-                  <div class="panel-group smart-accordion-default" id="accordion-2">';
-                
-                  foreach($regiones as $rowd){
-                    $tabla.='
-                    <div class="panel panel-default">
-                      <div class="panel-heading">';
-                      /// Distritales Cabecera
-                      if($rowd['dep_id']!=10){
-                        $tabla.='<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-2" href="#collapse'.$rowd['dep_id'].'" class="collapsed"> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i> REGIONAL '.strtoupper($rowd['dep_departamento']).'</a></h4>';
-                      }
-
-                      /// Oficina nacional Cabecera
-                      else{
-                        $tabla.='<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-2" href="#collapse'.$rowd['dep_id'].'" class="collapsed"> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i>'.strtoupper($rowd['dep_departamento']).'</a></h4>';
-                      }
-                      $tabla.='
-                      </div>
-                      <div id="collapse'.$rowd['dep_id'].'" class="panel-collapse collapse">';
-                      /// Lista de Distritales
-                      if($rowd['dep_id']!=10){
-                        $tabla.='<div class="panel-body">'.$this->list_distrital($rowd['dep_id']).'</div>'; /// Distritales
-                      }
-
-                      /// Lista de Gerencias
-                      else{
-                        $tabla.='<div class="panel-body">'.$this->list_gerencias($rowd['dep_id']).'</div>'; /// Gerencia General
-                      }
-                      $tabla.='
-                      </div>
-                    </div>';
-                  }
-                $tabla.='
-                  </div>
-      
-                </div>
+                  </fieldset>
+              </form>
               </div>
-            </div>
-          </article>
-
-          <article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
-            <div id="content1"></div>
-          </article>';
-      return $tabla;
-    }
-
-
-
-    /* ---- Lista de Distritales ---*/
-    public function list_distrital($dep_id){
-      $tabla='';
-      $departamento=$this->model_proyecto->get_departamento($dep_id);
-      $distritales=$this->model_evalinstitucional->get_distritales($dep_id);
-
-      $nro=1;
-      $tabla.='<hr><table class="table table-bordered">
-        <tr >
-          <td>'.$nro.'</td>
-          <td style="font-size: 7.8pt;"><b>CONSOLIDADO - '.strtoupper($departamento[0]['dep_departamento']).'</b></td>
-          <td align=center><a href="#" class="btn btn-info enlace" name="'.$departamento[0]['dep_id'].'" id="0">VER</a></td>
-          </tr>';
-        //  if(count($distritales)>1){
-            foreach($distritales as $row){
-              $nro++;
-              $tabla.='
-              <tr>
-                <td>'.$nro.'</td>
-                <td style="font-size: 7.3pt;">'.strtoupper($row['dist_distrital']).'</td>
-                <td align=center><a href="#" class="btn btn-info enlace" name="'.$row['dist_id'].'" id="1">VER</a></td>
-              </tr>';
-            }
-        //  }
-          
-      $tabla.='</table>';
-      return $tabla;
-    }
-
-    /* ---- Lista Gerencias ---*/
-    public function list_gerencias($dep_id){
-      $tabla='';
-      $departamento=$this->model_proyecto->get_departamento($dep_id);
-      $distritales=$this->model_evalinstitucional->get_distritales($dep_id);
-
-      $nro=1;
-      $tabla.='
-        <hr>
-        <table class="table table-bordered">
-        <tr>
-          <td bgcolor=#efefef></td>
-          <td bgcolor=#efefef><b>CONSOLIDADO OFN</b></td>
-          <td align=center bgcolor=#efefef><a href="#" class="btn btn-info enlace" name="'.$dep_id.'" id="0">VER</a></td>
-        </tr>';
-          if($this->gestion==2020){
-            $tabla.='
-            <tr>
-              <td>'.($nro+1).'</td>
-              <td>GERENCIA GENERAL</td>
-              <td align=center><a href="#" class="btn btn-info enlaceg" name="1781" id="1">VER</a></td>
-            </tr>
-            <tr>
-              <td>'.($nro+2).'</td>
-              <td>GERENCIA ADMINISTRATIVA FINANCIERA</td>
-              <td align=center><a href="#" class="btn btn-info enlaceg" name="1783" id="2">VER</a></td>
-            </tr>
-            <tr>
-              <td>'.($nro+3).'</td>
-              <td>GERENCIA SERVICIOS DE SALUD</td>
-              <td align=center><a href="#" class="btn btn-info enlaceg" name="1801" id="3">VER</a></td>
-            </tr>
-            </table>';
-          }
-          elseif($this->gestion==2021){
-            $tabla.='
-            <tr>
-              <td>'.($nro+1).'</td>
-              <td>GERENCIA GENERAL</td>
-              <td align=center><a href="#" class="btn btn-info enlaceg" name="2301" id="1">VER</a></td>
-            </tr>
-            <tr>
-              <td>'.($nro+2).'</td>
-              <td>GERENCIA ADMINISTRATIVA FINANCIERA</td>
-              <td align=center><a href="#" class="btn btn-info enlaceg" name="2300" id="2">VER</a></td>
-            </tr>
-            <tr>
-              <td>'.($nro+3).'</td>
-              <td>GERENCIA SERVICIOS DE SALUD</td>
-              <td align=center><a href="#" class="btn btn-info enlaceg" name="2308" id="3">VER</a></td>
-            </tr>
-            </table>';
-          }
-        
-      return $tabla;
-    }
-
+            </article>';
+    return $tabla;
+  }
 
     /*--- TABLA ACUMULADA EVALUACIÓN 2020 - REGIONAL, DISTRITAL ---*/
     public function tabla_acumulada_evaluacion_regional_distrital($regresion,$tp_graf,$tip_rep){
@@ -384,20 +251,19 @@ class Evaluacionpoa extends CI_Controller{
     }
 
 
-        /*----- Parametros de Eficacia Concolidado por Unidad (ANTERIOR) -----*/
+        /*----- Parametros de Eficacia Concolidado por Unidad  -----*/
     public function parametros_eficacia($matriz,$tp_rep){
       if($tp_rep==1){ //// Normal
         $class='class="table table-bordered" align=center style="width:60%;"';
-        $div='<div id="parametro_efi" style="width: 600px; height: 400px; margin: 0 auto"></div>';
+        $tit='<div style="font-size: 25px;font-family: Arial;"><b>PARAMETROS DE CUMPLIMIENTO</b></div><br>';
 
       }
       else{ /// Impresion
         $class='class="change_order_items" border=1 align=center style="width:100%;"';
-        $div='<div id="parametro_efi_print" style="width: 650px; height: 330px; margin: 0 auto"></div>';
       }
      // $nro=$matriz;
       $tabla='';
-      $tabla .='<table '.$class.'>
+      $tabla .=''.$tit.'<table '.$class.'>
                     <thead>
                       <tr>
                         <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
@@ -436,72 +302,8 @@ class Evaluacionpoa extends CI_Controller{
       return $tabla;
     }
 
-    /*----- Parametros de Eficacia Concolidado por Unidad (ANTERIOR) -----*/
-    public function parametros_eficacia_ANTERILR($matriz,$tp_rep){
-      if($tp_rep==1){ //// Normal
-        $class='class="table table-bordered" align=center style="width:60%;"';
-        $div='<div id="parametro_efi" style="width: 600px; height: 400px; margin: 0 auto"></div>';
 
-      }
-      else{ /// Impresion
-        $class='class="change_order_items" border=1 align=center style="width:100%;"';
-        $div='<div id="parametro_efi_print" style="width: 650px; height: 330px; margin: 0 auto"></div>';
-      }
-     // $nro=$matriz;
-      $tabla='';
-      $tabla .='<table '.$class.'>
-                  <tr>
-                    <td>
-                      '.$div.'
-                    </td>
-                  </tr>
-                  <tr>
-                  <td>
-                      <table '.$class.'>
-                        <thead>
-                          <tr>
-                            <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
-                            <th style="width: 33%"><center><b>PARAMETRO</b></center></th>
-                            <th style="width: 33%"><center><b>NRO DE UNIDADES</b></center></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>INSATISFACTORIO</td>
-                            <td>0% a 75%</td>
-                            <td align="center"><a class="btn btn-danger" style="width: 100%" align="left" title="'.$matriz[1][2].' Unidades/Proyectos">'.$matriz[1][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>REGULAR</td>
-                            <td>75% a 90% </td>
-                            <td align="center"><a class="btn btn-warning" style="width: 100%" align="left" title="'.$matriz[2][2].' Unidades/Proyectos">'.$matriz[2][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>BUENO</td>
-                            <td>90% a 99%</td>
-                            <td align="center"><a class="btn btn-info" style="width: 100%" align="left" title="'.$matriz[3][2].' Unidades/Proyectos">'.$matriz[3][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>OPTIMO </td>
-                            <td>100%</td>
-                            <td align="center"><a class="btn btn-success" style="width: 100%" align="left" title="'.$matriz[4][2].' Unidades/Proyectos">'.$matriz[4][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td colspan=2 align="left"><b>TOTAL: </b></td>
-                            <td align="center"><b>'.($matriz[1][2]+$matriz[2][2]+$matriz[3][2]+$matriz[4][2]).'</b></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </table>';
-
-      return $tabla;
-    }
-
-
-
-      /*------- CABECERA REPORTE EVALUACION POA ------*/
+      /*------- CABECERA REPORTE EVALUACION POA GRAFICO------*/
     function cabecera_evaluacionpoa($tp_reg,$dato,$tp_titulo){
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
       /// tp_reg 0 : Regional
@@ -515,17 +317,17 @@ class Evaluacionpoa extends CI_Controller{
       $tit_rep='';
 
       if($tp_titulo==1){
-        $tit_rep='<div style="height: 30px;font-size: 18px;font-family: Arial;"><b>CUADRO DE AVANCE EVALUACI&Oacute;N POA AL '.$trimestre['0']['trm_descripcion'].' / '.$this->gestion.'</b></div>';
+        $tit_rep='<div style="height: 30px;font-size: 18px;font-family: Arial;"><b>EVALUACI&Oacute;N POA AL '.$trimestre['0']['trm_descripcion'].' / '.$this->gestion.'</b></div>';
       }
-      elseif($tp_titulo==2){
-        $tit_rep='<div style="height: 30px;font-size: 18px;font-family: Arial;"><b>CUADRO DETALLE EVALUACI&Oacute;N POA AL '.$trimestre['0']['trm_descripcion'].' / '.$this->gestion.'</b></div>';
-      }
+/*      elseif($tp_titulo==2){
+        $tit_rep='<div style="height: 30px;font-size: 18px;font-family: Arial;"><b>EVALUACI&Oacute;N POA AL '.$trimestre['0']['trm_descripcion'].' / '.$this->gestion.'</b></div>';
+      }*/
       elseif($tp_titulo==3){
-        $tit_rep='<div style="height: 30px;font-size: 18px;font-family: Arial;"><b>CUADRO DE EVALUACI&Oacute;N POA GESTIÓN : '.$this->gestion.'</b></div>';
+        $tit_rep='<div style="height: 30px;font-size: 18px;font-family: Arial;"><b>EVALUACI&Oacute;N POA GESTIÓN : '.$this->gestion.'</b></div>';
       }
-      else{
+/*      else{
        $tit_rep='<div style="height: 30px;font-size: 18px;font-family: Arial;"><b>CUADRO DE EFICACIA '.$trimestre['0']['trm_descripcion'].' / '.$this->gestion.'</b></div>'; 
-      }
+      }*/
 
 
       $titulo='';
@@ -598,6 +400,81 @@ class Evaluacionpoa extends CI_Controller{
     }
 
 
+    //// Cabecera Evaluacion Trimestral
+    public function cabecera_evaluacion_trimestral($id,$titulo){
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
+      $tabla='';
+      $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+              <td style="width:70%;height: 2%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                  <tr style="font-size: 10px;font-family: Arial;">
+                      <td style="width:45%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                  </tr>
+                  <tr>
+                      <td style="width:50%;font-size: 7px;">&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                  </tr>
+              </table>
+              </td>
+              <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+               '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%;">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-size: 20px;font-family: Arial;">
+                            <td style="height: 3%;"><b>PARAMETROS DE CUMPLIMIENTO </b>  <br> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr>
+            <td style="width:1%;"></td>
+            <td style="width:98%;height: 2%;">
+              <div style="font-family: Arial;font-size: 13px;">'.$titulo.'</div>
+            </td>
+            <td style="width:1%;"></td>
+          </tr>
+        </table><<hr>';
+      return $tabla;
+    }
+
+  //// Pie de Evaluacion POA Trimestral
+  public function pie_evaluacionpoa(){
+    $tabla='';
+    $tabla.='
+
+      <table border=0 style="width:100%;">
+        <tr>
+          <td style="width:1%;"></td>
+          <td style="width:98%;">
+          <hr>
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <tr>
+                  <td style="height:18px;width:33.3%">'.$this->session->userdata('rd_poa').'</td>
+                  <td style="height:18px;width:33.3%">'.$this->session->userdata('sistema').'</td>
+                  <td style="height:18px;width:33.3%" align=right>'.$this->session->userdata('funcionario').' - pag. [[page_cu]]/[[page_nb]]</td>
+                </tr>
+              </table>
+          </td>
+          <td style="width:1%;"></td>
+        </tr>
+      </table>';
+
+    return $tabla;
+  }   
 
 
 
@@ -672,13 +549,16 @@ class Evaluacionpoa extends CI_Controller{
         return $tabla;
     }
 
-    /*---- UNIDADES ORGANIZACIONAL -----*/
-    public function unidades($tp_rep,$tp_uni,$id){
+
+
+
+    /*---- EFICACIA UNIDADES ORGANIZACIONAL -----*/
+    public function unidades_dist_reg($tp_rep,$tp_uni,$id,$tp_id){
     $unidades=$this->model_evalinstitucional->list_unidades_organizacionales($tp_uni,$id);
     $distrital=$this->model_proyecto->dep_dist($id);
     
     if($tp_uni==0){
-      $titulo_consolidado='CONSOLIDADO OFICINA NACIONAL';
+      $titulo_consolidado='CONSOLIDADO '.strtoupper($distrital[0]['dep_departamento']).'';
       $eficacia_distrital=$this->tabla_regresion_lineal_regional($id); /// Eficacia
       $economia_distrital=$this->economia_por_regional($id); /// Economia
       $eficiencia_distrital=$this->eficiencia_por_regional($eficacia_distrital[5][$this->tmes],$economia_distrital[3]); /// Eficiencia
@@ -696,7 +576,7 @@ class Evaluacionpoa extends CI_Controller{
       // 1 : normal, 2 : Impresion
       if($tp_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
-        $tabla.='<h2 align=center>CUADRO DE INDICADORES </h2>';
+        $tabla.='<div style="font-size: 25px;font-family: Arial;"><b>CUADRO DE % CUMPLIMIENTO POR UNIDADES</b></div><br>';
         $color='';
       } 
       else{ /// Impresion
@@ -707,14 +587,14 @@ class Evaluacionpoa extends CI_Controller{
       $tabla.='
         <table '.$tab.'>
          <thead>
-            <tr style="font-size: 9px;" align=center bgcolor='.$color.'>
+            <tr style="font-size: 10px;" align=center bgcolor='.$color.'>
               <th style="width:2%;height:15px;">#</th>
-              <th style="width:13%;">DISTRITO</th>
-              <th style="width:13%;">UNIDAD</th>
-              <th style="width:10%;">ACT. PROGRAMADO</th>
-              <th style="width:10%;">ACT. CUMPLIDO</th>
-              <th style="width:10%;">ACT. NO CUMPLIDO</th>
-              <th style="width:10%;">% EFICACIA</th>
+              <th style="width:13%;">DISTRITAL</th>
+              <th style="width:13%;">GASTO CORRIENTE / PROY. INV.</th>
+              <th style="width:10%;">METAS. PROGRAMADAS</th>
+              <th style="width:10%;">METAS CUMPLIDAS</th>
+              <th style="width:10%;">METAS NO CUMPLIDS</th>
+              <th style="width:10%;">% CUMPLIMIENTO</th>
               <th style="width:10%;">% ECONOMIA</th>
               <th style="width:10%;">EFICIENCIA</th>
             </tr>
@@ -725,8 +605,15 @@ class Evaluacionpoa extends CI_Controller{
             $eficacia=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
             $economia=$this->economia_por_unidad($row['aper_id'],$row['proy_id']); /// Economia
             $eficiencia=$this->eficiencia_unidad($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
+
+            $color='';
+            if($eficacia[5][$this->tmes]<=75){$color='#f9e1e7';} /// Insatisfactorio - Rojo (1)
+            if($eficacia[5][$this->tmes] > 75 & $eficacia[5][$this->tmes] <= 90){$color='#f3e8d2';} /// Regular - Amarillo (2)
+            if($eficacia[5][$this->tmes] > 90 & $eficacia[5][$this->tmes] <= 99){$color='#def0f7';} /// Bueno - Azul (3)
+            if($eficacia[5][$this->tmes] > 99 & $eficacia[5][$this->tmes] <= 100){$color='#d1f5d1';} /// Optimo - verde (4)
+
             $nro++;
-            $tabla.='<tr style="font-size: 9px;">';
+            $tabla.='<tr style="font-size: 10px;" bgcolor='.$color.'>';
             $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
             $tabla.='<td style="width:13%;">'.strtoupper($row['dist_distrital']).'</td>';
             $tabla.='<td style="width:13%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
@@ -739,15 +626,15 @@ class Evaluacionpoa extends CI_Controller{
             $tabla.='</tr>';
           }
       $tabla.='
-          <tr style="font-size: 9px;" bgcolor="#d3f8c5">
+          <tr style="font-size: 10px;" >
             <td></td>
             <td colspan=2><b>'.$titulo_consolidado.'</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficacia_distrital[2][$this->tmes].'</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficacia_distrital[3][$this->tmes].'</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficacia_distrital[4][$this->tmes].'</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficacia_distrital[5][$this->tmes].'%</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$economia_distrital[3].'%</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficiencia_distrital.'</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[2][$this->tmes].'</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[3][$this->tmes].'</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[4][$this->tmes].'</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[5][$this->tmes].'%</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$economia_distrital[3].'%</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$eficiencia_distrital.'</b></td>
           </tr>
           </tbody>
         </table>';
@@ -1423,6 +1310,7 @@ class Evaluacionpoa extends CI_Controller{
         $tr[5][$i]=0; /// eficacia %
         $tr[6][$i]=0; /// no eficacia %
         $tr[7][$i]=0; /// en proceso
+        $tr[8][$i]=0; /// en proceso %
       }
 
       for ($i=1; $i <=$this->tmes; $i++) {
@@ -1436,6 +1324,8 @@ class Evaluacionpoa extends CI_Controller{
         $tr[6][$i]=(100-$tr[5][$i]);
         $proceso=$this->obtiene_datos_evaluacíon_distrital($dist_id,$i,2);
         $tr[7][$i]=$proceso[2]; /// En Proceso
+
+        $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
       }
 
     return $tr;
@@ -1526,6 +1416,187 @@ class Evaluacionpoa extends CI_Controller{
       }
 
       return $titulo;
+    }
+
+
+    ////=====================  CATEGORIA PROGRAMATICA
+    /*--- TABLA APERTURA PROGRAMATICAS VISTA ---*/
+    public function tabla_apertura_programatica($matriz,$nro,$tip_rep){
+      $tabla='';
+      if($tip_rep==1){ /// Normal
+        $tab='class="table table-bordered" align=center style="width:100%;"';
+        $color='#e9edec';
+        $tit='<div style="font-size: 25px;font-family: Arial;"><b>PARAMETROS DE CUMPLIMIENTO POR PROGRAMA</b></div><br>';
+      } 
+      else{ /// Impresion
+        $tab='class="change_order_items" border=1 align=center style="width:100%;"';
+        $color='#e9edec';
+        $tit='';
+      }
+
+      $tabla='
+      <style type="text/css">
+      table{font-size: 9.5px;
+        width: 100%;
+        max-width:1550px;
+        overflow-x: scroll;
+      }
+      th{
+        padding: 1.4px;
+        text-align: center;
+        font-size: 9.5px;
+      }
+      </style>';
+
+      $tabla.='
+        '.$tit.'<table '.$tab.'>
+          <thead>
+              <tr align=center bgcolor='.$color.'>
+                <th>#</th>
+                <th>APERTURA PROGRAM&Aacute;TICA</th>
+                <th>DESCRIPCI&Oacute;N</th>
+                <th>TOTAL PROGRAMADAS</th>
+                <th>TOTAL EVALUADAS</th>
+                <th>CUMPLIDAS</th>
+                <th>NO CUMPLIDAS</th>
+                <th>% CUMPLIDAS</th>
+                <th>% NO CUMPLIDAS</th>
+                </tr>
+              </thead>
+            <tbody>';
+              for ($i=1; $i <=$nro+1; $i++) { 
+                $tabla.='<tr>';
+                if($i==$nro+1){
+                  $tabla.='<tr bgcolor=#e5ecef>';
+                }
+                
+                for ($j=1; $j <=9; $j++) {
+                  if($j==8 || $j==9){
+                    if($j==8){
+                      $tabla.='<td style="font-size: 13px;font-family: Arial;" align="right"><b>'.$matriz[$i][$j].'%</b></td>';
+                    }
+                    else{
+                      $tabla.='<td style="font-size: 13px;font-family: Arial;" align="right"><b>'.$matriz[$i][$j].'%</b></td>';
+                    }
+                    
+                  }
+                  elseif($j==1 || $j==2 || $j==3){
+                    if($j==3){
+                      $tabla.='<td><b>'.$matriz[$i][$j].'</b></td>';
+                    }
+                    else{
+                      $tabla.='<td align=center><b>'.$matriz[$i][$j].'</b></td>';
+                    }
+                  }
+                  else{
+                    $tabla.='<td align=right><b>'.$matriz[$i][$j].'</b></td>';
+                  }
+                  
+                }
+                $tabla.='</tr>';
+              }
+          $tabla.='
+            </tbody>
+          </table>';
+
+      return $tabla;
+    }
+
+
+        //// ========= DISTRITAL 
+    /*--- MATRIZ EVALUACION PROGRAMA AL TRIMESTRE - DISTRITAL ---*/
+    public function matriz_programas_distrital($lista_programas){
+      $nro_prog=count($lista_programas)+1;
+      $nro=0;
+      $total=0;$cumplido=0;$ncumplido=0;
+      foreach($lista_programas as $row){
+        $nro++;
+        $tr[$nro][1]=$nro; /// nro
+        $tr[$nro][2]=$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad']; /// Apertura Programatica
+        $tr[$nro][3]=$row['aper_descripcion']; /// Descripcion
+        $datos=$this->obtiene_datos_evaluacíon_programa_distrital($row['dist_id'],$row['aper_programa'],1);
+        $tr[$nro][4]=$datos[1]; /// Total Total
+        $tr[$nro][5]=$datos[1]; /// Total Evaluado
+        $tr[$nro][6]=$datos[2]; /// Total Cumplidos
+        $tr[$nro][7]=($datos[1]-$datos[2]); /// Total No Cumplido
+        $tr[$nro][8]=0; /// Total Cumplido %
+        if($tr[$nro][4]!=0){
+          $tr[$nro][8]=round((($tr[$nro][6]/$tr[$nro][4])*100),2);
+        }
+        $tr[$nro][9]=(100-$tr[$nro][8]); /// Total No cumplido %
+
+        $total=$total+$tr[$nro][4];
+        $cumplido=$cumplido+$tr[$nro][6];
+        $ncumplido=$ncumplido+$tr[$nro][7];
+      }
+
+        $tr[$nro_prog][1]=''; /// nro
+        $tr[$nro_prog][2]=''; /// Apertura Programatica
+        $tr[$nro_prog][3]='TOTAL DISTRITAL '; /// Descripcion
+        $tr[$nro_prog][4]=$total; /// Total Total
+        $tr[$nro_prog][5]=$total; /// Total Evaluado
+        $tr[$nro_prog][6]=$cumplido; /// Total Cumplidos
+        $tr[$nro_prog][7]=$ncumplido; /// Total No Cumplido
+        $tr[$nro_prog][8]=0; /// Total Cumplido %
+        if($tr[$nro_prog][4]!=0){
+          $tr[$nro_prog][8]=round((($tr[$nro_prog][6]/$tr[$nro_prog][4])*100),2);
+        }
+        $tr[$nro_prog][9]=(100-$tr[$nro_prog][8]); /// Total No cumplido %
+
+      return $tr;
+    }
+
+    /*--- OBTIENE DATOS DE EVALUACIÓN 2020 - APERTURA REGIONAL ---*/
+    public function obtiene_datos_evaluacíon_programa_distrital($dist_id,$aper_programa,$tipo_evaluacion){
+      $nro_ope_eval=0; $nro_cumplidas=0;
+      for ($i=1; $i <=$this->tmes; $i++) {
+        $programadas=$this->model_evalprograma->nro_operaciones_programadas_distrital($dist_id,$aper_programa,$i,4);
+        if(count($programadas)!=0){
+          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
+        }
+
+        if(count($this->model_evalprograma->list_operaciones_evaluadas_distrital_trimestre($dist_id,$aper_programa,$i,$tipo_evaluacion,4))!=0){
+          $nro_cumplidas=$nro_cumplidas+count($this->model_evalprograma->list_operaciones_evaluadas_distrital_trimestre($dist_id,$aper_programa,$i,$tipo_evaluacion,4));
+        }
+      }
+
+      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
+      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
+
+      return $vtrimestre;
+    }
+    //// ========= END REGIONAL 
+
+
+
+
+
+
+
+    /////  PARAMETROS DE EFICACIA  PROGRAMAS
+    /*---- Tabla Parametros -----*/ 
+    public function matriz_parametros($matriz,$nro){
+
+      for ($i=1; $i <=4 ; $i++) { 
+        $par[$i][1]=$i;
+        $par[$i][2]=0;
+        $par[$i][3]=0;
+      }
+
+      for ($i=1; $i <=$nro; $i++) { 
+        $eficacia=$matriz[$i][8];
+        
+        if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+        if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
+        if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
+        if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+      }
+
+      for ($i=1; $i <=4 ; $i++) { 
+        $par[$i][3]=round((($par[$i][2]/$nro)*100),2);
+      }
+
+      return $par;
     }
 }
 ?>
