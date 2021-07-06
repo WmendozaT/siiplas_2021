@@ -20,56 +20,6 @@
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>  
-        <script>
-            function abreVentana(PDF){             
-                var direccion;
-                direccion = '' + PDF;
-                window.open(direccion, "Reporte de Evaluacion POA" , "width=800,height=650,scrollbars=SI") ;                                                                 
-            }                                            
-        </script>
-        <meta name="viewport" content="width=device-width">
-        <style>
-            #areaImprimir{display:none}
-        @media print {
-            #areaImprimir {display:block}
-        }
-            #areaImprimir_eval{display:none}
-        @media print {
-            #areaImprimir_eval {display:block}
-        }
-        @media print {
-            #areaImprimir_eficacia {display:block}
-        }
-        </style>
-        <style>
-         hr{ 
-            height:3px;  
-            background-color:#1C7366; 
-            }
-            table{font-size: 9px;
-            width: 100%;
-            max-width:1550px;;
-            overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              font-size: 8px;
-              text-align: center;
-            }
-            td{
-              padding: 1.4px;
-              font-size: 8px;
-            }
-        </style>
-<!--         <script type="text/javascript">
-        function printDiv(nombreDiv) {
-            var contenido= document.getElementById(nombreDiv).innerHTML;
-            var contenidoOriginal= document.body.innerHTML;
-            document.body.innerHTML = contenido;
-            window.print();
-            document.body.innerHTML = contenidoOriginal;
-        }
-        </script> -->
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -168,19 +118,11 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <section id="widget-grid" class="well">
-                                <div class="">
-                                    <h4><b>CARGO : </b><?php echo $this->session->userdata("cargo");?></h4>
-                                    <h4><b>REPONSABLE : </b><?php echo $this->session->userdata("user_name");?></h4>
-                                </div>
-                            </section>
-                        </article>
-                    </div>
-                    <h2 class="alert alert-success"><center>EVALUACI&Oacute;N GASTO CORRIENTE - <?php echo $trimestre[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></center></h2>
-                    <div class="row">
-                        <?php echo $base;?>
                         <?php echo $regional;?>
+                    </div>
+                    
+                    <div class="row">
+                        
                     </div>
                 </section>
             </div>
@@ -238,6 +180,103 @@
         <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
+         <!-- <script type="text/javascript">
+        $(document).ready(function() {
+            pageSetUp();
+            $("#dep_id").change(function () {
+                $("#dep_id option:selected").each(function () {
+                    dist_id=$('[name="dist_id"]').val();
+                    elegido=$(this).val();
+                    if(elegido!=0){
+                        $('#ue').slideDown();
+                        $('#tp').slideDown();
+                        $.post("<?php echo base_url(); ?>index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'distrital' }, function(data){
+                            $("#dist_id").html(data);
+                            $("#tp_id").html('');
+                            $("#lista_consolidado").html('');
+                        });
+                    }
+                    else{
+                        dep_id=0;
+                        dist_id=0;
+                        tp_id=4;
+                        $('#ue').slideUp();
+                        $('#tp').slideUp();
+
+                        $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
+                        var url = "<?php echo site_url("")?>/reporte_seguimiento_poa/crep_seguimientopoa/get_lista_gcorriente_pinversion";
+                        var request;
+                        if (request) {
+                            request.abort();
+                        }
+                        request = $.ajax({
+                            url: url,
+                            type: "POST",
+                            dataType: 'json',
+                            data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+                        });
+
+                        request.done(function (response, textStatus, jqXHR) {
+                            if (response.respuesta == 'correcto') {
+                                $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                            }
+                            else{
+                                alertify.error("ERROR AL LISTAR");
+                            }
+                        }); 
+                    }
+                    
+                });
+            });
+
+            $("#dist_id").change(function () {
+                $("#dist_id option:selected").each(function () {
+                    elegido=$(this).val();
+                    $.post("<?php echo base_url(); ?>index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'tipo' }, function(data){
+                        $("#tp_id").html(data);
+                        $("#lista_consolidado").html('');
+                    });
+                });
+            });
+
+
+
+            $("#tp_id").change(function () {
+                $("#tp_id option:selected").each(function () {
+                    dep_id=$('[name="dep_id"]').val();
+                    dist_id=$('[name="dist_id"]').val();
+                    tp_id=$(this).val();
+                    if(tp_id!=0){
+                        $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
+                        var url = "<?php echo site_url("")?>/reporte_seguimiento_poa/crep_seguimientopoa/get_lista_gcorriente_pinversion";
+                        var request;
+                        if (request) {
+                            request.abort();
+                        }
+                        request = $.ajax({
+                            url: url,
+                            type: "POST",
+                            dataType: 'json',
+                            data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+                        });
+
+                        request.done(function (response, textStatus, jqXHR) {
+                            if (response.respuesta == 'correcto') {
+                                $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                            }
+                            else{
+                                alertify.error("ERROR AL LISTAR");
+                            }
+                        }); 
+                    }
+                    else{
+                        $("#lista_consolidado").html('');
+                    }
+                    
+                });
+            });
+        })
+
+        </script> -->
     </body>
 </html>

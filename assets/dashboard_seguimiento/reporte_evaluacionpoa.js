@@ -15,6 +15,17 @@ function abreVentana_eficiencia(PDF){
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
   function doSearch(){
     var tableReg = document.getElementById('datos');
     var searchText = document.getElementById('searchTerm').value.toLowerCase();
@@ -55,6 +66,59 @@ function abreVentana_eficiencia(PDF){
     return true;           
     return /\d/.test(String.fromCharCode(keynum));
   }
+
+
+////------- menu select regionales
+
+  $("#dep_id").change(function () {
+      $("#dep_id option:selected").each(function () {
+          dist_id=$('[name="dist_id"]').val();
+          elegido=$(this).val();
+          alert(elegido)
+          if(elegido!=0){
+              $('#ue').slideDown();
+              $('#tp').slideDown();
+              $.post(base+"index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'distrital' }, function(data){
+                  $("#dist_id").html(data);
+                  $("#tp_id").html('');
+                  $("#lista_consolidado").html('');
+              });
+          }
+          else{
+              dep_id=0;
+              dist_id=0;
+              tp_id=4;
+              $('#ue').slideUp();
+              $('#tp').slideUp();
+
+              $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
+              var url = base+"/index.php/reporte_seguimiento_poa/crep_seguimientopoa/get_lista_gcorriente_pinversion";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+              });
+
+              request.done(function (response, textStatus, jqXHR) {
+                  if (response.respuesta == 'correcto') {
+                      $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                  }
+                  else{
+                      alertify.error("ERROR AL LISTAR");
+                  }
+              }); 
+          }
+          
+      });
+  });
+    
+
+////----- End menu select
 
 
     function verif_valor(programado,ejecutado,nro){

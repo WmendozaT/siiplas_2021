@@ -1450,53 +1450,60 @@ class Seguimientopoa extends CI_Controller{
         /// ----------
         $temporalidad=$this->obtiene_suma_temporalidad_prog_ejec($row['prod_id']);
 
-        if($row['indi_id']==2 & $row['mt_id']==1){ /// Relativo Recurrente
-
-        }
-        else{
-
-        }
-
-        /*----- Temporalidad Programado / Ejecutado -----*/
-        if($temporalidad[1]!=0 & $temporalidad[4]<$row['prod_meta'] & $temporalidad[2]>0){
-          if($temporalidad[3]==$temporalidad[4]){
-            $tp=2;
-            $activo=0;
-            $obs='';
-            if($temporalidad[1]==$temporalidad[2]){
-              $tp=1;
-              $activo=1;
-              $obs='Trimestre Cumplido';
-            }
-           // echo "prod id : ".$row['prod_id']." --> ".$row['prod_producto']." ----Solo un registro<br><br>";
-            $this->insertando_datos($row['prod_id'],$this->tmes,$tp,$activo,$obs);
+        if($row['indi_id']==2 & $row['mt_id']==1){ /// ==== RELATIVO RECURRENTE
+          
+          if($temporalidad[1]==$temporalidad[2]){ /// Cumplido
+            $this->insertando_datos($row['prod_id'],$this->tmes,1,1,'Trimestre Cumplido');
           }
-          elseif($temporalidad[1]==$temporalidad[2]){
-            for ($i=1; $i <=$this->tmes; $i++) { 
-              //$verif_prog=$this->model_seguimientopoa->programado_trimestral_productos($i,$row['prod_id']);
-              if(count($this->model_evaluacion->programado_trimestral_productos($i,$row['prod_id']))!=0){
-                
-                ///------- Eliminamos el registro anterior
-                $this->eliminando_registro_evaluacion($row['prod_id'],$i);
-                /// ----------
-
-                //// recorrer trimestres anteriores
-                if($i==$this->tmes){
-                  $this->insertando_datos($row['prod_id'],$i,1,1,'Trimestre Cumplido');
-                }
-                else{
-                  $this->insertando_datos($row['prod_id'],$i,1,0,'Actualizado Trimestre Cumplido '.$i);  
-                }
-                
-              }
-            }
-
-          }
-          else{
+          elseif($temporalidad[1]>$temporalidad[2]){ /// En proceso
             $this->insertando_datos($row['prod_id'],$this->tmes,2,0,'');
           }
-          
-        }    
+
+        }
+        else{ /// ==== ABSOLUTO
+
+            /*----- Temporalidad Programado / Ejecutado -----*/
+            if($temporalidad[1]!=0 & $temporalidad[4]<$row['prod_meta'] & $temporalidad[2]>0){
+              if($temporalidad[3]==$temporalidad[4]){
+                $tp=2;
+                $activo=0;
+                $obs='';
+                if($temporalidad[1]==$temporalidad[2]){
+                  $tp=1;
+                  $activo=1;
+                  $obs='Trimestre Cumplido';
+                }
+               // echo "prod id : ".$row['prod_id']." --> ".$row['prod_producto']." ----Solo un registro<br><br>";
+                $this->insertando_datos($row['prod_id'],$this->tmes,$tp,$activo,$obs);
+              }
+              elseif($temporalidad[1]==$temporalidad[2]){
+                for ($i=1; $i <=$this->tmes; $i++) { 
+                  //$verif_prog=$this->model_seguimientopoa->programado_trimestral_productos($i,$row['prod_id']);
+                  if(count($this->model_evaluacion->programado_trimestral_productos($i,$row['prod_id']))!=0){
+                    
+                    ///------- Eliminamos el registro anterior
+                    $this->eliminando_registro_evaluacion($row['prod_id'],$i);
+                    /// ----------
+
+                    //// recorrer trimestres anteriores
+                    if($i==$this->tmes){
+                      $this->insertando_datos($row['prod_id'],$i,1,1,'Trimestre Cumplido');
+                    }
+                    else{
+                      $this->insertando_datos($row['prod_id'],$i,1,0,'Actualizado Trimestre Cumplido '.$i);  
+                    }
+                    
+                  }
+                }
+
+              }
+              else{
+                $this->insertando_datos($row['prod_id'],$this->tmes,2,0,'');
+              }
+              
+            }  
+
+        }  
       }
     
     }

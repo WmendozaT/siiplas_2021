@@ -9,6 +9,7 @@ class Crep_evalinstitucional extends CI_Controller {
             $this->load->model('programacion/model_faseetapa');
             $this->load->model('programacion/model_producto');
             $this->load->model('programacion/model_componente');
+            $this->load->model('mantenimiento/model_estructura_org');
 
             $this->load->model('reporte_eval/model_evalunidad'); /// Model Evaluacion Unidad
             $this->load->model('reporte_eval/model_evalinstitucional'); /// Model Evaluacion Institucional
@@ -38,15 +39,63 @@ class Crep_evalinstitucional extends CI_Controller {
       if($this->gestion>2019){
         $data['menu']=$this->menu(7); //// genera menu
         $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-        $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
-        $data['regional']=$this->evaluacionpoa->regionales();
 
+      //  $data['regional']=$this->evaluacionpoa->regionales();
+        $data['regional']=$this->listado_regionales();
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_menu', $data);
       }
       else{
         redirect('regionales'); // Rideccionando a Evaluacion anterior 2019
       }
     }
+
+
+    //// Listado Regionales
+    public function listado_regionales(){
+    $tabla='';
+    $regionales=$this->model_proyecto->list_departamentos();
+    $unidades=$this->model_estructura_org->list_unidades_apertura();
+    $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+      $tabla.='
+          <input name="base" type="hidden" value="'.base_url().'">
+          <article class="col-sm-12">
+            <div class="well">
+              <form class="smart-form">
+                  <header><b>EVALUACI&Oacute;N POA '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
+                  <fieldset>          
+                    <div class="row">
+                      <section class="col col-3">
+                        <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
+                        <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
+                        <option value="">SELECCIONE REGIONAL</option>
+                        <option value="0">0.- INSTITUCIONAL C.N.S.</option>';
+                        foreach($regionales as $row){
+                          if($row['dep_id']!=0){
+                            $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                          }
+                        }
+                        $tabla.='
+                        </select>
+                      </section>
+
+                      <section class="col col-3" id="ue">
+                        <label class="label">UNIDAD EJECUTORA</label>
+                        <select class="form-control" id="dist_id" name="dist_id" title="SELECCIONE DISTRITAL">
+                        </select>
+                      </section>
+
+                      <section class="col col-3" id="tp">
+                        <label class="label">TIPO DE GASTO</label>
+                        <select class="form-control" id="tp_id" name="tp_id" title="SELECCIONE TIPO">
+                        </select>
+                      </section>
+                    </div>
+                  </fieldset>
+              </form>
+              </div>
+            </article>';
+    return $tabla;
+  }
 
 
 
