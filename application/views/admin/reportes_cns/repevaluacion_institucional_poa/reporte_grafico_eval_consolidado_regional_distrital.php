@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
 
     <style type="text/css">
-      table{font-size: 9.5px;
+      table{font-size: 11px;
         width: 100%;
         max-width:1550px;
         overflow-x: scroll;
@@ -22,7 +22,7 @@
       th{
         padding: 1.4px;
         text-align: center;
-        font-size: 9.5px;
+        font-size: 10px;
       }
     </style>
 <body>
@@ -162,14 +162,12 @@
                                             <div class="row">
                                               <div id="lista"></div>
                                             </div>
-
-                                            
-                                            <div align="right" id="print_eficacia" style="display: none">
-                                              <a href="javascript:abreVentana_eficiencia('<?php echo site_url("").'/rep_eval_poa/rep_eficacia/'.$url; ?>');" class="btn btn-default" title="IMPRIMIR CUADRO DE CUMPLIMIENTO"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>
-                                            </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                             <div id="parametro_eficacia"></div>
+                                            <div align="right" id="print_eficacia" style="display: none">
+                                              <a href="javascript:abreVentana_eficiencia('<?php echo site_url("").'/rep_eval_poa/rep_eficacia/'.$url; ?>');" class="btn btn-default" title="IMPRIMIR CUADRO DE CUMPLIMIENTO"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

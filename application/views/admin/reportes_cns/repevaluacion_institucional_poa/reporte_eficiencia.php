@@ -22,7 +22,7 @@ ob_start();
         <page_footer>
             <?php echo $pie;?>
         </page_footer>
-        <?php echo $operaciones;?>
+        <?php echo $lista_unidades;?>
     </page>
 
 <?php

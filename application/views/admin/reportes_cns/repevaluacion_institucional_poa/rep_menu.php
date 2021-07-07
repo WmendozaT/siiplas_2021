@@ -19,7 +19,7 @@
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>  
+        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->

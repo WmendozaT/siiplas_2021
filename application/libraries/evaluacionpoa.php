@@ -401,7 +401,7 @@ class Evaluacionpoa extends CI_Controller{
 
 
     //// Cabecera Evaluacion Trimestral
-    public function cabecera_evaluacion_trimestral($id,$titulo){
+    public function cabecera_evaluacion_trimestral($titulo){
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
       $tabla='';
       $tabla.='
@@ -606,14 +606,14 @@ class Evaluacionpoa extends CI_Controller{
             $economia=$this->economia_por_unidad($row['aper_id'],$row['proy_id']); /// Economia
             $eficiencia=$this->eficiencia_unidad($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
 
-            $color='';
+           /* $color='';
             if($eficacia[5][$this->tmes]<=75){$color='#f9e1e7';} /// Insatisfactorio - Rojo (1)
             if($eficacia[5][$this->tmes] > 75 & $eficacia[5][$this->tmes] <= 90){$color='#f3e8d2';} /// Regular - Amarillo (2)
             if($eficacia[5][$this->tmes] > 90 & $eficacia[5][$this->tmes] <= 99){$color='#def0f7';} /// Bueno - Azul (3)
             if($eficacia[5][$this->tmes] > 99 & $eficacia[5][$this->tmes] <= 100){$color='#d1f5d1';} /// Optimo - verde (4)
-
+*/
             $nro++;
-            $tabla.='<tr style="font-size: 10px;" bgcolor='.$color.'>';
+            $tabla.='<tr style="font-size: 10px;">';
             $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
             $tabla.='<td style="width:13%;">'.strtoupper($row['dist_distrital']).'</td>';
             $tabla.='<td style="width:13%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';

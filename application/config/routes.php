@@ -457,6 +457,7 @@ $route['reporte_solicitud_poa_aprobado/(:any)'] = 'ejecucion/ccertificacion_poa/
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (GASTO CORRIENTE) 2020 ----------*/
 $route['menu_eval_poa'] = 'reporte_evaluacion/crep_evalinstitucional/menu_eval_poa';  /// MENU EVALUACION POA 
 $route['rep_eval_poa/evaluacion_poa_distrital/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa_distrital/$1/$2';  /// REPORTES GRAFICOS DISTRITAL
+$route['rep_eval_poa/evaluacion_poa_regional/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa_regional/$1/$2';  /// REPORTES GRAFICOS REGIONAL
 
 //$route['rep_eval_poa/evaluacion_poa/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa/$1/$2';  /// REPORTES GRAFICOS REGIONAL, DISTRITAL
 
