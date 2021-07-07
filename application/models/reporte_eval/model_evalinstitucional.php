@@ -520,7 +520,7 @@ class Model_evalinstitucional extends CI_Model{
         }
         else{
             $sql = '
-                select * 
+                select *
                 from _proyectos as p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id

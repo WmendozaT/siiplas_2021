@@ -10,6 +10,7 @@ class Crep_evalinstitucional extends CI_Controller {
             $this->load->model('programacion/model_producto');
             $this->load->model('programacion/model_componente');
             $this->load->model('mantenimiento/model_estructura_org');
+            $this->load->model('ejecucion/model_seguimientopoa');
 
             $this->load->model('reporte_eval/model_evalunidad'); /// Model Evaluacion Unidad
             $this->load->model('reporte_eval/model_evalinstitucional'); /// Model Evaluacion Institucional
@@ -92,7 +93,7 @@ class Crep_evalinstitucional extends CI_Controller {
       $data['titulo_indicador']='UNIDADES DEPENDIENTES';
       $data['boton']='CARGAR CUADRO DE INDICADORES Y PARAMETROS DE CUMPLIMIENTO';
       $data['titulo']=
-        '<h2><b>EVALUACI&Oacute;N POA - CONSOLIDADO REGIONAL '.strtoupper($data['departamento'][0]['dep_departamento']).' -'.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
+        '<h2><b>CONSOLIDADO REGIONAL '.strtoupper($data['departamento'][0]['dep_departamento']).' - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
 
       $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],1);
       $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],1);
@@ -140,13 +141,15 @@ class Crep_evalinstitucional extends CI_Controller {
     public function evaluacion_poa_distrital($dist_id,$tp_id){
       $data['trimestre']=$this->trimestre;
       $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
-      $data['url']=$data['distrital'][0]['dep_id'].'/'.$dist_id.'/'.$tp_id;
+      $data['url']='1/'.$dist_id;
+      //$data['url']=$data['distrital'][0]['dep_id'].'/'.$dist_id.'/'.$tp_id;
       $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_distrital($dist_id); /// Tabla para el grafico al trimestre
       $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_distrital_total($dist_id); /// Tabla para el grafico Total Gestion
       $data['titulo_indicador']='UNIDADES DEPENDIENTES';
-      $data['boton']='CARGAR CUADRO DE INDICADORES Y PARAMETROS DE CUMPLIMIENTO';
+      $data['boton1']='CARGAR % CUMPLIMIENTO POR UNIDAD';
+      $data['boton2']='CARGAR % CUMPLIMIENTO POR PROGRAMAS';
       $data['titulo']=
-        '<h2>EVALUACI&Oacute;N POA - '.strtoupper($data['distrital'][0]['dist_distrital']).' <b>AL '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
+        '<h2>'.strtoupper($data['distrital'][0]['dist_distrital']).' <b>- '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
 
       $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],1);
       $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],1);
@@ -166,6 +169,13 @@ class Crep_evalinstitucional extends CI_Controller {
       $data['tabla_pastel_todo']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
       $data['tabla_pastel_todo_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
 
+      $data['boton_parametros_unidad']='
+          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_unidad/'.$dist_id.'/1\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
+          <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
+
+      $data['boton_parametros_prog']='
+          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_programa/'.$dist_id.'/1\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
+          <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
 
       $data['base']='
         <input name="base" type="hidden" value="'.base_url().'">
@@ -300,7 +310,7 @@ class Crep_evalinstitucional extends CI_Controller {
 
 
 
-    /*-- GET CUADRO DE EFICIENCIA Y EFICACIA NACIONA, REGIONAL, DISTRITAL --*/
+    /*-- GET CUADRO DE EFICIENCIA Y EFICACIA por UNIDAD NACIONA, REGIONAL, DISTRITAL --*/
     public function get_unidades_eficiencia(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -321,18 +331,20 @@ class Crep_evalinstitucional extends CI_Controller {
         }
         elseif ($dep_id!=0 & $dist_id!=0) { /// Distrital
           $matriz=$this->evaluacionpoa->matriz_eficacia_distrital($dist_id); /// matriz de parametros
-          $tabla=$this->evaluacionpoa->unidades_dist_reg(1,1,$dist_id,$tp_id); //// Lista de Unidades - Distrital
+          $tabla=$this->evaluacionpoa->unidades_dist_reg(1,$dist_id,$tp_id); //// Lista de Unidades - Distrital
 
           $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($dist_id,4);
-          $matriz_programas=$this->evaluacionpoa->matriz_programas_distrital($lista_programas);
+         // $matriz_programas=$this->evaluacionpoa->matriz_programas_distrital($lista_programas);
         }
 
         $parametro_eficacia=$this->evaluacionpoa->parametros_eficacia($matriz,1);
+
+       /* $parametro_eficacia=$this->evaluacionpoa->parametros_eficacia($matriz,1);
         $tabla_programa=$this->evaluacionpoa->tabla_apertura_programatica($matriz_programas,count($lista_programas),1);
 
 
         $matriz_parametros_prog=$this->evaluacionpoa->matriz_parametros($matriz_programas,count($lista_programas));
-        $parametros_prog=$this->evaluacionpoa->parametros_eficacia($matriz_parametros_prog,1);
+        $parametros_prog=$this->evaluacionpoa->parametros_eficacia($matriz_parametros_prog,1);*/
 
 
 
@@ -340,8 +352,8 @@ class Crep_evalinstitucional extends CI_Controller {
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
           'parametro_eficacia'=>$parametro_eficacia,
-          'lista_prog'=>$tabla_programa,
-          'parametros_prog'=>$parametros_prog,
+/*          'lista_prog'=>$tabla_programa,
+          'parametros_prog'=>$parametros_prog,*/
         );
           
         echo json_encode($result);
@@ -351,9 +363,61 @@ class Crep_evalinstitucional extends CI_Controller {
     }
 
 
-   
+/*public function reporte_parametros($tp_regional,$id){
+      $mes = $this->mes_nombre();
+      $trimestre=$this->model_evaluacion->trimestre();
+      $tr=($this->tmes*3);
+      
+      if($tp_regional==0){ //// CONSOLIDADO REGIONAL
+        $regional=$this->model_proyecto->get_departamento($id);
+        $titulo='
+                <tr style="font-size: 15pt;">
+                  <td style="width:100%;" align=center><b>CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']).'</b></td>
+                </tr>';
+      }
+      elseif($tp_regional==1){ //// CONSOLIDADO DISTRITAL
+        $regional=$this->model_proyecto->dep_dist($id);
+        $titulo='
+                <tr style="font-size: 15pt;">
+                  <td style="width:100%;" align=center><b>REGIONAL '.strtoupper($regional[0]['dep_departamento']).'</b></td>
+                </tr>
+                <tr style="font-size: 12pt;">
+                  <td style="width:100%;" align=center>'.strtoupper($regional[0]['dist_distrital']).'</td>
+                </tr>';
+      }
+      else{ //// CONSOLIDADO NACIONAL
+        $titulo='
+                <tr style="font-size: 15pt;">
+                  <td style="width:100%;" align=center><b>CONSOLIDADO NACIONAL INSTITUCIONAL</b></td>
+                </tr>';
+      }
+
+      $data['titulo']=$titulo;
+      if($tp_regional==2){
+        $data['tit']='CUADRO DE INDICADORES'; //// Nacional
+        $data['tabla']=$this->evaluacionpoa->eficacia_regionales(2);  
+      }
+      elseif($tp_regional==1){
+        $data['tit']='CUADRO DE INDICADORES'; //// Distrital
+        $data['tabla']=$this->evaluacionpoa->unidades_dist_reg(2,$tp_regional,$id);  
+      }
+      else{
+        $data['tit']='CUADRO DE INDICADORES'; //// Regional
+        if($id==10){
+          $data['tabla']=$this->evaluacionpoa->unidades_dist_reg(2,0,$id);  
+        }
+        else{
+          $data['tabla']=$this->evaluacionpoa->list_distritales(2,$id);  
+        }
+        
+      }
+    // echo $data['tabla'];
+      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_eficiencia', $data);
+
+    }*/
+
     /*---- REPORTE PARAMETROS DE CUMPLIMIENTO ----*/
-    public function reporte_parametros($dep_id,$dist_id,$tp_id){
+/*    public function reporte_parametros($dep_id,$dist_id,$tp_id){
       $distrital=$this->model_proyecto->dep_dist($dist_id);
 
       $tr=($this->tmes*3);
@@ -367,24 +431,20 @@ class Crep_evalinstitucional extends CI_Controller {
         }
         elseif ($dep_id!=0 & $dist_id!=0) { /// Distrital
           $titulo=strtoupper($distrital[0]['dep_departamento']).' / '.strtoupper($distrital[0]['dist_distrital']);
-          $lista1=$this->evaluacionpoa->unidades_dist_reg(2,1,$dist_id,$tp_id); //// Lista de Unidades - Distrital
+         // $lista1=$this->unidades_dist_reg(1,$dist_id,4); //// Lista de Unidades - Distrital
         }
 
-
+        $lista1=$this->unidades_dist_reg(1,$dist_id,4); //// Lista de Unidades - Distrital
 
       $data['cabecera']=$this->evaluacionpoa->cabecera_evaluacion_trimestral($titulo);
       $data['pie']=$this->evaluacionpoa->pie_evaluacionpoa();
-      $data['lista_unidades']=$lista1;
+      $data['tabla']=$this->unidades_dist_reg(1,$dist_id,4);
 
      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_eficiencia', $data);
-    }
+    }*/
     /*========================*/
 
 
-   
-
-
-  
 
 
 

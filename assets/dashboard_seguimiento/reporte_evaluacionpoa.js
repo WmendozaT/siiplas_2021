@@ -45,6 +45,35 @@ function abreVentana_eficiencia(PDF){
     }
   }
 
+    function doSearchuni(){
+    var tableReg = document.getElementById('tab_uni');
+    var searchText = document.getElementById('searchTerm').value.toLowerCase();
+    var cellsOfRow="";
+    var found=false;
+    var compareWith="";
+
+    // Recorremos todas las filas con contenido de la tabla
+    for (var i = 1; i < tableReg.rows.length; i++){
+      cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+      found = false;
+      // Recorremos todas las celdas
+      for (var j = 0; j < cellsOfRow.length && !found; j++){
+        compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+        // Buscamos el texto en el contenido de la celda
+        if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+          found = true;
+        }
+      }
+      if(found) {
+        tableReg.rows[i].style.display = '';
+      } else {
+        // si no ha encontrado ninguna coincidencia, esconde la
+        // fila de la tabla
+        tableReg.rows[i].style.display = 'none';
+      }
+    }
+  }
+
 
   $( function() {
     $( "#grupoTablas" ).tabs();
@@ -275,15 +304,14 @@ function abreVentana_eficiencia(PDF){
 
     /*---- CUADRO EFICACIA POR UNIDAD-REGIONAL ----*/
     $(function () {
-        $(".eficacia").on("click", function (e) {
+        $(".eficacia_unidad").on("click", function (e) {
             dep_id=$('[name="dep_id"]').val();
             dist_id=$('[name="dist_id"]').val();
             tp_id=$('[name="tp_id"]').val();
 
             $('#lista').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
             $('#parametro_eficacia').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
-            $('#lista_prog').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
-            $('#parametros_prog').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
+           
             document.getElementById("boton_eficacia").style.display = 'none';
             var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_unidades_eficiencia";
             var request;
@@ -301,14 +329,7 @@ function abreVentana_eficiencia(PDF){
             if (response.respuesta == 'correcto') {
                 $('#lista').fadeIn(1000).html(response.tabla);
                 $('#parametro_eficacia').fadeIn(1000).html(response.parametro_eficacia);
-                $('#lista_prog').fadeIn(1000).html(response.lista_prog);
-                $('#parametros_prog').fadeIn(1000).html(response.parametros_prog);
                 $('#print_eficacia').slideDown();
-
-                //$('#boton_eficacia').slideUp();
-               // 
-              //  $('#eval_poa').slideDown();
-               // $('#par').slideDown();
             }
             else{
                 alertify.error("ERROR AL RECUPERAR DATOS DE EVALUACIÓN POA ");
@@ -426,6 +447,11 @@ function abreVentana_eficiencia(PDF){
     });
 
 
+
+
+
+
+
       //// ----CAPTURA GRAFICOS CANVAS
       var downPdf = document.getElementById("btnregresion");
 
@@ -526,59 +552,3 @@ function abreVentana_eficiencia(PDF){
   });
 ////============= ENS PASTEL
 
-
-// var chart = new CanvasJS.Chart("chartContainer", {
-//   animationEnabled: true,
-//   exportEnabled: true,
-//   title:{
-//     text: "Gold Medals Won in Olympics"             
-//   }, 
-//   axisY:{
-//     title: "Number of Medals"
-//   },
-//   toolTip: {
-//     shared: true
-//   },
-//   legend:{
-//     cursor:"pointer",
-//     itemclick: toggleDataSeries
-//   },
-//   data: [{        
-//     type: "line",  
-//     name: "US",        
-//     showInLegend: true,
-//     dataPoints: [
-//       { label: "", y: 0 },     
-//       { label:"Sydney 2000", y: 37,indexLabel: "\u2191 highest",markerColor: "red", markerType: "triangle" },     
-//       { label: "Athens 2004", y: 36 },     
-//       { label: "Beijing 2008", y: 36 },     
-//       { label: "London 2012", y: 46 },
-//       { label: "Rio 2016", y: 46 }
-//     ]
-//   }, 
-//   {        
-//     type: "line",
-//     name: "China",        
-//     showInLegend: true,
-//     dataPoints: [
-//       { label: "Atlanta 1996" , y: 16 },     
-//       { label:"Sydney 2000", y: 28 },     
-//       { label: "Athens 2004", y: 32 },     
-//       { label: "Beijing 2008", y: 48 },     
-//       { label: "London 2012", y: 38 },
-//       { label: "Rio 2016", y: 26 }
-//     ]
-//   }]
-// });
-
-// chart.render();
-
-
-// function toggleDataSeries(e) {
-//   if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-//     e.dataSeries.visible = false;
-//   } else {
-//     e.dataSeries.visible = true;
-//   }
-//   e.chart.render();
-// }

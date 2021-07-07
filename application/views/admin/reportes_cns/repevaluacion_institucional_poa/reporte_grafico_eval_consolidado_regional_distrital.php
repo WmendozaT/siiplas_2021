@@ -12,8 +12,8 @@
     <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
     <!--estiloh-->
     <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
-
     <style type="text/css">
+
       table{font-size: 11px;
         width: 100%;
         max-width:1550px;
@@ -156,7 +156,7 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                             <div align="left" id="boton_eficacia">
-                                                <a href="#" class="btn btn-default eficacia" title="CUADRO DE EFICIENCIA Y EFICACIA" style="width:60%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;<?php echo $boton;?></a>
+                                                <a href="#" class="btn btn-default eficacia_unidad" title="CUADRO DE EFICIENCIA Y EFICACIA" style="width:40%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;<?php echo $boton1;?></a>
                                              </div>
 
                                             <div class="row">
@@ -166,7 +166,7 @@
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                             <div id="parametro_eficacia"></div>
                                             <div align="right" id="print_eficacia" style="display: none">
-                                              <a href="javascript:abreVentana_eficiencia('<?php echo site_url("").'/rep_eval_poa/rep_eficacia/'.$url; ?>');" class="btn btn-default" title="IMPRIMIR CUADRO DE CUMPLIMIENTO"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>
+                                              <?php echo $boton_parametros_unidad;?>
                                             </div>
                                         </div>
                                     </div>
@@ -175,10 +175,16 @@
                                 <div class="tab-pane fade" id="s4">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                            <div align="left" id="boton_eficacia_prog">
+                                              <a href="#" class="btn btn-default eficacia_prog" title="CUADRO DE EFICIENCIA Y EFICACIA" style="width:40%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;<?php echo $boton2;?></a>
+                                            </div>
                                             <div id="lista_prog"></div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                             <div id="parametros_prog"></div>
+                                            <div align="right">
+                                              <?php echo $boton_parametros_prog;?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -586,71 +592,4 @@ chart_gestion.render();
       });
     });
   </script>
-    <script type="text/javascript">
-
-  </script>
-<!--   <script type="text/javascript">
-    $(document).ready(function() {  
-       Highcharts.chart('parametro_efi', {
-        chart: {
-            type: 'pie',
-            options3d: {
-                enabled: true,
-                alpha: 45,
-                beta: 0
-            }
-        },
-        title: {
-            text: ''
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                depth: 35,
-                dataLabels: {
-                    enabled: true,
-                    format: '{point.name}'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Unidades',
-            data: [
-                {
-                  name: 'INSATISFACTORIO : <?php echo $matriz[1][3];?> %',
-                  y: <?php echo $matriz[1][3];?>,
-                  color: '#f95b4f',
-                },
-
-                {
-                  name: 'REGULAR : <?php echo $matriz[2][3];?> %',
-                  y: <?php echo $matriz[2][3];?>,
-                  color: '#edd094',
-                },
-
-                {
-                 name: 'BUENO : <?php echo $matriz[3][3];?> %',
-                  y: <?php echo $matriz[3][3];?>,
-                  color: '#afd5e5',
-                },
-
-                {
-                  name: 'OPTIMO : <?php echo $matriz[4][3];?> %',
-                  y: <?php echo $matriz[4][3];?>,
-                  color: '#4caf50',
-                  sliced: true,
-                  selected: true
-                }
-            ]
-        }]
-      });
-    });
-</script> -->
-
-</body>
 </html>

@@ -462,14 +462,15 @@ $route['rep_eval_poa/evaluacion_poa_regional/(:any)'] = 'reporte_evaluacion/crep
 //$route['rep_eval_poa/evaluacion_poa/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa/$1/$2';  /// REPORTES GRAFICOS REGIONAL, DISTRITAL
 
 $route['rep_eval_poa/evaluacion_poa_onacional/(:any)'] = 'reporte_evaluacion/crep_evalofinacional/evaluacion_poa_onacional/$1';  /// REPORTES GRAFICOS OFICINA NACIONAL
-$route['rep_eval_poa/rep_eficacia/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/reporte_parametros/$1/$2/$3';  /// REPORTE EVALUACION GASTO CORRIENTE
+//$route['rep_eval_poa/rep_eficacia/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/reporte_parametros/$1/$2';  /// REPORTE EVALUACION GASTO CORRIENTE
 
 /*---------- EVALUACION DE LA OPERACION - UNIDAD, PROYECTO ----------*/
 $route['eval/eval_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/evaluacion_poa_unidad/$1';  /// REDIRECCION EVALUACION POA - UNIDAD, PROY INV.
 $route['eval/eval_unidad_gcorriente/(:any)'] = 'reporte_evaluacion/crep_evalunidad/evaluacion_unidad_gcorriente/$1';  /// REPORTES GRAFICOS DE EVALUACION GASTO CORRIENTE
 $route['rep_eficacia_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/reporte_indicadores_unidad/$1';  /// REPORTE POR EFICIENCIA Y EFICACIA POR CADA UNIDAD O PROYECTO DE UNIDAD
 
-
+$route['rep_indicadores_unidad/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_indicadores_unidades/$1/$2';  /// REPORTE INDICADORES POR UNIDAD
+$route['rep_indicadores_programas/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_categoria_programatica/$1/$2';  /// REPORTE POR CATEGORIA PROGRAMATICA
 
 
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (PROYECTOS DE INVERSION) 2020 ----------*/
@@ -481,7 +482,7 @@ $route['rep_eval_poa/rep_eficacia_pi/(:any)'] = 'reporte_evaluacion/crep_evalins
 /*---------- EVALUACION GASTO CORRIENTE - PROGRAMA ----------*/
 $route['menu_eval_prog'] = 'reporte_evaluacion/crep_evalprogramas/menu_eval_programas';  /// MENU EVALUACION PROGRAMA 
 $route['rep_eval_prog/evaluacion_programas/(:any)'] = 'reporte_evaluacion/crep_evalprogramas/evaluacion_programas/$1/$2';  /// REPORTES GRAFICOS REGIONAL
-$route['rep_cat_programatica/(:any)'] = 'reporte_evaluacion/crep_evalprogramas/reporte_categoria_programatica/$1/$2';  /// REPORTE POR CATEGORIA PROGRAMATICA
+
 
 //====== REPORTE EVALUACION OBJETIVOS DE GESTION 2020
 /*---------- EVALUACION DE OBJETIVOS DE GESTION 2020 ----------*/
