@@ -469,8 +469,8 @@ $route['eval/eval_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/evaluaci
 $route['eval/eval_unidad_gcorriente/(:any)'] = 'reporte_evaluacion/crep_evalunidad/evaluacion_unidad_gcorriente/$1';  /// REPORTES GRAFICOS DE EVALUACION GASTO CORRIENTE
 $route['rep_eficacia_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/reporte_indicadores_unidad/$1';  /// REPORTE POR EFICIENCIA Y EFICACIA POR CADA UNIDAD O PROYECTO DE UNIDAD
 
-$route['rep_indicadores_unidad/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_indicadores_unidades/$1/$2';  /// REPORTE INDICADORES POR UNIDAD
-$route['rep_indicadores_programas/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_categoria_programatica/$1/$2';  /// REPORTE POR CATEGORIA PROGRAMATICA
+$route['rep_indicadores_unidad/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_indicadores_unidades/$1/$2/$3';  /// REPORTE INDICADORES POR UNIDAD
+$route['rep_indicadores_programa/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_categoria_programatica/$1/$2';  /// REPORTE POR CATEGORIA PROGRAMATICA
 
 
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (PROYECTOS DE INVERSION) 2020 ----------*/

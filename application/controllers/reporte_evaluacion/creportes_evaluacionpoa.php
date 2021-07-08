@@ -35,72 +35,78 @@ class Creportes_evaluacionpoa extends CI_Controller {
     }
 
     /*--- REPORTE EVALUACION POR CATEGORIA PROGRAMATICA ---*/
-    public function reporte_indicadores_unidades($id,$tp){
-
+    public function reporte_indicadores_unidades($dep_id,$dist_id,$tp_id){
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
-      $titulo_rep='CUADRO DE CUMPLIMIENTO POR UNIDADES';
-      $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral($id,$tp,$titulo_rep);
+      $titulo_rep='PARAMETROS DE CUMPLIMIENTO POR UNIDAD';
+      if($dep_id==0){ /// Institucional
+          $tabla='Institucional';
+        }
+        elseif($dep_id!=0 & $dist_id==0){ /// Regional
+          $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral($dep_id,0,$titulo_rep);
+          $lista=$this->reportes_evaluacionpoa->pdf_lista_parametro_cumplimiento_unidad(0,$dep_id);
+        }
+        elseif($dep_id!=0 & $dist_id!=0){ /// Distrital
+          $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral($dep_id,1,$titulo_rep);
+          $lista=$this->reportes_evaluacionpoa->pdf_lista_parametro_cumplimiento_unidad(1,$dist_id);
+        }
+
       $data['pie']=$this->reportes_evaluacionpoa->pie_evaluacionpoa();
-      $tabla='';
-      $unidades=$this->model_evalinstitucional->list_unidades_organizacionales($tp,$id);
-
-      $tabla.='
-      <div style="font-size: 13px;font-family: Arial;height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;DETALLE DE CUMPLIMIENTO</div>
-      <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
-         <thead>
-            <tr style="font-size: 9.5px;" align=center >
-              <th style="width:2%;height:15px;">#</th>
-              <th style="width:13%;">DISTRITAL</th>
-              <th style="width:20%;">GASTO CORRIENTE / PROY. INV.</th>
-              <th style="width:10%;">METAS. PROGR.</th>
-              <th style="width:10%;">METAS CUMP.</th>
-              <th style="width:10%;">METAS NO CUMP.</th>
-              <th style="width:10%;">% CUMP.</th>
-              <th style="width:10%;">% ECONOMIA</th>
-              <th style="width:10%;">EFICIENCIA</th>
-            </tr>
-          </thead>
-          <tbody>';
-          $nro=0; $sum_cert=0;$sum_asig=0;
-          foreach($unidades as $row){
-            $eficacia=$this->reportes_evaluacionpoa->eficacia_por_unidad($row['proy_id']); /// Eficacia
-            $economia=$this->reportes_evaluacionpoa->economia_por_unidad($row['aper_id'],$row['proy_id']); /// Economia
-            $eficiencia=$this->reportes_evaluacionpoa->eficiencia_unidad($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
-
-            $nro++;
-            $tabla.='<tr style="font-size: 9.5px;" >';
-            $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
-            $tabla.='<td style="width:13%;">'.strtoupper($row['dist_distrital']).'</td>';
-            $tabla.='<td style="width:20%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[2][$this->tmes].'</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$economia[3].'%</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficiencia.'</b></td>';
-            $tabla.='</tr>';
-          }
-      $tabla.='
-          </tbody>
-        </table>';
-
-        $data['operaciones']=$tabla;
-
-
-
+      $data['operaciones']=$lista;
       $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_indicadores_parametros', $data);
-
-
     }
 
 
     
 
+        /*-- GET CUADRO DE EFICIENCIA Y EFICACIA por UNIDAD NACIONA, REGIONAL, DISTRITAL --*/
+    public function get_programas_parametros(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $dep_id = $this->security->xss_clean($post['dep_id']); // dep id
+        $dist_id = $this->security->xss_clean($post['dist_id']); // dist id
+        $tp_id = $this->security->xss_clean($post['tp_id']); /// tipo id
+        
+        $matriz='No encontrado !!';
+        $tabla='No encontrado !!';
+
+        if($dep_id==0){ /// Institucional
+          $matriz='Institucional';
+          $tabla='';
+        }
+        elseif($dep_id!=0 & $dist_id==0){ /// Regional
+          $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($dep_id,4);
+          $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_regional($lista_programas);
+        }
+        elseif ($dep_id!=0 & $dist_id!=0) { /// Distrital
+          $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($dist_id,4);
+          $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_distrital($lista_programas);
+        }
+
+        $tabla_programa=$this->reportes_evaluacionpoa->tabla_apertura_programatica($matriz_programas,count($lista_programas),1);
+        
+
+        $matriz_parametros_prog=$this->reportes_evaluacionpoa->matriz_parametros($matriz_programas,count($lista_programas));
+        $parametros_prog=$this->reportes_evaluacionpoa->parametros_eficacia($matriz_parametros_prog,1);
+
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla_prog'=>$tabla_programa,
+          'parametro_eficacia_prog'=>$parametros_prog,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
 
 
     /*--- REPORTE EVALUACION POR CATEGORIA PROGRAMATICA ---*/
-    public function reporte_categoria_programaticas($id,$tp){
-      if($tp==0){
+    public function reporte_categoria_programatica($id,$tp){
+
+
+     /* if($tp==0){
         $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($id,4);
         $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_regional($lista_programas);
       }
@@ -117,7 +123,7 @@ class Creportes_evaluacionpoa extends CI_Controller {
       $data['pie']=$this->reportes_evaluacionpoa->pie_evaluacionpoa();
       $data['operaciones']=$this->reportes_evaluacionpoa->tabla_apertura_programatica_reporte($matriz_programas,count($lista_programas));
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
-      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_indicadores_parametros', $data);
+      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_indicadores_parametros', $data);*/
     }
 
 }

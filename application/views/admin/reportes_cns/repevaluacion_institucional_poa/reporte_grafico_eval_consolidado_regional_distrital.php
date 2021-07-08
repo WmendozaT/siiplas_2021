@@ -182,7 +182,7 @@
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                             <div id="parametros_prog"></div>
-                                            <div align="right">
+                                            <div align="right" id="print_eficacia_prog" style="display: none">
                                               <?php echo $boton_parametros_prog;?>
                                             </div>
                                         </div>

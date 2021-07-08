@@ -43,7 +43,7 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['menu']=$this->menu(7); //// genera menu
         $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
         $data['regional']=$this->evaluacionpoa->listado_regionales();
-        
+
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_menu', $data);
       }
       else{
@@ -90,8 +90,8 @@ class Crep_evalinstitucional extends CI_Controller {
       $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_regional($dep_id); /// Tabla para el grafico al trimestre
       $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_regional_total($dep_id); /// Tabla para el grafico Total Gestion
       
-      $data['titulo_indicador']='UNIDADES DEPENDIENTES';
-      $data['boton']='CARGAR CUADRO DE INDICADORES Y PARAMETROS DE CUMPLIMIENTO';
+      $data['boton1']='CARGAR % CUMPLIMIENTO POR UNIDAD';
+      $data['boton2']='CARGAR % CUMPLIMIENTO POR PROGRAMAS';
       $data['titulo']=
         '<h2><b>CONSOLIDADO REGIONAL '.strtoupper($data['departamento'][0]['dep_departamento']).' - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
 
@@ -113,6 +113,13 @@ class Crep_evalinstitucional extends CI_Controller {
       $data['tabla_pastel_todo']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
       $data['tabla_pastel_todo_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
 
+      $data['boton_parametros_unidad']='
+          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_unidad/'.$dep_id.'/0/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
+          <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
+
+      $data['boton_parametros_prog']='
+          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_programa/'.$dep_id.'/0/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
+          <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
 
       $data['base']='
         <input name="base" type="hidden" value="'.base_url().'">
@@ -141,11 +148,11 @@ class Crep_evalinstitucional extends CI_Controller {
     public function evaluacion_poa_distrital($dist_id,$tp_id){
       $data['trimestre']=$this->trimestre;
       $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
-      $data['url']='1/'.$dist_id;
+     // $data['url']='1/'.$dist_id;
       //$data['url']=$data['distrital'][0]['dep_id'].'/'.$dist_id.'/'.$tp_id;
       $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_distrital($dist_id); /// Tabla para el grafico al trimestre
       $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_distrital_total($dist_id); /// Tabla para el grafico Total Gestion
-      $data['titulo_indicador']='UNIDADES DEPENDIENTES';
+     // $data['titulo_indicador']='UNIDADES DEPENDIENTES';
       $data['boton1']='CARGAR % CUMPLIMIENTO POR UNIDAD';
       $data['boton2']='CARGAR % CUMPLIMIENTO POR PROGRAMAS';
       $data['titulo']=
@@ -170,11 +177,11 @@ class Crep_evalinstitucional extends CI_Controller {
       $data['tabla_pastel_todo_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
 
       $data['boton_parametros_unidad']='
-          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_unidad/'.$dist_id.'/1\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
+          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_unidad/'.$data['distrital'][0]['dep_id'].'/'.$dist_id.'/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
           <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
 
       $data['boton_parametros_prog']='
-          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_programa/'.$dist_id.'/1\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
+          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_programa/'.$data['distrital'][0]['dep_id'].'/'.$dist_id.'/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
           <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
 
       $data['base']='
@@ -326,34 +333,20 @@ class Crep_evalinstitucional extends CI_Controller {
           $tabla='';
         }
         elseif($dep_id!=0 & $dist_id==0){ /// Regional
-          $matriz='';
-          $tabla='';
+          $matriz=$this->evaluacionpoa->matriz_eficacia_regional($dep_id); /// matriz de parametros
+          $tabla=$this->evaluacionpoa->unidades_dist_reg(0,$dep_id,$tp_id); //// Lista de Unidades - Regional
         }
         elseif ($dep_id!=0 & $dist_id!=0) { /// Distrital
           $matriz=$this->evaluacionpoa->matriz_eficacia_distrital($dist_id); /// matriz de parametros
           $tabla=$this->evaluacionpoa->unidades_dist_reg(1,$dist_id,$tp_id); //// Lista de Unidades - Distrital
-
-          $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($dist_id,4);
-         // $matriz_programas=$this->evaluacionpoa->matriz_programas_distrital($lista_programas);
         }
 
         $parametro_eficacia=$this->evaluacionpoa->parametros_eficacia($matriz,1);
-
-       /* $parametro_eficacia=$this->evaluacionpoa->parametros_eficacia($matriz,1);
-        $tabla_programa=$this->evaluacionpoa->tabla_apertura_programatica($matriz_programas,count($lista_programas),1);
-
-
-        $matriz_parametros_prog=$this->evaluacionpoa->matriz_parametros($matriz_programas,count($lista_programas));
-        $parametros_prog=$this->evaluacionpoa->parametros_eficacia($matriz_parametros_prog,1);*/
-
-
 
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
           'parametro_eficacia'=>$parametro_eficacia,
-/*          'lista_prog'=>$tabla_programa,
-          'parametros_prog'=>$parametros_prog,*/
         );
           
         echo json_encode($result);

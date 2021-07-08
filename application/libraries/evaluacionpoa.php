@@ -613,7 +613,7 @@ class Evaluacionpoa extends CI_Controller{
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[2][$this->tmes].'</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
+            $tabla.='<td style="width:10%;" align=right><button type="button" style="width:100%;" class="btn btn-info"><b>'.$eficacia[5][$this->tmes].'%</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$economia[3].'%</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$eficiencia.'</b></td>';
             $tabla.='</tr>';

@@ -39,7 +39,72 @@ class reportes_evaluacionpoa extends CI_Controller{
     }
 
 
-        /*============ EFICACIA UNIDAD =============*/
+
+    /*-- LISTA % CUMPLIMIENTO POR UNIDAD - REGIONAL, DISTRITAL --*/
+    public function pdf_lista_parametro_cumplimiento_unidad($tip_reg,$id){
+      $tabla='';
+      $unidades=$this->model_evalinstitucional->list_unidades_organizacionales($tip_reg,$id);
+
+      $tabla.='
+      <div style="font-size: 13px;font-family: Arial;height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;DETALLE DE CUMPLIMIENTO</div>
+      <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+         <thead>
+            <tr style="font-size: 9.5px;" align=center >
+              <th style="width:2%;height:15px;">#</th>
+              <th style="width:13%;">DISTRITAL</th>
+              <th style="width:20%;">GASTO CORRIENTE / PROY. INV.</th>
+              <th style="width:10%;">METAS. PROGR.</th>
+              <th style="width:10%;">METAS CUMP.</th>
+              <th style="width:10%;">METAS NO CUMP.</th>
+              <th style="width:10%;">% CUMP.</th>
+              <th style="width:10%;">% ECONOMIA</th>
+              <th style="width:10%;">EFICIENCIA</th>
+            </tr>
+          </thead>
+          <tbody>';
+          $nro=0; $sum_cert=0;$sum_asig=0;
+          foreach($unidades as $row){
+            $eficacia=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
+            $economia=$this->economia_por_unidad($row['aper_id'],$row['proy_id']); /// Economia
+            $eficiencia=$this->eficiencia_unidad($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
+
+            $nro++;
+            $tabla.='<tr style="font-size: 9.5px;" >';
+            $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
+            $tabla.='<td style="width:13%;">'.strtoupper($row['dist_distrital']).'</td>';
+            $tabla.='<td style="width:20%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
+            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[2][$this->tmes].'</b></td>';
+            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
+            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';
+            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
+            $tabla.='<td style="width:10%;" align=right><b>'.$economia[3].'%</b></td>';
+            $tabla.='<td style="width:10%;" align=right><b>'.$eficiencia.'</b></td>';
+            $tabla.='</tr>';
+          }
+      $tabla.='
+          </tbody>
+        </table>';
+
+      return $tabla;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*============ EFICACIA UNIDAD =============*/
     /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE -------*/
     public function eficacia_por_unidad($proy_id){
 
@@ -382,62 +447,41 @@ class reportes_evaluacionpoa extends CI_Controller{
 
     /*----- Parametros de Eficacia Concolidado por Unidad -----*/
     public function parametros_eficacia($matriz,$tp_rep){
-      if($tp_rep==1){ //// Normal
-        $class='class="table table-bordered" align=center style="width:60%;"';
-        $div='<div id="parametro_efi" style="width: 600px; height: 400px; margin: 0 auto"></div>';
-
-      }
-      else{ /// Impresion
-        $class='class="change_order_items" border=1 align=center style="width:100%;"';
-        $div='<div id="parametro_efi_print" style="width: 650px; height: 330px; margin: 0 auto"></div>';
-      }
-     // $nro=$matriz;
       $tabla='';
-      $tabla .='<table '.$class.'>
-                  <tr>
-                    <td>
-                      '.$div.'
-                    </td>
-                  </tr>
-                  <tr>
-                  <td>
-                      <table '.$class.'>
-                        <thead>
-                          <tr>
-                            <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
-                            <th style="width: 33%"><center><b>PARAMETRO</b></center></th>
-                            <th style="width: 33%"><center><b>NRO DE UNIDADES</b></center></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>INSATISFACTORIO</td>
-                            <td>0% a 75%</td>
-                            <td align="center"><a class="btn btn-danger" style="width: 100%" align="left" title="'.$matriz[1][2].' Unidades/Proyectos">'.$matriz[1][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>REGULAR</td>
-                            <td>75% a 90% </td>
-                            <td align="center"><a class="btn btn-warning" style="width: 100%" align="left" title="'.$matriz[2][2].' Unidades/Proyectos">'.$matriz[2][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>BUENO</td>
-                            <td>90% a 99%</td>
-                            <td align="center"><a class="btn btn-info" style="width: 100%" align="left" title="'.$matriz[3][2].' Unidades/Proyectos">'.$matriz[3][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>OPTIMO </td>
-                            <td>100%</td>
-                            <td align="center"><a class="btn btn-success" style="width: 100%" align="left" title="'.$matriz[4][2].' Unidades/Proyectos">'.$matriz[4][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td colspan=2 align="left"><b>TOTAL: </b></td>
-                            <td align="center"><b>'.($matriz[1][2]+$matriz[2][2]+$matriz[3][2]+$matriz[4][2]).'</b></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
+      $tabla .='<table class="table table-bordered" align=center style="width:80%;">
+                  <thead>
+                    <tr>
+                      <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
+                      <th style="width: 33%"><center><b>PARAMETRO</b></center></th>
+                      <th style="width: 33%"><center><b>NRO DE UNIDADES</b></center></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>INSATISFACTORIO</td>
+                      <td>0% a 75%</td>
+                      <td align="center"><a class="btn btn-danger" style="width: 100%" align="left" title="'.$matriz[1][2].' Unidades/Proyectos">'.$matriz[1][2].'</a></td>
+                    </tr>
+                    <tr>
+                      <td>REGULAR</td>
+                      <td>75% a 90% </td>
+                      <td align="center"><a class="btn btn-warning" style="width: 100%" align="left" title="'.$matriz[2][2].' Unidades/Proyectos">'.$matriz[2][2].'</a></td>
+                    </tr>
+                    <tr>
+                      <td>BUENO</td>
+                      <td>90% a 99%</td>
+                      <td align="center"><a class="btn btn-info" style="width: 100%" align="left" title="'.$matriz[3][2].' Unidades/Proyectos">'.$matriz[3][2].'</a></td>
+                    </tr>
+                    <tr>
+                      <td>OPTIMO </td>
+                      <td>100%</td>
+                      <td align="center"><a class="btn btn-success" style="width: 100%" align="left" title="'.$matriz[4][2].' Unidades/Proyectos">'.$matriz[4][2].'</a></td>
+                    </tr>
+                    <tr>
+                      <td colspan=2 align="left"><b>TOTAL: </b></td>
+                      <td align="center"><b>'.($matriz[1][2]+$matriz[2][2]+$matriz[3][2]+$matriz[4][2]).'</b></td>
+                    </tr>
+                  </tbody>
                 </table>';
 
       return $tabla;

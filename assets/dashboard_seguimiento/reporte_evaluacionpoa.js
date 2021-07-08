@@ -302,12 +302,13 @@ function abreVentana_eficiencia(PDF){
 
 
 
-    /*---- CUADRO EFICACIA POR UNIDAD-REGIONAL ----*/
+    /*---- CUADRO DE CUMPLIMIENTO POR UNIDAD-REGIONAL ----*/
     $(function () {
         $(".eficacia_unidad").on("click", function (e) {
             dep_id=$('[name="dep_id"]').val();
             dist_id=$('[name="dist_id"]').val();
             tp_id=$('[name="tp_id"]').val();
+          //  alert(dep_id+'--'+dist_id+'--'+tp_id)
 
             $('#lista').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
             $('#parametro_eficacia').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
@@ -330,6 +331,49 @@ function abreVentana_eficiencia(PDF){
                 $('#lista').fadeIn(1000).html(response.tabla);
                 $('#parametro_eficacia').fadeIn(1000).html(response.parametro_eficacia);
                 $('#print_eficacia').slideDown();
+            }
+            else{
+                alertify.error("ERROR AL RECUPERAR DATOS DE EVALUACIÓN POA ");
+            }
+
+            });
+            request.fail(function (jqXHR, textStatus, thrown) {
+                console.log("ERROR: " + textStatus);
+            });
+            request.always(function () {
+                //console.log("termino la ejecuicion de ajax");
+            });
+            e.preventDefault();
+          
+        });
+
+
+        $(".eficacia_prog").on("click", function (e) {
+            dep_id=$('[name="dep_id"]').val();
+            dist_id=$('[name="dist_id"]').val();
+            tp_id=$('[name="tp_id"]').val();
+
+            $('#lista_prog').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
+            $('#parametros_prog').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
+           
+            document.getElementById("boton_eficacia_prog").style.display = 'none';
+            var url = base+"index.php/reporte_evaluacion/creportes_evaluacionpoa/get_programas_parametros";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+            if (response.respuesta == 'correcto') {
+                $('#lista_prog').fadeIn(1000).html(response.tabla_prog);
+                $('#parametros_prog').fadeIn(1000).html(response.parametro_eficacia_prog);
+                $('#print_eficacia_prog').slideDown();
             }
             else{
                 alertify.error("ERROR AL RECUPERAR DATOS DE EVALUACIÓN POA ");
