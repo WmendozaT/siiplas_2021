@@ -478,39 +478,27 @@ class Evaluacionpoa extends CI_Controller{
 
 
 
- /*---- EFICACIA INSTITUCIONAL -----*/
-    public function eficacia_regionales($tp_rep){
+ /*---- CUADRO DE CUMPLIMIENTO POR REGIONAL - INSTITUCIONAL -----*/
+    public function eficacia_regionales(){
     $regionales=$this->model_proyecto->list_departamentos();
     $eficacia_nacional=$this->tabla_regresion_lineal_nacional(); /// Eficacia
     $economia_nacional=$this->economia_institucional_nacional(); /// Economia
     $eficiencia_nacional=$this->eficiencia_por_regional($eficacia_nacional[5][$this->tmes],$economia_nacional[3]); /// Eficiencia
 
     $tabla='';
-      // 1 : normal, 2 : Impresion
-      if($tp_rep==1){ /// Normal
-        $tab='class="table table-bordered" align=center style="width:50%;"';
-        //$tabla.='<h2 class="alert alert-success" align="center">CUADRO DE EFICACIA Y EFICIENCIA A NIVEL DE REGIONALES </h2>';
-        $color='';
-      } 
-      else{ /// Impresion
-        $tab='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center';
-        $color='#e9edec';
-      }
-
       $tabla.='
-        
-        <table '.$tab.'>
+        <div style="font-size: 25px;font-family: Arial;"><b>CUADRO DE % CUMPLIMIENTO POR REGIONALES</b></div><br>
+        <table class="table table-bordered" align=center style="width:80%;">
          <thead>
-            <tr style="font-size: 10px;" align=center bgcolor='.$color.'>
+            <tr style="font-size: 10px;" align=center>
               <th style="width:2%;height:15px;">#</th>
-              <th style="width:20%;">REGIONAL</th>
-              <th style="width:15%;">OPE. PROGRAMADAS AL TRIMESTRE</th>
-              <th style="width:15%;">OPE. CUMPLIDAS AL TRIMESTRE</th>
-              <th style="width:15%;">OPE. NO CUMPLIDAS AL TRIMESTRE</th>
-              <th style="width:15%;">% EFICACIA</th>
-              <th style="width:15%;">% ECONOMIA</th>';
-            // $tabla.=' <th style="width:10%;">EFICIENCIA</th>';
-             $tabla.='
+              <th style="width:20%;">DIRECCIÓN ADMINISTRATIVA</th>
+              <th style="width:12%;">METAS PROGRAMADAS</th>
+              <th style="width:12%;">METAS CUMPLIDAS</th>
+              <th style="width:12%;">METAS NO CUMPLIDAS</th>
+              <th style="width:12%;">% CUMPLIMIENTO</th>
+              <th style="width:12%;">% NO CUMPLIDO</th>
+              <th style="width:12%;">% EJEC. PPTO.</th>
             </tr>
           </thead>
           <tbody>';
@@ -518,29 +506,29 @@ class Evaluacionpoa extends CI_Controller{
           foreach($regionales as $row){
             $eficacia=$this->eficacia_por_regional($row['dep_id']); /// Eficacia
             $economia=$this->economia_por_regional($row['dep_id']); /// Economia
-            $eficiencia=$this->eficiencia_por_regional($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
+          //  $eficiencia=$this->eficiencia_por_regional($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
             $nro++;
             $tabla.='<tr style="font-size: 10px;">';
             $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
             $tabla.='<td style="width:20%;">'.strtoupper($row['dep_departamento']).'</td>';
-            $tabla.='<td style="width:15%;" align=right>'.$eficacia[2][$this->tmes].'</td>';
-            $tabla.='<td style="width:15%;" align=right>'.$eficacia[3][$this->tmes].'</td>';
-            $tabla.='<td style="width:15%;" align=right>'.$eficacia[4][$this->tmes].'</td>';
-            $tabla.='<td style="width:15%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
-            $tabla.='<td style="width:15%;" align=right><b>'.$economia[3].'%</b></td>';
-            /*$tabla.='<td style="width:10%;" align=right><b>'.$eficiencia.'</b></td>';*/
+            $tabla.='<td style="width:12%;" align=right>'.$eficacia[2][$this->tmes].'</td>';
+            $tabla.='<td style="width:12%;" align=right>'.$eficacia[3][$this->tmes].'</td>';
+            $tabla.='<td style="width:12%;" align=right>'.$eficacia[4][$this->tmes].'</td>';
+            $tabla.='<td style="width:12%;" align=right><button type="button" style="width:100%;" class="btn btn-info"><b>'.$eficacia[5][$this->tmes].'%</b></button></td>';
+            $tabla.='<td style="width:12%;" align=right><button type="button" style="width:100%;" class="btn btn-danger"><b>'.(100-$eficacia[5][$this->tmes]).'%</b></button></td>';
+            $tabla.='<td style="width:12%;" align=right><b>'.$economia[3].'%</b></td>';
             $tabla.='</tr>';
           }
       $tabla.='
           <tr style="font-size: 10px;" bgcolor="#d3f8c5">
             <td></td>
             <td ><b>CONSOLIDADO INSTITUCIONAL</b></td>
-            <td style="font-size: 15px;" align=right><b>'.$eficacia_nacional[2][$this->tmes].'</b></td>
-            <td style="font-size: 15px;" align=right><b>'.$eficacia_nacional[3][$this->tmes].'</b></td>
-            <td style="font-size: 15px;" align=right><b>'.$eficacia_nacional[4][$this->tmes].'</b></td>
-            <td style="font-size: 15px;" align=right><b>'.$eficacia_nacional[5][$this->tmes].'%</b></td>
-            <td style="font-size: 15px;" align=right><b>'.$economia_nacional[3].'%</b></td>';
-         // $tabla.='  <td style="font-size: 10px;" align=right><b>'.$eficiencia_nacional.'</b></td>';
+            <td style="font-size: 13px;" align=right><b>'.$eficacia_nacional[2][$this->tmes].'</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$eficacia_nacional[3][$this->tmes].'</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$eficacia_nacional[4][$this->tmes].'</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$eficacia_nacional[5][$this->tmes].'%</b></td>
+            <td style="font-size: 13px;" align=right><b>'.(100-$eficacia_nacional[5][$this->tmes]).'%</b></td>
+            <td style="font-size: 13px;" align=right><b>'.$economia_nacional[3].'%</b></td>';
           $tabla.='
           </tr>
           </tbody>
@@ -588,8 +576,8 @@ class Evaluacionpoa extends CI_Controller{
               <th style="width:10%;">METAS CUMPLIDAS</th>
               <th style="width:10%;">METAS NO CUMPLIDS</th>
               <th style="width:10%;">% CUMPLIMIENTO</th>
-              <th style="width:10%;">% ECONOMIA</th>
-              <th style="width:10%;">EFICIENCIA</th>
+              <th style="width:10%;">% NO CUMPLIDAS</th>
+              <th style="width:10%;">% EJEC. PRESUPUESTARIA</th>
             </tr>
           </thead>
           <tbody>';
@@ -614,8 +602,8 @@ class Evaluacionpoa extends CI_Controller{
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';
             $tabla.='<td style="width:10%;" align=right><button type="button" style="width:100%;" class="btn btn-info"><b>'.$eficacia[5][$this->tmes].'%</b></td>';
+            $tabla.='<td style="width:10%;" align=right><button type="button" style="width:100%;" class="btn btn-danger"><b>'.(100-$eficacia[5][$this->tmes]).'%</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$economia[3].'%</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficiencia.'</b></td>';
             $tabla.='</tr>';
           }
       $tabla.='
@@ -626,8 +614,8 @@ class Evaluacionpoa extends CI_Controller{
             <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[3][$this->tmes].'</b></td>
             <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[4][$this->tmes].'</b></td>
             <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[5][$this->tmes].'%</b></td>
+            <td style="font-size: 13px;" align=right><b>'.(100-$eficacia_distrital[5][$this->tmes]).'%</b></td>
             <td style="font-size: 13px;" align=right><b>'.$economia_distrital[3].'%</b></td>
-            <td style="font-size: 13px;" align=right><b>'.$eficiencia_distrital.'</b></td>
           </tr>
           </tbody>
         </table>';
@@ -1109,6 +1097,7 @@ class Evaluacionpoa extends CI_Controller{
         $tr[5][$i]=0; /// eficacia %
         $tr[6][$i]=0; /// no eficacia %
         $tr[7][$i]=0; /// en proceso
+        $tr[8][$i]=0; /// en proceso %
       }
 
       for ($i=1; $i <=$this->tmes; $i++) {
@@ -1122,6 +1111,8 @@ class Evaluacionpoa extends CI_Controller{
         $tr[6][$i]=(100-$tr[5][$i]);
         $proceso=$this->obtiene_datos_evaluacíon_nacional($i,2);
         $tr[7][$i]=$proceso[2]; /// En Proceso
+
+        $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
       }
 
     return $tr;

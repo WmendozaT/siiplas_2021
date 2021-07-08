@@ -352,6 +352,7 @@ class model_producto extends CI_Model {
             'm_id' => $m_id,
             'pejec_fis' => $ejecutado,
             'g_id' => $gestion,
+            'fun_id' => $this->fun_id,
             'medio_verificacion' => strtoupper($mverificacion),
             'observacion' => strtoupper($observacion),
             'acciones' => strtoupper($acciones),

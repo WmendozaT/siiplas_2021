@@ -40,25 +40,25 @@ class reportes_evaluacionpoa extends CI_Controller{
 
 
 
-    /*-- LISTA % CUMPLIMIENTO POR UNIDAD - REGIONAL, DISTRITAL --*/
+    /*-- LISTA % CUMPLIMIENTO POR UNIDAD - para REGIONAL, DISTRITAL --*/
     public function pdf_lista_parametro_cumplimiento_unidad($tip_reg,$id){
       $tabla='';
       $unidades=$this->model_evalinstitucional->list_unidades_organizacionales($tip_reg,$id);
 
       $tabla.='
-      <div style="font-size: 13px;font-family: Arial;height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;DETALLE DE CUMPLIMIENTO</div>
+      <div style="font-size: 13px;font-family: Arial;height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DETALLE DE (%) CUMPLIMIENTO POR UNIDADES</div>
       <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
          <thead>
-            <tr style="font-size: 9.5px;" align=center >
+            <tr style="font-size: 9px;" align=center bgcolor="#f8f2f2">
               <th style="width:2%;height:15px;">#</th>
-              <th style="width:13%;">DISTRITAL</th>
+              <th style="width:15%;">DISTRITAL</th>
               <th style="width:20%;">GASTO CORRIENTE / PROY. INV.</th>
-              <th style="width:10%;">METAS. PROGR.</th>
-              <th style="width:10%;">METAS CUMP.</th>
+              <th style="width:8%;">METAS. PROGR.</th>
+              <th style="width:8%;">METAS CUMP.</th>
               <th style="width:10%;">METAS NO CUMP.</th>
-              <th style="width:10%;">% CUMP.</th>
-              <th style="width:10%;">% ECONOMIA</th>
-              <th style="width:10%;">EFICIENCIA</th>
+              <th style="width:10%;">% CUMPLIMIENTO</th>
+              <th style="width:10%;">% NO CUMPLIDAS</th>
+              <th style="width:10%;">% EJEC. PPTO.</th>
             </tr>
           </thead>
           <tbody>';
@@ -66,19 +66,18 @@ class reportes_evaluacionpoa extends CI_Controller{
           foreach($unidades as $row){
             $eficacia=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
             $economia=$this->economia_por_unidad($row['aper_id'],$row['proy_id']); /// Economia
-            $eficiencia=$this->eficiencia_unidad($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
 
             $nro++;
-            $tabla.='<tr style="font-size: 9.5px;" >';
+            $tabla.='<tr style="font-size: 9px;" >';
             $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
-            $tabla.='<td style="width:13%;">'.strtoupper($row['dist_distrital']).'</td>';
+            $tabla.='<td style="width:15%;">'.strtoupper($row['dist_distrital']).'</td>';
             $tabla.='<td style="width:20%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[2][$this->tmes].'</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
+            $tabla.='<td style="width:8%;" align=right><b>'.$eficacia[2][$this->tmes].'</b></td>';
+            $tabla.='<td style="width:8%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
+            $tabla.='<td style="width:10%;" align=right><b>'.(100-$eficacia[5][$this->tmes]).'%</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$economia[3].'%</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficiencia.'</b></td>';
             $tabla.='</tr>';
           }
       $tabla.='
@@ -89,14 +88,132 @@ class reportes_evaluacionpoa extends CI_Controller{
     }
 
 
+    /*-- LISTA % CUMPLIMIENTO POR REGIONAL para la INSTITUCIONAL--*/
+    public function pdf_lista_parametro_cumplimiento_regional(){
+      $tabla='';
+      $regionales=$this->model_proyecto->list_departamentos();
+      $eficacia_nacional=$this->tabla_regresion_lineal_nacional(); /// Eficacia
+       $tabla.='
+        <div style="font-size: 13px;font-family: Arial;height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DETALLE DE (%) CUMPLIMIENTO POR D.A.</div>
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+         <thead>
+            <tr style="font-size: 10px;" align=center bgcolor="#f8f2f2">
+              <th style="width:2%;height:15px;">#</th>
+              <th style="width:20%;">DIRECCIÓN ADMINISTRATIVA</th>
+              <th style="width:12%;">METAS PROGRAMADAS</th>
+              <th style="width:12%;">METAS CUMPLIDAS</th>
+              <th style="width:12%;">METAS NO CUMPLIDAS</th>
+              <th style="width:12%;">% CUMPLIMIENTO</th>
+              <th style="width:12%;">% NO CUMPLIDO</th>
+              <th style="width:12%;">% EJEC. PPTO.</th>
+            </tr>
+          </thead>
+          <tbody>';
+          $nro=0;
+          foreach($regionales as $row){
+            $eficacia=$this->eficacia_por_regional($row['dep_id']); /// Eficacia
+            $economia=$this->economia_por_regional($row['dep_id']); /// Economia
+          //  $eficiencia=$this->eficiencia_por_regional($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
+            $nro++;
+            $tabla.='<tr style="font-size: 10px;">';
+            $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
+            $tabla.='<td style="width:20%;">'.strtoupper($row['dep_departamento']).'</td>';
+            $tabla.='<td style="width:12%;" align=right>'.$eficacia[2][$this->tmes].'</td>';
+            $tabla.='<td style="width:12%;" align=right>'.$eficacia[3][$this->tmes].'</td>';
+            $tabla.='<td style="width:12%;" align=right>'.$eficacia[4][$this->tmes].'</td>';
+            $tabla.='<td style="width:12%;" align=right><b>'.$eficacia[5][$this->tmes].'%</b></td>';
+            $tabla.='<td style="width:12%;" align=right><b>'.(100-$eficacia[5][$this->tmes]).'%</b></td>';
+            $tabla.='<td style="width:12%;" align=right><b>'.$economia[3].'%</b></td>';
+            $tabla.='</tr>';
+          }
+      $tabla.='
+          </tbody>
+        </table><br><br>
+        <div style="font-size: 22px;font-family: Arial;height:20px;"><b>&nbsp;&nbsp;(%) CUMPLIMIENTO A NIVEL INSTITUCIONAL : '.$eficacia_nacional[5][$this->tmes].'%</b></div>';
+
+      return $tabla;
+    }
 
 
 
+    /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE -------*/
+    public function eficacia_por_regional($dep_id){
 
+      for ($i=0; $i <=$this->tmes; $i++){ 
 
+        $tr[2][$i]=0; /// Prog
+        $tr[3][$i]=0; /// cumplidas
+        $tr[4][$i]=0; /// no cumplidas
+        $tr[5][$i]=0; /// eficacia %
+        $tr[6][$i]=0; /// no eficacia %
 
+      }
 
+      for ($i=1; $i <=$this->tmes; $i++) {
+        $valor=$this->obtiene_datos_evaluacíon_por_regional($dep_id,$i,1);
+        $tr[2][$i]=$valor[1]; /// Prog
+        $tr[3][$i]=$valor[2]; /// cumplidas
+        $tr[4][$i]=($tr[2][$i]-$tr[3][$i]); /// No cumplidas
+        if($tr[2][$i]!=0){
+          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+        }
+        $tr[6][$i]=(100-$tr[5][$i]);
+      }
 
+    return $tr;
+    }
+
+    /*------ OBTIENE DATOS DE EVALUACIÓN 2020 - REGIONAL -------*/
+    public function obtiene_datos_evaluacíon_por_regional($dep_id,$trimestre,$tipo_evaluacion){
+      $nro_ope_eval=0; $nro_cumplidas=0;
+      for ($i=1; $i <=$trimestre; $i++) {
+        $programadas=$this->model_evalinstitucional->nro_operaciones_programadas_regional($dep_id,$i,4);
+        if(count($programadas)!=0){
+          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
+        }
+
+        if(count($this->model_evalinstitucional->list_operaciones_evaluadas_unidad_trimestre_tipo_regional($dep_id,$i,$tipo_evaluacion,4))!=0){
+          $nro_cumplidas=$nro_cumplidas+count($this->model_evalinstitucional->list_operaciones_evaluadas_unidad_trimestre_tipo_regional($dep_id,$i,$tipo_evaluacion,4));
+        }
+      }
+
+      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
+      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
+
+      return $vtrimestre;
+    }
+
+    /*========================*/
+
+    /*====== ECONOMIA REGIONAL ======*/
+    public function economia_por_regional($dep_id){
+      $suma_grupo_partida=$this->model_certificacion->suma_grupo_partida_programado_por_regional(4,$dep_id,10000); /// Partidas por defecto al trimestre
+      $monto_grupo_partida=0;
+      if(count($suma_grupo_partida)!=0){
+        $monto_grupo_partida=$suma_grupo_partida[0]['suma_partida'];
+      }
+
+      $suma_ppto_certificado=$this->model_certificacion->suma_monto_certificado_por_regional(4,$dep_id); //// Presupuesto Certificado al trimestre
+      $monto_ppto_certificado=0;
+      if(count($suma_ppto_certificado)!=0){
+        $monto_ppto_certificado=$suma_ppto_certificado[0]['ppto_certificado'];
+      }
+
+      $suma_ppto_asignado=$this->model_evalinstitucional->monto_total_programado_trimestre_por_regional(4,$dep_id); //// Presupuesto Asignado POA al trimestre
+      $monto_ppto_asignado=0;
+      if(count($suma_ppto_asignado)!=0){
+        $monto_ppto_asignado=$suma_ppto_asignado[0]['ppto_programado'];
+      }
+
+      $datos[1]=$monto_grupo_partida+$monto_ppto_certificado; /// Total Certificado
+      $datos[2]=$monto_ppto_asignado; /// Total Asignado
+      $datos[3]=0; /// % Eficiencia
+      if($datos[2]!=0){
+        $datos[3]=round((($datos[1]/$datos[2])*100),2);
+      }
+
+      return $datos;
+    }
 
 
 
@@ -197,30 +314,70 @@ class reportes_evaluacionpoa extends CI_Controller{
       return $eficiencia;
     }
 
+        /*--- REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE - REGIONAL ---*/
+    public function tabla_regresion_lineal_nacional(){
+      $m[0]='';
+      $m[1]='I TRIMESTRE.';
+      $m[2]='II TRIMESTRE';
+      $m[3]='III TRIMESTRE';
+      $m[4]='IV TRIMESTRE';
+
+      for ($i=0; $i <=$this->tmes; $i++){ 
+        $tr[1][$i]=$m[$i]; /// Trimestre
+        $tr[2][$i]=0; /// Prog
+        $tr[3][$i]=0; /// cumplidas
+        $tr[4][$i]=0; /// no cumplidas
+        $tr[5][$i]=0; /// eficacia %
+        $tr[6][$i]=0; /// no eficacia %
+        $tr[7][$i]=0; /// en proceso
+        $tr[8][$i]=0; /// en proceso %
+      }
+
+      for ($i=1; $i <=$this->tmes; $i++) {
+        $valor=$this->obtiene_datos_evaluacíon_nacional($i,1);
+        $tr[2][$i]=$valor[1]; /// Prog
+        $tr[3][$i]=$valor[2]; /// cumplidas
+        $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
+        if($tr[2][$i]!=0){
+          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+        }
+        $tr[6][$i]=(100-$tr[5][$i]);
+        $proceso=$this->obtiene_datos_evaluacíon_nacional($i,2);
+        $tr[7][$i]=$proceso[2]; /// En Proceso
+
+        $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
+      }
+
+    return $tr;
+    }
 
 
+    /*--- OBTIENE DATOS DE EVALUACIÓN 2020 - REGIONAL ---*/
+    public function obtiene_datos_evaluacíon_nacional($trimestre,$tipo_evaluacion){
+      $nro_ope_eval=0; $nro_cumplidas=0;
+      for ($i=1; $i <=$trimestre; $i++) {
+        $programadas=$this->model_evalinstitucional->nro_operaciones_programadas_nacional($i,4);
+        if(count($programadas)!=0){
+          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
+        }
 
+        if(count($this->model_evalinstitucional->list_operaciones_evaluadas_unidad_trimestre_tipo_nacional($i,$tipo_evaluacion,4))!=0){
+          $nro_cumplidas=$nro_cumplidas+count($this->model_evalinstitucional->list_operaciones_evaluadas_unidad_trimestre_tipo_nacional($i,$tipo_evaluacion,4));
+        }
+      }
 
+      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
+      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
 
-
-
-
-
+      return $vtrimestre;
+    }
+  /*================*/
 
 
 
     /*--- TABLA APERTURA PROGRAMATICAS VISTA ---*/
-    public function tabla_apertura_programatica($matriz,$nro,$tip_rep){
+    public function tabla_apertura_programatica($matriz,$nro){
       $tabla='';
-      if($tip_rep==1){ /// Normal
-        $tab='class="table table-bordered" align=center style="width:100%;"';
-        $color='#e9edec';
-      } 
-      else{ /// Impresion
-        $tab='class="change_order_items" border=1 align=center style="width:100%;"';
-        $color='#e9edec';
-      }
-
       $tabla='
       <style type="text/css">
       table{font-size: 9.5px;
@@ -236,17 +393,18 @@ class reportes_evaluacionpoa extends CI_Controller{
       </style>';
 
       $tabla.='
-        <table '.$tab.'>
+        <div style="font-size: 25px;font-family: Arial;height:20px;"><b>CUADRO DE % CUMPLIMIENTO POR PROGRAMAS</b></div><br>
+        <table class="table table-bordered" align=center style="width:90%;">
           <thead>
-              <tr align=center bgcolor='.$color.'>
+              <tr align=center bgcolor="#e9edec">
                 <th>#</th>
                 <th>APERTURA PROGRAM&Aacute;TICA</th>
                 <th>DESCRIPCI&Oacute;N</th>
-                <th>TOTAL PROGRAMADAS</th>
-                <th>TOTAL EVALUADAS</th>
-                <th>CUMPLIDAS</th>
-                <th>NO CUMPLIDAS</th>
-                <th>% CUMPLIDAS</th>
+                <th>METAS PROGRAMADAS</th>
+                <th>METAS EVALUADAS</th>
+                <th>METAS CUMP.</th>
+                <th>METAS NO CUMP.</th>
+                <th>% CUMPLIMIENTO</th>
                 <th>% NO CUMPLIDAS</th>
                 </tr>
               </thead>
@@ -296,7 +454,7 @@ class reportes_evaluacionpoa extends CI_Controller{
 
       $tabla.='
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div style="height:20px;font-size: 10px;font-family: Arial;"><b>DETALLE DE EVALUACIÓN POR APERTURA PROGRAMATICA</b></div>
+        <div style="font-size: 13px;font-family: Arial;height:20px;">&nbsp;DETALLE DE (%) CUMPLIMIENTO POR PROGRAMAS</div>
         <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center">
             <thead>
               <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
@@ -361,14 +519,14 @@ class reportes_evaluacionpoa extends CI_Controller{
 
       if($tp==0){
         $departamento=$this->model_proyecto->get_departamento($id);
-        $tit='REGIONAL : '.strtoupper($departamento[0]['dep_departamento']);
+        $tit='CONSOLIDADO REGIONAL '.strtoupper($departamento[0]['dep_departamento']);
       }
       elseif($tp==1) {
         $distrital=$this->model_proyecto->dep_dist($id);
         $tit=''.strtoupper($distrital[0]['dep_departamento']).' / '.strtoupper($distrital[0]['dist_distrital']);
       }
       else{
-        $tit='INSTITUCIONAL C.N.S.';
+        $tit='CONSOLIDADO INSTITUCIONAL C.N.S.';
       }
 
       $tabla='';
@@ -448,7 +606,9 @@ class reportes_evaluacionpoa extends CI_Controller{
     /*----- Parametros de Eficacia Concolidado por Unidad -----*/
     public function parametros_eficacia($matriz,$tp_rep){
       $tabla='';
-      $tabla .='<table class="table table-bordered" align=center style="width:80%;">
+      $tabla .='
+                <div style="font-size: 25px;font-family: Arial;height:20px;">&nbsp;<b>PARAMETROS DE CUMPLIMIENTO</b></div><br>
+                <table class="table table-bordered" align=center style="width:60%;">
                   <thead>
                     <tr>
                       <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>

@@ -36,17 +36,20 @@ class Creportes_evaluacionpoa extends CI_Controller {
 
     /*--- REPORTE EVALUACION POR CATEGORIA PROGRAMATICA ---*/
     public function reporte_indicadores_unidades($dep_id,$dist_id,$tp_id){
-      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
-      $titulo_rep='PARAMETROS DE CUMPLIMIENTO POR UNIDAD';
+      
       if($dep_id==0){ /// Institucional
-          $tabla='Institucional';
+          $titulo_rep='PARAMETROS DE CUMPLIMIENTO POR REGIONAL';
+          $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral('',2,$titulo_rep);
+          $lista=$this->reportes_evaluacionpoa->pdf_lista_parametro_cumplimiento_regional();
         }
         elseif($dep_id!=0 & $dist_id==0){ /// Regional
+          $titulo_rep='PARAMETROS DE CUMPLIMIENTO POR UNIDAD';
           $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral($dep_id,0,$titulo_rep);
           $lista=$this->reportes_evaluacionpoa->pdf_lista_parametro_cumplimiento_unidad(0,$dep_id);
         }
         elseif($dep_id!=0 & $dist_id!=0){ /// Distrital
-          $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral($dep_id,1,$titulo_rep);
+          $titulo_rep='PARAMETROS DE CUMPLIMIENTO POR UNIDAD';
+          $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral($dist_id,1,$titulo_rep);
           $lista=$this->reportes_evaluacionpoa->pdf_lista_parametro_cumplimiento_unidad(1,$dist_id);
         }
 
@@ -70,19 +73,19 @@ class Creportes_evaluacionpoa extends CI_Controller {
         $tabla='No encontrado !!';
 
         if($dep_id==0){ /// Institucional
-          $matriz='Institucional';
-          $tabla='';
+          $lista_programas=$this->model_evalprograma->lista_apertura_programas_institucional($tp_id);
+          $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_institucional($lista_programas);
         }
         elseif($dep_id!=0 & $dist_id==0){ /// Regional
-          $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($dep_id,4);
+          $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($dep_id,$tp_id);
           $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_regional($lista_programas);
         }
         elseif ($dep_id!=0 & $dist_id!=0) { /// Distrital
-          $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($dist_id,4);
+          $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($dist_id,$tp_id);
           $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_distrital($lista_programas);
         }
 
-        $tabla_programa=$this->reportes_evaluacionpoa->tabla_apertura_programatica($matriz_programas,count($lista_programas),1);
+        $tabla_programa=$this->reportes_evaluacionpoa->tabla_apertura_programatica($matriz_programas,count($lista_programas));
         
 
         $matriz_parametros_prog=$this->reportes_evaluacionpoa->matriz_parametros($matriz_programas,count($lista_programas));
@@ -103,27 +106,28 @@ class Creportes_evaluacionpoa extends CI_Controller {
 
 
     /*--- REPORTE EVALUACION POR CATEGORIA PROGRAMATICA ---*/
-    public function reporte_categoria_programatica($id,$tp){
+    public function reporte_categoria_programatica($dep_id,$dist_id,$tp_id){
+      $titulo_rep='PARAMETROS DE CUMPLIMIENTO POR PROGRAMAS';
+      if($dep_id==0){ /// Institucional
+          $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral(0,2,$titulo_rep);
+          $lista_programas=$this->model_evalprograma->lista_apertura_programas_institucional($tp_id);
+          $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_institucional($lista_programas);
+        }
+        elseif($dep_id!=0 & $dist_id==0){ /// Regional
+          $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral($dep_id,0,$titulo_rep);
+          $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($dep_id,$tp_id);
+          $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_regional($lista_programas);
+        }
+        elseif($dep_id!=0 & $dist_id!=0){ /// Distrital
+          $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral($dist_id,1,$titulo_rep);
+          $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($dist_id,$tp_id);
+          $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_distrital($lista_programas);
+        }
 
+        $data['operaciones']=$this->reportes_evaluacionpoa->tabla_apertura_programatica_reporte($matriz_programas,count($lista_programas));
+        $data['pie']=$this->reportes_evaluacionpoa->pie_evaluacionpoa();
 
-     /* if($tp==0){
-        $lista_programas=$this->model_evalprograma->lista_apertura_programas_regional($id,4);
-        $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_regional($lista_programas);
-      }
-      elseif($tp==1) {
-        $lista_programas=$this->model_evalprograma->lista_apertura_programas_distrital($id,4);
-        $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_distrital($lista_programas);
-      }
-      else{
-        $lista_programas=$this->model_evalprograma->lista_apertura_programas_institucional(4);
-        $matriz_programas=$this->reportes_evaluacionpoa->matriz_programas_institucional($lista_programas);
-      }
-
-      $data['cabecera']=$this->reportes_evaluacionpoa->cabecera_evaluacion_trimestral($id,$tp);
-      $data['pie']=$this->reportes_evaluacionpoa->pie_evaluacionpoa();
-      $data['operaciones']=$this->reportes_evaluacionpoa->tabla_apertura_programatica_reporte($matriz_programas,count($lista_programas));
-      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
-      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_indicadores_parametros', $data);*/
+      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_indicadores_parametros', $data);
     }
 
 }

@@ -110,23 +110,23 @@ function abreVentana_eficiencia(PDF){
               tp_id=4;
               $('#ue').slideUp();
               $('#tp').slideUp();
-
-              $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
-              var url = base+"/index.php/reporte_seguimiento_poa/crep_seguimientopoa/get_lista_gcorriente_pinversion";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
-              });
+       
+              $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
+                var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
+                var request;
+                if (request) {
+                    request.abort();
+                }
+                request = $.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: 'json',
+                    data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+                });
 
               request.done(function (response, textStatus, jqXHR) {
                   if (response.respuesta == 'correcto') {
-                      $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                      $('#lista_consolidado').fadeIn(1000).html(response.tabla);
                   }
                   else{
                       alertify.error("ERROR AL LISTAR");
@@ -147,7 +147,7 @@ function abreVentana_eficiencia(PDF){
       });
     });
 
-
+    //// 2021
     $("#tp_id").change(function () {
         $("#tp_id option:selected").each(function () {
             dep_id=$('[name="dep_id"]').val();
@@ -205,10 +205,11 @@ function abreVentana_eficiencia(PDF){
 
 
     ///// Muestra Datos para la Regionales y distritales
-      $(function () {
+/*      $(function () {
         $(".enlace").on("click", function (e) {
           id = $(this).attr('name');
           tp = $(this).attr('id');
+          alert(id+'--'+tp)
           titulo='Consolidado Regional';
           if(tp==1){
               titulo='Consolidado Distrital';
@@ -249,11 +250,11 @@ function abreVentana_eficiencia(PDF){
           e.preventDefault();
           
         });
-      });
+      });*/
 
 
       //// Muestra datos para las gerencias de la Oficina Nacional
-       $(function () {
+/*       $(function () {
           $(".enlaceg").on("click", function (e) {
             id = $(this).attr('name');
             tp = $(this).attr('id');
@@ -298,10 +299,10 @@ function abreVentana_eficiencia(PDF){
             e.preventDefault();
             
           });
-      });
+      });*/
 
 
-
+       /// 2021
     /*---- CUADRO DE CUMPLIMIENTO POR UNIDAD-REGIONAL ----*/
     $(function () {
         $(".eficacia_unidad").on("click", function (e) {
@@ -347,7 +348,7 @@ function abreVentana_eficiencia(PDF){
           
         });
 
-
+        //// 2021
         $(".eficacia_prog").on("click", function (e) {
             dep_id=$('[name="dep_id"]').val();
             dist_id=$('[name="dist_id"]').val();

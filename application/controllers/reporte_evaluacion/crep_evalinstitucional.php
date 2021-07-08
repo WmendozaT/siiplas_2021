@@ -52,24 +52,15 @@ class Crep_evalinstitucional extends CI_Controller {
     }
 
 
-    /*-------- GET CUADRO EVALUACION INTITUCIONAL REGIONAL DISTRITAL --------*/
+    /*--- GET IFRAME EVALUACION INTITUCIONAL REGIONAL DISTRITAL 2021 ---*/
     public function get_cuadro_evaluacion_institucional(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $dep_id=$this->security->xss_clean($post['dep_id']); // dep id
         $dist_id = $this->security->xss_clean($post['dist_id']); // dist id
-        $tp_id = $this->security->xss_clean($post['tp_id']); // 0 : Consolidado Regional, 1: distrital, 2 : Nacional
+        $tp_id = $this->security->xss_clean($post['tp_id']); // tipo de operacion
 
-        if($dep_id==0){ /// Institucional
-          $tabla='Institucional';
-        }
-        elseif($dep_id!=0 & $dist_id==0){
-          $tabla='<center><iframe id="ipdf" width="99%" height="1000px;" src="'.base_url().'index.php/rep_eval_poa/evaluacion_poa_regional/'.$dep_id.'/'.$tp_id.'"></iframe></center>';
-        }
-        elseif($dep_id!=0 & $dist_id!=0){
-          $tabla='<center><iframe id="ipdf" width="99%" height="1000px;" src="'.base_url().'index.php/rep_eval_poa/evaluacion_poa_distrital/'.$dist_id.'/'.$tp_id.'"></iframe></center>';
-        }
-
+        $tabla='<center><iframe id="ipdf" width="99%" height="1000px;" src="'.base_url().'index.php/rep_eval_poa/iframe_rep_evaluacionpoa/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'"></iframe></center>';
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
@@ -82,46 +73,87 @@ class Crep_evalinstitucional extends CI_Controller {
     }
 
 
-    //// IFRAME DISTRITAL EVAL POA 
-    public function evaluacion_poa_regional($dep_id,$tp_id){
-      $data['trimestre']=$this->trimestre;
-      $data['departamento']=$this->model_proyecto->get_departamento($dep_id);
-      $data['url']=$dep_id.'/0/'.$tp_id;
-      $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_regional($dep_id); /// Tabla para el grafico al trimestre
-      $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_regional_total($dep_id); /// Tabla para el grafico Total Gestion
-      
-      $data['boton1']='CARGAR % CUMPLIMIENTO POR UNIDAD';
-      $data['boton2']='CARGAR % CUMPLIMIENTO POR PROGRAMAS';
-      $data['titulo']=
-        '<h2><b>CONSOLIDADO REGIONAL '.strtoupper($data['departamento'][0]['dep_departamento']).' - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
+    //// IFRAME NACIONAL, REGIONAL DISTRITAL - EVAL POA 2021
+    public function iframe_evaluacion_poa($dep_id,$dist_id,$tp_id){
+        $data['trimestre']=$this->trimestre;
 
-      $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],1);
-      $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],1);
-      $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],3);
-      $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],4);
+        if($dep_id==0){ /// INSTITUCIONAL
+        
+        $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_nacional(); /// Tabla para el grafico al trimestre
+        $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_nacional_total(); /// Tabla para el grafico Total Gestion
+        
+        $data['boton1']='CARGAR % CUMPLIMIENTO POR REGIONAL';
+        $data['boton2']='CARGAR % CUMPLIMIENTO POR PROGRAMAS';
 
-      $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['departamento'][0]['dep_departamento']);
+        $data['titulo']=
+          '<h2><b>CONSOLIDADO INSTITUCIONAL - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
 
-      $data['tabla_regresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
-      $data['tabla_regresion_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion
-      
+        $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa(2,'',1);
+        $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa(2,'',1);
+        $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa(2,'',3);
+        $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa(2,'',4);
+     
+        $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_INSTITUCIONAL';
 
-      $data['tabla_regresion_total']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion 
-      $data['tabla_regresion_total_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
-      
 
-      $data['tabla_pastel_todo']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
-      $data['tabla_pastel_todo_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
 
-      $data['boton_parametros_unidad']='
-          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_unidad/'.$dep_id.'/0/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
-          <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
+        }
+        elseif($dep_id!=0 & $dist_id==0){ /// REGIONAL
+          $data['departamento']=$this->model_proyecto->get_departamento($dep_id);
 
-      $data['boton_parametros_prog']='
-          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_programa/'.$dep_id.'/0/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
-          <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
+          $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_regional($dep_id); /// Tabla para el grafico al trimestre
+          $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_regional_total($dep_id); /// Tabla para el grafico Total Gestion
+          
+          $data['boton1']='CARGAR % CUMPLIMIENTO POR UNIDAD';
+          $data['boton2']='CARGAR % CUMPLIMIENTO POR PROGRAMAS';
+          $data['titulo']=
+            '<h2><b>CONSOLIDADO REGIONAL '.strtoupper($data['departamento'][0]['dep_departamento']).' - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
 
-      $data['base']='
+          $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],1);
+          $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],1);
+          $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],3);
+          $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa(0,$data['departamento'],4);
+
+          $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['departamento'][0]['dep_departamento']);
+
+        }
+        elseif ($dep_id!=0 & $dist_id!=0) { /// DISTRITAL
+          $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
+
+          $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_distrital($dist_id); /// Tabla para el grafico al trimestre
+          $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_distrital_total($dist_id); /// Tabla para el grafico Total Gestion
+          $data['boton1']='CARGAR % CUMPLIMIENTO POR UNIDAD';
+          $data['boton2']='CARGAR % CUMPLIMIENTO POR PROGRAMAS';
+          $data['titulo']=
+            '<h2>'.strtoupper($data['distrital'][0]['dist_distrital']).' <b>- '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
+
+          $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],1);
+          $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],1);
+          $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],3);
+          $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],4);
+
+          $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['distrital'][0]['dist_distrital']);
+
+        }
+
+        $data['tabla_regresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
+        $data['tabla_regresion_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion
+          
+        $data['tabla_regresion_total']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion 
+        $data['tabla_regresion_total_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
+          
+        $data['tabla_pastel_todo']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
+        $data['tabla_pastel_todo_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
+
+        $data['boton_parametros_unidad']='
+              <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_unidad/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
+              <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
+
+        $data['boton_parametros_prog']='
+              <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_programa/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
+              <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
+
+        $data['base']='
         <input name="base" type="hidden" value="'.base_url().'">
         <input name="tabla2" type="hidden" value="'.$data['tabla'][2][$this->session->userData('trimestre')].'">
         <input name="tabla3" type="hidden" value="'.$data['tabla'][3][$this->session->userData('trimestre')].'">
@@ -133,188 +165,14 @@ class Crep_evalinstitucional extends CI_Controller {
 
         <input name="tit" type="hidden" value="'.$tit.'">
         <input name="dep_id" type="hidden" value="'.$dep_id.'">
-        <input name="dist_id" type="hidden" value="0">
-        <input name="tp_id" type="hidden" value="'.$tp_id.'">';
-      $data['calificacion']=$this->evaluacionpoa->calificacion_eficacia($data['tabla'][5][$this->tmes]); /// Parametros de Eficacia
-
-
-      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_grafico_eval_consolidado_regional_distrital', $data);
-
-    }
-
-
-
-    //// IFRAME DISTRITAL EVAL POA 
-    public function evaluacion_poa_distrital($dist_id,$tp_id){
-      $data['trimestre']=$this->trimestre;
-      $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
-     // $data['url']='1/'.$dist_id;
-      //$data['url']=$data['distrital'][0]['dep_id'].'/'.$dist_id.'/'.$tp_id;
-      $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_distrital($dist_id); /// Tabla para el grafico al trimestre
-      $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_distrital_total($dist_id); /// Tabla para el grafico Total Gestion
-     // $data['titulo_indicador']='UNIDADES DEPENDIENTES';
-      $data['boton1']='CARGAR % CUMPLIMIENTO POR UNIDAD';
-      $data['boton2']='CARGAR % CUMPLIMIENTO POR PROGRAMAS';
-      $data['titulo']=
-        '<h2>'.strtoupper($data['distrital'][0]['dist_distrital']).' <b>- '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
-
-      $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],1);
-      $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],1);
-      $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],3);
-      $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa(1,$data['distrital'],4);
-
-      $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['distrital'][0]['dist_distrital']);
-
-      $data['tabla_regresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
-      $data['tabla_regresion_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion
-      
-
-      $data['tabla_regresion_total']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion 
-      $data['tabla_regresion_total_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
-      
-
-      $data['tabla_pastel_todo']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
-      $data['tabla_pastel_todo_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
-
-      $data['boton_parametros_unidad']='
-          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_unidad/'.$data['distrital'][0]['dep_id'].'/'.$dist_id.'/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
-          <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
-
-      $data['boton_parametros_prog']='
-          <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_programa/'.$data['distrital'][0]['dep_id'].'/'.$dist_id.'/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
-          <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
-
-      $data['base']='
-        <input name="base" type="hidden" value="'.base_url().'">
-        <input name="tabla2" type="hidden" value="'.$data['tabla'][2][$this->session->userData('trimestre')].'">
-        <input name="tabla3" type="hidden" value="'.$data['tabla'][3][$this->session->userData('trimestre')].'">
-        <input name="tabla4" type="hidden" value="'.$data['tabla'][4][$this->session->userData('trimestre')].'">
-        <input name="tabla5" type="hidden" value="'.$data['tabla'][5][$this->session->userData('trimestre')].'">
-        <input name="tabla6" type="hidden" value="'.$data['tabla'][6][$this->session->userData('trimestre')].'">
-        <input name="tabla7" type="hidden" value="'.$data['tabla'][7][$this->session->userData('trimestre')].'">
-        <input name="tabla8" type="hidden" value="'.$data['tabla'][8][$this->session->userData('trimestre')].'">
-
-        <input name="tit" type="hidden" value="'.$tit.'">
-        <input name="dep_id" type="hidden" value="'.$data['distrital'][0]['dep_id'].'">
         <input name="dist_id" type="hidden" value="'.$dist_id.'">
         <input name="tp_id" type="hidden" value="'.$tp_id.'">';
-      $data['calificacion']=$this->evaluacionpoa->calificacion_eficacia($data['tabla'][5][$this->tmes]); /// Parametros de Eficacia
+        $data['calificacion']=$this->evaluacionpoa->calificacion_eficacia($data['tabla'][5][$this->tmes]); /// Parametros de Eficacia
 
 
       $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_grafico_eval_consolidado_regional_distrital', $data);
 
     }
-
-
-
-
-
-
-    //// EVALUACIÓN POA - REGIONAL -DISTRITAL  - IFRAME (ANTERIOR)
-    public function evaluacion_poa($id,$tp){
-      $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      //$data['base']='<input name="base" type="hidden" value="'.base_url().'">';
-
-      if($tp==0){ //// CONSOLIDADO REGIONAL
-        $dep_id=$id;
-        $data['departamento']=$this->model_proyecto->get_departamento($dep_id);
-        $data['titulo_indicador']='DISTRITALES DEPENDIENTES';
-        $data['boton']='CARGAR INDICADORES';
-        $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_regional($dep_id); /// Tabla para el grafico al trimestre
-        $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_regional_total($dep_id); /// Tabla para el grafico Total Gestion
-         
-        $data['titulo']=
-        '<h1><b>EVALUACI&Oacute;N POA - CONSOLIDADO REGIONAL '.strtoupper($data['departamento'][0]['dep_departamento']).'</b></h1>
-        <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
-
-        $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['departamento'],1);
-        $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['departamento'],2);
-        $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['departamento'],3);
-        $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['departamento'],4);
-      //  $data['matriz']=$this->evaluacionpoa->matriz_eficacia_regional($dep_id);
-
-        $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['departamento'][0]['dep_departamento']);
-      /*for ($i=1; $i <=$this->tmes ; $i++) { 
-        for ($j=1; $j <=8 ; $j++) { 
-            echo "[".$data['tabla'][$j][$i]."]";
-          }  
-          echo "<br>";
-      };*/
-      
-      }
-      elseif($tp==1){ //// CONSOLIDADO DISTRITAL
-        $dist_id=$id;
-        $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
-        $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_distrital($dist_id); /// Tabla para el grafico al trimestre
-        $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_distrital_total($dist_id); /// Tabla para el grafico Total Gestion
-        $data['titulo_indicador']='UNIDADES DEPENDIENTES';
-        $data['boton']='CARGAR INDICADORES';
-        $data['titulo']=
-        '<h1><b>EVALUACI&Oacute;N POA - '.strtoupper($data['distrital'][0]['dist_distrital']).'</b></h1>
-        <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
-
-        $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['distrital'],1);
-        $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['distrital'],2);
-        $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['distrital'],3);
-        $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,$data['distrital'],4);
-      //  $data['matriz']=$this->evaluacionpoa->matriz_eficacia_distrital($id);
-
-        $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_'.strtoupper($data['distrital'][0]['dist_distrital']);
-     
-      }
-      else{ /// NACIONAL tp:2
-        $data['tabla']=$this->evaluacionpoa->tabla_regresion_lineal_nacional(); /// Tabla para el grafico al trimestre
-        $data['tabla_gestion']=$this->evaluacionpoa->tabla_regresion_lineal_nacional_total(); /// Tabla para el grafico Total Gestion
-       // $data['boton']='MOSTRAR CUADRO DE REGIONALES';
-        $data['titulo_indicador']='REGIONALES';
-        $data['boton']='CARGAR INDICADORES';
-        $data['titulo']=
-        '<h1><b>EVALUACI&Oacute;N POA - CONSOLIDADO INSTITUCIONAL</b></h1>
-        <h2><b>EVALUACI&Oacute;N POA AL '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
-
-        $data['cabecera_regresion']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,'',1);
-        $data['cabecera_pastel']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,'',2);
-        $data['cabecera_regresion_total']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,'',3);
-        $data['cabecera_eficacia']=$this->evaluacionpoa->cabecera_evaluacionpoa($tp,'',4);
-      //  $data['matriz']=$this->evaluacionpoa->matriz_eficacia_institucional();
-     
-        $tit='EVAL_'.$data['trimestre'][0]['trm_descripcion'].'_INSTITUCIONAL';
-      }
-
-      $data['tabla_regresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
-      $data['tabla_regresion_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion
-      
-
-      $data['tabla_regresion_total']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion 
-      $data['tabla_regresion_total_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
-      
-
-      $data['tabla_pastel_todo']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
-      $data['tabla_pastel_todo_impresion']=$this->evaluacionpoa->tabla_acumulada_evaluacion_regional_distrital($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
-      
-    //  $data['parametro_eficacia']=$this->evaluacionpoa->parametros_eficacia($data['matriz'],1);
-
-      $data['id']=$id;
-      $data['tp']=$tp;
-
-      $data['base']='
-        <input name="base" type="hidden" value="'.base_url().'">
-        <input name="tabla2" type="hidden" value="'.$data['tabla'][2][$this->session->userData('trimestre')].'">
-        <input name="tabla3" type="hidden" value="'.$data['tabla'][3][$this->session->userData('trimestre')].'">
-        <input name="tabla4" type="hidden" value="'.$data['tabla'][4][$this->session->userData('trimestre')].'">
-        <input name="tabla5" type="hidden" value="'.$data['tabla'][5][$this->session->userData('trimestre')].'">
-        <input name="tabla6" type="hidden" value="'.$data['tabla'][6][$this->session->userData('trimestre')].'">
-        <input name="tabla7" type="hidden" value="'.$data['tabla'][7][$this->session->userData('trimestre')].'">
-        <input name="tabla8" type="hidden" value="'.$data['tabla'][8][$this->session->userData('trimestre')].'">
-
-        <input name="tit" type="hidden" value="'.$tit.'">
-        ';
-      $data['calificacion']=$this->evaluacionpoa->calificacion_eficacia($data['tabla'][5][$this->tmes]); /// Parametros de Eficacia
-
-
-      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_grafico_eval_consolidado_regional_distrital', $data);
-    }
-
 
 
     /*-- GET CUADRO DE EFICIENCIA Y EFICACIA por UNIDAD NACIONA, REGIONAL, DISTRITAL --*/
@@ -329,8 +187,8 @@ class Crep_evalinstitucional extends CI_Controller {
         $tabla='No encontrado !!';
 
         if($dep_id==0){ /// Institucional
-          $matriz='Institucional';
-          $tabla='';
+          $matriz=$this->evaluacionpoa->matriz_eficacia_institucional();
+          $tabla=$this->evaluacionpoa->eficacia_regionales();
         }
         elseif($dep_id!=0 & $dist_id==0){ /// Regional
           $matriz=$this->evaluacionpoa->matriz_eficacia_regional($dep_id); /// matriz de parametros
@@ -354,93 +212,6 @@ class Crep_evalinstitucional extends CI_Controller {
           show_404();
       }
     }
-
-
-/*public function reporte_parametros($tp_regional,$id){
-      $mes = $this->mes_nombre();
-      $trimestre=$this->model_evaluacion->trimestre();
-      $tr=($this->tmes*3);
-      
-      if($tp_regional==0){ //// CONSOLIDADO REGIONAL
-        $regional=$this->model_proyecto->get_departamento($id);
-        $titulo='
-                <tr style="font-size: 15pt;">
-                  <td style="width:100%;" align=center><b>CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']).'</b></td>
-                </tr>';
-      }
-      elseif($tp_regional==1){ //// CONSOLIDADO DISTRITAL
-        $regional=$this->model_proyecto->dep_dist($id);
-        $titulo='
-                <tr style="font-size: 15pt;">
-                  <td style="width:100%;" align=center><b>REGIONAL '.strtoupper($regional[0]['dep_departamento']).'</b></td>
-                </tr>
-                <tr style="font-size: 12pt;">
-                  <td style="width:100%;" align=center>'.strtoupper($regional[0]['dist_distrital']).'</td>
-                </tr>';
-      }
-      else{ //// CONSOLIDADO NACIONAL
-        $titulo='
-                <tr style="font-size: 15pt;">
-                  <td style="width:100%;" align=center><b>CONSOLIDADO NACIONAL INSTITUCIONAL</b></td>
-                </tr>';
-      }
-
-      $data['titulo']=$titulo;
-      if($tp_regional==2){
-        $data['tit']='CUADRO DE INDICADORES'; //// Nacional
-        $data['tabla']=$this->evaluacionpoa->eficacia_regionales(2);  
-      }
-      elseif($tp_regional==1){
-        $data['tit']='CUADRO DE INDICADORES'; //// Distrital
-        $data['tabla']=$this->evaluacionpoa->unidades_dist_reg(2,$tp_regional,$id);  
-      }
-      else{
-        $data['tit']='CUADRO DE INDICADORES'; //// Regional
-        if($id==10){
-          $data['tabla']=$this->evaluacionpoa->unidades_dist_reg(2,0,$id);  
-        }
-        else{
-          $data['tabla']=$this->evaluacionpoa->list_distritales(2,$id);  
-        }
-        
-      }
-    // echo $data['tabla'];
-      $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_eficiencia', $data);
-
-    }*/
-
-    /*---- REPORTE PARAMETROS DE CUMPLIMIENTO ----*/
-/*    public function reporte_parametros($dep_id,$dist_id,$tp_id){
-      $distrital=$this->model_proyecto->dep_dist($dist_id);
-
-      $tr=($this->tmes*3);
-      
-      if($dep_id==0){ /// Institucional
-          $titulo='INSTITUCIONAL CONSOLIDADO';
-        }
-        elseif($dep_id!=0 & $dist_id==0){ /// Regional
-          $titulo='REGIONAL '.strtoupper($distrital[0]['dep_departamento']);
-
-        }
-        elseif ($dep_id!=0 & $dist_id!=0) { /// Distrital
-          $titulo=strtoupper($distrital[0]['dep_departamento']).' / '.strtoupper($distrital[0]['dist_distrital']);
-         // $lista1=$this->unidades_dist_reg(1,$dist_id,4); //// Lista de Unidades - Distrital
-        }
-
-        $lista1=$this->unidades_dist_reg(1,$dist_id,4); //// Lista de Unidades - Distrital
-
-      $data['cabecera']=$this->evaluacionpoa->cabecera_evaluacion_trimestral($titulo);
-      $data['pie']=$this->evaluacionpoa->pie_evaluacionpoa();
-      $data['tabla']=$this->unidades_dist_reg(1,$dist_id,4);
-
-     $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_eficiencia', $data);
-    }*/
-    /*========================*/
-
-
-
-
-
 
     /*------ NOMBRE MES -------*/
     function mes_nombre(){
@@ -484,17 +255,4 @@ class Crep_evalinstitucional extends CI_Controller {
       return $tabla;
     }
     /*--------------------------------------------------------------------------------*/
-/*    function rolfun($rol){
-      $valor=false;
-      for ($i=1; $i <=count($rol) ; $i++) { 
-        $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$rol[$i]);
-        if(count($data)!=0){
-          $valor=true;
-          break;
-        }
-      }
-      return $valor;
-    }*/
-    /*======================================================================================*/
-
 }

@@ -456,10 +456,8 @@ $route['reporte_solicitud_poa_aprobado/(:any)'] = 'ejecucion/ccertificacion_poa/
 //====== REPORTE EVALUACION POA 2020
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (GASTO CORRIENTE) 2020 ----------*/
 $route['menu_eval_poa'] = 'reporte_evaluacion/crep_evalinstitucional/menu_eval_poa';  /// MENU EVALUACION POA 
-$route['rep_eval_poa/evaluacion_poa_distrital/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa_distrital/$1/$2';  /// REPORTES GRAFICOS DISTRITAL
-$route['rep_eval_poa/evaluacion_poa_regional/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa_regional/$1/$2';  /// REPORTES GRAFICOS REGIONAL
+$route['rep_eval_poa/iframe_rep_evaluacionpoa/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/iframe_evaluacion_poa/$1/$2/$3';  /// IFRAME NACIONA, REGIONAL, DISTRITAL 2021
 
-//$route['rep_eval_poa/evaluacion_poa/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/evaluacion_poa/$1/$2';  /// REPORTES GRAFICOS REGIONAL, DISTRITAL
 
 $route['rep_eval_poa/evaluacion_poa_onacional/(:any)'] = 'reporte_evaluacion/crep_evalofinacional/evaluacion_poa_onacional/$1';  /// REPORTES GRAFICOS OFICINA NACIONAL
 //$route['rep_eval_poa/rep_eficacia/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/reporte_parametros/$1/$2';  /// REPORTE EVALUACION GASTO CORRIENTE
@@ -469,8 +467,8 @@ $route['eval/eval_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/evaluaci
 $route['eval/eval_unidad_gcorriente/(:any)'] = 'reporte_evaluacion/crep_evalunidad/evaluacion_unidad_gcorriente/$1';  /// REPORTES GRAFICOS DE EVALUACION GASTO CORRIENTE
 $route['rep_eficacia_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/reporte_indicadores_unidad/$1';  /// REPORTE POR EFICIENCIA Y EFICACIA POR CADA UNIDAD O PROYECTO DE UNIDAD
 
-$route['rep_indicadores_unidad/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_indicadores_unidades/$1/$2/$3';  /// REPORTE INDICADORES POR UNIDAD
-$route['rep_indicadores_programa/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_categoria_programatica/$1/$2';  /// REPORTE POR CATEGORIA PROGRAMATICA
+$route['rep_indicadores_unidad/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_indicadores_unidades/$1/$2/$3';  /// REPORTE INDICADORES POR UNIDAD 2021
+$route['rep_indicadores_programa/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_categoria_programatica/$1/$2/$3';  /// REPORTE POR CATEGORIA PROGRAMATICA 2021
 
 
 /*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (PROYECTOS DE INVERSION) 2020 ----------*/

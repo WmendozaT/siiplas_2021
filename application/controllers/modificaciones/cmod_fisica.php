@@ -445,6 +445,7 @@ class Cmod_fisica extends CI_Controller {
             'prod_indicador' => strtoupper($indicador),
             'prod_linea_base' => $lb,
             'prod_meta' => $meta ,
+            'prod_unidades' => strtoupper($unidad),
             'prod_fuente_verificacion' => strtoupper($verificacion), 
             'acc_id' => $ae,
             'mt_id' => $tp_met,
