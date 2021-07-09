@@ -1,4 +1,5 @@
 <?php
+///// formularios de Gestion 
 class Crep_ogestion extends CI_Controller { 
   public function __construct (){ 
         parent::__construct();

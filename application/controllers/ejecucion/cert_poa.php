@@ -361,25 +361,6 @@ class Cert_poa extends CI_Controller {
       return $tabla;
     }
 
-    /*-------- VALIDA UPDATE REQUERIMIENTOS NO CERTIFICADOS (a borrar)--------*/
-    public function valida_update_req_nocertificados(){   
-      $cert = $this->model_ejecucion->get_certificado_poa($this->input->post('cpoa_id'));
-
-      if($this->nro_req()!=0){
-        /*---------------------- INSERTA ITEMS CERTIFICADOS ---------------------------*/
-        $this->inserta_items_certificados($this->input->post('cpoa_id'));
-        /*----------------------------------------------------------------------------*/
-        
-        $this->session->set_flashdata('success','LA CORRECCI&Oacute;N DE ITEM SE GENERO CORRECTAMENTE');
-        redirect('ejec/verificar_reformulacion/'.$this->input->post('cpoa_id').'');
-      }
-      else{
-        $this->session->set_flashdata('danger','SELECCIONE REQUERIMIENTOS A CORREGIR');
-        redirect('ejec/verificar_reformulacion/'.$this->input->post('cpoa_id').'');
-      }
-    }
-
-
 
     /*------------------------------------- MENU -----------------------------------*/
     function menu($mod){

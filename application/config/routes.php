@@ -203,8 +203,8 @@ $route['prog/verif_cod'] = 'programacion/producto/verif_codigo'; ////// verifica
 $route['prog/delete_insumos_servicio/(:any)'] = 'programacion/producto/delete_insumos_servicios/$1';// Eliminar Todas los requerimientos del servicio (2020)
 //$route['prog/delete_requerimientos/(:any)'] = 'programacion/producto/delete_requerimientos/$1';// Eliminar Todas los Requerimientos (2020)
 $route['admin/prog/valida_upload_prod'] = 'programacion/producto/subir_producto';  //// Subir Archivo Productos txt
-$route['admin/prog/plist_prod/(:any)'] = 'programacion/producto/pre_lista_productos/$1/$2/$3/$4/$5';  //// pre lista de Productos
-$route['admin/prog/subir_prod/(:any)'] = 'programacion/producto/validar_pre_lista_productos/$1/$2/$3/$4/$5';  //// Validar pre lista de Productos
+//$route['admin/prog/plist_prod/(:any)'] = 'programacion/producto/pre_lista_productos/$1/$2/$3/$4/$5';  //// pre lista de Productos
+//$route['admin/prog/subir_prod/(:any)'] = 'programacion/producto/validar_pre_lista_productos/$1/$2/$3/$4/$5';  //// Validar pre lista de Productos
 $route['prog/delete_prod'] = 'programacion/producto/delete_operacion';  //// Eliminar Operaciones - Proyecto Inversion
 
 $route['prog/delete_operaciones'] = 'programacion/producto/delete_operaciones'; //// ELIMINA OPERACIONES SELECCIONADOS
@@ -276,8 +276,8 @@ $route['exportar_requerimientos'] = 'mantenimiento/ccontrol_calidad/exportar_req
 
 //--- DIRECTO - PROGRAMACION DE INSUMOS trabajando/vista
 
-$route['prog/ins/(:any)'] = 'programacion/cprog_insumos/insumos/$1/$2';//--
-$route['prog/delete_ins_total/(:any)'] = 'programacion/cprog_insumos/delete_insumo_total/$1';///// Eliminar Insumos total
+//$route['prog/ins/(:any)'] = 'programacion/cprog_insumos/insumos/$1/$2';//--
+//route['prog/delete_ins_total/(:any)'] = 'programacion/cprog_insumos/delete_insumo_total/$1';///// Eliminar Insumos total
 
 
 /// REQUERIMIENTOS A NIVEL DE ACTIVIDADES (2020 - GASTO CORRIENTE)
@@ -292,55 +292,55 @@ $route['prog/get_requerimiento']='insumos/cprog_insumo/get_requerimiento';// get
 
 
 //REPORTE - PRESUPUESTO
-$route['rep/pres_prog'] = 'reportes/crep_pres_prog';
-$route['rep/prog_lproy/(:any)'] = 'reportes/crep_pres_prog/lista_proyectos/$1';
-$route['rep/pres_prog_proy/(:any)'] = 'reportes/crep_pres_prog/presupuesto_programado/$1/$2/$3';
-$route['rep/pres_ejec'] = 'reportes/crep_pres_ejec';
-$route['rep/pres_ejec_lproy/(:any)'] = 'reportes/crep_pres_ejec/lista_proyectos/$1';
-$route['rep/pres_ejec_proy/(:any)'] = 'reportes/crep_pres_ejec/presupuesto_ejecutado/$1/$2/$3';
+//$route['rep/pres_prog'] = 'reportes/crep_pres_prog';
+//$route['rep/prog_lproy/(:any)'] = 'reportes/crep_pres_prog/lista_proyectos/$1';
+//$route['rep/pres_prog_proy/(:any)'] = 'reportes/crep_pres_prog/presupuesto_programado/$1/$2/$3';
+//$route['rep/pres_ejec'] = 'reportes/crep_pres_ejec';
+//$route['rep/pres_ejec_lproy/(:any)'] = 'reportes/crep_pres_ejec/lista_proyectos/$1';
+//$route['rep/pres_ejec_proy/(:any)'] = 'reportes/crep_pres_ejec/presupuesto_ejecutado/$1/$2/$3';
 //REPORTE- EVALUACION
-$route['rep/eva_institucional'] = 'reportes/crep_eva_institucional';
-$route['rep/eva_programacion'] = 'reportes/crep_eva_programacion';
-$route['rep/ev_prog/(:any)'] = 'reportes/crep_eva_programacion/evaluacion_programa/$1';
+//$route['rep/eva_institucional'] = 'reportes/crep_eva_institucional';
+//$route['rep/eva_programacion'] = 'reportes/crep_eva_programacion';
+//$route['rep/ev_prog/(:any)'] = 'reportes/crep_eva_programacion/evaluacion_programa/$1';
 
-$route['rep/eva_institucional'] = 'reportes/crep_eva_institucional';
-$route['rep/eva_programacion'] = 'reportes/crep_eva_programacion';
+//$route['rep/eva_institucional'] = 'reportes/crep_eva_institucional';
+//$route['rep/eva_programacion'] = 'reportes/crep_eva_programacion';
 
 
 //ejecucion presupuestaria
-$route['rep/ejec_pres'] = 'reportes/cseg_alerta_ejec_pres';//alerta temprana en la ejecucion del presupuesto
-$route['rep/ejec_pres/prog'] = 'reportes/cseg_alerta_ejec_pres/nivel_programa';//alerta a nivel programa
-$route['rep/ejec_pres/proy/(:any)'] = 'reportes/cseg_alerta_ejec_pres/ejec_pres_proy/$1';//alerta a nivel programa lista de proyectos
-$route['rep/ejec_pres/unidad'] = 'reportes/cseg_alerta_ejec_pres/nivel_unidad_ejecutora';//alerta a nivel  UNIDAD EJECUTORA
-$route['rep/ejec_pres/uni_proy/(:any)'] = 'reportes/cseg_alerta_ejec_pres/ejec_pres_uni_proy/$1';//alerta a nivel UNIDAD EJECUTORA lista de proyectos
-$route['rep/ejec_pres/prov'] = 'reportes/cseg_alerta_ejec_pres/nivel_provincia';//alerta a nivel provincia
-$route['rep/ejec_pres/prov/(:any)'] = 'reportes/cseg_alerta_ejec_pres/ejec_pres_nivel_prov_proy/$1';//alerta a nivel provincia lista de proyectos
+//$route['rep/ejec_pres'] = 'reportes/cseg_alerta_ejec_pres';//alerta temprana en la ejecucion del presupuesto
+//$route['rep/ejec_pres/prog'] = 'reportes/cseg_alerta_ejec_pres/nivel_programa';//alerta a nivel programa
+//$route['rep/ejec_pres/proy/(:any)'] = 'reportes/cseg_alerta_ejec_pres/ejec_pres_proy/$1';//alerta a nivel programa lista de proyectos
+//$route['rep/ejec_pres/unidad'] = 'reportes/cseg_alerta_ejec_pres/nivel_unidad_ejecutora';//alerta a nivel  UNIDAD EJECUTORA
+//$route['rep/ejec_pres/uni_proy/(:any)'] = 'reportes/cseg_alerta_ejec_pres/ejec_pres_uni_proy/$1';//alerta a nivel UNIDAD EJECUTORA lista de proyectos
+//$route['rep/ejec_pres/prov'] = 'reportes/cseg_alerta_ejec_pres/nivel_provincia';//alerta a nivel provincia
+//$route['rep/ejec_pres/prov/(:any)'] = 'reportes/cseg_alerta_ejec_pres/ejec_pres_nivel_prov_proy/$1';//alerta a nivel provincia lista de proyectos
 
 
 /*- PONDERACION - COMPONENTES - PRODUCTOS - ACTIVIDADES -*/
-$route['proy/update_pcion_comp/(:any)'] = 'programacion/cponderacion/update_ponderacion_proceso/$1';  //// Update Procesos
-$route['proy/pcion_comp/(:any)'] = 'programacion/cponderacion/mis_procesos/$1';  //// Mis Procesos
-$route['proy/valida_pcion_comp'] = 'programacion/cponderacion/valida_ponderacion_procesos';  //// Valida Ponderacion Componentes
-$route['proy/vcion_prod/(:any)'] = 'programacion/cponderacion/exportar_vinculacion_proceso/$1';  //// Excel Vinculacion Estrategica
-$route['proy/rep_vcion_prod/(:any)'] = 'programacion/cponderacion/reporte_vinculacion_proceso/$1';  //// Excel Vinculacion Estrategica
+//$route['proy/update_pcion_comp/(:any)'] = 'programacion/cponderacion/update_ponderacion_proceso/$1';  //// Update Procesos
+//$route['proy/pcion_comp/(:any)'] = 'programacion/cponderacion/mis_procesos/$1';  //// Mis Procesos
+//$route['proy/valida_pcion_comp'] = 'programacion/cponderacion/valida_ponderacion_procesos';  //// Valida Ponderacion Componentes
+//$route['proy/vcion_prod/(:any)'] = 'programacion/cponderacion/exportar_vinculacion_proceso/$1';  //// Excel Vinculacion Estrategica
+//$route['proy/rep_vcion_prod/(:any)'] = 'programacion/cponderacion/reporte_vinculacion_proceso/$1';  //// Excel Vinculacion Estrategica
 
-$route['proy/pcion_prod/(:any)'] = 'programacion/cponderacion/mis_productos/$1';  //// Ponderar Productos
-$route['proy/valida_pcion_prod'] = 'programacion/cponderacion/valida_ponderacion_productos';  //// Valida Ponderacion Productos
+//$route['proy/pcion_prod/(:any)'] = 'programacion/cponderacion/mis_productos/$1';  //// Ponderar Productos
+//$route['proy/valida_pcion_prod'] = 'programacion/cponderacion/valida_ponderacion_productos';  //// Valida Ponderacion Productos
 
-$route['proy/pcion_act/(:any)'] = 'programacion/cponderacion/mis_actividades/$1';  //// Ponderar Actividades
-$route['proy/valida_pcion_act'] = 'programacion/cponderacion/valida_ponderacion_actividades';  //// Valida Ponderacion Actividades
+//$route['proy/pcion_act/(:any)'] = 'programacion/cponderacion/mis_actividades/$1';  //// Ponderar Actividades
+//$route['proy/valida_pcion_act'] = 'programacion/cponderacion/valida_ponderacion_actividades';  //// Valida Ponderacion Actividades
 
-$route['proy/rep_vinculario_uorganizacional/(:any)'] = 'programacion/cponderacion/reporte_vinculacion_uorganizacional/$1';  //// Valida Ponderacion Actividades
+//$route['proy/rep_vinculario_uorganizacional/(:any)'] = 'programacion/cponderacion/reporte_vinculacion_uorganizacional/$1';  //// Valida Ponderacion Actividades
 
 /*- PONDERACION - OPERACIONES -*/
-$route['proy/pcion_operacion/(:any)'] = 'programacion/cponderacion/update_ponderacion_operacion/$1';  //// Update Ponderacion Operaciones
-$route['prog/pond_prog'] = 'programacion/cponderacion/update_ponderacion_programa';  //// Update Ponderacion Programas
+//$route['proy/pcion_operacion/(:any)'] = 'programacion/cponderacion/update_ponderacion_operacion/$1';  //// Update Ponderacion Operaciones
+//$route['prog/pond_prog'] = 'programacion/cponderacion/update_ponderacion_programa';  //// Update Ponderacion Programas
 
 
 /*--------------------------------- TECNICO DE PLANIFICACION -------------------------------*/
 //$route['admin/proy/operacion/(:any)'] = 'programacion/proyecto/get_operacion/$1/$2';  //// lista de la operacion especifica
-$route['proy/orequerimiento/(:any)'] = 'programacion/cprog_insumos/reporte_proyecto_insumo/$1';  //// Operacion requerimiento
-$route['proy/orequerimiento_total/(:any)'] = 'programacion/cprog_insumos/reporte_proyecto_total/$1/$2';  //// Reporte Operacion requerimiento total
+//$route['proy/orequerimiento/(:any)'] = 'programacion/cprog_insumos/reporte_proyecto_insumo/$1';  //// Operacion requerimiento
+//$route['proy/orequerimiento_total/(:any)'] = 'programacion/cprog_insumos/reporte_proyecto_total/$1/$2';  //// Reporte Operacion requerimiento total
 //$route['proy/proceso_productos/(:any)'] = 'programacion/componente/reporte_proceso_producto_actividad/$1/$2';  //// Reporte Procesos-Productos
 $route['proy/proceso_productos_consolidado/(:any)'] = 'programacion/componente/reporte_consolidado_operaciones_componentes/$1';  //// Reporte Procesos-Operaciones Consolidado TOTAL
 
@@ -454,7 +454,7 @@ $route['ejec/mis_solicitudes_certpoa'] = 'ejecucion/ccertificacion_poa/ver_mis_s
 $route['reporte_solicitud_poa_aprobado/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_solicitud_probado_certpoa/$1';  /// REPORTE SOLICITUD CERTIFICADO POA (APROBADO)
 
 //====== REPORTE EVALUACION POA 2020
-/*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (GASTO CORRIENTE) 2020 ----------*/
+/*---------- EVALUACION POA INSTITUCIONAL 2021 ----------*/
 $route['menu_eval_poa'] = 'reporte_evaluacion/crep_evalinstitucional/menu_eval_poa';  /// MENU EVALUACION POA 
 $route['rep_eval_poa/iframe_rep_evaluacionpoa/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/iframe_evaluacion_poa/$1/$2/$3';  /// IFRAME NACIONA, REGIONAL, DISTRITAL 2021
 
@@ -471,44 +471,37 @@ $route['rep_indicadores_unidad/(:any)'] = 'reporte_evaluacion/creportes_evaluaci
 $route['rep_indicadores_programa/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_categoria_programatica/$1/$2/$3';  /// REPORTE POR CATEGORIA PROGRAMATICA 2021
 
 
-/*---------- EVALUACION DE LA OPERACION INSITUCIONAL - MENU (PROYECTOS DE INVERSION) 2020 ----------*/
-/*$route['menu_eval_pi'] = 'reporte_evaluacion/crep_evalinstitucionalpi/menu_eval_poa';  /// MENU EVALUACION POA PROYECTO DE INVERSION
-$route['rep_eval_poa/evaluacion_pi/(:any)'] = 'reporte_evaluacion/crep_evalinstitucionalpi/evaluacion_pi/$1/$2';  /// REPORTES GRAFICOS REGIONAL, DISTRITAL
-$route['rep_eval_poa/rep_eficacia_pi/(:any)'] = 'reporte_evaluacion/crep_evalinstitucionalpi/reporte_eficacia_pi/$1/$2';  /// REPORTES EFICACIA-EFICIENCIA REGIONAL, DISTRITAL*/
-
-
 /*---------- EVALUACION GASTO CORRIENTE - PROGRAMA ----------*/
 $route['menu_eval_prog'] = 'reporte_evaluacion/crep_evalprogramas/menu_eval_programas';  /// MENU EVALUACION PROGRAMA 
 $route['rep_eval_prog/evaluacion_programas/(:any)'] = 'reporte_evaluacion/crep_evalprogramas/evaluacion_programas/$1/$2';  /// REPORTES GRAFICOS REGIONAL
 
 
 //====== REPORTE EVALUACION OBJETIVOS DE GESTION 2020
-/*---------- EVALUACION DE OBJETIVOS DE GESTION 2020 ----------*/
 $route['menu_eval_objetivos'] = 'reporte_evalobjetivos/crep_evalobjetivos/menu_eval_objetivos';  /// MENU EVALUACION OBJETIVOS 
 $route['rep_eval_obj/evaluacion_objetivos/(:any)'] = 'reporte_evalobjetivos/crep_evalobjetivos/evaluacion_objetivos/$1';  /// REPORTES GRAFICOS REGIONAL
 
 
 
 /*--------- EJECUCION - CERTIFICACION POA (TUE) 2019 -----------*/
-$route['ejec/menu_cpoa'] = 'ejecucion/cert_poa/menu_certificacion_poa'; //// Menu Tecnico de Unidad Ejecutora
-$route['ejec/cpoa/(:any)'] = 'ejecucion/cert_poa/list_certificados_poa/$1'; //// Lista de Certificados POA solicitados, aprobados
-$route['ejec/generar_cpoa'] = 'ejecucion/cert_poa/cpoa_lista_programas'; //// Lista de Operaciones
-$route['ejec/proceso/(:any)'] = 'ejecucion/cert_poa/procesos_operacion/$1/$2'; //// Procesos de la Operacion
-$route['ejec/cpoa_requerimiento/(:any)'] = 'ejecucion/cert_poa/cpoa_operacion_requerimiento_prod/$1/$2/$3'; //// Certificados POA Requerimientos a nivel de productos
-$route['ejec/valida_cpoa_requerimiento'] = 'ejecucion/cert_poa/valida_cpoa_operacion_requerimiento'; //// Valida Certificacion POA
-$route['ejec/mod_certificacion/(:any)'] = 'ejecucion/cert_poa/modificar_certificacion/$1/$2/$3/$4'; //// Modificar Certificacion POA
-$route['ejec/valida_update_cpoa_requerimiento'] = 'ejecucion/cert_poa/valida_update_cpoa_operacion_requerimiento'; //// Valida Update Certificacion POA
-$route['ejec/ver_certificado_poa/(:any)'] = 'ejecucion/cert_poa/ver_reporte_certificado_poa/$1/$2/$3'; //// Iframe reporte Certificado POA
-$route['ejec/certificado_poa/(:any)'] = 'ejecucion/cert_poa/reporte_certificado_poa/$1'; //// reporte Certificado POA
-$route['ejec/certificado_poa_antiguo/(:any)'] = 'ejecucion/cert_poa/reporte_certificado_poa_antiguo/$1'; //// reporte Certificado POA Antiguo
-$route['ejec/validar_cert'] = 'ejecucion/cert_poa/validar_certificacion';  //// Valida para la certificacion POA
-$route['ejec/get_requerimiento'] = 'ejecucion/cert_poa/get_requerimiento';  //// recupera datos del requerimiento
+$route['ejec/menu_cpoa'] = 'ejecucion/cert_poa/menu_certificacion_poa'; //// Menu Tecnico de Unidad Ejecutora 2021
+//$route['ejec/cpoa/(:any)'] = 'ejecucion/cert_poa/list_certificados_poa/$1'; //// Lista de Certificados POA solicitados, aprobados
+//$route['ejec/generar_cpoa'] = 'ejecucion/cert_poa/cpoa_lista_programas'; //// Lista de Operaciones
+//$route['ejec/proceso/(:any)'] = 'ejecucion/cert_poa/procesos_operacion/$1/$2'; //// Procesos de la Operacion
+//$route['ejec/cpoa_requerimiento/(:any)'] = 'ejecucion/cert_poa/cpoa_operacion_requerimiento_prod/$1/$2/$3'; //// Certificados POA Requerimientos a nivel de productos
+//$route['ejec/valida_cpoa_requerimiento'] = 'ejecucion/cert_poa/valida_cpoa_operacion_requerimiento'; //// Valida Certificacion POA
+//$route['ejec/mod_certificacion/(:any)'] = 'ejecucion/cert_poa/modificar_certificacion/$1/$2/$3/$4'; //// Modificar Certificacion POA
+//$route['ejec/valida_update_cpoa_requerimiento'] = 'ejecucion/cert_poa/valida_update_cpoa_operacion_requerimiento'; //// Valida Update Certificacion POA
+//$route['ejec/ver_certificado_poa/(:any)'] = 'ejecucion/cert_poa/ver_reporte_certificado_poa/$1/$2/$3'; //// Iframe reporte Certificado POA
+//$route['ejec/certificado_poa/(:any)'] = 'ejecucion/cert_poa/reporte_certificado_poa/$1'; //// reporte Certificado POA
+//$route['ejec/certificado_poa_antiguo/(:any)'] = 'ejecucion/cert_poa/reporte_certificado_poa_antiguo/$1'; //// reporte Certificado POA Antiguo
+//$route['ejec/validar_cert'] = 'ejecucion/cert_poa/validar_certificacion';  //// Valida para la certificacion POA
+//$route['ejec/get_requerimiento'] = 'ejecucion/cert_poa/get_requerimiento';  //// recupera datos del requerimiento
 
-$route['ejec/valida_update_reqnocertificados'] = 'ejecucion/cert_poa/valida_update_req_nocertificados'; //// Valida Update Requerimientos no Certificados
+//$route['ejec/valida_update_reqnocertificados'] = 'ejecucion/cert_poa/valida_update_req_nocertificados'; //// Valida Update Requerimientos no Certificados
 
-$route['ejec/mis_operaciones'] = 'ejecucion/cert_poa/list_operaciones'; //// Lista de Operaciones
-$route['ejec/list_req_cert/(:any)'] = 'ejecucion/cert_poa/list_req_cert/$1'; //// Lista requerimientos Certificados
-$route['ejec/rep_cert_partidas/(:any)'] = 'ejecucion/cert_poa/cuadro_partidas_certificados/$1'; //// Lista Certificados Generados
+//$route['ejec/mis_operaciones'] = 'ejecucion/cert_poa/list_operaciones'; //// Lista de Operaciones
+//$route['ejec/list_req_cert/(:any)'] = 'ejecucion/cert_poa/list_req_cert/$1'; //// Lista requerimientos Certificados
+//$route['ejec/rep_cert_partidas/(:any)'] = 'ejecucion/cert_poa/cuadro_partidas_certificados/$1'; //// Lista Certificados Generados
 
 $route['ejec/get_uadministrativas'] = 'ejecucion/cert_poa/get_unidades_administrativas'; ////// Combo Unidades Administrativas
 
@@ -538,13 +531,7 @@ $route['cert/eliminar_certificacion/(:any)'] = 'ejecucion/cert_poa/eliminar_cert
 
 /*-- EDICION DE CERTIFICACIÓN POA 2020 ---*/
 $route['cert/edit_certificacion/(:any)'] = 'ejecucion/ccertificacion_poa/modificar_cpoa/$1'; //// Generar Codigo Cert POA 2020
-//$route['cert/reporte_cpoa_delete/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_cpoa_delete/$1'; //// reporte Certificado (Eliminados) POA 2020
 
-/*-- NOTIFICACION POA 2020 ---*/
-/*$route['ejec/notificacion_poa'] = 'ejecucion/cnotificacion_poa/list_poas_aprobados'; //// Lista POA Aprobados
-$route['ejec/ver_notificacion/(:any)'] = 'ejecucion/cnotificacion_poa/lista_requerimientos_notificados_servicio/$1'; //// Lista Requerimientos Notificados-Servicio
-$route['ejec/ver_notificacion_unidad/(:any)'] = 'ejecucion/cnotificacion_poa/lista_requerimientos_notificados_unidad/$1'; //// Lista Requerimientos Notificados-Unidad
-*/
 
 
 /*----------------------------- EJECUCION - CERTIFICACION POA (POA) -------------------------------*/
@@ -564,36 +551,33 @@ $route['mod/list_top'] = 'modificaciones/cmodificaciones/list_poas_aprobados';  
 
 $route['mod/list_cites/(:any)'] = 'modificaciones/cmodificaciones/lista_cites/$1';  ///// Lista de Modificaciones POA 
 
-//$route['mod/cites_mod/(:any)'] = 'modificaciones/cmodificaciones/cites_modificacion/$1/$2';  ///// Lista de Cites Generados
-//$route['mod/cites_mod_ope/(:any)'] = 'modificaciones/cmodificaciones/update_cites_operacion/$1';  ///// Lista de Cites Generados para editar
-
 /*------------- Modificar Requerimientos (2019)------------*/
-$route['mod/cite_modificacion'] = 'modificaciones/cmod_requerimientos/valida_cite_modificacion'; //// Valida Cite Modificacion
+//$route['mod/cite_modificacion'] = 'modificaciones/cmod_requerimientos/valida_cite_modificacion'; //// Valida Cite Modificacion
 
 //$route['mod/procesos/(:any)'] = 'modificaciones/cmod_requerimientos/procesos/$1'; //// Procesos de la operacion Institucional
-$route['mod/mod_requerimiento/(:any)'] = 'modificaciones/cmod_requerimientos/requerimientos/$1/$2/$3'; //// Lista de Requerimientos
-$route['mod/update_requerimiento/(:any)'] = 'modificaciones/cmod_requerimientos/update_requerimiento/$1/$2/$3/$4'; //// Update Requerimiento
-$route['mod/valida_update_requerimiento'] = 'modificaciones/cmod_requerimientos/valida_update_requerimiento'; //// Valida Update Requerimiento
-$route['mod/update_temporalizacion/(:any)'] = 'modificaciones/cmod_requerimientos/update_temporalizacion/$1/$2/$3/$4/$5'; //// Update Temporalizacion
-$route['mod/valida_update_temporalizacion'] = 'modificaciones/cmod_requerimientos/valida_update_temporalizacion'; //// Valida Update Temporalizacion
-$route['mod/temporalizacion/(:any)'] = 'modificaciones/cmod_requerimientos/temporalizacion/$1/$2/$3/$4'; //// Pasar a Temporalizacion
+//$route['mod/mod_requerimiento/(:any)'] = 'modificaciones/cmod_requerimientos/requerimientos/$1/$2/$3'; //// Lista de Requerimientos
+//$route['mod/update_requerimiento/(:any)'] = 'modificaciones/cmod_requerimientos/update_requerimiento/$1/$2/$3/$4'; //// Update Requerimiento
+//$route['mod/valida_update_requerimiento'] = 'modificaciones/cmod_requerimientos/valida_update_requerimiento'; //// Valida Update Requerimiento
+//$route['mod/update_temporalizacion/(:any)'] = 'modificaciones/cmod_requerimientos/update_temporalizacion/$1/$2/$3/$4/$5'; //// Update Temporalizacion
+//$route['mod/valida_update_temporalizacion'] = 'modificaciones/cmod_requerimientos/valida_update_temporalizacion'; //// Valida Update Temporalizacion
+//$route['mod/temporalizacion/(:any)'] = 'modificaciones/cmod_requerimientos/temporalizacion/$1/$2/$3/$4'; //// Pasar a Temporalizacion
 
-$route['mod/add_requerimiento/(:any)'] = 'modificaciones/cmod_requerimientos/add_requerimiento/$1/$2/$3/$4'; //// Agrega Requerimiento
-$route['mod/add_temporalidad/(:any)'] = 'modificaciones/cmod_requerimientos/add_temporalidad/$1/$2/$3/$4'; //// Agrega Temporalidad
+//$route['mod/add_requerimiento/(:any)'] = 'modificaciones/cmod_requerimientos/add_requerimiento/$1/$2/$3/$4'; //// Agrega Requerimiento
+//$route['mod/add_temporalidad/(:any)'] = 'modificaciones/cmod_requerimientos/add_temporalidad/$1/$2/$3/$4'; //// Agrega Temporalidad
 
-$route['mod/delete_requerimiento'] = 'modificaciones/cmod_requerimientos/delete_requerimiento'; //// Elimina Requerimiento
-$route['mod/cites_mod_ins/(:any)'] = 'modificaciones/cmodificaciones/update_cites_requerimientos/$1';  ///// Lista de Cites Generados para editar Insumos
-$route['mod/quitar_requerimiento'] = 'modificaciones/cmodificaciones/quitar_requerimiento'; //// Quitar Requerimiento del Cite
-$route['mod/delete_requerimientos'] = 'modificaciones/cmod_requerimientos/delete_requerimientos'; //// Elimina Requerimientos en conjunto
-$route['mod/cuadro_comparativo/(:any)'] = 'modificaciones/cmod_requerimientos/cuadro_comparativo/$1'; //// Cuadro Comparativo por Partidas
-$route['mod/get_requerimiento']='modificaciones/cmod_requerimientos/get_requerimiento';// get Requerimiento Modificacion
+//$route['mod/delete_requerimiento'] = 'modificaciones/cmod_requerimientos/delete_requerimiento'; //// Elimina Requerimiento
+//$route['mod/cites_mod_ins/(:any)'] = 'modificaciones/cmodificaciones/update_cites_requerimientos/$1';  ///// Lista de Cites Generados para editar Insumos
+//$route['mod/quitar_requerimiento'] = 'modificaciones/cmodificaciones/quitar_requerimiento'; //// Quitar Requerimiento del Cite
+//$route['mod/delete_requerimientos'] = 'modificaciones/cmod_requerimientos/delete_requerimientos'; //// Elimina Requerimientos en conjunto
+//$route['mod/cuadro_comparativo/(:any)'] = 'modificaciones/cmod_requerimientos/cuadro_comparativo/$1'; //// Cuadro Comparativo por Partidas
+//$route['mod/get_requerimiento']='modificaciones/cmod_requerimientos/get_requerimiento';// get Requerimiento Modificacion
 
-$route['mod/revertir_mod/(:any)'] = 'modificaciones/cmodificaciones/revertir_ediciones/$1/$2/$3'; ///// Revertir Adicion, Modificacion - eliminacion
+//$route['mod/revertir_mod/(:any)'] = 'modificaciones/cmodificaciones/revertir_ediciones/$1/$2/$3'; ///// Revertir Adicion, Modificacion - eliminacion
 
-$route['mod/get_montop']='modificaciones/cmod_requerimientos/get_monto_partida';// get Monto Partida
-$route['mod/del_ins/(:any)'] = 'modificaciones/cmod_requerimientos/elimina_requerimientos_producto_actividad/$1/$2'; //// Elimina Requerimientos por producto-Actividad (2019)
+//$route['mod/get_montop']='modificaciones/cmod_requerimientos/get_monto_partida';// get Monto Partida
+//$route['mod/del_ins/(:any)'] = 'modificaciones/cmod_requerimientos/elimina_requerimientos_producto_actividad/$1/$2'; //// Elimina Requerimientos por producto-Actividad (2019)
 
-/*------- Modificar Techo - Partidas Asignadas -------*/
+/*------- Modificar Techo - Partidas Asignadas (TECHO PRESUPUESTARIO)-------*/
 $route['mod/cite_techo/(:any)'] = 'modificaciones/cmod_requerimientos/cite_techo/$1'; //// Cite Techo 
 $route['mod/techo/(:any)'] = 'modificaciones/cmod_requerimientos/techo/$1'; //// Modificar Techo
 $route['mod/rep_mod_req/(:any)'] = 'modificaciones/cmod_requerimientos/reporte_modificacion/$1/$2';  ///// Reporte Modificaciones Requerimientos 2019
@@ -689,13 +673,13 @@ $route['servicios/(:any)']='mantenimiento/cestructura_organizacional/list_servic
 $route['mis_poas_scanneados']='mantenimiento/cpoas_scanneados/list_poa_scanneados';// Lista de POAS Escaneados
 
 //===================partidas==========================//
-$route['partidas']='mantenimiento/partidas/lista_partidas';// vista partidas
-$route['imprime_partida']='mantenimiento/partidas/imprime_partidas';// Imprimir lista de partidas
-$route['umedidas/(:any)']='mantenimiento/partidas/umedidas/$1';// Lista de Unidades de medida
-$route['admin/verificar_par']='mantenimiento/partidas/verificar_cod_par';// vista partidas verificar codigo partida
-$route['admin/partidas_add']='mantenimiento/partidas/add_par';// vista partidas adicionar partidas
-$route['admin/partidas_mod']='mantenimiento/partidas/get_par';// vista partidas modificar partidas
-$route['admin/partidas_del']='mantenimiento/partidas/del_par';// vista partidas eliminar partidas
+//$route['partidas']='mantenimiento/partidas/lista_partidas';// vista partidas
+//$route['imprime_partida']='mantenimiento/partidas/imprime_partidas';// Imprimir lista de partidas
+//$route['umedidas/(:any)']='mantenimiento/partidas/umedidas/$1';// Lista de Unidades de medida
+//$route['admin/verificar_par']='mantenimiento/partidas/verificar_cod_par';// vista partidas verificar codigo partida
+//$route['admin/partidas_add']='mantenimiento/partidas/add_par';// vista partidas adicionar partidas
+//$route['admin/partidas_mod']='mantenimiento/partidas/get_par';// vista partidas modificar partidas
+//$route['admin/partidas_del']='mantenimiento/partidas/del_par';// vista partidas eliminar partidas
 
 //--------------------------- CONF. PROYECTOS DE INVERSIÓN ----------------------//
 $route['proy_inversion']='mantenimiento/cconf_pinversion/list_proyectos';// Lista Proyectos de Inversion
@@ -719,23 +703,6 @@ $route['cambiar'] = 'nueva_session/cambiar_gestion';//cambiar contralador
 $route['trabajando'] = 'trabajando/vista';
 $route['error'] = 'trabajando/error';
 
-/*===================================== MODULO DE REPORTES ==============================*/
-
-/*--- REPORTES PAC EXCEL ----*/
-/*$route['rep/list_operaciones/(:any)'] = 'reportes_cns/exporting_datos/mis_unidades/$1'; ///// Lista Operaciones por regiones
-$route['rep/exportar_requerimientos/(:any)'] = 'reportes_cns/exporting_datos/requerimientos/$1/$2'; ///// Exportar Requerimientos
-$route['rep/exportar_requerimientos_proceso/(:any)'] = 'reportes_cns/exporting_datos/exporting_requerimientos/$1/$2/$3'; ///// Exportar Requerimientos por Procesos
-
-$route['rep/exportar_requerimientos_distrital/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_distrital/$1'; ///// Exportar Requerimientos por distrital
-
-$route['rep/exportar_requerimientos_certificados/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_certificados_regional/$1'; ///// Exportar Requerimientos Certificados
-
-$route['rep/exportar_consolidado_unidad/(:any)'] = 'reportes_cns/exporting_datos/exportar_consolidado_unidad/$1'; /// Exportar consolidado de requerimientos Excel
-$route['rep/exportar_consolidado_partidas/(:any)'] = 'reportes_cns/exporting_datos/exportar_consolidado_partidas/$1'; /// Exportar consolidado por partidas Excel
-
-$route['rep/exportar_rep_req/(:any)'] = 'reportes_cns/exporting_datos/exportar_requerimientos_certificados/$1'; ///// Exportar Requerimientos Certificados Regional*/
-
-//$route['rep/exportar_rep_req/(:any)'] = 'reportes_cns/exporting_datos/exportar_requerimientos_certificados/$1'; /// Exportar Requerimientos Certificados Generados total
 
 /*--------------------------- REPORTES - MARCO ESTRATEGICO INSTITUCIONAL ---------------------------*/
 $route['rep/ogestion/(:any)'] = 'reportes_cns/crep_ogestion/mis_ogestion/$1'; ///// Lista de Objetivos de Gestion - FORMULARIO SPO 01
@@ -746,81 +713,81 @@ $route['rep/ver_ogestion/(:any)'] = 'reportes_cns/crep_ogestion/ver_relacion_oge
 
 
 /*--------------------------- REPORTES - ALINEACION POA - PEI ---------------------------*/
-$route['rep/alin_regionales_poa_pei'] = 'reportes_cns/crep_poai/list_regionales'; ///// Regionales CNS
-$route['rep/rep_detalle_institucional'] = 'reportes_cns/crep_poai/reporte_detalle_alineacion_operaciones_institucional'; //// Reporte detalle alineacion operaciones - Intitucional
-$route['rep/rep_detalle_regional_operaciones/(:any)'] = 'reportes_cns/crep_poai/reporte_detalle_alineacion_operaciones_acciones/$1'; //// Reporte detalle alineacion operaciones - acciones por actividad
-$route['rep/rep_detalle_regional/(:any)'] = 'reportes_cns/crep_poai/reporte_total_alineacion_operaciones_acciones/$1'; //// Reporte Total alineacion operaciones - acciones por regional
-$route['rep/rep_detalle_oe_regional/(:any)'] = 'reportes_cns/crep_poai/reporte_total_alineacion_operaciones_oe/$1'; //// Reporte Total alineacion operaciones - Obj. Est. por regional
+//$route['rep/alin_regionales_poa_pei'] = 'reportes_cns/crep_poai/list_regionales'; ///// Regionales CNS
+//$route['rep/rep_detalle_institucional'] = 'reportes_cns/crep_poai/reporte_detalle_alineacion_operaciones_institucional'; //// Reporte detalle alineacion operaciones - Intitucional
+//$route['rep/rep_detalle_regional_operaciones/(:any)'] = 'reportes_cns/crep_poai/reporte_detalle_alineacion_operaciones_acciones/$1'; //// Reporte detalle alineacion operaciones - acciones por actividad
+//$route['rep/rep_detalle_regional/(:any)'] = 'reportes_cns/crep_poai/reporte_total_alineacion_operaciones_acciones/$1'; //// Reporte Total alineacion operaciones - acciones por regional
+//$route['rep/rep_detalle_oe_regional/(:any)'] = 'reportes_cns/crep_poai/reporte_total_alineacion_operaciones_oe/$1'; //// Reporte Total alineacion operaciones - Obj. Est. por regional
 
-$route['rep/rep_detalle_oestrategicos'] = 'reportes_cns/crep_poai/reporte_detalle_alineacion_operaciones_evaluacion_oestrategicos'; //// Reporte detalle alineacion operaciones - Evaluacion - Objetivos Estrategicos
-$route['pei_poa'] = 'reportes_cns/crep_poai/institucional_pei_poa'; //// Reporte Institucional PEI-POA
-$route['print_pei_poa/(:any)'] = 'reportes_cns/crep_poai/reporte_institucional_pei_poa/$1'; //// Reporte Institucional PEI-POA
+//$route['rep/rep_detalle_oestrategicos'] = 'reportes_cns/crep_poai/reporte_detalle_alineacion_operaciones_evaluacion_oestrategicos'; //// Reporte detalle alineacion operaciones - Evaluacion - Objetivos Estrategicos
+//$route['pei_poa'] = 'reportes_cns/crep_poai/institucional_pei_poa'; //// Reporte Institucional PEI-POA
+//$route['print_pei_poa/(:any)'] = 'reportes_cns/crep_poai/reporte_institucional_pei_poa/$1'; //// Reporte Institucional PEI-POA
 
 
 /*--------------------------- REPORTES - EVALUACION NACIONAL (2018) a revision ---------------------------*/
-$route['rep/eval_nacional'] = 'reportes_cns/crep_evalnacional/nacional_institucional'; ///// Insitutcional Nacional Global
+//$route['rep/eval_nacional'] = 'reportes_cns/crep_evalnacional/nacional_institucional'; ///// Insitutcional Nacional Global
 /*-- Programas --*/
-$route['rep/eval_nprogramas'] = 'reportes_cns/crep_evalnacional/nivel_programas'; ///// A nivel de Programas
-$route['rep/print_eval_nprogramas'] = 'reportes_cns/crep_evalnacional/print_nivel_programas'; ///// A nivel de Programas para imprimir
-$route['rep/rep_eval_nprogramas'] = 'reportes_cns/crep_evalnacional/reporte_nivel_programas'; ///// Reporte nivel de Programas
-$route['rep/get_nprograma/(:any)'] = 'reportes_cns/crep_evalnacional/get_programa/$1'; ///// get Programa
+//$route['rep/eval_nprogramas'] = 'reportes_cns/crep_evalnacional/nivel_programas'; ///// A nivel de Programas
+//$route['rep/print_eval_nprogramas'] = 'reportes_cns/crep_evalnacional/print_nivel_programas'; ///// A nivel de Programas para imprimir
+//$route['rep/rep_eval_nprogramas'] = 'reportes_cns/crep_evalnacional/reporte_nivel_programas'; ///// Reporte nivel de Programas
+//$route['rep/get_nprograma/(:any)'] = 'reportes_cns/crep_evalnacional/get_programa/$1'; ///// get Programa
 
 /*-- Proyecto --*/
-$route['rep/eval_nproyecto/(:any)'] = 'reportes_cns/crep_evalnacional/nivel_proyecto/$1'; ///// A nivel de Proyecto
-$route['rep/print_eval_nproyecto/(:any)'] = 'reportes_cns/crep_evalnacional/print_nivel_proyecto/$1'; ///// A nivel de Proyecto para imprimir
-$route['rep/get_nproyecto/(:any)'] = 'reportes_cns/crep_evalnacional/get_proyecto/$1/$2'; ///// get Proyecto
+//$route['rep/eval_nproyecto/(:any)'] = 'reportes_cns/crep_evalnacional/nivel_proyecto/$1'; ///// A nivel de Proyecto
+//$route['rep/print_eval_nproyecto/(:any)'] = 'reportes_cns/crep_evalnacional/print_nivel_proyecto/$1'; ///// A nivel de Proyecto para imprimir
+//$route['rep/get_nproyecto/(:any)'] = 'reportes_cns/crep_evalnacional/get_proyecto/$1/$2'; ///// get Proyecto
 
 /*-- Componente --*/
-$route['rep/eval_nproceso/(:any)'] = 'reportes_cns/crep_evalnacional/nivel_proceso/$1/$2'; ///// A nivel de Proceso
-$route['rep/print_eval_nproceso/(:any)'] = 'reportes_cns/crep_evalnacional/print_nivel_proceso/$1/$2'; ///// A nivel de Proceso para imprimir
-$route['rep/get_nproceso/(:any)'] = 'reportes_cns/crep_evalnacional/get_proceso/$1/$2'; ///// get Proceso
+//$route['rep/eval_nproceso/(:any)'] = 'reportes_cns/crep_evalnacional/nivel_proceso/$1/$2'; ///// A nivel de Proceso
+//$route['rep/print_eval_nproceso/(:any)'] = 'reportes_cns/crep_evalnacional/print_nivel_proceso/$1/$2'; ///// A nivel de Proceso para imprimir
+//$route['rep/get_nproceso/(:any)'] = 'reportes_cns/crep_evalnacional/get_proceso/$1/$2'; ///// get Proceso
 
 /*-- Producto --*/
-$route['rep/eval_nproducto/(:any)'] = 'reportes_cns/crep_evalnacional/nivel_producto/$1/$2'; ///// A nivel de Producto
-$route['rep/print_eval_nproducto/(:any)'] = 'reportes_cns/crep_evalnacional/print_nivel_producto/$1/$2'; ///// A nivel de Producto para imprimir
-$route['rep/get_nproducto/(:any)'] = 'reportes_cns/crep_evalnacional/get_producto/$1/$2'; ///// get Producto
+//$route['rep/eval_nproducto/(:any)'] = 'reportes_cns/crep_evalnacional/nivel_producto/$1/$2'; ///// A nivel de Producto
+//$route['rep/print_eval_nproducto/(:any)'] = 'reportes_cns/crep_evalnacional/print_nivel_producto/$1/$2'; ///// A nivel de Producto para imprimir
+//$route['rep/get_nproducto/(:any)'] = 'reportes_cns/crep_evalnacional/get_producto/$1/$2'; ///// get Producto
 
 /*-- Actividad --*/
-$route['rep/eval_nactividad/(:any)'] = 'reportes_cns/crep_evalnacional/nivel_actividad/$1/$2'; ///// A nivel de Actividad
-$route['rep/print_eval_nactividad/(:any)'] = 'reportes_cns/crep_evalnacional/print_nivel_actividad/$1/$2'; ///// A nivel de Actividad para imprimir
-$route['rep/get_nactividad/(:any)'] = 'reportes_cns/crep_evalnacional/get_actividad/$1/$2'; ///// get Actividad
+//$route['rep/eval_nactividad/(:any)'] = 'reportes_cns/crep_evalnacional/nivel_actividad/$1/$2'; ///// A nivel de Actividad
+//$route['rep/print_eval_nactividad/(:any)'] = 'reportes_cns/crep_evalnacional/print_nivel_actividad/$1/$2'; ///// A nivel de Actividad para imprimir
+//$route['rep/get_nactividad/(:any)'] = 'reportes_cns/crep_evalnacional/get_actividad/$1/$2'; ///// get Actividad
 
 
 /*--------------------------- REPORTES - EVALUACION NACIONAL OPERACION DE FUNCIONAMIENTO (2018) a revision ---------------------------*/
-$route['rep/eval_nacional_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nacional_institucional_tp/$1'; ///// Insitutcional Nacional Global - Operacion de Funcionamiento
+//$route['rep/eval_nacional_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nacional_institucional_tp/$1'; ///// Insitutcional Nacional Global - Operacion de Funcionamiento
 /*-- Programas --*/
-$route['rep/eval_nprogramas_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_programas/$1'; ///// A nivel de Programas
-$route['rep/print_eval_nprogramas_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_programas/$1'; ///// A nivel de Programas para imprimir
-$route['rep/rep_eval_nprogramas_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/reporte_nivel_programas/$1'; ///// Reporte nivel de Programas
-$route['rep/get_nprograma_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_programa/$1/$2'; ///// get Programa
+//$route['rep/eval_nprogramas_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_programas/$1'; ///// A nivel de Programas
+//$route['rep/print_eval_nprogramas_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_programas/$1'; ///// A nivel de Programas para imprimir
+//$route['rep/rep_eval_nprogramas_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/reporte_nivel_programas/$1'; ///// Reporte nivel de Programas
+//$route['rep/get_nprograma_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_programa/$1/$2'; ///// get Programa
 
 /*-- Proyecto --*/
-$route['rep/eval_nproyecto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_proyecto/$1/$2'; ///// A nivel de Proyecto
-$route['rep/print_eval_nproyecto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_proyecto/$1/$2'; ///// A nivel de Proyecto para imprimir
-$route['rep/get_nproyecto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_proyecto/$1/$2/$3'; ///// get Proyecto
+//$route['rep/eval_nproyecto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_proyecto/$1/$2'; ///// A nivel de Proyecto
+//$route['rep/print_eval_nproyecto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_proyecto/$1/$2'; ///// A nivel de Proyecto para imprimir
+//$route['rep/get_nproyecto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_proyecto/$1/$2/$3'; ///// get Proyecto
 
 /*-- Componente --*/
-$route['rep/eval_nproceso_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_proceso/$1/$2'; ///// A nivel de Proceso
-$route['rep/print_eval_nproceso_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_proceso/$1/$2'; ///// A nivel de Proceso para imprimir
-$route['rep/get_nproceso_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_proceso/$1/$2'; ///// get Proceso
+//$route['rep/eval_nproceso_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_proceso/$1/$2'; ///// A nivel de Proceso
+///$route['rep/print_eval_nproceso_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_proceso/$1/$2'; ///// A nivel de Proceso para imprimir
+//$route['rep/get_nproceso_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_proceso/$1/$2'; ///// get Proceso
 
 /*-- Producto --*/
-$route['rep/eval_nproducto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_producto/$1/$2'; ///// A nivel de Producto
-$route['rep/print_eval_nproducto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_producto/$1/$2'; ///// A nivel de Producto para imprimir
-$route['rep/get_nproducto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_producto/$1/$2'; ///// get Producto
+//$route['rep/eval_nproducto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_producto/$1/$2'; ///// A nivel de Producto
+//$route['rep/print_eval_nproducto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_producto/$1/$2'; ///// A nivel de Producto para imprimir
+//$route['rep/get_nproducto_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_producto/$1/$2'; ///// get Producto
 
 /*-- Actividad --*/
-$route['rep/eval_nactividad_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_actividad/$1/$2'; ///// A nivel de Actividad
-$route['rep/print_eval_nactividad_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_actividad/$1/$2'; ///// A nivel de Actividad para imprimir
-$route['rep/get_nactividad_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_actividad/$1/$2'; ///// get Actividad
+//$route['rep/eval_nactividad_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/nivel_actividad/$1/$2'; ///// A nivel de Actividad
+//$route['rep/print_eval_nactividad_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/print_nivel_actividad/$1/$2'; ///// A nivel de Actividad para imprimir
+//$route['rep/get_nactividad_tp/(:any)'] = 'reportes_cns/crep_evalnacional_tp/get_actividad/$1/$2'; ///// get Actividad
 
 /*--------------------------- REPORTES EVALUACION POA - INSTITUCIONAL ---------------------------*/
-$route['institucional'] = 'reportes_cns/crep_evalinstitucional/nacional_institucional'; ///// Institucional
-$route['print_rep_prog_inst'] = 'reportes_cns/crep_evalinstitucional/reporte_programas_institucional'; ///// Reporte Evaluacion Institucional por programas
-$route['print_rep_reg_inst'] = 'reportes_cns/crep_evalinstitucional/reporte_eval_regional'; ///// Reporte Evaluacion Institucional por programas
+//$route['institucional'] = 'reportes_cns/crep_evalinstitucional/nacional_institucional'; ///// Institucional
+//$route['print_rep_prog_inst'] = 'reportes_cns/crep_evalinstitucional/reporte_programas_institucional'; ///// Reporte Evaluacion Institucional por programas
+//$route['print_rep_reg_inst'] = 'reportes_cns/crep_evalinstitucional/reporte_eval_regional'; ///// Reporte Evaluacion Institucional por programas
 
 /*--------------------------- REPORTES EVALUACION POA - REGIONALES 2019 ---------------------------*/
-$route['regionales'] = 'reportes_cns/crep_evalregional/menu_regionales'; ///// Menu Regionales
+/*$route['regionales'] = 'reportes_cns/crep_evalregional/menu_regionales'; ///// Menu Regionales
 $route['get_regional/(:any)'] = 'reportes_cns/crep_evalregional/get_regional/$1'; ///// get Regional
 $route['rep_cregional/(:any)'] = 'reportes_cns/crep_evalregional/consolidado_regional/$1'; ///// Consolidado Regional - poa
 $route['efi_trimestre_regional/(:any)'] = 'reportes_cns/crep_evalrtrimestre/consolidado_regional_trimestre/$1'; ///// get Regional - operaciones priorizados
@@ -831,18 +798,18 @@ $route['print_eval_regional/(:any)'] = 'reportes_cns/crep_evalregional/reporte_e
 $route['rep_cregional_pr/(:any)'] = 'reportes_cns/crep_evalregionalpr/consolidado_regional_priorizados/$1'; ///// get Regional - operaciones priorizados
 
 $route['rep_cregional_pei/(:any)'] = 'reportes_cns/crep_evalregionalpei/consolidado_regional_pei/$1'; ///// get Regional - Consolidado por Objetivo Estrategico
-$route['rep_eval_pei/dep_operaciones/(:any)'] = 'reportes_cns/crep_evalregionalpei/list_consolidado_acc/$1/$2'; ///// get Regional - Consolidado por Objetivo Estrategico
+$route['rep_eval_pei/dep_operaciones/(:any)'] = 'reportes_cns/crep_evalregionalpei/list_consolidado_acc/$1/$2'; ///// get Regional - Consolidado por Objetivo Estrategico*/
 
 /*--------------------------- REPORTES - DISTRITALES ---------------------------*/
-$route['rep_distrital/(:any)'] = 'reportes_cns/crep_evaldistrital/menu_distrital/$1'; ///// Menu Distrital
-$route['print_rep_distrital/(:any)'] = 'reportes_cns/crep_evaldistrital/reporte_eficacia/$1'; ///// print eficacia por acciones operativas
+//$route['rep_distrital/(:any)'] = 'reportes_cns/crep_evaldistrital/menu_distrital/$1'; ///// Menu Distrital
+//$route['print_rep_distrital/(:any)'] = 'reportes_cns/crep_evaldistrital/reporte_eficacia/$1'; ///// print eficacia por acciones operativas
 
 /*--------------------------- REPORTES - ACCION OPERATIVA ---------------------------*/
-$route['eval_dproyecto/(:any)'] = 'reportes_cns/crep_evalaccion/menu_accion/$1'; ///// Menu Accion
-$route['print_eval_componentes/(:any)'] = 'reportes_cns/crep_evalaccion/reporte_evaluacion_componente/$1'; ///// print Evaluacion de operaciones por componentes
+//$route['eval_dproyecto/(:any)'] = 'reportes_cns/crep_evalaccion/menu_accion/$1'; ///// Menu Accion
+//$route['print_eval_componentes/(:any)'] = 'reportes_cns/crep_evalaccion/reporte_evaluacion_componente/$1'; ///// print Evaluacion de operaciones por componentes
 
 /*--------------------------- REPORTES - PARTIDAS INSTITUCIONAL ---------------------------*/
-$route['rep/partidas'] = 'reportes_cns/crep_partidas/partidas_institucional'; ///// Partidas A nivel Nacional
+/*$route['rep/partidas'] = 'reportes_cns/crep_partidas/partidas_institucional'; ///// Partidas A nivel Nacional
 $route['rep/rep_partidas'] = 'reportes_cns/crep_partidas/reporte_partidas_institucional'; ///// Reporte Partidas A nivel Nacional
 $route['rep/xls_pnacional'] = 'reportes_cns/crep_partidas/reporte_excel_partidas_institucional'; ///// Reporte Excel Partidas A nivel Nacional
 
@@ -854,11 +821,11 @@ $route['rep/xls_partida_ue/(:any)'] = 'reportes_cns/crep_partidas/reporte_excel_
 $route['rep/acciones_operativas/(:any)'] = 'reportes_cns/crep_partidas/list_acciones_operativas/$1'; ///// Lista de Acciones
 $route['rep/accion/(:any)'] = 'reportes_cns/crep_partidas/partida_accion_operativa/$1/$2'; ///// Accion Operativa
 $route['rep/rep_accion/(:any)'] = 'reportes_cns/crep_partidas/reporte_partidas_accion/$1/$2'; ///// Reporte Partidas A nivel Accion Operativa
-$route['rep/xls_paccion/(:any)'] = 'reportes_cns/crep_partidas/reporte_excel_partidas_accion/$1/$2'; ///// Reporte Excel Partidas A nivel Accion Operativa
+$route['rep/xls_paccion/(:any)'] = 'reportes_cns/crep_partidas/reporte_excel_partidas_accion/$1/$2'; ///// Reporte Excel Partidas A nivel Accion Operativa*/
 
 
 /*--------------------------- REPORTES - PARTIDAS REGIONAL ---------------------------*/
-$route['rep/rpartidas/(:any)'] = 'reportes_cns/crep_rpartidas/partidas_regional/$1'; ///// Partidas A nivel regional
+/*$route['rep/rpartidas/(:any)'] = 'reportes_cns/crep_rpartidas/partidas_regional/$1'; ///// Partidas A nivel regional
 $route['rep/rep_rpartidas/(:any)'] = 'reportes_cns/crep_rpartidas/reporte_partidas_regional/$1'; ///// Reporte Partidas A nivel Regional
 $route['rep/xls_pregional/(:any)'] = 'reportes_cns/crep_rpartidas/reporte_excel_partidas_regional/$1'; ///// Reporte Excel Partidas A nivel Regional
 
@@ -872,7 +839,7 @@ $route['rep/xls_rpartida_ue/(:any)'] = 'reportes_cns/crep_rpartidas/reporte_exce
 $route['rep/racciones_operativas/(:any)'] = 'reportes_cns/crep_rpartidas/list_acciones_operativas/$1/$2'; ///// Lista de Acciones
 $route['rep/raccion/(:any)'] = 'reportes_cns/crep_rpartidas/partida_accion_operativa/$1/$2'; ///// Accion Operativa
 $route['rep/rep_raccion/(:any)'] = 'reportes_cns/crep_rpartidas/reporte_partidas_accion/$1/$2'; ///// Reporte Partidas A nivel Accion Operativa
-$route['rep/xls_rpaccion/(:any)'] = 'reportes_cns/crep_rpartidas/reporte_excel_partidas_accion/$1/$2'; ///// Reporte Excel Partidas A nivel Accion Operativa
+$route['rep/xls_rpaccion/(:any)'] = 'reportes_cns/crep_rpartidas/reporte_excel_partidas_accion/$1/$2'; ///// Reporte Excel Partidas A nivel Accion Operativa*/
 
 
 /*--------------------------- REPORTES - CONSULTAS INTERNAS ---------------------------*/

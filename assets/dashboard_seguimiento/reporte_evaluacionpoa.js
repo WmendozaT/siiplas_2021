@@ -101,6 +101,7 @@ function abreVentana_eficiencia(PDF){
                   $("#dist_id").html(data);
                   $("#tp_id").html('');
                   $("#lista_consolidado").html('');
+                  document.getElementById("update_eval").style.display = 'block';
               });
           }
           else{ //// INSTITUCIONAL NACIONAL
@@ -110,6 +111,7 @@ function abreVentana_eficiencia(PDF){
               tp_id=4;
               $('#ue').slideUp();
               $('#tp').slideUp();
+              document.getElementById("update_eval").style.display = 'none';
        
               $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
                 var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
@@ -150,39 +152,78 @@ function abreVentana_eficiencia(PDF){
     //// 2021
     $("#tp_id").change(function () {
         $("#tp_id option:selected").each(function () {
-            dep_id=$('[name="dep_id"]').val();
-            dist_id=$('[name="dist_id"]').val();
-            tp_id=$(this).val();
-            if(tp_id!=0){
-                $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
-                var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
-                var request;
-                if (request) {
-                    request.abort();
-                }
-                request = $.ajax({
-                    url: url,
-                    type: "POST",
-                    dataType: 'json',
-                    data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
-                });
+          dep_id=$('[name="dep_id"]').val();
+          dist_id=$('[name="dist_id"]').val();
+          tp_id=$(this).val();
+          document.getElementById("update_eval").style.display = 'none';
+          if(tp_id!=0){
+              $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
+              var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+              });
 
-                request.done(function (response, textStatus, jqXHR) {
-                    if (response.respuesta == 'correcto') {
-                        $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-                    }
-                    else{
-                        alertify.error("ERROR AL LISTAR");
-                    }
-                }); 
-            }
-            else{
-                $("#lista_consolidado").html('');
-            }
-            
+              request.done(function (response, textStatus, jqXHR) {
+                  if (response.respuesta == 'correcto') {
+                      $('#lista_consolidado').fadeIn(1000).html(response.tabla);
+                  }
+                  else{
+                      alertify.error("ERROR AL LISTAR");
+                  }
+              }); 
+          }
+          else{
+              $("#lista_consolidado").html('');
+          }
         });
       });
 ////----- End menu select
+
+
+  //// Actualizar Evaluacion Trimestral por Regional
+    $("#da").change(function () {
+        $("#da option:selected").each(function () {
+          dep_id=$(this).val();
+          tp_id=4;
+          document.getElementById("da").disabled=true;
+          document.getElementById("loadd").style.display = 'block';
+          var url = base+"index.php/reporte_evaluacion/crep_evalunidad/update_evaluacion_trimestral_institucional";
+          var request;
+          if (request) {
+              request.abort();
+          }
+          request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "dep_id="+dep_id+"&tp_id="+tp_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+              document.getElementById("loadd").style.display = 'none';
+              $('#loadd').fadeIn(1000).html(response.tabla);
+          }
+          else{
+              alertify.error("ERROR AL RECUPERAR DATOS");
+          }
+
+          });
+          request.fail(function (jqXHR, textStatus, thrown) {
+              console.log("ERROR: " + textStatus);
+          });
+        });
+      });
+
+
+
 
 
     function verif_valor(programado,ejecutado,nro){
@@ -203,106 +244,7 @@ function abreVentana_eficiencia(PDF){
       }
     }
 
-
-    ///// Muestra Datos para la Regionales y distritales
-/*      $(function () {
-        $(".enlace").on("click", function (e) {
-          id = $(this).attr('name');
-          tp = $(this).attr('id');
-          alert(id+'--'+tp)
-          titulo='Consolidado Regional';
-          if(tp==1){
-              titulo='Consolidado Distrital';
-          }
-          else{
-              titulo='Consolidado Nacional';
-          }
-
-          $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Evaluaci&oacute;n '+titulo+'</div>');
-          var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
-          var request;
-          if (request) {
-              request.abort();
-          }
-          request = $.ajax({
-              url: url,
-              type: "POST",
-              dataType: 'json',
-              data: "id="+id+"&tp="+tp
-          });
-
-          request.done(function (response, textStatus, jqXHR) {
-
-          if (response.respuesta == 'correcto') {
-              $('#content1').fadeIn(1000).html(response.tabla);
-          }
-          else{
-              alertify.error("ERROR AL RECUPERAR DATOS");
-          }
-
-          });
-          request.fail(function (jqXHR, textStatus, thrown) {
-              console.log("ERROR: " + textStatus);
-          });
-          request.always(function () {
-              //console.log("termino la ejecuicion de ajax");
-          });
-          e.preventDefault();
-          
-        });
-      });*/
-
-
-      //// Muestra datos para las gerencias de la Oficina Nacional
-/*       $(function () {
-          $(".enlaceg").on("click", function (e) {
-            id = $(this).attr('name');
-            tp = $(this).attr('id');
-            titulo='Consolidado Gerencia de Servicios de Salud';
-            if(tp==1){
-                titulo='Consolidado Gerencia General';
-            }
-            else{
-                titulo='Consolidado Gerencia Administrativa Financiera';
-            }
-
-            $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Evaluaci&oacute;n '+titulo+'</div>');
-            
-            var url = base+"index.php/reporte_evaluacion/crep_evalofinacional/get_cuadro_evaluacion_onacional";
-            var request;
-            if (request) {
-                request.abort();
-            }
-            request = $.ajax({
-                url: url,
-                type: "POST",
-                dataType: 'json',
-                data: "id="+id+"&tp="+tp
-            });
-
-            request.done(function (response, textStatus, jqXHR) {
-
-            if (response.respuesta == 'correcto') {
-                $('#content1').fadeIn(1000).html(response.tabla);
-            }
-            else{
-                alertify.error("ERROR AL RECUPERAR DATOS");
-            }
-
-            });
-            request.fail(function (jqXHR, textStatus, thrown) {
-                console.log("ERROR: " + textStatus);
-            });
-            request.always(function () {
-                //console.log("termino la ejecuicion de ajax");
-            });
-            e.preventDefault();
-            
-          });
-      });*/
-
-
-       /// 2021
+    /// 2021
     /*---- CUADRO DE CUMPLIMIENTO POR UNIDAD-REGIONAL ----*/
     $(function () {
         $(".eficacia_unidad").on("click", function (e) {
@@ -391,6 +333,64 @@ function abreVentana_eficiencia(PDF){
           
         });
     });
+
+
+      /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL ------*/
+        $(function () {
+          $(".update_eval").on("click", function (e) {
+              tp_id=4;
+              var url = base+"index.php/reporte_evaluacion/crep_evalunidad/update_evaluacion_trimestral_institucional";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "tp_id="+tp_id
+              });
+
+              request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                 alert(response.respuesta)
+                 // $('#content_valida').fadeIn(1000).html(response.tabla);
+                 // $('#but').slideDown();
+              }
+              else{
+                  alertify.error("ERROR AL RECUPERAR DATOS");
+              }
+
+              });
+              request.fail(function (jqXHR, textStatus, thrown) {
+                  console.log("ERROR: " + textStatus);
+              });
+              request.always(function () {
+              });
+              e.preventDefault();
+
+             /* $("#but_update").on("click", function (e) {
+                var $valid = $("#form_update").valid();
+                if (!$valid) {
+                    $validator.focusInvalid();
+                } else {
+                    window.location.reload(true);
+                    document.getElementById("but").style.display = 'none';
+                    document.getElementById("load").style.display = 'block';
+                    alertify.success("ACTUALIZACIÓN EXITOSA ...");
+                }
+              });*/
+          });
+        });
+
+
+
+
+
+
+
+
+
 
 
 

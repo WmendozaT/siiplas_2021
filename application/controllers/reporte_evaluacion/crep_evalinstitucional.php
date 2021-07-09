@@ -41,8 +41,27 @@ class Crep_evalinstitucional extends CI_Controller {
     public function menu_eval_poa(){
       if($this->gestion>2019){
         $data['menu']=$this->menu(7); //// genera menu
-        $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+        $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
         $data['regional']=$this->evaluacionpoa->listado_regionales();
+        $data['da']=$this->model_proyecto->list_departamentos();
+        $tabla='';
+        $tabla.='<div class="well" id="update_eval">
+                    <div class="jumbotron">
+                        <h1>Evaluaci&oacute;n POA '.$this->gestion.'</h1>
+                        <p>
+                            Reporte consolidado de evaluaci&oacute;n POA acumulado al '.$trimestre[0]['trm_descripcion'].' de '.$this->gestion.' a nivel Institucional, Regional y distrital.
+                        </p>';
+                        if($this->tp_adm==1){
+                          $tabla.='
+                          <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
+                            Actualizar Datos de Evaluación POA
+                          </button>';
+                        }
+                        $tabla.=' 
+                    </div>
+                </div>';
+
+        $data['titulo_modulo']=$tabla;
 
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_menu', $data);
       }

@@ -1437,10 +1437,21 @@ class Seguimientopoa extends CI_Controller{
     }
 
     /// ACTUALIZAR INFORMACION DE EVALUACION POA (TRIMESTRAL)
+    /*---- FUNCION PARA ACTUALIZAR EVALUACION POA POR REGIONAL ----*/
+    public function update_evaluacion_poa_regional($dep_id,$tp_id){
+      $unidades=$this->model_seguimientopoa->list_poa_gacorriente_pinversion_regional($dep_id,$tp_id);
+      foreach($unidades as $row){
+        $componentes=$this->model_componente->lista_subactividad($row['proy_id']);
+        foreach($componentes as $rowc){
+          $this->update_evaluacion_operaciones($rowc['com_id']);
+        }
+      }
+    }
 
 
 
-  /*---- FUNCION PARA ACTUALIZAR EVALUACION POA ----*/
+
+  /*---- FUNCION PARA ACTUALIZAR EVALUACION POA POR SERVICIO ----*/
     public function update_evaluacion_operaciones($com_id){
       $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
 

@@ -12,6 +12,7 @@ class Crep_evalunidad extends CI_Controller {
             $this->load->model('mantenimiento/model_ptto_sigep');
             $this->load->model('ejecucion/model_evaluacion');
             $this->load->model('ejecucion/model_certificacion');
+            $this->load->model('ejecucion/model_seguimientopoa');
 
             $this->load->model('reporte_eval/model_evalunidad'); /// Model Evaluacion Unidad
 
@@ -124,7 +125,7 @@ class Crep_evalunidad extends CI_Controller {
     }
 
 
-    /*--- REPORTE EVALUACION POR UNIDAD ---*/
+    /*--- REPORTE EVALUACION POR UNIDAD 2021---*/
     public function reporte_indicadores_unidad($proy_id){
       $proyecto=$this->model_proyecto->get_id_proyecto($proy_id);
       $nombre_proyecto=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'];
@@ -268,7 +269,7 @@ class Crep_evalunidad extends CI_Controller {
       
 
 
-    /*---- FUNCION ACTUALIZA INFORMACION EVALUACION POA AL TRIMESTRE --------*/
+    /*---- FUNCION ACTUALIZA INFORMACION EVALUACION POA AL TRIMESTRE 2021 POR UNIDAD -----*/
     public function update_evaluacion_trimestral(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -300,9 +301,62 @@ class Crep_evalunidad extends CI_Controller {
     }
 
 
+    /*---- FUNCION ACTUALIZA INFORMACION EVALUACION POA AL TRIMESTRE 2021 INSTITUCIONAL -----*/
+    public function update_evaluacion_trimestral_institucional(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $dep_id = $this->security->xss_clean($post['dep_id']);
+        $tp_id = $this->security->xss_clean($post['tp_id']);
+        $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+        $this->seguimientopoa->update_evaluacion_poa_regional($dep_id,$tp_id);
+        
+        $tabla='';
+        $tabla.='
+              <hr>
+              <div class="alert alert-success alert-block" align=center>
+                <h2> EVALUACI&Oacute;N POA '.$trimestre[0]['trm_descripcion'].' '.$this->gestion.' ACTUALIZADO !!!</2> 
+              </div>
+              <hr>
+              <p>
+                <div id="butt" align="right">
+                  <a href="'.site_url("").'/menu_eval_poa" class="btn btn-default" title="SALIR">
+                  <img src="'.base_url().'assets/Iconos/cancel.png" WIDTH="25" HEIGHT="25"/> SALIR</a>
+
+                  <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_unidad/'.$dep_id.'/0/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
+                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/> VER CUMPLIMIENTO POR UNIDADES</a>
+                </div>
+              </p>';
+
+          $result = array(
+            'respuesta' => 'correcto',
+            'tabla'=>$tabla,
+          );
+
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
 
 
+ public function reporte_indicadores_unidadd($proy_id){
+   $tp_id = 4;
+        $regionales=$this->model_proyecto->list_departamentos();
+        echo count($regionales)."<br>";
+        foreach($regionales as $row){
+          $this->seguimientopoa->update_evaluacion_poa_regional($row['dep_id'],$tp_id);
+          echo $row['dep_id'].'--'.$row['dep_departamento'].'<br>';
+        }
 
+       /* $unidades=$this->model_seguimientopoa->list_poa_gacorriente_pinversion_regional(7,4);
+      foreach($unidades as $row){
+        $componentes=$this->model_componente->lista_subactividad($row['proy_id']);
+        foreach($componentes as $rowc){
+          $this->seguimientopoa->update_evaluacion_operaciones($rowc['com_id']);
+        }
+        echo $row['proy_id'].'--'.$row['actividad']."<br>";
+      }*/
+ }
 
 
 
