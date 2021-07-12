@@ -268,14 +268,6 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
         <!-- BOOTSTRAP JS -->
         <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
-        <!-- CUSTOM NOTIFICATION -->
-        <script src="<?php echo base_url(); ?>assets/js/notification/SmartNotification.min.js"></script>
-        <!-- JARVIS WIDGETS -->
-        <script src="<?php echo base_url(); ?>assets/js/smartwidgets/jarvis.widget.min.js"></script>
-        <!-- EASY PIE CHARTS -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
-        <!-- SPARKLINES -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/sparkline/jquery.sparkline.min.js"></script>
         <!-- JQUERY VALIDATE -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
         <!-- JQUERY MASKED INPUT -->
@@ -294,7 +286,7 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
-        <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
+    
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
@@ -302,58 +294,6 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento_unidad.js"></script> 
-        <script type="text/javascript">
-            $(function () {
-                $(".enlace").on("click", function (e) {
-                    proy_id = $(this).attr('name');
-                    establecimiento = $(this).attr('id');
-                    
-                    $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
-                    $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones - <br>'+establecimiento+'</div>');
-                    
-                    var url = "<?php echo site_url("")?>/ejecucion/cseguimiento/get_subactividades";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "proy_id="+proy_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-
-                    if (response.respuesta == 'correcto') {
-                        $('#content1').fadeIn(1000).html(response.tabla);
-                        $('#evaluacion').fadeIn(1000).html(response.evaluacion);
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                  
-                });
-            });
-        </script>
-
         <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                pageSetUp();
-                $("#menu").menu();
-                $('.ui-dialog :button').blur();
-                $('#tabs').tabs();
-            })
-        </script>
     </body>
 </html>

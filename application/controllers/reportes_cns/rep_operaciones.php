@@ -53,25 +53,27 @@ class Rep_operaciones extends CI_Controller {
     public function list_regiones(){
       $data['menu']=$this->menu(7);
       $data['list']=$this->menu_nacional();
-        $tabla='
-          <div  id="update_eval">
-                <div class="jumbotron">
-                    <h1>Consolidado Programación POA '.$this->gestion.'</h1>
-                    <p>
-                        Reporte consolidado de Programación POA a nivel Regional y Distrital.
-                    </p>
 
-                    <ol style="font-size:16px;">
-                      <li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li>
-                      <li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li>
-                      <li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li>
-                      <li>Genera el nro. de Actividades alineados a cada Objetivo Regional por Regional y Distrital.</li>
-                      <li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li>
-                      <li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li>
-                      <li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li>
-                    </ol>
-                </div>
-            </div>';
+        $tabla='
+          <input name="base" type="hidden" value="'.base_url().'">
+          <div  id="update_eval">
+              <div class="jumbotron">
+                  <h1>Consolidado Programación POA '.$this->gestion.'</h1>
+                  <p>
+                      Reporte consolidado de Programación POA a nivel Regional y Distrital.
+                  </p>
+
+                  <ol style="font-size:16px;">
+                    <li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li>
+                    <li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li>
+                    <li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li>
+                    <li>Genera el nro. de Actividades alineados a cada Objetivo Regional por Regional y Distrital.</li>
+                    <li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li>
+                    <li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li>
+                    <li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li>
+                  </ol>
+              </div>
+          </div>';
 
       $data['titulo_modulo']=$tabla;
 
@@ -94,7 +96,7 @@ class Rep_operaciones extends CI_Controller {
                       <section class="col col-2">
                         <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
                         <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
-                        <option value="">SELECCIONE REGIONAL</option>';
+                        <option value="0">SELECCIONE REGIONAL</option>';
                         foreach($regionales as $row){
                           if($row['dep_id']!=0){
                             $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';

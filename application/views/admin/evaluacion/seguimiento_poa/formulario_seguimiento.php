@@ -450,8 +450,8 @@
         <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/seguimiento.js"></script> 
-
+        <!-- <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/seguimiento.js"></script>  -->
+        <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento.js"></script> 
         <!-- REGRESION LINEAL AL TRIMESTRE -->
         <script type="text/javascript">
           var chart1;

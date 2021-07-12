@@ -129,7 +129,6 @@
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                            <div id="lista_consolidado" class="well"><?php echo $titulo_modulo; ?></div>
                         </article>
-                        
                     </div>
                 </section>
             </div>
@@ -254,15 +253,20 @@
             pageSetUp();
             $("#dep_id").change(function () {
                 $("#dep_id option:selected").each(function () {
-                    dist_id=$('[name="dist_id"]').val();
+                    //dist_id=$('[name="dist_id"]').val();
                     elegido=$(this).val();
-                    $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'distrital' }, function(data){
-                        $("#dist_id").html(data);
-                        $("#tp_id").html('');
-                        $("#rep_id").html('');
-                        $('#unidad').slideUp();
-                        $("#lista_consolidado").html('');
-                    });
+                    if(elegido==0){
+                       window.location.reload(true);
+                    }
+                    else{
+                        $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'distrital' }, function(data){
+                            $("#dist_id").html(data);
+                            $("#tp_id").html('');
+                            $("#rep_id").html('');
+                            $('#unidad').slideUp();
+                           // $("#lista_consolidado").html('');
+                        });
+                    }
                 });
             });
 
@@ -273,7 +277,7 @@
                         $("#rep_id").html(data);
                         $("#tp_id").html('');
                         $('#unidad').slideUp();
-                        $("#lista_consolidado").html('');
+                      //  $("#lista_consolidado").html('');
                     });
                 });
             });
@@ -284,7 +288,7 @@
                     $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'tipo' }, function(data){
                         $("#tp_id").html(data);
                         $('#unidad').slideUp();
-                        $("#lista_consolidado").html('');
+                     //   $("#lista_consolidado").html('');
                     });
                 });
             });

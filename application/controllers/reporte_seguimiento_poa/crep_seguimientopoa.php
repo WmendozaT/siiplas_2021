@@ -52,6 +52,20 @@ class Crep_seguimientopoa extends CI_Controller {
       $data['menu']=$this->menu(7);
       $data['list']=$this->menu_nacional();
 
+      $tabla='
+          <input name="base" type="hidden" value="'.base_url().'">
+          <div id="update_eval">
+            <div class="jumbotron">
+              <h1>Seguimiento POA mensual '.$this->gestion.'</h1>
+              <p>
+                Muestra el avance de ejecución de metas programas al mes de <b>'.$this->verif_mes[2].' / '.$this->gestion.'</b>, a nivel Nacional, Regional y Distrital.
+              </p>
+            </div>
+          </div>';
+     
+      $data['titulo_modulo']=$tabla;
+
+
       $this->load->view('admin/reportes_cns/seguimiento_poa/menu_seguimiento_poa', $data);
     }
 

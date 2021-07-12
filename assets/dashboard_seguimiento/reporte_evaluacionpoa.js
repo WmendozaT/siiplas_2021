@@ -187,7 +187,7 @@ function abreVentana_eficiencia(PDF){
 ////----- End menu select
 
 
-  //// Actualizar Evaluacion Trimestral por Regional
+  //// Actualizar Evaluacion Trimestral por Regional 2021
     $("#da").change(function () {
         $("#da option:selected").each(function () {
           dep_id=$(this).val();
@@ -333,61 +333,6 @@ function abreVentana_eficiencia(PDF){
           
         });
     });
-
-
-      /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL ------*/
-        $(function () {
-          $(".update_eval").on("click", function (e) {
-              tp_id=4;
-              var url = base+"index.php/reporte_evaluacion/crep_evalunidad/update_evaluacion_trimestral_institucional";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "tp_id="+tp_id
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-              if (response.respuesta == 'correcto') {
-                 alert(response.respuesta)
-                 // $('#content_valida').fadeIn(1000).html(response.tabla);
-                 // $('#but').slideDown();
-              }
-              else{
-                  alertify.error("ERROR AL RECUPERAR DATOS");
-              }
-
-              });
-              request.fail(function (jqXHR, textStatus, thrown) {
-                  console.log("ERROR: " + textStatus);
-              });
-              request.always(function () {
-              });
-              e.preventDefault();
-
-             /* $("#but_update").on("click", function (e) {
-                var $valid = $("#form_update").valid();
-                if (!$valid) {
-                    $validator.focusInvalid();
-                } else {
-                    window.location.reload(true);
-                    document.getElementById("but").style.display = 'none';
-                    document.getElementById("load").style.display = 'block';
-                    alertify.success("ACTUALIZACIÓN EXITOSA ...");
-                }
-              });*/
-          });
-        });
-
-
-
-
-
-
 
 
 

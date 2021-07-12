@@ -79,7 +79,7 @@ class Crep_evalunidad extends CI_Controller {
         /*-------------------*/
         
 
-         /*--- Regresion lineal trimestral ---*/
+        /*--- Regresion lineal trimestral ---*/
         $data['cabecera2']=$this->cabecera_seguimiento($data['proyecto'],2);
         $data['tabla']=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
         $data['tabla_regresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
@@ -116,6 +116,17 @@ class Crep_evalunidad extends CI_Controller {
           $data['no_cumplido']=(100-($data['tabla'][5][$this->session->userData('trimestre')]+round((($data['tabla'][7][$this->session->userData('trimestre')]/$data['tabla'][2][$this->session->userData('trimestre')])*100),2)));
           $data['en_proceso']=round((($data['tabla'][7][$this->session->userData('trimestre')]/$data['tabla'][2][$this->session->userData('trimestre')])*100),2);
         }
+
+         $data['base']='
+        <input name="base" type="hidden" value="'.base_url().'">
+        <input name="tabla2" type="hidden" value="'.$data['tabla'][2][$this->session->userData('trimestre')].'">
+        <input name="tabla3" type="hidden" value="'.$data['tabla'][3][$this->session->userData('trimestre')].'">
+        <input name="tabla4" type="hidden" value="'.$data['tabla'][4][$this->session->userData('trimestre')].'">
+        <input name="tabla5" type="hidden" value="'.$data['tabla'][5][$this->session->userData('trimestre')].'">
+        <input name="tabla6" type="hidden" value="'.$data['tabla'][6][$this->session->userData('trimestre')].'">
+        <input name="tabla7" type="hidden" value="'.$data['tabla'][7][$this->session->userData('trimestre')].'">
+        <input name="tabla8" type="hidden" value="'.$data['tabla'][8][$this->session->userData('trimestre')].'">';
+
 
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_unidad', $data);
       }
@@ -593,6 +604,7 @@ class Crep_evalunidad extends CI_Controller {
         $tr[5][$i]=0; /// eficacia %
         $tr[6][$i]=0; /// no eficacia %
         $tr[7][$i]=0; /// en proceso
+        $tr[8][$i]=0; /// en proceso %
       }
 
       for ($i=1; $i <=$this->tmes; $i++) {
@@ -606,6 +618,10 @@ class Crep_evalunidad extends CI_Controller {
         $tr[6][$i]=(100-$tr[5][$i]);
         $proceso=$this->obtiene_datos_evaluacíon_servicio($com_id,$i,2);
         $tr[7][$i]=$proceso[2]; /// En Proceso
+        if($tr[2][$i]!=0){
+          $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
+        }
+        
       }
 
     return $tr;
@@ -635,45 +651,45 @@ class Crep_evalunidad extends CI_Controller {
     /*------ TABLA ACUMULADA EVALUACIÓN 2020 -------*/
     public function tabla_acumulada_evaluacion_unidad($regresion,$tp_graf,$tip_rep){
       $tabla='';
-      $tit[2]='<b>NRO. OPE. PROGRAMADOS EN EL TRIMESTRE</b>';
-      $tit[3]='<b>NRO. OPE. CUMPLIDOS EN EL TRIMESTRE</b>';
-      $tit[4]='<b>NRO. OPE. NO CUMPLIDOS</b>';
+      $tit[2]='<b>NRO. METAS PROGRAMADAS EN EL TRIMESTRE</b>';
+      $tit[3]='<b>NRO. METAS CUMPLIDAS EN EL TRIMESTRE</b>';
+      $tit[4]='<b>NRO. METAS NO CUMPLIDOS</b>';
       $tit[5]='<b>% CUMPLIDOS</b>';
       $tit[6]='<b>% NO CUMPLIDOS</b>';
 
-      $tit_total[2]='<b>NRO. OPE. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[3]='<b>NRO. OPE. CUMPLIDOS AL TRIMESTRE</b>';
-      $tit_total[4]='<b>% OPE. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[5]='<b>% OPE. CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[2]='<b>NRO. METAS PROGRAMADAS AL TRIMESTRE</b>';
+      $tit_total[3]='<b>NRO. METAS CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[4]='<b>% METAS PROGRAMADOS AL TRIMESTRE</b>';
+      $tit_total[5]='<b>% METAS CUMPLIDOS AL TRIMESTRE</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
+        $color='#e9edec';
       } 
       else{ /// Impresion
-        $tab='class="change_order_items" border=1 style="width:100%;"';
+        $tab='class="change_order_items" border=1 align=center style="width:100%;"';
+        $color='#e9edec';
       }
-
-
 
       if($tp_graf==1){ // pastel : Programado-Cumplido
         $tabla.='
         <table '.$tab.'>
           <thead>
-              <tr align=center>
-                <th>NRO. OPE. PROGRAMADAS</th>
+              <tr align=center bgcolor='.$color.' style="font-family: Arial;">
+                <th>NRO. METAS PROGRAMADAS</th>
                 <th>METAS EVALUADAS</th>
-                <th>OPE. CUMPLIDAS</th>
-                <th>OPE. NO CUMPLIDAS</th>
+                <th>METAS CUMPLIDAS</th>
+                <th>METAS NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
-                </tr>
+              </tr>
               </thead>
             <tbody>
-              <tr align=right>
-                <td><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td><b>'.$regresion[3][$this->tmes].'</b></td>
-                <td><b>'.$regresion[4][$this->tmes].'</b></td>
+              <tr align=right >
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[4][$this->tmes].'</b></td>
                 <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
                 <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
               </tr>
@@ -684,14 +700,14 @@ class Crep_evalunidad extends CI_Controller {
         $tabla.='
         <table '.$tab.'>
           <thead>
-              <tr >
+              <tr bgcolor='.$color.'>
                 <th></th>';
                 for ($i=1; $i <=$this->tmes; $i++) { 
-                  $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
+                  $tabla.='<th align=center style="font-family: Arial;"><b>'.$regresion[1][$i].'</b></th>';
                 }
               $tabla.='
               </tr>
-              </thead>
+            </thead>
             <tbody>';
               $color=''; $por='';
               for ($i=2; $i <=6; $i++) {
@@ -703,8 +719,8 @@ class Crep_evalunidad extends CI_Controller {
                   $por='%';
                   $color='#f7d3d0';
                 }
-                $tabla.='<tr bgcolor='.$color.' >
-                  <td>'.$tit[$i].'</td>';
+                $tabla.='<tr bgcolor='.$color.'>
+                  <td style="font-family: Arial;">'.$tit[$i].'</td>';
                   for ($j=1; $j <=$this->tmes; $j++) { 
                     $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
                   }
@@ -719,7 +735,7 @@ class Crep_evalunidad extends CI_Controller {
         <h4><b>'.$regresion[5][$this->tmes].'%</b> CUMPLIMIENTO DE '.$regresion[1][$this->tmes].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
         <table '.$tab.'>
           <thead>
-              <tr>
+              <tr bgcolor='.$color.' >
                 <th></th>';
                 for ($i=1; $i <=4; $i++) { 
                   $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
@@ -734,7 +750,7 @@ class Crep_evalunidad extends CI_Controller {
                   $por='%';
                   $color='#9de9f3';
                 }
-                $tabla.='<tr bgcolor='.$color.'>
+                $tabla.='<tr bgcolor='.$color.' >
                   <td>'.$tit_total[$i].'</td>';
                   for ($j=1; $j <=4; $j++) { 
                     $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
@@ -748,26 +764,26 @@ class Crep_evalunidad extends CI_Controller {
       else{
         $tabla.='
         <table '.$tab.'>
-          <thead>
-              <tr align=center >
-                <th>NRO. OPE. PROGRAMADAS</th>
-                <th>NRO. OPE. EVALUADAS</th>
-                <th>NRO. OPE. CUMPLIDAS</th>
-                <th>NRO. OPE. EN PROCESO</th>
-                <th>NRO. OPE. NO CUMPLIDAS</th>
+            <thead>
+              <tr align=center style="font-family: Arial;" >
+                <th>NRO. METAS PROGRAMADAS</th>
+                <th>NRO. METAS EVALUADAS</th>
+                <th>NRO. METAS CUMPLIDAS</th>
+                <th>NRO. METAS EN PROCESO</th>
+                <th>NRO. METAS NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
               </tr>
-              </thead>
+            </thead>
             <tbody>
-              <tr align=right>
-                <td><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td><b>'.$regresion[3][$this->tmes].'</b></td>
-                <td><b>'.$regresion[7][$this->tmes].'</b></td>
-                <td><b>'.($regresion[2][$this->tmes]-($regresion[7][$this->tmes]+$regresion[3][$this->tmes])).'</b></td>
-                <td><b>'.$regresion[5][$this->tmes].'%</b></td>
-                <td><b>'.$regresion[6][$this->tmes].'%</b></td>
+              <tr align=right >
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[7][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.($regresion[2][$this->tmes]-($regresion[7][$this->tmes]+$regresion[3][$this->tmes])).'</b></td>
+                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
+                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
               </tr>
             </tbody>
         </table>';
@@ -829,6 +845,7 @@ class Crep_evalunidad extends CI_Controller {
         $tr[5][$i]=0; /// eficacia %
         $tr[6][$i]=0; /// no eficacia %
         $tr[7][$i]=0; /// en proceso
+        $tr[8][$i]=0; /// en proceso %
       }
 
       for ($i=1; $i <=$this->tmes; $i++) {
@@ -842,6 +859,9 @@ class Crep_evalunidad extends CI_Controller {
         $tr[6][$i]=(100-$tr[5][$i]);
         $proceso=$this->obtiene_datos_evaluacíon($proy_id,$i,2);
         $tr[7][$i]=$proceso[2]; /// En Proceso
+        if($tr[2][$i]!=0){
+          $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
+        }
       }
 
     return $tr;

@@ -790,7 +790,7 @@ class Seguimientopoa extends CI_Controller{
                 <th style="width:10%;">OPERACI&Oacute;N</th>
                 <th style="width:10%;">RESULTADO</th>
                 <th style="width:10%;">INDICADOR</th>
-                <th style="width:3%;">META</th>
+                <th style="width:3%;">META TOTAL</th>
                 <th style="width:3.5%;">META PROG.</th>
                 <th style="width:3.5%;">META EJEC.</th>
                 <th style="width:15.5%;">MEDIO DE VERIFICACIÓN</th>
@@ -938,7 +938,8 @@ class Seguimientopoa extends CI_Controller{
       $datos[2]=$ejec_trimestre; /// EJECUTADO
       $datos[3]=($acu_prog-$acu_ejec); /// DIFERENCIA PROG-EJEC
 
-      if($datos[1]==$datos[2]){
+      
+      if(($datos[1]==$datos[2]) || $datos[3]==0){
         $datos[4]='TRIMESTRE CUMPLIDO';
       }
       elseif ($datos[1]!=0 & $datos[2]==0) {

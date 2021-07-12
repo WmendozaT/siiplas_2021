@@ -16,8 +16,7 @@
         <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
+        
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script> 
         <meta name="viewport" content="width=device-width">
         <script language="javascript">
@@ -157,22 +156,8 @@
                     <div class="row">
                     <?php echo $list;?>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="jarviswidget jarviswidget-color-darken" >
-                              <header>
-                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                                  <h2 class="font-md"><strong>SEGUIMIENTO POA - <?php echo $this->session->userdata('gestion')?></strong></h2>  
-                              </header>
-                                <div>
-                                    <div class="widget-body no-padding">
-                                       <div id="lista_consolidado"></div>
-                                    </div>
-                                    <!-- end widget content -->
-                                </div>
-                                <!-- end widget div -->
-                            </div>
-                            <!-- end widget -->
+                           <div id="lista_consolidado" class="well"><?php echo $titulo_modulo; ?></div>
                         </article>
-                        
                     </div>
                 </section>
             </div>
@@ -223,14 +208,8 @@
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
-        <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
         <!-- BOOTSTRAP JS -->
         <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
-        <!-- CUSTOM NOTIFICATION -->
-        <script src="<?php echo base_url(); ?>assets/js/notification/SmartNotification.min.js"></script>
-        <!-- JARVIS WIDGETS -->
-        <script src="<?php echo base_url(); ?>assets/js/smartwidgets/jarvis.widget.min.js"></script>
         <!-- EASY PIE CHARTS -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
         <!-- SPARKLINES -->
@@ -252,138 +231,8 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
-        <!-- Voice command : plugin -->
-        <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <script type="text/javascript">
-            function ver_operaciones(proy_id) {
-                $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
-                $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando informacion </div>');
-            
-                var url = "<?php echo site_url("")?>/reporte_seguimiento_poa/crep_seguimientopoa/get_operaciones_subactividad";
-                var request;
-                if (request) {
-                    request.abort();
-                }
-                request = $.ajax({
-                    url: url,
-                    type: "POST",
-                    dataType: 'json',
-                    data: "proy_id="+proy_id
-                });
+        <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento_unidad.js"></script> 
 
-                request.done(function (response, textStatus, jqXHR) {
-
-                if (response.respuesta == 'correcto') {
-                    $('#titulo').fadeIn(1000).html('<font size=3><b>'+response.titulo+'</b></font>');
-                    $('#content1').fadeIn(1000).html(response.tabla);
-                }
-                else{
-                    alertify.error("ERROR AL RECUPERAR INFORMACION");
-                }
-
-                });
-            }
-        </script>
-           
-        <script type="text/javascript">
-        $(document).ready(function() {
-            pageSetUp();
-            $("#dep_id").change(function () {
-                $("#dep_id option:selected").each(function () {
-                    dist_id=$('[name="dist_id"]').val();
-                    elegido=$(this).val();
-                    if(elegido!=0){
-                        $('#ue').slideDown();
-                        $('#tp').slideDown();
-                        $.post("<?php echo base_url(); ?>index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'distrital' }, function(data){
-                            $("#dist_id").html(data);
-                            $("#tp_id").html('');
-                            $("#lista_consolidado").html('');
-                        });
-                    }
-                    else{
-                        dep_id=0;
-                        dist_id=0;
-                        tp_id=4;
-                        $('#ue').slideUp();
-                        $('#tp').slideUp();
-
-                        $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
-                        var url = "<?php echo site_url("")?>/reporte_seguimiento_poa/crep_seguimientopoa/get_lista_gcorriente_pinversion";
-                        var request;
-                        if (request) {
-                            request.abort();
-                        }
-                        request = $.ajax({
-                            url: url,
-                            type: "POST",
-                            dataType: 'json',
-                            data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
-                        });
-
-                        request.done(function (response, textStatus, jqXHR) {
-                            if (response.respuesta == 'correcto') {
-                                $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
-                            }
-                            else{
-                                alertify.error("ERROR AL LISTAR");
-                            }
-                        }); 
-                    }
-                    
-                });
-            });
-
-            $("#dist_id").change(function () {
-                $("#dist_id option:selected").each(function () {
-                    elegido=$(this).val();
-                    $.post("<?php echo base_url(); ?>index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'tipo' }, function(data){
-                        $("#tp_id").html(data);
-                        $("#lista_consolidado").html('');
-                    });
-                });
-            });
-
-
-
-            $("#tp_id").change(function () {
-                $("#tp_id option:selected").each(function () {
-                    dep_id=$('[name="dep_id"]').val();
-                    dist_id=$('[name="dist_id"]').val();
-                    tp_id=$(this).val();
-                    if(tp_id!=0){
-                        $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
-                        var url = "<?php echo site_url("")?>/reporte_seguimiento_poa/crep_seguimientopoa/get_lista_gcorriente_pinversion";
-                        var request;
-                        if (request) {
-                            request.abort();
-                        }
-                        request = $.ajax({
-                            url: url,
-                            type: "POST",
-                            dataType: 'json',
-                            data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
-                        });
-
-                        request.done(function (response, textStatus, jqXHR) {
-                            if (response.respuesta == 'correcto') {
-                                $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
-                            }
-                            else{
-                                alertify.error("ERROR AL LISTAR");
-                            }
-                        }); 
-                    }
-                    else{
-                        $("#lista_consolidado").html('');
-                    }
-                    
-                });
-            });
-        })
-
-        </script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>

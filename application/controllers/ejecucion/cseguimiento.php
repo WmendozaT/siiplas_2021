@@ -52,6 +52,7 @@ class Cseguimiento extends CI_Controller {
       $data['proyectos']='No disponible';
       $data['gasto_corriente']='No disponible';
 
+
       $data['proyectos']=$this->list_pinversion(4);
       $data['gasto_corriente']=$this->list_gasto_corriente(4);
       

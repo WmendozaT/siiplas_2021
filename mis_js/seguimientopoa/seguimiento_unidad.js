@@ -1,10 +1,26 @@
 base = $('[name="base"]').val();
+tab2 = $('[name="tabla2"]').val();
+tab3 = $('[name="tabla3"]').val();
+tab4 = $('[name="tabla4"]').val();
+tab5 = $('[name="tabla5"]').val();
+tab6 = $('[name="tabla6"]').val();
+tab7 = $('[name="tabla7"]').val();
+tab8 = $('[name="tabla8"]').val();
 
 function abreVentana(PDF){             
   var direccion;
   direccion = '' + PDF;
-  window.open(direccion, "REPORTE CONSOLIDADO EVALUACION POA" , "width=800,height=700,scrollbars=NO") ; 
+  window.open(direccion, "REPORTE SEGUIMIENTO POA" , "width=800,height=700,scrollbars=NO") ; 
 }
+
+
+  $(document).ready(function() {
+    pageSetUp();
+    $("#menu").menu();
+    $('.ui-dialog :button').blur();
+    $('#tabs').tabs();
+  })
+
 
 
     function doSearch(){
@@ -48,64 +64,334 @@ function abreVentana(PDF){
     return /\d/.test(String.fromCharCode(keynum));
   }
 
+  //// Lista de Unidades -- enlace para listar las subactividades
+  $(function () {
+    $(".enlace").on("click", function (e) {
+      proy_id = $(this).attr('name');
+      establecimiento = $(this).attr('id');
+      
+      $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
+      $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones - <br>'+establecimiento+'</div>');
+      
+      var url = base+"index.php/ejecucion/cseguimiento/get_subactividades";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+          $('#content1').fadeIn(1000).html(response.tabla);
+          $('#evaluacion').fadeIn(1000).html(response.evaluacion);
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
+      }
+
+      });
+      request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+      });
+      request.always(function () {
+          //console.log("termino la ejecuicion de ajax");
+      });
+      e.preventDefault();
+      
+    });
+  });
+
 
 
  /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL POR UNIDAD------*/
-        $(function () {
-          $(".update_eval_unidad").on("click", function (e) {
-              proy_id = $(this).attr('name');
-              document.getElementById("proy_id").value=proy_id;
-            
-              $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');
-              $('#butt').slideUp();
+  $(function () {
+    $(".update_eval_unidad").on("click", function (e) {
+        proy_id = $(this).attr('name');
+        document.getElementById("proy_id").value=proy_id;
+      
+        $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');
+        $('#butt').slideUp();
 
-              var url = base+"index.php/reporte_evaluacion/crep_evalunidad/update_evaluacion_trimestral";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "proy_id="+proy_id
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-          
-              if (response.respuesta == 'correcto') {
-                  $('#content_valida').fadeIn(1000).html(response.tabla);
-                  $('#butt').slideDown();
-              }
-              else{
-                  alertify.error("ERROR AL RECUPERAR DATOS");
-              }
-
-              });
-              request.fail(function (jqXHR, textStatus, thrown) {
-                  console.log("ERROR: " + textStatus);
-              });
-              request.always(function () {
-              });
-              e.preventDefault();
-
-              $("#but_update").on("click", function (e) {
-                var $valid = $("#form_update").valid();
-                if (!$valid) {
-                    $validator.focusInvalid();
-                } else {
-                  document.getElementById("butt").style.display = 'none';
-                  $('#content_valida').fadeIn(1000).html('<center><div class="loading" align="center"><h2>Actualizando Evaluaci&oacute;n  POA <br><div id="tit"></div><br><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /></div></center>');
-                  window.open(base+"index.php/rep_eficacia_unidad/"+proy_id, "CUADRO DE AVANCE - EVALUACION POA TRIMESTRAL", "width=800, height=800");
-                  $("#modal_update_eval_unidad").modal("hide");
-                }
-              });
-          });
+        var url = base+"index.php/reporte_evaluacion/crep_evalunidad/update_evaluacion_trimestral";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "proy_id="+proy_id
         });
 
+        request.done(function (response, textStatus, jqXHR) {
+    
+        if (response.respuesta == 'correcto') {
+            $('#content_valida').fadeIn(1000).html(response.tabla);
+            $('#butt').slideDown();
+        }
+        else{
+            alertify.error("ERROR AL RECUPERAR DATOS");
+        }
+
+        });
+        request.fail(function (jqXHR, textStatus, thrown) {
+            console.log("ERROR: " + textStatus);
+        });
+        request.always(function () {
+        });
+        e.preventDefault();
+
+        $("#but_update").on("click", function (e) {
+          var $valid = $("#form_update").valid();
+          if (!$valid) {
+              $validator.focusInvalid();
+          } else {
+            document.getElementById("butt").style.display = 'none';
+            $('#content_valida').fadeIn(1000).html('<center><div class="loading" align="center"><h2>Actualizando Evaluaci&oacute;n  POA <br><div id="tit"></div><br><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /></div></center>');
+            window.open(base+"index.php/rep_eficacia_unidad/"+proy_id, "CUADRO DE AVANCE - EVALUACION POA TRIMESTRAL", "width=800, height=800");
+            $("#modal_update_eval_unidad").modal("hide");
+          }
+        });
+    });
+  });
+
+
+///////============ REPORTE GERENCIAL DE SEGUIMIENTO POA
+
+
+  function ver_operaciones(proy_id) {
+      $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
+      $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando informacion </div>');
+  
+      var url = base+"index.php/reporte_seguimiento_poa/crep_seguimientopoa/get_operaciones_subactividad";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+          $('#titulo').fadeIn(1000).html('<font size=3><b>'+response.titulo+'</b></font>');
+          $('#content1').fadeIn(1000).html(response.tabla);
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
+  }
+
+
+  $(document).ready(function() {
+      pageSetUp();
+      $("#dep_id").change(function () {
+          $("#dep_id option:selected").each(function () {
+             // dist_id=$('[name="dist_id"]').val();
+              elegido=$(this).val();
+              if(elegido!=0){
+                  $('#ue').slideDown();
+                  $('#tp').slideDown();
+                  $.post(base+"index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'distrital' }, function(data){
+                      $("#dist_id").html(data);
+                      $("#tp_id").html('');
+                      $("#lista_consolidado").html('');
+                  });
+              }
+              else{
+                  dep_id=0;
+                  dist_id=0;
+                  tp_id=4;
+                  $('#ue').slideUp();
+                  $('#tp').slideUp();
+
+                  $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
+                  var url = base+"index.php/reporte_seguimiento_poa/crep_seguimientopoa/get_lista_gcorriente_pinversion";
+                  var request;
+                  if (request) {
+                      request.abort();
+                  }
+                  request = $.ajax({
+                      url: url,
+                      type: "POST",
+                      dataType: 'json',
+                      data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+                  });
+
+                  request.done(function (response, textStatus, jqXHR) {
+                      if (response.respuesta == 'correcto') {
+                          $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                      }
+                      else{
+                          alertify.error("ERROR AL LISTAR");
+                      }
+                  }); 
+              }
+              
+          });
+      });
+
+      $("#dist_id").change(function () {
+          $("#dist_id option:selected").each(function () {
+              elegido=$(this).val();
+              $.post(base+"index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'tipo' }, function(data){
+                  $("#tp_id").html(data);
+                  $("#lista_consolidado").html('');
+              });
+          });
+      });
+
+
+      $("#tp_id").change(function () {
+          $("#tp_id option:selected").each(function () {
+              dep_id=$('[name="dep_id"]').val();
+              dist_id=$('[name="dist_id"]').val();
+              tp_id=$(this).val();
+              if(tp_id!=0){
+                  $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
+                  var url = base+"index.php/reporte_seguimiento_poa/crep_seguimientopoa/get_lista_gcorriente_pinversion";
+                  var request;
+                  if (request) {
+                      request.abort();
+                  }
+                  request = $.ajax({
+                      url: url,
+                      type: "POST",
+                      dataType: 'json',
+                      data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+                  });
+
+                  request.done(function (response, textStatus, jqXHR) {
+                      if (response.respuesta == 'correcto') {
+                          $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                      }
+                      else{
+                          alertify.error("ERROR AL LISTAR");
+                      }
+                  }); 
+              }
+              else{
+                  $("#lista_consolidado").html('');
+              }
+              
+          });
+      });
+  })
 
 
 
+//// ----CAPTURA GRAFICOS CANVAS
+/*      var downPdf = document.getElementById("btnregresion");
+
+      downPdf.onclick = function() {
+        html2canvas(document.body, {
+          onrendered:function(canvas) {
+
+            var contentWidth = canvas.width;
+            var contentHeight = canvas.height;
+
+            var pageHeight = contentWidth / 595.28 * 841.89;
+        
+            var leftHeight = contentHeight;
+         
+            var position = 0;
+      
+            var imgWidth = 555.28;
+            var imgHeight = 555.28/contentWidth * contentHeight;
+
+            var pageData = canvas.toDataURL('image/jpeg', 1.0);
+
+            var pdf = new jsPDF('', 'pt', 'a4');
+        
+           if (leftHeight < pageHeight) {
+                pdf.addImage(pageData, 'JPEG', 20, 0, imgWidth, imgHeight );
+            } else {
+                while(leftHeight > 0) {
+                    pdf.addImage(pageData, 'JPEG', 20, position, imgWidth, imgHeight)
+                    leftHeight -= pageHeight;
+                    position -= 841.89;
+                 
+                    if(leftHeight > 0) {
+                        pdf.addPage();
+                    }
+                }
+            }
+
+            pdf.save(titulo_evaluacion+'_AVANCE_POA_EVALUACION_TRIMESTRE.pdf');
+          }
+        })
+      }*/
+
+    ///// =============== GRAFICO PASTEL HIGTHCARS Y CANVAS
+
+    $(document).ready(function() {  
+     Highcharts.chart('pastel_todosprint', {
+      chart: {
+          type: 'pie',
+          options3d: {
+              enabled: true,
+              alpha: 45,
+              beta: 0
+          }
+      },
+      title: {
+          text: ''
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              depth: 35,
+              dataLabels: {
+                  enabled: true,
+                  format: '{point.name}'
+              }
+          }
+      },
+      series: [{
+          type: 'pie',
+          name: 'Actividades',
+          data: [
+              {
+                name: 'NO CUMPLIDO : '+(tab6-tab8)+'%',
+                y: +(tab6-tab8),
+                color: '#f98178',
+              },
+
+              {
+                name: 'EN PROCESO : '+tab8+'%',
+                y: +tab8,
+                color: '#f5eea3',
+              },
+
+              {
+                name: 'CUMPLIDO : '+tab5+'%',
+                y: +tab5,
+                color: '#2CC8DC',
+                sliced: true,
+                selected: true
+              }
+          ]
+      }]
+    });
+  });
+////============= ENS PASTEL
 
 
 
@@ -116,12 +402,8 @@ function abreVentana(PDF){
 
       var ventana = window.open('Seguimiento Evaluacion POA ', 'PRINT', 'height=800,width=1000');
       ventana.document.write('<html><head><title>SEGUIMIENTO POA</title>');
-      //ventana.document.write('<link rel="stylesheet" href="assets/print_static.css">');
       ventana.document.write('</head><body>');
-     // ventana.document.write('<style type="text/css" media="print">div.page { writing-mode: tb-rl;height: 100%;margin: 100% 100%;}</style>');
-      //ventana.document.write('<style type="text/css">@media print{body{writing-mode: rl;}}.verde{ width:100%; height:5px; background-color:#1c7368;}.blanco{ width:100%; height:5px; background-color:#F1F2F1;}</style>');
       ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
-     // ventana.document.write('<div class="page">');
       ventana.document.write('<hr>');
       ventana.document.write(cabecera.innerHTML);
       ventana.document.write('<hr>');
@@ -129,10 +411,6 @@ function abreVentana(PDF){
       ventana.document.write(grafico.innerHTML);
       ventana.document.write('<hr>');
       ventana.document.write(tabla.innerHTML);
-/*      ventana.document.write("<p>");
-      ventana.document.write("<div style='font-size: 10px;'>[Copyright]:Departamento Nacional de Planificación - Sistema de Planificación de Salud SIIPLAS V.2</div>");
-      ventana.document.write("<\/p>");*/
-     // ventana.document.write('</div>');
       ventana.document.write('</body></html>');
       ventana.document.close();
       ventana.focus();

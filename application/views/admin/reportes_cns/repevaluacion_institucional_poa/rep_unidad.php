@@ -17,9 +17,7 @@
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <!--estiloh-->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>  
+        
         <style>
             table{font-size: 10px;
             width: 100%;
@@ -28,12 +26,12 @@
             }
             th{
               padding: 1.4px;
-              font-size: 9px;
+              font-size: 10px;
               text-align: center;
             }
             td{
               padding: 1.4px;
-              font-size: 9px;
+              font-size: 10px;
             }
         </style>
     </head>
@@ -157,13 +155,13 @@
 
                                     <ul class="nav nav-tabs pull-right in" id="myTab">
                                         <li class="active">
-                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</span></a>
+                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">AVANCE DE CUMPLIMIENTO</span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (GESTI&Oacute;N)</span></a>
+                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">DETALLE EVALUACIÓN POA</span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">MIS SUBACTIVIDADES</span></a>
+                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">UNIDADES DEPENDIENTES</span></a>
                                         </li>
                                         <li>
                                             <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">PARAMETROS DE EFICACIA</span></a>
@@ -188,14 +186,11 @@
                                                 <div class="row">
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                         <div id="cabecera2" style="display: none"><?php echo $cabecera2;?></div>
-                                                        <hr>
-                                                        <table>
-                                                            <tr>
-                                                                <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE AVANCE EVALUACI&Oacute;N POA AL <?php echo $tmes[0]['trm_descripcion'].' DE '.$this->session->userData('gestion');?></b></td>
-                                                            </tr>
-                                                        </table>
-                                                        <hr>
-                                                        <div id="evaluacion_trimestre">
+                                                        <div id="regresion_canvas">
+                                                            <div id="regresion_canvasjs" style="width: 750px; height: 390px; margin: 0 auto"></div>
+                                                        </div>
+
+                                                        <div id="evaluacion_trimestre" style="display: none">
                                                             <div id="regresion" style="width: 600px; height: 380px; margin: 0 auto"></div>
                                                         </div>
                                                         <hr>
@@ -211,15 +206,33 @@
                                                         </div>
                                                     </div>
 
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                                        <div id="cabecera2" style="display: none"><?php echo $cabecera_regresion_total;?></div>
+                                                        <div id="regresion_gestion_canvas">
+                                                            <center><div id="regresion_gestion_canvasjs" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
+                                                        </div>
+                                                        <hr>
+                                                        <div id="evaluacion_gestion" style="display: none">
+                                                          <div id="regresion_gestion" style="width: 700px; height: 400px; margin: 0 auto"></div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="table-responsive" id="tabla_regresion_total_vista">
+                                                            <?php echo $tabla_regresion_total;?>
+                                                        </div>
+                                                        <div id="tabla_regresion_total_impresion" style="display: none">
+                                                            <?php echo $tabla_regresion_total_impresion;?>
+                                                        </div>
+                                                      <hr>
+                                                        <div align="right">
+                                                            <button id="btnImprimir_evaluacion_gestion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
+                                                        </div>
+                                                    </div>
+                                        <!-- 
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                         <div id="cabecera2" style="display: none"><?php echo $cabecera2;?></div>
-                                                        <hr>
-                                                        <table>
-                                                            <tr>
-                                                                <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DETALLE EVALUACI&Oacute;N POA AL <?php echo $tmes[0]['trm_descripcion'].' DE '.$this->session->userData('gestion');?></b></td>
-                                                            </tr>
-                                                        </table>
-                                                        <hr>
+                                                        <div id="regresion_gestion_canvas">
+                                                            <center><div id="regresion_gestion_canvasjs" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
+                                                        </div>
                                                         <div id="evaluacion_pastel">
                                                             <div id="pastel_todos" style="width: 600px; height: 420px; margin: 0 auto"></div>
                                                         </div>
@@ -234,43 +247,39 @@
                                                         <div align="right">
                                                             <button id="btnImprimir_evaluacion_pastel" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="16" HEIGHT="16"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</b></button>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                                </div>
                                             </div>
                                             <!-- end s1 tab pane -->
                                     
-                                            <div class="tab-pane fade" id="s2" title="CUADRO DE EVALUACIÓN POA GESTIÓN">
-                                               <div class="row">
-                                                <div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                                            <div class="tab-pane fade" id="s2">
+                                                <div class="row">
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                                                </div>
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                                                  <div id="cabecera1" style="display: none"><?php echo $cabecera_pastel;?></div>
+
+                                                    <div id="pastel_canvas" align="center">
+                                                        <center><div id="pastel_canvasjs" style="width: 500px; height: 420px; margin: 0 auto" ></div></center>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-                                                        <div id="cabecera3" style="display: none"><?php echo $cabecera3;?></div>
-                                                        <hr>
-                                                        <table>
-                                                            <tr>
-                                                                <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE EVALUACI&Oacute;N POA <?php echo $this->session->userData('gestion');?></b></td>
-                                                            </tr>
-                                                        </table>
-                                                        <hr>
-                                                        <div id="evaluacion_gestion">
-                                                          <div id="regresion_gestion" style="width: 700px; height: 400px; margin: 0 auto"></div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="table-responsive" id="tabla_regresion_total_vista">
-                                                            <?php echo $tabla_regresion_total;?>
-                                                        </div>
-                                                        <div id="tabla_regresion_total_impresion" style="display: none">
-                                                            <?php echo $tabla_regresion_total_impresion;?>
-                                                        </div>
-                                                      <hr>
-                                                        <div align="right">
-                                                            <button id="btnImprimir_evaluacion_gestion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="16" HEIGHT="16"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (GESTIÓN)</b></button>
-                                                        </div>
+                                                    
+                                                    <div id="evaluacion_pastel" style="display: none">
+                                                      <div id="pastel_todosprint" style="width: 600px; height: 420px; margin: 0 auto"></div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="table-responsive" id="tabla_pastel_vista">
+                                                        <?php echo $tabla_pastel_todo;?>
+                                                    </div>
+                                                    <div id="tabla_pastel_impresion" style="display: none">
+                                                        <?php echo $tabla_pastel_todo_impresion;?>
+                                                    </div>
+                                                    <hr>
+                                                    <div align="right">
+                                                        <button id="btnImprimir_evaluacion_pastel" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
                                                     </div>
                                                 </div>
-                                               </div>
+                                              </div>
                                             </div>
 
                                             <div class="tab-pane fade" id="s3" title="CUADRO MIS MIS SUBACTIVIDADES">
@@ -356,9 +365,13 @@
         </script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
         
+        <script src="<?php echo base_url(); ?>assets/captura/html2canvas.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/captura/canvasjs.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/captura/jsPdf.debug.js"></script>
+
         <!-- IMPORTANT: APP CONFIG -->
-        <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
@@ -382,16 +395,207 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
-        <!-- FastClick: For mobile devices -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <!-- Demo purpose only -->
         <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento_unidad.js"></script> 
+        <script>
+    window.onload = function () {
+/// Grafico Pastel 
+    var chart1 = new CanvasJS.Chart("pastel_canvasjs", {
+      exportEnabled: true,
+      animationEnabled: true,
+      title:{
+        text: "EVALUACION POA AL <?php echo $tmes[0]['trm_descripcion'] ?>/<?php echo $this->session->userData('gestion')?>" 
+      },
+      legend:{
+        cursor: "pointer",
+        itemclick: explodePastel
+      },
+      data: [{
+        type: "pie",
+        showInLegend: true,
+        toolTipContent: "{name}: <strong>{y} %</strong>",
+        indexLabel: "{name} - {y} %",
+        dataPoints: [
+          { y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>, name: "METAS CUMPLIDAS", color: '#57889c', exploded: true },
+          { y: <?php echo $tabla[8][$this->session->userData('trimestre')];?>, name: "METAS EN PROCESO",color: '#f5e218' },
+          { y: <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?>, name: "METAS NO CUMPLIDAS", color: '#a90329'}
+        ]
+      }]
+    });
+    chart1.render();
 
+/// Regresion al Trimestre Vigente
+var chart = new CanvasJS.Chart("regresion_canvasjs", {
+    animationEnabled: true,
+    exportEnabled: true,
+    title:{
+        text: "EVALUACION POA ACUMULADO AL <?php echo $tmes[0]['trm_descripcion'] ?>/<?php echo $this->session->userData('gestion')?>"             
+    }, 
+    axisY:{
+        title: "Nro. de Metas Programadas y Cumplidas"
+    },
+    toolTip: {
+        shared: true
+    },
+    legend:{
+        cursor:"pointer",
+        itemclick: toggleDataSeries
+    },
+    data: [{        
+        type: "area",  
+        name: "METAS PROGRAMADAS",        
+        showInLegend: true,
+        dataPoints: [
+        <?php 
+          if($this->session->userdata('trimestre')==1){ ?>
+            { label: "-", y: 0},     
+            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> metas", markerType: "square",  markerColor: "blue"}
+              <?php
+          }
+          elseif ($this->session->userdata('trimestre')==2) { ?>
+            { label: "-", y: 0},     
+            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> metas", markerType: "square",  markerColor: "blue"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> metas", markerType: "square",  markerColor: "blue"}
+              <?php
+          }
+          elseif ($this->session->userdata('trimestre')==3) { ?>
+            { label: "-", y: 0},     
+            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> metas", markerType: "square",  markerColor: "blue"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> metas", markerType: "square",  markerColor: "blue"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla[2][3];?>,indexLabel: "<?php echo $tabla[2][3];?> metas", markerType: "square",  markerColor: "blue"}
+              <?php
+          }
+          elseif ($this->session->userdata('trimestre')==4) { ?>
+            { label: "-", y: 0},   
+            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> metas", markerType: "square",  markerColor: "blue"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> metas", markerType: "square",  markerColor: "blue"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla[2][3];?>,indexLabel: "<?php echo $tabla[2][3];?> metas", markerType: "square",  markerColor: "blue"},     
+            { label: "4to. Trimestre", y: <?php echo $tabla[2][4];?>,indexLabel: "<?php echo $tabla[2][4];?> metas", markerType: "square",  markerColor: "blue"}
+              <?php
+          }
+        ?>
+        ]
+    }, 
+    {        
+        type: "area",
+        color: "green",
+        name: "METAS CUMPLIDAS",        
+        showInLegend: true,
+        dataPoints: [
+        <?php 
+          if($this->session->userdata('trimestre')==1){ ?>
+            { label: "-", y: 0},  
+            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> metas", markerType: "square",  markerColor: "green"}
+              <?php
+          }
+          elseif ($this->session->userdata('trimestre')==2) { ?>
+            { label: "-", y: 0},  
+            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> metas", markerType: "square",  markerColor: "green"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> metas", markerType: "square",  markerColor: "green"}
+              <?php
+          }
+          elseif ($this->session->userdata('trimestre')==3) { ?>
+            { label: "-", y: 0},  
+            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> metas", markerType: "square",  markerColor: "green"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> metas", markerType: "square",  markerColor: "green"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla[3][3];?>,indexLabel: "<?php echo $tabla[3][3];?> metas", markerType: "square",  markerColor: "green"}
+              <?php
+          }
+          elseif ($this->session->userdata('trimestre')==4) { ?>
+            { label: "-", y: 0},  
+            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> metas", markerType: "square",  markerColor: "green"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> metas", markerType: "square",  markerColor: "green"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla[3][3];?>,indexLabel: "<?php echo $tabla[3][3];?> metas", markerType: "square",  markerColor: "green"},     
+            { label: "4to. Trimestre", y: <?php echo $tabla[3][4];?>,indexLabel: "<?php echo $tabla[3][4];?> metas", markerType: "square",  markerColor: "green"}
+              <?php
+          }
+        ?>
+        ]
+    }]
+});
+
+chart.render();
+
+/// Regresion a la Gestion 
+var chart_gestion = new CanvasJS.Chart("regresion_gestion_canvasjs", {
+    animationEnabled: true,
+    exportEnabled: true,
+    title:{
+        text: "EVALUACION POA - GESTION <?php echo $this->session->userData('gestion')?>"             
+    }, 
+    axisY:{
+        title: "% de Metas Programadas y Cumplidas"
+    },
+    toolTip: {
+        shared: true
+    },
+    legend:{
+        cursor:"pointer",
+        itemclick: toggleDataSeries_gestion
+    },
+    data: [{        
+        type: "area",  
+        name: "% METAS PROGRAMAS",        
+        showInLegend: true,
+        dataPoints: [
+        {   label: "-", y: 0},   
+            { label: "1er. Trimestre", y: <?php echo $tabla_gestion[4][1];?>,indexLabel: "<?php echo $tabla_gestion[4][1];?> %", markerType: "square",  markerColor: "blue"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla_gestion[4][2];?>,indexLabel: "<?php echo $tabla_gestion[4][2];?> %", markerType: "square",  markerColor: "blue"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla_gestion[4][3];?>,indexLabel: "<?php echo $tabla_gestion[4][3];?> %", markerType: "square",  markerColor: "blue"},     
+            { label: "4to. Trimestre", y: <?php echo $tabla_gestion[4][4];?>,indexLabel: "<?php echo $tabla_gestion[4][4];?> %", markerType: "square",  markerColor: "blue"}
+        ]
+    }, 
+    {        
+        type: "area",
+        color: "green",
+        name: "% METAS CUMPLIDAS",        
+        showInLegend: true,
+        dataPoints: [
+            { label: "-", y: 0},  
+            { label: "1er. Trimestre", y: <?php echo $tabla_gestion[5][1];?>,indexLabel: "<?php echo $tabla_gestion[5][1];?> %", markerType: "square",  markerColor: "green"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla_gestion[5][2];?>,indexLabel: "<?php echo $tabla_gestion[5][2];?> %", markerType: "square",  markerColor: "green"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla_gestion[5][3];?>,indexLabel: "<?php echo $tabla_gestion[5][3];?> %", markerType: "square",  markerColor: "green"},     
+            { label: "4to. Trimestre", y: <?php echo $tabla_gestion[5][4];?>,indexLabel: "<?php echo $tabla_gestion[5][4];?> %", markerType: "square",  markerColor: "green"}
+        ]
+    }]
+});
+
+chart_gestion.render();
+}
+
+    function explodePastel (e) {
+        if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+        } else {
+            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+        }
+        e.chart1.render();
+    }
+
+    function toggleDataSeries(e) {
+        if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
+            e.dataSeries.visible = false;
+        }
+        else {
+            e.dataSeries.visible = true;            
+        }
+        chart.render();
+    }
+
+    function toggleDataSeries_gestion(e) {
+        if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
+            e.dataSeries.visible = false;
+        }
+        else {
+            e.dataSeries.visible = true;            
+        }
+        chart_gestion.render();
+    }
+</script>
          <!-- REGRESION LINEAL AL TRIMESTRE -->
         <script type="text/javascript">
           var chart1;

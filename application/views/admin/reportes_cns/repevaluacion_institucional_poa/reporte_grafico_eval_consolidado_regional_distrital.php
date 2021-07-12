@@ -46,8 +46,8 @@
                         <!-- widget content -->
                         <div class="widget-body">
                             <p>
-                                <?php echo $base; ?>
-                                <?php echo $titulo;?>
+                              <?php echo $base; ?>
+                              <?php echo $titulo;?>
                             </p>
                             <hr class="simple">
                             <ul id="myTab1" class="nav nav-tabs bordered">
