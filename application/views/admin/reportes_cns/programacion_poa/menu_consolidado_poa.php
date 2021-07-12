@@ -127,20 +127,7 @@
                     <div class="row">
                     <?php echo $list;?>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="jarviswidget jarviswidget-color-darken" >
-                              <header>
-                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                                  <h2 class="font-md"><strong>PROGRAMACI&Oacute;N POA - <?php echo $this->session->userdata('gestion')?></strong></h2>  
-                              </header>
-                                <div>
-                                    <div class="widget-body no-padding">
-                                       <div id="lista_consolidado"></div>
-                                    </div>
-                                    <!-- end widget content -->
-                                </div>
-                                <!-- end widget div -->
-                            </div>
-                            <!-- end widget -->
+                           <div id="lista_consolidado" class="well"><?php echo $titulo_modulo; ?></div>
                         </article>
                         
                     </div>

@@ -115,7 +115,7 @@ $route['admin/proy/list_proy_ok'] = 'programacion/proyecto/list_proyectos_aproba
 
 $route['prog/update_insumos/(:any)'] = 'programacion/crequerimiento/update_id_requerimientos_pi/$1';//// Actualiza los id de los insumos llevandolos a productos 2020
 
-//// REPORTE PROGRAMACION POA 
+
 /*--------------------------- REPORTES - SUB ACTIVIDADES---------------------------*/
 /*$route['rep/rep_sactividad'] = 'reportes_cns/rep_operaciones/list_sub_actividades'; ///// Lista de Sub actividades
 $route['rep/reporte_operaciones_totales'] = 'reportes_cns/rep_operaciones/reporte_total_subactividad'; ///// Reporte Lista de Sub actividades
@@ -138,6 +138,8 @@ $route['rep/ver_poa_consolidado_apertura_nacional']='reportes_cns/rep_operacione
 
 
 //$route['rep/reporte_operaciones/(:any)'] = 'reportes_cns/rep_operaciones/reporte_operaciones/$1'; ///// reporte de todas las operaciones
+//// REPORTE PROGRAMACION POA 
+///=== Reporte Consolidado POA 2021
 $route['rep/list_operaciones_req'] = 'reportes_cns/rep_operaciones/list_regiones'; ///// Menu Lista de Regiones Consolidado POA (2020-2021)
 $route['rep/get_uadministrativas'] = 'reportes_cns/rep_operaciones/get_unidades_administrativas'; ////// Combo Unidades Administrativas (CONSOLIDADO REPORTES 2020-2021)
 //$route['rep/exportar_operaciones_regional/(:any)'] = 'reportes_cns/exporting_datos/operaciones_regional_nacional/$1/$2'; ///// Exportar Operaciones por regional 
