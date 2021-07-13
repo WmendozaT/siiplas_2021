@@ -268,6 +268,14 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
         <!-- BOOTSTRAP JS -->
         <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
+        <!-- CUSTOM NOTIFICATION -->
+        <script src="<?php echo base_url(); ?>assets/js/notification/SmartNotification.min.js"></script>
+        <!-- JARVIS WIDGETS -->
+        <script src="<?php echo base_url(); ?>assets/js/smartwidgets/jarvis.widget.min.js"></script>
+        <!-- EASY PIE CHARTS -->
+        <script src="<?php echo base_url(); ?>assets/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+        <!-- SPARKLINES -->
+        <script src="<?php echo base_url(); ?>assets/js/plugin/sparkline/jquery.sparkline.min.js"></script>
         <!-- JQUERY VALIDATE -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
         <!-- JQUERY MASKED INPUT -->
@@ -286,7 +294,7 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
-    
+        <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
@@ -295,5 +303,13 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento_unidad.js"></script> 
         <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                pageSetUp();
+                $("#menu").menu();
+                $('.ui-dialog :button').blur();
+                $('#tabs').tabs();
+            })
+        </script>
     </body>
 </html>

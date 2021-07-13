@@ -103,7 +103,7 @@ class Cppto_comparativo extends CI_Controller {
             <th style="width:12%; color:#FFF;">'.$titulo.'</th>
             <th style="width:12%; color:#FFF;">PRESUPUESTO POA</th>
             <th style="width:12%; color:#FFF;">SALDO POA</th>';
-            if($this->fun_id==399){
+            if($this->tp_adm==1){
               $tabla.='<th style="width:10%; color:#FFF; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
             }
             $tabla.='

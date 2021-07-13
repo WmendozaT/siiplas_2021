@@ -747,7 +747,62 @@ chart_gestion.render();
       });
     });
   </script>
+    <script type="text/javascript">
+        $(document).ready(function() {  
+           Highcharts.chart('pastel_todosprint', {
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45,
+                    beta: 0
+                }
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    depth: 35,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}'
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Actividades',
+                data: [
+                    {
+                      name: 'NO CUMPLIDO : <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?> %',
+                      y: <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?>,
+                      color: '#f98178',
+                    },
 
+                    {
+                      name: 'EN PROCESO : <?php echo $tabla[8][$this->session->userData('trimestre')];?> %',
+                      y: <?php echo $tabla[8][$this->session->userData('trimestre')];?>,
+                      color: '#f5eea3',
+                    },
+
+                    {
+                      name: 'CUMPLIDO : <?php echo $tabla[5][$this->session->userData('trimestre')];?> %',
+                      y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>,
+                      color: '#2CC8DC',
+                      sliced: true,
+                      selected: true
+                    }
+                ]
+            }]
+          });
+        });
+    </script>
         <script type="text/javascript">
             $(document).ready(function() {  
                Highcharts.chart('parametro_efi', {

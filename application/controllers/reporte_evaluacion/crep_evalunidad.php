@@ -1,38 +1,38 @@
 <?php
 class Crep_evalunidad extends CI_Controller {  
     public function __construct (){
-        parent::__construct();
-        if($this->session->userdata('fun_id')!=null){
-            $this->load->model('Users_model','',true);
-            $this->load->model('menu_modelo');
-            $this->load->model('programacion/model_proyecto');
-            $this->load->model('programacion/model_faseetapa');
-            $this->load->model('programacion/model_producto');
-            $this->load->model('programacion/model_componente');
-            $this->load->model('mantenimiento/model_ptto_sigep');
-            $this->load->model('ejecucion/model_evaluacion');
-            $this->load->model('ejecucion/model_certificacion');
-            $this->load->model('ejecucion/model_seguimientopoa');
+      parent::__construct();
+      if($this->session->userdata('fun_id')!=null){
+        $this->load->model('Users_model','',true);
+        $this->load->model('menu_modelo');
+        $this->load->model('programacion/model_proyecto');
+        $this->load->model('programacion/model_faseetapa');
+        $this->load->model('programacion/model_producto');
+        $this->load->model('programacion/model_componente');
+        $this->load->model('mantenimiento/model_ptto_sigep');
+        $this->load->model('ejecucion/model_evaluacion');
+        $this->load->model('ejecucion/model_certificacion');
+        $this->load->model('ejecucion/model_seguimientopoa');
 
-            $this->load->model('reporte_eval/model_evalunidad'); /// Model Evaluacion Unidad
+        $this->load->model('reporte_eval/model_evalunidad'); /// Model Evaluacion Unidad
 
-            $this->pcion = $this->session->userData('pcion');
-            $this->gestion = $this->session->userData('gestion');
-            $this->adm = $this->session->userData('adm');
-            $this->rol = $this->session->userData('rol_id');
-            $this->dist = $this->session->userData('dist');
-            $this->dist_tp = $this->session->userData('dist_tp');
-            $this->tmes = $this->session->userData('trimestre');
-            $this->fun_id = $this->session->userData('fun_id');
-            $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
-            $this->tp_adm = $this->session->userData('tp_adm');
-            $this->verif_mes=$this->session->userdata('mes_actual');
-            $this->mes = $this->mes_nombre();
-            $this->load->library('seguimientopoa');
-        }
-        else{
-            redirect('/','refresh');
-        }
+        $this->pcion = $this->session->userData('pcion');
+        $this->gestion = $this->session->userData('gestion');
+        $this->adm = $this->session->userData('adm');
+        $this->rol = $this->session->userData('rol_id');
+        $this->dist = $this->session->userData('dist');
+        $this->dist_tp = $this->session->userData('dist_tp');
+        $this->tmes = $this->session->userData('trimestre');
+        $this->fun_id = $this->session->userData('fun_id');
+        $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
+        $this->tp_adm = $this->session->userData('tp_adm');
+        $this->verif_mes=$this->session->userdata('mes_actual');
+        $this->mes = $this->mes_nombre();
+        $this->load->library('seguimientopoa');
+      }
+      else{
+          redirect('/','refresh');
+      }
     }
 
 
@@ -118,14 +118,7 @@ class Crep_evalunidad extends CI_Controller {
         }
 
          $data['base']='
-        <input name="base" type="hidden" value="'.base_url().'">
-        <input name="tabla2" type="hidden" value="'.$data['tabla'][2][$this->session->userData('trimestre')].'">
-        <input name="tabla3" type="hidden" value="'.$data['tabla'][3][$this->session->userData('trimestre')].'">
-        <input name="tabla4" type="hidden" value="'.$data['tabla'][4][$this->session->userData('trimestre')].'">
-        <input name="tabla5" type="hidden" value="'.$data['tabla'][5][$this->session->userData('trimestre')].'">
-        <input name="tabla6" type="hidden" value="'.$data['tabla'][6][$this->session->userData('trimestre')].'">
-        <input name="tabla7" type="hidden" value="'.$data['tabla'][7][$this->session->userData('trimestre')].'">
-        <input name="tabla8" type="hidden" value="'.$data['tabla'][8][$this->session->userData('trimestre')].'">';
+        <input name="base" type="hidden" value="'.base_url().'">';
 
 
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_unidad', $data);

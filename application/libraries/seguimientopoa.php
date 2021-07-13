@@ -1832,8 +1832,8 @@ class Seguimientopoa extends CI_Controller{
 
           /*if (($date_actual >= $date_inicio) && ($date_actual <= $date_final) || $this->tp_adm==1){
             if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0 || $this->tp_adm==1){*/
-            if (($date_actual >= $date_inicio) && ($date_actual <= $date_final)){
-             // if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0){
+            if (($date_actual >= $date_inicio) && ($date_actual <= $date_final)|| $this->tp_adm==1){
+              if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0){
 
               $tabla.='
               <section class="col col-3">
@@ -1852,7 +1852,7 @@ class Seguimientopoa extends CI_Controller{
                $tabla.='
                 </select>
               </section>';
-           // }
+            }
           }
       }
 
