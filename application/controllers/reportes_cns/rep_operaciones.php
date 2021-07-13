@@ -67,6 +67,7 @@ class Rep_operaciones extends CI_Controller {
                     <li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li>
                     <li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li>
                     <li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li>
+                    <li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li>
                     <li>Genera el nro. de Actividades alineados a cada Objetivo Regional por Regional y Distrital.</li>
                     <li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li>
                     <li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li>

@@ -224,10 +224,10 @@ class Crep_evalunidad extends CI_Controller {
 
       $tit='';
       if($tipo_titulo==2){
-        $tit='<td style="height: 35px;font-size: 18px;"><center><b>CUADRO EVALUACIÓN POA ACUMULADO</b> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></td>';
+        $tit='<td style="height: 35px;font-size: 18px;"><center><b>EVALUACIÓN POA ACUMULADO</b> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></td>';
       }
       elseif($tipo_titulo==3){
-        $tit='<td style="height: 35px;font-size: 23px;"><center><b>CUADRO EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</b></center></td>';
+        $tit='<td style="height: 35px;font-size: 23px;"><center><b>EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</b></center></td>';
       }
 
       $tabla='';
@@ -548,14 +548,15 @@ class Crep_evalunidad extends CI_Controller {
           <thead>
           <tr align=center bgcolor=#f4f4f4>
             <th style="width:3%;height:2%;">#</th>
-            <th style="width:25%;">'.$tit.'</th>
+            <th style="width:20%;">'.$tit.'</th>
             <th style="width:8%;">TOTAL PROGRAMADO</th>
             <th style="width:8%;">TOTAL EVALUADO</th>
             <th style="width:8%;">TOTAL CUMPLIDOS</th>
             <th style="width:8%;">EN PROCESO</th>
             <th style="width:8%;">NO CUMPLIDOS</th>
-            <th style="width:10%;">% CUMPLIDO</th>
-            <th style="width:10%;">% NO CUMPLIDO</th>
+            <th style="width:8%;">% CUMPLIDO</th>
+            <th style="width:8%;">% NO CUMPLIDO</th>
+            <th style="width:8%;">% EJEC. PPTO.</th>
           </tr>
           </thead>
           <tbody>';
@@ -579,7 +580,7 @@ class Crep_evalunidad extends CI_Controller {
                 $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[5][$this->tmes].'%</b></td>';
                 $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[6][$this->tmes].'%</b></td>';
               }
-              
+              $tabla.='<td align=right></td>';
             $tabla.='</tr>';
           }
         $tabla.='

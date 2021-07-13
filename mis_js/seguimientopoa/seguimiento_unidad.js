@@ -442,27 +442,6 @@ function abreVentana(PDF){
     });
 
 
-    document.querySelector("#btnImprimir_evaluacion_pastel").addEventListener("click", function() {
-      var grafico = document.querySelector("#evaluacion_pastel");
-      
-      document.getElementById("cabecera2").style.display = 'block';
-      var cabecera = document.querySelector("#cabecera2");
-      
-      var eficacia = document.querySelector("#eficacia");
-
-      document.getElementById("tabla_pastel_impresion").style.display = 'block';
-      document.getElementById("tabla_pastel_vista").style.display = 'none';
-      var tabla = document.querySelector("#tabla_pastel_impresion");
-
-      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
-      document.getElementById("cabecera2").style.display = 'none';
-
-      document.getElementById("tabla_pastel_vista").style.display = 'block';
-      document.getElementById("tabla_pastel_impresion").style.display = 'none';
-    });
-
-
-
 
     document.querySelector("#btnImprimir_evaluacion_gestion").addEventListener("click", function() {
       var grafico = document.querySelector("#evaluacion_gestion");
@@ -483,3 +462,23 @@ function abreVentana(PDF){
       document.getElementById("tabla_regresion_total_impresion").style.display = 'none';
     });
 
+
+
+    document.querySelector("#btnImprimir_evaluacion_pastel").addEventListener("click", function() {
+      var grafico = document.querySelector("#evaluacion_pastel");
+      
+      document.getElementById("cabecera2").style.display = 'block';
+      var cabecera = document.querySelector("#cabecera2");
+      
+      var eficacia = document.querySelector("#eficacia");
+
+      document.getElementById("tabla_pastel_impresion").style.display = 'block';
+      document.getElementById("tabla_pastel_vista").style.display = 'none';
+      var tabla = document.querySelector("#tabla_pastel_impresion");
+
+      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
+      document.getElementById("cabecera2").style.display = 'none';
+
+      document.getElementById("tabla_pastel_vista").style.display = 'block';
+      document.getElementById("tabla_pastel_impresion").style.display = 'none';
+    });

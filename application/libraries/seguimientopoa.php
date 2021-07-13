@@ -87,10 +87,10 @@ class Seguimientopoa extends CI_Controller{
         $tit='<td style="height: 35px;font-size: 23px;"><center><b>CUADRO DE SEGUIMIENTO POA</b> - '.$this->verif_mes[2].' / '.$this->gestion.'</center></td>';
       }
       elseif($tipo_titulo==2){
-        $tit='<td style="height: 35px;font-size: 18px;"><center><b>CUADRO EVALUACIÓN POA ACUMULADO</b> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></td>';
+        $tit='<td style="height: 35px;font-size: 18px;"><center><b>EVALUACIÓN POA ACUMULADO AL </b> '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></td>';
       }
       else{
-        $tit='<td style="height: 35px;font-size: 23px;"><center><b>CUADRO EVALUACI&Oacute;N POA - GESTI&Oacute;N '.$this->gestion.'</b></center></td>';
+        $tit='<td style="height: 35px;font-size: 23px;"><center><b>EVALUACI&Oacute;N POA GESTI&Oacute;N '.$this->gestion.'</b></center></td>';
       }
 
 
@@ -1192,16 +1192,16 @@ class Seguimientopoa extends CI_Controller{
     /// GRAFICOS DE EVALUACION POA 
  public function tabla_acumulada_evaluacion_servicio($regresion,$tp_graf,$tip_rep){
       $tabla='';
-      $tit[2]='<b>NRO. OPE. PROGRAMADOS EN EL TRIMESTRE</b>';
-      $tit[3]='<b>NRO. OPE. CUMPLIDOS EN EL TRIMESTRE</b>';
-      $tit[4]='<b>NRO. OPE. NO CUMPLIDOS</b>';
-      $tit[5]='<b>% CUMPLIDOS</b>';
+      $tit[2]='<b>NRO. DE METAS PROGRAMADAS</b>';
+      $tit[3]='<b>NRO. DE METAS CUMPLIDAS</b>';
+      $tit[4]='<b>NRO. DE METAS NO CUMPLIDAS</b>';
+      $tit[5]='<b>% CUMPLIMIENTO</b>';
       $tit[6]='<b>% NO CUMPLIDOS</b>';
 
-      $tit_total[2]='<b>NRO. OPE. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[3]='<b>NRO. OPE. CUMPLIDOS AL TRIMESTRE</b>';
-      $tit_total[4]='<b>% OPE. PROGRAMADOS AL TRIMESTRE</b>';
-      $tit_total[5]='<b>% OPE. CUMPLIDOS AL TRIMESTRE</b>';
+      $tit_total[2]='<b>NRO. DE METAS PROGRAMADAS</b>';
+      $tit_total[3]='<b>NRO. DE METAS CUMPLIDAS</b>';
+      $tit_total[4]='<b>% METAS PROGRAMADAS AL TRIMESTRE</b>';
+      $tit_total[5]='<b>% METAS CUMPLIDAS AL TRIMESTRE</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -1217,10 +1217,10 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center>
-                <th>NRO. OPE. PROGRAMADAS</th>
+                <th>NRO. METAS PROGRAMADAS</th>
                 <th>METAS EVALUADAS</th>
-                <th>OPE. CUMPLIDAS</th>
-                <th>OPE. NO CUMPLIDAS</th>
+                <th>METAS CUMPLIDAS</th>
+                <th>METAS NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
                 </tr>
@@ -1307,11 +1307,11 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center >
-                <th>NRO. OPE. PROGRAMADAS</th>
-                <th>NRO. OPE. EVALUADAS</th>
-                <th>NRO. OPE. CUMPLIDAS</th>
-                <th>NRO. OPE. EN PROCESO</th>
-                <th>NRO. OPE. NO CUMPLIDAS</th>
+                <th>NRO. METAS PROGRAMADAS</th>
+                <th>NRO. METAS EVALUADAS</th>
+                <th>NRO. METAS CUMPLIDAS</th>
+                <th>NRO. METAS EN PROCESO</th>
+                <th>NRO. METAS NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
               </tr>
