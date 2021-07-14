@@ -954,7 +954,8 @@
         $data['mes'] = $this->mes_nombre();
         $data['cabecera']=$this->cabecera($data['componente'],$data['proyecto'],1); /// Cabecera
         $data['requerimientos']=$this->rep_lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id); // Requerimientos Distrital 2020-2021
-        $data['ejecucion']=$this->ejecucion_presupuestaria_acumulado($com_id);
+        $data['ejecucion']=$this->ejecucion_presupuestaria_acumulado_total($com_id);
+        //$data['ejecucion']=$this->ejecucion_presupuestaria_acumulado($com_id); /// anterior
         $this->load->view('admin/reportes_cns/programacion_poa/reporte_poa_form5', $data);
       }
     }
@@ -1052,23 +1053,23 @@
     }
 
 
-    /*------- FORM 4 Tabla Ejecucion Presupuestaria --------*/
-    public function ejecucion_presupuestaria_acumulado($com_id){
+    /*------- Ejecucion presupuestaria al total programado (Nuevo) --------*/
+    public function ejecucion_presupuestaria_acumulado_total($com_id){
       $tabla='';
       $monto_total=0;
-      $ppto_total=$this->model_evaluacion->suma_ppto_programado_trimestre($com_id);
+      $ppto_total=$this->model_componente->componente_ppto_total($com_id);
       if (count($ppto_total)!=0) {
         $monto_total=$ppto_total[0]['total_ppto'];
       }
 
       $monto_partida=0;
-      $suma_partida=$this->model_evaluacion->suma_grupo_partida_programado($com_id,10000);
+      $suma_partida=$this->model_evaluacion->suma_grupo_partida_programado($com_id,10000); /// total partida 10000
       if(count($suma_partida)!=0){
         $monto_partida=$suma_partida[0]['suma_partida'];
       }
 
       $monto_certificado=0;
-      $suma_certificado=$this->model_evaluacion->suma_monto_certificado_servicio($com_id);
+      $suma_certificado=$this->model_evaluacion->suma_monto_certificado_servicio($com_id); // Ejecutado al trimestre
       if(count($suma_certificado)!=0){
         $monto_certificado=$suma_certificado[0]['ppto_certificado'];
       }
@@ -1076,6 +1077,7 @@
       if($this->gestion>=2020){
       $tabla.='
         <div align=center>
+       
         <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
           <thead>
           <tr>
@@ -1086,7 +1088,87 @@
             }
           
         $tabla.='
-            <th style="width:12%;">TOTAL CERT. POA</th>
+            <th style="width:10%;">TOTAL N° CERT. POA</th>
+            <th style="width:10%;">MONTO PROGRAMADO TOTAL</th>
+            <th style="width:10%;">MONTO EJECUTADO</th>
+            <th style="width:5%;">% EJECUTADO</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 10%; font-size: 7px; text-align: left;height:13px;"><b>CERTIFICACIONES POA</b></td>';
+              $nro_total=0;
+              for ($i=1; $i <= $this->tmes; $i++) {
+                $nro=0;
+                $cert=$this->model_evaluacion->nro_certificaciones_trimestre($com_id,$i);
+                if(count($cert)!=0){
+                  $nro=$cert[0]['numero_certificaciones'];
+                  $nro_total=$nro_total+$nro;
+                }
+                
+                $tabla.='<td align=right><b>'.$nro.'</b></td>';
+              }
+          $tabla.='
+              <td align=right bgcolor="#d9f9f5"><b>'.$nro_total.'</b></td>
+              <td align=right bgcolor="#d9f9f5"><b>'.number_format($monto_total, 2, ',', '.').'</b></td>
+              <td align=right bgcolor="#d9f9f5"><b>'.number_format(($monto_partida+$monto_certificado), 2, ',', '.').'</b></td>';
+                if($monto_total!=0){
+                  $tabla.='<td align=right bgcolor="#d9f9f5"><b>'.(round(((($monto_partida+$monto_certificado)/$monto_total)*100),2)).' %</b></td>';
+                }
+                else{
+                  $tabla.='<td align=right bgcolor="#d9f9f5"><b>0 %</b></td>';
+                }
+              $tabla.='
+            </tr>
+          </tbody>
+        </table>
+        </div>';
+      }
+
+      return $tabla;
+    }
+
+
+
+
+
+
+    /*------- Ejecucion presupuestaria al trimestre (a borrar) --------*/
+    public function ejecucion_presupuestaria_acumulado($com_id){
+      $tabla='';
+      $monto_total=0;
+      $ppto_total=$this->model_evaluacion->suma_ppto_programado_trimestre($com_id); // Prog. al trimestre
+      if (count($ppto_total)!=0) {
+        $monto_total=$ppto_total[0]['total_ppto'];
+      }
+
+      $monto_partida=0;
+      $suma_partida=$this->model_evaluacion->suma_grupo_partida_programado($com_id,10000); /// total partida 10000
+      if(count($suma_partida)!=0){
+        $monto_partida=$suma_partida[0]['suma_partida'];
+      }
+
+      $monto_certificado=0;
+      $suma_certificado=$this->model_evaluacion->suma_monto_certificado_servicio($com_id); // Ejecutado al trimestre
+      if(count($suma_certificado)!=0){
+        $monto_certificado=$suma_certificado[0]['ppto_certificado'];
+      }
+
+      if($this->gestion>=2020){
+      $tabla.='
+        <div align=center>
+        programado al trimestre : '.$monto_total.'-- monto partida defecto '.$monto_partida.'--- monto certificado '.$monto_certificado.'
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+          <thead>
+          <tr>
+            <th style="width:10%; height:18px;"></th>';
+            for ($i=1; $i <=$this->tmes ; $i++) {
+              $trimestre=$this->model_evaluacion->get_trimestre($i);
+              $tabla.='<th style="width:12%;">'.$trimestre[0]['trm_descripcion'].'</th>';
+            }
+          
+        $tabla.='
+            <th style="width:12%;">TOTAL N° CERT. POA</th>
             <th style="width:12%;">MONTO EJECUTADO</th>
             <th style="width:5%;">% EJECUTADO</th>
           </tr>

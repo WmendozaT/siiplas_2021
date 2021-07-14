@@ -836,6 +836,87 @@ class Seguimientopoa extends CI_Controller{
       return $tabla;
   }
 
+
+   /*------- Ejecucion presupuestaria al total programado (Nuevo) --------*/
+    public function ejecucion_presupuestaria_acumulado_total($com_id){
+      $tabla='';
+      $monto_total=0;
+      $ppto_total=$this->model_componente->componente_ppto_total($com_id);
+      if (count($ppto_total)!=0) {
+        $monto_total=$ppto_total[0]['total_ppto'];
+      }
+
+      $monto_partida=0;
+      $suma_partida=$this->model_evaluacion->suma_grupo_partida_programado($com_id,10000); /// total partida 10000
+      if(count($suma_partida)!=0){
+        $monto_partida=$suma_partida[0]['suma_partida'];
+      }
+
+      $monto_certificado=0;
+      $suma_certificado=$this->model_evaluacion->suma_monto_certificado_servicio($com_id); // Ejecutado al trimestre
+      if(count($suma_certificado)!=0){
+        $monto_certificado=$suma_certificado[0]['ppto_certificado'];
+      }
+
+      $tabla.='
+        <div align=center>
+       
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+          <thead>
+          <tr>
+            <th style="width:10%; height:18px;"></th>';
+            for ($i=1; $i <=$this->tmes ; $i++) {
+              $trimestre=$this->model_evaluacion->get_trimestre($i);
+              $tabla.='<th style="width:12%;">'.$trimestre[0]['trm_descripcion'].'</th>';
+            }
+          
+        $tabla.='
+            <th style="width:10%;">TOTAL N° CERT. POA</th>
+            <th style="width:10%;">MONTO PROGRAMADO TOTAL</th>
+            <th style="width:10%;">MONTO EJECUTADO</th>
+            <th style="width:5%;">% EJECUTADO</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 10%; font-size: 7px; text-align: left;height:13px;"><b>CERTIFICACIONES POA</b></td>';
+              $nro_total=0;
+              for ($i=1; $i <= $this->tmes; $i++) {
+                $nro=0;
+                $cert=$this->model_evaluacion->nro_certificaciones_trimestre($com_id,$i);
+                if(count($cert)!=0){
+                  $nro=$cert[0]['numero_certificaciones'];
+                  $nro_total=$nro_total+$nro;
+                }
+                
+                $tabla.='<td align=right><b>'.$nro.'</b></td>';
+              }
+          $tabla.='
+              <td align=right bgcolor="#d9f9f5"><b>'.$nro_total.'</b></td>
+              <td align=right bgcolor="#d9f9f5"><b>'.number_format($monto_total, 2, ',', '.').'</b></td>
+              <td align=right bgcolor="#d9f9f5"><b>'.number_format(($monto_partida+$monto_certificado), 2, ',', '.').'</b></td>';
+                if($monto_total!=0){
+                  $tabla.='<td align=right bgcolor="#d9f9f5"><b>'.(round(((($monto_partida+$monto_certificado)/$monto_total)*100),2)).' %</b></td>';
+                }
+                else{
+                  $tabla.='<td align=right bgcolor="#d9f9f5"><b>0 %</b></td>';
+                }
+              $tabla.='
+            </tr>
+          </tbody>
+        </table>
+        </div>';
+
+      return $tabla;
+    }
+
+
+
+
+
+
+
+
     /*---- VERIFICA OPERACION TRIMESTRAL -----*/
     public function verif_medios_verificacion($prod_id,$tipo_medio,$trimestre){
       $tabla='';
@@ -1085,6 +1166,7 @@ class Seguimientopoa extends CI_Controller{
         $tr[5][$i]=0; /// eficacia %
         $tr[6][$i]=0; /// no eficacia %
         $tr[7][$i]=0; /// en proceso
+        $tr[8][$i]=0; /// en proceso %
       }
 
       for ($i=1; $i <=$this->tmes; $i++) {
@@ -1606,7 +1688,7 @@ class Seguimientopoa extends CI_Controller{
 
 
 
-    /*-- LISTA DE FORMULARIOS REPORTE DE SEGUIMIENTO POA --*/
+    /*-- LISTA DE FORMULARIOS REPORTE DE SEGUIMIENTO Y EVALUACION POA --*/
     public function formularios_mensual($com_id){
       $tabla='';
       $meses = $this->model_configuracion->get_mes();
@@ -1633,6 +1715,7 @@ class Seguimientopoa extends CI_Controller{
                   <a href="javascript:abreVentana(\''.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$com_id.'/'.$i.'\');" >REP. EVAL. POA - '.$trimestre[0]['trm_descripcion'].'</a>
                 </li>';
               }
+            
             $tabla.='
             </ul>
           </div>';
@@ -1773,8 +1856,8 @@ class Seguimientopoa extends CI_Controller{
             if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0 || $this->tp_adm==1){
 
               $tabla.='
-                <a href="javascript:abreVentana(\''.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$com_id.'/'.$this->tmes.'\');" class="btn btn-success" title="IMPRIMIR EVALUACIÓN POA">
-                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR EVALUACI&Oacute;N PLAN OPERATIVO ANUAL POA</b>
+                <a href="javascript:abreVentana(\''.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$com_id.'/'.$this->tmes.'\');" class="btn btn-default" title="IMPRIMIR EVALUACIÓN POA">
+                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR EVALUACI&Oacute;N POA '.$this->gestion.'</b>
                 </a>';
             }
           }
@@ -1791,7 +1874,7 @@ class Seguimientopoa extends CI_Controller{
       $meses = $this->model_configuracion->get_mes();
 
       $tabla.='<div class="btn-group" >
-                  <a class="btn btn-default"  >FORMULARIOS POA - '.$this->gestion.'</a>
+                  <a class="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FORMULARIOS POA GESTIÓN - '.$this->gestion.'&nbsp;&nbsp;&nbsp;&nbsp;</a>
                   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" ><span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li>

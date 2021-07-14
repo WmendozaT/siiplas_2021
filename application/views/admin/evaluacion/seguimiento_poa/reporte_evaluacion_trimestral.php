@@ -25,6 +25,19 @@ ob_start();
         <?php echo $operaciones;?>
     </page>
 
+    <page backtop="60mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+        <page_header>
+        <br><div class="verde"></div>
+           <?php echo $cabecera; ?>
+        </page_header>
+
+        <page_footer>
+            <?php echo $pie;?>
+        </page_footer>&nbsp;&nbsp;&nbsp;&nbsp;
+        <div style="font-size: 12px;font-family: Arial; height:20px;"><b>CERTIFICACI&Oacute;N POA - GESTI&Oacute;N <?php echo $this->session->userData('gestion'); ?></b></div>
+        <?php echo $ejecucion_ppto;?>
+    </page>
+
 <?php
 $content = ob_get_clean();
 //require_once(dirname(__FILE__).'/../html2pdf.class.php');

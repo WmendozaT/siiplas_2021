@@ -124,7 +124,7 @@
                         </article>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
                             <section id="widget-grid" class="well" align="center">
-                                <a href="<?php echo base_url().'index.php/seg/seguimiento_poa';?>" title="SALIR" class="btn btn-default" style="width:70%;"><img src="<?php echo base_url(); ?>assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;VOLVER ATRAS</a>
+                                <?php echo $formularios_poa;?>
                                 <br><br>
                                 <?php echo $formularios_seguimiento;?>
                             </section>
@@ -186,6 +186,7 @@
                                                     <div style="font-size: 13pt;font-family:Verdana;"><b>FORMULARIO DE SEGUIMIENTO POA - <?php echo $datos_mes[2].' '.$this->session->userData('gestion');?></b></div>
                                                     <hr>
                                                         <div align="right">
+                                                            <a href="<?php echo base_url().'index.php/seg/seguimiento_poa';?>" title="SALIR" class="btn btn-danger"><img src="<?php echo base_url(); ?>assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>SALIR</b></a>
                                                             <?php echo $boton_reporte_seguimiento_poa;?>
                                                             <?php echo $boton_reporte_evaluacion_poa;?>
                                                         </div>

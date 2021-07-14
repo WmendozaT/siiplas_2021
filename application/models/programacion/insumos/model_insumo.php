@@ -21,6 +21,7 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+
     // ------ lista Temporalidad Insumo
     public function list_temporalidad_insumo($ins_id){
         $sql = 'select *

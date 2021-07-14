@@ -349,6 +349,7 @@ class Cseguimiento extends CI_Controller {
 
     //  $this->seguimientopoa->update_evaluacion_operaciones($com_id);
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
+      $data['formularios_poa']=$this->seguimientopoa->formularios_poa($com_id,$data['proyecto'][0]['proy_id']);
       $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($com_id);
       
       $this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
@@ -541,6 +542,8 @@ class Cseguimiento extends CI_Controller {
         $this->seguimientopoa->update_evaluacion_operaciones($com_id);
         /// -----------------------------------------------------
         $data['operaciones']=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$trm_id); /// Reporte Gasto Corriente, Proyecto de Inversion 2020
+        $data['ejecucion_ppto']=$this->seguimientopoa->ejecucion_presupuestaria_acumulado_total($com_id); /// Ejecucion ppto
+
 
         $this->load->view('admin/evaluacion/seguimiento_poa/reporte_evaluacion_trimestral', $data);
 

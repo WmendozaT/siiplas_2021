@@ -75,41 +75,41 @@ class C_consultas extends CI_Controller {
     $tabla='';
     $regionales=$this->model_proyecto->list_departamentos();
       $tabla.='
-          <article class="col-sm-12">
-            <div class="well">
-              <form class="smart-form">
-                  <header><b>SEGUIMIENTO POA '.$this->gestion.'</b></header>
-                  <fieldset>          
-                    <div class="row">
-                      <section class="col col-3">
-                        <label class="label"><b>DIRECCIÓN ADMINISTRATIVA</b></label>
-                        <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
-                        <option value="">SELECCIONE REGIONAL</option> ';
-                        foreach($regionales as $row){
-                          if($row['dep_id']!=0){
-                            $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
-                          }
-                        }
-                        $tabla.='
-                        </select>
-                      </section>
+      <article class="col-sm-12">
+        <div class="well">
+          <form class="smart-form">
+              <header><b>SEGUIMIENTO POA '.$this->gestion.'</b></header>
+              <fieldset>          
+                <div class="row">
+                  <section class="col col-3">
+                    <label class="label"><b>DIRECCIÓN ADMINISTRATIVA</b></label>
+                    <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
+                    <option value="">SELECCIONE REGIONAL</option>';
+                    foreach($regionales as $row){
+                      if($row['dep_id']!=0){
+                        $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                      }
+                    }
+                    $tabla.='
+                    </select>
+                  </section>
 
-                      <section class="col col-3" id="tprep">
-                        <label class="label"><b>TIPO DE REPORTE</b></label>
-                        <select class="form-control" id="tp_rep" name="tp_rep" title="SELECCIONE TIPO DE REPORTE">
-                        </select>
-                      </section>
+                  <section class="col col-3" id="tprep">
+                    <label class="label"><b>TIPO DE REPORTE</b></label>
+                    <select class="form-control" id="tp_rep" name="tp_rep" title="SELECCIONE TIPO DE REPORTE">
+                    </select>
+                  </section>
 
-                      <section class="col col-3" id="tp">
-                        <label class="label"><b>TIPO DE GASTO</b></label>
-                        <select class="form-control" id="tipo" name="tipo" title="SELECCIONE TIPO DE GASTO">
-                        </select>
-                      </section>
-                    </div>
-                  </fieldset>
-              </form>
-              </div>
-            </article>';
+                  <section class="col col-3" id="tp">
+                    <label class="label"><b>TIPO DE GASTO</b></label>
+                    <select class="form-control" id="tipo" name="tipo" title="SELECCIONE TIPO DE GASTO">
+                    </select>
+                  </section>
+                </div>
+              </fieldset>
+          </form>
+          </div>
+        </article>';
       return $tabla;
     }
 
