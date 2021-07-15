@@ -140,7 +140,7 @@ class Model_ptto_sigep extends CI_Model{
 
     /*-------------------- Partidas por Apertura ------------------------*/
     public function partidas_proyecto($aper_id){
-        $sql = ' select pg.sp_id, pg.par_id,pg.partida,p.par_nombre,pg.importe,pg.ppto_saldo_ncert
+        $sql = ' select pg.sp_id, pg.par_id,pg.partida,p.par_nombre,pg.importe,pg.ppto_saldo_ncert,pg.ppto_saldo_observacion
                  from ptto_partidas_sigep pg
                  Inner Join partidas as p On p.par_id=pg.par_id
                  where pg.aper_id='.$aper_id.' and pg.estado!=\'3\' and pg.g_id='.$this->gestion.'
@@ -151,7 +151,7 @@ class Model_ptto_sigep extends CI_Model{
 
     /*---- Get Partida Asignado -----*/
     public function get_partida_asignado_unidad($aper_id,$par_id){
-        $sql = ' select pg.sp_id, pg.par_id,pg.partida,p.par_nombre,pg.importe,pg.ppto_saldo_ncert
+        $sql = ' select pg.sp_id, pg.par_id,pg.partida,p.par_nombre,pg.importe,pg.ppto_saldo_ncert,pg.ppto_saldo_observacion
                  from ptto_partidas_sigep pg
                  Inner Join partidas as p On p.par_id=pg.par_id
                  where pg.aper_id='.$aper_id.' and pg.estado!=\'3\' and pg.g_id='.$this->gestion.' and pg.par_id='.$par_id.'

@@ -334,14 +334,15 @@ class Cmod_requerimientos extends CI_Controller {
                   <thead>
                     <tr>
                       <th bgcolor="#1c7368"><font color="#ffffff">#</font></th>
-                      <th bgcolor="#1c7368"><font color="#ffffff">C&Oacute;DIGO PARTIDA</font></th>
-                      <th bgcolor="#1c7368"><font color="#ffffff">DESCRIPCI&Oacute;N PARTIDA</font></th>
+                      <th style="width:5%;" bgcolor="#1c7368"><font color="#ffffff">C&Oacute;DIGO PARTIDA</font></th>
+                      <th style="width:15%;"bgcolor="#1c7368"><font color="#ffffff">DESCRIPCI&Oacute;N PARTIDA</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff">MONTO ASIGNADO INICIAL</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff">MONTO PROGRAMADO POA</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff">MONTO A INCREMENTAR.</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff">MONTO FINAL</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff">ELIMINAR</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff" style="width:8%;">SALDO NO EJECUTADO</font></th>
+                      <th style="width:20%;" bgcolor="#1c7368"><font color="#ffffff" style="width:10%;">OBSERVACIÓN</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff"></font></th>
                     </tr>
                   </thead>
@@ -378,6 +379,7 @@ class Cmod_requerimientos extends CI_Controller {
                     }
                   $tabla.='
                   </td>
+                  <td><textarea name="obs_saldo'.$nro.'" id="obs_saldo'.$nro.'" rows="5" class="form-control" cols="25">'.$row['ppto_saldo_observacion'].'</textarea></td>
                   <td align="center">';
                     if($row['importe']!=0){
                       if($row['ppto_saldo_ncert']!=0){
@@ -459,9 +461,11 @@ class Cmod_requerimientos extends CI_Controller {
         $post = $this->input->post();
         $sp_id = $this->security->xss_clean($post['sp_id']);
         $saldo = $this->security->xss_clean($post['saldo']);
+        $observacion = $this->security->xss_clean($post['obs']);
 
           $update_saldo = array(
-            'ppto_saldo_ncert' => $saldo
+            'ppto_saldo_ncert' => $saldo,
+            'ppto_saldo_observacion' => $observacion
           );
           $this->db->where('sp_id', $sp_id);
           $this->db->update('ptto_partidas_sigep', $update_saldo);

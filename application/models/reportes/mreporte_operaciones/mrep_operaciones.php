@@ -1642,6 +1642,30 @@ class Mrep_operaciones extends CI_Model {
     }
 
 
+    ///// -- CONSOLIDADO PROGRAMADO DE REQUERIMIENTOS PARA LA EJECUCION PRESUPUESTARIA (Relacion directa)
+    public function consolidado_directo_requerimientos_distrital_simple($dist_id, $tp_id){
+        $sql = 'select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
+                p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.ins_id,par.par_codigo,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,
+                i.ins_estado,i.ins_gestion,i.ins_observacion,temp.programado_total,temp.mes1,temp.mes2,temp.mes3,temp.mes4,temp.mes5,temp.mes6,temp.mes7,temp.mes8,temp.mes9,temp.mes10,temp.mes11,temp.mes12
+                from _proyectofaseetapacomponente pfe
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                Inner Join _departamentos as d On d.dep_id=p.dep_id
+                Inner Join _distritales as ds On ds.dist_id=p.dist_id
+
+                Inner Join insumos as i On i.aper_id=apg.aper_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                Inner Join vista_temporalidad_insumo as temp On temp.ins_id=i.ins_id
+
+                where p.dist_id='.$dist_id.' and apg.aper_gestion='.$this->gestion.' and pfe.estado!=\'3\' and p.estado!=\'3\' and apg.aper_estado!=\'3\' and apg.aper_proy_estado=\'4\' and i.aper_id!=\'0\' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and p.tp_id='.$tp_id.'
+                order by ds.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, ds.dist_id, i.ins_id,par.par_codigo asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
 
 
 

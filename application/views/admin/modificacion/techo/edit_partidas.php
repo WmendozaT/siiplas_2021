@@ -386,8 +386,10 @@
         <script type="text/javascript">
             function guardar(sp_id,nro){
                 saldo=parseFloat($('[id="saldo'+nro+'"]').val());
+                observacion=$('[id="obs_saldo'+nro+'"]').val();
 
-                alertify.confirm("GUARDAR PRESUPUESTO NO EJECUTADO POA?", function (a) {
+
+                alertify.confirm("GUARDAR SALDO PRESUPUESTO NO EJECUTADO POA?", function (a) {
                     if (a) {
                         var url = "<?php echo site_url().'/modificaciones/cmod_requerimientos/guardar_saldo_ppto'?>";
                         var request;
@@ -398,7 +400,7 @@
                             url: url,
                             type: "POST",
                             dataType: 'json',
-                            data: "sp_id="+sp_id+"&saldo="+saldo
+                            data: "sp_id="+sp_id+"&saldo="+saldo+"&obs="+observacion
                         });
 
                         request.done(function (response, textStatus, jqXHR) {

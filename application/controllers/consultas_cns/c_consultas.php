@@ -16,6 +16,7 @@ class C_consultas extends CI_Controller {
             $this->load->model('programacion/model_producto');
             $this->load->model('programacion/model_componente');
             $this->load->model('ejecucion/model_certificacion');
+            $this->load->model('programacion/insumos/model_insumo');
 /*            $this->load->model('reporte_eval/model_evalnacional');
             $this->load->model('reporte_eval/model_evalregional');
             $this->load->model('mantenimiento/mapertura_programatica');*/
@@ -66,7 +67,8 @@ class C_consultas extends CI_Controller {
       $data['menu']=$this->menu(7);
       $data['list']=$this->menu_nacional();
 
-      $this->load->view('admin/consultas_internas/menu_consultas_poa', $data);
+      echo $this->consolidado_ejecucion_requerimientos_regional(3,4);
+     // $this->load->view('admin/consultas_internas/menu_consultas_poa', $data);
     }
 
 
@@ -134,6 +136,9 @@ class C_consultas extends CI_Controller {
         }
         elseif ($tp_rep==4) {
           $salida=$this->lista_certificaciones_poa($dep_id,$tp_id);
+        }
+        elseif ($tp_rep==5) {
+          $salida=$this->consolidado_ejecucion_requerimientos_regional($dep_id,$tp_id);
         }
 
         //$lista=$this->lista_certificaciones_poa($dist_id,$tp_id);
@@ -542,7 +547,8 @@ class C_consultas extends CI_Controller {
               <th style="width:10%;">UNIDAD DE MEDIDA</th>
               <th style="width:5%;">CANTIDAD</th>
               <th style="width:5%;">PRECIO</th>
-              <th style="width:15%;">COSTO TOTAL</th>
+              <th style="width:15%;">MONTO TOTAL</th>
+              <th style="width:15%;">MONTO CERTIFICADO</th>
               <th style="width:4%;">P. ENE.</th>
               <th style="width:4%;">P. FEB.</th>
               <th style="width:4%;">P. MAR.</th>
@@ -589,6 +595,7 @@ class C_consultas extends CI_Controller {
                 $tabla.='<td>'.round($row['ins_cant_requerida'],2).'</td>';
                 $tabla.='<td>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
                 $tabla.='<td>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                $tabla.='<td></td>';
 
                 $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes1'], 2, ',', '.').'</td>';
                 $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes2'], 2, ',', '.').'</td>';
@@ -684,6 +691,157 @@ class C_consultas extends CI_Controller {
 
 
 
+    /*-- REPORTE 5 (CONSOLIDADO REQUERIMIENTOS EJECUTADOS REGIONAL) 2020-2021--*/
+    public function consolidado_ejecucion_requerimientos_regional($dist_id,$tp_id){
+     // $dep=$this->model_proyecto->get_departamento($dep_id);
+      $tabla='';
+      $tabla.='
+      <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
+
+      if($this->gestion==2019){
+        $tabla='No disponible';
+      }
+      else{
+        $requerimientos=$this->mrep_operaciones->consolidado_directo_requerimientos_distrital_simple($dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
+
+        $titulo='GASTO CORRIENTE';
+        if($tp_id==1){
+          $titulo='PROYECTO DE INVERSI&Oacute;N';
+        }
+
+        $tabla.='
+        <br>
+        <div align=right>
+          
+        </div>
+        <br>
+        <div class="alert alert-warning">
+          <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO DE REQUERIMIENTOS '.$this->gestion.'</b></center></a>
+        </div>
+        <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
+          <thead>
+            <tr style="background-color: #66b2e8">
+              <th style="width:3%;">COD. DA.</th>
+              <th style="width:3%;">COD. UE.</th>
+              <th style="width:3%;">COD. PROG.</th>
+              <th style="width:10%;">COD. PROY.</th>
+              <th style="width:3%;">COD. ACT.</th>
+              <th style="width:35%;">'.$titulo.'</th>
+             
+              <th style="width:15%;">PARTIDA</th>
+              <th style="width:25%;">REQUERIMIENTO</th>
+              <th style="width:10%;">UNIDAD DE MEDIDA</th>
+              <th style="width:5%;">CANTIDAD</th>
+              <th style="width:5%;">PRECIO</th>
+              <th style="width:15%;">MONTO TOTAL</th>
+              <th style="width:15%;">MONTO CERTIFICADO</th>
+              <th style="width:4%;">P. ENE.</th>
+              <th style="width:4%;">P. FEB.</th>
+              <th style="width:4%;">P. MAR.</th>
+              <th style="width:4%;">P. ABR.</th>
+              <th style="width:4%;">P. MAY.</th>
+              <th style="width:4%;">P. JUN.</th>
+              <th style="width:4%;">P. JUL.</th>
+              <th style="width:4%;">P. AGOS.</th>
+              <th style="width:4%;">P. SEPT.</th>
+              <th style="width:4%;">P. OCT.</th>
+              <th style="width:4%;">P. NOV.</th>
+              <th style="width:4%;">P. DIC.</th>
+              <th style="width:10%;">OBSERVACI&Oacute;N</th>
+            </tr>
+          </thead>
+          <tbody id="bdi">';
+          $nro=0; $sum_programado=0;$sum_certificado=0;
+          foreach ($requerimientos as $row){
+           // $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+            $monto_certificado=0;$color='';
+            $m_cert=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']); /// Monto Certificado
+              if(count($m_cert)!=0){
+                $monto_certificado=$m_cert[0]['certificado'];
+              }
+           
+            $nro++;
+            $tabla.='<tr>';
+                $tabla.='<td style="height:50px;">'.$row['dep_cod'].'</td>';
+                $tabla.='<td>'.$row['dist_cod'].'</td>';
+                $tabla.='<td>'.$row['aper_programa'].'</td>';
+                $tabla.='<td>';
+                if($tp_id==1){
+                  $tabla.=''.$row['proy_sisin'].'';
+                }
+                else{
+                  $tabla.=''.$row['aper_proyecto'].'';
+                }
+                $tabla.='</td>';
+                $tabla.='<td>'.$row['aper_actividad'].'</td>';
+                $tabla.='<td>';
+                  if($row['tp_id']==1){
+                    $tabla.=''.$row['proy_nombre'].'';
+                  }
+                  else{
+                    $tabla.=''.$row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'].'';
+                  }
+                $tabla.='</td>';
+                $tabla.='<td>'.$row['par_codigo'].'</td>';
+                $tabla.='<td>'.strtoupper($row['ins_detalle']).'</td>';
+                $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
+                $tabla.='<td>'.round($row['ins_cant_requerida'],2).'</td>';
+                $tabla.='<td>'.round($row['ins_costo_unitario'],2).'</td>';
+                $tabla.='<td>'.round($row['ins_costo_total'],2).'</td>';
+                $tabla.='<td><b></b></td>';
+/*                if(count($prog)!=0){
+                  if($monto_certificado==$prog[0]['programado_total']){
+                    for ($i=1; $i<=12 ; $i++) {
+                    $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.round($prog[0]['mes'.$i],2).'</td>';
+                    }
+                  }
+                  else{
+                    for ($i=1; $i<=12 ; $i++) {
+                      $color_td='';
+                      $mes_cert=$this->model_certificacion->get_insumo_programado_certificado_mes($row['ins_id'],$i);
+                      if(count($mes_cert)!=0){
+                        $color_td='#ddf7dd';
+                      }
+                      $tabla.='<td style="width:4%;" align=right bgcolor='.$color_td.'>'.round($prog[0]['mes'.$i],2).'</td>';
+                    }
+                  }
+                }
+                else{
+                  for ($i=1; $i<=12 ; $i++) {
+                    $tabla.='<td style="width:4%;" align=right><font color=red><b>0</b></font></td>';
+                  }
+                }*/
+
+                /*$tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes1'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes2'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes3'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes4'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes5'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes6'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes7'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes8'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes9'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes10'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes11'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.number_format($row['mes12'], 2, ',', '.').'</td>';*/
+                $tabla.='<td>'.strtoupper($row['ins_observacion']).'</td>';
+            $tabla.='</tr>';
+          }
+          $tabla.='
+          </tbody>
+        </table>';
+      }
+
+      return $tabla;
+    }
+
+
+
+
+
+
+
+
 
   /*-----  OPCIONES 2020-2021 -----*/
     public function get_opciones($accion=''){ 
@@ -698,6 +856,7 @@ class C_consultas extends CI_Controller {
           $salida.= "<option value='2'>CONSOLIDADO FORMULARIO 4 (OPERACIONES)</option>";
           $salida.= "<option value='3'>CONSOLIDADO FORMULARIO 5 (REQUERIMEINTOS)</option>";
           $salida.= "<option value='4'>CERTIFICACIONES POA</option>";
+          $salida.= "<option value='5'>CONSOLIDADO FORMULARIO 5 (EJECUCIÓN REQUERIMIENTOS)</option>";
 
         echo $salida; 
         //return $salida;
