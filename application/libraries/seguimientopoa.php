@@ -1274,16 +1274,16 @@ class Seguimientopoa extends CI_Controller{
     /// GRAFICOS DE EVALUACION POA 
  public function tabla_acumulada_evaluacion_servicio($regresion,$tp_graf,$tip_rep){
       $tabla='';
-      $tit[2]='<b>NRO. DE METAS PROGRAMADAS</b>';
-      $tit[3]='<b>NRO. DE METAS CUMPLIDAS</b>';
-      $tit[4]='<b>NRO. DE METAS NO CUMPLIDAS</b>';
+      $tit[2]='<b>NRO. ACT. PROGRAMADAS</b>';
+      $tit[3]='<b>NRO. ACT. CUMPLIDAS</b>';
+      $tit[4]='<b>NRO. ACT. NO CUMPLIDAS</b>';
       $tit[5]='<b>% CUMPLIMIENTO</b>';
       $tit[6]='<b>% NO CUMPLIDOS</b>';
 
-      $tit_total[2]='<b>NRO. DE METAS PROGRAMADAS</b>';
-      $tit_total[3]='<b>NRO. DE METAS CUMPLIDAS</b>';
-      $tit_total[4]='<b>% METAS PROGRAMADAS AL TRIMESTRE</b>';
-      $tit_total[5]='<b>% METAS CUMPLIDAS AL TRIMESTRE</b>';
+      $tit_total[2]='<b>NRO. ACT. PROGRAMADAS</b>';
+      $tit_total[3]='<b>NRO. ACT. CUMPLIDAS</b>';
+      $tit_total[4]='<b>% ACT. PROGRAMADAS AL TRIMESTRE</b>';
+      $tit_total[5]='<b>% ACT. CUMPLIDAS AL TRIMESTRE</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -1299,10 +1299,10 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center>
-                <th>NRO. METAS PROGRAMADAS</th>
-                <th>METAS EVALUADAS</th>
-                <th>METAS CUMPLIDAS</th>
-                <th>METAS NO CUMPLIDAS</th>
+                <th>NRO. ACT. PROGRAMADAS</th>
+                <th>ACT. EVALUADAS</th>
+                <th>ACT. CUMPLIDAS</th>
+                <th>ACT. NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
                 </tr>
@@ -1389,11 +1389,11 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center >
-                <th>NRO. METAS PROGRAMADAS</th>
-                <th>NRO. METAS EVALUADAS</th>
-                <th>NRO. METAS CUMPLIDAS</th>
-                <th>NRO. METAS EN PROCESO</th>
-                <th>NRO. METAS NO CUMPLIDAS</th>
+                <th>NRO. ACT. PROGRAMADAS</th>
+                <th>NRO. ACT. EVALUADAS</th>
+                <th>NRO. ACT. CUMPLIDAS</th>
+                <th>NRO. ACT. EN PROCESO</th>
+                <th>NRO. ACT. NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>
               </tr>
@@ -1998,7 +1998,7 @@ class Seguimientopoa extends CI_Controller{
                   <th style="width:1%;"><b>COD. OPE.</b></th>
                   <th style="width:13%;">OPERACI&Oacute;N</th>
                   <th style="width:8%;">INDICADOR</th>
-                  <th style="width:3%;">META</th>
+                  <th style="width:3%;">META TOTAL</th>
                   <th style="width:5%;">META NO EJECUTADO</th>
                   <th style="width:5%;">PROGRAMADO MES '.$this->verif_mes[2].'</th>
                   <th style="width:5%;">EJECUTADO MES '.$this->verif_mes[2].'</th>

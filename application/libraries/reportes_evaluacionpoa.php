@@ -400,10 +400,10 @@ class reportes_evaluacionpoa extends CI_Controller{
                 <th>#</th>
                 <th>APERTURA PROGRAM&Aacute;TICA</th>
                 <th>DESCRIPCI&Oacute;N</th>
-                <th>METAS PROGRAMADAS</th>
-                <th>METAS EVALUADAS</th>
-                <th>METAS CUMP.</th>
-                <th>METAS NO CUMP.</th>
+                <th>NRO. PROGRAMADAS</th>
+                <th>NRO. EVALUADAS</th>
+                <th>NRO. CUMP.</th>
+                <th>NRO. NO CUMP.</th>
                 <th>% CUMPLIMIENTO</th>
                 <th>% NO CUMPLIDAS</th>
                 </tr>

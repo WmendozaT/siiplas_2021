@@ -21,6 +21,27 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+    // ------ lista Programacion Insumos Certificados (Nuevo)
+    public function lista_prog_fin_certificado($ins_id){
+        $sql = 'select ins_id, SUM(ipm_fis) monto_certificado
+                from temporalidad_prog_insumo
+                where ins_id='.$ins_id.' and estado_cert=\'1\'
+                group by ins_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    // ------ Get temporalidad
+/*    public function get_temporalidad_prog($tins_id,$ins_id){
+        $sql = 'select *
+                from temporalidad_prog_insumo
+                where tins_id='.$tins_id.' and ins_id='.$ins_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }*/
+
 
     // ------ lista Temporalidad Insumo
     public function list_temporalidad_insumo($ins_id){

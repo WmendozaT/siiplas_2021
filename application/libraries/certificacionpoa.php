@@ -185,7 +185,11 @@ class Certificacionpoa extends CI_Controller{
                   <th style="width:10%;" bgcolor="#474544" title="NIVEL">NIVEL</th>
                   <th style="width:10%;" bgcolor="#474544" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
                   <th style="width:10%;" bgcolor="#474544" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
-                  <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
+                  <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>';
+                  if($this->fun_id==399){
+                    $tabla.='<th style="width:5%;" bgcolor="#474544" title="UPDATE CERT. POA.">UPDATE CERT. POA</th>';
+                  }
+                  $tabla.='
                 </tr>
               </thead>
               <tbody>';
@@ -206,7 +210,11 @@ class Certificacionpoa extends CI_Controller{
                         <td>'.$row['nivel'].'</td>
                         <td>'.$row['tipo_adm'].'</td>
                         <td>'.strtoupper($row['dep_departamento']).'</td>
-                        <td>'.strtoupper($row['dist_distrital']).'</td>
+                        <td>'.strtoupper($row['dist_distrital']).'</td>';
+                          if($this->fun_id==399){
+                            $tabla.='<td><a href="'.site_url("").'/proy/edit/'.$row['proy_id'].'" title="UPDATE DATOS CERT. POA." class="btn btn-primary">UPDATE CPOA.</a></td>';
+                          }
+                        $tabla.='
                       </tr>';
                   }
                 }

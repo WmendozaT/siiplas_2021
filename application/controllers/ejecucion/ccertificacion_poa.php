@@ -213,6 +213,15 @@ class Ccertificacion_poa extends CI_Controller {
                 );
                 $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
                 /*--------------------------------------------*/
+
+                /// Actualizando el estado de la temporalidad
+                $update_proyect = array(
+                  'estado_cert' => 1
+                );
+                $this->db->where('tins_id', $_POST["ipm".$i."".$_POST["ins"][$como]]);
+                $this->db->where('ins_id', $_POST["ins"][$como]);
+                $this->db->update('temporalidad_prog_insumo', $update_proyect);
+              // echo "ins_id : ".$_POST["ins"][$como]." -----muchos  tins_id ".$_POST["ipm".$i."".$_POST["ins"][$como]]."<br>";
               } 
             }
           }
@@ -224,11 +233,33 @@ class Ccertificacion_poa extends CI_Controller {
               );
               $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
             /*--------------------------------------------*/
+
+            /// Actualizando el estado de la temporalidad
+              $update_proyect = array(
+                'estado_cert' => 1
+              );
+              $this->db->where('tins_id', $lista_temporalidad[0]['tins_id']);
+              $this->db->where('ins_id', $_POST["ins"][$como]);
+              $this->db->update('temporalidad_prog_insumo', $update_proyect);
+
+             // echo "ins_id : ".$_POST["ins"][$como]." -----uno tins_id ".$lista_temporalidad[0]['tins_id']."<br>";
           }
           
+
+          $get_cert_insumo=$this->model_insumo->lista_prog_fin_certificado($_POST["ins"][$como]);
+          if(count($get_cert_insumo)!=0){
+            /// Actualizando monto certificado por insumo
+              $update_insumo = array(
+                'ins_monto_certificado' => $get_cert_insumo[0]['monto_certificado']
+              );
+              $this->db->where('ins_id', $_POST["ins"][$como]);
+              $this->db->update('insumos', $update_insumo);
+          }
+          
+
         }
 
-        if(count($this->model_certificacion->get_lista_detalle_cert_poa($cpoa_id)==$total)){
+          if(count($this->model_certificacion->get_lista_detalle_cert_poa($cpoa_id)==$total)){
             $this->session->set_flashdata('success','LA CERTIFICACIÓN POA SE GENERO EXITOSAMENTE ... ');
           }
           else{
@@ -252,6 +283,26 @@ class Ccertificacion_poa extends CI_Controller {
       echo "Error !!!";
     }
   }
+
+
+
+  /*--- ACTUALIZA EL MONTO CERTIFICADO A CADA REQUERIMIENTO (NUEVO 2021) ---*/
+  public function actualizar_monto_certificado_por_insumo($proy_id){
+    echo "Actualizando !!";
+/*    $list_cpoas_anterior=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
+
+    foreach ($list_cpoas_anterior as $row){
+      $this->db->where('cpoad_id',$row['cpoad_id']);
+      $this->db->delete('cert_temporalidad_prog_insumo');
+
+      $this->db->where('cpoad_id',$row['cpoad_id']);
+      $this->db->delete('certificacionpoadetalle');
+    }*/
+  }
+
+
+
+
 
 
   /*--- VALIDA MODIFICACION DE CERTIFICACION POA (2020) ---*/
@@ -287,6 +338,14 @@ class Ccertificacion_poa extends CI_Controller {
               );
               $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
               /*--------------------------------------------*/
+
+              /// Actualizando el estado de la temporalidad
+              $update_proyect = array(
+                'estado_cert' => 1
+              );
+              $this->db->where('tins_id', $temp[0]['tins_id']);
+              $this->db->where('ins_id', $_POST["ins"][$como]);
+              $this->db->update('temporalidad_prog_insumo', $update_proyect);
             }
             else{
 
@@ -302,12 +361,31 @@ class Ccertificacion_poa extends CI_Controller {
                       );
                       $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
                      
+
+                      /// Actualizando el estado de la temporalidad
+                      $update_proyect = array(
+                        'estado_cert' => 1
+                      );
+                      $this->db->where('tins_id', $_POST["ipm".$i."".$_POST["ins"][$como]]);
+                      $this->db->where('ins_id', $_POST["ins"][$como]);
+                      $this->db->update('temporalidad_prog_insumo', $update_proyect);
+
                     }
                   } 
                 }
 
             }
            
+            $get_cert_insumo=$this->model_insumo->lista_prog_fin_certificado($_POST["ins"][$como]);
+            if(count($get_cert_insumo)!=0){
+              /// Actualizando monto certificado por insumo
+                $update_insumo = array(
+                  'ins_monto_certificado' => $get_cert_insumo[0]['monto_certificado']
+                );
+                $this->db->where('ins_id', $_POST["ins"][$como]);
+                $this->db->update('insumos', $update_insumo);
+            }
+
           }
 
           if(count($this->model_modrequerimiento->list_requerimientos_modificados($cite_mod_req[0]['cite_id']))!=0){
