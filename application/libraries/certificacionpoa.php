@@ -212,7 +212,7 @@ class Certificacionpoa extends CI_Controller{
                         <td>'.strtoupper($row['dep_departamento']).'</td>
                         <td>'.strtoupper($row['dist_distrital']).'</td>';
                           if($this->fun_id==399){
-                            $tabla.='<td><a href="'.site_url("").'/proy/edit/'.$row['proy_id'].'" title="UPDATE DATOS CERT. POA." class="btn btn-primary">UPDATE CPOA.</a></td>';
+                            $tabla.='<td><a href="'.site_url("").'/cert/update_certpoa_insumo/'.$row['proy_id'].'" title="UPDATE DATOS CERT. POA." class="btn btn-primary">UPDATE CPOA.</a></td>';
                           }
                         $tabla.='
                       </tr>';

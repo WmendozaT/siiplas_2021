@@ -759,6 +759,18 @@ class Cmod_insumo extends CI_Controller {
           $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos 
           if($this->copia_insumo($cert_editado[0]['cite_id'],$ins_id,2)){
 
+            ///------ cambiando de estado de certificacion poa la temporalidad
+            $get_list_temp_prog=$this->model_certificacion->get_list_cert_temporalidad_prog_insumo($detalle_cert[0]['cpoad_id']);
+            foreach($get_list_temp_prog as $row){
+              /// Actualizando el estado de la temporalidad
+              $update_temp = array(
+                'estado_cert' => 0
+              );
+              $this->db->where('tins_id', $row['tins_id']);
+              $this->db->update('temporalidad_prog_insumo', $update_temp);
+            }
+            ///---------------------------------------------------------------
+
               /*-------- Elimina Los items certificados --------*/
               $this->db->where('cpoad_id', $detalle_cert[0]['cpoad_id']);
               $this->db->delete('cert_temporalidad_prog_insumo');

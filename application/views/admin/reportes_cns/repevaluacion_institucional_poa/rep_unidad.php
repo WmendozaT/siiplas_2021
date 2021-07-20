@@ -415,7 +415,7 @@ var chart = new CanvasJS.Chart("regresion_canvasjs", {
         text: "EVALUACION POA ACUMULADO AL <?php echo $tmes[0]['trm_descripcion'] ?>/<?php echo $this->session->userData('gestion')?>"             
     }, 
     axisY:{
-        title: "Nro. de Metas Programadas y Cumplidas"
+        title: "Nro. de Act. Programadas y Cumplidas"
     },
     toolTip: {
         shared: true
@@ -426,34 +426,34 @@ var chart = new CanvasJS.Chart("regresion_canvasjs", {
     },
     data: [{        
         type: "area",  
-        name: "METAS PROGRAMADAS",        
+        name: "ACT. PROGRAMADAS",        
         showInLegend: true,
         dataPoints: [
         <?php 
           if($this->session->userdata('trimestre')==1){ ?>
             { label: "-", y: 0},     
-            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> metas", markerType: "square",  markerColor: "blue"}
+            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> Act.", markerType: "square",  markerColor: "blue"}
               <?php
           }
           elseif ($this->session->userdata('trimestre')==2) { ?>
             { label: "-", y: 0},     
-            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> metas", markerType: "square",  markerColor: "blue"},     
-            { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> metas", markerType: "square",  markerColor: "blue"}
+            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> Act.", markerType: "square",  markerColor: "blue"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> Act.", markerType: "square",  markerColor: "blue"}
               <?php
           }
           elseif ($this->session->userdata('trimestre')==3) { ?>
             { label: "-", y: 0},     
-            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> metas", markerType: "square",  markerColor: "blue"},     
-            { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> metas", markerType: "square",  markerColor: "blue"},     
-            { label: "3er. Trimestre", y: <?php echo $tabla[2][3];?>,indexLabel: "<?php echo $tabla[2][3];?> metas", markerType: "square",  markerColor: "blue"}
+            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> Act.", markerType: "square",  markerColor: "blue"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> Act.", markerType: "square",  markerColor: "blue"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla[2][3];?>,indexLabel: "<?php echo $tabla[2][3];?> Act.", markerType: "square",  markerColor: "blue"}
               <?php
           }
           elseif ($this->session->userdata('trimestre')==4) { ?>
             { label: "-", y: 0},   
-            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> metas", markerType: "square",  markerColor: "blue"},     
-            { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> metas", markerType: "square",  markerColor: "blue"},     
-            { label: "3er. Trimestre", y: <?php echo $tabla[2][3];?>,indexLabel: "<?php echo $tabla[2][3];?> metas", markerType: "square",  markerColor: "blue"},     
-            { label: "4to. Trimestre", y: <?php echo $tabla[2][4];?>,indexLabel: "<?php echo $tabla[2][4];?> metas", markerType: "square",  markerColor: "blue"}
+            { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> Act.", markerType: "square",  markerColor: "blue"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> Act.", markerType: "square",  markerColor: "blue"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla[2][3];?>,indexLabel: "<?php echo $tabla[2][3];?> Act.", markerType: "square",  markerColor: "blue"},     
+            { label: "4to. Trimestre", y: <?php echo $tabla[2][4];?>,indexLabel: "<?php echo $tabla[2][4];?> Act.", markerType: "square",  markerColor: "blue"}
               <?php
           }
         ?>
@@ -462,34 +462,34 @@ var chart = new CanvasJS.Chart("regresion_canvasjs", {
     {        
         type: "area",
         color: "green",
-        name: "METAS CUMPLIDAS",        
+        name: "ACT. CUMPLIDAS",        
         showInLegend: true,
         dataPoints: [
         <?php 
           if($this->session->userdata('trimestre')==1){ ?>
             { label: "-", y: 0},  
-            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> metas", markerType: "square",  markerColor: "green"}
+            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> Act.", markerType: "square",  markerColor: "green"}
               <?php
           }
           elseif ($this->session->userdata('trimestre')==2) { ?>
             { label: "-", y: 0},  
-            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> metas", markerType: "square",  markerColor: "green"},     
-            { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> metas", markerType: "square",  markerColor: "green"}
+            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> Act.", markerType: "square",  markerColor: "green"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> Act.", markerType: "square",  markerColor: "green"}
               <?php
           }
           elseif ($this->session->userdata('trimestre')==3) { ?>
             { label: "-", y: 0},  
-            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> metas", markerType: "square",  markerColor: "green"},     
-            { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> metas", markerType: "square",  markerColor: "green"},     
-            { label: "3er. Trimestre", y: <?php echo $tabla[3][3];?>,indexLabel: "<?php echo $tabla[3][3];?> metas", markerType: "square",  markerColor: "green"}
+            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> Act.", markerType: "square",  markerColor: "green"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> Act.", markerType: "square",  markerColor: "green"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla[3][3];?>,indexLabel: "<?php echo $tabla[3][3];?> Act.", markerType: "square",  markerColor: "green"}
               <?php
           }
           elseif ($this->session->userdata('trimestre')==4) { ?>
             { label: "-", y: 0},  
-            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> metas", markerType: "square",  markerColor: "green"},     
-            { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> metas", markerType: "square",  markerColor: "green"},     
-            { label: "3er. Trimestre", y: <?php echo $tabla[3][3];?>,indexLabel: "<?php echo $tabla[3][3];?> metas", markerType: "square",  markerColor: "green"},     
-            { label: "4to. Trimestre", y: <?php echo $tabla[3][4];?>,indexLabel: "<?php echo $tabla[3][4];?> metas", markerType: "square",  markerColor: "green"}
+            { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> Act.", markerType: "square",  markerColor: "green"},     
+            { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> Act.", markerType: "square",  markerColor: "green"},     
+            { label: "3er. Trimestre", y: <?php echo $tabla[3][3];?>,indexLabel: "<?php echo $tabla[3][3];?> Act.", markerType: "square",  markerColor: "green"},     
+            { label: "4to. Trimestre", y: <?php echo $tabla[3][4];?>,indexLabel: "<?php echo $tabla[3][4];?> Act.", markerType: "square",  markerColor: "green"}
               <?php
           }
         ?>
@@ -507,7 +507,7 @@ var chart_gestion = new CanvasJS.Chart("regresion_gestion_canvasjs", {
         text: "EVALUACION POA - GESTION <?php echo $this->session->userData('gestion')?>"             
     }, 
     axisY:{
-        title: "% de Metas Programadas y Cumplidas"
+        title: "% de Act. Programadas y Cumplidas"
     },
     toolTip: {
         shared: true
@@ -518,7 +518,7 @@ var chart_gestion = new CanvasJS.Chart("regresion_gestion_canvasjs", {
     },
     data: [{        
         type: "area",  
-        name: "% METAS PROGRAMAS",        
+        name: "% ACT. PROGRAMADASS",        
         showInLegend: true,
         dataPoints: [
         {   label: "-", y: 0},   
@@ -531,7 +531,7 @@ var chart_gestion = new CanvasJS.Chart("regresion_gestion_canvasjs", {
     {        
         type: "area",
         color: "green",
-        name: "% METAS CUMPLIDAS",        
+        name: "% ACT. CUMPLIDAS",        
         showInLegend: true,
         dataPoints: [
             { label: "-", y: 0},  
@@ -736,11 +736,11 @@ chart_gestion.render();
 
           series: [
               {
-                  name: '% PROGRAMADAS',
+                  name: '% ACT. PROGRAMADAS',
                   data: [ <?php echo $tabla_gestion[4][0];?> , <?php echo $tabla_gestion[4][1];?>, <?php echo $tabla_gestion[4][2];?>, <?php echo $tabla_gestion[4][3];?>, <?php echo $tabla_gestion[4][4];?>]
               },
               {
-                  name: '% CUMPLIDAS',
+                  name: '% ACT. CUMPLIDAS',
                   data: [ <?php echo $tabla_gestion[5][0];?>, <?php echo $tabla_gestion[5][1];?>, <?php echo $tabla_gestion[5][2];?>, <?php echo $tabla_gestion[5][3];?>, <?php echo $tabla_gestion[5][4];?>]
               }
           ]

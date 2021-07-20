@@ -288,16 +288,35 @@ class Ccertificacion_poa extends CI_Controller {
 
   /*--- ACTUALIZA EL MONTO CERTIFICADO A CADA REQUERIMIENTO (NUEVO 2021) ---*/
   public function actualizar_monto_certificado_por_insumo($proy_id){
-    echo "Actualizando !!";
-/*    $list_cpoas_anterior=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
+    $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
+    if(count($proyecto)!=0){
+        $insumos=$this->model_insumo->insumos_por_unidad($proyecto[0]['aper_id']);
+        foreach ($insumos as $ins){
+          echo $ins['ins_id'].' '.$ins['ins_detalle']."<br>";
+          $temp=$this->model_insumo->lista_prog_fin($ins['ins_id']);
+          foreach ($temp as $row){
+            $cert=''; $estado=0;
+            if(count($this->model_certificacion->get_mes_certificado($row['tins_id']))==1){
+              $estado=1;
+              $cert='CERTIFICADO';
+            }
 
-    foreach ($list_cpoas_anterior as $row){
-      $this->db->where('cpoad_id',$row['cpoad_id']);
-      $this->db->delete('cert_temporalidad_prog_insumo');
+            /// Actualizando el estado de la temporalidad
+            $update_temp = array(
+              'estado_cert' => $estado
+            );
+            $this->db->where('tins_id', $row['tins_id']);
+            $this->db->update('temporalidad_prog_insumo', $update_temp);
 
-      $this->db->where('cpoad_id',$row['cpoad_id']);
-      $this->db->delete('certificacionpoadetalle');
-    }*/
+            echo "temp : ".$row['tins_id']." - ".$row['mes_id']." - ".$row['estado_cert']." - ".$cert."<br>";
+          }
+
+          echo "------------------------<br>";
+        }
+    }
+    else{
+      redirect('cert/list_poas');
+    }
   }
 
 

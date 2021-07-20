@@ -76,6 +76,18 @@ class Model_certificacion extends CI_Model{
     }
 
 
+    /*------- LISTA OPERACIONES POR SUBACTIVIDAD CON SU PRESUPUESTO (2021) nuevo --------*/
+    public function get_list_cert_temporalidad_prog_insumo($cpoad_id){
+        $sql = '
+            select *
+            from cert_temporalidad_prog_insumo
+            where cpoad_id='.$cpoad_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
 
     /*------- DATOS UNIDAD,ESTABLECIMIENTO, ATRAVES DE SU PRODUCTO ID (GASTO CORRIENTE)--------*/
     public function get_datos_unidad_prod($prod_id){

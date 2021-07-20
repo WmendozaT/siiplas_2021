@@ -1557,43 +1557,43 @@ class Seguimientopoa extends CI_Controller{
         else{ /// ==== ABSOLUTO
 
             /*----- Temporalidad Programado / Ejecutado -----*/
-            if($temporalidad[1]!=0 & $temporalidad[4]<$row['prod_meta'] & $temporalidad[2]>0){
-              if($temporalidad[3]==$temporalidad[4]){
-                $tp=2;
-                $activo=0;
-                $obs='';
-                if($temporalidad[1]==$temporalidad[2]){
-                  $tp=1;
-                  $activo=1;
-                  $obs='Trimestre Cumplido';
-                }
-               // echo "prod id : ".$row['prod_id']." --> ".$row['prod_producto']." ----Solo un registro<br><br>";
-                $this->insertando_datos($row['prod_id'],$this->tmes,$tp,$activo,$obs);
-              }
-              elseif($temporalidad[1]==$temporalidad[2]){
-                for ($i=1; $i <=$this->tmes; $i++) { 
-                  //$verif_prog=$this->model_seguimientopoa->programado_trimestral_productos($i,$row['prod_id']);
-                  if(count($this->model_evaluacion->programado_trimestral_productos($i,$row['prod_id']))!=0){
-                    
-                    ///------- Eliminamos el registro anterior
-                    $this->eliminando_registro_evaluacion($row['prod_id'],$i);
-                    /// ----------
-
-                    //// recorrer trimestres anteriores
-                    if($i==$this->tmes){
-                      $this->insertando_datos($row['prod_id'],$i,1,1,'Trimestre Cumplido');
-                    }
-                    else{
-                      $this->insertando_datos($row['prod_id'],$i,1,0,'Actualizado Trimestre Cumplido '.$i);  
-                    }
-                    
+            if($temporalidad[1]!=0 & $temporalidad[4]<$row['prod_meta'] & $temporalidad[2]>0 & ($temporalidad[2]<=$temporalidad[1]) & ($temporalidad[1]!=$temporalidad[3] & $temporalidad[2]!=$temporalidad[4])){
+                if($temporalidad[3]==$temporalidad[4]){
+                  $tp=2;
+                  $activo=0;
+                  $obs='';
+                  if($temporalidad[1]==$temporalidad[2]){
+                    $tp=1;
+                    $activo=1;
+                    $obs='Trimestre Cumplido';
                   }
+                 // echo "prod id : ".$row['prod_id']." --> ".$row['prod_producto']." ----Solo un registro<br><br>";
+                  $this->insertando_datos($row['prod_id'],$this->tmes,$tp,$activo,$obs);
                 }
+                elseif($temporalidad[1]==$temporalidad[2]){
+                  for ($i=1; $i <=$this->tmes; $i++) { 
+                    //$verif_prog=$this->model_seguimientopoa->programado_trimestral_productos($i,$row['prod_id']);
+                    if(count($this->model_evaluacion->programado_trimestral_productos($i,$row['prod_id']))!=0){
+                      
+                      ///------- Eliminamos el registro anterior
+                      $this->eliminando_registro_evaluacion($row['prod_id'],$i);
+                      /// ----------
 
-              }
-              else{
-                $this->insertando_datos($row['prod_id'],$this->tmes,2,0,'');
-              }
+                      //// recorrer trimestres anteriores
+                      if($i==$this->tmes){
+                        $this->insertando_datos($row['prod_id'],$i,1,1,'Trimestre Cumplido');
+                      }
+                      else{
+                        $this->insertando_datos($row['prod_id'],$i,1,0,'Actualizado Trimestre Cumplido '.$i);  
+                      }
+                      
+                    }
+                  }
+
+                }
+                else{
+                  $this->insertando_datos($row['prod_id'],$this->tmes,2,0,'');
+                }
               
             }  
 
@@ -1620,8 +1620,8 @@ class Seguimientopoa extends CI_Controller{
         }
 
         /*----- Temporalidad Programado / Ejecutado (Trimestre anterior)-----*/
-        $prog_anterior=$this->model_seguimientopoa->rango_programado_trimestral_productos($prod_id,($this->tmes-1)); /// Suma rango trimestre - Programado Actual
-        $eval_anterior=$this->model_seguimientopoa->rango_ejecutado_trimestral_productos($prod_id,($this->tmes-1)); /// Suma rango trimestre - Ejecutado Actual
+        $prog_anterior=$this->model_seguimientopoa->rango_programado_trimestral_productos($prod_id,($this->tmes-1)); /// Suma rango trimestre - Programado trimestre anterior
+        $eval_anterior=$this->model_seguimientopoa->rango_ejecutado_trimestral_productos($prod_id,($this->tmes-1)); /// Suma rango trimestre - Ejecutado trimestre anterior
 
         $acu_prog_anterior=0;
         $acu_ejec_anterior=0;
