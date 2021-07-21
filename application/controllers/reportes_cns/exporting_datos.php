@@ -575,6 +575,7 @@
                   <th style="width:5%;background-color: #eceaea;">CANTIDAD</th>
                   <th style="width:5%;background-color: #eceaea;">PRECIO</th>
                   <th style="width:15%;background-color: #eceaea;">COSTO TOTAL</th>
+                  <th style="width:15%;background-color: #eceaea;">MONTO CERTIFICADO</th>
                   <th style="width:4%;background-color: #eceaea;">P. ENE.</th>
                   <th style="width:4%;background-color: #eceaea;">P. FEB.</th>
                   <th style="width:4%;background-color: #eceaea;">P. MAR.</th>
@@ -587,7 +588,7 @@
                   <th style="width:4%;background-color: #eceaea;">P. OCT.</th>
                   <th style="width:4%;background-color: #eceaea;">P. NOV.</th>
                   <th style="width:4%;background-color: #eceaea;">P. DIC.</th>
-                  <th style="width:10%;background-color: #eceaea;">OBSERVACIÓN</th>
+                  <th style="width:10%;background-color: #eceaea;">OBSERVACION</th>
                 </tr>
               </thead>
             <tbody>';
@@ -623,22 +624,13 @@
                 $tabla.='<td>'.$row['par_codigo'].'</td>';
                 $tabla.='<td>'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
                 $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                $tabla.='<td>'.round($row['ins_cant_requerida'],2).'</td>';
-                $tabla.='<td>'.round($row['ins_costo_unitario'],2).'</td>';
-                $tabla.='<td>'.round($row['ins_costo_total'],2).'</td>';
-
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes1'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes2'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes3'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes4'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes5'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes6'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes7'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes8'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes9'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes10'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes11'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes12'],2).'</td>';
+                $tabla.='<td align="right">'.round($row['ins_cant_requerida'],2).'</td>';
+                $tabla.='<td align="right">'.round($row['ins_costo_unitario'],2).'</td>';
+                $tabla.='<td align="right">'.round($row['ins_costo_total'],2).'</td>';
+                $tabla.='<td align="right" bgcolor="#c1f5ee"><b>'.round($row['ins_monto_certificado'],2).'</b></td>';
+                for ($i=1; $i <=12 ; $i++) { 
+                  $tabla.='<td style="width:3%;">'.round($row['mes'.$i],2).'</td>';
+                }
                 $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>';
             $tabla.='</tr>';
           }
@@ -954,9 +946,10 @@
         $data['mes'] = $this->mes_nombre();
         $data['cabecera']=$this->cabecera($data['componente'],$data['proyecto'],1); /// Cabecera
         $data['requerimientos']=$this->rep_lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id); // Requerimientos Distrital 2020-2021
-        $data['ejecucion']=$this->ejecucion_presupuestaria_acumulado_total($com_id);
+       // $data['ejecucion']=$this->ejecucion_presupuestaria_acumulado_total($com_id);
         //$data['ejecucion']=$this->ejecucion_presupuestaria_acumulado($com_id); /// anterior
         $this->load->view('admin/reportes_cns/programacion_poa/reporte_poa_form5', $data);
+      
       }
     }
 
@@ -992,60 +985,103 @@
               </thead>
             <tbody>';
             $nro=0;$sum_programado=0;$sum_certificado=0;
-            foreach ($requerimientos as $row){
-              $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-              $monto_certificado=0;$color='';
-              $m_cert=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']); /// Monto Certificado
-                if(count($m_cert)!=0){
-                  $monto_certificado=$m_cert[0]['certificado'];
-                }
-           
-              $nro++;
-              $tabla.='<tr>';
-                  $tabla.='<td style="width: 2%; font-size: 8px; text-align: center;height:13px;"><b>'.$row['prod_cod'].'</b></td>';
-                  $tabla.='<td style="width: 3.5%; text-align: center;font-size: 8px;" bgcolor="#eceaea">'.$row['par_codigo'].'</td>';
-                  $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'</td>';
-                  $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                  $tabla.='<td style="width: 4.3%; text-align: right;font-size: 7.5px;">'.round($row['ins_cant_requerida'],2).'</td>';
-                  $tabla.='<td style="width: 4.5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                  $tabla.='<td style="width: 5.2%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                  $tabla.='<td style="width: 5.2%;" bgcolor="#c1f5ee" align=right><b>'.number_format($monto_certificado, 2, ',', '.').'</b></td>';
-                    if(count($prog)!=0){
-                      if($monto_certificado==$prog[0]['programado_total']){
+            if(count($requerimientos)>150){ /// items mayores a 150 sin color de marcado
+
+                  foreach ($requerimientos as $row){
+                    $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                    $nro++;
+                    $tabla.='<tr>';
+                      $tabla.='<td style="width: 2%; font-size: 8px; text-align: center;height:13px;"><b>'.$row['prod_cod'].'</b></td>';
+                      $tabla.='<td style="width: 3.5%; text-align: center;font-size: 8px;" bgcolor="#eceaea">'.$row['par_codigo'].'</td>';
+                      $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'DDDD</td>';
+                      $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
+                      $tabla.='<td style="width: 4.3%; text-align: right;font-size: 7.5px;">'.round($row['ins_cant_requerida'],2).'</td>';
+                      $tabla.='<td style="width: 4.5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+                      $tabla.='<td style="width: 5.2%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                      $tabla.='<td style="width: 5.2%;" bgcolor="#c1f5ee" align=right><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
+                      if(count($prog)!=0){
                         for ($i=1; $i<=12 ; $i++) {
-                        $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                        }
+                            $tabla.='<td style="width:4%;" align=right >'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
+                          }
                       }
                       else{
                         for ($i=1; $i<=12 ; $i++) {
-                          $color_td='';
-                          $mes_cert=$this->model_certificacion->get_insumo_programado_certificado_mes($row['ins_id'],$i);
-                          if(count($mes_cert)!=0){
-                            $color_td='#ddf7dd';
-                          }
-                          $tabla.='<td style="width:4%;" align=right bgcolor='.$color_td.'>'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
+                          $tabla.='<td style="width:4%;" align=right bgcolor="red">'.number_format(0, 2, ',', '.').'</td>';
                         }
+                      }
+
+                      $tabla.='
+                        <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+                      </tr>';
+                      $sum_programado=$sum_programado+$prog[0]['programado_total'];
+                      $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];  
+                  }
+
+            }
+            else{
+              
+                foreach ($requerimientos as $row){
+                  $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                  $nro++;
+                  $tabla.='<tr>';
+                    $tabla.='<td style="width: 2%; font-size: 8px; text-align: center;height:13px;"><b>'.$row['prod_cod'].'</b></td>';
+                    $tabla.='<td style="width: 3.5%; text-align: center;font-size: 8px;" bgcolor="#eceaea">'.$row['par_codigo'].'</td>';
+                    $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'DDDD</td>';
+                    $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
+                    $tabla.='<td style="width: 4.3%; text-align: right;font-size: 7.5px;">'.round($row['ins_cant_requerida'],2).'</td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+                    $tabla.='<td style="width: 5.2%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                    $tabla.='<td style="width: 5.2%;" bgcolor="#c1f5ee" align=right><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
+                    if(count($prog)!=0){
+                      if($prog[0]['programado_total']==$row['ins_monto_certificado']){
+                        for ($i=1; $i<=12 ; $i++) {
+                          $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
+                        }
+                      }
+                      elseif($prog[0]['programado_total']>$row['ins_monto_certificado']){
+                          for ($i=1; $i<=12 ; $i++) {
+                            $mes=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
+                            $color='';
+                            if(count($mes)==1){
+                              if($mes[0]['estado_cert']==1){
+                                $color='#ddf7dd';
+                              }
+                            }
+                            
+                            $tabla.='<td style="width:4%;" align=right bgcolor="'.$color.'">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
+                          }
+                      }
+                      elseif($row['ins_monto_certificado']==0){
+                        $tabla.='<td style="width:4%;" align=right>'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
                       }
                     }
                     else{
                       for ($i=1; $i<=12 ; $i++) {
-                        $tabla.='<td style="width:4%;" align=right><font color=red><b>0</b></font></td>';
+                        $tabla.='<td style="width:4%;" align=right bgcolor="red">'.number_format(0, 2, ',', '.').'</td>';
                       }
                     }
-                  $tabla.='
-                    <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
-                  </tr>';
-                  $sum_programado=$sum_programado+$prog[0]['programado_total'];
-                  $sum_certificado=$sum_certificado+$monto_certificado;
+
+                    $tabla.='
+                      <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+                    </tr>';
+                    $sum_programado=$sum_programado+$prog[0]['programado_total'];
+                    $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];  
+                }
+            }
+
+
+            $ejecucion=0;
+            if($sum_certificado!=0){
+              $ejecucion=round((($sum_certificado/$sum_programado)*100),2);
             }
 
             $tabla.='
             </tbody>
             <tr>
-              <td colspan=6 style="height:30px;"></td>
+              <td colspan=6 style="height:20px;"></td>
               <td align=right>'.number_format($sum_programado, 2, ',', '.').'</td>
               <td align=right>'.number_format($sum_certificado, 2, ',', '.').'</td>
-              <td colspan=13></td>
+              <td colspan=13> &nbsp;&nbsp;EJECUCI&Oacute;N POA '.$this->gestion.' : <b>'.$ejecucion.'%</b></td>
             </tr>
         </table>';
 

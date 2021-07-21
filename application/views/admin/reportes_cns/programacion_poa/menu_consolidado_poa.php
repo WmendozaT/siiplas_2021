@@ -264,7 +264,7 @@
                             $("#tp_id").html('');
                             $("#rep_id").html('');
                             $('#unidad').slideUp();
-                           // $("#lista_consolidado").html('');
+                          // $("#lista_consolidado").html('');
                         });
                     }
                 });

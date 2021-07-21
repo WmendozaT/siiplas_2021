@@ -312,6 +312,17 @@ class Ccertificacion_poa extends CI_Controller {
           }
 
           echo "------------------------<br>";
+            
+            $m_cert=$this->model_insumo->lista_prog_fin_certificado($ins['ins_id']); /// Monto Certificado
+            if(count($m_cert)!=0){
+              /// Actualizando el estado de la temporalidad
+              $update_ins = array(
+                'ins_monto_certificado' => $m_cert[0]['monto_certificado']
+              );
+              $this->db->where('ins_id', $ins['ins_id']);
+              $this->db->update('insumos', $update_ins);
+            }
+          echo "------------------------<br>";
         }
     }
     else{

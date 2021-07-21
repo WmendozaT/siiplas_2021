@@ -42,7 +42,7 @@ class Menu extends CI_Controller{
     }
 
 
-    function const_menu($f)
+/*    function const_menu($f)
     {
         // $this->load->model('menu_modelo');
         // $this->filtro = $f;
@@ -68,7 +68,7 @@ class Menu extends CI_Controller{
             $subenlaces[$enlaces[$i]['o_child']] = $this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
         }
         return $subenlaces;
-    }
+    }*/
 
 }
 ?>

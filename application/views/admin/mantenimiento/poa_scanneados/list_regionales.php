@@ -183,9 +183,9 @@
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-body">
-                <link href="<?php echo base_url(); ?>assets/file/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+<!--                 <link href="<?php echo base_url(); ?>assets/file/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
                 <script src="<?php echo base_url(); ?>assets/file/jquery.min.js"></script>
-                <script src="<?php echo base_url(); ?>assets/file/js/fileinput.min.js" type="text/javascript"></script> 
+                <script src="<?php echo base_url(); ?>assets/file/js/fileinput.min.js" type="text/javascript"></script>  -->
 
                 <form action="<?php echo site_url().'/mantenimiento/cpoas_scanneados/importar_archivo_pdf' ?>" id="form_file" name="form_file" class="form-horizontal" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="dist_id" id="dist_id">

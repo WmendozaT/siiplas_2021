@@ -296,7 +296,7 @@ window.onload = function () {
         dataPoints: [
           { y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>, name: "ACT. CUMPLIDAS", color: '#57889c', exploded: true },
           { y: <?php echo $tabla[8][$this->session->userData('trimestre')];?>, name: "ACT. EN PROCESO",color: '#f5e218' },
-          { y: <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?>, name: "METAS NO CUMPLIDAS", color: '#a90329'}
+          { y: <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?>, name: "ACT. NO CUMPLIDAS", color: '#a90329'}
         ]
       }]
     });

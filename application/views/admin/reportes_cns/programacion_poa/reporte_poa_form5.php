@@ -28,7 +28,7 @@ ob_start();
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
                             <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
                               <td width=15%; text-align:center;"">
-                                <img src="<?php echo $this->session->userdata('img')?>" alt="" style="width:37%;">
+                               <!--  <img src="<?php echo $this->session->userdata('img')?>" alt="" style="width:37%;"> -->
                               </td>
                               <td style="width:65%;" align=left>
                                 <?php echo $cabecera;?>
@@ -68,54 +68,6 @@ ob_start();
             </table>
         </page_footer>
         <?php echo $requerimientos;?> 
-    </page>
-
-    <page backtop="41.6mm" backbottom="11.5mm" backleft="8mm" backright="8mm" pagegroup="new">
-        <page_header>
-            <br><div class="verde"></div>
-            <table class="page_header" border="0">
-                <tr>
-                    <td style="width: 100%; text-align: left">
-                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
-                            <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                              <td width=15%; text-align:center;"">
-                                <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:37%;">
-                              </td>
-                              <td style="width:65%;" align=left>
-                                <?php echo $cabecera;?>
-                              </td>
-                              <td width=15%; align=left style="font-size: 7.8px;">
-                                &nbsp; <b style="font-size: 7.8pt;">EJEC. FORMULARIO POA N°5</b>
-                              </td>
-                            </tr>
-                      </table>
-                    </td>
-                </tr>
-            </table><br>
-            <div align="center">
-                PLAN OPERATIVO ANUAL <?php echo $this->session->userdata('gestion')?> - EJECUCI&Oacute;N PROGRAMACI&Oacute;N FINANCIERA
-            </div>
-        </page_header>
-        <page_footer>
-            <hr>
-            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;" align="center">
-                <tr>
-                    <td style="width: 33%; text-align: left;font-size: 6px;">
-                        <?php echo "POA - ".$this->session->userdata('gestion').". ".$this->session->userdata('rd_poa');?>
-                    </td>
-                    <td style="width: 33%; text-align: center;font-size: 6px;">
-                        <?php echo $this->session->userdata('sistema')?>
-                    </td>
-                    <td style="width: 33%; text-align: right;font-size: 6px;">
-                        <?php echo $mes[ltrim(date("m"), "0")]. " / " . date("Y").', '.$this->session->userdata('funcionario'); ?> - pag. [[page_cu]]/[[page_nb]] 
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3"><br><br></td>
-                </tr>
-            </table>
-        </page_footer>
-        <?php echo $ejecucion;?> 
     </page>
 
 <?php

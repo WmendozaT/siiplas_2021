@@ -1,13 +1,30 @@
 <?php
 
-class Mapertura_programatica extends CI_Model
-{
+class Mapertura_programatica extends CI_Model{
     var $gestion;
-    public function __construct()
-    {
+    public function __construct(){
         $this->load->database();
         $this->gestion = $this->session->userData('gestion');
     }
+
+
+
+    /*------ lista de Programas Padres --------*/
+    public function list_aperturas_programaticas(){
+        $sql = '
+                select *
+                from aperturaprogramatica a
+                where a.aper_estado!=\'3\' and a.aper_gestion='.$this->gestion.' and a.aper_proyecto=\'0000\' and a.aper_actividad=\'000\' and a.aper_asignado=\'1\'
+                order by a.aper_gestion,a.aper_programa,a.aper_proyecto,a.aper_actividad asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
+
 
     //=======================================  APERTURA PROGRAMATICA  =================================================
     //LISTA DE APERTURAS PADRES

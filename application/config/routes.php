@@ -674,14 +674,14 @@ $route['servicios/(:any)']='mantenimiento/cestructura_organizacional/list_servic
 //---------- LISTA DE POAS SCANNEADOS ----------//
 $route['mis_poas_scanneados']='mantenimiento/cpoas_scanneados/list_poa_scanneados';// Lista de POAS Escaneados
 
-//===================partidas==========================//
-//$route['partidas']='mantenimiento/partidas/lista_partidas';// vista partidas
-//$route['imprime_partida']='mantenimiento/partidas/imprime_partidas';// Imprimir lista de partidas
-//$route['umedidas/(:any)']='mantenimiento/partidas/umedidas/$1';// Lista de Unidades de medida
-//$route['admin/verificar_par']='mantenimiento/partidas/verificar_cod_par';// vista partidas verificar codigo partida
-//$route['admin/partidas_add']='mantenimiento/partidas/add_par';// vista partidas adicionar partidas
-//$route['admin/partidas_mod']='mantenimiento/partidas/get_par';// vista partidas modificar partidas
-//$route['admin/partidas_del']='mantenimiento/partidas/del_par';// vista partidas eliminar partidas
+//============= MANTENIMIENTO PARTIDAS =====================//
+$route['partidas']='mantenimiento/partidas/lista_partidas';// vista partidas
+$route['imprime_partida']='mantenimiento/partidas/imprime_partidas';// Imprimir lista de partidas
+$route['umedidas/(:any)']='mantenimiento/partidas/umedidas/$1';// Lista de Unidades de medida
+$route['admin/verificar_par']='mantenimiento/partidas/verificar_cod_par';// vista partidas verificar codigo partida
+$route['admin/partidas_add']='mantenimiento/partidas/add_par';// vista partidas adicionar partidas
+$route['admin/partidas_mod']='mantenimiento/partidas/get_par';// vista partidas modificar partidas
+$route['admin/partidas_del']='mantenimiento/partidas/del_par';// vista partidas eliminar partidas
 
 //--------------------------- CONF. PROYECTOS DE INVERSIÓN ----------------------//
 $route['proy_inversion']='mantenimiento/cconf_pinversion/list_proyectos';// Lista Proyectos de Inversion
