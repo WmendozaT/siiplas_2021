@@ -146,7 +146,7 @@
                                           </header>
                                             <div>
                                                 <div class="widget-body no-padding">
-                                                    Hola Mundo
+                                                    <?php echo $lista;?>
                                                 </div>
                                                 <!-- end widget content -->
                                             </div>
@@ -177,37 +177,77 @@
         </div>
         <!-- END PAGE FOOTER -->
 
-        <!-- ======== MODAL MOD UMEDIDA ========= -->
-        <div class="modal fade" id="modal_mod_umedida" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+        <!-- MODAL NUEVO REGISTRO PROGRAMA   -->
+        <div class="modal fade" id="modal_nuevo_ff" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <form action="<?php echo site_url().'/mantenimiento/capertura_programatica/valida_programa'?>" id="form_nuevo" name="form_nuevo" class="form-horizontal" method="post">
+                        <input type="hidden" name="tp" id="tp" value="1">
+                        <h2 class="alert alert-info"><center>APERTURA PROGRAMATICA (Agregar)</center></h2>                           
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">PROGRAMA</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" maxlength="2" size="2" name="prog" id="prog">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">DESCRIPCI&Oacute;N</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="desc" id="desc">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>                   
+                        <div class="form-actions">
+                            <div class="row">
+                                <div>
+                                    <div class="col-md-12">
+                                       <button class="btn btn-default" data-dismiss="modal" id="cl" title="CANCELAR">CANCELAR</button>
+                                       <button type="button" name="subir_form" id="subir_form" class="btn btn-info" >GUARDAR INFORMACI&Oacute;N</button>
+                                        <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  ======================================  -->
+
+        <!-- ======== MODAL UPDATE PROGRAMA ========= -->
+        <div class="modal fade" id="modal_mod_programa" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
 
               <div class="modal-body">
-                <form action="<?php echo site_url().'/mantenimiento/partidas/valida_umedida'?>" id="form_mod" name="form_mod" class="form-horizontal" method="post">
-                <input type="hidden" name="um_id" id="um_id">
-                    <h2 class="alert alert-info"><center>UNIDAD DE MANEJO (Modificar)</center></h2>                           
+                <form action="<?php echo site_url().'/mantenimiento/capertura_programatica/valida_programa'?>" id="form_mod" name="form_mod" class="form-horizontal" method="post">
+                    <input type="hidden" name="aper_id" id="aper_id">
+                    <input type="hidden" name="tp" id="tp" value="2">
+                    <h2 class="alert alert-info"><center>APERTURA PROGRAMATICA (Modificar)</center></h2>                           
+                    
                     <fieldset>
                         <div class="form-group">
                             <div class="form-group">
-                                <label class="col-md-2 control-label">UNIDAD DE MEDIDA</label>
+                                <label class="col-md-2 control-label">PROGRAMA</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" name="umedida" id="umedida" >
+                                    <input class="form-control" type="text" maxlength="2" size="2" name="mprog" id="mprog">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-group">
-                                <label class="col-md-2 control-label">ABREVIATURA</label>
+                                <label class="col-md-2 control-label">DESCRIPCI&Oacute;N</label>
                                 <div class="col-md-10">
-                                    <input class="form-control" type="text" name="abrev" id="abrev" >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">ID ERP</label>
-                                <div class="col-md-10">
-                                    <input class="form-control" type="text" name="erp_id" id="erp_id" >
+                                    <input class="form-control" type="text" name="mdesc" id="mdesc">
                                 </div>
                             </div>
                         </div>
@@ -215,8 +255,8 @@
                     <div class="form-actions">
                         <div class="row">
                             <div class="col-md-12">
-                               <button class="btn btn-default" data-dismiss="modal" id="mcl" title="CANCELAR">CANCELAR</button>
-                               <button type="button" name="mod_ffenviar" id="mod_ffenviar" class="btn btn-info" >MODIFICAR INFORMACI&Oacute;N</button>
+                                <button class="btn btn-default" data-dismiss="modal" id="mcl" title="CANCELAR">CANCELAR</button>
+                                <button type="button" name="mod_ffenviar" id="mod_ffenviar" class="btn btn-info" >MODIFICAR INFORMACI&Oacute;N</button>
                                 <center><img id="loadd" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
                             </div>
                         </div>
@@ -269,128 +309,22 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-        <!-- MODIFICAR UNIDAD DE MEDIDAS -->
-        <script type="text/javascript">
-            $(function () {
-                $(".mod_um").on("click", function (e) {
-                    um_id = $(this).attr('name');
-                    document.getElementById("um_id").value=um_id;
-                    var url = "<?php echo site_url().'/mantenimiento/partidas/get_umedida'?>";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "um_id="+um_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-                    if (response.respuesta == 'correcto') {
-                        document.getElementById("umedida").value = response.unidad[0]['um_descripcion'];
-                        document.getElementById("abrev").value = response.unidad[0]['um_abrev'];
-                        document.getElementById("erp_id").value = response.unidad[0]['erp_id'];
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR DATOS DE LA UNIDAD DE MANEJO");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                    // =============================VALIDAR EL FORMULARIO DE MODIFICACION
-                    $("#mod_ffenviar").on("click", function (e) {
-                        var $validator = $("#form_mod").validate({
-                               rules: {
-                                um_id: { //// 
-                                required: true,
-                                },
-                                umedida: { ////
-                                    required: true,
-                                },
-                                abrev: { //// 
-                                    required: true,
-                                }
-                            },
-                            messages: {
-                                umedida: "<font color=red>REGISTRE DATO</font>",
-                                abrev: "<font color=red>REGISTRE DATO</font>",                    
-                            },
-                            highlight: function (element) {
-                                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-                            },
-                            unhighlight: function (element) {
-                                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-                            },
-                            errorElement: 'span',
-                            errorClass: 'help-block',
-                            errorPlacement: function (error, element) {
-                                if (element.parent('.input-group').length) {
-                                    error.insertAfter(element.parent());
-                                } else {
-                                    error.insertAfter(element);
-                                }
-                            }
-                        });
-                        var $valid = $("#form_mod").valid();
-                        if (!$valid) {
-                            $validator.focusInvalid();
-                        } else {
-
-                            alertify.confirm("MODIFICAR DATOS UNIDAD DE MANEJO ?", function (a) {
-                                if (a) {
-                                    document.getElementById("loadd").style.display = 'block';
-                                    document.getElementById('mod_ffenviar').disabled = true;
-                                    document.forms['form_mod'].submit();
-                                } else {
-                                    alertify.error("OPCI\u00D3N CANCELADA");
-                                }
-                            });
-
-                        }
-                    });
-                });
-            });
-        </script>
-
         <!-- AGREGAR NUEVA ACTIVIDAD -->
         <script type="text/javascript">
         $(function () {
             $("#subir_form").on("click", function () {
                 var $validator = $("#form_nuevo").validate({
                         rules: {
-                            dep_id: { //// codigo
-                            required: true,
-                            },
-                            ue_id: { //// descripcion Actividad
+                            prog: { //// codigo
                                 required: true,
                             },
-                            codigo: { //// Codigo
-                                required: true,
-                            },
-                            descripcion: { //// Programa
-                                required: true,
-                            },
-                            te: { //// Establecimiento
+                            desc: { //// descripcion subActividad
                                 required: true,
                             }
                         },
                         messages: {
-                            dep_id: "<font color=red>SELECCIONE REGIONAL</font>",
-                            ue_id: "<font color=red>SELECCIONE UNIDAD EJECUTORA</font>", 
-                            codigo: "<font color=red>REGISTRE CÓDIGO</font>", 
-                            descripcion: "<font color=red>REGISTRE DESCRIPCIÓN</font>", 
-                            te: "<font color=red>SELECCIONE TIPO DE ESTABLECIMIENTO</font>",                     
+                            prog: "<font color=red>REGISTRE PROGRAMA</font>",
+                            desc: "<font color=red>REGISTRE DESCRIPCIÓN PROGRAMA</font>",                   
                         },
                         highlight: function (element) {
                             $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -414,7 +348,7 @@
                     $validator.focusInvalid();
                 } else {
 
-                    alertify.confirm("GUARDAR DATOS DE UNIDAD, ESTABLECIMIENTO, COMPRA DE SERVICIO ?", function (a) {
+                    alertify.confirm("GUARDAR DATOS DE PROGRAMA ?", function (a) {
                         if (a) {
                             document.getElementById("load").style.display = 'block';
                             document.getElementById('subir_form').disabled = true;
@@ -427,8 +361,96 @@
             });
         });
         </script>
+        <!-- MODIFICAR UNIDAD DE MEDIDAS -->
+        <script type="text/javascript">
+            $(function () {
+                $(".mod_prog").on("click", function (e) {
+                    aper_id = $(this).attr('name');
+                    document.getElementById("aper_id").value=aper_id;
+                    var url = "<?php echo site_url().'/mantenimiento/capertura_programatica/get_dato_programa'?>";
+                    var request;
+                    if (request) {
+                        request.abort();
+                    }
+                    request = $.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: 'json',
+                        data: "aper_id="+aper_id
+                    });
 
-        <!-- ELIMINAR ACTIVIDAD INSTITUCIONAL -->
+                    request.done(function (response, textStatus, jqXHR) {
+                    if (response.respuesta == 'correcto') {
+                        document.getElementById("mprog").value = response.programa[0]['aper_programa'];
+                        document.getElementById("mdesc").value = response.programa[0]['aper_descripcion'];
+                    }
+                    else{
+                        alertify.error("ERROR AL RECUPERAR DATOS");
+                    }
+
+                    });
+                    request.fail(function (jqXHR, textStatus, thrown) {
+                        console.log("ERROR: " + textStatus);
+                    });
+                    request.always(function () {
+                        //console.log("termino la ejecuicion de ajax");
+                    });
+                    e.preventDefault();
+                    // =============================VALIDAR EL FORMULARIO DE MODIFICACION
+                    $("#mod_ffenviar").on("click", function (e) {
+                        var $validator = $("#form_mod").validate({
+                               rules: {
+                                aper_id: { //// 
+                                required: true,
+                                },
+                                mprog: { ////
+                                    required: true,
+                                },
+                                mdesc: { //// 
+                                    required: true,
+                                }
+                            },
+                            messages: {
+                                mprog: "<font color=red>REGISTRE DATO</font>",
+                                mdesc: "<font color=red>REGISTRE DATO</font>",                    
+                            },
+                            highlight: function (element) {
+                                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                            },
+                            unhighlight: function (element) {
+                                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                            },
+                            errorElement: 'span',
+                            errorClass: 'help-block',
+                            errorPlacement: function (error, element) {
+                                if (element.parent('.input-group').length) {
+                                    error.insertAfter(element.parent());
+                                } else {
+                                    error.insertAfter(element);
+                                }
+                            }
+                        });
+                        var $valid = $("#form_mod").valid();
+                        if (!$valid) {
+                            $validator.focusInvalid();
+                        } else {
+
+                            alertify.confirm("MODIFICAR DATOS DEL PROGRAMA ?", function (a) {
+                                if (a) {
+                                    document.getElementById("loadd").style.display = 'block';
+                                    document.getElementById('mod_ffenviar').disabled = true;
+                                    document.forms['form_mod'].submit();
+                                } else {
+                                    alertify.error("OPCI\u00D3N CANCELADA");
+                                }
+                            });
+
+                        }
+                    });
+                });
+            });
+        </script>
+         <!-- ELIMINAR ACTIVIDAD INSTITUCIONAL -->
         <script type="text/javascript">
             $(function () {
                 function reset() {
@@ -446,12 +468,12 @@
 
                 $(".del_ff").on("click", function (e) {
                     reset();
-                    var name = $(this).attr('name');
+                    var aper_id = $(this).attr('name');
                     var request;
                     // confirm dialog
-                    alertify.confirm("DESEA ELIMINAR ACTIVIDAD INSTITUCIONAL?", function (a) {
+                    alertify.confirm("DESEA ELIMINAR PROGRAMA ?", function (a) {
                         if (a) { 
-                            url = "<?php echo site_url("")?>/mnt/delete_actividad";
+                            var url = "<?php echo site_url().'/mantenimiento/capertura_programatica/delete_dato_programa'?>";
                             if (request) {
                                 request.abort();
                             }
@@ -459,18 +481,16 @@
                                 url: url,
                                 type: "POST",
                                 dataType: "json",
-                                data: "act_id="+name
+                                data: "aper_id="+aper_id
 
                             });
 
                             request.done(function (response, textStatus, jqXHR) { 
                                 reset();
                                 if (response.respuesta == 'correcto') {
-                                    alertify.alert("EL OBJETIVO ESTRATEGICO SE ELIMINO CORRECTAMENTE ", function (e) {
-                                        if (e) {
-                                            window.location.reload(true);
-                                        }
-                                    })
+                                    window.location.reload(true);
+                                    alertify.success("Eliminacion correcta !!!");
+                                    
                                 } else {
                                     alertify.error("Error al Eliminar");
                                 }
@@ -494,7 +514,6 @@
 
             });
         </script>
-        <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
     </body>
 </html>
 

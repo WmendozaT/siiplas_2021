@@ -712,7 +712,8 @@ class User extends CI_Controller{
             'mes' => $gestion[0]['conf_mes'],
             'entidad' => $gestion[0]['conf_nombre_entidad'],
             'trimestre' => $gestion[0]['conf_mes_otro'], /// Trimestre 1,2,3,4
-            'verif_ppto' => $gestion[0]['ppto_poa'], /// Ppto poa : 0 (Vigente), 1: (Aprobado)
+            'verif_ppto' => $gestion[0]['ppto_poa'], /// Ppto poa : 0 (Ante proyecto), 1: (Aprobado)
+            'conf_poa_estado' => $gestion[0]['conf_poa_estado'], /// Estado Poa Estado : 1 (Inicial), 2: (Ajuste), 3: (Aprobado)
             'tr_id' => ($gestion[0]['conf_mes_otro']+$gestion[0]['conf_mes_otro']*2), /// Trimestre 3,6,9,12
             'tp_msn' => $gestion[0]['tp_msn'], /// tipo de mensaje 1: rojo, 2: amarillo, 3: verde
             'mensaje' => $gestion[0]['conf_mensaje'], /// Mensaje

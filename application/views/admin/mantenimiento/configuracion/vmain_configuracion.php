@@ -204,7 +204,7 @@
                                                     <a href="#tab-r8" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">8</span>CONF. EVALUACI&Oacute;N POA</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#tab-r9" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">9</span>CONF. PRESUPUESTO</a>
+                                                    <a href="#tab-r9" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">9</span>CONF. PROGRAMACIÓN POA</a>
                                                 </li>
                                                 <li>
                                                     <a href="#tab-r10" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">10</span>CONF. MENSAJES SISTEMA</a>
@@ -512,10 +512,10 @@
                                                                 <form method="post" class="form-horizontal">
                                                                     <input type="hidden" name="ide" id="ide" value="<?php echo $conf[0]['ide'] ?>">
                                                                     <fieldset>
-                                                                        <legend>CONFIGURAR TIPO DE PRESUPUESTO</legend>
+                                                                        <legend>CONFIGURAR PROGRAMACIÓN POA</legend>
                                                                         
                                                                         <div class="form-group">
-                                                                            <label class="col-md-2 control-label">PPTO POA</label>
+                                                                            <label class="col-md-2 control-label">TIPO DE PRESUPUESTO</label>
                                                                             <div class="col-md-10">
                                                                                 <select class="form-control" id="ppto" name="ppto" title="SELECCIONE">
                                                                                     <?php 
@@ -531,6 +531,33 @@
                                                                                         }
                                                                                     ?>
                                                                                     
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-2 control-label">ESTADO POA</label>
+                                                                            <div class="col-md-10">
+                                                                                <select class="form-control" id="estado_poa" name="estado_poa" title="SELECCIONE PLAN OPERATIVO ANUAL">
+                                                                                    <?php 
+                                                                                        if($this->session->userData('conf_poa_estado')==1){ ?>
+                                                                                            <option value="1" selected>PROGRAMACIÓN INICIAL </option>
+                                                                                            <option value="2">AJUSTE POA</option>      
+                                                                                            <option value="3">POA APROBADO</option>      
+                                                                                            <?php
+                                                                                        }
+                                                                                        elseif($this->session->userData('conf_poa_estado')==2){ ?>
+                                                                                            <option value="1">PROGRAMACIÓN INICIAL </option>
+                                                                                            <option value="2" selected>AJUSTE POA</option>      
+                                                                                            <option value="3">POA APROBADO</option> 
+                                                                                            <?php
+                                                                                        }
+                                                                                        else{ ?>
+                                                                                            <option value="1">PROGRAMACIÓN INICIAL </option>
+                                                                                            <option value="2">AJUSTE POA</option>      
+                                                                                            <option value="3" selected>POA APROBADO</option> 
+                                                                                            <?php
+                                                                                        }
+                                                                                    ?>
                                                                                 </select>
                                                                             </div>
                                                                         </div>
@@ -948,6 +975,48 @@
                             type:"post",
                             url:url,
                             data:{ppto:ppto,g_id:id},
+                            success:function(datos){
+                                if(datos.trim() =='true'){
+                                    window.location.reload(true);
+                                }else{
+                                    alertify.error("Error al Actualizar ..");
+                                }
+                        }});
+                    } else {
+                        alertify.error("OPCI\u00D3N CANCELADA");
+                    }
+                  });
+
+                });
+            });
+        </script>
+        <!--   UPDATE ESTADO POA   -->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#estado_poa").change(function () {            
+                var est_poa = $(this).val();
+                var id = <?php echo $conf[0]['ide'];?>;
+
+                var mensaje='';
+                if(est_poa==1){
+                    mensaje='PLAN OPERATIVO INICIAL ?';
+                }
+                else{
+                    if(est_poa==2){
+                        mensaje='PLAN OPERATIVO AJUSTADO ?';
+                    }
+                    else{
+                        mensaje='PLAN OPERATIVO APROBADO?';
+                    }
+                }
+
+                alertify.confirm(mensaje, function (a) {
+                    if (a) {
+                        var url = "<?php echo site_url().'/mantenimiento/cconfiguracion/valida_update_estadopoa'?>";
+                        $.ajax({
+                            type:"post",
+                            url:url,
+                            data:{estado:est_poa,g_id:id},
                             success:function(datos){
                                 if(datos.trim() =='true'){
                                     window.location.reload(true);

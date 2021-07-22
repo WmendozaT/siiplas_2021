@@ -15,7 +15,7 @@ class Cprog_insumo extends CI_Controller{
         $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
         $this->load->model('mantenimiento/model_partidas');
         $this->load->model('mantenimiento/model_entidad_tras');
-        $this->load->model('programacion/insumos/minsumos_delegado');
+      //  $this->load->model('programacion/insumos/minsumos_delegado');
         $this->load->model('programacion/model_proyecto');
         $this->load->model('programacion/model_producto');
         $this->load->model('programacion/model_faseetapa');

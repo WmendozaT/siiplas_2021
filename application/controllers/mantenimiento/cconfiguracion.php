@@ -778,7 +778,7 @@ echo "post_max_size = 2000M";*/
         $this->load->view('admin/mantenimiento/caratula_poa/caratula_distrital_pi', $data);
     }
 
-    /*--- VERIFICANDO APERTURA PROGRAMATICA GASTO CORRIENTE---*/
+    /*--- TIPO DE PRESUPUESTO (ANTEPROYECTO, APROBADO)---*/
     function valida_update_ppto(){
       if($this->input->is_ajax_request()){
           $post = $this->input->post();
@@ -793,6 +793,30 @@ echo "post_max_size = 2000M";*/
           $this->db->update('configuracion', $update_conf);
 
           $this->session->set_userdata('verif_ppto', $ppto);
+
+          echo "true";
+
+      }else{
+        show_404();
+      }
+    }
+
+
+    /*--- ESTADO DEL POA---*/
+    function valida_update_estadopoa(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $estado = $post['estado'];
+          $g_id= $post['g_id'];
+
+          $update_conf = array(
+            'conf_poa_estado' => $estado,
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('ide', $this->gestion);
+          $this->db->update('configuracion', $update_conf);
+
+          $this->session->set_userdata('conf_poa_estado', $estado);
 
           echo "true";
 

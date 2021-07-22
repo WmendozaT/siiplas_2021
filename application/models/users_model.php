@@ -8,12 +8,11 @@ class users_model extends CI_Model {
     * @param string $password
     * @return void
     */
-public function __construct()
-    {
+	public function __construct(){
         $this->load->database();
     }
-	function validate($user_name, $password)
-	{
+
+	function validate($user_name, $password){
 		$this->db->where('fun_usuario', $user_name);
 		$this->db->where('fun_password', $password);
 		$query = $this->db->get('funcionario');
@@ -34,9 +33,7 @@ public function __construct()
     * @return void
     */
 
-	function datos_usuario($user_name, $password) 
-	{
-
+	function datos_usuario($user_name, $password){
 		$this->db->select(" f.fun_id,
                             f.uni_id,
                             u.uni_unidad,
@@ -108,8 +105,7 @@ public function __construct()
     * store it in a new array and return it to the controller 
     * @return array
     */
-	function get_db_session_data()
-	{
+	function get_db_session_data(){
 		$query = $this->db->select('user_data')->get('ci_sessions');
 		$user = array(); /* array to store the user data we fetch */
 		foreach ($query->result() as $row)
@@ -127,8 +123,7 @@ public function __construct()
     * @return boolean - check the insert
     */
 
-    function get_datos_usuario_roles($fun_id,$rol) 
-	{
+    function get_datos_usuario_roles($fun_id,$rol){
 		$sql = 'select *
 				from (select f.*, r.r_id
 				from fun_rol r right join (select f.*, u.uni_unidad
@@ -142,8 +137,8 @@ public function __construct()
         $query = $this->db->query($sql);
         return $query->result_array();
 	}
-	function create_member()
-	{
+
+	function create_member(){
 
 		$this->db->where('user_name', $this->input->post('username'));
 		$query = $this->db->get('membership');
@@ -166,8 +161,7 @@ public function __construct()
 	      
 	}//create_member
 	
-	function get_entidad($gestion)
-	{
+	function get_entidad($gestion){
 		$query = "SELECT *
 		FROM configuracion
 		WHERE ide = $gestion AND conf_estado = 1";
@@ -176,8 +170,7 @@ public function __construct()
 		return $query;
 	}
 
-	public function verificar_menu($url)
-	{
+	public function verificar_menu($url){
 		$fun_id = $this->session->userdata('fun_id');
 		$query = "SELECT *  
 		FROM (SELECT * FROM opciones o right join (Select * from opcion_rol where r_id not in (Select r_id from fun_rol where fun_id = $fun_id)) tmp ON o.o_id = tmp.o_id) a where a.o_url like '$url' ";
@@ -185,8 +178,8 @@ public function __construct()
 		$verificar = (count($query) > 0) ? true : false ;
 		return $verificar;
 	}
-	public function verificar_menu_1($url)
-	{
+
+	public function verificar_menu_1($url){
 		$fun_id = $this->session->userdata('fun_id');
 		$query = "SELECT * 
 		FROM (SELECT *

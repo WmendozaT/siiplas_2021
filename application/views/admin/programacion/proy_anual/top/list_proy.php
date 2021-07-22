@@ -192,12 +192,12 @@
 				                              </header>
 												<div>
 													<a href='<?php echo site_url("").'/proy/add_unidad';?>' title="NUEVO REGISTRO POA" class="btn btn-success" style="width:13%;">HABILITAR NUEVO POA </a>
-												<!-- 	<?php
+													<?php
 														if($this->session->userData('gestion')==2021){ ?>
 															<a href='<?php echo site_url("").'/proy/verif_plantillas';?>' title="VERIFICAR PLANTILLA DE MIGRACIÓN" class="btn btn-default" style="width:13%;">VERIFICAR PLANTILLA DE MIGRACI&Oacute;N</a>
 															<?php
 														}
-													?> -->
+													?>
 													<br><br>
 													<div class="widget-body no-padding">
 														<table id="dt_basic3" class="table1 table-bordered" style="width:100%;">
