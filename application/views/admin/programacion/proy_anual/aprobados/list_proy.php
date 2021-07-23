@@ -20,54 +20,12 @@
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
 	    <meta name="viewport" content="width=device-width">
-		<!--fin de stiloh-->
-			<style>
-			.table1{
-	          display: inline-block;
-	          width:100%;
-	          max-width:1550px;
-	          overflow-x: scroll;
-	          }
-			table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-			overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-            #mdialTamanio{
-              width: 45% !important;
-            }
-			</style>
+	    <?php echo $estilo; ?>
 	</head>
 	<body class="">
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
 		<!-- HEADER -->
 		<header id="header">
-			<div id="logo-group">
-				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -139,12 +97,12 @@
 			<!-- MAIN CONTENT -->
 			<div id="content">
 				<!-- widget grid -->
-				<section id="widget-grid" class="">
+				<section id="widget-grid" class=""> 
 					<div class="row">
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="well well-sm well-light">
-								<h3>RESPONSABLE : <?php echo $resp; ?> -> <small><?php echo $res_dep;?></h3>
-
+								<?php echo $res_dep;?>
+								<?php echo $base;?>
 								<div id="tabs">
 									<ul>
 										<li>
@@ -366,210 +324,7 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-		<script type="text/javascript">
-            $(function () {
-                $(".enlace").on("click", function (e) {
-                    proy_id = $(this).attr('name');
-                    establecimiento = $(this).attr('id');
-                    
-                    $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
-                    $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones - <br>'+establecimiento+'</div>');
-                    
-                    var url = "<?php echo site_url("")?>/programacion/proyecto/get_poa";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "proy_id="+proy_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-
-                    if (response.respuesta == 'correcto') {
-                        $('#content1').fadeIn(1000).html(response.tabla);
-                        $('#caratula').fadeIn(1000).html(response.caratula);
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                  
-                });
-            });
-
-            $(function () {
-                $(".enlace1").on("click", function (e) {
-                    proy_id = $(this).attr('name');
-                    establecimiento = $(this).attr('id');
-                    
-                    $('#title').html('<font size=3><b>'+establecimiento+'</b></font>');
-                    $('#content2').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Archivo - <br>'+establecimiento+'</div>');
-                    
-                    var url = "<?php echo site_url("")?>/mantenimiento/cpoas_scanneados/get_pdf_poa_unidad";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "proy_id="+proy_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-
-                    if (response.respuesta == 'correcto') {
-                        $('#content2').fadeIn(1000).html(response.tabla);
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR ARCHIVO POA");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                  
-                });
-            });
-        </script>
-        <script type="text/javascript">
-		    $(function () {
-		        function reset() {
-		            $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
-		            alertify.set({
-		                labels: {
-		                    ok: "ACEPTAR",
-		                    cancel: "CANCELAR"
-		                },
-		                delay: 5000,
-		                buttonReverse: false,
-		                buttonFocus: "ok"
-		            });
-		        }
-		        /*----------- RECHAZAR POA ---------------*/
-		        $(".neg_ff").on("click", function (e) {
-		            reset();
-		            var proy_id = $(this).attr('name');
-		            var request;
-		            alertify.confirm("ESTA SEGURO DE RECHAZAR EL POA Y DEVOLVER AL RESPONSABLE POA ?", function (a) {
-		                if (a) { 
-		                    var url = "<?php echo site_url("")?>/programacion/proyecto/observar_poa";
-		                    if (request) {
-		                        request.abort();
-		                    }
-		                    request = $.ajax({
-		                        url: url,
-		                        type: "POST",
-		                        dataType: "json",
-                    			data: "proy_id="+proy_id
-
-		                    });
-
-		                    request.done(function (response, textStatus, jqXHR) { 
-			                    reset();
-			                    if (response.respuesta == 'correcto') {
-			                        alertify.alert("SE RECHAZO REPORTE POA", function (e) {
-			                            if (e) {
-			                                window.location.reload(true);
-			                            }
-			                        });
-			                    } else {
-			                        alertify.alert("ERROR AL OBSERVAR !!!", function (e) {
-			                            if (e) {
-			                                window.location.reload(true);
-			                            }
-			                        });
-			                    }
-			                });
-		                    request.fail(function (jqXHR, textStatus, thrown) {
-		                        console.log("ERROR: " + textStatus);
-		                    });
-		                    request.always(function () {
-		                        //console.log("termino la ejecuicion de ajax");
-		                    });
-
-		                    e.preventDefault();
-
-		                } else {
-		                    // user clicked "cancel"
-		                    alertify.error("OPCIÓN CANCELADA");
-		                }
-		            });
-		            return false;
-		        });
-
-		        /*----------- APROBAR POA ---------------*/
-		        $(".aprobar_poa").on("click", function (e) {
-		            reset();
-		            var proy_id = $(this).attr('name');
-		            var request;
-		            alertify.confirm("ESTA SEGURO DE APROBAR POA ?", function (a) {
-		                if (a) { 
-		                    var url = "<?php echo site_url("")?>/programacion/proyecto/aprobar_poa";
-		                    if (request) {
-		                        request.abort();
-		                    }
-		                    request = $.ajax({
-		                        url: url,
-		                        type: "POST",
-		                        dataType: "json",
-                    			data: "proy_id="+proy_id
-
-		                    });
-
-		                    request.done(function (response, textStatus, jqXHR) { 
-			                    reset();
-			                    if (response.respuesta == 'correcto') {
-			                        alertify.alert("EL POA SE APROBO CORRECTAMENTE ", function (e) {
-			                            if (e) {
-			                                window.location.reload(true);
-			                            }
-			                        });
-			                    } else {
-			                        alertify.alert("ERROR AL OBSERVAR !!!", function (e) {
-			                            if (e) {
-			                                window.location.reload(true);
-			                            }
-			                        });
-			                    }
-			                });
-		                    request.fail(function (jqXHR, textStatus, thrown) {
-		                        console.log("ERROR: " + textStatus);
-		                    });
-		                    request.always(function () {
-		                        //console.log("termino la ejecuicion de ajax");
-		                    });
-
-		                    e.preventDefault();
-
-		                } else {
-		                    // user clicked "cancel"
-		                    alertify.error("OPCIÓN CANCELADA");
-		                }
-		            });
-		            return false;
-		        });
-
-		    });
-		</script>
+		<script src="<?php echo base_url(); ?>mis_js/programacionpoa/programacionpoa.js"></script> 
 		<!-- ====================================================================================================== -->
 		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 		<script type="text/javascript">

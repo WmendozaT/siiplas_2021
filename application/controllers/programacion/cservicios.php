@@ -247,15 +247,15 @@ class Cservicios extends CI_Controller {
                 <thead>
                     <tr style="height:45px;">
                         <th style="width:1%;">#</th>
-                        <th style="width:5%;">COD. SUBACTIVIDAD</th>
-                        <th style="width:20%;">SUBACTIVIDAD</th>
+                        <th style="width:5%;">COD. UNIDAD</th>
+                        <th style="width:20%;">UNIDAD RESPONSABLE</th>
                         <th style="width:15%;">RESPONSABLE</th>
                         <th style="width:5%;">PONDERACI&Oacute;N</th>
-                        <th style="width:5%;">NRO. OPE.</th>
-                        <th style="width:5%;">MIS OPERACIONES</th>
+                        <th style="width:5%;">NRO. ACT.</th>
+                        <th style="width:5%;">MIS ACTIVIDADES</th>
                         <th style="width:5%;">FORMULARIO N 4</th>
-                        <th style="width:5%;">EXCEL OPERACIONES</th>
-                        <th style="width:5%;">DELETE OPERACIONES</th>
+                        <th style="width:5%;">EXCEL ACTIVIDADES</th>
+                        <th style="width:5%;">ELIMINAR ACTIVIDADES</th>
                     </tr>
                 </thead>
                 <tbody>';
@@ -288,19 +288,19 @@ class Cservicios extends CI_Controller {
                             }
                         }
                         $tabla.='
-                        <td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO SUBACTIVIDAD : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
-                        <td>'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
+                        <td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO UNIDAD : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
+                        <td>'.$row['serv_descripcion'].'</td>
                         <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
                         <td>'.$row['com_ponderacion'].' %</td>
                         <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
                         <td align="center">
-                            <a href="'.site_url("admin").'/prog/list_prod/'.$row['com_id'].'" title="MIS OPERACIONES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/archivo.png" WIDTH="34" HEIGHT="34"/></a>
+                            <a href="'.site_url("admin").'/prog/list_prod/'.$row['com_id'].'" title="MIS ACTIVIDADES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/archivo.png" WIDTH="34" HEIGHT="34"/></a>
                         </td>
-                        <td align="center"><a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$row['com_id'].'\');" title="REPORTE DE OPERACIONES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="35" HEIGHT="35"/></a></td>
-                        <td align="center"><a href="'.site_url("").'/prog/exportar_productos/'.$row['com_id'].'" title="EXPORTAR OPERACIONES" class="btn btn-default"><img src="' . base_url() . 'assets/ifinal/excel.jpg" WIDTH="38"/></a></td>
+                        <td align="center"><a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$row['com_id'].'\');" title="REPORTE DE ACTIVIDADES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="35" HEIGHT="35"/></a></td>
+                        <td align="center"><a href="'.site_url("").'/prog/exportar_productos/'.$row['com_id'].'" title="EXPORTAR ACTIVIDADES" class="btn btn-default"><img src="' . base_url() . 'assets/ifinal/excel.jpg" WIDTH="38"/></a></td>
                         <td align="center">';
                         if(count($this->model_producto->list_prod($row['com_id']))!=0 & $this->tp_adm==1){
-                            $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR TODAS LAS OPERACIONES DE LA SUB-ACTIVIDAD"  name="'.$row['com_id'].'" id="'.count($this->model_producto->list_prod($row['com_id'])).'" ><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
+                            $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR TODAS LAS ACTIVIDADES DE LA UNIDAD"  name="'.$row['com_id'].'" id="'.count($this->model_producto->list_prod($row['com_id'])).'" ><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
                         }
                         $tabla.='
                         </td>
@@ -355,10 +355,16 @@ class Cservicios extends CI_Controller {
     public function lista_componentes($proy_id){
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id); // Proy
         $data['fase'] = $this->model_faseetapa->get_id_fase($proy_id); //// recupera datos de la tabla fase activa
-        $data['menu']=$this->genera_menu($proy_id);
-        $data['unidad']=$this->model_componente->list_subactividades_pi();
-        $data['componente']=$this->list_componentes_pi($proy_id); 
-        $this->load->view('admin/programacion/componente/list_componentes_pi', $data);
+        if(count($data['fase'])!=0){
+            $data['menu']=$this->genera_menu($proy_id);
+            $data['unidad']=$this->model_componente->list_subactividades_pi();
+            $data['componente']=$this->list_componentes_pi($proy_id); 
+            $this->load->view('admin/programacion/componente/list_componentes_pi', $data);
+        }
+        else{
+            redirect('admin/proy/fase_etapa/'.$proy_id); ///// fase sin habilitar
+        }
+        
     }
 
     public function lista_componentes_anterior($proy_id){
@@ -393,6 +399,7 @@ class Cservicios extends CI_Controller {
     else{
         $componente=$this->model_componente->componentes_fun_id($fase[0]['id'],$this->fun_id);     
     }
+
     $tabla='';
     $tabla.='<table id="dt_basic4" class="table table table-bordered" width="100%">
                 <thead>
@@ -403,11 +410,11 @@ class Cservicios extends CI_Controller {
                         <th style="width:15%;">DESCRIPCI&Oacute;N COMPONENTE</th>
                         <th style="width:15%;">RESPONSABLE</th>
                         <th style="width:5%;">PONDERACI&Oacute;N</th>
-                        <th style="width:5%;">NRO. OPE.</th>
-                        <th style="width:5%;">MIS OPERACIONES</th>
-                        <th style="width:5%;">REP. OPERACIONES</th>
-                        <th style="width:5%;">EXCEL OPERACIONES</th>
-                        <th style="width:5%;">DELETE OPERACIONES</th>
+                        <th style="width:5%;">NRO. ACT.</th>
+                        <th style="width:5%;">MIS ACTIVIDADES</th>
+                        <th style="width:5%;">FORMULARIO N 4</th>
+                        <th style="width:5%;">EXCEL ACTIVIDADES</th>
+                        <th style="width:5%;">ELIMINAR ACTIVIDADES</th>
                     </tr>
                 </thead>
                 <tbody>';
@@ -429,12 +436,12 @@ class Cservicios extends CI_Controller {
                         <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
                         <td>'.$row['com_ponderacion'].' %</td>
                         <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
-                        <td align="center"><a href="'.site_url("admin").'/prog/list_prod/'.$row['com_id'].'" title="OPERACIONES DE LA FASE" class="btn btn-default"><img src="'.base_url().'assets/ifinal/archivo.png" WIDTH="34" HEIGHT="34"/></a></td>
-                        <td align="center"><a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$row['com_id'].'\');" title="REPORTE DE OPERACIONES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="35" HEIGHT="35"/></a></td>
-                        <td align="center"><a href="'.site_url("").'/prog/exportar_productos/'.$row['com_id'].'" title="EXPORTAR OPERACIONES" class="btn btn-default"><img src="' . base_url() . 'assets/ifinal/excel.jpg" WIDTH="38"/></a></td>
+                        <td align="center"><a href="'.site_url("admin").'/prog/list_prod/'.$row['com_id'].'" title="ACTIVIDADES DE LA FASE" class="btn btn-default"><img src="'.base_url().'assets/ifinal/archivo.png" WIDTH="34" HEIGHT="34"/></a></td>
+                        <td align="center"><a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$row['com_id'].'\');" title="REPORTE DE ACTIVIDADES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="35" HEIGHT="35"/></a></td>
+                        <td align="center"><a href="'.site_url("").'/prog/exportar_productos/'.$row['com_id'].'" title="EXPORTAR ACTIVIDADES" class="btn btn-default"><img src="' . base_url() . 'assets/ifinal/excel.jpg" WIDTH="38"/></a></td>
                         <td align="center">';
                         if(count($this->model_producto->list_prod($row['com_id']))!=0){
-                            $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR TODAS LAS OPERACIONES DE LA SUB-ACTIVIDAD"  name="'.$row['com_id'].'" id="'.count($this->model_producto->list_prod($row['com_id'])).'" ><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
+                            $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR TODAS LAS ACTIVIDADES DE LA UNIDAD"  name="'.$row['com_id'].'" id="'.count($this->model_producto->list_prod($row['com_id'])).'" ><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
                         }
                         $tabla.='
                         </td>

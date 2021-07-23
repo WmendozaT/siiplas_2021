@@ -20,70 +20,12 @@
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
 	    <meta name="viewport" content="width=device-width">
-		<!--fin de stiloh-->
-          <script>
-		  	function abreVentana(PDF){
-				var direccion;
-				direccion = '' + PDF;
-				window.open(direccion, "Programación POA" , "width=800,height=650,scrollbars=SI") ;
-			}
-			function confirmar(){
-		        if(confirm('¿Estas seguro de Eliminar ?'))
-		          return true;
-		        else
-		          return false;
-		    }                                                    
-          </script>
-			<style>
-			.table1{
-	          display: inline-block;
-	          width:100%;
-	          max-width:1550px;
-	          overflow-x: scroll;
-	          }
-			table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-			overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-            #mdialTamanio{
-              width: 45% !important;
-            }
-            #mdialTamanio2{
-              width: 35% !important;
-            }
-			</style>
+			<?php echo $estilo; ?>
 	</head>
 	<body class="">
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
 		<!-- HEADER -->
 		<header id="header">
-			<div id="logo-group">
-				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -149,7 +91,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Programaci&oacute;n POA</li><li>T&eacute;cnico de Unidad Ejecutora</li><li>POA - <?php echo $this->session->userdata('gestion')?></li>
+					<li>Programaci&oacute;n POA</li><li>POA - <?php echo $this->session->userdata('gestion')?></li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->
@@ -158,25 +100,13 @@
 				<section id="widget-grid" class="">
 					<div class="row">
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<?php 
-			                  if($this->session->flashdata('success')){ ?>
-			                    <div class="alert alert-success">
-			                      <?php echo $this->session->flashdata('success'); ?>
-			                    </div>
-			                <?php }
-			                    elseif($this->session->flashdata('danger')){ ?>
-		                    	<div class="alert alert-danger">
-			                      <?php echo $this->session->flashdata('danger'); ?>
-			                    </div><?php }
-			                ?>
-
 							<div class="well well-sm well-light">
-								<h3>RESPONSABLE : <?php echo $resp; ?> -> <small><?php echo $res_dep;?></h3>
-
+								<?php echo $res_dep;?>
+								<?php echo $base;?>
 								<div id="tabs">
 									<ul>
 										<li>
-											<a href="#tabs-c">OPERACI&Oacute;N DE FUNCIONAMIENTO</a>
+											<a href="#tabs-c">GASTO CORRIENTE</a>
 										</li>
 										<li>
 											<a href="#tabs-a">PROYECTOS DE INVERSI&Oacute;N P&Uacute;BLICA</a>
@@ -188,23 +118,21 @@
 											<div class="jarviswidget jarviswidget-color-darken">
 				                              <header>
 				                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-				                                  <h2 class="font-md"><strong>OPERACI&Oacute;N FUNCIONAMIENTO</strong></h2>  
+				                                  <h2 class="font-md"><strong>GASTO CORRIENTE</strong></h2>  
 				                              </header>
 												<div>
-													<a href='<?php echo site_url("").'/proy/add_unidad';?>' title="NUEVO REGISTRO POA" class="btn btn-success" style="width:13%;">HABILITAR NUEVO POA </a>
-													<?php
-														if($this->session->userData('gestion')==2021){ ?>
-															<a href='<?php echo site_url("").'/proy/verif_plantillas';?>' title="VERIFICAR PLANTILLA DE MIGRACIÓN" class="btn btn-default" style="width:13%;">VERIFICAR PLANTILLA DE MIGRACI&Oacute;N</a>
-															<?php
-														}
-													?>
-													<br><br>
+													<?php echo $opc1;?><br><br>
 													<div class="widget-body no-padding">
 														<table id="dt_basic3" class="table1 table-bordered" style="width:100%;">
 															<thead>
 																<tr style="height:65px;">
-																	<th style="width:5%;" title="PROGRAMACIÓN FISICA Y FINANCIERA">PROG.</th>
-																	<th style="width:5%;" title="REPORTE POA - FORM. 4 Y 5"></th>
+																	<th style="width:3%;" title="">
+																		<a href='<?php echo site_url("").'/proy/add_unidad';?>' title="NUEVO REGISTRO POA" class="btn btn-default">
+																			<img src="<?php echo base_url() ?>assets/img/add_icon.PNG" WIDTH="45" HEIGHT="45" title="NUEVO REGISTRO POA"/>
+																		</a>
+																	</th>
+																	<th style="width:5%;" title="PROGRAMACIÓN FISICA Y FINANCIERA">PROGRAMACIÓN POA</th>
+																	<th style="width:5%;" title="REPORTE POA - FORM. 4 Y 5">REPORTE POA</th>
 																	<?php 
                                                                         if($this->session->userData('verif_ppto')==1){ ?>
                                                                             <th style="width:5%;" title="AJUSTE POA">AJUSTE POA</th>
@@ -222,7 +150,7 @@
 																</tr>
 															</thead>
 															<tbody>
-															<?php echo $operacion;?>
+															<?php echo $gasto_corriente;?>
 															</tbody>
 														</table>
 													</div>
@@ -244,16 +172,19 @@
 				                                  <h2 class="font-md"><strong>PROYECTOS DE INVERSI&Oacute;N PUBLICA </strong></h2>  
 				                              </header>
 												<div>
-													<?php
-														if($this->session->userdata('rol_id')==1){?>
-														<a href='<?php echo site_url("admin").'/proy/proyecto'; ?>' title="NUEVO REGISTRO - PROYECTO DE INVERSI&Oacute;N" class="btn btn-success" style="width:15.5%;">NUEVO REGISTRO</a><br><br>
-													<?php } ?>
 													<div class="widget-body no-padding">
 														<table id="dt_basic" class="table table-bordered" style="width:100%;">
 															<thead>
 																<tr style="height:65px;">
-																	<th style="width:5%;" title="PROGRAMACIÓN FISICA Y FINANCIERA">&nbsp;&nbsp;&nbsp;PROGRAMACI&Oacute;N POA&nbsp;&nbsp;&nbsp;</th>
-																	<th style="width:5%;" title="REPORTE POA"></th>
+																	<th style="width:3%;">
+																		<?php
+																			if($this->session->userdata('rol_id')==1){?>
+																			<a href='<?php echo site_url("admin").'/proy/proyecto'; ?>' title="NUEVO REGISTRO POA" class="btn btn-default">
+																				<img src="<?php echo base_url() ?>assets/img/add_icon.PNG" WIDTH="45" HEIGHT="45" title="NUEVO REGISTRO POA"/>
+																			</a>
+																		<?php } ?>
+																	</th>
+																	<th style="width:5%;" title="REPORTE POA">REPORTE POA</th>
 																	<th style="width:5%;" title="MODIFICAR - ELIMINAR">&nbsp;&nbsp;&nbsp;E/B&nbsp;&nbsp;&nbsp;</th>
 																	<th style="width:10%;" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA <?php echo $this->session->userdata("gestion");?></th>
 																	<th style="width:20%;" title="NOMBRE DEL PROYECTO DE INVERSI&Oacute;N">PROYECTO DE INVERSI&Oacute;N</th>
@@ -422,234 +353,7 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-		<script type="text/javascript">
-            $(function () {
-                $(".enlace").on("click", function (e) {
-                    proy_id = $(this).attr('name');
-                    establecimiento = $(this).attr('id');
-                    
-                    $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
-                    $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones - <br>'+establecimiento+'</div>');
-                    
-                    var url = "<?php echo site_url("")?>/programacion/proyecto/get_poa";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "proy_id="+proy_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-                    if (response.respuesta == 'correcto') {
-                        $('#content1').fadeIn(1000).html(response.tabla);
-                        $('#caratula').fadeIn(1000).html(response.caratula);
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                  
-                });
-            });
-
-            /*------ AJUSTE POA ------*/
-            $(function () {
-                $(".enlace2").on("click", function (e) {
-                    proy_id = $(this).attr('name');
-                    establecimiento = $(this).attr('id');
-                   
-                    $('#titulo2').html('<font size=3><b>'+establecimiento+'</b></font>');
-                    $('#content2').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Poa - <br>'+establecimiento+'</div>');
-                    
-                    var url = "<?php echo site_url("")?>/programacion/proyecto/get_poa_ajuste";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "proy_id="+proy_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-                    if (response.respuesta == 'correcto') {
-                        $('#content2').fadeIn(1000).html(response.tabla);
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                  
-                });
-            });
-        </script>
-
-	<script type="text/javascript">
-	    /*------------ VERIFICANDO POA ----------------*/
-	    $(function () {
-	        $(".verif_poa").on("click", function (e) {
-	        	proy_id = $(this).attr('name');
-	            document.getElementById("proy_id").value=proy_id;
-	            
-	            establecimiento = $(this).attr('id');
-	            $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
-	            $('#content_valida').html('<div class="loading" align="center"><h2>Verificando Presupuesto POA  <br>'+establecimiento+'</h2><br><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /></div>');
-	            $('#but').slideUp();
-
-	            var url = "<?php echo site_url("")?>/programacion/proyecto/verif_poa";
-	            var request;
-	            if (request) {
-	                request.abort();
-	            }
-	            request = $.ajax({
-	                url: url,
-	                type: "POST",
-	                dataType: 'json',
-	                data: "proy_id="+proy_id
-	            });
-
-	            request.done(function (response, textStatus, jqXHR) {
-	            if (response.respuesta == 'correcto') {
-	            	$('#content_valida').fadeIn(1000).html(response.tabla);
-	                    if(response.valor==0){
-	                        $('#but').slideDown();
-	                	}
-	            }
-	            else{
-	                alertify.error("ERROR AL RECUPERAR DATOS");
-	            }
-
-	            });
-	            request.fail(function (jqXHR, textStatus, thrown) {
-	                console.log("ERROR: " + textStatus);
-	            });
-	            request.always(function () {
-	                //console.log("termino la ejecuicion de ajax");
-	            });
-	            e.preventDefault();
-	            // =============================VALIDAR EL FORMULARIO DE MODIFICACION
-	            $("#enviar_ff").on("click", function (e) {
-	                var $valid = $("#form_vpoa").valid();
-	                if (!$valid) {
-	                    $validator.focusInvalid();
-	                } else {
-
-	                    alertify.confirm("ESTA SEGURO EN VALIDAR EL POA , PARA SU APROBACIÓN ?", function (a) {
-	                        if (a) {
-	                        	var url = "<?php echo site_url("")?>/programacion/proyecto/validar_poa";
-			                    $.ajax({
-			                        type: "post",
-			                        url: url,
-			                        data: {
-			                            proy_id: proy_id
-			                        },
-			                        success: function (date) {
-			                            window.location.reload(true);
-			                            alertify.success("VALIDACION EXITOSA ...");
-			                        }
-			                    });
-
-	                        } else {
-	                            alertify.error("OPCI\u00D3N CANCELADA");
-	                        }
-	                    });
-
-	                }
-	            });
-	        });
-	    });
-	  </script>
-
-	  	<script type="text/javascript">
-		    $(function () {
-		        function reset() {
-		            $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
-		            alertify.set({
-		                labels: {
-		                    ok: "ACEPTAR",
-		                    cancel: "CANCELAR"
-		                },
-		                delay: 5000,
-		                buttonReverse: false,
-		                buttonFocus: "ok"
-		            });
-		        }
-		        /*--- APROBAR PROYECTOS DE INVERSION ---*/
-		        $(".neg_ff").on("click", function (e) {
-		            reset();
-		            var proy_id = $(this).attr('name');
-		            var request;
-		            alertify.confirm("ESTA SEGURO DE APROBAR POA ?", function (a) {
-		                if (a) { 
-		                    var url = "<?php echo site_url("")?>/programacion/proyecto/aprobar_poa";
-		                    if (request) {
-		                        request.abort();
-		                    }
-		                    request = $.ajax({
-		                        url: url,
-		                        type: "POST",
-		                        dataType: "json",
-                    			data: "proy_id="+proy_id
-
-		                    });
-
-		                    request.done(function (response, textStatus, jqXHR) { 
-			                    reset();
-			                    if (response.respuesta == 'correcto') {
-			                        alertify.alert("EL POA SE APROBO CORRECTAMENTE ", function (e) {
-			                            if (e) {
-			                                window.location.reload(true);
-			                            }
-			                        });
-			                    } else {
-			                        alertify.alert("ERROR !!!", function (e) {
-			                            if (e) {
-			                                window.location.reload(true);
-			                            }
-			                        });
-			                    }
-			                });
-		                    request.fail(function (jqXHR, textStatus, thrown) {
-		                        console.log("ERROR: " + textStatus);
-		                    });
-		                    request.always(function () {
-		                        //console.log("termino la ejecuicion de ajax");
-		                    });
-
-		                    e.preventDefault();
-
-		                } else {
-		                    // user clicked "cancel"
-		                    alertify.error("OPCIÓN CANCELADA");
-		                }
-		            });
-		            return false;
-		        });
-
-		    });
-		</script>
+		<script src="<?php echo base_url(); ?>mis_js/programacionpoa/programacionpoa.js"></script> 
 		<!-- ====================================================================================================== -->
 		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 		<script type="text/javascript">

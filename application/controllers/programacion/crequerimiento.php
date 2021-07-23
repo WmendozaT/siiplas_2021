@@ -36,7 +36,7 @@ class crequerimiento extends CI_Controller{
     }
 
     /*---- LISTA DE COMPONENTES SEGUN EL TIPO DE EJECUCION ----*/
-    function list_componente($proy_id){
+/*    function list_componente($proy_id){
       $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id); // Proy
       if(count($data['proyecto'])!=0){
           $data['menu']=$this->genera_menu($proy_id);
@@ -53,7 +53,7 @@ class crequerimiento extends CI_Controller{
       else{
           redirect('admin/dashboard');
       }
-    }
+    }*/
 
 
     /*---- LISTA DE COMPONENTES SEGUN EL TIPO DE EJECUCION ----*/
@@ -104,7 +104,7 @@ class crequerimiento extends CI_Controller{
                 <h1><small>OPERACI&Oacute;N : </small>COD - '.$data['producto'][0]['prod_cod'].'.- '.$data['producto'][0]['prod_producto'].'</h1>';
             }
 
-            $lista_insumos = $this->minsumos->lista_insumos_prod($id);
+            $lista_insumos = $this->model_insumo->lista_insumos_prod($id);
             $data['part_padres'] = $this->model_partidas->lista_padres();//partidas padres
             $data['part_hijos'] = $this->model_partidas->lista_partidas();//partidas hijos
 
@@ -203,7 +203,7 @@ class crequerimiento extends CI_Controller{
               }
             }
 
-          $get_ins=$this->minsumos->get_insumo_producto($ins_id);
+          $get_ins=$this->model_insumo->get_insumo_producto($ins_id);
             if(count($get_ins)==1){
               $this->session->set_flashdata('success','EL REQUERIMIENTO SE REGISTRO CORRECTAMENTE :)');
             }
@@ -431,125 +431,9 @@ class crequerimiento extends CI_Controller{
       return $tabla;
     }
 
-    /*---------- LISTA DE REQUERIMIENTOS (2019) -----------*/
-    public function mis_requerimientos_2019($lista_insumos,$tp){
-
-      $tabla='';
-      if($tp==1){
-        $tab='id="dt_basic" class="table table table-bordered" width="100%"'; 
-      }
-      elseif($tp==2){
-        $tab='border="0" cellpadding="0" cellspacing="0" class="tabla" align="center"';
-      }
-      $total=0;
-      $tabla.='<table '.$tab.'>
-                <thead>
-                  <tr class="modo1">
-                    <th></th>
-                    <th>PARTIDA</th>
-                    <th>DETALLE REQUERIMIENTO</th>
-                    <th>UNIDAD</th>
-                    <th>CANTIDAD</th>
-                    <th>UNITARIO</th>
-                    <th>TOTAL</th>
-                    <th>TOTAL PROG.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">ENE.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">FEB.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">MAR.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">ABR.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">MAY.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">JUN.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">JUL.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">AGO.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">SEPT.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">OCT.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">NOV.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">DIC.</th>
-                    <th>OBSERVACIONES</th>
-                  </tr>
-                </thead>
-                <tbody>';
-                $cont = 0;
-                foreach ($lista_insumos as $row) {
-                  $prog=$this->minsumos->get_temporalidad_2019($row['ins_id']);
-                  $color='';
-                  if(count($prog)!=0){
-                    if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
-                      $color='#f5bfb6';
-                    }
-                  }
-         
-                  $cont++;
-                  $tabla .= '<tr class="modo1" bgcolor="'.$color.'" title='.$row['ins_id'].'>';
-                    $tabla .= '<td align="center">';
-                    if($tp==1){
-                      $tabla.='
-                          <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO" ><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
-                          <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn-default del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
-                    }
-                    else{
-                      $tabla.=''.$cont.'';
-                    }
-
-                    $tabla .='</td>';
-                    $tabla .='<td>'.$row['par_codigo'].'</td>'; /// partida
-                    $tabla .= '<td>'.$row['ins_detalle'].'</td>'; /// detalle requerimiento
-                    $tabla .= '<td>'.$row['ins_unidad_medida'].'</td>'; /// Unidad
-                    $tabla .= '<td>'.$row['ins_cant_requerida'].'</td>'; /// cantidad
-                    $tabla .= '<td>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                    $tabla .= '<td>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-
-                    if(count($prog)!=0){
-                      $tabla.='
-                      <td>'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td> 
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes2'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes3'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes4'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes5'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes6'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes7'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes8'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes9'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes10'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes11'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes12'], 2, ',', '.').'</td>';
-                    }
-                    else{
-                      $tabla.='
-                      <td>0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>';
-                    }
-                    
-                    $tabla .= '<td>'.$row['ins_observacion'].'</td>';
-                  $tabla .= '</tr>';
-                  $total=$total+$row['ins_costo_total'];
-                }
-                $tabla.='
-                </tbody>
-                  <tr class="modo1">
-                    <td colspan="6"> TOTAL </td>
-                    <td><font color="blue" size=1>'.number_format($total, 2, ',', '.') .'</font></td>
-                    <td colspan="14"></td>
-                  </tr>
-              </table>';
-
-      return $tabla;
-    }
-
+   
     /*------------ TABLA PRODUCTO-REQUERIMIENTOS -----------*/
-    function genera_tabla_prod_insumo($proy_id){
+/*    function genera_tabla_prod_insumo($proy_id){
         $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); //// DATOS DEL PROYECTO
         $fase = $this->model_faseetapa->get_id_fase($proy_id); //// recupera datos de la tabla fase activa
         $componentes=$this->model_componente->componentes_id($fase[0]['id'],$proyecto[0]['tp_id']);
@@ -557,7 +441,7 @@ class crequerimiento extends CI_Controller{
         $tabla = '';
         $cont_acordion = 0;
         foreach ($componentes as $row) {
-            $requerimientos = $this->minsumos->list_requerimientos_operacion_procesos($row['com_id']);
+            $requerimientos = $this->model_insumo->list_requerimientos_operacion_procesos($row['com_id']);
             $cont_acordion++;
             $tabla .= '<div class="panel panel-default">
                             <div class="panel-heading">
@@ -621,10 +505,10 @@ class crequerimiento extends CI_Controller{
                  </div>';
         }
         return $tabla;
-    }
+    }*/
 
     /*------------ TABLA ACTIVIDADES-REQUERIMIENTOS -----------*/
-    function genera_tabla_act_insumo($proy_id){
+/*    function genera_tabla_act_insumo($proy_id){
         $lista_productos = $this->minsumos->lista_productos($proy_id, $this->gestion);
         $tabla = '';
         $cont_acordion = 0;
@@ -686,7 +570,7 @@ class crequerimiento extends CI_Controller{
                  </div>';
         }
         return $tabla;
-    }
+    }*/
 
 
     /*----- TABLA - CONSOLIDADO OPERACION (OPERACIONES) -----*/
@@ -770,7 +654,7 @@ class crequerimiento extends CI_Controller{
 
 
     /*---- COMPARATIVO DE PARTIDAS A NIVEL DE UNIDAD / ESTABLECIMIENTO (2019)---*/
-    public function comparativo_partidas_acciones($dep_id,$aper_id){ 
+   /* public function comparativo_partidas_acciones($dep_id,$aper_id){ 
       $tabla ='';
       $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,1); // Asig
       $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,2); // Prog
@@ -908,7 +792,7 @@ class crequerimiento extends CI_Controller{
                 </table>';
 
       return $tabla;
-    }
+    }*/
 
 
     /*---- CAMBIA EL ID DEL INSUMO Y LO LLEVA A INSUMOPRODUCTO ----*/

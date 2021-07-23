@@ -147,5 +147,40 @@ class Model_insumo extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+    function lista_insumos_prod($prod_id){
+        $sql = 'select *
+                from _insumoproducto ip
+                Inner Join _productos as prod On prod.prod_id=ip.prod_id
+                Inner Join insumos as i On i.ins_id=ip.ins_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\'
+                order by par.par_codigo,i.ins_id asc';
+
+        
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    function get_insumo_producto($ins_id){
+        $sql = 'select *
+                from insumos
+                where ins_id='.$ins_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+/*    public function lista_productos($proy_id, $gestion){
+        $this->db->SELECT('*');
+        $this->db->FROM('vista_producto');
+        $this->db->WHERE('proy_id', $proy_id);
+        $this->db->WHERE('estado IN (1,2)');
+        $this->db->ORDER_BY('com_id', 'ASC');
+        //$this->db->WHERE("(cast(to_char(fecha,'yyyy')as integer))=" . $gestion);
+        $query = $this->db->get();
+        return $query->result_array();
+    }*/
 }
 ?>

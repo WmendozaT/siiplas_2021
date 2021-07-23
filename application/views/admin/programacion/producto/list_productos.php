@@ -57,27 +57,6 @@
     <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
     <!-- HEADER -->
     <header id="header">
-      <div id="logo-group">
-        <!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-      </div>
-      <div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-        <span>
-          &nbsp;&nbsp;&nbsp; 
-          <div class="badge bg-color-blue">
-            <span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-          </div>
-        </span>
-        <div class="project-context hidden-xs">
-          <span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-            <i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-          </span>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-            </li>
-          </ul>
-        </div>
-      </div>
       <!-- pulled right: nav area -->
       <div class="pull-right">
         <!-- collapse menu button -->
@@ -128,7 +107,7 @@
       <div id="ribbon">
         <!-- breadcrumb -->
           <ol class="breadcrumb">                         
-               <li><a href="<?php echo base_url().'index.php/admin/proy/list_proy';?>" title="VOLVER A MI POA">Programaci&oacute;n POA</a></li><li>...</li><li><?php echo $tit_comp;?></li><li>Mis Operaciones</li> 
+               <li><a href="<?php echo base_url().'index.php/admin/proy/list_proy';?>" title="VOLVER A MI POA">Programaci&oacute;n POA</a></li><li>Unidad Reponsable</li><li>Mis Actividades</li> 
           </ol>
       </div>
       <!-- END RIBBON -->
@@ -138,8 +117,8 @@
             <article class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
               <section id="widget-grid" class="well">
                 <ul class="nav nav-pills">
-                  <li><a href="<?php echo base_url().'index.php/prog/list_serv/'.$fase[0]['proy_id'].'';?>"><?php echo $tit_comp;?></a></li>
-                  <li class="active"><a href="#">MIS OPERACIONES</a></li>
+                  <li><a href="<?php echo base_url().'index.php/prog/list_serv/'.$fase[0]['proy_id'].'';?>">UNIDAD RESPONSABLE</a></li>
+                  <li class="active"><a href="#">MIS ACTIVIDADES</a></li>
                 </ul>
               </section>
             </article>
@@ -154,11 +133,11 @@
                   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'index.php/admin/dashboard' ?>">SALIR A MENU PRINCIPAL</a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'index.php/admin/proy/list_proy'?>">SALIR A MIS POAS</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'index.php/prog/list_serv/'.$fase[0]['proy_id'].'';?>">SALIR A MIS SERVICIOS</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'index.php/prog/list_serv/'.$fase[0]['proy_id'].'';?>">SALIR A MIS UNIDADES</a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" class="btn btn-success" onclick="update_codigo()"><font color="#ffffff">ACTUALIZAR C&Oacute;DIGOS</font></a></li>
                     <?php
                       if($this->session->userdata('tp_adm')==1 ){ ?>
-                        <li ><a onclick="eliminar_requerimientos_servicio()" class="btn btn-danger" style="width:100%;" title="Eliminar Requerimientos del Servicio (todos)"><font color="#ffffff">ELIMINAR REQUERIMIENTOS SERVICIO (TODOS)</font></a></li>
+                        <li ><a onclick="eliminar_requerimientos_servicio()" class="btn btn-danger" style="width:100%;" title="Eliminar Requerimientos de la unidad (todos)"><font color="#ffffff">ELIMINAR REQUERIMIENTOS UNIDAD (TODOS)</font></a></li>
                         <!-- <li ><a onclick="eliminar_requerimientos()" class="btn btn-danger" style="width:100%;" title="Eliminar Requerimientos (todos)"><font color="#ffffff">ELIMINAR REQUERIMIENTOS (TODOS)</font></a></li> -->
                       <?php
                       }
@@ -182,7 +161,7 @@
                       <?php echo $oregional;?>
                     </div>
                   </div>
-                  <h1> <?php echo $tit_comp;?> : <small><?php echo $componente[0]['tipo_subactividad'].' '.$componente[0]['com_componente']; ?></small></h1>
+                  <h1> UNIDAD RESPONSABLE : <small><?php echo $componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion']; ?></small></h1>
                 </div>
             </section>
           </article>
@@ -520,7 +499,7 @@
                             <section id="widget-grid" class="">
                               <div>
                                 <?php echo $datos_proyecto;?>
-                                <h1> <?php echo $tit_comp; ?> : <small><?php echo $componente[0]['com_componente']; ?></small></h1>
+                                <h1> UNIDAD RESPONSABLE : <small><?php echo $componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion']; ?></small></h1>
                               </div>
                             </section>
                             <hr>

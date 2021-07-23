@@ -57,7 +57,7 @@ class Minsumos extends CI_Model{
         return $query->result_array();
     }*/
 
-    public function lista_productos($proy_id, $gestion){
+/*    public function lista_productos($proy_id, $gestion){
         $this->db->SELECT('*');
         $this->db->FROM('vista_producto');
         $this->db->WHERE('proy_id', $proy_id);
@@ -66,17 +66,17 @@ class Minsumos extends CI_Model{
         //$this->db->WHERE("(cast(to_char(fecha,'yyyy')as integer))=" . $gestion);
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
 
     //LISTA DE ACTIVIDADES FILTRADO POR PRODUCTO
-    public function lista_actividades($prod_id, $gestion){
+/*    public function lista_actividades($prod_id, $gestion){
         $this->db->SELECT('*');
         $this->db->FROM('vista_actividad');
         $this->db->WHERE('prod_id', $prod_id);
         $this->db->ORDER_BY('act_id', 'ASC');
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
 
     /*------- Lista de componente-producto-actividad*/
     public function lista_com_prod_actividades($com_id, $gestion){
@@ -1066,13 +1066,13 @@ class Minsumos extends CI_Model{
     }*/
 
     /*---- GET ID INSUMO PRODUCTO -----*/
-    function get_insumo_producto($ins_id){
+/*    function get_insumo_producto($ins_id){
         $sql = 'select *
                 from insumos
                 where ins_id='.$ins_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*---- SUMA TOTAL MONTO PROGRAMADO POR ACTIVIDAD (PROYECTO) -----*/
 /*    function monto_total_programado($aper_id,$gestion){

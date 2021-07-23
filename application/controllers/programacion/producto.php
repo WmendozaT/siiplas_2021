@@ -74,7 +74,7 @@ class Producto extends CI_Controller {
           $data['datos_proyecto']='<h1> PROYECTO : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small></h1>';
           $data['list_oregional']=$this->lista_oregional_pi($proy_id);
           $data['prod'] = $this->operaciones($proy_id,$com_id);
-          $data['tit_comp']='UNIDAD RESPONSABLE';
+          //$data['tit_comp']='UNIDAD RESPONSABLE';
         }
         /*--------- Operacion de Funcionamiento ----------*/
         else{
@@ -83,7 +83,7 @@ class Producto extends CI_Controller {
           $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
           $data['list_oregional']=$this->lista_oregional($proy_id);
           $data['prod'] = $this->operaciones($proy_id,$com_id);
-          $data['tit_comp']='SUBACTIVIDAD';
+          //$data['tit_comp']='UNIDAD RESPONSABLE';
         }
 
         
