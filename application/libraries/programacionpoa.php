@@ -222,6 +222,26 @@ class Programacionpoa extends CI_Controller{
     }
 
 
+
+  /*--- ACTUALIZA CODIGO DE ACTIVIDAD (FORM 4) ----*/
+  public function update_codigo_actividad($com_id){  
+    $productos = $this->model_producto->lista_operaciones($com_id,$this->gestion); // Lista de productos
+    $nro=0;
+    foreach($productos as $row){
+      $nro++;
+      $update_prod= array(
+        'prod_cod' => $nro,
+        'fun_id' => $this->fun_id
+      );
+      $this->db->where('prod_id', $row['prod_id']);
+      $this->db->update('_productos', $update_prod);
+    }
+  }
+
+
+
+
+
   /*-------- MENU -----*/
     function menu($mod){
         $enlaces=$this->menu_modelo->get_Modulos($mod);

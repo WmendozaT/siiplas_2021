@@ -214,7 +214,7 @@ function abreVentana(PDF){
 
   $(function () {
       function reset() {
-        $("#toggleCSS").attr("href", +base+"/assets/themes_alerta/alertify.default.css");
+        $("#toggleCSS").attr("href", base+"/assets/themes_alerta/alertify.default.css");
         alertify.set({
             labels: {
                 ok: "ACEPTAR",

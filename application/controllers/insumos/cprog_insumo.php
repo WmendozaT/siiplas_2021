@@ -1,6 +1,4 @@
 <?php
-define("DOMPDF_ENABLE_REMOTE", true);
-define("DOMPDF_TEMP_DIR", "/tmp");
 class Cprog_insumo extends CI_Controller{
     var $gestion;
     var $rol;
@@ -1711,66 +1709,4 @@ class Cprog_insumo extends CI_Controller{
       return $tabla;
     }
 
-      function estilo_vertical(){
-        $estilo_vertical = '<style>
-        .saltopagina{page-break-after:always;}
-        body{
-            font-family: sans-serif;
-            }
-        table{
-            font-size: 7px;
-            width: 100%;
-            background-color:#fff;
-        }
-        .mv{font-size:10px;}
-        .verde{ width:100%; height:5px; background-color:#1c7368;}
-        .blanco{ width:100%; height:5px; background-color:#F1F2F1;}
-        .siipp{width:120px;}
-
-        .titulo_pdf {
-            text-align: left;
-            font-size: 7px;
-        }
-        .tabla {
-        font-family: Verdana, Arial, Helvetica, sans-serif;
-        font-size: 7px;
-        width: 100%;
-
-        }
-        .tabla th {
-        padding: 2px;
-        font-size: 7px;
-        background-color: #1c7368;
-        background-repeat: repeat-x;
-        color: #FFFFFF;
-        border-right-width: 1px;
-        border-bottom-width: 1px;
-        border-right-style: solid;
-        border-bottom-style: solid;
-        border-right-color: #558FA6;
-        border-bottom-color: #558FA6;
-        font-family: "Trebuchet MS", Arial;
-        text-transform: uppercase;
-        }
-        .tabla .modo1 {
-        font-size: 7px;
-        font-weight:bold;
-       
-        background-image: url(fondo_tr01.png);
-        background-repeat: repeat-x;
-        color: #34484E;
-        font-family: "Trebuchet MS", Arial;
-        }
-        .tabla .modo1 td {
-        padding: 1px;
-        border-right-width: 1px;
-        border-bottom-width: 1px;
-        border-right-style: solid;
-        border-bottom-style: solid;
-        border-right-color: #A4C4D0;
-        border-bottom-color: #A4C4D0;
-        }
-    </style>';
-        return $estilo_vertical;
-    }
 }

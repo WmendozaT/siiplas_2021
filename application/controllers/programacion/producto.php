@@ -27,6 +27,9 @@ class Producto extends CI_Controller {
         $this->dist_tp = $this->session->userData('dist_tp');
         $this->fun_id = $this->session->userdata("fun_id");
         $this->tp_adm = $this->session->userData('tp_adm');
+        $this->conf_form4 = $this->session->userData('conf_form4');
+        $this->conf_form5 = $this->session->userData('conf_form5');
+        $this->load->library('programacionpoa');
       }else{
         $this->session->sess_destroy();
           redirect('/','refresh');
@@ -44,7 +47,7 @@ class Producto extends CI_Controller {
         $data['productos'] = $this->model_producto->list_prod($com_id); // Lista de productos
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
         $data['oregional']=$this->verif_oregional($proy_id);  //// Verifica Objetivos regionales
-        $data['monto_asig']=0;
+       /* $data['monto_asig']=0;
         $data['monto_prog']=0;
         $data['monto_asig']=$this->model_ptto_sigep->suma_ptto_accion($data['proyecto'][0]['aper_id'],1);
         $data['monto_prog']=$this->model_ptto_sigep->suma_ptto_accion($data['proyecto'][0]['aper_id'],2);
@@ -57,7 +60,7 @@ class Producto extends CI_Controller {
          $monto_p=$data['monto_prog'][0]['monto']; 
         }
 
-        $data['saldo']= round(($monto_a-$monto_p),2);
+        $data['saldo']= round(($monto_a-$monto_p),2);*/
         $data['indi'] = $this->model_proyecto->indicador(); /// indicador
         $data['metas'] = $this->model_producto->tp_metas(); /// tp metas
         $data['oestrategicos'] = $this->model_mestrategico->list_objetivos_estrategicos(); /// Objetivos Estrategicos
@@ -70,23 +73,18 @@ class Producto extends CI_Controller {
 
         /*--------- Proyecto de Inversion -----------*/
         if($data['proyecto'][0]['tp_id']==1){
-          //$data['componente'] = $this->model_componente->get_componente_pi($com_id);
           $data['datos_proyecto']='<h1> PROYECTO : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small></h1>';
           $data['list_oregional']=$this->lista_oregional_pi($proy_id);
-          $data['prod'] = $this->operaciones($proy_id,$com_id);
-          //$data['tit_comp']='UNIDAD RESPONSABLE';
         }
         /*--------- Operacion de Funcionamiento ----------*/
         else{
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-          //$data['componente'] = $this->model_componente->get_componente($com_id);
           $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
           $data['list_oregional']=$this->lista_oregional($proy_id);
-          $data['prod'] = $this->operaciones($proy_id,$com_id);
-          //$data['tit_comp']='UNIDAD RESPONSABLE';
         }
 
-        
+        $data['button']=$this->button_form4(count($data['productos']));
+        $data['prod'] = $this->operaciones($proy_id,$com_id);
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
 
       }
@@ -96,8 +94,45 @@ class Producto extends CI_Controller {
   }
 
 
+
+
+    /*--- BOTON REPORTE SEGUIMIENTO POA (MES VIGENTE)---*/
+    function button_form4($nro){
+      $tabla='';
+      if($this->tp_adm==1 || $this->conf_form4==1){
+        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO FORM N 4" class="btn btn-success">
+                    <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;NUEVO REGISTRO
+                  </a>
+                  
+                  <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="1" title="MODIFICAR REGISTRO" >
+                    <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR NUEVAS ACTIVIDADES.CSV
+                  </a>';
+
+        if($nro!=0){
+          $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="2" title="SUBIR ARCHIVO REQUERIMIENTO (GLOBAL)" >
+                      <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR REQUERIMIENTOS (GLOBAL)
+                    </a>';
+        }
+      }
+
+      $tabla.='<br><br>';
+      
+      return $tabla;
+    }
+
+    /*--- BOTON REPORTE SEGUIMIENTO POA (MES VIGENTE)---*/
+    function button_rep_seguimientopoa($com_id){
+      $tabla='';
+        $tabla.='
+                <a href="javascript:abreVentana(\''.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$com_id.'/'.$this->verif_mes[1].'\');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
+                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;&nbsp;<b>IMPRIMIR SEGUIMIENTO POA ('.$this->verif_mes[2].')</b>
+                </a>';
+      return $tabla;
+    }
+
+
   /*--- ACTUALIZA CODIGO DE OPERACION ----*/
-  public function update_codigo($com_id){  
+/*  public function update_codigo($com_id){  
     $productos = $this->model_producto->lista_operaciones($com_id,$this->gestion); // Lista de productos
     $nro=0;
     foreach($productos as $row){
@@ -111,7 +146,7 @@ class Producto extends CI_Controller {
     }
 
     redirect('admin/prog/list_prod/'.$com_id);
-  }
+  }*/
 
 
   /*--- LISTA DE OBJETIVO REGIONAL (GASTO CORRIENTE )-----*/
@@ -544,7 +579,7 @@ class Producto extends CI_Controller {
                     <th style="width:4%;"><b>NOV.</b></th>
                     <th style="width:4%;"><b>DIC.</b></th>
                     <th style="width:10%;"><b>MEDIO DE VERIFICACI&Oacute;N</b></th>
-                    <th style="width:7%;"><b>DELETE</b></th>
+                    <th style="width:7%;"><b>ELIMINAR ACTIVIDAD</b></th>
                     <th style="width:7%;"><b>PTTO..</b></th>
                     <th style="width:7%;"><b>NRO. REQ.</b></th>
                   </tr>
@@ -657,7 +692,7 @@ class Producto extends CI_Controller {
     }
 
     /*----------------- LISTA OPERACIONES (2019) ------------------*/
-    public function operaciones2019($proy_id,$com_id){
+/*    public function operaciones2019($proy_id,$com_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
       $fase = $this->model_faseetapa->get_id_fase($proy_id); //// recupera datos de la tabla fase activa
       $productos = $this->model_producto->list_producto_programado($com_id,$this->gestion); // Lista de productos
@@ -751,7 +786,7 @@ class Producto extends CI_Controller {
                 $tabla.='</tbody>';
 
       return $tabla;
-    }
+    }*/
 
     /*--- ELIMINAR TOD@S LOS REQUERIMIENTOS DEL SERVICIO (SOLO REQUERIMIENTOS) (2020) ---*/
     public function delete_insumos_servicios($com_id){
@@ -1123,10 +1158,8 @@ class Producto extends CI_Controller {
 
   /*------------ AGREGAR NUEVA OPERACION (2019) -------------------*/
   public function new_productos($com_id){
-    $enlaces=$this->menu_modelo->get_Modulos_programacion(2);
-    $data['enlaces'] = $enlaces;
+    $data['enlaces'] = $this->menu_modelo->get_Modulos_programacion(2);
     $data['componente'] = $this->model_componente->get_componente($com_id);
-
 
     if(count($data['componente'])!=0){
       $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
@@ -1144,12 +1177,6 @@ class Producto extends CI_Controller {
         $data['cod_ope']=0;
       }
       
-/*      if($data['proyecto'][0]['tp_id']==1){
-        $data['componente'] = $this->model_componente->get_componente_pi($com_id); 
-      }
-      else{
-        $data['componente'] = $this->model_componente->get_componente($com_id);
-      }*/
       
       $this->load->view('admin/programacion/producto/form_prod', $data); 
     }

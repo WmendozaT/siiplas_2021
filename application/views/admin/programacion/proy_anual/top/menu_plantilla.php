@@ -23,7 +23,7 @@
 		<!--fin de stiloh-->
 			<style>
             #mdialTamanio{
-          		width: 70% !important;
+          		width: 50% !important;
 		      }
 		      #mdialTamanio2{
 		         width: 60.5% !important;
@@ -34,27 +34,6 @@
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
 		<!-- HEADER -->
 		<header id="header">
-			<div id="logo-group">
-				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -147,76 +126,50 @@
 			<!-- END MAIN CONTENT -->
 		</div>
 
+		<!-- MODAL SUBIR PLANTILLA -->
+		<div class="modal fade" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="mdialTamanio">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                    </div>
+                    <div class="modal-body">
+                        <h2><div id="titulo"></div></h2>
+                    	<div id="datos"></div>
+                        <div class="row">
+                              <form action="<?php echo site_url().'/insumos/cprog_insumo/ver_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_prev" name="form_subir_prev" class="form-horizontal">
+                                <input type="hidden" name="tp" id="tp">
+                                <fieldset>
+		                            <div class="form-group">
+		                            	<center><div id="img"></div></center>
+		                            </div>
+		                        </fieldset>  
+                                <hr>
+                                <div class="form-group">
+                                	<b>SELECCIONAR ARCHIVO CSV</b>
+	                                <div class="input-group">
+	                                  <span class="input-group-btn">
+	                                    <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+	                                    <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+	                                    <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+	                                  </span>
+	                                  <span class="form-control"></span>
+	                                </div>
+	                            </div>
+                                
+                                <div>
+                                    <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;"><div id="buton"></div></button><br>
+                                    <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                                </div>
+                              </form> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 	<!-- ======= MODAL VER ARCHIVO ACTIVIDADES =============== -->
-  <div class="modal animated fadeInDown" id="modal_importar_ff" tabindex="-1" role="dialog">
-    <link href="<?php echo base_url(); ?>assets/file/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
-    <script src="<?php echo base_url(); ?>assets/file/jquery.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/file/js/fileinput.min.js" type="text/javascript"></script> 
-    <div class="modal-dialog" id="mdialTamanio2">
-        <div class="modal-content">
-            <div class="modal-body no-padding">
-                <div class="row">
-                   <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="row">
-                        <div id="titulo"></div>
-                        <div class="col-sm-12">
-                          <!-- well -->
-                          <div class="well">
-                            <hr>
-                            <!-- row -->
-                            <div class="row">
-                              <!-- col -->
-                              <div class="col-sm-12">
-                                <!-- row -->
-                                <div class="row">
-                                  <p class="alert alert-warning">
-                                    DETALLES A CONSIDERAR EN EL ARCHIVO EXCEL: 
-                                  </p>
-                                  <div id="datos"></div>
-                                  <hr>
-                                  <!-- <img  src="<?php echo base_url() ?>/assets/img/Vista Requerimientos global.jpg" style="border-style:solid;border-width:5px;" style="width:100%;"> -->
-                                  <center><div id="img"></div></center>
-                                  <hr>
-                                  <p class="alert alert-warning">
-                                    <i class="fa fa-warning"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
-                                  </p>
-                                  	<form action="<?php echo site_url().'/insumos/cprog_insumo/ver_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_prev" name="form_subir_prev" method="post">
-                                      <input type="hidden" name="tp" id="tp">
-                                      <fieldset>
-                                        <section class="form-group">
-                                          <label class="label"><b>SUBIR ARCHIVO .CSV </b></label>
-                                          <label class="input input-file">
-                                              <span class="button">
-                                                <input id="archivo" accept=".csv" name="archivo" type="file" class="file">
-                                                <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
-                                              <b class="tooltip tooltip-top-left">
-                                                 <i class="fa fa-warning txt-color-teal"></i> EL ARCHIVO A SUBIR, DEBE SER EXTENSION .CSV
-                                              </b>
-                                          </label>
-                                        </section>
-                                      </fieldset>
-                                      <div >
-                                        <button type="button" name="subir_archivo_prev" id="subir_archivo_prev" class="btn btn-warning" style="width:100%;"><div id="buton"></div></button>
-                                        <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                                      </div>
-                                  	</form> 
-                                </div>
-                                <!-- end row -->
-                              </div>
-                              <!-- end col -->
-                            </div>
-                            <!-- end row -->
-                          </div>
-                          <!-- end well -->
-                        </div>
-                      </div>
-                    </article>
-                </div>   
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
+
 
 		<!-- PAGE FOOTER -->
 		<div class="page-footer">
@@ -283,14 +236,14 @@
 		          tipo = $(this).attr('name');
 		          document.getElementById("tp").value=tipo;
 		          if(tipo==1){
-		            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <font color=blue><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE ACTIVIDADES.CSV</b></font></h2>');
-		            $('#datos').html('<ul style="font-size: 15px;"><li type="circle"><b>Copiar el contenido de datos del primer Archivo Excel a la plantilla de migración </b></li> <li type="circle"><b>Numero de columnas 21</b></li> <li type="circle"><b>Columna (A) COD. OR. : Codigo de Objetivo Regional</b></li> <li type="circle"><b>Columna (B) COD. ACT. : Codigo Actividad</b></li> <li type="circle"><b>Columnas (G-T), Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>Convertir el Archivo .Xls a .Csv</b></li></ul>');
+		            $('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE ACTIVIDADES.CSV</b></center>');
+		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 21</b></li> <li type="circle"><b>Columna (A) COD. OR. : Codigo de Objetivo Regional</b></li> <li type="circle"><b>Columna (B) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (G-T), Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
 		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/actividades.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
 		            $('#buton').html('VER ARCHIVO DE ACTIVIDADES.CSV');
 		          }
 		          else{
-		            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <font color=blue><b> VERIFICAR PLANTILLA MIGRACI&Oacute;N DE REQUERIMIENTOS.SCV </b></font></h2>');
-		            $('#datos').html('<ul style="font-size: 15px;"><li type="circle"><b>Copiar el contenido de datos del primer Archivo Excel a la plantilla de migración </b></li> <li type="circle"><b>Numero de columnas 22</b></li> <li type="circle"><b>Columna (A) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (E-S), por tratarse de presupuesto el Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>Convertir el Archivo .Xls a .Csv</b></li></ul>');
+		          	$('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE REQUERIMIENTOS.SCV</b></center>');
+		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 22</b></li> <li type="circle"><b>Columna (A) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (E-S), por tratarse de presupuesto el Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
 		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/requerimientos_global.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
 		            $('#buton').html('VER ARCHIVO DE REQUERIMIENTOS.CSV');
 		          }
@@ -323,13 +276,13 @@
 	        });
 	      });
 	    </script>
-		<script type="text/javascript">
+<!-- 		<script type="text/javascript">
 			$(document).ready(function() {
 				pageSetUp();
 				$("#menu").menu();
 				$('.ui-dialog :button').blur();
 				$('#tabs').tabs();
 			})
-		</script>
+		</script> -->
 	</body>
 </html>

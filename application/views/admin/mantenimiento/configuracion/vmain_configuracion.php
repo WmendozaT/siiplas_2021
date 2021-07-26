@@ -561,6 +561,46 @@
                                                                                 </select>
                                                                             </div>
                                                                         </div>
+
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-2 control-label">REGISTRO DEL FORM. N°4</label>
+                                                                            <div class="col-md-10">
+                                                                                <select class="form-control" id="estado_poa_form4" name="estado_poa_form4" title="SELECCIONE ESTADO FORMULARIO N4">
+                                                                                    <?php 
+                                                                                        if($this->session->userData('conf_form4')==1){ ?>
+                                                                                            <option value="1" selected>HABILITADO PARA REGISTRO </option>
+                                                                                            <option value="0">NO HABILITADO</option>     
+                                                                                            <?php
+                                                                                        }
+                                                                                        else{ ?>
+                                                                                            <option value="1">HABILITADO PARA REGISTRO </option>
+                                                                                            <option value="0" selected>NO HABILITADO</option> 
+                                                                                            <?php
+                                                                                        }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-2 control-label">REGISTRO DEL FORM. N°5</label>
+                                                                            <div class="col-md-10">
+                                                                                <select class="form-control" id="estado_poa_form5" name="estado_poa_form5" title="SELECCIONE ESTADO FORMULARIO N5">
+                                                                                    <?php 
+                                                                                        if($this->session->userData('conf_form5')==1){ ?>
+                                                                                            <option value="1" selected>HABILITADO PARA REGISTRO </option>
+                                                                                            <option value="0">NO HABILITADO</option>     
+                                                                                            <?php
+                                                                                        }
+                                                                                        else{ ?>
+                                                                                            <option value="1">HABILITADO PARA REGISTRO </option>
+                                                                                            <option value="0" selected>NO HABILITADO</option> 
+                                                                                            <?php
+                                                                                        }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
                                                                     </fieldset>
                                                                 </form>
                                                             </div>
@@ -1017,6 +1057,75 @@
                             type:"post",
                             url:url,
                             data:{estado:est_poa,g_id:id},
+                            success:function(datos){
+                                if(datos.trim() =='true'){
+                                    window.location.reload(true);
+                                }else{
+                                    alertify.error("Error al Actualizar ..");
+                                }
+                        }});
+                    } else {
+                        alertify.error("OPCI\u00D3N CANCELADA");
+                    }
+                  });
+
+                });
+
+                //// ESTADO FORMULARIO 4
+                $("#estado_poa_form4").change(function () {            
+                var estado = $(this).val();
+                var id = <?php echo $conf[0]['ide'];?>;
+
+                var mensaje='';
+                if(estado==1){
+                    mensaje='HABILITAR FORMULARIO N°4 ?';
+                }
+                else{
+                    mensaje='DESHABILITAR FORMULARIO N°4 ?';
+                }
+
+                alertify.confirm(mensaje, function (a) {
+                    if (a) {
+                        var url = "<?php echo site_url().'/mantenimiento/cconfiguracion/valida_update_estadoform4'?>";
+                        $.ajax({
+                            type:"post",
+                            url:url,
+                            data:{estado:estado,g_id:id},
+                            success:function(datos){
+                                if(datos.trim() =='true'){
+                                    window.location.reload(true);
+                                }else{
+                                    alertify.error("Error al Actualizar ..");
+                                }
+                        }});
+                    } else {
+                        alertify.error("OPCI\u00D3N CANCELADA");
+                    }
+                  });
+
+                });
+
+
+                //// ESTADO FORMULARIO 5
+                $("#estado_poa_form5").change(function () {            
+                var estado = $(this).val();
+                var id = <?php echo $conf[0]['ide'];?>;
+
+                var mensaje='';
+                if(estado==1){
+                    mensaje='HABILITAR FORMULARIO N°5 ?';
+                }
+                else{
+                    mensaje='DESHABILITAR FORMULARIO N°5 ?';
+                }
+
+                alertify.confirm(mensaje, function (a) {
+                    if (a) {
+                        var url = "<?php echo site_url().'/mantenimiento/cconfiguracion/valida_update_estadoform5'?>";
+                        $.ajax({
+                            type:"post",
+                            url:url,
+                            data:{estado:estado,g_id:id},
                             success:function(datos){
                                 if(datos.trim() =='true'){
                                     window.location.reload(true);

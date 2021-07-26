@@ -195,19 +195,8 @@
                     <h2 class="font-md"><strong><?php echo count($productos);?> ACTIVIDADES REGISTRADOS</strong></h2>  
                   </header>
                 <div>
-                  <?php 
-                    if($this->session->userData('verif_ppto')==0 || $this->session->userData('fun_id')==715 || $this->session->userData('fun_id')==690){ ?>
-                      <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-success nuevo_form" title="NUEVO REGISTRO" class="btn btn-success" style="width:12%;">NUEVO REGISTRO</a>
-                      <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-info importar_ff" name="1" title="MODIFICAR REQUERIMIENTO" style="width:12%;">SUBIR OPERACI&Oacute;N.CSV</a>                                                                
-                    <?php
-                    }
-
-                    if(count($productos)!=0){ ?>
-                        <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-info importar_ff" name="2" title="SUBIR ARCHIVO REQUERIMIENTO (GLOBAL)" style="width:12%;">SUBIR REQUERIMIENTOS (GLOBAL)</a>
-                      <?php
-                    }
+                  <?php echo $button;
                   ?>
-                  <br><br> 
                     <div class="widget-body no-padding">
                       <form id="del_req" name="del_req" novalidate="novalidate" method="post">
                         <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $fase[0]['proy_id']; ?>">
@@ -252,11 +241,11 @@
             <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
           </div>
           <div class="modal-body">
-            <h2 class="alert alert-info"><center>NUEVO REGISTRO - OPERACI&Oacuten;N <?php echo $this->session->userData('gestion');?></center></h2>
+            <h2 class="alert alert-info"><center>NUEVO REGISTRO FORM N° 4 - ACTIVIDAD <?php echo $this->session->userData('gestion');?></center></h2>
               <form action="<?php echo site_url().'/programacion/producto/valida_producto'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
                   <input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>"> 
                   <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-                  <header><b>DATOS GENERALES DE LA OPERACI&Oacute;N</b></header>
+                  <header><b>DATOS GENERALES DE LA ACTIVIDAD</b></header>
                   <fieldset>          
                     <div class="row">
                       <section class="col col-1">
@@ -268,7 +257,7 @@
                         </label>
                       </section>
                       <section class="col col-5">
-                        <label class="label"><b>OPOERACI&Oascute;N</b></label>
+                        <label class="label"><b>DESCRIPCI&Oacute;N DE LA ACTIVIDAD</b></label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
                           <textarea rows="2" name="prod" id="prod" title="REGISTRAR OPERACIÓN"></textarea>
@@ -485,7 +474,7 @@
 
   <!-- ======= MODAL SUBIR ARCHIVO ACTIVIDADES =============== -->
   <div class="modal animated fadeInDown" id="modal_importar_ff" tabindex="-1" role="dialog">
-    <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
+   <!--  <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script> -->
     <div class="modal-dialog" id="mdialTamanio2">
         <div class="modal-content">
             <div class="modal-body no-padding">

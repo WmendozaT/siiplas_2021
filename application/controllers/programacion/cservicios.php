@@ -22,6 +22,7 @@ class Cservicios extends CI_Controller {
             $this->rol = $this->session->userData('rol_id');
             $this->dist_tp = $this->session->userData('dist_tp');
             $this->fun_id = $this->session->userdata("fun_id");
+            $this->load->library('programacionpoa');
 
             }else{
                 $this->session->sess_destroy();
@@ -80,8 +81,8 @@ class Cservicios extends CI_Controller {
     function importar_operaciones_global(){
         if ($this->input->post()) {
             $post = $this->input->post();
-            $proy_id = $post['proy_id'];
-            $pfec_id = $post['pfec_id'];
+            $proy_id = $this->security->xss_clean($post['proy_id']);
+            $pfec_id = $this->security->xss_clean($post['pfec_id']);
             $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
             $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id); /// Lista de Objetivos Regionales
             
@@ -105,20 +106,21 @@ class Cservicios extends CI_Controller {
                     if($i != 0){ 
                         $datos = explode(";",$linea);
                         if(count($datos)==22){
+
                             $cod_serv=trim($datos[0]); /// Codigo Servicio
 
-                            $cod_or = trim($datos[1]); // Codigo Objetivo Regional
-                            $cod_act = trim($datos[2]); // Codigo Actividad
+                            $cod_or = intval(trim($datos[1])); // Codigo Objetivo Regional
+                            $cod_act = intval(trim($datos[2])); // Codigo Actividad
                             $descripcion = utf8_encode(trim($datos[3])); //// descripcion Operacion
                             $resultado = utf8_encode(trim($datos[4])); //// descripcion Resultado
                             $unidad = utf8_encode(trim($datos[5])); //// Unidad
                             $indicador = utf8_encode(trim($datos[6])); //// descripcion Indicador
-                            $lbase = utf8_encode(trim($datos[7])); //// Linea Base
+                            $lbase = intval(trim($datos[7])); //// Linea Base
                             if(trim($datos[7])==''){
                               $lbase = 0; //// Linea Base
                             }
 
-                            $meta = utf8_encode(trim($datos[8])); //// Meta
+                            $meta = intval(trim($datos[8])); //// Meta
                             if(trim($datos[8])==''){
                               $meta = 0; //// Meta
                             }
@@ -136,6 +138,7 @@ class Cservicios extends CI_Controller {
 
                             $ae=0;
                             $or_id=0;
+                         
                             if(count($list_oregional)!=0){
                               $get_acc=$this->model_objetivoregion->get_alineacion_proyecto_oregional($proy_id,$cod_or);
                               if(count($get_acc)!=0){
@@ -148,7 +151,7 @@ class Cservicios extends CI_Controller {
                               if($cod_serv!='' & $cod_serv!=0){
                                 $servicio=$this->model_componente->get_fase_componente_nro($pfec_id,$cod_serv,$proyecto[0]['tp_id']);
                                 if(count($servicio)!=0){
-                                    /*--- INSERTAR DATOS OPERACIONES (ACTIVIDADES 2021) ---*/
+                                   
                                     $query=$this->db->query('set datestyle to DMY');
                                     $data_to_store = array(
                                       'com_id' => $servicio[0]['com_id'],
@@ -186,6 +189,9 @@ class Cservicios extends CI_Controller {
                                       $no_guardado++;
                                     }
                                 }
+
+                                /// Actualizando codigo de actividades
+                                $this->programacionpoa->update_codigo_actividad($servicio[0]['com_id']);
                             }
                             ///////////
    
@@ -316,7 +322,7 @@ class Cservicios extends CI_Controller {
                     <td></td>
                     <td></td>
                     <td>'.$ponderacion.'%</td>
-                    <td>'.$sum.'</td>
+                    <td align=center><b>'.$sum.'</b></td>
                     <td></td>
                     <td></td>
                     <td></td>

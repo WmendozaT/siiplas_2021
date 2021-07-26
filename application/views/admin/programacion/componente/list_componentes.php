@@ -38,6 +38,9 @@
               text-align: center;
               font-size: 10px;
             }
+            #mdialTamanio{
+          		width: 40% !important;
+		     }
 		</style>
 	</head>
 	<body class="">
@@ -174,10 +177,13 @@
 		</div>
 
 		  <!-- ======= MODAL SUBIR ARCHIVO ACTIVIDADES =============== -->
-  <div class="modal animated fadeInDown" id="modal_importar_ff" tabindex="-1" role="dialog">
-    <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
-    <div class="modal-dialog" id="mdialTamanio2">
+  <div class="modal animated fadeInDown" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+   <!--  <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script> -->
+    <div class="modal-dialog" id="mdialTamanio">
         <div class="modal-content">
+        	<div class="modal-header">
+                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+            </div>
             <div class="modal-body no-padding">
                 <div class="row">
                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -240,7 +246,6 @@
 		</script>
 		<!-- IMPORTANT: APP CONFIG -->
 		<script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
-		<script src = "<?php echo base_url(); ?>mis_js/control_session.js"></script>
 		<script src="<?php echo base_url();?>/assets/js/app.config.js"></script>
 		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
 		<script src="<?php echo base_url();?>/assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 

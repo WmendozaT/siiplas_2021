@@ -826,6 +826,53 @@ echo "post_max_size = 2000M";*/
     }
 
 
+    /*--- ESTADO DEL FORMULARIO N° 4 ---*/
+    function valida_update_estadoform4(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $estado = $post['estado'];
+          $g_id= $post['g_id'];
+
+          $update_conf = array(
+            'conf_form4' => $estado,
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('ide', $this->gestion);
+          $this->db->update('configuracion', $update_conf);
+
+          $this->session->set_userdata('conf_form4', $estado);
+
+          echo "true";
+
+      }else{
+        show_404();
+      }
+    }
+
+    /*--- ESTADO DEL FORMULARIO N° 4 ---*/
+    function valida_update_estadoform5(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $estado = $post['estado'];
+          $g_id= $post['g_id'];
+
+          $update_conf = array(
+            'conf_form5' => $estado,
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('ide', $this->gestion);
+          $this->db->update('configuracion', $update_conf);
+
+          $this->session->set_userdata('conf_form5', $estado);
+
+          echo "true";
+
+      }else{
+        show_404();
+      }
+    }
+
+
     function mes_nombre(){
         $mes[1] = 'ENE.';
         $mes[2] = 'FEB.';
