@@ -194,7 +194,7 @@
     </div>
 </div>
 
-  <!-- ======= MODAL FORMULARIO DE REGISTRO =============== -->
+  <!-- ==== MODAL FORMULARIO DE REGISTRO FORM 4 ==== -->
   <div class="modal fade" id="modal_nuevo_form" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" id="mdialTamanio">
       <div class="modal-content">
@@ -310,7 +310,6 @@
                           </select>
                         </section><br>  
                       </div>
-
                     </div>
                  
                     <div id="atit"></div>
@@ -435,98 +434,121 @@
 
       <!-- ============ Modal Modificar formulario N4 ========= -->
       <div class="modal fade" id="modal_mod_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog" id="mdialTamanio">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+        <div class="modal-dialog" id="mdialTamanio">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
             </div>
-              <div class="modal-body">
-                <h2 class="alert alert-info"><center>MODIFICAR REGISTRO - REQUERIMIENTO</center></h2>
-                <form action="<?php echo site_url().'/programacion/crequerimiento/valida_update_insumo'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
-          <input type="text" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-          <input type="text" name="id" id="id" value="<?php echo $id;?>">
-          <input type="text" name="ins_id" id="ins_id">
-            <header><b>DATOS GENERALES DEL REQUERIMIENTO</b><br><label class="label"><b>C&Oacute;DIGO DE ACTIVIDAD : <?php echo $producto[0]['prod_cod'];?></b></label></header>
-            <fieldset>
-              <div class="row">
-                <section class="col col-3">
-                  <label class="label"><b>GRUPO PARTIDA</b></label>
-                  <label class="input">
-                    <select class="form-control" id="par_padre" name="par_padre" title="SELECCIONE GRUPO DE PARTIDA">
-                                          <option value="">Seleccione Grupo Partida</option>
-                                          <?php 
-                                              foreach($part_padres as $row){ ?>
-                                                  <option value="<?php echo $row['par_codigo'];?>" <?php if(@$_POST['pais']==$row['par_codigo']){ echo "selected";} ?>><?php echo $row['par_codigo'].' - '.$row['par_nombre'];?></option>
-                                          <?php } ?>        
-                                      </select>
-                  </label>
-                </section>
-                <section class="col col-3">
-                  <label class="label"><b>PARTIDA</b></label>
-                  <label class="input">
-                    <select class="form-control" id="par_hijo" name="par_hijo" title="SELECCIONE PARTIDA">       
-                                      </select>
-                  </label>
-                </section>
-                <section class="col col-3">
-                  <label class="label"><b>UNIDAD DE MEDIDA</b></label>
-                  <label class="input">
-                    <input type="text" name="iumedida" id="iumedida" title="MODIFICAR UNIDAD DE MEDIDA">
-                    <!-- <select class="form-control" id="mum_id" name="mum_id" title="SELECCIONE UNIDAD DE MEDIDA">
-                                      </select> -->
-                  </label>
-                </section>
-                <section class="col col-3">
-                  <label class="label"><b><font color="blue">MONTO SALDO (TECHO)</font></b></label>
-                  <label class="input">
-                    <i class="icon-append fa fa-tag"></i>
-                    <input type="hidden" name="saldo" id="saldo">
-                    <input type="text" name="sal" id="sal" disabled="true">
-                  </label>
-                </section>
-              </div>
+            <div class="modal-body">
+              <h2 class="alert alert-info"><center>MODIFICAR REGISTRO FORM N°4 - ACTIVIDAD</center></h2>
+              <form action="<?php echo site_url().'/programacion/crequerimiento/valida_update_insumo'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
+              <input type="hidden" name="prod_id" id="prod_id">
+                <header><b>DATOS GENERALES DE LA ACTIVIDAD</b></header>
+                <fieldset>
+                  <div class="row">
+                    <section class="col col-1">
+                      <label class="label"><b>C&Oacute;DIGO</b></label>
+                      <label class="input">
+                        <i class="icon-append fa fa-tag"></i>
+                        <input type="text" name="mcod" id="mcod" disabled="true">
+                      </label>
+                    </section>
+                    <section class="col col-5">
+                      <label class="label"><b>DESCRIPCI&Oacute;N DE LA ACTIVIDAD</b></label>
+                      <label class="textarea">
+                        <i class="icon-append fa fa-tag"></i>
+                        <textarea rows="2" name="mprod" id="mprod" title="REGISTRAR ACTIVIDAD"></textarea>
+                      </label>
+                    </section>
+                    <section class="col col-4">
+                      <label class="label"><b>RESULTADO</b></label>
+                      <label class="textarea">
+                        <i class="icon-append fa fa-tag"></i>
+                        <textarea rows="2" name="mresultado" id="mresultado" title="REGISTRAR RESULTADO"></textarea>
+                      </label>
+                    </section>
+                    <section class="col col-2">
+                      <label class="label"><b>TIPO DE INDICADOR</b></label>
+                      <select class="form-control" id="mtipo_i" name="mtipo_i" title="SELECCIONE TIPO DE INDICADOR">
+                          <option value="">Seleccione Tipo de Indicador</option>
+                          <?php 
+                            foreach($indi as $row){ ?>
+                            <option value="<?php echo $row['indi_id'];?>"><?php echo $row['indi_descripcion'];?></option>
+                          <?php } ?>        
+                      </select>
+                    </section>
+                  </div>
 
-              <div class="row">
-                <section class="col col-6">
-                  <label class="label"><b>DETALLE</b></label>
-                  <label class="textarea">
-                    <i class="icon-append fa fa-tag"></i>
-                    <textarea rows="2" name="detalle" id="detalle" title="MODIFICAR DETALLE DEL REQUERIMIENTO"></textarea>
-                  </label>
-                </section>
-                <section class="col col-2">
-                  <label class="label"><b>CANTIDAD</b></label>
-                  <label class="input">
-                    <i class="icon-append fa fa-tag"></i>
-                    <input type="text" name="cantidad" id="cantidad" onkeyup="costo_totalm()" onkeypress="return justNumbers(event);" title="MODIFICAR CANTIDAD">
-                  </label>
-                </section>
-                <section class="col col-2">
-                  <label class="label"><b>COSTO UNITARIO <font color="blue">(2 decimales)</font></b></label>
-                  <label class="input">
-                    <i class="icon-append fa fa-tag"></i>
-                    <input type="text" name="costou" id="costou" onkeyup="costo_totalm()" onkeypress="return justNumbers(event);" onpaste="return false" title="MODIFICAR COSTO UNITARIO">
-                  </label>
-                </section>
-                <section class="col col-2">
-                  <label class="label"><b>COSTO TOTAL</b></label>
-                  <label class="input">
-                    <i class="icon-append fa fa-tag"></i>
-                    <input type="hidden" name="costot" id="costot">
-                    <input type="text" name="costot2" id="costot2" disabled="true">
-                  </label>
-                </section>
-              </div>
+                  <div class="row">
+                    <section class="col col-4">
+                      <label class="label"><b>INDICADOR</b></label>
+                      <label class="textarea">
+                        <i class="icon-append fa fa-tag"></i>
+                        <textarea rows="2" name="mindicador" id="mindicador" title="REGISTRE DESCRIPCIÓN INDICADOR"></textarea>
+                      </label>
+                    </section>
+                    <section class="col col-4">
+                      <label class="label"><b>MEDIO DE VERIFICACI&Oacute;N</b></label>
+                      <label class="textarea">
+                        <i class="icon-append fa fa-tag"></i>
+                        <textarea rows="2" name="mverificacion" id="mverificacion" title="REGISTRE MEDIO DE VERIFICACIÓN"></textarea>
+                      </label>
+                    </section>
+                    <section class="col col-4">
+                      <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
+                      <label class="textarea">
+                        <i class="icon-append fa fa-tag"></i>
+                        <textarea rows="2" name="munidad" id="munidad" title="REGISTRE UNIDAD RESPONSABLE"></textarea>
+                      </label>
+                    </section>
+                  </div>
 
-              <div class="row">
-                <section class="col col-6">
-                  <label class="label"><b>OBSERVACI&Oacute;N</b></label>
-                  <label class="textarea">
-                    <i class="icon-append fa fa-tag"></i>
-                    <textarea rows="2" name="observacion" id="observacion"></textarea>
-                  </label>
-                </section>
-              </div>
+                  <div class="row">
+                      <section class="col col-2">
+                        <label class="label"><b>LINEA BASE</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-tag"></i>
+                          <input type="text" name="mlbase" id="mlbase" value="0" title="REGISTRE LINEA BASE" onkeyup="suma_programado()">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>META</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-tag"></i>
+                          <input type="text" name="mmeta" id="mmeta" value="0" onkeyup="verif_suma_programado()" title="REGISTRE META">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>NECESITA PRESUPUESTO ?</b></label>
+                        <select class="form-control" id="mppto" name="mppto" title="NECESITA PRESUPUESTO">
+                          <option value="1">SI</option>
+                          <option value="0">NO</option>       
+                        </select>
+                      </section>
+                      <?php echo $list_oregional;?>
+                      <div id="trep" style="display:none;" >
+                        <section class="col col-3">
+                          <label class="label"><b>TIPO DE META</b></label>
+                            <select class="form-control" id="mtp_met" name="mtp_met" title="SELECCIONE TIPO DE META">
+                              <option value="">Seleccione Tipo de Meta</option>
+                                <?php 
+                                  foreach($metas as $row){ 
+                                    if($row['mt_id']==3){ ?>
+                                      <option value="<?php echo $row['mt_id']; ?>" selected><?php echo $row['mt_tipo']; ?></option>
+                                      <?php
+                                    }
+                                    else{ ?>
+                                      <option value="<?php echo $row['mt_id']; ?>"><?php echo $row['mt_tipo']; ?></option>
+                                      <?php
+                                    }
+                                  }
+                                ?>
+                          </select>
+                        </section><br>  
+                      </div>
+                    </div>
+
+
               <br>
               <div id="amtit"></div>
               <header><b>DISTRIBUCI&Oacute;N FINANCIERA: <?php echo $this->session->userdata('gestion')?></b><br>

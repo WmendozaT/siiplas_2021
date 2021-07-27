@@ -68,6 +68,8 @@ class Producto extends CI_Controller {
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
           $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
           $data['list_oregional']=$this->programacionpoa->lista_oregional($proy_id);
+
+         // $data['list_oregional']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);/// Lista de Objetivos Regionales
         }
 
         $data['button']=$this->programacionpoa->button_form4(count($data['productos']));
@@ -81,7 +83,30 @@ class Producto extends CI_Controller {
   }
 
 
+    /*---- GET DATOS PRODUCTO ----*/
+    public function get_producto(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $prod_id = $this->security->xss_clean($post['prod_id']);
+        $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
+        
+        if(count($producto)!=0){
+          $result = array(
+            'respuesta' => 'correcto',
+            'producto'=>$producto,
+          );
+        }
+        else{
+          $result = array(
+            'respuesta' => 'error',
+          );
+        }
 
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
 
 
 
