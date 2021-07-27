@@ -201,7 +201,7 @@ $route['proy/ptto_consolidado_comparativo/(:any)'] = 'programacion/cppto_compara
 
 /*-----------------------------  PROGRAMACION DEL PROYECTO - PRODUCTOS  -------------------------------*/
 $route['admin/prog/list_prod/(:any)'] = 'programacion/producto/lista_productos/$1';  //// lista de productos (2020)
-$route['prog/verif_cod'] = 'programacion/producto/verif_codigo'; ////// verificando codigo Operacion
+//$route['prog/verif_cod'] = 'programacion/producto/verif_codigo'; ////// verificando codigo Operacion
 $route['prog/delete_insumos_servicio/(:any)'] = 'programacion/producto/delete_insumos_servicios/$1';// Eliminar Todas los requerimientos del servicio (2020)
 //$route['prog/delete_requerimientos/(:any)'] = 'programacion/producto/delete_requerimientos/$1';// Eliminar Todas los Requerimientos (2020)
 $route['admin/prog/valida_upload_prod'] = 'programacion/producto/subir_producto';  //// Subir Archivo Productos txt
@@ -211,7 +211,7 @@ $route['prog/delete_prod'] = 'programacion/producto/delete_operacion';  //// Eli
 
 $route['prog/delete_operaciones'] = 'programacion/producto/delete_operaciones'; //// ELIMINA OPERACIONES SELECCIONADOS
 $route['prog/combo_acciones'] = 'programacion/producto/combo_acciones_estrategicos';// COMBO ACCIONES OPERATIVAS
-$route['prog/combo_indicadores'] = 'programacion/producto/combo_indicadores_pei';// COMBO ACCIONES INDICADORES DEL PROCESO
+//$route['prog/combo_indicadores'] = 'programacion/producto/combo_indicadores_pei';// COMBO ACCIONES INDICADORES DEL PROCESO
 
 $route['admin/prog/new_prod/(:any)'] = 'programacion/producto/new_productos/$1';  //// NUEVA OPERACION
 $route['admin/prog/mod_prod/(:any)'] = 'programacion/producto/update_producto/$1';  ////  formulario editado productos 

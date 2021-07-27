@@ -19,39 +19,7 @@
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css"/>
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS"/>
     <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-    <style type="text/css">
-      aside{background: #05678B;}
-      #mdialTamanio{
-          width: 70% !important;
-      }
-      #mdialTamanio2{
-          width: 60.5% !important;
-      }
-      table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-            overflow-x: scroll;
-            }
-      input[type="checkbox"] {
-        display:inline-block;
-        width:28px;
-        height:28px;
-        margin:-1px 4px 0 0;
-        vertical-align:middle;
-        cursor:pointer;
-      }
-      th {font-size: 10px;     font-weight: normal;     padding: 8px;     background: #b3b0b0;
-        border-top: 2px solid #b3b0b0;    border-bottom: 1px solid #fff; color: #404040; }
-
-      input[type="checkbox"] {
-        display:inline-block;
-        width:25px;
-        height:25px;
-        margin:-1px 4px 0 0;
-        vertical-align:middle;
-        cursor:pointer;
-      }
-    </style>
+    <?php echo $stylo;?>
   </head>
   <body class="">
     <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -199,14 +167,7 @@
                   ?>
                     <div class="widget-body no-padding">
                       <form id="del_req" name="del_req" novalidate="novalidate" method="post">
-                        <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $fase[0]['proy_id']; ?>">
-                        <input type="hidden" name="pfec_id" id="pfec_id" value="<?php echo $fase[0]['pfec_id']; ?>">
-                        <input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id']; ?>">
-                        <div class="table-responsive">
-                          <table id="dt_basic" class="table table-bordered">
-                            <?php echo $prod; ?>
-                          </table>
-                        </div>
+                        <?php echo $prod; ?>
                         <input type="hidden" name="tot" id="tot" value="0">
                         <div class="alert alert-danger" align=right><input type="button" class="btn btn-danger btn-xs" value="ELIMINAR ACTIVIDADES" id="btsubmit" onclick="valida_eliminar()" title="ELIMINAR OPERACIONES"></div>
                       </form>
@@ -454,12 +415,11 @@
                         </label>
                       </section>
                     </div>
-
                   </fieldset>
         
                   <div id="but" style="display:none;">
                     <footer>
-                      <button type="button" name="subir_ope" id="subir_ope" class="btn btn-info" >GUARDAR DATOS OPERACIÓN</button>
+                      <button type="button" name="subir_ope" id="subir_ope" class="btn btn-info" >GUARDAR DATOS ACTIVIDAD</button>
                       <button class="btn btn-default" data-dismiss="modal" id="amcl" title="CANCELAR">CANCELAR</button>
                     </footer>
                     <div id="loadp" style="display: none" align="center">
@@ -471,6 +431,221 @@
           </div>
       </div>
   </div>
+
+
+      <!-- ============ Modal Modificar formulario N4 ========= -->
+      <div class="modal fade" id="modal_mod_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog" id="mdialTamanio">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+            </div>
+              <div class="modal-body">
+                <h2 class="alert alert-info"><center>MODIFICAR REGISTRO - REQUERIMIENTO</center></h2>
+                <form action="<?php echo site_url().'/programacion/crequerimiento/valida_update_insumo'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
+          <input type="text" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
+          <input type="text" name="id" id="id" value="<?php echo $id;?>">
+          <input type="text" name="ins_id" id="ins_id">
+            <header><b>DATOS GENERALES DEL REQUERIMIENTO</b><br><label class="label"><b>C&Oacute;DIGO DE ACTIVIDAD : <?php echo $producto[0]['prod_cod'];?></b></label></header>
+            <fieldset>
+              <div class="row">
+                <section class="col col-3">
+                  <label class="label"><b>GRUPO PARTIDA</b></label>
+                  <label class="input">
+                    <select class="form-control" id="par_padre" name="par_padre" title="SELECCIONE GRUPO DE PARTIDA">
+                                          <option value="">Seleccione Grupo Partida</option>
+                                          <?php 
+                                              foreach($part_padres as $row){ ?>
+                                                  <option value="<?php echo $row['par_codigo'];?>" <?php if(@$_POST['pais']==$row['par_codigo']){ echo "selected";} ?>><?php echo $row['par_codigo'].' - '.$row['par_nombre'];?></option>
+                                          <?php } ?>        
+                                      </select>
+                  </label>
+                </section>
+                <section class="col col-3">
+                  <label class="label"><b>PARTIDA</b></label>
+                  <label class="input">
+                    <select class="form-control" id="par_hijo" name="par_hijo" title="SELECCIONE PARTIDA">       
+                                      </select>
+                  </label>
+                </section>
+                <section class="col col-3">
+                  <label class="label"><b>UNIDAD DE MEDIDA</b></label>
+                  <label class="input">
+                    <input type="text" name="iumedida" id="iumedida" title="MODIFICAR UNIDAD DE MEDIDA">
+                    <!-- <select class="form-control" id="mum_id" name="mum_id" title="SELECCIONE UNIDAD DE MEDIDA">
+                                      </select> -->
+                  </label>
+                </section>
+                <section class="col col-3">
+                  <label class="label"><b><font color="blue">MONTO SALDO (TECHO)</font></b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-tag"></i>
+                    <input type="hidden" name="saldo" id="saldo">
+                    <input type="text" name="sal" id="sal" disabled="true">
+                  </label>
+                </section>
+              </div>
+
+              <div class="row">
+                <section class="col col-6">
+                  <label class="label"><b>DETALLE</b></label>
+                  <label class="textarea">
+                    <i class="icon-append fa fa-tag"></i>
+                    <textarea rows="2" name="detalle" id="detalle" title="MODIFICAR DETALLE DEL REQUERIMIENTO"></textarea>
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>CANTIDAD</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-tag"></i>
+                    <input type="text" name="cantidad" id="cantidad" onkeyup="costo_totalm()" onkeypress="return justNumbers(event);" title="MODIFICAR CANTIDAD">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>COSTO UNITARIO <font color="blue">(2 decimales)</font></b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-tag"></i>
+                    <input type="text" name="costou" id="costou" onkeyup="costo_totalm()" onkeypress="return justNumbers(event);" onpaste="return false" title="MODIFICAR COSTO UNITARIO">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>COSTO TOTAL</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-tag"></i>
+                    <input type="hidden" name="costot" id="costot">
+                    <input type="text" name="costot2" id="costot2" disabled="true">
+                  </label>
+                </section>
+              </div>
+
+              <div class="row">
+                <section class="col col-6">
+                  <label class="label"><b>OBSERVACI&Oacute;N</b></label>
+                  <label class="textarea">
+                    <i class="icon-append fa fa-tag"></i>
+                    <textarea rows="2" name="observacion" id="observacion"></textarea>
+                  </label>
+                </section>
+              </div>
+              <br>
+              <div id="amtit"></div>
+              <header><b>DISTRIBUCI&Oacute;N FINANCIERA: <?php echo $this->session->userdata('gestion')?></b><br>
+              <label class="label"><div id="ff"></div></label>
+              </header>
+              <br>
+              <div class="row">
+                <section class="col col-2">
+                  <label class="label"><b>PROGRAMADO TOTAL</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mtot" id="mtot" value="0" disabled="true">
+                  </label>
+                </section>
+              </div>
+              <div class="row">
+                <section class="col col-2">
+                  <label class="label"><b>ENERO</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm1" id="mm1" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ENERO - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>FEBRERO</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm2" id="mm2" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE FEBRERO - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>MARZO</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm3" id="mm3" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MARZO - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>ABRIL</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm4" id="mm4" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ABRIL - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>MAYO</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm5" id="mm5" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MAYO - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>JUNIO</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm6" id="mm6" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JUNIO - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+              </div>
+              <div class="row">
+                <section class="col col-2">
+                  <label class="label"><b>JULIO</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm7" id="mm7" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JULIO - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>AGOSTO</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm8" id="mm8" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>SEPTIEMBRE</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm9" id="mm9" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>OCTUBRE</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm10" id="mm10" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>NOVIEMBRE</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm11" id="mm11" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+                <section class="col col-2">
+                  <label class="label"><b>DICIEMBRE</b></label>
+                  <label class="input">
+                    <i class="icon-append fa fa-money"></i>
+                    <input type="text" name="mm12" id="mm12" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                  </label>
+                </section>
+              </div>
+
+            </fieldset>
+            
+            <div id="mbut">
+              <footer>
+                <button type="button" name="subir_mins" id="subir_mins" class="btn btn-info" >MODIFICAR REQUERIMIENTO</button>
+                <button class="btn btn-default" data-dismiss="modal" id="amcl" title="CANCELAR">CANCELAR</button>
+              </footer>
+              <center><img id="loadm" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="45" height="45"></center>
+            </div>
+          </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- ======================================================== -->
 
   <!-- ======= MODAL SUBIR ARCHIVO ACTIVIDADES =============== -->
   <div class="modal animated fadeInDown" id="modal_importar_ff" tabindex="-1" role="dialog">
@@ -598,90 +773,12 @@
 <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+<script src="<?php echo base_url(); ?>mis_js/programacionpoa/form4.js"></script> 
 <script type="text/javascript">
-  $(function () {
-      $(".importar_ff").on("click", function (e) {
-        tipo = $(this).attr('name');
-        document.getElementById("tp").value=tipo;
-        if(tipo==1){
-            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <b>IMPORTAR ARCHIVO DE OPERACIONES.CSV</b></h2>');
-            $('#datos').html('<ul><li type="circle"><b>Copiar el contenido de datos del primer Archivo Excel a la plantilla de migración </b></li> <li type="circle"><b>Numero de columnas 21</b></li> <li type="circle"><b>Columna (A) COD. OR. : Codigo de Objetivo Regional</b></li> <li type="circle"><b>Columna (B) COD. ACT. : Codigo Actividad</b></li> <li type="circle"><b>Columnas (G-T), Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>Convertir el Archivo .Xls a .Csv</b></li></ul>');
-            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/actividades.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
-            $('#buton').html('SUBIR ARCHIVO DE OPERACION.SCV');
-          }
-          else{
-            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <font color=blue><b> IMPORTAR ARCHIVO DE REQUERIMIENTOS.SCV (GLOBAL)</b></font></h2>');
-            $('#datos').html('<ul><li type="circle"><b>Copiar el contenido de datos del primer Archivo Excel a la plantilla de migración </b></li> <li type="circle"><b>Numero de columnas 22</b></li> <li type="circle"><b>Columna (A) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (E-S), por tratarse de presupuesto el Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>Convertir el Archivo .Xls a .Csv</b></li></ul>');
-            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/requerimientos_global.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
-            $('#buton').html('SUBIR ARCHIVO DE REQUERIMIENTOS.SCV');
-          }
-      });
-  });
+
 </script>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#tipo_i").change(function () {            
-          var tp_id = $(this).val();
-            if(tp_id==2){
-              $('#trep').slideDown();
-            }
-            else{
-              $('#trep').slideUp();
-              for (var i = 1; i <= 12; i++) {
-                  $('[name="m'+i+'"]').val((0).toFixed(0));
-                  $("#m"+i).html('');
-                  $('[name="m'+i+'"]').prop('disabled', false);
-              }
-              $('[name="total"]').val((0).toFixed(0));
-              $('[name="tp_met"]').val((3).toFixed(0));
-            }
-          });
-      });
 
-      $(document).ready(function () {
-        $("#tp_met").change(function () {            
-          var tp_met = $(this).val();
-            if(tp_met==1){
-              meta = parseFloat($('[name="meta"]').val());
-              for (var i = 1; i <= 12; i++) {
-                $('[name="m'+i+'"]').val((meta).toFixed(0));
-                $("#m"+i).html('%');
-                $('[name="m'+i+'"]').prop('disabled', true);
-              }
-              $('[name="total"]').val((meta).toFixed(0));
-            }
-            else{
-              for (var i = 1; i <= 12; i++) {
-                $('[name="m'+i+'"]').val((0).toFixed(0));
-                $("#m"+i).html('');
-                $('[name="m'+i+'"]').prop('disabled', false);
-              }
-              $('[name="total"]').val((0).toFixed(0));
-            }
-          });
-      });
-
-      $(document).ready(function() {
-        pageSetUp();
-        $("#obj_id").change(function () {
-            $("#obj_id option:selected").each(function () {
-            elegido=$(this).val();
-            $.post("<?php echo base_url(); ?>index.php/prog/combo_acciones", { elegido: elegido }, function(data){ 
-              $("#acc_id").html(data);
-              });     
-          });
-        });  
-      })
-      $("#acc_id").change(function () {
-        $("#acc_id option:selected").each(function () {
-          elegido=$(this).val();
-            $.post("<?php echo base_url(); ?>index.php/prog/combo_indicadores", { elegido: elegido}, function(data){
-              $("#indi_pei").html(data);
-            });     
-          });
-      });
-    </script>
     <script>
       function reset() {
         $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
@@ -697,207 +794,9 @@
     }
     </script>
     <script type="text/javascript">
-    $(function () {
-        $("#subir_ope").on("click", function () {
-            var $validator = $("#form_nuevo").validate({
-                rules: {
-                  com_id: {
-                    required: true,
-                  },
-                  prod: {
-                      required: true,
-                  },
-                  resultado: {
-                      required: true,
-                  },
-                  tipo_i: {
-                      required: true,
-                  },
-                  indicador: {
-                      required: true,
-                  },
-                  lbase: {
-                      required: true,
-                  },
-                  meta: {
-                      required: true,
-                  }
-                },
-                messages: {
-                  prod: {required: "<font color=red size=1>REGISTRE DESCRIPCIÓN DE ACTIVIDAD</font>"},
-                  resultado: {required: "<font color=red size=1>REGISTRE RESULTADO</font>"},
-                  tipo_i: {required: "<font color=red size=1>SELECCIONE UNIDAD EJECUTORA</font>"},
-                  indicador: {required: "<font color=red size=1>REGISTRE INDICADOR</font>"},
-                  lbase: {required: "<font color=red size=1>REGISTRE LINEA BASE</font>"},
-                  meta: {required: "<font color=red size=1>REGISTRE META DE LA ACTIVIDAD</font>"}                    
-                },
-                highlight: function (element) {
-                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-                },
-                unhighlight: function (element) {
-                    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-                },
-                errorElement: 'span',
-                errorClass: 'help-block',
-                errorPlacement: function (error, element) {
-                    if (element.parent('.input-group').length) {
-                        error.insertAfter(element.parent());
-                    } else {
-                        error.insertAfter(element);
-                    }
-                }
-            });
 
-            var $valid = $("#form_nuevo").valid();
-            if (!$valid) {
-                $validator.focusInvalid();
-            } else {
-              if(document.form_nuevo.tipo_i.value==1){
-                meta = parseFloat($('[name="meta"]').val());
-                total = parseFloat($('[name="total"]').val());
-                if(parseFloat(meta)!=parseFloat(total)){
-                  alertify.error("LA SUMA DE MESES PROGRAMADOS NO ES IGUAL A LA META DE LA OPERACION") 
-                    document.form_nuevo.meta.focus() 
-                    return 0; 
-                }
-              } 
-              else{
-                if(document.form_nuevo.tp_met.value==0){
-                  alertify.error("SELECCIONE TIPO DE META") 
-                    document.form_nuevo.resultado.focus() 
-                    return 0; 
-                }
-                if(document.form_nuevo.tipo_i.value==2){
-                  if(document.form_nuevo.tp_met.value==3){
-                    meta = parseFloat($('[name="meta"]').val());
-                    total = parseFloat($('[name="total"]').val());
-                    if(parseFloat(meta)!=parseFloat(total)){
-                      alertify.error("LA SUMA DE MESES PROGRAMADOS NO ES IGUAL A LA META DE LA OPERACION") 
-                        document.form_nuevo.meta.focus() 
-                        return 0; 
-                    }
-                  }
-                }
-              }
-
-              if(document.form_nuevo.cod.value==0 || document.form_nuevo.cod.value==''){
-                alertify.error("REGISTRE CÓDIGO DE OPERACION") 
-                  document.form_nuevo.cod.focus() 
-                  return 0;
-              }
-
-              alertify.confirm("GUARDAR DATOS DE LA OPERACION ?", function (a) {
-                if (a) {
-                    document.getElementById("loadp").style.display = 'block';
-                    document.forms['form_nuevo'].submit();
-                    document.getElementById("subir_ope").style.display = 'none';
-                } else {
-                    alertify.error("OPCI\u00D3N CANCELADA");
-                }
-              });
-            }
-        });
-    });
     </script>
     <script type="text/javascript">
-      function verif_codigo(){ 
-        codigo = parseFloat($('[name="cod"]').val()); //// codigo
-        com_id=<?php echo $componente[0]['com_id']; ?>;
-        if(!isNaN(codigo) & codigo!=0){
-          var url = "<?php echo site_url("")?>/prog/verif_cod";
-          $.ajax({
-            type:"post",
-            url:url,
-            data:{codigo:codigo,com_id:com_id},
-            success:function(datos){
-              if(datos.trim() =='true'){
-                $('#atit').html('<center><div class="alert alert-danger alert-block">C&Oacute;DIGO DE OPERACI&Oacute;N '+codigo+' YA EXISTE</div></center>');
-                $('[name="cod"]').val((0).toFixed(0));
-                $('#but').slideUp();
-              }else{
-                $('#atit').html('');
-                $('#but').slideDown();
-              }
-          }});
-        }
-        else{
-          alertify.error("REGISTRE CÓDIGO DE OPERACION");
-          $('#but').slideUp();
-        }
-      }
-
-      function verif_suma_programado(){ /// meta
-        meta = parseFloat($('[name="meta"]').val()); //// linea base
-        if(meta!=0){
-          total = parseFloat($('[name="total"]').val()); //// linea base
-          if(meta==total){
-            $('#atit').html('');
-            $ ('#but').slideDown();
-          }
-          else{
-            $('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-            $('#but').slideUp();
-          }
-        }
-        else{
-          $('#but').slideUp();
-        }
-      }
-
-      function suma_programado(){ 
-        sum=0;
-        linea = parseFloat($('[name="lbase"]').val()); //// linea base
-        codigo = parseFloat($('[name="cod"]').val()); //// codigo
-        for (var i = 1; i<=12; i++) {
-          sum=parseFloat(sum)+parseFloat($('[name="m'+i+'"]').val());
-        }
-
-        $('[name="total"]').val((sum+linea).toFixed(2));
-        programado = parseFloat($('[name="total"]').val()); //// programado total
-        meta = parseFloat($('[name="meta"]').val()); //// Meta
-
-        if(programado!='' || programado!=0){
-          if(programado!=meta){
-            $('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-            $('#but').slideUp();
-          }
-          else{
-
-            if(codigo==0){
-              $('#but').slideUp();
-            }
-            else{
-              $('#atit').html('');
-              $ ('#but').slideDown();
-            }
-          }
-        }
-        else{
-          $('#but').slideUp();
-        }
-      }
-
-      /*------- ELIMINAR REQUERIMIENTOS DEL SERVICIO --------*/
-      function eliminar_requerimientos_servicio(){
-        alertify.confirm("DESEA ELIMINAR REQUERIMIENTOS DEL SERVICIO ?", function (a) {
-          if (a) {
-            window.location='<?php echo base_url().'index.php/prog/delete_insumos_servicio/'.$componente[0]['com_id'];?>';
-          } else {
-              alertify.error("OPCI\u00D3N CANCELADA");
-          }
-        });
-      }
-
-      /*------- UPDATE CÓDIGO --------*/
-      function update_codigo(){
-        alertify.confirm("DESEA ACTUALIZAR LOS CÓDIGOS DE LA OPERACION ?", function (a) {
-          if (a) {
-            window.location='<?php echo base_url().'index.php/prog/update_codigo/'.$componente[0]['com_id'];?>';
-          } else {
-              alertify.error("OPCI\u00D3N CANCELADA");
-          }
-        });
-      }
 
     </script>
     <script type="text/javascript">
@@ -927,23 +826,7 @@
       });
     </script>
     <script type="text/javascript">
-    function valida_eliminar(){
-        if (document.del_req.tot.value=="" || document.del_req.tot.value==0){
-          alertify.error("SELECCIONE OPERACIONES A ELIMINAR");
-        }
-        else{
-          alertify.confirm("DESEA ELIMINAR "+document.del_req.tot.value+" OPERACIONES ?", function (a) {
-            if (a) {
-                document.getElementById("btsubmit").value = "ELIMINANDO REQUERIMIENTOS...";
-                document.getElementById("btsubmit").disabled = true;
-                document.del_req.submit();
-                return true;
-            } else {
-                alertify.error("OPCI\u00D3N CANCELADA");
-            }
-          });
-        }
-      }
+
 
       $(function () {
           function reset() {
@@ -1015,24 +898,23 @@
       });
     </script>
     <script type="text/javascript">
-    $(document).ready(function(){
-      $("#kwd_search").keyup(function(){
-        if( $(this).val() != ""){
-          // Show only matching TR, hide rest of them
-          $("#table tbody>tr").hide();
-          $("#table td:contains-ci('" + $(this).val() + "')").parent("tr").show();
-        }
-        else{
-          $("#table tbody>tr").show();
-        }
+      $(document).ready(function(){
+        $("#kwd_search").keyup(function(){
+          if( $(this).val() != ""){
+            $("#table tbody>tr").hide();
+            $("#table td:contains-ci('" + $(this).val() + "')").parent("tr").show();
+          }
+          else{
+            $("#table tbody>tr").show();
+          }
+        });
       });
-    });
-    $.extend($.expr[":"], 
-    {
+      $.extend($.expr[":"], 
+      {
         "contains-ci": function(elem, i, match, array){
         return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-      }
-    });
+        }
+      });
     </script>
     <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 </body>

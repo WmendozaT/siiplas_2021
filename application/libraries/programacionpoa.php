@@ -17,6 +17,7 @@ class Programacionpoa extends CI_Controller{
             $this->load->model('mantenimiento/model_configuracion');
             $this->load->model('ejecucion/model_certificacion');
             $this->load->model('programacion/insumos/minsumos');
+            $this->load->model('mestrategico/model_objetivoregion');
             $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
             $this->load->model('menu_modelo');
             $this->load->library('security');
@@ -33,6 +34,8 @@ class Programacionpoa extends CI_Controller{
             $this->resolucion=$this->session->userdata('rd_poa');
             $this->tp_adm = $this->session->userData('tp_adm');
             $this->mes = $this->mes_nombre();
+            $this->conf_form4 = $this->session->userData('conf_form4');
+            $this->conf_form5 = $this->session->userData('conf_form5');
     }
 
 
@@ -221,7 +224,7 @@ class Programacionpoa extends CI_Controller{
       return $tabla;
     }
 
-
+  ///// ============= FORMULARIO N° 4 
 
   /*--- ACTUALIZA CODIGO DE ACTIVIDAD (FORM 4) ----*/
   public function update_codigo_actividad($com_id){  
@@ -237,6 +240,151 @@ class Programacionpoa extends CI_Controller{
       $this->db->update('_productos', $update_prod);
     }
   }
+
+    /*--- BOTON REPORTE SEGUIMIENTO POA (MES VIGENTE)---*/
+    function button_form4($nro){
+      $tabla='';
+      if($this->tp_adm==1 || $this->conf_form4==1){
+        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO FORM N 4" class="btn btn-success">
+                    <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;NUEVO REGISTRO
+                  </a>
+                  
+                  <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="1" title="MODIFICAR REGISTRO" >
+                    <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR NUEVAS ACTIVIDADES.CSV
+                  </a>';
+
+        if($nro!=0){
+          $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="2" title="SUBIR ARCHIVO REQUERIMIENTO (GLOBAL)" >
+                      <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR REQUERIMIENTOS (GLOBAL)
+                    </a>';
+        }
+      }
+
+      $tabla.='<br><br>';
+      
+      return $tabla;
+    }
+
+    /*--- LISTA DE OBJETIVO REGIONAL (GASTO CORRIENTE )-----*/
+    public function lista_oregional($proy_id){
+      $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
+      $tabla='';
+      if(count($list_oregional)==1){
+        $tabla.=' <section class="col col-3">
+                    <label class="label"><b>OBJETIVO REGIONAL '.$list_oregional[0]['or_id'].'</b></label>
+                    <label class="input">
+                      <i class="icon-append fa fa-tag"></i>
+                      <input type="hidden" name="or_id" id="or_id" value="'.$list_oregional[0]['or_id'].'">
+                      <input type="text" value="'.$list_oregional[0]['or_codigo'].'.- '.$list_oregional[0]['or_objetivo'].'" disabled>
+                    </label>
+                  </section>'; 
+      }
+      else{
+          $tabla.='<section class="col col-6">
+                  <label class="label"><b>OBJETIVO REGIONAL</b></label>
+                    <select class="form-control" id="or_id" name="or_id" title="SELECCIONE">
+                      <option value="0">SELECCIONE OBJETIVO REGIONAL</option>';
+                      foreach($list_oregional as $row){ 
+                        $tabla.='<option value="'.$row['or_id'].'">'.$row['or_codigo'].'.- '.$row['or_objetivo'].'</option>';    
+                      }
+                    $tabla.='
+                  </select>
+                </section>'; 
+      }
+         
+      return $tabla;
+    }
+
+    /*---- LISTA DE OBJETIVO REGIONAL (PROYECTO DE INVERSION)-----*/
+    public function lista_oregional_pi($proy_id){
+      $list_oregional= $this->model_objetivoregion->get_unidad_pregional_programado($proy_id);
+      $tabla='';
+      if(count($list_oregional)==1){
+        $tabla.=' <section class="col col-6">
+                    <label class="label"><b>OBJETIVO REGIONAL '.$list_oregional[0]['or_id'].'</b></label>
+                    <label class="input">
+                      <i class="icon-append fa fa-tag"></i>
+                      <input type="hidden" name="or_id" id="or_id" value="'.$list_oregional[0]['or_id'].'">
+                      <input type="text" value="'.$list_oregional[0]['or_codigo'].'.- '.$list_oregional[0]['or_objetivo'].'" disabled>
+                    </label>
+                  </section>'; 
+      }
+      else{
+          $tabla.='<section class="col col-6">
+                  <label class="label"><b>OBJETIVO REGIONAL</b></label>
+                    <select class="form-control" id="or_id" name="or_id" title="SELECCIONE">
+                      <option value="0">SELECCIONE OBJETIVO REGIONAL</option>';
+                      foreach($list_oregional as $row){ 
+                        $tabla.='<option value="'.$row['or_id'].'">'.$row['or_codigo'].'.- '.$row['or_objetivo'].'</option>';    
+                      }
+                    $tabla.='
+                  </select>
+                </section>'; 
+      }
+         
+      return $tabla;
+    }
+
+    /*----------- VERIFICA LA ALINEACION DE OBJETIVO REGIONAL -----*/
+    public function verif_oregional($proy_id){
+      $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
+      $tabla='';
+      $nro=0;
+      if(count($list_oregional)!=0){
+        foreach($list_oregional as $row){
+          $nro++;
+          $tabla.='<h1 title='.$row['or_id'].'> '.$nro.'.- OBJETIVO REGIONAL : <small> <b>'.$row['or_codigo'].'</b>.- '.$row['or_objetivo'].'</small></h1>';
+        }
+      }
+      else{
+        $tabla.='<h1><small><font color=red>NO ALINEADO A NINGUN OBJETIVO REGIONAL</font></small></h1>';
+      }
+      
+      return $tabla;
+    }
+
+    /*--- ESTILO FORM 4---*/
+    public function estilo_tabla_form4(){
+      $tabla='';
+      $tabla.='
+      <style type="text/css">
+        aside{background: #05678B;}
+        #mdialTamanio{
+            width: 70% !important;
+        }
+        #mdialTamanio2{
+            width: 60.5% !important;
+        }
+        table{font-size: 10px;
+              width: 100%;
+              max-width:1550px;;
+              overflow-x: scroll;
+              }
+        input[type="checkbox"] {
+          display:inline-block;
+          width:28px;
+          height:28px;
+          margin:-1px 4px 0 0;
+          vertical-align:middle;
+          cursor:pointer;
+        }
+        th {font-size: 10px; }
+
+        input[type="checkbox"] {
+          display:inline-block;
+          width:25px;
+          height:25px;
+          margin:-1px 4px 0 0;
+          vertical-align:middle;
+          cursor:pointer;
+        }
+      </style>';
+
+      return $tabla;
+    }
+
+
+
 
 
 
