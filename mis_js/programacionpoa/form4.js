@@ -366,46 +366,43 @@ function abreVentana(PDF){
             });
             e.preventDefault();
             // =============================VALIDAR EL FORMULARIO DE MODIFICACION
-            $("#subir_mins").on("click", function (e) {
+            $("#subir_mform4").on("click", function (e) {
                 var $validator = $("#form_mod").validate({
                        rules: {
-                        ins_id: { //// Insumo
-                        required: true,
+                        prod_id: { //// prod id
+                          required: true,
                         },
-                        proy_id: { //// Proyecto
+                        mprod: { //// prod
                             required: true,
                         },
-                        detalle: { //// Detalle
+                        mresultado: { //// resultado
                             required: true,
                         },
-                        cantidad: { //// Cantidad
+                        mtipo_i: { //// tipo de indi
                             required: true,
                         },
-                        costou: { //// Costo U
+                        mindicador: { //// indicador
                             required: true,
                         },
-                        costot: { //// costo tot
+                        munidad: { //// unidad
                             required: true,
                         },
-                        mum_id: { //// unidad medida
+                        mlbase: { //// linea base
                             required: true,
                         },
-                        par_padre: { //// par padre
-                            required: true,
-                        },
-                        par_hijo: { //// par hijo
+                        mmeta: { //// meta
                             required: true,
                         }
                     },
                     messages: {
-                        ins_id: "<font color=red>INSUMO/font>",
-                        detalle: "<font color=red>REGISTRE DETALLE DEL REQUERIMIENTO</font>", 
-                        cantidad: "<font color=red>CANTIDAD</font>",
-                        costou: "<font color=red>COSTO UNITARIO</font>",
-                        costot: "<font color=red>COSTO TOTAL</font>",
-                        mum_id: "<font color=red>SELECCIONE UNIDAD DE MEDIDA</font>",
-                        par_padre: "<font color=red>SELECCIONE GRUPO DE PARTIDAS</font>",
-                        par_hijo: "<font color=red>SELECCIONE PARTIDA</font>",                     
+                        prod_id: "<font color=red>ACTIVIDAD/font>",
+                        mprod: "<font color=red>REGISTRE DETALLE DE LA ACTIVIDAD</font>", 
+                        mresultado: "<font color=red>REGISTRE RESULTADO</font>",
+                        mtipo_i: "<font color=red>TIPO DE INDICADOR</font>",
+                        mindicador: "<font color=red>RESGISTRE INDICADOR</font>",
+                        munidad: "<font color=red>REGISTRE UNIDAD RESPONSABLE</font>",
+                        mlbase: "<font color=red>REGISTRE LINEA BASE</font>",
+                        mmeta: "<font color=red>REGISTRE META</font>",                     
                     },
                     highlight: function (element) {
                         $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -426,22 +423,18 @@ function abreVentana(PDF){
                 var $valid = $("#form_mod").valid();
                 if (!$valid) {
                     $validator.focusInvalid();
-                } else {
-                  saldo=document.getElementById("sal").value;
-                  programado=document.getElementById("mtot").value;
-                  dif=saldo-programado;
-            
-                $('#amtit').html('');
+                } else {            
+                  $('#matit').html('');
                     alertify.confirm("MODIFICAR DATOS DE LA ACTIVIDAD ?", function (a) {
-                        if (a) {
-                          document.getElementById("loadm").style.display = 'block';
-                            document.getElementById('subir_mins').disabled = true;
-                            document.getElementById("subir_mins").value = "MODIFICANDO DATOS REQUERIMIENTO...";
-                            document.forms['form_mod'].submit();
-                        } else {
-                            alertify.error("OPCI\u00D3N CANCELADA");
-                        }
-                    });
+                      if (a) {
+                        document.getElementById("loadm").style.display = 'block';
+                          document.getElementById('subir_mform4').disabled = true;
+                          document.getElementById("subir_mform4").value = "MODIFICANDO DATOS ACTIVIDAD...";
+                          document.forms['form_mod'].submit();
+                      } else {
+                          alertify.error("OPCI\u00D3N CANCELADA");
+                      }
+                  });
                 }
             });
         });
@@ -472,7 +465,7 @@ function abreVentana(PDF){
     $(document).ready(function () {
       $("#mtp_met").change(function () {            
         var tp_met = $(this).val();
-
+        
           if(tp_met==0){
             $('#mbut').slideUp();
           }
@@ -485,6 +478,9 @@ function abreVentana(PDF){
                 $('[name="mm'+i+'"]').prop('disabled', true);
               }
               $('[name="mtotal"]').val((meta).toFixed(0));
+
+              $('#matit').html('');
+              $('#mbut').slideDown();
             }
             else{
               for (var i = 1; i <= 12; i++) {
@@ -493,6 +489,17 @@ function abreVentana(PDF){
                 $('[name="mm'+i+'"]').prop('disabled', false);
               }
               $('[name="mtotal"]').val((0).toFixed(0));
+              
+              programado = parseFloat($('[id="mtotal"]').val()); //// programado total
+              meta = parseFloat($('[id="mmeta"]').val()); //// Meta
+              if(meta==programado){
+                $('#matit').html('');
+                $('#mbut').slideDown();
+              }
+              else{
+                $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+                $('#mbut').slideUp();
+              }
             }
           }
         });
@@ -533,37 +540,37 @@ function abreVentana(PDF){
     }
 
 
-      //// VERIF META (Modificado)
-      function verif_meta_mod(){ /// meta
-        meta = document.getElementById("mmeta").value;
-        
-        alert(meta)
+    //// VERIF META (Modificado)
+    function verif_meta_mod(){ /// meta
+      meta = document.getElementById("mmeta").value;
 
-          if(meta!='' & meta!=0){
-            total = parseFloat($('[name="mtotal"]').val()); //// linea base
-            indicador = parseFloat($('[name="mtipo_i"]').val()); //// Indicador
-            tipo_meta = parseFloat($('[name="mtp_met"]').val()); //// tipo Meta
+      if(meta!='' & meta!=0){
+          total = parseFloat($('[name="mtotal"]').val()); //// linea base
+          indicador = parseFloat($('[name="mtipo_i"]').val()); //// Indicador
+          tipo_meta = parseFloat($('[name="mtp_met"]').val()); //// tipo Meta
 
-            if(indicador==2 & tipo_meta==1){
+          if(indicador==2 & tipo_meta==1){
             for (var i = 1; i <=12; i++) {
-              document.getElementById("mm"+i).value = parseInt(meta);
-            }
-          }
-          else{
-            if(meta==total){
-              $('#matit').html('');
+                document.getElementById("mm"+i).value = parseInt(meta);
+              }
+              document.getElementById("mmeta").value = parseInt(meta);
               $('#mbut').slideDown();
             }
             else{
-              $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-              $('#mbut').slideUp();
+              if(meta==total){
+                $('#matit').html('');
+                $('#mbut').slideDown();
+              }
+              else{
+                $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+                $('#mbut').slideUp();
+              }
             }
-          }
-        }
-        else{
-          $('#mbut').slideUp();
-        }
       }
+      else{
+        $('#mbut').slideUp();
+      }
+    }
 
 
 

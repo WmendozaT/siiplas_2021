@@ -441,8 +441,8 @@
             </div>
             <div class="modal-body">
               <h2 class="alert alert-info"><center>MODIFICAR REGISTRO FORM N°4 - ACTIVIDAD</center></h2>
-              <form action="<?php echo site_url().'/programacion/crequerimiento/valida_update_insumo'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
-              <input type="text" name="prod_id" id="prod_id">
+              <form action="<?php echo site_url().'/programacion/producto/valida_update_form4'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
+              <input type="hidden" name="prod_id" id="prod_id">
                 <header><b>DATOS GENERALES DE LA ACTIVIDAD</b></header>
                 <fieldset>
                   <div class="row">
@@ -457,14 +457,14 @@
                       <label class="label"><b>DESCRIPCI&Oacute;N DE LA ACTIVIDAD</b></label>
                       <label class="textarea">
                         <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="2" name="mprod" id="mprod" title="REGISTRAR ACTIVIDAD"></textarea>
+                        <textarea rows="3" name="mprod" id="mprod" title="REGISTRAR ACTIVIDAD"></textarea>
                       </label>
                     </section>
                     <section class="col col-4">
                       <label class="label"><b>RESULTADO</b></label>
                       <label class="textarea">
                         <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="2" name="mresultado" id="mresultado" title="REGISTRAR RESULTADO"></textarea>
+                        <textarea rows="3" name="mresultado" id="mresultado" title="REGISTRAR RESULTADO"></textarea>
                       </label>
                     </section>
                     <section class="col col-2">
@@ -552,8 +552,6 @@
                         </section><br>  
                       </div>
                     </div>
-
-
               <br>
               <div id="matit"></div>
               <header><b>DISTRIBUCI&Oacute;N F&Iacute;SICA : <?php echo $this->session->userdata('gestion')?></b><br>
@@ -662,7 +660,7 @@
             
             <div id="mbut">
               <footer>
-                <button type="button" name="subir_mins" id="subir_mins" class="btn btn-info" >MODIFICAR REQUERIMIENTO</button>
+                <button type="button" name="subir_mform4" id="subir_mform4" class="btn btn-info" >MODIFICAR ACTIVIDAD</button>
                 <button class="btn btn-default" data-dismiss="modal" id="amcl" title="CANCELAR">CANCELAR</button>
               </footer>
               <center><img id="loadm" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="45" height="45"></center>

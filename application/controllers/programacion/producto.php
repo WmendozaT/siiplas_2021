@@ -2,6 +2,10 @@
 class Producto extends CI_Controller { 
   public $temp = array( '1' => 'enero','2' => 'febrero','3' => 'marzo','4' => 'abril','5' => 'mayo','6' => 'junio',
                         '7' => 'julio','8' => 'agosto','9' => 'septiembre','10' => 'octubre','11' => 'noviembre','12' => 'diciembre'); 
+
+  public $prog_mes = array( '1' => 0,'2' => 0,'3' => 0,'4' => 0,'5' => 0,'6' => 0,
+                        '7' => 0,'8' => 0,'9' => 0,'10' => 0,'11' => 0,'12' => 0); 
+  
   public function __construct (){ 
       parent::__construct();
       if($this->session->userdata('fun_id')!=null){
@@ -78,6 +82,7 @@ class Producto extends CI_Controller {
         $data['button']=$this->programacionpoa->button_form4(count($data['productos']));
         $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
+
       }
       else{
         redirect('prog/list_serv/'.$com_id);
@@ -92,16 +97,18 @@ class Producto extends CI_Controller {
         $prod_id = $this->security->xss_clean($post['prod_id']);
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
         $temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
-        for ($i=1; $i <=12 ; $i++) { 
-          $prog_mes[$i]=0;
-          $prog_mes[$i]= $temporalidad[0][$this->temp[$i]];
+        
+        if(count($temporalidad)!=0){
+          for ($i=1; $i <=12 ; $i++) { 
+            $this->prog_mes[$i]= $temporalidad[0][$this->temp[$i]];
+          }
         }
 
         if(count($producto)!=0){
           $result = array(
             'respuesta' => 'correcto',
             'producto'=>$producto,
-            'temp'=>$prog_mes,
+            'temp'=>$this->prog_mes,
           );
         }
         else{
@@ -211,61 +218,98 @@ class Producto extends CI_Controller {
   }
 
 
-    /*----- MODIFICAR PRODUCTO (UNIDAD / ESTABLECIMIENTO DE SALUD)(2019) ----*/
-    public function update_producto($prod_id){
-    $data['producto']=$this->model_producto->get_producto_id($prod_id);
-    if(count($data['producto'])!=0){
-      $data['programado']=$this->model_producto->producto_programado($data['producto'][0]['prod_id'],$this->gestion);
-      $data['componente'] = $this->model_componente->get_componente_pi($data['producto'][0]['com_id']);
-      $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
-      $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['fase'][0]['proy_id']);
+    /*----- VALIDAR UPDATE MOD FORM4 ----*/
+    public function valida_update_form4(){
+      if($this->input->post()) {
+        $post = $this->input->post();
+        $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
+        $producto = $this->security->xss_clean($post['mprod']); /// detalle producto
+        $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
+        $indi_id = $this->security->xss_clean($post['mtipo_i']); /// Tipo de Indicador
+        $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador
+        $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
+        $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
+        $linea_base = $this->security->xss_clean($post['mlbase']); /// Linea Base
+        $meta = $this->security->xss_clean($post['mmeta']); /// Meta
+        $presupuesto = $this->security->xss_clean($post['mppto']); /// Presupuesto
+        $or_id = $this->security->xss_clean($post['mor_id']); /// Objetivo Regional
+        $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
 
-      $data['menu']=$this->genera_menu($data['proyecto'][0]['proy_id']);
-
-      $data['indi']= $this->model_proyecto->indicador(); /// indicador
-      $data['metas'] = $this->model_producto->tp_metas(); /// tp metas
-      $data['oestrategicos'] = $this->model_mestrategico->list_objetivos_estrategicos(); /// Objetivos Estrategicos
-      if($data['producto'][0]['acc_id']!=''){
-        $data['ope_acc'] = $this->model_producto->operacion_accion($data['producto'][0]['acc_id']); /// Acciones estrategicas
-        if(count($data['ope_acc'])!=0){
-          $data['list_aestrategicas']=$this->model_mestrategico->list_acciones_estrategicas($data['ope_acc'][0]['obj_id']);
-          $data['indi_pei']=$this->model_mestrategico->list_indicadores_pei2($data['producto'][0]['acc_id']); 
+        $ae=0;
+        $get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
+        if(count($get_acc)!=0){
+          $ae=$get_acc[0]['ae'];
         }
-      }
-      
-      $data['componente'] = $this->model_componente->get_componente($data['producto'][0]['com_id']);
-      $data['oregional']=$this->programacionpoa->verif_oregional($data['fase'][0]['proy_id']);
-      $data['prog']=0;
-      $programado=$this->model_producto->suma_programado_producto($prod_id,$this->gestion);
-      if(count($programado)!=0){
-        $prog=$programado[0]['prog'];
-      }
 
-      if($data['producto'][0]['mt_id']==1){
-        $data['prog']=$data['producto'][0]['prod_meta'];
-      }
-      else{
-        $data['prog']=$prog;
-      }
-
-      if($data['proyecto'][0]['tp_id']==1){
-        $data['list_oregional']=$this->model_objetivoregion->get_unidad_pregional_programado($data['fase'][0]['proy_id']); /// Lista de Objetivos Regionales PI
-        $this->load->view('admin/programacion/producto/edit_prod_pi', $data); /// Gasto Corriente
-      }
-      else{
-        if($this->gestion==2019){
-          $this->load->view('admin/programacion/producto/edit_prod2019', $data); /// Gasto Corriente
+        /*if($indi_id==1){
+          $tp_met=3;
         }
         else{
-          $data['list_oregional']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);/// Lista de Objetivos Regionales
-          $this->load->view('admin/programacion/producto/edit_prod', $data); /// Gasto Corriente
-        }
+          $tp_met=$tp_meta;
+        }*/
+
+        /*----- UPDATE FORMULARIO N4 ----*/
+          $update_prod = array(
+            'prod_producto' => strtoupper($producto),
+            'prod_resultado' => strtoupper($resultado),
+            'indi_id' => $indi_id,
+            'prod_indicador' => strtoupper($indicador),
+            'prod_linea_base' => $linea_base,
+            'prod_meta' => $meta,
+            'prod_unidades' => $unidad,
+            'prod_fuente_verificacion' => strtoupper($mverificacion),
+            'estado' => 2,
+            'or_id' => $or_id,
+            'acc_id' => $ae,
+            'fecha' => date("d/m/Y H:i:s"),
+            'mt_id' => $tp_meta,
+            'fun_id' => $this->fun_id,
+            'prod_ppto' => $presupuesto,
+            'num_ip' => $this->input->ip_address(), 
+            'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+            );
+          $this->db->where('prod_id', $prod_id);
+          $this->db->update('_productos', $update_prod);  
+        /*----------------------------------------------*/
+
+          /*------------ ANULAR TEMPORALIDAD -----------*/
+          $this->model_producto->delete_prod_gest($prod_id);
+
+
+          if($indi_id==1){
+            for ($i=1; $i <=12 ; $i++) {
+              if($this->security->xss_clean($post['mm'.$i])!=0){
+                $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$this->security->xss_clean($post['mm'.$i]));
+              }
+            }
+          }
+
+          if($indi_id==2){
+            if($tp_meta==3){
+              for ($i=1; $i <=12 ; $i++) {
+                if($this->security->xss_clean($post['mm'.$i])!=0){
+                  $this->model_producto->add_prod_gest($this->input->post('prod_id'),$this->gestion,$i,$this->input->post('m'.$i));
+                }
+              }
+            }
+            elseif($tp_meta==1){
+              for ($i=1; $i <=12 ; $i++) {
+                $this->model_producto->add_prod_gest($this->input->post('prod_id'),$this->gestion,$i,$this->input->post('met'));
+              }
+            }
+          }  
+            
+            $producto=$this->model_producto->get_producto_id($this->input->post('prod_id'));
+            $this->session->set_flashdata('success','SE MODIFICO CORRECTAMENTE DATOS DE LA ACTIVIDAD :)');
+            redirect('admin/prog/list_prod/'.$producto[0]['com_id'].'');
+
+
+      } else {
+          show_404();
       }
     }
-    else{
-      redirect('admin/dashboard');
-    } 
-  }
+
+
 
   /*-------- VALIDAR MODIFICACION OPERACIÓN-PRODUCTO (2020) --------*/
   public function modificar_producto(){
