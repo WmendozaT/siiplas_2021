@@ -329,6 +329,19 @@ function abreVentana(PDF){
                document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
                document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
 
+               document.getElementById("mor_id").value = response.producto[0]['or_id'];
+               document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
+
+               for (var i = 1; i <=12; i++) {
+                  document.getElementById("mm"+i).value = parseInt(response.temp[i]);
+                  if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
+                    document.getElementById("mm"+i).disabled = true;
+                  }
+                  else{
+                  document.getElementById("mm"+i).disabled = false;
+                  }
+               }
+
 
 
               /* document.getElementById("detalle").value = response.insumo[0]['ins_detalle'];
@@ -446,6 +459,72 @@ function abreVentana(PDF){
             });
         });
     });
+
+
+  /// ---- Suma Programado Modificado
+      function suma_programado_modificado(){ 
+        sum=0;
+        linea = parseFloat($('[name="mlbase"]').val()); //// linea base
+        codigo = parseFloat($('[name="mcod"]').val()); //// codigo
+        for (var i = 1; i<=12; i++) {
+          sum=parseFloat(sum)+parseFloat($('[name="mm'+i+'"]').val());
+        }
+
+        $('[name="mtotal"]').val((sum+linea).toFixed(2));
+        programado = parseFloat($('[name="mtotal"]').val()); //// programado total
+        meta = parseFloat($('[name="mmeta"]').val()); //// Meta
+
+        if(programado!='' || programado!=0){
+          if(programado!=meta){
+            $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+            $('#mbut').slideUp();
+          }
+          else{
+
+            if(codigo==0){
+              $('#mbut').slideUp();
+            }
+            else{
+              $('#matit').html('');
+              $ ('#mbut').slideDown();
+            }
+          }
+        }
+        else{
+          $('#mbut').slideUp();
+        }
+      }
+/*      function suma_programado_modificado(){ 
+          sum=0;
+          for (var i = 1; i <=12; i++) {
+            sum=parseFloat(sum)+parseFloat($('[name="mm'+i+'"]').val());
+          }
+
+          $('[name="mtot"]').val((sum).toFixed(2));
+          programado = parseFloat($('[name="mtot"]').val()); //// programado total
+          ctotal = parseFloat($('[name="costot"]').val()); //// Costo Total
+          saldo = parseFloat($('[name="sal"]').val()); //// saldo
+
+          if(programado!=ctotal){
+            $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO, VERIFIQUE DATOS</div></center>');
+                $('#mbut').slideUp();
+          }
+          else{
+            if(ctotal>saldo){
+              $('#amtit').html('<center><div class="alert alert-danger alert-block">COSTO TOTAL SUPERA AL SALDO DE LA PARTIDA, VERIFIQUE MONTOS</div></center>');
+                  $('#mbut').slideUp();
+            }
+            else{
+              $('#amtit').html('');
+              $('#mbut').slideDown();
+            }
+          }
+      }*/
+
+
+
+
+
 
     function valida_eliminar(){
       if (document.del_req.tot.value=="" || document.del_req.tot.value==0){

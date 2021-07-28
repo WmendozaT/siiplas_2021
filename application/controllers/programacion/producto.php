@@ -1,5 +1,7 @@
 <?php
 class Producto extends CI_Controller { 
+  public $temp = array( '1' => 'enero','2' => 'febrero','3' => 'marzo','4' => 'abril','5' => 'mayo','6' => 'junio',
+                        '7' => 'julio','8' => 'agosto','9' => 'septiembre','10' => 'octubre','11' => 'noviembre','12' => 'diciembre'); 
   public function __construct (){ 
       parent::__construct();
       if($this->session->userdata('fun_id')!=null){
@@ -72,10 +74,36 @@ class Producto extends CI_Controller {
          // $data['list_oregional']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);/// Lista de Objetivos Regionales
         }
 
+        $data['objetivos']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);
         $data['button']=$this->programacionpoa->button_form4(count($data['productos']));
         $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
 
+/*                $prod_id = 52572;
+        $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
+        $temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
+        for ($i=1; $i <=12 ; $i++) { 
+          $prog_mes[$i]=0;
+          $prog_mes[$i]= $temporalidad[0][$this->temp[$i]];
+        }
+
+
+
+
+
+        if(count($producto)!=0){
+          $result = array(
+            'respuesta' => 'correcto',
+            'producto'=>$producto,
+          );
+        }
+        else{
+          $result = array(
+            'respuesta' => 'error',
+          );
+        }
+
+        echo json_encode($result);*/
       }
       else{
         redirect('prog/list_serv/'.$com_id);
@@ -89,11 +117,17 @@ class Producto extends CI_Controller {
         $post = $this->input->post();
         $prod_id = $this->security->xss_clean($post['prod_id']);
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
-        
+        $temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
+        for ($i=1; $i <=12 ; $i++) { 
+          $prog_mes[$i]=0;
+          $prog_mes[$i]= $temporalidad[0][$this->temp[$i]];
+        }
+
         if(count($producto)!=0){
           $result = array(
             'respuesta' => 'correcto',
             'producto'=>$producto,
+            'temp'=>$prog_mes,
           );
         }
         else{

@@ -2397,3 +2397,79 @@ SELECT dep.dep_id,
 
 ALTER TABLE public.vlista_establecimientos_salud
   OWNER TO postgres;
+
+
+
+
+  //////============= PROGRAMACION POA 2022 - PRODUCTOS
+  ------ VISTA : TEMPORALIDAD PRODUCTO PROGRAMADO
+  CREATE OR REPLACE VIEW public.vista_temporalidad_producto_programado AS 
+ SELECT prod_programado_mensual.prod_id,
+    prod_programado_mensual.g_id,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 1 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes1,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 2 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes2,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 3 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes3,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 4 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes4,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 5 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes5,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 6 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes6,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 7 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes7,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 8 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes8,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 9 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes9,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 10 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes10,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 11 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes11,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN prod_programado_mensual.m_id = 12 THEN to_char(prod_programado_mensual.pg_fis, '99999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '99999999.99'::text) AS mes12,
+    count(*) AS n
+   FROM prod_programado_mensual
+  GROUP BY prod_programado_mensual.prod_id, prod_programado_mensual.g_id
+  ORDER BY prod_programado_mensual.prod_id, prod_programado_mensual.g_id;
+
+ALTER TABLE public.vista_temporalidad_producto_programado
+  OWNER TO postgres;
