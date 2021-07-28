@@ -78,32 +78,6 @@ class Producto extends CI_Controller {
         $data['button']=$this->programacionpoa->button_form4(count($data['productos']));
         $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
-
-/*                $prod_id = 52572;
-        $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
-        $temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
-        for ($i=1; $i <=12 ; $i++) { 
-          $prog_mes[$i]=0;
-          $prog_mes[$i]= $temporalidad[0][$this->temp[$i]];
-        }
-
-
-
-
-
-        if(count($producto)!=0){
-          $result = array(
-            'respuesta' => 'correcto',
-            'producto'=>$producto,
-          );
-        }
-        else{
-          $result = array(
-            'respuesta' => 'error',
-          );
-        }
-
-        echo json_encode($result);*/
       }
       else{
         redirect('prog/list_serv/'.$com_id);

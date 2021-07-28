@@ -119,6 +119,7 @@ function abreVentana(PDF){
         }
       }
 
+      //// VERIF META PROGRAMADO
       function verif_suma_programado(){ /// meta
         meta = parseFloat($('[name="meta"]').val()); //// linea base
         if(meta!=0){
@@ -137,6 +138,7 @@ function abreVentana(PDF){
         }
       }
 
+      /// -- SUMA PROGRAMADO
       function suma_programado(){ 
         sum=0;
         linea = parseFloat($('[name="lbase"]').val()); //// linea base
@@ -333,41 +335,26 @@ function abreVentana(PDF){
                document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
 
                for (var i = 1; i <=12; i++) {
-                  document.getElementById("mm"+i).value = parseInt(response.temp[i]);
-                  if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
-                    document.getElementById("mm"+i).disabled = true;
-                  }
-                  else{
-                  document.getElementById("mm"+i).disabled = false;
-                  }
+                document.getElementById("mm"+i).value = parseInt(response.temp[i]);
+                if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
+                  document.getElementById("mm"+i).disabled = true;
+                }
+                else{
+                document.getElementById("mm"+i).disabled = false;
+                }
                }
 
-
-
-              /* document.getElementById("detalle").value = response.insumo[0]['ins_detalle'];
-               document.getElementById("cantidad").value = response.insumo[0]['ins_cant_requerida'];
-               document.getElementById("costou").value = parseFloat(response.insumo[0]['ins_costo_unitario']).toFixed(2);
-               document.getElementById("costot").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
-               document.getElementById("costot2").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
-               document.getElementById("par_padre").value = response.ppdre[0]['par_codigo'];
-               $("#par_hijo").html(response.lista_partidas);
-               document.getElementById("iumedida").value = response.insumo[0]['ins_unidad_medida'];
-               //$("#mum_id").html(response.lista_umedida);
-               document.getElementById("mtot").value = response.prog[0];
-               document.getElementById("observacion").value = response.insumo[0]['ins_observacion'];
-               //$('#ff').html('FUENTE DE FINANCIAMIENTO : '+response.prog[0]['ff_codigo']+' || ORGANISMO FINANCIADOR : '+response.prog[0]['of_codigo']);
-               if(response.prog[0]!=response.insumo[0]['ins_costo_total']){
-                $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
-                $('#mbut').slideUp();
+               $('[name="mtotal"]').val((parseInt(response.producto[0]['prod_meta'])).toFixed(0));
+               if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
+                document.getElementById("mtrep").style.display = 'block';
+               }
+               else{
+                document.getElementById("mtrep").style.display = 'none';
                }
 
-               for (var i = 1; i <=12; i++) {
-                document.getElementById("mm"+i).value = response.prog[i];
-               }*/
-               
             }
             else{
-                alertify.error("ERROR AL RECUPERAR DATOS DEL REQUERIMIENTO");
+                alertify.error("ERROR AL RECUPERAR DATOS DE LA ACTIVIDAD");
             }
 
             });
@@ -445,7 +432,7 @@ function abreVentana(PDF){
                   dif=saldo-programado;
             
                 $('#amtit').html('');
-                    alertify.confirm("MODIFICAR REQUERIMIENTO ?", function (a) {
+                    alertify.confirm("MODIFICAR DATOS DE LA ACTIVIDAD ?", function (a) {
                         if (a) {
                           document.getElementById("loadm").style.display = 'block';
                             document.getElementById('subir_mins').disabled = true;
@@ -460,33 +447,116 @@ function abreVentana(PDF){
         });
     });
 
+    /// Tipo de indicador (Modificacion POA)
+    $(document).ready(function () {
+      $("#mtipo_i").change(function () {            
+        var tp_id = $(this).val();
+    
+          if(tp_id==2){
+            $('#mtrep').slideDown();
+          }
+          else{
+            $('#mtrep').slideUp();
+            for (var i = 1; i <= 12; i++) {
+                $('[name="mm'+i+'"]').val((0).toFixed(0));
+                $("#mm"+i).html('');
+                $('[name="mm'+i+'"]').prop('disabled', false);
+            }
+            $('[name="mtotal"]').val((0).toFixed(0));
+            $('[name="mtp_met"]').val((3).toFixed(0));
+          }
+        });
+    });
 
-  /// ---- Suma Programado Modificado
-      function suma_programado_modificado(){ 
-        sum=0;
-        linea = parseFloat($('[name="mlbase"]').val()); //// linea base
-        codigo = parseFloat($('[name="mcod"]').val()); //// codigo
-        for (var i = 1; i<=12; i++) {
-          sum=parseFloat(sum)+parseFloat($('[name="mm'+i+'"]').val());
-        }
+    /// Tipo de Meta (modificacion poa)
+    $(document).ready(function () {
+      $("#mtp_met").change(function () {            
+        var tp_met = $(this).val();
 
-        $('[name="mtotal"]').val((sum+linea).toFixed(2));
-        programado = parseFloat($('[name="mtotal"]').val()); //// programado total
-        meta = parseFloat($('[name="mmeta"]').val()); //// Meta
-
-        if(programado!='' || programado!=0){
-          if(programado!=meta){
-            $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+          if(tp_met==0){
             $('#mbut').slideUp();
           }
           else{
-
-            if(codigo==0){
-              $('#mbut').slideUp();
+            if(tp_met==1){
+              meta = parseFloat($('[name="mmeta"]').val());
+              for (var i = 1; i <= 12; i++) {
+                $('[name="mm'+i+'"]').val((meta).toFixed(0));
+                $("#m"+i).html('%');
+                $('[name="mm'+i+'"]').prop('disabled', true);
+              }
+              $('[name="mtotal"]').val((meta).toFixed(0));
             }
             else{
+              for (var i = 1; i <= 12; i++) {
+                $('[name="mm'+i+'"]').val((0).toFixed(0));
+                $("#mm"+i).html('');
+                $('[name="mm'+i+'"]').prop('disabled', false);
+              }
+              $('[name="mtotal"]').val((0).toFixed(0));
+            }
+          }
+        });
+    });
+
+  /// ---- Suma Programado Modificado
+    function suma_programado_modificado(){ 
+      sum=0;
+      linea = parseFloat($('[name="mlbase"]').val()); //// linea base
+      codigo = parseFloat($('[name="mcod"]').val()); //// codigo
+      for (var i = 1; i<=12; i++) {
+        sum=parseFloat(sum)+parseFloat($('[name="mm'+i+'"]').val());
+      }
+
+      $('[name="mtotal"]').val((sum+linea).toFixed(2));
+      programado = parseFloat($('[name="mtotal"]').val()); //// programado total
+      meta = parseFloat($('[name="mmeta"]').val()); //// Meta
+
+      if(programado!='' || programado!=0){
+        if(programado!=meta){
+          $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+          $('#mbut').slideUp();
+        }
+        else{
+
+          if(codigo==0){
+            $('#mbut').slideUp();
+          }
+          else{
+            $('#matit').html('');
+            $ ('#mbut').slideDown();
+          }
+        }
+      }
+      else{
+        $('#mbut').slideUp();
+      }
+    }
+
+
+      //// VERIF META (Modificado)
+      function verif_meta_mod(){ /// meta
+        meta = document.getElementById("mmeta").value;
+        
+        alert(meta)
+
+          if(meta!='' & meta!=0){
+            total = parseFloat($('[name="mtotal"]').val()); //// linea base
+            indicador = parseFloat($('[name="mtipo_i"]').val()); //// Indicador
+            tipo_meta = parseFloat($('[name="mtp_met"]').val()); //// tipo Meta
+
+            if(indicador==2 & tipo_meta==1){
+            for (var i = 1; i <=12; i++) {
+              document.getElementById("mm"+i).value = parseInt(meta);
+            }
+          }
+          else{
+            if(meta==total){
               $('#matit').html('');
-              $ ('#mbut').slideDown();
+              $('#mbut').slideDown();
+            }
+            else{
+              $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+              $('#mbut').slideUp();
             }
           }
         }
@@ -494,35 +564,6 @@ function abreVentana(PDF){
           $('#mbut').slideUp();
         }
       }
-/*      function suma_programado_modificado(){ 
-          sum=0;
-          for (var i = 1; i <=12; i++) {
-            sum=parseFloat(sum)+parseFloat($('[name="mm'+i+'"]').val());
-          }
-
-          $('[name="mtot"]').val((sum).toFixed(2));
-          programado = parseFloat($('[name="mtot"]').val()); //// programado total
-          ctotal = parseFloat($('[name="costot"]').val()); //// Costo Total
-          saldo = parseFloat($('[name="sal"]').val()); //// saldo
-
-          if(programado!=ctotal){
-            $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO, VERIFIQUE DATOS</div></center>');
-                $('#mbut').slideUp();
-          }
-          else{
-            if(ctotal>saldo){
-              $('#amtit').html('<center><div class="alert alert-danger alert-block">COSTO TOTAL SUPERA AL SALDO DE LA PARTIDA, VERIFIQUE MONTOS</div></center>');
-                  $('#mbut').slideUp();
-            }
-            else{
-              $('#amtit').html('');
-              $('#mbut').slideDown();
-            }
-          }
-      }*/
-
-
-
 
 
 
