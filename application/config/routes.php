@@ -236,7 +236,8 @@ $route['prog/reporte_form4/(:any)'] = 'programacion/creporte/reporte_formulario4
 
 /*-----------------------------  PROGRAMACION REQUERIMIENTOS (2020) -------------------------------*/
 $route['prog/prog_financiera/(:any)'] = 'programacion/crequerimiento/list_componente/$1';  //// Listado de componentes/operacione, segun el tipo de proyecto
-$route['prog/requerimiento/(:any)'] = 'programacion/crequerimiento/list_requerimientos/$1/$2';  //// Listado de Requerimientos
+$route['prog/requerimiento/(:any)'] = 'programacion/crequerimiento/list_requerimientos/$1';  //// Listado de Requerimientos
+$route['prog/eliminar_insumos_todos/(:any)'] = 'programacion/crequerimiento/eliminar_todos_insumos/$1';  //// eliminar todos los requerimientos
 
 $route['prog/combo_partidas'] = 'programacion/crequerimiento/combo_partidas_hijos';// COMBO PARTIDAS HIJOS
 $route['prog/combo_umedida'] = 'programacion/crequerimiento/combo_unidad_medida';// COMBO UNIDAD DE MEDIDA
@@ -286,7 +287,7 @@ $route['exportar_requerimientos'] = 'mantenimiento/ccontrol_calidad/exportar_req
 $route['prog/ins_prod/(:any)'] = 'insumos/cprog_insumo/prog_isumos_prod/$1';//PROGRAMACION DE INSUMOS A NIVEL PRODUCTOS
 $route['prog/delete_ins_ope'] = 'insumos/cprog_insumo/delete_get_requerimiento';//// DELETE REQUERIMIENTO 7 ope/act
 $route['prog/mod_ins_p/(:any)'] = 'insumos/cprog_insumo/mod_insumo/$1/$2/$3/$4/$5/$6';//MODIFICAR INSUMO A NIVEL PRODUCTO
-$route['prog/delete_ins_p/(:any)'] = 'insumos/cprog_insumo/eliminar_insumos/$1/$2';//ELIMINAR INSUMOS DE LA ACTIVIDAD (2020)
+//$route['prog/delete_ins_p/(:any)'] = 'insumos/cprog_insumo/eliminar_insumos/$1/$2';//ELIMINAR INSUMOS DE LA ACTIVIDAD (2020)
 //$route['prog/rep_requerimientos_ope/(:any)'] = 'insumos/cprog_insumo/reporte_requerimientos_operacion/$1';//REQUERIMIENTOS DE LA OPERACI&Oacute;N PDF
 $route['prog/rep_partidas_ope/(:any)'] = 'insumos/cprog_insumo/reporte_partida/$1';//Consolidado partidas pdf
 $route['prog/xcel_partidas_ope/(:any)'] = 'insumos/cprog_insumo/xcel_reporte_partida/$1';//Consolidado partidas Excel

@@ -21,72 +21,12 @@
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
 	    <meta name="viewport" content="width=device-width">
 		<!--fin de stiloh-->
-          <script>
-		  	function abreVentana(PDF){
-				var direccion;
-				direccion = '' + PDF;
-				window.open(direccion, "Reporte de Consolidado Partida" , "width=800,height=650,scrollbars=SI") ;
-			}                                                  
-          </script>
-			<style>
-			aside{background: #05678B;}
-			.table1{
-	          display: inline-block;
-	          width:100%;
-	          max-width:1550px;
-	          overflow-x: scroll;
-	          }
-			table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-			overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-            #mdialTamanio{
-		      width: 80% !important;
-		    }
-		    #mdialTamanio2{
-		      width: 55% !important;
-		    }
-		    input[type="checkbox"] {
-                display:inline-block;
-                width:25px;
-                height:25px;
-                margin:-1px 4px 0 0;
-                vertical-align:middle;
-                cursor:pointer;
-            }
-			</style>
+          <?php echo $stylo;?>
 	</head>
 	<body class="">
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
 		<!-- HEADER -->
 		<header id="header">
-			<div id="logo-group">
-				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -141,7 +81,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>...</li><li>Programaci&oacute;n POA</a></li><li><?php if($proyecto[0]['tp_id']==1){echo "Componente";}else{echo "Servicio";}?></li><li>Mis Requerimientos</li>
+					<li>Programaci&oacute;n POA</a></li><li>Unidades</li><li>Actividades</li><li>Requerimientos</li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->
@@ -199,60 +139,32 @@
 			                    <?php
 			                  }
 			                ?>
-			               
-	                		<div class="well well-sm well-light">
-								<div id="tabs">
-									<ul>
-										<li>
-											<a href="#tabs-a">REQUERIMIENTOS DE LA ACTIVIDAD</a>
-										</li>
-										<li>
-											<a href="#tabs-b"><?php echo $titulos[1];?></a>
-										</li>
-									</ul>
-									<div id="tabs-a">
-										<div class="row">
-											<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-											<div class="jarviswidget jarviswidget-color-darken">
-				                              <header>
-				                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-				                                  <h2 class="font-md"><strong></strong></h2>  
-				                              </header>
-												<div>
-												<!-- <?php
-													if(($monto_a-$monto_p)>10){ ?>
-													<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success nuevo_ff" title="NUEVO REGISTRO - REQUERIMIENTOS" class="btn btn-success" style="width:15.5%;">NUEVO REGISTRO</a><br><br>
-												<?php }
-												?> -->
-												<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success nuevo_ff" title="NUEVO REGISTRO - REQUERIMIENTOS" class="btn btn-success" style="width:12%;">NUEVO REGISTRO</a>
-												<!-- <a href="#" data-toggle="modal" data-target="#modal_vprevia" class="btn btn-warning vprevia" title="VISTA PREVIA DEL ARCHIVO" class="btn btn-warning" style="width:12%;">VISTA PREVIA ARCHIVO.CSV</a> -->
-												<a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-info importar_ff" title="SUBIR ARCHIVO EXCEL" class="btn btn-info" style="width:12%;">SUBIR REQUERIMIENTOS.CSV</a><br><br>	
-													<div class="widget-body no-padding">
-														<form id="del_req" name="del_req" novalidate="novalidate" action="<?php echo site_url().'/insumos/cprog_insumo/delete_requerimientos'?>" method="post">
-															<input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-															<input type="hidden" name="id" id="id" value="<?php echo $id; ?>">
-															<?php echo $requerimientos;?>
-															<input type="hidden" name="tot" id="tot" value="0">
-									                        <div class="alert alert-danger" align=right><input type="button" class="btn btn-danger btn-xs" value="ELIMINAR REQUERIMIENTOS" id="btsubmit" onclick="valida_eliminar()" title="ELIMINAR REQUERIMIENTOS SELECCIONADOS"></div>
-									                    </form>
-													</div>
-													<!-- end widget content -->
-												</div>
-												<!-- end widget div -->
+			               <div class="well">
+	                		<div class="row">
+								<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<div class="jarviswidget jarviswidget-color-darken">
+		                              <header>
+		                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+		                                  <h2 class="font-md"><strong></strong></h2>  
+		                              </header>
+										<div>
+											<?php echo $button;?>
+										
+											<div class="widget-body no-padding">
+												<form id="del_req" name="del_req" novalidate="novalidate" action="<?php echo site_url().'/insumos/cprog_insumo/delete_requerimientos'?>" method="post">
+													<input type="hidden" name="prod_id" id="prod_id" value="<?php echo $producto[0]['prod_id'];?>">
+													<?php echo $requerimientos;?>
+													<input type="hidden" name="tot" id="tot" value="0">
+							                        <div class="alert alert-danger" align=right><input type="button" class="btn btn-danger btn-xs" value="ELIMINAR REQUERIMIENTOS" id="btsubmit" onclick="valida_eliminar()" title="ELIMINAR REQUERIMIENTOS SELECCIONADOS"></div>
+							                    </form>
 											</div>
-											<!-- end widget -->
-											</article>
+											<!-- end widget content -->
 										</div>
+										<!-- end widget div -->
 									</div>
-
-									<div id="tabs-b">
-										<div class="row">
-											<hr>
-											<?php echo $partidas_ope;?>
-										</div>
-									</div>
-									
-								</div>
+									<!-- end widget -->
+								</article>
+							</div>
 							</div>
 						</article>
 						<!-- WIDGET END -->
@@ -272,8 +184,7 @@
                 <div class="modal-body">
                 	<h2 class="alert alert-info"><center>NUEVO REGISTRO - REQUERIMIENTO</center></h2>
                     <form action="<?php echo site_url().'/programacion/crequerimiento/valida_insumo'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
-                        <input type="hidden" name="id" id="id" value="<?php echo $id;?>">
-                        <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
+                        <input type="hidden" name="prod_id" id="proy_id" value="<?php echo $producto[0]['prod_id'];?>">
                         <header><b>DATOS GENERALES DEL REQUERIMIENTO</b><br><label class="label"><b>C&Oacute;DIGO DE ACTIVIDAD : <?php echo $producto[0]['prod_cod'];?></b></label></header>
 							<fieldset>					
 								<div class="row">
@@ -692,7 +603,6 @@
 	    <!-- ======================================================== -->
     <!-- ================== MODAL SUBIR ARCHIVO ========================== -->
      	<div class="modal animated fadeInDown" id="modal_importar_ff" tabindex="-1" role="dialog">
-        <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
         <div class="modal-dialog" id="mdialTamanio2">
             <div class="modal-content">
                 <div class="modal-body no-padding">
@@ -815,63 +725,9 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-		<script>
-		function doSelectAlert(event,prod_id,ins_id) {
-		    var option = event.srcElement.children[event.srcElement.selectedIndex];
-		    if (option.dataset.noAlert !== undefined) {
-		        return;
-		    }
+		<script src="<?php echo base_url(); ?>mis_js/programacionpoa/form5.js"></script> 
 
-		    alertify.confirm("DESEA CAMBIAR DE OPERACIÓN ?", function (a) {
-	            if (a) {
-                	var url = "<?php echo site_url().'/programacion/crequerimiento/cambia_actividad'?>";
-			        $.ajax({
-			            type: "post",
-			            url: url,
-			            data:{prod_id:prod_id,ins_id:ins_id},
-			                success: function (data) {
-			                window.location.reload(true);
-			            }
-			        });
-	            } else {
-	                alertify.error("OPCI\u00D3N CANCELADA");
-	            }
-          	});
-		}
-		</script>
 		<script type="text/javascript">
-			function justNumbers(e){
-	            var keynum = window.event ? window.event.keyCode : e.which;
-	            if ((keynum == 8) || (keynum == 46))
-	            return true;
-	             
-	            return /\d/.test(String.fromCharCode(keynum));
-	        }
-
-
-	        function valida_eliminar(){
-	        	alertify.confirm("DESEA ELIMINAR "+document.del_req.tot.value+" OPERACIONES ?", function (a) {
-		            if (a) {
-		                document.getElementById("btsubmit").value = "ELIMINANDO REQUERIMIENTOS...";
-		                document.getElementById("btsubmit").disabled = true;
-		                document.del_req.submit();
-		                return true;
-		            } else {
-		                alertify.error("OPCI\u00D3N CANCELADA");
-		            }
-		          });
-		     }
-
-			function eliminar_requerimientos(){
-				alertify.confirm("DESEA ELIMINAR TODOS LOS REQUERIMIENTOS ?", function (a) {
-			        if (a) {
-			        	window.location='<?php echo base_url().'index.php/prog/delete_ins_p/'.$proyecto[0]['proy_id'].'/'.$producto[0]['prod_id'].''?>';
-			        } else {
-			            alertify.error("OPCI\u00D3N CANCELADA");
-			        }
-			    });
-			}
-
             /*------------ MODIFICAR REQUERIMIENTO ----------------*/
             $(function () {
                 $(".mod_ff").on("click", function (e) {
@@ -1012,85 +868,7 @@
         </script>
         <!-- AGREGAR NUEVO REQUERIMIENTO -->
         <script type="text/javascript">
-        $(function () {
-            $("#subir_ins").on("click", function () {
-                var $validator = $("#form_nuevo").validate({
-                        rules: {
-                            prod_id: { //// producto
-                            required: true,
-                            },
-                            proy_id: { //// proyecto
-                                required: true,
-                            },
-                            ins_detalle: { //// Detalle
-                                required: true,
-                            },
-                            ins_cantidad: { //// Cantidad
-                                required: true,
-                            },
-                            ins_costo_u: { //// Costo U
-                                required: true,
-                            },
-                            costo: { //// costo tot
-                                required: true,
-                            },
-                            um_id: { //// unidad medida
-                                required: true,
-                            },
-                            padre: { //// par padre
-                                required: true,
-                            },
-                            partida_id: { //// par hijo
-                                required: true,
-                            }
-                        },
-                        messages: {
-                            ins_detalle: "<font color=red>REGISTRE DETALLE DEL REQUERIMIENTO</font>", 
-                            ins_cantidad: "<font color=red>CANTIDAD</font>",
-                            ins_costo_u: "<font color=red>COSTO UNITARIO</font>",
-                            costo: "<font color=red>COSTO TOTAL</font>",
-                            um_id: "<font color=red>SELECCIONE UNIDAD DE MEDIDA</font>",
-                            padre: "<font color=red>SELECCIONE GRUPO DE PARTIDAS</font>",
-                            partida_id: "<font color=red>SELECCIONE PARTIDA</font>",                     
-                        },
-                        highlight: function (element) {
-                            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-                        },
-                        unhighlight: function (element) {
-                            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-                        },
-                        errorElement: 'span',
-                        errorClass: 'help-block',
-                        errorPlacement: function (error, element) {
-                            if (element.parent('.input-group').length) {
-                                error.insertAfter(element.parent());
-                            } else {
-                                error.insertAfter(element);
-                            }
-                        }
-                    });
 
-                var $valid = $("#form_nuevo").valid();
-                if (!$valid) {
-                    $validator.focusInvalid();
-                } else {
-                	saldo=document.getElementById("saldo").value;
-                    programado=document.getElementById("tot").value;
-                    dif=saldo-programado;
-                    $('#atit').html('');
-                    	alertify.confirm("GUARDAR DATOS REQUERIMIENTO ?", function (a) {
-	                        if (a) {
-	                        	document.getElementById("loadi").style.display = 'block';
-                                document.getElementById('subir_ins').disabled = true;
-                                document.getElementById("subir_ins").value = "GUARDANDO DATOS REQUERIMIENTO...";
-                                document.forms['form_nuevo'].submit();
-	                        	} else {
-	                            	alertify.error("OPCI\u00D3N CANCELADA");
-	                        }
-	                    });	
-                }
-            });
-        });
         </script>
         <script type="text/javascript">
             $(function () {
@@ -1219,145 +997,7 @@
 			})
 		</script>
 		<script type="text/javascript">
-		$(document).ready(function() {
-			pageSetUp();
-			$("#padre").change(function () {
-                $("#padre option:selected").each(function () {
-	                elegido=$(this).val();
-	                $("#um_id").html('');
-	                $.post("<?php echo base_url(); ?>index.php/prog/combo_partidas", { elegido: elegido }, function(data){ 
-	                $("#partida_id").html(data);
-	                });     
-	            });
-            });
 
-            $("#partida_id").change(function () {
-                $("#partida_id option:selected").each(function () {
-	                elegido=$(this).val();
-	                $.post("<?php echo base_url(); ?>index.php/prog/combo_umedida", { elegido: elegido }, function(data){ 
-	                $("#um_id").html(data);
-	                });     
-	            });
-            }); 
-		})
-
-		$(document).ready(function() {
-			pageSetUp();
-			$("#par_padre").change(function () {
-                $("#par_padre option:selected").each(function () {
-	                elegido=$(this).val();
-	                $.post("<?php echo base_url(); ?>index.php/prog/combo_partidas", { elegido: elegido }, function(data){ 
-	                $("#par_hijo").html(data);
-	                });     
-	            });
-            });
-
-            $("#par_hijo").change(function () {
-                $("#par_hijo option:selected").each(function () {
-	                elegido=$(this).val();
-	                $.post("<?php echo base_url(); ?>index.php/prog/combo_umedida", { elegido: elegido }, function(data){ 
-	                $("#mum_id").html(data);
-	                });     
-	            });
-            }); 
-		})
-
-
-		function suma_programado(){ 
-	        sum=0;
-	        for (var i = 1; i<=12; i++) {
-	        	sum=parseFloat(sum)+parseFloat($('[name="m'+i+'"]').val());
-	        }
-
-	        $('[name="tot"]').val((sum).toFixed(2));
-	        programado = parseFloat($('[name="tot"]').val()); //// programado total
-	        ctotal = parseFloat($('[name="costo"]').val()); //// Costo Total
-
-	        if(programado!=ctotal){
-	        	$('#atit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO, VERIFIQUE DATOS</div></center>');
-                $('#but').slideUp();
-	        }
-	        else{
-	        	$('#atit').html('');
-                $('#but').slideDown();
-	        }
-	    }
-
-	    function suma_programado_modificado(){ 
-	        sum=0;
-	        for (var i = 1; i <=12; i++) {
-	        	sum=parseFloat(sum)+parseFloat($('[name="mm'+i+'"]').val());
-	        }
-
-	        $('[name="mtot"]').val((sum).toFixed(2));
-	        saldo = parseFloat($('[name="saldo"]').val()); //// Monto Saldo
-	        programado = parseFloat($('[name="mtot"]').val()); //// programado total
-	        ctotal = parseFloat($('[name="costot"]').val()); //// Costo Total
-
-	        if(programado!=ctotal){
-	        	$('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO, VERIFIQUE DATOS</div></center>');
-                $('#mbut').slideUp();
-	        }
-	        else{
-	        	$('#amtit').html('');
-                $('#mbut').slideDown();
-	        }
-	    }
-
-	    function costo_totalm(){ 
-	        a = parseFloat($('[name="cantidad"]').val()); //// Meta
-	        b = parseFloat($('[name="costou"]').val()); //// Costo
-	        if (a!=0 && a>0 ){
-	            $('[name="costot"]').val((b*a).toFixed(2) );
-	            $('[name="costot2"]').val((b*a).toFixed(2) );
-	        }
-
-	        ct = parseFloat($('[name="costot"]').val()); //// total
-	        mt = parseFloat($('[name="mtot"]').val()); //// prog
-	        if(ct!=mt ||  isNaN(a)){
-	        	$('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
-                $('#mbut').slideUp();
-	        }
-	        else{
-	        	$('#amtit').html('');
-                $('#mbut').slideDown();
-	        }
-
-	    }
-
-	   	function costo_total(){ 
-	        a = parseFloat($('[name="ins_cantidad"]').val()); //// cantidad
-	        b = parseFloat($('[name="ins_costo_u"]').val()); //// Costo unitario
-	        if (a!=0 && a>0 ){
-	            $('[name="costo"]').val((b*a).toFixed(2) );
-	            $('[name="costo2"]').val((b*a).toFixed(2) );
-	        }
-
-	        ct = parseFloat($('[name="costo"]').val()); //// total
-	        mt = parseFloat($('[name="tot"]').val()); //// prog
-	        if(ct!=mt ||  isNaN(a) || ct==0){
-	        	$('#atit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
-                $('#but').slideUp();
-	        }
-	        else{
-	        	$('#atit').html('');
-                $('#but').slideDown();
-	        }
-
-	    }
-
-	    function verif(){ 
-			a = parseFloat($('[name="costot"]').val()); //// total
-	        b = parseFloat($('[name="mtot"]').val()); //// prog
-	        if(a!=b){
-	        	$('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
-                $('#mbut').slideUp();
-	        }
-	        else{
-	        	$('#amtit').html('');
-                $('#mbut').slideDown();
-	        }
-	    }
 		</script>
 	</body>
 </html>

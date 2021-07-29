@@ -54,7 +54,7 @@ class Cprog_insumo extends CI_Controller{
       $this->load->view('admin/programacion/proy_anual/top/menu_plantilla', $data);
     }
 
-    /*--- MIGRACION DE OPERACIONES (2020) Y REQUERIMIENTOS  ---*/
+    /*--- MIGRACION DE FORM4 (2020-2022) Y FORM 5 ---*/
     function ver_operaciones_requerimientos(){
       if ($this->input->post()) {
           $post = $this->input->post();
@@ -87,20 +87,20 @@ class Cprog_insumo extends CI_Controller{
                 if($i != 0){
                   $datos = explode(";",$linea);
 
-                    $cod_or = trim($datos[0]); // Codigo Objetivo Regional
-                    $cod_ope = $nro_prod; // Codigo Operacion
-                    $descripcion = utf8_encode(trim($datos[2])); //// descripcion Operacion
+                    $cod_or = intval(trim($datos[0])); // Codigo Objetivo Regional
+                    $cod_ope = intval($nro_prod); // Codigo Form 4
+                    $descripcion = utf8_encode(trim($datos[2])); //// descripcion form 4
                     $resultado = utf8_encode(trim($datos[3])); //// descripcion Resultado
 
                     $unidad = utf8_encode(trim($datos[4])); //// Unidad
                     $indicador = utf8_encode(trim($datos[5])); //// descripcion Indicador
-                    $lbase = utf8_encode(trim($datos[6])); //// Linea Base
-                    if(trim($datos[6])==''){
+                    $lbase = intval(trim($datos[6])); //// Linea Base
+                    if(intval(trim($datos[6]))==''){
                       $lbase = 0; //// Linea Base
                     }
 
-                    $meta = utf8_encode(trim($datos[7])); //// Meta
-                    if(trim($datos[7])==''){
+                    $meta = intval(trim($datos[7])); //// Meta
+                    if(intval(trim($datos[7]))==''){
                       $meta = 0; //// Meta
                     }
 
@@ -179,17 +179,17 @@ class Cprog_insumo extends CI_Controller{
             foreach ($lineas as $linea_num => $linea){
               if($i != 0){
                   $datos = explode(";",$linea);
-                    $numero = (int)$datos[0]; //// Numero correlativo
-                    $cod_partida = (int)$datos[1]; //// Codigo partida
-                    $par_id = $this->minsumos->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
+                    $numero = intval(trim($datos[0])); //// Numero correlativo o Cod act.
+                    $cod_partida = intval(trim($datos[1])); //// Codigo partida
+                    $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
 
                     $detalle = utf8_encode(trim($datos[2])); //// descripcion
                   if(count($datos)==20){
 
                     $unidad = utf8_encode(trim($datos[3])); //// Unidad
-                    $cantidad = (int)$datos[4]; //// Cantidad
-                    $unitario = $datos[5]; //// Costo Unitario
-                    $total = $datos[6]; //// Costo Total
+                    $cantidad = intval(trim($datos[4])); //// Cantidad
+                    $unitario = intval(trim($datos[5])); //// Costo Unitario
+                    $total = intval(trim($datos[6])); //// Costo Total
 
                     $p_total=round(($cantidad*$unitario),2);
 
@@ -312,7 +312,7 @@ class Cprog_insumo extends CI_Controller{
 
         $saldo=($m_asig-$m_prog);
         
-        $insumo= $this->minsumos->get_requerimiento($ins_id); /// Datos requerimientos productos
+        $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
 
         $par_padre=$this->model_partidas->get_partida_padre($insumo[0]['par_depende']); /// lista de partidas padres
         $lista_partidas=$this->partidas_dependientes($insumo); /// Lista de Insumos dependientes
@@ -345,13 +345,7 @@ class Cprog_insumo extends CI_Controller{
 
     /*--- DISTRIBUCION FINANCIERA ---*/
     function distribucion_financiera($insumo){
-      if($this->gestion==2019){
-          $prog=$this->minsumos->get_list_insumo_financiamiento($insumo[0]['insg_id']); /// Temporalidad Requerimiento 2019
-        }
-        else{
-          $prog=$this->model_insumo->list_temporalidad_insumo($insumo[0]['ins_id']); /// Temporalidad Requerimiento 2020
-        }
-
+      $prog=$this->model_insumo->list_temporalidad_insumo($insumo[0]['ins_id']); /// Temporalidad Requerimiento 2020
         for ($i=0; $i <=12 ; $i++) { 
           if($i==0){
             $titulo[$i]='programado_total';  
@@ -517,7 +511,7 @@ class Cprog_insumo extends CI_Controller{
                       if(count($datos)==20){
                         $numero = (int)$datos[0]; //// Numero Actividad
                         $cod_partida = (int)$datos[1]; //// Codigo partida
-                        $par_id = $this->minsumos->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
+                        $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
 
                         $detalle = utf8_encode(trim($datos[2])); //// detalle Requerimiento
                         $unidad = utf8_encode(trim($datos[3])); //// Unidad de medida
@@ -614,142 +608,8 @@ class Cprog_insumo extends CI_Controller{
     }
 
 
-   
-    /*------- SUBIDA DE VERIFICACION DE OPERACIONES -------*/
-    function verificar_requerimientos_a_una_actividad(){
-      if ($this->input->post()) {
-          $post = $this->input->post();
-          $proy_id = $post['proy_id']; /// proy id
-          $id = $post['id']; /// prod id, act id
-          
-          $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// DATOS DEL PROYECTO
-          $fase = $this->model_faseetapa->get_id_fase($proy_id); //// DATOS DE LA FASE ACTIVA
-
-          $tipo = $_FILES['archivo']['type'];
-          $tamanio = $_FILES['archivo']['size'];
-          $archivotmp = $_FILES['archivo']['tmp_name'];
-
-          $filename = $_FILES["archivo"]["name"];
-          $file_basename = substr($filename, 0, strripos($filename, '.'));
-          $file_ext = substr($filename, strripos($filename, '.'));
-          $allowed_file_types = array('.csv');
-          if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
-               
-          /*------------------- Migrando ---------------*/
-          $lineas = file($archivotmp);
-          $i=0;
-          $nro_ok=0; $nro_ncumple=0; $nro_npartida=0; $suma_monto=0;
-          $ncump=array();$naprob=array();$aprob=array();
-          //Recorremos el bucle para leer línea por línea
-          foreach ($lineas as $linea_num => $linea){ 
-            if($i != 0){
-                $datos = explode(";",$linea);
-                  $numero = (int)$datos[0]; //// Numero correlativo
-                  $cod_partida = (int)$datos[1]; //// Codigo partida
-                  $par_id = $this->minsumos->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
-
-                  $detalle = utf8_encode(trim($datos[2])); //// descripcion
-                if(count($datos)==22){
-
-                  $unidad = utf8_encode(trim($datos[3])); //// Unidad
-                  $cantidad = (int)$datos[4]; //// Cantidad
-                  $unitario = (float)$datos[5]; //// Costo Unitario
-                  $total = (float)$datos[6]; //// Costo Total
-
-                  $var=7; $sum_temp=0;
-                  for ($i=1; $i <=12 ; $i++) {
-                    $m[$i]=(float)$datos[$var]; //// Mes i
-                    if($m[$i]==''){
-                      $m[$i]=0;
-                    }
-                    $sum_temp=$sum_temp+$m[$i];
-                    $var++;
-                  }
-
-                  $observacion = utf8_encode(trim($datos[21])); //// Observacion
-
-
-                  if(count($par_id)!=0 & $cod_partida!=0 & $sum_temp==$total){
-                      $nro_ok++;
-                      $aprob[1][$nro_ok]=$numero;
-                      $aprob[2][$nro_ok]=$cod_partida;
-                      $aprob[3][$nro_ok]=$detalle ;
-                      $aprob[4][$nro_ok]=$unidad;
-                      $aprob[5][$nro_ok]=$cantidad;
-                      $aprob[6][$nro_ok]=$unitario;
-                      $aprob[7][$nro_ok]=$total;
-                      $aprob[8][$nro_ok]=$sum_temp;
-
-                      $vari=9;
-                      for ($i=1; $i <=12 ; $i++) { 
-                        $aprob[$vari][$nro_ok]=$m[$i];
-                        $vari++;
-                      }
-                      //echo $numero.". - INSUMO: ".$detalle." - MONTO : ".$total." SUMA : ".$aprob[8][$nro_ok]."<br>";
-                      $suma_monto=$suma_monto+$total;
-                  }
-                  else{
-                      //echo "NO CUMPLE PARTIDA Y CODIGO :".$cod_partida." - INSUMO: ".$detalle."<br>";
-                      $nro_npartida++;
-                      $naprob[1][$nro_npartida]=$numero;
-                      $naprob[2][$nro_npartida]=$cod_partida;
-                      $naprob[3][$nro_npartida]=$detalle ;
-                      $naprob[4][$nro_npartida]=$unidad;
-                      $naprob[5][$nro_npartida]=$cantidad;
-                      $naprob[6][$nro_npartida]=$unitario;
-                      $naprob[7][$nro_npartida]=$total;
-                      $naprob[8][$nro_npartida]=$sum_temp;
-
-                      $vari=9;
-                      for ($i=1; $i <=12 ; $i++) { 
-                        $naprob[$vari][$nro_npartida]=$m[$i];
-                        $vari++;
-                      }
-                  }
-
-                }
-                else{
-                  //echo "NO CUMPLE 21 CAMPOS : ".count($datos)." - ".$detalle."<br>";
-                  $nro_ncumple++;
-                  $ncump[1][$nro_ncumple]=$nro_ncumple;
-                  $ncump[2][$nro_ncumple]=$cod_partida;
-                  $ncump[3][$nro_ncumple]=$detalle ;
-                  $ncump[4][$nro_ncumple]=count($datos);
-                }
-
-              }
-              $i++;
-            }
-
-            $data['proy_id']=$proy_id;
-            $data['id']=$id;
-            $data['menu']=$this->genera_menu($proy_id);
-            $data['titulo']=$this->titulo($proy_id,$id);
-            $data['bien']=$this->vista_requerimientos($aprob,$nro_ok,$proy_id,$id,1);
-            $data['regular']=$this->vista_requerimientos($naprob,$nro_npartida,$proy_id,$id,2);
-            $data['mal']=$this->vista_requerimientos_error($ncump,$nro_ncumple,$proy_id,$id);
-
-            $this->load->view('admin/programacion/requerimiento/vprevia_requerimientos', $data);
-          } 
-          elseif (empty($file_basename)) {
-            $this->session->set_flashdata('danger','POR FAVOR SELECCIONE ARCHIVO CSV');
-            redirect('prog/requerimiento/'.$proy_id.'/'.$id.'/false');
-          } 
-          elseif ($filesize > 100000000) {
-              //redirect('');
-          } 
-          else {
-            $mensaje = "Sólo estos tipos de archivo se permiten para la carga: " . implode(', ', $allowed_file_types);
-            echo '<script>alert("' . $mensaje . '")</script>';
-          }
-
-      } else {
-          show_404();
-      }
-    }
-
     /*--- TITULO PARA LA DESCRIPCION DE LA VISTA PREVIA DE REQUERIMIENTOS ---*/
-    function titulo($proy_id,$id){
+/*    function titulo($proy_id,$id){
       $tabla='';
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
       if($proyecto[0]['tp_id']==1){
@@ -768,10 +628,10 @@ class Cprog_insumo extends CI_Controller{
 
       return $tabla;
 
-    }
+    }*/
 
 
-    /*--- VISTA PREVIA DE OPERACIONES (ACTIVIDADES - DATOS GENERALES) ---*/
+    /*--- VISTA PREVIA DE FORM 4 (ACTIVIDADES - DATOS GENERALES) ---*/
     function vista_prev_actividades($matriz,$nro,$tp){
       $tabla='';
       $styl='';
@@ -860,7 +720,7 @@ class Cprog_insumo extends CI_Controller{
       return $tabla;
     }
 
-    /*--- VISTA PREVIA DE ACTIVIDADES CON ERROR DE DIMENSION (DATOS GENERALES) ---*/
+    /*--- VISTA PREVIA DE FORM 4 CON ERROR DE DIMENSION (DATOS GENERALES) ---*/
     function vista_prev_actividades_error($matriz,$nro){
       $tabla='';
       $tabla.='
@@ -908,7 +768,7 @@ class Cprog_insumo extends CI_Controller{
       return $tabla;
     }
 
-    /*--- VISTA PREVIA DE REQUERIMIENTOS (DATOS GENERALES) ---*/
+    /*--- VISTA PREVIA DE FORM 5 (DATOS GENERALES) ---*/
     function vista_prev_requerimientos($matriz,$nro,$tp,$monto){
       $tabla='';
       $styl='';
@@ -1003,7 +863,7 @@ class Cprog_insumo extends CI_Controller{
       return $tabla;
     }
 
-    /*--- VISTA PREVIA DE REQUERIMIENTOS CON ERROR DE DIMENSION (DATOS GENERALES) ---*/
+    /*--- VISTA PREVIA DE FORM 5 CON ERROR DE DIMENSION (DATOS GENERALES) ---*/
     function vista_prev_requerimientos_error($matriz,$nro){
       $tabla='';
       $tabla.='
@@ -1056,7 +916,7 @@ class Cprog_insumo extends CI_Controller{
     }
 
 
-    /*--- VISTA PREVIA DE REQUERIMIENTOS A IMPORTAR (REQUERIMIENTOS)---*/
+    /*--- VISTA PREVIA DE REQUERIMIENTOS A IMPORTAR (FORMULARIO 5)---*/
     function vista_requerimientos($matriz,$nro,$proy_id,$id,$tp){
       $tabla='';
       $styl='';
@@ -1211,7 +1071,7 @@ class Cprog_insumo extends CI_Controller{
     
 
     /*----- SUMA TOTAL MONTO REQUERIMIENTOS A IMPORTAR -------*/
-    function suma_monto_total($requerimientos){
+/*    function suma_monto_total($requerimientos){
       $i=0; $suma=0;
       foreach ($requerimientos as $linea_num => $linea){ 
         if($i != 0){
@@ -1227,309 +1087,15 @@ class Cprog_insumo extends CI_Controller{
 
       return $suma;
     }      
+*/
 
-
-    /*------------------ SUBIDA DE VERIFICACION DE OPERACIONES ------------*/
-    function vprevia_requerimientosss(){
-      if ($this->input->post()) {
-          $post = $this->input->post();
-          $proy_id = $post['proy_id']; /// proy id
-          $prod_id = $post['prod_id']; /// pfec id
-          $producto = $this->model_producto->get_producto_id($prod_id); ///// DATOS DEL PRODUCTO
-          
-          $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// DATOS DEL PROYECTO
-          $fase = $this->model_faseetapa->get_id_fase($proy_id); //// DATOS DE LA FASE ACTIVA
-
-          $tipo = $_FILES['archivo']['type'];
-          $tamanio = $_FILES['archivo']['size'];
-          $archivotmp = $_FILES['archivo']['tmp_name'];
-
-          $filename = $_FILES["archivo"]["name"];
-          $file_basename = substr($filename, 0, strripos($filename, '.'));
-          $file_ext = substr($filename, strripos($filename, '.'));
-          $allowed_file_types = array('.csv');
-          if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
-               
-            /*------------------- Migrando ---------------*/
-          $lineas = file($archivotmp);
-          $i=0;
-          $nro_ok=0; $nro_ncumple=0; $nro_npartida=0; $suma_monto=0;
-          //Recorremos el bucle para leer línea por línea
-          foreach ($lineas as $linea_num => $linea){ 
-            if($i != 0){
-                $datos = explode(";",$linea);
-                
-                if(count($datos)==21){
-                  $cod_ope = (int)$datos[0]; //// Codigo Operacion
-                  $cod_partida = (int)$datos[1]; //// Codigo partida
-                //  $verif_com_ope=$this->model_producto->verif_componente_operacion($com_id,$cod_ope);
-                  $par_id = $this->minsumos->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
-
-                  $detalle = utf8_encode(trim($datos[3])); //// descripcion
-                  $unidad = utf8_encode(trim($datos[4])); //// Unidad
-                  $cantidad = (int)$datos[5]; //// Cantidad
-                  $unitario = (float)$datos[6]; //// Costo Unitario
-                  $total = (float)$datos[7]; //// Costo Total
-                  if(!is_numeric($unitario)){
-                    if($cantidad!=0){
-                      $unitario=round(($total/$unitario),2); 
-                    }
-                  }
-
-                  $var=8; $sum_temp=0;
-                  for ($i=1; $i <=12 ; $i++) {
-                    $m[$i]=(float)$datos[$var]; //// Mes i
-                    if($m[$i]==''){
-                      $m[$i]=0;
-                    }
-                    $sum_temp=$sum_temp+$m[$i];
-                    $var++;
-                  }
-
-                  $observacion = utf8_encode(trim($datos[20])); //// Observacion
-
-                  if(count($par_id)!=0 & $cod_ope==$producto[0]['prod_cod'] & $cod_partida!=0){
-                      $nro_ok++;
-                      $aprob[1][$nro_ok]=$cod_ope;
-                      $aprob[2][$nro_ok]=$cod_partida;
-                      $aprob[3][$nro_ok]=$detalle ;
-                      $aprob[4][$nro_ok]=$unidad;
-                      $aprob[5][$nro_ok]=$cantidad;
-                      $aprob[6][$nro_ok]=$unitario;
-                      $aprob[7][$nro_ok]=$total;
-                      $aprob[8][$nro_ok]=$sum_temp;
-                    //  echo $nro.".- COD: ".$cod_ope." - COD PARTIDA: ".$cod_partida." - INSUMO: ".$detalle." - MONTO : ".$total."<br>";
-                      $suma_monto=$suma_monto+$total;
-                  }
-                  else{
-                      //echo "NO CUMPLE PARTIDA Y CODIGO :".$cod_partida." - INSUMO: ".$detalle."<br>";
-                      $nro_npartida++;
-                      $naprob[1][$nro_npartida]=$cod_ope;
-                      $naprob[2][$nro_npartida]=$cod_partida;
-                      $naprob[3][$nro_npartida]=$detalle ;
-                      $naprob[4][$nro_npartida]=$unidad;
-                      $naprob[5][$nro_npartida]=$cantidad;
-                      $naprob[6][$nro_npartida]=$unitario;
-                      $naprob[7][$nro_npartida]=$total;
-                      $aprob[8][$nro_ok]=$sum_temp;
-                  }
-
-                }
-                else{
-                  //echo "NO CUMPLE 21 CAMPOS : ".count($datos)." - ".$detalle."<br>";
-                  $nro_ncumple++;
-                    $ncump[1][$nro_ncumple]=$cod_ope;
-                    $ncump[2][$nro_ncumple]=$cod_partida;
-                    $ncump[3][$nro_ncumple]=$detalle ;
-                    $ncump[4][$nro_ncumple]=count($datos);
-                }
-
-              }
-              $i++;
-            }
-
-            echo "<div align='center'><font color='blue'>VISTA PREVIA DE REQUERIMIENTOS A SUBIR</font></div><br>";
-          //  echo "OK : ".$nro_ok." - NO PARTIDA : ".$nro_npartida." - NO CUMPLE : ".$nro_ncumple."<br>";
-            
-            if($nro_ok!=0){
-              $tabla_a ='<style>
-                    table{font-size: 9px;
-                          width: 100%;
-                          max-width:1550px;
-                          overflow-x: scroll;
-                          }
-                          th{
-                            padding: 1.4px;
-                            text-align: center;
-                            font-size: 9px;
-                          }
-                    </style>';
-
-              $tabla_a.='<table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:60%;" align="center">
-                          <tr>
-                            <td><b>'.$nro_ok.' REQUERIMIENTOS PARA MIGRAR</b></td>
-                          </tr>
-                        </table>';
-
-              $tabla_a.='<table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:60%;" align="center">';
-                $tabla_a.='<tr class="modo1">
-                          <th style="width:1%;">#</th>
-                          <th style="width:5%;">COD. OPE.</th>
-                          <th style="width:7%;">COD. PARTIDA</th>
-                          <th style="width:10%;">DETALLE REQUERIMIENTO</th>
-                          <th style="width:5%;">UNIDAD</th>
-                          <th style="width:5%;">CANTIDAD</th>
-                          <th style="width:5%;">UNITARIO</th>
-                          <th style="width:5%;">TOTAL</th>
-                          <th style="width:5%;">PROGRAMADO</th>
-                        </tr>';
-                        for ($i=1; $i <=$nro_ok ; $i++) {
-                          $color='';  
-                          if($aprob[7][$i]!=$aprob[8][$i]){
-                            $color="#f9ab9c";
-                          }
-                          $tabla_a.='<tr bgcolor="#c9f5bc" class="modo1">
-                                    <td>'.$i.'</td>
-                                    <td>'.$aprob[1][$i].'</td>
-                                    <td>'.$aprob[2][$i].'</td>
-                                    <td>'.$aprob[3][$i].'</td>
-                                    <td>'.$aprob[4][$i].'</td>
-                                    <td>'.$aprob[5][$i].'</td>
-                                    <td>'.$aprob[6][$i].'</td>
-                                    <td bgcolor='.$color.'>'.$aprob[7][$i].'</td>
-                                    <td bgcolor='.$color.'>'.$aprob[8][$i].'</td>
-                                  </tr>';
-                        }
-                        $tabla_a.=' <tr>
-                                      <td colspan=6>SUMA REQUERIMIENTO</td>
-                                      <td>'.$suma_monto.'</td>
-                                      <td></td>
-                                    </tr>';
-              $tabla_a.='</table>';
-              echo $tabla_a."<br>";
-            }
-
-            if($nro_npartida!=0){
-              $tabla_n ='<style>
-                    table{font-size: 9px;
-                          width: 100%;
-                          max-width:1550px;
-                          overflow-x: scroll;
-                          }
-                          th{
-                            padding: 1.4px;
-                            text-align: center;
-                            font-size: 9px;
-                          }
-                    </style>';
-
-              $tabla_n.='<table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:60%;" align="center">
-                          <tr>
-                            <td><b>'.$nro_npartida.' REQUERIMIENTOS RECHAZADOS POR INCOMPATIBILIDAD DE CODIGOS</b></td>
-                          </tr>
-                        </table>';
-              $tabla_n.='<table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:60%;" align="center">';
-                $tabla_n.='<tr class="modo1">
-                          <th style="width:1%;">#</th>
-                          <th style="width:5%;">COD. OPE.</th>
-                          <th style="width:7%;">COD. PARTIDA</th>
-                          <th style="width:10%;">DETALLE REQUERIMIENTO</th>
-                          <th style="width:5%;">UNIDAD</th>
-                          <th style="width:5%;">CANTIDAD</th>
-                          <th style="width:5%;">UNITARIO</th>
-                          <th style="width:5%;">TOTAL</th>
-                        </tr>';
-                        for ($i=1; $i <=$nro_npartida ; $i++) { 
-                          $tabla_n.='<tr bgcolor="#f5e7d4" class="modo1">
-                                    <td>'.$i.'</td>
-                                    <td>'.$naprob[1][$i].'</td>
-                                    <td>'.$naprob[2][$i].'</td>
-                                    <td>'.$naprob[3][$i].'</td>
-                                    <td>'.$naprob[4][$i].'</td>
-                                    <td>'.$naprob[5][$i].'</td>
-                                    <td>'.$naprob[6][$i].'</td>
-                                    <td>'.$naprob[7][$i].'</td>
-                                  </tr>';
-                        }
-              $tabla_n.='</table>';
-              echo $tabla_n;
-            }
-
-            if($nro_ncumple!=0){
-              $tabla_r ='<style>
-                    table{font-size: 9px;
-                          width: 100%;
-                          max-width:1550px;
-                          overflow-x: scroll;
-                          }
-                          th{
-                            padding: 1.4px;
-                            text-align: center;
-                            font-size: 9px;
-                          }
-                    </style>';
-
-              $tabla_r.='<table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:60%;" align="center">
-                          <tr>
-                            <td><b>'.$nro_ncumple.' REQUERIMIENTOS RECHAZADOS POR TAMAÑO DE PLANTILLA</b></td>
-                          </tr>
-                        </table>';
-              $tabla_r.='<table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:60%;" align="center">';
-                $tabla_r.='<tr class="modo1">
-                          <th style="width:1%;">#</th>
-                          <th style="width:5%;">COD. OPE.</th>
-                          <th style="width:7%;">COD. PARTIDA</th>
-                          <th style="width:10%;">DETALLE REQUERIMIENTO</th>
-                          <th style="width:5%;">TAMAÑO COLUMNAS</th>
-                        </tr>';
-                        for ($i=1; $i <=$nro_npartida ; $i++) { 
-                          $tabla_r.='
-                                  <tr bgcolor="#ea9797" class="modo1">
-                                    <td>'.$i.'</td>
-                                    <td>'.$naprob[1][$i].'</td>
-                                    <td>'.$naprob[2][$i].'</td>
-                                    <td>'.$naprob[3][$i].'</td>
-                                    <td>'.$naprob[4][$i].'</td>
-                                  </tr>';
-                        }
-              $tabla_r.='</table>';
-              echo $tabla_r;
-            }
-
-            echo '<a href="'.site_url("").'/prog/ins_prod/'.$prod_id.'" title="VOLVER A MIS REQUERIMIENTOS" class="btn btn-success">VOLVER ATRAS</a>';
-            /*--------------------------------------------*/
-          } 
-          elseif (empty($file_basename)) {
-            $this->session->set_flashdata('danger','POR FAVOR SELECCIONE ARCHIVO CSV');
-            redirect('prog/ins_prod/'.$prod_id.'/false');
-          } 
-          elseif ($filesize > 100000000) {
-              //redirect('');
-          } 
-          else {
-              $mensaje = "Sólo estos tipos de archivo se permiten para la carga: " . implode(', ', $allowed_file_types);
-              echo '<script>alert("' . $mensaje . '")</script>';
-          }
-
-      } else {
-          show_404();
-      }
-    }
+  
 
     
-    /*--- ELIMINAR TODOS LOS REQUERIMIENTOS DE LA OPERACION/ACTIVIDAD ---*/
-    function eliminar_insumos($proy_id,$id){
-      $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
-      if($proyecto[0]['tp_id']==1){
-        $insumos = $this->minsumos->lista_insumos_act($id); /// Insumos Actividad
-      }
-      else{
-        $insumos = $this->minsumos->lista_insumos_prod($id); //// Insumos Operacion
-      }
 
-      foreach ($insumos as $row) {
-        /*-------- DELETE INSUMO PROGRAMADO --------*/  
-          $this->db->where('ins_id', $row['ins_id']);
-          $this->db->delete('temporalidad_prog_insumo');
-        /*------------------------------------------*/
-
-        /*-------- DELETE INSUMO --------*/
-          $this->db->where('prod_id', $id);
-          $this->db->where('ins_id', $row['ins_id']);
-          $this->db->delete('_insumoproducto');
-          /*--------------------------------*/
-
-        /*-------- DELETE INSUMO  --------*/  
-          $this->db->where('ins_id', $row['ins_id']);
-          $this->db->delete('insumos');
-        /*--------------------------------*/
-      }
-      
-      redirect(site_url("").'/prog/requerimiento/'.$proy_id.'/'.$id.'');    
-    }
 
     /*----------- REPORTE REQUERIMIENTOS - OPERACION (html2) (PRODUCTO)--------------*/
-    public function reporte_requerimientos_operacion($prod_id){
+/*    public function reporte_requerimientos_operacion($prod_id){
       $data['prod_id']=$prod_id;
       $data['producto'] = $this->model_producto->get_producto_id($prod_id); ///// DATOS DEL PRODUCTO
       $data['componente'] = $this->model_componente->get_componente($data['producto'][0]['com_id']); /// COMPONENTE 
@@ -1539,7 +1105,7 @@ class Cprog_insumo extends CI_Controller{
       $data['mes'] = $this->mes_nombre();
       $data['lista_insumos']= $this->minsumos->lista_insumos_prod($prod_id);
       $this->load->view('admin/programacion/insumos/insumo_productos/requerimientos_operacion', $data);
-    }
+    }*/
 
 
     /*--------------- EXPORTAR REQUERIMIENTOS DE OPERACIONES --------------*/

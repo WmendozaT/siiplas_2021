@@ -32,6 +32,24 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+    function get_partida_codigo($par_codigo){
+        $this->db->SELECT('*');
+        $this->db->FROM('partidas');
+        $this->db->WHERE('par_codigo', $par_codigo);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    //LISTA PARTIDAS DEPENDIENTES
+    function lista_par_dependientes($par_codigo){
+        $this->db->SELECT('*');
+        $this->db->FROM('partidas');
+        $this->db->WHERE('par_depende', $par_codigo);
+        //$this->db->WHERE('par_gestion',$this->gestion);
+        $this->db->ORDER_BY('par_codigo', 'ASC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
     // ------ Get temporalidad
 /*    public function get_temporalidad_prog($tins_id,$ins_id){
         $sql = 'select *

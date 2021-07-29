@@ -137,7 +137,7 @@
                         <h2><div id="titulo"></div></h2>
                     	<div id="datos"></div>
                         <div class="row">
-                              <form action="<?php echo site_url().'/insumos/cprog_insumo/ver_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_prev" name="form_subir_prev" class="form-horizontal">
+                              <form action="<?php echo site_url().'/insumos/cprog_insumo/ver_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_prev" name="form_subir_prev" class="form-horizontal" method="post">
                                 <input type="hidden" name="tp" id="tp">
                                 <fieldset>
 		                            <div class="form-group">
@@ -158,7 +158,7 @@
 	                            </div>
                                 
                                 <div>
-                                    <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;"><div id="buton"></div></button><br>
+                                    <button type="button" name="subir_archivo_prev" id="subir_archivo_prev" class="btn btn-success" style="width:100%;"><div id="buton"></div></button><br>
                                     <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
                                 </div>
                               </form> 
@@ -238,13 +238,13 @@
 		          if(tipo==1){
 		            $('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE ACTIVIDADES.CSV</b></center>');
 		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 21</b></li> <li type="circle"><b>Columna (A) COD. OR. : Codigo de Objetivo Regional</b></li> <li type="circle"><b>Columna (B) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (G-T), Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
-		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/actividades.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
+		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/img_migracion/migracion_form4.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
 		            $('#buton').html('VER ARCHIVO DE ACTIVIDADES.CSV');
 		          }
 		          else{
 		          	$('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE REQUERIMIENTOS.SCV</b></center>');
 		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 22</b></li> <li type="circle"><b>Columna (A) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (E-S), por tratarse de presupuesto el Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
-		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/requerimientos_global.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
+		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/img_migracion/migracion_form5.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
 		            $('#buton').html('VER ARCHIVO DE REQUERIMIENTOS.CSV');
 		          }
 		        });

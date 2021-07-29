@@ -672,12 +672,9 @@
     </div>
     <!-- ======================================================== -->
 
-
-
-
-    <!-- MODAL SUBIR PLANTILLA -->
+    <!---- MODAL SUBIR PLANTILLA ---->
     <div class="modal fade" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog" id="mdialTamanio">
+      <div class="modal-dialog" id="mdialTamanio2">
         <div class="modal-content">
           <div class="modal-header">
               <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
@@ -691,7 +688,7 @@
                 </div>
               </section>
               <div class="row">
-                <form action="<?php echo site_url().'/programacion/producto/importar_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_prev" name="form_subir_prev" class="form-horizontal">
+                <form action="<?php echo site_url().'/programacion/producto/importar_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" class="form-horizontal" method="post">
                   <input type="hidden" name="com_id" value="<?php echo $componente[0]['com_id'];?>">
                   <input type="hidden" name="tp" id="tp">
                   <fieldset>
@@ -703,7 +700,7 @@
                         </p>
                     </div>
                   </fieldset>  
-                  <hr>
+                
                   <div class="form-group">
                     <b>SELECCIONAR ARCHIVO CSV</b>
                     <div class="input-group">
@@ -726,86 +723,6 @@
         </div>
       </div>
     </div>
-
-
-
-
-
-
-
-
-
-  <!-- ======= MODAL SUBIR ARCHIVO ACTIVIDADES =============== -->
-  <div class="modal animated fadeInDown" id="modal_importar_ff2" tabindex="-1" role="dialog">
-   <!--  <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script> -->
-    <div class="modal-dialog" id="mdialTamanio2">
-        <div class="modal-content">
-            <div class="modal-body no-padding">
-                <div class="row">
-                   <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="row">
-                        <div id="titulo"></div>
-                        <div class="col-sm-12">
-                          <!-- well -->
-                          <div class="well">
-                            <section id="widget-grid" class="">
-                              <div>
-                                <?php echo $datos_proyecto;?>
-                                <h1> UNIDAD RESPONSABLE : <small><?php echo $componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion']; ?></small></h1>
-                              </div>
-                            </section>
-                            <hr>
-                            <!-- row -->
-                            <div class="row">
-                              <!-- col -->
-                              <div class="col-sm-12">
-                                
-                                <!-- row -->
-                                <div class="row">
-                                  <p class="alert alert-info">
-                                    DETALLES A CONSIDERAR EN EL ARCHIVO EXCEL: 
-                                  </p>
-                                  <div id="datos"></div>
-                                  <!-- <img  src="<?php echo base_url() ?>/assets/img/Vista Requerimientos global.jpg" style="border-style:solid;border-width:5px;" style="width:100%;"> -->
-                                  <center><div id="img"></div></center>
-                                  <hr>
-                                  <p class="alert alert-info">
-                                    <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
-                                  </p>
-                                  <form action="<?php echo site_url().'/programacion/producto/importar_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" method="post">
-                                      <input type="text" name="com_id" value="<?php echo $componente[0]['com_id'];?>">
-                                      <input type="text" name="tp" id="tp">
-                                      <fieldset>
-                                        <div class="input-group">
-                                          <span class="input-group-btn">
-                                            <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
-                                            <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
-                                            <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
-                                          </span>
-                                          <span class="form-control"></span>
-                                        </div>
-                                      </fieldset><br>
-                                      <div >
-                                        <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;"><div id="buton"></div></button>
-                                        <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                                      </div>
-                                  </form> 
-                                </div>
-                                <!-- end row -->
-                              </div>
-                              <!-- end col -->
-                            </div>
-                            <!-- end row -->
-                          </div>
-                          <!-- end well -->
-                        </div>
-                      </div>
-                    </article>
-                </div>   
-            </div>
-        </div><!-- /.modal-content -->
-    </div>
-  </div>
 
     <!--================================================== -->
 <!-- END PAGE FOOTER -->
@@ -863,48 +780,6 @@
 <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 <script src="<?php echo base_url(); ?>mis_js/programacionpoa/form4.js"></script> 
-
-
-    <script>
-      function reset() {
-        $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
-        alertify.set({
-          labels: {
-              ok: "ACEPTAR",
-              cancel: "CANCELAR"
-          },
-          delay: 5000,
-          buttonReverse: false,
-          buttonFocus: "ok"
-        });
-    }
-    </script>
-    <script type="text/javascript">
-      $(function () {
-        //SUBIR ARCHIVO
-        $("#subir_archivo").on("click", function () {
-          var $valid = $("#form_subir_sigep").valid();
-          if (!$valid) {
-              $validator.focusInvalid();
-          } else {
-            if(document.getElementById('archivo').value==''){
-              alertify.alert('PORFAVOR SELECCIONE ARCHIVO .CSV');
-              return false;
-            }
-
-            alertify.confirm("REALMENTE DESEA SUBIR ESTE ARCHIVO?", function (a) {
-              if (a) {
-                  document.getElementById("load").style.display = 'block';
-                  document.getElementById('subir_archivo').disabled = true;
-                  document.forms['form_subir_sigep'].submit();
-              } else {
-                  alertify.error("OPCI\u00D3N CANCELADA");
-              }
-            });
-          }
-        });
-      });
-    </script>
 
     <script type="text/javascript">
       $(document).ready(function(){

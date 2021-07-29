@@ -169,7 +169,7 @@ class Minsumos extends CI_Model{
         return $query->row();
     }
 
-    function get_partida_codigo($par_codigo){
+/*    function get_partida_codigo($par_codigo){
         $this->db->SELECT('*');
         $this->db->FROM('partidas');
         $this->db->WHERE('par_codigo', $par_codigo);
@@ -186,7 +186,7 @@ class Minsumos extends CI_Model{
         $this->db->ORDER_BY('par_codigo', 'ASC');
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
 
     //GUARDAR INSUMO
     function guardar_insumo($data_insumo, $post, $act_id, $cant_fin){
@@ -384,7 +384,7 @@ class Minsumos extends CI_Model{
     }*/
     
     //LISTA DE INSUMOS A NIVEL DE PRODUCTOS (Wilmer 2019)
-    function lista_insumos_prod($prod_id){
+/*    function lista_insumos_prod($prod_id){
         if($this->gestion==2019){
             $sql = 'select *
                 from _insumoproducto ip
@@ -407,7 +407,7 @@ class Minsumos extends CI_Model{
         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     //LISTA DE INSUMOS A NIVEL DE ACTIVIDADES (Wilmer 2019)
 /*    function lista_insumos_act($act_id){

@@ -8,26 +8,25 @@ function abreVentana(PDF){
   window.open(direccion, "REPORTE FORMULARIO N° 4" , "width=800,height=700,scrollbars=NO") ; 
 }
 
-
+  //// Subir Archivo de Migracionform 4 y form5
   $(function () {
       $(".importar_ff").on("click", function (e) {
         tipo = $(this).attr('name');
         document.getElementById("tp").value=tipo;
         if(tipo==1){
-            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <b>IMPORTAR ARCHIVO DE OPERACIONES.CSV</b></h2>');
-            $('#datos').html('<ul><li type="circle"><b>Copiar el contenido de datos del primer Archivo Excel a la plantilla de migración </b></li> <li type="circle"><b>Numero de columnas 21</b></li> <li type="circle"><b>Columna (A) COD. OR. : Codigo de Objetivo Regional</b></li> <li type="circle"><b>Columna (B) COD. ACT. : Codigo Actividad</b></li> <li type="circle"><b>Columnas (G-T), Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>Convertir el Archivo .Xls a .Csv</b></li></ul>');
-            $('#img').html('<img src="'+base+'/assets/img/actividades.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
+            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <b>IMPORTAR ARCHIVO FORM 4.CSV</b></h2>');
+            $('#img').html('<img src="'+base+'/assets/img/img_migracion/migracion_form4.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
             $('#buton').html('SUBIR ARCHIVO ACTIVIDADES.SCV');
           }
           else{
-            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <font color=blue><b> IMPORTAR ARCHIVO DE REQUERIMIENTOS.SCV (GLOBAL)</b></font></h2>');
-            $('#datos').html('<ul><li type="circle"><b>Copiar el contenido de datos del primer Archivo Excel a la plantilla de migración </b></li> <li type="circle"><b>Numero de columnas 22</b></li> <li type="circle"><b>Columna (A) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (E-S), por tratarse de presupuesto el Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>Convertir el Archivo .Xls a .Csv</b></li></ul>');
-            $('#img').html('<img src="'+base+'/assets/img/requerimientos_global.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
+            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <font color=blue><b> IMPORTAR ARCHIVO DE FORM 5.SCV (GLOBAL)</b></font></h2>');
+            $('#img').html('<img src="'+base+'/assets/img/img_migracion/migracion_form5.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
             $('#buton').html('SUBIR ARCHIVO DE REQUERIMIENTOS.SCV');
           }
       });
   });
 
+    /// ---- TIPO DE INDICADOR
     $(document).ready(function () {
         $("#tipo_i").change(function () {            
           var tp_id = $(this).val();
@@ -47,6 +46,7 @@ function abreVentana(PDF){
           });
       });
 
+    /// TIPO DE META
       $(document).ready(function () {
         $("#tp_met").change(function () {            
           var tp_met = $(this).val();
@@ -69,6 +69,34 @@ function abreVentana(PDF){
             }
           });
       });
+
+
+  //// Subir archivo de migracion form4 y 5
+  $(function () {
+    //SUBIR ARCHIVO
+    $("#subir_archivo").on("click", function () {
+      var $valid = $("#form_subir_sigep").valid();
+      if (!$valid) {
+          $validator.focusInvalid();
+      } else {
+        if(document.getElementById('archivo').value==''){
+          alertify.alert('PORFAVOR SELECCIONE ARCHIVO .CSV');
+          return false;
+        }
+
+        alertify.confirm("REALMENTE DESEA SUBIR ESTE ARCHIVO?", function (a) {
+          if (a) {
+              document.getElementById("load").style.display = 'block';
+              document.getElementById('subir_archivo').disabled = true;
+              document.forms['form_subir_sigep'].submit();
+          } else {
+              alertify.error("OPCI\u00D3N CANCELADA");
+          }
+        });
+      }
+    });
+  });
+
 
       $(document).ready(function() {
         pageSetUp();
@@ -318,6 +346,7 @@ function abreVentana(PDF){
 
             request.done(function (response, textStatus, jqXHR) {
             if (response.respuesta == 'correcto') {
+
                document.getElementById("mcod").value = response.producto[0]['prod_cod']; 
                document.getElementById("mprod").value = response.producto[0]['prod_producto']; 
                document.getElementById("mresultado").value = response.producto[0]['prod_resultado'];
@@ -662,357 +691,4 @@ function abreVentana(PDF){
     });
   });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*  function confirmar(){
-    if(confirm('¿Estas seguro de Eliminar ?'))
-      return true;
-    else
-    return false;
-  }
-
-
-    function doSearch(){
-      var tableReg = document.getElementById('datos');
-      var searchText = document.getElementById('searchTerm').value.toLowerCase();
-      var cellsOfRow="";
-      var found=false;
-      var compareWith="";
- 
-      // Recorremos todas las filas con contenido de la tabla
-      for (var i = 1; i < tableReg.rows.length; i++){
-        cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
-        found = false;
-        // Recorremos todas las celdas
-        for (var j = 0; j < cellsOfRow.length && !found; j++){
-          compareWith = cellsOfRow[j].innerHTML.toLowerCase();
-          // Buscamos el texto en el contenido de la celda
-          if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
-            found = true;
-          }
-        }
-        if(found) {
-          tableReg.rows[i].style.display = '';
-        } else {
-
-          tableReg.rows[i].style.display = 'none';
-        }
-      }
-    }
-
-
-  $( function() {
-    $( "#grupoTablas" ).tabs();
-  } );
-
-  function justNumbers(e){
-    var keynum = window.event ? window.event.keyCode : e.which;
-    if ((keynum == 8) || (keynum == 46))
-    return true;           
-    return /\d/.test(String.fromCharCode(keynum));
-  }
-*/
-  //// VER POA
-/*  $(function () {
-    $(".enlace").on("click", function (e) {
-        proy_id = $(this).attr('name');
-        establecimiento = $(this).attr('id');
-        
-        $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
-        $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones - <br>'+establecimiento+'</div>');
-        
-        var url = base+"index.php/programacion/proyecto/get_poa";
-        var request;
-        if (request) {
-            request.abort();
-        }
-        request = $.ajax({
-            url: url,
-            type: "POST",
-            dataType: 'json',
-            data: "proy_id="+proy_id
-        });
-
-        request.done(function (response, textStatus, jqXHR) {
-        if (response.respuesta == 'correcto') {
-            $('#content1').fadeIn(1000).html(response.tabla);
-            $('#caratula').fadeIn(1000).html(response.caratula);
-        }
-        else{
-            alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
-        }
-
-        });
-        request.fail(function (jqXHR, textStatus, thrown) {
-            console.log("ERROR: " + textStatus);
-        });
-        request.always(function () {
-        });
-        e.preventDefault();
-        
-      });
-  });*/
-
-  /*------ AJUSTE POA ------*/
-/*  $(function () {
-    $(".enlace2").on("click", function (e) {
-        proy_id = $(this).attr('name');
-        establecimiento = $(this).attr('id');
-       
-        $('#titulo2').html('<font size=3><b>'+establecimiento+'</b></font>');
-        $('#content2').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Poa - <br>'+establecimiento+'</div>');
-        
-        var url = base+"index.php/programacion/proyecto/get_poa_ajuste";
-        var request;
-        if (request) {
-            request.abort();
-        }
-        request = $.ajax({
-            url: url,
-            type: "POST",
-            dataType: 'json',
-            data: "proy_id="+proy_id
-        });
-
-        request.done(function (response, textStatus, jqXHR) {
-        if (response.respuesta == 'correcto') {
-            $('#content2').fadeIn(1000).html(response.tabla);
-        }
-        else{
-            alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
-        }
-
-        });
-        request.fail(function (jqXHR, textStatus, thrown) {
-            console.log("ERROR: " + textStatus);
-        });
-        request.always(function () {
-        });
-        e.preventDefault();
-      });
-  });*/
-
-  /*------------ VERIFICANDO POA ----------------*/
-/*  $(function () {
-      $(".verif_poa").on("click", function (e) {
-        proy_id = $(this).attr('name');
-          document.getElementById("proy_id").value=proy_id;
-          
-          establecimiento = $(this).attr('id');
-          $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
-          $('#content_valida').html('<div class="loading" align="center"><h2>Verificando Presupuesto POA  <br>'+establecimiento+'</h2><br><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /></div>');
-          $('#but').slideUp();
-
-          var url = base+"index.php/programacion/proyecto/verif_poa";
-          var request;
-          if (request) {
-              request.abort();
-          }
-          request = $.ajax({
-              url: url,
-              type: "POST",
-              dataType: 'json',
-              data: "proy_id="+proy_id
-          });
-
-          request.done(function (response, textStatus, jqXHR) {
-          if (response.respuesta == 'correcto') {
-            $('#content_valida').fadeIn(1000).html(response.tabla);
-                  if(response.valor==0){
-                      $('#but').slideDown();
-                }
-          }
-          else{
-              alertify.error("ERROR AL RECUPERAR DATOS");
-          }
-
-          });
-          request.fail(function (jqXHR, textStatus, thrown) {
-              console.log("ERROR: " + textStatus);
-          });
-          request.always(function () {
-              //console.log("termino la ejecuicion de ajax");
-          });
-          e.preventDefault();
-          // =============================VALIDAR EL FORMULARIO DE MODIFICACION
-          $("#enviar_ff").on("click", function (e) {
-              var $valid = $("#form_vpoa").valid();
-              if (!$valid) {
-                  $validator.focusInvalid();
-              } else {
-
-                  alertify.confirm("ESTA SEGURO EN VALIDAR EL POA, PARA SU APROBACIÓN ?", function (a) {
-                      if (a) {
-                      var url = base+"index.php/programacion/proyecto/validar_poa";
-                      $.ajax({
-                          type: "post",
-                          url: url,
-                          data: {
-                              proy_id: proy_id
-                          },
-                          success: function (date) {
-                              window.location.reload(true);
-                              alertify.success("VALIDACION EXITOSA ...");
-                          }
-                      });
-
-                      } else {
-                          alertify.error("OPCI\u00D3N CANCELADA");
-                      }
-                  });
-
-              }
-          });
-      });
-  });*/
-
-/*  $(function () {
-      function reset() {
-        $("#toggleCSS").attr("href", base+"/assets/themes_alerta/alertify.default.css");
-        alertify.set({
-            labels: {
-                ok: "ACEPTAR",
-                cancel: "CANCELAR"
-            },
-            delay: 5000,
-            buttonReverse: false,
-            buttonFocus: "ok"
-        });
-      }
-
-      $(".aprob_pi").on("click", function (e) {
-          reset();
-          var proy_id = $(this).attr('name');
-          var request;
-          alertify.confirm("ESTA SEGURO DE APROBAR POA ?", function (a) {
-            if (a) { 
-                var url = base+"index.php/programacion/proyecto/aprobar_poa";
-                if (request) {
-                    request.abort();
-                }
-                request = $.ajax({
-                    url: url,
-                    type: "POST",
-                    dataType: "json",
-                  data: "proy_id="+proy_id
-
-                });
-
-                request.done(function (response, textStatus, jqXHR) { 
-                  reset();
-                  if (response.respuesta == 'correcto') {
-                      alertify.alert("EL POA SE APROBO CORRECTAMENTE ", function (e) {
-                          if (e) {
-                              window.location.reload(true);
-                          }
-                      });
-                  } else {
-                      alertify.alert("ERROR !!!", function (e) {
-                          if (e) {
-                              window.location.reload(true);
-                          }
-                      });
-                  }
-              });
-                request.fail(function (jqXHR, textStatus, thrown) {
-                    console.log("ERROR: " + textStatus);
-                });
-                request.always(function () {
-                    //console.log("termino la ejecuicion de ajax");
-                });
-
-                e.preventDefault();
-
-            } else {
-                // user clicked "cancel"
-                alertify.error("OPCIÓN CANCELADA");
-            }
-          });
-          return false;
-      });
-    });*/
-
-    ///// Rechazar POA
-
- /* $(function () {
-      function reset() {
-         $("#toggleCSS").attr("href", base+"/assets/themes_alerta/alertify.default.css");
-          alertify.set({
-              labels: {
-                  ok: "ACEPTAR",
-                  cancel: "CANCELAR"
-              },
-              delay: 5000,
-              buttonReverse: false,
-              buttonFocus: "ok"
-          });
-      }
-
-      $(".neg_ff").on("click", function (e) {
-       // alert(base+'/assets/themes_alerta/alertify.default.css')
-          reset();
-          var proy_id = $(this).attr('name');
-          var request;
-          alertify.confirm("ESTA SEGURO DE RECHAZAR EL POA Y DEVOLVER AL RESPONSABLE POA ?", function (a) {
-              if (a) { 
-                  var url = base+"index.php/programacion/proyecto/observar_poa";
-                  if (request) {
-                      request.abort();
-                  }
-                  request = $.ajax({
-                      url: url,
-                      type: "POST",
-                      dataType: "json",
-                    data: "proy_id="+proy_id
-
-                  });
-
-                  request.done(function (response, textStatus, jqXHR) { 
-                    reset();
-                    if (response.respuesta == 'correcto') {
-                        alertify.alert("SE RECHAZO REPORTE POA", function (e) {
-                            if (e) {
-                                window.location.reload(true);
-                            }
-                        });
-                    } else {
-                        alertify.alert("ERROR AL OBSERVAR !!!", function (e) {
-                            if (e) {
-                                window.location.reload(true);
-                            }
-                        });
-                    }
-                });
-                  request.fail(function (jqXHR, textStatus, thrown) {
-                      console.log("ERROR: " + textStatus);
-                  });
-                  request.always(function () {
-                      //console.log("termino la ejecuicion de ajax");
-                  });
-
-                  e.preventDefault();
-
-              } else {
-                  // user clicked "cancel"
-                  alertify.error("OPCIÓN CANCELADA");
-              }
-          });
-          return false;
-      });
-  });*/
 

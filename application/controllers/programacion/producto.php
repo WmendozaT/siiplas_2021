@@ -78,7 +78,7 @@ class Producto extends CI_Controller {
          // $data['list_oregional']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);/// Lista de Objetivos Regionales
         }
 
-        $data['objetivos']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);
+        $data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['fase'][0]['proy_id']);
         $data['button']=$this->programacionpoa->button_form4(count($data['productos']));
         $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
@@ -454,21 +454,29 @@ class Producto extends CI_Controller {
                   }
 
                   $color=''; $titulo=''; $por='';
-                  if($rowp['indi_id']==2){ // Relativo
-                    $por='%';
-                    if($rowp['mt_id']==3){
+                  if($proyecto[0]['tp_id']==1){
+                    if($rowp['prod_meta']!=($sum[0]['meta_gest']+$rowp['prod_linea_base'])){
+                      $color='#fbd5d5';
+                    }
+                  }
+                  else{
+                    if($rowp['indi_id']==2){ // Relativo
+                      $por='%';
+                      if($rowp['mt_id']==3){
+                        if($sum[0]['meta_gest']!=$rowp['prod_meta'] || $rowp['or_id']==0){
+                          $color='#fbd5d5';
+                          $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
+                        }
+                      }
+                    }
+                    else{ // Absoluto
                       if($sum[0]['meta_gest']!=$rowp['prod_meta'] || $rowp['or_id']==0){
                         $color='#fbd5d5';
                         $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
                       }
                     }
                   }
-                  else{ // Absoluto
-                    if($sum[0]['meta_gest']!=$rowp['prod_meta'] || $rowp['or_id']==0){
-                      $color='#fbd5d5';
-                      $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
-                    }
-                  }
+                  
                   
                   $tabla .='<tr bgcolor="'.$color.'" class="modo1" title='.$titulo.'>';
                     $tabla.='<td align="center"><font color="blue" size="2" title='.$rowp['prod_id'].'><b>'.$rowp['prod_cod'].'</b></font></td>';
@@ -478,7 +486,7 @@ class Producto extends CI_Controller {
                     }
 
                     if($rowp['prod_ppto']==1){
-                      $tabla.='<a href="'.site_url("").'/prog/requerimiento/'.$proy_id.'/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="33" HEIGHT="33"/></a>';
+                      $tabla.='<a href="'.site_url("").'/prog/requerimiento/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="33" HEIGHT="33"/></a>';
                     }
                     $tabla.='</td>';
                     $tabla.='<td style="width:2%;text-align=center"><b><font size=5 color=blue>'.$rowp['or_codigo'].'</font></b></td>';
@@ -558,7 +566,7 @@ class Producto extends CI_Controller {
       $nro=0;$nro_ins=0;
       //echo "eliminar productos";
       foreach($productos as $rowp){
-        $insumos=$this->minsumos->lista_insumos_prod($rowp['prod_id']);
+        $insumos=$this->model_insumo->lista_insumos_prod($rowp['prod_id']);
         foreach ($insumos as $rowi) {
           /*--------- delete temporalidad --------*/
           $this->db->where('ins_id', $rowi['ins_id']);
@@ -571,7 +579,7 @@ class Producto extends CI_Controller {
           $this->db->where('ins_id', $rowi['ins_id']);
           $this->db->delete('insumos');
 
-          if(count($this->minsumos->get_insumo_producto($rowi['ins_id']))==0){
+          if(count($this->model_insumo->get_insumo_producto($rowi['ins_id']))==0){
             $nro_ins++;
           }
         }
@@ -605,7 +613,7 @@ class Producto extends CI_Controller {
         $this->db->where('ins_id', $rowi['ins_id']);
         $this->db->delete('insumos');
 
-        if(count($this->minsumos->get_insumo_producto($rowi['ins_id']))==0){
+        if(count($this->model_insumo->get_insumo_producto($rowi['ins_id']))==0){
           $nro_ins++;
         }
       }
@@ -686,135 +694,8 @@ class Producto extends CI_Controller {
       return $tabla;
     }
 
-    /*--- ELIMINAR OPERACION PROY. DE INVERSION ---*/
-    function delete_operacion(){
-      if ($this->input->is_ajax_request() && $this->input->post()) {
-          $post = $this->input->post();
-          $prod_id = $this->security->xss_clean($post['prod_id']);
 
-          $nro=0; $nro_ins=0;
-          $actividad=$this->model_actividad->list_act_anual($prod_id);
-          foreach ($actividad as $rowa) {
-            /*---------------------------------------*/
-            $insumos = $this->model_actividad->insumo_actividad($rowa['act_id']);
-            foreach ($insumos as $rowi) {
-              /*--------- delete temporalidad --------*/
-              $this->db->where('ins_id', $rowi['ins_id']);
-              $this->db->delete('temporalidad_prog_insumo');
 
-              $this->db->where('act_id', $rowa['act_id']);
-              $this->db->where('ins_id', $rowi['ins_id']);
-              $this->db->delete('_insumoactividad');
-
-              /*--------- delete Insumos --------*/
-              $this->db->where('ins_id', $rowi['ins_id']);
-              $this->db->delete('insumos');
-
-              if(count($this->minsumos->get_insumo_producto($rowi['ins_id']))==0){
-                $nro_ins++;
-              }
-            }
-
-              /*------ delete Temporalidad Actividad -----*/
-              $this->db->where('act_id', $rowa['act_id']);
-              $this->db->delete('act_programado_mensual');
-
-              /*------ delete Actividad -----*/
-              $this->db->where('act_id', $rowa['act_id']);
-              $this->db->delete('_actividades');
-          }
-
-          /*------ delete Productos -----*/
-            $this->db->where('prod_id', $prod_id);
-            $this->db->delete('prod_programado_mensual');
-
-          /*------ delete Productos -----*/
-            $this->db->where('prod_id', $prod_id);
-            $this->db->delete('_productos');
-          
-          
-          $prod=$this->model_producto->get_producto_id($prod_id);
-          if(count($prod)==0){
-            $result = array(
-              'respuesta' => 'correcto'
-            );
-          }
-          else{
-            $result = array(
-              'respuesta' => 'error'
-            );
-          }
-
-          echo json_encode($result);
-      } else {
-          echo 'DATOS ERRONEOS';
-      }
-    }
-    
-
-    function delete_operacion2(){
-      if ($this->input->is_ajax_request() && $this->input->post()) {
-          $post = $this->input->post();
-          $prod_id = $this->security->xss_clean($post['prod_id']);
-
-          $nro=0; $nro_ins=0;
-          $actividad=$this->model_actividad->list_act_anual($prod_id);
-          foreach ($actividad as $rowa) {
-            /*---------------------------------------*/
-            $insumos = $this->model_actividad->insumo_actividad($rowa['act_id']);
-            foreach ($insumos as $rowi) {
-              /*--------- delete temporalidad --------*/
-              $this->db->where('ins_id', $rowi['ins_id']);
-              $this->db->delete('temporalidad_prog_insumo');
-
-              $this->db->where('act_id', $rowa['act_id']);
-              $this->db->where('ins_id', $rowi['ins_id']);
-              $this->db->delete('_insumoactividad');
-
-              /*--------- delete Insumos --------*/
-              $this->db->where('ins_id', $rowi['ins_id']);
-              $this->db->delete('insumos');
-
-              if(count($this->minsumos->get_insumo_producto($rowi['ins_id']))==0){
-                $nro_ins++;
-              }
-            }
-
-              /*------ delete Temporalidad Actividad -----*/
-              $this->db->where('act_id', $rowa['act_id']);
-              $this->db->delete('act_programado_mensual');
-
-              /*------ delete Actividad -----*/
-              $this->db->where('act_id', $rowa['act_id']);
-              $this->db->delete('_actividades');
-          }
-
-          /*------ delete Productos -----*/
-            $this->db->where('prod_id', $prod_id);
-            $this->db->delete('prod_programado_mensual');
-
-          /*------ delete Productos -----*/
-            $this->db->where('prod_id', $prod_id);
-            $this->db->delete('_productos');
-          
-          
-          $prod=$this->model_producto->get_producto_id($prod_id);
-          if(count($prod)==0){
-            $result = array(
-              'respuesta' => 'correcto'
-            );
-          }
-          else{
-            $result = array(
-              'respuesta' => 'error'
-            );
-          }
-
-          echo json_encode($result);
-      } else {
-          echo 'DATOS ERRONEOS';
-      }
-    }
 
     /*----- ELIMINAR VARIOS OPERACIONES SELECCIONADOS -----*/
     public function delete_operaciones(){
@@ -842,7 +723,7 @@ class Producto extends CI_Controller {
               $this->db->where('ins_id', $rowi['ins_id']);
               $this->db->delete('insumos');
 
-              if(count($this->minsumos->get_insumo_producto($rowi['ins_id']))==0){
+              if(count($this->model_insumo->get_insumo_producto($rowi['ins_id']))==0){
                 $nro_ins++;
               }
             }
@@ -1375,7 +1256,7 @@ class Producto extends CI_Controller {
 
 
 
-    /*--- MIGRACION DE OPERACIONES (2020) Y REQUERIMIENTOS (revisar) ---*/
+    /*--- MIGRACION DE OPERACIONES (2020-2022) Y REQUERIMIENTOS (revisar) ---*/
     function importar_operaciones_requerimientos(){
       if ($this->input->post()) {
         $post = $this->input->post();
@@ -1402,14 +1283,6 @@ class Producto extends CI_Controller {
             $nro=0;
             $guardado=0;
             $no_guardado=0;
-            $nro_prod=count($this->model_producto->list_prod($com_id));
-            if($nro_prod!=0){
-              $ope_ult=$this->model_producto->ult_operacion($com_id);
-              $nro_prod=$ope_ult[0]['prod_cod']+1;
-            }
-            else{
-              $nro_prod=1;;
-            }
 
             if($tp==1){  /// Actividades
               foreach ($lineas as $linea_num => $linea){ 
@@ -1417,19 +1290,20 @@ class Producto extends CI_Controller {
                   $datos = explode(";",$linea);
                   if(count($datos)==21){
 
-                    $cod_or = trim($datos[0]); // Codigo Objetivo Regional
-                    $cod_ope = $nro_prod; // Codigo Operacion
-                    $descripcion = utf8_encode(trim($datos[2])); //// descripcion Operacion
+                    $cod_or = intval(trim($datos[0])); // Codigo Objetivo Regional
+                    $descripcion = utf8_encode(trim($datos[2])); //// descripcion form4
                     $resultado = utf8_encode(trim($datos[3])); //// descripcion Resultado
-                    $unidad = utf8_encode(trim($datos[4])); //// Unidad
+                    $unidad = utf8_encode(trim($datos[4])); //// Unidad responsable
+                   // $tp_indicador = utf8_encode(trim($datos[5])); //// tipo de indicador
                     $indicador = utf8_encode(trim($datos[5])); //// descripcion Indicador
-                    $lbase = utf8_encode(trim($datos[6])); //// Linea Base
-                    if(trim($datos[6])==''){
+                    
+                    $lbase = intval(trim($datos[6])); //// Linea Base
+                    if(intval(trim($datos[6]))==''){
                       $lbase = 0; //// Linea Base
                     }
 
-                    $meta = utf8_encode(trim($datos[7])); //// Meta
-                    if(trim($datos[7])==''){
+                    $meta = intval(trim($datos[7])); //// Meta
+                    if(intval(trim($datos[7]))==''){
                       $meta = 0; //// Meta
                     }
 
@@ -1454,7 +1328,8 @@ class Producto extends CI_Controller {
                       }
                     }
 
-                    /*--- INSERTAR DATOS OPERACIONES (ACTIVIDADES 2020) ---*/
+
+                    /*--- INSERTAR DATOS FORM N4 ---*/
                     $query=$this->db->query('set datestyle to DMY');
                     $data_to_store = array(
                       'com_id' => $com_id,
@@ -1469,7 +1344,7 @@ class Producto extends CI_Controller {
                       'acc_id' => $ae,
                       'prod_ppto' => 1,
                       'fecha' => date("d/m/Y H:i:s"),
-                      'prod_cod'=>$cod_ope,
+                     // 'prod_cod'=>$cod_ope,
                       'or_id'=>$or_id,
                       'fun_id' => $this->fun_id,
                       'num_ip' => $this->input->ip_address(), 
@@ -1498,26 +1373,29 @@ class Producto extends CI_Controller {
                 $i++;
               }
               
+              //// Actualizando Codigos
+              $this->programacionpoa->update_codigo_actividad($com_id);
+              $this->session->set_flashdata('success','SE REGISTRARON '.$guardado.' ACTIVIDADES');
             }
             else{ /// Requerimientos
 
             foreach ($lineas as $linea_num => $linea){
               if($i != 0){
                 $datos = explode(";",$linea);
-                //echo count($datos).'<br>';
+             
                 if(count($datos)==20){
                  
-                    $prod_cod = (int)$datos[0]; //// Codigo Actividad
-                    $cod_partida = (int)$datos[1]; //// Codigo partida
-                    $par_id = $this->minsumos->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
+                    $prod_cod = intval(trim($datos[0])); //// Codigo Actividad
+                    $cod_partida = intval(trim($datos[1])); //// Codigo partida
+                    $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
 
                     $detalle = utf8_encode(trim($datos[2])); //// descripcion
                     $unidad = utf8_encode(trim($datos[3])); //// Unidad
-                    $cantidad = (int)$datos[4]; //// Cantidad
-                    $unitario = $datos[5]; //// Costo Unitario
+                    $cantidad = intval(trim($datos[4])); //// Cantidad
+                    $unitario = intval(trim($datos[5])); //// Costo Unitario
                     
                     $p_total=($cantidad*$unitario);
-                    $total = $datos[6]; //// Costo Total
+                    $total = intval(trim($datos[6])); //// Costo Total
 
                     $var=7; $sum_temp=0;
                     for ($i=1; $i <=12 ; $i++) {
@@ -1531,11 +1409,9 @@ class Producto extends CI_Controller {
 
                     $observacion = utf8_encode(trim($datos[19])); //// Observacion
                     $verif_cod=$this->model_producto->verif_componente_operacion($com_id,$prod_cod);
-                  
-                    //echo count($verif_cod).'--'.count($par_id).'--'.$cod_partida.'--'.round($sum_temp,2).'=='.round($total,2);
+                   // echo count($verif_cod).'--'.count($par_id).'--'.$cod_partida.'--'.round($sum_temp,2).'=='.round($total,2)."<br>";
 
                     if(count($verif_cod)!=0 & count($par_id)!=0 & $cod_partida!=0 & round($sum_temp,2)==round($total,2)){ /// Verificando si existe Codigo de Actividad, par id, Codigo producto
-                     // if($verif_cod[0]['prod_ppto']==1){ /// guardando si tiene programado presupuesto en la operacion
                         $guardado++;
                         /*-------- INSERTAR DATOS REQUERIMIENTO ---------*/
                         $query=$this->db->query('set datestyle to DMY');
@@ -1577,11 +1453,8 @@ class Producto extends CI_Controller {
                             $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
                           }
                         }
-                     // }
-
                     }
                
-
                 } /// end dimension (22)
               } /// i!=0
 
@@ -1589,11 +1462,9 @@ class Producto extends CI_Controller {
 
             }
 
-              /// --- ACTUALIZANDO MONEDA PARA CARGAR PRESUPUESTO
-              $this->update_ptto_operaciones($com_id);
+              $this->session->set_flashdata('success','SE REGISTRARON '.$guardado.' REQUERIMIENTOS');
             } /// end else
 
-            $this->session->set_flashdata('success','SE REGISTRARON '.$guardado.' REQUERIMIENTOS');
             redirect('admin/prog/list_prod/'.$com_id.'');
           }
           else{

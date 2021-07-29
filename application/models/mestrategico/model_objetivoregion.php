@@ -192,7 +192,7 @@ class Model_objetivoregion extends CI_Model{
         return $query->result_array();
     }
 
-    /*----- GET UNIDAD/ESTABLECIMIENTO EN OBJETIVO REGIONAL -----*/
+    /*----- GET UNIDAD/ESTABLECIMIENTO EN OBJETIVO REGIONAL (GASTO CORRIENTE) -----*/
     public function get_unidad_pregional_programado($act_id){
         $sql = 'select *
               from objetivo_regional_programado orp

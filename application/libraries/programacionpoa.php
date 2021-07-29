@@ -327,7 +327,8 @@ class Programacionpoa extends CI_Controller{
 
     /*----------- VERIFICA LA ALINEACION DE OBJETIVO REGIONAL -----*/
     public function verif_oregional($proy_id){
-      $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
+      $list_oregional=$this->model_objetivoregion->get_unidad_pregional_programado($proy_id);
+
       $tabla='';
       $nro=0;
       if(count($list_oregional)!=0){
@@ -350,7 +351,7 @@ class Programacionpoa extends CI_Controller{
       <style type="text/css">
         aside{background: #05678B;}
         #mdialTamanio{
-            width: 50% !important;
+            width: 80% !important;
         }
         #mdialTamanio2{
             width: 50% !important;
@@ -382,6 +383,79 @@ class Programacionpoa extends CI_Controller{
 
       return $tabla;
     }
+
+
+
+
+
+
+/// ===== FORMULARIO N5
+
+
+    /*--- BOTON ESTADO FORM 5---*/
+    function button_form5(){
+      $tabla='';
+      if($this->tp_adm==1 || $this->conf_form5==1){
+        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" title="NUEVO REGISTRO FORM N 5" class="btn btn-success">
+                    <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;NUEVO REGISTRO
+                  </a>
+                  
+                  <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="1" title="IMPORTAR REQUERIMIENTOS" >
+                    <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR REQUERIMIENTOS.CSV
+                  </a>';
+      }
+
+      $tabla.='<br><br>';
+      
+      return $tabla;
+    }
+
+    /*--- ESTILO FORM 5---*/
+    public function estilo_tabla_form5(){
+      $tabla='';
+      $tabla.='
+      <style>
+      aside{background: #05678B;}
+      .table1{
+            display: inline-block;
+            width:100%;
+            max-width:1550px;
+            overflow-x: scroll;
+            }
+      table{font-size: 10px;
+            width: 100%;
+            max-width:1550px;;
+      overflow-x: scroll;
+            }
+            th{
+              padding: 1.4px;
+              text-align: center;
+              font-size: 10px;
+            }
+            #mdialTamanio{
+          width: 80% !important;
+        }
+        #mdialTamanio2{
+          width: 55% !important;
+        }
+        input[type="checkbox"] {
+                display:inline-block;
+                width:25px;
+                height:25px;
+                margin:-1px 4px 0 0;
+                vertical-align:middle;
+                cursor:pointer;
+            }
+      </style>';
+
+      return $tabla;
+    }
+
+
+
+
+
+
 
 
 

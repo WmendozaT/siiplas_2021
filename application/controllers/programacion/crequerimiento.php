@@ -29,6 +29,9 @@ class crequerimiento extends CI_Controller{
         $this->rol = $this->session->userData('rol_id');
         $this->dist_tp = $this->session->userData('dist_tp');
         $this->fun_id = $this->session->userdata("fun_id");
+        $this->tp_adm = $this->session->userData('tp_adm');
+        $this->conf_form5 = $this->session->userData('conf_form5');
+        $this->load->library('programacionpoa');
         }else{
             $this->session->sess_destroy();
             redirect('/','refresh');
@@ -36,115 +39,57 @@ class crequerimiento extends CI_Controller{
     }
 
     /*---- LISTA DE COMPONENTES SEGUN EL TIPO DE EJECUCION ----*/
-/*    function list_componente($proy_id){
-      $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id); // Proy
-      if(count($data['proyecto'])!=0){
-          $data['menu']=$this->genera_menu($proy_id);
-          
-          if($data['proyecto'][0]['tp_id']==1){
-              $data['lista_com']=$this->genera_tabla_act_insumo($proy_id);
-          }
-          else{
-              $data['lista_com']=$this->genera_tabla_prod_insumo($proy_id);
-          }
+    function list_requerimientos($prod_id){
+      $data['producto']=$this->model_producto->get_producto_id($prod_id); // Producto
+      $data['stylo']=$this->programacionpoa->estilo_tabla_form5();
+      if(count($data['producto'])!=0){
+        $data['componente']=$this->model_componente->get_componente($data['producto'][0]['com_id']); // Componente
+        $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['componente'][0]['proy_id']);
+        $data['menu']=$this->genera_menu($data['proyecto'][0]['proy_id']);
+        $data['monto_asig']=$this->model_ptto_sigep->suma_ptto_accion($data['proyecto'][0]['aper_id'],1);
+        $data['monto_prog']=$this->model_ptto_sigep->suma_ptto_accion($data['proyecto'][0]['aper_id'],2);
+        $monto_a=0;$monto_p=0;$monto_saldo=0;
+        if(count($data['monto_asig'])!=0){
+            $monto_a=$data['monto_asig'][0]['monto'];
+        }
+        if(count($data['monto_prog'])){
+            $monto_p=$data['monto_prog'][0]['monto'];
+        }
 
-          $this->load->view('admin/programacion/requerimiento/list_componentes', $data);
+        $data['monto_a']=$monto_a;
+        $data['monto_p']=$monto_p;
+        $tit='<small>PROYECTO : </small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'';
+        /*--------- Gasto Corriente ----------*/
+        if($data['proyecto'][0]['tp_id']==4){
+          $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['proyecto'][0]['proy_id']);
+          $tit='<small>'.$data['proyecto'][0]['establecimiento'].' : </small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'';
+
+        }
+
+        $data['datos']=
+                '<h1>'.$tit.'</h1>
+                <h1><small>ACTIVIDAD : </small>COD - '.$data['producto'][0]['prod_cod'].'. '.$data['producto'][0]['prod_producto'].'</h1>';
+        
+        $data['part_padres'] = $this->model_partidas->lista_padres();//partidas padres
+        $data['part_hijos'] = $this->model_partidas->lista_partidas();//partidas hijos
+        
+        $data['requerimientos'] = $this->mis_requerimientos($prod_id,$data['componente']); /// Lista de requerimientos 2020 
+        $data['button']=$this->programacionpoa->button_form5();
+
+        $this->load->view('admin/programacion/requerimiento/list_requerimientos', $data);
       }
       else{
-          redirect('admin/dashboard');
+        echo "Error !!!";
       }
-    }*/
-
-
-    /*---- LISTA DE COMPONENTES SEGUN EL TIPO DE EJECUCION ----*/
-    function list_requerimientos($proy_id,$id){
-        $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
-        if(count($data['proyecto'])!=0){
-            $data['menu']=$this->genera_menu($proy_id);
-            $data['fase'] = $this->model_faseetapa->get_id_fase($proy_id); // Fase 
-            $data['id'] = $id;
-            $data['monto_asig']=$this->model_ptto_sigep->suma_ptto_accion($data['proyecto'][0]['aper_id'],1);
-            $data['monto_prog']=$this->model_ptto_sigep->suma_ptto_accion($data['proyecto'][0]['aper_id'],2);
-            $monto_a=0;$monto_p=0;$monto_saldo=0;
-            if(count($data['monto_asig'])!=0){
-                $monto_a=$data['monto_asig'][0]['monto'];
-            }
-            if(count($data['monto_prog'])){
-                $monto_p=$data['monto_prog'][0]['monto'];
-            }
-
-            $data['monto_a']=$monto_a;
-            $data['monto_p']=$monto_p;
-
-
-            if($data['proyecto'][0]['tp_id']==1){
-                //$data['actividad'] = $this->model_actividad->get_actividad_id($id); // Actividad
-                $data['producto']=$this->model_producto->get_producto_id($id); // Producto
-                $data['componente']=$this->model_componente->get_componente($data['producto'][0]['com_id']); // Componente
-                $data['partidas_ope']='';
-                
-                $titulo[1]='CONSOLIDADO DE PARTIDAS DE LA OPERACI&Oacute;N';
-                $titulo[2]='CONSOLIDADO TOTAL DE PARTIDAS DEL PROYECTO';
-                $titulo_requerimiento=
-                '<h1><small>PROYECTO : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</h1>
-                <h1><small>OPERACI&Oacute;N : </small>COD - '.$data['producto'][0]['prod_cod'].'. '.$data['producto'][0]['prod_producto'].'</h1>';
-            }
-            else{
-                $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['fase'][0]['proy_id']);
-                $data['producto']=$this->model_producto->get_producto_id($id); // Producto
-                $data['componente']=$this->model_componente->get_componente($data['producto'][0]['com_id']); // Componente
-                $data['partidas_ope']='';
-
-                $titulo[1]='CONSOLIDADO DE PARTIDAS DE LA OPERACI&Oacute;N';
-                $titulo[2]='CONSOLIDADO TOTAL DE PARTIDAS DE LA UNIDAD / ESTABLECIMIENTO';
-
-                 $titulo_requerimiento=
-                '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].'-'.$data['proyecto'][0]['abrev'].'</h1>
-                <h1><small>SUBACTIVIDAD : </small>'.$data['componente'][0]['serv_cod'].'.- '.$data['componente'][0]['serv_descripcion'].'</h1>
-                <h1><small>OPERACI&Oacute;N : </small>COD - '.$data['producto'][0]['prod_cod'].'.- '.$data['producto'][0]['prod_producto'].'</h1>';
-            }
-
-            $lista_insumos = $this->model_insumo->lista_insumos_prod($id);
-            $data['part_padres'] = $this->model_partidas->lista_padres();//partidas padres
-            $data['part_hijos'] = $this->model_partidas->lista_partidas();//partidas hijos
-
-            $data['requerimientos'] = $this->mis_requerimientos($lista_insumos,$data['componente'],1); /// Lista de requerimientos 2020 
-            
-            $data['titulos']=$titulo;
-            $data['datos']=$titulo_requerimiento;
-            //echo "proy_id : ".$data['proyecto'][0]['dep_id']." - aper_id : ".$data['proyecto'][0]['aper_id']." - proy_id : ".$proy_id;
-            $this->load->view('admin/programacion/requerimiento/list_requerimientos', $data);
-        }
-        else{
-            redirect('admin/dashboard');
-        }
     }
 
-    /*--- VERIFICA LA ALINEACION DE OBJETIVO REGIONAL ---*/
-    public function verif_oregional($proy_id){
-      $tabla='';
 
-      $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
-      $nro=0;
-      if(count($list_oregional)!=0){
-        foreach($list_oregional as $row){
-          $nro++;
-          $tabla.='<h1> '.$nro.'.- OBJETIVO REGIONAL : <small> '.$row['or_codigo'].'.- '.$row['or_objetivo'].'</small></h1>';
-        }
-      }
-      else{
-        $tabla.='<h1><small><font color=red>NO ALINEADO A NINGUN OBJETIVO REGIONAL</font></small></h1>';
-      }
-
-      return $tabla;
-    }
 
     /*--------- VALIDA ADD REQUERIMIENTO ----------*/
      public function valida_insumo(){
       if($this->input->post()) {
         $post = $this->input->post();
-        $id = $this->security->xss_clean($post['id']); /// prod/act id
-        $proy_id = $this->security->xss_clean($post['proy_id']); /// Proy id
+        $prod_id = $this->security->xss_clean($post['prod_id']); /// prod
         $detalle = $this->security->xss_clean($post['ins_detalle']); /// detalle
         $cantidad = $this->security->xss_clean($post['ins_cantidad']); /// cantidad
         $costo_unitario = $this->security->xss_clean($post['ins_costo_u']); /// costo unitario
@@ -153,8 +98,9 @@ class crequerimiento extends CI_Controller{
         $partida = $this->security->xss_clean($post['partida_id']); /// costo unitario
         $observacion = $this->security->xss_clean($post['ins_observacion']); /// Observacion
 
-        $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// DATOS DEL PROYECTO
-        $fase = $this->model_faseetapa->get_id_fase($proy_id); //// DATOS DE LA FASE ACTIVA
+        $producto=$this->model_producto->get_producto_id($prod_id); // Producto
+        $componente=$this->model_componente->get_componente($producto[0]['com_id']); // Componente
+        $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); /// DATOS DEL PROYECTO
         
         $umedida=$this->model_insumo->get_unidadmedida($um_id);
 
@@ -181,7 +127,7 @@ class crequerimiento extends CI_Controller{
 
           /*--------------------------------------------------------*/
             $data_to_store2 = array( ///// Tabla InsumoProducto
-                'prod_id' => $id, /// prod id
+                'prod_id' => $prod_id, /// prod id
                 'ins_id' => $ins_id, /// ins_id
                 'tp_ins' => $proyecto[0]['tp_id'], /// tp id                
               );
@@ -211,7 +157,7 @@ class crequerimiento extends CI_Controller{
               $this->session->set_flashdata('danger','EL REQUERIMIENTO NOSE REGISTRO CORRECTAMENTE, VERIFIQUE DATOS :(');
             }
 
-        redirect(site_url("").'/prog/requerimiento/'.$proy_id.'/'.$id.'');
+        redirect(site_url("").'/prog/requerimiento/'.$prod_id.'');
             
       } else {
           show_404();
@@ -282,155 +228,184 @@ class crequerimiento extends CI_Controller{
     }
 
     /*----------- LISTA DE REQUERIMIENTOS (2020) --------------*/
-    public function mis_requerimientos($lista_insumos,$componente,$tp){
-      $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
-      $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']); 
-
+    public function mis_requerimientos($prod_id,$componente){
+      $lista_insumos = $this->model_insumo->lista_insumos_prod($prod_id);
+     // $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+     // $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']); 
       $tabla='';
-      if($tp==1){
-        $col1=7;$col2=15;
-        $tab='id="dt_basic" class="table table table-bordered" width="100%"'; 
-      }
-      elseif($tp==2){
-        $col1=6;$col2=14;
-        $tab='border="0" cellpadding="0" cellspacing="0" class="tabla" align="center"';
-      }
       $total=0;
-      $tabla.='<table '.$tab.'>
-                <thead>
-                  <tr class="modo1">
-                    <th></th>
-                    <th>PARTIDA</th>
-                    <th>DETALLE REQUERIMIENTO</th>
-                    <th>UNIDAD</th>
-                    <th>CANTIDAD</th>
-                    <th>UNITARIO</th>
-                    <th>TOTAL</th>
-                    <th>TOTAL PROG.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">ENE.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">FEB.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">MAR.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">ABR.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">MAY.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">JUN.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">JUL.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">AGO.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">SEPT.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">OCT.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">NOV.</th>
-                    <th style="background-color: #0AA699;color: #FFFFFF">DIC.</th>
-                    <th>OBSERVACIONES</th>';
-                    if($tp==1){
-                      $tabla.='<th>ELIMINAR</th>';
-
-                      $tabla.='<th>COD. OPE.</th>';
-                    }
-                    $tabla.='
-                  </tr>
-                </thead>
-                <tbody>';
-                $cont = 0;
-                foreach ($lista_insumos as $row) {
-                  $color='';
-                  $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-                  if(count($prog)!=0){
-                    if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
-                      $color='#f5bfb6';
-                    }
-                  }      
-                  $cont++;
-                  $tabla .= '<tr class="modo1" bgcolor="'.$color.'" title='.$row['ins_id'].'>';
-                    $tabla .= '<td align="center">';
-                    if($tp==1){
-                      $tabla.='
-                        <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO" ><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
-                        <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn-default del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
-                    }
-                    else{
-                      $tabla.=''.$cont.'';
-                    }
-                    $tabla .='</td>';
-                    $tabla .='<td>'.$row['par_codigo'].'</td>'; /// partida
-                    $tabla .= '<td>'.$row['ins_detalle'].'</td>'; /// detalle requerimiento
-                    $tabla .= '<td>'.$row['ins_unidad_medida'].'</td>'; /// Unidad
-                    $tabla .= '<td>'.$row['ins_cant_requerida'].'</td>'; /// cantidad
-                    $tabla .= '<td>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                    $tabla .= '<td>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                    if(count($prog)!=0){
-                      $tabla.='
-                      <td>'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td> 
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes2'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes3'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes4'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes5'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes6'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes7'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes8'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes9'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes10'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes11'], 2, ',', '.').'</td>
-                      <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes12'], 2, ',', '.').'</td>';
-                    }
-                    else{
-                      $tabla.='
-                      <td>0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>
-                      <td bgcolor="#f9d4ce">0</td>';
-                    }
-                    $tabla .= '<td>'.$row['ins_observacion'].'</td>';
-
-                    if($tp==1){
-                      $tabla .= '
-                      <td>
-                        <center>
-                          <input type="checkbox" name="ins[]" value="'.$row['ins_id'].'" onclick="scheck'.$cont.'(this.checked);"/>
-                        </center>
-                      </td>
-                      <td>';
-                        if($proyecto[0]['tp_id']==4){
-                          $productos = $this->model_producto->list_producto_programado($componente[0]['com_id'],$this->gestion); // Lista de productos
-                          $tabla .='<select class="form-control" onchange="doSelectAlert(event,this.value,'.$row['ins_id'].');">';
-                            foreach($productos as $pr){
-                              if($pr['prod_ppto']==1){
-                                if($pr['prod_id']==$row['prod_id']){
-                                  $tabla .="<option value=".$pr['prod_id']." selected>".$pr['prod_cod']."</option>";
-                                }
-                                else{
-                                  $tabla .="<option value=".$pr['prod_id'].">".$pr['prod_cod']."</option>"; 
-                                } 
-                              }
-                            }
-                          $tabla.='</select>';
-                        }
-                      $tabla.='  
-                      </td>';
-                    }
-                  $tabla .= '</tr>';
-                  $total=$total+$row['ins_costo_total'];
-                }
+      $tabla.='
+      <input type="hidden" name="prod_id" id="prod_id" value="'.$prod_id.'">
+      <input type="hidden" name="base" value="'.base_url().'">
+      <table id="dt_basic" class="table table table-bordered" width="100%">
+          <thead>
+            <tr class="modo1">
+              <th></th>
+              <th>PARTIDA</th>
+              <th>DETALLE REQUERIMIENTO</th>
+              <th>UNIDAD</th>
+              <th>CANTIDAD</th>
+              <th>UNITARIO</th>
+              <th>TOTAL</th>
+              <th>TOTAL PROG.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">ENE.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">FEB.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">MAR.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">ABR.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">MAY.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">JUN.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">JUL.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">AGO.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">SEPT.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">OCT.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">NOV.</th>
+              <th style="background-color: #0AA699;color: #FFFFFF">DIC.</th>
+              <th>OBSERVACIONES</th>
+              <th>ELIMINAR</th>
+              <th>COD. OPE.</th>';
+              $tabla.='
+            </tr>
+          </thead>
+          <tbody>';
+          $cont = 0;
+          foreach ($lista_insumos as $row) {
+            $color='';
+            $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+            if(count($prog)!=0){
+              if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
+                $color='#f5bfb6';
+              }
+            }      
+            $cont++;
+            $tabla .= '<tr class="modo1" bgcolor="'.$color.'" title='.$row['ins_id'].'>';
+              $tabla .= '<td align="center">';
+              if($this->tp_adm==1 || $this->conf_form5==1){
                 $tabla.='
-                </tbody>
-                  <tr class="modo1">
-                    <td colspan="'.$col1.'"> TOTAL </td>
-                    <td><font color="blue" size=1>'.number_format($total, 2, ',', '.') .'</font></td>
-                    <td colspan="'.$col2.'"></td>
-                  </tr>
-              </table>';
+                  <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO" ><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
+                  <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn-default del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
+              }
+              else{
+                $tabla.=''.$cont.'';
+              }
+              $tabla .='</td>';
+              $tabla .='<td>'.$row['par_codigo'].'</td>'; /// partida
+              $tabla .= '<td>'.$row['ins_detalle'].'</td>'; /// detalle requerimiento
+              $tabla .= '<td>'.$row['ins_unidad_medida'].'</td>'; /// Unidad
+              $tabla .= '<td>'.$row['ins_cant_requerida'].'</td>'; /// cantidad
+              $tabla .= '<td>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+              $tabla .= '<td>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+              if(count($prog)!=0){
+                $tabla.='
+                <td>'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td> 
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes2'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes3'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes4'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes5'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes6'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes7'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes8'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes9'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes10'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes11'], 2, ',', '.').'</td>
+                <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes12'], 2, ',', '.').'</td>';
+              }
+              else{
+                $tabla.='
+                <td>0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>
+                <td bgcolor="#f9d4ce">0</td>';
+              }
+              $tabla .= '<td>'.$row['ins_observacion'].'</td>
+              <td>';
+              if($this->tp_adm==1 || $this->conf_form5==1){
+                $tabla.='
+                  <center>
+                    <input type="checkbox" name="ins[]" value="'.$row['ins_id'].'" onclick="scheck'.$cont.'(this.checked);"/>
+                  </center>';
+              }
+              $tabla.='
+                </td>
+                <td>';
+                  $productos = $this->model_producto->lista_operaciones($componente[0]['com_id']); // Lista de productos
+                    $tabla .='<select class="form-control" onchange="doSelectAlert(event,this.value,'.$row['ins_id'].');">';
+                      foreach($productos as $pr){
+                        if($pr['prod_ppto']==1){
+                          if($pr['prod_id']==$row['prod_id']){
+                            $tabla .="<option value=".$pr['prod_id']." selected>".$pr['prod_cod']."</option>";
+                          }
+                          else{
+                            $tabla .="<option value=".$pr['prod_id'].">".$pr['prod_cod']."</option>"; 
+                          } 
+                        }
+                      }
+                    $tabla.='</select>';
+                $tabla.='  
+                </td>';
+           
+            $tabla .= '</tr>';
+            $total=$total+$row['ins_costo_total'];
+            ?>
+            <script>
+              function scheck<?php echo $cont;?>(estaChequeado) {
+                val = parseInt($('[name="tot"]').val());
+                if (estaChequeado == true) {
+                  val = val + 1;
+                } else {
+                  val = val - 1;
+                }
+                $('[name="tot"]').val((val).toFixed(0));
+              }
+            </script>
+            <?php
+          }
+          $tabla.='
+          </tbody>
+            <tr class="modo1">
+              <td colspan="6"> TOTAL </td>
+              <td><font color="blue" size=1>'.number_format($total, 2, ',', '.') .'</font></td>
+              <td colspan="15"></td>
+            </tr>
+        </table>';
 
       return $tabla;
     }
 
+
+    /*--- ELIMINAR TODOS LOS REQUERIMIENTOS DE LA OPERACION/ACTIVIDAD ---*/
+    function eliminar_todos_insumos($prod_id){
+      $insumos = $this->model_insumo->lista_insumos_prod($prod_id); //// Insumos Operacion
+
+      foreach ($insumos as $row) {
+        /*-------- DELETE INSUMO PROGRAMADO --------*/  
+          $this->db->where('ins_id', $row['ins_id']);
+          $this->db->delete('temporalidad_prog_insumo');
+        /*------------------------------------------*/
+
+        /*-------- DELETE INSUMO --------*/
+          $this->db->where('prod_id', $prod_id);
+          $this->db->where('ins_id', $row['ins_id']);
+          $this->db->delete('_insumoproducto');
+          /*--------------------------------*/
+
+        /*-------- DELETE INSUMO  --------*/  
+          $this->db->where('ins_id', $row['ins_id']);
+          $this->db->delete('insumos');
+        /*--------------------------------*/
+      }
+      
+      redirect(site_url("").'/prog/requerimiento/'.$prod_id.'');    
+    }
    
     /*------------ TABLA PRODUCTO-REQUERIMIENTOS -----------*/
 /*    function genera_tabla_prod_insumo($proy_id){
