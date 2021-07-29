@@ -350,10 +350,10 @@ class Programacionpoa extends CI_Controller{
       <style type="text/css">
         aside{background: #05678B;}
         #mdialTamanio{
-            width: 70% !important;
+            width: 50% !important;
         }
         #mdialTamanio2{
-            width: 60.5% !important;
+            width: 50% !important;
         }
         table{font-size: 10px;
               width: 100%;

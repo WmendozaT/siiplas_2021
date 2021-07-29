@@ -213,10 +213,10 @@ $route['prog/delete_operaciones'] = 'programacion/producto/delete_operaciones'; 
 $route['prog/combo_acciones'] = 'programacion/producto/combo_acciones_estrategicos';// COMBO ACCIONES OPERATIVAS
 //$route['prog/combo_indicadores'] = 'programacion/producto/combo_indicadores_pei';// COMBO ACCIONES INDICADORES DEL PROCESO
 
-$route['admin/prog/new_prod/(:any)'] = 'programacion/producto/new_productos/$1';  //// NUEVA OPERACION
-$route['admin/prog/mod_prod/(:any)'] = 'programacion/producto/update_producto/$1';  ////  formulario editado productos 
+//$route['admin/prog/new_prod/(:any)'] = 'programacion/producto/new_productos/$1';  //// NUEVA OPERACION
+//$route['admin/prog/mod_prod/(:any)'] = 'programacion/producto/update_producto/$1';  ////  formulario editado productos 
 //$route['admin/prog/delete_prod/(:any)'] = 'programacion/producto/delete_producto/$1/$2/$3/$4/$5'; //// Eliminando el producto
-$route['admin/prog/del_prod'] = 'programacion/producto/desactiva_producto';  //// Eliminar Productos - Gasto Operacion
+//$route['admin/prog/del_prod'] = 'programacion/producto/desactiva_producto';  //// Eliminar Productos - Gasto Operacion
 $route['prog/rep_operacion_componente/(:any)'] = 'programacion/producto/reporte_operacion_componente/$1';  //// Reporte Operaciones por componente 2019-2020
 $route['prog/exportar_productos/(:any)'] = 'programacion/producto/exportar_productos/$1';  //// Exportar lista de Productos
 $route['prog/exportar_productos_req/(:any)'] = 'programacion/producto/exportar_productos_requerimientos/$1';  //// Exportar lista de Productos - Requerimientos

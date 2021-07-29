@@ -223,7 +223,7 @@ class Producto extends CI_Controller {
       if($this->input->post()) {
         $post = $this->input->post();
         $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
-        $producto = $this->security->xss_clean($post['mprod']); /// detalle producto
+        $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
         $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
         $indi_id = $this->security->xss_clean($post['mtipo_i']); /// Tipo de Indicador
         $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador
@@ -250,7 +250,7 @@ class Producto extends CI_Controller {
 
         /*----- UPDATE FORMULARIO N4 ----*/
           $update_prod = array(
-            'prod_producto' => strtoupper($producto),
+            'prod_producto' => strtoupper($prod),
             'prod_resultado' => strtoupper($resultado),
             'indi_id' => $indi_id,
             'prod_indicador' => strtoupper($indicador),
@@ -275,7 +275,6 @@ class Producto extends CI_Controller {
           /*------------ ANULAR TEMPORALIDAD -----------*/
           $this->model_producto->delete_prod_gest($prod_id);
 
-
           if($indi_id==1){
             for ($i=1; $i <=12 ; $i++) {
               if($this->security->xss_clean($post['mm'.$i])!=0){
@@ -288,13 +287,13 @@ class Producto extends CI_Controller {
             if($tp_meta==3){
               for ($i=1; $i <=12 ; $i++) {
                 if($this->security->xss_clean($post['mm'.$i])!=0){
-                  $this->model_producto->add_prod_gest($this->input->post('prod_id'),$this->gestion,$i,$this->input->post('m'.$i));
+                  $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$this->security->xss_clean($post['mm'.$i]));
                 }
               }
             }
-            elseif($tp_meta==1){
+            elseif($tp_meta==1){ /// recurrente
               for ($i=1; $i <=12 ; $i++) {
-                $this->model_producto->add_prod_gest($this->input->post('prod_id'),$this->gestion,$i,$this->input->post('met'));
+                $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$meta);
               }
             }
           }  
@@ -400,7 +399,7 @@ class Producto extends CI_Controller {
 
 
 
-    /*----------------- LISTA OPERACIONES (2020) ------------------*/
+    /*------ LISTA OPERACIONES (2020-2021-2022) ------*/
     public function operaciones($proy_id,$com_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
       $fase = $this->model_faseetapa->get_id_fase($proy_id); //// recupera datos de la tabla fase activa
@@ -414,7 +413,7 @@ class Producto extends CI_Controller {
           <table id="dt_basic" class="table table-bordered">
             <thead>
                   <tr class="modo1">
-                    <th style="width:1%; text-align=center"><b>COD.</b></th>
+                    <th style="width:1%; text-align=center">#</th>
                     <th style="width:1%; text-align=center"><b>E/B</b></th>
                     <th style="width:2%;"><b>COD. OR.</b></th>
                     <th style="width:2%;"><b>COD. ACT.</b></th>
@@ -472,25 +471,24 @@ class Producto extends CI_Controller {
                   }
                   
                   $tabla .='<tr bgcolor="'.$color.'" class="modo1" title='.$titulo.'>';
-                    $tabla.='<td align="center"><font color="blue" size="2"><b>'.$rowp['prod_cod'].'</b></font></td>';
+                    $tabla.='<td align="center"><font color="blue" size="2" title='.$rowp['prod_id'].'><b>'.$rowp['prod_cod'].'</b></font></td>';
                     $tabla.='<td align="center">';
-                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$rowp['prod_id'].'" title="MODIFICAR ACTIVIDAD"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
-                    $tabla.='<a href="'.site_url("admin").'/prog/mod_prod/'.$rowp['prod_id'].'" title="MODIFICAR OPERACI&Oacute;N" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
-                    /*if($this->tp_adm==1){
-                      $tabla.='<a href="'.site_url("admin").'/prog/mod_prod/'.$rowp['prod_id'].'" title="MODIFICAR OPERACI&Oacute;N" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
-                    }*/
+                    if($this->tp_adm==1 || $this->conf_form4==1){
+                      $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff" name="'.$rowp['prod_id'].'" title="MODIFICAR ACTIVIDAD"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
+                    }
+
                     if($rowp['prod_ppto']==1){
-                      $tabla.='<a href="'.site_url("").'/prog/requerimiento/'.$proy_id.'/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA OPERACI&Oacute;N" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="33" HEIGHT="33"/></a>';
+                      $tabla.='<a href="'.site_url("").'/prog/requerimiento/'.$proy_id.'/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="33" HEIGHT="33"/></a>';
                     }
                     $tabla.='</td>';
                     $tabla.='<td style="width:2%;text-align=center"><b><font size=5 color=blue>'.$rowp['or_codigo'].'</font></b></td>';
                     $tabla.='<td style="width:2%;text-align=center"><b><font size=5>'.$rowp['prod_cod'].'</font></b></td>';
-                    $tabla.='<td style="width:15%;">'.$rowp['prod_producto'].'</td>';
-                    $tabla.='<td style="width:15%;">'.$rowp['prod_resultado'].'</td>';
-                    $tabla.='<td style="width:10%;">'.$rowp['indi_abreviacion'].'</td>';
+                    $tabla.='<td style="width:15%;">'.strtoupper($rowp['prod_producto']).'</td>';
+                    $tabla.='<td style="width:15%;">'.strtoupper($rowp['prod_resultado']).'</td>';
+                    $tabla.='<td style="width:5%;"><b>'.strtoupper($rowp['indi_abreviacion']).'</b></td>';
                     $tabla.='<td style="width:10%;">'.$rowp['prod_indicador'].'</td>';
-                    $tabla.='<td style="width:10%;">'.round($rowp['prod_linea_base'],2).'</td>';
-                    $tabla.='<td style="width:10%;">'.round($rowp['prod_meta'],2).'</td>';
+                    $tabla.='<td style="width:5%;">'.round($rowp['prod_linea_base'],2).'</td>';
+                    $tabla.='<td style="width:5%;">'.round($rowp['prod_meta'],2).'</td>';
                     if(count($programado)!=0){
                       $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['enero'],2).' '.$por.'</td>';
                       $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['febrero'],2).' '.$por.'</td>';
@@ -521,8 +519,8 @@ class Producto extends CI_Controller {
                     }
                     $tabla.='<td style="width:10%;" bgcolor="#e5fde5">'.$rowp['prod_fuente_verificacion'].'</td>';
                     $tabla.='<td style="width:7%;">';
-                      if($this->tp_adm==1 || $this->fun_id==715 || $this->fun_id==690){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'" id="'.$proy_id.'"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a><br><br>';
+                      if($this->tp_adm==1 || $this->conf_form4==1){
+                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a><br><br>';
                         $tabla.=' <center>
                                     <input type="checkbox" name="req[]" value="'.$rowp['prod_id'].'" onclick="scheck'.$cont.'(this.checked);"/>
                                   </center>';
@@ -947,14 +945,14 @@ class Producto extends CI_Controller {
 
 
    
- /*------ ELIMINA LOGICAMENTE PRODUCTOS Y SUS DEPENDIENTES ------*/
+ /*------ ELIMINA EL PRODUCTO Y SUS REQUERIMIENTOS ------*/
     function desactiva_producto(){
       if ($this->input->is_ajax_request() && $this->input->post()) {
           $post = $this->input->post();
           $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
-          $proy_id = $this->security->xss_clean($post['proy_id']); /// proy id
+         // $proy_id = $this->security->xss_clean($post['proy_id']); /// proy id
 
-          $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
+         // $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
           $insumos = $this->model_producto->insumo_producto($prod_id); /// Insumo del producto
 
           foreach ($insumos as $rowi) {

@@ -24,21 +24,11 @@ class model_producto extends CI_Model {
 
     /*----- RELACION INSUMO PRODUCTO (2019) -----*/
     function insumo_producto($prod_id){
-        if($this->gestion==2019){
-            $sql = 'select *
-                from _insumoproducto ip
-                Inner Join insumos as i On i.ins_id=ip.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                Inner Join insumo_gestion as ig On i.ins_id=ig.ins_id
-                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and ig.g_id='.$this->gestion.''; 
-        }
-        else{ // gestion : 2020
-            $sql = 'select *
+        $sql = 'select *
                 from _insumoproducto ip
                 Inner Join insumos as i On i.ins_id=ip.ins_id
                 Inner Join partidas as par On par.par_id=i.par_id
                 where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.''; 
-        }
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -46,22 +36,11 @@ class model_producto extends CI_Model {
 
     /*--- MONTO TOTAL OPERACION - INSUMOPRODUCTO (2019) ------*/
     function monto_insumoproducto($prod_id){
-        if($this->gestion==2019){ /// 2019
-            $sql = 'select ip.prod_id,SUM(i.ins_costo_total) as total
-                from _insumoproducto ip
-                Inner Join insumos as i On i.ins_id=ip.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                Inner Join insumo_gestion as ig On ig.ins_id=i.ins_id
-                where ip.prod_id='.$prod_id.' and ins_estado!=\'3\' and ig.g_id='.$this->gestion.' and insg_estado!=\'3\'
-                group by ip.prod_id'; 
-        }
-        else{ /// 2020
-            $sql = 'select ip.prod_id,SUM(i.ins_costo_total) as total
+        $sql = 'select ip.prod_id,SUM(i.ins_costo_total) as total
                 from _insumoproducto ip
                 Inner Join insumos as i On i.ins_id=ip.ins_id
                 where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.'
                 group by ip.prod_id'; 
-        }
  
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -139,7 +118,7 @@ class model_producto extends CI_Model {
     /*===================================================================*/
 
     /*======== LISTA DE PRODUCTOS PROGRAMADO GESTION (2018-2019) ========*/
-    function list_producto_programado($com_id,$gestion){
+/*    function list_producto_programado($com_id,$gestion){
         $sql = 'select p.prod_id,p.com_id,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
                 p.prod_resultado,p.acc_id,p.prod_cod, p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,indi_abreviacion,pr.g_id,
                 pr.enero,pr.febrero,pr.marzo,pr.abril,pr.mayo,pr.junio,pr.julio,pr.agosto,pr.septiembre,pr.octubre,pr.noviembre,pr.diciembre,ore.or_id,ore.or_codigo
@@ -151,10 +130,10 @@ class model_producto extends CI_Model {
                 order by p.prod_cod, p.prod_id asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
-    /*======== LISTA DE OPERACIONES VISTA (2020) ========*/
-    function lista_operaciones($com_id,$gestion){
+    /*======== LISTA DE OPERACIONES VISTA (2020-2022) ========*/
+/*    function lista_operaciones($com_id,$gestion){
         $sql = 'select p.prod_id,p.com_id,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
                 p.prod_resultado,p.acc_id,p.prod_cod, p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,indi_abreviacion,ore.or_id,ore.or_codigo
                 from _productos p
@@ -164,12 +143,12 @@ class model_producto extends CI_Model {
                 order by p.prod_cod, p.prod_id asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*=== LISTA DE OPERACIONES (2020) REPORTE - GASTO CORRIENTE ===*/
-    function list_operaciones($com_id){
+    function lista_operaciones($com_id){
         $sql = 'select p.prod_id,p.com_id,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
-                p.prod_resultado,p.acc_id,p.prod_cod, p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,
+                p.prod_resultado,p.acc_id,p.prod_cod, p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
                 ore.or_id,ore.or_codigo,og.og_id,og.og_codigo, ae.acc_id,ae.acc_codigo,oe.obj_codigo
                 from _productos p
                 Inner Join indicador as i On i.indi_id=p.indi_id

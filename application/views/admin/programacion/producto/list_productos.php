@@ -432,126 +432,126 @@
   </div>
 
 
-      <!-- ============ Modal Modificar formulario N4 ========= -->
-      <div class="modal fade" id="modal_mod_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog" id="mdialTamanio">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-            </div>
-            <div class="modal-body">
-              <h2 class="alert alert-info"><center>MODIFICAR REGISTRO FORM N°4 - ACTIVIDAD</center></h2>
-              <form action="<?php echo site_url().'/programacion/producto/valida_update_form4'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
-              <input type="hidden" name="prod_id" id="prod_id">
-                <header><b>DATOS GENERALES DE LA ACTIVIDAD</b></header>
-                <fieldset>
-                  <div class="row">
-                    <section class="col col-1">
-                      <label class="label"><b>C&Oacute;DIGO</b></label>
+    <!-- ============ Modal Modificar formulario N4 ========= -->
+    <div class="modal fade" id="modal_mod_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" id="mdialTamanio">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+            <h2 class="alert alert-info"><center>MODIFICAR REGISTRO FORM N°4 - ACTIVIDAD</center></h2>
+            <form action="<?php echo site_url().'/programacion/producto/valida_update_form4'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
+            <input type="hidden" name="prod_id" id="prod_id">
+              <header><b>DATOS GENERALES DE LA ACTIVIDAD</b></header>
+              <fieldset>
+                <div class="row">
+                  <section class="col col-1">
+                    <label class="label"><b>C&Oacute;DIGO</b></label>
+                    <label class="input">
+                      <i class="icon-append fa fa-tag"></i>
+                      <input type="text" name="mcod" id="mcod" disabled="true">
+                    </label>
+                  </section>
+                  <section class="col col-5">
+                    <label class="label"><b>DESCRIPCI&Oacute;N DE LA ACTIVIDAD</b></label>
+                    <label class="textarea">
+                      <i class="icon-append fa fa-tag"></i>
+                      <textarea rows="3" name="mprod" id="mprod" title="REGISTRAR ACTIVIDAD"></textarea>
+                    </label>
+                  </section>
+                  <section class="col col-4">
+                    <label class="label"><b>RESULTADO</b></label>
+                    <label class="textarea">
+                      <i class="icon-append fa fa-tag"></i>
+                      <textarea rows="3" name="mresultado" id="mresultado" title="REGISTRAR RESULTADO"></textarea>
+                    </label>
+                  </section>
+                  <section class="col col-2">
+                    <label class="label"><b>TIPO DE INDICADOR</b></label>
+                    <select class="form-control" id="mtipo_i" name="mtipo_i" title="SELECCIONE TIPO DE INDICADOR">
+                        <option value="">Seleccione Tipo de Indicador</option>
+                        <?php 
+                          foreach($indi as $row){ ?>
+                          <option value="<?php echo $row['indi_id'];?>"><?php echo $row['indi_descripcion'];?></option>
+                        <?php } ?>        
+                    </select>
+                  </section>
+                </div>
+
+                <div class="row">
+                  <section class="col col-4">
+                    <label class="label"><b>INDICADOR</b></label>
+                    <label class="textarea">
+                      <i class="icon-append fa fa-tag"></i>
+                      <textarea rows="2" name="mindicador" id="mindicador" title="REGISTRE DESCRIPCIÓN INDICADOR"></textarea>
+                    </label>
+                  </section>
+                  <section class="col col-4">
+                    <label class="label"><b>MEDIO DE VERIFICACI&Oacute;N</b></label>
+                    <label class="textarea">
+                      <i class="icon-append fa fa-tag"></i>
+                      <textarea rows="2" name="mverificacion" id="mverificacion" title="REGISTRE MEDIO DE VERIFICACIÓN"></textarea>
+                    </label>
+                  </section>
+                  <section class="col col-4">
+                    <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
+                    <label class="textarea">
+                      <i class="icon-append fa fa-tag"></i>
+                      <textarea rows="2" name="munidad" id="munidad" title="REGISTRE UNIDAD RESPONSABLE"></textarea>
+                    </label>
+                  </section>
+                </div>
+
+                <div class="row">
+                    <section class="col col-2">
+                      <label class="label"><b>LINEA BASE</b></label>
                       <label class="input">
                         <i class="icon-append fa fa-tag"></i>
-                        <input type="text" name="mcod" id="mcod" disabled="true">
-                      </label>
-                    </section>
-                    <section class="col col-5">
-                      <label class="label"><b>DESCRIPCI&Oacute;N DE LA ACTIVIDAD</b></label>
-                      <label class="textarea">
-                        <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="3" name="mprod" id="mprod" title="REGISTRAR ACTIVIDAD"></textarea>
-                      </label>
-                    </section>
-                    <section class="col col-4">
-                      <label class="label"><b>RESULTADO</b></label>
-                      <label class="textarea">
-                        <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="3" name="mresultado" id="mresultado" title="REGISTRAR RESULTADO"></textarea>
+                        <input type="text" name="mlbase" id="mlbase" value="0" title="REGISTRE LINEA BASE" onkeyup="suma_programado()">
                       </label>
                     </section>
                     <section class="col col-2">
-                      <label class="label"><b>TIPO DE INDICADOR</b></label>
-                      <select class="form-control" id="mtipo_i" name="mtipo_i" title="SELECCIONE TIPO DE INDICADOR">
-                          <option value="">Seleccione Tipo de Indicador</option>
+                      <label class="label"><b>META</b></label>
+                      <label class="input">
+                        <i class="icon-append fa fa-tag"></i>
+                        <input type="text" name="mmeta" id="mmeta" value="0" onkeyup="verif_meta_mod()" title="REGISTRE META">
+                      </label>
+                    </section>
+                    <section class="col col-2">
+                      <label class="label"><b>NECESITA PRESUPUESTO ?</b></label>
+                      <select class="form-control" id="mppto" name="mppto" title="NECESITA PRESUPUESTO">
+                        <option value="1">SI</option>
+                        <option value="0">NO</option>       
+                      </select>
+                    </section>
+
+                    <section class="col col-5">
+                      <label class="label"><b>OBJETIVO REGIONAL</b></label>
+                      <select class="form-control" id="mor_id" name="mor_id" title="SELECCIONE OBJETIVO REGIONAL">
+                          <option value="">SELECCIONE OBJETIVO REGIONAL</option>
                           <?php 
-                            foreach($indi as $row){ ?>
-                            <option value="<?php echo $row['indi_id'];?>"><?php echo $row['indi_descripcion'];?></option>
+                            foreach($objetivos as $row){ ?>
+                            <option value="<?php echo $row['or_id'];?>"><?php echo $row['or_codigo'].'.- '.$row['or_objetivo'];?></option>
                           <?php } ?>        
                       </select>
                     </section>
-                  </div>
 
-                  <div class="row">
-                    <section class="col col-4">
-                      <label class="label"><b>INDICADOR</b></label>
-                      <label class="textarea">
-                        <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="2" name="mindicador" id="mindicador" title="REGISTRE DESCRIPCIÓN INDICADOR"></textarea>
-                      </label>
-                    </section>
-                    <section class="col col-4">
-                      <label class="label"><b>MEDIO DE VERIFICACI&Oacute;N</b></label>
-                      <label class="textarea">
-                        <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="2" name="mverificacion" id="mverificacion" title="REGISTRE MEDIO DE VERIFICACIÓN"></textarea>
-                      </label>
-                    </section>
-                    <section class="col col-4">
-                      <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
-                      <label class="textarea">
-                        <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="2" name="munidad" id="munidad" title="REGISTRE UNIDAD RESPONSABLE"></textarea>
-                      </label>
-                    </section>
-                  </div>
-
-                  <div class="row">
-                      <section class="col col-2">
-                        <label class="label"><b>LINEA BASE</b></label>
-                        <label class="input">
-                          <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="mlbase" id="mlbase" value="0" title="REGISTRE LINEA BASE" onkeyup="suma_programado()">
-                        </label>
-                      </section>
-                      <section class="col col-2">
-                        <label class="label"><b>META</b></label>
-                        <label class="input">
-                          <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="mmeta" id="mmeta" value="0" onkeyup="verif_meta_mod()" title="REGISTRE META">
-                        </label>
-                      </section>
-                      <section class="col col-2">
-                        <label class="label"><b>NECESITA PRESUPUESTO ?</b></label>
-                        <select class="form-control" id="mppto" name="mppto" title="NECESITA PRESUPUESTO">
-                          <option value="1">SI</option>
-                          <option value="0">NO</option>       
+                    <div id="mtrep" style="display:none;" >
+                      <section class="col col-3">
+                        <label class="label"><b>TIPO DE META</b></label>
+                          <select class="form-control" id="mtp_met" name="mtp_met" title="SELECCIONE TIPO DE META">
+                            <option value="">Seleccione Tipo de Meta</option>
+                              <?php 
+                                foreach($metas as $row){ ?>
+                                  <option value="<?php echo $row['mt_id']; ?>"><?php echo $row['mt_tipo']; ?></option>
+                                  <?php
+                                }
+                              ?>
                         </select>
-                      </section>
-
-                      <section class="col col-5">
-                        <label class="label"><b>OBJETIVO REGIONAL</b></label>
-                        <select class="form-control" id="mor_id" name="mor_id" title="SELECCIONE OBJETIVO REGIONAL">
-                            <option value="">SELECCIONE OBJETIVO REGIONAL</option>
-                            <?php 
-                              foreach($objetivos as $row){ ?>
-                              <option value="<?php echo $row['or_id'];?>"><?php echo $row['or_codigo'].'.- '.$row['or_objetivo'];?></option>
-                            <?php } ?>        
-                        </select>
-                      </section>
-
-                      <div id="mtrep" style="display:none;" >
-                        <section class="col col-3">
-                          <label class="label"><b>TIPO DE META</b></label>
-                            <select class="form-control" id="mtp_met" name="mtp_met" title="SELECCIONE TIPO DE META">
-                              <option value="">Seleccione Tipo de Meta</option>
-                                <?php 
-                                  foreach($metas as $row){ ?>
-                                    <option value="<?php echo $row['mt_id']; ?>"><?php echo $row['mt_tipo']; ?></option>
-                                    <?php
-                                  }
-                                ?>
-                          </select>
-                        </section><br>  
-                      </div>
+                      </section><br>  
                     </div>
+                  </div>
               <br>
               <div id="matit"></div>
               <header><b>DISTRIBUCI&Oacute;N F&Iacute;SICA : <?php echo $this->session->userdata('gestion')?></b><br>
@@ -672,8 +672,71 @@
     </div>
     <!-- ======================================================== -->
 
+
+
+
+    <!-- MODAL SUBIR PLANTILLA -->
+    <div class="modal fade" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" id="mdialTamanio">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+              <h2><div id="titulo"></div></h2>
+              <section id="widget-grid" class="">
+                <div>
+                  <?php echo $datos_proyecto;?>
+                  <h1> UNIDAD RESPONSABLE : <small><?php echo $componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion']; ?></small></h1>
+                </div>
+              </section>
+              <div class="row">
+                <form action="<?php echo site_url().'/programacion/producto/importar_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_prev" name="form_subir_prev" class="form-horizontal">
+                  <input type="hidden" name="com_id" value="<?php echo $componente[0]['com_id'];?>">
+                  <input type="hidden" name="tp" id="tp">
+                  <fieldset>
+                    <div class="form-group">
+                      <center><div id="img"></div></center>
+                      <hr>
+                        <p class="alert alert-info">
+                          <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
+                        </p>
+                    </div>
+                  </fieldset>  
+                  <hr>
+                  <div class="form-group">
+                    <b>SELECCIONAR ARCHIVO CSV</b>
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+                        <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+                      </span>
+                      <span class="form-control"></span>
+                    </div>
+                </div>
+                  
+                  <div>
+                      <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;"><div id="buton"></div></button><br>
+                      <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                  </div>
+                </form> 
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
   <!-- ======= MODAL SUBIR ARCHIVO ACTIVIDADES =============== -->
-  <div class="modal animated fadeInDown" id="modal_importar_ff" tabindex="-1" role="dialog">
+  <div class="modal animated fadeInDown" id="modal_importar_ff2" tabindex="-1" role="dialog">
    <!--  <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script> -->
     <div class="modal-dialog" id="mdialTamanio2">
         <div class="modal-content">
@@ -710,8 +773,8 @@
                                     <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
                                   </p>
                                   <form action="<?php echo site_url().'/programacion/producto/importar_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" method="post">
-                                      <input type="hidden" name="com_id" value="<?php echo $componente[0]['com_id'];?>">
-                                      <input type="hidden" name="tp" id="tp">
+                                      <input type="text" name="com_id" value="<?php echo $componente[0]['com_id'];?>">
+                                      <input type="text" name="tp" id="tp">
                                       <fieldset>
                                         <div class="input-group">
                                           <span class="input-group-btn">
@@ -742,6 +805,7 @@
             </div>
         </div><!-- /.modal-content -->
     </div>
+  </div>
 
     <!--================================================== -->
 <!-- END PAGE FOOTER -->
@@ -799,9 +863,6 @@
 <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 <script src="<?php echo base_url(); ?>mis_js/programacionpoa/form4.js"></script> 
-<script type="text/javascript">
-
-</script>
 
 
     <script>
@@ -817,12 +878,6 @@
           buttonFocus: "ok"
         });
     }
-    </script>
-    <script type="text/javascript">
-
-    </script>
-    <script type="text/javascript">
-
     </script>
     <script type="text/javascript">
       $(function () {
@@ -850,78 +905,7 @@
         });
       });
     </script>
-    <script type="text/javascript">
 
-
-      $(function () {
-          function reset() {
-            $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
-            alertify.set({
-                labels: {
-                    ok: "ACEPTAR",
-                    cancel: "CANCELAR"
-                },
-                delay: 5000,
-                buttonReverse: false,
-                buttonFocus: "ok"
-            });
-          }
-
-          // =====================================================================
-          $(".del_ff").on("click", function (e) {
-              reset();
-              var name = $(this).attr('name');
-              var id = $(this).attr('id');
-              var request;
-              // confirm dialog
-              alertify.confirm("DESEA ELIMINAR OPERACION ?", function (a) {
-                if (a) { 
-                    url = "<?php echo site_url("admin")?>/prog/del_prod";
-                    if (request) {
-                      request.abort();
-                    }
-                    request = $.ajax({
-                      url: url,
-                      type: "POST",
-                      dataType: "json",
-                      data: "prod_id="+name+"&proy_id="+id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) { 
-                      reset();
-                    //  alert(response.verif)
-                      if (response.respuesta == 'correcto') {
-                        alertify.alert("LA ACTIVIDAD SE ELIMINO CORRECTAMENTE ", function (e) {
-                          if (e) {
-                            window.location.reload(true);
-                          }
-                        });
-                      } else {
-                        alertify.alert("ERROR AL ELIMINAR LA ACTIVIDAD !!!", function (e) {
-                          if (e) {
-                            window.location.reload(true);
-                          }
-                        });
-                      }
-                  });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                      console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-
-                    e.preventDefault();
-
-                } else {
-                    // user clicked "cancel"
-                    alertify.error("OPERACION CANCELADA");
-                }
-              });
-            return false;
-          });
-      });
-    </script>
     <script type="text/javascript">
       $(document).ready(function(){
         $("#kwd_search").keyup(function(){

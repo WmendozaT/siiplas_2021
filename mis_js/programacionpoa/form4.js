@@ -573,7 +573,7 @@ function abreVentana(PDF){
     }
 
 
-
+    //// Elimina Actividades Seleccionados
     function valida_eliminar(){
       if (document.del_req.tot.value=="" || document.del_req.tot.value==0){
         alertify.error("SELECCIONE ACTIVIDADES A ELIMINAR");
@@ -591,6 +591,93 @@ function abreVentana(PDF){
         });
       }
     }
+
+
+    //// ELiminar Actividad
+  $(function () {
+/*      function reset() {
+        $("#toggleCSS").attr("href", base+"/assets/themes_alerta/alertify.default.css");
+        alertify.set({
+            labels: {
+                ok: "ACEPTAR",
+                cancel: "CANCELAR"
+            },
+            delay: 5000,
+            buttonReverse: false,
+            buttonFocus: "ok"
+        });
+      }*/
+
+      // =====================================================================
+    $(".del_ff").on("click", function (e) {
+        reset();
+        var prod_id = $(this).attr('name');
+        var request;
+        // confirm dialog
+        alertify.confirm("DESEA ELIMINAR ACTIVIDAD ?", function (a) {
+          if (a) { 
+              var url = base+"index.php/programacion/producto/desactiva_producto";
+              if (request) {
+                request.abort();
+              }
+              request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: "json",
+                data: "prod_id="+prod_id
+              });
+
+              request.done(function (response, textStatus, jqXHR) { 
+                reset();
+              //  alert(response.verif)
+                if (response.respuesta == 'correcto') {
+                  alertify.alert("LA ACTIVIDAD SE ELIMINO CORRECTAMENTE ", function (e) {
+                    if (e) {
+                      window.location.reload(true);
+                    }
+                  });
+                } else {
+                  alertify.alert("ERROR AL ELIMINAR LA ACTIVIDAD !!!", function (e) {
+                    if (e) {
+                      window.location.reload(true);
+                    }
+                  });
+                }
+            });
+              request.fail(function (jqXHR, textStatus, thrown) {
+                console.log("ERROR: " + textStatus);
+              });
+              request.always(function () {
+                  //console.log("termino la ejecuicion de ajax");
+              });
+
+              e.preventDefault();
+
+          } else {
+              // user clicked "cancel"
+              alertify.error("OPERACION CANCELADA");
+          }
+        });
+      return false;
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*  function confirmar(){
     if(confirm('¿Estas seguro de Eliminar ?'))
