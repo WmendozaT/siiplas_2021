@@ -108,7 +108,7 @@ class Cobjetivo_regional extends CI_Controller {
                               <th scope="col" style="width:3%;" bgcolor="#e4e2e2">DEL.</th>
                               <th scope="col" style="width:5%;" bgcolor="#e4e2e2">COD. O.G.</th>
                               <th scope="col" style="width:5%;" bgcolor="#e4e2e2">COD. O.R.</th>
-                              <th scope="col" style="width:12%;" bgcolor="#e4e2e2">OBJETIVO REGIONAL '.$this->gestion.' / OPERACI&Oacute;N</th>
+                              <th scope="col" style="width:12%;" bgcolor="#e4e2e2">OPERACIÓN '.$this->gestion.' / OPERACI&Oacute;N</th>
                               <th scope="col" style="width:12%;" bgcolor="#e4e2e2">PRODUCTO</th>
                               <th scope="col" style="width:12%;" bgcolor="#e4e2e2">RESULTADO (LOGROS)</th>
                               <th scope="col" style="width:12%;" bgcolor="#e4e2e2">INDICADOR</th>
@@ -264,13 +264,13 @@ class Cobjetivo_regional extends CI_Controller {
                   <input type="hidden" name="tp" id="tp" value="1">
                   <input type="hidden" name="ogestion" id="ogestion" value="'.$ogestion[0]['og_objetivo'].'">
                   <div class="col-sm-12">
-                    <h2 class="alert alert-success"><center>DETALLE - OBJETIVO REGIONAL</center></h2>
+                    <h2 class="alert alert-success"><center>DETALLE - OPERACIÓN</center></h2>
                     <div class="well">
-                    <header><b>DECRIPCI&Oacute;N OBJETIVO REGIONAL -  COD: '.$ogestion[0]['og_codigo'].'</b></header>
+                    <header><b>DECRIPCI&Oacute;N OPERACIÓN -  COD: '.$ogestion[0]['og_codigo'].'</b></header>
                       <fieldset>          
                         <div class="row">
                         <section class="col col-3">
-                          <label class="label">OBJETIVO REGIONAL</label>
+                          <label class="label">OPERACIÓN</label>
                           <label class="textarea">
                             <i class="icon-append fa fa-tag"></i>
                             <textarea rows="3" name="oregional" id="oregional" title="REGISTRE OBJETIVO REGIONAL" >'.$ogestion[0]['og_objetivo'].'</textarea>
@@ -433,13 +433,13 @@ class Cobjetivo_regional extends CI_Controller {
                   <input type="hidden" name="tp" id="tp" value="2">
                   <input type="hidden" name="or_id" id="or_id" value="'.$oregion[0]['or_id'].'">
                   <div class="col-sm-12">
-                    <h2 class="alert alert-success"><center>DETALLE - OBJETIVO REGIONAL</center></h2>
+                    <h2 class="alert alert-success"><center>DETALLE - OPERACIÓN</center></h2>
                     <div class="well">
-                    <header><b>DECRIPCI&Oacute;N OBJETIVO REGIONAL</b></header>
+                    <header><b>DECRIPCI&Oacute;N OPERACIÓN</b></header>
                       <fieldset>          
                         <div class="row">
                         <section class="col col-3">
-                          <label class="label">OBJETIVO REGIONAL</label>
+                          <label class="label">OPERACIÓN</label>
                           <label class="textarea">
                             <i class="icon-append fa fa-tag"></i>
                             <textarea rows="3" name="oregional" id="oregional" title="REGISTRE OBJETIVO REGIONAL" >'.$oregion[0]['or_objetivo'].'</textarea>
@@ -805,7 +805,7 @@ class Cobjetivo_regional extends CI_Controller {
                   <tr style="font-size: 8px;" bgcolor="#d8d8d8" align=center>
                     <th style="width:2%;height:25px;">#</th>
                     <th style="width:5%;">COD. O.G.</th>
-                    <th style="width:15%;">OBJETIVO REGIONAL '.$this->gestion.'</th>
+                    <th style="width:15%;">OPERACIÓN '.$this->gestion.'</th>
                     <th style="width:15%;">PRODUCTO</th>
                     <th style="width:14%;">RESULTADO (LOGROS)</th>
                     <th style="width:13%;">INDICADOR</th>

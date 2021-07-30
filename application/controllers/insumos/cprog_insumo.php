@@ -282,157 +282,9 @@ class Cprog_insumo extends CI_Controller{
     }
 
 
-    /*------------ GET DATOS REQUERIMIENTO --------------*/
-    public function get_requerimiento(){
-      if($this->input->is_ajax_request() && $this->input->post()){
-        $post = $this->input->post();
-        $ins_id = $this->security->xss_clean($post['ins_id']);
-        $proy_id = $this->security->xss_clean($post['proy_id']);
-
-        $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); ////// DATOS DEL PROYECTO
-        $fase = $this->model_faseetapa->get_id_fase($proy_id); /// FASE ACTIVA
-
-        if($this->gestion==2019){
-          $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
-          $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
-        }
-        else{
-          $monto_asig=$this->model_ptto_sigep->suma_ptto_poa($proyecto[0]['aper_id'],1);
-          $monto_prog=$this->model_ptto_sigep->suma_ptto_poa($proyecto[0]['aper_id'],2);
-        }
-        
-
-        $m_asig=0;$m_prog=0;
-        if(count($monto_asig)!=0){
-          $m_asig=$monto_asig[0]['monto'];
-        }
-        if(count($monto_prog)!=0){
-          $m_prog=$monto_prog[0]['monto'];
-        }
-
-        $saldo=($m_asig-$m_prog);
-        
-        $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
-
-        $par_padre=$this->model_partidas->get_partida_padre($insumo[0]['par_depende']); /// lista de partidas padres
-        $lista_partidas=$this->partidas_dependientes($insumo); /// Lista de Insumos dependientes
-        $temporalidad=$this->distribucion_financiera($insumo); /// Distribucion Financiera
-        $lista_umedida=$this->unidades_medida($insumo); /// Lista de Unidad de medida
-
-        if(count($insumo)!=0){
-          $result = array(
-            'respuesta' => 'correcto',
-            'insumo' => $insumo,
-            'monto_saldo' => $saldo+$insumo[0]['ins_costo_total'],
-            'lista_partidas'=> $lista_partidas,
-            'lista_umedida'=> $lista_umedida,
-            'ppdre' => $par_padre,
-            'prog' => $temporalidad,
-          );
-        }
-        else{
-          $result = array(
-            'respuesta' => 'error',
-          );
-        }
-          
-        echo json_encode($result);
-      }else{
-          show_404();
-      }
-    }
 
 
-    /*--- DISTRIBUCION FINANCIERA ---*/
-    function distribucion_financiera($insumo){
-      $prog=$this->model_insumo->list_temporalidad_insumo($insumo[0]['ins_id']); /// Temporalidad Requerimiento 2020
-        for ($i=0; $i <=12 ; $i++) { 
-          if($i==0){
-            $titulo[$i]='programado_total';  
-          }
-          else{
-            $titulo[$i]='mes'.$i.''; 
-          }
 
-          $temporalidad[$i]=0;
-        }
-
-        if(count($prog)!=0){
-          for ($i=0; $i <=12 ; $i++) { 
-            $temporalidad[$i]= $prog[0][$titulo[$i]];
-          }
-        }
-
-      return $temporalidad;
-    }
-
-    /*--- PARTIDAS DEPENDIENTES ---*/
-    function partidas_dependientes($insumo){
-      $tabla='';
-      $get_partida=$this->model_partidas->get_partida($insumo[0]['par_id']); /// datos de la partda
-      $lista_partidas=$this->model_partidas->lista_par_hijos($get_partida[0]['par_depende']);
-      foreach ($lista_partidas as $row) {
-        if($insumo[0]['par_id']==$row['par_id']){
-          $tabla.='<option value="'.$row['par_id'].'" selected>'.$row['par_codigo'].'.- '.$row['par_nombre'].'</option>';
-        }
-        else{
-          $tabla.='<option value="'.$row['par_id'].'">'.$row['par_codigo'].'.- '.$row['par_nombre'].'</option>';
-        }
-      }
-
-      return $tabla;
-    }
-
-    /*--- LISTA DE UNIDADES DE MEDIDA ---*/
-    function unidades_medida($insumo){
-      $tabla='';
-      $lista_umedida=$this->model_insumo->lista_umedida($insumo[0]['par_id']); /// Lista de Unidades de medida
-
-      foreach ($lista_umedida as $row) {
-        if($insumo[0]['ins_unidad_medida']==$row['um_descripcion']){
-          $tabla.='<option value="'.$row['um_id'].'" selected>'.$row['um_descripcion'].'</option>';
-        }
-        else{
-          $tabla.='<option value="'.$row['um_id'].'">'.$row['um_descripcion'].'</option>';
-        }
-      }
-
-      return $tabla;
-    }
-
-    /*------ ELIMINAR GET REQUERIMIENTO ------*/
-    function delete_get_requerimiento(){
-      if ($this->input->is_ajax_request() && $this->input->post()) {
-          $post = $this->input->post();
-          $ins_id = $this->security->xss_clean($post['ins_id']); // ins id
-          $proy_id = $this->security->xss_clean($post['proy_id']); // proy id
-          $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); // datos proyecto
-
-          /*-------- DELETE INSUMO PROGRAMADO --------*/  
-          $this->db->where('ins_id', $ins_id);
-          $this->db->delete('temporalidad_prog_insumo');
-          /*------------------------------------------*/
-
-          /*---- DELETE INSUMO PRODUCTO ----*/  
-            $this->db->where('ins_id', $ins_id);
-            $this->db->delete('_insumoproducto');
-          /*--------------------------------*/
-          
-          /*-------- DELETE INSUMO  --------*/  
-          $this->db->where('ins_id', $ins_id);
-          $this->db->delete('insumos');
-          /*--------------------------------*/
-
-          $result = array(
-            'respuesta' => 'correcto'
-          );
-
-        echo json_encode($result);
-
-      } else {
-          echo 'DATOS ERRONEOS';
-      }
-    }
 
     /*----- ELIMINAR VARIOS REQUERIMIENTOS SELECCIONADOS -----*/
     public function delete_requerimientos(){
@@ -480,11 +332,11 @@ class Cprog_insumo extends CI_Controller{
       function importar_requerimientos_a_una_actividad(){
       if ($this->input->post()) {
           $post = $this->input->post();
-          $proy_id = $post['proy_id']; /// proy id
-          $id = $post['id']; /// prod id / Act id
-          $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// DATOS DEL PROYECTO
-
-          $producto = $this->model_producto->get_producto_id($id); ///// DATOS DEL PRODUCTO          
+          $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
+          $producto = $this->model_producto->get_producto_id($prod_id); ///// DATOS DEL PRODUCTO 
+          $componente = $this->model_componente->get_componente($producto[0]['com_id']);
+          $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']);
+                   
           $tipo = $_FILES['archivo_csv']['type'];
           $tamanio = $_FILES['archivo_csv']['size'];
           $archivotmp = $_FILES['archivo_csv']['tmp_name'];
@@ -497,109 +349,100 @@ class Cprog_insumo extends CI_Controller{
           /*----------------------------------------------------------------------*/
           $nro_ok=0; $nro_ncumple=0; $nro_npartida=0; $suma_monto=0;
           if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
-            $lineas = file($archivotmp);
-            //if($this->suma_monto_total($lineas)<=$saldo){
-                /*------------------- Migrando ---------------*/
-                $lineas = file($archivotmp);
-                $i=0;
-                $nro=0;
-                //Recorremos el bucle para leer línea por línea
-                foreach ($lineas as $linea_num => $linea){ 
-                  if($i != 0){
-                      $datos = explode(";",$linea);
+              /*------------------- Migrando ---------------*/
+              $lineas = file($archivotmp);
+              $i=0;
+              $nro=0;
+              //Recorremos el bucle para leer línea por línea
+              foreach ($lineas as $linea_num => $linea){ 
+                if($i != 0){
+                    $datos = explode(";",$linea);
+                    
+                    if(count($datos)==20){
+                      $prod_cod = intval(trim($datos[0])); //// Codigo Actividad
+                      $cod_partida = intval(trim($datos[1])); //// Codigo partida
+                      $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
+
+                      $detalle = utf8_encode(trim($datos[2])); //// descripcion
+                      $unidad = utf8_encode(trim($datos[3])); //// Unidad
+                      $cantidad = intval(trim($datos[4])); //// Cantidad
+                      $unitario = intval(trim($datos[5])); //// Costo Unitario
                       
-                      if(count($datos)==20){
-                        $numero = (int)$datos[0]; //// Numero Actividad
-                        $cod_partida = (int)$datos[1]; //// Codigo partida
-                        $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
+                      $p_total=($cantidad*$unitario);
+                      $total = intval(trim($datos[6])); //// Costo Total
 
-                        $detalle = utf8_encode(trim($datos[2])); //// detalle Requerimiento
-                        $unidad = utf8_encode(trim($datos[3])); //// Unidad de medida
-                        $cantidad = (int)$datos[4]; //// Cantidad
-                        $unitario = (float)$datos[5]; //// Costo Unitario
-                        $total = (float)$datos[6]; //// Costo Total
-
-                        $var=7;
-                        for ($i=1; $i <=12 ; $i++) {
-                          $m[$i]=(float)$datos[$var]; //// Mes i
-                          if($m[$i]==''){
-                            $m[$i]=0;
-                          }
-                          $var++;
+                      $var=7; $sum_temp=0;
+                      for ($i=1; $i <=12 ; $i++) {
+                        $m[$i]=$datos[$var]; //// Mes i
+                        if($m[$i]==''){
+                          $m[$i]=0;
                         }
+                        $var++;
+                        $sum_temp=$sum_temp+$m[$i];
+                      }
 
-                        $observacion = utf8_encode(trim($datos[19])); //// Observacion
+                      $observacion = utf8_encode(trim($datos[19])); //// Observacion
 
-                        if(count($par_id)!=0 & $cod_partida!=0){
-                          $nro++;
+                      if(count($par_id)!=0 & $cod_partida!=0 & round($sum_temp,2)==round($total,2)){
+                        $nro++;
+                        /*-------- INSERTAR DATOS REQUERIMIENTO ---------*/
+                        $query=$this->db->query('set datestyle to DMY');
+                        $data_to_store = array( 
+                        'ins_codigo' => $this->session->userdata("name").'/REQ/'.$this->gestion, /// Codigo Insumo
+                        'ins_fecha_requerimiento' => date('d/m/Y'), /// Fecha de Requerimiento
+                        'ins_detalle' => strtoupper($detalle), /// Insumo Detalle
+                        'ins_cant_requerida' => round($cantidad,0), /// Cantidad Requerida
+                        'ins_costo_unitario' => $unitario, /// Costo Unitario
+                        'ins_costo_total' => $total, /// Costo Total
+                        'ins_unidad_medida' => $unidad, /// Unidad de Medida
+                        'ins_gestion' => $this->gestion, /// Insumo gestion
+                        'par_id' => $par_id[0]['par_id'], /// Partidas
+                        'ins_tipo' => 1, /// Ins Tipo
+                        'ins_observacion' => strtoupper($observacion), /// Observacion
+                        'fun_id' => $this->fun_id, /// Funcionario
+                        'aper_id' => $proyecto[0]['aper_id'], /// aper id
+                        'num_ip' => $this->input->ip_address(), 
+                        'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                        );
+                        $this->db->insert('insumos', $data_to_store); ///// Guardar en Tabla Insumos 
+                        $ins_id=$this->db->insert_id();
 
-                          /*-------- INSERTAR DATOS REQUERIMIENTO ---------*/
-                          $query=$this->db->query('set datestyle to DMY');
-                          $data_to_store = array( 
-                          'ins_codigo' => $this->session->userdata("name").'/REQ/'.$this->gestion, /// Codigo Insumo
-                          'ins_fecha_requerimiento' => date('d/m/Y'), /// Fecha de Requerimiento
-                          'ins_detalle' => strtoupper($detalle), /// Insumo Detalle
-                          'ins_cant_requerida' => round($cantidad,0), /// Cantidad Requerida
-                          'ins_costo_unitario' => $unitario, /// Costo Unitario
-                          'ins_costo_total' => $total, /// Costo Total
-                          'ins_unidad_medida' => $unidad, /// Unidad de Medida
-                          'ins_gestion' => $this->gestion, /// Insumo gestion
-                          'par_id' => $par_id[0]['par_id'], /// Partidas
-                          'ins_tipo' => 1, /// Ins Tipo
-                          'ins_observacion' => strtoupper($observacion), /// Observacion
-                          'fun_id' => $this->fun_id, /// Funcionario
-                          'aper_id' => $proyecto[0]['aper_id'], /// aper id
-                          'num_ip' => $this->input->ip_address(), 
-                          'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                        /*--------------------------------------------------------*/
+                          $data_to_store2 = array( ///// Tabla InsumoProducto
+                            'prod_id' => $prod_id, /// prod id
+                            'ins_id' => $ins_id, /// ins_id
                           );
-                          $this->db->insert('insumos', $data_to_store); ///// Guardar en Tabla Insumos 
-                          $ins_id=$this->db->insert_id();
+                          $this->db->insert('_insumoproducto', $data_to_store2);
+                        /*----------------------------------------------------------*/
 
-                          /*--------------------------------------------------------*/
-                            $data_to_store2 = array( ///// Tabla InsumoProducto
-                              'prod_id' => $id, /// prod id
-                              'ins_id' => $ins_id, /// ins_id
+                        /*------------ PARA LA GESTION 2020 ---------*/
+                        for ($p=1; $p <=12 ; $p++) { 
+                          if($m[$p]!=0 & is_numeric($unitario)){
+                            $data_to_store4 = array(
+                              'ins_id' => $ins_id, /// Id Insumo
+                              'mes_id' => $p, /// Mes 
+                              'ipm_fis' => $m[$p], /// Valor mes
+                              'g_id' => $this->gestion, /// Gestion
                             );
-                            $this->db->insert('_insumoproducto', $data_to_store2);
-                          /*----------------------------------------------------------*/
-
-                          /*------------ PARA LA GESTION 2020 ---------*/
-                          for ($p=1; $p <=12 ; $p++) { 
-                            if($m[$p]!=0 & is_numeric($unitario)){
-                              $data_to_store4 = array(
-                                'ins_id' => $ins_id, /// Id Insumo
-                                'mes_id' => $p, /// Mes 
-                                'ipm_fis' => $m[$p], /// Valor mes
-                                'g_id' => $this->gestion, /// Gestion
-                              );
-                              $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
-                            }
+                            $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
                           }
-
                         }
+
                       }
                     }
-                    $i++;
                   }
+                  $i++;
+                }
 
-                  $this->session->set_flashdata('success','SE REGISTRARON '.$nro.' REQUERIMIENTOS');
-                  redirect('prog/requerimiento/'.$proy_id.'/'.$id.'');
+                $this->session->set_flashdata('success','SE REGISTRARON '.$nro.' REQUERIMIENTOS');
+                redirect('prog/requerimiento/'.$prod_id);
             /*--------------------------------------------*/
           }
-          elseif (empty($file_basename)) {
-            $this->session->set_flashdata('danger','POR FAVOR SELECCIONE ARCHIVO CSV');
-            redirect('prog/requerimiento/'.$proy_id.'/'.$id.'/false');
-          } 
-          elseif ($filesize > 100000000) {
-            $this->session->set_flashdata('danger','TAMAÑO DEL ARCHIVO');
-            redirect('prog/requerimiento/'.$proy_id.'/'.$id.'/false');
-          } 
           else {
-            $mensaje = "SOLO SE PERMITEN ESTOS ARCHIVOS : " . implode(', ', $allowed_file_types);
-            $this->session->set_flashdata('danger',$mensaje);
-            
-            redirect('prog/ins_prod/'.$prod_id.'/false');
-          }
+            $this->session->set_flashdata('danger','ERROR');
+            redirect('prog/requerimiento/'.$prod_id);
+          } 
+
           /*----------------------------------------------------------------------*/
       }
       else{
@@ -608,27 +451,6 @@ class Cprog_insumo extends CI_Controller{
     }
 
 
-    /*--- TITULO PARA LA DESCRIPCION DE LA VISTA PREVIA DE REQUERIMIENTOS ---*/
-/*    function titulo($proy_id,$id){
-      $tabla='';
-      $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
-      if($proyecto[0]['tp_id']==1){
-        $actividad = $this->model_actividad->get_actividad_id($id); // Actividad
-        $tabla.='
-        <h1> PROYECTO : <small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'].'</small></h1>
-        <h1> ACTIVIDAD : <small>'.$actividad[0]['act_actividad'].'</small></h1>';
-      }
-      else{
-        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-        $producto=$this->model_producto->get_producto_id($id); // Producto
-        $tabla.='
-        <h1><small>'.$proyecto[0]['tipo_adm'].' : </small>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['proy_nombre'].'-'.$proyecto[0]['abrev'].'</h1>
-        <h1> ACTIVIDAD : <small>'.$producto[0]['prod_cod'].'.- '.$producto[0]['prod_producto'].'</small></h1>';
-      }
-
-      return $tabla;
-
-    }*/
 
 
     /*--- VISTA PREVIA DE FORM 4 (ACTIVIDADES - DATOS GENERALES) ---*/

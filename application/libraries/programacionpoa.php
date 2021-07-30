@@ -385,11 +385,66 @@ class Programacionpoa extends CI_Controller{
     }
 
 
-
-
-
-
 /// ===== FORMULARIO N5
+
+
+    /*--- DISTRIBUCION FINANCIERA ---*/
+    function distribucion_financiera($insumo){
+      $prog=$this->model_insumo->list_temporalidad_insumo($insumo[0]['ins_id']); /// Temporalidad Requerimiento 2020
+        for ($i=0; $i <=12 ; $i++) { 
+          if($i==0){
+            $titulo[$i]='programado_total';  
+          }
+          else{
+            $titulo[$i]='mes'.$i.''; 
+          }
+
+          $temporalidad[$i]=0;
+        }
+
+        if(count($prog)!=0){
+          for ($i=0; $i <=12 ; $i++) { 
+            $temporalidad[$i]= round($prog[0][$titulo[$i]],2);
+          }
+        }
+
+      return $temporalidad;
+    }
+
+    /*--- PARTIDAS DEPENDIENTES ---*/
+    function partidas_dependientes($insumo){
+      $tabla='';
+      $get_partida=$this->model_partidas->get_partida($insumo[0]['par_id']); /// datos de la partda
+      $lista_partidas=$this->model_partidas->lista_par_hijos($get_partida[0]['par_depende']);
+      foreach ($lista_partidas as $row) {
+        if($insumo[0]['par_id']==$row['par_id']){
+          $tabla.='<option value="'.$row['par_id'].'" selected>'.$row['par_codigo'].'.- '.$row['par_nombre'].'</option>';
+        }
+        else{
+          $tabla.='<option value="'.$row['par_id'].'">'.$row['par_codigo'].'.- '.$row['par_nombre'].'</option>';
+        }
+      }
+
+      return $tabla;
+    }
+
+    /*--- LISTA DE UNIDADES DE MEDIDA ---*/
+    function unidades_medida($insumo){
+      $tabla='';
+      $lista_umedida=$this->model_insumo->lista_umedida($insumo[0]['par_id']); /// Lista de Unidades de medida
+
+      foreach ($lista_umedida as $row) {
+        if($insumo[0]['ins_unidad_medida']==$row['um_descripcion']){
+          $tabla.='<option value="'.$row['um_id'].'" selected>'.$row['um_descripcion'].'</option>';
+        }
+        else{
+          $tabla.='<option value="'.$row['um_id'].'">'.$row['um_descripcion'].'</option>';
+        }
+      }
+
+      return $tabla;
+    }
+
 
 
     /*--- BOTON ESTADO FORM 5---*/

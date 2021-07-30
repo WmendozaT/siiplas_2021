@@ -286,10 +286,231 @@ function doSelectAlert(event,prod_id,ins_id) {
       });
   });
 
+  ////// ===== MODIFICAR REUQERIMIENTO
+    $(function () {
+        $(".mod_ff").on("click", function (e) {
+            ins_id = $(this).attr('name');
+            document.getElementById("ins_id").value=ins_id;
+            var url = base+"index.php/programacion/crequerimiento/get_requerimiento";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "ins_id="+ins_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+            if (response.respuesta == 'correcto') {
+               document.getElementById("saldo").value = parseFloat(response.monto_saldo).toFixed(2);
+               document.getElementById("sal").value = parseFloat(response.monto_saldo).toFixed(2);
+               document.getElementById("detalle").value = response.insumo[0]['ins_detalle'];
+               document.getElementById("cantidad").value = response.insumo[0]['ins_cant_requerida'];
+               document.getElementById("costou").value = parseFloat(response.insumo[0]['ins_costo_unitario']).toFixed(2);
+               document.getElementById("costot").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
+               document.getElementById("costot2").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
+               document.getElementById("par_padre").value = response.ppdre[0]['par_codigo'];
+               $("#par_hijo").html(response.lista_partidas);
+               document.getElementById("iumedida").value = response.insumo[0]['ins_unidad_medida'];
+               //$("#mum_id").html(response.lista_umedida);
+               document.getElementById("mtot").value = response.prog[0];
+               document.getElementById("observacion").value = response.insumo[0]['ins_observacion'];
+               //$('#ff').html('FUENTE DE FINANCIAMIENTO : '+response.prog[0]['ff_codigo']+' || ORGANISMO FINANCIADOR : '+response.prog[0]['of_codigo']);
+               if(response.prog[0]!=response.insumo[0]['ins_costo_total']){
+                $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
+                $('#mbut').slideUp();
+               }
+
+               for (var i = 1; i <=12; i++) {
+                document.getElementById("mm"+i).value = response.prog[i];
+               }
+               
+            }
+            else{
+                alertify.error("ERROR AL RECUPERAR DATOS DEL REQUERIMIENTO");
+            }
+
+            });
+            request.fail(function (jqXHR, textStatus, thrown) {
+                console.log("ERROR: " + textStatus);
+            });
+            request.always(function () {
+                //console.log("termino la ejecuicion de ajax");
+            });
+            e.preventDefault();
+            // =============================VALIDAR EL FORMULARIO DE MODIFICACION
+            $("#subir_mins").on("click", function (e) {
+                var $validator = $("#form_mod").validate({
+                       rules: {
+                        ins_id: { //// Insumo
+                        required: true,
+                        },
+                        proy_id: { //// Proyecto
+                            required: true,
+                        },
+                        detalle: { //// Detalle
+                            required: true,
+                        },
+                        cantidad: { //// Cantidad
+                            required: true,
+                        },
+                        costou: { //// Costo U
+                            required: true,
+                        },
+                        costot: { //// costo tot
+                            required: true,
+                        },
+                        mum_id: { //// unidad medida
+                            required: true,
+                        },
+                        par_padre: { //// par padre
+                            required: true,
+                        },
+                        par_hijo: { //// par hijo
+                            required: true,
+                        }
+                    },
+                    messages: {
+                        ins_id: "<font color=red>INSUMO/font>",
+                        detalle: "<font color=red>REGISTRE DETALLE DEL REQUERIMIENTO</font>", 
+                        cantidad: "<font color=red>CANTIDAD</font>",
+                        costou: "<font color=red>COSTO UNITARIO</font>",
+                        costot: "<font color=red>COSTO TOTAL</font>",
+                        mum_id: "<font color=red>SELECCIONE UNIDAD DE MEDIDA</font>",
+                        par_padre: "<font color=red>SELECCIONE GRUPO DE PARTIDAS</font>",
+                        par_hijo: "<font color=red>SELECCIONE PARTIDA</font>",                     
+                    },
+                    highlight: function (element) {
+                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    unhighlight: function (element) {
+                        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                    },
+                    errorElement: 'span',
+                    errorClass: 'help-block',
+                    errorPlacement: function (error, element) {
+                        if (element.parent('.input-group').length) {
+                            error.insertAfter(element.parent());
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
+                var $valid = $("#form_mod").valid();
+                if (!$valid) {
+                    $validator.focusInvalid();
+                } else {
+                  saldo=document.getElementById("sal").value;
+                  programado=document.getElementById("mtot").value;
+                  dif=saldo-programado;
+            
+                $('#amtit').html('');
+                    alertify.confirm("MODIFICAR REQUERIMIENTO ?", function (a) {
+                        if (a) {
+                          document.getElementById("loadm").style.display = 'block';
+                            document.getElementById('subir_mins').disabled = true;
+                            document.getElementById("subir_mins").value = "MODIFICANDO DATOS REQUERIMIENTO...";
+                            document.forms['form_mod'].submit();
+                        } else {
+                            alertify.error("OPCI\u00D3N CANCELADA");
+                        }
+                    });
+                }
+            });
+        });
+    });
 
 
+  //// ==== ELIMINAR REQUERIMIENTO
+    $(function () {
+        function reset() {
+          $("#toggleCSS").attr("href", base+"/assets/themes_alerta/alertify.default.css");
+          alertify.set({
+            labels: {
+                ok: "ACEPTAR",
+                cancel: "CANCELAR"
+            },
+            delay: 5000,
+            buttonReverse: false,
+            buttonFocus: "ok"
+          });
+        }
+
+        $(".del_ff").on("click", function (e) {
+            reset();
+            var ins_id = $(this).attr('name');
+            var request;
+
+            // confirm dialog
+            alertify.confirm("DESEA ELIMINAR REQUERIMIENTO ?", function (a) {
+              if (a) { 
+                  var url = base+"index.php/programacion/crequerimiento/delete_get_requerimiento";
+                  if (request) {
+                      request.abort();
+                  }
+                  request = $.ajax({
+                      url: url,
+                      type: "POST",
+                      dataType: "json",
+                      data: "ins_id="+ins_id
+                  });
+
+                  request.done(function (response, textStatus, jqXHR) { 
+                    reset();
+                    if (response.respuesta == 'correcto') {
+                        alertify.alert("EL REQUERIMIENTO SE ELIMINO CORRECTAMENTE ", function (e) {
+                            if (e) {
+                                window.location.reload(true);
+                            }
+                        })
+                    } else {
+                        alertify.error("Error al Eliminar");
+                    }
+                  });
+                  request.fail(function (jqXHR, textStatus, thrown) {
+                      console.log("ERROR: " + textStatus);
+                  });
+                  request.always(function () {
+                      //console.log("termino la ejecuicion de ajax");
+                  });
+
+                  e.preventDefault();
+
+              } else {
+                  // user clicked "cancel"
+                  alertify.error("Opcion cancelada");
+              }
+          });
+          return false;
+        });
+
+    });
 
 
+    ///// SUBIR ARCHIVO DE MIRGRACION DE REQUERIMIENTOS
+    $(function () {
+      $("#subir_archivo").on("click", function () {
+          var $valid = $("#form_subir_sigep").valid();
+          if (!$valid) {
+              $validator.focusInvalid();
+          } else {
+            if(document.getElementById('archivo_csv').value==''){
+              alertify.alert('PORFAVOR SELECCIONE ARCHIVO .CSV');
+              return false;
+            }
 
-
-
+              alertify.confirm("SUBIR ARCHIVO AL SISTEMA ?", function (a) {
+                  if (a) {
+                      document.getElementById("load").style.display = 'block';
+                      document.getElementById('subir_archivo').disabled = true;
+                      document.forms['form_subir_sigep'].submit();
+                  } else {
+                      alertify.error("OPCI\u00D3N CANCELADA");
+                  }
+              });
+          }
+      });
+    });

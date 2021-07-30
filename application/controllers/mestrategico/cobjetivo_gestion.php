@@ -57,22 +57,22 @@ class Cobjetivo_gestion extends CI_Controller {
               <div class="jarviswidget jarviswidget-color-darken" >
                     <header>
                       <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                      <h2 class="font-md"><strong>OBJETIVOS DE GESTI&Oacute;N - '.$this->gestion.'</strong></h2>  
+                      <h2 class="font-md"><strong>ACCIONES DE CORTO PLAZO - '.$this->gestion.'</strong></h2>  
                     </header>
                 <div>
-                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - RESULTADO INTERMEDIO">NUEVO OBJETIVO DE GESTI&Oacute;N</a><br><br>
+                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO">REGISTRAR ACCIÓN DE CORTO PLAZO</a><br><br>
                   <div class="widget-body no-padding">
                     <table id="dt_basic" class="table table table-bordered" width="100%">
                       <thead>
                         <tr>
                           <th style="width:1%;">NRO</th>
                           <th style="width:1%;">M/E</th>
-                          <th style="width:2%;">OBJETIVOS REGIONALES</th>
+                          <th style="width:2%;">OPERACIONES</th>
                           <th style="width:2%;">REPORTE</th>
                           <th style="width:2%;">COD. O.E.</th>
                           <th style="width:2%;">COD. A.E.</th>
-                          <th style="width:2%;">COD. O.G.</th>
-                          <th style="width:10%;">OBJETIVO DE GESTI&Oacute;N</th>
+                          <th style="width:2%;">COD. ACP.</th>
+                          <th style="width:10%;">ACCIÓN DE CORTO PLAZO '.$this->gestion.'</th>
                           <th style="width:10%;">PRODUCTO</th>
                           <th style="width:10%;">RESULTADO</th>
                           <th style="width:5%;">TP. INDI.</th>
@@ -191,7 +191,7 @@ class Cobjetivo_gestion extends CI_Controller {
               <div class="jarviswidget jarviswidget-color-darken" >
                     <header>
                       <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                      <h2 class="font-md"><strong>OBJETIVOS DE GESTI&Oacute;N - '.$this->gestion.'</strong></h2>  
+                      <h2 class="font-md"><strong>ACCIONES DE CORTO PLAZO - '.$this->gestion.'</strong></h2>  
                     </header>
                 <div>
                   <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - RESULTADO INTERMEDIO">NUEVO OBJETIVO DE GESTI&Oacute;N</a><br><br>
@@ -201,8 +201,8 @@ class Cobjetivo_gestion extends CI_Controller {
                         <tr>
                           <th style="width:1%;">NRO</th>
                           <th style="width:1%;">M/E</th>
-                          <th style="width:2%;">OBJETIVOS REGIONALES</th>
-                          <th style="width:10%;">OBJETIVO DE GESTI&Oacute;N</th>
+                          <th style="width:2%;">OPERACIONES</th>
+                          <th style="width:10%;">ACCIÓN DE CORTO PLAZO</th>
                           <th style="width:10%;">PRODUCTO</th>
                           <th style="width:10%;">RESULTADO</th>
                           <th style="width:5%;">TP. INDI.</th>
@@ -622,7 +622,7 @@ class Cobjetivo_gestion extends CI_Controller {
             <th style="width:2%;height:20px;">#</th>
             <th style="width:3%;">COD. O.E.</th>
             <th style="width:3%;">COD. A.E.</th>
-            <th style="width:10%;">OBJETIVO DE GESTI&Oacute;N</th>
+            <th style="width:10%;">ACCIÓN DE CORTO PLAZO</th>
             <th style="width:10%;">PRODUCTO</th>
             <th style="width:10%;">RESULTADO</th>
             <th style="width:5%;">TP. INDI.</th>

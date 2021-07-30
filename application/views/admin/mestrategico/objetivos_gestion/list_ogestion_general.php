@@ -135,7 +135,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Objetivos de Gesti&oacute;n</li><li>Mis Objetivos de Gesti&oacute;n</li>
+					<li>Mis Acciones de Corto Plazo</li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->

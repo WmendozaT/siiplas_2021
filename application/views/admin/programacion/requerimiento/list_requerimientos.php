@@ -90,7 +90,7 @@
 				<section id="widget-grid" class="">
 					<div class="row">
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
-				            <section id="widget-grid" class="well">
+				            <section id="widget-grid" class="well" title="aper <?php echo $proyecto[0]['aper_id'];?>">
 				                <div class="">
 				                  <?php echo $datos; ?>
 				                  <h1> PRESUPUESTO ASIGNADO : <small><?php echo number_format($monto_a, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;PRESUPUESTO PROGRAMADO : <small><?php echo number_format($monto_p, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;SALDO : <small><?php echo number_format(($monto_a-$monto_p), 2, ',', '.'); ?></small></h1>
@@ -109,13 +109,12 @@
 				                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 				                  	<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'index.php/admin/dashboard';?>">SALIR A MENU PRINCIPAL</a></li>
 				                  	<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'index.php/admin/proy/list_proy'; ?>" title="LISTA DE POAS">LISTA DE POAS - <?php echo $this->session->userData('gestion');?></a></li>
-				                	<li ><a onclick="eliminar_requerimientos()" class="btn btn-danger" style="width:100%;" title="Cerrar Modificacion"><font color="#ffffff">ELIMINAR TODOS LOS REQUERIMIENTOS   </font></a></li>
-				                	<!-- <?php
-					                  	if($this->session->userdata('tp_adm')==1){ ?>
+				                	<?php
+					                  	if($this->session->userdata('tp_adm')==1 || $this->session->userdata('conf_form5')==1){ ?>
 					                  		<li ><a onclick="eliminar_requerimientos()" class="btn btn-danger" style="width:100%;" title="Cerrar Modificacion"><font color="#ffffff">ELIMINAR TODOS LOS REQUERIMIENTOS   </font></a></li>
 					                  	<?php
 					                  	}
-					                ?> -->
+					                ?>
 					               <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'index.php/admin/prog/list_prod/'.$componente[0]['com_id']; ?>" title="VOLVER ATRAS">VOLVER ATRAS</a></li>
 				                </ul>
 				              </div>
@@ -398,8 +397,6 @@
 	              <div class="modal-body">
 	              	<h2 class="alert alert-info"><center>MODIFICAR REGISTRO - REQUERIMIENTO</center></h2>
 	                <form action="<?php echo site_url().'/programacion/crequerimiento/valida_update_insumo'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
-						<input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-						<input type="hidden" name="id" id="id" value="<?php echo $id;?>">
 						<input type="hidden" name="ins_id" id="ins_id">
 							<header><b>DATOS GENERALES DEL REQUERIMIENTO</b><br><label class="label"><b>C&Oacute;DIGO DE ACTIVIDAD : <?php echo $producto[0]['prod_cod'];?></b></label></header>
 							<fieldset>
@@ -427,8 +424,6 @@
 										<label class="label"><b>UNIDAD DE MEDIDA</b></label>
 										<label class="input">
 											<input type="text" name="iumedida" id="iumedida" title="MODIFICAR UNIDAD DE MEDIDA">
-											<!-- <select class="form-control" id="mum_id" name="mum_id" title="SELECCIONE UNIDAD DE MEDIDA">
-		                                    </select> -->
 										</label>
 									</section>
 									<section class="col col-3">
@@ -601,65 +596,56 @@
 	        </div>
 	    </div>
 	    <!-- ======================================================== -->
-    <!-- ================== MODAL SUBIR ARCHIVO ========================== -->
-     	<div class="modal animated fadeInDown" id="modal_importar_ff" tabindex="-1" role="dialog">
-        <div class="modal-dialog" id="mdialTamanio2">
-            <div class="modal-content">
-                <div class="modal-body no-padding">
-                    <div class="row">
-                       <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="row">
-                            <h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> IMPORTAR REQUERIMIENTOS DE LA ACTIVIDAD (.CSV) </h2>
-                            <div class="col-sm-12">
-                              <!-- well -->
-                              <div class="well">
-                                <!-- row -->
-                                <div class="row">
-                                  <!-- col -->
-                                  <div class="col-sm-12">
-                                    <p class="alert alert-info">
-                                      <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
-                                    </p>
-                                    <!-- row -->
-                                    <div class="row">
-                                    	<font color="#1b5f56" size="2.5"><b>C&Oacute;DIGO ACTIVIDAD : </b><?php echo $producto[0]['prod_cod'];?><br>
-                                    	<b>ACTIVIDAD : </b><?php echo $producto[0]['prod_producto'];?></font>
-                                      <form action="<?php echo site_url() . '/insumos/cprog_insumo/importar_requerimientos_a_una_actividad' ?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" method="post">
-                                          <input class="form-control" type="hidden" name="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-                                          <input type="hidden" name="id" id="id" value="<?php echo $id;?>">
-                                          <fieldset>
-                                          	<br>
-	                                        <div class="input-group">
-	                                          <span class="input-group-btn">
-	                                            <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
-	                                            <input  id="archivo_csv" accept=".csv" name="archivo_csv" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
-	                                            <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
-	                                          </span>
-	                                          <span class="form-control"></span>
-	                                        </div>
-	                                    	</br>
-	                                      </fieldset>
-                                          <div >
-                                            <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;" title="SUBIR REQUERIMIENTOS A LA OPERACI&Oacute;N">SUBIR REQUERIMIENTOS .CSV</button>
-                                            <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                                          </div>
-                                      </form> 
-                                    </div>
-                                    <!-- end row -->
-                                  </div>
-                                  <!-- end col -->
-                                </div>
-                                <!-- end row -->
-                              </div>
-                              <!-- end well -->
-                            </div>
-                          </div>
-                        </article>
-                    </div>   
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div>
+    	<!-- =============== MODAL SUBIR ARCHIVO =================== -->
+    	<div class="modal fade" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	      <div class="modal-dialog" id="mdialTamanio2">
+	        <div class="modal-content">
+	          <div class="modal-header">
+	              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+	          </div>
+	          <div class="modal-body">
+	              <h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> IMPORTAR ARCHIVO REQUERIMIENTOS (.CSV) </h2>
+	              <section id="widget-grid" class="">
+	                <div>
+	                  	<h1> UNIDAD RESPONSABLE : <small><?php echo $componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion']; ?></small></h1>
+	                  	<h1> ACTIVIDAD : <small><?php echo $producto[0]['prod_cod'].' .- '.$producto[0]['prod_producto']; ?></small></h1>
+	                </div>
+	              </section>
+	              <div class="row">
+	                <form action="<?php echo site_url() . '/insumos/cprog_insumo/importar_requerimientos_a_una_actividad' ?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" method="post">
+                        <input type="hidden" name="prod_id" value="<?php echo $producto[0]['prod_id'];?>">
+	                  	<fieldset>
+		                    <div class="form-group">
+		                      <center><div id="img"></div></center>
+		                      <hr>
+		                        <p class="alert alert-info">
+		                          <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
+		                        </p>
+		                    </div>
+	                  	</fieldset>  
+	                
+	                  <div class="form-group">
+	                    <b>SELECCIONAR ARCHIVO CSV</b>
+	                    <div class="input-group">
+	                      <span class="input-group-btn">
+	                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+	                        <input  id="archivo_csv" accept=".csv" name="archivo_csv" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+	                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+	                      </span>
+	                      <span class="form-control"></span>
+	                    </div>
+	                </div>
+	                  
+	                  <div>
+	                      <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR ARCHIVO.CSV</button><br>
+	                      <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+	                  </div>
+	                </form> 
+	              </div>
+	            </div>
+	        </div>
+	      </div>
+	    </div>
     	<!--================================================== -->
 		<!-- PAGE FOOTER -->
 		<div class="page-footer">
@@ -726,265 +712,6 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 		<script src="<?php echo base_url(); ?>mis_js/programacionpoa/form5.js"></script> 
-
-		<script type="text/javascript">
-            /*------------ MODIFICAR REQUERIMIENTO ----------------*/
-            $(function () {
-                $(".mod_ff").on("click", function (e) {
-                    ins_id = $(this).attr('name');
-                    document.getElementById("ins_id").value=ins_id;
-           			proy_id=document.getElementById("proy_id").value;
-                    var url = "<?php echo site_url("")?>/prog/get_requerimiento";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "ins_id="+ins_id+"&proy_id="+proy_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-                    if (response.respuesta == 'correcto') {
-                       document.getElementById("saldo").value = parseFloat(response.monto_saldo).toFixed(2);
-                       document.getElementById("sal").value = parseFloat(response.monto_saldo).toFixed(2);
-                       document.getElementById("detalle").value = response.insumo[0]['ins_detalle'];
-                       document.getElementById("cantidad").value = response.insumo[0]['ins_cant_requerida'];
-                       document.getElementById("costou").value = parseFloat(response.insumo[0]['ins_costo_unitario']).toFixed(2);
-                       document.getElementById("costot").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
-                       document.getElementById("costot2").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
-                       document.getElementById("par_padre").value = response.ppdre[0]['par_codigo'];
-                       $("#par_hijo").html(response.lista_partidas);
-                       document.getElementById("iumedida").value = response.insumo[0]['ins_unidad_medida'];
-                       //$("#mum_id").html(response.lista_umedida);
-                       document.getElementById("mtot").value = response.prog[0];
-                       document.getElementById("observacion").value = response.insumo[0]['ins_observacion'];
-                       //$('#ff').html('FUENTE DE FINANCIAMIENTO : '+response.prog[0]['ff_codigo']+' || ORGANISMO FINANCIADOR : '+response.prog[0]['of_codigo']);
-                       if(response.prog[0]!=response.insumo[0]['ins_costo_total']){
-                       	$('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
-                       	$('#mbut').slideUp();
-                       }
-
-                       for (var i = 1; i <=12; i++) {
-                       	document.getElementById("mm"+i).value = response.prog[i];
-                       }
-                       
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR DATOS DEL REQUERIMIENTO");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                    // =============================VALIDAR EL FORMULARIO DE MODIFICACION
-                    $("#subir_mins").on("click", function (e) {
-                        var $validator = $("#form_mod").validate({
-                               rules: {
-                                ins_id: { //// Insumo
-                                required: true,
-                                },
-                                proy_id: { //// Proyecto
-                                    required: true,
-                                },
-                                detalle: { //// Detalle
-                                    required: true,
-                                },
-                                cantidad: { //// Cantidad
-                                    required: true,
-                                },
-                                costou: { //// Costo U
-                                    required: true,
-                                },
-                                costot: { //// costo tot
-                                    required: true,
-                                },
-                                mum_id: { //// unidad medida
-                                    required: true,
-                                },
-                                par_padre: { //// par padre
-                                    required: true,
-                                },
-                                par_hijo: { //// par hijo
-                                    required: true,
-                                }
-                            },
-                            messages: {
-                                ins_id: "<font color=red>INSUMO/font>",
-                                detalle: "<font color=red>REGISTRE DETALLE DEL REQUERIMIENTO</font>", 
-                                cantidad: "<font color=red>CANTIDAD</font>",
-                                costou: "<font color=red>COSTO UNITARIO</font>",
-                                costot: "<font color=red>COSTO TOTAL</font>",
-                                mum_id: "<font color=red>SELECCIONE UNIDAD DE MEDIDA</font>",
-                                par_padre: "<font color=red>SELECCIONE GRUPO DE PARTIDAS</font>",
-                                par_hijo: "<font color=red>SELECCIONE PARTIDA</font>",                     
-                            },
-                            highlight: function (element) {
-                                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-                            },
-                            unhighlight: function (element) {
-                                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-                            },
-                            errorElement: 'span',
-                            errorClass: 'help-block',
-                            errorPlacement: function (error, element) {
-                                if (element.parent('.input-group').length) {
-                                    error.insertAfter(element.parent());
-                                } else {
-                                    error.insertAfter(element);
-                                }
-                            }
-                        });
-                        var $valid = $("#form_mod").valid();
-                        if (!$valid) {
-                            $validator.focusInvalid();
-                        } else {
-                        	saldo=document.getElementById("sal").value;
-                        	programado=document.getElementById("mtot").value;
-                        	dif=saldo-programado;
-                    
-                    		$('#amtit').html('');
-                        		alertify.confirm("MODIFICAR REQUERIMIENTO ?", function (a) {
-                                if (a) {
-                                	document.getElementById("loadm").style.display = 'block';
-                                    document.getElementById('subir_mins').disabled = true;
-                                    document.getElementById("subir_mins").value = "MODIFICANDO DATOS REQUERIMIENTO...";
-                                    document.forms['form_mod'].submit();
-                                } else {
-                                    alertify.error("OPCI\u00D3N CANCELADA");
-                                }
-                            });
-                        }
-                    });
-                });
-            });
-        </script>
-        <!-- AGREGAR NUEVO REQUERIMIENTO -->
-        <script type="text/javascript">
-
-        </script>
-        <script type="text/javascript">
-            $(function () {
-                function reset() {
-                    $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
-                    alertify.set({
-                        labels: {
-                            ok: "ACEPTAR",
-                            cancel: "CANCELAR"
-                        },
-                        delay: 5000,
-                        buttonReverse: false,
-                        buttonFocus: "ok"
-                    });
-                }
-
-                $(".del_ff").on("click", function (e) {
-                    reset();
-                    var ins_id = $(this).attr('name');
-                    var proy_id = <?php echo $proyecto[0]['proy_id'];?>;
-                    var request;
-
-                    // confirm dialog
-                    alertify.confirm("DESEA ELIMINAR REQUERIMIENTO ?", function (a) {
-                        if (a) { 
-                            url = "<?php echo site_url("")?>/prog/delete_ins_ope";
-                            if (request) {
-                                request.abort();
-                            }
-                            request = $.ajax({
-                                url: url,
-                                type: "POST",
-                                dataType: "json",
-                                data: "ins_id="+ins_id+"&proy_id="+proy_id
-                            });
-
-                            request.done(function (response, textStatus, jqXHR) { 
-                                reset();
-                                if (response.respuesta == 'correcto') {
-                                    alertify.alert("EL REQUERIMIENTO SE ELIMINO CORRECTAMENTE ", function (e) {
-                                        if (e) {
-                                            window.location.reload(true);
-                                        }
-                                    })
-                                } else {
-                                    alertify.error("Error al Eliminar");
-                                }
-                            });
-                            request.fail(function (jqXHR, textStatus, thrown) {
-                                console.log("ERROR: " + textStatus);
-                            });
-                            request.always(function () {
-                                //console.log("termino la ejecuicion de ajax");
-                            });
-
-                            e.preventDefault();
-
-                        } else {
-                            // user clicked "cancel"
-                            alertify.error("Opcion cancelada");
-                        }
-                    });
-                    return false;
-                });
-
-            });
-        </script>
-
-	    <script type="text/javascript">
-	      $(function () {
-	        //VISTA PREVIA ARCHIVO
-	        $("#subir_archivo_prev").on("click", function () {
-	            var $valid = $("#form_subir_prev").valid();
-	            if (!$valid) {
-	                $validator.focusInvalid();
-	            } else {
-	              if(document.getElementById('archivo').value==''){
-	                alertify.alert('PORFAVOR SELECCIONE ARCHIVO .CSV');
-	                return false;
-	              }
-
-	                alertify.confirm("DESEA VER ARCHIVO PREVIO A LA IMPORTACIÓN?", function (a) {
-	                    if (a) {
-	                        document.getElementById("load").style.display = 'block';
-	                        document.getElementById('subir_archivo_prev').disabled = true;
-	                        document.forms['form_subir_prev'].submit();
-	                    } else {
-	                        alertify.error("OPCI\u00D3N CANCELADA");
-	                    }
-	                });
-	            }
-	        });
-
-	        $("#subir_archivo").on("click", function () {
-	            var $valid = $("#form_subir_sigep").valid();
-	            if (!$valid) {
-	                $validator.focusInvalid();
-	            } else {
-	              if(document.getElementById('archivo_csv').value==''){
-	                alertify.alert('PORFAVOR SELECCIONE ARCHIVO .CSV');
-	                return false;
-	              }
-
-	                alertify.confirm("SUBIR ARCHIVO AL SISTEMA ?", function (a) {
-	                    if (a) {
-	                        document.getElementById("load").style.display = 'block';
-	                        document.getElementById('subir_archivo').disabled = true;
-	                        document.forms['form_subir_sigep'].submit();
-	                    } else {
-	                        alertify.error("OPCI\u00D3N CANCELADA");
-	                    }
-	                });
-	            }
-	        });
-	      });
-	    </script>
 		<!-- ====================================================================================================== -->
 		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 		<script type="text/javascript">

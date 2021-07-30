@@ -111,7 +111,7 @@ class Model_componente extends CI_Model{
     public function get_componente($com_id){
         $sql = 'select *
                 from _componentes as c
-            
+                Inner Join funcionario as f On f.fun_id=c.resp_id
                 Inner Join unidadorganizacional as u On u.uni_id=c.uni_id
                 Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
                 Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
@@ -122,7 +122,7 @@ class Model_componente extends CI_Model{
         return $query->result_array();
     }
 
-    public function get_datos_componente($com_id,$gestion){
+/*    public function get_datos_componente($com_id,$gestion){
         $sql = 'select *
                 from _componentes as c
                 Inner Join funcionario as f On f.fun_id=c.resp_id
@@ -134,7 +134,7 @@ class Model_componente extends CI_Model{
                 where c.com_id='.$com_id.' and apg.aper_gestion='.$gestion.' and apg.aper_estado!=\'3\''; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
     /*===================================================================*/
 
     /*================== COMPONENTE X (Proy Inversion) =================*/

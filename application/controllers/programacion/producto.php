@@ -776,24 +776,6 @@ class Producto extends CI_Controller {
       echo $salida;
     }
 
-  /*------------- COMBO INDICADORES PEI -----------------*/
-/*    public function combo_indicadores_pei(){
-      $salida = "";
-      $acc_id = $_POST["elegido"];
-
-      $combog = pg_query(' select pt.*,rmp.*
-                           from _acciones_estrategicas ae
-                           Inner Join _resultado_mplazo as rmp On rmp.acc_id=ae.acc_id
-                           Inner Join _pterminal_mplazo as pt On pt.rm_id=rmp.rm_id
-                           where ae.acc_id='.$acc_id.' and rmp.rm_estado!=\'3\' and pt.ptm_estado!=\'3\'
-                           order by pt.ptm_codigo desc');
-      $salida .= "<option value=''>" . mb_convert_encoding('SELECCIONE INDICADOR', 'cp1252', 'UTF-8') . "</option>";
-      while ($sql_p = pg_fetch_row($combog)) {
-          $salida .= "<option value='" . $sql_p[0] . "'>" .$sql_p[2].".- ".$sql_p[5] . "</option>";
-      }
-      echo $salida;
-    }*/
-
 
   /*--- ACTUALIZA CODIGO DE ACTIVIDAD (FORM 4) ----*/
   public function update_codigo($com_id){  
@@ -823,8 +805,6 @@ class Producto extends CI_Controller {
   }
 
   
-
-
    
  /*------ ELIMINA EL PRODUCTO Y SUS REQUERIMIENTOS ------*/
     function desactiva_producto(){
@@ -875,25 +855,6 @@ class Producto extends CI_Controller {
           echo 'DATOS ERRONEOS';
       }
     }
-
-
-    /*----- SUMA TOTAL MONTO REQUERIMIENTOS A IMPORTAR -------*/
-/*    function suma_monto_total($requerimientos){
-      $i=0; $suma=0;
-      foreach ($requerimientos as $linea_num => $linea){ 
-        if($i != 0){
-            $datos = explode(";",$linea);
-            
-            if(count($datos)==21){
-                $suma=$suma+(float)$datos[7];
-            }
-          }
-
-          $i++;
-      }
-
-      return $suma;
-    }  */
 
 
     /*------ REPORTE OPERACIONES POR COMPONENTE(2019 - 2020 - 2021) ----*/
@@ -1455,7 +1416,7 @@ class Producto extends CI_Controller {
                         }
                     }
                
-                } /// end dimension (22)
+                } /// end dimension (20)
               } /// i!=0
 
               $i++;

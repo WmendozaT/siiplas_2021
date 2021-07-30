@@ -285,13 +285,13 @@ $route['exportar_requerimientos'] = 'mantenimiento/ccontrol_calidad/exportar_req
 
 /// REQUERIMIENTOS A NIVEL DE ACTIVIDADES (2020 - GASTO CORRIENTE)
 $route['prog/ins_prod/(:any)'] = 'insumos/cprog_insumo/prog_isumos_prod/$1';//PROGRAMACION DE INSUMOS A NIVEL PRODUCTOS
-$route['prog/delete_ins_ope'] = 'insumos/cprog_insumo/delete_get_requerimiento';//// DELETE REQUERIMIENTO 7 ope/act
+//$route['prog/delete_ins_ope'] = 'insumos/cprog_insumo/delete_get_requerimiento';//// DELETE REQUERIMIENTO 7 ope/act
 $route['prog/mod_ins_p/(:any)'] = 'insumos/cprog_insumo/mod_insumo/$1/$2/$3/$4/$5/$6';//MODIFICAR INSUMO A NIVEL PRODUCTO
 //$route['prog/delete_ins_p/(:any)'] = 'insumos/cprog_insumo/eliminar_insumos/$1/$2';//ELIMINAR INSUMOS DE LA ACTIVIDAD (2020)
 //$route['prog/rep_requerimientos_ope/(:any)'] = 'insumos/cprog_insumo/reporte_requerimientos_operacion/$1';//REQUERIMIENTOS DE LA OPERACI&Oacute;N PDF
 $route['prog/rep_partidas_ope/(:any)'] = 'insumos/cprog_insumo/reporte_partida/$1';//Consolidado partidas pdf
 $route['prog/xcel_partidas_ope/(:any)'] = 'insumos/cprog_insumo/xcel_reporte_partida/$1';//Consolidado partidas Excel
-$route['prog/get_requerimiento']='insumos/cprog_insumo/get_requerimiento';// get Requerimiento
+//$route['prog/get_requerimiento']='insumos/cprog_insumo/get_requerimiento';// get Requerimiento
 
 
 //REPORTE - PRESUPUESTO

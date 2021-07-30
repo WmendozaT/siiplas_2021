@@ -58,7 +58,7 @@ class cajuste_crequerimiento extends CI_Controller{
 
         $data['datos']=
           '<h2 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].'-'.$data['proyecto'][0]['abrev'].'</h2>
-          <h2><small>SERVICIO : </small>'.$data['componente'][0]['serv_cod'].'.- '.$data['componente'][0]['serv_descripcion'].'</h2>';
+          <h2><small>UNIDAD RESPONSABLE : </small>'.$data['componente'][0]['serv_cod'].'.- '.$data['componente'][0]['serv_descripcion'].'</h2>';
 
         $data['datos_unidad']= $data['proyecto'][0]['tipo_adm'].' : '.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].'-'.$data['proyecto'][0]['abrev'];
 
@@ -75,7 +75,7 @@ class cajuste_crequerimiento extends CI_Controller{
     /*---- tipo lista : Operacion-Actividad ----*/
     public function tipo_lista_ope_act($com_id){
       $tabla='';
-      $operaciones=$this->model_producto->list_operaciones($com_id);
+      $operaciones=$this->model_producto->lista_operaciones($com_id);
         $tabla.='
           <section class="col col-4">
             <label class="label"><b>ALINEACI&Oacute;N ACTIVIDAD '.$this->gestion.'</b></label>

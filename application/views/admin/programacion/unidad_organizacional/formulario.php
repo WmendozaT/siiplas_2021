@@ -432,10 +432,10 @@
                             tp_ubi: { //// tipo ubicacion
                                 required: true,
                             },
-                            tp_est: { //// tipo establecimiento
+                           	prov_id: { //// provincia
                                 required: true,
                             },
-                            prov_id: { //// provincia
+                            fono: { //// fono
                                 required: true,
                             },
                             muni_id: { //// municipio
@@ -449,7 +449,7 @@
                         messages: {
                             unidad: "<font color=red>REGISTRE UNIDAD / ESTABLECIMIENTO</font>", 
                             tp_ubi: "<font color=red>TIPO DE UBICACIÓN</font>", 
-                            tp_est: "<font color=red>TIPO DE ESTABLECIMIENTO</font>", 
+                         	fono: "<font color=red>REGISTRE FONO</font>", 
                             prov_id: "<font color=red>SELECCIONE PROVINCIA</font>",
                             muni_id: "<font color=red>SELECCIONE MUNICIPIO</font>",
                             direccion: "<font color=red>REGISTRE DIRECCIÓN</font>",                    
@@ -521,7 +521,7 @@
                                 required: true,
                             },
                             
-                            cie_mce1: { //// cie1
+                           /* cie_mce1: { //// cie1
                                 required: true,
                             },
                             diag_mce1: { //// Diagnostico 1
@@ -549,7 +549,7 @@
                             },
                             fre_mce3: { //// Frecuencia 3
                                 required: true,
-                            },
+                            },*/
 
                            /* cie_mce4: { //// cie4
                                 required: true,
@@ -602,7 +602,7 @@
                             },*/
 
                             /*------------*/
-                            cie_mue1: { //// cie1
+                            /*cie_mue1: { //// cie1
                                 required: true,
                             },
                             diag_mue1: { //// Diagnostico 1
@@ -620,7 +620,7 @@
                             },
                             fre_mue2: { //// Frecuencia 2
                                 required: true,
-                            }
+                            }*/
                           /*  ,
 
                             cie_mue3: { //// cie3
@@ -659,7 +659,7 @@
                             num_fam_asig_est: "<font color=red>REGISTRE NÚMERO DE FAMILIAS</font>", 
                             pob_asig_red: "<font color=red>REGISTRE POBLACIÓN ASIGNADA A LA RED</font>",  
 
-                            cie_mce1: "<font color=red>REGISTRE CIE-10/1</font>",  
+                            /*cie_mce1: "<font color=red>REGISTRE CIE-10/1</font>",  
                             diag_mce1: "<font color=red>REGISTRE DIAGNOSTICO 1 </font>",  
                             fre_mce1: "<font color=red>REGISTRE FRECUENCIA 1</font>", 
 
@@ -669,7 +669,7 @@
 
                             cie_mce3: "<font color=red>REGISTRE CIE-10/3</font>",  
                             diag_mce3: "<font color=red>REGISTRE DIAGNOSTICO 3 </font>",  
-                            fre_mce3: "<font color=red>REGISTRE FRECUENCIA 3</font>", 
+                            fre_mce3: "<font color=red>REGISTRE FRECUENCIA 3</font>", */
 
                           /*  cie_mce4: "<font color=red>REGISTRE CIE-10/4</font>",  
                             diag_mce4: "<font color=red>REGISTRE DIAGNOSTICO 4 </font>",  
@@ -692,13 +692,13 @@
                             fre_mce8: "<font color=red>REGISTRE FRECUENCIA 8</font>",*/
 
 
-                            cie_mue1: "<font color=red>REGISTRE CIE-10/1</font>",  
+                           /* cie_mue1: "<font color=red>REGISTRE CIE-10/1</font>",  
                             diag_mue1: "<font color=red>REGISTRE DIAGNOSTICO 1 </font>",  
                             fre_mue1: "<font color=red>REGISTRE FRECUENCIA 1</font>", 
 
                             cie_mue2: "<font color=red>REGISTRE CIE-10/2</font>",  
                             diag_mue2: "<font color=red>REGISTRE DIAGNOSTICO 2 </font>",  
-                            fre_mue2: "<font color=red>REGISTRE FRECUENCIA 2</font>", 
+                            fre_mue2: "<font color=red>REGISTRE FRECUENCIA 2</font>", */
 /*
                             cie_mue3: "<font color=red>REGISTRE CIE-10/3</font>",  
                             diag_mue3: "<font color=red>REGISTRE DIAGNOSTICO 3 </font>",  

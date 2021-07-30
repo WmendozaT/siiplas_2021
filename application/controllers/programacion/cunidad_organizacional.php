@@ -785,19 +785,11 @@ class Cunidad_organizacional extends CI_Controller {
                       </section>
                       <section class="col col-4">
                         <label class="label">TIPO DE ESTABLECIMIENTO</label>
-                        <select class="form-control" id="tp_est" name="tp_est" title="SELECCIONE TIPO DE ESTABLECIMIENTO" disabled>';
-                          foreach($tp_establecimiento as $row){
-                            if($row['ta_id']==2){
-                              if($row['te_id']==$unidad[0]['te_id']){
-                                $tabla.='<option value="'.$row['te_id'].'" selected>'.$row['escalon'].'.-'.$row['establecimiento'].' ('.$row['tipo'].')</option>';
-                              }
-                              else{
-                                $tabla.='<option value="'.$row['te_id'].'">'.$row['escalon'].'.-'.$row['establecimiento'].' ('.$row['tipo'].')</option>';
-                              }
-                            }
-                          }        
-                        $tabla.='
-                        </select>
+                        <label class="input">
+                          <i class="icon-append fa fa-tag"></i>
+                          <input type="text" title="TIPO DE ESTABLECIMIENTO" value="'.$unidad[0]['escalon'].'.-'.$unidad[0]['establecimiento'].' ('.$unidad[0]['tipo'].')" disabled>
+                        </label>
+
                       </section>
                     </div>
                   </fieldset>
@@ -1032,13 +1024,13 @@ class Cunidad_organizacional extends CI_Controller {
           redirect(site_url("").'/prog/datos_unidad/'.$uni_id.'#tabs-c');
         }
         elseif ($tp==4) {
-          $tn_id = $this->security->xss_clean($post['tn_id']); /// tn_id
+         // $tn_id = $this->security->xss_clean($post['tn_id']); /// tn_id
           $distancia = $this->security->xss_clean($post['distancia']); /// distancia
           $tiempo_horas = $this->security->xss_clean($post['tiempo_horas']); /// tiempo_horas
           $medio_transporte = $this->security->xss_clean($post['medio_transporte']); /// medio_transporte
 
           $update_dato= array(
-            'tn_id' => $tn_id,
+           // 'tn_id' => $tn_id,
             'distancia' => $distancia,
             'tiempo_horas' => $tiempo_horas,
             'medio_transporte' => $medio_transporte,

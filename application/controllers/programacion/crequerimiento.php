@@ -168,30 +168,30 @@ class crequerimiento extends CI_Controller{
      public function valida_update_insumo(){
       if($this->input->post()) {
         $post = $this->input->post();
-        $id = $this->security->xss_clean($post['id']); /// prod/act id
         $ins_id = $this->security->xss_clean($post['ins_id']); /// Ins id
-        $proy_id = $this->security->xss_clean($post['proy_id']); /// Proy id
         $detalle = $this->security->xss_clean($post['detalle']); /// detalle
         $cantidad = $this->security->xss_clean($post['cantidad']); /// cantidad
         $costo_unitario = $this->security->xss_clean($post['costou']); /// costo unitario
         $costo_total = $this->security->xss_clean($post['costot']); /// costo Total
-        $um_id = $this->security->xss_clean($post['mum_id']); /// Unidad de medida
+        $umedida = $this->security->xss_clean($post['iumedida']); /// Unidad de medida
         $partida = $this->security->xss_clean($post['par_hijo']); /// costo unitario
         $observacion = $this->security->xss_clean($post['observacion']); /// Observacion
 
-        $fase = $this->model_faseetapa->get_id_fase($proy_id); /// FASE ACTIVA
-        //$umedida=$this->model_insumo->get_unidadmedida($um_id);
+        $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
+        $producto=$this->model_producto->get_producto_id($insumo[0]['prod_id']); /// Get producto
+        $componente = $this->model_componente->get_componente($producto[0]['com_id']); /// Get Componente
+        $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); ////// DATOS DEL PROYECTO
+
       
         /*------------ UPDATE REQUERIMIENTO -------*/
           $update_ins= array(
             'ins_cant_requerida' => $cantidad,
             'ins_costo_unitario' => $costo_unitario,
             'ins_costo_total' => $costo_total,
-            'ins_detalle' => $detalle,
+            'ins_detalle' => strtoupper($detalle),
             'par_id' => $partida, /// Partidas
-            //'ins_unidad_medida' => $umedida[0]['um_descripcion'],
-            'ins_unidad_medida' => $this->security->xss_clean($post['iumedida']),
-            'ins_observacion' => $observacion,
+            'ins_unidad_medida' => strtoupper($umedida),
+            'ins_observacion' => strtoupper($observacion),
             'fun_id' => $this->fun_id,
             'ins_estado' => 2,
             'num_ip' => $this->input->ip_address(), 
@@ -209,18 +209,18 @@ class crequerimiento extends CI_Controller{
           for ($i=1; $i <=12 ; $i++) {
             $pfin=$this->security->xss_clean($post['mm'.$i]);
             if($pfin!=0){
-                $data_to_store4 = array( 
-                  'ins_id' => $ins_id, /// Id Insumo
-                  'mes_id' => $i, /// Mes 
-                  'ipm_fis' => $pfin, /// Valor mes
-                  'g_id' => $this->gestion, /// Gestion
-                  );
-                $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
+              $data_to_store4 = array( 
+                'ins_id' => $ins_id, /// Id Insumo
+                'mes_id' => $i, /// Mes 
+                'ipm_fis' => $pfin, /// Valor mes
+                'g_id' => $this->gestion, /// Gestion
+                );
+              $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
             }
           }
 
         $this->session->set_flashdata('success','EL REQUERIMIENTO SE MODIFICO CORRECTAMENTE :)');
-        redirect(site_url("").'/prog/requerimiento/'.$proy_id.'/'.$id.'');
+        redirect(site_url("").'/prog/requerimiento/'.$producto[0]['prod_id']);
 
       } else {
           show_404();
@@ -337,6 +337,7 @@ class crequerimiento extends CI_Controller{
               $tabla.='
                 </td>
                 <td>';
+                  if($this->tp_adm==1 || $this->conf_form5==1){
                   $productos = $this->model_producto->lista_operaciones($componente[0]['com_id']); // Lista de productos
                     $tabla .='<select class="form-control" onchange="doSelectAlert(event,this.value,'.$row['ins_id'].');">';
                       foreach($productos as $pr){
@@ -350,6 +351,7 @@ class crequerimiento extends CI_Controller{
                         }
                       }
                     $tabla.='</select>';
+                  }
                 $tabla.='  
                 </td>';
            
@@ -407,368 +409,100 @@ class crequerimiento extends CI_Controller{
       redirect(site_url("").'/prog/requerimiento/'.$prod_id.'');    
     }
    
-    /*------------ TABLA PRODUCTO-REQUERIMIENTOS -----------*/
-/*    function genera_tabla_prod_insumo($proy_id){
-        $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); //// DATOS DEL PROYECTO
-        $fase = $this->model_faseetapa->get_id_fase($proy_id); //// recupera datos de la tabla fase activa
-        $componentes=$this->model_componente->componentes_id($fase[0]['id'],$proyecto[0]['tp_id']);
 
-        $tabla = '';
-        $cont_acordion = 0;
-        foreach ($componentes as $row) {
-            $requerimientos = $this->model_insumo->list_requerimientos_operacion_procesos($row['com_id']);
-            $cont_acordion++;
-            $tabla .= '<div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse' . $cont_acordion . '">
-                                        <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i>';
-                                            if($proyecto[0]['tp_id']==1){
-                                                $tabla.=''.$row['com_componente'].'';
-                                            }
-                                            else{
-                                                $tabla.=''.$row['serv_cod'].' - ' . $row['com_componente'] .'';
-                                            }
-                                        $tabla.='
-                                    </a>
-                                </h4>
-                            </div>';
-            $tabla .= '<div id="collapse' . $cont_acordion . '" class="panel-collapse collapse">
-                            <div class="panel-body no-padding table-responsive">
-                                <table class="table table-bordered table-condensed">';
-            $tabla .= '            <tbody>
-                                      <tr>
-                                          <td></td>
-                                          <td><b>ASIGNAR</b></td>
-                                          <td><b>OPERACI&Oacute;N</b></td>
-                                          <td><b>RESULTADO</b></td>
-                                          <td><b>MONTO PROGRAMADO</b></td>
-                                      </tr>';
-            $lista_productos = $this->model_producto->list_prod($row['com_id']);
-            $cont = 1;
-            foreach ($lista_productos as $row_p) {
-                $monto=$this->model_producto->monto_insumoproducto($row_p['prod_id']);
-                $tabla .= '<tr>';
-                $tabla .= '<td>'.$row_p['prod_cod'].'</td>';
-                $tabla .= '<td>';
-                  if($row_p['prod_ppto']==1){
-                    $tabla.='<a href="' . site_url("").'/prog/requerimiento/'.$proy_id.'/'.$row_p['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA OPERACI&Oacute;N" >
-                                  <center>
-                                      <img src="' . base_url() . 'assets/ifinal/money.png" width="30" height="30"
-                                      class="img-responsive "title="ASIGNAR REQUERIMIENTOS A LA OPERACI&Oacute;N">
-                                  </center>
-                              </a>';
-                  }
-                $tabla.=' </td>';
-                $tabla .= '<td>'.$row_p['prod_producto'].'</td>';
-                $tabla .= '<td>'.$row_p['prod_resultado'].'</td>';
-                $tabla .= '<td>';
-                            if(count($monto)!=0){
-                            $tabla.=''.number_format($monto[0]['total'], 2, ',', '.').' Bs.';
-                            }
-                            else{
-                                $tabla.='0.00 Bs.';
-                            }
-                $tabla .= '</td>';
-                $tabla .= '</tr>';
-                $cont++;
-            }
-            $tabla .= '             </tbody>
-                                </table>
-                           </div>
-                      </div>
-                 </div>';
+
+    /*---- GET DATOS REQUERIMIENTO (Vigente)-----*/
+    public function get_requerimiento(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $ins_id = $this->security->xss_clean($post['ins_id']);
+        $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
+        $producto=$this->model_producto->get_producto_id($insumo[0]['prod_id']); /// Get producto
+        $componente = $this->model_componente->get_componente($producto[0]['com_id']); /// Get Componente
+        $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); ////// DATOS DEL PROYECTO
+
+        $monto_asig=$this->model_ptto_sigep->suma_ptto_poa($proyecto[0]['aper_id'],1);
+        $monto_prog=$this->model_ptto_sigep->suma_ptto_poa($proyecto[0]['aper_id'],2);
+        
+
+        $m_asig=0;$m_prog=0;
+        if(count($monto_asig)!=0){
+          $m_asig=$monto_asig[0]['monto'];
         }
-        return $tabla;
-    }*/
-
-    /*------------ TABLA ACTIVIDADES-REQUERIMIENTOS -----------*/
-/*    function genera_tabla_act_insumo($proy_id){
-        $lista_productos = $this->minsumos->lista_productos($proy_id, $this->gestion);
-        $tabla = '';
-        $cont_acordion = 0;
-        foreach ($lista_productos as $row) {
-            $cont_acordion++;
-            $tabla .= '<div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse' . $cont_acordion . '">
-                                        <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i>' .
-                $cont_acordion . ' - ' . $row['prod_producto'] . '
-                                    </a>
-                                </h4>
-                            </div>';
-            $tabla .= '<div id="collapse' . $cont_acordion . '" class="panel-collapse collapse">
-                            <div class="panel-body no-padding table-responsive">
-                                <table class="table table-bordered table-condensed">';
-            $tabla .= '            <tbody>
-                                      <tr>
-                                          <td><b>NRO.</b></td>
-                                          <td><b>ASIGNAR</b></td>
-                                          <td><b>DETALLE ACTIVIDAD</b></td>
-                                          <td><b>MEDIO DE VERIFICACI&Oacute;N</b></td>
-                                          <td><b>META</b></td>
-                                          <td><b>PRESUPUESTO</b></td>
-                                      </tr>';
-            $lista_actividad = $this->minsumos->lista_actividades($row['prod_id'], $this->gestion);
-            $cont = 1;
-            foreach ($lista_actividad as $row_a) {
-                $monto=$this->model_actividad->monto_insumoactividad($row_a['act_id']);
-                $tabla .= '<tr>';
-                $tabla .= '<td>'.$cont_acordion.'-'.$cont.'</td>';
-                $tabla .= '<td>
-                                <a href="' . site_url("").'/prog/requerimiento/'.$proy_id.'/'.$row_a['act_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD">
-                                    <center>
-                                        <img src="'.base_url().'assets/ifinal/money.png" width="30" height="30"
-                                        class="img-responsive "title="ASIGNAR INSUMOS">
-                                    </center>
-                               </a>
-                          </td>';
-                $tabla .= '<td>'.$row_a['act_actividad'].'</td>';
-                $tabla .= '<td>'.$row_a['act_fuente_verificacion'].'</td>';
-                $tabla .= '<td>'.$row_a['act_meta'].'</td>';
-                $tabla .= '<td>';
-                            if(count($monto)!=0){
-                                $tabla.=''.number_format($monto[0]['total'], 2, ',', '.').' Bs.';
-                            }
-                            else{
-                                $tabla.='0.00 Bs.';
-                            }
-                $tabla .= '</td>';
-                $tabla .= '</tr>';
-                $cont++;
-            }
-            $tabla .= '             </tbody>
-                                </table>
-                           </div>
-                      </div>
-                 </div>';
+        if(count($monto_prog)!=0){
+          $m_prog=$monto_prog[0]['monto'];
         }
-        return $tabla;
-    }*/
 
+        $saldo=($m_asig-$m_prog);
+        
+        $par_padre=$this->model_partidas->get_partida_padre($insumo[0]['par_depende']); /// lista de partidas padres
+        $lista_partidas=$this->programacionpoa->partidas_dependientes($insumo); /// Lista de Insumos dependientes
+        $temporalidad=$this->programacionpoa->distribucion_financiera($insumo); /// Distribucion Financiera
+        $lista_umedida=$this->programacionpoa->unidades_medida($insumo); /// Lista de Unidad de medida
 
-    /*----- TABLA - CONSOLIDADO OPERACION (OPERACIONES) -----*/
-    public function consolidado_partidas_operacion($id,$tp,$tp_id){
-      $tabla='';
-      if($tp_id==1){
-        $partidas = $this->minsumos->consolidado_partidas_directo($id);
-      }
-      else{
-        $partidas = $this->minsumos->consolidado_partidas_operacion($id);
-      }
-
-      if($tp==1){
-        $tab='class="table table-bordered" style="width:70%;"';
-      }
-      elseif($tp==2){
-        $tabla ='<style>
-                    table{font-size: 9px;
-                          width: 100%;
-                          max-width:1550px;
-                          overflow-x: scroll;
-                          }
-                          th{
-                            padding: 1.4px;
-                            text-align: center;
-                            font-size: 9px;
-                          }
-                    </style>';
-        $tab='border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:70%;" align="center"';
-      }
-      
-      $nro=0;
-      $tabla.='<center>
-      <table '.$tab.'>
-        <thead>
-          <tr class="modo1">
-            <th scope="col" bgcolor="#1c7368"><font color="#ffffff">#</font></th>
-            <th scope="col" bgcolor="#1c7368"><font color="#ffffff">C&Oacute;DIGO PARTIDA</font></th>
-            <th scope="col" bgcolor="#1c7368"><font color="#ffffff">DESCRIPCI&Oacute;N PARTIDA</font></th>
-            <th scope="col" bgcolor="#1c7368"><font color="#ffffff">MONTO PROGRAMADO</font></th>
-          </tr>
-        </thead>
-        <tbody>';
-        $monto_total=0;
-      foreach ($partidas as $row) {
-        $monto_total=$monto_total+$row['total'];
-        $nro++;
-        $tabla.='<tr class="modo1">';
-
-          $tabla.='<td>'.$nro.'</td>';
-          $tabla.='<td>'.$row['par_codigo'].'</td>';
+        if(count($insumo)!=0){
+          $result = array(
+            'respuesta' => 'correcto',
+            'insumo' => $insumo,
+            'monto_saldo' => $saldo+$insumo[0]['ins_costo_total'],
+            'lista_partidas'=> $lista_partidas,
+            'lista_umedida'=> $lista_umedida,
+            'ppdre' => $par_padre,
+            'prog' => $temporalidad,
+          );
+        }
+        else{
+          $result = array(
+            'respuesta' => 'error',
+          );
+        }
           
-          if($tp==1){
-            $tabla.='<td>'.$row['par_nombre'].'</td>';
-            $tabla.='<td>' . number_format($row['total'], 2, ',', '.') . '</td>';
-          }
-          else{
-            $tabla.='<td>'.mb_convert_encoding(''.$row['par_nombre'], 'cp1252', 'UTF-8').'</td>';
-            $tabla.='<td>'.$row['total'].'</td>';
-          }
-        $tabla.='</tr>';
+        echo json_encode($result);
+      }else{
+          show_404();
       }
-      $tabla.='<tr>';
-          $tabla.='<td></td>';
-          $tabla.='<td colspan="2">TOTAL</td>';
-          if($tp==1){
-            $tabla.='<td>'.number_format($monto_total, 2, ',', '.').'</td>';
-          }
-          else{
-            $tabla.='<td>'.$monto_total.'</td>';
-          }
-          
-        $tabla.='</tr>';
-      $tabla.='</tbody>
-      </table></center>';
-
-      return $tabla;
     }
 
 
+    /*------ ELIMINAR GET REQUERIMIENTO ------*/
+    function delete_get_requerimiento(){
+      if ($this->input->is_ajax_request() && $this->input->post()) {
+          $post = $this->input->post();
+          $ins_id = $this->security->xss_clean($post['ins_id']); // ins id
 
+          /*-------- DELETE INSUMO PROGRAMADO --------*/  
+          $this->db->where('ins_id', $ins_id);
+          $this->db->delete('temporalidad_prog_insumo');
+          /*------------------------------------------*/
 
-    /*---- COMPARATIVO DE PARTIDAS A NIVEL DE UNIDAD / ESTABLECIMIENTO (2019)---*/
-   /* public function comparativo_partidas_acciones($dep_id,$aper_id){ 
-      $tabla ='';
-      $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,1); // Asig
-      $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,2); // Prog
+          /*---- DELETE INSUMO PRODUCTO ----*/  
+            $this->db->where('ins_id', $ins_id);
+            $this->db->delete('_insumoproducto');
+          /*--------------------------------*/
+          
+          /*-------- DELETE INSUMO  --------*/  
+          $this->db->where('ins_id', $ins_id);
+          $this->db->delete('insumos');
+          /*--------------------------------*/
 
-      $nro=0;
-      $monto_asig=0;
-      $monto_prog=0;
-      $tabla .='<table id="dt_basic1" class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th bgcolor="#1c7368" style="width:1%;"><font color=#fff>NRO.</font></th>
-                      <th bgcolor="#1c7368" style="width:5%;"><font color=#fff>C&Oacute;DIGO PARTIDA</font></th>
-                      <th bgcolor="#1c7368" style="width:15%;"><font color=#fff>DETALLE PARTIDA</font></th>
-                      <th bgcolor="#1c7368" style="width:10%;"><font color=#fff>PRESUPUESTO ASIGNADO</font></th>
-                      <th bgcolor="#1c7368" style="width:10%;"><font color=#fff>PRESUPUESTO PROGRAMADO</font></th>
-                      <th bgcolor="#1c7368" style="width:10%;"><font color=#fff>MONTO DIFERENCIA</font></th>
-                    </tr>
-                  </thead>
-                  <tbody>';
-      if(count($partidas_asig)>count($partidas_prog)){
-        foreach($partidas_asig  as $row){
-          $part=$this->model_ptto_sigep->get_partida_accion_regional($dep_id,$aper_id,$row['par_id']);
-            $prog=0;
-            if(count($part)!=0){
-              $prog=$part[0]['monto'];
-            }
-            $dif=($row['monto']-$prog);
-            $color='#f1f1f1';
-            if($dif<0){
-              $color='#f9cdcd';
-            }
-
-            $nro++;
-            $tabla .='<tr class="modo1" bgcolor='.$color.'>
-                        <td align=center>'.$nro.'</td>
-                        <td align=center>'.$row['codigo'].'</td>
-                        <td align=left>'.$row['nombre'].'</td>
-                        <td align=right>'.number_format($row['monto'], 2, ',', '.').'</td>
-                        <td align=right>'.number_format($prog, 2, ',', '.').'</td>
-                        <td align=right>'.number_format($dif, 2, ',', '.').'</td>
-                      </tr>';
-            $monto_asig=$monto_asig+$row['monto'];
-            $monto_prog=$monto_prog+$prog;
-        }
-
-        foreach($partidas_prog  as $row){
-          $nro++;
-          $part=$this->model_ptto_sigep->get_partida_asig_accion($dep_id,$aper_id,$row['par_id']);
-          if(count($part)==0){
-            $asig=0;
-            if(count($part)!=0){
-              $asig=$part[0]['monto'];
-            }
-            $dif=($asig-$row['monto']);
-            $color='#f1f1f1';
-            if($dif<0){
-              $color='#f9cdcd';
-            }
-            $tabla .='<tr class="modo1" bgcolor='.$color.'>
-                        <td align=center>'.$nro.'</td>
-                        <td align=center>'.$row['codigo'].'</td>
-                        <td align=left>'.$row['nombre'].'</td>
-                        <td align=right>'.number_format($asig, 2, ',', '.').'</td>
-                        <td align=right>'.number_format($row['monto'], 2, ',', '.').'</td>
-                        <td align=right>'.number_format($dif, 2, ',', '.').'</td>
-                      </tr>';
-                      $monto_asig=$monto_asig+$asig;
-                      $monto_prog=$monto_prog+$row['monto'];
+          $insumo=$this->model_insumo->get_requerimiento($ins_id);
+          if(count($insumo)==0){
+            $result = array(
+              'respuesta' => 'correcto'
+            );
           }
-        }
-      }
-      else{
-        foreach($partidas_prog  as $row){
-          $part=$this->model_ptto_sigep->get_partida_asig_accion($dep_id,$aper_id,$row['par_id']);
-            $asig=0;
-            if(count($part)!=0){
-              $asig=$part[0]['monto'];
-            }
-            $dif=($asig-$row['monto']);
-            $color='#f1f1f1';
-            if($dif<0){
-              $color='#f9cdcd';
-            }
-
-          $nro++;
-          $tabla .='<tr class="modo1" bgcolor='.$color.'>
-                      <td align=center>'.$nro.'</td>
-                      <td align=center>'.$row['codigo'].'</td>
-                      <td align=left>'.$row['nombre'].'</td>
-                      <td align=right>'.number_format($asig, 2, ',', '.').'</td>
-                      <td align=right>'.number_format($row['monto'], 2, ',', '.').'</td>
-                      <td align=right>'.number_format($dif, 2, ',', '.').'</td>
-                    </tr>';
-          $monto_asig=$monto_asig+$asig;
-          $monto_prog=$monto_prog+$row['monto'];
-        }
-
-        foreach($partidas_asig  as $row){
-            $part=$this->model_ptto_sigep->get_partida_accion_regional($dep_id,$aper_id,$row['par_id']);
-
-            if(count($part)==0){
-                $prog=0;
-                if(count($part)!=0){
-                  $prog=$part[0]['monto'];
-                }
-                $dif=($row['monto']-$prog);
-                $color='#f1f1f1';
-                if($dif<0){
-                  $color='#f9cdcd';
-                }
-
-                $nro++;
-                $tabla .='<tr class="modo1" bgcolor='.$color.'>
-                            <td align=center>'.$nro.'</td>
-                            <td align=center>'.$row['codigo'].'</td>
-                            <td align=left>'.$row['nombre'].'</td>
-                            <td align=right>'.number_format($row['monto'], 2, ',', '.').'</td>
-                            <td align=right>'.number_format($prog, 2, ',', '.').'</td>
-                            <td align=right>'.number_format($dif, 2, ',', '.').'</td>
-                          </tr>';
-                $monto_asig=$monto_asig+$row['monto'];
-                $monto_prog=$monto_prog+$prog;
-            }
-              
+          else{
+            $result = array(
+              'respuesta' => 'error'
+            );
           }
-        
+          
+          echo json_encode($result);
+
+      } else {
+          echo 'DATOS ERRONEOS';
       }
-      $tabla .='</tbody>
-                  <tr class="modo1">
-                      <td colspan=3><strong>TOTAL</strong></td>
-                      <td align=right>'.number_format($monto_asig, 2, ',', '.').'</td>
-                      <td align=right>'.number_format($monto_prog, 2, ',', '.').'</td>
-                      <td align=right>'.number_format(($monto_asig-$monto_prog), 2, ',', '.').'</td>
-                    </tr>
-                </table>';
-
-      return $tabla;
-    }*/
-
+    }
 
     /*---- CAMBIA EL ID DEL INSUMO Y LO LLEVA A INSUMOPRODUCTO ----*/
     function update_id_requerimientos_pi($proy_id){
@@ -809,7 +543,7 @@ class crequerimiento extends CI_Controller{
 
 
     /*------ CAMBIA CODIGO DE ACTIVIDAD ---------*/
-    function cambia_actividad(){
+/*    function cambia_actividad(){
       if($this->input->is_ajax_request() && $this->input->post()){
           $this->form_validation->set_rules('prod_id', 'id producto', 'required|trim');
           $this->form_validation->set_message('required', 'El campo es es obligatorio');
@@ -827,7 +561,7 @@ class crequerimiento extends CI_Controller{
       }else{
           show_404();
       }
-    }
+    }*/
 
 
     /*--------- Lista Partidas Hijos -----------*/
