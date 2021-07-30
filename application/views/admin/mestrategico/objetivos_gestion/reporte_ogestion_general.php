@@ -43,7 +43,7 @@ ob_start();
                                 <td style="width:100%; height: 1.2%; font-size: 13pt;" align="center">PLAN OPERATIVO ANUAL - <?php echo $this->session->userdata('gestion');?></td>
                               </tr>
                               <tr>
-                                <td style="width:100%; height: 1.2%; font-size: 8pt;" align="center"><b>ARTICULACI&Oacute;N POA <?php echo $this->session->userdata('gestion');?> - PEI 2021-2022</b></td>
+                                <td style="width:100%; height: 1.2%; font-size: 8pt;" align="center"><b>ARTICULACI&Oacute;N POA <?php echo $this->session->userdata('gestion');?> - PEI 2021-2025</b></td>
                               </tr>
                               <tr>
                                 <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center"><b>ACCIONES DE CORTO PLAZO</b></td>
