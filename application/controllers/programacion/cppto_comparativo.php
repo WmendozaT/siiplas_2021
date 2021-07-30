@@ -187,7 +187,7 @@ class Cppto_comparativo extends CI_Controller {
                       <td style="width: 15%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
                       <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
                 if($this->fun_id==399){
-                  $tabla.='<td style="width: 10%; text-align: right;">'.number_format($row['saldo'], 2, ',', '.').'</td>';
+                  $tabla.='<td style="width: 10%; text-align: right;"></td>';
                 }
                 $tabla.='
                     </tr>';

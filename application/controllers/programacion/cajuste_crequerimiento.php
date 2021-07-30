@@ -28,6 +28,7 @@ class cajuste_crequerimiento extends CI_Controller{
         $this->rol = $this->session->userData('rol_id');
         $this->dist_tp = $this->session->userData('dist_tp');
         $this->fun_id = $this->session->userdata("fun_id");
+        $this->load->library('programacionpoa');
         }else{
             $this->session->sess_destroy();
             redirect('/','refresh');
@@ -217,14 +218,14 @@ class cajuste_crequerimiento extends CI_Controller{
     }
 
 
-    /*------------ GET DATOS REQUERIMIENTO PARA AJUSTE--------------*/
+    /*----- GET DATOS REQUERIMIENTO PARA AJUSTE ------*/
     public function get_requerimiento_ajuste(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $ins_id = $this->security->xss_clean($post['ins_id']);
         $com_id = $this->security->xss_clean($post['com_id']);
 
-        $insumo= $this->minsumos->get_requerimiento($ins_id); /// Datos requerimientos productos
+        $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
 
         $monto_asig=$this->model_ptto_sigep->get_partida_asignado_sigep($insumo[0]['aper_id'],$insumo[0]['par_id']);
         $monto_prog=$this->model_ptto_sigep->get_partida_accion($insumo[0]['aper_id'],$insumo[0]['par_id']);
@@ -240,10 +241,10 @@ class cajuste_crequerimiento extends CI_Controller{
         $saldo=($m_asig-$m_prog);
         
         $par_padre=$this->model_partidas->get_partida_padre($insumo[0]['par_depende']); /// lista de partidas padres
-        $lista_partidas=$this->partidas_dependientes($insumo); /// Lista de Insumos dependientes
-        $temporalidad=$this->distribucion_financiera($insumo); /// Distribucion Financiera
-        $lista_umedida=$this->unidades_medida($insumo); /// Lista de Unidad de medida
-        $lista_prod_act=$this->list_prod_actividad($com_id,$insumo); /// Lista de Productos, Actividades
+        $lista_partidas=$this->programacionpoa->partidas_dependientes($insumo); /// Lista de Insumos dependientes
+        $temporalidad=$this->programacionpoa->distribucion_financiera($insumo); /// Distribucion Financiera
+        $lista_umedida=$this->programacionpoa->unidades_medida($insumo); /// Lista de Unidad de medida
+        $lista_prod_act=$this->programacionpoa->list_prod_actividad($com_id,$insumo); /// Lista de Productos, Actividades
 
         if(count($insumo)!=0){
           $result = array(
@@ -398,87 +399,6 @@ class cajuste_crequerimiento extends CI_Controller{
       }
     }
 
-    /*--- LISTA DE PRODUCTOS, ACTIVIDADES (MOD) ---*/
-    function list_prod_actividad($com_id,$insumo){
-      $tabla='';
-
-        $operaciones=$this->model_producto->list_operaciones($com_id);
-        $tabla.='<option value="">Seleccione Actividad</option>';
-        foreach($operaciones as $row){
-          if($row['prod_id']==$insumo[0]['prod_id']){
-            $tabla.='<option value="'.$row['prod_id'].'" selected>ACT. '.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
-          }
-          else{
-            $tabla.='<option value="'.$row['prod_id'].'">ACT. '.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
-          }
-        } 
-
-      return $tabla;
-    }
-
-    /*--- PARTIDAS DEPENDIENTES (MOD) ---*/
-    function partidas_dependientes($insumo){
-      $tabla='';
-      $get_partida=$this->model_partidas->get_partida($insumo[0]['par_id']); /// datos de la partda
-
-      $lista_partidas=$this->model_modrequerimiento->lista_partidas_dependientes($insumo[0]['aper_id'],$get_partida[0]['par_depende']);
-      foreach ($lista_partidas as $row) {
-        if($insumo[0]['par_id']==$row['par_id']){
-          $tabla.='<option value="'.$row['par_id'].'" selected>'.$row['par_codigo'].'.- '.$row['par_nombre'].'</option>';
-        }
-        else{
-          $tabla.='<option value="'.$row['par_id'].'">'.$row['par_codigo'].'.- '.$row['par_nombre'].'</option>';
-        }
-      }
-
-      return $tabla;
-    }
-
-    /*--- DISTRIBUCION FINANCIERA ---*/
-    function distribucion_financiera($insumo){
-      if($this->gestion==2019){
-          $prog=$this->minsumos->get_list_insumo_financiamiento($insumo[0]['insg_id']); /// Temporalidad Requerimiento 2019
-        }
-        else{
-          $prog=$this->model_insumo->list_temporalidad_insumo($insumo[0]['ins_id']); /// Temporalidad Requerimiento 2020
-        }
-
-        for ($i=0; $i <=12 ; $i++) { 
-          if($i==0){
-            $titulo[$i]='programado_total';  
-          }
-          else{
-            $titulo[$i]='mes'.$i.''; 
-          }
-
-          $temporalidad[$i]=0;
-        }
-
-        if(count($prog)!=0){
-          for ($i=0; $i <=12 ; $i++) { 
-            $temporalidad[$i]= $prog[0][$titulo[$i]];
-          }
-        }
-
-      return $temporalidad;
-    }
-
-        /*--- LISTA DE UNIDADES DE MEDIDA ---*/
-    function unidades_medida($insumo){
-      $tabla='';
-      $lista_umedida=$this->model_insumo->lista_umedida($insumo[0]['par_id']); /// Lista de Unidades de medida
-
-      foreach ($lista_umedida as $row) {
-        if($insumo[0]['ins_unidad_medida']==$row['um_descripcion']){
-          $tabla.='<option value="'.$row['um_id'].'" selected>'.$row['um_descripcion'].'</option>';
-        }
-        else{
-          $tabla.='<option value="'.$row['um_id'].'">'.$row['um_descripcion'].'</option>';
-        }
-      }
-
-      return $tabla;
-    }
     /*------ CAMBIA CODIGO DE ACTIVIDAD ---------*/
     function cambia_actividad(){
       if($this->input->is_ajax_request() && $this->input->post()){

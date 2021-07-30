@@ -445,7 +445,24 @@ class Programacionpoa extends CI_Controller{
       return $tabla;
     }
 
+        /*--- LISTA DE PRODUCTOS, ACTIVIDADES (MOD) ---*/
+    function list_prod_actividad($com_id,$insumo){
+      $tabla='';
 
+        $operaciones=$this->model_producto->lista_operaciones($com_id);
+        $tabla.='<option value="">Seleccione Actividad</option>';
+        foreach($operaciones as $row){
+          if($row['prod_id']==$insumo[0]['prod_id']){
+            $tabla.='<option value="'.$row['prod_id'].'" selected>ACT. '.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
+          }
+          else{
+            $tabla.='<option value="'.$row['prod_id'].'">ACT. '.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
+          }
+        } 
+
+      return $tabla;
+    }
+    
 
     /*--- BOTON ESTADO FORM 5---*/
     function button_form5(){

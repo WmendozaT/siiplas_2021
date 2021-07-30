@@ -539,31 +539,6 @@ class crequerimiento extends CI_Controller{
 
 
 
-
-
-
-    /*------ CAMBIA CODIGO DE ACTIVIDAD ---------*/
-/*    function cambia_actividad(){
-      if($this->input->is_ajax_request() && $this->input->post()){
-          $this->form_validation->set_rules('prod_id', 'id producto', 'required|trim');
-          $this->form_validation->set_message('required', 'El campo es es obligatorio');
-        
-          $post = $this->input->post();
-          $prod_id= $this->security->xss_clean($post['prod_id']);
-          $ins_id= $this->security->xss_clean($post['ins_id']);
-           
-          $update_proy = array(
-            'prod_id' => $prod_id,
-          );
-          $this->db->where('ins_id', $ins_id);
-          $this->db->update('_insumoproducto', $update_proy);
-              
-      }else{
-          show_404();
-      }
-    }*/
-
-
     /*--------- Lista Partidas Hijos -----------*/
     public function combo_partidas_hijos(){
       //echo "urbanizaciones";

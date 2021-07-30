@@ -72,27 +72,6 @@
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
 		<!-- HEADER -->
 		<header id="header">
-			<div id="logo-group">
-				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -147,7 +126,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>...</li><li>Programaci&oacute;n POA</a></li><li><?php if($proyecto[0]['tp_id']==1){echo "Componente";}else{echo "Servicio";}?></li><li>Ajuste POA Requerimientos</li>
+					<li>...</li><li>Programaci&oacute;n POA</a></li><li>Unidad Responsable</li><li>Ajuste POA Requerimientos</li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->
@@ -455,9 +434,9 @@
 	              <div class="modal-body">
 	              	<h2 class="alert alert-info"><center>MODIFICAR REGISTRO - REQUERIMIENTO</center></h2>
 	                <form action="<?php echo site_url().'/programacion/cajuste_crequerimiento/valida_update_insumo_ajuste'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
-						<input type="hidden" name="tp" id="tp" value="1">
-						<input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
-						<input type="hidden" name="ins_id" id="ins_id">
+						<input type="text" name="tp" id="tp" value="1">
+						<input type="text" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
+						<input type="text" name="ins_id" id="ins_id">
 							<header><b>DATOS GENERALES DEL REQUERIMIENTO</b><br><label class="label"><b>C&Oacute;DIGO DE ACTIVIDAD : </b></label></header>
 							<fieldset>
 								<div class="row">
