@@ -142,23 +142,11 @@
 			<div id="content">
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
-					<div class="row">
-						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
-				            <section id="widget-grid" class="well">
-				                <div class="">
-        							<h4><b>CARGO : </b><?php echo $this->session->userdata("cargo");?></h4>
-        							<h4><b>REPONSABLE : </b><?php echo $this->session->userdata("user_name");?></h4>
-				                </div>
-				            </section>
-				        </article>
-				        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
-                            <section id="widget-grid" class="well">
-                                <a href="javascript:abreVentana('<?php echo site_url("").'/me/rep_ogestion'?>');" style="width:100%;" title="IMPRIMIR OBJETIVOS DE GESTIÓN" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR OBJETIVOS DE GESTI&Oacute;N</a>
-                            </section>
-                        </article>
-	                </div>
+
 	                <div class="row">
 	                    <?php 
+	                    echo $titulo;
+	                    
 		                  if($this->session->flashdata('success')){ ?>
 		                    <div class="alert alert-success">
 		                      	<?php echo $this->session->flashdata('success'); ?>
@@ -191,7 +179,7 @@
             <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
           </div>
           <div class="modal-body">
-            <h2 class="alert alert-info"><center>NUEVO OBJETIVO DE GESTI&Oacute;N</center></h2>
+            <h2 class="alert alert-info"><center>NUEVO REGISTRO - ACCI&Oacute;N DE CORTO PLAZO</center></h2>
               <form action="<?php echo site_url().'/mestrategico/cobjetivo_gestion/valida_ogestion';?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
                   <input type="hidden" name="tp" id="tp" value="1">
                   <input type="hidden" name="form" id="form" value="0"> 
@@ -217,18 +205,18 @@
                   	</div>
                   </fieldset>
 
-                  <header><b>DATOS GENERALES OBJETIVO DE GESTI&Oacute;N</b></header>
+                  <header><b>DATOS GENERALES ACCI&Oacute;N DE CORTO PLAZO</b></header>
                   <fieldset>          
                     <div class="row">
                       <section class="col col-1">
                         <label class="label">C&Oacute;DIGO</label>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="cod" id="cod" value="0" title="CODIGO OPERACI&Oacute;N" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" onkeyup="verif_codigo()">
+                          <input type="text" name="cod" id="cod" value="0" title="CODIGO ACP" onkeypress="if (this.value.length < 10) { return soloNumeros(event);}else{return false; }" onpaste="return false" onkeyup="verif_codigo()">
                         </label>
                       </section>
                       <section class="col col-4">
-                        <label class="label">OBJETIVO DE GESTI&Oacute;N</label>
+                        <label class="label">ACCI&Oacute;N DE CORTO PLAZO</label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
                           <textarea rows="3" name="ogestion" id="ogestion" title="REGISTRAR OBJETIVO"></textarea>
@@ -272,7 +260,7 @@
                         <label class="label">LINEA BASE</label>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="lbase" id="lbase" value="0" title="REGISTRE LINEA BASE" onkeyup="suma_programado()">
+                          <input type="text" name="lbase" id="lbase" value="0" title="REGISTRE LINEA BASE">
                         </label>
                       </section>
                       <section class="col col-2">
@@ -309,7 +297,7 @@
                     </div>
                     <br>
                     <div id="atit"></div>
-                    <header><b>TEMPORALIDAD PROGRAMACI&Oacute;N FÍSICA : <?php echo $this->session->userdata('gestion')?></b><br>
+                    <header><b>DISTRIBUCI&Oacute;N REGIONAL : <?php echo $this->session->userdata('gestion')?></b><br>
                     	<label class="label"><div id="ff"></div></label>
                     </header><br>
 
@@ -401,6 +389,106 @@
                       </section>
                     </div>
 
+                    <header><b>TEMPORALIDAD FÍSICA : <?php echo $this->session->userdata('gestion')?></b><br>
+                    </header>
+                    <br>
+                    <div class="row">
+                      <section class="col col-2">
+                        <label class="label">TOTAL</label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="total_temp" id="total_temp" value="0" disabled="true">
+                        </label>
+                      </section>
+                    </div>
+                    <div class="row">
+                      <section class="col col-2">
+                        <label class="label"><b>ENERO</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes1" id="mes1" value="0" onkeyup="suma_programado_temporalidad()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ENERO - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>FEBRERO</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes2" id="mes2" value="0" onkeyup="suma_programado_temporalidad()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="FEBRERO - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>MARZO</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes3" id="mes3" value="0" onkeyup="suma_programado_temporalidad()"onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MARZO - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>ABRIL</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes4" id="mes4" value="0" onkeyup="suma_programado_temporalidad()"onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ABRIL - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>MAYO</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes5" id="mes5" value="0" onkeyup="suma_programado_temporalidad()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MAYO - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>JUNIO</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes6" id="mes6" value="0" onkeyup="suma_programado_temporalidad()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JUNIO - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                    </div>
+                    <div class="row">
+                      <section class="col col-2">
+                        <label class="label"><b>JULIO</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes7" id="mes7" value="0" onkeyup="suma_programado_temporalidad()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JULIO - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>AGOSTO</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes8" id="mes8" value="0" onkeyup="suma_programado_temporalidad()"onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="AGOSTO - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>SEPTIEMBRE</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes9" id="mes9" value="0" onkeyup="suma_programado_temporalidad()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>OCTUBRE</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes10" id="mes10" value="0" onkeyup="suma_programado_temporalidad()"onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>NOVIEMBRE</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes11" id="mes11" value="0" onkeyup="suma_programado_temporalidad()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>DICIEMBRE</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-money"></i>
+                          <input type="text" name="mes12" id="mes12" value="0" onkeyup="suma_programado_temporalidad()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                        </label>
+                      </section>
+                    </div>
                   </fieldset>
         
                   <div id="but" style="display:none;">
@@ -423,7 +511,7 @@
             	<button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
           	</div>
               <div class="modal-body">
-                <h2 class="alert alert-info"><center>MODIFICAR OBJETIVO DE GESTI&Oacute;N</center></h2>
+                <h2 class="alert alert-info"><center>MODIFICAR ACCI&Oacute;N DE CORTO PLAZO</center></h2>
                 <form action="<?php echo site_url().'/mestrategico/cobjetivo_gestion/valida_ogestion';?>" method="post" id="form_mod" name="form_mod" class="smart-form">
                 <input type="hidden" name="tp" id="tp" value="2"> 
               	<input type="hidden" name="mog_id" id="mog_id">
@@ -450,7 +538,7 @@
                       </section>
 	              	</div>
               	</fieldset>
-                <header><b>DATOS GENERALES DEL OBJETIVO DE GESTI&Oacute;N</b></header>
+                <header><b>DATOS GENERALES ACCI&Oacute;N DE CORTO PLAZO</b></header>
                 <fieldset>          
                   <div class="row">
                   	<section class="col col-1">
@@ -461,24 +549,24 @@
                         </label>
                       </section>
                     <section class="col col-3">
-                      <label class="label">OBJETIVO DE GESTI&Oacute;N</label>
+                      <label class="label">ACCI&Oacute;N DE CORTO PLAZO</label>
                       <label class="textarea">
                         <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="2" name="mogestion" id="mogestion" title="MODIFICAR OBJETIVO DE GESTION"></textarea>
+                        <textarea rows="3" name="mogestion" id="mogestion" title="MODIFICAR OBJETIVO DE GESTION"></textarea>
                       </label>
                     </section>
                     <section class="col col-4">
                       <label class="label">PRODUCTO</label>
                       <label class="textarea">
                         <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="2" name="mproducto" id="mproducto" title="MODIFICAR PRODUCTO"></textarea>
+                        <textarea rows="3" name="mproducto" id="mproducto" title="MODIFICAR PRODUCTO"></textarea>
                       </label>
                     </section>
                     <section class="col col-4">
                       <label class="label">RESULTADO</label>
                       <label class="textarea">
                         <i class="icon-append fa fa-tag"></i>
-                        <textarea rows="2" name="mresultado" id="mresultado" title="MODIFICAR RESULTADO"></textarea>
+                        <textarea rows="3" name="mresultado" id="mresultado" title="MODIFICAR RESULTADO"></textarea>
                       </label>
                     </section>
                   </div>
@@ -505,7 +593,7 @@
                         <label class="label">LINEA BASE</label>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="mlbase" id="mlbase" value="0" title="REGISTRE LINEA BASE" onkeyup="suma_programado_modificado()">
+                          <input type="text" name="mlbase" id="mlbase" value="0" title="REGISTRE LINEA BASE">
                         </label>
                       </section>
                       <section class="col col-2">
@@ -542,7 +630,7 @@
                     </div>
                   <br>
                   <div id="amtit"></div>
-                  <header><b>TEMPORALIDAD PROGRAMACIÓN FÍSICA: <?php echo $this->session->userdata('gestion')?></b><br>
+                  <header><b>DISTRIBUCIÓN REGIONAL : <?php echo $this->session->userdata('gestion')?></b><br>
                   <label class="label"><div id="ff"></div></label>
                   </header>
                   <br>
@@ -630,10 +718,110 @@
                     </section>
                   </div>
 
+                  	<header><b>TEMPORALIDAD F&Iacute;SICA : <?php echo $this->session->userdata('gestion')?></b><br>
+		              </header>
+		              <br>
+		              <div class="row">
+		                <section class="col col-2">
+		                  <label class="label"><b>PROGRAMADO TOTAL</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="total_temp_mod" id="total_temp_mod" value="0" disabled="true">
+		                  </label>
+		                </section>
+		              </div>
+		              <div class="row">
+		                <section class="col col-2">
+		                  <label class="label"><b>ENERO</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes1" id="mmes1" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ENERO - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>FEBRERO</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes2" id="mmes2" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="FEBRERO - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>MARZO</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes3" id="mmes3" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MARZO - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>ABRIL</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes4" id="mmes4" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ABRIL - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>MAYO</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes5" id="mmes5" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MAYO - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>JUNIO</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes6" id="mmes6" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JUNIO - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		              </div>
+		              <div class="row">
+		                <section class="col col-2">
+		                  <label class="label"><b>JULIO</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes7" id="mmes7" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JULIO - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>AGOSTO</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes8" id="mmes8" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>SEPTIEMBRE</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes9" id="mmes9" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>OCTUBRE</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes10" id="mmes10" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>NOVIEMBRE</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes11" id="mmes11" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		                <section class="col col-2">
+		                  <label class="label"><b>DICIEMBRE</b></label>
+		                  <label class="input">
+		                    <i class="icon-append fa fa-money"></i>
+		                    <input type="text" name="mmes12" id="mmes12" value="0" onkeyup="suma_programado_temporalidad_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+		                  </label>
+		                </section>
+		              </div>
                 </fieldset>
                 <div id="mbut">
                   <footer>
-                    <button type="button" name="subir_mact" id="subir_mact" class="btn btn-info" >MODIFICAR OBJETIVO GESTI&Oacute;N</button>
+                    <button type="button" name="subir_mact" id="subir_mact" class="btn btn-info" >MODIFICAR ACCI&Oacute;N DE CORTO PLAZO</button>
                     <button class="btn btn-default" data-dismiss="modal" id="amcl" title="CANCELAR">CANCELAR</button>
                   </footer>
                 </div>
@@ -705,428 +893,7 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function() {
-		        pageSetUp();
-		        $("#obj_id").change(function () {
-		            $("#obj_id option:selected").each(function () {
-		            elegido=$(this).val();
-		            $.post("<?php echo base_url(); ?>index.php/prog/combo_acciones", { elegido: elegido }, function(data){ 
-		              $("#acc_id").html(data);
-		              });     
-		          });
-		        });  
-		    })
-
-			function justNumbers(e){
-	            var keynum = window.event ? window.event.keyCode : e.which;
-	            if ((keynum == 8) || (keynum == 46))
-	            return true;
-	            return /\d/.test(String.fromCharCode(keynum));
-	        }
-
-	        function verif_codigo(){ 
-	        codigo = parseFloat($('[name="cod"]').val()); //// codigo
-	        if(!isNaN(codigo) & codigo!=0){
-	        	var url = "<?php echo site_url().'/mestrategico/cobjetivo_gestion/verif_codigo';?>";
-	          	$.ajax({
-	            type:"post",
-	            url:url,
-	            data:{codigo:codigo},
-	            success:function(datos){
-	              if(datos.trim() =='true'){
-	                $('#atit').html('<center><div class="alert alert-danger alert-block">C&Oacute;DIGO DE OPERACI&Oacute;N '+codigo+' YA EXISTE</div></center>');
-	                $('[name="cod"]').val((0).toFixed(0));
-	                $('#but').slideUp();
-	              }else{
-	                $('#atit').html('');
-	                $('#but').slideDown();
-	              }
-	          }});
-	        }
-	        else{
-	          alertify.error("REGISTRE CÓDIGO DE OPERACIÓN");
-	          $('#but').slideUp();
-	        }
-	      }
-		</script>
-		<!------ AGREGAR NUEVO OBJETIVO ------->
-	  <script type="text/javascript">
-	    $(function () {
-	        $("#subir_act").on("click", function () {
-	            var $validator = $("#form_nuevo").validate({
-	                  rules: {
-	                      obj_id: { //// Objetivo Estrategico
-	                      	required: true,
-	                      },
-	                      acc_id: { //// Accion Estrategico
-	                         required: true,
-	                      },
-	                      ogestion: { //// Objetivo de Gestion
-	                      	required: true,
-	                      },
-	                      producto: { //// producto
-	                         required: true,
-	                      },
-	                      resultado: { //// resultado
-	                          required: true,
-	                      },
-	                      tp_indi: { //// tipo de indicador
-	                          required: true,
-	                      },
-	                      indicador: { //// Indicador
-	                          required: true,
-	                      },
-	                      verificacion: { //// verificacion
-	                          required: true,
-	                      },
-	                      lbase: { //// linea base
-	                          required: true,
-	                      },
-	                      meta: { //// meta
-	                          required: true,
-	                      }
-	                  },
-	                  messages: {
-	                    obj_id: "<font color=red>SELECCIONE OBJETIVO ESTRATEGICO</font>", 
-	                    acc_id: "<font color=red>SELECCIONE ACCIÓN ESTRATEGICA</font>", 
-	                    ogestion: "<font color=red>REGISTRE OBJETIVO DE GESTI&Oacute;N</font>", 
-	                    producto: "<font color=red>REGISTRE PRODUCTO</font>", 
-	                    resultado: "<font color=red>REGISTRE RESULTADO</font>", 
-	                    tp_indi: "<font color=red>SELECCIONE TIPO DE INDICADOR</font>",
-	                    indicador: "<font color=red>REGISTRE DETALLE DEL INDICADOR</font>",
-	                    verificacion: "<font color=red>REGISTRE MEDIO DE VERIFICACI&Oacute;N</font>",
-	                    lbase: "<font color=red>REGISTRE LINEA BASE</font>",
-	                    meta: "<font color=red>REGISTRE META</font>",                     
-	                  },
-	                  highlight: function (element) {
-	                      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-	                  },
-	                  unhighlight: function (element) {
-	                      $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-	                  },
-	                  errorElement: 'span',
-	                  errorClass: 'help-block',
-	                  errorPlacement: function (error, element) {
-	                      if (element.parent('.input-group').length) {
-	                          error.insertAfter(element.parent());
-	                      } else {
-	                          error.insertAfter(element);
-	                      }
-	                  }
-	              });
-
-	            var $valid = $("#form_nuevo").valid();
-	            if (!$valid) {
-	                $validator.focusInvalid();
-	            } else {
-	                alertify.confirm("GUARDAR OBJETIVO DE GESTIÓN ?", function (a) {
-	                    if (a) {
-	                    //    document.getElementById("load").style.display = 'block';
-	                        document.getElementById('subir_act').disabled = true;
-	                        document.forms['form_nuevo'].submit();
-	                    } else {
-	                        alertify.error("OPCI\u00D3N CANCELADA");
-	                    }
-	                });
-	            }
-	        });
-	    });
-	  </script>
-	  <script type="text/javascript">
-	    /*------------ MODIFICAR OBJETIVO ----------------*/
-	    $(function () {
-	        $(".mod_ff").on("click", function (e) {
-	        	og_id = $(this).attr('name');
-	            document.getElementById("mog_id").value=og_id;
-
-	        	var url = "<?php echo site_url().'/mestrategico/cobjetivo_gestion/get_ogestion';?>";
-	            var request;
-	            if (request) {
-	                request.abort();
-	            }
-	            request = $.ajax({
-	                url: url,
-	                type: "POST",
-	                dataType: 'json',
-	                data: "og_id="+og_id
-	            });
-
-	            request.done(function (response, textStatus, jqXHR) {
-	            if (response.respuesta == 'correcto') {
-	            	$('#macc_id').html('<option value="'+response.ogestion[0]['acc_id']+'">'+response.ogestion[0]['acc_codigo']+'.- '+response.ogestion[0]['acc_descripcion']+'</option>');
-	            	document.getElementById("mobj_id").value = response.ogestion[0]['obj_id'];
-	            	document.getElementById("mogestion").value = response.ogestion[0]['og_objetivo'];
-	               	document.getElementById("mproducto").value = response.ogestion[0]['og_producto'];
-	               	document.getElementById("mresultado").value = response.ogestion[0]['og_resultado'];
-	               	document.getElementById("mtp_indi").value = response.ogestion[0]['indi_id'];
-	               	document.getElementById("mindicador").value = response.ogestion[0]['og_indicador'];
-	               	document.getElementById("mcod").value = response.ogestion[0]['og_codigo'];
-
-	               	document.getElementById("mlbase").value = response.ogestion[0]['og_linea_base'];
-	               	document.getElementById("mmeta").value = response.ogestion[0]['og_meta'];
-	               	document.getElementById("munidad").value = response.ogestion[0]['og_unidad'];
-	               	document.getElementById("mobservacion").value = response.ogestion[0]['og_observacion'];
-	               	document.getElementById("mverif").value = response.ogestion[0]['og_verificacion'];
-
-	               	document.getElementById("mtot").value = response.suma;
-	   				
-	   				for (var i = 1; i <= 10; i++) {
-	   					document.getElementById("mm"+i+"").value = response.oprogramado['reg'+i+""];
-	   					//document.getElementById("mm"+i+"").disabled = response.verif_programado['verif'+i+""];
-	   					
-	   					document.getElementById("mm"+i+"").title = response.titulo['tit'+i+""];
-	   				}
-
-	   				if(response.suma!=Math.round(response.ogestion[0]['og_meta']) || response.suma==0){
-		                $('#amtit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-		                $('#mbut').slideUp();
-		            }
-		            else{
-		            	$('#amtit').html('');
-		            	$('#mbut').slideDown();
-		            }
-
-	            }
-	            else{
-	                alertify.error("ERROR AL RECUPERAR DATOS DE LA ACTIVIDAD");
-	            }
-
-	            });
-	            request.fail(function (jqXHR, textStatus, thrown) {
-	                console.log("ERROR: " + textStatus);
-	            });
-	            request.always(function () {
-	                //console.log("termino la ejecuicion de ajax");
-	            });
-	            e.preventDefault();
-	            // =============================VALIDAR EL FORMULARIO DE MODIFICACION
-	            $("#subir_mact").on("click", function (e) {
-	                var $validator = $("#form_mod").validate({
-	                       rules: {
-	                        og_id: { //// og
-	                            required: true,
-	                        },
-	                        mobj_id: { //// Objetivo Estrategico
-	                      		required: true,
-		                    },
-		                    macc_id: { //// Accion Estrategico
-		                        required: true,
-		                    },
-	                        mogestion: { //// Objetivo de Gestion
-	                      		required: true,
-	                      	},
-	                      	mproducto: { //// producto
-	                         	required: true,
-	                      	},
-	                      	mresultado: { //// resultado
-	                          	required: true,
-	                      	},
-	                      	mtp_indi: { //// tipo de indicador
-	                          	required: true,
-	                      	},
-	                      	mindicador: { //// Indicador
-	                          	required: true,
-	                      	},
-	                      	mverif: { //// verificacion
-	                          	required: true,
-	                      	},
-	                      	mlbase: { //// linea base
-	                          	required: true,
-	                      	},
-	                      	mmeta: { //// meta
-	                          	required: true,
-	                    	}
-	                    },
-	                    messages: {
-	                    	mobj_id: "<font color=red>SELECCIONE OBJETIVO ESTRATEGICO</font>", 
-	                    	macc_id: "<font color=red>SELECCIONE ACCIÓN ESTRATEGICA</font>", 
-	                        mogestion: "<font color=red>REGISTRE OBJETIVO DE GESTI&Oacute;N</font>", 
-		                    mproducto: "<font color=red>REGISTRE PRODUCTO</font>", 
-		                    mresultado: "<font color=red>REGISTRE RESULTADO</font>", 
-		                    mtp_indi: "<font color=red>SELECCIONE TIPO DE INDICADOR</font>",
-		                    mindicador: "<font color=red>REGISTRE DETALLE DEL INDICADOR</font>",
-		                    mverif: "<font color=red>REGISTRE MEDIO DE VERIFICACI&Oacute;N</font>",
-		                    mlbase: "<font color=red>REGISTRE LINEA BASE</font>",
-		                    mmeta: "<font color=red>REGISTRE META</font>",                     
-	                    },
-	                    highlight: function (element) {
-	                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-	                    },
-	                    unhighlight: function (element) {
-	                        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-	                    },
-	                    errorElement: 'span',
-	                    errorClass: 'help-block',
-	                    errorPlacement: function (error, element) {
-	                        if (element.parent('.input-group').length) {
-	                            error.insertAfter(element.parent());
-	                        } else {
-	                            error.insertAfter(element);
-	                        }
-	                    }
-	                });
-	                var $valid = $("#form_mod").valid();
-	                if (!$valid) {
-	                    $validator.focusInvalid();
-	                } else {
-	                    alertify.confirm("MODIFICAR DATOS DE LA GESTIÓN ?", function (a) {
-	                        if (a) {
-	                            document.getElementById('subir_mact').disabled = true;
-	                            document.forms['form_mod'].submit();
-	                        } else {
-	                            alertify.error("OPCI\u00D3N CANCELADA");
-	                        }
-	                    });
-
-	                }
-	            });
-	        });
-	    });
-	  </script>
-	  <script type="text/javascript">
-	      $(function () {
-	          function reset() {
-	              $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
-	              alertify.set({
-	                  labels: {
-	                      ok: "ACEPTAR",
-	                      cancel: "CANCELAR"
-	                  },
-	                  delay: 5000,
-	                  buttonReverse: false,
-	                  buttonFocus: "ok"
-	              });
-	          }
-
-	          $(".del_ff").on("click", function (e) {
-	              reset();
-	              var name = $(this).attr('name');
-	              var request;
-	              // confirm dialog
-	              alertify.confirm("ELIMINAR OBJETIVO DE GESTIÓN ?", function (a) {
-	                  if (a) {
-	                  	  url = "<?php echo site_url().'/mestrategico/cobjetivo_gestion/delete_ogestion';?>";
-	                      if (request) {
-	                          request.abort();
-	                      }
-	                      request = $.ajax({
-	                          url: url,
-	                          type: "POST",
-	                          dataType: "json",
-	                          data: "og_id="+name
-
-	                      });
-
-	                      request.done(function (response, textStatus, jqXHR) { 
-	                          reset();
-	                          if (response.respuesta == 'correcto') {
-	                              alertify.alert("EL OBJETIVO SE ELIMINO CORRECTAMENTE ", function (e) {
-	                                  if (e) {
-	                                      window.location.reload(true);
-	                                  }
-	                              })
-	                          } else {
-	                              alertify.error("Error al Eliminar");
-	                          }
-	                      });
-	                      request.fail(function (jqXHR, textStatus, thrown) {
-	                          console.log("ERROR: " + textStatus);
-	                      });
-	                      request.always(function () {
-	                          //console.log("termino la ejecuicion de ajax");
-	                      });
-
-	                      e.preventDefault();
-
-	                  } else {
-	                      // user clicked "cancel"
-	                      alertify.error("Opcion cancelada");
-	                  }
-	              });
-	              return false;
-	          });
-
-	      });
-	  </script>
-	  <script type="text/javascript">
-	    function fmeta(){ 
-	      meta = parseFloat($('[name="meta"]').val()); //// Meta
-	      programado = parseFloat($('[name="tot"]').val()); //// Total Programado
-
-	        if(programado!=meta){
-	          $('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-	          $('#but').slideUp();
-	        }
-	        else{
-	          $('#atit').html('');
-	          $('#but').slideDown();
-	        }
-	      }
-
-	    function fmmeta(){ 
-	      meta = parseFloat($('[name="mmeta"]').val()); //// Meta
-	      programado = parseFloat($('[name="mtot"]').val()); //// Total Programado
-
-	        if(programado!=meta){
-	          $('#amtit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-	          $('#mbut').slideUp();
-	        }
-	        else{
-
-	          $('#amtit').html('');
-	          $('#mbut').slideDown();
-	        }
-	      }
-
-	      function suma_programado(){ 
-	          sum=0;
-	          linea = parseFloat($('[name="lbase"]').val()); //// linea base
-	          for (var i = 1; i<=10; i++) {
-	            sum=parseFloat(sum)+parseFloat($('[name="m'+i+'"]').val());
-	          }
-
-	          $('[name="tot"]').val((sum+linea).toFixed(2));
-	          programado = parseFloat($('[name="tot"]').val()); //// programado total
-	          meta = parseFloat($('[name="meta"]').val()); //// Meta
-
-	          if(programado!=0){
-	          	if(programado!=meta){
-		            $('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-		            $('#but').slideUp();
-		        }
-		        else{
-		            $('#atit').html('');
-		            $('#but').slideDown();
-		        }
-	          }
-	          else{
-	          	$('#but').slideUp();
-	          }
-	          
-	      }
-
-	      function suma_programado_modificado(){ 
-	          sum=0;
-	          linea = parseFloat($('[name="mlbase"]').val()); //// linea base
-	          for (var i = 1; i <=10; i++) {
-	            sum=parseFloat(sum)+parseFloat($('[name="mm'+i+'"]').val());
-	          }
-
-	          $('[name="mtot"]').val((sum+linea).toFixed(2));
-	          programado = parseFloat($('[name="mtot"]').val()); //// programado total
-	          meta = parseFloat($('[name="mmeta"]').val()); //// Meta
-
-	          if(programado!=meta){
-	            $('#amtit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-	                $('#mbut').slideUp();
-	          }
-	          else{
-	            $('#amtit').html('');
-	                $('#mbut').slideDown();
-	          }
-	      }
-	    </script>
+		<script src="<?php echo base_url(); ?>mis_js/accionespoa/ogestion.js"></script> 
 		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 	</body>
 </html>

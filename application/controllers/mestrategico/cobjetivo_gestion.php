@@ -19,131 +19,44 @@ class Cobjetivo_gestion extends CI_Controller {
           $this->dist = $this->session->userData('dist');
           $this->dist_tp = $this->session->userData('dist_tp');
           $this->fun_id = $this->session->userData('fun_id');
+          $this->load->library('acortoplazo');
         }else{
             redirect('/','refresh');
         }
     }
 
-    /*------- TIPO DE RESPONSABLE --------*/
-    public function tp_resp(){
-      $ddep = $this->model_proyecto->dep_dist($this->dist);
-      if($this->adm==1){
-        $titulo='RESPONSABLE NACIONAL';
-      }
-      elseif($this->adm==2){
-        $titulo='RESPONSABLE '.strtoupper($ddep[0]['dist_distrital']);
-      }
-
-      return $titulo;
-    }  
+ 
     
-    /*----- LISTA OBJETIVOS DE GESTION ----*/
+    /*----- LISTA ACCION DE CORTO PLAZO 2022 ----*/
     public function list_objetivos_gestion(){
-      $data['menu']=$this->menu();
-      $data['resp']=$this->session->userdata('funcionario');
-      $data['res_dep']=$this->tp_resp();
+      $data['menu']=$this->acortoplazo->menu(1);
+      $data['titulo']=$this->acortoplazo->titulo();
       $data['oestrategicos'] = $this->model_mestrategico->list_objetivos_estrategicos(); /// Objetivos Estrategicos
       $data['indi']= $this->model_proyecto->indicador(); /// indicador
-      $data['ogestion']=$this->mis_ogestion_gral();
+      $data['ogestion']=$this->acortoplazo->mis_ogestion_gral();
       $this->load->view('admin/mestrategico/objetivos_gestion/list_ogestion_general', $data);
     }
 
-     /*---------- LISTA MIS OBJETIVOS DE GESTION ------------*/
-    public function mis_ogestion_gral(){
-      $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
+    /*----- REPORTE DE ACCION CORTO PLAZO 2022 ----*/
+    public function reporte_ogestion($tp){
+      // tp : 1 distribucion Regional
+      // tp : 2 distribuacion mensual
+      $data['mes'] = $this->acortoplazo->mes_nombre();
 
-      $tabla ='';
-      $tabla .='<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <div class="jarviswidget jarviswidget-color-darken" >
-                    <header>
-                      <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                      <h2 class="font-md"><strong>ACCIONES DE CORTO PLAZO - '.$this->gestion.'</strong></h2>  
-                    </header>
-                <div>
-                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO">REGISTRAR ACCIÓN DE CORTO PLAZO</a><br><br>
-                  <div class="widget-body no-padding">
-                    <table id="dt_basic" class="table table table-bordered" width="100%">
-                      <thead>
-                        <tr>
-                          <th style="width:1%;">NRO</th>
-                          <th style="width:1%;">M/E</th>
-                          <th style="width:2%;">OPERACIONES</th>
-                          <th style="width:2%;">REPORTE</th>
-                          <th style="width:2%;">COD. O.E.</th>
-                          <th style="width:2%;">COD. A.E.</th>
-                          <th style="width:2%;">COD. ACP.</th>
-                          <th style="width:10%;">ACCIÓN DE CORTO PLAZO '.$this->gestion.'</th>
-                          <th style="width:10%;">PRODUCTO</th>
-                          <th style="width:10%;">RESULTADO</th>
-                          <th style="width:5%;">TP. INDI.</th>
-                          <th style="width:7%;">INDICADOR</th>
-                          <th style="width:4%;">LINEA BASE</th>
-                          <th style="width:4%;">META</th>
-                          <th style="width:4%;" title="CHUQUISACA">CH.</th>
-                          <th style="width:4%;" title="LA PAZ">LPZ.</th>
-                          <th style="width:4%;" title="COCHABAMBA">CBBA.</th>
-                          <th style="width:4%;" title="ORURO">OR.</th>
-                          <th style="width:4%;" title="POTOSI">POT.</th>
-                          <th style="width:4%;" title="TARIJA">TJA.</th>
-                          <th style="width:4%;" title="SANTA CRUZ">SCZ.</th>
-                          <th style="width:4%;" title="BENI">BE.</th>
-                          <th style="width:4%;" title="PANDO">PN</th>
-                          <th style="width:4%;" title="OFICINA NACIONAL">OFN</th>
-                          <th style="width:10%;">MEDIO VERIFICACI&Oacute;N</th>
-                          <th style="width:5%;">PPTO.<br>'.$this->gestion.'</th>
-                        </tr>
-                      </thead>
-                      <tbody>';
-                      $nro=0;
-                        foreach($ogestion  as $row){
-                          $presupuesto_gc=$this->model_objetivogestion->get_ppto_ogestion_gc($row['og_id']); // ppto Gasto Corriente
-                          $ppto_gc=0;$ppto_pi=0;
-                          if(count($presupuesto_gc)!=0){
-                            $ppto_gc=$presupuesto_gc[0]['presupuesto'];
-                          }
-                          $nro++;
-                          $tabla .='<tr title='.$row['og_id'].'>';
-                            $tabla .='<td>'.$nro.'</td>';
-                            $tabla .='<td align="center">';
-                              $tabla .='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff"  title="MODIFICAR DE GESTION" name="'.$row['og_id'].'"><img src="' . base_url() . 'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>';
-                              $tabla .='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OBJETIVO DE GESTION"  name="'.$row['og_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="30" HEIGHT="30"/></a><br>';
-                            $tabla .='</td>';
-                            $tabla .='<td bgcolor="#cef3ee"><br><a href="'.site_url("").'/me/objetivos_regionales/'.$row['og_id'].'" class="btn btn-default" title="OBJETIVOS REGIONALES"><img src="'.base_url().'assets/img/folder.png" WIDTH="30" HEIGHT="30"/></a></td>';
-                            $tabla .='<td bgcolor="#cef3ee"><br><a href="javascript:abreVentana(\''.site_url("").'/me/rep_oregionales/'.$row['og_id'].'\');" title="GENERAR REPORTE PDF" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></a></td>';
-                            $tabla .='<td>'.$row['obj_codigo'].'</td>';
-                            $tabla .='<td>'.$row['acc_codigo'].'</td>';
-                            $tabla .='<td><b><font color=blue size=4>'.$row['og_codigo'].'</font></b></td>';
-                            $tabla .='<td>'.$row['og_objetivo'].'</td>';
-                            $tabla .='<td>'.$row['og_producto'].'</td>';
-                            $tabla .='<td>'.$row['og_resultado'].'</td>';
-                            $tabla .='<td>'.strtoupper($row['indi_descripcion']).'</td>';
-                            $tabla .='<td>'.$row['og_indicador'].'</td>';
-                            $tabla .='<td>'.$row['og_linea_base'].'</td>';
-                            $tabla .='<td>'.$row['og_meta'].'</td>';
-                            
-                            for ($i=1; $i <=10 ; $i++) { 
-                              $dep=$this->model_objetivogestion->get_ogestion_regional($row['og_id'],$i);
-                              if(count($dep)!=0){
-                                $tabla.='<td bgcolor="#e6f5e0"><b>'.$dep[0]['prog_fis'].'</b></td>';
-                              }
-                              else{
-                                $tabla.='<td bgcolor="#e6f5e0"><b>0</b></td>';
-                              }
-                            }
-                            $tabla.='<td>'.$row['og_verificacion'].'</td>';
-                            $tabla.='<td align="right">'.number_format(($ppto_gc), 2, ',', '.').'</td>';
-                          $tabla.='</tr>';
-                        }
-                      $tabla .='
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </article>';
+      if($tp==1){
+        $lista=$this->acortoplazo->distribucion_regional();
+      }
+      else{
+        $lista=$this->acortoplazo->distribucion_mensual();
+      }
 
-      return $tabla;
+      $data['cabecera']=$this->acortoplazo->cabecera_acp($tp);
+      $data['lista']= $lista; /// lista
+      $this->load->view('admin/mestrategico/objetivos_gestion/reporte_ogestion_general', $data);
     }
+
+
+
 
    /*------- Verifica Codigo Operacion ------*/ 
   function verif_codigo(){
@@ -324,6 +237,17 @@ class Cobjetivo_gestion extends CI_Controller {
             $this->db->insert('objetivo_programado_mensual', $data_to_store4);
           }
 
+          for ($i=1; $i <=12 ; $i++) {
+            if($this->security->xss_clean($post['mes'.$i])!=0){
+                $data_to_store5 = array( 
+                'og_id' => $og_id, /// og id
+                'mes_id' => $i, /// mes id 
+                'fis' => $this->security->xss_clean($post['mes'.$i]), /// Valor prog
+                'g_id' => $this->gestion, /// Gestion
+              );
+              $this->db->insert('temporalidad_ogestion', $data_to_store5);
+            }
+          }
         }
         else{
           $og_id = $this->security->xss_clean($post['mog_id']); /// Obj id
@@ -401,6 +325,24 @@ class Cobjetivo_gestion extends CI_Controller {
               $this->db->insert('objetivo_programado_mensual', $data_to_store4);
             }
           }
+
+          /// Update Temporelidad
+
+          $this->db->where('og_id', $og_id);
+          $this->db->delete('temporalidad_ogestion');
+
+          for ($i=1; $i <=12 ; $i++) {
+            if($this->security->xss_clean($post['mmes'.$i])!=0){
+                $data_to_store5 = array( 
+                'og_id' => $og_id, /// og id
+                'mes_id' => $i, /// mes id 
+                'fis' => $this->security->xss_clean($post['mmes'.$i]), /// Valor prog
+                'g_id' => $this->gestion, /// Gestion
+              );
+              $this->db->insert('temporalidad_ogestion', $data_to_store5);
+            }
+          }
+
         }
 
         $this->session->set_flashdata('success','SE REGISTRO CORRECTAMENTE)');
@@ -423,7 +365,8 @@ class Cobjetivo_gestion extends CI_Controller {
         $og_id = $this->security->xss_clean($post['og_id']); /// Obj id
         $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id); 
         $ogestion_programado=$this->model_objetivogestion->get_objetivosgestion_temporalidad($og_id);
-        $suma=0;
+        $ogestion_programado_mes=$this->model_objetivogestion->get_objetivosgestion_temporalidad_mensual($og_id);
+        $suma=0;$suma_mes=0;
         for ($i=1; $i <=10; $i++) { 
           $dep['reg'.$i.'']=0;
           $dep_verif['verif'.$i.'']=false;
@@ -432,7 +375,7 @@ class Cobjetivo_gestion extends CI_Controller {
 
         if(count($ogestion_programado)!=0){
           for ($i=1; $i <=10 ; $i++) { 
-            $dep['reg'.$i.'']=$ogestion_programado[0]['reg'.$i.''];
+            $dep['reg'.$i.'']=round($ogestion_programado[0]['reg'.$i.''],2);
             if(count($this->model_objetivogestion->get_ogestion_oregional_temporalidad($og_id,$i))!=0){
               $dep_verif['verif'.$i.'']=true;
               $titulo['tit'.$i.'']='REGIONAL YA PROGRAMADO';
@@ -441,14 +384,28 @@ class Cobjetivo_gestion extends CI_Controller {
           $suma=$ogestion_programado[0]['programado_total']+$ogestion[0]['og_linea_base'];
         }
 
+        for ($i=1; $i <=12 ; $i++) { 
+          $temp_mes[$i]=0;
+        }
+
+        if(count($ogestion_programado_mes)!=0){
+          for ($i=1; $i <=12 ; $i++) { 
+            $temp_mes[$i]=round($ogestion_programado_mes[0]['m'.$i],2);
+          }
+          $suma_mes=$ogestion_programado_mes[0]['programado_total'];
+        }
+
+
         if(count($ogestion)!=0){
           $result = array(
             'respuesta' => 'correcto',
             'ogestion' => $ogestion,
             'oprogramado' => $dep,
+            'temporalidad' => $temp_mes,
             'verif_programado' => $dep_verif,
             'titulo' => $titulo,
             'suma' => round($suma,2),
+            'suma_mes' => round($suma_mes,2),
           );
         }
         else{
@@ -468,10 +425,6 @@ class Cobjetivo_gestion extends CI_Controller {
       if ($this->input->is_ajax_request() && $this->input->post()) {
           $post = $this->input->post();
           $og_id = $this->security->xss_clean($post['og_id']);
-
-          /*$this->db->where('og_id', $og_id);
-          $this->db->delete('objetivo_programado_mensual');*/
-
           /*----- UPDATE O. GESTION ----*/
           $update_og= array(
             'fun_id' => $this->fun_id,
@@ -481,6 +434,11 @@ class Cobjetivo_gestion extends CI_Controller {
           );
           $this->db->where('og_id', $og_id);
           $this->db->update('objetivo_gestion', $update_og);
+
+          //// Eliminando Temporalidad mensual
+          $this->db->where('og_id', $og_id);
+          $this->db->delete('temporalidad_ogestion');
+          //// ----------------------------------
 
           $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id); 
           if(count($ogestion)==0){
@@ -503,94 +461,12 @@ class Cobjetivo_gestion extends CI_Controller {
 
 
    /*----- REPORTE objetivo de Gestion GENERAL -----*/
-    public function reporte_ogestion(){
-      $data['mes'] = $this->mes_nombre();
-
-      $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
-      $tabla='';
-      $tabla.='  
-      <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;">
-        <thead>
-          <tr style="font-size: 7px;" bgcolor="#1c7368" align=center>
-            <th style="width:1%;height:20px;color:#FFF;">N°</th>
-            <th style="width:2.4%;color:#FFF;">COD. O.E.</th>
-            <th style="width:2.4%;color:#FFF;">COD. ACE.</th>
-            <th style="width:2.4%;color:#FFF;">COD. ACP.</th>
-            <th style="width:12%;color:#FFF;">ACCI&Oacute;N A CORTO PLAZO</th>
-            <th style="width:5%;color:#FFF;">PRODUCTO</th>
-            <th style="width:11%;color:#FFF;">RESULTADO</th>
-            <th style="width:10%;color:#FFF;">INDICADOR</th>
-            <th style="width:3.3%;color:#FFF;">LINEA BASE</th>
-            <th style="width:3.3%;color:#FFF;">META</th>
-            <th style="width:3.3%;color:#FFF;" title="CHUQUISACA">CH.</th>
-            <th style="width:3.3%;color:#FFF;" title="LA PAZ">LPZ.</th>
-            <th style="width:3.3%;color:#FFF;" title="COCHABAMBA">CBBA.</th>
-            <th style="width:3.3%;color:#FFF;" title="ORURO">OR.</th>
-            <th style="width:3.3%;color:#FFF;" title="POTOSI">POT.</th>
-            <th style="width:3.3%;color:#FFF;" title="TARIJA">TJA.</th>
-            <th style="width:3.3%;color:#FFF;" title="SANTA CRUZ">SCZ.</th>
-            <th style="width:3.3%;color:#FFF;" title="BENI">BE.</th>
-            <th style="width:3.3%;color:#FFF;" title="PANDO">PN</th>
-            <th style="width:3.3%;color:#FFF;" title="OFICINA NACIONAL">OFN</th>
-            <th style="width:8%;color:#FFF;">MEDIO VERIFICACI&Oacute;N</th>
-            <th style="width:6%;color:#FFF;">PPTO.<br>'.$this->gestion.'</th>
-          </tr>
-        </thead>
-        <tbody>';
-        $nro=0; $monto_total=0;
-        foreach($ogestion  as $row){
-          $presupuesto_gc=$this->model_objetivogestion->get_ppto_ogestion_gc($row['og_id']); // ppto Gasto Corriente
-          
-            $ppto_gc=0;$ppto_pi=0;
-            if(count($presupuesto_gc)!=0){
-              $ppto_gc=$presupuesto_gc[0]['presupuesto'];
-            }
-
-            $prc='';
-            if($row['indi_id']==2){
-              $prc='%';
-            }
-          $nro++;
-          $tabla .='<tr style="font-size: 7px;">';
-            $tabla .='<td style="width:1%; height:15px;" align=center>'.$nro.'</td>';
-            $tabla .='<td style="width:2.4%;" align="center">'.$row['obj_codigo'].'</td>';
-            $tabla .='<td style="width:2.4%;" align="center">'.$row['acc_codigo'].'</td>';
-            $tabla .='<td style="width:2.4%; font-size: 8px;" align="center" bgcolor="#f1eeee"><b>'.$row['og_codigo'].'</b></td>';
-            $tabla .='<td style="width:12%;">'.$row['og_objetivo'].'</td>';
-            $tabla .='<td style="width:5%;">'.$row['og_producto'].'</td>';
-            $tabla .='<td style="width:11%;">'.$row['og_resultado'].'</td>';
-            $tabla .='<td style="width:10%;">'.$row['og_indicador'].'</td>';
-            $tabla .='<td style="width:3.3%;" align=center>'.round($row['og_linea_base'],2).'</td>';
-            $tabla .='<td style="width:3.3%;" align=center>'.round($row['og_meta'],2).''.$prc.'</td>';
-            
-            for ($i=1; $i <=10 ; $i++) { 
-              $dep=$this->model_objetivogestion->get_ogestion_regional($row['og_id'],$i);
-              if(count($dep)!=0){
-                $tabla.='<td style="width:3.3%;" bgcolor="#f5f5f5" align=center>'.round($dep[0]['prog_fis'],2).''.$prc.'</td>';
-              }
-              else{
-                $tabla.='<td style="width:3.3%;" bgcolor="#f5f5f5" align=center>0</td>';
-              }
-            }
-            $tabla.='<td style="width:8%;">'.$row['og_verificacion'].'</td>';
-            $tabla.='<td style="width:6%; text-align: right;">'.number_format($ppto_gc, 2, ',', '.').'</td>';
-          $tabla.='</tr>';
-
-          $monto_total=$monto_total+$ppto_gc;
-        }
-        $tabla.='
-        </tbody>
-        <tr>
-          <td style="height:11px; text-align: right;" colspan=21><b>PRESUPUESTO TOTAL : </b></td>
-          <td style="text-align: right;">'.number_format($monto_total, 2, ',', '.').'</td>
-        </tr>
-       </table>';
+  
 
 
-      $data['ogestion']=$tabla;
-      
-      $this->load->view('admin/mestrategico/objetivos_gestion/reporte_ogestion_general', $data);
-    }
+
+
+
 
 
     /*----- Reporte objetivo de Gestion segun Accion estrategica -----*/

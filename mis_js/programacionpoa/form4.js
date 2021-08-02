@@ -645,33 +645,33 @@ function abreVentana(PDF){
         // confirm dialog
         alertify.confirm("DESEA ELIMINAR ACTIVIDAD ?", function (a) {
           if (a) { 
-              var url = base+"index.php/programacion/producto/desactiva_producto";
-              if (request) {
-                request.abort();
-              }
-              request = $.ajax({
-                url: url,
-                type: "POST",
-                dataType: "json",
-                data: "prod_id="+prod_id
-              });
+            var url = base+"index.php/programacion/producto/desactiva_producto";
+            if (request) {
+              request.abort();
+            }
+            request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: "json",
+              data: "prod_id="+prod_id
+            });
 
-              request.done(function (response, textStatus, jqXHR) { 
-                reset();
-              //  alert(response.verif)
-                if (response.respuesta == 'correcto') {
-                  alertify.alert("LA ACTIVIDAD SE ELIMINO CORRECTAMENTE ", function (e) {
-                    if (e) {
-                      window.location.reload(true);
-                    }
-                  });
-                } else {
-                  alertify.alert("ERROR AL ELIMINAR LA ACTIVIDAD !!!", function (e) {
-                    if (e) {
-                      window.location.reload(true);
-                    }
-                  });
-                }
+            request.done(function (response, textStatus, jqXHR) { 
+              reset();
+            //  alert(response.verif)
+              if (response.respuesta == 'correcto') {
+                alertify.alert("LA ACTIVIDAD SE ELIMINO CORRECTAMENTE ", function (e) {
+                  if (e) {
+                    window.location.reload(true);
+                  }
+                });
+              } else {
+                alertify.alert("ERROR AL ELIMINAR LA ACTIVIDAD !!!", function (e) {
+                  if (e) {
+                    window.location.reload(true);
+                  }
+                });
+              }
             });
               request.fail(function (jqXHR, textStatus, thrown) {
                 console.log("ERROR: " + textStatus);

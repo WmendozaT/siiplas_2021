@@ -150,6 +150,17 @@ class Model_objetivogestion extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*---------- GET OBJETIVOS DE GESTION PROGRAMADO MENSUAL --------------*/
+    public function get_objetivosgestion_temporalidad_mensual($og_id){
+        $sql = 'select *
+                from v_ogestion_programado_temporalidad
+                where og_id='.$og_id.' and g_id='.$this->gestion.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*---------- GET DEPARTAMENTO --------------*/
     public function get_ogestion_regional($og_id,$dep_id){
         $sql = 'select *

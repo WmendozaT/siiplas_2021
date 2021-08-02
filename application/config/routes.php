@@ -61,7 +61,8 @@ $route['me/rep_objetivos_gestion/(:any)'] = 'mestrategico/cobjetivo_gestion/repo
 
 /* OBJETIVOS DE GESTION INSTITUCIONAL */
 $route['me/mis_ogestion'] = 'mestrategico/cobjetivo_gestion/list_objetivos_gestion'; //// Lista Objetivos de Gestion General
-$route['me/rep_ogestion'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion'; //// Reporte Objetivo de Gestion General
+$route['me/rep_ogestion/(:any)'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion/$1'; //// Reporte Objetivo de Gestion General
+//$route['me/rep_ogestion_mes'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion_mes'; //// Reporte Objetivo de Gestion General Msnual
 
 
 /* OBJETIVOS REGIONALES */

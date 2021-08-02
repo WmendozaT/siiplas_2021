@@ -245,7 +245,7 @@ class Programacionpoa extends CI_Controller{
     function button_form4($nro){
       $tabla='';
       if($this->tp_adm==1 || $this->conf_form4==1){
-        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO FORM N 4" class="btn btn-success">
+        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO FORM N 4" >
                     <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;NUEVO REGISTRO
                   </a>
                   
