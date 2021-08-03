@@ -82,7 +82,7 @@ class Cobjetivo_gestion extends CI_Controller {
 
     /*----- LISTA OBJETIVOS DE GESTION SEGUN ACCION ESTRATEGICO ----*/
     public function objetivos_gestion($acc_id){
-      $data['menu']=$this->menu();
+      $data['menu']=$this->acortoplazo->menu(1);
       $data['resp']=$this->session->userdata('funcionario');
       $data['res_dep']=$this->tp_resp();
       $data['configuracion']=$this->model_proyecto->configuracion_session();
@@ -94,7 +94,7 @@ class Cobjetivo_gestion extends CI_Controller {
     }
 
     /*---------- MIS OBJETIVOS DE GESTION ------------*/
-    public function mis_ogestion($acc_id){
+/*    public function mis_ogestion($acc_id){
       $ogestion = $this->model_objetivogestion->list_objetivosgestion($acc_id); /// OBJETIVOS DE GESTION
       $acciones = $this->model_mestrategico->get_acciones_estrategicas($acc_id); // ACCIONES ESTRATEGICAS
       $objetivos =$this->model_mestrategico->get_objetivos_estrategicos($acciones[0]['obj_id']); /// OBJETIVOS ESTRATEGICOS
@@ -151,8 +151,8 @@ class Cobjetivo_gestion extends CI_Controller {
                             $tabla .='<td>'.$row['og_resultado'].'</td>';
                             $tabla .='<td>'.strtoupper($row['indi_descripcion']).'</td>';
                             $tabla .='<td>'.$row['og_indicador'].'</td>';
-                            $tabla .='<td>'.$row['og_linea_base'].'</td>';
-                            $tabla .='<td>'.$row['og_meta'].'</td>';
+                            $tabla .='<td>'.round($row['og_linea_base'],2).'</td>';
+                            $tabla .='<td>'.round($row['og_meta'],2).'</td>';
                             
                             for ($i=1; $i <=10 ; $i++) { 
                               $dep=$this->model_objetivogestion->get_ogestion_regional($row['og_id'],$i);
@@ -175,7 +175,7 @@ class Cobjetivo_gestion extends CI_Controller {
             </article>';
 
       return $tabla;
-    }
+    }*/
     
 
     /*------- VALIDA OBJETIVO DE GESTION -------*/
@@ -473,7 +473,7 @@ class Cobjetivo_gestion extends CI_Controller {
     public function reporte_objetivos_gestion($acc_id){
       $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($acc_id);
       if(count($data['accion_estrategica'])!=0){
-        $data['mes'] = $this->mes_nombre();
+        $data['mes'] = $this->acortoplazo->mes_nombre();
         $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($acc_id);
         $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
         $data['ogestion']=$this->rep_list_ogestion($acc_id);
@@ -555,7 +555,7 @@ class Cobjetivo_gestion extends CI_Controller {
 
 
     /*------ NOMBRE MES -------*/
-    function mes_nombre(){
+/*    function mes_nombre(){
         $mes[1] = 'ENE.';
         $mes[2] = 'FEB.';
         $mes[3] = 'MAR.';
@@ -569,10 +569,10 @@ class Cobjetivo_gestion extends CI_Controller {
         $mes[11] = 'NOV.';
         $mes[12] = 'DIC.';
         return $mes;
-    }
+    }*/
 
     /*------------------------------------- MENU -----------------------------------*/
-    function menu(){
+/*    function menu(){
       $enlaces=$this->menu_modelo->get_Modulos(1);
       for($i=0;$i<count($enlaces);$i++){
         $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
@@ -593,7 +593,7 @@ class Cobjetivo_gestion extends CI_Controller {
         }
       }
       return $tabla;
-    }
+    }*/
 
     /*------------------------- COMBO RESPONSABLES ----------------------*/
     public function combo_funcionario_unidad_organizacional($accion=''){ 
@@ -617,7 +617,7 @@ class Cobjetivo_gestion extends CI_Controller {
       }
     }
 
-    function rolfun($rol){
+/*    function rolfun($rol){
       $valor=false;
       for ($i=1; $i <=count($rol) ; $i++) { 
         $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$rol[$i]);
@@ -636,5 +636,5 @@ class Cobjetivo_gestion extends CI_Controller {
         $valor=true;
       }
       return $valor;
-    }
+    }*/
 }

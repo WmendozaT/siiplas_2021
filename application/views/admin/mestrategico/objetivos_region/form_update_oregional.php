@@ -122,7 +122,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>...</li><li>....</li><li>....</li><li>Objetivos de Gesti&oacute;n</li><li>Mis Objetivos Regional</li><li>Modificar Registro</li>
+					<li>Acci&oacute;n de Corto Plazo</li><li>Operaciones</li><li>Modificar</li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->
@@ -134,9 +134,9 @@
 	                        <section id="widget-grid" class="well">
 	                            <div class="">
 	                            	<h1>OBJETIVO ESTRAT&Eacute;GICO : <small><?php echo $obj_estrategico[0]['obj_codigo'].' .- '.$obj_estrategico[0]['obj_descripcion'];?></small></h1>
-	                              	<h1>ACCIONES ESTRAT&Eacute;GICAS : <small><?php echo $accion_estrategica[0]['acc_codigo'].' .- '.$accion_estrategica[0]['acc_descripcion'];?></small></h1>
-	                              	<h1>OBJETIVO DE GESTI&Oacute;N : <small><?php echo $ogestion[0]['og_codigo'].' .- '.$ogestion[0]['og_objetivo'];?></small> || META : <?php echo $ogestion[0]['og_meta']; ?></h1>
-	                              	<h1>OBJETIVO REGIONAL : <small><?php echo strtoupper($regional[0]['dep_departamento']);?></small></h1>
+	                              	<h1>ACCI&Oacute;N ESTRAT&Eacute;GICA : <small><?php echo $accion_estrategica[0]['acc_codigo'].' .- '.$accion_estrategica[0]['acc_descripcion'];?></small></h1>
+	                              	<h1>ACCI&Oacute;N DE CORTO PLAZO : <small><?php echo $ogestion[0]['og_codigo'].' .- '.$ogestion[0]['og_objetivo'];?></small> || META : <b><?php echo round($ogestion[0]['og_meta'],2); ?></b></h1>
+	                              	<!-- <h1>OBJETIVO REGIONAL : <small><?php echo strtoupper($regional[0]['dep_departamento']);?></small></h1> -->
 	                            </div>
 	                        </section>
 	                    </article>
