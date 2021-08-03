@@ -30,14 +30,12 @@
 		  }
 		</script>
 		<style>
-			table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;
+			table{font-size: 11px;
             }
             th{
               padding: 1.4px;
               text-align: center;
-              font-size: 10px;
+              font-size: 11px;
             }
 		</style>
 	</head>
@@ -292,7 +290,7 @@
 	              var name = $(this).attr('name');
 	              var request;
 	              // confirm dialog
-	              alertify.confirm("ELIMINAR OBJETIVO REGIONAL ?", function (a) {
+	              alertify.confirm("ELIMINAR OPERACIÓN ?", function (a) {
 	                  if (a) {
 	                  	  url = "<?php echo site_url().'/mestrategico/cobjetivo_regional/delete_oregional';?>";
 	                      if (request) {
@@ -309,7 +307,7 @@
 	                      request.done(function (response, textStatus, jqXHR) { 
 	                          reset();
 	                          if (response.respuesta == 'correcto') {
-	                              alertify.alert("EL OBJETIVO SE ELIMINO CORRECTAMENTE ", function (e) {
+	                              alertify.alert("LA OPERACIÓN SE ELIMINO CORRECTAMENTE ", function (e) {
 	                                  if (e) {
 	                                      window.location.reload(true);
 	                                  }

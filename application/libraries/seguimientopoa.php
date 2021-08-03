@@ -1057,7 +1057,7 @@ class Seguimientopoa extends CI_Controller{
         </thead>
         <tbody>
           <tr style="font-size: 10px;">
-            <td ><b>SUMA META PROGRAMADO</b></td>';
+            <td ><b>SUMA ACT. PROGRAMADO</b></td>';
           for ($i=1; $i <=12 ; $i++) { 
               $color='';
               if($i<=$this->verif_mes[1]){
@@ -1069,7 +1069,7 @@ class Seguimientopoa extends CI_Controller{
         $tabla.='
           </tr>
           <tr style="font-size: 10px;">
-            <td><b>SUMA META EJECUTADO</b></td>';
+            <td><b>SUMA ACT. EJECUTADOS</b></td>';
           for ($i=1; $i <=12 ; $i++) { 
             $color='';
               if($i<=$this->verif_mes[1]){
@@ -1095,7 +1095,7 @@ class Seguimientopoa extends CI_Controller{
       $tabla.='
         </tbody>
       </table><br>
-      <b><font color=blue size=1.5 >GRADO DE CUMPLIMIENTO DE META AL MES DE '.$this->verif_mes[2].' : '.$matriz[4][$this->verif_mes[1]].'%</font></b>';
+      <b><font color=blue size=1.5 >GRADO DE CUMPLIMIENTO DE ACT. AL MES DE '.$this->verif_mes[2].' : '.$matriz[4][$this->verif_mes[1]].'%</font></b>';
 
       return $tabla;
     }  

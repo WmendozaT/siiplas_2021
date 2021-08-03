@@ -50,6 +50,7 @@ class Cobjetivo_gestion extends CI_Controller {
         $lista=$this->acortoplazo->distribucion_mensual();
       }
 
+      $data['gestion']=$this->gestion;
       $data['cabecera']=$this->acortoplazo->cabecera_acp($tp);
       $data['lista']= $lista; /// lista
       $this->load->view('admin/mestrategico/objetivos_gestion/reporte_ogestion_general', $data);

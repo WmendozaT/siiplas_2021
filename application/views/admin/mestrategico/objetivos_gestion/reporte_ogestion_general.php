@@ -86,7 +86,7 @@ try{
     $html2pdf = new HTML2PDF('L', 'Letter', 'fr', true, 'UTF-8', 0);
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-    $html2pdf->Output('Formulario POA - N 1.pdf');
+    $html2pdf->Output('Formulario N° 1 POA '.$gestion.'.pdf');
 }
 catch(HTML2PDF_exception $e) {
     echo $e;

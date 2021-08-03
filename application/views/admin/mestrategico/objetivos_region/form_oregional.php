@@ -134,9 +134,9 @@
 	                        <section id="widget-grid" class="well">
 	                            <div class="">
 	                            	<h1>OBJETIVO ESTRAT&Eacute;GICO : <small><?php echo $obj_estrategico[0]['obj_codigo'].' .- '.$obj_estrategico[0]['obj_descripcion'];?></small></h1>
-	                              	<h1>ACCIONES ESTRAT&Eacute;GICAS : <small><?php echo $accion_estrategica[0]['acc_codigo'].' .- '.$accion_estrategica[0]['acc_descripcion'];?></small></h1>
-	                              	<h1>OBJETIVO DE GESTI&Oacute;N : <small><?php echo $ogestion[0]['og_codigo'].' .- '.$ogestion[0]['og_objetivo'];?></small> || META : <?php echo $ogestion[0]['og_meta']; ?></h1>
-	                              	<h1>OBJETIVO REGIONAL : <small><?php echo strtoupper($regional[0]['dep_departamento']);?></small></h1>
+	                              	<h1>ACCI&Oacute;N ESTRAT&Eacute;GICO : <small><?php echo $accion_estrategica[0]['acc_codigo'].' .- '.$accion_estrategica[0]['acc_descripcion'];?></small></h1>
+	                              	<h1>ACCI&Oacute;N DE CORTO PLAZO : <small><?php echo $ogestion[0]['og_codigo'].' .- '.$ogestion[0]['og_objetivo'];?></small> || META : <?php echo round($ogestion[0]['og_meta'],2);?></h1>
+	                              	<h1>OPERACIÓN REGIONAL : <small><?php echo strtoupper($regional[0]['dep_departamento']);?></small></h1>
 	                            </div>
 	                        </section>
 	                    </article>
@@ -249,7 +249,6 @@
 	  	  	meta_oregional = parseFloat($('[name="meta_reg"]').val()); //// meta regional
 	  	  	meta = parseFloat($('[name="meta"]').val()); //// meta 
 	  	  	programado = parseFloat($('[name="total"]').val()); //// programado total
-
 	  	  	//alert(meta_oregional+'--'+meta+'--'+programado)
 
 	  	  	if(meta!=0){
@@ -258,7 +257,7 @@
 		            $('#but').slideDown();
 
 		            if(programado!=meta){
-		            	$('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DEL OBJETIVO REGIONAL</div></center>');
+		            	$('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA OPERACIÓN</div></center>');
 		            	$('#but').slideUp();
 		        	}
 		        	else{
@@ -267,12 +266,12 @@
 		        	}
 		  	  	}
 		  	  	else{
-		  	  		$('#atit').html('<center><div class="alert alert-danger alert-block">LA META DEL OBJETIVO REGIONAL ES MAYOR A LA META DE GESTIÓN, VERIFIQUE DATOS...</div></center>');
+		  	  		$('#atit').html('<center><div class="alert alert-danger alert-block">LA META DE LA OPERACIÓN ES MAYOR A LA META DE LA ACCIÓN DE CORTO PLAZO, VERIFIQUE DATOS...</div></center>');
 		            $('#but').slideUp();
 		  	  	}
 	  	  	}
 	  	  	else{
-	  	  		$('#atit').html('<center><div class="alert alert-danger alert-block">LA META DEL OBJETIVO REGIONAL ES MAYOR A LA META DE GESTIÓN, VERIFIQUE DATOS...</div></center>');
+	  	  		$('#atit').html('<center><div class="alert alert-danger alert-block">LA META DE LA OPERACIÓN ES MAYOR A LA META DE LA ACCIÓN, VERIFIQUE DATOS...</div></center>');
 		        $('#but').slideUp();
 	  	  	}
 	  	  }
@@ -297,7 +296,7 @@
 	        if(meta_reg!=0){
 		        if(programado!=0){
 	          		if(programado!=meta){
-		            	$('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DEL OBJETIVO REGIONAL</div></center>');
+		            	$('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA OPERACIÓN</div></center>');
 		            	$('#but').slideUp();
 		        	}
 		        	else{
@@ -323,6 +322,9 @@
 	                      pog_id: { //// Objetivo reg prog
 	                      	required: true,
 	                      },
+	                      codigo: { //// codigo
+	                      	required: true,
+	                      },
 	                      oregional: { //// Objetivo regional
 	                      	required: true,
 	                      },
@@ -346,7 +348,8 @@
 	                      }
 	                  },
 	                  messages: {
-	                    oregional: "<font color=red>REGISTRE OBJETIVO REGIONAL</font>", 
+	                  	codigo: "<font color=red>CODIGO OPERACIÓN</font>",
+	                    oregional: "<font color=red>REGISTRE OPERACIÓN</font>", 
 	                    producto: "<font color=red>REGISTRE PRODUCTO</font>", 
 	                    resultado: "<font color=red>REGISTRE RESULTADO</font>",
 	                    indicador: "<font color=red>REGISTRE DETALLE DEL INDICADOR</font>",
@@ -380,36 +383,18 @@
 	          
 	            	if(meta_reg!=0){
 	            		if(meta!=0 || meta!=''){
-		            		ogestion = $('[name="ogestion"]').val(); //// Objetivo Gestion
-		  	  				oregion = $('[name="oregional"]').val(); //// Objetivo Regional
-		  	  				if(ogestion==oregion){
-		  	  					alertify.alert("ESTA SEGURO DE MANTENER LA DESCRIPCIÓN DEL OBJETIVO REGIONAL ?") 
-	                            document.form_nuevo.oregional.focus() 
-	                            return 0;
-		  	  				}
-		  	  				else{
-		  	  					alertify.confirm("GUARDAR OBJETIVO REGIONAL ?", function (a) {
-				                    if (a) {
-				                        document.getElementById('subir_fregional').disabled = true;
-				                        document.forms['form_nuevo'].submit();
-				                    } else {
-				                        alertify.error("OPCI\u00D3N CANCELADA");
-				                    }
-				                });
-		  	  				}
+		            		alertify.confirm("GUARDAR OPERACIÓN ?", function (a) {
+			                    if (a) {
+			                        document.getElementById('subir_fregional').disabled = true;
+			                        document.forms['form_nuevo'].submit();
+			                    } else {
+			                        alertify.error("OPCI\u00D3N CANCELADA");
+			                    }
+			                });
 		            	}
 	            	}
 	            	else{
-	            		sum_total = $('[name="sum"]').val(); //// suma total
-	            		ogestion = $('[name="ogestion"]').val(); //// Objetivo Gestion
-	  	  				oregion = $('[name="oregional"]').val(); //// Objetivo Regional
-	  	  				if(ogestion==oregion){
-	  	  					alertify.alert("ESTA SEGURO DE MANTENER LA DESCRIPCIÓN DEL OBJETIVO REGIONAL ?") 
-                            document.form_nuevo.oregional.focus() 
-                            return 0;
-	  	  				}
-		  	  				
-	            		alertify.confirm("GUARDAR OBJETIVO REGIONAL ?", function (a) {
+	            		alertify.confirm("GUARDAR OPERACIÓN ?", function (a) {
 		                    if (a) {
 		                        document.getElementById('subir_fregional').disabled = true;
 		                        document.forms['form_nuevo'].submit();

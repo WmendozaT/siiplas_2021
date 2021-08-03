@@ -20,6 +20,7 @@ class Cobjetivo_regional extends CI_Controller {
           $this->dist_tp = $this->session->userData('dist_tp');
           $this->fun_id = $this->session->userData('fun_id');
           $this->load->library('oregional');
+          //$this->load->CI_Controller('reporte_evaluacion/crep_evalunidad');
         }else{
             redirect('/','refresh');
         }
@@ -41,15 +42,13 @@ class Cobjetivo_regional extends CI_Controller {
 
     /*---------- FORMULARIO ADD OBJ. REGIONAL ------------*/
     public function form_oregional($dep_id,$og_id){
-      $data['menu']=$this->menu();
-      $data['resp']=$this->session->userdata('funcionario');
-      $data['res_dep']=$this->oregional->tp_resp();
+      $data['menu']=$this->oregional->menu(1);
       $data['ogestion']=$this->model_objetivogestion->get_objetivosgestion($og_id);
       $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
       $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
       $data['regional']=$this->model_proyecto->get_departamento($dep_id);
       
-      $data['formulario']=$this->formulario_add($dep_id,$og_id);
+      $data['formulario']=$this->oregional->formulario_add($dep_id,$og_id);
       $this->load->view('admin/mestrategico/objetivos_region/form_oregional', $data);
     }
 
@@ -67,179 +66,6 @@ class Cobjetivo_regional extends CI_Controller {
     }
 
 
-    /*------------ FORMULARIO DE REGISTRO ----------*/
-    public function formulario_add($dep_id,$og_id){
-      $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id);
-      $indi= $this->model_proyecto->indicador(); /// indicador
-      $get_meta_prog=$this->model_objetivogestion->get_temporalidad_regional($og_id,$dep_id);
-      $tabla='';
-      $tabla.='
-            <article class="col-sm-12">
-                <form action="'.site_url("").'/mestrategico/cobjetivo_regional/add_ogestion'.'" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
-                  <input type="hidden" name="pog_id" id="pog_id" value="'.$get_meta_prog[0]['pog_id'].'">
-                  <input type="hidden" name="dep_id" id="dep_id" value="'.$dep_id.'">
-                  <input type="hidden" name="nro" id="nro" value="'.count($this->model_objetivoregion->list_unidades_total($dep_id)).'">
-                  <input type="hidden" name="meta_reg" id="meta_reg" value="'.$get_meta_prog[0]['prog_fis'].'">
-                  <input type="hidden" name="tp" id="tp" value="1">
-                  <input type="hidden" name="ogestion" id="ogestion" value="'.$ogestion[0]['og_objetivo'].'">
-                  <div class="col-sm-12">
-                    <h2 class="alert alert-success"><center>DETALLE - OPERACIÓN</center></h2>
-                    <div class="well">
-                    <header><b>DECRIPCI&Oacute;N OPERACIÓN -  COD: '.$ogestion[0]['og_codigo'].'</b></header>
-                      <fieldset>          
-                        <div class="row">
-                        <section class="col col-3">
-                          <label class="label">OPERACIÓN</label>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" name="oregional" id="oregional" title="REGISTRE OBJETIVO REGIONAL" >'.$ogestion[0]['og_objetivo'].'</textarea>
-                          </label>
-                        </section>
-                        <section class="col col-3">
-                          <label class="label">PRODUCTO</label>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" name="producto" id="producto" title="REGISTRE PRODUCTO"  disabled>'.$ogestion[0]['og_producto'].'</textarea>
-                          </label>
-                        </section>
-                        <section class="col col-3">
-                          <label class="label">RESULTADO</label>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" name="resultado" id="resultado" title="REGISTRE RESULTADO" disabled>'.$ogestion[0]['og_resultado'].'</textarea>
-                          </label>
-                        </section>
-                        <section class="col col-3">
-                          <label class="label">INDICADOR</label>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" name="indicador" id="indicador" title="REGISTRE INDICADOR" disabled>'.$ogestion[0]['og_indicador'].'</textarea>
-                          </label>
-                        </section>
-                        </div>
-
-                        <div class="row">
-                          <section class="col col-3">
-                          <label class="label">LINEA BASE</label>
-                            <label class="input">
-                              <i class="icon-append fa fa-tag"></i>
-                              <input type="text" name="lbase" id="lbase" title="LINEA BASE" value='.round($ogestion[0]['og_linea_base'],2).' onkeyup="suma_programado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" disabled>
-                            </label>
-                          </section>
-                          <section class="col col-3">
-                          <label class="label">META</label>
-                            <label class="input">
-                              <i class="icon-append fa fa-tag"></i>
-                              <input type="text" name="meta" id="meta" title="META" value="'.round($get_meta_prog[0]['prog_fis'],2).'" onkeyup="verif_meta()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" disabled>
-                            </label>
-                          </section>
-                          <section class="col col-3">
-                          <label class="label">MEDIO DE VERIFICACI&Oacute;N</label>
-                            <label class="textarea">
-                              <i class="icon-append fa fa-tag"></i>
-                              <textarea rows="3" name="mverificacion" id="mverificacion" title="REGISTRE MEDIO DE VERIFICACION" disabled>'.$ogestion[0]['og_verificacion'].'</textarea>
-                            </label>
-                          </section>
-                          <section class="col col-3">
-                          <label class="label">OBSERVACIONES</label>
-                            <label class="textarea">
-                              <i class="icon-append fa fa-tag"></i>
-                              <textarea rows="3" name="observaciones" id="observaciones" title="REGISTRE OBSERVACIONES"></textarea>
-                          </label>
-                          </section>
-                        </div>
-                        <div id="atit"></div>
-                      </fieldset>
-                    </div>
-                    <br>
-                    <h2 class="alert alert-success"><center>DISTRIBUCI&Oacute;N</center></h2>';
-                    $num=0;
-                    $distritales=$this->model_proyecto->list_distritales($dep_id);
-                    foreach($distritales as $row){
-                      $tabla.='
-                      <div class="well">
-                      <header><b>'.$row['dist_id'].'.- '.strtoupper($row['dist_distrital']).'</b></header>
-                        <fieldset>          
-                          <div class="row">';
-                          $niveles=$this->model_objetivoregion->list_niveles();
-                          foreach($niveles as $rown){
-                            $nivel=$this->model_objetivoregion->list_unidades_distrital_niveles($row['dist_id'],$rown['tn_id']);
-                            if(count($nivel)!=0){
-                              $tabla.='
-                                <table class="table table-bordered" style="width:100%;">
-                                  <thead>
-                                    <tr>
-                                      <th style="width:100%;">'.$rown['descripcion'].'</th>
-                                    <tr>
-                                  </thead>
-                                  <tbody>
-                                  <tr>
-                                  <td>';
-                                  foreach($nivel as $rowu){
-                                    $num++;
-                                    $tabla.='
-                                    <section class="col col-2">
-                                      <label class="label">(<b>'.$rowu['aper_programa'].'</b>) '.$rowu['tipo'].' '.$rowu['act_descripcion'].'</label>
-                                      <label class="input">
-                                        <i class="icon-append fa fa-tag"></i>
-                                        <input type="hidden" name="act_id[]" value="'.$rowu['act_id'].'">
-                                        <input type="text" name="uni_id[]" id="uni'.$num.'" title="UNIDAD" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true">
-                                      </label>
-                                    </section>';
-                                  }
-                                  $tabla.='
-                                  </td>
-                                  </tr>
-                                  </tbody>
-                                </table><br>';
-                            }
-                          }
-                    }
-                    $tabla.='
-                          
-                          </div>
-                        </fieldset>
-                      </div><br>
-                  </div> 
-                  <input type="hidden" name="total" id="total" value="0">
-                  <br><hr>
-                  <div class="row">
-                    <section class="col col-2">
-                    <label class="label"><font color=blue><b>META REGIONAL</b></font></label>
-                      <label class="input">
-                        <i class="icon-append fa fa-tag"></i>
-                        <input type="text" name="met" id="met" title="META REGIONAL" value="'.$get_meta_prog[0]['prog_fis'].'" disabled=true>
-                      </label>
-                    </section>
-                    <section class="col col-2">
-                    <label class="label"><font color=blue><b>SUMA TOTAL PROGRAMADO</b></font></label>
-                      <label class="input">
-                        <i class="icon-append fa fa-tag"></i>
-                        <input type="text" name="sum" id="sum" title="LINEA BASE + PROGRAMADO" value="0" disabled=true>
-                      </label>
-                    </section>
-                  </div>';
-                 /* $styl='style="display:none;"';
-                  if($get_meta_prog[0]['prog_fis']==0){
-                    $styl='';
-                  }*/
-
-        $tabla.='<div id="but" style="display:none;">
-                    <footer>
-                      <button type="button" name="subir_fregional" id="subir_fregional" class="btn btn-info" >GUARDAR OBJETIVO REGIONAL</button>
-                      <a href="'.base_url().'index.php/me/objetivos_regionales/'.$og_id.'" title="SALIR" class="btn btn-default">CANCELAR</a>
-                    </footer>
-                    <div id="loadp" style="display: none" align="center">
-                      <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>GUARDANDO OPERACI&Oacute;N</b>
-                    </div>
-                  </div>
-                </form>
-            </article>';
-
-      return $tabla;
-    }
-
-   
 
     /*--- VALIDA ADD / UPDATE OBJETIVO REGIONAL ---*/
     public function add_ogestion(){
@@ -247,10 +73,9 @@ class Cobjetivo_regional extends CI_Controller {
         $post = $this->input->post();
         $tp = $this->security->xss_clean($post['tp']); /// tipo id
 
-        $objetivo = $this->security->xss_clean($post['oregional']); /// Objetivo
-        $observacion = $this->security->xss_clean($post['observaciones']); /// Observacion
+       // $objetivo = $this->security->xss_clean($post['oregional']); /// Objetivo
+       // $observacion = $this->security->xss_clean($post['observaciones']); /// Observacion
         $meta_reg = $this->security->xss_clean($post['meta_reg']); /// Meta regional
-
 
         if($tp==1){ //// INSERT
           $pog_id = $this->security->xss_clean($post['pog_id']); /// pog id
@@ -258,16 +83,16 @@ class Cobjetivo_regional extends CI_Controller {
           $ogestion=$this->model_objetivogestion->get_objetivo_temporalidad($pog_id);
           $data_to_store = array(
             'pog_id' => $pog_id,
-            'or_objetivo' => strtoupper($objetivo),
-            'or_producto' => $ogestion[0]['og_producto'],
-            'or_codigo' => $ogestion[0]['og_codigo'],
-            'or_resultado' => $ogestion[0]['og_resultado'],
+            'or_objetivo' => strtoupper($this->security->xss_clean($post['oregional'])),
+            'or_producto' => strtoupper($this->security->xss_clean($post['producto'])),
+            'or_codigo' => $this->security->xss_clean($post['codigo']),
+            'or_resultado' => strtoupper($this->security->xss_clean($post['resultado'])),
             'indi_id' => 1,
-            'or_indicador' => $ogestion[0]['og_indicador'],
-            'or_linea_base' => $ogestion[0]['og_linea_base'],
-            'or_meta' => $ogestion[0]['prog_fis'],
-            'or_verificacion' => $ogestion[0]['og_verificacion'],
-            'or_observacion' => strtoupper($observacion),
+            'or_indicador' => strtoupper($this->security->xss_clean($post['indicador'])),
+            'or_linea_base' => $this->security->xss_clean($post['lbase']),
+            'or_meta' => $this->security->xss_clean($post['meta']),
+            'or_verificacion' => strtoupper($this->security->xss_clean($post['mverificacion'])),
+            'or_observacion' => strtoupper($this->security->xss_clean($post['observaciones'])),
             'g_id' => $this->gestion,
             'fun_id' => $this->fun_id,
             'num_ip' => $this->input->ip_address(), 
@@ -311,9 +136,9 @@ class Cobjetivo_regional extends CI_Controller {
             'or_resultado' => strtoupper($this->security->xss_clean($post['resultado'])),
             'or_linea_base' => $this->security->xss_clean($post['lbase']),
             'or_meta' => $this->security->xss_clean($post['meta']),
-            'or_verificacion' => strtoupper($this->security->xss_clean($post['verificacion'])),
+            'or_verificacion' => strtoupper($this->security->xss_clean($post['mverificacion'])),
             'or_observacion' => strtoupper($this->security->xss_clean($post['observaciones'])),
-           // 'or_codigo' => $oregion[0]['og_codigo'],
+            'or_codigo' => $this->security->xss_clean($post['codigo']),
             'estado' => 2,
             'fun_id' => $this->fun_id,
             'num_ip' => $this->input->ip_address(), 
@@ -361,9 +186,11 @@ class Cobjetivo_regional extends CI_Controller {
           }
         }
 
-        $obj_gestion=$this->model_objetivogestion->get_objetivo_temporalidad($pog_id);
+        $get_or=$this->model_objetivoregion->get_objetivosregional($or_id);
+
+       // $obj_gestion=$this->model_objetivogestion->get_objetivo_temporalidad($pog_id);
         $this->session->set_flashdata('success','REGISTRO CORRECTO !!! ');
-        redirect(site_url("").'/me/objetivos_regionales/'.$obj_gestion[0]['og_id'].'#tabs-'.$obj_gestion[0]['dep_id'].'');
+        redirect(site_url("").'/me/objetivos_regionales/'.$get_or[0]['og_id'].'#tabs-'.$get_or[0]['dep_id'].'');
 
       } else {
           show_404();
@@ -411,16 +238,23 @@ class Cobjetivo_regional extends CI_Controller {
       }
     }
 
+
+
     /*---- REPORTE - LISTA DE OBJETIVOS REGIONALES SEGUN OBJETIVO DE GESTION ----*/
     public function reporte_objetivos_regionales($og_id){
-      $data['ogestion']=$this->model_objetivogestion->get_objetivosgestion($og_id); 
-      if(count($data['ogestion'])!=0){
-        $data['mes'] = $this->mes_nombre();
-        $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
-        $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
-        $data['regionales']=$this->model_objetivogestion->list_temporalidad_regional($og_id);
-        $data['og_id']=$og_id;
-        //$data['oregionales']=$this->reporte_lista_oregionales($og_id);
+      $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id); 
+      if(count($ogestion)!=0){
+        $data['gestion']=$this->gestion;
+       // $data['mes'] = $this->oregional->mes_nombre();
+       // $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
+       // $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
+       // $data['regionales']=$this->model_objetivogestion->list_temporalidad_regional($og_id);
+       // $data['og_id']=$og_id;
+       // $data['oregionales']=$this->reporte_lista_oregionales($og_id);
+       // echo $data['oregionales'];
+       // $data['cabecera']=$this->oregional->cabecera_rep_operaciones($data['ogestion']);
+       // $data['pie']=$this->oregional->pie_rep_operaciones($data['ogestion']);
+        $data['lista_operaciones']=$this->reporte_lista_oregionales($og_id);
         $this->load->view('admin/mestrategico/objetivos_gestion/reporte_objetivos_regionales', $data); 
       }
       else{
@@ -428,7 +262,152 @@ class Cobjetivo_regional extends CI_Controller {
       }
     }
 
+    /// --- Lista de Operaciones por Objetivo de Gestion 2022
     public function reporte_lista_oregionales($og_id){
+      $regionales=$this->model_objetivogestion->list_temporalidad_regional($og_id);
+      $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id); 
+
+      $tabla='';
+        $nro_pag=0;
+        foreach($regionales as $row){ 
+          $oregional=$this->model_objetivoregion->list_oregional_regional($og_id,$row['dep_id']);
+          $nro_pag++;
+          $tabla.='<page backtop="70mm" backbottom="30mm" backleft="5mm" backright="5mm" pagegroup="new">
+                    <page_header>
+                        <br><div class="verde"></div>
+                        '.$this->oregional->cabecera_rep_operaciones($ogestion).'
+                    </page_header>
+                    <page_footer>
+                        '.$this->oregional->pie_rep_operaciones($ogestion).'
+                    </page_footer>';
+
+          $tabla.='
+          <div style="font-size: 12px;font-family: Arial; height:20px;"><b>REGIONAL : </b>'.strtoupper($row['dep_departamento']).' |<b> META REGIONAL : </b>'.round($row['prog_fis'],2).'</div>';
+
+          $nro=0;
+          if(count($oregional)!=0){
+            $tabla.=$this->reporte_datos_objetivo_regional_por_regional($oregional,$row['dep_id']);
+          }
+          else{
+            $tabla.='<div style="font-size: 9px;font-family: Arial; height:20px;">SIN REGISTROS</div>';
+          }
+
+          $tabla.='</page>';
+        }
+
+      return $tabla;
+    }
+
+
+    //// Reporte muestra el reporte de operaciones por regional 2022
+    public function reporte_datos_objetivo_regional_por_regional($oregional,$dep_id){
+      $tabla='';
+        $nro=0;
+        foreach($oregional as $row_or){
+         $nro++;
+
+         $tabla.='
+         <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
+                <thead>
+                  <tr style="font-size: 8px;" bgcolor="#d8d8d8" align=center>
+                    <th style="width:2%;height:15px;">#</th>
+                    <th style="width:5%;">COD. OPE.</th>
+                    <th style="width:15%;">OPERACI&Oacute;N '.$this->gestion.'</th>
+                    <th style="width:15%;">PRODUCTO</th>
+                    <th style="width:14%;">RESULTADO (LOGROS)</th>
+                    <th style="width:13%;">INDICADOR</th>
+                    <th style="width:5%;">LINEA BASE</th>
+                    <th style="width:5%;">META</th>
+                    <th style="width:13%;">MEDIO DE VERIFICACI&Oacute;N</th>
+                    <th style="width:13%;">OBSERVACIONES DETALLE DE DISTRIBUCI&Oacute;N</th>
+                  </tr>
+                </thead>
+              <tbody>
+                <tr style="font-size: 7px;">
+                <td style="width:2%; height:20px;" align=center>'.$nro.'</td>
+                <td style="width:5%; font-size: 15px; text-align: center"><b>'.$row_or['or_codigo'].'</b></td>
+                <td style="width:15%;">'.$row_or['or_objetivo'].'</td>
+                <td style="width:15%;">'.$row_or['or_producto'].'</td>
+                <td style="width:14%;">'.$row_or['or_resultado'].'</td>
+                <td style="width:13%;">'.$row_or['or_indicador'].'</td>
+                <td style="width:5%;font-size: 10px;text-align:right">'.round($row_or['or_linea_base'],2).'</td>
+                <td style="width:5%;font-size: 10px;text-align:right">'.round($row_or['or_meta'],2).'</td>
+                <td style="width:13%;">'.$row_or['or_verificacion'].'</td>
+                <td style="width:13%;">'.$row_or['or_observacion'].'</td>
+              </tr>
+              </tbody>
+            </table><br>';
+            $num=0;
+            $distritales=$this->model_proyecto->list_distritales($dep_id);
+            foreach($distritales as $rowd){
+              $niveles=$this->model_objetivoregion->list_niveles();
+              $tabla.='
+                 <table cellpadding="0" cellspacing="0" class="tabla" border=0.4 style="width:100%;">
+                    <thead>
+                    <tr>
+                      <th colspan=4 bgcolor="#e4e2e2" style="height:12px;" align=center>DISTRIBUCI&Oacute;N - '.strtoupper($rowd['dist_distrital']).'</th>
+                    </tr>
+                    <tr>
+                      <th style="width:25%; height:12px;" bgcolor="#e4e2e2" align=center>REGIONAL / DISTRITAL</th>
+                      <th style="width:25%;" bgcolor="#e4e2e2" align=center>PRIMER NIVEL</th>
+                      <th style="width:25%;" bgcolor="#e4e2e2" align=center>SEGUNDO NIVEL</th>
+                      <th style="width:25%;" bgcolor="#e4e2e2" align=center>TERCER NIVEL</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="text-align: center;">';
+                        
+                        foreach($niveles as $rown){
+                            $nivel=$this->model_objetivoregion->list_unidades_distrital_niveles($rowd['dist_id'],$rown['tn_id']);
+                            $tabla.='
+                            <td style="width:25%;">
+                              <table class="tabla" cellpadding="0" cellspacing="0" border=0.2 style="width:100%; font-size: 6.3px;">
+                                <thead>
+                                <tr>
+                                  <th style="width:10px; height:10px;">#</th>
+                                  <th style="width:30px;">CAT. PROG.</th>
+                                  <th style="width:135px;">UNIDAD / ESTABLECIMIENTO</th>
+                                  <th style="width:50px;">PROG.</th>
+                                </tr>
+                                </thead>
+                                <tbody>';
+                                $nro=0;
+                                foreach($nivel as $rowu){
+                                  $uni=$this->model_objetivoregion->get_unidad_programado($row_or['or_id'],$rowu['act_id']);
+                                  $color='';$valor_prog=0;
+                                  if(count($uni)!=0){
+                                      if($uni[0]['or_estado']==1){
+                                          $color='#cbf7cb';      
+                                      }
+                                    $valor_prog=$uni[0]['prog_fis'];
+                                  }
+                                  $nro++;
+                                  $tabla.='
+                                  <tr bgcolor='.$color.'>
+                                    <td style="width:10px;">'.$nro.'</td>
+                                    <td style="width:30px;">'.$rowu['aper_programa'].'</td>
+                                    <td style="width:135px;text-align: left;">'.$rowu['tipo'].' '.$rowu['act_descripcion'].'</td>
+                                    <td style="width:50px;">'.round($valor_prog,2).'</td>
+                                  </tr>';
+                                }
+
+                                $tabla.='
+                                </tbody>
+                              </table>
+                            </td>';
+                        }
+                    $tabla.='
+                        </tr>
+                    </tbody>
+                </table><br>';
+            }
+        }
+
+      return $tabla;
+    }
+
+
+    /*public function reporte_lista_oregionaless($og_id){
       $tabla='';
       $regionales=$this->model_objetivogestion->list_temporalidad_regional($og_id);
 
@@ -445,7 +424,7 @@ class Cobjetivo_regional extends CI_Controller {
                 <thead>
                   <tr style="font-size: 8px;" bgcolor="#d8d8d8" align=center>
                     <th style="width:2%;height:25px;">#</th>
-                    <th style="width:5%;">COD. O.G.</th>
+                    <th style="width:5%;">COD. ACP.</th>
                     <th style="width:15%;">OPERACIÓN '.$this->gestion.'</th>
                     <th style="width:15%;">PRODUCTO</th>
                     <th style="width:14%;">RESULTADO (LOGROS)</th>
@@ -465,8 +444,8 @@ class Cobjetivo_regional extends CI_Controller {
                 <td style="width:15%;">'.$row_or['or_producto'].'</td>
                 <td style="width:14%;">'.$row_or['or_resultado'].'</td>
                 <td style="width:13%;">'.$row_or['or_indicador'].'</td>
-                <td style="width:5%;">'.$row_or['or_linea_base'].'</td>
-                <td style="width:5%;">'.$row_or['or_meta'].'</td>
+                <td style="width:5%;">'.round($row_or['or_linea_base'],2).'</td>
+                <td style="width:5%;">'.round($row_or['or_meta'],2).'</td>
                 <td style="width:13%;">'.$row_or['or_verificacion'].'</td>
                 <td style="width:13%;">'.$row_or['or_observacion'].'</td>
               </tr>
@@ -518,7 +497,7 @@ class Cobjetivo_regional extends CI_Controller {
                               <td style="width:9%; text-align: left;">'.$row_n['tipo'].'</td>
                               <td style="width:48%; text-align: left;">'.$row_n['act_descripcion'].'</td>
                               <td style="width:30%; text-align: left;">'.strtoupper($row_n['dist_distrital']).'</td>
-                              <td style="width:10%; text-align: right;">'.$prog.'</td>
+                              <td style="width:10%; text-align: right;">'.round($prog,2).'</td>
                             </tr>';
                           }
                           $tabla.='
@@ -557,7 +536,7 @@ class Cobjetivo_regional extends CI_Controller {
                               <td style="width:9%; text-align: left;">'.$row_n['tipo'].'</td>
                               <td style="width:48%; text-align: left;">'.$row_n['act_descripcion'].'</td>
                               <td style="width:30%; text-align: left;">'.strtoupper($row_n['dist_distrital']).'</td>
-                              <td style="width:10%; text-align: right;">'.$prog.'</td>
+                              <td style="width:10%; text-align: right;">'.round($prog,2).'</td>
                             </tr>';
                           }
                           $tabla.='
@@ -596,7 +575,7 @@ class Cobjetivo_regional extends CI_Controller {
                               <td style="width:9%; text-align: left;">'.$row_n['tipo'].'</td>
                               <td style="width:48%; text-align: left;">'.$row_n['act_descripcion'].'</td>
                               <td style="width:30%; text-align: left;">'.strtoupper($row_n['dist_distrital']).'</td>
-                              <td style="width:10%; text-align: right;">'.$prog.'</td>
+                              <td style="width:10%; text-align: right;">'.round($prog,2).'</td>
                             </tr>';
                           }
                           $tabla.='
@@ -635,7 +614,7 @@ class Cobjetivo_regional extends CI_Controller {
                               <td style="width:9%; text-align: left;">'.$row_n['tipo'].'</td>
                               <td style="width:48%; text-align: left;">'.$row_n['act_descripcion'].'</td>
                               <td style="width:30%; text-align: left;">'.strtoupper($row_n['dist_distrital']).'</td>
-                              <td style="width:10%; text-align: right;">'.$prog.'</td>
+                              <td style="width:10%; text-align: right;">'.round($prog,2).'</td>
                             </tr>';
                           }
                           $tabla.='
@@ -647,23 +626,20 @@ class Cobjetivo_regional extends CI_Controller {
                   </tr>
                 </tbody>
               </table>';
-
-              
           }
         }
         else{
           $tabla.='Sin Registro';
         }
 
-        
       }
 
       return $tabla;
-    }
+    }*/
 
 
     /*------ NOMBRE MES -------*/
-    function mes_nombre(){
+/*    function mes_nombre(){
         $mes[1] = 'ENE.';
         $mes[2] = 'FEB.';
         $mes[3] = 'MAR.';
@@ -677,10 +653,10 @@ class Cobjetivo_regional extends CI_Controller {
         $mes[11] = 'NOV.';
         $mes[12] = 'DIC.';
         return $mes;
-    }
+    }*/
 
     /*------------------------------------- MENU -----------------------------------*/
-    function menu(){
+/*    function menu(){
       $enlaces=$this->menu_modelo->get_Modulos(1);
       for($i=0;$i<count($enlaces);$i++){
         $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
@@ -701,7 +677,7 @@ class Cobjetivo_regional extends CI_Controller {
         }
       }
       return $tabla;
-    }
+    }*/
 
     /*------------------------- COMBO RESPONSABLES ----------------------*/
     public function combo_funcionario_unidad_organizacional($accion='') 
@@ -726,7 +702,7 @@ class Cobjetivo_regional extends CI_Controller {
       }
     }
 
-    function rolfun($rol){
+/*    function rolfun($rol){
       $valor=false;
       for ($i=1; $i <=count($rol) ; $i++) { 
         $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$rol[$i]);
@@ -745,5 +721,5 @@ class Cobjetivo_regional extends CI_Controller {
         $valor=true;
       }
       return $valor;
-    }
+    }*/
 }

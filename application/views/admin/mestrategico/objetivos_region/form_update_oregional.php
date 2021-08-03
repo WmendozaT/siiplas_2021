@@ -317,6 +317,9 @@
 	        $("#subir_fregional").on("click", function () {
 	            var $validator = $("#form_nuevo").validate({
 	                  rules: {
+	                      codigo: { //// codigo
+	                      	required: true,
+	                      },
 	                      oregional: { //// Objetivo regional
 	                      	required: true,
 	                      },
@@ -340,7 +343,8 @@
 	                      }
 	                  },
 	                  messages: {
-	                    oregional: "<font color=red>REGISTRE OBJETIVO REGIONAL</font>", 
+	                    codigo: "<font color=red>CODIGO OPERACIÓN</font>",
+	                    oregional: "<font color=red>REGISTRE OPERACIÓN</font>", 
 	                    producto: "<font color=red>REGISTRE PRODUCTO</font>", 
 	                    resultado: "<font color=red>REGISTRE RESULTADO</font>",
 	                    indicador: "<font color=red>REGISTRE DETALLE DEL INDICADOR</font>",
@@ -382,7 +386,7 @@
 	                            return 0;
 		  	  				}
 		  	  				else{
-		  	  					alertify.confirm("MODIFICAR DATOS OBJETIVO REGIONAL ?", function (a) {
+		  	  					alertify.confirm("MODIFICAR DATOS OPERACIÓN ?", function (a) {
 				                    if (a) {
 				                        document.getElementById('subir_fregional').disabled = true;
 				                        document.forms['form_nuevo'].submit();
@@ -395,7 +399,7 @@
 	            	}
 	            	else{
 	            		sum_total = $('[name="sum"]').val(); //// suma total
-	            		alertify.confirm("MODIFICAR DATOS REGIONAL ?", function (a) {
+	            		alertify.confirm("MODIFICAR DATOS OPERACIÓN ?", function (a) {
 		                    if (a) {
 		                        document.getElementById('subir_fregional').disabled = true;
 		                        document.forms['form_nuevo'].submit();

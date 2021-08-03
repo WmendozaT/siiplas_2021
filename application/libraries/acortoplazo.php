@@ -209,7 +209,7 @@ class Acortoplazo extends CI_Controller{
                 <td style="width:30%; height: 3%">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                     <tr style="font-size: 15px;font-family: Arial;">
-                      <td align=center style="width:100%;height: 10%;"><b>FORMULARIO MOD. N° 1 </b></td>
+                      <td align=center style="width:100%;height: 10%;"><b>FORMULARIO POA N° 1 </b></td>
                     </tr>
                   </table>
                 </td>
@@ -237,31 +237,31 @@ class Acortoplazo extends CI_Controller{
       $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
       $tabla='';
       $tabla.='  
-      <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;">
+      <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <thead>
-          <tr style="font-size: 7px;" bgcolor="#1c7368" align=center>
-            <th style="width:1%;height:20px;color:#FFF;">N°</th>
-            <th style="width:2.4%;color:#FFF;">COD. O.E.</th>
-            <th style="width:2.4%;color:#FFF;">COD. ACE.</th>
-            <th style="width:2.4%;color:#FFF;">COD. ACP.</th>
-            <th style="width:12%;color:#FFF;">ACCI&Oacute;N DE CORTO PLAZO</th>
-            <th style="width:5%;color:#FFF;">PRODUCTO</th>
-            <th style="width:11%;color:#FFF;">RESULTADO</th>
-            <th style="width:10%;color:#FFF;">INDICADOR</th>
-            <th style="width:3.3%;color:#FFF;">LINEA BASE</th>
-            <th style="width:3.3%;color:#FFF;">META</th>
-            <th style="width:3.3%;color:#FFF;" title="CHUQUISACA">CH.</th>
-            <th style="width:3.3%;color:#FFF;" title="LA PAZ">LPZ.</th>
-            <th style="width:3.3%;color:#FFF;" title="COCHABAMBA">CBBA.</th>
-            <th style="width:3.3%;color:#FFF;" title="ORURO">OR.</th>
-            <th style="width:3.3%;color:#FFF;" title="POTOSI">POT.</th>
-            <th style="width:3.3%;color:#FFF;" title="TARIJA">TJA.</th>
-            <th style="width:3.3%;color:#FFF;" title="SANTA CRUZ">SCZ.</th>
-            <th style="width:3.3%;color:#FFF;" title="BENI">BE.</th>
-            <th style="width:3.3%;color:#FFF;" title="PANDO">PN</th>
-            <th style="width:3.3%;color:#FFF;" title="OFICINA NACIONAL">OFN</th>
-            <th style="width:8%;color:#FFF;">MEDIO VERIFICACI&Oacute;N</th>
-            <th style="width:6%;color:#FFF;">PPTO.<br>'.$this->gestion.'</th>
+          <tr style="font-size: 7px;" bgcolor="#dcdcdc" align=center>
+            <th style="width:1%;height:20px;">N°</th>
+            <th style="width:2.4%;">COD. O.E.</th>
+            <th style="width:2.4%;">COD. ACE.</th>
+            <th style="width:2.4%;">COD. ACP.</th>
+            <th style="width:12%;">ACCI&Oacute;N DE CORTO PLAZO</th>
+            <th style="width:5%;">PRODUCTO</th>
+            <th style="width:11%;">RESULTADO</th>
+            <th style="width:10%;">INDICADOR</th>
+            <th style="width:3.3%;">LINEA BASE</th>
+            <th style="width:3.3%;">META</th>
+            <th style="width:3.3%;" title="CHUQUISACA">CH.</th>
+            <th style="width:3.3%;" title="LA PAZ">LPZ.</th>
+            <th style="width:3.3%;" title="COCHABAMBA">CBBA.</th>
+            <th style="width:3.3%;" title="ORURO">OR.</th>
+            <th style="width:3.3%;" title="POTOSI">POT.</th>
+            <th style="width:3.3%;" title="TARIJA">TJA.</th>
+            <th style="width:3.3%;" title="SANTA CRUZ">SCZ.</th>
+            <th style="width:3.3%;" title="BENI">BE.</th>
+            <th style="width:3.3%;" title="PANDO">PN</th>
+            <th style="width:3.3%;" title="OFICINA NACIONAL">OFN</th>
+            <th style="width:8%;">MEDIO VERIFICACI&Oacute;N</th>
+            <th style="width:6%;">PPTO.<br>'.$this->gestion.'</th>
           </tr>
         </thead>
         <tbody>';
@@ -283,7 +283,7 @@ class Acortoplazo extends CI_Controller{
             $tabla .='<td style="width:1%; height:15px;" align=center>'.$nro.'</td>';
             $tabla .='<td style="width:2.4%;" align="center">'.$row['obj_codigo'].'</td>';
             $tabla .='<td style="width:2.4%;" align="center">'.$row['acc_codigo'].'</td>';
-            $tabla .='<td style="width:2.4%; font-size: 8px;" align="center" bgcolor="#f1eeee"><b>'.$row['og_codigo'].'</b></td>';
+            $tabla .='<td style="width:2.4%; font-size: 10px;" align="center"><b>'.$row['og_codigo'].'</b></td>';
             $tabla .='<td style="width:12%;">'.$row['og_objetivo'].'</td>';
             $tabla .='<td style="width:5%;">'.$row['og_producto'].'</td>';
             $tabla .='<td style="width:11%;">'.$row['og_resultado'].'</td>';
@@ -324,33 +324,33 @@ class Acortoplazo extends CI_Controller{
       $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
       $tabla='';
       $tabla.='  
-      <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;">
+      <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <thead>
-          <tr style="font-size: 7px;" bgcolor="#1c7368" align=center>
-            <th style="width:1%;height:20px;color:#FFF;">N°</th>
-            <th style="width:2.4%;color:#FFF;">COD. O.E.</th>
-            <th style="width:2.4%;color:#FFF;">COD. ACE.</th>
-            <th style="width:2.4%;color:#FFF;">COD. ACP.</th>
-            <th style="width:15%;color:#FFF;">ACCI&Oacute;N A CORTO PLAZO</th>
-            <th style="width:5%;color:#FFF;">PRODUCTO</th>
-            <th style="width:11%;color:#FFF;">RESULTADO</th>
-            <th style="width:10%;color:#FFF;">INDICADOR</th>
-            <th style="width:3%;color:#FFF;">LINEA BASE</th>
-            <th style="width:3%;color:#FFF;">META</th>
-            <th style="width:2.5%;color:#FFF;" title="CHUQUISACA">ENE.</th>
-            <th style="width:2.5%;color:#FFF;" title="LA PAZ">FEB.</th>
-            <th style="width:2.5%;color:#FFF;" title="COCHABAMBA">MAR.</th>
-            <th style="width:2.5%;color:#FFF;" title="ORURO">ABR.</th>
-            <th style="width:2.5%;color:#FFF;" title="POTOSI">MAY.</th>
-            <th style="width:2.5%;color:#FFF;" title="TARIJA">JUN.</th>
-            <th style="width:2.5%;color:#FFF;" title="SANTA CRUZ">JUL.</th>
-            <th style="width:2.5%;color:#FFF;" title="BENI">AGO.</th>
-            <th style="width:2.5%;color:#FFF;" title="PANDO">SEP.</th>
-            <th style="width:2.5%;color:#FFF;" title="PANDO">OCT.</th>
-            <th style="width:2.5%;color:#FFF;" title="PANDO">NOV.</th>
-            <th style="width:2.5%;color:#FFF;" title="PANDO">DIC.</th>
-            <th style="width:8%;color:#FFF;">MEDIO VERIFICACI&Oacute;N</th>
-            <th style="width:6%;color:#FFF;">PPTO.<br>'.$this->gestion.'</th>
+          <tr style="font-size: 7px;" bgcolor="#dcdcdc" align=center>
+            <th style="width:1%;height:20px;">N°</th>
+            <th style="width:2.4%;">COD. O.E.</th>
+            <th style="width:2.4%;">COD. ACE.</th>
+            <th style="width:2.4%;">COD. ACP.</th>
+            <th style="width:15%;">ACCI&Oacute;N DE CORTO PLAZO</th>
+            <th style="width:5%;">PRODUCTO</th>
+            <th style="width:11%;">RESULTADO</th>
+            <th style="width:10%;">INDICADOR</th>
+            <th style="width:3%;">LINEA BASE</th>
+            <th style="width:3%;">META</th>
+            <th style="width:2.5%;" title="">ENE.</th>
+            <th style="width:2.5%;" title="">FEB.</th>
+            <th style="width:2.5%;" title="">MAR.</th>
+            <th style="width:2.5%;" title="">ABR.</th>
+            <th style="width:2.5%;" title="">MAY.</th>
+            <th style="width:2.5%;" title="">JUN.</th>
+            <th style="width:2.5%;" title="">JUL.</th>
+            <th style="width:2.5%;" title="">AGO.</th>
+            <th style="width:2.5%;" title="">SEP.</th>
+            <th style="width:2.5%;" title="">OCT.</th>
+            <th style="width:2.5%;" title="">NOV.</th>
+            <th style="width:2.5%;" title="">DIC.</th>
+            <th style="width:8%;">MEDIO VERIFICACI&Oacute;N</th>
+            <th style="width:6%;">PPTO.<br>'.$this->gestion.'</th>
           </tr>
         </thead>
         <tbody>';
@@ -372,7 +372,7 @@ class Acortoplazo extends CI_Controller{
             $tabla .='<td style="width:1%; height:15px;" align=center>'.$nro.'</td>';
             $tabla .='<td style="width:2.4%;" align="center">'.$row['obj_codigo'].'</td>';
             $tabla .='<td style="width:2.4%;" align="center">'.$row['acc_codigo'].'</td>';
-            $tabla .='<td style="width:2.4%; font-size: 8px;" align="center" bgcolor="#f1eeee"><b>'.$row['og_codigo'].'</b></td>';
+            $tabla .='<td style="width:2.4%; font-size: 10px;" align="center"><b>'.$row['og_codigo'].'</b></td>';
             $tabla .='<td style="width:12%;">'.$row['og_objetivo'].'</td>';
             $tabla .='<td style="width:5%;">'.$row['og_producto'].'</td>';
             $tabla .='<td style="width:11%;">'.$row['og_resultado'].'</td>';

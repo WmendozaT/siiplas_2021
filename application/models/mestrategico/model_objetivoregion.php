@@ -102,7 +102,7 @@ class Model_objetivoregion extends CI_Model{
                 Inner Join objetivo_gestion as og On og.og_id=opg.og_id
                 Inner Join objetivos_regionales as oreg On opg.pog_id=oreg.pog_id
                 where opg.og_id='.$og_id.' and opg.dep_id='.$dep_id.' and oreg.estado!=\'3\'
-                order by oreg.or_id asc';
+                order by oreg.or_codigo,oreg.or_id asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();
