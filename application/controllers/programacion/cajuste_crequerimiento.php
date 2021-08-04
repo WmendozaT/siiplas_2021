@@ -28,6 +28,7 @@ class cajuste_crequerimiento extends CI_Controller{
         $this->rol = $this->session->userData('rol_id');
         $this->dist_tp = $this->session->userData('dist_tp');
         $this->fun_id = $this->session->userdata("fun_id");
+        $this->conf_form5 = $this->session->userData('conf_form5');
         $this->load->library('programacionpoa');
         }else{
             $this->session->sess_destroy();
@@ -38,10 +39,11 @@ class cajuste_crequerimiento extends CI_Controller{
     /*---- LISTA DE REQUERIMIENTOS POR SERVICIO ----*/
     function list_requerimientos_total($com_id){
       $data['componente'] = $this->model_componente->get_componente($com_id);
+      $data['menu']=$this->genera_menu($data['componente'][0]['proy_id']);
       if(count($data['componente'])!=0){
         $fase = $this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
         $data['proyecto']=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
-        $data['menu']=$this->genera_menu($fase[0]['proy_id']);
+        $data['titulo']=$this->programacionpoa->titulo_ajuste($data['proyecto'],$data['componente']);
         $data['part_padres'] = $this->model_partidas->lista_padres();//partidas padres
         $data['part_hijos'] = $this->model_partidas->lista_partidas();//partidas hijos
         $data['monto_asig']=$this->model_ptto_sigep->suma_ptto_accion($data['proyecto'][0]['aper_id'],1);
@@ -57,11 +59,7 @@ class cajuste_crequerimiento extends CI_Controller{
         $data['monto_a']=$monto_a;
         $data['monto_p']=$monto_p;
 
-        $data['datos']=
-          '<h2 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].'-'.$data['proyecto'][0]['abrev'].'</h2>
-          <h2><small>UNIDAD RESPONSABLE : </small>'.$data['componente'][0]['serv_cod'].'.- '.$data['componente'][0]['serv_descripcion'].'</h2>';
-
-        $data['datos_unidad']= $data['proyecto'][0]['tipo_adm'].' : '.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].'-'.$data['proyecto'][0]['abrev'];
+        $data['datos_proyecto']= $data['proyecto'][0]['tipo_adm'].' : '.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].'-'.$data['proyecto'][0]['abrev'];
 
         $data['lista']=$this->tipo_lista_ope_act($com_id);
         $data['requerimientos']=$this->lista_requerimientos($com_id);

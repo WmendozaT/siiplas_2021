@@ -219,8 +219,9 @@
 		<script src="<?php echo base_url();?>/assets/js/app.min.js"></script>
         <script src="<?php echo base_url();?>/assets/form/js/jquery.backstretch.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
+        <script src="<?php echo base_url(); ?>mis_js/programacionpoa/programacionpoa.js"></script> 
 
-        <script type="text/javascript">
+<!--         <script type="text/javascript">
         $(function () {
             $("#subir_form1").on("click", function () {
                 var $validator = $("#form1").validate({
@@ -268,7 +269,10 @@
                 }
             });
         });    
-        </script>
+
+
+
+        </script> -->
 		<script type="text/javascript">
 			// DO NOT REMOVE : GLOBAL FUNCTIONS!
 			$(document).ready(function() {

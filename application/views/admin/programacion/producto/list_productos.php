@@ -122,7 +122,7 @@
                 <div class="">
                   <?php echo $datos_proyecto;?>
                   <p>
-                    <button class="btn btn-default" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">LISTA DE OBJETIVOS REGIONALES ALINEADOS</button>
+                    <button class="btn btn-default" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">LISTA DE OPERACIONES REGIONALES ALINEADOS</button>
                   </p>
                   <div class="collapse multi-collapse" id="multiCollapseExample1">
                     <div class="card card-body">
@@ -527,12 +527,12 @@
                     </section>
 
                     <section class="col col-5">
-                      <label class="label"><b>OBJETIVO REGIONAL</b></label>
-                      <select class="form-control" id="mor_id" name="mor_id" title="SELECCIONE OBJETIVO REGIONAL">
-                          <option value="">SELECCIONE OBJETIVO REGIONAL</option>
+                      <label class="label"><b>ALINEACIÓN OPERACI&Oacute;N REGIONAL</b></label>
+                      <select class="form-control" id="mor_id" name="mor_id" title="SELECCIONE ALINEACIÓN REGIONAL">
+                          <option value="">SELECCIONE ALINEACIÓN OPERACIÓN</option>
                           <?php 
                             foreach($objetivos as $row){ ?>
-                            <option value="<?php echo $row['or_id'];?>"><?php echo $row['or_codigo'].'.- '.$row['or_objetivo'];?></option>
+                            <option value="<?php echo $row['or_id'];?>"><?php echo $row['og_codigo'].'.'.$row['or_codigo'].'. .- '.$row['or_objetivo'];?></option>
                           <?php } ?>        
                       </select>
                     </section>

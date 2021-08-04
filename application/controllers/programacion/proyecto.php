@@ -392,12 +392,12 @@ class Proyecto extends CI_Controller {
   /*----- FORMULARIO DE REGISTRO DE UNIDADES/ESTABLECIMIENTOS (2020) -----*/
   function form_poa_unidades(){
     $data['menu']=$this->programacionpoa->menu(2);
-    $data['res_dep']=$this->tp_resp();
+    $data['res_dep']=$this->programacionpoa->tp_resp();
     if($this->tp_adm==1){
-      $data['form']=$this->formulacion_add_poa_adm();
+      $data['form']=$this->programacionpoa->formulacion_add_poa_adm();
     }
     else{
-      $data['form']=$this->formulacion_add_poa();
+      $data['form']=$this->programacionpoa->formulacion_add_poa();
     }
 
     $this->load->view('admin/programacion/prog_operaciones/formularios/form_add_of', $data);
@@ -407,10 +407,10 @@ class Proyecto extends CI_Controller {
   /*--- FORMULARIO DE MODIFICACIÓN DE UNIDADES/ESTABLECIMIENTOS (2020) ---*/
   function form_update_poa_unidades($proy_id){
     $data['menu']=$this->programacionpoa->menu(2);
-    $data['res_dep']=$this->tp_resp();
+    $data['res_dep']=$this->programacionpoa->tp_resp();
     $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
     if(count($data['proyecto'])!=0){
-      $data['form']=$this->formulacion_update_poa($data['proyecto']);
+      $data['form']=$this->programacionpoa->formulacion_update_poa($data['proyecto']);
 
       $this->load->view('admin/programacion/prog_operaciones/formularios/form_edit_of', $data);
     }
@@ -420,308 +420,7 @@ class Proyecto extends CI_Controller {
     }
   }
 
-  /*------------ FORMULACIÓN - ADICION - POA (2020) ----------*/
-  public function formulacion_add_poa_adm(){
-    $tabla='';
-    $regionales=$this->model_proyecto->list_departamentos();
-    $unidades=$this->model_estructura_org->list_unidades_apertura();
-      $tabla.='
-            <article class="col-sm-12">
-            <div class="well">
-              <form action="'.site_url("").'/programacion/proyecto/valida_poa_unidades'.'" id="form1" name="form1" class="smart-form" method="post">
-                  <input type="hidden" name="tp" id="tp" value="1">
-                  <header><b>FORMULACI&Oacute;N POA '.$this->gestion.'</b></header>
-                  <input type="hidden" name="uni_id" id="uni_id" value="0">
-                  <input type="hidden" name="prog" id="prog" value="0">
-                  <input type="hidden" name="act" id="act" value="0">
-                  <fieldset>          
-                    <div class="row">
-                      <section class="col col-3">
-                        <label class="label">REGIONAL</label>
-                        <select class="select2" id="reg_id" name="reg_id" title="SELECCIONE REGIONAL">
-                        <option value="">SELECCIONE REGIONAL</option>';
-                        foreach($regionales as $row){
-                          if($row['dep_id']!=0){
-                            $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
-                          }
-                        }
-                        $tabla.='
-                        </select>
-                      </section>
-                      
-                    </div>
-                    
-                    <div id="uni" style="display:none;">
-                      <hr><br>
-                      <div class="row">
-                        <section class="col col-3">
-                          <label class="label">UNIDAD / ESTABLECIMIENTO DE SALUD</label>
-                          <select class="select2" id="act_id" name="act_id" title="SELECCIONE UNIDAD / ESTABLECIMIENTO DE SALUD">
-                          <option value="">SELECCIONE UNIDAD / ESTABLECIMIENTO</option>
-                          </select>
-                        </section>
-                        <section class="col col-5">
-                          <label class="label">VINCULACI&Oacute;N A OBJETIVO REGIONAL</label>
-                          <div id="oregional"></div>
-                        </section>
 
-                        <section class="col col-4">
-                          <label class="label">SERVICIOS DISPONIBLES</label>
-                          <div id="servicios"></div>
-                        </section>
-                      </div>
-                      <div class="row">
-                        <div id="programa"></div>
-                      </div>
-                    </div>
-                    
-
-                  </fieldset>
-                  <div id="programa"></div>
-                  <div id="but" style="display:none;">
-                    <footer>
-                      <button type="button" name="subir_form1" id="subir_form1" class="btn btn-info">GUARDAR DATOS</button>
-                      <a href="'.base_url().'index.php/admin/proy/list_proy" title="SALIR" class="btn btn-default">CANCELAR</a>
-                    </footer>
-                  </div>
-              </form>
-              </div>
-            </article>';
-    return $tabla;
-  }
-
-  /*------------ FORMULACIÓN - ADICION - POA (2020) ----------*/
-    public function formulacion_add_poa(){
-      $tabla='';
-      $unidades=$this->model_estructura_org->list_unidades_apertura();
-      $tabla.='
-            <article class="col-sm-12">
-            <div class="well">
-              <form action="'.site_url("").'/programacion/proyecto/valida_poa_unidades'.'" id="form1" name="form1" class="smart-form" method="post">
-                  <input type="hidden" name="tp" id="tp" value="1">
-                  <header><b>FORMULACI&Oacute;N POA '.$this->gestion.'</b></header>
-                  <input type="hidden" name="uni_id" id="uni_id" value="0">
-                  <input type="hidden" name="prog" id="prog" value="0">
-                  <input type="hidden" name="act" id="act" value="0">
-                  <fieldset>          
-                    <div class="row">
-                      <section class="col col-3">
-                        <label class="label">UNIDAD / ESTABLECIMIENTO DE SALUD</label>
-                        <select  id="act_id" name="act_id" title="SELECCIONE UNIDAD / ESTABLECIMIENTO DE SALUD">
-                        <option value="">SELECCIONES UNIDAD / ESTABLECIMIENTO</option>';
-                        foreach($unidades as $row){
-                          if(count($this->model_proyecto->get_uni_apertura_programatica($row['act_id']))==0){
-                            $tabla.='<option value="'.$row['act_id'].'">'.$row['act_cod'].'.- '.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</option>';
-                          }
-                        }
-                        $tabla.='
-                        </select>
-                      </section>
-
-                      <section class="col col-5">
-                        <label class="label">VINCULACI&Oacute;N A OBJETIVO REGIONAL</label>
-                        <div id="oregional"></div>
-                      </section>
-
-                      <section class="col col-4">
-                        <label class="label">SERVICIOS DISPONIBLES</label>
-                        <div id="servicios"></div>
-                      </section>
-                    </div>
-                  </fieldset>
-                  <div id="programa"></div>
-                  <div id="but" style="display:none;">
-                    <footer>
-                      <button type="button" name="subir_form1" id="subir_form1" class="btn btn-info">GUARDAR DATOS</button>
-                      <a href="'.base_url().'index.php/admin/proy/list_proy" title="SALIR" class="btn btn-default">CANCELAR</a>
-                    </footer>
-                  </div>
-              </form>
-              </div>
-            </article>';
-
-      return $tabla;
-    }
-
-    /*------------ FORMULACIÓN - UPDATE - POA (2020) ----------*/
-    public function formulacion_update_poa($proyecto){
-      $tabla='';
-      $actividad= $this->model_estructura_org->get_actividad($proyecto[0]['act_id']); /// get actividad
-      $oregionales=$this->model_objetivoregion->get_unidad_pregional_programado($proyecto[0]['act_id']); /// Objetivos Regionales
-      $servicios=$this->model_estructura_org->list_establecimiento_servicio($actividad[0]['te_id']); /// Servicios Habilitados
-      $fase = $this->model_faseetapa->get_id_fase($proyecto[0]['proy_id']);
-      $tabla.='
-            <article class="col-sm-12">
-            <div class="well">
-              <form action="'.site_url("").'/programacion/proyecto/valida_update_poa_unidades'.'" id="form1" name="form1" class="smart-form" method="post">
-                  <input type="hidden" name="tp" id="tp" value="1">
-                  <header><b>FORMULACI&Oacute;N POA '.$this->gestion.'</b></header>
-                  <fieldset>          
-                    <div class="row">
-                      <section class="col col-3">
-                        <label class="label">UNIDAD / ESTABLECIMIENTO DE SALUD '.$proyecto[0]['act_id'].'</label>
-                        <select class="select2" id="act_id" name="act_id" title="SELECCIONE UNIDAD / ESTABLECIMIENTO DE SALUD" disabled>
-                        <option value="'.$actividad[0]['act_id'].'">'.$actividad[0]['act_cod'].'.- ('.$actividad[0]['tipo'].') '.$actividad[0]['act_descripcion'].'</option></select>
-                      </section>
-
-                      <section class="col col-5">
-                        <label class="label">VINCULACI&Oacute;N A OBJETIVO REGIONAL</label>
-                        <table class="table table-bordered">
-                          <thead>
-                            <tr>
-                              <th scope="col">#</th>
-                              <th scope="col">OBJETIVO REGIONAL '.$this->gestion.'</th>
-                              <th scope="col">OBJETIVO DE GESTI&Oacute;N '.$this->gestion.'</th>
-                              <th scope="col"></th>
-                            </tr>
-                          </thead>
-                          <tbody>';
-                          $cont = 0;
-                          foreach($oregionales as $row){
-                            $verif=$this->model_objetivoregion->get_proyecto_oregional($proyecto[0]['proy_id'],$row['por_id']);
-                              $color='#f9eeee';
-                              if($row['or_estado']!=0){
-                                $color='#e2f9f6';
-                              }
-                            $cont++;
-                            $tabla.='
-                            <tr bgcolor='.$color.'>
-                              <td>'.$cont.'</td>
-                              <td>'.$row['or_codigo'].'.- '.$row['or_objetivo'].'</td>
-                              <td>'.$row['og_codigo'].'.- '.$row['og_objetivo'].'</td>
-                              <td>';
-                              if(count($verif)!=0){
-                                $tabla.='<center><input type="checkbox" onclick="scheck'.$cont.'(this.checked,'.$row['por_id'].','.$proyecto[0]['proy_id'].');" title="OBJETIVO SELECCIONADO" checked/></center>';
-                              }
-                              else{
-                                $tabla.='<center><input type="checkbox" onclick="scheck'.$cont.'(this.checked,'.$row['por_id'].','.$proyecto[0]['proy_id'].');" title="SELECCIONE OBJETIVO REGIONAL"/></center>';
-                              }
-                              $tabla.='
-                              </td>
-                            </tr>';
-                            ?>
-                            <script>
-                              function scheck<?php echo $cont;?>(estaChequeado,id,proy_id) {
-                                valor=0;
-                                titulo='DESACTIVAR OBJETIVO REGIONAL';
-                                if (estaChequeado == true) {
-                                  valor=1;
-                                  titulo='ACTIVAR OBJETIVO REGIONAL';
-                                }
-
-                                alertify.confirm(titulo, function (a) {
-                                    if (a) {
-                                        var url = "<?php echo site_url().'/programacion/proyecto/estado_oregional'?>";
-                                        $.ajax({
-                                            type: "post",
-                                            url: url,
-                                            data:{id:id,estado:valor,proy_id:proy_id},
-                                            success: function (data) {
-                                                window.location.reload(true);
-                                            }
-                                        });
-                                    } else {
-                                        alertify.error("OPCI\u00D3N CANCELADA");
-                                    }
-                                });
-                              }
-                            </script>
-                            <?php
-                          }
-                          $tabla.='
-                          </tbody>
-                        </table>
-                      </section>
-
-                      <section class="col col-4">
-                        <label class="label">SERVICIOS DISPONIBLES</label>
-                        <table class="table table-bordered">
-                          <thead>
-                            <tr>
-                              <th scope="col">#</th>
-                              <th scope="col">C&Oacute;DIGO</th>
-                              <th scope="col">SERVICIO '.$this->gestion.'</th>
-                              <th scope="col"></th>
-                              <th scope="col">PROG.</th>
-                            </tr>
-                          </thead>
-                          <tbody>';
-                          $cont = 0;
-                          foreach($servicios as $row){
-                            $veri_cs=$this->model_proyecto->verif_componente_servicio($fase[0]['id'],$row['serv_id']);
-                            $cont++;
-                            $tabla.='
-                            <tr>
-                              <td>'.$cont.'</td>
-                              <td>'.$row['serv_cod'].'</td>
-                              <td>'.$row['serv_descripcion'].'</td>';
-                                if($row['serv_id']!=0){
-                                  if(count($veri_cs)!=0){
-                                  $tabla.='
-                                  <td align="center">';
-                                    if(count($this->model_producto->list_producto_programado($veri_cs[0]['com_id'],$this->gestion))==0){
-                                      $tabla.='<input type="checkbox" onclick="scheckk'.$cont.'(this.checked,'.$row['serv_id'].','.$fase[0]['id'].');" title="SERVICIO ACTIVADO" checked/>';
-                                    }
-                                  $tabla.='
-                                  </td>
-                                  <td align="center">
-                                    <a href="'.site_url("admin").'/prog/list_prod/'.$veri_cs[0]['com_id'].'" title="PROGRAMAR ACTIVIDADES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/archivo.png" WIDTH="35" HEIGHT="35"/></a>
-                                  </td>';
-                                  }
-                                  else{
-                                    $tabla.='
-                                    <td>
-                                      <input type="checkbox" onclick="scheckk'.$cont.'(this.checked,'.$row['serv_id'].','.$fase[0]['id'].');" title="SELECCIONAR SERVICIO"/>
-                                    </td>
-                                    <td>
-                                    </td>';
-                                  }
-                                }
-                                $tabla.='
-                              </td>
-                            </tr>';
-                            ?>
-                            <script>
-                              function scheckk<?php echo $cont;?>(estaChequeado,id,pfec_id) {
-                                valor=0;
-                                titulo='DESACTIVAR SERVICIO';
-                                if (estaChequeado == true) {
-                                  valor=1;
-                                  titulo='ACTIVAR SERVICIO';
-                                }
-
-                                alertify.confirm(titulo, function (a) {
-                                    if (a) {
-                                        var url = "<?php echo site_url().'/programacion/proyecto/estado_servicios'?>";
-                                        $.ajax({
-                                            type: "post",
-                                            url: url,
-                                            data:{id:id,estado:valor,pfec_id:pfec_id},
-                                            success: function (data) {
-                                                window.location.reload(true);
-                                            }
-                                        });
-                                    } else {
-                                        alertify.error("OPCI\u00D3N CANCELADA");
-                                    }
-                                });
-                              }
-                            </script>
-                            <?php
-                          }
-                          $tabla.='
-                          </tbody>
-                        </table>
-                      </section>
-                    </div>
-                  </fieldset>
-                  <center><div class="alert alert-warning alert-block"><h1>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev'].'</h1></div></center>
-              </form>
-              </div>
-            </article>';
-
-      return $tabla;
-    }
 
     /*--- ACTIVAR, DESACTIVAR OBJETIVO REGIONAL -----*/
     function estado_oregional(){
@@ -741,6 +440,7 @@ class Proyecto extends CI_Controller {
               );
               $this->db->insert('proy_oregional', $data_to_store3);
           }
+
           else{ /// Desactivar unidad a la gestion
             $this->db->where('por_id', $id);
             $this->db->delete('proy_oregional');
@@ -783,6 +483,42 @@ class Proyecto extends CI_Controller {
           show_404();
       }
     }
+
+
+
+    /*-- SELECCIONAR Y DESECCIONALES ALINEACION A OPERACIONES 2022 --*/
+    public function deseleccion_seleccion_alineacion(){
+      if($this->input->post()){
+        $post = $this->input->post();
+        $proy_id = $this->security->xss_clean($post['proy_id']);
+        $tp = $this->security->xss_clean($post['tp']);
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
+        $oregionales=$this->model_objetivoregion->get_unidad_pregional_programado($proyecto[0]['act_id']); /// Objetivos Regionales
+
+          if($tp==0){ /// Deselecciona
+            $this->db->where('proy_id', $proy_id);
+            $this->db->delete('proy_oregional');
+          }
+          else{ /// Selecciona
+            foreach($oregionales as $row){
+              $data_to_store3 = array(
+                'proy_id' => $proy_id,
+                'por_id' => $row['por_id'],
+              );
+              $this->db->insert('proy_oregional', $data_to_store3);
+            }
+          }
+
+        $result = array(
+          'respuesta' => 'correcto',
+        );
+
+      //  echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
 
     /*---------  DIRECCION ADMINISTRATIVA --------------*/
     public function combo_da($accion=''){ 

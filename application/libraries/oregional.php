@@ -614,7 +614,7 @@ class Oregional extends CI_Controller{
               <td style="width:70%;height: 2%">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                       <tr style="font-size: 15px;font-family: Arial;">
-                          <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                          <td style="width:35%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
                       </tr>
                       <tr>
                           <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
@@ -637,7 +637,7 @@ class Oregional extends CI_Controller{
                             <td style="height: 35%;"><b>OPERACIONES </b></td>
                         </tr>
                         <tr style="font-size: 20px;font-family: Arial;">
-                          <td style="height: 5%;">PLAN OPERATIVO ANUAL - '.$this->gestion.'</td>
+                          <td style="height: 2%;">PLAN OPERATIVO ANUAL - '.$this->gestion.'</td>
                         </tr>
                     </table>
                 </td>
@@ -789,15 +789,12 @@ class Oregional extends CI_Controller{
                 <td colspan="3"><br></td>
             </tr>
             <tr style="font-size: 7px;font-family: Arial;">
-                <td style="text-align: left" colspan="2">
+                <td style="text-align: left;height: 2.5%;" colspan="2">
                     '.$this->session->userdata('sistema').'
                 </td>
                 <td style="width: 20%; text-align: right">
                     pag. [[page_cu]]/[[page_nb]]
                 </td>
-            </tr>
-            <tr>
-                <td colspan="3"><br><br><br></td>
             </tr>
         </table>';
 

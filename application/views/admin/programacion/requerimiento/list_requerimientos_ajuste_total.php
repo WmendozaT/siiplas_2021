@@ -134,11 +134,14 @@
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
 					<div class="row">
-						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
+						<?php echo $titulo; ?>
+						<!-- <article class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
 				            <section id="widget-grid" class="well">
 				                <div class="">
-				                  <?php echo $datos; ?>
-				                  <!-- <h1> PRESUPUESTO ASIGNADO : <small><?php echo number_format($monto_a, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;PRESUPUESTO PROGRAMADO : <small><?php echo number_format($monto_p, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;SALDO : <small><?php echo number_format(($monto_a-$monto_p), 2, ',', '.'); ?></small></h1> -->
+				                  	<?php echo $datos; ?>
+				                  	<h1> PRESUPUESTO ASIGNADO : <small><?php echo number_format($monto_a, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;PRESUPUESTO PROGRAMADO : <small><?php echo number_format($monto_p, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;SALDO : <small><?php echo number_format(($monto_a-$monto_p), 2, ',', '.'); ?></small></h1>
+				                	<a href="#" data-toggle="modal" data-target="#modal_comparativo" name="<?php echo $proyecto[0]['proy_id'];?>" id="<?php echo $datos_unidad;?>" class="btn btn-default comparativo" title="MOSTRAR CUADRO COMPARATIVO PRESUPUESTARIA ASIGANDO-POA"><i class="fa fa-clipboard"></i> <b>COMPARATIVO PPTO.</b></a>
+				                	<a class="btn btn-danger" id="btsubmit" onclick="valida_eliminar()" title="ELIMINAR REQUERIMIENTOS SELECCIONADOS"><i class="glyphicon glyphicon-trash"></i> DELETE INSUMOS (SELECCIONADOS)</a>
 				                </div>
 				            </section>
 				        </article>
@@ -152,7 +155,7 @@
 									<a class="btn btn-danger" id="btsubmit" onclick="valida_eliminar()" title="ELIMINAR REQUERIMIENTOS SELECCIONADOS"><i class="glyphicon glyphicon-trash"></i> DELETE INSUMOS (SELECCIONADOS)</a>
 								</div>
 							</div>
-				        </article>
+				        </article> -->
 
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<?php 
@@ -182,8 +185,6 @@
 	                                  <h2 class="font-md"><strong></strong></h2>  
 	                              </header>
 									<div>
-									<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success nuevo_ff" title="NUEVO REGISTRO - REQUERIMIENTOS" class="btn btn-success" style="width:15%;">NUEVO REGISTRO</a>
-									<a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-info importar_ff" title="SUBIR ARCHIVO EXCEL" class="btn btn-info" style="width:15%;">SUBIR REQUERIMIENTOS.CSV</a><br><br>	
 										<div class="widget-body no-padding">
 											<form id="del_req" name="del_req" novalidate="novalidate" action="<?php echo site_url().'/programacion/cajuste_crequerimiento/delete_requerimientos_ajustes'?>" method="post">
 												<input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
@@ -434,9 +435,9 @@
 	              <div class="modal-body">
 	              	<h2 class="alert alert-info"><center>MODIFICAR REGISTRO - REQUERIMIENTO</center></h2>
 	                <form action="<?php echo site_url().'/programacion/cajuste_crequerimiento/valida_update_insumo_ajuste'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
-						<input type="text" name="tp" id="tp" value="1">
-						<input type="text" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
-						<input type="text" name="ins_id" id="ins_id">
+						<input type="hidden" name="tp" id="tp" value="1">
+						<input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
+						<input type="hidden" name="ins_id" id="ins_id">
 							<header><b>DATOS GENERALES DEL REQUERIMIENTO</b><br><label class="label"><b>C&Oacute;DIGO DE ACTIVIDAD : </b></label></header>
 							<fieldset>
 								<div class="row">
@@ -664,65 +665,58 @@
 	    </div>
 	 	<!--  =============== -->
 
-    	<!-- ================== MODAL SUBIR ARCHIVO ========================== -->
-     	<div class="modal animated fadeInDown" id="modal_importar_ff" tabindex="-1" role="dialog">
-        <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
-        <div class="modal-dialog" id="mdialTamanio2">
-            <div class="modal-content">
-                <div class="modal-body no-padding">
-                    <div class="row">
-                       <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="row">
-                            <h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> IMPORTAR REQUERIMIENTOS (.CSV) </h2>
-                            <div class="col-sm-12">
-                              <!-- well -->
-                              <div class="well">
-                                <!-- row -->
-                                <div class="row">
-                                  <!-- col -->
-                                  <div class="col-sm-12">
-                                    <p class="alert alert-info">
-                                      <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
-                                    </p>
-                                    <!-- row -->
-                                    <div class="row">
-                                    	<font color="#1b5f56" size="5"><b>SERVICIO : </b><?php echo $componente[0]['com_componente'];?><br>
-                                      <form action="<?php echo site_url().'/programacion/cajuste_crequerimiento/importar_operaciones_requerimientos_ajustes'?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" method="post">
-                                          <input type="hidden" name="aper_id" value="<?php echo $proyecto[0]['aper_id'];?>">
-                                          <input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
-                                          <fieldset>
-                                          	<br>
-	                                        <div class="input-group">
-	                                          <span class="input-group-btn">
-	                                            <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
-	                                            <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
-	                                            <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
-	                                          </span>
-	                                          <span class="form-control"></span>
-	                                        </div>
-	                                    	</br>
-	                                      </fieldset>
-                                          <div >
-                                            <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;" title="SUBIR REQUERIMIENTOS A LA OPERACI&Oacute;N">SUBIR REQUERIMIENTOS .CSV</button>
-                                            <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                                          </div>
-                                      </form> 
-                                    </div>
-                                    <!-- end row -->
-                                  </div>
-                                  <!-- end col -->
-                                </div>
-                                <!-- end row -->
-                              </div>
-                              <!-- end well -->
-                            </div>
-                          </div>
-                        </article>
-                    </div>   
+	 <!---- MODAL SUBIR PLANTILLA ---->
+    <div class="modal fade" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" id="mdialTamanio2">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+              <h2><div id="titulo"></div></h2>
+              <section id="widget-grid" class="">
+                <div>
+                  <?php echo $datos_proyecto;?>
+                  <h1> UNIDAD RESPONSABLE : <small><?php echo $componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion']; ?></small></h1>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
+              </section>
+              <div class="row">
+                <form action="<?php echo site_url().'/programacion/cajuste_crequerimiento/importar_operaciones_requerimientos_ajustes'?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" method="post">  
+                  <input type="hidden" name="aper_id" value="<?php echo $proyecto[0]['aper_id'];?>">
+                  <input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
+                  <fieldset>
+                    <div class="form-group">
+                      <center><div id="img"></div></center>
+                      <hr>
+                        <p class="alert alert-info">
+                          <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
+                        </p>
+                    </div>
+                  </fieldset>  
+                
+                  <div class="form-group">
+                    <b>SELECCIONAR ARCHIVO CSV</b>
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+                        <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+                      </span>
+                      <span class="form-control"></span>
+                    </div>
+                </div>
+                  
+                  <div>
+                      <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR ARCHIVO REQUERIMIENTO.CSV</button><br>
+                      <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                  </div>
+                </form> 
+              </div>
+            </div>
+        </div>
+      </div>
     </div>
+
     	<!--================================================== -->
 		<!-- PAGE FOOTER -->
 		<div class="page-footer">

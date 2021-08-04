@@ -27,7 +27,7 @@ class Acortoplazo extends CI_Controller{
             $this->conf_form5 = $this->session->userData('conf_form5');
     }
 
-    /*------- TIPO DE RESPONSABLE --------*/
+    /*------- TIPO --------*/
     public function titulo(){
       $tabla='';
       $tabla.='
@@ -69,8 +69,8 @@ class Acortoplazo extends CI_Controller{
                         <tr>
                           <th style="width:1%;">NRO</th>
                           <th style="width:1%;">M/E</th>
-                          <th style="width:2%;">OPERACIONES</th>
-                          <th style="width:2%;">REPORTE</th>
+                          <th style="width:2%;">OPERACIONES '.$this->gestion.'</th>
+                          <th style="width:2%;">REPORTE OPERACIONES</th>
                           <th style="width:2%;">COD. O.E.</th>
                           <th style="width:2%;">COD. A.E.</th>
                           <th style="width:2%;">COD. ACP.</th>
@@ -110,8 +110,8 @@ class Acortoplazo extends CI_Controller{
                               $tabla .='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff"  title="MODIFICAR DE GESTION" name="'.$row['og_id'].'"><img src="' . base_url() . 'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>';
                               $tabla .='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OBJETIVO DE GESTION"  name="'.$row['og_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="30" HEIGHT="30"/></a><br>';
                             $tabla .='</td>';
-                            $tabla .='<td bgcolor="#cef3ee"><br><a href="'.site_url("").'/me/objetivos_regionales/'.$row['og_id'].'" class="btn btn-default" title="OBJETIVOS REGIONALES"><img src="'.base_url().'assets/img/folder.png" WIDTH="30" HEIGHT="30"/></a></td>';
-                            $tabla .='<td bgcolor="#cef3ee"><br><a href="javascript:abreVentana(\''.site_url("").'/me/rep_oregionales/'.$row['og_id'].'\');" title="GENERAR REPORTE PDF" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></a></td>';
+                            $tabla .='<td bgcolor="#cef3ee" align=center><br><a href="'.site_url("").'/me/objetivos_regionales/'.$row['og_id'].'" class="btn btn-default" title="OBJETIVOS REGIONALES"><img src="'.base_url().'assets/img/folder.png" WIDTH="30" HEIGHT="30"/></a></td>';
+                            $tabla .='<td bgcolor="#cef3ee" align=center><br><a href="javascript:abreVentana(\''.site_url("").'/me/rep_oregionales/'.$row['og_id'].'\');" title="GENERAR REPORTE PDF" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></a></td>';
                             $tabla .='<td>'.$row['obj_codigo'].'</td>';
                             $tabla .='<td>'.$row['acc_codigo'].'</td>';
                             $tabla .='<td><b><font color=blue size=4>'.$row['og_codigo'].'</font></b></td>';

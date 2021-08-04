@@ -54,7 +54,7 @@ class Cobjetivo_regional extends CI_Controller {
 
     /*---------- FORMULARIO UPDATE OBJ. REGIONAL ------------*/
     public function form_update_oregional($or_id){
-      $data['menu']=$this->menu();
+      $data['menu']=$this->oregional->menu(1);
       $data['oregion']=$this->model_objetivoregion->get_objetivosregional($or_id); /// Objetivo Regional
       $data['ogestion']=$this->model_objetivogestion->get_objetivosgestion($data['oregion'][0]['og_id']); /// Objetivo de Gestion
       $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
@@ -272,7 +272,7 @@ class Cobjetivo_regional extends CI_Controller {
         foreach($regionales as $row){ 
           $oregional=$this->model_objetivoregion->list_oregional_regional($og_id,$row['dep_id']);
           $nro_pag++;
-          $tabla.='<page backtop="70mm" backbottom="30mm" backleft="5mm" backright="5mm" pagegroup="new">
+          $tabla.='<page backtop="66mm" backbottom="20mm" backleft="5mm" backright="5mm" pagegroup="new">
                     <page_header>
                         <br><div class="verde"></div>
                         '.$this->oregional->cabecera_rep_operaciones($ogestion).'
@@ -309,7 +309,7 @@ class Cobjetivo_regional extends CI_Controller {
          $tabla.='
          <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
                 <thead>
-                  <tr style="font-size: 8px;" bgcolor="#d8d8d8" align=center>
+                  <tr style="font-size: 8px;" bgcolor="#d2d2d2" align=center>
                     <th style="width:2%;height:15px;">#</th>
                     <th style="width:5%;">COD. OPE.</th>
                     <th style="width:15%;">OPERACI&Oacute;N '.$this->gestion.'</th>
@@ -342,7 +342,7 @@ class Cobjetivo_regional extends CI_Controller {
             foreach($distritales as $rowd){
               $niveles=$this->model_objetivoregion->list_niveles();
               $tabla.='
-                 <table cellpadding="0" cellspacing="0" class="tabla" border=0.4 style="width:100%;">
+                 <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
                     <thead>
                     <tr>
                       <th colspan=4 bgcolor="#e4e2e2" style="height:12px;" align=center>DISTRIBUCI&Oacute;N - '.strtoupper($rowd['dist_distrital']).'</th>
@@ -361,7 +361,7 @@ class Cobjetivo_regional extends CI_Controller {
                             $nivel=$this->model_objetivoregion->list_unidades_distrital_niveles($rowd['dist_id'],$rown['tn_id']);
                             $tabla.='
                             <td style="width:25%;">
-                              <table class="tabla" cellpadding="0" cellspacing="0" border=0.2 style="width:100%; font-size: 6.3px;">
+                              <table class="tabla" cellpadding="0" cellspacing="0" border=0.1 style="width:100%; font-size: 6.3px;">
                                 <thead>
                                 <tr>
                                   <th style="width:10px; height:10px;">#</th>
@@ -406,282 +406,8 @@ class Cobjetivo_regional extends CI_Controller {
       return $tabla;
     }
 
-
-    /*public function reporte_lista_oregionaless($og_id){
-      $tabla='';
-      $regionales=$this->model_objetivogestion->list_temporalidad_regional($og_id);
-
-      foreach($regionales as $row){
-        $oregional=$this->model_objetivoregion->list_oregional_regional($og_id,$row['dep_id']);
-        
-        $tabla.='REGIONAL : '.$row['dep_departamento'].' - '.$row['prog_fis'].'<br>';
-        $nro=0;
-        if(count($oregional)!=0){
-          foreach($oregional as $row_or){
-          $nro++;
-           $tabla.='
-              <table cellpadding="0" cellspacing="0" class="tabla" border=0.4 style="width:100%;">
-                <thead>
-                  <tr style="font-size: 8px;" bgcolor="#d8d8d8" align=center>
-                    <th style="width:2%;height:25px;">#</th>
-                    <th style="width:5%;">COD. ACP.</th>
-                    <th style="width:15%;">OPERACIÓN '.$this->gestion.'</th>
-                    <th style="width:15%;">PRODUCTO</th>
-                    <th style="width:14%;">RESULTADO (LOGROS)</th>
-                    <th style="width:13%;">INDICADOR</th>
-                    <th style="width:5%;">LINEA BASE</th>
-                    <th style="width:5%;">META</th>
-                    <th style="width:13%;">MEDIO DE VERIFICACI&Oacute;N</th>
-                    <th style="width:13%;">OBSERVACIONES DETALLE DE DISTRIBUCI&Oacute;N</th>
-                  </tr>
-                </thead>
-              <tbody>';
-              $tabla.='
-              <tr style="font-size: 7px;">
-                <td style="width:2%; height:17px;" align=center>'.$nro.'</td>
-                <td style="width:5%;">'.$row_or['og_codigo'].'</td>
-                <td style="width:15%;">'.$row_or['or_objetivo'].'</td>
-                <td style="width:15%;">'.$row_or['or_producto'].'</td>
-                <td style="width:14%;">'.$row_or['or_resultado'].'</td>
-                <td style="width:13%;">'.$row_or['or_indicador'].'</td>
-                <td style="width:5%;">'.round($row_or['or_linea_base'],2).'</td>
-                <td style="width:5%;">'.round($row_or['or_meta'],2).'</td>
-                <td style="width:13%;">'.$row_or['or_verificacion'].'</td>
-                <td style="width:13%;">'.$row_or['or_observacion'].'</td>
-              </tr>
-              </tbody>
-              </table><br>';
-
-              $tabla.=
-              '<table cellpadding="0" cellspacing="0" class="tabla" border=0.4 style="width:100%;">
-                <thead>
-                <tr>
-                  <th colspan=4 bgcolor="#e4e2e2" style="height:20px;" align=center>DISTRIBUCI&Oacute;N</th>
-                </tr>
-                <tr>
-                  <th style="width:25%; height:20px;" bgcolor="#e4e2e2" align=center>REGIONAL / DISTRITAL</th>
-                  <th style="width:25%;" bgcolor="#e4e2e2" align=center>PRIMER NIVEL</th>
-                  <th style="width:25%;" bgcolor="#e4e2e2" align=center>SEGUNDO NIVEL</th>
-                  <th style="width:25%;" bgcolor="#e4e2e2" align=center>TERCER NIVEL</th>
-                </tr>
-                </thead>
-                <tbody>
-                  <tr style="text-align: center;">
-                    <td style="width: 25%;">';
-                      $nivel=$this->model_objetivoregion->list_unidades_niveles($row['dep_id'],0);
-                      if(count($nivel)!=0){
-                        $tabla.=
-                        '<br><table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
-                          <thead>
-                          <tr>
-                            <th style="width:1%; height:16px;" align=center>#</th>
-                            <th style="width:9%;" align=center>TIPO</th>
-                            <th style="width:48%;" align=center>UNIDAD / ESTABLECIMIENTO</th>
-                            <th style="width:30%;" align=center>DISTRITAL</th>
-                            <th style="width:10%;" align=center>PROG.</th>
-                          </tr>
-                          </thead>
-                          <tbody>';
-                          $nro_nivel=0;
-                          foreach($nivel as $row_n){
-                            $uni=$this->model_objetivoregion->get_unidad_programado($row_or['or_id'],$row_n['act_id']);
-                            $prog='-'; $bgcolor='';
-                            if(count($uni)!=0){
-                              $prog=$uni[0]['prog_fis'];
-                              $bgcolor='#dcebf9';
-                            }
-                            $nro_nivel++;
-                            $tabla.=
-                            '<tr bgcolor='.$bgcolor.'>
-                              <td style="width:1%;height:14px; text-align: center;">'.$nro_nivel.'</td>
-                              <td style="width:9%; text-align: left;">'.$row_n['tipo'].'</td>
-                              <td style="width:48%; text-align: left;">'.$row_n['act_descripcion'].'</td>
-                              <td style="width:30%; text-align: left;">'.strtoupper($row_n['dist_distrital']).'</td>
-                              <td style="width:10%; text-align: right;">'.round($prog,2).'</td>
-                            </tr>';
-                          }
-                          $tabla.='
-                          </tbody>
-                        </table><br>';
-                      }
-                    $tabla.='
-                    </td>
-                    <td style="width: 25%;">';
-                      $nivel=$this->model_objetivoregion->list_unidades_niveles($row['dep_id'],1);
-                      if(count($nivel)!=0){
-                        $tabla.=
-                        '<br><table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
-                          <thead>
-                          <tr>
-                            <th style="width:1%; height:16px;" align=center>#</th>
-                            <th style="width:9%;" align=center>TIPO</th>
-                            <th style="width:48%;" align=center>UNIDAD / ESTABLECIMIENTO</th>
-                            <th style="width:30%;" align=center>DISTRITAL</th>
-                            <th style="width:10%;" align=center>PROG.</th>
-                          </tr>
-                          </thead>
-                          <tbody>';
-                          $nro_nivel=0;
-                          foreach($nivel as $row_n){
-                            $uni=$this->model_objetivoregion->get_unidad_programado($row_or['or_id'],$row_n['act_id']);
-                            $prog='-'; $bgcolor='';
-                            if(count($uni)!=0){
-                              $prog=$uni[0]['prog_fis'];
-                              $bgcolor='#dcebf9';
-                            }
-                            $nro_nivel++;
-                            $tabla.=
-                            '<tr bgcolor='.$bgcolor.'>
-                              <td style="width:1%;height:14px; text-align: center;">'.$nro_nivel.'</td>
-                              <td style="width:9%; text-align: left;">'.$row_n['tipo'].'</td>
-                              <td style="width:48%; text-align: left;">'.$row_n['act_descripcion'].'</td>
-                              <td style="width:30%; text-align: left;">'.strtoupper($row_n['dist_distrital']).'</td>
-                              <td style="width:10%; text-align: right;">'.round($prog,2).'</td>
-                            </tr>';
-                          }
-                          $tabla.='
-                          </tbody>
-                        </table><br>';
-                      }
-                    $tabla.='
-                    </td>
-                    <td style="width: 25%;">';
-                      $nivel=$this->model_objetivoregion->list_unidades_niveles($row['dep_id'],2);
-                      if(count($nivel)!=0){
-                        $tabla.=
-                        '<br><table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
-                          <thead>
-                          <tr>
-                            <th style="width:1%; height:16px;" align=center>#</th>
-                            <th style="width:9%;" align=center>TIPO</th>
-                            <th style="width:48%;" align=center>UNIDAD / ESTABLECIMIENTO</th>
-                            <th style="width:30%;" align=center>DISTRITAL</th>
-                            <th style="width:10%;" align=center>PROG.</th>
-                          </tr>
-                          </thead>
-                          <tbody>';
-                          $nro_nivel=0;
-                          foreach($nivel as $row_n){
-                            $uni=$this->model_objetivoregion->get_unidad_programado($row_or['or_id'],$row_n['act_id']);
-                            $prog='-'; $bgcolor='';
-                            if(count($uni)!=0){
-                              $prog=$uni[0]['prog_fis'];
-                              $bgcolor='#dcebf9';
-                            }
-                            $nro_nivel++;
-                            $tabla.=
-                            '<tr bgcolor='.$bgcolor.'>
-                              <td style="width:1%;height:14px; text-align: center;">'.$nro_nivel.'</td>
-                              <td style="width:9%; text-align: left;">'.$row_n['tipo'].'</td>
-                              <td style="width:48%; text-align: left;">'.$row_n['act_descripcion'].'</td>
-                              <td style="width:30%; text-align: left;">'.strtoupper($row_n['dist_distrital']).'</td>
-                              <td style="width:10%; text-align: right;">'.round($prog,2).'</td>
-                            </tr>';
-                          }
-                          $tabla.='
-                          </tbody>
-                        </table><br>';
-                      }
-                    $tabla.='
-                    </td>
-                    <td style="width: 25%;">';
-                      $nivel=$this->model_objetivoregion->list_unidades_niveles($row['dep_id'],3);
-                      if(count($nivel)!=0){
-                        $tabla.=
-                        '<br><table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
-                          <thead>
-                          <tr>
-                            <th style="width:1%; height:16px;" align=center>#</th>
-                            <th style="width:9%;" align=center>TIPO</th>
-                            <th style="width:48%;" align=center>UNIDAD / ESTABLECIMIENTO</th>
-                            <th style="width:30%;" align=center>DISTRITAL</th>
-                            <th style="width:10%;" align=center>PROG.</th>
-                          </tr>
-                          </thead>
-                          <tbody>';
-                          $nro_nivel=0;
-                          foreach($nivel as $row_n){
-                            $uni=$this->model_objetivoregion->get_unidad_programado($row_or['or_id'],$row_n['act_id']);
-                            $prog='-'; $bgcolor='';
-                            if(count($uni)!=0){
-                              $prog=$uni[0]['prog_fis'];
-                              $bgcolor='#dcebf9';
-                            }
-                            $nro_nivel++;
-                            $tabla.=
-                            '<tr bgcolor='.$bgcolor.'>
-                              <td style="width:1%;height:14px; text-align: center;">'.$nro_nivel.'</td>
-                              <td style="width:9%; text-align: left;">'.$row_n['tipo'].'</td>
-                              <td style="width:48%; text-align: left;">'.$row_n['act_descripcion'].'</td>
-                              <td style="width:30%; text-align: left;">'.strtoupper($row_n['dist_distrital']).'</td>
-                              <td style="width:10%; text-align: right;">'.round($prog,2).'</td>
-                            </tr>';
-                          }
-                          $tabla.='
-                          </tbody>
-                        </table><br>';
-                      }
-                    $tabla.='
-                    </td>
-                  </tr>
-                </tbody>
-              </table>';
-          }
-        }
-        else{
-          $tabla.='Sin Registro';
-        }
-
-      }
-
-      return $tabla;
-    }*/
-
-
-    /*------ NOMBRE MES -------*/
-/*    function mes_nombre(){
-        $mes[1] = 'ENE.';
-        $mes[2] = 'FEB.';
-        $mes[3] = 'MAR.';
-        $mes[4] = 'ABR.';
-        $mes[5] = 'MAY.';
-        $mes[6] = 'JUN.';
-        $mes[7] = 'JUL.';
-        $mes[8] = 'AGOS.';
-        $mes[9] = 'SEPT.';
-        $mes[10] = 'OCT.';
-        $mes[11] = 'NOV.';
-        $mes[12] = 'DIC.';
-        return $mes;
-    }*/
-
-    /*------------------------------------- MENU -----------------------------------*/
-/*    function menu(){
-      $enlaces=$this->menu_modelo->get_Modulos(1);
-      for($i=0;$i<count($enlaces);$i++){
-        $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
-      }
-
-      $tabla ='';
-      for($i=0;$i<count($enlaces);$i++){
-        if(count($subenlaces[$enlaces[$i]['o_child']])>0){
-            $tabla .='<li>';
-                $tabla .='<a href="#">';
-                    $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
-                    $tabla .='<ul>';    
-                        foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
-                        $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
-                    }
-                    $tabla .='</ul>';
-            $tabla .='</li>';
-        }
-      }
-      return $tabla;
-    }*/
-
     /*------------------------- COMBO RESPONSABLES ----------------------*/
-    public function combo_funcionario_unidad_organizacional($accion='') 
-    { 
+    public function combo_funcionario_unidad_organizacional($accion=''){ 
       $salida="";
       $accion=$_POST["accion"];
       switch ($accion) {
@@ -702,24 +428,4 @@ class Cobjetivo_regional extends CI_Controller {
       }
     }
 
-/*    function rolfun($rol){
-      $valor=false;
-      for ($i=1; $i <=count($rol) ; $i++) { 
-        $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$rol[$i]);
-        if(count($data)!=0){
-          $valor=true;
-          break;
-        }
-      }
-      return $valor;
-    }
-
-    function rolfunn($tp_rol){
-      $valor=false;
-      $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$tp_rol);
-      if(count($data)!=0){
-        $valor=true;
-      }
-      return $valor;
-    }*/
 }

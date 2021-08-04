@@ -67,18 +67,20 @@ class Producto extends CI_Controller {
         /*--------- Proyecto de Inversion -----------*/
         if($data['proyecto'][0]['tp_id']==1){
           $data['datos_proyecto']='<h1> PROYECTO : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small></h1>';
+          $data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['fase'][0]['proy_id']);
           $data['list_oregional']=$this->programacionpoa->lista_oregional_pi($proy_id);
         }
         /*--------- Gasto Corriente ----------*/
         else{
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+          $data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['proyecto'][0]['act_id']);
           $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
           $data['list_oregional']=$this->programacionpoa->lista_oregional($proy_id);
 
          // $data['list_oregional']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);/// Lista de Objetivos Regionales
         }
 
-        $data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['fase'][0]['proy_id']);
+        
         $data['button']=$this->programacionpoa->button_form4(count($data['productos']));
         $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente

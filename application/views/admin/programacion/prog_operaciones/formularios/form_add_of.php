@@ -279,7 +279,7 @@
 	                });
 
 	                request.done(function (response, textStatus, jqXHR) {
-	                	alert(response.respuesta)
+	                	//alert(response.respuesta)
 	                if (response.respuesta == 'correcto') {
 	                	document.getElementById("uni_id").value = response.actividad[0]['act_id'];
 	                	

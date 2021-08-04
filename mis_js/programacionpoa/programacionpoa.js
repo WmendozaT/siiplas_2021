@@ -56,6 +56,80 @@ function abreVentana(PDF){
     return /\d/.test(String.fromCharCode(keynum));
   }
 
+
+  /// deseleccionar TODO Operaciones Regionales
+  function deseleccionar_todo(){
+    proy_id = document.getElementById("proy_id").value;
+    nro = document.getElementById("nro_ope").value;
+    tp = 0;
+/*      for (var i=1; i<=nro; i++) {
+        if(document.getElementById("ope"+i).checked){
+            document.getElementById("ope"+i).checked=0;
+        }
+      }*/
+
+      alertify.confirm("DESELECCIONAR LA ALINEACION ?", function (a) {
+        if (a) {
+        var url = base+"index.php/programacion/proyecto/deseleccion_seleccion_alineacion";
+        $.ajax({
+          type: "post",
+          url: url,
+          data: {
+            proy_id:proy_id,tp:tp
+          },
+          success: function (date) {
+            alertify.success("DESELECCIÓN EXITOSA ...");
+            window.location.reload(true);
+          }
+        });
+
+        } else {
+            alertify.error("OPCI\u00D3N CANCELADA");
+            window.location.reload(true);
+        }
+        
+    });
+        
+  }
+
+  /// Seleccionar TODO Operaciones Regionales
+  function seleccionar_todo(){
+    proy_id = document.getElementById("proy_id").value;
+    nro = document.getElementById("nro_ope").value;
+    tp = 1;
+
+/*      for (var i=1; i<=nro; i++) {
+        if(!document.getElementById("ope"+i).checked){
+          document.getElementById("ope"+i).checked=1;
+        }
+      }*/
+
+      alertify.confirm("DESELECCIONAR LA ALINEACION ?", function (a) {
+        if (a) {
+        var url = base+"index.php/programacion/proyecto/deseleccion_seleccion_alineacion";
+        $.ajax({
+          type: "post",
+          url: url,
+          data: {
+            proy_id:proy_id,tp:tp
+          },
+          success: function (date) {
+            alertify.success("SELECCIÓN EXITOSA ...");
+            window.location.reload(true);
+          }
+        });
+
+        } else {
+            alertify.error("OPCI\u00D3N CANCELADA");
+            window.location.reload(true);
+        }
+    });
+
+  }
+
+
+
+
   //// VER POA
   $(function () {
     $(".enlace").on("click", function (e) {
