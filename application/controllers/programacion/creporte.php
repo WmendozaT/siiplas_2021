@@ -23,6 +23,7 @@ class Creporte extends CI_Controller {
             $this->rol = $this->session->userData('rol_id');
             $this->dist_tp = $this->session->userData('dist_tp');
             $this->fun_id = $this->session->userdata("fun_id");
+            $this->load->library('programacionpoa');
 
             }else{
                 $this->session->sess_destroy();
@@ -439,9 +440,6 @@ class Creporte extends CI_Controller {
     }
 
 
-
-
-    /*----- REPORTE - FORMULARIO 4 (2021) -----*/
     public function reporte_formulario4($com_id){
         $data['componente']=$this->model_componente->get_componente($com_id);
         if(count($data['componente'])!=0){
@@ -451,12 +449,35 @@ class Creporte extends CI_Controller {
             $data['cabecera']=$this->cabecera($data['componente'],$data['proyecto'],1); /// Cabecera
             
             $data['operaciones']=$this->operaciones_form4($data['componente'],$data['proyecto']); /// Reporte Gasto Corriente, Proyecto de Inversion 2020
-            $this->load->view('admin/programacion/reportes/reporte_form4', $data);
+       // echo $data['cabecera'];
+           $this->load->view('admin/programacion/reportes/reporte_form4', $data);
         }
         else{
             echo "Error !!!";
         }
     }
+
+
+    /*----- REPORTE - FORMULARIO 4 (2021) -----*/
+/*    public function reporte_formulario4($com_id){
+        $componente=$this->model_componente->get_componente($com_id);
+        if(count($componente)!=0){
+            $data['mes'] = $this->mes_nombre();
+          //  $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
+            $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); //// DATOS PROYECTO
+            if($proyecto[0]['tp_id']==4){
+                $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
+            }
+
+          //  $data['cabecera']=$this->cabecera($proyecto[0]['tp_id'],4,$proyecto); /// Cabecera
+          //  $data['pie']='';
+            $data['operaciones']=$this->operaciones_form4($componente,$proyecto); /// Reporte Gasto Corriente, Proyecto de Inversion 2020
+            $this->load->view('admin/programacion/reportes/reporte_form4', $data);
+        }
+        else{
+            echo "Error !!!";
+        }
+    }*/
 
     /*----- TITULO DEL REPORTE tp:1 (pdf), 2:(Excel) 2021 -----*/
     public function cabecera($componente,$proyecto,$tp){
@@ -630,7 +651,7 @@ class Creporte extends CI_Controller {
                 </thead>
                 <tbody>';
                 $nro=0;
-                $operaciones=$this->model_producto->list_operaciones($componente[0]['com_id']);
+                $operaciones=$this->model_producto->lista_operaciones($componente[0]['com_id']);
                 
                 foreach($operaciones as $rowp){
                   $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);

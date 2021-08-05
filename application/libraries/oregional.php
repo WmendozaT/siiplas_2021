@@ -652,7 +652,7 @@ class Oregional extends CI_Controller{
                 <td style="width:30%; height: 2%">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                       <tr style="font-size: 15px;font-family: Arial;">
-                          <td align=center style="width:100%;height: 20%;"><b>FORMULARIO POA N° 2 </b></td>
+                          <td align=center style="width:100%;height: 20%;"><b>FORMULARIO SPO N° 2 </b></td>
                       </tr>
                   </table>
                 </td>

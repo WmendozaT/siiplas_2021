@@ -876,6 +876,251 @@ class Programacionpoa extends CI_Controller{
 
 
 
+
+
+    //// ======== CABECERA Y PIE PARA LOS REPORTES POA 2022
+  //// Cabecera Reporte form 3, 4 y 5
+  public function cabecera($tp_id,$tp_rep,$proyecto){
+    /// tp_rep : 3 (Foda), 4 (Actividades), 5 (requerimientos)
+    
+    if($tp_rep==3){
+      $titulo_rep='ANALISIS DE PROBLEMAS Y CAUSAS';
+      $titulo_form='FORMULARIO SPO N° 3';
+      $comp='';
+    }
+    else{
+      if($tp_rep==4){
+        $titulo_rep='ACTIVIDADES';
+        $titulo_form='FORMULARIO SPO N° 4';
+      }
+      elseif($tp_rep==5){
+        $titulo_rep='REQUERIMIENTOS';
+        $titulo_form='FORMULARIO SPO N° 5';
+      }
+      $comp='
+        <tr>
+          <td style="width:20%;">
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                  <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD REPONSABLE</b></td><td style="width:5%;"></td></tr>
+              </table>
+          </td>
+          <td style="width:80%;">
+              <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                  <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;</td></tr>
+              </table>
+          </td>
+        </tr>';
+    }
+
+    
+
+
+    $tabla='';
+    $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+        <tr style="border: solid 0px;">              
+            <td style="width:70%;height: 2%">
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="font-size: 13px;font-family: Arial;">
+                        <td style="width:40%;height: 20%;">&nbsp;&nbsp;<b> '.$this->session->userData('entidad').'</b></td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+      </table>
+      <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px black; text-align: center;">
+              <td style="width:10%; text-align:center;">
+              </td>
+              <td style="width:80%; height: 5%">
+                  <table align="center" border="0" style="width:100%;">
+                      <tr style="font-size: 23px;font-family: Arial;">
+                          <td style="height: 30%;"><b>PLAN OPERATIVO ANUAL GESTION - '.$this->gestion.'</b></td>
+                      </tr>
+                      <tr style="font-size: 20px;font-family: Arial;">
+                        <td style="height: 5%;">'.$titulo_rep.'</td>
+                      </tr>
+                  </table>
+              </td>
+              <td style="width:10%; text-align:center;">
+              </td>
+          </tr>
+      </table>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+              <td style="width:70%;">
+              </td>
+              <td style="width:30%; height: 3%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="font-size: 15px;font-family: Arial;">
+                      <td align=center style="width:100%;height: 40%;"><b>'.$titulo_form.'</b></td>
+                    </tr>
+                </table>
+              </td>
+          </tr>
+      </table>
+      
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+         <tr>
+            <td style="width:2%;"></td>
+            <td style="width:96%;height: 1%;">
+              <hr>
+            </td>
+            <td style="width:2%;"></td>
+        </tr>
+        <tr>
+            <td style="width:2%;"></td>
+            <td style="width:96%;height: 3%;">
+             
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                <tr>
+                    <td style="width:20%;">
+                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>REGIONAL / DEPARTAMENTO</b></td><td style="width:5%;"></td></tr>
+                        </table>
+                    </td>
+                    <td style="width:80%;">
+                        <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                            <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$proyecto[0]['dep_cod'].' '.strtoupper ($proyecto[0]['dep_departamento']).'</td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:20%;">
+                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD EJECUTORA</b></td><td style="width:5%;"></td></tr>
+                        </table>
+                    </td>
+                    <td style="width:80%;">
+                        <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                            <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$proyecto[0]['dist_cod'].' '.strtoupper ($proyecto[0]['dist_distrital']).'</td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>';
+                  if($tp_id==4){
+                    $tabla.='
+                    <td style="width:20%;">
+                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>'.$proyecto[0]['tipo_adm'].'</b></td><td style="width:5%;"></td></tr>
+                        </table>
+                    </td>
+                    <td style="width:80%;">
+                        <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                            <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.strtoupper ($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td></tr>
+                        </table>
+                    </td>';
+                  }
+                  else{
+                    $tabla.='
+                    <td style="width:20%;">
+                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>PROYECTO</b></td><td style="width:5%;"></td></tr>
+                        </table>
+                    </td>
+                    <td style="width:80%;">
+                        <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                            <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$proyecto[0]['aper_programa'].''.$proyecto[0]['proy_sisin'].''.$proyecto[0]['aper_actividad'].' - '.strtoupper ($proyecto[0]['proy_nombre']).'</td></tr>
+                        </table>
+                    </td>';
+                  }
+                $tabla.='
+                </tr>
+                '.$comp.'
+            </table>
+          </td>
+          <td style="width:2%;"></td>
+        </tr>
+        <tr>
+          <td style="width:2%;"></td>
+          <td style="width:96%;height: 1%;">
+            <hr>
+            <br><b style="font-size: 8px;font-family: Arial;">DETALLE : </b>
+          </td>
+          <td style="width:2%;"></td>
+        </tr>
+      </table>';
+    return $tabla;
+  }
+
+
+  /*------ PIE FODA - REPORTE -----*/
+  public function pie_foda(){
+    $tabla='';
+    $tabla.='    
+      <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;" align="center">
+        <tr>
+          <td style="width: 50%;">
+              <table border="0.3" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                  <tr style="font-size: 10px;font-family: Arial;">
+                      <td style="width:100%;height:13px;"><b>ELABORADO POR<br></b></td>
+                  </tr>
+                 
+                  <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                      <td><b><br><br><br><br>FIRMA</b></td>
+                  </tr>
+              </table>
+          </td>
+          <td style="width: 50%;">
+              <table border="0.3" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                  <tr style="font-size: 10px;font-family: Arial;">
+                      <td style="width:100%;height:13px;"><b>APROBADO POR<br></b></td>
+                  </tr>
+                 
+                  <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                      <td><b><br><br><br><br>FIRMA</b></td>
+                  </tr>
+              </table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"><br></td>
+        </tr>
+        <tr style="font-size: 7px;font-family: Arial;">
+          <td style="text-align: left" >
+            '.$this->session->userdata('sistema').'
+          </td>
+          <td style="width: 20%; text-align: right">
+                pag. [[page_cu]]/[[page_nb]]
+          </td>
+        </tr>
+        <tr>
+            <td colspan="2"><br><br></td>
+        </tr>
+      </table>';
+
+    return $tabla;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /*-------- MENU -----*/
     function menu($mod){
         $enlaces=$this->menu_modelo->get_Modulos($mod);
@@ -901,7 +1146,7 @@ class Programacionpoa extends CI_Controller{
         return $tabla;
     }
 
-        /*------ NOMBRE MES -------*/
+    /*------ NOMBRE MES -------*/
     function mes_nombre(){
         $mes[1] = 'ENE.';
         $mes[2] = 'FEB.';

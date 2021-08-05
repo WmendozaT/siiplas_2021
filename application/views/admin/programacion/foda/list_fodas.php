@@ -35,12 +35,6 @@
 		    }                                                    
           </script>
 			<style>
-			.table1{
-	          display: inline-block;
-	          width:100%;
-	          max-width:1550px;
-	          overflow-x: scroll;
-	          }
 			table{font-size: 10px;
             width: 100%;
             max-width:1550px;;
@@ -63,27 +57,6 @@
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
 		<!-- HEADER -->
 		<header id="header">
-			<div id="logo-group">
-				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -160,7 +133,13 @@
                         <article class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 							<div class="well well-sm well-light">
 								<h2><b>ANALISIS DE PROBLEMAS Y SUS CAUSAS</b></h2>
-								<h3><b><?php if($proyecto[0]['tp_id']==1){echo "PROYECTO DE INVERSI&Oacute;N : ";}else{echo "UNIDAD : ";} ?></b></small><?php echo $proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'];?></h3><hr>
+								<h3><b>UNIDAD ORG.</b></small><?php echo $proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'];?></h3><hr>
+								<a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default" title="NUEVO REGISTRO - FODA">
+									<img src="<?php echo base_url(); ?>assets/Iconos/add.png" WIDTH="25" HEIGHT="25"/>&nbsp;NUEVO REGISTRO
+								</a>
+								<a href="javascript:abreVentana('<?php echo site_url("").'/as/rep_list_foda/'.$proyecto[0]['proy_id'].''?>');" title="IMPRIMIR" class="btn btn-default">
+									<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;IMPRIMIR FORM. SPO 3
+								</a>
 							</div>
 						</article>
 						<article class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
@@ -181,9 +160,7 @@
 
 									<div id="tabs-a">
 										<div class="row">
-											<article class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-												<center><a href="javascript:abreVentana('<?php echo site_url("").'/as/rep_list_foda/'.$proyecto[0]['proy_id'].''?>');" style="width:70%;" title="IMPRIMIR" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;IMPRIMIR</a></center>
-											</article>
+											<article class="col-xs-12 col-sm-12 col-md-2 col-lg-2"></article>
 											<?php echo $fodas;?>
 										</div>
 									</div>

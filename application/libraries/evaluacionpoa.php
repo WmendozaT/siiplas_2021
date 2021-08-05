@@ -546,14 +546,14 @@ class Evaluacionpoa extends CI_Controller{
     $distrital=$this->model_proyecto->dep_dist($id);
     
     if($tp_uni==0){
-      $titulo_consolidado='CONSOLIDADO '.strtoupper($distrital[0]['dep_departamento']).'';
+      $titulo_consolidado='% CONSOLIDADO ';
       $eficacia_distrital=$this->tabla_regresion_lineal_regional($id); /// Eficacia
       $economia_distrital=$this->economia_por_regional($id); /// Economia
       $eficiencia_distrital=$this->eficiencia_por_regional($eficacia_distrital[5][$this->tmes],$economia_distrital[3]); /// Eficiencia
     }
     else{
       $distrital=$this->model_proyecto->dep_dist($id);
-      $titulo_consolidado='CONSOLIDADO '.strtoupper($distrital[0]['dist_distrital']).'';
+      $titulo_consolidado='% CONSOLIDADO ';
       $eficacia_distrital=$this->tabla_regresion_lineal_distrital($id); /// Eficacia
       $economia_distrital=$this->economia_por_distrital($id); /// Economia
       $eficiencia_distrital=$this->eficiencia_por_distrital($eficacia_distrital[5][$this->tmes],$economia_distrital[3]); /// Eficiencia

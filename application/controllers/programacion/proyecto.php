@@ -27,6 +27,7 @@ class Proyecto extends CI_Controller {
       $this->tp_adm = $this->session->userdata("tp_adm");
       $this->dist_tp = $this->session->userData('dist_tp'); /// dist_tp->1 Regional, dist_tp->0 Distritales
       $this->verif_ppto = $this->session->userData('verif_ppto'); /// AnteProyecto Ptto POA : 0, Ptto Aprobado Sigep : 1
+      $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
       $this->load->library('programacionpoa');
       }else{
           $this->session->sess_destroy();
@@ -76,7 +77,9 @@ class Proyecto extends CI_Controller {
             $tabla .= '</td>';
            
             $tabla .='<td><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success enlace" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'">VER POA</a></center></td>';
-            $tabla .='<td><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff2" class="btn btn-default enlace2" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'"><img src="'.base_url().'assets/img/ajuste_ppto.jpg" WIDTH="45" HEIGHT="45" title="AJUSTAR POA '.$this->gestion.'"/></a></center></td>';
+            if($this->conf_poa_estado==2){
+              $tabla .='<td><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff2" class="btn btn-default enlace2" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'"><img src="'.base_url().'assets/img/ajuste_ppto.jpg" WIDTH="45" HEIGHT="45" title="AJUSTAR POA '.$this->gestion.'"/></a></center></td>';
+            }
 
             $tabla .= '<td aling="center">';
               if($this->tp_adm==1){

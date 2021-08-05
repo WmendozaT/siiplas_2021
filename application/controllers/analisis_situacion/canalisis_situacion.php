@@ -17,6 +17,8 @@ class Canalisis_situacion extends CI_Controller {
       $this->dist_tp = $this->session->userData('dist_tp');
       $this->fun_id = $this->session->userdata("fun_id");
       $this->tp_adm = $this->session->userdata("tp_adm"); // 1: Privilegios, 0: sin Privilegios
+      $this->mes=$this->mes_nombre();
+      $this->load->library('programacionpoa');
       }else{
           redirect('/','refresh');
       }
@@ -38,10 +40,10 @@ class Canalisis_situacion extends CI_Controller {
     /*------ Lista de Unidad - Establecimiento - Proyecto de Inversion -----*/
     public function lista_unidades(){
       $data['menu']=$this->menu();
-      $data['res_dep']=$this->tp_resp();
-      $data['resp']=$this->session->userdata('funcionario');
+     // $data['res_dep']=$this->tp_resp();
+     // $data['resp']=$this->session->userdata('funcionario');
       
-      $data['unidades']=$this->lista_operaciones(4); // Unidades 
+      $data['unidades']=$this->lista_operaciones(4); // Gasto Corrientes 
       $this->load->view('admin/programacion/foda/list_proy', $data);
     }
 
@@ -63,13 +65,7 @@ class Canalisis_situacion extends CI_Controller {
             $tabla .= '<td align=center><a href="'.site_url("").'/as/list_foda/'.$rowp['proy_id'].'" title="FORMULARIO FODA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/foda.png" WIDTH="35" HEIGHT="35"/></a></td>';
             $tabla .= '<td align=center><a href="javascript:abreVentana(\''.site_url("").'/as/rep_list_foda/'.$rowp['proy_id'].'\');" title="IMPRIMIR FORMULARIO FODA" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="35" HEIGHT="35"/></a></td>';
             $tabla .= '<td align=center style="font-size: 9pt;">'.$rowp['aper_programa'].''.$rowp['aper_proyecto'].''.$rowp['aper_actividad'].'</td>';
-            if($this->gestion<2020){
-              $tabla .= '<td>'.$rowp['proy_nombre'].'</td>';
-            }
-            else{
-              $tabla .= '<td><b>'.$rowp['tipo'].' '.$rowp['act_descripcion'].' '.$rowp['abrev'].'</b></td>';
-            }
-            
+            $tabla .= '<td><b>'.$rowp['tipo'].' '.$rowp['act_descripcion'].' '.$rowp['abrev'].'</b></td>';
             $tabla.='<td>'.$rowp['nivel'].'</td>';
             $tabla.='<td>'.$rowp['tipo_adm'].'</td>';
             $tabla .= '<td>'.strtoupper($rowp['dep_departamento']).'</td>';
@@ -85,8 +81,8 @@ class Canalisis_situacion extends CI_Controller {
       $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
       if(count($data['proyecto'])!=0){
         $data['menu']=$this->menu();
-        $data['res_dep']=$this->tp_resp();
-        $data['resp']=$this->session->userdata('funcionario');
+      //  $data['res_dep']=$this->tp_resp();
+      //  $data['resp']=$this->session->userdata('funcionario');
         $data['fodas']=$this->fodas($proy_id);
         $this->load->view('admin/programacion/foda/list_fodas', $data);
       }
@@ -107,7 +103,7 @@ class Canalisis_situacion extends CI_Controller {
                       <h2 class="font-md"></h2>  
                     </header>
                 <div>
-                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - FODA">NUEVO REGISTRO</a><br><br>
+                  
                   <div class="widget-body no-padding">
                     <table id="dt_basic" class="table table table-bordered" width="100%">
                       <thead>
@@ -135,7 +131,7 @@ class Canalisis_situacion extends CI_Controller {
                           </td>';
                           $tabla.='<td>'.$row['problema'].'</td>';
                           $tabla.='<td>
-                            <a href="#" data-toggle="modal" data-target="#modal_nuevo_cff" class="btn btn-xs nuevo_cff" title="REGISTRAR CAUSAS-ACCIONES" name="'.$row['prob_id'].'">
+                            <a href="#" data-toggle="modal" data-target="#modal_nuevo_cff" class="btn btn-default nuevo_cff" title="REGISTRAR CAUSAS-ACCIONES" name="'.$row['prob_id'].'">
                               <img src="'.base_url().'assets/Iconos/add.png" width="35" height="35"/>
                             </a>
                           </td>';
@@ -383,6 +379,8 @@ class Canalisis_situacion extends CI_Controller {
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
       $data['mes'] = $this->mes_nombre();
       if(count($data['proyecto'])!=0){
+        $data['cabecera']=$this->programacionpoa->cabecera(4,3,$data['proyecto']);
+        $data['pie']=$this->programacionpoa->pie_foda();
         $data['foda']=$this->reporte_datos_foda($proy_id);
         $this->load->view('admin/programacion/foda/reporte_foda', $data); 
       }
@@ -391,19 +389,18 @@ class Canalisis_situacion extends CI_Controller {
       }
     }
 
-
     /*------ LISTA DE FODA - REPORTE -----*/
     public function reporte_datos_foda($proy_id){
       $problemas = $this->model_analisis_situacion->list_analisis_problemas_reporte($proy_id); /// Problemas
       $tabla='';
       $tabla.='  
-      <table cellpadding="0" cellspacing="0" class="tabla" border=0.3 style="width:100%;">
+      <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <thead>
-          <tr style="font-size: 8px;">
-            <th style="width:3%; height:18px;color:#FFF;" bgcolor="#1c7368" align=center>#</th>
-            <th style="width:33%;color:#FFF;" bgcolor="#1c7368" align=center>PROBLEMAS IDENTIFICADOS</th>
-            <th style="width:31.6%;color:#FFF;" bgcolor="#1c7368" align=center>CAUSAS DE LOS PROBLEMAS</th>
-            <th style="width:31.6%;color:#FFF;" bgcolor="#1c7368" align=center>ACCIONES RECOMENDADAS</th>
+          <tr style="font-size: 7.5px;">
+            <th style="width:3%; height:18px;" bgcolor="#dedede" align=center>#</th>
+            <th style="width:34%;" bgcolor="#dedede" align=center>PROBLEMAS IDENTIFICADOS</th>
+            <th style="width:31.6%;" bgcolor="#dedede" align=center>CAUSAS DE LOS PROBLEMAS</th>
+            <th style="width:31.6%;" bgcolor="#dedede" align=center>ACCIONES RECOMENDADAS</th>
           </tr>
         </thead>
         <tbody>';
@@ -414,7 +411,7 @@ class Canalisis_situacion extends CI_Controller {
           $tabla.='
           <tr style="font-size: 7px;">
             <td style="width:3%; height:17px;" align=center>'.$nro.'</td>
-            <td style="width:33%;">'.strtoupper($row['problema']).'</td>
+            <td style="width:34%;">'.strtoupper($row['problema']).'</td>
             <td style="width:31.6%;">'.strtoupper($row['causas']).'</td>
             <td style="width:31.6%;">'.strtoupper($row['acciones']).'</td>
           </tr>';

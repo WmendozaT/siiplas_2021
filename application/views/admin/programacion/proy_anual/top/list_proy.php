@@ -128,13 +128,13 @@
 																<tr style="height:65px;">
 																	<th style="width:3%;" title="">
 																		<a href='<?php echo site_url("").'/proy/add_unidad';?>' title="NUEVO REGISTRO POA" class="btn btn-default">
-																			<img src="<?php echo base_url() ?>assets/img/add_icon.PNG" WIDTH="45" HEIGHT="45" title="NUEVO REGISTRO POA"/>
+																			<img src="<?php echo base_url() ?>assets/img/add_icon.png" WIDTH="45" HEIGHT="45" title="NUEVO REGISTRO POA"/>
 																		</a>
 																	</th>
 																	<th style="width:5%;" title="PROGRAMACIÓN FISICA Y FINANCIERA">PROGRAMACIÓN POA</th>
 																	<th style="width:5%;" title="REPORTE POA - FORM. 4 Y 5">REPORTE POA</th>
 																	<?php 
-                                                                        if($this->session->userData('verif_ppto')==1){ ?>
+                                                                        if($this->session->userData('conf_poa_estado')==2){ ?>
                                                                             <th style="width:5%;" title="AJUSTE POA">AJUSTE POA</th>
                                                                             <?php
                                                                         }
@@ -180,7 +180,7 @@
 																		<?php
 																			if($this->session->userdata('rol_id')==1){?>
 																			<a href='<?php echo site_url("admin").'/proy/proyecto'; ?>' title="NUEVO REGISTRO POA" class="btn btn-default">
-																				<img src="<?php echo base_url() ?>assets/img/add_icon.PNG" WIDTH="45" HEIGHT="45" title="NUEVO REGISTRO POA"/>
+																				<img src="<?php echo base_url() ?>assets/img/add_icon.png" WIDTH="45" HEIGHT="45" title="NUEVO REGISTRO POA"/>
 																			</a>
 																		<?php } ?>
 																	</th>
