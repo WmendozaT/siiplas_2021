@@ -52,6 +52,7 @@ class Model_objetivogestion extends CI_Model{
                 from _productos p
                 Inner Join _componentes as c On c.com_id=p.com_id
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                 Inner Join _proyectos as proy On proy.proy_id=pfe.proy_id
         
                 Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
@@ -69,7 +70,7 @@ class Model_objetivogestion extends CI_Model{
 
                 ) as ppto On ppto.prod_id=p.prod_id
                                 
-                where opm.og_id='.$og_id.' and opm.dep_id='.$dep_id.' and p.estado!=\'3\' and og.g_id='.$this->gestion.' and og.estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and c.estado!=\'3\' 
+                where opm.og_id='.$og_id.' and opm.dep_id='.$dep_id.' and p.estado!=\'3\' and og.g_id='.$this->gestion.' and og.estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and c.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=3
                 group by opm.og_id,opm.dep_id';
 
         $query = $this->db->query($sql);
@@ -244,7 +245,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join _objetivos_estrategicos as oe on oe.obj_id = ae.obj_id
 
                 where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
-                order by oge.og_codigo asc';
+                order by oge.og_codigo,oreg.or_codigo asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();

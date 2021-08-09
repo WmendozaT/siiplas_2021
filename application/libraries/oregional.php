@@ -85,7 +85,14 @@ class Oregional extends CI_Controller{
               }
             }
 
-              $tabla.='<hr>';
+              $tabla.='
+              <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/'.$row['dep_id'].'\');" title="IMPRIMIR OPERACIONES REGIONAL" class="btn btn-default">
+                <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp; REP. OPERACIÓN (FORM N° 2)
+              </a>
+              <a href="'.site_url("").'/me/mis_ogestion" title="SALIR" class="btn btn-default">
+                <img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="25" HEIGHT="25"/>&nbsp; SALIR
+              </a>
+              <hr>';
               $oregional=$this->model_objetivoregion->list_oregional_regional($og_id,$row['dep_id']);
               $nro=0;
               foreach($oregional as $row_or){
@@ -603,7 +610,7 @@ class Oregional extends CI_Controller{
 
 
 
-  ///// ============== OPERACIONES
+  ///// ============== OPERACIONES CONSOLIDADO POR ACCION
     /*-------- Cbecera Operacuiones ------*/
     public function cabecera_rep_operaciones($ogestion){
       $tabla='';
@@ -652,7 +659,7 @@ class Oregional extends CI_Controller{
                 <td style="width:30%; height: 2%">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                       <tr style="font-size: 15px;font-family: Arial;">
-                          <td align=center style="width:100%;height: 20%;"><b>FORMULARIO SPO N° 2 </b></td>
+                          <td align=center style="width:100%;height: 20%;"><b>FORMULARIO SPO N° 2 (Consolidado)</b></td>
                       </tr>
                   </table>
                 </td>
@@ -800,6 +807,212 @@ class Oregional extends CI_Controller{
 
       return $tabla;
     }
+
+
+  //// ======== REPORTE FORMULARIO N2
+  //// Cabecera Reporte form2
+  public function cabecera_form2($regional){ 
+    $tabla='';
+       $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+              <td style="width:70%;height: 2%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 15px;font-family: Arial;">
+                          <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                      </tr>
+                      <tr>
+                          <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                      </tr>
+                  </table>
+              </td>
+              <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+                '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%; height: 5%">
+                  <table align="center" border="0" style="width:100%;">
+                    <tr style="font-size: 23px;font-family: Arial;">
+                      <td style="height: 32%;"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
+                    </tr>
+                    <tr style="font-size: 20px;font-family: Arial;">
+                      <td style="height: 5%;">OPERACIONES - '.strtoupper($regional[0]['dep_departamento']).'</td>
+                    </tr>
+                  </table>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px;">              
+                <td style="width:70%;">
+                </td>
+                <td style="width:30%; height: 3%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="font-size: 15px;font-family: Arial;">
+                      <td align=center style="width:100%;height: 10%;"><b>FORMULARIO SPO N° 2 </b></td>
+                    </tr>
+                  </table>
+                </td>
+            </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>';
+
+    return $tabla;
+  }
+
+
+  //// Lista de OPeraciones Regional form 2
+  public function rep_lista_form2($dep_id){ 
+    $tabla='';
+    $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
+
+    $tabla.='
+    <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+      <thead>
+        <tr style="font-size: 7px;" bgcolor="#e4e2e2" align=center>
+          <th style="width:1%;height:20px;">#</th>
+          <th style="width:2.5%;"><b>COD. ACE.</b></th>
+          <th style="width:2.5%;"><b>COD. ACP.</b></th>
+          <th style="width:2.5%;"><b>COD. OPE.</b></th>
+          <th style="width:24%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
+          <th style="width:20%;">RESULTADO</th>
+          <th style="width:18%;">INDICADOR</th>
+          <th style="width:4%;">META</th>
+          <th style="width:18%;">MEDIO DE VERIFICACI&Oacute;N</th>
+          <th style="width:7%;">PPTO. '.$this->gestion.'</th>
+        </tr>
+      </thead>
+      <tbody>';
+    $nro=0;$monto_total=0;
+    foreach($lista_ogestion as $row){
+      $presupuesto_gc=$this->model_objetivogestion->get_ppto_ogestion_gc_regional($row['og_id'],$dep_id); // ppto Gasto Corriente
+      $presupuesto_pi=$this->model_objetivogestion->get_ppto_ogestion_pi_regional($row['og_id'],$dep_id); // ppto Proyecto de Inversion
+        $ppto_gc=0;$ppto_pi=0;
+        if(count($presupuesto_gc)!=0){
+          $ppto_gc=$presupuesto_gc[0]['presupuesto'];
+        }
+        if(count($presupuesto_pi)!=0){
+          $ppto_pi=$presupuesto_pi[0]['presupuesto'];
+        }
+      $nro++;
+      $tabla.='
+      <tr style="font-size: 7px;">
+        <td style="width:1%; height:18px;" align=center>'.$nro.'</td>
+        <td style="width:2.5%;" align="center">'.$row['acc_codigo'].'</td>
+        <td style="width:2.5%;" align="center">'.$row['og_codigo'].'</td>
+        <td style="width:2.5%; font-size: 8px;" align="center" bgcolor="#f1eeee"><b>'.$row['og_codigo'].'.'.$row['or_codigo'].'.</b></td>
+        <td style="width:24%;">'.$row['or_objetivo'].'</td>
+        <td style="width:20%;">'.$row['or_resultado'].'</td>
+        <td style="width:18%;">'.$row['or_indicador'].'</td>
+        <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
+        <td style="width:18%;">'.$row['or_verificacion'].'</td>
+        <td style="width:7%;text-align: right;">'.number_format(($ppto_gc+$ppto_pi), 2, ',', '.').'</td>
+      </tr>';
+      $monto_total=$monto_total+($ppto_gc+$ppto_pi);
+    }
+    $tabla.='
+      </tbody>
+      <tr>
+        <td style="height:15px; text-align: right;" colspan=9><b>PRESUPUESTO TOTAL : </b></td>
+        <td style="text-align: right;">'.number_format($monto_total, 2, ',', '.').'</td>
+      </tr>
+    </table>';
+
+    return $tabla;
+  }
+
+  //// Pie Regional form 2
+  public function pie_form2($regional){ 
+    $tabla='';
+    $tabla.='
+    <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:97.5%;" align="center">
+          <tr>
+            <td style="width: 33.3%;">
+              <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <tr>';
+                  if($regional[0]['dep_id']!=10){
+                      $tabla.='<td style="width:100%;height:1.4%"><b>JEFATURA DE SERVICIOS GENERALES</b></td>';
+                  }
+                  else{
+                      $tabla.='<td style="width:100%;height:1.4%"><b>GERENCIA ADMINISTRATIVA FINANCIERA</b></td>';
+                  }
+                $tabla.='
+                </tr>
+                <tr>
+                    <td align=center><br><br><br><br><br><br><b>FIRMA</b></td>
+                </tr>
+              </table>
+            </td>
+            <td style="width: 33.3%;">
+              <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <tr>';
+                  if($regional[0]['dep_id']!=10){
+                      $tabla.='<td style="width:100%;height:1.4%"><b>JEFATURA MEDICA</b></td>';
+                  }
+                  else{
+                      $tabla.='<td style="width:100%;height:1.4%"><b>GERENCIA DE SERVICIOS DE SALUD</b></td>';
+                  }
+                $tabla.='
+                </tr>
+                <tr>
+                  <td align=center><br><br><br><br><br><br><b>FIRMA</b></td>
+                </tr>
+              </table>
+            </td>
+            <td style="width: 33.3%;">
+              <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <tr>';
+                  if($regional[0]['dep_id']!=10){
+                    $tabla.='<td style="width:100%; height:1.4%"><b>ADMINISTRADOR REGIONAL</b></td>';
+                  }
+                  else{
+                    $tabla.='<td style="width:100%; height:1.4%"><b>GERENCIA GENERAL</b></td>';
+                  }
+                $tabla.='
+                </tr>
+                <tr>
+                  <td align=center><br><br><br><br><br><br><b>FIRMA</b></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 33%; height:18px;text-align: left">
+              POA - '.$this->session->userdata('gestion').". ".$this->session->userdata('rd_poa').'
+            </td>
+            <td style="width: 33%; text-align: center">
+              '.$this->session->userdata('sistema').'
+            </td>
+            <td style="width: 33%; text-align: right">
+              '.$this->session->userdata('funcionario').' - pag. [[page_cu]]/[[page_nb]]
+            </td>
+          </tr>
+      </table>';
+
+    return $tabla;
+  }
+
+
+ 
+
 
   /*-------- MENU -----*/
     function menu($mod){

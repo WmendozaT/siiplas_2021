@@ -142,12 +142,12 @@
 			<div id="content">
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
-
 	                <div class="row">
-	                    <?php 
-	                    echo $titulo;
-	                    
-		                  if($this->session->flashdata('success')){ ?>
+	                    <?php echo $titulo;?>
+		            </div>
+		            <div class="row">
+		            	<?php
+		            	if($this->session->flashdata('success')){ ?>
 		                    <div class="alert alert-success">
 		                      	<?php echo $this->session->flashdata('success'); ?>
 		                    </div>
@@ -161,7 +161,9 @@
 		                      <script type="text/javascript">alertify.error("<?php echo '<font size=2>'.$this->session->flashdata('danger').'</font>'; ?>")</script>
 		                    <?php
 		                  }
-		                ?>
+		            	?>
+		            </div>
+		            <div class="row">  
 	                    <?php echo $ogestion;?>
 					</div>
 				</section>

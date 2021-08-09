@@ -220,7 +220,7 @@ class Cmod_insumo extends CI_Controller {
     /*---- tipo lista : Operacion-Actividad ----*/
     public function tipo_lista_ope_act($cite){
       $tabla='';
-      $operaciones=$this->model_producto->list_operaciones($cite[0]['com_id']);
+      $operaciones=$this->model_producto->lista_operaciones($cite[0]['com_id']);
         $tabla.='
           <section class="col col-3">
             <label class="label"><b>ALINEACI&Oacute;N ACTIVIDAD '.$this->gestion.'</b></label>
@@ -651,7 +651,7 @@ class Cmod_insumo extends CI_Controller {
           $id_anterior=$actividades[0]['act_id'];
         }
         else{
-          $operaciones=$this->model_producto->list_operaciones($cite[0]['com_id']);
+          $operaciones=$this->model_producto->lista_operaciones($cite[0]['com_id']);
           $id_anterior=$operaciones[0]['prod_id'];
         }
 
@@ -759,17 +759,17 @@ class Cmod_insumo extends CI_Controller {
           $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos 
           if($this->copia_insumo($cert_editado[0]['cite_id'],$ins_id,2)){
 
-            ///------ cambiando de estado de certificacion poa la temporalidad
-            $get_list_temp_prog=$this->model_certificacion->get_list_cert_temporalidad_prog_insumo($detalle_cert[0]['cpoad_id']);
-            foreach($get_list_temp_prog as $row){
-              /// Actualizando el estado de la temporalidad
-              $update_temp = array(
-                'estado_cert' => 0
-              );
-              $this->db->where('tins_id', $row['tins_id']);
-              $this->db->update('temporalidad_prog_insumo', $update_temp);
-            }
-            ///---------------------------------------------------------------
+              ///------ cambiando de estado de certificacion poa la temporalidad
+              $get_list_temp_prog=$this->model_certificacion->get_list_cert_temporalidad_prog_insumo($detalle_cert[0]['cpoad_id']);
+              foreach($get_list_temp_prog as $row){
+                /// Actualizando el estado de la temporalidad
+                $update_temp = array(
+                  'estado_cert' => 0
+                );
+                $this->db->where('tins_id', $row['tins_id']);
+                $this->db->update('temporalidad_prog_insumo', $update_temp);
+              }
+              ///---------------------------------------------------------------
 
               /*-------- Elimina Los items certificados --------*/
               $this->db->where('cpoad_id', $detalle_cert[0]['cpoad_id']);
@@ -2242,7 +2242,7 @@ class Cmod_insumo extends CI_Controller {
     function list_operaciones($cite,$insumo){
       $tabla='';
 
-        $operaciones=$this->model_producto->list_operaciones($cite[0]['com_id']);
+        $operaciones=$this->model_producto->lista_operaciones($cite[0]['com_id']);
         $tabla.='<option value="">Seleccione Actividad</option>';
         foreach($operaciones as $row){
           if($row['prod_id']==$insumo[0]['prod_id']){

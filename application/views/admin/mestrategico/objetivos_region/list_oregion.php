@@ -26,7 +26,7 @@
 		      var direccion;
 		      direccion = '' + PDF;
 		      
-		      window.open(direccion, "Objetivo Regional" , "width=700,height=600,scrollbars=NO") ; 
+		      window.open(direccion, "Form. SPO. N° 2" , "width=700,height=600,scrollbars=NO") ; 
 		  }
 		</script>
 		<style>
@@ -135,7 +135,7 @@
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
 					<div class="row">
-						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
+						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 	                        <section id="widget-grid" class="well">
 	                            <div class="">
 	                            	<h1>OBJETIVO ESTRAT&Eacute;GICO : <small><?php echo $obj_estrategico[0]['obj_codigo'].' .- '.$obj_estrategico[0]['obj_descripcion'];?></small></h1>
@@ -145,22 +145,6 @@
 	                            </div>
 	                        </section>
 	                    </article>
-	                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
-                            <section id="widget-grid" class="well">
-                              <center>
-                                <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="width:100%;">
-                                  OPCIONES
-                                  <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:abreVentana('<?php echo site_url("").'/me/rep_objetivos_gestion/';?>');">IMPRIMIR RESULTADOS</a></li>
-                                  <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url().'index.php/me/mis_ogestion'; ?>">VOLVER ATRAS</a></li>
-                                </ul>
-                              </div>
-                              </center>
-                            </section>
-                        </article>
 	                </div>
 	                <div class="row">
 	                	<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

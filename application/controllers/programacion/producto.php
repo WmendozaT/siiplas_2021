@@ -1137,7 +1137,7 @@ class Producto extends CI_Controller {
                 </thead>
                 <tbody>';
                 $nro=0;
-                $operaciones=$this->model_producto->list_operaciones($com_id);
+                $operaciones=$this->model_producto->lista_operaciones($com_id);
                 
                 foreach($operaciones as $rowp){
                   $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);

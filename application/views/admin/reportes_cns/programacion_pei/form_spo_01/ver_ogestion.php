@@ -23,7 +23,7 @@
             function abreVentana(PDF){
                 var direccion;
                 direccion = '' + PDF;
-                window.open(direccion, "Reporte de Proyectos" , "width=800,height=650,scrollbars=SI") ;
+                window.open(direccion, "Reporte SPO N° 1" , "width=800,height=650,scrollbars=SI") ;
             }                        
           </script>
           <style>
@@ -82,7 +82,7 @@
                     <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
                     </li>
                     <li class="text-center">
-                        <a href="#" title="<?php echo $titulo;?>"> <span class="menu-item-parent"><?php echo $titulo;?></span></a>
+                        <a href="#" title=""> <span class="menu-item-parent">REPORTES POA</span></a>
                     </li>
                     <?php echo $menu;?>
                 </ul>
@@ -101,7 +101,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <?php echo $li;?>
+                  <li>Reportes POA</li><li>ACP y Opoeraciones</li><li>Formulario POA - N° 1</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -122,7 +122,7 @@
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="jarviswidget" id="wid-id-5" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
                                 <header>
-                                    <h2>ACCIONES DE CORTO PLAZO </h2>
+                                    <h2>ACCIONES DE CORTO PLAZO (APROBADO)</h2>
                                 </header>
                 
                                 <div>
@@ -131,31 +131,7 @@
                                     <!-- end widget edit box -->
                                     <!-- widget content -->
                                     <div class="widget-body">
-                
-                                        <div class="tabs-left">
-                                            <ul class="nav nav-tabs tabs-left" id="demo-pill-nav">
-                                                <li>
-                                                    <a href="#tab-r1" data-toggle="tab" ><span class="btn btn-default"><img src="<?php echo base_url().'assets/ifinal/requerimiento.png'?>" style="width:20px;"></span> CARATULA GASTO CORRIENTE</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#tab-r2" data-toggle="tab" ><span class="btn btn-default"><img src="<?php echo base_url().'assets/ifinal/requerimiento.png'?>" style="width:20px;"></span> CARATULA PROY. INVERSI&Oacute;N</a>
-                                                </li>
-                                                <li class="active">
-                                                    <a href="#tab-r3" data-toggle="tab"><span class="btn btn-default"><img src="<?php echo base_url().'assets/ifinal/requerimiento.png'?>" style="width:20px;"></span> FORMULARIO POA - N° 1</a>
-                                                </li>
-                                            </ul>
-                                            <div class="tab-content">
-                                                <div class="tab-pane" id="tab-r1">
-                                                    <p><center><?php echo $caratula_poa;?></center></p>
-                                                </div>
-                                                <div class="tab-pane" id="tab-r2">
-                                                    <p><center><?php echo $caratula_pi;?></center></p>
-                                                </div>
-                                                <div class="tab-pane active" id="tab-r3">
-                                                    <p><center><?php echo $contenido;?></center></p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <?php echo $contenido;?>
                                     </div>
                                 </div>
                             </div>
@@ -228,7 +204,7 @@
         <!-- Voice command : plugin -->
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <script type="text/javascript">
+<!--         <script type="text/javascript">
             $(document).ready(function() {
                 pageSetUp();
                 $("#dep_id").change(function () {
@@ -261,6 +237,6 @@
                   });
                 });  
             });
-        </script>
+        </script> -->
     </body>
 </html>

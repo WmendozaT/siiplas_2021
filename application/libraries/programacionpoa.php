@@ -913,8 +913,6 @@ class Programacionpoa extends CI_Controller{
     }
 
     
-
-
     $tabla='';
     $tabla.='
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">

@@ -23,7 +23,7 @@
             function abreVentana(PDF){
                 var direccion;
                 direccion = '' + PDF;
-                window.open(direccion, "Reporte de Proyectos" , "width=800,height=650,scrollbars=SI") ;
+                window.open(direccion, "Reporte Form. N° 2" , "width=800,height=650,scrollbars=SI") ;
             }                        
           </script>
           <style>
@@ -82,7 +82,7 @@
                     <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
                     </li>
                     <li class="text-center">
-                        <a href="#" title="<?php echo $titulo;?>"> <span class="menu-item-parent"><?php echo $titulo;?></span></a>
+                        <a href="#" title=""> <span class="menu-item-parent">REPORTES POA</span></a>
                     </li>
                     <?php echo $menu;?>
                 </ul>
@@ -101,7 +101,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <?php echo $li;?>
+                  <li>Reportes POA</li><li>ACP y Opoeraciones</li><li>Formulario POA - N° 2</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->

@@ -308,98 +308,98 @@ class Cobjetivo_regional extends CI_Controller {
 
          $tabla.='
          <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
-                <thead>
-                  <tr style="font-size: 8px;" bgcolor="#d2d2d2" align=center>
-                    <th style="width:2%;height:15px;">#</th>
-                    <th style="width:5%;">COD. OPE.</th>
-                    <th style="width:15%;">OPERACI&Oacute;N '.$this->gestion.'</th>
-                    <th style="width:15%;">PRODUCTO</th>
-                    <th style="width:14%;">RESULTADO (LOGROS)</th>
-                    <th style="width:13%;">INDICADOR</th>
-                    <th style="width:5%;">LINEA BASE</th>
-                    <th style="width:5%;">META</th>
-                    <th style="width:13%;">MEDIO DE VERIFICACI&Oacute;N</th>
-                    <th style="width:13%;">OBSERVACIONES DETALLE DE DISTRIBUCI&Oacute;N</th>
-                  </tr>
-                </thead>
-              <tbody>
-                <tr style="font-size: 7px;">
-                <td style="width:2%; height:20px;" align=center>'.$nro.'</td>
-                <td style="width:5%; font-size: 15px; text-align: center"><b>'.$row_or['or_codigo'].'</b></td>
-                <td style="width:15%;">'.$row_or['or_objetivo'].'</td>
-                <td style="width:15%;">'.$row_or['or_producto'].'</td>
-                <td style="width:14%;">'.$row_or['or_resultado'].'</td>
-                <td style="width:13%;">'.$row_or['or_indicador'].'</td>
-                <td style="width:5%;font-size: 10px;text-align:right">'.round($row_or['or_linea_base'],2).'</td>
-                <td style="width:5%;font-size: 10px;text-align:right">'.round($row_or['or_meta'],2).'</td>
-                <td style="width:13%;">'.$row_or['or_verificacion'].'</td>
-                <td style="width:13%;">'.$row_or['or_observacion'].'</td>
+            <thead>
+              <tr style="font-size: 8px;" bgcolor="#d2d2d2" align=center>
+                <th style="width:2%;height:15px;">#</th>
+                <th style="width:5%;">COD. OPE.</th>
+                <th style="width:15%;">OPERACI&Oacute;N '.$this->gestion.'</th>
+                <th style="width:15%;">PRODUCTO</th>
+                <th style="width:14%;">RESULTADO (LOGROS)</th>
+                <th style="width:13%;">INDICADOR</th>
+                <th style="width:5%;">LINEA BASE</th>
+                <th style="width:5%;">META</th>
+                <th style="width:13%;">MEDIO DE VERIFICACI&Oacute;N</th>
+                <th style="width:13%;">OBSERVACIONES DETALLE DE DISTRIBUCI&Oacute;N</th>
               </tr>
+            </thead>
+          <tbody>
+            <tr style="font-size: 7px;">
+            <td style="width:2%; height:20px;" align=center>'.$nro.'</td>
+            <td style="width:5%; font-size: 15px; text-align: center"><b>'.$row_or['or_codigo'].'</b></td>
+            <td style="width:15%;">'.$row_or['or_objetivo'].'</td>
+            <td style="width:15%;">'.$row_or['or_producto'].'</td>
+            <td style="width:14%;">'.$row_or['or_resultado'].'</td>
+            <td style="width:13%;">'.$row_or['or_indicador'].'</td>
+            <td style="width:5%;font-size: 10px;text-align:right">'.round($row_or['or_linea_base'],2).'</td>
+            <td style="width:5%;font-size: 10px;text-align:right">'.round($row_or['or_meta'],2).'</td>
+            <td style="width:13%;">'.$row_or['or_verificacion'].'</td>
+            <td style="width:13%;">'.$row_or['or_observacion'].'</td>
+          </tr>
+          </tbody>
+        </table><br>';
+        $num=0;
+        $distritales=$this->model_proyecto->list_distritales($dep_id);
+        foreach($distritales as $rowd){
+          $niveles=$this->model_objetivoregion->list_niveles();
+          $tabla.='
+             <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
+                <thead>
+                <tr>
+                  <th colspan=4 bgcolor="#e4e2e2" style="height:12px;" align=center>DISTRIBUCI&Oacute;N - '.strtoupper($rowd['dist_distrital']).'</th>
+                </tr>
+                <tr>
+                  <th style="width:25%; height:12px;" bgcolor="#e4e2e2" align=center>REGIONAL / DISTRITAL</th>
+                  <th style="width:25%;" bgcolor="#e4e2e2" align=center>PRIMER NIVEL</th>
+                  <th style="width:25%;" bgcolor="#e4e2e2" align=center>SEGUNDO NIVEL</th>
+                  <th style="width:25%;" bgcolor="#e4e2e2" align=center>TERCER NIVEL</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr style="text-align: center;">';
+                  
+                  foreach($niveles as $rown){
+                    $nivel=$this->model_objetivoregion->list_unidades_distrital_niveles($rowd['dist_id'],$rown['tn_id']);
+                    $tabla.='
+                    <td style="width:25%;">
+                      <table class="tabla" cellpadding="0" cellspacing="0" border=0.1 style="width:100%; font-size: 6.3px;">
+                        <thead>
+                        <tr>
+                          <th style="width:10px; height:10px;">#</th>
+                          <th style="width:30px;">CAT. PROG.</th>
+                          <th style="width:135px;">UNIDAD / ESTABLECIMIENTO</th>
+                          <th style="width:50px;">PROG.</th>
+                        </tr>
+                        </thead>
+                        <tbody>';
+                        $nro=0;
+                        foreach($nivel as $rowu){
+                          $uni=$this->model_objetivoregion->get_unidad_programado($row_or['or_id'],$rowu['act_id']);
+                          $color='';$valor_prog=0;
+                          if(count($uni)!=0){
+                              if($uni[0]['or_estado']==1){
+                                  $color='#cbf7cb';      
+                              }
+                            $valor_prog=$uni[0]['prog_fis'];
+                          }
+                          $nro++;
+                          $tabla.='
+                          <tr bgcolor='.$color.'>
+                            <td style="width:10px;">'.$nro.'</td>
+                            <td style="width:30px;">'.$rowu['aper_programa'].'</td>
+                            <td style="width:135px;text-align: left;">'.$rowu['tipo'].' '.$rowu['act_descripcion'].'</td>
+                            <td style="width:50px;">'.round($valor_prog,2).'</td>
+                          </tr>';
+                        }
+
+                        $tabla.='
+                        </tbody>
+                      </table>
+                    </td>';
+                  }
+              $tabla.='
+                </tr>
               </tbody>
             </table><br>';
-            $num=0;
-            $distritales=$this->model_proyecto->list_distritales($dep_id);
-            foreach($distritales as $rowd){
-              $niveles=$this->model_objetivoregion->list_niveles();
-              $tabla.='
-                 <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
-                    <thead>
-                    <tr>
-                      <th colspan=4 bgcolor="#e4e2e2" style="height:12px;" align=center>DISTRIBUCI&Oacute;N - '.strtoupper($rowd['dist_distrital']).'</th>
-                    </tr>
-                    <tr>
-                      <th style="width:25%; height:12px;" bgcolor="#e4e2e2" align=center>REGIONAL / DISTRITAL</th>
-                      <th style="width:25%;" bgcolor="#e4e2e2" align=center>PRIMER NIVEL</th>
-                      <th style="width:25%;" bgcolor="#e4e2e2" align=center>SEGUNDO NIVEL</th>
-                      <th style="width:25%;" bgcolor="#e4e2e2" align=center>TERCER NIVEL</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="text-align: center;">';
-                        
-                        foreach($niveles as $rown){
-                            $nivel=$this->model_objetivoregion->list_unidades_distrital_niveles($rowd['dist_id'],$rown['tn_id']);
-                            $tabla.='
-                            <td style="width:25%;">
-                              <table class="tabla" cellpadding="0" cellspacing="0" border=0.1 style="width:100%; font-size: 6.3px;">
-                                <thead>
-                                <tr>
-                                  <th style="width:10px; height:10px;">#</th>
-                                  <th style="width:30px;">CAT. PROG.</th>
-                                  <th style="width:135px;">UNIDAD / ESTABLECIMIENTO</th>
-                                  <th style="width:50px;">PROG.</th>
-                                </tr>
-                                </thead>
-                                <tbody>';
-                                $nro=0;
-                                foreach($nivel as $rowu){
-                                  $uni=$this->model_objetivoregion->get_unidad_programado($row_or['or_id'],$rowu['act_id']);
-                                  $color='';$valor_prog=0;
-                                  if(count($uni)!=0){
-                                      if($uni[0]['or_estado']==1){
-                                          $color='#cbf7cb';      
-                                      }
-                                    $valor_prog=$uni[0]['prog_fis'];
-                                  }
-                                  $nro++;
-                                  $tabla.='
-                                  <tr bgcolor='.$color.'>
-                                    <td style="width:10px;">'.$nro.'</td>
-                                    <td style="width:30px;">'.$rowu['aper_programa'].'</td>
-                                    <td style="width:135px;text-align: left;">'.$rowu['tipo'].' '.$rowu['act_descripcion'].'</td>
-                                    <td style="width:50px;">'.round($valor_prog,2).'</td>
-                                  </tr>';
-                                }
-
-                                $tabla.='
-                                </tbody>
-                              </table>
-                            </td>';
-                        }
-                    $tabla.='
-                        </tr>
-                    </tbody>
-                </table><br>';
             }
         }
 
@@ -427,5 +427,30 @@ class Cobjetivo_regional extends CI_Controller {
         break;
       }
     }
+
+  ///// ===== REPORTE FORMULARIO N° 2
+
+  public function reporte_form2($dep_id){
+    $data['regional']=$this->model_proyecto->get_departamento($dep_id);
+    //$data['mes'] = $this->mes_nombre();
+    $data['cabecera']=$this->oregional->cabecera_form2($data['regional']);
+    $data['oregional']=$this->oregional->rep_lista_form2($dep_id);
+    $data['pie']=$this->oregional->pie_form2($data['regional']);
+
+    $this->load->view('admin/mestrategico/objetivos_region/reporte_form2', $data);
+  }
+
+
+  ///// ===== REPORTE CONSOLIDADO ALINEACION FORM 4 A OPERACIONES Y ACP
+
+  public function rep_alineacion_acp($og_id){
+    echo "Hola Mundo";
+/*    $data['regional']=$this->model_proyecto->get_departamento($dep_id);
+    $data['cabecera']=$this->oregional->cabecera_form2($data['regional']);
+    $data['oregional']=$this->oregional->rep_lista_form2($dep_id);
+    $data['pie']=$this->oregional->pie_form2($data['regional']);
+
+    $this->load->view('admin/mestrategico/objetivos_region/reporte_form2', $data);*/
+  }
 
 }

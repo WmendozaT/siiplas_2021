@@ -38,41 +38,35 @@ class Cobjetivo_gestion extends CI_Controller {
     }
 
     /*----- REPORTE DE ACCION CORTO PLAZO 2022 ----*/
-    public function reporte_ogestion($tp){
+    public function reporte_ogestion(){
       // tp : 1 distribucion Regional
       // tp : 2 distribuacion mensual
       $data['mes'] = $this->acortoplazo->mes_nombre();
 
-      if($tp==1){
-        $lista=$this->acortoplazo->distribucion_regional();
-      }
-      else{
-        $lista=$this->acortoplazo->distribucion_mensual();
-      }
-
       $data['gestion']=$this->gestion;
-      $data['cabecera']=$this->acortoplazo->cabecera_acp($tp);
-      $data['lista']= $lista; /// lista
-      $this->load->view('admin/mestrategico/objetivos_gestion/reporte_ogestion_general', $data);
+      $data['cabecera']=$this->acortoplazo->cabecera_acp();
+      $data['lista1']= $this->acortoplazo->distribucion_regional(); /// lista 1
+      $data['lista2']= $this->acortoplazo->distribucion_mensual(); /// lista 2
+      $data['pie']=$this->acortoplazo->pie_form1();
+      $this->load->view('admin/mestrategico/objetivos_gestion/reporte_form1', $data);
     }
-
 
 
 
    /*------- Verifica Codigo Operacion ------*/ 
   function verif_codigo(){
     if($this->input->is_ajax_request()){
-        $post = $this->input->post();
+      $post = $this->input->post();
 
-        $codigo= $this->security->xss_clean($post['codigo']); /// Codigo
+      $codigo= $this->security->xss_clean($post['codigo']); /// Codigo
 
-        $verif_cod=$this->model_objetivogestion->get_cod_objetivosgestion($codigo);
-        if(count($verif_cod)!=0){
-          echo "true"; ///// no existe un CI registrado
-        }
-        else{
-          echo "false"; //// existe el CI ya registrado
-        } 
+      $verif_cod=$this->model_objetivogestion->get_cod_objetivosgestion($codigo);
+      if(count($verif_cod)!=0){
+        echo "true"; ///// no existe un CI registrado
+      }
+      else{
+        echo "false"; //// existe el CI ya registrado
+      } 
     }else{
       show_404();
     }
