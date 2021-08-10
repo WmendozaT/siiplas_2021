@@ -43,7 +43,7 @@ class crequerimiento extends CI_Controller{
       $data['producto']=$this->model_producto->get_producto_id($prod_id); // Producto
       $data['stylo']=$this->programacionpoa->estilo_tabla_form5();
       if(count($data['producto'])!=0){
-        $data['componente']=$this->model_componente->get_componente($data['producto'][0]['com_id']); // Componente
+        $data['componente']=$this->model_componente->get_componente($data['producto'][0]['com_id'],$this->gestion); // Componente
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['componente'][0]['proy_id']);
         $data['menu']=$this->genera_menu($data['proyecto'][0]['proy_id']);
         $data['monto_asig']=$this->model_ptto_sigep->suma_ptto_accion($data['proyecto'][0]['aper_id'],1);
@@ -99,7 +99,7 @@ class crequerimiento extends CI_Controller{
         $observacion = $this->security->xss_clean($post['ins_observacion']); /// Observacion
 
         $producto=$this->model_producto->get_producto_id($prod_id); // Producto
-        $componente=$this->model_componente->get_componente($producto[0]['com_id']); // Componente
+        $componente=$this->model_componente->get_componente($producto[0]['com_id'],$this->gestion); // Componente
         $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); /// DATOS DEL PROYECTO
         
         $umedida=$this->model_insumo->get_unidadmedida($um_id);
@@ -179,7 +179,7 @@ class crequerimiento extends CI_Controller{
 
         $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
         $producto=$this->model_producto->get_producto_id($insumo[0]['prod_id']); /// Get producto
-        $componente = $this->model_componente->get_componente($producto[0]['com_id']); /// Get Componente
+        $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion); /// Get Componente
         $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); ////// DATOS DEL PROYECTO
 
       
@@ -418,7 +418,7 @@ class crequerimiento extends CI_Controller{
         $ins_id = $this->security->xss_clean($post['ins_id']);
         $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
         $producto=$this->model_producto->get_producto_id($insumo[0]['prod_id']); /// Get producto
-        $componente = $this->model_componente->get_componente($producto[0]['com_id']); /// Get Componente
+        $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion); /// Get Componente
         $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); ////// DATOS DEL PROYECTO
 
         $monto_asig=$this->model_ptto_sigep->suma_ptto_poa($proyecto[0]['aper_id'],1);

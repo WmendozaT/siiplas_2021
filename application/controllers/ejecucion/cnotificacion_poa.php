@@ -214,7 +214,7 @@ class Cnotificacion_poa extends CI_Controller {
 
     /*-------- LISTA DE REQUERIMIENTOS NOTIFICADOS - SERVICIO -------*/
     public function lista_requerimientos_notificados_servicio($com_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id);
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion);
       $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
       $data['mes'] = $this->mes_nombre();
       $data['datos_mes'] = $this->verif_mes;

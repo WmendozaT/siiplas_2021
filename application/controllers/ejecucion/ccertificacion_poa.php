@@ -897,7 +897,7 @@ class Ccertificacion_poa extends CI_Controller {
   //// CERTIFICACION POA POR SUBACTIVIDAD
   /*------ SOLICITAR CERTIFICACION POA  -------*/
   public function solicitar_certpoa($com_id){
-    $componente = $this->model_componente->get_componente($com_id);
+    $componente = $this->model_componente->get_componente($com_id,$this->gestion);
     if(count($componente)!=0){
 
       $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
@@ -1275,7 +1275,7 @@ class Ccertificacion_poa extends CI_Controller {
 
   /*------ MIS SOLICITUDES CERTIFICACION POA  -------*/
   public function mis_solicitudes_certificacionespoa($com_id){
-    $componente = $this->model_componente->get_componente($com_id);
+    $componente = $this->model_componente->get_componente($com_id,$this->gestion);
     if(count($componente)!=0){
       $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
       $data['li']='<li>Mis Solicitudes de Certificación POA</li>';

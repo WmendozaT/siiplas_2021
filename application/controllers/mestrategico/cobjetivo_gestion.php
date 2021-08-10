@@ -88,91 +88,6 @@ class Cobjetivo_gestion extends CI_Controller {
       $this->load->view('admin/mestrategico/objetivos_gestion/list_ogestion', $data);
     }
 
-    /*---------- MIS OBJETIVOS DE GESTION ------------*/
-/*    public function mis_ogestion($acc_id){
-      $ogestion = $this->model_objetivogestion->list_objetivosgestion($acc_id); /// OBJETIVOS DE GESTION
-      $acciones = $this->model_mestrategico->get_acciones_estrategicas($acc_id); // ACCIONES ESTRATEGICAS
-      $objetivos =$this->model_mestrategico->get_objetivos_estrategicos($acciones[0]['obj_id']); /// OBJETIVOS ESTRATEGICOS
-
-      $tabla ='';
-      $tabla .='<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <div class="jarviswidget jarviswidget-color-darken" >
-                    <header>
-                      <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                      <h2 class="font-md"><strong>ACCIONES DE CORTO PLAZO - '.$this->gestion.'</strong></h2>  
-                    </header>
-                <div>
-                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - RESULTADO INTERMEDIO">NUEVO OBJETIVO DE GESTI&Oacute;N</a><br><br>
-                  <div class="widget-body no-padding">
-                    <table id="dt_basic" class="table table table-bordered" width="100%">
-                      <thead>
-                        <tr>
-                          <th style="width:1%;">NRO</th>
-                          <th style="width:1%;">M/E</th>
-                          <th style="width:2%;">OPERACIONES</th>
-                          <th style="width:10%;">ACCIÓN DE CORTO PLAZO</th>
-                          <th style="width:10%;">PRODUCTO</th>
-                          <th style="width:10%;">RESULTADO</th>
-                          <th style="width:5%;">TP. INDI.</th>
-                          <th style="width:7%;">INDICADOR</th>
-                          <th style="width:4%;">LINEA BASE</th>
-                          <th style="width:4%;">META</th>
-                          <th style="width:4%;" title="CHUQUISACA">CH.</th>
-                          <th style="width:4%;" title="LA PAZ">LPZ.</th>
-                          <th style="width:4%;" title="COCHABAMBA">CBBA.</th>
-                          <th style="width:4%;" title="ORURO">OR.</th>
-                          <th style="width:4%;" title="POTOSI">POT.</th>
-                          <th style="width:4%;" title="TARIJA">TJA.</th>
-                          <th style="width:4%;" title="SANTA CRUZ">SCZ.</th>
-                          <th style="width:4%;" title="BENI">BE.</th>
-                          <th style="width:4%;" title="PANDO">PN</th>
-                          <th style="width:4%;" title="OFICINA NACIONAL">OFN</th>
-                          <th style="width:10%;">MEDIO VERIFICACI&Oacute;N</th>
-                        </tr>
-                      </thead>
-                      <tbody>';
-                      $nro=0;
-                        foreach($ogestion  as $row){
-                          $nro++;
-                          $tabla .='<tr>';
-                            $tabla .='<td>'.$nro.'</td>';
-                            $tabla .='<td align="center">';
-                              $tabla .='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff"  title="MODIFICAR DATOS - OBJETIVOS DE GESTIÓN" name="'.$row['og_id'].'"><img src="' . base_url() . 'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>';
-                              $tabla .='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-xs del_ff" title="ELIMINAR OBJETIVO DE GESTIÓN"  name="'.$row['og_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a><br>';
-                            $tabla .='</td>';
-                            $tabla .='<td bgcolor="#cef3ee"><a href="'.site_url("").'/me/objetivos_regionales/'.$row['og_id'].'" class="btn btn-default" title="OBJETIVOS REGIONALES"><img src="'.base_url().'assets/img/folder.png" WIDTH="35" HEIGHT="35"/></a></td>';
-                            $tabla .='<td>'.$row['og_objetivo'].'</td>';
-                            $tabla .='<td>'.$row['og_producto'].'</td>';
-                            $tabla .='<td>'.$row['og_resultado'].'</td>';
-                            $tabla .='<td>'.strtoupper($row['indi_descripcion']).'</td>';
-                            $tabla .='<td>'.$row['og_indicador'].'</td>';
-                            $tabla .='<td>'.round($row['og_linea_base'],2).'</td>';
-                            $tabla .='<td>'.round($row['og_meta'],2).'</td>';
-                            
-                            for ($i=1; $i <=10 ; $i++) { 
-                              $dep=$this->model_objetivogestion->get_ogestion_regional($row['og_id'],$i);
-                              if(count($dep)!=0){
-                                $tabla.='<td bgcolor="#e6f5e0"><b>'.$dep[0]['prog_fis'].'</b></td>';
-                              }
-                              else{
-                                $tabla.='<td bgcolor="#e6f5e0"><b>0</b></td>';
-                              }
-                            }
-                            $tabla.='<td>'.$row['og_verificacion'].'</td>';
-                          $tabla.='</tr>';
-                        }
-                      $tabla .='
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </article>';
-
-      return $tabla;
-    }*/
-    
-
     /*------- VALIDA OBJETIVO DE GESTION -------*/
     public function valida_ogestion(){
       if($this->input->post()) {
@@ -455,17 +370,8 @@ class Cobjetivo_gestion extends CI_Controller {
     }
 
 
-   /*----- REPORTE objetivo de Gestion GENERAL -----*/
-  
-
-
-
-
-
-
-
     /*----- Reporte objetivo de Gestion segun Accion estrategica -----*/
-    public function reporte_objetivos_gestion($acc_id){
+/*    public function reporte_objetivos_gestion($acc_id){
       $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($acc_id);
       if(count($data['accion_estrategica'])!=0){
         $data['mes'] = $this->acortoplazo->mes_nombre();
@@ -478,10 +384,10 @@ class Cobjetivo_gestion extends CI_Controller {
       else{
         echo "Error !!!";
       }
-    }
+    }*/
 
     /*----- Reporte Lista de objetivo de Gestion -----*/
-    public function rep_list_ogestion($acc_id){
+  /*  public function rep_list_ogestion($acc_id){
       $ogestion = $this->model_objetivogestion->list_objetivosgestion($acc_id); /// OBJETIVOS DE GESTION
       $acciones = $this->model_mestrategico->get_acciones_estrategicas($acc_id); // ACCIONES ESTRATEGICAS
       $objetivos =$this->model_mestrategico->get_objetivos_estrategicos($acciones[0]['obj_id']); /// OBJETIVOS ESTRATEGICOS
@@ -546,49 +452,8 @@ class Cobjetivo_gestion extends CI_Controller {
        </table>';
 
        return $tabla;
-    }
-
-
-    /*------ NOMBRE MES -------*/
-/*    function mes_nombre(){
-        $mes[1] = 'ENE.';
-        $mes[2] = 'FEB.';
-        $mes[3] = 'MAR.';
-        $mes[4] = 'ABR.';
-        $mes[5] = 'MAY.';
-        $mes[6] = 'JUN.';
-        $mes[7] = 'JUL.';
-        $mes[8] = 'AGOS.';
-        $mes[9] = 'SEPT.';
-        $mes[10] = 'OCT.';
-        $mes[11] = 'NOV.';
-        $mes[12] = 'DIC.';
-        return $mes;
     }*/
 
-    /*------------------------------------- MENU -----------------------------------*/
-/*    function menu(){
-      $enlaces=$this->menu_modelo->get_Modulos(1);
-      for($i=0;$i<count($enlaces);$i++){
-        $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
-      }
-
-      $tabla ='';
-      for($i=0;$i<count($enlaces);$i++){
-        if(count($subenlaces[$enlaces[$i]['o_child']])>0){
-            $tabla .='<li>';
-                $tabla .='<a href="#">';
-                    $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
-                    $tabla .='<ul>';    
-                        foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
-                        $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
-                    }
-                    $tabla .='</ul>';
-            $tabla .='</li>';
-        }
-      }
-      return $tabla;
-    }*/
 
     /*------------------------- COMBO RESPONSABLES ----------------------*/
     public function combo_funcionario_unidad_organizacional($accion=''){ 
@@ -612,24 +477,60 @@ class Cobjetivo_gestion extends CI_Controller {
       }
     }
 
-/*    function rolfun($rol){
-      $valor=false;
-      for ($i=1; $i <=count($rol) ; $i++) { 
-        $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$rol[$i]);
-        if(count($data)!=0){
-          $valor=true;
-          break;
-        }
-      }
-      return $valor;
-    }
 
-    function rolfunn($tp_rol){
-      $valor=false;
-      $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$tp_rol);
-      if(count($data)!=0){
-        $valor=true;
+
+
+
+
+
+
+  ///// ===== REPORTE CONSOLIDADO ALINEACION ACP A ACTIVIDADES
+
+  public function rep_alineacion_acp_act($og_id){
+    $tabla='';
+    $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id);
+    $data['titulo']='
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="well">
+            <h2>ACP. : '.$ogestion[0]['og_codigo'].' .- '.$ogestion[0]['og_objetivo'].'</h2>
+            <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion\');" title="IMPRIMIR" class="btn btn-default">
+              <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;REP. A.C.P. - FORM 4
+            </a>
+          </div>
+        </article>';
+
+    $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT.
+    
+      foreach($alienacion_acp  as $row){
+        $tabla.='
+        <tr>
+          <td align=center><b>'.$row['og_codigo'].'</b></td>
+          <td>'.strtoupper($row['dep_departamento']).'</td>
+          <td align=center>'.$row['og_codigo'].'.'.$row['or_codigo'].'.</td>
+          <td>'.strtoupper($row['or_objetivo']).'</td>
+          <td>'.strtoupper($row['or_indicador']).'</td>
+          <td>'.strtoupper($row['or_producto']).'</td>
+          <td>'.strtoupper($row['or_resultado']).'</td>
+          <td align=right>'.round($row['or_linea_base'],2).'</td>
+          <td align=right>'.round($row['or_meta'],2).'</td>
+
+          <td bgcolor="#e7f3f1" align=center>'.strtoupper($row['prod_cod']).'</td>
+          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_producto']).'</td>
+          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_indicador']).'</td>
+          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_unidades']).'</td>
+          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_linea_base'],2).'</b></td>
+          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).'</b></td>
+          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_fuente_verificacion']).'</td>';
+          for ($i=1; $i <=12 ; $i++) { 
+            $tabla.='
+            <td bgcolor="#e7f3f1" align=right><b>'.round($row['mes'.$i]).'</b></td>';
+          }
+
+        $tabla.='
+        </tr>';
       }
-      return $valor;
-    }*/
+
+    $data['tabla']=$tabla;
+    $this->load->view('admin/mestrategico/objetivos_gestion/ver_alineacion_acp_act', $data); 
+  }
 }

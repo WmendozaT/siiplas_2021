@@ -902,8 +902,8 @@ class Oregional extends CI_Controller{
       <tbody>';
     $nro=0;$monto_total=0;
     foreach($lista_ogestion as $row){
-      $presupuesto_gc=$this->model_objetivogestion->get_ppto_ogestion_gc_regional($row['og_id'],$dep_id); // ppto Gasto Corriente
-      $presupuesto_pi=$this->model_objetivogestion->get_ppto_ogestion_pi_regional($row['og_id'],$dep_id); // ppto Proyecto de Inversion
+      $presupuesto_gc=$this->model_objetivogestion->get_ppto_ogestion_gc_regional($row['or_id'],$dep_id); // ppto Gasto Corriente
+      $presupuesto_pi=$this->model_objetivogestion->get_ppto_ogestion_pi_regional($row['or_id'],$dep_id); // ppto Proyecto de Inversion
         $ppto_gc=0;$ppto_pi=0;
         if(count($presupuesto_gc)!=0){
           $ppto_gc=$presupuesto_gc[0]['presupuesto'];

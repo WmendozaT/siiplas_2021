@@ -334,7 +334,7 @@ class Cprog_insumo extends CI_Controller{
           $post = $this->input->post();
           $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
           $producto = $this->model_producto->get_producto_id($prod_id); ///// DATOS DEL PRODUCTO 
-          $componente = $this->model_componente->get_componente($producto[0]['com_id']);
+          $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion);
           $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']);
                    
           $tipo = $_FILES['archivo_csv']['type'];
@@ -933,7 +933,7 @@ class Cprog_insumo extends CI_Controller{
     /*--------------- EXPORTAR REQUERIMIENTOS DE OPERACIONES --------------*/
     public function xcel_reporte_partida($prod_id){
       $producto = $this->model_producto->get_producto_id($prod_id); ///// DATOS DEL PRODUCTO
-      $componente = $this->model_componente->get_componente($producto[0]['com_id']); /// COMPONENTE 
+      $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion); /// COMPONENTE 
       $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
       $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']); /// PROYECTO
       $req=$this->consolidado_partidas_operacion($prod_id,2);

@@ -2786,7 +2786,7 @@ class Cmod_requerimientos extends CI_Controller {
         $tabla = '';
         $cont_acordion = 0;
         foreach ($lista_productos as $row) {
-            $componente=$this->model_componente->get_componente($row['com_id']);
+            $componente=$this->model_componente->get_componente($row['com_id'],$this->gestion);
             $lista_actividad = $this->minsumos->lista_actividades($row['prod_id'], $this->gestion);
             if(count($lista_actividad)!=0){
             $cont_acordion++;

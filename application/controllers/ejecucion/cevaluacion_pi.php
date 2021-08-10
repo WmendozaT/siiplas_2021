@@ -48,7 +48,7 @@ class Cevaluacion_pi extends CI_Controller {
 
     /*------ EVALUAR PROYECTOS DE INVERSIÓN 2020 ------*/
     public function evaluar_proyectoinversion($com_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       $data['menu']=$this->menu(4); //// genera menu
       $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
       $data['proyecto'] = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']); ////// DATOS DEL PROYECTO

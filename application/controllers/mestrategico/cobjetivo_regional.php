@@ -441,16 +441,6 @@ class Cobjetivo_regional extends CI_Controller {
   }
 
 
-  ///// ===== REPORTE CONSOLIDADO ALINEACION FORM 4 A OPERACIONES Y ACP
 
-  public function rep_alineacion_acp($og_id){
-    echo "Hola Mundo";
-/*    $data['regional']=$this->model_proyecto->get_departamento($dep_id);
-    $data['cabecera']=$this->oregional->cabecera_form2($data['regional']);
-    $data['oregional']=$this->oregional->rep_lista_form2($dep_id);
-    $data['pie']=$this->oregional->pie_form2($data['regional']);
-
-    $this->load->view('admin/mestrategico/objetivos_region/reporte_form2', $data);*/
-  }
 
 }

@@ -297,7 +297,7 @@ class Cseguimiento extends CI_Controller {
   public function formulario_segpoa($com_id){
     $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
     $data['menu'] = $this->seguimientopoa->menu(4);
-    $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+    $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
     $data['com_id']=$com_id;
 
     if(count($data['componente'])!=0){
@@ -369,7 +369,7 @@ class Cseguimiento extends CI_Controller {
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $com_id = $this->security->xss_clean($post['com_id']);
-        $componente = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+        $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
         $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
         $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
         $this->seguimientopoa->update_evaluacion_operaciones($com_id);
@@ -504,7 +504,7 @@ class Cseguimiento extends CI_Controller {
     /*----- REPORTE SEGUIMIENTO POA PDF 2021 MENSUAL POR SUBACTIVIDAD (MENSUAL)-------*/
     public function ver_reportesegpoa($com_id){
       
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
         $data['mes'] = $this->seguimientopoa->mes_nombre();
         $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
@@ -529,7 +529,7 @@ class Cseguimiento extends CI_Controller {
 
     /*----- REPORTE EVALUACION POA PDF 2021 MENSUAL POR SUBACTIVIDAD (TRIMESTRAL)-------*/
     public function ver_reporteevalpoa($com_id,$trm_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
        // $data['mes'] = $this->seguimientopoa->mes_nombre();
         $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
@@ -560,7 +560,7 @@ class Cseguimiento extends CI_Controller {
 
     /*----- REPORTE SEGUIMIENTO POA PDF 2021 -------*/
     public function ver_reporteevalpoa_consolidado_temporalidad($com_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
         $data['mes'] = $this->seguimientopoa->mes_nombre();
         $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
@@ -712,7 +712,7 @@ class Cseguimiento extends CI_Controller {
 
       $tabla='';
         foreach ($subactividades as $row) {
-          $componente = $this->model_componente->get_componente($row['com_id']); ///// DATOS DEL COMPONENTE
+          $componente = $this->model_componente->get_componente($row['com_id'],$this->gestion); ///// DATOS DEL COMPONENTE
           $tabla.='
           <page backtop="47mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
           <page_header>
@@ -852,7 +852,7 @@ class Cseguimiento extends CI_Controller {
     public function formulario_subactividad(){
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
       $data['menu'] = $this->seguimientopoa->menu_segpoa($this->com_id);
-      $data['componente']=$this->model_componente->get_datos_componente($this->com_id,$this->gestion);
+      $data['componente']=$this->model_componente->get_componente($this->com_id,$this->gestion);
       if(count($data['componente'])!=0){
         $data['com_id']=$this->com_id;
         $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['componente'][0]['proy_id']); /// PROYECTO
@@ -909,7 +909,7 @@ class Cseguimiento extends CI_Controller {
     /*----- REPORTE SEGUIMIENTO POA PDF 2021 MENSUAL POR SUBACTIVIDAD POR MES-------*/
     public function reporte_formulario_subactividad_mes($com_id,$mes_id){
       
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
         $data['verif_mes']=$this->seguimientopoa->update_mes_gestion($mes_id);
         $data['mes'] = $this->seguimientopoa->mes_nombre();

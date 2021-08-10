@@ -1727,7 +1727,7 @@ class Seguimientopoa extends CI_Controller{
 
     /*--- UPDATE DATOS DE EVALUACION POA 2021 planificadores ---*/
     function button_update_($com_id){
-      $componente = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       $tabla='';
 
       $dia_actual=ltrim(date("d"), "0");
@@ -1763,7 +1763,7 @@ class Seguimientopoa extends CI_Controller{
 
     /*--- UPDATE DATOS DE EVALUACION POA 2021 Unidades, Establecimientos ---*/
     function button_update_sa($com_id){
-      $componente = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       $tabla='';
 
       $dia_actual=ltrim(date("d"), "0");
@@ -1837,7 +1837,7 @@ class Seguimientopoa extends CI_Controller{
 
     /*--- BOTON REPORTE EVALUACION POA (TRIMESTRE VIGENTE)---*/
     function button_rep_evaluacion($com_id){
-      $componente = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       $tabla='';
 
       $dia_actual=ltrim(date("d"), "0");

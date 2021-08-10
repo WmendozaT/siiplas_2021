@@ -162,7 +162,7 @@ class Creporte extends CI_Controller {
         $com_id = $this->security->xss_clean($post['com_id']); // com id
         $tp = $this->security->xss_clean($post['tp']); // tp 1:ope, 2:req
 
-        $componente = $this->model_componente->get_componente($com_id);
+        $componente = $this->model_componente->get_componente($com_id,$this->gestion);
         $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
 
        if($tp==1){
@@ -212,7 +212,7 @@ class Creporte extends CI_Controller {
            
         }
 
-        $data['componente']=$this->model_componente->get_componente($com_id);
+        $data['componente']=$this->model_componente->get_componente($com_id,$this->gestion);
         $data['requerimientos']=$this->list_requerimientos_reporte($com_id,$data['proyecto'][0]['tp_id']);
         $data['partidas']=$this->consolidado_partida_reporte($com_id,$data['proyecto'][0]['tp_id']);
 
@@ -441,7 +441,7 @@ class Creporte extends CI_Controller {
 
 
     public function reporte_formulario4($com_id){
-        $data['componente']=$this->model_componente->get_componente($com_id);
+        $data['componente']=$this->model_componente->get_componente($com_id,$this->gestion);
         if(count($data['componente'])!=0){
             $data['mes'] = $this->mes_nombre();
             $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE

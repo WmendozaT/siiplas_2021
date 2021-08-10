@@ -628,7 +628,7 @@ class User extends CI_Controller{
                                 redirect('admin/dashboard');
                             }
                             else{
-                                if(count($this->model_componente->get_datos_componente($this->session->userData('com_id'),$this->session->userData('gestion')))!=0){
+                                if(count($this->model_componente->get_componente($this->session->userData('com_id'),$this->session->userData('gestion')))!=0){
                                     redirect('seguimiento_poa');
                                 }
                                 else{

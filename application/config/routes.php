@@ -63,7 +63,7 @@ $route['me/rep_objetivos_gestion/(:any)'] = 'mestrategico/cobjetivo_gestion/repo
 $route['me/mis_ogestion'] = 'mestrategico/cobjetivo_gestion/list_objetivos_gestion'; //// Lista Objetivos de Gestion General
 $route['me/rep_ogestion'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion'; //// Reporte Acciones de Corto Plazo Form 1 2022
 //$route['me/rep_ogestion_mes'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion_mes'; //// Reporte Objetivo de Gestion General Msnual
-
+$route['me/alineacion_ope_acp/(:any)'] = 'mestrategico/cobjetivo_gestion/rep_alineacion_acp_act/$1'; ///// ver Alineacion completa de actividades a operaciones y acciones 2022
 
 /* ---- OBJETIVOS REGIONALES 2022 ---- */
 $route['me/objetivos_regionales/(:any)'] = 'mestrategico/cobjetivo_regional/objetivos_regional/$1'; //// Lista Objetivos regional
@@ -74,7 +74,8 @@ $route['me/combo_oregional'] = 'mestrategico/cobjetivo_regional/combo_oregional'
 $route['me/rep_oregionales/(:any)'] = 'mestrategico/cobjetivo_regional/reporte_objetivos_regionales/$1'; //// Reporte consolidado de Objetivos Regionales
 $route['me/rep_form2/(:any)'] = 'mestrategico/cobjetivo_regional/reporte_form2/$1'; ///// ver datos de la regional alineado al objetivo de Gestion form 2 2022
 
-$route['me/objetivos_regionales/(:any)'] = 'mestrategico/cobjetivo_regional/rep_alineacion_acp/$1'; ///// ver datos de la regional alineado al objetivo de Gestion form 2 2022
+//$route['me/objetivos_regionales/(:any)'] = 'mestrategico/cobjetivo_regional/rep_alineacion_acp/$1'; ///// ver datos de la regional alineado al objetivo de Gestion form 2 2022
+
 
 
 

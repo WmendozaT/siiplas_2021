@@ -2560,3 +2560,69 @@ create table temporalidad_ogestion(
 
 ALTER TABLE public.v_ogestion_programado_temporalidad
   OWNER TO postgres;
+
+
+
+
+/////============= VISTA - ALINEACION ACP A ACT. 2022
+CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS 
+          select 
+          oge.og_id,
+          oge.og_codigo,
+          oge.g_id,
+          apg.aper_gestion,
+          opge.dep_id, 
+          dep.dep_cod,
+          dep.dep_departamento, 
+          dep.dep_sigla, 
+          opge.prog_fis, 
+          oreg.or_id,
+          oreg.or_codigo,
+          oreg.or_objetivo,
+          oreg.or_indicador,
+          oreg.or_producto,
+          oreg.or_resultado,
+          oreg.or_linea_base,
+          oreg.or_meta,
+          oreg.or_verificacion,
+          p.com_id,
+          p.prod_id,
+          p.prod_cod,
+          p.prod_producto,
+          p.indi_id,
+          p.prod_indicador,
+          p.prod_linea_base,
+          p.prod_meta,
+          p.prod_fuente_verificacion,
+          p.prod_unidades,
+          p.prod_resultado,
+          temp.enero mes1,
+          temp.febrero mes2,
+          temp.marzo mes3,
+          temp.abril mes4,
+          temp.mayo mes5,
+          temp.junio mes6,
+          temp.julio mes7,
+          temp.agosto mes8,
+          temp.septiembre mes9,
+          temp.octubre mes10,
+          temp.noviembre mes11,
+          temp.diciembre mes12
+          
+                from objetivo_gestion oge
+                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+                Inner Join _departamentos as dep On dep.dep_id=opge.dep_id
+                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+
+          Inner Join _productos p On p.or_id=oreg.or_id
+                Inner Join _componentes as c On c.com_id=p.com_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+
+                Inner Join vista_productos_temporalizacion_programado_dictamen as temp On temp.prod_id=p.prod_id
+
+                where oreg.or_meta!=0 and p.estado!=3 and c.estado!=3 and pfe.estado!=3 and pfe.pfec_estado=1
+                order by oge.og_codigo,opge.dep_id,oreg.or_codigo, p.prod_cod asc;
+
+          ALTER TABLE public.vista_alineacion_poa_acp
+          OWNER TO postgres;

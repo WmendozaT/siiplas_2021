@@ -38,7 +38,7 @@ class cajuste_crequerimiento extends CI_Controller{
 
     /*---- LISTA DE REQUERIMIENTOS POR SERVICIO ----*/
     function list_requerimientos_total($com_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id);
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion);
       $data['menu']=$this->genera_menu($data['componente'][0]['proy_id']);
       if(count($data['componente'])!=0){
         $fase = $this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);

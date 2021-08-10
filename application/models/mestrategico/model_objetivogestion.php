@@ -47,19 +47,18 @@ class Model_objetivogestion extends CI_Model{
     }
 
     /*---- GET PRESUPUESTO OGESTION - GASTO CORRIENTE (REGIONAL) ----*/
-    public function get_ppto_ogestion_gc_regional($og_id,$dep_id){
-        $sql = 'select opm.og_id,opm.dep_id,SUM(ppto.ptto) presupuesto
+    public function get_ppto_ogestion_gc_regional($or_id,$dep_id){
+        $sql = 'select p.or_id,opm.dep_id,SUM(ppto.ptto) presupuesto
                 from _productos p
                 Inner Join _componentes as c On c.com_id=p.com_id
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                Inner Join _proyectos as proy On proy.proy_id=pfe.proy_id
         
                 Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
 
                 Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
                 Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-
+                
                 Inner Join (
 
                 select ipr.prod_id,SUM(ins_costo_total) ptto
@@ -69,9 +68,10 @@ class Model_objetivogestion extends CI_Model{
                 group by ipr.prod_id
 
                 ) as ppto On ppto.prod_id=p.prod_id
-                                
-                where opm.og_id='.$og_id.' and opm.dep_id='.$dep_id.' and p.estado!=\'3\' and og.g_id='.$this->gestion.' and og.estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and c.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=3
-                group by opm.og_id,opm.dep_id';
+                
+
+                where p.or_id='.$or_id.' and opm.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and p.estado!=\'3\' and c.estado!=\'3\' and pfe.estado!=\'3\' and pfe.pfec_estado=\'1\'
+                group by p.or_id,opm.dep_id';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -274,4 +274,16 @@ class Model_objetivogestion extends CI_Model{
     }
 
 
+
+
+    /*========= ALINEACION DE ACCIONES DE CORTO PLAZO A ACTIVIDADES 2022 =================*/
+    /*----- Alineacion de Acciones de Corto Plazo a Actividades-----*/
+    public function vinculacion_acp_actividades($og_id){
+        $sql = 'select *
+                from vista_alineacion_poa_acp
+                where g_id='.$this->gestion.' and og_id='.$og_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }

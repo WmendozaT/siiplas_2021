@@ -499,7 +499,7 @@ class Cservicios extends CI_Controller {
                 $com_id=$this->db->insert_id();
                 /*------------------------------------*/
 
-                if(count($this->model_componente->get_componente($com_id))!=0){
+                if(count($this->model_componente->get_componente($com_id,$this->gestion))!=0){
                     $this->session->set_flashdata('success','EL COMPONENTE SE REGISTRO CORRECTAMENTE');
                     redirect(site_url("").'/prog/list_serv/'.$fase[0]['proy_id']);
                 }
@@ -525,7 +525,7 @@ class Cservicios extends CI_Controller {
           $com_id = $this->security->xss_clean($post['com_id']); /// com id
           $serv_id = $this->security->xss_clean($post['mserv_id']); /// Descripcion Componente 
           $comp = $this->security->xss_clean($post['mcomponente']); //// Codigo
-          $componente=$this->model_componente->get_componente($com_id);
+          $componente=$this->model_componente->get_componente($com_id,$this->gestion);
             $fase = $this->model_faseetapa->get_fase($componente[0]['pfec_id']);
             $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
 
@@ -564,7 +564,7 @@ class Cservicios extends CI_Controller {
             $post = $this->input->post();
             $com_id = $post['com_id'];
             $com_id = $this->security->xss_clean($com_id);
-            $dato_comp = $this->model_componente->get_componente($com_id);
+            $dato_comp = $this->model_componente->get_componente($com_id,$this->gestion);
             //caso para modificar el codigo de proyecto y actividades
             
             if(count($dato_comp)!=0){
@@ -649,7 +649,7 @@ class Cservicios extends CI_Controller {
             $this->db->where('com_id', $com_id);
             $this->db->update('_componentes', $this->security->xss_clean($update_com));
 
-            $dato_comp = $this->model_componente->get_componente($com_id);
+            $dato_comp = $this->model_componente->get_componente($com_id,$this->gestion);
             if($dato_comp[0]['estado']==3){
                 $result = array(
                 'respuesta' => 'correcto'

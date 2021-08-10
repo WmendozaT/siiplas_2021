@@ -806,7 +806,7 @@
 
      /*----- LISTA DE REQUERIMIENTOS SUBACTIVIDAD (2020-2021) ----*/
     public function lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id){
-        $componente=$this->model_componente->get_componente($com_id);
+        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
         $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
         $proyecto=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
         $tit='PROYECTO DE INVERSI&Oacute;N';
@@ -940,7 +940,7 @@
       }
       else{
         $requerimientos=$this->mrep_operaciones->lista_insumo_subactividad($com_id); /// Lista de requerimientos certificados por Subactividad (2020-2021)
-        $data['componente']=$this->model_componente->get_componente($com_id);
+        $data['componente']=$this->model_componente->get_componente($com_id,$this->gestion);
         $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
         $data['proyecto']=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
         $data['mes'] = $this->mes_nombre();

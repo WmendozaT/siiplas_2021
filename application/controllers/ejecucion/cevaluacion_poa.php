@@ -48,7 +48,7 @@ class Cevaluacion_poa extends CI_Controller {
     /*----- formulario Evaluacion POA ------*/
     public function formulario_evaluacionpoa($com_id){
       $data['menu']=$this->menu(4); //// genera menu
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
 
           $data['list_trimestre']=$this->list_trimestre();
@@ -431,7 +431,7 @@ class Cevaluacion_poa extends CI_Controller {
 
     /*------ EVALUAR OPERACION (Gasto Corriente-Proyecto de Inversion)2020 ------*/
     public function mi_evaluacion($com_id){
-      $componente=$this->model_componente->get_componente($com_id);
+      $componente=$this->model_componente->get_componente($com_id,$this->gestion);
       if(count($componente)!=0){
         $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
         $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']); ////// DATOS DEL PROYECTO
@@ -450,7 +450,7 @@ class Cevaluacion_poa extends CI_Controller {
 
     /*------ EVALUAR OPERACION 2020 ------*/
     public function evaluar_gastocorriente($com_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       $data['menu']=$this->menu(4); //// genera menu
       $data['list_trimestre']=$this->list_trimestre();
       $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
@@ -1029,7 +1029,7 @@ class Cevaluacion_poa extends CI_Controller {
           $com_id = $this->security->xss_clean($post['com_id']);
           $productos=$this->model_producto->list_prod($com_id);
 
-          $com=$this->model_evaluacion->get_componente($com_id);
+          $com=$this->model_evaluacion->get_componente($com_id,$this->gestion);
 
           foreach($productos as $rowp){
             $trimestre_prog = $this->model_evaluacion->programado_trimestral_productos($this->tmes,$rowp['prod_id']); /// Trimestre Programado
@@ -1133,7 +1133,7 @@ class Cevaluacion_poa extends CI_Controller {
         $data['menu']=$this->menu(4); //// genera menu
         $data['resp']=$this->session->userdata('funcionario');
         $data['res_dep']=$this->tp_resp();
-        $data['componente'] = $this->model_componente->get_componente($data['producto'][0]['com_id']); ///// DATOS DEL COMPONENTE
+        $data['componente'] = $this->model_componente->get_componente($data['producto'][0]['com_id'],$this->gestion); ///// DATOS DEL COMPONENTE
         $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
         $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['fase'][0]['proy_id']);
 
@@ -2368,7 +2368,7 @@ class Cevaluacion_poa extends CI_Controller {
 
     /*--------- REPORTE EVALUACION POA 2020 --------*/
     public function reporte_evaluar_operaciones($com_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE 
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE 
       if(count($data['componente'])!=0){
         $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']); ////// DATOS DEL PROYECTO
@@ -2385,7 +2385,7 @@ class Cevaluacion_poa extends CI_Controller {
 
     /*--------- REPORTE EVALUACION POA 2020 (CONSOLIDADO) --------*/
     public function reporte_evaluar_operaciones_consolidado($com_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE 
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE 
       if(count($data['componente'])!=0){
         $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']); ////// DATOS DEL PROYECTO

@@ -44,7 +44,7 @@ class Producto extends CI_Controller {
 
   /*------- LISTA DE OPERACIONES ----------*/
     public function lista_productos($com_id){  
-      $data['componente'] = $this->model_componente->get_componente($com_id);
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion);
       $data['stylo']=$this->programacionpoa->estilo_tabla_form4();
       if(count($data['componente'])!=0){
 
@@ -132,7 +132,7 @@ class Producto extends CI_Controller {
     if ($this->input->server('REQUEST_METHOD') === 'POST'){
         $this->form_validation->set_rules('prod', 'Producto', 'required|trim');
         $this->form_validation->set_rules('tipo_i', 'Tipo de Indicador', 'required|trim');
-        $componente = $this->model_componente->get_componente($this->input->post('com_id'));
+        $componente = $this->model_componente->get_componente($this->input->post('com_id'),$this->gestion);
         $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
         $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
         
@@ -320,7 +320,7 @@ class Producto extends CI_Controller {
         $this->form_validation->set_rules('met', 'Meta', 'required|trim');
 
         $producto=$this->model_producto->get_producto_id($this->input->post('prod_id'));
-        $componente = $this->model_componente->get_componente($producto[0]['com_id']);
+        $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion);
         $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
         $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
         
@@ -704,7 +704,7 @@ class Producto extends CI_Controller {
       if ($this->input->post()) {
           $post = $this->input->post();
           $com_id = $this->security->xss_clean($post['com_id']); /// com id
-          $componente = $this->model_componente->get_componente($com_id);
+          $componente = $this->model_componente->get_componente($com_id,$this->gestion);
          // $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
 
           $nro=0; $nro_ins=0;

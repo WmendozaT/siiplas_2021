@@ -77,7 +77,6 @@ class Rep_operaciones extends CI_Controller {
           </div>';
 
       $data['titulo_modulo']=$tabla;
-
       $this->load->view('admin/reportes_cns/programacion_poa/menu_consolidado_poa', $data);
     }
 
@@ -879,7 +878,7 @@ class Rep_operaciones extends CI_Controller {
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $com_id = $this->security->xss_clean($post['com_id']);
-        $componente=$this->model_componente->get_componente($com_id);
+        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
         
         $salida=$this->requerimientos_certificados_subactividad($componente);
 
@@ -1007,7 +1006,10 @@ class Rep_operaciones extends CI_Controller {
                 $tabla.='
                   <td style="width:5%;">'.$row['ins_observacion'].'</td>
                 </tr>';
-                $sum_programado=$sum_programado+$prog[0]['programado_total'];
+                if(count($prog)!=0){
+                  $sum_programado=$sum_programado+$prog[0]['programado_total'];
+                }
+                
                 $sum_certificado=$sum_certificado+$row['ins_monto_certificado']; 
           }
           $tabla.='

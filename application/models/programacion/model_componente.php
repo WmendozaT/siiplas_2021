@@ -108,7 +108,7 @@ class Model_componente extends CI_Model{
     }
     /*================================================================================================*/
     /*======================= COMPONENTE (Operaciones) =============================*/
-    public function get_componente($com_id){
+    public function get_componente($com_id,$gestion){
         $sql = 'select *
                 from _componentes as c
                 Inner Join funcionario as f On f.fun_id=c.resp_id
@@ -117,7 +117,7 @@ class Model_componente extends CI_Model{
                 Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                where c.com_id='.$com_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\''; 
+                where c.com_id='.$com_id.' and apg.aper_gestion='.$gestion.' and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\''; 
         $query = $this->db->query($sql);
         return $query->result_array();
     }

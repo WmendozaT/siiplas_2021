@@ -67,6 +67,7 @@ class Acortoplazo extends CI_Controller{
                           <th style="width:1%;">M/E</th>
                           <th style="width:2%;">OPERACIONES '.$this->gestion.'</th>
                           <th style="width:2%;">REPORTE OPERACIONES</th>
+                          <th style="width:2%;">REP. ALINEACIÓN</th>
                           <th style="width:2%;">COD. O.E.</th>
                           <th style="width:2%;">COD. A.E.</th>
                           <th style="width:2%;">COD. A.C.P.</th>
@@ -108,11 +109,10 @@ class Acortoplazo extends CI_Controller{
                             $tabla .='</td>';
                             $tabla .='
                             <td bgcolor="#cef3ee" align=center><br>
-                            <a href="'.site_url("").'/me/objetivos_regionales/'.$row['og_id'].'" class="btn btn-default" title="OBJETIVOS REGIONALES"><img src="'.base_url().'assets/img/folder.png" WIDTH="30" HEIGHT="30"/></a>
-                            <br>
-                            <a href="'.site_url("").'/me/alineacion_acp_operaciones/'.$row['og_id'].'" class="btn btn-default" title="CONSOLIDADO"><img src="'.base_url().'assets/img/folder.png" WIDTH="30" HEIGHT="30"/></a>
+                              <a href="'.site_url("").'/me/objetivos_regionales/'.$row['og_id'].'" class="btn btn-default" title="OBJETIVOS REGIONALES"><img src="'.base_url().'assets/img/folder.png" WIDTH="30" HEIGHT="30"/></a>
                             </td>';
                             $tabla .='<td bgcolor="#cef3ee" align=center><br><a href="javascript:abreVentana(\''.site_url("").'/me/rep_oregionales/'.$row['og_id'].'\');" title="GENERAR REPORTE PDF" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></a></td>';
+                            $tabla .='<td align=center><br><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a></td>';
                             $tabla .='<td>'.$row['obj_codigo'].'</td>';
                             $tabla .='<td>'.$row['acc_codigo'].'</td>';
                             $tabla .='<td><b><font color=blue size=4>'.$row['og_codigo'].'</font></b></td>';
