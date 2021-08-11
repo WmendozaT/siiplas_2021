@@ -379,7 +379,7 @@ class Canalisis_situacion extends CI_Controller {
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
       $data['mes'] = $this->mes_nombre();
       if(count($data['proyecto'])!=0){
-        $data['cabecera']=$this->programacionpoa->cabecera(4,3,$data['proyecto']);
+        $data['cabecera']=$this->programacionpoa->cabecera(4,3,$data['proyecto'],0);
         $data['pie']=$this->programacionpoa->pie_foda();
         $data['foda']=$this->reporte_datos_foda($proy_id);
         $this->load->view('admin/programacion/foda/reporte_foda', $data); 

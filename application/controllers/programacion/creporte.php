@@ -441,16 +441,19 @@ class Creporte extends CI_Controller {
 
 
     public function reporte_formulario4($com_id){
-        $data['componente']=$this->model_componente->get_componente($com_id,$this->gestion);
-        if(count($data['componente'])!=0){
-            $data['mes'] = $this->mes_nombre();
-            $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
-            $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['fase'][0]['proy_id']); //// DATOS PROYECTO
-            $data['cabecera']=$this->cabecera($data['componente'],$data['proyecto'],1); /// Cabecera
-            
-            $data['operaciones']=$this->operaciones_form4($data['componente'],$data['proyecto']); /// Reporte Gasto Corriente, Proyecto de Inversion 2020
-       // echo $data['cabecera'];
-           $this->load->view('admin/programacion/reportes/reporte_form4', $data);
+        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+        if(count($componente)!=0){
+            $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); //// DATOS PROYECTO
+            $data['pie_rep']=$proyecto[0]['proy_nombre'].'-'.$componente[0]['serv_descripcion'];
+            if($proyecto[0]['tp_id']==4){
+                $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); /// PROYECTO
+                $data['pie_rep']=$componente[0]['serv_descripcion'].'-'.$proyecto[0]['abrev'];
+            }
+
+            $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$com_id);
+            $data['operaciones']=$this->operaciones_form4($componente,$proyecto); /// Reporte Gasto Corriente, Proyecto de Inversion 2022
+            $data['pie']=$this->programacionpoa->pie_form($proyecto);
+            $this->load->view('admin/programacion/reportes/reporte_form4', $data);
         }
         else{
             echo "Error !!!";
@@ -618,7 +621,7 @@ class Creporte extends CI_Controller {
       }
       else{ //// Gasto Corriente
 
-         $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+         $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
                 <thead>
                  <tr style="font-size: 7px;" bgcolor=#1c7368 align=center>
                     <th style="width:1%;height:15px;color:#FFF;">#</th>
@@ -695,25 +698,25 @@ class Creporte extends CI_Controller {
                     <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
                     <td style="width: 9%; text-align: left;">'.$rowp['prod_indicador'].'</td>
                     <td style="width: 2%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
-                    <td style="width: 3%; text-align: center;" bgcolor="#eceaea">'.round($rowp['prod_meta'],2).'</td>';
+                    <td style="width: 3%; text-align: center;"><b>'.round($rowp['prod_meta'],2).'</b></td>';
 
                     if(count($programado)!=0){
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['enero'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['febrero'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['marzo'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['abril'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['mayo'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['junio'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['julio'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['agosto'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['septiembre'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['octubre'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['noviembre'],2).''.$tp.'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5" align=center>'.round($programado[0]['diciembre'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['enero'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['febrero'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['marzo'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['abril'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['mayo'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['junio'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['julio'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['agosto'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['septiembre'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['octubre'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['noviembre'],2).''.$tp.'</td>';
+                      $tabla.='<td style="width:3%;" align=center>'.round($programado[0]['diciembre'],2).''.$tp.'</td>';
                     }
                     else{
                       for ($i=1; $i <=12 ; $i++) { 
-                        $tabla.='<td bgcolor="#f5cace" align=center>0.00</td>';
+                        $tabla.='<td bgcolor="#f5cace" align=center>0</td>';
                       }
                     }
 

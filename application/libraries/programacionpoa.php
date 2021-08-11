@@ -38,6 +38,7 @@ class Programacionpoa extends CI_Controller{
             $this->mes = $this->mes_nombre();
             $this->conf_form4 = $this->session->userData('conf_form4');
             $this->conf_form5 = $this->session->userData('conf_form5');
+            $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
     }
 
   /// ----- APERTURAR NUEVO POA (UNIDAD)
@@ -880,7 +881,7 @@ class Programacionpoa extends CI_Controller{
 
     //// ======== CABECERA Y PIE PARA LOS REPORTES POA 2022
   //// Cabecera Reporte form 3, 4 y 5
-  public function cabecera($tp_id,$tp_rep,$proyecto){
+  public function cabecera($tp_id,$tp_rep,$proyecto,$com_id){
     /// tp_rep : 3 (Foda), 4 (Actividades), 5 (requerimientos)
     
     if($tp_rep==3){
@@ -889,6 +890,7 @@ class Programacionpoa extends CI_Controller{
       $comp='';
     }
     else{
+      $componente=$this->model_componente->get_componente($com_id,$this->gestion);
       if($tp_rep==4){
         $titulo_rep='ACTIVIDADES';
         $titulo_form='FORMULARIO SPO N° 4';
@@ -906,7 +908,7 @@ class Programacionpoa extends CI_Controller{
           </td>
           <td style="width:80%;">
               <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                  <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;</td></tr>
+                  <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'</td></tr>
               </table>
           </td>
         </tr>';
@@ -1093,6 +1095,67 @@ class Programacionpoa extends CI_Controller{
         <tr>
             <td colspan="2"><br><br></td>
         </tr>
+      </table>';
+
+    return $tabla;
+  }
+
+
+  /*------ PIE FORM - REPORTE -----*/
+  public function pie_form($proyecto){
+    $tabla='';
+    $tabla.='
+      <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:98%;" align="center">
+          <tr>
+            <td style="width: 33%;">
+                <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                    <tr>
+                        <td style="width:100%;height:12px;"><b>JEFATURA DE UNIDAD O AREA / REP. DE AREA REGIONALES</b></td>
+                    </tr>
+                    <tr>
+                        <td align=center><br><br><br><br><br><br><b>FIRMA</b></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width: 33%;">
+                <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                    <tr>
+                      <td style="width:100%;height:12px;"><b>JEFATURA DE DEPARTAMENTOS / SERV. GENERALES REGIONAL / JEFATURA MEDICA </b></td>
+                    </tr>
+                    <tr>
+                      <td align=center><br><br><br><br><br><br><b>FIRMA</b></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width: 33%;">
+                <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                    <tr>
+                      <td style="width:100%;height:12px;"><b>GERENCIA GENERAL / GERENCIAS DE AREA / ADMINISTRADOR REGIONAL </b></td>
+                    </tr>
+                    <tr>
+                      <td align=center><br><br><br><br><br><br><b>FIRMA</b></td>
+                    </tr>
+                </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 33%; text-align: left; height:18px;">';
+              if($proyecto[0]['proy_estado']==1){
+                $tabla.='POA - '.$this->session->userdata('gestion');
+              }
+              else{
+                $tabla.='POA - '.$this->session->userdata('gestion').' '.$this->session->userdata('rd_poa');
+              } 
+            $tabla.='
+            </td>
+            <td style="width: 33%; text-align: center">
+              '.$this->session->userdata('sistema').'
+            </td>
+            <td style="width: 33%; text-align: right">
+                pag. [[page_cu]]/[[page_nb]]
+            </td>
+          </tr>
       </table>';
 
     return $tabla;
