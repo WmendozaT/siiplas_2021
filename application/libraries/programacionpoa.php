@@ -15,15 +15,14 @@ class Programacionpoa extends CI_Controller{
             $this->load->model('ejecucion/model_notificacion');
             $this->load->model('programacion/model_producto');
             $this->load->model('ejecucion/model_evaluacion');
-            $this->load->model('mantenimiento/model_configuracion');
+          //  $this->load->model('mantenimiento/model_configuracion');
             $this->load->model('ejecucion/model_certificacion');
             $this->load->model('programacion/insumos/minsumos');
             $this->load->model('mestrategico/model_objetivoregion');
             $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
             $this->load->model('mantenimiento/model_estructura_org');
             $this->load->model('menu_modelo');
-            $this->load->library('security');
-
+         
             $this->gestion = $this->session->userData('gestion');
             $this->adm = $this->session->userData('adm');
             //$this->rol = $this->session->userData('rol_id');
@@ -360,10 +359,6 @@ class Programacionpoa extends CI_Controller{
 
 
 
-
-
-
-
     /*------ GET POA -----*/
     public function mi_poa($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
@@ -390,11 +385,11 @@ class Programacionpoa extends CI_Controller{
                             <td>'.$pr['serv_cod'].' '.$pr['tipo_subactividad'].' '.$pr['serv_descripcion'].'</td>
                             <td align=center>'.round($pr['com_ponderacion'],2).'%</td>
                             <td align=center>
-                              <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$pr['com_id'].'\');" title="REPORTE OPERACIONES"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>
+                              <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$pr['com_id'].'\');" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>
                             </td>
                             <td align=center>';
                               if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
-                                $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$proy_id.'/'.$pr['com_id'].'\');" title="REPORTE REQUERIMIENTOS POR PROCESOS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>';
+                                $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$pr['com_id'].'\');" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>';
                                 $nro_ppto++;
                               } 
                             $tabla.='
@@ -467,7 +462,7 @@ class Programacionpoa extends CI_Controller{
                             </td>
                             <td align=center>';
                               if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
-                                $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$proy_id.'/'.$pr['com_id'].'\');" title="REPORTE REQUERIMIENTOS POR PROCESOS" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="34" HEIGHT="30"/></a>';
+                                $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$pr['com_id'].'\');" title="REPORTE FORM 5" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="34" HEIGHT="30"/></a>';
                                 $nro_ppto++;
                               } 
                             $tabla.='
@@ -604,7 +599,7 @@ class Programacionpoa extends CI_Controller{
                     <select class="form-control" id="or_id" name="or_id" title="SELECCIONE">
                       <option value="0">SELECCIONE ALINEACIÓN OPERACIÓN</option>';
                       foreach($list_oregional as $row){ 
-                        $tabla.='<option value="'.$row['or_id'].'">'.$row['og_codigo'].'.'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
+                        $tabla.='<option value="'.$row['or_id'].'">'.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
                       }
                     $tabla.='
                   </select>
@@ -634,7 +629,7 @@ class Programacionpoa extends CI_Controller{
                     <select class="form-control" id="or_id" name="or_id" title="SELECCIONE">
                       <option value="0">SELECCIONE ALINEACIÓN OPERACIÓN</option>';
                       foreach($list_oregional as $row){ 
-                        $tabla.='<option value="'.$row['or_id'].'">'.$row['og_codigo'].'.'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
+                        $tabla.='<option value="'.$row['or_id'].'">'.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
                       }
                     $tabla.='
                   </select>
@@ -660,7 +655,7 @@ class Programacionpoa extends CI_Controller{
       if(count($list_oregional)!=0){
         foreach($list_oregional as $row){
           $nro++;
-          $tabla.='<h1 title='.$row['or_id'].'> '.$nro.'.- OPERACIÓN REGIONAL : <small> <b>'.$row['og_codigo'].'.'.$row['or_codigo'].'.</b>.- '.$row['or_objetivo'].'</small></h1>';
+          $tabla.='<h1 title='.$row['or_id'].'> '.$nro.'.- OPERACIÓN REGIONAL : <small> <b>'.$row['og_codigo'].'.|'.$row['or_codigo'].'.</b>.- '.$row['or_objetivo'].'</small></h1>';
         }
       }
       else{
@@ -882,21 +877,38 @@ class Programacionpoa extends CI_Controller{
     //// ======== CABECERA Y PIE PARA LOS REPORTES POA 2022
   //// Cabecera Reporte form 3, 4 y 5
   public function cabecera($tp_id,$tp_rep,$proyecto,$com_id){
-    /// tp_rep : 3 (Foda), 4 (Actividades), 5 (requerimientos)
+    /// tp_rep : 3 (Foda), 4 (Actividades), 5 (requerimientos), 0 (consolidado ppto)
     
-    if($tp_rep==3){
+    if($tp_rep==0){
+      if($proyecto[0]['proy_estado']==1){
+        $titulo_rep='CONSOLIDADO PRESUPUESTO POA';
+        $titulo_form='PPTO. ANTEPROYECTO';
+      } 
+      else{
+        $titulo_rep='COMPARATIVO PRESUPUESTO POA - APROBADO';
+        $titulo_form='PPTO. APROBADO - POA';
+      }
+      
+      $comp='';
+    }
+    elseif($tp_rep==3){
       $titulo_rep='ANALISIS DE PROBLEMAS Y CAUSAS';
       $titulo_form='FORMULARIO SPO N° 3';
       $comp='';
     }
     else{
       $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+      $estado='';
+      if($proyecto[0]['proy_estado']==1){
+        $estado='<b>(ANTEPROYECTO)</b>';
+      } 
+
       if($tp_rep==4){
-        $titulo_rep='ACTIVIDADES';
+        $titulo_rep='ACTIVIDADES '.$estado;
         $titulo_form='FORMULARIO SPO N° 4';
       }
       elseif($tp_rep==5){
-        $titulo_rep='REQUERIMIENTOS';
+        $titulo_rep='REQUERIMIENTOS '.$estado;
         $titulo_form='FORMULARIO SPO N° 5';
       }
       $comp='
@@ -1140,7 +1152,7 @@ class Programacionpoa extends CI_Controller{
             </td>
           </tr>
           <tr>
-            <td style="width: 33%; text-align: left; height:18px;">';
+            <td style="width: 33%; text-align: left; height:20px;">';
               if($proyecto[0]['proy_estado']==1){
                 $tabla.='POA - '.$this->session->userdata('gestion');
               }
@@ -1163,11 +1175,314 @@ class Programacionpoa extends CI_Controller{
 
 
 
+  /*----- REPORTE FORMULARIO 4 (2021 - Operaciones, Proyectos de Inversion) ----*/
+  public function operaciones_form4($componente,$proyecto){
+    $tabla='';
+    
+    if($proyecto[0]['tp_id']==1){ /// Proyectos de Inversion
+      $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+              <thead>
+                <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
+                  <th style="width:1%;height:15px;">#</th>
+                  <th style="width:2%;">COD.<br>ACE.</th>
+                  <th style="width:2%;">COD.<br>ACP.</th>
+                  <th style="width:2%;">COD.<br>OPE.</th>
+                  <th style="width:2%;">COD.<br>ACT.</th>
+                  <th style="width:9%;">COMPONENTE</th>
+                  <th style="width:11.5%;">ACTIVIDAD</th>
+                  <th style="width:11%;">RESULTADO</th>
+                  <th style="width:11%;">INDICADOR</th>
+                  <th style="width:2%;">LB.</th>
+                  <th style="width:2.5%;">META</th>
+                  <th style="width:2.5%;">ENE.</th>
+                  <th style="width:2.5%;">FEB.</th>
+                  <th style="width:2.5%;">MAR.</th>
+                  <th style="width:2.5%;">ABR.</th>
+                  <th style="width:2.5%;">MAY.</th>
+                  <th style="width:2.5%;">JUN.</th>
+                  <th style="width:2.5%;">JUL.</th>
+                  <th style="width:2.5%;">AGO.</th>
+                  <th style="width:2.5%;">SEPT.</th>
+                  <th style="width:2.5%;">OCT.</th>
+                  <th style="width:2.5%;">NOV.</th>
+                  <th style="width:2.5%;">DIC.</th>
+                  <th style="width:8.5%;">VERIFICACI&Oacute;N</th> 
+                  <th style="width:5%;">PPTO.</th>   
+                </tr>
+              </thead>
+              <tbody>';
+              $operaciones=$this->model_producto->list_operaciones_pi($componente[0]['com_id']);  /// 2020
+              $nro=0;
+              foreach($operaciones as $rowp){
+                $nro++;
+                $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
+                $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+                $tp='';
+                if($rowp['indi_id']==2){
+                  $tp='%';
+                }
+
+                $color_or='';
+                if($rowp['or_id']==0){
+                  $color_or='#fbd5d5';
+                }
+
+                $ptto=number_format(0, 2, '.', ',');
+                if(count($monto)!=0){
+                  $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
+                }
+
+                $tabla.='
+                <tr>
+                  <td style="font-size: 6.5px; height:12px;">'.$nro.'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['acc_codigo'].'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' ><b>'.$rowp['og_codigo'].'.'.$rowp['or_codigo'].'.</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 9%; text-align: left;">'.$componente[0]['com_componente'].'</td>
+                  <td style="width: 11.5%; text-align: left;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 11%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width:11%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                  <td style="width:2%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
+                  <td style="width:2.5%; text-align: center;"><b>'.round($rowp['prod_meta'],2).'</b></td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['enero'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['febrero'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['marzo'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['abril'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['mayo'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['junio'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['julio'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['agosto'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['septiembre'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['octubre'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['noviembre'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['diciembre'],2).''.$tp.'</td>
+                  <td style="width:8.5%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                  <td style="width: 5%; text-align: right;">'.$ptto.'</td>
+                </tr>';            
+              }
+        $tabla.='
+              </tbody>
+            </table>';
+
+    }
+    else{ //// Gasto Corriente
+
+       $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+              <thead>
+               <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
+                  <th style="width:1%;height:15px;">#</th>
+                  <th style="width:2%;">COD.<br>ACE.</th>
+                  <th style="width:2%;">COD.<br>ACP.</th>
+                  <th style="width:2%;">COD.<br>OPE.</th>
+                  <th style="width:2%;">COD.<br>ACT.</th> 
+                  <th style="width:11.5%;">ACTIVIDAD</th>
+                  <th style="width:11.5%;">RESULTADO</th>
+                  <th style="width:7%;">UNIDAD RESPONSABLE</th>
+                  <th style="width:11.5%;">INDICADOR</th>
+                  <th style="width:2.5%;">LB.</th>
+                  <th style="width:2.5%;">META</th>
+                  <th style="width:2.5%;">ENE.</th>
+                  <th style="width:2.5%;">FEB.</th>
+                  <th style="width:2.5%;">MAR.</th>
+                  <th style="width:2.5%;">ABR.</th>
+                  <th style="width:2.5%;">MAY.</th>
+                  <th style="width:2.5%;">JUN.</th>
+                  <th style="width:2.5%;">JUL.</th>
+                  <th style="width:2.5%;">AGO.</th>
+                  <th style="width:2.5%;">SEPT.</th>
+                  <th style="width:2.5%;">OCT.</th>
+                  <th style="width:2.5%;">NOV.</th>
+                  <th style="width:2.5%;">DIC.</th>
+                  <th style="width:9%;">VERIFICACI&Oacute;N</th> 
+                  <th style="width:5%;">PPTO.</th>   
+              </tr>    
+             
+              </thead>
+              <tbody>';
+              $nro=0;
+              $operaciones=$this->model_producto->lista_operaciones($componente[0]['com_id']);
+              
+              foreach($operaciones as $rowp){
+                $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
+                $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+                $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
+                $color=''; $tp='';
+                if($rowp['indi_id']==1){
+                  if(($sum[0]['meta_gest'])!=$rowp['prod_meta']){
+                    $color='#fbd5d5';
+                  }
+                }
+                elseif ($rowp['indi_id']==2) {
+                  $tp='%';
+                  if($rowp['mt_id']==3){
+                    if(($sum[0]['meta_gest'])!=$rowp['prod_meta']){
+                      $color='#fbd5d5';
+                    }
+                  }
+                }
+
+                $ptto=number_format(0, 2, '.', ',');
+                if(count($monto)!=0){
+                  $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
+                }
+
+                $color_or='';
+                if($rowp['or_id']==0){
+                  $color_or='#fbd5d5';
+                }
+
+                $nro++;
+                $tabla.=
+                '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">
+                  <td style="height:12px;" bgcolor='.$color_or.'>'.$nro.'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['acc_codigo'].'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' ><b>'.$rowp['og_codigo'].'.'.$rowp['or_codigo'].'.</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 11.5%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 11.5%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
+                  <td style="width: 11.5%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                  <td style="width: 2.5%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
+                  <td style="width: 2.5%; text-align: center;"><b>'.round($rowp['prod_meta'],2).'</b></td>';
+
+                  if(count($programado)!=0){
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['enero'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['febrero'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['marzo'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['abril'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['mayo'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['junio'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['julio'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['agosto'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['septiembre'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['octubre'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['noviembre'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['diciembre'],2).''.$tp.'</td>';
+                  }
+                  else{
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla.='<td style="width:2.5%;" bgcolor="#f5cace" align=center>0</td>';
+                    }
+                  }
+
+                  $tabla.='
+                  <td style="width: 9%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                  <td style="width: 5%; text-align: right;">'.$ptto.'</td>
+                </tr>';
+
+              }
+              $tabla.='
+              </tbody>
+            </table>';
+    }
+    return $tabla;
+  }
 
 
 
+  /*----- REPORTE - FORMULARIO 5 -----*/
+    public function list_requerimientos_reporte($com_id,$tp_id){
+      $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id); /// Lista requerimientos
+      $tabla='';
+      $tabla.=' 
+          <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
+              <thead>
+              <tr style="font-size: 7px;" bgcolor="#eceaea" align=center>
+                <th style="width:1%;height:15px;">#</th>
+                <th style="width:2%;">COD.<br>ACT.</th> 
+                <th style="width:4%;">PARTIDA</th>
+                <th style="width:18%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:5%;">UNIDAD</th>
+                <th style="width:4%;">CANTIDAD</th>
+                <th style="width:5%;">UNITARIO</th>
+                <th style="width:5%;">TOTAL</th>
+                <th style="width:4%;">ENE.</th>
+                <th style="width:4%;">FEB.</th>
+                <th style="width:4%;">MAR.</th>
+                <th style="width:4%;">ABR.</th>
+                <th style="width:4%;">MAY.</th>
+                <th style="width:4%;">JUN.</th>
+                <th style="width:4%;">JUL.</th>
+                <th style="width:4%;">AGO.</th>
+                <th style="width:4%;">SEPT.</th>
+                <th style="width:4%;">OCT.</th>
+                <th style="width:4%;">NOV.</th>
+                <th style="width:4%;">DIC.</th>
+                <th style="width:8%;">OBSERVACI&Oacute;N</th>
+              </tr>
+              </thead>
+              <tbody>';
+              $cont = 0; $total=0; 
+              foreach ($lista_insumos as $row) {
+              $cont++;
+              $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+              $total=$total+$row['ins_costo_total'];
+              $color='';
+              if(count($prog)!=0){
+                if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
+                  $color='#f5bfb6';
+                }
+              }
 
+              $tabla.=
+              '<tr style="font-size: 6.5px;" >
+                  <td style="width: 1%; font-size: 4.5px; text-align: center;height:13px;">'.$cont.'</td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$row['prod_cod'].'</b></td>
+                  <td style="width: 4%; text-align: center;font-size: 8px;"><b>'.$row['par_codigo'].'</b></td>
+                  <td style="width: 18%; text-align: left;font-size: 7.5px;">'.$row['ins_detalle'].'</td>
+                  <td style="width: 5%; text-align: left">'.$row['ins_unidad_medida'].'</td>
+                  <td style="width: 4%; text-align: right">'.round($row['ins_cant_requerida'],2).'</td>
+                  <td style="width: 5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                  <td style="width: 5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>'; 
+                  if(count($prog)!=0){ 
+                  $tabla.=
+                  '<td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes2'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes3'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes4'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes5'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes6'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes7'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes8'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes9'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes10'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes11'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes12'], 2, ',', '.').'</td>';
+                  }
+                  else{
+                  $tabla.=
+                  '<td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>';
+                  }
 
+              $tabla.='
+                  <td style="width: 8%; text-align: left;">'.$row['ins_observacion'].'</td>
+                  
+              </tr>';
+              }
+
+          $tabla.='
+              </tbody>
+              <tr class="modo1" bgcolor="#eceaea">
+                  <td colspan="6" style="height:10px;" ><b>TOTAL PROGRAMADO </b></td>
+                  <td style="width: 4%; text-align: right; font-size: 7px;"><b>'.number_format($total, 2, ',', '.').'</b></td>
+                  <td colspan="14"></td>
+              </tr>
+          </table><br>';
+      return $tabla;
+    }
 
 
 

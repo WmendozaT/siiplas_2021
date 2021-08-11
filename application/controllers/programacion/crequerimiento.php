@@ -119,6 +119,8 @@ class crequerimiento extends CI_Controller{
           'ins_observacion' => strtoupper($observacion), /// Observacion
           'fun_id' => $this->fun_id, /// Funcionario
           'aper_id' => $proyecto[0]['aper_id'], /// aper id
+          'com_id' => $producto[0]['com_id'], /// com id 
+          'prod_cod' => $producto[0]['prod_cod'], /// aper id
           'num_ip' => $this->input->ip_address(), 
           'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
           );
@@ -193,6 +195,8 @@ class crequerimiento extends CI_Controller{
             'ins_unidad_medida' => strtoupper($umedida),
             'ins_observacion' => strtoupper($observacion),
             'fun_id' => $this->fun_id,
+            'com_id' => $producto[0]['com_id'], /// com id 
+            'prod_cod' => $producto[0]['prod_cod'], /// aper id
             'ins_estado' => 2,
             'num_ip' => $this->input->ip_address(), 
             'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR'])

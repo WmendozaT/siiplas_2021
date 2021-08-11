@@ -39,7 +39,7 @@ class model_producto extends CI_Model {
         $sql = 'select ip.prod_id,SUM(i.ins_costo_total) as total
                 from _insumoproducto ip
                 Inner Join insumos as i On i.ins_id=ip.ins_id
-                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.'
+                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.' and i.aper_id!=\'0\'
                 group by ip.prod_id'; 
  
         $query = $this->db->query($sql);
@@ -71,19 +71,19 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-    function suma_ponderacion($com_id){
+/*    function suma_ponderacion($com_id){
         $sql = 'select SUM(prod_ponderacion) as suma
                 from _productos
                 where com_id='.$com_id.' and estado!=\'3\' '; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
     /*==============================================================================================================*/
 
-    function update_producto_archivo($id){
+/*    function update_producto_archivo($id){
         $sql = 'update _productos_archivos set estado=0 WHERE id = '.$id.'';  
         $this->db->query($sql);
-    }
+    }*/
 
 /*    function get_producto_archivo($id){
         $sql = 'select * from _productos_archivos where id = '.$id.'';   
@@ -165,6 +165,28 @@ class model_producto extends CI_Model {
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+/*    function lista_operaciones2($com_id){
+        $sql = 'select *
+                from _productos p
+                Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
+                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+                Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
+
+
+
+           
+               
+
+
+                where p.com_id='.$com_id.' and p.estado!=\'3\'
+                order by p.prod_cod, oe.obj_codigo, ae.ae asc'; 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }*/
 
     /*=== LISTA DE OPERACIONES (2020) REPORTE - GASTO CORRIENTE ===*/
     function list_operaciones_pi($com_id){

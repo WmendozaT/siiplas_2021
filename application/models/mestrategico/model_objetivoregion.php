@@ -200,7 +200,7 @@ class Model_objetivoregion extends CI_Model{
               Inner Join objetivo_programado_mensual as ogp On ogp.pog_id=oreg.pog_id
               Inner Join objetivo_gestion as og On og.og_id=ogp.og_id
               where orp.act_id='.$act_id.' and oreg.g_id='.$this->gestion.'
-              order by oreg.or_codigo asc';
+              order by og.og_codigo,oreg.or_codigo asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -226,7 +226,7 @@ class Model_objetivoregion extends CI_Model{
                 Inner Join objetivo_gestion as og On og.og_id=opm.og_id
                 Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
                 where por.proy_id='.$proy_id.' and obr.estado!=\'3\' and og.g_id='.$this->gestion.'
-                order by obr.or_codigo asc';
+                order by og.og_codigo,obr.or_codigo asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();

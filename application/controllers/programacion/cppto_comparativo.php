@@ -10,13 +10,13 @@ class Cppto_comparativo extends CI_Controller {
       $this->load->model('programacion/model_proyecto');
       $this->load->model('programacion/model_componente');
       $this->load->model('programacion/model_producto');
-      $this->load->model('programacion/model_actividad');
-      $this->load->model('mantenimiento/mapertura_programatica');
-      $this->load->model('mantenimiento/munidad_organizacional');
-      $this->load->model('mantenimiento/model_estructura_org');
+    //  $this->load->model('programacion/model_actividad');
+    //  $this->load->model('mantenimiento/mapertura_programatica');
+    //  $this->load->model('mantenimiento/munidad_organizacional');
+    //  $this->load->model('mantenimiento/model_estructura_org');
       $this->load->model('programacion/insumos/minsumos');
       $this->load->model('programacion/insumos/model_insumo');
-      $this->load->model('mestrategico/model_objetivoregion');
+    //  $this->load->model('mestrategico/model_objetivoregion');
       $this->load->model('mantenimiento/model_ptto_sigep');
       $this->gestion = $this->session->userData('gestion');
       $this->adm = $this->session->userData('adm'); // 1: Nacional, 2: Regional, Distrital
@@ -26,6 +26,7 @@ class Cppto_comparativo extends CI_Controller {
       $this->tp_adm = $this->session->userdata("tp_adm");
       $this->dist_tp = $this->session->userData('dist_tp'); /// dist_tp->1 Regional, dist_tp->0 Distritales
       $this->verif_ppto = $this->session->userData('verif_ppto'); /// AnteProyecto Ptto POA : 0, Ptto Aprobado Sigep : 1
+      $this->load->library('programacionpoa');
       }else{
           $this->session->sess_destroy();
           redirect('/','refresh');
@@ -36,6 +37,7 @@ class Cppto_comparativo extends CI_Controller {
     public function reporte_presupuesto_consolidado_comparativo($proy_id){
       $data['mes'] = $this->mes_nombre();
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+      $data['cabecera']=$this->programacionpoa->cabecera($data['proyecto'][0]['tp_id'],0,$data['proyecto'],0);
       //$data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
       if(count($data['proyecto'])!=0){
           $monto_asignado=0;$monto_programado=0;
@@ -96,13 +98,13 @@ class Cppto_comparativo extends CI_Controller {
       $tabla .='
       <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:95%;font-size: 8px;" align=center>
         <thead>
-          <tr style="height:11px;" bgcolor="#1c7368" align=center>
-            <th style="width:3%;color:#FFF;" align=center>NRO.</th>
-            <th style="width:10%;color:#FFF;">C&Oacute;DIGO PARTIDA</th>
-            <th style="width:35%; color:#FFF;">DETALLE PARTIDA</th>
-            <th style="width:12%; color:#FFF;">'.$titulo.'</th>
-            <th style="width:12%; color:#FFF;">PRESUPUESTO POA</th>
-            <th style="width:12%; color:#FFF;">SALDO POA</th>';
+          <tr style="height:13px;" bgcolor="#eceaea" align=center>
+            <th style="width:3%;" align=center>#</th>
+            <th style="width:10%;">C&Oacute;DIGO PARTIDA</th>
+            <th style="width:35%;">DETALLE PARTIDA</th>
+            <th style="width:12%;">'.$titulo.'</th>
+            <th style="width:12%;">PRESUPUESTO POA</th>
+            <th style="width:12%;">SALDO POA</th>';
             if($this->tp_adm==1){
               $tabla.='<th style="width:10%; color:#FFF; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
             }
@@ -238,15 +240,15 @@ class Cppto_comparativo extends CI_Controller {
       $tabla .='
         <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:95%;font-size: 8px;" align=center>
           <thead>
-            <tr style="height:11px;" bgcolor="#1c7368" align=center>
-              <th style="width:3%;color:#FFF;" align=center>NRO.</th>
-              <th style="width:10%;color:#FFF;">C&Oacute;DIGO PARTIDA</th>
-              <th style="width:35%; color:#FFF;">DETALLE PARTIDA</th>
-              <th style="width:15%; color:#FFF;">'.$titulo.'</th>
-              <th style="width:15%; color:#FFF;">PRESUPUESTO POA</th>
-              <th style="width:15%; color:#FFF;">SALDO POA</th>';
+            <tr style="height:11px;" bgcolor="#eceaea" align=center>
+              <th style="width:3%;" align=center>#</th>
+              <th style="width:10%;">C&Oacute;DIGO PARTIDA</th>
+              <th style="width:35%;">DETALLE PARTIDA</th>
+              <th style="width:15%;">'.$titulo.'</th>
+              <th style="width:15%;">PRESUPUESTO POA</th>
+              <th style="width:15%;">SALDO POA</th>';
             if($this->fun_id==399){
-              $tabla.='<th style="width:10%; color:#FFF; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
+              $tabla.='<th style="width:10%; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
             }
             $tabla.='
             </tr>

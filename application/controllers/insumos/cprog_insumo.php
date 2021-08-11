@@ -401,6 +401,8 @@ class Cprog_insumo extends CI_Controller{
                         'ins_observacion' => strtoupper($observacion), /// Observacion
                         'fun_id' => $this->fun_id, /// Funcionario
                         'aper_id' => $proyecto[0]['aper_id'], /// aper id
+                        'com_id' => $producto[0]['com_id'], /// com id 
+                        'prod_cod' => $producto[0]['prod_cod'], /// aper id
                         'num_ip' => $this->input->ip_address(), 
                         'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
                         );
