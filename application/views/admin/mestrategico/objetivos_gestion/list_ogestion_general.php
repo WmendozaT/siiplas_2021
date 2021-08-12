@@ -262,14 +262,14 @@
                         <label class="label">LINEA BASE</label>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="lbase" id="lbase" value="0" title="REGISTRE LINEA BASE">
+                          <input type="text" name="lbase" id="lbase" value="0" title="REGISTRE LINEA BASE" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label">META</label>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="meta" id="meta" value="0" title="REGISTRE META" onkeyup="fmeta()">
+                          <input type="text" name="meta" id="meta" value="0" title="REGISTRE META" onkeyup="fmeta()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                         </label>
                       </section>
                     </div>
@@ -547,7 +547,7 @@
                         <label class="label">C&Oacute;DIGO</label>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="mcod" id="mcod" disabled="true">
+                          <input type="text" name="mcod" id="mcod" onkeypress="if (this.value.length < 10) { return soloNumeros(event);}else{return false; }" onpaste="return false" required="true">
                         </label>
                       </section>
                     <section class="col col-3">
@@ -595,14 +595,14 @@
                         <label class="label">LINEA BASE</label>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="mlbase" id="mlbase" value="0" title="REGISTRE LINEA BASE">
+                          <input type="text" name="mlbase" id="mlbase" value="0" title="REGISTRE LINEA BASE" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label">META</label>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="mmeta" id="mmeta" value="0" title="REGISTRE META" onkeyup="fmmeta()">
+                          <input type="text" name="mmeta" id="mmeta" value="0" title="REGISTRE META" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true"  onkeyup="fmmeta()">
                         </label>
                       </section>
                     </div>

@@ -65,6 +65,24 @@ class Model_objetivoregion extends CI_Model{
         return $query->result_array();
     }
 
+
+    /* ----- LISTA TOTALDE DE UNIDADES,ESTABLECIMIENTOS HABILITADOS DE TODOS LOS NIVELES POR REGIONAL------*/
+    public function list_unidades_habilitados_regional($dep_id){
+        $sql = 'select *
+                from unidad_actividad ua
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                Inner Join uni_gestion as ug On ug.act_id=ua.act_id
+                Inner Join _distritales as dist On dist.dist_id=ua.dist_id
+                Inner Join aper_establecimiento as aest On aest.te_id=te.te_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=aest.aper_id
+
+                where dist.dep_id='.$dep_id.' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and aest.g_id='.$this->gestion.'
+                order by te.tn_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*---------- LISTA DE UNIDADES TOTAL SEGUN REGIONAL --------------*/
     public function list_unidades_total($dep_id){
         $sql = 'select *
@@ -233,7 +251,7 @@ class Model_objetivoregion extends CI_Model{
     }
 
     /*----- GET VINCULO PROYECTO - OBJETIVO REGIONAL -----*/
-    public function get_alineacion_proyecto_oregional($proy_id,$or_codigo){
+    public function get_alineacion_proyecto_oregional($proy_id,$og_codigo,$or_codigo){
         $sql = 'select *
                 from proy_oregional por
                 Inner Join objetivo_regional_programado as orp On orp.por_id=por.por_id
@@ -241,7 +259,7 @@ class Model_objetivoregion extends CI_Model{
                 Inner Join objetivo_programado_mensual as opm On obr.pog_id=opm.pog_id
                 Inner Join objetivo_gestion as og On og.og_id=opm.og_id
                 Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
-                where por.proy_id='.$proy_id.' and obr.or_codigo='.$or_codigo.' and obr.estado!=\'3\' and og.g_id='.$this->gestion.'';
+                where por.proy_id='.$proy_id.' and og.og_codigo='.$og_codigo.' and obr.or_codigo='.$or_codigo.' and obr.estado!=\'3\' and og.g_id='.$this->gestion.'';
 
         $query = $this->db->query($sql);
         return $query->result_array();

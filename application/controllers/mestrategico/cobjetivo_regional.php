@@ -211,7 +211,20 @@ class Cobjetivo_regional extends CI_Controller {
             );
             $this->db->where('por_id', $row['por_id']);
             $this->db->update('_proyectos', $update_proy);
+
+
+            $this->db->where('por_id', $row['por_id']);
+            $this->db->delete('proy_oregional');
           }
+
+          // -----------------------
+          $update_prod= array(
+            'or_id' =>0
+          );
+          $this->db->where('or_id', $or_id);
+          $this->db->update('_productos', $update_prod);
+          // ----------------------
+
 
           $this->db->where('or_id', $or_id);
           $this->db->delete('objetivo_regional_programado');
@@ -245,15 +258,6 @@ class Cobjetivo_regional extends CI_Controller {
       $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id); 
       if(count($ogestion)!=0){
         $data['gestion']=$this->gestion;
-       // $data['mes'] = $this->oregional->mes_nombre();
-       // $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
-       // $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
-       // $data['regionales']=$this->model_objetivogestion->list_temporalidad_regional($og_id);
-       // $data['og_id']=$og_id;
-       // $data['oregionales']=$this->reporte_lista_oregionales($og_id);
-       // echo $data['oregionales'];
-       // $data['cabecera']=$this->oregional->cabecera_rep_operaciones($data['ogestion']);
-       // $data['pie']=$this->oregional->pie_rep_operaciones($data['ogestion']);
         $data['lista_operaciones']=$this->reporte_lista_oregionales($og_id);
         $this->load->view('admin/mestrategico/objetivos_gestion/reporte_objetivos_regionales', $data); 
       }

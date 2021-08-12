@@ -781,25 +781,25 @@
 <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 <script src="<?php echo base_url(); ?>mis_js/programacionpoa/form4.js"></script> 
 
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $("#kwd_search").keyup(function(){
-          if( $(this).val() != ""){
-            $("#table tbody>tr").hide();
-            $("#table td:contains-ci('" + $(this).val() + "')").parent("tr").show();
-          }
-          else{
-            $("#table tbody>tr").show();
-          }
-        });
-      });
-      $.extend($.expr[":"], 
-      {
-        "contains-ci": function(elem, i, match, array){
-        return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $("#kwd_search").keyup(function(){
+        if( $(this).val() != ""){
+          $("#table tbody>tr").hide();
+          $("#table td:contains-ci('" + $(this).val() + "')").parent("tr").show();
+        }
+        else{
+          $("#table tbody>tr").show();
         }
       });
-    </script>
-    <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+    });
+    $.extend($.expr[":"], 
+    {
+      "contains-ci": function(elem, i, match, array){
+      return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+      }
+    });
+  </script>
+  <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 </body>
 </html>

@@ -397,7 +397,7 @@ class Canalisis_situacion extends CI_Controller {
       <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <thead>
           <tr style="font-size: 7.5px;">
-            <th style="width:3%; height:18px;" bgcolor="#dedede" align=center>#</th>
+            <th style="width:3%; height:18px;" bgcolor="#eceaea" align=center>#</th>
             <th style="width:34%;" bgcolor="#dedede" align=center>PROBLEMAS IDENTIFICADOS</th>
             <th style="width:31.6%;" bgcolor="#dedede" align=center>CAUSAS DE LOS PROBLEMAS</th>
             <th style="width:31.6%;" bgcolor="#dedede" align=center>ACCIONES RECOMENDADAS</th>

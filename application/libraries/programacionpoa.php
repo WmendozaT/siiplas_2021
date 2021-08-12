@@ -665,6 +665,9 @@ class Programacionpoa extends CI_Controller{
       return $tabla;
     }
 
+
+
+
     /*--- ESTILO FORM 4---*/
     public function estilo_tabla_form4(){
       $tabla='';
@@ -880,7 +883,7 @@ class Programacionpoa extends CI_Controller{
     /// tp_rep : 3 (Foda), 4 (Actividades), 5 (requerimientos), 0 (consolidado ppto)
     
     if($tp_rep==0){
-      if($proyecto[0]['proy_estado']==1){
+      if($proyecto[0]['aper_proy_estado']==1){
         $titulo_rep='CONSOLIDADO PRESUPUESTO POA';
         $titulo_form='PPTO. ANTEPROYECTO';
       } 
@@ -899,7 +902,7 @@ class Programacionpoa extends CI_Controller{
     else{
       $componente=$this->model_componente->get_componente($com_id,$this->gestion);
       $estado='';
-      if($proyecto[0]['proy_estado']==1){
+      if($proyecto[0]['aper_proy_estado']==1){
         $estado='<b>(ANTEPROYECTO)</b>';
       } 
 
@@ -915,7 +918,7 @@ class Programacionpoa extends CI_Controller{
         <tr>
           <td style="width:20%;">
               <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                  <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD REPONSABLE</b></td><td style="width:5%;"></td></tr>
+                  <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>UNIDAD REPONSABLE</b></td><td style="width:5%;"></td></tr>
               </table>
           </td>
           <td style="width:80%;">
@@ -995,7 +998,7 @@ class Programacionpoa extends CI_Controller{
                 <tr>
                     <td style="width:20%;">
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                            <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>REGIONAL / DEPARTAMENTO</b></td><td style="width:5%;"></td></tr>
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>REGIONAL / DEPARTAMENTO</b></td><td style="width:5%;"></td></tr>
                         </table>
                     </td>
                     <td style="width:80%;">
@@ -1007,7 +1010,7 @@ class Programacionpoa extends CI_Controller{
                 <tr>
                     <td style="width:20%;">
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                            <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD EJECUTORA</b></td><td style="width:5%;"></td></tr>
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>UNIDAD EJECUTORA</b></td><td style="width:5%;"></td></tr>
                         </table>
                     </td>
                     <td style="width:80%;">
@@ -1021,7 +1024,7 @@ class Programacionpoa extends CI_Controller{
                     $tabla.='
                     <td style="width:20%;">
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                            <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>'.$proyecto[0]['tipo_adm'].'</b></td><td style="width:5%;"></td></tr>
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>'.$proyecto[0]['tipo_adm'].'</b></td><td style="width:5%;"></td></tr>
                         </table>
                     </td>
                     <td style="width:80%;">
@@ -1034,7 +1037,7 @@ class Programacionpoa extends CI_Controller{
                     $tabla.='
                     <td style="width:20%;">
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                            <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>PROYECTO</b></td><td style="width:5%;"></td></tr>
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>PROYECTO</b></td><td style="width:5%;"></td></tr>
                         </table>
                     </td>
                     <td style="width:80%;">
@@ -1153,7 +1156,7 @@ class Programacionpoa extends CI_Controller{
           </tr>
           <tr>
             <td style="width: 33%; text-align: left; height:20px;">';
-              if($proyecto[0]['proy_estado']==1){
+              if($proyecto[0]['aper_proy_estado']==1){
                 $tabla.='POA - '.$this->session->userdata('gestion');
               }
               else{
@@ -1235,9 +1238,9 @@ class Programacionpoa extends CI_Controller{
                 $tabla.='
                 <tr>
                   <td style="font-size: 6.5px; height:12px;">'.$nro.'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' ><b>'.$rowp['og_codigo'].'.'.$rowp['or_codigo'].'.</b></td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['acc_codigo'].'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['og_codigo'].'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
                   <td style="width: 9%; text-align: left;">'.$componente[0]['com_componente'].'</td>
                   <td style="width: 11.5%; text-align: left;">'.$rowp['prod_producto'].'</td>
@@ -1336,9 +1339,9 @@ class Programacionpoa extends CI_Controller{
                 $tabla.=
                 '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">
                   <td style="height:12px;" bgcolor='.$color_or.'>'.$nro.'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' ><b>'.$rowp['og_codigo'].'.'.$rowp['or_codigo'].'.</b></td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['acc_codigo'].'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['og_codigo'].'</td>
+                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
                   <td style="width: 11.5%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
                   <td style="width: 11.5%; text-align: left;">'.$rowp['prod_resultado'].'</td>
@@ -1431,8 +1434,8 @@ class Programacionpoa extends CI_Controller{
                   <td style="width: 1%; font-size: 4.5px; text-align: center;height:13px;">'.$cont.'</td>
                   <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$row['prod_cod'].'</b></td>
                   <td style="width: 4%; text-align: center;font-size: 8px;"><b>'.$row['par_codigo'].'</b></td>
-                  <td style="width: 18%; text-align: left;font-size: 7.5px;">'.$row['ins_detalle'].'</td>
-                  <td style="width: 5%; text-align: left">'.$row['ins_unidad_medida'].'</td>
+                  <td style="width: 18%; text-align: left;font-size: 7.5px;">'.strtoupper($row['ins_detalle']).'</td>
+                  <td style="width: 5%; text-align: left">'.strtoupper($row['ins_unidad_medida']).'</td>
                   <td style="width: 4%; text-align: right">'.round($row['ins_cant_requerida'],2).'</td>
                   <td style="width: 5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
                   <td style="width: 5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>'; 

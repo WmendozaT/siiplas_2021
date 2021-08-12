@@ -92,7 +92,7 @@ class Producto extends CI_Controller {
   }
 
 
-    /*---- GET DATOS PRODUCTO ----*/
+    /*---- GET DATOS PRODUCTO FORM 4 ----*/
     public function get_producto(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -100,6 +100,12 @@ class Producto extends CI_Controller {
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
         $temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
         
+        $sum_temp=0;
+        $sum=$this->model_producto->meta_prod_gest($prod_id);
+        if(count($sum)!=0){
+          $sum_temp=$sum[0]['meta_gest'];
+        }
+
         if(count($temporalidad)!=0){
           for ($i=1; $i <=12 ; $i++) { 
             $this->prog_mes[$i]= $temporalidad[0][$this->temp[$i]];
@@ -111,6 +117,7 @@ class Producto extends CI_Controller {
             'respuesta' => 'correcto',
             'producto'=>$producto,
             'temp'=>$this->prog_mes,
+            'sum_temp'=>$sum_temp,
           );
         }
         else{
@@ -456,7 +463,7 @@ class Producto extends CI_Controller {
                     $ptto=$monto[0]['total'];
                   }
 
-                  $color=''; $titulo=''; $por='';
+                  $color='#f1fdf1'; $titulo=''; $por=''; 
                   if($proyecto[0]['tp_id']==1){
                     if($rowp['prod_meta']!=($sum[0]['meta_gest']+$rowp['prod_linea_base'])){
                       $color='#fbd5d5';
@@ -492,28 +499,28 @@ class Producto extends CI_Controller {
                       $tabla.='<a href="'.site_url("").'/prog/requerimiento/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="33" HEIGHT="33"/></a>';
                     }
                     $tabla.='</td>';
-                    $tabla.='<td style="width:2%;text-align=center" bgcolor="#d6eef7"><b><font size=5 color=blue>'.$rowp['og_codigo'].'.</font></b></td>';
-                    $tabla.='<td style="width:2%;text-align=center" bgcolor="#d6eef7"><b><font size=5 color=blue>'.$rowp['or_codigo'].'.</font></b></td>';
+                    $tabla.='<td style="width:2%;text-align=center" bgcolor="#d6eef7"><b><font size=5 color=blue>'.$rowp['og_codigo'].'</font></b></td>';
+                    $tabla.='<td style="width:2%;text-align=center" bgcolor="#d6eef7"><b><font size=5 color=blue>'.$rowp['or_codigo'].'</font></b></td>';
                     $tabla.='<td style="width:2%;text-align=center" bgcolor="#f1fdf1"><b><font size=5>'.$rowp['prod_cod'].'</font></b></td>';
-                    $tabla.='<td style="width:15%;" bgcolor="#f1fdf1">'.strtoupper($rowp['prod_producto']).'</td>';
-                    $tabla.='<td style="width:15%;" bgcolor="#f1fdf1">'.strtoupper($rowp['prod_resultado']).'</td>';
-                    $tabla.='<td style="width:5%;" bgcolor="#f1fdf1"><b>'.strtoupper($rowp['indi_abreviacion']).'</b></td>';
-                    $tabla.='<td style="width:10%;" bgcolor="#f1fdf1">'.$rowp['prod_indicador'].'</td>';
-                    $tabla.='<td style="width:5%;" bgcolor="#f1fdf1">'.round($rowp['prod_linea_base'],2).'</td>';
-                    $tabla.='<td style="width:5%;" bgcolor="#f1fdf1">'.round($rowp['prod_meta'],2).'</td>';
+                    $tabla.='<td style="width:15%;" bgcolor="'.$color.'">'.strtoupper($rowp['prod_producto']).'</td>';
+                    $tabla.='<td style="width:15%;" bgcolor="'.$color.'">'.strtoupper($rowp['prod_resultado']).'</td>';
+                    $tabla.='<td style="width:5%;" bgcolor="'.$color.'"><b>'.strtoupper($rowp['indi_abreviacion']).'</b></td>';
+                    $tabla.='<td style="width:10%;" bgcolor="'.$color.'">'.$rowp['prod_indicador'].'</td>';
+                    $tabla.='<td style="width:5%;" bgcolor="'.$color.'">'.round($rowp['prod_linea_base'],2).'</td>';
+                    $tabla.='<td style="width:5%;" bgcolor="'.$color.'">'.round($rowp['prod_meta'],2).'</td>';
                     if(count($programado)!=0){
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['enero'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['febrero'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['marzo'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['abril'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['mayo'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['junio'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['julio'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['agosto'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['septiembre'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['octubre'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['noviembre'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#f1fdf1">'.round($programado[0]['diciembre'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['enero'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['febrero'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['marzo'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['abril'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['mayo'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['junio'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['julio'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['agosto'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['septiembre'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['octubre'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['noviembre'],2).' '.$por.'</td>';
+                      $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['diciembre'],2).' '.$por.'</td>';
                     }
                     else{
                       $tabla.='<td style="width:4%;" bgcolor="#f1bac6">0</td>
@@ -1248,92 +1255,78 @@ class Producto extends CI_Controller {
             $nro=0;
             $guardado=0;
             $no_guardado=0;
-
+  
             if($tp==1){  /// Actividades
               foreach ($lineas as $linea_num => $linea){ 
                 if($i != 0){
                   $datos = explode(";",$linea);
-                  if(count($datos)==21){
+                  if(count($datos)==22){
 
-                    $cod_or = intval(trim($datos[0])); // Codigo Objetivo Regional
-                    echo $cod_or."<br>";
-/*                    $descripcion = utf8_encode(trim($datos[2])); //// descripcion form4
-                    $resultado = utf8_encode(trim($datos[3])); //// descripcion Resultado
-                    $unidad = utf8_encode(trim($datos[4])); //// Unidad responsable
-                   // $tp_indicador = utf8_encode(trim($datos[5])); //// tipo de indicador
-                    $indicador = utf8_encode(trim($datos[5])); //// descripcion Indicador
-                    
-                    $lbase = intval(trim($datos[6])); //// Linea Base
-                    if(intval(trim($datos[6]))==''){
-                      $lbase = 0; //// Linea Base
-                    }
-
-                    $meta = intval(trim($datos[7])); //// Meta
-                    if(intval(trim($datos[7]))==''){
-                      $meta = 0; //// Meta
-                    }
-
-                    $var=8;
-                    for ($i=1; $i <=12 ; $i++) {
-                      $m[$i]=(float)$datos[$var]; //// Mes i
-                      if($m[$i]==''){
-                        $m[$i]=0;
-                      }
-                      $var++;
-                    }
-
-                    $mverificacion = utf8_encode(trim($datos[20])); //// Medio de verificacion
+                    $cod_og = intval(trim($datos[0])); // Codigo ACP
+                    $cod_or = intval(trim($datos[1])); // Codigo Objetivo Regional
+                    $cod_form4 = intval(trim($datos[2])); // Codigo Form 4
+                    $descripcion = strval(utf8_encode(trim($datos[3]))); //// descripcion form4
+                    $resultado = strval(utf8_encode(trim($datos[4]))); //// descripcion Resultado
+                    $unidad = strval(utf8_encode(trim($datos[5]))); //// Unidad responsable
+                    $indicador = strval(utf8_encode(trim($datos[6]))); //// descripcion Indicador
+                    $lbase = intval(trim($datos[7])); //// Linea Base
+                    $meta = intval(trim($datos[8])); //// Meta
+                    $mverificacion = strval(utf8_encode(trim($datos[21]))); //// Medio de verificacion
 
                     $ae=0;
                     $or_id=0;
                     if(count($list_oregional)!=0){
-                      $get_acc=$this->model_objetivoregion->get_alineacion_proyecto_oregional($fase[0]['proy_id'],$cod_or);
+                      $get_acc=$this->model_objetivoregion->get_alineacion_proyecto_oregional($fase[0]['proy_id'],$cod_og,$cod_or);
                       if(count($get_acc)!=0){
                         $ae=$get_acc[0]['ae'];
                         $or_id=$get_acc[0]['or_id'];
                       }
                     }
 
+                    if(strlen($descripcion)!=0 & strlen($resultado)!=0){
+                        $query=$this->db->query('set datestyle to DMY');
+                        $data_to_store = array(
+                          'com_id' => $com_id,
+                          'prod_producto' => strtoupper($descripcion),
+                          'prod_resultado' => strtoupper($resultado),
+                          'indi_id' => 1,
+                          'prod_indicador' => strtoupper($indicador),
+                          'prod_fuente_verificacion' => strtoupper($mverificacion), 
+                          'prod_linea_base' => $lbase,
+                          'prod_meta' => $meta,
+                          'prod_unidades' => $unidad,
+                          'acc_id' => $ae,
+                          'prod_ppto' => 1,
+                          'fecha' => date("d/m/Y H:i:s"),
+                         // 'prod_cod'=>$cod_ope,
+                          'or_id'=>$or_id,
+                          'fun_id' => $this->fun_id,
+                          'num_ip' => $this->input->ip_address(), 
+                          'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                        );
+                        $this->db->insert('_productos', $data_to_store);
+                        $prod_id=$this->db->insert_id(); 
 
-                    /// INSERTAR DATOS FORM N4 
-                    $query=$this->db->query('set datestyle to DMY');
-                    $data_to_store = array(
-                      'com_id' => $com_id,
-                      'prod_producto' => strtoupper($descripcion),
-                      'prod_resultado' => strtoupper($resultado),
-                      'indi_id' => 1,
-                      'prod_indicador' => strtoupper($indicador),
-                      'prod_fuente_verificacion' => strtoupper($mverificacion), 
-                      'prod_linea_base' => $lbase,
-                      'prod_meta' => $meta,
-                      'prod_unidades' => $unidad,
-                      'acc_id' => $ae,
-                      'prod_ppto' => 1,
-                      'fecha' => date("d/m/Y H:i:s"),
-                     // 'prod_cod'=>$cod_ope,
-                      'or_id'=>$or_id,
-                      'fun_id' => $this->fun_id,
-                      'num_ip' => $this->input->ip_address(), 
-                      'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
-                    );
-                    $this->db->insert('_productos', $data_to_store);
-                    $prod_id=$this->db->insert_id(); 
 
-                    for ($p=1; $p <=12 ; $p++) { 
-                      if($m[$p]!=0){
-                        $this->model_producto->add_prod_gest($prod_id,$this->gestion,$p,$m[$p]);
-                      }
+                        $var=9;
+                        for ($i=1; $i <=12 ; $i++) {
+                          $m[$i]=floatval(trim($datos[$var])); //// Mes i
+                          if($m[$i]!=0){
+                            $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$m[$i]);
+                          }
+                          
+                          $var++;
+                        }
+
+                        $producto=$this->model_producto->get_producto_id($prod_id);
+                        if(count($producto)!=0){
+                          $guardado++;
+                        }
+                        else{
+                          $no_guardado++;
+                        }
                     }
 
-                    $producto=$this->model_producto->get_producto_id($prod_id);
-                    if(count($producto)!=0){
-                      $guardado++;
-                    }
-                    else{
-                      $no_guardado++;
-                    }
-
-                    $nro_prod++;*/
                   }
                 }
                 $i++;
@@ -1481,7 +1474,7 @@ class Producto extends CI_Controller {
     
 
 
-    public function reporte_formulario4($com_id){
+/*    public function reporte_formulario4($com_id){
         $componente=$this->model_componente->get_componente($com_id,$this->gestion);
         if(count($componente)!=0){
             $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); //// DATOS PROYECTO
@@ -1500,7 +1493,7 @@ class Producto extends CI_Controller {
         else{
             echo "Error !!!";
         }
-    }
+    }*/
 
 
 

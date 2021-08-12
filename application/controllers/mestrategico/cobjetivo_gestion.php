@@ -162,6 +162,7 @@ class Cobjetivo_gestion extends CI_Controller {
         else{
           $og_id = $this->security->xss_clean($post['mog_id']); /// Obj id
           $acc_id = $this->security->xss_clean($post['macc_id']); /// acc id
+          $codigo = $this->security->xss_clean($post['mcod']); /// codigo
           $objetivo = $this->security->xss_clean($post['mogestion']); /// Objetivo
           $producto = $this->security->xss_clean($post['mproducto']); /// Producto
           $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
@@ -175,6 +176,7 @@ class Cobjetivo_gestion extends CI_Controller {
 
           $update_og= array(
             'acc_id' => $acc_id,
+            'og_codigo' => $codigo,
             'og_objetivo' => strtoupper($objetivo),
             'og_producto' => strtoupper($producto),
             'og_resultado' => strtoupper($resultado),

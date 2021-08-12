@@ -71,7 +71,7 @@ class Cservicios extends CI_Controller {
         $nro=0;
         foreach($list_oregional as $row){
             $nro++;
-            $tabla.='<h1> '.$nro.'.- OBJETIVO REGIONAL : <small> '.$row['or_codigo'].'.- '.$row['or_objetivo'].'</small></h1>';
+            $tabla.='<h1> '.$nro.'.- OPERACI&Oacute;N REGIONAL : <small> '.$row['or_codigo'].' | '.$row['or_codigo'].' .- '.$row['or_objetivo'].'</small></h1>';
         }
 
         return $tabla;

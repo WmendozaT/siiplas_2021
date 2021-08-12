@@ -283,6 +283,7 @@
 	        nro = parseFloat($('[name="nro"]').val()); //// nro de unidades/establecimientos 
 	 		meta_reg = parseFloat($('[name="meta_reg"]').val()); /// meta regional
 
+
 	 		for (var i = 1; i<=nro; i++) {
 	            sum=parseFloat(sum)+parseFloat($('[id="uni'+i+'"]').val());
 		    }
@@ -291,7 +292,6 @@
 		    $('[id="sum"]').val((sum+linea).toFixed(2));
 		    programado = parseFloat($('[name="total"]').val()); //// programado total
 		    meta = parseFloat($('[name="meta"]').val()); //// Meta
-
 
 	        if(meta_reg!=0){
 		        if(programado!=0){

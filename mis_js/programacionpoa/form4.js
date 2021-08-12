@@ -10,20 +10,20 @@ function abreVentana(PDF){
 
   //// Subir Archivo de Migracionform 4 y form5
   $(function () {
-      $(".importar_ff").on("click", function (e) {
-        tipo = $(this).attr('name');
-        document.getElementById("tp").value=tipo;
-        if(tipo==1){
-            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <b>IMPORTAR ARCHIVO FORM 4.CSV</b></h2>');
-            $('#img').html('<img src="'+base+'/assets/img/img_migracion/migracion_form4.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
-            $('#buton').html('SUBIR ARCHIVO ACTIVIDADES.SCV');
-          }
-          else{
-            $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <font color=blue><b> IMPORTAR ARCHIVO DE FORM 5.SCV (GLOBAL)</b></font></h2>');
-            $('#img').html('<img src="'+base+'/assets/img/img_migracion/migracion_form5.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
-            $('#buton').html('SUBIR ARCHIVO DE REQUERIMIENTOS.SCV');
-          }
-      });
+    $(".importar_ff").on("click", function (e) {
+      tipo = $(this).attr('name');
+      document.getElementById("tp").value=tipo;
+      if(tipo==1){
+          $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <b>IMPORTAR ARCHIVO FORM 4.CSV</b></h2>');
+          $('#img').html('<img src="'+base+'/assets/img/img_migracion/migracion_f4.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
+          $('#buton').html('SUBIR ARCHIVO ACTIVIDADES.SCV');
+        }
+        else{
+          $('#titulo').html('<h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <font color=blue><b> IMPORTAR ARCHIVO DE FORM 5.SCV (GLOBAL)</b></font></h2>');
+          $('#img').html('<img src="'+base+'/assets/img/img_migracion/migracion_form5.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
+          $('#buton').html('SUBIR ARCHIVO DE REQUERIMIENTOS.SCV');
+        }
+    });
   });
 
     /// ---- TIPO DE INDICADOR
@@ -372,8 +372,17 @@ function abreVentana(PDF){
                 document.getElementById("mm"+i).disabled = false;
                 }
                }
+                /// Tipo de Meta
+/*               if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){ /// Recurrente
+                  document.getElementById("mm"+i).disabled = true;
+                }
+                else{
+                document.getElementById("mm"+i).disabled = false;
+                }*/
 
-               $('[name="mtotal"]').val((parseInt(response.producto[0]['prod_meta'])).toFixed(0));
+
+
+               $('[name="mtotal"]').val((parseInt(response.sum_temp)).toFixed(0));
                if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
                 document.getElementById("mtrep").style.display = 'block';
                }
@@ -452,7 +461,8 @@ function abreVentana(PDF){
                 var $valid = $("#form_mod").valid();
                 if (!$valid) {
                     $validator.focusInvalid();
-                } else {            
+                } else {
+
                   $('#matit').html('');
                     alertify.confirm("MODIFICAR DATOS DE LA ACTIVIDAD ?", function (a) {
                       if (a) {

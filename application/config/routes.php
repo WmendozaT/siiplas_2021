@@ -182,7 +182,6 @@ $route['proy/ptto_consolidado_comparativo/(:any)'] = 'programacion/cppto_compara
 
 
 
-
 /*-----------------------------  PROGRAMACION DEL PROYECTO - PRODUCTOS  -------------------------------*/
 $route['admin/prog/list_prod/(:any)'] = 'programacion/producto/lista_productos/$1';  //// lista de productos (2020)
 //$route['prog/verif_cod'] = 'programacion/producto/verif_codigo'; ////// verificando codigo Operacion

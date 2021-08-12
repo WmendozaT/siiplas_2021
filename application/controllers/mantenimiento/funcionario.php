@@ -107,7 +107,7 @@ class Funcionario extends CI_Controller {
 
             $data['edit_pass'] = $this->encrypt->decode($data['fun'][0]['fun_password']);
             $data['rol']=$this->model_funcionario->get_rol($fun_id);
-            $data['componente']=$this->model_componente->get_componente($data['fun'][0]['cm_id']);
+            $data['componente']=$this->model_componente->get_componente($data['fun'][0]['cm_id'],$this->gestion);
             
             $data['actividad']='';
             $data['subactividad']='';
@@ -236,7 +236,7 @@ class Funcionario extends CI_Controller {
 
         $nro=0;
         foreach($funcionarios  as $row){
-            $subactividad=$this->model_componente->get_componente($row['cm_id']);
+            $subactividad=$this->model_componente->get_componente($row['cm_id'],$this->gestion);
             $nro++;
             $rol=$this->model_funcionario->verif_rol($row['id'],1);
             $tabla .='<tr>';

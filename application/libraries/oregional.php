@@ -76,12 +76,12 @@ class Oregional extends CI_Controller{
             if($row['estado']!=0){
             //  $tabla.='<br>'.$valor_meta.'-----'.$row['prog_fis'].'';
               if($valor_meta<$row['prog_fis']){
-                $tabla.='<a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; REGISTRO - OBJETIVO REGIONAL</a>';
+                $tabla.='<a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>';
               }
             }
             else{
               if(count($meta)==0){
-                $tabla.='<a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; REGISTRO - OBJETIVO REGIONAL</a>';
+                $tabla.='<a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>';
               }
             }
 
@@ -105,7 +105,7 @@ class Oregional extends CI_Controller{
                       <th style="width:3%;" bgcolor="#d2d2d2">DEL.</th>
                       <th style="width:5%;" bgcolor="#d2d2d2">COD. ACP..</th>
                       <th style="width:5%;" bgcolor="#d2d2d2">COD. OPE.</th>
-                      <th style="width:12%;" bgcolor="#d2d2d2">OPERACIÓN '.$this->gestion.' / OPERACI&Oacute;N</th>
+                      <th style="width:12%;" bgcolor="#d2d2d2">OPERACIÓN '.$this->gestion.'</th>
                       <th style="width:12%;" bgcolor="#d2d2d2">PRODUCTO</th>
                       <th style="width:12%;" bgcolor="#d2d2d2">RESULTADO (LOGROS)</th>
                       <th style="width:12%;" bgcolor="#d2d2d2">INDICADOR</th>
@@ -232,7 +232,7 @@ class Oregional extends CI_Controller{
             <form action="'.site_url("").'/mestrategico/cobjetivo_regional/add_ogestion'.'" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
               <input type="hidden" name="pog_id" id="pog_id" value="'.$get_meta_prog[0]['pog_id'].'">
               <input type="hidden" name="dep_id" id="dep_id" value="'.$dep_id.'">
-              <input type="hidden" name="nro" id="nro" value="'.count($this->model_objetivoregion->list_unidades_total($dep_id)).'">
+              <input type="hidden" name="nro" id="nro" value="'.count($this->model_objetivoregion->list_unidades_habilitados_regional($dep_id)).'">
               <input type="hidden" name="meta_reg" id="meta_reg" value="'.round(($get_meta_prog[0]['prog_fis']-$meta_ocupado),2).'">
               <input type="hidden" name="tp" id="tp" value="1">
               <div class="col-sm-12">
@@ -317,6 +317,7 @@ class Oregional extends CI_Controller{
                 <h2 class="alert alert-success"><center>DISTRIBUCI&Oacute;N</center></h2>';
                 $num=0;
                 $distritales=$this->model_proyecto->list_distritales($dep_id);
+
                 foreach($distritales as $row){
                   $tabla.='
                   <div class="well">
@@ -884,9 +885,9 @@ class Oregional extends CI_Controller{
     $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
 
     $tabla.='
-    <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+    <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
       <thead>
-        <tr style="font-size: 7px;" bgcolor="#e4e2e2" align=center>
+        <tr style="font-size: 6.7px;" bgcolor="#eceaea" align=center>
           <th style="width:1%;height:20px;">#</th>
           <th style="width:2.5%;"><b>COD. ACE.</b></th>
           <th style="width:2.5%;"><b>COD. ACP.</b></th>
@@ -913,11 +914,11 @@ class Oregional extends CI_Controller{
         }
       $nro++;
       $tabla.='
-      <tr style="font-size: 7px;">
+      <tr style="font-size: 6.5px;">
         <td style="width:1%; height:18px;" align=center>'.$nro.'</td>
-        <td style="width:2.5%;" align="center">'.$row['acc_codigo'].'</td>
-        <td style="width:2.5%;" align="center">'.$row['og_codigo'].'</td>
-        <td style="width:2.5%; font-size: 8px;" align="center" bgcolor="#f1eeee"><b>'.$row['og_codigo'].'.'.$row['or_codigo'].'.</b></td>
+        <td style="width:2.5%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
+        <td style="width:2.5%;" align="center"><b>'.$row['og_codigo'].'</b></td>
+        <td style="width:2.5%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
         <td style="width:24%;">'.$row['or_objetivo'].'</td>
         <td style="width:20%;">'.$row['or_resultado'].'</td>
         <td style="width:18%;">'.$row['or_indicador'].'</td>

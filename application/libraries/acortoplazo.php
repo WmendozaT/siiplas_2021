@@ -282,12 +282,12 @@ class Acortoplazo extends CI_Controller{
       $tabla.='  
       <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <thead>
-          <tr style="font-size: 7px;" bgcolor="#dcdcdc" align=center>
+          <tr style="font-size: 7px;" bgcolor="#eceaea" align=center>
             <th style="width:1%;height:20px;">N°</th>
             <th style="width:2.4%;">COD. O.E.</th>
             <th style="width:2.4%;">COD. ACE.</th>
             <th style="width:2.4%;">COD. ACP.</th>
-            <th style="width:12%;">ACCI&Oacute;N DE CORTO PLAZO</th>
+            <th style="width:12%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
             <th style="width:5%;">PRODUCTO</th>
             <th style="width:11%;">RESULTADO</th>
             <th style="width:10%;">INDICADOR</th>
@@ -369,12 +369,12 @@ class Acortoplazo extends CI_Controller{
       $tabla.='  
       <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <thead>
-          <tr style="font-size: 7px;" bgcolor="#dcdcdc" align=center>
+          <tr style="font-size: 7px;" bgcolor="#eceaea" align=center>
             <th style="width:1%;height:20px;">N°</th>
             <th style="width:2.4%;">COD. O.E.</th>
             <th style="width:2.4%;">COD. ACE.</th>
             <th style="width:2.4%;">COD. ACP.</th>
-            <th style="width:15%;">ACCI&Oacute;N DE CORTO PLAZO</th>
+            <th style="width:15%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
             <th style="width:5%;">PRODUCTO</th>
             <th style="width:11%;">RESULTADO</th>
             <th style="width:10%;">INDICADOR</th>
@@ -450,10 +450,6 @@ class Acortoplazo extends CI_Controller{
 
       return $tabla;
     }
-
-
-
-
 
 
 
