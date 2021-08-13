@@ -1569,7 +1569,7 @@ class Cmod_insumo extends CI_Controller {
                   if(count($datos)==20){ /// C
                       $cod_ope = (int)$datos[0]; //// Codigo Actividad
                       $cod_partida = (int)$datos[1]; //// Codigo partida
-                      $par_id = $this->minsumos->get_partida_codigo($cod_partida); //// Datos Partida
+                      $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// Datos Partida
 
                       $detalle = utf8_encode(trim($datos[2])); //// Detalle Requerimiento
                       $unidad = utf8_encode(trim($datos[3])); //// Unidad de medida
@@ -1708,7 +1708,7 @@ class Cmod_insumo extends CI_Controller {
                   if(count($datos)==20){ /// C
                       $cod_ope = (int)$datos[0]; //// Codigo Actividad
                       $cod_partida = (int)$datos[1]; //// Codigo partida
-                      $par_id = $this->minsumos->get_partida_codigo($cod_partida); //// Datos Partida
+                      $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// Datos Partida
 
                       $detalle = utf8_encode(trim($datos[2])); //// Detalle Requerimiento
                       $unidad = utf8_encode(trim($datos[3])); //// Unidad de medida

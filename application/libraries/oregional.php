@@ -73,8 +73,8 @@ class Oregional extends CI_Controller{
               <h1>OPERACI&Oacute;N REGIONAL : <small><font color="#000">'.strtoupper($row['dep_departamento']).'</font></small></h1>
               <h1>META : <small><font color="#000">'.round($row['prog_fis'],2).'</font></small></h1>
             </div>';
-            if($row['estado']!=0){
-            //  $tabla.='<br>'.$valor_meta.'-----'.$row['prog_fis'].'';
+            /*if($row['estado']!=0){
+       
               if($valor_meta<$row['prog_fis']){
                 $tabla.='<a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>';
               }
@@ -83,9 +83,10 @@ class Oregional extends CI_Controller{
               if(count($meta)==0){
                 $tabla.='<a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>';
               }
-            }
+            }*/
 
               $tabla.='
+              <a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>
               <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/'.$row['dep_id'].'\');" title="IMPRIMIR OPERACIONES REGIONAL" class="btn btn-default">
                 <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp; REP. OPERACIÓN (FORM N° 2)
               </a>
@@ -136,7 +137,7 @@ class Oregional extends CI_Controller{
                 </tbody>
                 </table>';
                 $num=0;
-                $distritales=$this->model_proyecto->list_distritales($row['dep_id']);
+             /*   $distritales=$this->model_proyecto->list_distritales($row['dep_id']);
                 foreach($distritales as $rowd){
                   $niveles=$this->model_objetivoregion->list_niveles();
                   $tabla.=
@@ -162,7 +163,7 @@ class Oregional extends CI_Controller{
                         </tr>
                       </tbody>
                     </table><hr>';
-                }
+                }*/
               }
               $tabla.='
           </div>
@@ -292,7 +293,7 @@ class Oregional extends CI_Controller{
                       <label class="label">META</label>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="meta" id="meta" title="META" value="'.round(($get_meta_prog[0]['prog_fis']-$meta_ocupado),2).'" onkeyup="verif_meta()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" >
+                          <input type="text" name="meta" id="meta" title="META" value="0" onkeyup="verif_meta()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" >
                         </label>
                       </section>
                       <section class="col col-3">
@@ -366,13 +367,6 @@ class Oregional extends CI_Controller{
               <input type="hidden" name="total" id="total" value="0">
               <br><hr>
               <div class="row">
-                <section class="col col-2">
-                <label class="label"><font color=blue><b>META REGIONAL</b></font></label>
-                  <label class="input">
-                    <i class="icon-append fa fa-tag"></i>
-                    <input type="text" name="met" id="met" title="META REGIONAL" value="'.round(($get_meta_prog[0]['prog_fis']-$meta_ocupado),2).'" disabled=true>
-                  </label>
-                </section>
                 <section class="col col-2">
                 <label class="label"><font color=blue><b>SUMA TOTAL PROGRAMADO</b></font></label>
                   <label class="input">

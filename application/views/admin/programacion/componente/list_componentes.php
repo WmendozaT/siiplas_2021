@@ -39,7 +39,7 @@
               font-size: 10px;
             }
             #mdialTamanio{
-          		width: 40% !important;
+          		width: 55% !important;
 		     }
 		</style>
 	</head>
@@ -144,6 +144,7 @@
 			                    </div>
 			                </div>
                           </div>
+
                       </section>
 					</article>
 
@@ -154,10 +155,11 @@
 								<div class="jarviswidget jarviswidget-color-darken" >
 									<header>
 										<span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-										<h2 class="font-md"><strong>SUB ACTIVIDADES</strong></h2>               
+										<h2 class="font-md"><strong>MIS UNIDADES REPONSABLES</strong></h2>               
 									</header>
 									<div>
 										<div class="widget-body no-padding">
+												<?php echo $button;?>
 											<div class="table-responsive">
 												<?php echo $componente;?>
 											</div>
@@ -176,55 +178,61 @@
 			<!-- END MAIN CONTENT -->
 		</div>
 
-		  <!-- ======= MODAL SUBIR ARCHIVO ACTIVIDADES =============== -->
-  <div class="modal animated fadeInDown" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
-   <!--  <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script> -->
-    <div class="modal-dialog" id="mdialTamanio">
+
+	<!-- SUBIR PLANTILLA DE MIGRACION -->
+	<div class="modal fade" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" id="mdialTamanio">
         <div class="modal-content">
-        	<div class="modal-header">
-                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          <div class="modal-header">
+              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+              <h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <b>IMPORTAR ARCHIVO FORM 4.CSV</b></h2>
+              <section id="widget-grid" class="">
+                <div>
+                  <h1> <?php echo $proyecto[0]['establecimiento'];?> : <small><?php echo $proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev']?></small></h1>
+                </div>
+              </section>
+              <div class="row">
+                <form action="<?php echo site_url().'/programacion/cservicios/importar_operaciones_global'?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" method="post">
+                    <input type="hidden" name="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
+                    <input type="hidden" name="pfec_id" value="<?php echo $proyecto[0]['pfec_id'];?>">
+                  <fieldset>
+                    <div class="form-group">
+                      <center>
+                      	<img src="<?php echo base_url(); ?>assets/img/img_migracion/migracion_form4_unidad.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">
+                      </center>
+                      <hr>
+                        <p class="alert alert-info">
+                          <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
+                        </p>
+                    </div>
+                  </fieldset>  
+                
+                  <div class="form-group">
+                    <b>SELECCIONAR ARCHIVO CSV</b>
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+                        <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+                      </span>
+                      <span class="form-control"></span>
+                    </div>
+                </div>
+                  
+                  <div>
+                      <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR ARCHIVO FORM 4.CSV</button><br>
+                      <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                  </div>
+                </form> 
+              </div>
             </div>
-            <div class="modal-body no-padding">
-                <div class="row">
-                   <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="">
-                        <h2 class="row-seperator-header"><i class="glyphicon glyphicon-import"></i> <b>IMPORTAR ARCHIVO DE ACTIVIDADES.CSV (GLOBAL)</b></h2>
-                        <div class="col-sm-12">
-                          <!-- well -->
-                          <div class="well">
-                            <section id="widget-grid" class="">
-                              <div>
-                                <h1> <?php echo $proyecto[0]['establecimiento'];?> : <small><?php echo $proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev']?></small></h1>
-                              </div>
-                            </section>
-                            <hr>
-                            	<form action="<?php echo site_url().'/programacion/cservicios/importar_operaciones_global'?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" method="post">
-                                  <input type="hidden" name="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-                                  <input type="hidden" name="pfec_id" value="<?php echo $proyecto[0]['pfec_id'];?>">
-                                  <fieldset>
-                                    <div class="input-group">
-                                      <span class="input-group-btn">
-                                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
-                                        <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
-                                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
-                                      </span>
-                                      <span class="form-control"></span>
-                                    </div>
-                                  </fieldset><br>
-                                  <div >
-                                    <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR ACTIVIDADES</div></button>
-                                    <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                                  </div>
-                              	</form>
-                          </div>
-                          <!-- end well -->
-                        </div>
-                      </div>
-                    </article>
-                </div>   
-            </div>
-        </div><!-- /.modal-content -->
+        </div>
+      </div>
     </div>
+
+
 		<!-- END MAIN PANEL -->    
 		<div class="page-footer">
 			<div class="row">

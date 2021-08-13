@@ -73,11 +73,10 @@ class Producto extends CI_Controller {
         /*--------- Gasto Corriente ----------*/
         else{
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-          $data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['proyecto'][0]['act_id']);
+          $data['objetivos']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);
+          //$data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['proyecto'][0]['act_id']);
           $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
           $data['list_oregional']=$this->programacionpoa->lista_oregional($proy_id);
-
-         // $data['list_oregional']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);/// Lista de Objetivos Regionales
         }
 
         
@@ -573,7 +572,8 @@ class Producto extends CI_Controller {
 
     /*--- ELIMINAR TOD@S LOS REQUERIMIENTOS DEL SERVICIO (SOLO REQUERIMIENTOS) (2020) ---*/
     public function delete_insumos_servicios($com_id){
-      $productos = $this->model_producto->list_producto_programado($com_id,$this->gestion); // Lista de productos
+    //  $productos = $this->model_producto->list_producto_programado($com_id,$this->gestion); // Lista de productos
+      $productos=$this->model_producto->lista_operaciones($com_id);
       $nro=0;$nro_ins=0;
       //echo "eliminar productos";
       foreach($productos as $rowp){
@@ -604,7 +604,7 @@ class Producto extends CI_Controller {
       $this->db->update('_productos', $update_prod);
 
 
-      $this->session->set_flashdata('success','SE ELIMINO CORRECTAMENTE '.$nro_ins.' REQUERIMIENTOS DEL SERVICIO ');
+      $this->session->set_flashdata('success','SE ELIMINO CORRECTAMENTE '.$nro_ins.' REQUERIMIENTOS DE LA UNIDAD ');
       redirect(site_url("").'/admin/prog/list_prod/'.$com_id);
     }
 
@@ -1441,7 +1441,8 @@ class Producto extends CI_Controller {
 
     /*------ ACTUALIZA PRESUPUESTO EXISTENTE DE LAS OPERACIONES -------*/
     public function update_ptto_operaciones($com_id){
-      $operaciones=$this->model_producto->list_producto_programado($com_id,$this->gestion);
+      //$operaciones=$this->model_producto->list_producto_programado($com_id,$this->gestion);
+      $operaciones=$this->model_producto->lista_operaciones($com_id);
       foreach($operaciones as $rowp){
         $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
         if(count($monto)==0){

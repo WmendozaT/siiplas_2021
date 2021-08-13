@@ -129,7 +129,7 @@ class Programacionpoa extends CI_Controller{
                     <div class="row">
                       <section class="col col-3">
                         <label class="label">UNIDAD ORGANIZACIONAL</label>
-                        <select  id="act_id" name="act_id" title="SELECCIONE UNIDAD ORGANIZACIONAL">
+                        <select class="form-control" id="act_id" name="act_id" title="SELECCIONE UNIDAD ORGANIZACIONAL">
                         <option value="">SELECCIONE UNIDAD ORGANIZACIONAL</option>';
                         foreach($unidades as $row){
                           if(count($this->model_proyecto->get_uni_apertura_programatica($row['act_id']))==0){
@@ -642,13 +642,14 @@ class Programacionpoa extends CI_Controller{
     /*----------- VERIFICA LA ALINEACION DE OBJETIVO REGIONAL -----*/
     public function verif_oregional($proy_id){
       $proyecto=$this->model_proyecto->get_id_proyecto($proy_id);
-      if($proyecto[0]['tp_id']==1){
+      $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
+/*      if($proyecto[0]['tp_id']==1){
         $list_oregional=$this->model_objetivoregion->get_unidad_pregional_programado($proy_id);
       }
       else{
         $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
         $list_oregional=$this->model_objetivoregion->get_unidad_pregional_programado($proyecto[0]['act_id']); /// Objetivos Regionales
-      }
+      }*/
       
       $tabla='';
       $nro=0;

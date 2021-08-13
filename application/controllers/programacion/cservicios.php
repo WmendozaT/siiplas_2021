@@ -22,6 +22,8 @@ class Cservicios extends CI_Controller {
             $this->rol = $this->session->userData('rol_id');
             $this->dist_tp = $this->session->userData('dist_tp');
             $this->fun_id = $this->session->userdata("fun_id");
+            $this->conf_form4 = $this->session->userData('conf_form4');
+            $this->conf_form5 = $this->session->userData('conf_form5');
             $this->load->library('programacionpoa');
 
             }else{
@@ -56,6 +58,17 @@ class Cservicios extends CI_Controller {
             $data['menu']=$this->genera_menu($proy_id);
             $data['oregional']=$this->verif_oregional($proy_id);
             $data['componente']= $this->mis_servicios($proy_id);
+
+            $data['button']='';
+            if($this->conf_form4==1 || $this->tp_adm==1){
+                $data['button']='
+                <br>&nbsp;
+                <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="1" title="MODIFICAR REGISTRO" >
+                    <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR ACTIVIDADES.CSV
+                </a>
+                <hr>';
+            }
+
             $this->load->view('admin/programacion/componente/list_componentes', $data);
         }
         else{
@@ -105,97 +118,88 @@ class Cservicios extends CI_Controller {
                 foreach ($lineas as $linea_num => $linea){ 
                     if($i != 0){ 
                         $datos = explode(";",$linea);
-                        if(count($datos)==22){
+                        if(count($datos)==23){
 
-                            $cod_serv=trim($datos[0]); /// Codigo Servicio
+                            $cod_serv = strval(trim($datos[0])); // Codigo UNIDAD
+                            $cod_og = intval(trim($datos[1])); // Codigo ACP
+                            $cod_or = intval(trim($datos[2])); // Codigo Objetivo Regional
+                            $cod_form4 = intval(trim($datos[3])); // Codigo Form 4
+                            $descripcion = strval(utf8_encode(trim($datos[4]))); //// descripcion form4
+                            $resultado = strval(utf8_encode(trim($datos[5]))); //// descripcion Resultado
+                            $unidad = strval(utf8_encode(trim($datos[6]))); //// Unidad responsable
+                            $indicador = strval(utf8_encode(trim($datos[7]))); //// descripcion Indicador
+                            $lbase = intval(trim($datos[8])); //// Linea Base
+                            $meta = intval(trim($datos[9])); //// Meta
+                            $mverificacion = strval(utf8_encode(trim($datos[22]))); //// Medio de verificacion
 
-                            $cod_or = intval(trim($datos[1])); // Codigo Objetivo Regional
-                            $cod_act = intval(trim($datos[2])); // Codigo Actividad
-                            $descripcion = utf8_encode(trim($datos[3])); //// descripcion Operacion
-                            $resultado = utf8_encode(trim($datos[4])); //// descripcion Resultado
-                            $unidad = utf8_encode(trim($datos[5])); //// Unidad
-                            $indicador = utf8_encode(trim($datos[6])); //// descripcion Indicador
-                            $lbase = intval(trim($datos[7])); //// Linea Base
-                            if(trim($datos[7])==''){
-                              $lbase = 0; //// Linea Base
-                            }
-
-                            $meta = intval(trim($datos[8])); //// Meta
-                            if(trim($datos[8])==''){
-                              $meta = 0; //// Meta
-                            }
-
-                            $var=9;
-                            for ($i=1; $i <=12 ; $i++) {
-                              $m[$i]=(float)$datos[$var]; //// Mes i
-                              if($m[$i]==''){
-                                $m[$i]=0;
-                              }
-                              $var++;
-                            }
-
-                            $mverificacion = utf8_encode(trim($datos[21])); //// Medio de verificacion
-
-                            $ae=0;
-                            $or_id=0;
-                         
-                            if(count($list_oregional)!=0){
-                              $get_acc=$this->model_objetivoregion->get_alineacion_proyecto_oregional($proy_id,$cod_or);
-                              if(count($get_acc)!=0){
-                                $ae=$get_acc[0]['ae'];
-                                $or_id=$get_acc[0]['or_id'];
-                              }
-                            }
-
-                            ///////////
-                              if($cod_serv!='' & $cod_serv!=0){
+                            //// Verificando codigo de Unidad
+                            if($cod_serv!='' & strlen($cod_serv)!=0 & strlen($cod_serv)==4){
                                 $servicio=$this->model_componente->get_fase_componente_nro($pfec_id,$cod_serv,$proyecto[0]['tp_id']);
-                                if(count($servicio)!=0){
-                                   
-                                    $query=$this->db->query('set datestyle to DMY');
-                                    $data_to_store = array(
-                                      'com_id' => $servicio[0]['com_id'],
-                                      'prod_producto' => strtoupper($descripcion),
-                                      'prod_resultado' => strtoupper($resultado),
-                                      'indi_id' => 1,
-                                      'prod_indicador' => strtoupper($indicador),
-                                      'prod_fuente_verificacion' => strtoupper($mverificacion), 
-                                      'prod_linea_base' => $lbase,
-                                      'prod_meta' => $meta,
-                                      'prod_unidades' => $unidad,
-                                      'acc_id' => $ae,
-                                      'prod_ppto' => 1,
-                                      'fecha' => date("d/m/Y H:i:s"),
-                                      'prod_cod'=>$cod_act,
-                                      'or_id'=>$or_id,
-                                      'fun_id' => $this->fun_id,
-                                      'num_ip' => $this->input->ip_address(), 
-                                      'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
-                                    );
-                                    $this->db->insert('_productos', $data_to_store);
-                                    $prod_id=$this->db->insert_id();
+                                    if(count($servicio)!=0){
+                                        $ae=0;
+                                        $or_id=0;
+                                        if(count($list_oregional)!=0){
+                                          $get_acc=$this->model_objetivoregion->get_alineacion_proyecto_oregional($proy_id,$cod_og,$cod_or);
+                                          if(count($get_acc)!=0){
+                                            $ae=$get_acc[0]['ae'];
+                                            $or_id=$get_acc[0]['or_id'];
+                                          }
+                                        }
 
-                                    for ($p=1; $p <=12 ; $p++) { 
-                                      if($m[$p]!=0){
-                                        $this->model_producto->add_prod_gest($prod_id,$this->gestion,$p,$m[$p]);
-                                      }
-                                    }
 
-                                    $producto=$this->model_producto->get_producto_id($prod_id);
-                                    if(count($producto)!=0){
-                                      $guardado++;
+                                        if(strlen($descripcion)!=0 & strlen($resultado)!=0){
+                                            $query=$this->db->query('set datestyle to DMY');
+                                            $data_to_store = array(
+                                              'com_id' => $servicio[0]['com_id'],
+                                              'prod_producto' => strtoupper($descripcion),
+                                              'prod_resultado' => strtoupper($resultado),
+                                              'indi_id' => 1,
+                                              'prod_indicador' => strtoupper($indicador),
+                                              'prod_fuente_verificacion' => strtoupper($mverificacion), 
+                                              'prod_linea_base' => $lbase,
+                                              'prod_meta' => $meta,
+                                              'prod_unidades' => $unidad,
+                                              'acc_id' => $ae,
+                                              'prod_ppto' => 1,
+                                              'fecha' => date("d/m/Y H:i:s"),
+                                              'prod_cod'=>$cod_form4,
+                                              'or_id'=>$or_id,
+                                              'fun_id' => $this->fun_id,
+                                              'num_ip' => $this->input->ip_address(), 
+                                              'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                                            );
+                                            $this->db->insert('_productos', $data_to_store);
+                                            $prod_id=$this->db->insert_id(); 
+
+
+                                            $var=9;
+                                            for ($i=1; $i <=12 ; $i++) {
+                                              $m[$i]=floatval(trim($datos[$var])); //// Mes i
+                                              if($m[$i]!=0){
+                                                $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$m[$i]);
+                                              }
+                                              
+                                              $var++;
+                                            }
+
+                                            $producto=$this->model_producto->get_producto_id($prod_id);
+                                            if(count($producto)!=0){
+                                              $guardado++;
+                                            }
+                                            else{
+                                              $no_guardado++;
+                                            }
                                     }
-                                    else{
-                                      $no_guardado++;
-                                    }
+                                
                                 }
 
-                                /// Actualizando codigo de actividades
-                                $this->programacionpoa->update_codigo_actividad($servicio[0]['com_id']);
+                            /// Actualizando codigo de actividades
+                            $this->programacionpoa->update_codigo_actividad($servicio[0]['com_id']);
                             }
-                            ///////////
+                            /// end codigo de unidad
+
    
-                        }//// End count($datos)==22
+                        }//// End count($datos)==23
                         else{
                             $no_guardado++;
                         } 

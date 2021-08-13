@@ -50,7 +50,7 @@ function abreVentana(PDF){
       $(document).ready(function () {
         $("#tp_met").change(function () {            
           var tp_met = $(this).val();
-            if(tp_met==1){
+            if(tp_met==1){ /// recurrente
               meta = parseFloat($('[name="meta"]').val());
               for (var i = 1; i <= 12; i++) {
                 $('[name="m'+i+'"]').val((meta).toFixed(0));
@@ -67,6 +67,18 @@ function abreVentana(PDF){
               }
               $('[name="total"]').val((0).toFixed(0));
             }
+
+            total = parseFloat($('[name="total"]').val());
+
+            if(meta==total){
+              $('#atit').html('');
+              $ ('#but').slideDown();
+            }
+            else{
+              $('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+              $('#but').slideUp();
+            }
+
           });
       });
 
@@ -150,6 +162,16 @@ function abreVentana(PDF){
       //// VERIF META PROGRAMADO
       function verif_suma_programado(){ /// meta
         meta = parseFloat($('[name="meta"]').val()); //// linea base
+        tipo_meta = parseFloat($('[name="tp_met"]').val()); //// tipo de meta
+
+        if(tipo_meta==1){ /// recurrente
+          for (var i = 1; i <= 12; i++) {
+            $('[name="m'+i+'"]').val((meta).toFixed(0));
+          }
+          $('[name="total"]').val((meta).toFixed(0));
+        }
+
+
         if(meta!=0){
           total = parseFloat($('[name="total"]').val()); //// linea base
           if(meta==total){
@@ -372,22 +394,29 @@ function abreVentana(PDF){
                 document.getElementById("mm"+i).disabled = false;
                 }
                }
-                /// Tipo de Meta
-/*               if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){ /// Recurrente
-                  document.getElementById("mm"+i).disabled = true;
-                }
-                else{
-                document.getElementById("mm"+i).disabled = false;
-                }*/
+                
 
-
-
-               $('[name="mtotal"]').val((parseInt(response.sum_temp)).toFixed(0));
+               
                if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
+                $('[name="mtotal"]').val((parseInt(response.producto[0]['prod_meta'])).toFixed(0));
                 document.getElementById("mtrep").style.display = 'block';
                }
                else{
+                $('[name="mtotal"]').val((parseInt(response.sum_temp)).toFixed(0));
                 document.getElementById("mtrep").style.display = 'none';
+                
+                prog = parseFloat($('[name="mtotal"]').val());
+                meta = parseFloat($('[name="mmeta"]').val());
+
+
+                if(prog==meta){
+                  $('#matit').html('');
+                  $('#mbut').slideDown();
+                }
+                else{
+                  $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+                  $('#mbut').slideUp();
+                }
                }
 
             }
@@ -483,7 +512,7 @@ function abreVentana(PDF){
     $(document).ready(function () {
       $("#mtipo_i").change(function () {            
         var tp_id = $(this).val();
-    
+       
           if(tp_id==2){
             $('#mtrep').slideDown();
           }
@@ -497,6 +526,18 @@ function abreVentana(PDF){
             $('[name="mtotal"]').val((0).toFixed(0));
             $('[name="mtp_met"]').val((3).toFixed(0));
           }
+
+          programado = parseFloat($('[id="mtotal"]').val()); //// programado total
+          meta = parseFloat($('[id="mmeta"]').val()); //// Meta
+          if(meta==programado){
+            $('#matit').html('');
+            $('#mbut').slideDown();
+          }
+          else{
+            $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+            $('#mbut').slideUp();
+          }
+
         });
     });
 
