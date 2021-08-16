@@ -77,9 +77,6 @@ $route['me/rep_form2/(:any)'] = 'mestrategico/cobjetivo_regional/reporte_form2/$
 //$route['me/objetivos_regionales/(:any)'] = 'mestrategico/cobjetivo_regional/rep_alineacion_acp/$1'; ///// ver datos de la regional alineado al objetivo de Gestion form 2 2022
 
 
-
-
-
 /* ANALISIS DE SITUACION */
 $route['admin/analisis_sit'] = 'analisis_situacion/canalisis_situacion/lista_unidades';	//// Lista Unidades, Establecimientos
 $route['as/list_foda/(:any)'] = 'analisis_situacion/canalisis_situacion/lista_foda/$1';	//// Lista de formularios

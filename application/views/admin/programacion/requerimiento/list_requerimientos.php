@@ -616,7 +616,9 @@
                         <input type="hidden" name="prod_id" value="<?php echo $producto[0]['prod_id'];?>">
 	                  	<fieldset>
 		                    <div class="form-group">
-		                      <center><div id="img"></div></center>
+		                      <center>
+		                      	<img src="<?php echo base_url(); ?>assets/img/img_migracion/migracion_form5.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">
+		                      </center>
 		                      <hr>
 		                        <p class="alert alert-info">
 		                          <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
@@ -624,17 +626,17 @@
 		                    </div>
 	                  	</fieldset>  
 	                
-	                  <div class="form-group">
-	                    <b>SELECCIONAR ARCHIVO CSV</b>
-	                    <div class="input-group">
-	                      <span class="input-group-btn">
-	                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
-	                        <input  id="archivo_csv" accept=".csv" name="archivo_csv" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
-	                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
-	                      </span>
-	                      <span class="form-control"></span>
-	                    </div>
-	                </div>
+	                  	<div class="form-group">
+		                    <b>SELECCIONAR ARCHIVO CSV</b>
+		                    <div class="input-group">
+		                      <span class="input-group-btn">
+		                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+		                        <input  id="archivo_csv" accept=".csv" name="archivo_csv" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+		                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+		                      </span>
+		                      <span class="form-control"></span>
+		                    </div>
+		                </div>
 	                  
 	                  <div>
 	                      <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR ARCHIVO.CSV</button><br>

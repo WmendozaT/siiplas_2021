@@ -1348,8 +1348,8 @@ class Producto extends CI_Controller {
                     $cod_partida = intval(trim($datos[1])); //// Codigo partida
                     $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
 
-                    $detalle = utf8_encode(trim($datos[2])); //// descripcion
-                    $unidad = utf8_encode(trim($datos[3])); //// Unidad
+                    $detalle = strval(utf8_encode(trim($datos[2]))); //// descripcion form5
+                    $unidad = strval(utf8_encode(trim($datos[3]))); //// Unidad
                     $cantidad = intval(trim($datos[4])); //// Cantidad
                     $unitario = intval(trim($datos[5])); //// Costo Unitario
                     
@@ -1358,7 +1358,7 @@ class Producto extends CI_Controller {
 
                     $var=7; $sum_temp=0;
                     for ($i=1; $i <=12 ; $i++) {
-                      $m[$i]=$datos[$var]; //// Mes i
+                      $m[$i]=floatval(trim($datos[$var])); //// Mes i
                       if($m[$i]==''){
                         $m[$i]=0;
                       }
@@ -1366,7 +1366,7 @@ class Producto extends CI_Controller {
                       $sum_temp=$sum_temp+$m[$i];
                     }
 
-                    $observacion = utf8_encode(trim($datos[19])); //// Observacion
+                    $observacion = strval(utf8_encode(trim($datos[19]))); //// Observacion
                     $verif_cod=$this->model_producto->verif_componente_operacion($com_id,$prod_cod);
                    // echo count($verif_cod).'--'.count($par_id).'--'.$cod_partida.'--'.round($sum_temp,2).'=='.round($total,2)."<br>";
 
@@ -1390,7 +1390,7 @@ class Producto extends CI_Controller {
                         'fun_id' => $this->fun_id, /// Funcionario
                         'aper_id' => $proyecto[0]['aper_id'], /// aper id
                         'com_id' => $producto[0]['com_id'], /// com id 
-                        'prod_cod' => $producto[0]['prod_cod'], /// aper id
+                        'form4_cod' => $producto[0]['prod_cod'], /// aper id
                         'num_ip' => $this->input->ip_address(), 
                         'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
                         );

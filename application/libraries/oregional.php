@@ -380,7 +380,7 @@ class Oregional extends CI_Controller{
                 $styl='';
               }*/
 
-    $tabla.='<div id="but" style="display:none;">
+    $tabla.='<div id="but" >
                 <footer>
                   <button type="button" name="subir_fregional" id="subir_fregional" class="btn btn-info" >GUARDAR DATOS OPERACIÓN</button>
                   <a href="'.base_url().'index.php/me/objetivos_regionales/'.$og_id.'" title="SALIR" class="btn btn-default">CANCELAR</a>
@@ -886,9 +886,10 @@ class Oregional extends CI_Controller{
           <th style="width:2.5%;"><b>COD. ACE.</b></th>
           <th style="width:2.5%;"><b>COD. ACP.</b></th>
           <th style="width:2.5%;"><b>COD. OPE.</b></th>
-          <th style="width:24%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
-          <th style="width:20%;">RESULTADO</th>
-          <th style="width:18%;">INDICADOR</th>
+          <th style="width:17%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
+          <th style="width:15%;">PRODUCTO</th>
+          <th style="width:15%;">RESULTADO</th>
+          <th style="width:15%;">INDICADOR</th>
           <th style="width:4%;">META</th>
           <th style="width:18%;">MEDIO DE VERIFICACI&Oacute;N</th>
           <th style="width:7%;">PPTO. '.$this->gestion.'</th>
@@ -913,9 +914,10 @@ class Oregional extends CI_Controller{
         <td style="width:2.5%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
         <td style="width:2.5%;" align="center"><b>'.$row['og_codigo'].'</b></td>
         <td style="width:2.5%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
-        <td style="width:24%;">'.$row['or_objetivo'].'</td>
-        <td style="width:20%;">'.$row['or_resultado'].'</td>
-        <td style="width:18%;">'.$row['or_indicador'].'</td>
+        <td style="width:17%;">'.$row['or_objetivo'].'</td>
+        <td style="width:15%;">'.$row['or_producto'].'</td>
+        <td style="width:15%;">'.$row['or_resultado'].'</td>
+        <td style="width:15%;">'.$row['or_indicador'].'</td>
         <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
         <td style="width:18%;">'.$row['or_verificacion'].'</td>
         <td style="width:7%;text-align: right;">'.number_format(($ppto_gc+$ppto_pi), 2, ',', '.').'</td>
@@ -925,7 +927,7 @@ class Oregional extends CI_Controller{
     $tabla.='
       </tbody>
       <tr>
-        <td style="height:15px; text-align: right;" colspan=9><b>PRESUPUESTO TOTAL : </b></td>
+        <td style="height:15px; text-align: right;" colspan=10><b>PRESUPUESTO TOTAL : </b></td>
         <td style="text-align: right;">'.number_format($monto_total, 2, ',', '.').'</td>
       </tr>
     </table>';

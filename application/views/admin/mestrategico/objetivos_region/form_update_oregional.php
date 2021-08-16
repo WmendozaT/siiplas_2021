@@ -250,20 +250,20 @@
 	  	  	meta = parseFloat($('[name="meta"]').val()); //// meta 
 	  	  	programado = parseFloat($('[name="sum"]').val()); //// programado total
 	  	  	//alert(meta_oregional+'-'+meta+'-'+programado)
-	  	  	if(meta!=0){
+	  	  	/*if(meta!=0){
 	  	  		if(meta<=meta_oregional){
 		  	  		$('#atit').html('');
-		            $('#but').slideDown();
+		            $('#but').slideDown();*/
 
-		            if(programado!=meta){
+		            /*if(programado!=meta){
 		            	$('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DEL OBJETIVO REGIONAL</div></center>');
 		            	$('#but').slideUp();
 		        	}
 		        	else{
 		            	$('#atit').html('');
 		            	$('#but').slideDown();
-		        	}
-		  	  	}
+		        	}*/
+/*		  	  	}
 		  	  	else{
 		  	  		$('#atit').html('<center><div class="alert alert-danger alert-block">LA META DEL OBJETIVO REGIONAL ES MAYOR A LA META DE GESTIÓN, VERIFIQUE DATOS...</div></center>');
 		            $('#but').slideUp();
@@ -272,7 +272,7 @@
 	  	  	else{
 	  	  		$('#atit').html('<center><div class="alert alert-danger alert-block">LA META DEL OBJETIVO REGIONAL ES MAYOR A LA META DE GESTIÓN, VERIFIQUE DATOS...</div></center>');
 		        $('#but').slideUp();
-	  	  	}
+	  	  	}*/
 	  	  	
 	  	  }
 	      
@@ -292,8 +292,8 @@
 	        programado = parseFloat($('[name="sum"]').val()); //// programado total
 	        meta = parseFloat($('[name="meta"]').val()); //// Meta 
 	       
-	       	if(meta_reg!=0){
-	       		if(programado!=0){
+	       //	if(meta_reg!=0){
+	       		/*if(programado!=0){
 	          		if(programado!=meta){
 		            	$('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DEL OBJETIVO REGIONAL</div></center>');
 		            	$('#but').slideUp();
@@ -305,11 +305,11 @@
 	          	}
 	          	else{
 	          		$('#but').slideUp();
-	          	}
-	       	}
+	          	}*/
+	       	/*}
 	       	else{
 	       		$('#but').slideDown();
-	       	} 
+	       	} */
 	      }
 	    </script>
 	    <script type="text/javascript">
@@ -373,7 +373,16 @@
 	            if (!$valid) {
 	                $validator.focusInvalid();
 	            } else {
-	            	meta = parseFloat($('[name="meta"]').val()); //// meta 
+	            	alertify.confirm("MODIFICAR DATOS OPERACIÓN ?", function (a) {
+	                    if (a) {
+	                        document.getElementById('subir_fregional').disabled = true;
+	                        document.forms['form_nuevo'].submit();
+	                    } else {
+	                        alertify.error("OPCI\u00D3N CANCELADA");
+	                    }
+	                });
+	            	
+	            	/*meta = parseFloat($('[name="meta"]').val()); //// meta 
 	            	meta_reg = parseFloat($('[name="meta_reg"]').val()); //// meta regional 
 
 	            	if(meta_reg!=0){
@@ -407,7 +416,7 @@
 		                        alertify.error("OPCI\u00D3N CANCELADA");
 		                    }
 		                });
-	            	}
+	            	}*/
 	            }
 	        });
 	    });

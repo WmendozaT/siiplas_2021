@@ -283,17 +283,14 @@ class Cprog_insumo extends CI_Controller{
 
 
 
-
-
-
     /*----- ELIMINAR VARIOS REQUERIMIENTOS SELECCIONADOS -----*/
     public function delete_requerimientos(){
       if ($this->input->post()) {
         $post = $this->input->post();
-        $proy_id = $this->security->xss_clean($post['proy_id']);
-        $id = $this->security->xss_clean($post['id']);
+       // $proy_id = $this->security->xss_clean($post['proy_id']);
+        $id = $this->security->xss_clean($post['prod_id']);
 
-        $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
+       // $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
 
         if (!empty($_POST["ins"]) && is_array($_POST["ins"]) ) {
           foreach ( array_keys($_POST["ins"]) as $como){
@@ -315,7 +312,7 @@ class Cprog_insumo extends CI_Controller{
           }
 
           $this->session->set_flashdata('success','SE ELIMINARON CORRECTAMENTE');
-          redirect(site_url("").'/prog/requerimiento/'.$proy_id.'/'.$id);
+          redirect(site_url("").'/prog/requerimiento/'.$id);
 
         }
         else{
@@ -363,8 +360,8 @@ class Cprog_insumo extends CI_Controller{
                       $cod_partida = intval(trim($datos[1])); //// Codigo partida
                       $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
 
-                      $detalle = utf8_encode(trim($datos[2])); //// descripcion
-                      $unidad = utf8_encode(trim($datos[3])); //// Unidad
+                      $detalle = strval(utf8_encode(trim($datos[2]))); //// descripcion form5
+                      $unidad = strval(utf8_encode(trim($datos[3]))); //// Unidad
                       $cantidad = intval(trim($datos[4])); //// Cantidad
                       $unitario = intval(trim($datos[5])); //// Costo Unitario
                       
@@ -373,7 +370,7 @@ class Cprog_insumo extends CI_Controller{
 
                       $var=7; $sum_temp=0;
                       for ($i=1; $i <=12 ; $i++) {
-                        $m[$i]=$datos[$var]; //// Mes i
+                        $m[$i]=floatval(trim($datos[$var])); //// Mes i
                         if($m[$i]==''){
                           $m[$i]=0;
                         }
@@ -382,6 +379,7 @@ class Cprog_insumo extends CI_Controller{
                       }
 
                       $observacion = utf8_encode(trim($datos[19])); //// Observacion
+
 
                       if(count($par_id)!=0 & $cod_partida!=0 & round($sum_temp,2)==round($total,2)){
                         $nro++;

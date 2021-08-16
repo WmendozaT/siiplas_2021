@@ -246,34 +246,35 @@
 		</script>
 	  	<script type="text/javascript">
 	  	  function verif_meta(){
+	  	  	
 	  	  	meta_oregional = parseFloat($('[name="meta_reg"]').val()); //// meta regional
 	  	  	meta = parseFloat($('[name="meta"]').val()); //// meta 
 	  	  	programado = parseFloat($('[name="total"]').val()); //// programado total
-	  	  	//alert(meta_oregional+'--'+meta+'--'+programado)
+	  	  //	alert(meta_oregional+'--'+meta+'--'+programado)
 
-	  	  	if(meta!=0){
-	  	  		if(meta<=meta_oregional){
+	  	  //	if(meta!=0){
+	  	  	/*	if(meta<=meta_oregional){
 		  	  		$('#atit').html('');
-		            $('#but').slideDown();
+		            $('#but').slideDown();*/
 
-		            if(programado!=meta){
+		           /* if(programado!=meta){
 		            	$('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA OPERACIÓN</div></center>');
 		            	$('#but').slideUp();
 		        	}
 		        	else{
 		            	$('#atit').html('');
 		            	$('#but').slideDown();
-		        	}
-		  	  	}
+		        	}*/
+		  	  	/*}
 		  	  	else{
 		  	  		$('#atit').html('<center><div class="alert alert-danger alert-block">LA META DE LA OPERACIÓN ES MAYOR A LA META DE LA ACCIÓN DE CORTO PLAZO, VERIFIQUE DATOS...</div></center>');
 		            $('#but').slideUp();
-		  	  	}
-	  	  	}
+		  	  	}*/
+	  	  	/*}
 	  	  	else{
 	  	  		$('#atit').html('<center><div class="alert alert-danger alert-block">LA META DE LA OPERACIÓN ES MAYOR A LA META DE LA ACCIÓN, VERIFIQUE DATOS...</div></center>');
 		        $('#but').slideUp();
-	  	  	}
+	  	  	}*/
 	  	  }
 	      
 	      /*---- SUMA PROGRAMADO ----*/
@@ -284,17 +285,17 @@
 	 		meta_reg = parseFloat($('[name="meta_reg"]').val()); /// meta regional
 
 
-	 		for (var i = 1; i<=nro; i++) {
+	 		/*for (var i = 1; i<=nro; i++) {
 	            sum=parseFloat(sum)+parseFloat($('[id="uni'+i+'"]').val());
 		    }
 
 		    $('[name="total"]').val((sum+linea).toFixed(2));
 		    $('[id="sum"]').val((sum+linea).toFixed(2));
 		    programado = parseFloat($('[name="total"]').val()); //// programado total
-		    meta = parseFloat($('[name="meta"]').val()); //// Meta
+		    meta = parseFloat($('[name="meta"]').val()); //// Meta*/
 
-	        if(meta_reg!=0){
-		        if(programado!=0){
+	      //  if(meta_reg!=0){
+		        /*if(programado!=0){
 	          		if(programado!=meta){
 		            	$('#atit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA OPERACIÓN</div></center>');
 		            	$('#but').slideUp();
@@ -306,11 +307,11 @@
 	          	}
 	          	else{
 	          		$('#but').slideUp();
-	          	}
-	        }
+	          	}*/
+	        /*}
 	        else{
 	        	$('#but').slideDown();
-	        } 
+	        } */
 	      }
 	    </script>
 
@@ -379,9 +380,20 @@
 	                $validator.focusInvalid();
 	            } else {
 	            	meta = parseFloat($('[name="meta"]').val()); //// meta regional registrado
-	            	meta_reg = parseFloat($('[name="meta_reg"]').val()); //// meta regional 
-	          
-	            	if(meta_reg!=0){
+	            	//meta_reg = parseFloat($('[name="meta_reg"]').val()); //// meta regional 
+	         // 	alert('hola')
+	          		//if(meta!=''){
+	            		alertify.confirm("GUARDAR OPERACIÓN ?", function (a) {
+		                    if (a) {
+		                        document.getElementById('subir_fregional').disabled = true;
+		                        document.forms['form_nuevo'].submit();
+		                    } else {
+		                        alertify.error("OPCI\u00D3N CANCELADA");
+		                    }
+		                });
+	            //	}
+
+	            	/*if(meta_reg!=0){
 	            		if(meta!=0 || meta!=''){
 		            		alertify.confirm("GUARDAR OPERACIÓN ?", function (a) {
 			                    if (a) {
@@ -402,7 +414,7 @@
 		                        alertify.error("OPCI\u00D3N CANCELADA");
 		                    }
 		                });
-	            	}
+	            	}*/
 	            }
 	        });
 	    });

@@ -244,7 +244,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
                 Inner Join _objetivos_estrategicos as oe on oe.obj_id = ae.obj_id
 
-                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
+                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.'
                 order by oge.og_codigo,oreg.or_codigo asc';
 
         $query = $this->db->query($sql);
