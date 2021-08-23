@@ -495,8 +495,8 @@ class Cobjetivo_gestion extends CI_Controller {
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           <div class="well">
             <h2>ACP. : '.$ogestion[0]['og_codigo'].' .- '.$ogestion[0]['og_objetivo'].'</h2>
-            <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion\');" title="IMPRIMIR" class="btn btn-default">
-              <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;REP. A.C.P. - FORM 4
+            <a href="'.site_url("").'/me/exportar_alineacion_ope_acp/'.$og_id.'" title="EXPORTAR EN EXCEL" class="btn btn-default">
+              <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR ALINEACION EN EXCEL
             </a>
           </div>
         </article>';
@@ -535,4 +535,131 @@ class Cobjetivo_gestion extends CI_Controller {
     $data['tabla']=$tabla;
     $this->load->view('admin/mestrategico/objetivos_gestion/ver_alineacion_acp_act', $data); 
   }
+
+
+    /*------ EXPORTAR ALINEACION ACP-FORM 2 Y 3-----*/
+    public function exportar_alineacion_acp_act($og_id){
+      $acp=$this->model_objetivogestion->get_objetivosgestion($og_id);
+      $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT.
+      $tabla='';
+      $tabla .='
+          <style>
+            table{font-size: 9px;
+              width: 100%;
+              max-width:1550px;
+              overflow-x: scroll;
+            }
+            th{
+              padding: 1.4px;
+              text-align: center;
+              font-size: 10px;
+            }
+          </style>';
+
+      $tabla.='
+      <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+        <thead>
+          <tr style="height:50px;">
+            <th>CODIGO DA</th>
+            <th>UNIDAD ADMINISTRATIVA</th>
+            <th>COD. ACP.</th>
+            <th>COD. OPE.</th>
+            <th>OPERACION '.$this->gestion.'</th>
+            <th>INDICADOR</th>
+            <th>PRODUCTO</th>
+            <th>RESULTADO</th>
+            <th>LINEA BASE</th>
+            <th>META</th>
+            <th>COD. ACT.</th>
+            <th>ACTIVIDAD</th>
+            <th>INDICADOR</th>
+            <th>UNIDADES RESPONSABLES</th>
+            <th>LINEA BASE</th>
+            <th>META</th>
+            <th>MEDIO DE VERIFICACION</th>
+            <th>ENE.</th>
+            <th>FEB.</th>
+            <th>MAR.</th>
+            <th>ABR.</th>
+            <th>MAY.</th>
+            <th>JUN.</th>
+            <th>JUL.</th>
+            <th>AGO.</th>
+            <th>SEPT.</th>
+            <th>OCT.</th>
+            <th>NOV.</th>
+            <th>DIC.</th>
+          </tr>
+        </thead>
+      <tbody>';
+      foreach($alienacion_acp  as $row){
+        $tabla.='
+        <tr style="height:40px;">
+          <td align=center><b>'.$row['og_codigo'].'</b></td>
+          <td>'.strtoupper($row['dep_departamento']).'</td>
+          <td align=center>'.$row['og_codigo'].'</td>
+          <td align=center>'.$row['or_codigo'].'</td>
+          <td>'.strtoupper($row['or_objetivo']).'</td>
+          <td>'.strtoupper($row['or_indicador']).'</td>
+          <td>'.strtoupper($row['or_producto']).'</td>
+          <td>'.strtoupper($row['or_resultado']).'</td>
+          <td align=right>'.round($row['or_linea_base'],2).'</td>
+          <td align=right>'.round($row['or_meta'],2).'</td>
+
+          <td bgcolor="#e7f3f1" align=center>'.strtoupper($row['prod_cod']).'</td>
+          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_producto']).'</td>
+          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_indicador']).'</td>
+          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_unidades']).'</td>
+          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_linea_base'],2).'</b></td>
+          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).'</b></td>
+          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_fuente_verificacion']).'</td>';
+          for ($i=1; $i <=12 ; $i++) { 
+            $tabla.='
+            <td bgcolor="#e7f3f1" align=right><b>'.round($row['mes'.$i]).'</b></td>';
+          }
+
+        $tabla.='
+        </tr>';
+      }
+      $tabla.='</tbody>
+      </table>';
+
+      date_default_timezone_set('America/Lima');
+        $fecha = date("d-m-Y H:i:s");
+        header('Content-type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment; filename=ACP_".$acp[0]['og_codigo']." ".$this->gestion."_$fecha.xls"); //Indica el nombre del archivo resultante
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+    echo $tabla;
+
+
+
+/*      $dist=$this->model_proyecto->dep_dist($dist_id);
+      $distrital = strtoupper($dist[0]['dist_distrital']);
+      if(count($dist)!=0){
+        if($this->gestion==2019){
+          //$tabla=$this->lista_operaciones_por_regional_distrital($dist_id,2,$tp_id); // Distrital Operaciones 2019
+          $tabla='No disponible';
+        }
+        else{
+          $dist=$this->model_proyecto->dep_dist($dist_id);
+          $titulo='DISTRITAL : '.mb_convert_encoding($dist[0]['dist_distrital'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
+          $operaciones=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Operaciones a Nivel de distritales
+          $tabla=$this->lista_operaciones_regional_distrital($operaciones,$titulo); // Regional Operaciones Distrital 2020-2021
+        }
+        
+        date_default_timezone_set('America/Lima');
+        $fecha = date("d-m-Y H:i:s");
+        header('Content-type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment; filename=CONSOLIDADO_OPERACIONES_DISTRITAL_".$distrital."_$fecha.xls"); //Indica el nombre del archivo resultante
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        echo $tabla;
+      }
+      else{
+        echo "Error !!! ";
+      }*/
+    }
+
 }

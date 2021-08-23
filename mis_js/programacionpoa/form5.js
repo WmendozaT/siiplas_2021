@@ -72,7 +72,7 @@ function doSelectAlert(event,prod_id,ins_id) {
           $("#padre option:selected").each(function () {
             elegido=$(this).val();
             $("#um_id").html('');
-            $.post(base+"/index.php/prog/combo_partidas", { elegido: elegido }, function(data){ 
+            $.post(base+"index.php/prog/combo_partidas", { elegido: elegido }, function(data){ 
             $("#partida_id").html(data);
             });     
         });
@@ -81,7 +81,7 @@ function doSelectAlert(event,prod_id,ins_id) {
       $("#partida_id").change(function () {
           $("#partida_id option:selected").each(function () {
             elegido=$(this).val();
-            $.post(base+"/index.php/prog/combo_umedida", { elegido: elegido }, function(data){ 
+            $.post(base+"index.php/prog/combo_umedida", { elegido: elegido }, function(data){ 
             $("#um_id").html(data);
             });     
         });
@@ -93,7 +93,7 @@ function doSelectAlert(event,prod_id,ins_id) {
       $("#par_padre").change(function () {
           $("#par_padre option:selected").each(function () {
             elegido=$(this).val();
-            $.post(base+"/index.php/prog/combo_partidas", { elegido: elegido }, function(data){ 
+            $.post(base+"index.php/prog/combo_partidas", { elegido: elegido }, function(data){ 
             $("#par_hijo").html(data);
             });     
         });
@@ -102,7 +102,7 @@ function doSelectAlert(event,prod_id,ins_id) {
       $("#par_hijo").change(function () {
           $("#par_hijo option:selected").each(function () {
             elegido=$(this).val();
-            $.post(base+"/index.php/prog/combo_umedida", { elegido: elegido }, function(data){  
+            $.post(base+"index.php/prog/combo_umedida", { elegido: elegido }, function(data){  
             $("#mum_id").html(data);
             });     
         });

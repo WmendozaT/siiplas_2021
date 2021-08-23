@@ -2621,7 +2621,7 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
 
                 Inner Join vista_productos_temporalizacion_programado_dictamen as temp On temp.prod_id=p.prod_id
 
-                where oreg.or_meta!=0 and p.estado!=3 and c.estado!=3 and pfe.estado!=3 and pfe.pfec_estado=1
+                where p.estado!=3 and c.estado!=3 and pfe.estado!=3 and pfe.pfec_estado=1
                 order by oge.og_codigo,opge.dep_id,oreg.or_codigo, p.prod_cod asc;
 
           ALTER TABLE public.vista_alineacion_poa_acp

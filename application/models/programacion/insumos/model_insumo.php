@@ -181,6 +181,22 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+
+    ////insumos con estado 3 (eliminados)
+    function lista_insumos_prod_eliminados($prod_id){
+        $sql = 'select *
+                from _insumoproducto ip
+                Inner Join _productos as prod On prod.prod_id=ip.prod_id
+                Inner Join insumos as i On i.ins_id=ip.ins_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                where ip.prod_id='.$prod_id.'
+                order by par.par_codigo,i.ins_id asc';
+
+        
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     function get_insumo_producto($ins_id){
         $sql = 'select *
                 from insumos

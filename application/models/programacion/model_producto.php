@@ -22,6 +22,32 @@ class model_producto extends CI_Model {
     }
 
 
+
+    /*----- LISTA DE FORM 4 ELIMINADOS PARA LIMPIAR EN LA BS -----*/
+    function list_form4_eliminados_gestion($proy_id){
+        $sql = 'select c.*,prod.*,apg.aper_gestion
+                from _proyectofaseetapacomponente pfe
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+                Inner Join _productos as prod On c.com_id=prod.com_id
+                where pfe.proy_id='.$proy_id.' and apg.aper_gestion='.$this->gestion.''; 
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /// Migracion de temporalidad form 4 
+    function list_temporalidad_total_form4(){
+        $sql = 'select *
+                from prod_programado_mensual'; 
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
     /*----- RELACION INSUMO PRODUCTO (2019) -----*/
     function insumo_producto($prod_id){
         $sql = 'select *
@@ -58,7 +84,7 @@ class model_producto extends CI_Model {
     }
 
     /*=========== LISTA DE PRODUCTOS  ==============*/
-    function list_prod($com_id){
+    function list_prod2($com_id){
         $sql = 'select *
             from _productos as p
             Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
@@ -66,6 +92,18 @@ class model_producto extends CI_Model {
             Inner Join meta_relativo as mt On mt.mt_id=p.mt_id
             Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=p.prod_id
             where p.com_id='.$com_id.' and p.estado!=\'3\' and prog.g_id='.$this->gestion.'
+            ORDER BY p.prod_cod asc'; 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+        function list_prod($com_id){
+        $sql = 'select *
+            from _productos as p
+            Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
+            Inner Join indicador as tp On p.indi_id=tp.indi_id
+            Inner Join meta_relativo as mt On mt.mt_id=p.mt_id
+            where p.com_id='.$com_id.' and p.estado!=\'3\' 
             ORDER BY p.prod_cod asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();

@@ -12,6 +12,7 @@ class Cservicios extends CI_Controller {
             $this->load->model('programacion/insumos/minsumos');
             $this->load->model('mantenimiento/model_estructura_org');
             $this->load->model('mestrategico/model_objetivoregion');
+            $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
             $this->load->model('menu_modelo');
             $this->load->model('Users_model','',true);
             $this->load->library('security');
@@ -48,6 +49,7 @@ class Cservicios extends CI_Controller {
             $this->session->set_flashdata('danger','ERROR !!!');
             redirect('admin/proy/list_proy');
         }
+
     }
 
     /*------- OPERACION DE FUNCIONAMIENTO-----------*/
@@ -172,7 +174,7 @@ class Cservicios extends CI_Controller {
                                             $prod_id=$this->db->insert_id(); 
 
 
-                                            $var=9;
+                                            $var=10;
                                             for ($i=1; $i <=12 ; $i++) {
                                               $m[$i]=floatval(trim($datos[$var])); //// Mes i
                                               if($m[$i]!=0){
@@ -190,11 +192,12 @@ class Cservicios extends CI_Controller {
                                               $no_guardado++;
                                             }
                                     }
+                                    /// Actualizando codigo de actividades
+                                    $this->programacionpoa->update_codigo_actividad($servicio[0]['com_id']);
                                 
                                 }
 
-                            /// Actualizando codigo de actividades
-                            $this->programacionpoa->update_codigo_actividad($servicio[0]['com_id']);
+                            
                             }
                             /// end codigo de unidad
 
@@ -599,6 +602,7 @@ class Cservicios extends CI_Controller {
             foreach ($productos as $rowp) {
             $update_prod= array(
                 'fun_id' => $this->fun_id,
+                'or_id' => 0,
                 'estado' => 3
             );
             $this->db->where('prod_id', $rowp['prod_id']);

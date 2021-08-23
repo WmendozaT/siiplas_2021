@@ -116,7 +116,7 @@ class Cprog_insumo extends CI_Controller{
 
                     $mverificacion = utf8_encode(trim($datos[20])); //// Medio de verificacion
 
-                  if(count($datos)==21){
+                  if(count($datos)==23){
                     if($sum_temp==$meta){
                       $nro_ok++;
                       $aprob[1][$nro_ok]=$cod_ope; // cod. operacion

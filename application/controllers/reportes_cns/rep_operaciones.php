@@ -78,6 +78,9 @@ class Rep_operaciones extends CI_Controller {
 
       $data['titulo_modulo']=$tabla;
       $this->load->view('admin/reportes_cns/programacion_poa/menu_consolidado_poa', $data);
+    
+   // echo $this->consolidado_operaciones_distrital(5,4);
+
     }
 
 
@@ -637,6 +640,7 @@ class Rep_operaciones extends CI_Controller {
           $nro=0;
           foreach ($operaciones as $row){
             $monto=$this->model_producto->monto_insumoproducto($row['prod_id']);
+            $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
             $ejec=$this->model_producto->producto_ejecutado($row['prod_id'],$this->gestion);
               
             $ptto=0;
@@ -678,7 +682,26 @@ class Rep_operaciones extends CI_Controller {
                 $tabla.='<td>'.$row['prod_linea_base'].'</td>';
                 $tabla.='<td>'.$row['prod_meta'].'</td>';
                 $tabla.='<td>'.$row['prod_fuente_verificacion'].'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['enero'],2).'</td>';
+                if(count($programado)!=0){
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['enero'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['febrero'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['marzo'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['abril'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['mayo'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['junio'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['julio'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['agosto'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['septiembre'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['octubre'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['noviembre'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['diciembre'],2).'</td>';
+                    }
+                    else{
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla.='<td bgcolor="#f5cace">0.00</td>';
+                      }
+                    }
+                /*$tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['enero'],2).'</td>';
                 $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['febrero'],2).'</td>';
                 $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['marzo'],2).'</td>';
                 $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['abril'],2).'</td>';
@@ -689,7 +712,7 @@ class Rep_operaciones extends CI_Controller {
                 $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['septiembre'],2).'</td>';
                 $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['octubre'],2).'</td>';
                 $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['noviembre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['diciembre'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['diciembre'],2).'</td>';*/
 
                 $tabla.='<td style="width: 5%; text-align: right;">'.round($ptto,2).'</td>';
 

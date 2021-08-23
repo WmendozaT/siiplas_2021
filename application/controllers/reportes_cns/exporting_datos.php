@@ -260,6 +260,7 @@
             foreach ($operaciones as $row){
               $monto=$this->model_producto->monto_insumoproducto($row['prod_id']);
               $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
+              $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
               $ejec=$this->model_producto->producto_ejecutado($row['prod_id'],$this->gestion);
               
               $ptto=0;
@@ -301,18 +302,25 @@
                 $tabla.='<td>'.round($row['prod_linea_base'],2).'</td>';
                 $tabla.='<td>'.round($row['prod_meta'],2).'</td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_fuente_verificacion'], 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['enero'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['febrero'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['marzo'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['abril'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mayo'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['junio'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['julio'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['agosto'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['septiembre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['octubre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['noviembre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['diciembre'],2).'</td>';
+                if(count($programado)!=0){
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['enero'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['febrero'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['marzo'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['abril'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['mayo'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['junio'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['julio'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['agosto'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['septiembre'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['octubre'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['noviembre'],2).'</td>';
+                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['diciembre'],2).'</td>';
+                    }
+                    else{
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla.='<td bgcolor="#f5cace">0.00</td>';
+                      }
+                    }
 
                 $tabla.='<td style="width: 5%; text-align: right;">'.round($ptto,2).'</td>';
 

@@ -19,6 +19,8 @@ class Cobjetivo_regional extends CI_Controller {
           $this->dist = $this->session->userData('dist');
           $this->dist_tp = $this->session->userData('dist_tp');
           $this->fun_id = $this->session->userData('fun_id');
+          $this->dep_id = $this->session->userData('dep_id');
+
           $this->load->library('oregional');
           //$this->load->CI_Controller('reporte_evaluacion/crep_evalunidad');
         }else{
