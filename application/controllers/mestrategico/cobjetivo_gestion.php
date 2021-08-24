@@ -498,6 +498,9 @@ class Cobjetivo_gestion extends CI_Controller {
             <a href="'.site_url("").'/me/exportar_alineacion_ope_acp/'.$og_id.'" title="EXPORTAR EN EXCEL" class="btn btn-default">
               <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR ALINEACION EN EXCEL
             </a>
+            <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_aco/'.$og_id.'\');" title="EXPORTAR EN EXCEL" class="btn btn-default">
+              <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;IMPRIMIR REPORTE DE ALINEACION POA
+            </a>
           </div>
         </article>';
 
@@ -633,33 +636,13 @@ class Cobjetivo_gestion extends CI_Controller {
 
     echo $tabla;
 
-
-
-/*      $dist=$this->model_proyecto->dep_dist($dist_id);
-      $distrital = strtoupper($dist[0]['dist_distrital']);
-      if(count($dist)!=0){
-        if($this->gestion==2019){
-          //$tabla=$this->lista_operaciones_por_regional_distrital($dist_id,2,$tp_id); // Distrital Operaciones 2019
-          $tabla='No disponible';
-        }
-        else{
-          $dist=$this->model_proyecto->dep_dist($dist_id);
-          $titulo='DISTRITAL : '.mb_convert_encoding($dist[0]['dist_distrital'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
-          $operaciones=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Operaciones a Nivel de distritales
-          $tabla=$this->lista_operaciones_regional_distrital($operaciones,$titulo); // Regional Operaciones Distrital 2020-2021
-        }
-        
-        date_default_timezone_set('America/Lima');
-        $fecha = date("d-m-Y H:i:s");
-        header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment; filename=CONSOLIDADO_OPERACIONES_DISTRITAL_".$distrital."_$fecha.xls"); //Indica el nombre del archivo resultante
-        header("Pragma: no-cache");
-        header("Expires: 0");
-        echo $tabla;
-      }
-      else{
-        echo "Error !!! ";
-      }*/
     }
+
+    /*------ REPORTE ALINEACION ACP-FORM 2 Y 4-----*/
+    public function reporte_alineacion_acp_act($og_id){
+      echo "Trabajando !!!";
+    }
+
+
 
 }

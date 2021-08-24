@@ -21,6 +21,14 @@
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
 		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
 	    <meta name="viewport" content="width=device-width">
+        <script type="text/javascript">
+          function abreVentana(PDF){             
+              var direccion;
+              direccion = '' + PDF;
+              
+              window.open(direccion, "Ver Alineacion POA" , "width=700,height=600,scrollbars=NO") ; 
+          }
+        </script>
 		<style>
 			table{font-size: 10px;
             width: 100%;
