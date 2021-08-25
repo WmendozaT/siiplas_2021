@@ -198,6 +198,7 @@ $msg = "CÓDIGO:".$cpoa[0]['cpoa_codigo']." - RESPONSABLE:".$cpoa[0]['fun_nombre
     <div align="left" style="font-size: 11px;font-family: Arial;"><b>Descripci&oacute;n de lo solicitado :</b></div><br>
     <?php echo $items;?>
     <?php if($cpoa[0]['cpoa_estado']==0){echo "<br><br>(SIN C&Oacute;DIGO DE CERTIFICACIÓN, (Comuniquese con el Administrador SIIPLAS)...)";}?>
+  
 </page>
 <?php
 $content = ob_get_clean();

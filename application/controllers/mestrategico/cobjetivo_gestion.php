@@ -11,6 +11,7 @@ class Cobjetivo_gestion extends CI_Controller {
           $this->load->model('mestrategico/model_mestrategico');
           $this->load->model('mestrategico/model_objetivogestion');
           $this->load->model('mestrategico/model_objetivoregion');
+          $this->load->model('programacion/model_producto');
           $this->load->model('menu_modelo');
           $this->load->model('Users_model','',true);
           $this->gestion = $this->session->userData('gestion');
@@ -507,29 +508,43 @@ class Cobjetivo_gestion extends CI_Controller {
     $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT.
     
       foreach($alienacion_acp  as $row){
+      //  $temp=$this->model_producto->programado_producto($row['prod_id']);
+        $por=''; $color='';
+        /*if(count($temp)==0){
+          $color='#f1afaf';
+        }*/
+
+        if($row['indi_id']==2){
+          $por='%';
+        }
         $tabla.='
         <tr>
           <td align=center><b>'.$row['og_codigo'].'</b></td>
           <td>'.strtoupper($row['dep_departamento']).'</td>
-          <td align=center>'.$row['og_codigo'].'.'.$row['or_codigo'].'.</td>
+          <td align=center>'.$row['or_codigo'].'</td>
           <td>'.strtoupper($row['or_objetivo']).'</td>
           <td>'.strtoupper($row['or_indicador']).'</td>
           <td>'.strtoupper($row['or_producto']).'</td>
           <td>'.strtoupper($row['or_resultado']).'</td>
-          <td align=right>'.round($row['or_linea_base'],2).'</td>
           <td align=right>'.round($row['or_meta'],2).'</td>
+
+          <td bgcolor="#eaf2fd">'.strtoupper($row['tipo']).' '.strtoupper($row['act_descripcion']).' '.$row['abrev'].'</td>
+          <td bgcolor="#eaf2fd">'.$row['serv_cod'].' '.strtoupper($row['tipo_subactividad']).' '.strtoupper($row['serv_descripcion']).'</td>
+          <td bgcolor="'.$color.'"></td>
 
           <td bgcolor="#e7f3f1" align=center>'.strtoupper($row['prod_cod']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_producto']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_indicador']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_unidades']).'</td>
           <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_linea_base'],2).'</b></td>
-          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).'</b></td>
+          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).''.$por.'</b></td>
+          <td bgcolor="#e7f3f1">'.strtoupper($row['mt_tipo']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_fuente_verificacion']).'</td>';
-          for ($i=1; $i <=12 ; $i++) { 
-            $tabla.='
-            <td bgcolor="#e7f3f1" align=right><b>'.round($row['mes'.$i]).'</b></td>';
-          }
+         // $sum=$this->model_producto->meta_prod_gest($row['prod_id']);
+         // $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
+
+
+
 
         $tabla.='
         </tr>';
@@ -571,8 +586,8 @@ class Cobjetivo_gestion extends CI_Controller {
             <th>INDICADOR</th>
             <th>PRODUCTO</th>
             <th>RESULTADO</th>
-            <th>LINEA BASE</th>
-            <th>META</th>
+            <th>LINEA BASE OPERACION</th>
+            <th>META OPERACION</th>
             <th>COD. ACT.</th>
             <th>ACTIVIDAD</th>
             <th>INDICADOR</th>
@@ -599,23 +614,23 @@ class Cobjetivo_gestion extends CI_Controller {
         $tabla.='
         <tr style="height:40px;">
           <td align=center><b>'.$row['og_codigo'].'</b></td>
-          <td>'.strtoupper($row['dep_departamento']).'</td>
+          <td>'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
           <td align=center>'.$row['og_codigo'].'</td>
           <td align=center>'.$row['or_codigo'].'</td>
-          <td>'.strtoupper($row['or_objetivo']).'</td>
-          <td>'.strtoupper($row['or_indicador']).'</td>
-          <td>'.strtoupper($row['or_producto']).'</td>
-          <td>'.strtoupper($row['or_resultado']).'</td>
+          <td>'.mb_convert_encoding(strtoupper($row['or_objetivo']), 'cp1252', 'UTF-8').'</td>
+          <td>'.mb_convert_encoding(strtoupper($row['or_indicador']), 'cp1252', 'UTF-8').'</td>
+          <td>'.mb_convert_encoding(strtoupper($row['or_producto']), 'cp1252', 'UTF-8').'</td>
+          <td>'.mb_convert_encoding(strtoupper($row['or_resultado']), 'cp1252', 'UTF-8').'</td>
           <td align=right>'.round($row['or_linea_base'],2).'</td>
           <td align=right>'.round($row['or_meta'],2).'</td>
 
           <td bgcolor="#e7f3f1" align=center>'.strtoupper($row['prod_cod']).'</td>
-          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_producto']).'</td>
-          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_indicador']).'</td>
-          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_unidades']).'</td>
+          <td bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_producto']), 'cp1252', 'UTF-8').'</td>
+          <td bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_indicador']), 'cp1252', 'UTF-8').'</td>
+          <td bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_unidades']), 'cp1252', 'UTF-8').'</td>
           <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_linea_base'],2).'</b></td>
           <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).'</b></td>
-          <td bgcolor="#e7f3f1">'.strtoupper($row['prod_fuente_verificacion']).'</td>';
+          <td bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_fuente_verificacion']), 'cp1252', 'UTF-8').'</td>';
           for ($i=1; $i <=12 ; $i++) { 
             $tabla.='
             <td bgcolor="#e7f3f1" align=right><b>'.round($row['mes'.$i]).'</b></td>';
@@ -638,11 +653,19 @@ class Cobjetivo_gestion extends CI_Controller {
 
     }
 
+
     /*------ REPORTE ALINEACION ACP-FORM 2 Y 4-----*/
     public function reporte_alineacion_acp_act($og_id){
-      echo "Trabajando !!!";
-    }
+      $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id);
+      $data['cabecera']=$this->acortoplazo->cabecera_alineacion_acp($ogestion);
+      $data['pie']='';
+      $data['alienacion']='';
 
+
+                    
+
+      $this->load->view('admin/mestrategico/objetivos_gestion/reporte_alineacion_acp_act', $data); 
+    }
 
 
 }

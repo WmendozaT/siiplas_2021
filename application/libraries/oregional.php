@@ -636,10 +636,10 @@ class Oregional extends CI_Controller{
                 <td style="width:80%; height: 5%">
                     <table align="center" border="0" style="width:100%;">
                         <tr style="font-size: 23px;font-family: Arial;">
-                            <td style="height: 35%;"><b>OPERACIONES </b></td>
+                            <td style="height: 35%;"><b>PLAN OPERATIVO ANUAL GESTI&Oacute;N - '.$this->gestion.'</b></td>
                         </tr>
                         <tr style="font-size: 20px;font-family: Arial;">
-                          <td style="height: 2%;">PLAN OPERATIVO ANUAL - '.$this->gestion.'</td>
+                          <td style="height: 2%;">OPERACIONES</td>
                         </tr>
                     </table>
                 </td>

@@ -278,10 +278,82 @@ class Model_objetivogestion extends CI_Model{
 
     /*========= ALINEACION DE ACCIONES DE CORTO PLAZO A ACTIVIDADES 2022 =================*/
     /*----- Alineacion de Acciones de Corto Plazo a Actividades-----*/
-    public function vinculacion_acp_actividades($og_id){
+    public function vinculacion_acp_actividades_completo($og_id){
         $sql = 'select *
                 from vista_alineacion_poa_acp
                 where g_id='.$this->gestion.' and og_id='.$og_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    public function vinculacion_acp_actividades($og_id){
+        $sql = 'select 
+          oge.og_id,
+          oge.og_codigo,
+          oge.g_id,
+          apg.aper_gestion,
+          opge.dep_id, 
+          dep.dep_cod,
+          dep.dep_departamento, 
+          dep.dep_sigla, 
+          opge.prog_fis, 
+          oreg.or_id,
+          oreg.or_codigo,
+          oreg.or_objetivo,
+          oreg.or_indicador,
+          oreg.or_producto,
+          oreg.or_resultado,
+          oreg.or_linea_base,
+          oreg.or_meta,
+          oreg.or_verificacion,
+
+          p.proy_id,
+          ua.dist_id,
+          ua.act_descripcion,
+          te.tipo,
+          ds.abrev,
+
+          prod.com_id,
+          tpsa.tipo_subactividad,
+          sa.serv_cod,
+          sa.serv_descripcion,
+
+          mt.mt_tipo,
+          prod.prod_id,
+          prod.prod_cod,
+          prod.prod_producto,
+          prod.indi_id,
+          prod.mt_id,
+          prod.prod_indicador,
+          prod.prod_linea_base,
+          prod.prod_meta,
+          prod.prod_fuente_verificacion,
+          prod.prod_unidades,
+          prod.prod_resultado
+          
+            from objetivo_gestion oge
+            Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+            Inner Join _departamentos as dep On dep.dep_id=opge.dep_id
+            Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+
+            Inner Join _productos prod On prod.or_id=oreg.or_id
+            Inner Join meta_relativo as mt On mt.mt_id=prod.mt_id
+            Inner Join _componentes as c On c.com_id=prod.com_id
+            Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+            Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+            Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+            Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+
+            Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+            Inner Join _distritales as ds On ds.dist_id=p.dist_id
+            Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+            Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+
+
+            where prod.estado!=3 and c.estado!=\'3\' and pfe.estado!=\'3\' and pfe.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.' and oge.og_id='.$og_id.'
+            order by oge.og_codigo,opge.dep_id,oreg.or_codigo, prod.prod_cod asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();

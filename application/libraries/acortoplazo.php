@@ -453,6 +453,126 @@ class Acortoplazo extends CI_Controller{
 
 
 
+    /*-------- Cbecera Alineacion ACP - OPE - Form 4 ------*/
+    public function cabecera_alineacion_acp($ogestion){
+      $tabla='';
+
+      $tabla.='
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+              <td style="width:70%;height: 2%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 15px;font-family: Arial;">
+                          <td style="width:35%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                      </tr>
+                      <tr>
+                          <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                      </tr>
+                  </table>
+              </td>
+              <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+                '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%; height: 5%">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-size: 23px;font-family: Arial;">
+                            <td style="height: 35%;"><b>PLAN OPERATIVO ANUAL GESTI&Oacute;N - '.$this->gestion.'</b></td>
+                        </tr>
+                        <tr style="font-size: 20px;font-family: Arial;">
+                          <td style="height: 2%;">ALINEACI&Oacute;N ACCI&Oacute;N DE CORTO PLAZO</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 3%;">
+               
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr>
+                        <td style="width:20%;">
+                            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                <tr><td style="width:95%;height: 50%;" bgcolor="#dcdbdb"><b>OBJETIVO ESTRATEGICO</b></td><td style="width:5%;"></td></tr>
+                            </table>
+                        </td>
+                        <td style="width:80%;">
+                            <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                <tr><td style="width:100%;height: 50%;" bgcolor="#f9f9f9">&nbsp;<b>'.$ogestion[0]['obj_codigo'].'</b>.- '.$ogestion[0]['obj_descripcion'].'</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:20%;">
+                            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                <tr><td style="width:95%;height: 50%;" bgcolor="#dcdbdb"><b>ACCI&Oacute;N ESTRATEGICO</b></td><td style="width:5%;"></td></tr>
+                            </table>
+                        </td>
+                        <td style="width:80%;">
+                            <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                <tr><td style="width:100%;height: 50%;" bgcolor="#f9f9f9">&nbsp;<b>'.$ogestion[0]['acc_codigo'].'</b>.- '.$ogestion[0]['acc_descripcion'].'</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:20%;">
+                            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                <tr><td style="width:95%;height: 50%;" bgcolor="#dcdbdb"><b>ACCI&Oacute;N DE CORTO PLAZO</b></td><td style="width:5%;"></td></tr>
+                            </table>
+                        </td>
+                        <td style="width:80%;">
+                            <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                <tr><td style="width:100%;height: 50%;" bgcolor="#f9f9f9">&nbsp;<b>'.$ogestion[0]['og_codigo'].'</b>.- '.$ogestion[0]['og_objetivo'].'</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>';
+      return $tabla;
+    }
+
+
+  //// Lista Alineacion ACP - OPE - Form 4 2022
+  public function rep_lista_alineacion_poa($og_id){ 
+    $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT.
+    $tabla='';
+
+
+
+    return $tabla;
+  }
+
+
+
+
 
   /*-------- MENU -----*/
     function menu($mod){

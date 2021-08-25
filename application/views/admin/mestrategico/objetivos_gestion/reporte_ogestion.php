@@ -10,7 +10,7 @@ ob_start();
 
 }
 </style>
-<style>
+<!-- <style>
     .verde{ width:100%; height:5px; background-color:#1c7368;}
     .blanco{ width:100%; height:5px; background-color:#F1F2F1;}
     .siipp{width:120px;}
@@ -21,10 +21,10 @@ ob_start();
     width: 100%;
     }
 
-</style>
+</style> -->
 
 
-<page backtop="50mm" backbottom="15mm" backleft="5mm" backright="5mm" pagegroup="new">
+<!-- <page backtop="50mm" backbottom="15mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <table class="page_header" border="0">
@@ -143,7 +143,7 @@ ob_start();
     </table>
     </page_footer>
     <?php echo $ogestion;?>
-</page>
+</page> -->
 <?php
 $content = ob_get_clean();
 //require_once(dirname(__FILE__).'/../html2pdf.class.php');

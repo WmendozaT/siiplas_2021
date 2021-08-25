@@ -23,10 +23,9 @@
 	    <meta name="viewport" content="width=device-width">
         <script type="text/javascript">
           function abreVentana(PDF){             
-              var direccion;
-              direccion = '' + PDF;
-              
-              window.open(direccion, "Ver Alineacion POA" , "width=700,height=600,scrollbars=NO") ; 
+            var direccion;
+            direccion = '' + PDF;  
+            window.open(direccion, "Ver Alineacion POA" , "width=700,height=600,scrollbars=NO") ; 
           }
         </script>
 		<style>
@@ -124,6 +123,14 @@
                                                 <input type="text" class="form-control" placeholder="RESULTADO"/>
                                             </th>
                                             <th></th>
+
+                                            <th class="hasinput">
+                                                <input type="text" class="form-control" placeholder="GASTO CORRIENTE"/>
+                                            </th>
+                                            <th class="hasinput">
+                                                <input type="text" class="form-control" placeholder="UNIDAD RESPONSABLE"/>
+                                            </th>
+
                                             <th></th>
 
                                             <th class="hasinput">
@@ -140,9 +147,11 @@
                                             </th>
                                             <th></th>
                                             <th></th>
+                                            <th></th>
                                             <th class="hasinput">
                                                 <input type="text" class="form-control" placeholder="MEDIO DE VERIFICACIÓN"/>
                                             </th>
+                                           <!--  <th></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
@@ -153,27 +162,32 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
-                                            <th></th>
-                                            <th></th>
+                                            <th></th> -->
                                         </tr>                          
                                         <tr>
                                             <th style="width:1%;">COD. A.C.P.</th>
-                                            <th style="width:10%;">REGIONAL</th>
-                                            <th style="width:10%;">COD. OPE.</th>
-                                            <th style="width:10%;">OPERACIÓN</th>
-                                            <th style="width:20%;">INDICADOR</th>
-                                            <th style="width:10%;">PRODUCTO</th>
-                                            <th style="width:15%;">RESULTADO</th>
-                                            <th style="width:10%;">LINEA BASE</th>
-                                            <th style="width:5%;">META</th>
-                                            <th style="width:10%;">COD. ACT.</th>
+                                            <th style="width:8%;">REGIONAL</th>
+                                            <th style="width:5%;">COD. OPE.</th>
+                                            <th style="width:8%;">OPERACIÓN</th>
+                                            <th style="width:8%;">INDICADOR</th>
+                                            <th style="width:8%;">PRODUCTO</th>
+                                            <th style="width:8%;">RESULTADO</th>
+                                            <th style="width:3%;">META OPERACI&Oacute;N</th>
+
+                                            
+                                            <th style="width:10%;">GASTO CORRIENTE</th>
+                                            <th style="width:10%;">UNIDAD RESPONSABLE</th>
+                                            <th style="width:3%;"></th>
+
+                                            <th style="width:5%;">COD. ACT.</th>
                                             <th style="width:10%;">ACTIVIDAD</th>
                                             <th style="width:10%;">INDICADOR</th>
                                             <th style="width:10%;">UNIDADES RESPONSABLES</th>
-                                            <th style="width:10%;">LINEA BASE</th>
-                                            <th style="width:10%;">META</th>
+                                            <th style="width:5%;">L.B.</th>
+                                            <th style="width:5%;">META</th>
+                                            <th style="width:5%;">TIPO DE META</th>
                                             <th style="width:10%;">MEDIO DE VERIFICACIÓN</th>
-                                            <th style="width:5%;">ENE.</th>
+                                           <!--  <th style="width:5%;">ENE.</th>
                                             <th style="width:5%;">FEB.</th>
                                             <th style="width:5%;">MAR.</th>
                                             <th style="width:5%;">ABR.</th>
@@ -184,7 +198,7 @@
                                             <th style="width:5%;">SEPT.</th>
                                             <th style="width:5%;">OCT.</th>
                                             <th style="width:5%;">NOV.</th>
-                                            <th style="width:5%;">DIC.</th>
+                                            <th style="width:5%;">DIC.</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>

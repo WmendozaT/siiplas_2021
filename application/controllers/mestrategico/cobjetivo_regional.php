@@ -447,6 +447,4 @@ class Cobjetivo_regional extends CI_Controller {
   }
 
 
-
-
 }
