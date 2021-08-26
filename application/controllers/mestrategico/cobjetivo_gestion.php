@@ -530,7 +530,7 @@ class Cobjetivo_gestion extends CI_Controller {
 
           <td bgcolor="#eaf2fd">'.strtoupper($row['tipo']).' '.strtoupper($row['act_descripcion']).' '.$row['abrev'].'</td>
           <td bgcolor="#eaf2fd">'.$row['serv_cod'].' '.strtoupper($row['tipo_subactividad']).' '.strtoupper($row['serv_descripcion']).'</td>
-          <td bgcolor="'.$color.'"></td>
+          <td ></td>
 
           <td bgcolor="#e7f3f1" align=center>'.strtoupper($row['prod_cod']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_producto']).'</td>
