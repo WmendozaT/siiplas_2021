@@ -151,22 +151,10 @@
                                             <th class="hasinput">
                                                 <input type="text" class="form-control" placeholder="MEDIO DE VERIFICACIÓN"/>
                                             </th>
-                                           <!--  <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th> -->
                                         </tr>                          
                                         <tr>
                                             <th style="width:1%;">COD. A.C.P.</th>
-                                            <th style="width:8%;">REGIONAL</th>
+                                            <th style="width:5%;">REGIONAL</th>
                                             <th style="width:5%;">COD. OPE.</th>
                                             <th style="width:8%;">OPERACIÓN</th>
                                             <th style="width:8%;">INDICADOR</th>
@@ -177,7 +165,7 @@
                                             
                                             <th style="width:10%;">GASTO CORRIENTE</th>
                                             <th style="width:10%;">UNIDAD RESPONSABLE</th>
-                                            <th style="width:3%;"></th>
+                                            <th style="width:3%;">IR A FORMULARIO</th>
 
                                             <th style="width:5%;">COD. ACT.</th>
                                             <th style="width:10%;">ACTIVIDAD</th>
@@ -187,18 +175,6 @@
                                             <th style="width:5%;">META</th>
                                             <th style="width:5%;">TIPO DE META</th>
                                             <th style="width:10%;">MEDIO DE VERIFICACIÓN</th>
-                                           <!--  <th style="width:5%;">ENE.</th>
-                                            <th style="width:5%;">FEB.</th>
-                                            <th style="width:5%;">MAR.</th>
-                                            <th style="width:5%;">ABR.</th>
-                                            <th style="width:5%;">MAY.</th>
-                                            <th style="width:5%;">JUN.</th>
-                                            <th style="width:5%;">JUL.</th>
-                                            <th style="width:5%;">AGO.</th>
-                                            <th style="width:5%;">SEPT.</th>
-                                            <th style="width:5%;">OCT.</th>
-                                            <th style="width:5%;">NOV.</th>
-                                            <th style="width:5%;">DIC.</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>

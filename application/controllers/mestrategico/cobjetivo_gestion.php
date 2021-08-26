@@ -20,6 +20,7 @@ class Cobjetivo_gestion extends CI_Controller {
           $this->dist = $this->session->userData('dist');
           $this->dist_tp = $this->session->userData('dist_tp');
           $this->fun_id = $this->session->userData('fun_id');
+          $this->dep_id = $this->session->userData('dep_id');
           $this->load->library('acortoplazo');
         }else{
             redirect('/','refresh');
@@ -491,6 +492,7 @@ class Cobjetivo_gestion extends CI_Controller {
 
   public function rep_alineacion_acp_act($og_id){
     $tabla='';
+    $regionales=$this->model_proyecto->list_departamentos();
     $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id);
     $data['titulo']='
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -499,29 +501,70 @@ class Cobjetivo_gestion extends CI_Controller {
             <a href="'.site_url("").'/me/exportar_alineacion_ope_acp/'.$og_id.'" title="EXPORTAR EN EXCEL" class="btn btn-default">
               <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR ALINEACION EN EXCEL
             </a>
-            <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_aco/'.$og_id.'\');" title="EXPORTAR EN EXCEL" class="btn btn-default">
-              <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;IMPRIMIR REPORTE DE ALINEACION POA
-            </a>
+            <div class="btn-group">
+                      <button class="btn btn-default">
+                        <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;IMPRIMIR REPORTE DE ALINEACION POA
+                      </button>
+                      <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/1\');" title="ALINEACION CHUQUISACA">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - CHUQUISACA</a>
+                        </li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/2\');" title="ALINEACION LA PAZ">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - LA PAZ</a>
+                        </li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/3\');" title="ALINEACION COCHABAMBA">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - COCHABAMBA</a>
+                        </li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/4\');" title="ALINEACION ORURO">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - ORURO</a>
+                        </li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/5\');" title="ALINEACION POTOSI">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - POTOSI</a>
+                        </li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/6\');" title="ALINEACION TARIJA">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - TARIJA</a>
+                        </li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/7\');" title="ALINEACION SANTA CRUZ">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - SANTA CRUZ</a>
+                        </li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/8\');" title="ALINEACION BENI">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - BENI</a>
+                        </li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/9\');" title="ALINEACION PANDO">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - PANDO</a>
+                        </li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/10\');" title="ALINEACION OFICINA CENTRAL">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - OFICINA NACIONAL</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/0\');" title="ALINEACION CONSOLIDADO">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - CONSOLIDADO INSITUCIONAL</a>
+                        </li>
+                      </ul>
+                    </div>
           </div>
         </article>';
 
-    $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT.
-    
+        if($this->fun_id==399 || $this->fun_id==401){
+          $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT. (Todos)
+        }
+        else{
+          $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades_regional($og_id,$this->dep_id); /// ALINEACION ACP a ACT.
+        }
+      
       foreach($alienacion_acp  as $row){
-      //  $temp=$this->model_producto->programado_producto($row['prod_id']);
-        $por=''; $color='';
-        /*if(count($temp)==0){
-          $color='#f1afaf';
-        }*/
-
+        $por=''; 
         if($row['indi_id']==2){
           $por='%';
         }
         $tabla.='
         <tr>
-          <td align=center><b>'.$row['og_codigo'].'</b></td>
-          <td>'.strtoupper($row['dep_departamento']).'</td>
-          <td align=center>'.$row['or_codigo'].'</td>
+          <td style="font-size: 20px;font-family: Arial;" align=center><b>'.$row['og_codigo'].'</b></td>
+          <td style="font-size: 13px;font-family: Arial;"><b>'.strtoupper($row['dep_departamento']).'</b></td>
+          <td style="font-size: 20px;font-family: Arial;" align=center><b>'.$row['or_codigo'].'</b></td>
           <td>'.strtoupper($row['or_objetivo']).'</td>
           <td>'.strtoupper($row['or_indicador']).'</td>
           <td>'.strtoupper($row['or_producto']).'</td>
@@ -530,22 +573,20 @@ class Cobjetivo_gestion extends CI_Controller {
 
           <td bgcolor="#eaf2fd">'.strtoupper($row['tipo']).' '.strtoupper($row['act_descripcion']).' '.$row['abrev'].'</td>
           <td bgcolor="#eaf2fd">'.$row['serv_cod'].' '.strtoupper($row['tipo_subactividad']).' '.strtoupper($row['serv_descripcion']).'</td>
-          <td ></td>
-
-          <td bgcolor="#e7f3f1" align=center>'.strtoupper($row['prod_cod']).'</td>
+          <td>';
+            if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401){
+              $tabla.='<a href="'.site_url("").'/admin/prog/list_prod/'.$row['com_id'].'" target="_blank" class="btn btn-default" target title="MIS ACTIVIDADES"><img src="'.base_url().'assets/Iconos/folder_go.png" WIDTH="30" HEIGHT="30"/></a>';
+            }
+          $tabla.='
+          </td>
+          <td style="font-size: 20px;font-family: Arial;" bgcolor="#e7f3f1" align=center><b>'.strtoupper($row['prod_cod']).'</b></td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_producto']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_indicador']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_unidades']).'</td>
           <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_linea_base'],2).'</b></td>
-          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).''.$por.'</b></td>
+          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).' '.$por.'</b></td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['mt_tipo']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_fuente_verificacion']).'</td>';
-         // $sum=$this->model_producto->meta_prod_gest($row['prod_id']);
-         // $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
-
-
-
-
         $tabla.='
         </tr>';
       }
@@ -558,7 +599,7 @@ class Cobjetivo_gestion extends CI_Controller {
     /*------ EXPORTAR ALINEACION ACP-FORM 2 Y 3-----*/
     public function exportar_alineacion_acp_act($og_id){
       $acp=$this->model_objetivogestion->get_objetivosgestion($og_id);
-      $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT.
+      $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades_nacional_completo($og_id); /// ALINEACION ACP a ACT.
       $tabla='';
       $tabla .='
           <style>
@@ -582,19 +623,24 @@ class Cobjetivo_gestion extends CI_Controller {
             <th>UNIDAD ADMINISTRATIVA</th>
             <th>COD. ACP.</th>
             <th>COD. OPE.</th>
-            <th>OPERACION '.$this->gestion.'</th>
-            <th>INDICADOR</th>
-            <th>PRODUCTO</th>
-            <th>RESULTADO</th>
-            <th>LINEA BASE OPERACION</th>
+            <th>DESCRIPCION OPERACION '.$this->gestion.'</th>
+            <th>INDICADOR OPERACION</th>
+            <th>PRODUCTO OPERACION</th>
+            <th>RESULTADO OPERACION</th>
             <th>META OPERACION</th>
+
+
+            <th>DESCRIPCION GASTO CORRIENTE</th>
+            <th>UNIDAD RESPONSABLE</th>
+
             <th>COD. ACT.</th>
-            <th>ACTIVIDAD</th>
+            <th>DESCRIPCION ACTIVIDAD</th>
             <th>INDICADOR</th>
             <th>UNIDADES RESPONSABLES</th>
+            <th>MEDIO DE VERIFICACION</th>
+            <th>TIPO DE META</th>
             <th>LINEA BASE</th>
             <th>META</th>
-            <th>MEDIO DE VERIFICACION</th>
             <th>ENE.</th>
             <th>FEB.</th>
             <th>MAR.</th>
@@ -611,29 +657,38 @@ class Cobjetivo_gestion extends CI_Controller {
         </thead>
       <tbody>';
       foreach($alienacion_acp  as $row){
+        $por=''; 
+        if($row['indi_id']==2){
+          $por='%';
+        }
+
         $tabla.='
         <tr style="height:40px;">
-          <td align=center><b>'.$row['og_codigo'].'</b></td>
-          <td>'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
-          <td align=center>'.$row['og_codigo'].'</td>
-          <td align=center>'.$row['or_codigo'].'</td>
-          <td>'.mb_convert_encoding(strtoupper($row['or_objetivo']), 'cp1252', 'UTF-8').'</td>
-          <td>'.mb_convert_encoding(strtoupper($row['or_indicador']), 'cp1252', 'UTF-8').'</td>
-          <td>'.mb_convert_encoding(strtoupper($row['or_producto']), 'cp1252', 'UTF-8').'</td>
-          <td>'.mb_convert_encoding(strtoupper($row['or_resultado']), 'cp1252', 'UTF-8').'</td>
-          <td align=right>'.round($row['or_linea_base'],2).'</td>
-          <td align=right>'.round($row['or_meta'],2).'</td>
+          <td style="font-family: Arial;" align=center><b>'.$row['og_codigo'].'</b></td>
+          <td style="font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-size: 15px;font-family: Arial;" align=center>'.$row['og_codigo'].'</td>
+          <td style="font-size: 15px;font-family: Arial;" align=center>'.$row['or_codigo'].'</td>
+          <td style="font-family: Arial;">'.mb_convert_encoding(strtoupper($row['or_objetivo']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-family: Arial;">'.mb_convert_encoding(strtoupper($row['or_indicador']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-family: Arial;">'.mb_convert_encoding(strtoupper($row['or_producto']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-family: Arial;">'.mb_convert_encoding(strtoupper($row['or_resultado']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-family: Arial;" align=right>'.round($row['or_meta'],2).'</td>
 
-          <td bgcolor="#e7f3f1" align=center>'.strtoupper($row['prod_cod']).'</td>
-          <td bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_producto']), 'cp1252', 'UTF-8').'</td>
-          <td bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_indicador']), 'cp1252', 'UTF-8').'</td>
-          <td bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_unidades']), 'cp1252', 'UTF-8').'</td>
-          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_linea_base'],2).'</b></td>
-          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).'</b></td>
-          <td bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_fuente_verificacion']), 'cp1252', 'UTF-8').'</td>';
+          <td style="font-family: Arial;" bgcolor="#eaf2fd">'.mb_convert_encoding(strtoupper($row['tipo']).' '.strtoupper($row['act_descripcion']).' '.$row['abrev'], 'cp1252', 'UTF-8').'</td>
+          <td style="font-family: Arial;" bgcolor="#eaf2fd">'.mb_convert_encoding($row['serv_cod'].' '.strtoupper($row['tipo_subactividad']).' '.strtoupper($row['serv_descripcion']), 'cp1252', 'UTF-8').'</td>
+
+          <td style="font-size: 15px;font-family: Arial;" bgcolor="#e7f3f1" align=center>'.strtoupper($row['prod_cod']).'</td>
+          <td style="font-family: Arial;" bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_producto']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-family: Arial;" bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_indicador']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-family: Arial;" bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_unidades']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-family: Arial;" bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['prod_fuente_verificacion']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-family: Arial;" bgcolor="#e7f3f1">'.mb_convert_encoding(strtoupper($row['mt_tipo']), 'cp1252', 'UTF-8').'</td>
+          <td style="font-size: 12px;font-family: Arial;" bgcolor="#e7f3f1" align=right><b>'.round($row['prod_linea_base'],2).'</b></td>
+          <td style="font-size: 12px;font-family: Arial;" bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).' '.$por.'</b></td>';
+          
           for ($i=1; $i <=12 ; $i++) { 
             $tabla.='
-            <td bgcolor="#e7f3f1" align=right><b>'.round($row['mes'.$i]).'</b></td>';
+            <td style="font-size: 12px;font-family: Arial;" bgcolor="#e7f3f1" align=right><b>'.round($row['mes'.$i]).' '.$por.'</b></td>';
           }
 
         $tabla.='
@@ -655,15 +710,13 @@ class Cobjetivo_gestion extends CI_Controller {
 
 
     /*------ REPORTE ALINEACION ACP-FORM 2 Y 4-----*/
-    public function reporte_alineacion_acp_act($og_id){
+    public function reporte_alineacion_acp_act($og_id,$dep_id){
       $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id);
       $data['cabecera']=$this->acortoplazo->cabecera_alineacion_acp($ogestion);
-      $data['pie']='';
-      $data['alienacion']='';
-
-
-                    
-
+      $data['pie']=$this->acortoplazo->pie_rep_alineacion_acp();
+      $data['alineacion']=$this->acortoplazo->rep_lista_alineacion_poa($og_id,$dep_id);
+    
+     // echo $data['alineacion'];
       $this->load->view('admin/mestrategico/objetivos_gestion/reporte_alineacion_acp_act', $data); 
     }
 

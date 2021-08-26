@@ -22,6 +22,7 @@ class Oregional extends CI_Controller{
             $this->verif_mes=$this->session->userData('mes_actual');
             $this->resolucion=$this->session->userdata('rd_poa');
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->dep_id = $this->session->userData('dep_id');
             $this->mes = $this->mes_nombre();
             $this->conf_form4 = $this->session->userData('conf_form4');
             $this->conf_form5 = $this->session->userData('conf_form5');
@@ -85,8 +86,13 @@ class Oregional extends CI_Controller{
               }
             }*/
 
+              if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401){
+                $tabla.='
+                <a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>';
+              }
+              
+              
               $tabla.='
-              <a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>
               <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/'.$row['dep_id'].'\');" title="IMPRIMIR OPERACIONES REGIONAL" class="btn btn-default">
                 <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp; REP. OPERACIÓN (FORM N° 2)
               </a>
@@ -121,8 +127,18 @@ class Oregional extends CI_Controller{
                 $tabla.='<tr>';
                   $tabla.='
                   <td><b>'.$nro.'</b></td>
-                  <td><a href="'.site_url("").'/me/update_oregional/'.$row_or['or_id'].'" title="MODIFICAR DATOS" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a></td>
-                  <td><a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OBJETIVO REGIONAL"  name="'.$row_or['or_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="30" HEIGHT="30"/></a></td>
+                  <td>';
+                  if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401){
+                    $tabla.='<a href="'.site_url("").'/me/update_oregional/'.$row_or['or_id'].'" title="MODIFICAR DATOS" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>';
+                  }
+                  $tabla.='
+                  </td>
+                  <td>';
+                  if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401){
+                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OBJETIVO REGIONAL"  name="'.$row_or['or_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="30" HEIGHT="30"/></a>';
+                  }
+                  $tabla.='
+                  </td>
                   <td align=center><b><font color=blue size=6>'.$row_or['og_codigo'].'</font></b></td>
                   <td align=center><b><font color=blue size=6><b>'.$row_or['or_codigo'].'</b></font></b></td>
                   <td>'.$row_or['or_objetivo'].'</td>
@@ -636,10 +652,10 @@ class Oregional extends CI_Controller{
                 <td style="width:80%; height: 5%">
                     <table align="center" border="0" style="width:100%;">
                         <tr style="font-size: 23px;font-family: Arial;">
-                            <td style="height: 35%;"><b>PLAN OPERATIVO ANUAL GESTI&Oacute;N - '.$this->gestion.'</b></td>
+                            <td style="height: 35%;"><b>OPERACIONES </b></td>
                         </tr>
                         <tr style="font-size: 20px;font-family: Arial;">
-                          <td style="height: 2%;">OPERACIONES</td>
+                          <td style="height: 2%;">PLAN OPERATIVO ANUAL - '.$this->gestion.'</td>
                         </tr>
                     </table>
                 </td>

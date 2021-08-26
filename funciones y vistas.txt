@@ -2567,6 +2567,81 @@ ALTER TABLE public.v_ogestion_programado_temporalidad
 /////============= VISTA - ALINEACION ACP A ACT. 2022
 CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS 
           select 
+           oge.og_id,
+          oge.og_codigo,
+          oge.g_id,
+          apg.aper_gestion,
+          opge.dep_id, 
+          dep.dep_cod,
+          dep.dep_departamento, 
+          dep.dep_sigla, 
+          opge.prog_fis, 
+          oreg.or_id,
+          oreg.or_codigo,
+          oreg.or_objetivo,
+          oreg.or_indicador,
+          oreg.or_producto,
+          oreg.or_resultado,
+          oreg.or_linea_base,
+          oreg.or_meta,
+          oreg.or_verificacion,
+
+          p.proy_id,
+          ua.dist_id,
+          ua.act_descripcion,
+          te.tipo,
+          ds.abrev,
+
+          prod.com_id,
+          tpsa.tipo_subactividad,
+          sa.serv_cod,
+          sa.serv_descripcion,
+
+          mt.mt_tipo,
+          prod.prod_id,
+          prod.prod_cod,
+          prod.prod_producto,
+          prod.indi_id,
+          prod.mt_id,
+          prod.prod_indicador,
+          prod.prod_linea_base,
+          prod.prod_meta,
+          prod.prod_fuente_verificacion,
+          prod.prod_unidades,
+          prod.prod_resultado
+          
+          from objetivo_gestion oge
+            Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+            Inner Join _departamentos as dep On dep.dep_id=opge.dep_id
+            Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+
+            Inner Join _productos prod On prod.or_id=oreg.or_id
+            Inner Join meta_relativo as mt On mt.mt_id=prod.mt_id
+            Inner Join _componentes as c On c.com_id=prod.com_id
+            Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+            Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+            Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+            Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+
+            Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+            Inner Join _distritales as ds On ds.dist_id=p.dist_id
+            Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+            Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+
+                where prod.estado!=3 and c.estado!=3 and pfe.estado!=3 and pfe.pfec_estado=1
+                order by oge.og_codigo,opge.dep_id,oreg.or_codigo, prod.prod_cod asc;
+
+          ALTER TABLE public.vista_alineacion_poa_acp
+          OWNER TO postgres;
+
+
+
+
+/////--------------------------------
+
+
+ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp_completo AS 
+          select 
           oge.og_id,
           oge.og_codigo,
           oge.g_id,
@@ -2585,17 +2660,30 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
           oreg.or_linea_base,
           oreg.or_meta,
           oreg.or_verificacion,
-          p.com_id,
-          p.prod_id,
-          p.prod_cod,
-          p.prod_producto,
-          p.indi_id,
-          p.prod_indicador,
-          p.prod_linea_base,
-          p.prod_meta,
-          p.prod_fuente_verificacion,
-          p.prod_unidades,
-          p.prod_resultado,
+
+           p.proy_id,
+          ua.dist_id,
+          ua.act_descripcion,
+          te.tipo,
+          ds.abrev,
+
+          prod.com_id,
+          tpsa.tipo_subactividad,
+          sa.serv_cod,
+          sa.serv_descripcion,
+
+          mt.mt_tipo,
+          
+          prod.prod_id,
+          prod.prod_cod,
+          prod.prod_producto,
+          prod.indi_id,
+          prod.prod_indicador,
+          prod.prod_linea_base,
+          prod.prod_meta,
+          prod.prod_fuente_verificacion,
+          prod.prod_unidades,
+          prod.prod_resultado,
           temp.enero mes1,
           temp.febrero mes2,
           temp.marzo mes3,
@@ -2609,20 +2697,29 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
           temp.noviembre mes11,
           temp.diciembre mes12
           
-                from objetivo_gestion oge
-                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
-                Inner Join _departamentos as dep On dep.dep_id=opge.dep_id
-                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+          
+          from objetivo_gestion oge
+            Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+            Inner Join _departamentos as dep On dep.dep_id=opge.dep_id
+            Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
 
-          Inner Join _productos p On p.or_id=oreg.or_id
-                Inner Join _componentes as c On c.com_id=p.com_id
-                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+            Inner Join _productos prod On prod.or_id=oreg.or_id
+            Inner Join meta_relativo as mt On mt.mt_id=prod.mt_id
+            Inner Join _componentes as c On c.com_id=prod.com_id
+            Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+            Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+            Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+            Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
 
-                Inner Join vista_productos_temporalizacion_programado_dictamen as temp On temp.prod_id=p.prod_id
+            Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+            Inner Join _distritales as ds On ds.dist_id=p.dist_id
+            Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+            Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
 
-                where p.estado!=3 and c.estado!=3 and pfe.estado!=3 and pfe.pfec_estado=1
-                order by oge.og_codigo,opge.dep_id,oreg.or_codigo, p.prod_cod asc;
+                Inner Join vista_productos_temporalizacion_programado_dictamen as temp On temp.prod_id=prod.prod_id
 
-          ALTER TABLE public.vista_alineacion_poa_acp
+                where prod.estado!=3 and c.estado!=3 and pfe.estado!=3 and pfe.pfec_estado=1
+                order by oge.og_codigo,opge.dep_id,oreg.or_codigo, prod.prod_cod asc;
+
+          ALTER TABLE public.vista_alineacion_poa_acp_completo
           OWNER TO postgres;

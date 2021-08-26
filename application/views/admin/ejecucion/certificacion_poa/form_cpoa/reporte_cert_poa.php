@@ -199,7 +199,7 @@ $msg = $cpoa[0]['cpoa_codigo']." - RESPONSABLE:".$cpoa[0]['fun_nombre']." - NRO.
     <?php echo $items;?>
     <?php if($cpoa[0]['cpoa_estado']==0){echo "<br><br>(SIN C&Oacute;DIGO DE CERTIFICACIÓN, (Comuniquese con el Administrador SIIPLAS)...)";}?>
 <!-- <br><br>
-    <div align="center" style="font-size: 30px;font-family: Arial;">CERTIFICACIÓN ANULADA SEGUN R.A. 51/2021</div> -->
+    <div align="center" style="font-size: 25px;font-family: Arial;">CERTIFICACIÓN ANULADA SEGUN CITE N° INFRAESTRUCTURA-1/2021</div> -->
 </page>
 <?php
 $content = ob_get_clean();

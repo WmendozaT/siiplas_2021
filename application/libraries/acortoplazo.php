@@ -23,6 +23,7 @@ class Acortoplazo extends CI_Controller{
             $this->resolucion=$this->session->userdata('rd_poa');
             $this->tp_adm = $this->session->userData('tp_adm');
             $this->mes = $this->mes_nombre();
+            $this->dep_id = $this->session->userData('dep_id');
             $this->conf_form4 = $this->session->userData('conf_form4');
             $this->conf_form5 = $this->session->userData('conf_form5');
     }
@@ -486,7 +487,7 @@ class Acortoplazo extends CI_Controller{
                             <td style="height: 35%;"><b>PLAN OPERATIVO ANUAL GESTI&Oacute;N - '.$this->gestion.'</b></td>
                         </tr>
                         <tr style="font-size: 20px;font-family: Arial;">
-                          <td style="height: 2%;">ALINEACI&Oacute;N ACCI&Oacute;N DE CORTO PLAZO</td>
+                          <td style="height: 2%;">ALINEACI&Oacute;N ACCI&Oacute;N DE CORTO PLAZO '.$ogestion[0]['og_codigo'].' - '.$this->gestion.'</td>
                         </tr>
                     </table>
                 </td>
@@ -561,17 +562,88 @@ class Acortoplazo extends CI_Controller{
 
 
   //// Lista Alineacion ACP - OPE - Form 4 2022
-  public function rep_lista_alineacion_poa($og_id){ 
-    $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT.
+  public function rep_lista_alineacion_poa($og_id,$dep_id){ 
+
+    if($dep_id==0){
+      $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT. (Todos)
+    }
+    else{
+      $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades_regional($og_id,$dep_id); 
+    }
+    
     $tabla='';
 
+    $tabla.='
+    
+      <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+      <thead>
+        <tr style="font-size: 6.7px;" bgcolor="#eceaea" align=center>
+          <th style="width:1%;height:20px;">#</th>
+          <th style="width:8%;">REGIONAL</th>
+          <th style="width:2.5%;"><b>COD. ACP.</b></th>
+          <th style="width:2.5%;"><b>COD. OPE.</b></th>
+          <th style="width:15%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
+          <th style="width:10%;">INDICADOR</th>
+          <th style="width:10%;">RESULTADO</th>
+          <th style="width:3%;">META</th>
+          <th style="width:3%;">COD. ACT.</th>
+          <th style="width:15%;">ACTIVIDAD</th>
+          <th style="width:12%;">INDICADOR</th>
+          <th style="width:5%;">META</th>
+          <th style="width:12%;">MEDIO DE VERIFICACI&Oacute;N</th>
+        </tr>
+      </thead>
+      <tbody>';
+    $nro=0;
+    foreach($alienacion_acp  as $row){
+      $por=''; $nro++; 
+      if($row['indi_id']==2){
+        $por='%';
+      }
+      $tabla.='
+      <tr style="font-size: 6.5px;">
+        <td style="width:1%; height:17px; text-align:center">'.$nro.'</td>
+        <td style="width:8%;"><b>'.strtoupper($row['dep_departamento']).'</b></td>
+        <td style="width:2.5%;font-size: 9px;" align=center><b>'.$row['og_codigo'].'</b></td>
+        <td style="width:2.5%;font-size: 9px;" align=center><b>'.$row['or_codigo'].'</b></td>
+        <td style="width:15%;">'.strtoupper($row['or_objetivo']).'</td>
+        <td style="width:10%;">'.strtoupper($row['or_indicador']).'</td>
+        <td style="width:10%;">'.strtoupper($row['or_resultado']).'</td>
+        <td style="width:3%; font-size: 10px;"align=right>'.round($row['or_meta'],2).'</td>
 
+        <td style="width:3%; font-size: 10px; text-align:center"><b>'.strtoupper($row['prod_cod']).'</b></td>
+        <td style="width:15%;">'.strtoupper($row['prod_producto']).'</td>
+        <td style="width:12%;">'.strtoupper($row['prod_indicador']).'</td>
+        <td style="width:5%; font-size: 8px;" align=right><b>'.round($row['prod_meta'],2).' '.$por.'</b></td>
+        <td style="width:12%;">'.strtoupper($row['prod_fuente_verificacion']).'</td>
+      </tr>';
+    }
+    $tabla.='
+    </tbody>
+    </table>';
 
     return $tabla;
   }
 
 
+    /*---------- Pie de Reporte -----------*/
+    public function pie_rep_alineacion_acp(){
+      $tabla='';
+      $tabla.='
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;" align="center">
+            <tr style="font-size: 7px;font-family: Arial;">
+                <td style="text-align: left;height: 2.5%;width:50%;">
+                    '.$this->session->userdata('sistema').'
+                </td>
+                <td style="width: 50%; text-align: right">
+                    pag. [[page_cu]]/[[page_nb]]
+                </td>
+            </tr>
+        </table>';
 
+      return $tabla;
+    }
 
 
   /*-------- MENU -----*/

@@ -65,7 +65,8 @@ $route['me/rep_ogestion'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion'; /
 //$route['me/rep_ogestion_mes'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion_mes'; //// Reporte Objetivo de Gestion General Msnual
 $route['me/alineacion_ope_acp/(:any)'] = 'mestrategico/cobjetivo_gestion/rep_alineacion_acp_act/$1'; ///// ver Alineacion completa de actividades a operaciones y acciones 2022
 $route['me/exportar_alineacion_ope_acp/(:any)'] = 'mestrategico/cobjetivo_gestion/exportar_alineacion_acp_act/$1'; ///// Exportar Alineacion completa de actividades a operaciones y acciones 2022
-$route['me/reporte_alineacion_ope_aco/(:any)'] = 'mestrategico/cobjetivo_gestion/reporte_alineacion_acp_act/$1'; ///// Reporte Alineacion completa de actividades a operaciones y acciones 2022
+$route['me/reporte_alineacion_ope_acp/(:any)'] = 'mestrategico/cobjetivo_gestion/reporte_alineacion_acp_act/$1'; ///// Reporte Alineacion completa de actividades a operaciones y acciones 2022 INSTITUCIONAL
+//$route['me/reporte_alineacion_ope_acp_regional/(:any)'] = 'mestrategico/cobjetivo_gestion/reporte_alineacion_acp_act_regional/$1/$2'; ///// Reporte Alineacion completa de actividades a operaciones y acciones 2022 REGIONAL
 
 /* ---- OBJETIVOS REGIONALES 2022 ---- */
 $route['me/objetivos_regionales/(:any)'] = 'mestrategico/cobjetivo_regional/objetivos_regional/$1'; //// Lista Objetivos regional

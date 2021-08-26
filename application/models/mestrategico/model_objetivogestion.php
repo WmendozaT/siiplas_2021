@@ -278,7 +278,7 @@ class Model_objetivogestion extends CI_Model{
 
     /*========= ALINEACION DE ACCIONES DE CORTO PLAZO A ACTIVIDADES 2022 =================*/
     /*----- Alineacion de Acciones de Corto Plazo a Actividades-----*/
-    public function vinculacion_acp_actividades_completo($og_id){
+    public function vinculacion_acp_actividades($og_id){
         $sql = 'select *
                 from vista_alineacion_poa_acp
                 where g_id='.$this->gestion.' and og_id='.$og_id.'';
@@ -287,8 +287,40 @@ class Model_objetivogestion extends CI_Model{
         return $query->result_array();
     }
 
+    /*----- Alineacion de Acciones de Corto Plazo a Actividades-----*/
+    public function vinculacion_acp_actividades_regional($og_id,$dep_id){
+        $sql = 'select *
+                from vista_alineacion_poa_acp
+                where g_id='.$this->gestion.' and og_id='.$og_id.' and dep_id='.$dep_id.'';
 
-    public function vinculacion_acp_actividades($og_id){
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*----- Alineacion de Acciones de Corto Plazo a Actividades Completo-----*/
+    public function vinculacion_acp_actividades_nacional_completo($og_id){
+        $sql = 'select *
+                from vista_alineacion_poa_acp_completo
+                where g_id='.$this->gestion.' and og_id='.$og_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*----- Alineacion de Acciones de Corto Plazo a Actividades completo Regional-----*/
+    public function vinculacion_acp_actividades_regional_completo($og_id,$dep_id){
+        $sql = 'select *
+                from vista_alineacion_poa_acp_completo
+                where g_id='.$this->gestion.' and og_id='.$og_id.' and dep_id='.$dep_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*public function vinculacion_acp_actividades($og_id){
         $sql = 'select 
           oge.og_id,
           oge.og_codigo,
@@ -357,5 +389,5 @@ class Model_objetivogestion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 }
