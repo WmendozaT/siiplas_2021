@@ -502,49 +502,49 @@ class Cobjetivo_gestion extends CI_Controller {
               <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR ALINEACION EN EXCEL
             </a>
             <div class="btn-group">
-                      <button class="btn btn-default">
-                        <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;IMPRIMIR REPORTE DE ALINEACION POA
-                      </button>
-                      <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/1\');" title="ALINEACION CHUQUISACA">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - CHUQUISACA</a>
-                        </li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/2\');" title="ALINEACION LA PAZ">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - LA PAZ</a>
-                        </li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/3\');" title="ALINEACION COCHABAMBA">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - COCHABAMBA</a>
-                        </li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/4\');" title="ALINEACION ORURO">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - ORURO</a>
-                        </li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/5\');" title="ALINEACION POTOSI">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - POTOSI</a>
-                        </li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/6\');" title="ALINEACION TARIJA">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - TARIJA</a>
-                        </li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/7\');" title="ALINEACION SANTA CRUZ">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - SANTA CRUZ</a>
-                        </li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/8\');" title="ALINEACION BENI">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - BENI</a>
-                        </li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/9\');" title="ALINEACION PANDO">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - PANDO</a>
-                        </li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/10\');" title="ALINEACION OFICINA CENTRAL">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - OFICINA NACIONAL</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                          <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/0\');" title="ALINEACION CONSOLIDADO">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - CONSOLIDADO INSITUCIONAL</a>
-                        </li>
-                      </ul>
-                    </div>
+              <button class="btn btn-default">
+                <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;IMPRIMIR REPORTE DE ALINEACION POA
+              </button>
+              <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/1\');" title="ALINEACION CHUQUISACA">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - CHUQUISACA</a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/2\');" title="ALINEACION LA PAZ">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - LA PAZ</a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/3\');" title="ALINEACION COCHABAMBA">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - COCHABAMBA</a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/4\');" title="ALINEACION ORURO">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - ORURO</a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/5\');" title="ALINEACION POTOSI">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - POTOSI</a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/6\');" title="ALINEACION TARIJA">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - TARIJA</a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/7\');" title="ALINEACION SANTA CRUZ">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - SANTA CRUZ</a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/8\');" title="ALINEACION BENI">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - BENI</a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/9\');" title="ALINEACION PANDO">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - PANDO</a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/10\');" title="ALINEACION OFICINA CENTRAL">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - OFICINA NACIONAL</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/'.$og_id.'/0\');" title="ALINEACION CONSOLIDADO">ALINEACIÓN ACP '.$ogestion[0]['og_codigo'].' / '.$this->gestion.' - CONSOLIDADO INSITUCIONAL</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </article>';
 
