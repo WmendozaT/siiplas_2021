@@ -1354,7 +1354,7 @@ class Producto extends CI_Controller {
                     $unitario = intval(trim($datos[5])); //// Costo Unitario
                     
                     $p_total=($cantidad*$unitario);
-                    $total = intval(trim($datos[6])); //// Costo Total
+                    $total = floatval(trim($datos[6])); //// Costo Total
 
                     $var=7; $sum_temp=0;
                     for ($i=1; $i <=12 ; $i++) {

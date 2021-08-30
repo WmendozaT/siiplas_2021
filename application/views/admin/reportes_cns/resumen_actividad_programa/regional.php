@@ -144,7 +144,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Reportes</li><li>Prohramación POA</li><li>Resumen Operaciones por Categoria Programatica</li>
+					<li>Reportes</li><li>Prohramación POA</li><li>Resumen Actividades por Categoria Programatica</li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->
@@ -187,7 +187,7 @@
                                         <!-- content -->
                                         <div id="myTabContent" class="tab-content">
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="LISTA DE ESTABLECIMIENTOS DE SALUD">
-                                                <h2 class="alert alert-info" align="center">ALINEACI&Oacute;N DE OPERACIONES POR PROGRAMAS Y OBJETIVOS DE GEST&Oacute;N - <?php echo $this->session->userData('gestion') ?></h2>
+                                                <h2 class="alert alert-info" align="center">ALINEACI&Oacute;N DE ACTIVIDADES POR PROGRAMAS Y ACCIÓN DE CORTO PLAZO - <?php echo $this->session->userData('gestion') ?></h2>
                                                 <div class="row">
                                                     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 														<div>
@@ -232,9 +232,25 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/0'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/0'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/0'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL INSTITUCIONAL</center></b><hr>
+
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL INSTITUCIONAL</center></b><hr>
 
 					                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
@@ -254,9 +270,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/10'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/10'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/10'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL DE OFICINA NACIONAL</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL DE OFICINA NACIONAL</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $ofn_prog;?>
@@ -275,9 +306,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/2'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/2'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/2'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL REGIONAL LA PAZ</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL REGIONAL LA PAZ</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $lpz_prog;?>
@@ -296,9 +342,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/3'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/3'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/3'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL REGIONAL COCHABAMBA</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL REGIONAL COCHABAMBA</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $cbb_prog;?>
@@ -317,9 +378,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/1'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/1'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/1'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL REGIONAL CHUQUISACA</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL REGIONAL CHUQUISACA</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $ch_prog;?>
@@ -338,9 +414,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/4'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/4'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/4'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL REGIONAL ORURO</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL REGIONAL ORURO</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $or_prog;?>
@@ -359,9 +450,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/5'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/5'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/5'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL REGIONAL POTOSI</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL REGIONAL POTOSI</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $pot_prog;?>
@@ -380,9 +486,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/6'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/6'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/6'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL REGIONAL TARIJA</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL REGIONAL TARIJA</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $tja_prog;?>
@@ -401,9 +522,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/7'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/7'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/7'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL REGIONAL SANTA CRUZ</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL REGIONAL SANTA CRUZ</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $scz_prog;?>
@@ -422,9 +558,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/8'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/8'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/8'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL REGIONAL BENI</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL REGIONAL BENI</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $be_prog;?>
@@ -443,9 +594,24 @@
 																		<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 																		</div>
 																		<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-																			<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/9'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																			<div class="btn-group">
+																				<button class="btn btn-default">
+																					<img src="<?php echo base_url(); ?>assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA
+																				</button>
+																				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+																					<span class="caret"></span>
+																				</button>
+																				<ul class="dropdown-menu">
+																					<li>
+																						<a href="javascript:abreVentana('<?php echo site_url("").'/rep/rep_alineacion_poa/9'?>');" style="width:100%;" title="IMPRIMIR ALINEACION POA">&nbsp;&nbsp;IMPRIMIR ALINEACI&Oacute;N POA</a>
+																					</li>
+																					<li>
+																						<a href="<?php echo site_url("").'/rep/exportar_alineacion_poa/9'?>" style="width:100%;" title="EXPORTAR ALINEACION POA">&nbsp;&nbsp;EXPORTAR ALINEACI&Oacute;N POA</a>
+																					</li>
+																				</ul>
+																			</div>
 																		</div>
-																		<hr><b><center>RESUMEN DE OPERACIONES A NIVEL REGIONAL PANDO</center></b><hr>
+																		<hr><b><center>RESUMEN DE ACTIVIDADES A NIVEL REGIONAL PANDO</center></b><hr>
 																		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 					                                                        <section id="widget-grid" class="">
 					                                                        	<?php echo $pa_prog;?>

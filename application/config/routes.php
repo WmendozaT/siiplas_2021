@@ -592,4 +592,5 @@ $route['rep/exportar_operaciones_regional/(:any)'] = 'reportes_cns/exporting_dat
 ///////// REPORTE RESUMEN DE ALINEACION ACTIVIDAD A CATEGORIA PROGRAMATICA 2021
 $route['rep/resumen_act_programa'] = 'reporte_resumen_alineacion_poa/crep_actprog/regional';  //// Menu Regional act-prog (2020-2021)
 $route['rep/rep_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_actprog/reporte_alineacion_poa/$1';  //// Reporte Alineacion POA (2020-2021)
+$route['rep/exportar_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_actprog/exportar_alineacion_poa/$1';  //// Exportar Alineacion POA (2020-2021)
 

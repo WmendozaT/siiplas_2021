@@ -64,17 +64,20 @@ class Crep_actprog extends CI_Controller {
       if($tp_rep==1){
         $style='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center';
       }
+      elseif($tp_rep==2){
+        $style='border="1" cellpadding="0" cellspacing="0" class="tabla"';
+      }
 
        $tabla.='<table '.$style.'>
                 <thead>
                   <tr>
-                    <th style="height:18px;" colspan=4>ALINEACI&Oacute;N DE OPERACIONES POR PROGRAMAS</th>
+                    <th style="height:18px;" colspan=4>ALINEACI&Oacute;N DE ACTIVIDADES POR PROGRAMAS</th>
                   </tr>
                   <tr>
                     <th style="width:3%; height:15px;" align=center>#</th>
                     <th style="width:10%;" align=center>PROGRAMA</th>
                     <th style="width:40%;" align=center>DESCRIPCI&Oacute;N</th>
-                    <th style="width:10%;" align=center>NRO DE OPERACIONES</th>
+                    <th style="width:10%;" align=center>NRO DE ACT.</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -85,8 +88,14 @@ class Crep_actprog extends CI_Controller {
                 $tabla.='
                 <tr>
                   <td style="height:14px;">'.$nro.'</td>
-                  <td>'.$row['aper_programa'].' 0000 000</td>
-                  <td>'.$row['aper_descripcion'].'</td>
+                  <td>'.$row['aper_programa'].' 0000 000</td>';
+                  if($tp_rep==2){ /// excel
+                    $tabla.='<td>'.mb_convert_encoding($row['aper_descripcion'], 'cp1252', 'UTF-8').'</td>';
+                  }
+                  else{ /// normal
+                    $tabla.='<td>'.$row['aper_descripcion'].'</td>';
+                  }
+                  $tabla.='
                   <td align=center>'.$row['actividades'].'</td>
                 </tr>';
               }
@@ -109,17 +118,20 @@ class Crep_actprog extends CI_Controller {
       if($tp_rep==1){
         $style='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center';
       }
+      elseif($tp_rep==2){
+        $style='border="1" cellpadding="0" cellspacing="0" class="tabla"';
+      }
 
        $tabla.='<table '.$style.'>
                 <thead>
                   <tr>
-                    <th style="height:18px;" colspan=4>ALINEACI&Oacute;N DE OPERACIONES POR PROGRAMAS</th>
+                    <th style="height:18px;" colspan=4>ALINEACI&Oacute;N DE ACTIVIDADES POR PROGRAMAS</th>
                   </tr>
                   <tr>
                     <th style="width:3%;height:15px;" align=center>#</th>
                     <th style="width:10%;" align=center>PROGRAMA</th>
                     <th style="width:40%;" align=center>DESCRIPCI&Oacute;N</th>
-                    <th style="width:10%;" align=center>NRO DE OPERACIONES</th>
+                    <th style="width:10%;" align=center>NRO DE ACT.</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -130,8 +142,14 @@ class Crep_actprog extends CI_Controller {
                 $tabla.='
                 <tr>
                   <td style="height:14px;">'.$nro.'</td>
-                  <td>'.$row['aper_programa'].' 0000 000</td>
-                  <td>'.$row['aper_descripcion'].'</td>
+                  <td>'.$row['aper_programa'].' 0000 000</td>';
+                  if($tp_rep==2){ /// excel
+                    $tabla.='<td>'.mb_convert_encoding($row['aper_descripcion'], 'cp1252', 'UTF-8').'</td>';
+                  }
+                  else{ /// normal
+                    $tabla.='<td>'.$row['aper_descripcion'].'</td>';
+                  }
+                  $tabla.='
                   <td align=center>'.$row['actividades'].'</td>
                 </tr>';
               }
@@ -155,16 +173,19 @@ class Crep_actprog extends CI_Controller {
       if($tp_rep==1){
         $style='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center';
       }
+      elseif($tp_rep==2){
+        $style='border="1" cellpadding="0" cellspacing="0" class="tabla"';
+      }
 
        $tabla.='<table '.$style.'>
                 <thead>
                   <tr>
-                    <th style="height:18px;" colspan=3>ALINEACI&Oacute;N DE OPERACIONES POR OBJETIVOS</th>
+                    <th style="height:18px;" colspan=3>ALINEACI&Oacute;N DE ACTIVIDADES POR A.C.P.</th>
                   </tr>
                   <tr>
                     <th style="width:3%;height:15px;" align=center>#</th>
-                    <th style="width:40%;" align=center>OBJETIVO GESTI&Oacute;N</th>
-                    <th style="width:5%;" align=center>NRO DE OPERACIONES</th>
+                    <th style="width:40%;" align=center>ACCION DE CORTO PLAZO '.$this->gestion.'</th>
+                    <th style="width:5%;" align=center>NRO DE ACT.</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -174,8 +195,14 @@ class Crep_actprog extends CI_Controller {
                 $sum=$sum+$row['actividades'];
                 $tabla.='
                 <tr>
-                  <td style="height:14px;">'.$nro.'</td>
-                  <td>'.$row['og_codigo'].'.- '.$row['og_objetivo'].'</td>
+                  <td style="height:14px;">'.$nro.'</td>';
+                  if($tp_rep==2){ /// excel
+                    $tabla.='<td>'.mb_convert_encoding($row['og_codigo'].'.- '.$row['og_objetivo'], 'cp1252', 'UTF-8').'</td>';
+                  }
+                  else{ /// normal
+                    $tabla.='<td>'.$row['og_codigo'].'.- '.$row['og_objetivo'].'</td>';
+                  }
+                  $tabla.='
                   <td align=center>'.$row['actividades'].'</td>
                 </tr>';
               }
@@ -198,16 +225,19 @@ class Crep_actprog extends CI_Controller {
       if($tp_rep==1){
         $style='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center';
       }
+      if($tp_rep==2){ /// excel
+        $style='border="1" cellpadding="0" cellspacing="0" class="tabla"';
+      }
 
        $tabla.='<table '.$style.'>
                 <thead>
                   <tr>
-                    <th style="height:18px;" colspan=3>ALINEACI&Oacute;N DE OPERACIONES POR OBJETIVOS</th>
+                    <th style="height:18px;" colspan=3>ALINEACI&Oacute;N DE ACTIVIDADES POR A.C.P.</th>
                   </tr>
                   <tr>
                     <th style="width:3%;" align=center>#</th>
-                    <th style="width:50%;" align=center>OBJETIVO GESTI&Oacute;N</th>
-                    <th style="width:10%;" align=center>NRO DE OPERACIONES</th>
+                    <th style="width:50%;" align=center>ACCION DE CORTO PLAZO '.$this->gestion.'</th>
+                    <th style="width:10%;" align=center>NRO DE ACT.</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -217,8 +247,14 @@ class Crep_actprog extends CI_Controller {
                 $sum=$sum+$row['actividades'];
                 $tabla.='
                 <tr>
-                  <td style="width:3%; height:14px;">'.$nro.'</td>
-                  <td style="width:50%;">'.$row['og_codigo'].'.- '.$row['og_objetivo'].'</td>
+                  <td style="width:3%; height:14px;">'.$nro.'</td>';
+                  if($tp_rep==2){ /// excel
+                    $tabla.='<td>'.mb_convert_encoding($row['og_codigo'].'.- '.$row['og_objetivo'], 'cp1252', 'UTF-8').'</td>';
+                  }
+                  else{ /// normal
+                    $tabla.='<td>'.$row['og_codigo'].'.- '.$row['og_objetivo'].'</td>';
+                  }
+                  $tabla.='
                   <td style="width:10%;" align=center>'.$row['actividades'].'</td>
                 </tr>';
               }
@@ -250,6 +286,39 @@ class Crep_actprog extends CI_Controller {
         }
         
           $this->load->view('admin/reportes_cns/resumen_actividad_programa/reporte_alineacion_poa', $data);
+      }
+      else{
+        echo "Error !!!";
+      }
+    }
+
+
+    /*----- EXPORTAR ALINEACION POA -----*/
+    public function exportar_alineacion_poa($dep_id){
+      $tabla='';
+      $data['departamento']=$this->model_proyecto->get_departamento($dep_id);
+      $data['mes'] = $this->mes_nombre();
+      if(count($data['departamento'])!=0){
+        if($dep_id==0){
+          $data['titulo']='INSTITUCIONAL';
+          $data['aling_prog']=$this->alineacion_operacion_programa_institucional(2); /// Institucional Programa
+          $data['aling_og']=$this->alineacion_operacion_ogestion_institucional(2); /// Institucional Ogestion
+        }
+        else{
+          $data['titulo']=strtoupper($data['departamento'][0]['dep_departamento']);
+          $data['aling_prog']=$this->alineacion_operacion_programa_regional($dep_id,2); /// Oficina Nacional Programa
+          $data['aling_og']=$this->alineacion_operacion_ogestion_regional($dep_id,2); /// pando Programa
+        }
+        
+        date_default_timezone_set('America/Lima');
+        header('Content-type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment; filename=Alineacion_poa_or_".$data['departamento'][0]['dep_departamento'].".xls"); //Indica el nombre del archivo resultante
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        echo "";
+        $tabla.='ALINEACION '.$data['titulo'].' - '.$this->gestion.'<br>'.$data['aling_prog'].'<br>'.$data['aling_og'];
+        echo $tabla;
+         // $this->load->view('admin/reportes_cns/resumen_actividad_programa/reporte_alineacion_poa', $data);
       }
       else{
         echo "Error !!!";
