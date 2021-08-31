@@ -1351,7 +1351,7 @@ class Producto extends CI_Controller {
                     $detalle = strval(utf8_encode(trim($datos[2]))); //// descripcion form5
                     $unidad = strval(utf8_encode(trim($datos[3]))); //// Unidad
                     $cantidad = intval(trim($datos[4])); //// Cantidad
-                    $unitario = intval(trim($datos[5])); //// Costo Unitario
+                    $unitario = floatval(trim($datos[5])); //// Costo Unitario
                     
                     $p_total=($cantidad*$unitario);
                     $total = floatval(trim($datos[6])); //// Costo Total

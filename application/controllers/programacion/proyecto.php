@@ -27,7 +27,10 @@ class Proyecto extends CI_Controller {
       $this->tp_adm = $this->session->userdata("tp_adm");
       $this->dist_tp = $this->session->userData('dist_tp'); /// dist_tp->1 Regional, dist_tp->0 Distritales
       $this->verif_ppto = $this->session->userData('verif_ppto'); /// AnteProyecto Ptto POA : 0, Ptto Aprobado Sigep : 1
+      $this->conf_form4 = $this->session->userData('conf_form4');
+      $this->conf_form5 = $this->session->userData('conf_form5');
       $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
+      
       $this->load->library('programacionpoa');
       }else{
           $this->session->sess_destroy();
@@ -82,11 +85,13 @@ class Proyecto extends CI_Controller {
             }
 
             $tabla .= '<td aling="center">';
-              if($this->tp_adm==1){
+              if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399){
+              //if($this->tp_adm==1){
                 $tabla .= '<center><a href="'.site_url("").'/proy/update_unidad/'.$row['proy_id'].'" title="MODIFICAR DATOS DE LA UNIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="34" HEIGHT="30"/></a></center>';
               }
               /*---------------------------------------------*/
-              if($this->tp_adm==1){
+              if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399){
+              //if($this->tp_adm==1){
                 $tabla .= '<center><a href="'.site_url("admin").'/proy/delete/1/'.$row['proy_id'].'" title="ELIMINAR" onclick="return confirmar()" class="btn btn-default"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="34" HEIGHT="30"/></a></center>';
               }                              
             $tabla .= '</td>';

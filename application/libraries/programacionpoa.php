@@ -558,7 +558,8 @@ class Programacionpoa extends CI_Controller{
     /*--- BOTON REPORTE SEGUIMIENTO POA (MES VIGENTE)---*/
     function button_form4($nro){
       $tabla='';
-      if($this->tp_adm==1 || $this->conf_form4==1){
+      if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399){
+      //if($this->tp_adm==1 || $this->conf_form4==1){
         $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO FORM N 4" >
                     <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;NUEVO REGISTRO
                   </a>
@@ -569,7 +570,8 @@ class Programacionpoa extends CI_Controller{
 
         
       }
-      if($this->tp_adm==1 || $this->conf_form5==1){
+      if($this->conf_form5==1 || $this->fun_id==401 || $this->fun_id==399){
+     // if($this->tp_adm==1 || $this->conf_form5==1){
         if($nro!=0){
           $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="2" title="SUBIR ARCHIVO REQUERIMIENTO (GLOBAL)" >
                       <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR REQUERIMIENTOS (GLOBAL)
@@ -820,7 +822,8 @@ class Programacionpoa extends CI_Controller{
     /*--- BOTON ESTADO FORM 5---*/
     function button_form5(){
       $tabla='';
-      if($this->tp_adm==1 || $this->conf_form5==1){
+      if($this->conf_form5==1 || $this->fun_id==401 || $this->fun_id==399){
+      //if($this->tp_adm==1 || $this->conf_form5==1){
         $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" title="NUEVO REGISTRO FORM N 5" class="btn btn-success">
                     <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;NUEVO REGISTRO
                   </a>

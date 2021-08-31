@@ -14,6 +14,7 @@ class Cmod_presupuestario extends CI_Controller {
             $this->load->model('mantenimiento/model_ptto_sigep');
             $this->load->model('modificacion/model_modrequerimiento');
             $this->load->model('programacion/insumos/minsumos');
+            $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
             $this->load->library('security');
             $this->gestion = $this->session->userData('gestion'); /// Gestion
             $this->fun_id = $this->session->userData('fun_id'); /// Fun id
@@ -337,7 +338,7 @@ class Cmod_presupuestario extends CI_Controller {
                       $aper=$this->model_ptto_sigep->get_apertura($prog,'0000',$act);
                       //$aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                       if(count($aper)!=0){
-                          $partida = $this->minsumos->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                          $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                           $par_id=0;
                           if(count($partida)!=0){
                             $par_id=$partida[0]['par_id'];

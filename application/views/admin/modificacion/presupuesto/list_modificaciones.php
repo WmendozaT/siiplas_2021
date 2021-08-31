@@ -341,13 +341,79 @@
 		<!-- Voice command : plugin -->
 		<script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
 		<script src="<?php echo base_url(); ?>mis_js/modificacionpoa/modppto.js"></script> 
+		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
 		<!-- PAGE RELATED PLUGIN(S) -->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+		<script type="text/javascript">
+            $(function () {
+                function reset() {
+                    $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
+                    alertify.set({
+                        labels: {
+                            ok: "ACEPTAR",
+                            cancel: "CANCELAR"
+                        },
+                        delay: 5000,
+                        buttonReverse: false,
+                        buttonFocus: "ok"
+                    });
+                }
 
+                $(".del_ff").on("click", function (e) {
+
+                    reset();
+                    var mp_id = $(this).attr('name');
+                    var request;
+
+                    // confirm dialog
+                    alertify.confirm("DESEA ELIMINAR LA MODIFICACIÓN PRESUPUESTARIA ?", function (a) {
+                        if (a) { 
+                            url = "<?php echo site_url("")?>/mod_ppto/delete_mod_ppto";
+                            if (request) {
+                                request.abort();
+                            }
+                            request = $.ajax({
+                                url: url,
+                                type: "POST",
+                                dataType: "json",
+                                data: "mp_id="+mp_id
+                            });
+
+                            request.done(function (response, textStatus, jqXHR) { 
+                                reset();
+                                if (response.respuesta == 'correcto') {
+                                    alertify.alert("EL CITE DE MODIFICACION SE ELIMINO CORRECTAMENTE.. ", function (e) {
+                                        if (e) {
+                                            window.location.reload(true);
+                                        }
+                                    })
+                                } else {
+                                    alertify.error("Error al Eliminar");
+                                }
+                            });
+                            request.fail(function (jqXHR, textStatus, thrown) {
+                                console.log("ERROR: " + textStatus);
+                            });
+                            request.always(function () {
+                                //console.log("termino la ejecuicion de ajax");
+                            });
+
+                            e.preventDefault();
+
+                        } else {
+                            // user clicked "cancel"
+                            alertify.error("Opcion cancelada");
+                        }
+                    });
+                    return false;
+                });
+
+            });
+        </script>
         <script type="text/javascript">
         $(function () {
             $("#subir_archivo").on("click", function () {
@@ -407,71 +473,5 @@
             });
         });
         </script>
-        <script type="text/javascript">
-            $(function () {
-                function reset() {
-                    $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
-                    alertify.set({
-                        labels: {
-                            ok: "ACEPTAR",
-                            cancel: "CANCELAR"
-                        },
-                        delay: 5000,
-                        buttonReverse: false,
-                        buttonFocus: "ok"
-                    });
-                }
-
-                $(".del_ff").on("click", function (e) {
-                    reset();
-                    var mp_id = $(this).attr('name');
-                    var request;
-
-                    // confirm dialog
-                    alertify.confirm("DESEA ELIMINAR LA MODIFICACIÓN PRESUPUESTARIA ?", function (a) {
-                        if (a) { 
-                            url = "<?php echo site_url("")?>/mod_ppto/delete_mod_ppto";
-                            if (request) {
-                                request.abort();
-                            }
-                            request = $.ajax({
-                                url: url,
-                                type: "POST",
-                                dataType: "json",
-                                data: "mp_id="+mp_id
-                            });
-
-                            request.done(function (response, textStatus, jqXHR) { 
-                                reset();
-                                if (response.respuesta == 'correcto') {
-                                    alertify.alert("EL CITE DE MODIFICACION SE ELIMINO CORRECTAMENTE.. ", function (e) {
-                                        if (e) {
-                                            window.location.reload(true);
-                                        }
-                                    })
-                                } else {
-                                    alertify.error("Error al Eliminar");
-                                }
-                            });
-                            request.fail(function (jqXHR, textStatus, thrown) {
-                                console.log("ERROR: " + textStatus);
-                            });
-                            request.always(function () {
-                                //console.log("termino la ejecuicion de ajax");
-                            });
-
-                            e.preventDefault();
-
-                        } else {
-                            // user clicked "cancel"
-                            alertify.error("Opcion cancelada");
-                        }
-                    });
-                    return false;
-                });
-
-            });
-        </script>
-
 	</body>
 </html>

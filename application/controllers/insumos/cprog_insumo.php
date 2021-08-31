@@ -188,7 +188,7 @@ class Cprog_insumo extends CI_Controller{
 
                     $unidad = utf8_encode(trim($datos[3])); //// Unidad
                     $cantidad = intval(trim($datos[4])); //// Cantidad
-                    $unitario = intval(trim($datos[5])); //// Costo Unitario
+                    $unitario = floatval(trim($datos[5])); //// Costo Unitario
                     $total =  floatval(trim($datos[6])); //// Costo Total
 
                     $p_total=round(($cantidad*$unitario),2);
