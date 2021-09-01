@@ -314,6 +314,36 @@ class Creporte extends CI_Controller {
         }
     }
 
+
+
+    //// REPORTE FORMULARIO POA N 4 - CONSOLIDADO
+    public function reporte_formulario4_consolidado($proy_id){
+        echo "string";
+/*        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+        if(count($componente)!=0){
+            $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); //// DATOS PROYECTO
+            $data['pie_rep']=$proyecto[0]['proy_nombre'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
+            if($proyecto[0]['tp_id']==4){
+                $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); /// PROYECTO
+                $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
+            }
+
+            $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$com_id);
+            $data['operaciones']=$this->programacionpoa->operaciones_form4($componente,$proyecto); /// Reporte Gasto Corriente, Proyecto de Inversion 2022
+            $data['pie']=$this->programacionpoa->pie_form($proyecto);
+            $this->load->view('admin/programacion/reportes/reporte_form4', $data);
+        }
+        else{
+            echo "Error !!!";
+        }*/
+    }
+
+
+
+
+
+
+
     //// REPORTE FORMULARIO POA N 5
     public function reporte_formulario5($com_id){
         $componente=$this->model_componente->get_componente($com_id,$this->gestion);

@@ -68,7 +68,7 @@ class Rep_operaciones extends CI_Controller {
                     <li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li>
                     <li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li>
                     <li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li>
-                    <li>Genera el nro. de Actividades alineados a cada Objetivo Regional por Regional y Distrital.</li>
+                    <li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li>
                     <li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li>
                     <li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li>
                     <li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li>
@@ -93,7 +93,7 @@ class Rep_operaciones extends CI_Controller {
           <article class="col-sm-12">
             <div class="well">
               <form class="smart-form">
-                  <header><b>PROGRAMACI&Oacute;N DE OPERACIONES POA '.$this->gestion.'</b></header>
+                  <header><b>RESUMEN CONSOLIDADO PROGRAMACI&Oacute;N POA '.$this->gestion.'</b></header>
                   <fieldset>          
                     <div class="row">
                       <section class="col col-2">
@@ -129,15 +129,15 @@ class Rep_operaciones extends CI_Controller {
 
                       <div id="unidad" style="display:none;">
                         <section class="col col-2">
-                          <label class="label">ACTIVIDAD / PROYECTO DE INVERSI&Oacute;N</label>
-                          <select class="form-control" id="proy_id" name="proy_id" title="SELECCIONE ACTIVIDAD/PROYECTO DE INVERSION">
-                            <option value="0">SELECCIONE ACTIVIDAD/ PROYECTO</option>
+                          <label class="label">GASTO CORRIENTE / PROYECTO DE INVERSI&Oacute;N</label>
+                          <select class="form-control" id="proy_id" name="proy_id" title="SELECCIONE GASTO CORRIENTE/PROYECTO DE INVERSION">
+                            <option value="0">SELECCIONE GASTO CORRIENTE / PROYECTO</option>
                           </select>
                         </section>
 
                         <section class="col col-2">
-                          <label class="label">SUBACTIVIDAD</label>
-                          <select class="form-control"id="sub_act" name="sub_act" title="SELECCIONE SUBACTIVIDAD">
+                          <label class="label">UNIDAD RESPONSABLE</label>
+                          <select class="form-control"id="sub_act" name="sub_act" title="SELECCIONE UNIDAD RESPONSABLE">
                           </select>
                         </section>
                       </div>
@@ -190,13 +190,13 @@ class Rep_operaciones extends CI_Controller {
         $salida="";
           $salida.= "<option value='0'>SELECCIONE REPORTE</option>";
           $salida.= "<option value='1'>1-LISTA DE UNIDADES / PROY. INVERSIÓN</option>";
-          $salida.= "<option value='2'>2- CONSOLIDADO OPERACIONES</option>";
-          $salida.= "<option value='3'>3- CONSOLIDADO REQUERIMIENTOS</option>";
-          $salida.= "<option value='4'>4- EJECUCI&Oacute;N REQUERIMIENTOS</option>";
-          $salida.= "<option value='5'>5- OPERACIONES POR OBJETIVOS</option>";
-          $salida.= "<option value='6'>6- OPERACIONES POR PROGRAMA</option>";
-          $salida.= "<option value='7'>7- CONSOLIDADO MODIFICACIONES</option>";
-          $salida.= "<option value='8'>8- CONSOLIDADO CERTIFICACIONES POA</option>";
+          $salida.= "<option value='2'>2- CONSOLIDADO ACTIVIDADES (FORM 4)</option>";
+          $salida.= "<option value='3'>3- CONSOLIDADO REQUERIMIENTOS (FORM 5)</option>";
+          $salida.= "<option value='4'>4- EJECUCI&Oacute;N CERTIFICACIÓN POA</option>";
+          $salida.= "<option value='5'>5- ACTIVIDADES POR ACCION DE CORTO PLAZO</option>";
+          $salida.= "<option value='6'>6- ACTIVIDADES POR CATEGORIA PROGRAMÁTICA</option>";
+          $salida.= "<option value='7'>7- CONSOLIDADO NRO. MODIFICACIONES POA</option>";
+          $salida.= "<option value='8'>8- CONSOLIDADO NRO. CERTIFICACIONES POA</option>";
 
         echo $salida; 
         //return $salida;
@@ -214,7 +214,7 @@ class Rep_operaciones extends CI_Controller {
             where pfe.pfec_estado=1 and c.estado!=3 and pfe.proy_id='.$proy_id.'
             order by ser.serv_cod asc');
 
-          $salida.= "<option value='0'>SELECCIONE SUBACTIVIDAD</option>";
+          $salida.= "<option value='0'>SELECCIONE UNIDAD RESPONSABLE</option>";
           while($sql_p = pg_fetch_row($combog)){
             $salida.= "<option value='".$sql_p[0]."'>".$sql_p[1]." ".strtoupper ($sql_p[3])." ".strtoupper ($sql_p[2])."</option>";
           }

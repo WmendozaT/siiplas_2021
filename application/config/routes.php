@@ -208,7 +208,7 @@ $route['prog/valida_update_act'] = 'programacion/actividades/valida_update_activ
 $route['prog/delete_act'] = 'programacion/actividades/delete_actividad';	//// Elimina Actividad
 
 $route['prog/reporte_form4/(:any)'] = 'programacion/creporte/reporte_formulario4/$1';  //// Reporte Form 4 / 2021
-//$route['prog/reporte_form4/(:any)'] = 'programacion/producto/reporte_formulario4/$1';  //// Reporte Form 4 / 2021
+$route['prog/reporte_form4_consolidado/(:any)'] = 'programacion/creporte/reporte_formulario4_consolidado/$1';  //// Reporte Form 4 Consolidado
 
 
 /*-----------------------------  PROGRAMACION REQUERIMIENTOS (2020) -------------------------------*/
