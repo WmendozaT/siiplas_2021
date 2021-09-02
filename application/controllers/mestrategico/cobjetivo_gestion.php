@@ -220,7 +220,7 @@ class Cobjetivo_gestion extends CI_Controller {
               /*------- Actualizando meta objetivo regional ----------*/
               if($this->model_objetivoregion->get_oregional_por_progfis($verif[0]['pog_id'])!=0){
                   $update_ogp= array(
-                    'or_meta' => $prog_fis,
+                   // 'or_meta' => $prog_fis,
                     'fun_id' => $this->fun_id
                   );
                   $this->db->where('pog_id', $verif[0]['pog_id']);

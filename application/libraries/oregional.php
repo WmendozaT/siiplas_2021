@@ -889,8 +889,57 @@ class Oregional extends CI_Controller{
   }
 
 
-  //// Lista de OPeraciones Regional form 2
+    //// Lista de OPeraciones Regional form 2
   public function rep_lista_form2($dep_id){ 
+    $tabla='';
+    $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
+
+    $tabla.='
+    <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+      <thead>
+        <tr style="font-size: 6.7px;" bgcolor="#eceaea" align=center>
+          <th style="width:1%;height:20px;">#</th>
+          <th style="width:2.5%;"><b>COD. ACE.</b></th>
+          <th style="width:2.5%;"><b>COD. ACP.</b></th>
+          <th style="width:2.5%;"><b>COD. OPE.</b></th>
+          <th style="width:20%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
+          <th style="width:16%;">PRODUCTO</th>
+          <th style="width:16%;">RESULTADO</th>
+          <th style="width:16%;">INDICADOR</th>
+          <th style="width:4%;">META</th>
+          <th style="width:18%;">MEDIO DE VERIFICACI&Oacute;N</th>
+        </tr>
+      </thead>
+      <tbody>';
+    $nro=0;$monto_total=0;
+    foreach($lista_ogestion as $row){
+      $nro++;
+      $tabla.='
+      <tr style="font-size: 6.5px;">
+        <td style="width:1%; height:18px;" align=center>'.$nro.'</td>
+        <td style="width:2.5%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
+        <td style="width:2.5%; font-size: 8px;" align="center"><b>'.$row['og_codigo'].'</b></td>
+        <td style="width:2.5%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
+        <td style="width:20%;">'.$row['or_objetivo'].'</td>
+        <td style="width:16%;">'.$row['or_producto'].'</td>
+        <td style="width:16%;">'.$row['or_resultado'].'</td>
+        <td style="width:16%;">'.$row['or_indicador'].'</td>
+        <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
+        <td style="width:18%;">'.$row['or_verificacion'].'</td>
+      </tr>';
+    }
+    $tabla.='
+      </tbody>
+    </table>';
+
+    return $tabla;
+  }
+
+
+
+
+  //// Lista de OPeraciones Regional form 2 - original
+  public function rep_lista_form2_original($dep_id){ 
     $tabla='';
     $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
 

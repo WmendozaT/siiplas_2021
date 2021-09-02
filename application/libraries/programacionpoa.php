@@ -363,7 +363,12 @@ class Programacionpoa extends CI_Controller{
     public function mi_poa($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
       $tabla='';
-      $tabla.=' <table class="table table-bordered">
+      $tabla.=' 
+        <form >
+        <section class="col col-6">
+          <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
+        </section>
+        <table class="table table-bordered" id="datos">
                   <thead>
                   <tr>
                     <th >NRO.</th>
@@ -399,11 +404,11 @@ class Programacionpoa extends CI_Controller{
                       
                     }
                   $tabla.='</tbody>';
-                    if($this->fun_id==399){
+                    if($this->gestion>2021){
                       $tabla.='
-                      <tr>
-                        <td colspan=3><b>CONSOLIDADO POA</b></td>
-                        <td align=center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proy_id.'\');" title="REPORTE FORM. 4 CONSOLIDADO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
+                      <tr bgcolor="#d3e2f3">
+                        <td colspan=3><b>CONSOLIDADO POA UNIDADES RESPONSABLES FORM 4 - GESTIÓN '.$this->gestion.'</b></td>
+                        <td align=center ><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proy_id.'\');" title="REPORTE FORM. 4 CONSOLIDADO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
                         <td></td>
                       </tr>';
                     }
@@ -424,7 +429,8 @@ class Programacionpoa extends CI_Controller{
                     }
                   $tabla.='
                   
-                </table>';
+                </table>
+              </form>';
 
       return $tabla;
     }

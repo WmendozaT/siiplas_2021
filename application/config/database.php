@@ -6,7 +6,7 @@ $active_record = TRUE;
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'postgres';
 $db['default']['password'] = '123456';
-$db['default']['database'] = 'cns19082021c';  //// BD_CNS - BASE DE DATOS ORIGINAL CAMBIADO 11/03/2019 (CNS YA NO ES LA ORIGINAL)
+$db['default']['database'] = 'cns30082021';  //// BD_CNS - BASE DE DATOS ORIGINAL CAMBIADO 11/03/2019 (CNS YA NO ES LA ORIGINAL)
 
 $db['default']['dbdriver'] = 'postgre';
 $db['default']['port'] = '5432';
