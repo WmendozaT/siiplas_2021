@@ -15,18 +15,9 @@ ob_start();
         }
     </style>
 
-<page backtop="75mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
-    <page_header>
-        <br><div class="verde"></div>
-        <?php echo $cabecera; ?>
-    </page_header>
-    <page_footer>
-        <?php echo $pie; ?>
-    </page_footer>
-    <?php echo $operaciones;?>
 
-</page>
 <?php
+echo $lista;
 $content = ob_get_clean();
 //require_once(dirname(__FILE__).'/../html2pdf.class.php');
 require_once('assets/html2pdf-4.4.0/html2pdf.class.php');

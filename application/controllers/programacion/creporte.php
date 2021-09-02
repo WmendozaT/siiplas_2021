@@ -318,24 +318,52 @@ class Creporte extends CI_Controller {
 
     //// REPORTE FORMULARIO POA N 4 - CONSOLIDADO
     public function reporte_formulario4_consolidado($proy_id){
-        echo "string";
-/*        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
-        if(count($componente)!=0){
-            $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); //// DATOS PROYECTO
-            $data['pie_rep']=$proyecto[0]['proy_nombre'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
-            if($proyecto[0]['tp_id']==4){
-                $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); /// PROYECTO
-                $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
+        $tabla='';
+        $data['mes'] = $this->mes_nombre();
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
+        if(count($proyecto)!=0){
+            $procesos=$this->model_componente->lista_subactividad($proy_id);
+            $pie=$this->programacionpoa->pie_form($proyecto);
+
+            $tabla.='
+                    <page orientation="portrait" backtop="75mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
+                        <page_header>
+                            <br><div class="verde"></div>
+                    
+                        </page_header>
+                        <page_footer>
+                    
+                        </page_footer>
+                    
+                    </page>';
+
+            foreach($procesos  as $pr){
+                if(count($this->model_producto->list_prod($pr['com_id']))!=0){
+                    $componente=$this->model_componente->get_componente($pr['com_id'],$this->gestion);
+                    $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$pr['com_id']);
+                    $operaciones=$this->programacionpoa->operaciones_form4($componente,$proyecto); /// Reporte Gasto Corriente, Proyecto de Inversion 2022
+
+                    $tabla.='
+                    <page orientation="paysage" backtop="75mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
+                        <page_header>
+                            <br><div class="verde"></div>
+                            '.$cabecera.'
+                        </page_header>
+                        <page_footer>
+                            '.$pie.'
+                        </page_footer>
+                        '.$operaciones.'
+                    </page>';
+                }
             }
 
-            $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$com_id);
-            $data['operaciones']=$this->programacionpoa->operaciones_form4($componente,$proyecto); /// Reporte Gasto Corriente, Proyecto de Inversion 2022
-            $data['pie']=$this->programacionpoa->pie_form($proyecto);
-            $this->load->view('admin/programacion/reportes/reporte_form4', $data);
+            $data['lista']=$tabla;
+            $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$this->gestion;
+            $this->load->view('admin/programacion/reportes/reporte_form4_consolidado', $data);
         }
         else{
             echo "Error !!!";
-        }*/
+        }
     }
 
 
