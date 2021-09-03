@@ -131,24 +131,12 @@ class Cevaluacion_pei extends CI_Controller {
       </div><br>
       <table class="table table-bordered" border=0.2 style="width:100%;" align=center>
         <thead>
-        <tr style="font-size: 11px;" align=center>';
-          if($this->gestion>2020){ /// 2021
-            $tabla.='
-            <th style="width:1%;height:10px;color:#FFF;" bgcolor="#1c7368">N°</th>
-            <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACE.</b></th>
-            <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACP.</b></th>
-            <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. REG.</b></th>
-            <th style="width:11%;color:#FFF;" bgcolor="#1c7368">OBJETIVO REGIONAL</th>';
-          }
-          else{ /// 2020
-            $tabla.='
-            <th style="width:1%;height:10px;color:#FFF;" bgcolor="#1c7368">N°</th>
-            <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACE.</b></th>
-            <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACP.</b></th>
-            <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. OPE.</b></th>
-            <th style="width:11%;color:#FFF;" bgcolor="#1c7368">OPERACI&Oacute;N</th>';
-          }
-          $tabla.='
+        <tr style="font-size: 11px;" align=center>
+          <th style="width:1%;height:10px;color:#FFF;" bgcolor="#1c7368">N°</th>
+          <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACE.</b></th>
+          <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACP.</b></th>
+          <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. OPE.</b></th>
+          <th style="width:11%;color:#FFF;" bgcolor="#1c7368">OPERACI&Oacute;N</th>
           <th style="width:11%;color:#FFF;" bgcolor="#1c7368">RESULTADO</th>
           <th style="width:10%;color:#FFF;" bgcolor="#1c7368">INDICADOR</th>
           <th style="width:10%;color:#FFF;" bgcolor="#1c7368">MEDIO VERIFICACI&Oacute;N</th>
@@ -361,7 +349,7 @@ class Cevaluacion_pei extends CI_Controller {
                               <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">PLAN OPERATIVO ANUAL - '.$this->session->userdata('gestion').'</td>
                             </tr>
                             <tr>
-                              <td style="width:100%; height: 1.2%; font-size: 13pt;" align="center"><b>EVALUACI&Oacute;N DE OBJETIVOS REGIONALES </b></td>
+                              <td style="width:100%; height: 1.2%; font-size: 13pt;" align="center"><b>EVALUACI&Oacute;N DE OPERACIONES </b></td>
                             </tr>
                           </table>
                         </td>
