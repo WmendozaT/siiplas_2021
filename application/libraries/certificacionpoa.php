@@ -1616,7 +1616,7 @@ class Certificacionpoa extends CI_Controller{
             </td>
             <td style="width: 40%;"></td>
             <td style="width: 20%;" align="center">
-                <qrcode value="'.$certpoa[0]['cpoa_codigo'].'|'.$certpoa[0]['cpoa_cite'].'" style="border: none; width: 18mm; '.$color.'"></qrcode>
+                <qrcode value="'.$certpoa[0]['cpoa_codigo'].' '.$certpoa[0]['cpoa_cite'].'" style="border: none; width: 18mm; '.$color.'"></qrcode>
             </td>
           </tr>
           <tr>
@@ -2501,7 +2501,7 @@ class Certificacionpoa extends CI_Controller{
 
                   </td>
                   <td style="width:10%;" align=center>
-                    <qrcode value="'.$cite[0]['cite_codigo'].'|'.$codigo_certificacion.'" style="border: none; width: 18mm;"></qrcode>
+                    <qrcode value="'.$cite[0]['cite_codigo'].' '.$codigo_certificacion.'" style="border: none; width: 18mm;"></qrcode>
                   </td>
                 </tr>
                 <tr>

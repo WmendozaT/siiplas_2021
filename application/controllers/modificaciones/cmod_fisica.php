@@ -397,7 +397,7 @@ class Cmod_fisica extends CI_Controller {
         }
 
         $data['inputs']=$inptus;
-      //  echo $this->verif_mes[1];
+//        echo $this->verif_mes[1];
         $this->load->view('admin/modificacion/moperaciones/productos/edit_prod', $data);
       }
       else{
@@ -679,67 +679,46 @@ class Cmod_fisica extends CI_Controller {
           /*----------------------------------*/
 
           $mes=0;
+          // $this->verif_mes[1]
 
           if($tipo_i==1){
-            for ($i=1; $i <=4 ; $i++) { 
-              if(count($this->model_evaluacion->get_trimestral_prod($prod_id,$this->gestion,$i))==0){
-              for ($j=1; $j <=3 ; $j++) { 
-                $mes++;
-                if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$mes))==0){
-                  $this->db->where('prod_id', $prod_id);
-                  $this->db->where('m_id', $mes);
-                  $this->db->delete('prod_programado_mensual'); 
+            for ($i=$this->verif_mes[1]; $i <=12 ; $i++) { 
+              if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$i))==0){
+                $this->db->where('prod_id', $prod_id);
+                $this->db->where('m_id', $i);
+                $this->db->delete('prod_programado_mensual'); 
 
-                    if($post['m'.$mes]!=0){
-                      $this->model_producto->add_prod_gest($prod_id,$this->gestion,$mes,$post['m'.$mes]);
-                    }
-                  }
+                if($post['m'.$i]!=0){
+                  $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$post['m'.$i]);
                 }
-              }
-              else{
-                $mes=$mes+3;
               }
             }
           }
 
           if($tipo_i==2){
             if($tp_met==3){
-              for ($i=1; $i <=4 ; $i++) { 
-                if(count($this->model_evaluacion->get_trimestral_prod($prod_id,$this->gestion,$i))==0){
-                for ($j=1; $j <=3 ; $j++) { 
-                  $mes++;
-                    if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$mes))==0){
-                      $this->db->where('prod_id', $prod_id);
-                      $this->db->where('m_id', $mes);
-                      $this->db->delete('prod_programado_mensual'); 
+              for ($i=$this->verif_mes[1]; $i <=12 ; $i++) { 
+                if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$i))==0){
+                  $this->db->where('prod_id', $prod_id);
+                  $this->db->where('m_id', $i);
+                  $this->db->delete('prod_programado_mensual'); 
 
-                      if($post['m'.$mes]!=0){
-                        $this->model_producto->add_prod_gest($prod_id,$this->gestion,$mes,$post['m'.$mes]);
-                      }
-                    }
+                  if($post['m'.$i]!=0){
+                    $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$post['m'.$i]);
                   }
-                }
-                else{
-                  $mes=$mes+3;
                 }
               }
             }
             elseif($tp_met==1){
-              for ($i=1; $i <=4 ; $i++) { 
-                if(count($this->model_evaluacion->get_trimestral_prod($prod_id,$this->gestion,$i))==0){
-                for ($j=1; $j <=3 ; $j++) { 
-                  $mes++;
-                    if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$mes))==0){
-                      $this->db->where('prod_id', $prod_id);
-                      $this->db->where('m_id', $mes);
-                      $this->db->delete('prod_programado_mensual'); 
-                      $this->model_producto->add_prod_gest($prod_id,$this->gestion,$mes,$meta);
-                    }
-                  
+              for ($i=$this->verif_mes[1]; $i <=12 ; $i++) { 
+                if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$i))==0){
+                  $this->db->where('prod_id', $prod_id);
+                  $this->db->where('m_id', $i);
+                  $this->db->delete('prod_programado_mensual'); 
+
+                  if($post['m'.$i]!=0){
+                    $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$meta);
                   }
-                }
-                else{
-                  $mes=$mes+3;
                 }
               }
             }
