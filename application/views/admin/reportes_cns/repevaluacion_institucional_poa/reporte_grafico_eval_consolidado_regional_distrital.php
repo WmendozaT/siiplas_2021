@@ -155,16 +155,17 @@
                                <div class="tab-pane fade" id="s3">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                            <?php echo $parametro_eficacia;?>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                             <div align="left" id="boton_eficacia">
-                                                <a href="#" class="btn btn-default eficacia_unidad" title="CUADRO DE EFICIENCIA Y EFICACIA" style="width:40%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;<?php echo $boton1;?></a>
+                                                <a href="#" class="btn btn-default eficacia_unidad" title="CUADRO DE CUMPLIMIENTO" style="width:40%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;<?php echo $boton1;?></a>
                                              </div>
-
+                            
                                             <div class="row">
                                               <div id="lista"></div>
                                             </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                            <div id="parametro_eficacia"></div>
+
                                             <div align="right" id="print_eficacia" style="display: none">
                                               <?php echo $boton_parametros_unidad;?>
                                             </div>
@@ -301,6 +302,32 @@ window.onload = function () {
       }]
     });
     chart1.render();
+
+    /// Grafico Pastel Parametros unidad
+    var chart_parametros = new CanvasJS.Chart("pastel_canvasjs_parametros_unidad", {
+      exportEnabled: true,
+      animationEnabled: true,
+      title:{
+        text: "PARAMETROS DE CUMPLIMIENTO POA POR UNIDAD" 
+      },
+      legend:{
+        cursor: "pointer",
+        itemclick: explodePastel
+      },
+      data: [{
+        type: "pie",
+        showInLegend: true,
+        toolTipContent: "{name}: <strong>{y} %</strong>",
+        indexLabel: "{name} - {y} %",
+        dataPoints: [
+          { y: <?php echo round((($matriz_parametro_unidad[4][2]/($matriz_parametro_unidad[4][2]+$matriz_parametro_unidad[3][2]+$matriz_parametro_unidad[2][2]+$matriz_parametro_unidad[1][2]))*100),2);?>, name: "OPTIMO", color: '#73a773', exploded: true },
+          { y: <?php echo round((($matriz_parametro_unidad[3][2]/($matriz_parametro_unidad[4][2]+$matriz_parametro_unidad[3][2]+$matriz_parametro_unidad[2][2]+$matriz_parametro_unidad[1][2]))*100),2);?>, name: "BUENO",color: '#57889c' },
+          { y: <?php echo round((($matriz_parametro_unidad[2][2]/($matriz_parametro_unidad[4][2]+$matriz_parametro_unidad[3][2]+$matriz_parametro_unidad[2][2]+$matriz_parametro_unidad[1][2]))*100),2);?>, name: "REGULAR",color: '#f5e218' },
+          { y: <?php echo round((($matriz_parametro_unidad[1][2]/($matriz_parametro_unidad[4][2]+$matriz_parametro_unidad[3][2]+$matriz_parametro_unidad[2][2]+$matriz_parametro_unidad[1][2]))*100),2);?>, name: "INSATISFACTORIO",color: '#a90329' },
+        ]
+      }]
+    });
+    chart_parametros.render();
 
 /// Regresion al Trimestre Vigente
 var chart = new CanvasJS.Chart("regresion_canvasjs", {
@@ -443,34 +470,34 @@ chart_gestion.render();
 
 
 
-    function explodePastel (e) {
-        if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-        } else {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-        }
-        e.chart1.render();
+  function explodePastel (e) {
+    if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+        e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+    } else {
+        e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
     }
+    e.chart1.render();
+  }
 
-    function toggleDataSeries(e) {
-        if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
-            e.dataSeries.visible = false;
-        }
-        else {
-            e.dataSeries.visible = true;            
-        }
-        chart.render();
+  function toggleDataSeries(e) {
+    if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
+        e.dataSeries.visible = false;
     }
+    else {
+        e.dataSeries.visible = true;            
+    }
+    chart.render();
+  }
 
-    function toggleDataSeries_gestion(e) {
-        if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
-            e.dataSeries.visible = false;
-        }
-        else {
-            e.dataSeries.visible = true;            
-        }
-        chart_gestion.render();
+  function toggleDataSeries_gestion(e) {
+    if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
+        e.dataSeries.visible = false;
     }
+    else {
+        e.dataSeries.visible = true;            
+    }
+    chart_gestion.render();
+  }
 </script>
 
   <!-- REGRESION LINEAL AL TRIMESTRE -->

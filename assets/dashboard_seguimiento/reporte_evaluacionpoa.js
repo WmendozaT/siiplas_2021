@@ -272,7 +272,7 @@ function abreVentana_eficiencia(PDF){
             request.done(function (response, textStatus, jqXHR) {
             if (response.respuesta == 'correcto') {
                 $('#lista').fadeIn(1000).html(response.tabla);
-                $('#parametro_eficacia').fadeIn(1000).html(response.parametro_eficacia);
+              //  $('#parametro_eficacia').fadeIn(1000).html(response.parametro_eficacia);
                 $('#print_eficacia').slideDown();
             }
             else{

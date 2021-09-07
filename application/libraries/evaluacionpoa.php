@@ -255,7 +255,7 @@ class Evaluacionpoa extends CI_Controller{
     public function parametros_eficacia($matriz,$tp_rep){
       if($tp_rep==1){ //// Normal
         $class='class="table table-bordered" align=center style="width:60%;"';
-        $tit='<div style="font-size: 25px;font-family: Arial;"><b>PARAMETROS DE CUMPLIMIENTO</b></div><br>';
+       // $tit='<div style="font-size: 25px;font-family: Arial;"><b>PARAMETROS DE CUMPLIMIENTO</b></div><br>';
 
       }
       else{ /// Impresion
@@ -263,7 +263,8 @@ class Evaluacionpoa extends CI_Controller{
       }
      // $nro=$matriz;
       $tabla='';
-      $tabla .=''.$tit.'<table '.$class.'>
+      $tabla.='<div id="pastel_canvasjs_parametros_unidad" style="width: 500px; height: 420px; margin: 0 auto" ></div>';
+      $tabla .='<table '.$class.'>
                     <thead>
                       <tr>
                         <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
