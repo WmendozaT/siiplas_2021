@@ -570,15 +570,17 @@ class Evaluacionpoa extends CI_Controller{
         <table class="table table-bordered" align=center style="width:100%;" id="tab_uni">
          <thead>
             <tr style="font-size: 10px;" align=center>
-              <th style="width:2%;height:15px;">#</th>
-              <th style="width:13%;">DISTRITAL</th>
-              <th style="width:13%;">GASTO CORRIENTE / PROY. INV.</th>
-              <th style="width:10%;">METAS. PROGRAMADAS</th>
-              <th style="width:10%;">METAS CUMPLIDAS</th>
-              <th style="width:10%;">METAS NO CUMPLIDS</th>
-              <th style="width:10%;">% CUMPLIMIENTO</th>
-              <th style="width:10%;">% NO CUMPLIDAS</th>
-              <th style="width:10%;">% EJEC. PRESUPUESTARIA</th>
+              <th style="width:1%;height:15px;">#</th>
+              <th style="width:10%;">DISTRITAL</th>
+              <th style="width:10%;">GASTO CORRIENTE / PROY. INV.</th>
+              <th style="width:5%;"></th>
+              <th style="width:5%;">ACT. PROG.</th>
+              <th style="width:5%;">ACT CUMP.</th>
+              <th style="width:5%;">ACT NO CUMP.</th>
+              <th style="width:5%;">% CUMP.</th>
+              <th style="width:5%;">% NO CUMP.</th>
+              <th style="width:5%;">% EJEC. CERT. POA</th>
+              
             </tr>
           </thead>
           <tbody>';
@@ -596,27 +598,54 @@ class Evaluacionpoa extends CI_Controller{
 
             $nro++;
             $tabla.='<tr style="font-size: 10px;" bgcolor='.$color.'>';
-            $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
-            $tabla.='<td style="width:13%;">'.strtoupper($row['dist_distrital']).'</td>';
-            $tabla.='<td style="width:13%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[2][$this->tmes].'</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';
-            $tabla.='<td style="width:10%;" align=right><button type="button" style="width:100%;" class="btn btn-info"><b>'.$eficacia[5][$this->tmes].'%</b></td>';
-            $tabla.='<td style="width:10%;" align=right><button type="button" style="width:100%;" class="btn btn-danger"><b>'.(100-$eficacia[5][$this->tmes]).'%</b></td>';
-            $tabla.='<td style="width:10%;" align=right><b>'.$economia[3].'%</b></td>';
+            $tabla.='<td style="width:1;height:10px;" align=center>'.$nro.'</td>';
+            $tabla.='<td style="width:10%;">'.strtoupper($row['dist_distrital']).'</td>';
+            $tabla.='<td style="width:10%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
+            $tabla.='<td style="width:5%;" align=center>';
+            $procesos=$this->model_componente->lista_subactividad($row['proy_id']);
+              $tabla.=' <div class="btn-group">
+                          <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span> VER EVAL.</a>
+                          <ul class="dropdown-menu">';
+                          foreach($procesos as $pr){
+                            if(count($this->model_producto->list_prod($pr['com_id']))!=0){
+                              if($row['ta_id']==2){
+                                $tabla.='
+                                <li>
+                                  <a href="'.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$pr['com_id'].'/'.$this->tmes.'"  target="_blank" title="VER EVALUACIÓN POA">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</a>
+                                </li>';
+                              }
+                              else{
+                                $tabla.='
+                              <li>
+                                <a href="'.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$pr['com_id'].'/'.$this->tmes.'"  target="_blank" title="VER EVALUACIÓN POA">'.$pr['serv_cod'].' '.$pr['tipo_subactividad'].' '.$pr['serv_descripcion'].'</a>
+                              </li>';
+                              }
+                            }
+                          }
+                          $tabla.='
+                          </ul>
+                        </div>';
+            $tabla.='</td>';
+            $tabla.='<td style="width:5%;" align=right><b>'.$eficacia[2][$this->tmes].'</b></td>';
+            $tabla.='<td style="width:5%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
+            $tabla.='<td style="width:5%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';
+            $tabla.='<td style="width:5%;" align=right><button type="button" style="width:100%;" class="btn btn-info"><b>'.$eficacia[5][$this->tmes].'%</b></td>';
+            $tabla.='<td style="width:5%;" align=right><button type="button" style="width:100%;" class="btn btn-danger"><b>'.(100-$eficacia[5][$this->tmes]).'%</b></td>';
+            $tabla.='<td style="width:5%;" align=right><b>'.$economia[3].'%</b></td>';
             $tabla.='</tr>';
           }
       $tabla.='
           <tr style="font-size: 10px;" >
             <td></td>
             <td colspan=2><b>'.$titulo_consolidado.'</b></td>
+            <td></td>
             <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[2][$this->tmes].'</b></td>
             <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[3][$this->tmes].'</b></td>
             <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[4][$this->tmes].'</b></td>
             <td style="font-size: 13px;" align=right><b>'.$eficacia_distrital[5][$this->tmes].'%</b></td>
             <td style="font-size: 13px;" align=right><b>'.(100-$eficacia_distrital[5][$this->tmes]).'%</b></td>
             <td style="font-size: 13px;" align=right><b>'.$economia_distrital[3].'%</b></td>
+            
           </tr>
           </tbody>
         </table>';

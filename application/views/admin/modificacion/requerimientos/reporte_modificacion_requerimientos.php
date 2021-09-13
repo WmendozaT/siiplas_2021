@@ -15,7 +15,7 @@ ob_start();
         }
 </style>
 
-<page backtop="49mm" backbottom="49.5mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="45mm" backbottom="49mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <table class="page_header" border="0">
@@ -61,13 +61,13 @@ ob_start();
     <page_footer>
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;">
             <tr>
-                <td style="width: 3%;"></td>
-                <td style="width: 75%;">
+                <td style="width: 2%;"></td>
+                <td style="width: 80%;">
                     <b>OBERVACI&Oacute;N</b><hr>
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                         <tr bgcolor="#dcefec">
-                            <td style="width: 100%;">
-                                <br><?php echo strtoupper($cite[0]['cite_observacion']);?><br><br>
+                            <td style="width: 100%; height:15px;">
+                                <?php echo strtoupper($cite[0]['cite_observacion']);?>
                             </td>
                         </tr>
                     </table>
@@ -123,7 +123,7 @@ ob_start();
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><br><br><br></td>
+                <td colspan="2"><br></td>
             </tr>
         </table>
     </page_footer>
