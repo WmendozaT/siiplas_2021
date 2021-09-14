@@ -845,7 +845,7 @@ class Model_ptto_sigep extends CI_Model{
 
     /*============ PARTIDAS UNIDAD EJECUTORA POR REGIONAL ============*/
     public function partidas_accion_region($dep_id,$aper_id,$tp){
-        if($tp==1){
+        if($tp==1){ /// asignado
             $sql = 'select p.dep_id,pg.par_id,pg.partida as codigo,par.par_nombre as nombre,SUM(pg.importe) as monto ,pg.ppto_saldo_ncert as saldo
                     from ptto_partidas_sigep pg 
                     Inner Join aperturaproyectos as ap On ap.aper_id=pg.aper_id 
@@ -855,9 +855,18 @@ class Model_ptto_sigep extends CI_Model{
                     group by p.dep_id,pg.par_id,pg.partida,par.par_nombre,pg.importe ,pg.ppto_saldo_ncert
                     order by pg.partida';
         }
-        else{
+        else{ /// programado
 
-            $sql = 'select p.dep_id,i.aper_id,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(ip.programado_total) as monto
+            $sql = 'select i.aper_id,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(i.ins_costo_total) as monto
+                    from vlista_insumos i
+                    Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
+                  
+                    where i.aper_id='.$aper_id.' and i.aper_id!=\'0\'
+                    group by i.aper_id,i.par_id, i.par_codigo, i.par_nombre
+                    order by i.par_codigo';
+
+
+            /*$sql = 'select p.dep_id,i.aper_id,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(ip.programado_total) as monto
                     from vlista_insumos i
                     Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
                     Inner Join _proyectos as p On p.proy_id=ap.proy_id
@@ -865,7 +874,7 @@ class Model_ptto_sigep extends CI_Model{
                     Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
                     where p.dep_id='.$dep_id.' and i.aper_id='.$aper_id.' and i.aper_id!=\'0\'
                     group by p.dep_id,i.aper_id,i.par_id, i.par_codigo, i.par_nombre
-                    order by i.par_codigo';
+                    order by i.par_codigo';*/
         }
     
         $query = $this->db->query($sql);

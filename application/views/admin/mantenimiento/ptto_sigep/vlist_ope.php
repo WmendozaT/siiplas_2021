@@ -187,10 +187,10 @@
                                 <div id="tabs">
                                     <ul>
                                         <li>
-                                            <a href="#tabs-c">OPERACI&Oacute;N DE FUNCIONAMIENTO</a>
+                                            <a href="#tabs-c">GASTO CORRIENTE</a>
                                         </li>
                                         <li>
-                                            <a href="#tabs-a">PROYECTOS DE INVERSI&Oacute;N PUBLICA</a>
+                                            <a href="#tabs-a">PROYECTOS DE INVERSI&Oacute;N</a>
                                         </li>
                                     </ul>
                                     
@@ -200,7 +200,7 @@
                                             <div class="jarviswidget jarviswidget-color-darken" >
                                               <header>
                                                   <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                                                  <h2 class="font-md"><strong>OPERACI&Oacute;N FUNCIONAMIENTO</strong></h2>  
+                                                  <h2 class="font-md"><strong>GASTO CORRIENTE</strong></h2>  
                                               </header>
                                                 <div>
                                                     <div class="widget-body no-padding">
@@ -221,7 +221,7 @@
                                             <div class="jarviswidget jarviswidget-color-darken" >
                                               <header>
                                                   <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                                                  <h2 class="font-md"><strong>PROYECTOS DE INVERSI&Oacute;N PUBLICA </strong></h2>  
+                                                  <h2 class="font-md"><strong>PROYECTOS DE INVERSI&Oacute;N</strong></h2>  
                                               </header>
                                                 <div>
                                                     <div class="widget-body no-padding">
@@ -267,7 +267,7 @@
                         <h2><center>SUBIR ARCHIVO PPTO ASIGNADO.CSV</center></h2>
                     
                         <div class="row">
-                            <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
+                         <!--    <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script> -->
                               <form action="<?php echo site_url().'/mantenimiento/cptto_poa/importar_archivo_sigep' ?>" method="post" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep">
                                 <input name="tp" type="hidden" value="0">
                                 

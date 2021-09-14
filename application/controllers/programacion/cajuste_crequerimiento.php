@@ -94,7 +94,8 @@ class cajuste_crequerimiento extends CI_Controller{
 
     /*----- LISTA REQUERIMIENTOS COMPLETO (2020) ------*/
     public function lista_requerimientos($com_id){
-      $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($com_id);
+     // $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($com_id);
+      $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id); /// Lista requerimientos
 
       $tabla='';
       $total=0;

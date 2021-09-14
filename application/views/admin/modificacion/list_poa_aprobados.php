@@ -59,27 +59,6 @@
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
 		<!-- HEADER -->
 		<header id="header">
-			<div id="logo-group">
-				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -154,37 +133,15 @@
 			<div id="content">
 				<section id="widget-grid" class="">
 					<div class="row">
-						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
+						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="well well-sm well-light">
-								<h3>MODIFICACI&Oacute;N DE OPERACIONES - REQUERIMIENTOS <?php echo $this->session->userdata('gestion')?></h3>
-							</div>
-						</article>
-						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-							<div class="well well-sm well-light">
-								<?php
-									if($this->session->userdata('gestion')==2019 & $this->session->userdata('tp_adm')==1){ ?>
-										<a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-success" title="ACTUALIZAR OPERACIONES" style="width:100%;">ACTUALIZAR DATOS OPERACIONES</a>
-										<?php
-									}
-								?>
+								<h3>MODIFICACI&Oacute;N POA - GESTI&Oacute;N <?php echo $this->session->userdata('gestion')?></h3>
 							</div>
 						</article>
 					</div>
 					<div class="row">
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<?php 
-			                  if($this->session->flashdata('success')){ ?>
-			                    <div class="alert alert-success">
-			                      <?php echo $this->session->flashdata('success'); ?>
-			                    </div>
-			                <?php }
-			                    elseif($this->session->flashdata('danger')){ ?>
-		                    	<div class="alert alert-danger">
-			                      <?php echo $this->session->flashdata('danger'); ?>
-			                    </div><?php }
-			                ?>
 							<div class="well well-sm well-light">
-								<!-- <h3>T&Eacute;CNICO DE UNIDAD EJECUTORA</h3> -->
 								<div id="tabs">
 									<ul>
 										<li>
@@ -204,7 +161,7 @@
 				                              </header>
 												<div>
 													<div class="widget-body no-padding">
-														<?php echo $operaciones; ?>
+														<?php echo $gasto_corriente; ?>
 													</div>
 													<!-- end widget content -->
 												</div>

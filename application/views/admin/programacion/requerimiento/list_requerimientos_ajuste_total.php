@@ -135,28 +135,6 @@
 				<section id="widget-grid" class="">
 					<div class="row">
 						<?php echo $titulo; ?>
-						<!-- <article class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
-				            <section id="widget-grid" class="well">
-				                <div class="">
-				                  	<?php echo $datos; ?>
-				                  	<h1> PRESUPUESTO ASIGNADO : <small><?php echo number_format($monto_a, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;PRESUPUESTO PROGRAMADO : <small><?php echo number_format($monto_p, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;SALDO : <small><?php echo number_format(($monto_a-$monto_p), 2, ',', '.'); ?></small></h1>
-				                	<a href="#" data-toggle="modal" data-target="#modal_comparativo" name="<?php echo $proyecto[0]['proy_id'];?>" id="<?php echo $datos_unidad;?>" class="btn btn-default comparativo" title="MOSTRAR CUADRO COMPARATIVO PRESUPUESTARIA ASIGANDO-POA"><i class="fa fa-clipboard"></i> <b>COMPARATIVO PPTO.</b></a>
-				                	<a class="btn btn-danger" id="btsubmit" onclick="valida_eliminar()" title="ELIMINAR REQUERIMIENTOS SELECCIONADOS"><i class="glyphicon glyphicon-trash"></i> DELETE INSUMOS (SELECCIONADOS)</a>
-				                </div>
-				            </section>
-				        </article>
-				        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
-							<div class="well">
-								<div class="btn-group btn-group-justified">
-									<a href="#" data-toggle="modal" data-target="#modal_comparativo" name="<?php echo $proyecto[0]['proy_id'];?>" id="<?php echo $datos_unidad;?>" class="btn btn-default comparativo" title="MOSTRAR CUADRO COMPARATIVO PRESUPUESTARIA ASIGANDO-POA"><i class="fa fa-clipboard"></i> <b>COMPARATIVO PPTO.</b></a>
-								</div><hr>
-								<div class="btn-group btn-group-justified">
-									<a class="btn btn-default" href="<?php echo base_url(); ?>assets/video/Plantilla_migracion_requerimiento_mod.xlsx" download  title="DESCARGAR ARCHIVO DE MIGRACIÓN EXCEL"><i class="glyphicon glyphicon-download"></i> DESCARGAR ARCHIVO</a>
-									<a class="btn btn-danger" id="btsubmit" onclick="valida_eliminar()" title="ELIMINAR REQUERIMIENTOS SELECCIONADOS"><i class="glyphicon glyphicon-trash"></i> DELETE INSUMOS (SELECCIONADOS)</a>
-								</div>
-							</div>
-				        </article> -->
-
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<?php 
 			                  if($this->session->flashdata('success')){ ?>
@@ -1081,7 +1059,55 @@
                     });
                 }
 
-                $(".del_ff").on("click", function (e) {
+        $(".del_ff").on("click", function (e) {
+            reset();
+            var ins_id = $(this).attr('name');
+            var request;
+
+            // confirm dialog
+            alertify.confirm("DESEA ELIMINAR REQUERIMIENTO ?", function (a) {
+              if (a) { 
+              	  var url = "<?php echo site_url().'/programacion/crequerimiento/delete_get_requerimiento'?>";
+                //  var url = base+"index.php/programacion/crequerimiento/delete_get_requerimiento";
+                  if (request) {
+                      request.abort();
+                  }
+                  request = $.ajax({
+                      url: url,
+                      type: "POST",
+                      dataType: "json",
+                      data: "ins_id="+ins_id
+                  });
+
+                  request.done(function (response, textStatus, jqXHR) { 
+                    reset();
+                    if (response.respuesta == 'correcto') {
+                        alertify.alert("EL REQUERIMIENTO SE ELIMINO CORRECTAMENTE ", function (e) {
+                            if (e) {
+                                window.location.reload(true);
+                            }
+                        })
+                    } else {
+                        alertify.error("Error al Eliminar");
+                    }
+                  });
+                  request.fail(function (jqXHR, textStatus, thrown) {
+                      console.log("ERROR: " + textStatus);
+                  });
+                  request.always(function () {
+                      //console.log("termino la ejecuicion de ajax");
+                  });
+
+                  e.preventDefault();
+
+              } else {
+                  // user clicked "cancel"
+                  alertify.error("Opcion cancelada");
+              }
+          });
+          return false;
+        });
+/*                $(".del_ff").on("click", function (e) {
                     reset();
                     var ins_id = $(this).attr('name');
                     var proy_id = <?php echo $proyecto[0]['proy_id'];?>;
@@ -1128,7 +1154,7 @@
                         }
                     });
                     return false;
-                });
+                });*/
 
             });
         </script>

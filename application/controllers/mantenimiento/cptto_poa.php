@@ -17,6 +17,7 @@ class Cptto_poa extends CI_Controller {
                 $this->load->model('programacion/model_proyecto');
                 $this->load->model('programacion/model_faseetapa');
                 $this->load->model('programacion/insumos/minsumos');
+                $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
                 $this->load->model('mantenimiento/model_partidas');
                 $this->load->model('reporte_eval/model_evalregional');
                 $this->load->model('ejecucion/model_ejecucion');
@@ -546,7 +547,7 @@ class Cptto_poa extends CI_Controller {
                              //   echo "string<br>";
                                 $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                                 if(count($aper)!=0){
-                                    $partida = $this->minsumos->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                                    $partida = $this->model_insumo ->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                                     $par_id=0;
                                     if(count($partida)!=0){
                                         $par_id=$partida[0]['par_id'];
@@ -730,12 +731,12 @@ class Cptto_poa extends CI_Controller {
                       $cod_part=$cod_part.'00';
                     }
 
-                    $importe=(float)$datos[6]; /// Monto
+                    $importe=floatval($datos[6]); /// Monto
                     if(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
                         $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                         //$aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                         if(count($aper)!=0){
-                            $partida = $this->minsumos->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                            $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                             $par_id=0;
                             if(count($partida)!=0){
                                 $par_id=$partida[0]['par_id'];
@@ -779,7 +780,7 @@ class Cptto_poa extends CI_Controller {
                         $nro++;
                         }
                         else{
-                              $partida = $this->minsumos->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                              $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                               $par_id=0;
                               if(count($partida)!=0){
                                   $par_id=$partida[0]['par_id'];
@@ -869,7 +870,7 @@ class Cptto_poa extends CI_Controller {
                     if(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
                         $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                         if(count($aper)!=0){
-                            $partida = $this->minsumos->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                            $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                             $par_id=0;
                             if(count($partida)!=0){
                               $par_id=$partida[0]['par_id'];
@@ -911,7 +912,7 @@ class Cptto_poa extends CI_Controller {
                         $nro++;
                         }
                         else{
-                              $partida = $this->minsumos->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                              $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                               $par_id=0;
                               if(count($partida)!=0){
                                   $par_id=$partida[0]['par_id'];

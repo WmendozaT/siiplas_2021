@@ -27,6 +27,7 @@ class Cmodificaciones extends CI_Controller {
             $this->dist = $this->session->userData('dist');
             $this->dist_tp = $this->session->userData('dist_tp');
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->load->library('modificacionpoa');
 
             }else{
                 redirect('admin/dashboard');
@@ -42,277 +43,25 @@ class Cmodificaciones extends CI_Controller {
     public function list_poas_aprobados(){
       $data['menu']=$this->menu(3); //// genera menu
       $data['proyectos']='';
-      $data['operaciones']='';
+      $data['gasto_corriente']='';
       
       if($this->gestion>=2020){
-        $data['proyectos']=$this->list_pinversion(4); // Aprobados
-        $data['operaciones']=$this->list_unidades_es(4); // Aprobados
+        $data['proyectos']=$this->modificacionpoa->list_pinversion(4); // Aprobados
+        $data['gasto_corriente']=$this->modificacionpoa->list_unidades_es(4); // Aprobados
       }
       else{
         $data['proyectos']='OPCIÓN NULA';
-        $data['operaciones']='OPCIÓN NULA';
+        $data['gasto_corriente']='OPCIÓN NULA';
       }
 
       $this->load->view('admin/modificacion/list_poa_aprobados',$data);
     }
 
 
-    /*---- Lista de Unidades / Establecimientos de Salud (2020) -----*/
-    public function list_unidades_es($proy_estado){
-        $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);
-        $tabla='';
-        
-        $tabla.='
-        <table id="dt_basic1" class="table1 table-bordered" style="width:100%;">
-          <thead>
-            <tr style="height:65px;">
-              <th style="width:1%;" bgcolor="#fafafa">#</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="SELECCIONAR"></th>
-              <th style="width:5%;" bgcolor="#fafafa" title="LISTA DE CITES GENERADOS"></th>
-              <th style="width:10%;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
-              <th style="width:20%;" bgcolor="#fafafa" title="DESCRIPCI&Oacute;N">ACTIVIDAD</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="NIVEL">ESCALON</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="NIVEL">NIVEL</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="ESTADO"></th>
-            </tr>
-          </thead>
-          <tbody>';
-            $nro=0;
-            foreach($unidades as $row){
-              $color='#ccefcc';
-              $estado='APROBADO';
-
-              if($row['proy_estado']==4){
-                $nro++;
-                $tabla.='
-                  <tr style="height:40px;">
-                    <td align=center><b>'.$nro.'</b></td>
-                    <td align=center>
-                      <a data-toggle="modal" data-target="#'.$row['proy_id'].'" title="SELECCIONAR OPCI&Oacute;N" class="btn btn-info"><font size=1>SELECCIONAR OPCI&Oacute;N</font></a>
-                        <div class="modal fade bs-example-modal-lg" tabindex="-1" id="'.$row['proy_id'].'"  role="dialog" aria-labelledby="myLargeModalLabel">
-                          <div class="modal-dialog modal-lg" id="mdialTamanio">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close text-danger" data-dismiss="modal" aria-hidden="true">
-                                  &times;
-                                </button>
-                              </div>
-                              <div class="modal-body no-padding">
-                                  <div class="row">
-                                    <h2 class="alert alert-success"><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].' - '.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</center></h2>
-                                    
-                                    <a onclick="mod_operacion'.$row['proy_id'].'()" class="ruta" title="MODIFICAR OPERACIONES">
-                                      <div class="well well-sm col-sm-4">
-                                          <div class="well well-sm bg-color-teal txt-color-white text-center">
-                                            <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR OPERACIONES '.$this->gestion.'</h5>
-                                            <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                          </div>
-                                      </div>
-                                    </a>
-                                    
-                                    <a onclick="mod_insumo'.$row['proy_id'].'()"  class="ruta" title="MODIFICAR REQUERIMIENTOS">
-                                      <div class="well well-sm col-sm-4">
-                                          <div class="well well-sm bg-color-teal txt-color-white text-center">
-                                            <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR REQUERIMIENTOS '.$this->gestion.'</h5>
-                                            <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                          </div>
-                                      </div>
-                                    </a>';
-
-                                    $link=''; $color='red'; $titulo='OPCI&Oacute;N BLOQUEADA';
-                                      if($this->tp_adm==1){
-                                      $link='onclick="mod_techo'.$row['proy_id'].'()"';
-                                      $color='teal';
-                                      $titulo='MODIFICAR TECHO PRESUPUESTARIO';
-                                    }
-
-                                    $tabla.='
-                                    <a '.$link.' class="ruta" title="'.$titulo.'" >
-                                      <div class="well well-sm col-sm-4">
-                                          <div class="well well-sm bg-color-'.$color.' txt-color-white text-center">
-                                            <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR TECHO PRESUPUESTARIO</h5>
-                                            <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                          </div>
-                                      </div>
-                                    </a>
-                                    
-                                  </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row"><br>
-                            <img id="load1'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                            <img id="load2'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                            <img id="load3'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                          </div>
-                        </div>';
-                        $tabla.='
-                            <script>
-                              function mod_operacion'.$row['proy_id'].'(){
-                                document.getElementById("load1'.$row['proy_id'].'").style.display = "block";
-                                window.location="'.site_url("").'/mod/list_componentes/'.$row['proy_id'].'"
-                              }
-                              
-                              function mod_insumo'.$row['proy_id'].'(){
-                                document.getElementById("load2'.$row['proy_id'].'").style.display = "block";
-                                window.location="'.site_url("").'/mod/procesos/'.$row['proy_id'].'"
-                              }
-
-                              function mod_techo'.$row['proy_id'].'(){
-                                document.getElementById("load3'.$row['proy_id'].'").style.display = "block";
-                                window.location="'.site_url("").'/mod/cite_techo/'.$row['proy_id'].'"
-                              }
-                            </script>';
-                $tabla .= '
-                    </td>
-                    <td align=center><a href="'.site_url("").'/mod/list_cites/'.$row['proy_id'].'" title="LISTA DE CITES GENERADOS POR MODIFICACI&Oacute;N" target="_blank" class="btn btn-default"><font size=1>LISTA DE CITES</font></a></td>
-                    <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
-                    <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
-                    <td>'.$row['escalon'].'</td>
-                    <td>'.$row['nivel'].'</td>
-                    <td>'.$row['tipo_adm'].'</td>
-                    <td>'.strtoupper($row['dep_departamento']).'</td>
-                    <td>'.strtoupper($row['dist_distrital']).'</td>
-                    <td><center><b>'.$estado.'</b></center></td>
-                  </tr>';
-              }
-            }
-          $tabla.='
-          </tbody>
-        </table>';
-      return $tabla;
-    }
-
-    /*---- Lista de Proyectos de Inversion (2020) -----*/
-    public function list_pinversion($proy_estado){
-      $proyectos=$this->model_proyecto->list_pinversion(1,$proy_estado);
-      $tabla='';
-      $tabla.='
-        <table id="dt_basic" class="table table-bordered" style="width:100%;">
-          <thead>
-            <tr>
-              <th style="width:1%; height:30px;" bgcolor="#fafafa">#</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="SELECCIONAR"></th>
-              <th style="width:5%;" bgcolor="#fafafa" title="LISTA DE CITES GENERADOS"></th>
-              <th style="width:10%;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
-              <th style="width:20%;" bgcolor="#fafafa" title="DESCRIPCI&Oacute;N">PROYECTO DE INVERSI&Oacute;N</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="SISIN">C&Oacute;DIGO_SISIN</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="FASE - ETAPA">DESCRIPCI&Oacute;N FASE</th>
-            </tr>
-          </thead>
-          <tbody>';
-            $nro=0;
-            foreach($proyectos as $row){
-              $nro++;
-              $tabla.='<tr>';
-               $tabla .= '<td title='.$row['proy_id'].'><center>'.$nro.'</center></td>
-                          <td align=center>';
-                          if($row['pfec_estado']==1){
-                              $tabla.='
-                          <a data-toggle="modal" data-target="#'.$row['proy_id'].'" title="SELECCIONAR OPCI&Oacute;N" class="btn btn-info"><font size=1>SELECCIONAR</font></a>
-                            <div class="modal fade bs-example-modal-lg" tabindex="-1" id="'.$row['proy_id'].'"  role="dialog" aria-labelledby="myLargeModalLabel">
-                              <div class="modal-dialog modal-lg" id="mdialTamanio">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <button type="button" class="close text-danger" data-dismiss="modal" aria-hidden="true">
-                                      &times;
-                                    </button>
-                                  </div>
-                                  <div class="modal-body no-padding">
-                                      <div class="row">
-                                        <h2 class="alert alert-success"><center>'.$row['aper_programa'].' '.$row['proy_sisin'].' 000 - '.$row['proy_nombre'].'</center></h2>
-                                        
-                                        <a onclick="mod_operacion'.$row['proy_id'].'()" class="ruta" title="MODIFICAR ACTIVIDADES">
-                                          <div class="well well-sm col-sm-4">
-                                              <div class="well well-sm bg-color-teal txt-color-white text-center">
-                                                <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR ACTIVIDADES '.$this->gestion.'</h5>
-                                                <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                              </div>
-                                          </div>
-                                        </a>
-                                        
-                                        <a onclick="mod_insumo'.$row['proy_id'].'()"  class="ruta" title="MODIFICAR REQUERIMIENTOS">
-                                          <div class="well well-sm col-sm-4">
-                                              <div class="well well-sm bg-color-teal txt-color-white text-center">
-                                                <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR REQUERIMIENTOS '.$this->gestion.'</h5>
-                                                <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                              </div>
-                                          </div>
-                                        </a>';
-
-                                        $link=''; $color='red'; $titulo='OPCI&Oacute;N BLOQUEADA';
-                                          if($this->tp_adm==1){
-                                          $link='onclick="mod_techo'.$row['proy_id'].'()"';
-                                          $color='teal';
-                                          $titulo='MODIFICAR TECHO PRESUPUESTARIO';
-                                        }
-
-                                        $tabla.='
-                                        <a '.$link.' class="ruta" title="'.$titulo.'" >
-                                          <div class="well well-sm col-sm-4">
-                                              <div class="well well-sm bg-color-'.$color.' txt-color-white text-center">
-                                                <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR TECHO PRESUPUESTARIO</h5>
-                                                <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                              </div>
-                                          </div>
-                                        </a>
-                                        
-                                      </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row"><br>
-                                <img id="load1'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                                <img id="load2'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                                <img id="load3'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                              </div>
-                            </div>';
-                            $tabla.='
-                                <script>
-                                  function mod_operacion'.$row['proy_id'].'(){
-                                    document.getElementById("load1'.$row['proy_id'].'").style.display = "block";
-                                    window.location="'.site_url("").'/mod/list_componentes/'.$row['proy_id'].'"
-                                  }
-                                  
-                                  function mod_insumo'.$row['proy_id'].'(){
-                                    document.getElementById("load2'.$row['proy_id'].'").style.display = "block";
-                                    window.location="'.site_url("").'/mod/procesos/'.$row['proy_id'].'"
-                                  }
-
-                                  function mod_techo'.$row['proy_id'].'(){
-                                    document.getElementById("load3'.$row['proy_id'].'").style.display = "block";
-                                    window.location="'.site_url("").'/mod/cite_techo/'.$row['proy_id'].'"
-                                  }
-                                </script>';
-                          }
-                          else{
-                            $tabla.='FASE NO ACTIVA';
-                          }
-                $tabla .= '
-                    </td>
-                    <td align=center><a href="'.site_url("").'/mod/list_cites/'.$row['proy_id'].'" title="LISTA DE CITES GENERADOS POR MODIFICACI&Oacute;N" target="_blank" class="btn btn-default"><font size=1>LISTA DE CITES</font></a></td>
-                    <td><center>'.$row['aper_programa'].' '.$row['proy_sisin'].' '.$row['aper_actividad'].'</center></td>';
-                $tabla.='<td>'.$row['proy_nombre'].'</td>';
-                $tabla.='<td>'.$row['proy_sisin'].'</td>';
-                $tabla.='<td>'.$row['dep_cod'].' '.strtoupper($row['dep_departamento']).'</td>';
-                $tabla.='<td>'.$row['dist_cod'].' '.strtoupper($row['dist_distrital']).'</td>';
-                $tabla.='<td>'.strtoupper($row['pfec_descripcion']).'</td>';
-              $tabla.='</tr>';
-            }
-          $tabla.='
-          </tbody>
-        </table>';
-      
-      return $tabla;
-    }
+   
 
 
-    /*--- LISTA DE CITES OPERACION-REQUERIMIENTOS (2020-2021) ---*/
+    /*--- LISTA DE CITES FORM 4-FORM 5 (2020-2021) ---*/
     public function lista_cites($proy_id){
       $data['menu']=$this->menu(3); //// genera menu
       $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
@@ -321,7 +70,7 @@ class Cmodificaciones extends CI_Controller {
         $titulo='<h1> PROYECTO : <small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small></h1>';
         if($data['proyecto'][0]['tp_id']==4){
           $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-          $titulo='<h1> ACTIVIDAD : <small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>';
+          $titulo='<h1> '.$proyecto[0]['tipo_adm'].' : <small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>';
         }
 
         $data['titulo']=$titulo;

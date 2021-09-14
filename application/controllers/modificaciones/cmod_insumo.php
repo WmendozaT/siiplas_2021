@@ -23,6 +23,7 @@ class Cmod_insumo extends CI_Controller {
             $this->gestion = $this->session->userData('gestion'); /// Gestion
             $this->fun_id = $this->session->userData('fun_id'); /// Fun id
             $this->rol_id = $this->session->userData('rol_id'); /// Rol Id
+            $this->load->library('modificacionpoa');
         }
         else{
           $this->session->sess_destroy();
@@ -42,11 +43,11 @@ class Cmod_insumo extends CI_Controller {
         else{
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
           $titulo='
-          <h1> <b>ACTIVIDAD : </b><small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' '.$data['proyecto'][0]['abrev'].'</small>';
+          <h1> <b>'.$data['proyecto'][0]['tipo_adm'].' : </b><small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' '.$data['proyecto'][0]['abrev'].'</small>';
         }
 
         $data['titulo']=$titulo;
-        $data['tabla']=$this->lista_servicio_componentes($data['proyecto']);
+        $data['tabla']=$this->modificacionpoa->lista_servicio_componentes($data['proyecto']);
         $this->load->view('admin/modificacion/requerimientos/cite_servicio', $data); 
       }
       else{
@@ -55,82 +56,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-    /*------ Lista de Servicios y Componentes --------*/
-    public function lista_servicio_componentes($proyecto){
-      $tabla='';
-      $tabla.=$this->servicios($proyecto);
-
-      return $tabla;
-    }
-
-    /*------ Lista de Servicios (Gasto Corriente) ------*/
-    public function servicios($proyecto){
-      $fase = $this->model_faseetapa->get_id_fase($proyecto[0]['proy_id']);
-      $tabla='';
-        if(count($fase)!=0){
-            $componente=$this->model_componente->componentes_id($fase[0]['id'],$proyecto[0]['tp_id']);
-            $tabla.='<table id="dt_basic" class="table table table-bordered" width="100%">
-                <thead>
-                    <tr style="height:45px;">
-                        <th style="width:1%;">#</th>
-                        <th style="width:5%;">COD. SUBACTIVIDAD</th>
-                        <th style="width:20%;">SUBACTIVIDAD</th>
-                        <th style="width:15%;">RESPONSABLE</th>
-                        <th style="width:5%;">PONDERACI&Oacute;N</th>
-                        <th style="width:5%;">OPERACIONES PROGRAMADOS</th>
-                        <th style="width:5%;">PRESUPUESTO POA</th>
-                        <th style="width:5%;"></th>
-                    </tr>
-                </thead>
-                <tbody>';
-                $num=0; $ponderacion=0; $sum=0;
-                foreach($componente as $row){
-                  $monto=$this->model_modrequerimiento->prespuesto_servicio_componente($row['com_id'],$proyecto[0]['tp_id']);
-                  $ppto=number_format(0, 2, '.', ',');
-                  
-                  if(count($monto)!=0){
-                    $ppto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                  }
-
-                  $num++;
-                  $tabla.='
-                  <tr>
-                      <td align=center>'.$num.'</td><td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO SERVICIO : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
-                      <td title='.$row['com_id'].'>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
-                      <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
-                      <td align=center>'.$row['com_ponderacion'].' %</td>
-                      <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
-                      <td align=right>'.$ppto.'</td>
-                      <td>
-                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" style="width:100%; color: green; background-color: #eeeeee;border-bottom-width: 5px;" title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'"><i class="glyphicon glyphicon-file"></i> INGRESAR CITE</a>
-                      </td>
-                  </tr>';
-                  $sum=$sum+count($this->model_producto->list_prod($row['com_id']));
-                  $ponderacion=$ponderacion+$row['com_ponderacion'];
-                }
-                $tabla.='    
-                </tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td align=center>'.$ponderacion.'%</td>
-                    <td align=center>'.$sum.'</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </table>';
-        }
-        else{
-          $tabla.='<hr>
-                  <div class="alert alert-danger" role="alert">
-                    EL PROYECTO NO TIENE FASE ACTIVA PARA ESTA GESTIÓN '.$this->gestion.'  
-                  </div>';
-        }
-
-      return $tabla;
-    }
+   
 
 
     /*------- Valida Cite Para Modificacion -------*/
@@ -189,11 +115,11 @@ class Cmod_insumo extends CI_Controller {
             $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
             $data['tit_comp']=$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'];
           }
-            $data['titulo']=$this->titulo_cabecera($data['cite']); /// CABECERA
-            $data['datos_cite']=$this->datos_cite($data['cite']); /// DATOS CITE
+            $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']); /// CABECERA
+            $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
 
             $data['cite_id']=$cite_id;
-            $data['monto']=$this->ppto($data['proyecto']);
+            $data['monto']=$this->modificacionpoa->ppto($data['proyecto']);
 
             if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>500){
               $data['tabla']=$this->lista_requerimientos_auxiliar($data['cite']);
@@ -539,7 +465,7 @@ class Cmod_insumo extends CI_Controller {
         $partida = $this->security->xss_clean($post['partida_id']); /// partida id
         $observacion = $this->security->xss_clean($post['ins_observacion']); /// Observacion
         $id = $this->security->xss_clean($post['dato_id']); /// Alineacion id Producto, Actividad
-
+        $producto=$this->model_producto->get_producto_id($id); /// Get producto
         $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id);
         $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// DATOS DEL PROYECTO
         $umedida=$this->model_insumo->get_unidadmedida($um_id);
@@ -559,6 +485,8 @@ class Cmod_insumo extends CI_Controller {
           'ins_observacion' => strtoupper($observacion), /// Observacion
           'fun_id' => $this->fun_id, /// Funcionario
           'aper_id' => $proyecto[0]['aper_id'], /// aper id
+          'com_id' => $producto[0]['com_id'], /// com id 
+          'form4_cod' => $producto[0]['prod_cod'], /// aper id
           'ins_mod' => 2, /// mod
           'num_ip' => $this->input->ip_address(), 
           'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
@@ -644,6 +572,7 @@ class Cmod_insumo extends CI_Controller {
         $cantidad = $this->security->xss_clean($post['cantidad']); /// cantidad
         $costo_total = $this->security->xss_clean($post['costot']); /// costo Total
         $id = $this->security->xss_clean($post['id']); /// id : prod,act
+        $producto=$this->model_producto->get_producto_id($id); /// Get producto
 
         $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id);
         if($cite[0]['tp_id']==1){
@@ -666,6 +595,8 @@ class Cmod_insumo extends CI_Controller {
               'ins_unidad_medida' => $unidad,
               'ins_observacion' => $observacion,
               'fun_id' => $this->fun_id,
+              'com_id' => $cite[0]['com_id'], /// com id 
+              'form4_cod' => $producto[0]['prod_cod'], /// aper id
               'ins_mod' => 2, /// mod
               'ins_estado'=> 2, /// mod
               'num_ip' => $this->input->ip_address(), 
@@ -1706,19 +1637,21 @@ class Cmod_insumo extends CI_Controller {
                 if($i != 0){ /// B
                   $datos = explode(";",$linea);
                   if(count($datos)==20){ /// C
-                      $cod_ope = (int)$datos[0]; //// Codigo Actividad
-                      $cod_partida = (int)$datos[1]; //// Codigo partida
-                      $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// Datos Partida
+                      $cod_ope = intval(trim($datos[0])); //// Codigo Actividad
+                      $cod_partida = intval(trim($datos[1])); //// Codigo partida
+                      $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
 
-                      $detalle = utf8_encode(trim($datos[2])); //// Detalle Requerimiento
-                      $unidad = utf8_encode(trim($datos[3])); //// Unidad de medida
-                      $cantidad = (int)$datos[4]; //// Cantidad
-                      $unitario = (float)$datos[5]; //// Costo Unitario
-                      $total=round(($cantidad*$unitario),2); // Costo Total
+                      $detalle = strval(utf8_encode(trim($datos[2]))); //// descripcion form5
+                      $unidad = strval(utf8_encode(trim($datos[3]))); //// Unidad
+                      $cantidad = intval(trim($datos[4])); //// Cantidad
+                      $unitario = intval(trim($datos[5])); //// Costo Unitario
+                      
+                      $p_total=($cantidad*$unitario);
+                      $total = intval(trim($datos[6])); //// Costo Total
 
                       $var=7; $sum_prog=0;
                       for ($i=1; $i <=12 ; $i++) {
-                        $m[$i]=(float)$datos[$var]; //// Mes i
+                        $m[$i]=floatval(trim($datos[$var])); //// Mes i
                         if($m[$i]==''){
                           $m[$i]=0;
                         }
@@ -1897,8 +1830,8 @@ class Cmod_insumo extends CI_Controller {
       if(count($data['cite'])!=0){
         $data['menu']=$this->menu(3); //// genera menu
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
-        $data['titulo']=$this->titulo_cabecera($data['cite']); /// CABECERA
-        $data['datos_cite']=$this->datos_cite($data['cite']); /// DATOS CITE
+        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']); /// CABECERA
+        $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
 
         $data['requerimientos']=$this->rep_requerimiento_update($cite_id);
 
@@ -1916,8 +1849,8 @@ class Cmod_insumo extends CI_Controller {
       if(count($data['cite'])!=0){
         $data['menu']=$this->menu(3); //// genera menu
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
-        $data['titulo']=$this->titulo_cabecera($data['cite']); /// CABECERA
-        $data['datos_cite']=$this->datos_cite($data['cite']); /// DATOS CITE
+        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']); /// CABECERA
+        $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
 
         $this->load->view('admin/modificacion/requerimientos/ver_modificado_poa', $data);
       }
@@ -2070,67 +2003,7 @@ class Cmod_insumo extends CI_Controller {
       
     }
 
-    /*------ VERIFICANDO CODIGO DE MODIFICACION POA (2020)-----*/
-    public function datos_cite($cite){
-      $tabla='';
 
-      if($cite[0]['cite_estado']!=0){
-        $tit='<font color=blue><b>'.$cite[0]['cite_codigo'].'</b></font>';
-      }
-      else{
-        $tit=' <font color=#e60d25><b>DEBE CERRAR LA MODIFICACI&Oacute;N DEL REQUERIMIENTO !!</b></font>';
-      }
-
-      $tabla.='<h1 title="'.$cite[0]['com_id'].'"><b> CITE Nro. : <small>'.$cite[0]['cite_nota'].'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;FECHA : <small>'.date('d/m/Y',strtotime($cite[0]['cite_fecha'])).'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;C&Oacute;DIGO : '.$tit.'</b></h1>';
-      return $tabla;
-    }
-
-    /*------ TITULO CABECERA (2020)-----*/
-    public function titulo_cabecera($cite){
-      $tabla='';
-      if($cite[0]['tp_id']==1){ /// Proyecto de Inversion
-        $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// Proyecto de Inversion
-        $tabla.=' <h1> <b>PROYECTO : </b><small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'].'</small>
-                  <h1> <b>SUBACTIVIDAD : </b><small>'.$cite[0]['serv_cod'].' '.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
-      }
-      else{ /// Gasto Corriente
-        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cite[0]['proy_id']);
-        $tabla.=' <h1><b> ACTIVIDAD : <b><small>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>
-                  <h1><b> SUBACTIVIDAD : <b><small>'.$cite[0]['serv_cod'].' '.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
-      }
-
-      //// ------ Monto Presupuesto Programado-Asignado POA
-        $monto=$this->ppto($proyecto);
-        $tabla.='<h1><b> PPTO. ASIGNADO : <small>'.number_format($monto[1], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;PPTO PROGRAMADO : <small>'.number_format($monto[2], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;SALDO : <small>'.number_format($monto[3], 2, ',', '.').'</small></b></h1>';
-        
-      return $tabla;
-    }
-
-    /*----- MONTO PRESUPUESTO (2020) ------*/
-    public function ppto($proyecto){
-      $monto_a=0;$monto_p=0;$monto_saldo=0;
-      $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
-      $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
-      if($proyecto[0]['tp_id']==1){
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto[0]['proy_id']);
-      }
-      else{
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
-      }
-
-      if(count($monto_asig)!=0){
-        $monto_a=($monto_asig[0]['monto']+$monto_asig[0]['saldo']);
-      }
-      if(count($monto_prog)!=0){
-        $monto_p=$monto_prog[0]['monto'];
-      }
-
-      $monto[1]=$monto_a; /// Monto Asignado
-      $monto[2]=$monto_p; /// Monto Programado
-      $monto[3]=($monto_a-$monto_p); /// Saldo
-
-      return $monto;
-    }
 
     /*---- GET DATOS REQUERIMIENTO ----*/
     public function get_requerimiento(){

@@ -89,6 +89,7 @@ class User extends CI_Controller{
                 'gestion' => $conf[0]['ide'],
                 'mes' => $conf[0]['conf_mes'],
                 'conf_estado' => $conf[0]['conf_estado'], //7 Estado 1: Activo, 0: No activo
+                'conf_poa_estado' => $conf[0]['conf_poa_estado'], //7 Estado poa-presupuesto 1: inicial, 2 ajustado, 3 aprobado
                 'trimestre' => $conf[0]['conf_mes_otro'], /// Trimestre 1,2,3,4
                 'tr_id' => ($conf[0]['conf_mes_otro']+$conf[0]['conf_mes_otro']*2), /// Trimestre 3,6,9,12
                 'desc_mes' => $this->mes_texto($conf[0]['conf_mes']),
@@ -109,6 +110,7 @@ class User extends CI_Controller{
          $data = array(
                 'gestion' => $conf[0]['ide'],
                 'conf_estado' => $conf[0]['conf_estado'], //7 Estado 1: Activo, 0: No activo
+                'conf_poa_estado' => $conf[0]['conf_poa_estado'], //7 Estado poa-presupuesto 1: inicial, 2 ajustado, 3 aprobado
                 'trimestre' => $this->input->post('trimestre_usu'), /// Trimestre 1,2,3,4
                 'tr_id' => ($conf[0]['conf_mes_otro']+$conf[0]['conf_mes_otro']*2), /// Trimestre 3,6,9,12
                 'desc_mes' => $this->mes_texto($conf[0]['conf_mes']),

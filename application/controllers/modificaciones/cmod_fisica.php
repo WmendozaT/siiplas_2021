@@ -32,6 +32,7 @@ class Cmod_fisica extends CI_Controller {
             $this->tp_adm = $this->session->userData('tp_adm');
             $this->verif_mes=$this->session->userdata('mes_actual');
             $this->tmes = $this->session->userData('trimestre');
+            $this->load->library('modificacionpoa');
 
             }else{
                 redirect('admin/dashboard');
@@ -55,7 +56,7 @@ class Cmod_fisica extends CI_Controller {
         if($data['proyecto'][0]['tp_id']==4){
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
           $titulo='
-          <h1> <b>ACTIVIDAD : </b><small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' '.$data['proyecto'][0]['abrev'].'</small>';
+          <h1> <b>'.$data['proyecto'][0]['tipo_adm'].' : </b><small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' '.$data['proyecto'][0]['abrev'].'</small>';
         }
         
         $componente=$this->model_componente->componentes_id($data['fase'][0]['id'],$data['proyecto'][0]['tp_id']);
@@ -64,11 +65,11 @@ class Cmod_fisica extends CI_Controller {
                 <thead>
                   <tr style="height:25px;">
                     <th style="width:1%;"></th>
-                    <th style="width:5%;">Modificar Operaciones</th>
-                    <th style="width:15%;">SUBACTIVIDAD</th>
+                    <th style="width:5%;">Modificar Formulario</th>
+                    <th style="width:15%;">UNIDAD RESPONSABLE</th>
                     <th style="width:10%;">RESPONSABLE</th>
                     <th style="width:5%;">PONDERACI&Oacute;N</th>
-                    <th style="width:5%;">NRO. OPERACIONES REGISTRADOS</th>
+                    <th style="width:5%;">NRO. REGISTROS</th>
                   </tr>
                 </thead>
                 <tbody>';

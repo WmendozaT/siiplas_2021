@@ -56,27 +56,6 @@
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
 		<!-- HEADER -->
 		<header id="header">
-			<div id="logo-group">
-				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -158,13 +137,13 @@
 						</article>
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="well well-sm well-light">
-								<h3>HISTORIAL DE MODIFICACIONES POA - <?php echo $this->session->userData('gestion') ?></h3>
+								<h3>HISTORIAL DE MODIFICACIONES POA - GESTI&Oacute;N <?php echo $this->session->userData('gestion') ?></h3>
 								<div class="row">
 									<article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
 									<div class="jarviswidget jarviswidget-color-darken" >
 		                              <header>
 		                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-		                                  <h2 class="font-md"><strong>REQUERIMIENTOS</strong></h2>  
+		                                  <h2 class="font-md"><strong>FORMULARIO N° 5</strong></h2>  
 		                              </header>
 										<div>
 											<div class="widget-body no-padding">
@@ -197,7 +176,7 @@
 									<div class="jarviswidget jarviswidget-color-darken" >
 		                              <header>
 		                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-		                                  <h2 class="font-md"><strong>OPERACIONES</strong></h2>  
+		                                  <h2 class="font-md"><strong>FORMULARIO N° 4</strong></h2>  
 		                              </header>
 										<div>
 											<div class="widget-body no-padding">
