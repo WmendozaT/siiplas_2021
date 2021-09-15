@@ -61,6 +61,7 @@ class cajuste_crequerimiento extends CI_Controller{
 
         $data['datos_proyecto']= $data['proyecto'][0]['tipo_adm'].' : '.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].'-'.$data['proyecto'][0]['abrev'];
 
+
         $data['lista']=$this->tipo_lista_ope_act($com_id);
         $data['requerimientos']=$this->lista_requerimientos($com_id);
 
@@ -99,7 +100,8 @@ class cajuste_crequerimiento extends CI_Controller{
 
       $tabla='';
       $total=0;
-      $tabla.='<table id="dt_basic" class="table table table-bordered" width="100%">
+      $tabla.='<input name="base" type="hidden" value="'.base_url().'">
+                <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                   <tr class="modo1">
                     <th style="width:2%;">#</th>
@@ -520,8 +522,11 @@ class cajuste_crequerimiento extends CI_Controller{
       if ($this->input->post()) {
         $post = $this->input->post();
           $com_id = $this->security->xss_clean($post['com_id']); /// com id
+          $componente = $this->model_componente->get_componente_pi($com_id);
           $aper_id = $this->security->xss_clean($post['aper_id']); /// aper id
-          
+          $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+          $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
+
           $tipo = $_FILES['archivo']['type'];
           $tamanio = $_FILES['archivo']['size'];
           $archivotmp = $_FILES['archivo']['tmp_name'];
@@ -545,21 +550,21 @@ class cajuste_crequerimiento extends CI_Controller{
                 //echo count($datos).'<br>';
                 if(count($datos)==20){
                  
-                    $prod_cod = (int)$datos[0]; //// Codigo Actividad
-                    $cod_partida = (int)$datos[1]; //// Codigo partida
-                    $par_id = $this->minsumos->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
+                    $prod_cod = intval(trim($datos[0])); //// Codigo Actividad
+                    $cod_partida = intval(trim($datos[1])); //// Codigo partida
+                    $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
 
-                    $detalle = utf8_encode(trim($datos[2])); //// descripcion
-                    $unidad = utf8_encode(trim($datos[3])); //// Unidad
-                    $cantidad = (int)$datos[4]; //// Cantidad
-                    $unitario = $datos[5]; //// Costo Unitario
+                    $detalle = strval(utf8_encode(trim($datos[2]))); //// descripcion form5
+                    $unidad = strval(utf8_encode(trim($datos[3]))); //// Unidad
+                    $cantidad = intval(trim($datos[4])); //// Cantidad
+                    $unitario = floatval(trim($datos[5])); //// Costo Unitario
                     
                     $p_total=($cantidad*$unitario);
-                    $total = $datos[6]; //// Costo Total
+                    $total = floatval(trim($datos[6])); //// Costo Total
 
                     $var=7; $sum_temp=0;
                     for ($i=1; $i <=12 ; $i++) {
-                      $m[$i]=$datos[$var]; //// Mes i
+                      $m[$i]=floatval(trim($datos[$var])); //// Mes i
                       if($m[$i]==''){
                         $m[$i]=0;
                       }
@@ -567,32 +572,33 @@ class cajuste_crequerimiento extends CI_Controller{
                       $sum_temp=$sum_temp+$m[$i];
                     }
 
-                    $observacion = utf8_encode(trim($datos[19])); //// Observacion
+                    $observacion = strval(utf8_encode(trim($datos[19]))); //// Observacion
                     $verif_cod=$this->model_producto->verif_componente_operacion($com_id,$prod_cod);
-                  
-                    //echo count($verif_cod).'--'.count($par_id).'--'.$cod_partida.'--'.round($sum_temp,2).'=='.round($total,2);
+                   // echo count($verif_cod).'--'.count($par_id).'--'.$cod_partida.'--'.round($sum_temp,2).'=='.round($total,2)."<br>";
 
                     if(count($verif_cod)!=0 & count($par_id)!=0 & $cod_partida!=0 & round($sum_temp,2)==round($total,2)){ /// Verificando si existe Codigo de Actividad, par id, Codigo producto
-                     // if($verif_cod[0]['prod_ppto']==1){ /// guardando si tiene programado presupuesto en la operacion
+                        $producto=$this->model_producto->get_producto_id($verif_cod[0]['prod_id']); /// Get producto
                         $guardado++;
                         /*-------- INSERTAR DATOS REQUERIMIENTO ---------*/
                         $query=$this->db->query('set datestyle to DMY');
                         $data_to_store = array( 
-                          'ins_codigo' => $this->session->userdata("name").'/REQ/'.$this->gestion, /// Codigo Insumo
-                          'ins_fecha_requerimiento' => date('d/m/Y'), /// Fecha de Requerimiento
-                          'ins_detalle' => strtoupper($detalle), /// Insumo Detalle
-                          'ins_cant_requerida' => round($cantidad,0), /// Cantidad Requerida
-                          'ins_costo_unitario' => $unitario, /// Costo Unitario
-                          'ins_costo_total' => $total, /// Costo Total
-                          'ins_unidad_medida' => $unidad, /// Unidad de Medida
-                          'ins_gestion' => $this->gestion, /// Insumo gestion
-                          'par_id' => $par_id[0]['par_id'], /// Partidas
-                          'ins_tipo' => 1, /// Ins Tipo
-                          'ins_observacion' => strtoupper($observacion), /// Observacion
-                          'fun_id' => $this->fun_id, /// Funcionario
-                          'aper_id' => $aper_id, /// aper id
-                          'num_ip' => $this->input->ip_address(), 
-                          'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                        'ins_codigo' => $this->session->userdata("name").'/REQ/'.$this->gestion, /// Codigo Insumo
+                        'ins_fecha_requerimiento' => date('d/m/Y'), /// Fecha de Requerimiento
+                        'ins_detalle' => strtoupper($detalle), /// Insumo Detalle
+                        'ins_cant_requerida' => round($cantidad,0), /// Cantidad Requerida
+                        'ins_costo_unitario' => $unitario, /// Costo Unitario
+                        'ins_costo_total' => $total, /// Costo Total
+                        'ins_unidad_medida' => $unidad, /// Unidad de Medida
+                        'ins_gestion' => $this->gestion, /// Insumo gestion
+                        'par_id' => $par_id[0]['par_id'], /// Partidas
+                        'ins_tipo' => 1, /// Ins Tipo
+                        'ins_observacion' => strtoupper($observacion), /// Observacion
+                        'fun_id' => $this->fun_id, /// Funcionario
+                        'aper_id' => $proyecto[0]['aper_id'], /// aper id
+                        'com_id' => $producto[0]['com_id'], /// com id 
+                        'form4_cod' => $producto[0]['prod_cod'], /// aper id
+                        'num_ip' => $this->input->ip_address(), 
+                        'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
                         );
                         $this->db->insert('insumos', $data_to_store); ///// Guardar en Tabla Insumos 
                         $ins_id=$this->db->insert_id();
@@ -615,8 +621,6 @@ class cajuste_crequerimiento extends CI_Controller{
                             $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
                           }
                         }
-                     // }
-
                     }
 
                 } /// end dimension (22)
@@ -627,7 +631,7 @@ class cajuste_crequerimiento extends CI_Controller{
             }
 
             /// --- ACTUALIZANDO MONEDA PARA CARGAR PRESUPUESTO
-            $this->update_ptto_operaciones($com_id);
+          //  $this->update_ptto_operaciones($com_id);
 
             $this->session->set_flashdata('success','SE REGISTRARON '.$guardado.' REQUERIMIENTOS');
             redirect('prog/list_requerimiento/'.$com_id.'');
@@ -643,7 +647,7 @@ class cajuste_crequerimiento extends CI_Controller{
     }
 
     /*------ ACTUALIZA PRESUPUESTO EXISTENTE DE LAS OPERACIONES -------*/
-    public function update_ptto_operaciones($com_id){
+/*    public function update_ptto_operaciones($com_id){
       $operaciones=$this->model_producto->list_producto_programado($com_id,$this->gestion);
       foreach($operaciones as $rowp){
         $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
@@ -656,7 +660,7 @@ class cajuste_crequerimiento extends CI_Controller{
           $this->db->update('_productos', $update_act);
         }
       }
-    } 
+    } */
 
     function mes_nombre(){
         $mes[1] = 'ENE.';

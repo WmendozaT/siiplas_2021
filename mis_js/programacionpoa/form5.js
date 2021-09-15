@@ -147,7 +147,7 @@ function doSelectAlert(event,prod_id,ins_id) {
         }
         else{
           $('#amtit').html('');
-              $('#mbut').slideDown();
+          $('#mbut').slideDown();
         }
       }
 

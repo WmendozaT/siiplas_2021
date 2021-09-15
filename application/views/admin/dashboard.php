@@ -131,9 +131,13 @@
         
     <section id="widget-grid" class="well">
       <!-- row -->
+      
       <?php echo $mensaje;?>
-
-      <?php echo $seguimiento_poa;?>
+      <?php 
+        if($this->session->userdata('gestion')!=2022){
+          echo $seguimiento_poa;
+        }
+      ?>
 
       <div class="row" >
         <?php 

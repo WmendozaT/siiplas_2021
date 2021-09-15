@@ -33,6 +33,66 @@ class Cppto_comparativo extends CI_Controller {
       }
     }
 
+
+
+
+    /*-------- GET CUADRO COMPARATIVO ASIGNADO-POA --------*/
+    public function get_cuadro_comparativo_ptto(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $proy_id = $this->security->xss_clean($post['proy_id']);
+        $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
+
+        $tabla='';
+        if(count($proyecto)!=0){
+          $monto_asignado=0;$monto_programado=0;
+          $cod_part_asig=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($proyecto[0]['aper_id'],1);  //// ppto asignado Anteproyecto
+          
+          if(count($cod_part_asig)!=0){
+            $monto_asignado=$cod_part_asig[0]['sum_cod_partida'];
+          }
+
+          if($proyecto[0]['tp_id']==1){
+            $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog_pi($proyecto[0]['proy_id']); //// ppto Programado POA - PI
+          }
+          else{
+            $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($proyecto[0]['aper_id'],2); //// ppto Programado POA - G. corriente
+          }
+
+
+          ///----- Genera lista de Partidas Asignadas y Programadas
+          $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],1); // Asig
+          if($proyecto[0]['tp_id']==1){
+            $partidas_prog=$this->model_ptto_sigep->partidas_pi_prog_region($proyecto[0]['dep_id'],$proyecto[0]['proy_id']);
+          }
+          else{
+            $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],2); // Prog
+          }
+          
+
+
+          if($monto_asignado==$cod_part_prog[0]['sum_cod_partida']){ //// if (monto asignado = monto programado)
+            $tabla = $this->comparativo_partidas_normal($partidas_asig,$partidas_prog,$proyecto,0);
+          }
+          else{ /// Cuando existen diferencias en las partidas asignadas con las programas
+            $tabla = $this->comparativo_update_partidas_normal($partidas_asig,$partidas_prog,$proyecto,0);
+          }
+
+        }
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
     /*----- REPORTE COMPARATIVO DE PARTIDAS (ASIG - PROG) ----*/
     public function reporte_presupuesto_consolidado_comparativo($proy_id){
       $data['mes'] = $this->mes_nombre();
@@ -67,10 +127,10 @@ class Cppto_comparativo extends CI_Controller {
 
 
           if($monto_asignado==$cod_part_prog[0]['sum_cod_partida']){ //// if (monto asignado = monto programado)
-            $data['tabla'] = $this->comparativo_partidas_normal($partidas_asig,$partidas_prog,$data['proyecto']);
+            $data['tabla'] = $this->comparativo_partidas_normal($partidas_asig,$partidas_prog,$data['proyecto'],1);
           }
           else{ /// Cuando existen diferencias en las partidas asignadas con las programas
-            $data['tabla'] = $this->comparativo_update_partidas_normal($partidas_asig,$partidas_prog,$data['proyecto']);
+            $data['tabla'] = $this->comparativo_update_partidas_normal($partidas_asig,$partidas_prog,$data['proyecto'],1);
           }
 
             $data['titulo']='<div align="center">PLAN OPERATIVO ANUAL '.$this->gestion.' - PROGRAMACI&Oacute;N F&Iacute;SICO FINANCIERO <br><b>CONSOLIDADO CUADRO COMPARATIVO DE PRESUPUESTO (ANTEPROYECTO - POA)</b></div>';
@@ -86,7 +146,7 @@ class Cppto_comparativo extends CI_Controller {
     }
 
     /*---- COMPARATIVO DE PARTIDAS A NIVEL DE UNIDAD / ESTABLECIMIENTO  (las partidas cambian)---*/
-    public function comparativo_update_partidas_normal($partidas_asig,$partidas_prog,$proyecto){
+    public function comparativo_update_partidas_normal($partidas_asig,$partidas_prog,$proyecto,$tipo_rep){
       if($this->verif_ppto==0){
         $titulo='PRESUPUESTO ANTEPROYECTO';
       }
@@ -94,9 +154,18 @@ class Cppto_comparativo extends CI_Controller {
         $titulo='PRESUPUESTO APROBADO';
       }
 
+      /// 0 : normal
+      /// 1 : impresion
+      if($tipo_rep==0){
+        $tab='class="table table-bordered" style="width:60%;';
+      }
+      else{
+        $tab='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:95%;font-size: 8px;"';
+      }
+
       $tabla ='';
       $tabla .='
-      <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:95%;font-size: 8px;" align=center>
+      <table '.$tab.' align=center>
         <thead>
           <tr style="height:13px;" bgcolor="#eceaea" align=center>
             <th style="width:3%;" align=center>#</th>
@@ -151,7 +220,7 @@ class Cppto_comparativo extends CI_Controller {
                 <td style="width: 12%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
                 <td style="width: 12%; text-align: right;">'.number_format($prog, 2, ',', '.').'</td>
                 <td style="width: 12%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
-                if($this->fun_id==399){
+                if($this->tp_adm==1){
                   $tabla.='<td style="width: 10%; text-align: right;">'.number_format($row['saldo'], 2, ',', '.').'</td>';
                 }
                 $tabla.='
@@ -188,7 +257,7 @@ class Cppto_comparativo extends CI_Controller {
                       <td style="width: 15%; text-align: right;">'.number_format($asig, 2, ',', '.').'</td>
                       <td style="width: 15%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
                       <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
-                if($this->fun_id==399){
+                if($this->tp_adm==1){
                   $tabla.='<td style="width: 10%; text-align: right;"></td>';
                 }
                 $tabla.='
@@ -219,8 +288,7 @@ class Cppto_comparativo extends CI_Controller {
               <td align=right><b>'.number_format($monto_asig, 2, ',', '.').'</b></td>
               <td align=right><b>'.number_format($monto_prog, 2, ',', '.').'</b></td>
               <td align=right><b>'.$sig.''.number_format($dif, 2, ',', '.').'</b></td>
-              <td align=right></td>
-              <td align=right></td>
+              
             </tr>
         </table>';
 
@@ -228,7 +296,7 @@ class Cppto_comparativo extends CI_Controller {
     }
 
     /*---- COMPARATIVO DE PARTIDAS A NIVEL DE UNIDAD / ESTABLECIMIENTO  (las partidas no cambian)---*/
-    public function comparativo_partidas_normal($partidas_asig,$partidas_prog,$proyecto){ 
+    public function comparativo_partidas_normal($partidas_asig,$partidas_prog,$proyecto,$tipo_rep){ 
       if($this->verif_ppto==0){
         $titulo='PRESUPUESTO ANTEPROYECTO';
       }
@@ -236,9 +304,18 @@ class Cppto_comparativo extends CI_Controller {
         $titulo='PRESUPUESTO APROBADO';
       }
 
+      /// 0 : normal
+      /// 1 : impresion
+      if($tipo_rep==0){
+        $tab='class="table table-bordered" style="width:60%;';
+      }
+      else{
+        $tab='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:95%;font-size: 8px;"';
+      }
+
       $tabla ='';
       $tabla .='
-        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:95%;font-size: 8px;" align=center>
+        <table '.$tab.' align=center>
           <thead>
             <tr style="height:11px;" bgcolor="#eceaea" align=center>
               <th style="width:3%;" align=center>#</th>
@@ -247,7 +324,7 @@ class Cppto_comparativo extends CI_Controller {
               <th style="width:15%;">'.$titulo.'</th>
               <th style="width:15%;">PRESUPUESTO POA</th>
               <th style="width:15%;">SALDO POA</th>';
-            if($this->fun_id==399){
+            if($this->tp_adm==1){
               $tabla.='<th style="width:10%; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
             }
             $tabla.='
@@ -286,7 +363,7 @@ class Cppto_comparativo extends CI_Controller {
                     <td style="width: 15%; text-align: right;">'.number_format($asig, 2, ',', '.').'</td>
                     <td style="width: 15%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
                     <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
-                if($this->fun_id==399){
+                if($this->tp_adm==1){
                   $tabla.='<td style="width: 10%; text-align: right;">'.number_format($part[0]['saldo'], 2, ',', '.').'</td>';
                 }
                 $tabla.='</tr>';
@@ -313,8 +390,11 @@ class Cppto_comparativo extends CI_Controller {
               <td colspan=3 style="height:11px;"><strong>TOTAL</strong></td>
               <td align=right>'.number_format($monto_asig, 2, ',', '.').'</td>
               <td align=right>'.number_format($monto_prog, 2, ',', '.').'</td>
-              <td align=right>'.$sig.''.number_format($dif, 2, ',', '.').'</td>
-              <td></td>
+              <td align=right>'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
+              if($this->tp_adm==1){
+                $tabla.='<td></td>';
+              }
+             $tabla.='
             </tr>
         </table>';
 
