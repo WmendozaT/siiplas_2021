@@ -281,6 +281,7 @@ class cajuste_crequerimiento extends CI_Controller{
         if($tp==0){
           $aper_id = $this->security->xss_clean($post['aper_id']); /// aper id
           $prod_id = $this->security->xss_clean($post['prod_id']); /// prod/act id
+          $producto=$this->model_producto->get_producto_id($prod_id); // Producto
           $com_id = $this->security->xss_clean($post['com_id']); /// Com id
           $detalle = $this->security->xss_clean($post['ins_detalle']); /// detalle
           $cantidad = $this->security->xss_clean($post['ins_cantidad']); /// cantidad
@@ -307,6 +308,8 @@ class cajuste_crequerimiento extends CI_Controller{
           'ins_observacion' => strtoupper($observacion), /// Observacion
           'fun_id' => $this->fun_id, /// Funcionario
           'aper_id' => $aper_id, /// aper id
+          'com_id' => $producto[0]['com_id'], /// com id 
+          'form4_cod' => $producto[0]['prod_cod'], /// aper id
           'num_ip' => $this->input->ip_address(), 
           'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
           );
@@ -337,7 +340,8 @@ class cajuste_crequerimiento extends CI_Controller{
 
         }
         else{
-          $act_id = $this->security->xss_clean($post['act_id']); /// prod/act id
+          $prod_id = $this->security->xss_clean($post['act_id']); /// prod/act id
+          $producto=$this->model_producto->get_producto_id($prod_id); // Producto
           $ins_id = $this->security->xss_clean($post['ins_id']); /// Ins id
           $com_id = $this->security->xss_clean($post['com_id']); /// Proy id
           $detalle = $this->security->xss_clean($post['detalle']); /// detalle
@@ -349,7 +353,7 @@ class cajuste_crequerimiento extends CI_Controller{
           $observacion = $this->security->xss_clean($post['observacion']); /// Observacion
         /*------------ UPDATE INSUMOPRODUCTO -------*/
           $update_insprod= array(
-            'prod_id' => $act_id
+            'prod_id' => $prod_id
           );
           $this->db->where('ins_id', $ins_id);
           $this->db->update('_insumoproducto', $this->security->xss_clean($update_insprod));
@@ -365,6 +369,8 @@ class cajuste_crequerimiento extends CI_Controller{
             'ins_unidad_medida' => $um_id,
             'ins_observacion' => $observacion,
             'fun_id' => $this->fun_id,
+            'com_id' => $producto[0]['com_id'], /// com id 
+            'form4_cod' => $producto[0]['prod_cod'], /// aper id
             'ins_estado' => 2,
             'num_ip' => $this->input->ip_address(), 
             'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR'])

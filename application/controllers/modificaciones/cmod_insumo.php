@@ -795,6 +795,8 @@ class Cmod_insumo extends CI_Controller {
             'ins_estado' => 3, /// 3 : Eliminado
             'ins_mod' => 2, /// 2 : Modulo Modificaciones
             'aper_id' => 0, /// 2 : aper
+            'com_id' => 0, /// 2 : com_id
+            'form4_cod' => 0, /// 2 : cod. formulario n4
             'num_ip' => $this->input->ip_address(), 
             'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
             'fun_id' => $this->fun_id
@@ -833,6 +835,8 @@ class Cmod_insumo extends CI_Controller {
               'ins_estado' => 3, /// 3 : Eliminado
               'ins_mod' => 2, /// 2 : Modulo Modificaciones
               'aper_id' => 0, /// 2 : aper
+              'com_id' => 0, /// 2 : com_id
+              'form4_cod' => 0, /// 2 : cod. formulario n4
               'num_ip' => $this->input->ip_address(), 
               'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
               'fun_id' => $this->fun_id

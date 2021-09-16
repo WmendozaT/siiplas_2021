@@ -305,7 +305,7 @@ class Cert_poa extends CI_Controller {
                         <td>'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
                         <td align=center><b>'.$row['cpoa_gestion'].'</b></td>
                         <td align=center>';
-                          if(($row['cpoa_ref']==0 & $row['cpoa_estado']!=0 & $this->conf_estado==1) || $this->tp_adm==1) {
+                          if(($row['cpoa_ref']==0 & $row['cpoa_estado']!=0 & $this->conf_estado==1)) {
                             $tabla.='<a href="#" data-toggle="modal" data-target="#modal_anular_cert" '.$opcion_edit.' title="EDITAR CERTIFICACI&Oacute;N" name="'.$row['cpoa_id'].'" id="'.$row['proy_id'].'" class="btn btn-default btn-lg">
                                       <img src="'.base_url().'assets/img/neg.jpg" WIDTH="35" HEIGHT="35"/></a>';
 

@@ -344,7 +344,7 @@ class Rep_operaciones extends CI_Controller {
             }
             $tabla.='
              <td align=center>';
-            if($row['pfec_estado']==1){
+            if($row['pfec_estado']==1 & $this->gestion!=2022){
               $tabla.=' <a href="'.site_url("").'/seg/notificacion_operaciones_mensual/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="NOTIFICACIÓN POA">NOTIFICACI&Oacute;N POA '.$this->verif_mes[2].'</a>';
             }
             else{

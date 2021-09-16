@@ -357,21 +357,11 @@ class Model_ptto_sigep extends CI_Model{
                     group by pg.aper_id';
         }
         else{
-            if($this->gestion==2019){
-                $sql = 'select i.aper_id, SUM(ip.programado_total) as monto
-                    from vlista_insumos i
-                    Inner Join insumo_gestion as ig on ig.ins_id = i.ins_id
-                    Inner Join vifin_prog_mes as ip on ip.insg_id = ig.insg_id
-                    where i.aper_id='.$aper_id.' and ig.g_id='.$this->gestion.'
-                    group by i.aper_id';
-            }
-            else{
-                $sql = 'select i.aper_id, SUM(ip.programado_total) as monto
+            $sql = 'select i.aper_id, SUM(ip.programado_total) as monto
                     from vlista_insumos i
                     Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
                     where i.aper_id='.$aper_id.'
                     group by i.aper_id';
-            }
         }
     
         $query = $this->db->query($sql);
