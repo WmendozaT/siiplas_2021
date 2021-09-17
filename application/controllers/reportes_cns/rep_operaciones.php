@@ -53,34 +53,10 @@ class Rep_operaciones extends CI_Controller {
     public function list_regiones(){
       $data['menu']=$this->menu(7);
       $data['list']=$this->menu_nacional();
-
-        $tabla='
-          <input name="base" type="hidden" value="'.base_url().'">
-          <div  id="update_eval">
-              <div class="jumbotron">
-                  <h1>Consolidado Programación POA '.$this->gestion.'</h1>
-                  <p>
-                      Reporte consolidado de Programación POA a nivel Regional y Distrital.
-                  </p>
-
-                  <ol style="font-size:16px;">
-                    <li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li>
-                    <li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li>
-                    <li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li>
-                    <li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li>
-                    <li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li>
-                    <li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li>
-                    <li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li>
-                    <li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li>
-                  </ol>
-              </div>
-          </div>';
-
-      $data['titulo_modulo']=$tabla;
+      $data['mensaje']='<div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';
       $this->load->view('admin/reportes_cns/programacion_poa/menu_consolidado_poa', $data);
     
    // echo $this->consolidado_operaciones_distrital(5,4);
-
     }
 
 
@@ -90,6 +66,7 @@ class Rep_operaciones extends CI_Controller {
     $regionales=$this->model_proyecto->list_departamentos();
     $unidades=$this->model_estructura_org->list_unidades_apertura();
       $tabla.='
+          <input name="base" type="hidden" value="'.base_url().'">
           <article class="col-sm-12">
             <div class="well">
               <form class="smart-form">

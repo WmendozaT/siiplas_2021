@@ -1,6 +1,14 @@
 <?php
 class Cmod_fisica extends CI_Controller {  
-    public $rol = array('1' => '3','2' => '6','3' => '4'); 
+    public $rol = array('1' => '3','2' => '6','3' => '4');
+    public $temp = array( '1' => 'enero','2' => 'febrero','3' => 'marzo','4' => 'abril','5' => 'mayo','6' => 'junio',
+                        '7' => 'julio','8' => 'agosto','9' => 'septiembre','10' => 'octubre','11' => 'noviembre','12' => 'diciembre'); 
+
+    public $prog_mes = array( '1' => 0,'2' => 0,'3' => 0,'4' => 0,'5' => 0,'6' => 0,
+                        '7' => 0,'8' => 0,'9' => 0,'10' => 0,'11' => 0,'12' => 0); 
+
+    public $prog_mes_eval = array( '1' => 0,'2' => 0,'3' => 0,'4' => 0,'5' => 0,'6' => 0,
+                        '7' => 0,'8' => 0,'9' => 0,'10' => 0,'11' => 0,'12' => 0); 
     public function __construct (){
         parent::__construct();
         if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
@@ -32,6 +40,7 @@ class Cmod_fisica extends CI_Controller {
             $this->tp_adm = $this->session->userData('tp_adm');
             $this->verif_mes=$this->session->userdata('mes_actual');
             $this->tmes = $this->session->userData('trimestre');
+            $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
             $this->load->library('modificacionpoa');
 
             }else{
@@ -47,7 +56,7 @@ class Cmod_fisica extends CI_Controller {
 
     /*--- LISTA SUBACTIVIDADES (2020-2021) ---*/
     public function mis_subactividades($proy_id){
-      $data['menu']=$this->menu(3); //// genera menu
+      $data['menu']=$this->modificacionpoa->menu(3); //// genera menu
       $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
       if(count($data['proyecto'])!=0){
         $data['fase'] = $this->model_faseetapa->get_id_fase($proy_id);
@@ -106,12 +115,6 @@ class Cmod_fisica extends CI_Controller {
 
 
 
-
-
-
-
-
-
     /*----- VALIDA CITE FISICA 2020 -----*/
     public function valida_cite_modificacion(){
       if ($this->input->post()) {
@@ -154,27 +157,30 @@ class Cmod_fisica extends CI_Controller {
     }
 
 
-    /*------ LISTA DE OPERACIONES (2020 - 2021) -------*/
+    /*------ LISTA DE FORMULARIO N° 4 (2020 - 2021) -------*/
     public function list_operaciones($cite_id){
       $data['cite']=$this->model_modfisica->get_cite_fis($cite_id);
       if(count($data['cite'])!=0){
-        $data['menu']=$this->menu(3); //// genera menu
+        $data['menu']=$this->modificacionpoa->menu(3); //// genera menu
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
-        $data['datos_cite']=$this->datos_cite($data['cite']); /// DATOS CITE
-        $data['titulo']=$this->titulo_cabecera($data['cite']);
+        $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
+        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']);
         $data['indi'] = $this->model_proyecto->indicador(); /// indicador
         $data['metas'] = $this->model_producto->tp_metas(); /// tp metas
 
         if($data['cite'][0]['tp_id']==1){
           $data['list_oregional']=$this->lista_oregional_pi($data['cite'][0]['proy_id']);
+          $data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['proyecto'][0]['proy_id']);
         }
         else{
-          $data['list_oregional']=$this->lista_oregional($data['cite'][0]['proy_id']);
-        }
+          $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
+          $data['objetivos']=$this->model_objetivoregion->list_proyecto_oregional($data['proyecto'][0]['proy_id']);
+          $data['list_oregional']=$this->lista_oregional($data['proyecto'][0]['proy_id']);
+         }
         
-        $data['productos'] = $this->model_producto->list_prod($data['cite'][0]['com_id']); // Lista de productos
-        $data['verif_mod']=$this->verif_cite($cite_id); /// Verificando modulos
-        $data['operaciones']=$this->mis_operaciones($data['cite']); /// Lista Operaciones
+        $data['nro'] = $this->model_producto->list_prod($data['cite'][0]['com_id']); // Lista de productos para el codigo
+        $data['verif_mod']=$this->modificacionpoa->verif_cite($cite_id); /// Verificando modficaciones para la impresion
+        $data['formulario_N4']=$this->modificacionpoa->mis_formulario4($data['cite']); /// Lista Operaciones
         $this->load->view('admin/modificacion/moperaciones/productos/list_productos', $data);
 
       }
@@ -185,155 +191,69 @@ class Cmod_fisica extends CI_Controller {
     }
 
 
-    /*------ LISTA OPERACIONES (2020) ------*/
-    public function mis_operaciones($cite){
-      $proy_id=$cite[0]['proy_id'];
-      $productos = $this->model_producto->lista_operaciones($cite[0]['com_id'],$this->gestion); // Lista de Operaciones
-      $tabla ='';
-      $tabla .='<thead>
-                  <tr class="modo1">
-                    <th style="width:1%; text-align=center"><b>COD.</b></th>
-                    <th style="width:1%; text-align=center"><b>E/B</b></th>
-                    <th style="width:2%;"><b>COD. OR.</b></th>
-                    <th style="width:2%;"><b>COD. OPE.</b></th>
-                    <th style="width:15%;"><b>OPERACI&Oacute;N</b></th>
-                    <th style="width:15%;"><b>RESULTADO</b></th>
-                    <th style="width:10%;"><b>TIP. IND.</b></th>
-                    <th style="width:10%;"><b>INDICADOR</b></th>
-                    <th style="width:1%;"><b>LINEA BASE '.($this->gestion-1).'</b></th>
-                    <th style="width:1%;"><b>META</b></th>
-                    <th style="width:4%;"><b>ENE.</b></th>
-                    <th style="width:4%;"><b>FEB.</b></th>
-                    <th style="width:4%;"><b>MAR.</b></th>
-                    <th style="width:4%;"><b>ABR.</b></th>
-                    <th style="width:4%;"><b>MAY.</b></th>
-                    <th style="width:4%;"><b>JUN.</b></th>
-                    <th style="width:4%;"><b>JUL.</b></th>
-                    <th style="width:4%;"><b>AGO.</b></th>
-                    <th style="width:4%;"><b>SEP.</b></th>
-                    <th style="width:4%;"><b>OCT.</b></th>
-                    <th style="width:4%;"><b>NOV.</b></th>
-                    <th style="width:4%;"><b>DIC.</b></th>
-                    <th style="width:10%;"><b>MEDIO DE VERIFICACI&Oacute;N</b></th>
-                    <th style="width:7%;"><b>PTTO..</b></th>
-                    <th style="width:7%;"><b>NRO. REQ.</b></th>
-                  </tr>
-                </thead>
-                <tbody>';
-                $cont = 0;
-                foreach($productos as $rowp){
-                  $cont++;
-                  $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                  $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
-                  $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
-                  $ptto=0;
-                  if(count($monto)!=0){
-                    $ptto=$monto[0]['total'];
-                  }
+    /*---- GET DATOS PRODUCTO FORM 4 ----*/
+    public function get_form4_mod(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $prod_id = $this->security->xss_clean($post['prod_id']);
+        $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
+        $temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
+        
+        $sum_temp=0;
+        $sum=$this->model_producto->meta_prod_gest($prod_id);
+        if(count($sum)!=0){
+          $sum_temp=$sum[0]['meta_gest'];
+        }
 
-                  $color=''; $titulo=''; $por='';
-                  if($cite[0]['tp_id']==1){
-                    if(($sum[0]['meta_gest']+$rowp['prod_linea_base'])!=$rowp['prod_meta'] || $rowp['or_id']==0){
-                      $color='#fbd5d5';
-                      $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
-                    }
-                  }
-                  else{
-                    if($rowp['indi_id']==2){ // Relativo
-                      $por='%';
-                      if($rowp['mt_id']==3){
-                        if($sum[0]['meta_gest']!=$rowp['prod_meta'] || $rowp['or_id']==0){
-                          $color='#fbd5d5';
-                          $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
-                        }
-                      }
-                    }
-                    else{ // Absoluto
-                      if($sum[0]['meta_gest']!=$rowp['prod_meta'] || $rowp['or_id']==0){
-                        $color='#fbd5d5';
-                        $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
-                      }
-                    }
-                  }
+        if(count($temporalidad)!=0){
+          for ($i=1; $i <=12 ; $i++) { 
+            $this->prog_mes[$i]= $temporalidad[0][$this->temp[$i]];
+          }
+        }
 
-                  $tabla .='
-                    <tr bgcolor="'.$color.'" class="modo1" title='.$titulo.'>
-                      <td align="center" title='.$rowp['prod_id'].'><font color="blue" size="2"><b>'.$rowp['prod_cod'].'</b></font></td>
-                      <td align="center">
-                        <a href="'.site_url("").'/mod/update_ope/'.$rowp['prod_id'].'/'.$cite[0]['cite_id'].'" title="MODIFICAR ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a><br>';
-                        /*if(count($monto)==0){
-                          $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
-                        }*/
-                        $tabla.='
-                      </td>
-                      <td style="width:2%;text-align=center"><b><font size=5 color=blue>'.$rowp['or_codigo'].'</font></b></td>
-                      <td style="width:2%;text-align=center"><b><font size=5>'.$rowp['prod_cod'].'</font></b></td>
-                      <td style="width:15%;">'.$rowp['prod_producto'].'</td>
-                      <td style="width:15%;">'.$rowp['prod_resultado'].'</td>
-                      <td style="width:10%;">'.$rowp['indi_abreviacion'].'</td>
-                      <td style="width:10%;">'.$rowp['prod_indicador'].'</td>
-                      <td style="width:10%;">'.round($rowp['prod_linea_base'],2).'</td>
-                      <td style="width:10%;">'.round($rowp['prod_meta'],2).'</td>';
-                    if(count($programado)!=0){
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['enero'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['febrero'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['marzo'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['abril'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['mayo'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['junio'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['julio'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['agosto'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['septiembre'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['octubre'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['noviembre'],2).' '.$por.'</td>';
-                      $tabla.='<td style="width:4%;" bgcolor="#e5fde5">'.round($programado[0]['diciembre'],2).' '.$por.'</td>';
-                    }
-                    else{
-                      $tabla.='<td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>';
-                    }
-                    $tabla.='<td style="width:10%;" bgcolor="#e5fde5">'.$rowp['prod_fuente_verificacion'].'</td>';
-                    $tabla.='<td>'.number_format($ptto, 2, ',', '.').'</td>';
-                    $tabla.='<td style="width:7%;" align="center"><font color="blue" size="2"><b>'.count($this->model_producto->insumo_producto($rowp['prod_id'])).'</b></font></td>';
-                  $tabla .='</tr>';
-                  ?>
-                  <script>
-                    function scheck<?php echo $cont;?>(estaChequeado) {
-                      val = parseInt($('[name="tot"]').val());
-                      if (estaChequeado == true) {
-                        val = val + 1;
-                      } else {
-                        val = val - 1;
-                      }
-                      $('[name="tot"]').val((val).toFixed(0));
-                    }
-                  </script>
-                  <?php
-                }
-                $tabla.='</tbody>';
+        for ($i=1; $i <=12 ; $i++) { 
+          if($i<$this->verif_mes[1]){ /// Meses ejecutados
+            $this->prog_mes_eval[$i]=1;
+          }
+        }
 
-      return $tabla;
+
+        if(count($producto)!=0){
+          $result = array(
+            'respuesta' => 'correcto',
+            'producto'=>$producto,
+            'temp'=>$this->prog_mes,
+            'mes'=>$this->temp,
+            'mes_actual'=>$this->verif_mes,
+            'trimestre'=>$this->tmes,
+            'temp_eval'=>$this->prog_mes_eval,
+            'sum_temp'=>$sum_temp,
+          );
+        }
+        else{
+          $result = array(
+            'respuesta' => 'error',
+          );
+        }
+
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
     }
 
+
+   
+
   /*------ MODIFICAR PRODUCTO (2020 - 2021) -------*/
-    public function update_operacion($prod_id,$cite_id){
+/*    public function update_operacion($prod_id,$cite_id){
       $data['producto']=$this->model_producto->get_producto_id($prod_id);
       $data['cite']=$this->model_modfisica->get_cite_fis($cite_id);
       if(count($data['producto'])!=0 & count($data['cite'])!=0){
-        $data['menu']=$this->menu(3); //// genera menu
+        $data['menu']=$this->modificacionpoa->menu(3); //// genera menu
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
-        $data['datos_cite']=$this->datos_cite($data['cite']); /// DATOS CITE
-        $data['titulo']=$this->titulo_cabecera($data['cite']);
+        $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
+        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']);
         $data['indi']= $this->model_proyecto->indicador(); /// indicador
         $data['metas'] = $this->model_producto->tp_metas(); /// tp metas
         $data['indi_pei']=$this->model_mestrategico->list_indicadores_pei2($data['producto'][0]['acc_id']);
@@ -404,7 +324,173 @@ class Cmod_fisica extends CI_Controller {
       else{
         echo "Error !!!";
       }
-  }
+  }*/
+
+
+
+
+
+
+
+    /*----- VALIDAR UPDATE MOD FORM4 ----*/
+    public function valida_update_form4(){
+      if($this->input->post()) {
+        $post = $this->input->post();
+        $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
+        $producto=$this->model_producto->get_producto_id($prod_id);
+
+        //$this->verif_mes,
+        //$this->tmes,
+
+        if($this->verif_mes==1){
+          $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
+          $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
+          $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
+        }
+        else{
+          $prod = $producto[0]['prod_producto']; /// detalle producto
+          $resultado = $producto[0]['prod_resultado']; /// Resultado
+          $mverificacion = $producto[0]['prod_fuente_verificacion']; /// Medio de Verificacion
+        }
+
+        if($this->tmes==1){
+          $indi_id = $this->security->xss_clean($post['mtipo_i']); /// Tipo de Indicador
+          $linea_base = $this->security->xss_clean($post['mlbase']); /// Linea Base
+          $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
+        }
+        else{
+          $indi_id = $producto[0]['indi_id']; /// Tipo de Indicador
+          $linea_base = $producto[0]['prod_linea_base']; /// Linea Base
+          $tp_meta = $producto[0]['mt_id']; /// Tipo de Meta
+        }
+
+          $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador
+          $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
+          $meta = $this->security->xss_clean($post['mmeta']); /// Meta
+          $presupuesto = $this->security->xss_clean($post['mppto']); /// Presupuesto
+          $or_id = $this->security->xss_clean($post['mor_id']); /// Objetivo Regional
+
+        $ae=0;
+        $get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
+        if(count($get_acc)!=0){
+          $ae=$get_acc[0]['ae'];
+        }
+
+        if($tipo_i==1){
+          $tp_meta=3;
+        }
+
+        if($this->copia_operacion($cite,$prod_id,2)){
+          /*--------- Update Producto --------*/
+          $update_prod = array(
+            'com_id' => $com_id, // com id
+            'prod_producto' => strtoupper($producto), // Producto
+            'prod_resultado' => strtoupper($resultado),
+            'indi_id' => $tipo_i,
+            'prod_indicador' => strtoupper($indicador),
+            'prod_unidades' => strtoupper($unidad),
+            'prod_linea_base' => $linea_base,
+            'prod_meta' => $meta,
+            'prod_fuente_verificacion' => strtoupper($mverificacion),
+            'estado' => 2,
+            'acc_id' => $ae,
+            'fecha' => date("d/m/Y H:i:s"),
+            'mt_id' => $tp_meta,
+            'prod_mod' => 2,
+            'or_id' => $or_id,
+            'fun_id' => $this->fun_id,
+          );
+          $this->db->where('prod_id', $prod_id);
+          $this->db->update('_productos', $update_prod);
+          /*----------------------------------*/
+
+        }
+
+/*        $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
+        $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
+        $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
+        $indi_id = $this->security->xss_clean($post['mtipo_i']); /// Tipo de Indicador
+      
+        $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
+        
+      
+       
+        
+
+        $ae=0;
+        $get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
+        if(count($get_acc)!=0){
+          $ae=$get_acc[0]['ae'];
+        }*/
+
+        /*----- UPDATE FORMULARIO N4 ----*/
+/*          $update_prod = array(
+            'prod_producto' => strtoupper($prod),
+            'prod_resultado' => strtoupper($resultado),
+            'indi_id' => $indi_id,
+            'prod_indicador' => strtoupper($indicador),
+            'prod_linea_base' => $linea_base,
+            'prod_meta' => $meta,
+            'prod_unidades' => $unidad,
+            'prod_fuente_verificacion' => strtoupper($mverificacion),
+            'estado' => 2,
+            'or_id' => $or_id,
+            'acc_id' => $ae,
+            'fecha' => date("d/m/Y H:i:s"),
+            'mt_id' => $tp_meta,
+            'fun_id' => $this->fun_id,
+            'prod_ppto' => $presupuesto,
+            'num_ip' => $this->input->ip_address(), 
+            'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+            );
+          $this->db->where('prod_id', $prod_id);
+          $this->db->update('_productos', $update_prod);  */
+        /*----------------------------------------------*/
+
+          /*------------ ANULAR TEMPORALIDAD -----------*/
+/*          $this->model_producto->delete_prod_gest($prod_id);
+
+          if($indi_id==1){
+            for ($i=1; $i <=12 ; $i++) {
+              if($this->security->xss_clean($post['mm'.$i])!=0){
+                $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$this->security->xss_clean($post['mm'.$i]));
+              }
+            }
+          }
+
+          if($indi_id==2){
+            if($tp_meta==3){
+              for ($i=1; $i <=12 ; $i++) {
+                if($this->security->xss_clean($post['mm'.$i])!=0){
+                  $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$this->security->xss_clean($post['mm'.$i]));
+                }
+              }
+            }
+            elseif($tp_meta==1){ /// recurrente
+              for ($i=1; $i <=12 ; $i++) {
+                $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$meta);
+              }
+            }
+          }  
+            
+            $producto=$this->model_producto->get_producto_id($this->input->post('prod_id'));
+            $this->session->set_flashdata('success','SE MODIFICO CORRECTAMENTE DATOS DE LA ACTIVIDAD :)');
+            redirect('admin/prog/list_prod/'.$producto[0]['com_id'].'');
+*/
+
+      } else {
+          show_404();
+      }
+    }
+
+
+
+
+
+
+
+
+
 
     /*--- VALIDA NUEVA ACTIVIDAD (2020) ---*/
     public function valida_operacion(){
@@ -461,24 +547,24 @@ class Cmod_fisica extends CI_Controller {
           /*---------------------------*/
           
           /*---------------- Temporalidad -------------------*/
-          if($tipo_i==1){
+          if($this->input->post('tipo_i')==1){
             for ($i=1; $i <=12 ; $i++) {
-              if($post['m'.$i]!=0){
-                $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$post['m'.$i]);
+              if($this->input->post('m'.$i)!=0){
+                $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$this->input->post('m'.$i));
               }
             }
           }
-          if($tipo_i==2){
+          if($this->input->post('tipo_i')==2){
             if($tp_met==3){
               for ($i=1; $i <=12 ; $i++) {
-                if($post['m'.$i]!=0){
-                  $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$post['m'.$i]);
+                if($this->input->post('m'.$i)!=0){
+                  $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$this->input->post('m'.$i));
                 }
               }
             }
             elseif($tp_met==1){
               for ($i=1; $i <=12 ; $i++) {
-                $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$post['m'.$i]);
+                $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$this->input->post('meta'));
               }
             }
           }
@@ -1239,10 +1325,10 @@ class Cmod_fisica extends CI_Controller {
     public function ver_modificacion_poa($cite_id){
       $data['cite'] = $this->model_modfisica->get_cite_fis($cite_id); // Datos Cite
       if(count($data['cite'])!=0){
-        $data['menu']=$this->menu(3); //// genera menu
+        $data['menu']=$this->modificacionpoa->menu(3); //// genera menu
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
-        $data['titulo']=$this->titulo_cabecera($data['cite']); /// CABECERA
-        $data['datos_cite']=$this->datos_cite($data['cite']); /// DATOS CITE
+        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']); /// CABECERA
+        $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
         $this->load->view('admin/modificacion/moperaciones/ver_modificado_poa', $data);
       }
       else{
@@ -1357,115 +1443,37 @@ class Cmod_fisica extends CI_Controller {
 
 
 
-    /*--- VERIFICA SI SE TIENE ALGUN REGISTRO (ABM) ---*/
-    public function verif_cite($cite_id){
-      $cite=$this->model_modfisica->get_cite_fis($cite_id); // CITE
-      $proyecto=$this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// PROYECTO
 
-      $ca=$this->model_modfisica->operaciones_adicionados($cite_id);
-      $cm=$this->model_modfisica->operaciones_modificados($cite_id);
-      $cd=$this->model_modfisica->operaciones_eliminados($cite_id);
-
-      $sw=0;
-      if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
-        $sw=1;
-      }
-
-      return $sw;
-    }
-
-    /*------ VERIFICANDO CODIGO DE MODIFICACION POA (2020)-----*/
-    public function datos_cite($cite){
-      $tabla='';
-
-      if($cite[0]['cite_estado']!=0){
-        $tit='<font color=blue><b>'.$cite[0]['cite_codigo'].'</b></font>';
-      }
-      else{
-        $tit=' <font color=#a87830><b>DEBE CERRAR LA MODIFICACI&Oacute;N DEL REQUERIMIENTO !!</b></font>';
-      }
-
-      $tabla.='<h1><b> CITE Nro. : <small>'.$cite[0]['cite_nota'].'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;FECHA : <small>'.date('d/m/Y',strtotime($cite[0]['cite_fecha'])).'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;C&Oacute;DIGO : '.$tit.'</b></h1>';
-      return $tabla;
-    }
-
-
-    /*------ TITULO CABECERA (2020)-----*/
-    public function titulo_cabecera($cite){
-      $tabla='';
-      if($cite[0]['tp_id']==1){ /// Proyecto de Inversion
-        $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// Proyecto de Inversion
-        $tabla.=' <h1> <b>PROYECTO : </b><small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'].'</small>
-                  <h1> <b>SUBACTIVIDAD : </b><small>'.$cite[0]['serv_cod'].' '.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
-      }
-      else{ /// Gasto Corriente
-        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cite[0]['proy_id']);
-        $tabla.=' <h1><b> ACTIVIDAD : <b><small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>
-                  <h1><b> SUBACTIVIDAD : <b><small>'.$cite[0]['serv_cod'].' '.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
-      }
-
-      //// ------ Monto Presupuesto Programado-Asignado POA
-        $monto=$this->ppto($proyecto);
-        $tabla.='<h1><b> PPTO. ASIGNADO : <small>'.number_format($monto[1], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;PPTO PROGRAMADO : <small>'.number_format($monto[2], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;SALDO : <small>'.number_format($monto[3], 2, ',', '.').'</small></b></h1>';
-        
-      return $tabla;
-    }
-
-    /*--- MONTO PRESUPUESTO (2020) ---*/
-    public function ppto($proyecto){
-      $monto_a=0;$monto_p=0;$monto_saldo=0;
-      $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
-      
-      if($proyecto[0]['tp_id']==1){
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto[0]['proy_id']);
-      }
-      else{
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
-      }
-
-      if(count($monto_asig)!=0){
-        $monto_a=$monto_asig[0]['monto'];
-      }
-      if(count($monto_prog)!=0){
-        $monto_p=$monto_prog[0]['monto'];
-      }
-
-      $monto[1]=$monto_a; /// Monto Asignado
-      $monto[2]=$monto_p; /// Monto Programado
-      $monto[3]=($monto_a-$monto_p); /// Saldo
-
-      return $monto;
-    }
 
   /*--- LISTA DE OBJETIVO REGIONAL (GASTO CORRIENTE )-----*/
-  public function lista_oregional($proy_id){
-    $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
-    $tabla='';
-    if(count($list_oregional)==1){
-      $tabla.=' <section class="col col-3">
-                  <label class="label"><b>OBJETIVO REGIONAL '.$list_oregional[0]['or_id'].'</b></label>
-                  <label class="input">
-                    <i class="icon-append fa fa-tag"></i>
-                    <input type="hidden" name="or_id" id="or_id" value="'.$list_oregional[0]['or_id'].'">
-                    <input type="text" value="'.$list_oregional[0]['or_codigo'].'.- '.$list_oregional[0]['or_objetivo'].'" disabled>
-                  </label>
+    public function lista_oregional($proy_id){
+      $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
+      $tabla='';
+      if(count($list_oregional)==1){
+        $tabla.=' <section class="col col-3">
+                    <label class="label"><b>OPERACIÓN REGIONAL '.$list_oregional[0]['or_id'].'</b></label>
+                    <label class="input">
+                      <i class="icon-append fa fa-tag"></i>
+                      <input type="hidden" name="or_id" id="or_id" value="'.$list_oregional[0]['or_id'].'">
+                      <input type="text" value="'.$list_oregional[0]['or_codigo'].'.- '.$list_oregional[0]['or_objetivo'].'" disabled>
+                    </label>
+                  </section>'; 
+      }
+      else{
+          $tabla.='<section class="col col-6">
+                  <label class="label"><b>ALINEACIÓN OPERACIÓN REGIONAL '.$this->gestion.'</b></label>
+                    <select class="form-control" id="or_id" name="or_id" title="SELECCIONE">
+                      <option value="0">SELECCIONE ALINEACIÓN OPERACIÓN</option>';
+                      foreach($list_oregional as $row){ 
+                        $tabla.='<option value="'.$row['or_id'].'">'.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
+                      }
+                    $tabla.='
+                  </select>
                 </section>'; 
+      }
+         
+      return $tabla;
     }
-    else{
-        $tabla.='<section class="col col-6">
-                <label class="label"><b>OBJETIVO REGIONAL</b></label>
-                  <select class="form-control" id="or_id" name="or_id" title="SELECCIONE">
-                    <option value="0">SELECCIONE OBJETIVO REGIONAL</option>';
-                    foreach($list_oregional as $row){ 
-                      $tabla.='<option value="'.$row['or_id'].'">'.$row['or_codigo'].'.- '.$row['or_objetivo'].'</option>';    
-                    }
-                  $tabla.='
-                </select>
-              </section>'; 
-    }
-       
-    return $tabla;
-  }
 
   /*---- LISTA DE OBJETIVO REGIONAL (PROYECTO DE INVERSION)-----*/
   public function lista_oregional_pi($proy_id){
@@ -1497,7 +1505,7 @@ class Cmod_fisica extends CI_Controller {
     return $tabla;
   }
     /*------- GENERAR MENU --------*/
-    function menu($mod){
+/*    function menu($mod){
       $enlaces=$this->menu_modelo->get_Modulos($mod);
       for($i=0;$i<count($enlaces);$i++) {
         $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
@@ -1518,7 +1526,7 @@ class Cmod_fisica extends CI_Controller {
           }
       }
       return $tabla;
-    }
+    }*/
     /*--------------------------------------------------------------------------------*/
     function rolfun($rol){
       $valor=false;

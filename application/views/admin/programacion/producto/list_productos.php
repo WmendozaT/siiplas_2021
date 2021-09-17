@@ -508,14 +508,14 @@
                       <label class="label"><b>LINEA BASE</b></label>
                       <label class="input">
                         <i class="icon-append fa fa-tag"></i>
-                        <input type="text" name="mlbase" id="mlbase" value="0" title="REGISTRE LINEA BASE" onkeyup="suma_programado()">
+                        <input type="text" name="mlbase" id="mlbase" value="0" title="REGISTRE LINEA BASE" onkeyup="suma_programado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true">>
                       </label>
                     </section>
                     <section class="col col-2">
                       <label class="label"><b>META</b></label>
                       <label class="input">
                         <i class="icon-append fa fa-tag"></i>
-                        <input type="text" name="mmeta" id="mmeta" value="0" onkeyup="verif_meta_mod()" title="REGISTRE META">
+                        <input type="text" name="mmeta" id="mmeta" value="0" onkeyup="verif_meta_mod()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true">
                       </label>
                     </section>
                     <section class="col col-2">
@@ -623,35 +623,35 @@
                   <label class="label"><b>AGOSTO</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm8" id="mm8" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm8" id="mm8" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }"  onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>SEPTIEMBRE</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm9" id="mm9" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm9" id="mm9" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>OCTUBRE</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm10" id="mm10" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm10" id="mm10" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>NOVIEMBRE</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm11" id="mm11" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm11" id="mm11" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>DICIEMBRE</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm12" id="mm12" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm12" id="mm12" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
               </div>

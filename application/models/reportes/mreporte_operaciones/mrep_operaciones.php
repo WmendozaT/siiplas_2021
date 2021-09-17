@@ -22,7 +22,7 @@ class Mrep_operaciones extends CI_Model {
                 Inner Join _proyectos as p On p.act_id=es.act_id
                 Inner Join aperturaproyectos as pp On pp.proy_id=p.proy_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=pp.aper_id
-                where es.dist_id='.$dist_id.' and es.g_id='.$this->gestion.' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'';
+                where es.dist_id='.$dist_id.' and es.aper_gestion='.$this->gestion.' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'';
 
         $query = $this->db->query($sql);
         return $query->result_array();

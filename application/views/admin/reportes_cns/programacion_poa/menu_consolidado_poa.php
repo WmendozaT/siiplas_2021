@@ -127,7 +127,7 @@
                     <div class="row">
                     <?php echo $list;?>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                           <div id="lista_consolidado" class="well"><?php echo $titulo_modulo; ?></div>
+                           <div id="lista_consolidado" class="well"><?php echo $mensaje;?></div>
                         </article>
                     </div>
                 </section>
@@ -264,7 +264,7 @@
                             $("#tp_id").html('');
                             $("#rep_id").html('');
                             $('#unidad').slideUp();
-                          // $("#lista_consolidado").html('');
+                            $("#lista_consolidado").html('<?php echo $mensaje;?>');
                         });
                     }
                 });

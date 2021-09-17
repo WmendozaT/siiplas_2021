@@ -93,8 +93,11 @@ class Cseguimiento extends CI_Controller {
               $tabla.='
               <tr style="height:45px;">
                 <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>
-                <td align=center>
-                  <a href="#" data-toggle="modal" data-target="#modal_update_eval_unidad" class="btn btn-info update_eval_unidad" style="width:95%;" name="'.$row['proy_id'].'" id="'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'" title="ACTUALIZAR EVALUACION POA"><i class="glyphicon glyphicon-retweet"></i> ACTUALIZAR</a></a>
+                <td align=center>';
+                  if($this->tp_adm==1){
+                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_update_eval_unidad" class="btn btn-info update_eval_unidad" style="width:95%;" name="'.$row['proy_id'].'" id="'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'" title="ACTUALIZAR EVALUACION POA"><i class="glyphicon glyphicon-retweet"></i> ACTUALIZAR</a></a>';
+                  }
+                $tabla.='
                 </td>
                 <td align=center>
                   <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">

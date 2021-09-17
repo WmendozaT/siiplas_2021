@@ -17,6 +17,7 @@ class Modificacionpoa extends CI_Controller{
         $this->load->model('programacion/model_producto');
         $this->load->model('ejecucion/model_evaluacion');
         $this->load->model('mantenimiento/model_configuracion');
+        $this->load->model('modificacion/model_modfisica'); /// Gestion 2020
 
         $this->load->model('modificacion/model_modificacion');
 
@@ -297,6 +298,235 @@ class Modificacionpoa extends CI_Controller{
       return $tabla;
     }
 
+//////////////// FORMULARIO N° 4 
+        /*--- VERIFICA SI SE TIENE ALGUN REGISTRO (ABM) ---*/
+    public function verif_cite($cite_id){
+      $cite=$this->model_modfisica->get_cite_fis($cite_id); // CITE
+      $proyecto=$this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// PROYECTO
+
+      $ca=$this->model_modfisica->operaciones_adicionados($cite_id);
+      $cm=$this->model_modfisica->operaciones_modificados($cite_id);
+      $cd=$this->model_modfisica->operaciones_eliminados($cite_id);
+
+      $sw=0;
+      if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
+        $sw=1;
+      }
+
+      return $sw;
+    }
+
+    /*------ VERIFICANDO CODIGO DE MODIFICACION POA (2020)-----*/
+    public function datos_cite($cite){
+      $tabla='';
+
+      if($cite[0]['cite_estado']!=0){
+        $tit='<font color=blue><b>'.$cite[0]['cite_codigo'].'</b></font>';
+      }
+      else{
+        $tit=' <font color=#a87830><b>DEBE CERRAR LA MODIFICACI&Oacute;N DEL REQUERIMIENTO !!</b></font>';
+      }
+
+      $tabla.='<h1><b> CITE Nro. : <small>'.$cite[0]['cite_nota'].'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;FECHA : <small>'.date('d/m/Y',strtotime($cite[0]['cite_fecha'])).'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;C&Oacute;DIGO : '.$tit.'</b></h1>';
+      return $tabla;
+    }
+
+
+    /*------ TITULO CABECERA (2020) (FORMULARIO N° 4)-----*/
+    public function titulo_cabecera($cite){
+      $tabla='';
+      if($cite[0]['tp_id']==1){ /// Proyecto de Inversion
+        $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// Proyecto de Inversion
+        $tabla.=' <h1> <b>PROYECTO : </b><small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'].'</small>
+                  <h1> <b>UNIDAD RESPONSABLE : </b><small>'.$cite[0]['serv_cod'].' '.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
+      }
+      else{ /// Gasto Corriente
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cite[0]['proy_id']);
+        $tabla.=' <h1><b> '.$proyecto[0]['tipo_adm'].' : <b><small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>
+                  <h1><b> UNIDAD RESPONSABLE : <b><small>'.$cite[0]['serv_cod'].' '.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
+      }
+
+      //// ------ Monto Presupuesto Programado-Asignado POA
+        $monto=$this->ppto($proyecto);
+        $tabla.='<h1><b> PPTO. ASIGNADO : <small>'.number_format($monto[1], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;PPTO PROGRAMADO : <small>'.number_format($monto[2], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;SALDO : <small>'.number_format($monto[3], 2, ',', '.').'</small></b></h1>';
+        
+      return $tabla;
+    }
+
+    /*--- MONTO PRESUPUESTO (2020) ---*/
+    public function ppto($proyecto){
+      $monto_a=0;$monto_p=0;$monto_saldo=0;
+      $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
+      
+      if($proyecto[0]['tp_id']==1){
+        $monto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto[0]['proy_id']);
+      }
+      else{
+        $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
+      }
+
+      if(count($monto_asig)!=0){
+        $monto_a=$monto_asig[0]['monto'];
+      }
+      if(count($monto_prog)!=0){
+        $monto_p=$monto_prog[0]['monto'];
+      }
+
+      $monto[1]=$monto_a; /// Monto Asignado
+      $monto[2]=$monto_p; /// Monto Programado
+      $monto[3]=($monto_a-$monto_p); /// Saldo
+
+      return $monto;
+    }
+
+
+     /*------ LISTA FORMULARIO N° 4 (2020) ------*/
+    public function mis_formulario4($cite){
+      $proy_id=$cite[0]['proy_id'];
+      $productos = $this->model_producto->lista_operaciones($cite[0]['com_id'],$this->gestion); // Lista de Operaciones
+      $tabla ='';
+      $tabla .='
+        <input type="hidden" name="base" value="'.base_url().'">
+        <table id="dt_basic" class="table table-bordered">
+          <thead>
+            <tr class="modo1">
+              <th style="width:1%; text-align=center"><b>#</b></th>
+              <th style="width:1%; text-align=center"><b>E/B</b></th>
+              <th style="width:2%;"><b>COD. ACP.</b></th>
+              <th style="width:2%;"><b>COD. OPE.</b></th>
+              <th style="width:2%;"><b>COD. ACT.</b></th>
+              <th style="width:10%;"><b>DESCRIPCI&Oacute;N ACTIVIDAD</b></th>
+              <th style="width:10%;"><b>RESULTADO</b></th>
+              <th style="width:5%;"><b>TIP. IND.</b></th>
+              <th style="width:10%;"><b>INDICADOR</b></th>
+              <th style="width:5%;"><b>LINEA BASE '.($this->gestion-1).'</b></th>
+              <th style="width:5%;"><b>META</b></th>
+              <th style="width:2.5%;"><b>ENE.</b></th>
+              <th style="width:2.5%;"><b>FEB.</b></th>
+              <th style="width:2.5%;"><b>MAR.</b></th>
+              <th style="width:2.5%;"><b>ABR.</b></th>
+              <th style="width:2.5%;"><b>MAY.</b></th>
+              <th style="width:2.5%;"><b>JUN.</b></th>
+              <th style="width:2.5%;"><b>JUL.</b></th>
+              <th style="width:2.5%;"><b>AGO.</b></th>
+              <th style="width:2.5%;"><b>SEP.</b></th>
+              <th style="width:2.5%;"><b>OCT.</b></th>
+              <th style="width:2.5%;"><b>NOV.</b></th>
+              <th style="width:2.5%;"><b>DIC.</b></th>
+              <th style="width:8%;"><b>MEDIO DE VERIFICACI&Oacute;N</b></th>
+              <th style="width:6%;"><b>PTTO..</b></th>
+              <th style="width:5%;"><b>NRO. REQ.</b></th>
+            </tr>
+          </thead>
+          <tbody>';
+          $cont = 0;
+          foreach($productos as $rowp){
+            $cont++;
+            $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
+            $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+            $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
+            $ptto=0;
+            if(count($monto)!=0){
+              $ptto=$monto[0]['total'];
+            }
+
+            $color=''; $titulo=''; $por='';
+            if($cite[0]['tp_id']==1){
+              if(($sum[0]['meta_gest']+$rowp['prod_linea_base'])!=$rowp['prod_meta'] || $rowp['or_id']==0){
+                $color='#fbd5d5';
+                $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
+              }
+            }
+            else{
+              if($rowp['indi_id']==2){ // Relativo
+                $por='%';
+                if($rowp['mt_id']==3){
+                  if($sum[0]['meta_gest']!=$rowp['prod_meta'] || $rowp['or_id']==0){
+                    $color='#fbd5d5';
+                    $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
+                  }
+                }
+              }
+              else{ // Absoluto
+                if($sum[0]['meta_gest']!=$rowp['prod_meta'] || $rowp['or_id']==0){
+                  $color='#fbd5d5';
+                  $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
+                }
+              }
+            }
+
+            $tabla .='
+              <tr bgcolor="'.$color.'" class="modo1" title='.$titulo.'>
+                <td align="center" title='.$rowp['prod_id'].'><font color="blue" size="2"><b>'.$rowp['prod_cod'].'</b></font></td>
+                <td align="center">
+                  <a href="'.site_url("").'/mod/update_ope/'.$rowp['prod_id'].'/'.$cite[0]['cite_id'].'" title="MODIFICAR ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a><br>
+                  <a href="#" data-toggle="modal" data-target="#modal_mod_form4" class="btn btn-default mod_form4" name="'.$rowp['prod_id'].'" title="MODIFICAR ACTIVIDAD"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
+                  
+                  /*if(count($monto)==0){
+                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
+                  }*/
+                  $tabla.='
+                </td>
+                <td style="width:2%;text-align=center" bgcolor="#c1e1fb"><b><font size=5 color=blue>'.$rowp['og_codigo'].'</font></b></td>
+                <td style="width:2%;text-align=center" bgcolor="#c1e1fb"><b><font size=5 color=blue>'.$rowp['or_codigo'].'</font></b></td>
+                <td style="width:2%;text-align=center"><b><font size=5>'.$rowp['prod_cod'].'</font></b></td>
+                <td style="width:10%;">'.$rowp['prod_producto'].'</td>
+                <td style="width:10%;">'.$rowp['prod_resultado'].'</td>
+                <td style="width:5%;">'.$rowp['indi_abreviacion'].'</td>
+                <td style="width:10%;">'.$rowp['prod_indicador'].'</td>
+                <td style="width:5%;" align=right>'.round($rowp['prod_linea_base'],2).'</td>
+                <td style="width:5%;" align=right><b>'.round($rowp['prod_meta'],2).'</b></td>';
+              if(count($programado)!=0){
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['enero'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['febrero'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['marzo'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['abril'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['mayo'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['junio'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['julio'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['agosto'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['septiembre'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['octubre'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['noviembre'],2).' '.$por.'</td>';
+                $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['diciembre'],2).' '.$por.'</td>';
+              }
+              else{
+                for ($i=1; $i <=12 ; $i++) { 
+                  $tabla.='<td style="width:2.5%;" bgcolor="#f1bac6" align=right>0</td>';
+                }
+              }
+              $tabla.='<td style="width:8%;" bgcolor="#e5fde5" >'.$rowp['prod_fuente_verificacion'].'</td>';
+              $tabla.='<td style="width:6%;"  align=right><b>'.number_format($ptto, 2, ',', '.').'</b></td>';
+              $tabla.='<td style="width:5%;" align="center"><font color="blue" size="2"><b>'.count($this->model_producto->insumo_producto($rowp['prod_id'])).'</b></font></td>';
+            $tabla .='</tr>';
+            ?>
+            <script>
+              function scheck<?php echo $cont;?>(estaChequeado) {
+                val = parseInt($('[name="tot"]').val());
+                if (estaChequeado == true) {
+                  val = val + 1;
+                } else {
+                  val = val - 1;
+                }
+                $('[name="tot"]').val((val).toFixed(0));
+              }
+            </script>
+            <?php
+          }
+          $tabla.='</tbody>
+          </table>';
+
+      return $tabla;
+    }
+
+
+
+
+
+
+
+
+
 
 
 //////////////// FORMULARIO N5
@@ -379,67 +609,6 @@ class Modificacionpoa extends CI_Controller{
     }
 
 
-    /*------ VERIFICANDO CODIGO DE MODIFICACION POA (2020)-----*/
-    public function datos_cite($cite){
-      $tabla='';
-
-      if($cite[0]['cite_estado']!=0){
-        $tit='<font color=blue><b>'.$cite[0]['cite_codigo'].'</b></font>';
-      }
-      else{
-        $tit=' <font color=#e60d25><b>DEBE CERRAR LA MODIFICACI&Oacute;N DEL REQUERIMIENTO !!</b></font>';
-      }
-
-      $tabla.='<h1 title="'.$cite[0]['com_id'].'"><b> CITE Nro. : <small>'.$cite[0]['cite_nota'].'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;FECHA : <small>'.date('d/m/Y',strtotime($cite[0]['cite_fecha'])).'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;C&Oacute;DIGO : '.$tit.'</b></h1>';
-      return $tabla;
-    }
-
-    /*------ TITULO CABECERA (2020)-----*/
-    public function titulo_cabecera($cite){
-      $tabla='';
-      if($cite[0]['tp_id']==1){ /// Proyecto de Inversion
-        $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// Proyecto de Inversion
-        $tabla.=' <h1> <b>PROYECTO : </b><small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'].'</small>
-                  <h1> <b>UNIDAD RESP. : </b><small>'.$cite[0]['serv_cod'].' '.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
-      }
-      else{ /// Gasto Corriente
-        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cite[0]['proy_id']);
-        $tabla.=' <h1><b> '.$proyecto[0]['tipo_adm'].' : <b><small>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>
-                  <h1><b> UNIDAD RESP. : <b><small>'.$cite[0]['serv_cod'].' '.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
-      }
-
-      //// ------ Monto Presupuesto Programado-Asignado POA
-        $monto=$this->ppto($proyecto);
-        $tabla.='<h1><b> PPTO. ASIGNADO : <small>'.number_format($monto[1], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;PPTO PROGRAMADO : <small>'.number_format($monto[2], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;SALDO : <small>'.number_format($monto[3], 2, ',', '.').'</small></b></h1>';
-        
-      return $tabla;
-    }
-
-    /*----- MONTO PRESUPUESTO (2020) ------*/
-    public function ppto($proyecto){
-      $monto_a=0;$monto_p=0;$monto_saldo=0;
-      $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
-      $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
-      if($proyecto[0]['tp_id']==1){
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto[0]['proy_id']);
-      }
-      else{
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
-      }
-
-      if(count($monto_asig)!=0){
-        $monto_a=($monto_asig[0]['monto']+$monto_asig[0]['saldo']);
-      }
-      if(count($monto_prog)!=0){
-        $monto_p=$monto_prog[0]['monto'];
-      }
-
-      $monto[1]=$monto_a; /// Monto Asignado
-      $monto[2]=$monto_p; /// Monto Programado
-      $monto[3]=($monto_a-$monto_p); /// Saldo
-
-      return $monto;
-    }
 
 
 
@@ -497,6 +666,30 @@ class Modificacionpoa extends CI_Controller{
       return $tabla;
     }
 
+
+    /*------- GENERAR MENU --------*/
+    function menu($mod){
+      $enlaces=$this->menu_modelo->get_Modulos($mod);
+      for($i=0;$i<count($enlaces);$i++) {
+        $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
+      }
+
+      $tabla ='';
+      for($i=0;$i<count($enlaces);$i++){
+          if(count($subenlaces[$enlaces[$i]['o_child']])>0){
+              $tabla .='<li>';
+                  $tabla .='<a href="#">';
+                      $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
+                      $tabla .='<ul>';    
+                          foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
+                          $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
+                      }
+                      $tabla .='</ul>';
+              $tabla .='</li>';
+          }
+      }
+      return $tabla;
+    }
 
 
     /*------ NOMBRE MES -------*/

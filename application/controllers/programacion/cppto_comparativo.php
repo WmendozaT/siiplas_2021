@@ -148,10 +148,10 @@ class Cppto_comparativo extends CI_Controller {
     /*---- COMPARATIVO DE PARTIDAS A NIVEL DE UNIDAD / ESTABLECIMIENTO  (las partidas cambian)---*/
     public function comparativo_update_partidas_normal($partidas_asig,$partidas_prog,$proyecto,$tipo_rep){
       if($this->verif_ppto==0){
-        $titulo='PRESUPUESTO ANTEPROYECTO';
+        $titulo='PRESUPUESTO ASIGNADO';
       }
       else{
-        $titulo='PRESUPUESTO APROBADO';
+        $titulo='PRESUPUESTO ASIGNADO APROBADO';
       }
 
       /// 0 : normal
@@ -171,8 +171,8 @@ class Cppto_comparativo extends CI_Controller {
             <th style="width:3%;" align=center>#</th>
             <th style="width:10%;">C&Oacute;DIGO PARTIDA</th>
             <th style="width:35%;">DETALLE PARTIDA</th>
-            <th style="width:12%;">'.$titulo.'</th>
-            <th style="width:12%;">PRESUPUESTO POA</th>
+            <th style="width:12%;">'.$titulo.' '.$this->gestion.'</th>
+            <th style="width:12%;">PRESUPUESTO POA (SIIPLAS)</th>
             <th style="width:12%;">SALDO POA</th>';
             if($this->tp_adm==1){
               $tabla.='<th style="width:10%; color:#FFF; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
@@ -298,10 +298,10 @@ class Cppto_comparativo extends CI_Controller {
     /*---- COMPARATIVO DE PARTIDAS A NIVEL DE UNIDAD / ESTABLECIMIENTO  (las partidas no cambian)---*/
     public function comparativo_partidas_normal($partidas_asig,$partidas_prog,$proyecto,$tipo_rep){ 
       if($this->verif_ppto==0){
-        $titulo='PRESUPUESTO ANTEPROYECTO';
+        $titulo='PRESUPUESTO ASIGNADO';
       }
       else{
-        $titulo='PRESUPUESTO APROBADO';
+        $titulo='PRESUPUESTO ASIGNADO APROBADO';
       }
 
       /// 0 : normal
@@ -321,8 +321,8 @@ class Cppto_comparativo extends CI_Controller {
               <th style="width:3%;" align=center>#</th>
               <th style="width:10%;">C&Oacute;DIGO PARTIDA</th>
               <th style="width:35%;">DETALLE PARTIDA</th>
-              <th style="width:15%;">'.$titulo.'</th>
-              <th style="width:15%;">PRESUPUESTO POA</th>
+              <th style="width:15%;">'.$titulo.' '.$this->gestion.'</th>
+              <th style="width:15%;">PRESUPUESTO POA (SIIPLAS)</th>
               <th style="width:15%;">SALDO POA</th>';
             if($this->tp_adm==1){
               $tabla.='<th style="width:10%; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';

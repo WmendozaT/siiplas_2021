@@ -508,6 +508,194 @@ function abreVentana(PDF){
         });
     });
 
+
+    /// ------ Editar Datos de Modificacion POA (Formulario N° 4)
+    $(".mod_form4").on("click", function (e) {
+        prod_id = $(this).attr('name');
+        document.getElementById("prod_id").value=prod_id;
+        
+        var url = base+"index.php/modificaciones/cmod_fisica/get_form4_mod";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "prod_id="+prod_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+         // alert(response.trimestre)
+            document.getElementById("mcod").value = response.producto[0]['prod_cod']; 
+            document.getElementById("mprod").value = response.producto[0]['prod_producto']; 
+            document.getElementById("mresultado").value = response.producto[0]['prod_resultado'];
+            document.getElementById("mverificacion").value = response.producto[0]['prod_fuente_verificacion'];
+           if(response.trimestre==1){
+            document.getElementById("mprod").disabled = false;
+            document.getElementById("mresultado").disabled = false;
+            document.getElementById("mverificacion").disabled = false;
+           }
+           else{
+            document.getElementById("mprod").disabled = true;
+            document.getElementById("mresultado").disabled = true;
+            document.getElementById("mverificacion").disabled = true;
+            
+           }
+           
+           document.getElementById("mtipo_i").value = response.producto[0]['indi_id'];
+           document.getElementById("mlbase").value = parseInt(response.producto[0]['prod_linea_base']);
+           document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
+           document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
+
+           if(response.mes_actual==1){ /// el tipo de indicador solo se podra modificar el primer mes del año
+              document.getElementById("mtipo_i").disabled = false;
+              document.getElementById("mlbase").disabled = false;
+              document.getElementById("mtp_met").disabled = false;
+           }
+           else{
+              document.getElementById("mtipo_i").disabled = true;
+              document.getElementById("mlbase").disabled = true;
+              document.getElementById("mtp_met").disabled = true;
+           }
+
+           document.getElementById("mindicador").value = response.producto[0]['prod_indicador'];
+           document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
+           document.getElementById("mor_id").value = response.producto[0]['or_id'];
+           
+
+           for (var i = 1; i <=12; i++) {
+            document.getElementById("mm"+i).value = parseInt(response.temp[i]);
+            if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
+              document.getElementById("mm"+i).disabled = true;
+            }
+            else{
+              if(response.temp_eval[i]==0){
+                document.getElementById("mm"+i).disabled = false;
+                $('#e'+i).html(response.mes[i].toUpperCase());
+              }
+              else{
+                document.getElementById("mm"+i).disabled = true;
+                $('#e'+i).html('<font color=red><b>'+(response.mes[i].toUpperCase())+' (*)</b></font>');
+              }
+            
+            }
+           }
+
+           
+           if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
+            $('[name="mtotal"]').val((parseInt(response.producto[0]['prod_meta'])).toFixed(0));
+            document.getElementById("mtrep").style.display = 'block';
+           }
+           else{
+            $('[name="mtotal"]').val((parseInt(response.sum_temp)).toFixed(0));
+            document.getElementById("mtrep").style.display = 'none';
+            
+            prog = parseFloat($('[name="mtotal"]').val());
+            meta = parseFloat($('[name="mmeta"]').val());
+
+
+            if(prog==meta){
+              $('#matit').html('');
+              $('#mbut').slideDown();
+            }
+            else{
+              $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+              $('#mbut').slideUp();
+            }
+           }
+
+        }
+        else{
+            alertify.error("ERROR AL RECUPERAR DATOS DE LA ACTIVIDAD");
+        }
+
+        });
+        request.fail(function (jqXHR, textStatus, thrown) {
+            console.log("ERROR: " + textStatus);
+        });
+        request.always(function () {
+            //console.log("termino la ejecuicion de ajax");
+        });
+        e.preventDefault();
+        // =============================VALIDAR EL FORMULARIO DE MODIFICACION
+        $("#subir_mform4").on("click", function (e) {
+            var $validator = $("#form_mod").validate({
+                   rules: {
+                    prod_id: { //// prod id
+                      required: true,
+                    },
+                    mprod: { //// prod
+                        required: true,
+                    },
+                    mresultado: { //// resultado
+                        required: true,
+                    },
+                    mtipo_i: { //// tipo de indi
+                        required: true,
+                    },
+                    mindicador: { //// indicador
+                        required: true,
+                    },
+                    munidad: { //// unidad
+                        required: true,
+                    },
+                    mlbase: { //// linea base
+                        required: true,
+                    },
+                    mmeta: { //// meta
+                        required: true,
+                    }
+                },
+                messages: {
+                    prod_id: "<font color=red>ACTIVIDAD/font>",
+                    mprod: "<font color=red>REGISTRE DETALLE DE LA ACTIVIDAD</font>", 
+                    mresultado: "<font color=red>REGISTRE RESULTADO</font>",
+                    mtipo_i: "<font color=red>TIPO DE INDICADOR</font>",
+                    mindicador: "<font color=red>RESGISTRE INDICADOR</font>",
+                    munidad: "<font color=red>REGISTRE UNIDAD RESPONSABLE</font>",
+                    mlbase: "<font color=red>REGISTRE LINEA BASE</font>",
+                    mmeta: "<font color=red>REGISTRE META</font>",                     
+                },
+                highlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                unhighlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                },
+                errorElement: 'span',
+                errorClass: 'help-block',
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+            var $valid = $("#form_mod").valid();
+            if (!$valid) {
+                $validator.focusInvalid();
+            } else {
+
+              $('#matit').html('');
+                alertify.confirm("MODIFICAR DATOS DE LA ACTIVIDAD ?", function (a) {
+                  if (a) {
+                    document.getElementById("loadm").style.display = 'block';
+                      document.getElementById('subir_mform4').disabled = true;
+                      document.getElementById("subir_mform4").value = "MODIFICANDO DATOS ACTIVIDAD...";
+                      document.forms['form_mod'].submit();
+                  } else {
+                      alertify.error("OPCI\u00D3N CANCELADA");
+                  }
+              });
+            }
+        });
+    });
+    
+
     /// Tipo de indicador (Modificacion POA)
     $(document).ready(function () {
       $("#mtipo_i").change(function () {            
@@ -742,4 +930,53 @@ function abreVentana(PDF){
     });
   });
 
+////////////////////////////// MODIFICACION POA
+  $(function () {
+      $("#cerrar_mod").on("click", function () {
+          var $validator = $("#form_cerrar").validate({
+                rules: {
+                    cite_id: { //// cite
+                      required: true,
+                    },
+                    observacion: { //// Observacion
+                        required: true,
+                    }
+                },
+                messages: {
+                    observacion: "<font color=red>REGISTRE OBSERVACIÓN</font>",                     
+                },
+                highlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                unhighlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                },
+                errorElement: 'span',
+                errorClass: 'help-block',
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
 
+        var $valid = $("#form_cerrar").valid();
+        if (!$valid) {
+            $validator.focusInvalid();
+        } else {
+          alertify.confirm("CERRAR MODIFICACIÓN DE ACTIVIDADES ?", function (a) {
+                if (a) {
+                    document.getElementById("mload").style.display = 'block';
+                    document.forms['form_cerrar'].submit();
+                    document.getElementById("mbut").style.display = 'none';
+                } else {
+                    alertify.error("OPCI\u00D3N CANCELADA");
+                }
+            });
+        }
+      });
+
+     
+  });

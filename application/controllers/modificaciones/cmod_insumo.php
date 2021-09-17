@@ -2081,6 +2081,7 @@ class Cmod_insumo extends CI_Controller {
               'ppdre' => $par_padre,
               'prog' => $prog,
               'verif_mes' => $verf,
+              'trimestre' => $verf,
               'monto_certificado'=>$monto_certificado,
               'verif_cert'=>$verif_cert,
             );

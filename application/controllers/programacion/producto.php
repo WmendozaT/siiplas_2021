@@ -5,6 +5,9 @@ class Producto extends CI_Controller {
 
   public $prog_mes = array( '1' => 0,'2' => 0,'3' => 0,'4' => 0,'5' => 0,'6' => 0,
                         '7' => 0,'8' => 0,'9' => 0,'10' => 0,'11' => 0,'12' => 0); 
+
+  public $prog_mes_eval = array( '1' => 0,'2' => 0,'3' => 0,'4' => 0,'5' => 0,'6' => 0,
+                        '7' => 0,'8' => 0,'9' => 0,'10' => 0,'11' => 0,'12' => 0); 
   
   public function __construct (){ 
       parent::__construct();
@@ -33,8 +36,10 @@ class Producto extends CI_Controller {
         $this->dist_tp = $this->session->userData('dist_tp');
         $this->fun_id = $this->session->userdata("fun_id");
         $this->tp_adm = $this->session->userData('tp_adm');
+        $this->verif_mes=$this->session->userdata('mes_actual');
         $this->conf_form4 = $this->session->userData('conf_form4');
         $this->conf_form5 = $this->session->userData('conf_form5');
+        $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
         $this->load->library('programacionpoa');
       }else{
         $this->session->sess_destroy();
