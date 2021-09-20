@@ -565,31 +565,34 @@ function abreVentana(PDF){
            document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
            document.getElementById("mor_id").value = response.producto[0]['or_id'];
            
-
+           //// MOUESTRA LOS MESES YA EVALUADOS
            for (var i = 1; i <=12; i++) {
-            document.getElementById("mm"+i).value = parseInt(response.temp[i]);
-            if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
-              document.getElementById("mm"+i).disabled = true;
-            }
-            else{
-              if(response.temp_eval[i]==0){
+            if(response.temp_eval[i]==0){
                 document.getElementById("mm"+i).disabled = false;
-                $('#e'+i).html(response.mes[i].toUpperCase());
+                $('#e'+i).html('<font color=green><b>'+(response.mes[i].toUpperCase())+'</b></font>');
               }
               else{
                 document.getElementById("mm"+i).disabled = true;
-                $('#e'+i).html('<font color=red><b>'+(response.mes[i].toUpperCase())+' (*)</b></font>');
+                $('#e'+i).html('<font color=red><b>'+(response.mes[i].toUpperCase())+' (x)</b></font>');
               }
-            
-            }
            }
 
-           
-           if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
+           /// MUESTYRA LA TEMPORALIDAD
+           if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){ /// META RECURRENTE
+            for (var i = 1; i <=12; i++) {
+              document.getElementById("mm"+i).value = parseInt(response.producto[0]['prod_meta']);
+              document.getElementById("mm"+i).disabled = true;
+            }
+
             $('[name="mtotal"]').val((parseInt(response.producto[0]['prod_meta'])).toFixed(0));
             document.getElementById("mtrep").style.display = 'block';
            }
-           else{
+           else{ //// META ACUMULADO
+
+            for (var i = 1; i <=12; i++) {
+              document.getElementById("mm"+i).value = parseInt(response.temp[i]);
+            }
+
             $('[name="mtotal"]').val((parseInt(response.sum_temp)).toFixed(0));
             document.getElementById("mtrep").style.display = 'none';
             
@@ -647,6 +650,9 @@ function abreVentana(PDF){
                     },
                     mmeta: { //// meta
                         required: true,
+                    },
+                    mor_id: { //// meta
+                        required: true,
                     }
                 },
                 messages: {
@@ -657,7 +663,8 @@ function abreVentana(PDF){
                     mindicador: "<font color=red>RESGISTRE INDICADOR</font>",
                     munidad: "<font color=red>REGISTRE UNIDAD RESPONSABLE</font>",
                     mlbase: "<font color=red>REGISTRE LINEA BASE</font>",
-                    mmeta: "<font color=red>REGISTRE META</font>",                     
+                    mmeta: "<font color=red>REGISTRE META</font>",
+                    mor_id: "<font color=red>SELECCIONE ALINEACIÓN</font>",                     
                 },
                 highlight: function (element) {
                     $(element).closest('.form-group').removeClass('has-success').addClass('has-error');

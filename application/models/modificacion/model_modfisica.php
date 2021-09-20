@@ -26,7 +26,12 @@ class Model_modfisica extends CI_Model{
                 Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
                 Inner Join _proyectos as p On p.proy_id=pfe.proy_id
-                Inner Join _distritales as d On d.dist_id=p.dist_id
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join _departamentos as d On d.dep_id=p.dep_id
+                Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
                 where ci.cite_id='.$cite_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\'';
         $query = $this->db->query($sql);
         return $query->result_array();

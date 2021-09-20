@@ -38,6 +38,7 @@ class Modificacionpoa extends CI_Controller{
         $this->verif_mes=$this->session->userData('mes_actual');
         $this->resolucion=$this->session->userdata('rd_poa');
         $this->tp_adm = $this->session->userData('tp_adm');
+        $this->mes = $this->mes_nombre();
     }
 
 
@@ -475,7 +476,7 @@ class Modificacionpoa extends CI_Controller{
                 <td style="width:5%;">'.$rowp['indi_abreviacion'].'</td>
                 <td style="width:10%;">'.$rowp['prod_indicador'].'</td>
                 <td style="width:5%;" align=right>'.round($rowp['prod_linea_base'],2).'</td>
-                <td style="width:5%;" align=right><b>'.round($rowp['prod_meta'],2).'</b></td>';
+                <td style="width:5%;" align=right><b>'.round($rowp['prod_meta'],2).''.$por.'</b></td>';
               if(count($programado)!=0){
                 $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['enero'],2).' '.$por.'</td>';
                 $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['febrero'],2).' '.$por.'</td>';
@@ -499,19 +500,6 @@ class Modificacionpoa extends CI_Controller{
               $tabla.='<td style="width:6%;"  align=right><b>'.number_format($ptto, 2, ',', '.').'</b></td>';
               $tabla.='<td style="width:5%;" align="center"><font color="blue" size="2"><b>'.count($this->model_producto->insumo_producto($rowp['prod_id'])).'</b></font></td>';
             $tabla .='</tr>';
-            ?>
-            <script>
-              function scheck<?php echo $cont;?>(estaChequeado) {
-                val = parseInt($('[name="tot"]').val());
-                if (estaChequeado == true) {
-                  val = val + 1;
-                } else {
-                  val = val - 1;
-                }
-                $('[name="tot"]').val((val).toFixed(0));
-              }
-            </script>
-            <?php
           }
           $tabla.='</tbody>
           </table>';
@@ -619,53 +607,186 @@ class Modificacionpoa extends CI_Controller{
 
 
 
+  //// REPORTE MODIFICACION POA
+  //// Cabecera Modifcacion poa
+    public function cabecera_modpoa($cite,$tp){
+      $titulo_mod='ACTIVIDADES';
+      if($tp==2){
+        $titulo_mod='REQUERIMIENTOS';
+      }
 
-    //// REPORTE CABECERA MODIFICACION POA
-    public function cabecera_modpoa(){
       $tabla='';
+      $codigo='Sin Codigo ... debe cerrar la modificación poa ';
+      if($cite[0]['cite_codigo']!=''){
+        $codigo=$cite[0]['cite_codigo'];
+      }
 
       $tabla.='
-      <table class="page_header" border="0">
-            <tr>
-                <td style="width: 100%; text-align: left">
-                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:91.8%;">
-                        <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td width=14%; text-align:center;"">
-                     
-                          </td>
-                          <td width=76%; align=left>
-                            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:93%;" align="center">
-                                <tr>
-                                    <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b></b></td>
-                                </tr>
-                                <tr style="font-size: 8pt;">
-                                    <td style="width:17.5%; height: 1.2%"><b>DIR. ADM.</b></td>
-                                    <td style="width:82.5%;">: </td>
-                                </tr>
-                                <tr style="font-size: 8pt;">
-                                    <td style="width:17.5%; height: 1.2%"><b>UNI. EJEC.</b></td>
-                                    <td style="width:82.5%;">:</td>
-                                </tr>
-                                <?php echo $titulo;?>
-                                <tr style="font-size: 8pt;">
-                                    <td style="width:17.5%; height: 1.2%"><b>CITE FORM. MOD. N°8</b></td>
-                                    <td style="width:82.5%;">: </td>
-                                </tr>
-                            </table>
-                          </td>
-                          <td style="width:19%; font-size: 8.5px;" align="left">
-                            <b style="font-size: 11px;">CÓDIGO N°: </b><br>
-                            <b>FECHA DE IMP. : </b><br>
-                            <b>PAGINAS : </b>[[page_cu]]/[[page_nb]]
-                          </td>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px;">              
+              <td style="width:70%;height: 2%">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 15px;font-family: Arial;">
+                          <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                      </tr>
+                      <tr>
+                          <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                      </tr>
+                  </table>
+              </td>
+              <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+                '.strtoupper($cite[0]['dist_distrital']).' '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+          </tr>
+        </table>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px black; text-align: center;">
+                <td style="width:10%; text-align:center;">
+                </td>
+                <td style="width:80%; height: 5%">
+                    <table align="center" border="0" style="width:100%;">
+                        <tr style="font-size: 23px;font-family: Arial;">
+                            <td style="height: 30%;"><b>MODIFICACIÓN POA '.$this->gestion.' - '.$titulo_mod.'</b></td>
                         </tr>
+                        <tr style="font-size: 20px;font-family: Arial;">
+                          <td style="height: 5%;">'.$codigo.'</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:10%; text-align:center;">
+                </td>
+            </tr>
+        </table>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+            <tr style="border: solid 0px;">              
+                <td style="width:50%;">
+                </td>
+                <td style="width:50%; height: 3%">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 15px;font-family: Arial;">
+                          <td colspan=2 align=center style="width:100%;height: 40%;"><b>FORMULARIO MOD. N° 8 </b></td>
+                      </tr>
+                      <tr style="font-size: 10px;font-family: Arial;">
+                          <td style="width:47%;height: 30%;"><b>CITE : '.$cite[0]['cite_nota'].'</b></td>
+                          <td style="width:47%;height: 30%"><b>FECHA : '.date('d-m-Y',strtotime($cite[0]['cite_fecha'])).'</b></td>
+                      </tr>
                   </table>
                 </td>
             </tr>
-        </table><br>';
+        </table>
+        
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 3%;">
+               
+                      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                        <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>REGIONAL / DEPARTAMENTO</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.strtoupper ($cite[0]['dep_departamento']).'</td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD EJECUTORA</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.strtoupper ($cite[0]['dist_distrital']).'</td></tr>
+                                </table>
+                            </td>
+                        </tr>';
+
+                          if($cite[0]['tp_id']==1){
+                            $tabla.='
+                            <tr>
+                              <td style="width:20%;">
+                                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>PROY. INVERSI&Oacute;N</b></td><td style="width:5%;"></td></tr>
+                                  </table>
+                              </td>
+                              <td style="width:80%;">
+                                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['proy_sisin'].' '.strtoupper ($cite[0]['proy_nombre']).'</td></tr>
+                                  </table>
+                              </td>
+                            </tr>
+                            <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESP.</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr>
+                                        <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>';
+                          }
+                          else{
+                            $tabla.='
+                            <tr>
+                              <td style="width:20%;">
+                                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                  </table>
+                              </td>
+                              <td style="width:80%;">
+                                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                      <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['aper_actividad'].' '.strtoupper ($cite[0]['act_descripcion']).' '.$cite[0]['abrev'].'</td></tr>
+                                  </table>
+                              </td>
+                            </tr>
+                            <tr>
+                            <td style="width:20%;">
+                                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>SUBACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                </table>
+                            </td>
+                            <td style="width:80%;">
+                                <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+                                    <tr>
+                                        <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>';
+                          }
+                        $tabla.='
+                    </table>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+          <tr>
+              <td style="width:2%;"></td>
+              <td style="width:96%;height: 1%;">
+                <hr>
+              </td>
+              <td style="width:2%;"></td>
+          </tr>
+        </table>';
       return $tabla;
     }
-
 
     /*------- GENERAR MENU --------*/
     function menu($mod){
