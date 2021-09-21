@@ -23,6 +23,7 @@ class Cmod_insumo extends CI_Controller {
             $this->gestion = $this->session->userData('gestion'); /// Gestion
             $this->fun_id = $this->session->userData('fun_id'); /// Fun id
             $this->rol_id = $this->session->userData('rol_id'); /// Rol Id
+            $this->fecha_entrada = strtotime("20-09-2021 00:00:00");
             $this->load->library('modificacionpoa');
         }
         else{
@@ -870,36 +871,45 @@ class Cmod_insumo extends CI_Controller {
     /*------------- REPORTE CITE MOD-FINANCIERA -------------*/
     public function reporte_modificacion_financiera($cite_id){
       $data['cite']=$this->model_modrequerimiento->get_cite_insumo($cite_id);
-      if(count($data['cite'])!=0){
-        $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); 
-        if($data['proyecto'][0]['tp_id']==1){
-          $titulo='
-                            <tr style="font-size: 8pt;">
-                              <td style="height: 1.2%"><b>PROYECTO</b></td>
-                              <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</td>
-                           </tr>
-                           <tr style="font-size: 8pt;">
-                              <td style="height: 1.2%"><b>UNIDAD RESPONSABLE</b></td>
-                              <td style="width:90%;">: '.$data['cite'][0]['serv_cod'].' '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].'</td>
-                           </tr>';
+      if(count($data['cite'])!=0){ /// Nuevo formato de Reporte
+        if($this->fecha_entrada<strtotime($data['cite'][0]['cite_fecha'])){
+          $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],2);
+          $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id);
+          $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
+          $data['pie_rep']='MOD_POA_FORM5_'.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
+          $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
         }
-        else{
-          $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
-          $titulo='       
-                          <tr style="font-size: 8pt;">
-                            <td style="height: 1.2%"><b>ACTIVIDAD </b></td>
-                            <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' '.$data['proyecto'][0]['tipo'].'   '.strtoupper($data['proyecto'][0]['act_descripcion']).' '.$data['proyecto'][0]['abrev'].'</td>
-                          </tr>
-                          <tr style="font-size: 8pt;">
-                              <td style="height: 1.2%"><b>SUBACTIVIDAD</b></td>
-                              <td style="width:90%;">: '.$data['cite'][0]['serv_cod'].' '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].'</td>
-                           </tr>';
-        }
+        else{ /// Formato Antiguo de Reporte
+          $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); 
+          if($data['proyecto'][0]['tp_id']==1){
+            $titulo='
+                    <tr style="font-size: 8pt;">
+                      <td style="height: 1.2%"><b>PROYECTO</b></td>
+                      <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</td>
+                    </tr>
+                    <tr style="font-size: 8pt;">
+                      <td style="height: 1.2%"><b>UNIDAD RESPONSABLE</b></td>
+                      <td style="width:90%;">: '.$data['cite'][0]['serv_cod'].' '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].'</td>
+                    </tr>';
+          }
+          else{
+            $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
+            $titulo='       
+                    <tr style="font-size: 8pt;">
+                      <td style="height: 1.2%"><b>'.$data['proyecto'][0]['tipo_adm'].' </b></td>
+                      <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' '.$data['proyecto'][0]['tipo'].'   '.strtoupper($data['proyecto'][0]['act_descripcion']).' '.$data['proyecto'][0]['abrev'].'</td>
+                    </tr>
+                    <tr style="font-size: 8pt;">
+                        <td style="height: 1.2%"><b>SUBACTIVIDAD</b></td>
+                        <td style="width:90%;">: '.$data['cite'][0]['serv_cod'].' '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].'</td>
+                     </tr>';
+          }
 
-        $data['titulo']=$titulo;
-        $data['mes'] = $this->mes_nombre();
-        $data['requerimientos']=$this->rep_requerimiento($cite_id);
-        $this->load->view('admin/modificacion/requerimientos/reporte_modificacion_requerimientos', $data);
+          $data['titulo']=$titulo;
+          $data['mes'] = $this->mes_nombre();
+          $data['requerimientos']=$this->rep_requerimiento($cite_id); /// listado antiguo
+          $this->load->view('admin/modificacion/requerimientos/reporte_modificacion_requerimientos', $data);
+        }
       }
       else{
         echo "Error !!!";

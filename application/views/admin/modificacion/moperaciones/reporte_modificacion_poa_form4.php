@@ -13,7 +13,7 @@ ob_start();
     }
 }
 </style>
-    <page orientation="paysage"  backtop="75mm" backbottom="40mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+    <page orientation="paysage"  backtop="71mm" backbottom="40mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
         <page_header>
         <br><div class="verde"></div>
             <?php echo $cabecera_modpoa; ?> 
@@ -34,7 +34,7 @@ try{
     $html2pdf = new HTML2PDF('P', 'Letter', 'fr', true, 'UTF-8', 0);
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-    $html2pdf->Output('Modificacion_poa.pdf');
+    $html2pdf->Output($pie_rep.'.pdf');
 }
 catch(HTML2PDF_exception $e) {
     echo $e;

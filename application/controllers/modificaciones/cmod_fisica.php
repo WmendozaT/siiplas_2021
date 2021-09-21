@@ -41,7 +41,7 @@ class Cmod_fisica extends CI_Controller {
             $this->verif_mes=$this->session->userdata('mes_actual');
             $this->tmes = $this->session->userData('trimestre');
             $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
-            $this->fecha_entrada = strtotime("19-09-2021 00:00:00");
+            $this->fecha_entrada = strtotime("16-09-2021 00:00:00");
             $this->load->library('modificacionpoa');
             }else{
                 redirect('admin/dashboard');
@@ -532,12 +532,11 @@ class Cmod_fisica extends CI_Controller {
       $data['cite']=$this->model_modfisica->get_cite_fis($cite_id);
      //echo strtotime($data['cite'][0]['cite_fecha'])."---".$this->fecha_entrada;
         if(count($data['cite'])!=0){
-          if($this->fecha_entrada>strtotime($data['cite'][0]['cite_fecha'])){
+          if($this->fecha_entrada<strtotime($data['cite'][0]['cite_fecha'])){
             $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],1);
-          //  $data['items_modificados']=$this->certificacionpoa->items_modificados_edicionpoa($data['cite'][0]['cite_id']);
-            $data['items_modificados']=$this->rep_actividades($cite_id);;
-            $data['pie_mod']='hOLA';
-          
+            $data['items_modificados']=$this->modificacionpoa->items_modificados_form4($cite_id);
+            $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
+            $data['pie_rep']='MOD_POA_FORM4_'.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
             $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
           }
           else{
@@ -565,7 +564,7 @@ class Cmod_fisica extends CI_Controller {
               }
 
               $data['mes'] = $this->mes_nombre();
-              $data['actividades']=$this->rep_actividades($cite_id);
+              $data['actividades']=$this->rep_actividades($cite_id); /// Lista de modificaciones (angiguo 2020-2021)
               $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_operaciones', $data);
           }
         }
@@ -577,7 +576,7 @@ class Cmod_fisica extends CI_Controller {
 
 
 
-    /*--------- REPORTE CITE OPERACION ----------*/
+    /*--- REPORTE CITE OPERACION (antiguo) ---*/
     public function rep_actividades($cite_id){
       $tabla ='';
       $cite=$this->model_modfisica->get_cite_fis($cite_id);

@@ -2451,7 +2451,7 @@ class Certificacionpoa extends CI_Controller{
               <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                 <tr bgcolor="#cae4fb">
                   <td style="width: 100%;height: 2%;">
-                    MODIFICACIÓN POS SEGUN NOTA CITE : '.$cite[0]['cite_nota'].' EN FECHA '.date('d-m-Y',strtotime($cite[0]['cite_fecha'])).' CON LA SIGUIENTE JUSTIFICACIÓN TECNICA : '.$cite[0]['cite_observacion'].', QUE CORRESPONDE A LA SIGUIENTE CERTIFICACIÓN POA <b>'.$codigo_certificacion.'</b>
+                    MODIFICACIÓN POA SEGUN NOTA CITE : '.$cite[0]['cite_nota'].' EN FECHA '.date('d-m-Y',strtotime($cite[0]['cite_fecha'])).' CON LA SIGUIENTE JUSTIFICACIÓN TECNICA : '.$cite[0]['cite_observacion'].', QUE CORRESPONDE A LA SIGUIENTE CERTIFICACIÓN POA <b>'.$codigo_certificacion.'</b>
                   </td>
                 </tr>
               </table>
