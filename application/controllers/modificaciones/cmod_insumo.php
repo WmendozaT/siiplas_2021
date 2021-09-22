@@ -877,6 +877,7 @@ class Cmod_insumo extends CI_Controller {
           $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id);
           $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
           $data['pie_rep']='MOD_POA_FORM5_'.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
+    //     echo $data['items_modificados'];
           $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
         }
         else{ /// Formato Antiguo de Reporte
@@ -924,12 +925,12 @@ class Cmod_insumo extends CI_Controller {
       $requerimientos_add = $this->model_modrequerimiento->list_requerimientos_adicionados($cite_id);
       
       if(count($requerimientos_add)!=0){
-        $tabla.='<div style="font-size: 12px;font-family: Arial;">AGREGADOS ('.count($requerimientos_add).')</div>';
+        $tabla.='<div style="font-size: 12px;font-family: Arial;">ITEMS AGREGADOS ('.count($requerimientos_add).')</div>';
         $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
         $tabla.='<thead>';
         $tabla.='<tr class="modo1" align="center">';
-          $tabla.='<th style="width:1.3%;background-color: #1c7368; color: #FFFFFF">#</th>';
-          $tabla.='<th style="width:2.5%;background-color: #1c7368; color: #FFFFFF">COD.<br>OPE.</th>';
+          $tabla.='<th style="width:1%;background-color: #1c7368; color: #FFFFFF">#</th>';
+          $tabla.='<th style="width:2.5%;background-color: #1c7368; color: #FFFFFF">COD.<br>ACT.</th>';
           $tabla.='<th style="width:3.5%;background-color: #1c7368; color: #FFFFFF">PARTIDA</th>';
           $tabla.='<th style="width:12%;background-color: #1c7368; color: #FFFFFF">DETALLE REQUERIMIENTO</th>';
           $tabla.='<th style="width:4%;background-color: #1c7368; color: #FFFFFF">UNIDAD<br>MEDIDA</th>';
@@ -958,7 +959,7 @@ class Cmod_insumo extends CI_Controller {
           $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
           $nro++;
           $tabla.='<tr class="modo1">';
-            $tabla.='<td style="width: 1.3%; text-align: center;" style="height:11px;">'.$nro.'</td>';
+            $tabla.='<td style="width: 1%; text-align: center;" style="height:11px;">'.$nro.'</td>';
             $tabla.='<td style="width: 2.5%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>';
             $tabla.='<td style="width: 3.5%; text-align: center;">'.$row['par_codigo'].'</td>';
             $tabla.='<td style="width: 12%; text-align: left;">'.$row['ins_detalle'].'</td>';
@@ -1010,12 +1011,12 @@ class Cmod_insumo extends CI_Controller {
 
       $requerimientos_mod = $this->model_modrequerimiento->list_requerimientos_modificados($cite_id);
       if(count($requerimientos_mod)!=0){
-        $tabla.='<div style="font-size: 12px;font-family: Arial;">MODIFICADOS ('.count($requerimientos_mod).')</div>';
+        $tabla.='<div style="font-size: 12px;font-family: Arial;">ITEMS MODIFICADOS ('.count($requerimientos_mod).')</div>';
         $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
         $tabla.='<thead>';
         $tabla.='<tr class="modo1" style="text-align: center;">';
-          $tabla.='<th style="width:1.3%;background-color: #1c7368; color: #FFFFFF">#</th>';
-          $tabla.='<th style="width:2.5%;background-color: #1c7368; color: #FFFFFF">COD.<br>OPE.</th>';
+          $tabla.='<th style="width:1%;background-color: #1c7368; color: #FFFFFF">#</th>';
+          $tabla.='<th style="width:2.5%;background-color: #1c7368; color: #FFFFFF">COD.<br>ACT.</th>';
           $tabla.='<th style="width:3.5%;background-color: #1c7368; color: #FFFFFF">PARTIDA</th>';
           $tabla.='<th style="width:12%;background-color: #1c7368; color: #FFFFFF">DETALLE REQUERIMIENTO</th>';
           $tabla.='<th style="width:4%;background-color: #1c7368; color: #FFFFFF">UNIDAD<br>MEDIDA</th>';
@@ -1044,7 +1045,7 @@ class Cmod_insumo extends CI_Controller {
           $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
           $nro++;
           $tabla.='<tr class="modo1">';
-            $tabla.='<td style="width: 1.3%; text-align: center;" style="height:11px;">'.$nro.'</td>';
+            $tabla.='<td style="width: 1%; text-align: center;" style="height:11px;">'.$nro.'</td>';
             $tabla.='<td style="width: 2.5%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>';
             $tabla.='<td style="width: 3.5%; text-align: center;">'.$row['par_codigo'].'</td>';
             $tabla.='<td style="width: 12%; text-align: left;">'.$row['ins_detalle'].'</td>';
@@ -1095,7 +1096,7 @@ class Cmod_insumo extends CI_Controller {
       
       $requerimientos_del = $this->model_modrequerimiento->list_requerimientos_eliminados($cite_id);
       if(count($requerimientos_del)!=0){
-        $tabla.='<div style="font-size: 12px;font-family: Arial;">ELIMINADOS ('.count($requerimientos_del).')</div>';
+        $tabla.='<div style="font-size: 12px;font-family: Arial;">ITEMS ELIMINADOS ('.count($requerimientos_del).')</div>';
         $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
         $tabla.='<thead>';
         $tabla.='<tr class="modo1" style="text-align: center;">';
