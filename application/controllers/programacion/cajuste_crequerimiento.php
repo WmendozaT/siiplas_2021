@@ -133,6 +133,12 @@ class cajuste_crequerimiento extends CI_Controller{
                 <tbody>';
                 $cont = 0;
                 foreach ($lista_insumos as $row) {
+                  $update_poa = array(
+                    'g_id' => $row['ins_gestion'],
+                  );
+                  $this->db->where('ins_id', $row['ins_id']);
+                  $this->db->update('temporalidad_prog_insumo', $update_poa);
+
                   $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
                   $cont++;
                     $tabla .='<tr>';
@@ -623,6 +629,7 @@ class cajuste_crequerimiento extends CI_Controller{
                               'ins_id' => $ins_id, /// Id Insumo
                               'mes_id' => $p, /// Mes 
                               'ipm_fis' => $m[$p], /// Valor mes
+                              'g_id' => $this->gestion,
                             );
                             $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
                           }

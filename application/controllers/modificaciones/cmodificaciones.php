@@ -61,36 +61,36 @@ class Cmodificaciones extends CI_Controller {
    
 
 
-    /*--- LISTA DE CITES FORM 4-FORM 5 (2020-2021) ---*/
-    public function lista_cites($proy_id){
-      $data['menu']=$this->menu(3); //// genera menu
-      $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
-      if(count($data['proyecto'])!=0){
-        $data['fase'] = $this->model_faseetapa->get_id_fase($proy_id);
-        $titulo='<h1> PROYECTO : <small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small></h1>';
-        if($data['proyecto'][0]['tp_id']==4){
-          $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-          $titulo='<h1> '.$proyecto[0]['tipo_adm'].' : <small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>';
-        }
+  /*--- LISTA DE CITES FORM 4-FORM 5 (2020-2021) ---*/
+  public function lista_cites($proy_id){
+    $data['menu']=$this->menu(3); //// genera menu
+    $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
+    if(count($data['proyecto'])!=0){
+      $data['fase'] = $this->model_faseetapa->get_id_fase($proy_id);
+      $titulo='<h1> PROYECTO : <small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small></h1>';
+      if($data['proyecto'][0]['tp_id']==4){
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+        $titulo='<h1> '.$proyecto[0]['tipo_adm'].' : <small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>';
+      }
 
-        $data['titulo']=$titulo;
-        $data['requerimientos']=$this->list_cites_generados($proy_id,1);
-        $data['operaciones']=$this->list_cites_generados($proy_id,2);
-        $data['techo']=$this->list_cites_generados($proy_id,3);
-        
-        if($data['fase'][0]['pfec_estado']==1){
-          $this->load->view('admin/modificacion/list_cites', $data);
-        }
-        else{
-          redirect(site_url("").'/mod/list_top');
-        }
-        
+      $data['titulo']=$titulo;
+      $data['requerimientos']=$this->list_cites_generados($proy_id,1);
+      $data['operaciones']=$this->list_cites_generados($proy_id,2);
+      $data['techo']=$this->list_cites_generados($proy_id,3);
+      
+      if($data['fase'][0]['pfec_estado']==1){
+        $this->load->view('admin/modificacion/list_cites', $data);
       }
       else{
         redirect(site_url("").'/mod/list_top');
       }
       
     }
+    else{
+      redirect(site_url("").'/mod/list_top');
+    }
+    
+  }
 
 
 
@@ -109,7 +109,14 @@ class Cmodificaciones extends CI_Controller {
       }
     }
 
-
+    /*----- UPDATE ESTADO ACTIVO DE LA MODIFICACION ------*/
+    function update_activo_modificacion($cite_id){
+      $update_cite= array(
+        'cite_activo' => 1
+      );
+      $this->db->where('cite_id', $cite_id);
+      $this->db->update('cite_mod_requerimientos', $this->security->xss_clean($update_cite));
+    }
 
     /*--- LISTA DE MODIFCACIONES (REQUERIMIENTO-OPERACION-TECHO) 2020 ---*/
     public function list_cites_generados($proy_id,$tp){
@@ -127,10 +134,6 @@ class Cmodificaciones extends CI_Controller {
               $codigo='<font color=red><b>SIN CÓDIGO</b></font>';
             }
 
-              $ca=$this->model_modrequerimiento->list_requerimientos_adicionados($cit['cite_id']);
-              $cm=$this->model_modrequerimiento->list_requerimientos_modificados($cit['cite_id']);
-              $cd=$this->model_modrequerimiento->list_requerimientos_eliminados($cit['cite_id']);
-              if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
                 $nro++;
                 $tabla .='<tr bgcolor='.$color.'>';
                   $tabla .='<td align="center">'.$nro.'</td>';
@@ -139,7 +142,7 @@ class Cmodificaciones extends CI_Controller {
                   $tabla .='<td>'.$codigo.'</td>';
                   $tabla .='<td>'.$cit['com_componente'].'</td>';
                   $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/rep_mod_financiera/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE REQUERIMIENTOS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
-                  $tabla .='<td align="center">';
+                  $tabla .='<td align="center">'.$cit['cite_estado'].' - '.$cit['cite_activo'].'';
                       $tabla .='<a href="'.base_url().'index.php/mod/update_cite/'.$cit['cite_id'].'" id="myBtn'.$cit['cite_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
                               <img id="load'.$cit['cite_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
                   $tabla .='</td>';
@@ -151,7 +154,6 @@ class Cmodificaciones extends CI_Controller {
                             document.getElementById("load'.$cit['cite_id'].'").style.display = "block";
                           });
                         </script>';
-              }
             }
         }
       }

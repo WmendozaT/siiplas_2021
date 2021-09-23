@@ -57,9 +57,6 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-   
-
-
     /*------- Valida Cite Para Modificacion -------*/
     public function valida_cite_modificacion(){
       if ($this->input->post()) {
@@ -530,6 +527,10 @@ class Cmod_insumo extends CI_Controller {
             $add_id=$this->db->insert_id();
           /*----------------------------------------------------*/
 
+          /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+            $this->update_activo_modificacion($cite_id);
+          /*--------------------------------------*/
+
           /*-----------------------------------------------------------*/
           if(count($this->model_modrequerimiento->get_insumo_adicionado($add_id))==1){
             $this->session->set_flashdata('success','EL REQUERIMIENTO SE REGISTRO CORRECTAMENTE :)');
@@ -543,6 +544,18 @@ class Cmod_insumo extends CI_Controller {
       else{
         echo "Error en el Registro !!!";
       }
+    }
+
+
+
+    /*----- UPDATE ESTADO ACTIVO DE LA MODIFICACION ------*/
+    function update_activo_modificacion($cite_id){
+      $update_cite= array(
+        'cite_activo' => 1,
+        'fun_id'=>$this->fun_id
+      );
+      $this->db->where('cite_id', $cite_id);
+      $this->db->update('cite_mod_requerimientos', $this->security->xss_clean($update_cite));
     }
 
 
@@ -653,14 +666,10 @@ class Cmod_insumo extends CI_Controller {
               );
               $this->db->where('ins_id', $ins_id);
               $this->db->update('_insumoproducto', $update_proy);
-              
-            /*if($id!=$id_anterior){
-              $update_proy = array(
-                'prod_id' => $id,
-              );
-              $this->db->where('ins_id', $ins_id);
-              $this->db->update('_insumoproducto', $update_proy);
-            }*/
+
+              /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+              $this->update_activo_modificacion($cite_id);
+              /*--------------------------------------*/
 
             $this->session->set_flashdata('success','EL REQUERIMIENTO SE MODIFICO CORRECTAMENTE :)');
             redirect(site_url("").'/mod/list_requerimientos/'.$cite_id.'');
@@ -806,6 +815,10 @@ class Cmod_insumo extends CI_Controller {
           $this->db->update('insumos', $update_ins);
           /*------------------------------- -*/
 
+            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+              $this->update_activo_modificacion($cite_id);
+            /*--------------------------------------*/
+
             $result = array(
               'respuesta' => 'correcto'
             );
@@ -845,6 +858,10 @@ class Cmod_insumo extends CI_Controller {
             $this->db->where('ins_id', $_POST["ins"][$como]);
             $this->db->update('insumos', $update_ins);
             /*------------------------------- -*/
+
+            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+              $this->update_activo_modificacion($cite_id);
+            /*--------------------------------------*/
 
               if(count($this->model_insumo->get_requerimiento($_POST["ins"][$como]))==0){
                 $si++;
@@ -1745,6 +1762,10 @@ class Cmod_insumo extends CI_Controller {
                               $this->db->insert('insumo_add', $data_to_store2);
                               $add_id=$this->db->insert_id();
                             /*---------------------------------------*/
+
+                            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+                              $this->update_activo_modificacion($cite_id);
+                            /*--------------------------------------*/
                           } /// E
                         }
                       } /// D

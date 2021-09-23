@@ -179,7 +179,8 @@ class Model_modrequerimiento extends CI_Model{
     /*---- Get cite Proyecto - Requerimientos ----*/
     function list_cites_requerimientos_proy($proy_id){
         $sql = 'select *
-                from lista_modificacion_requerimiento('.$proy_id.','.$this->gestion.')';
+                from lista_modificacion_requerimiento('.$proy_id.','.$this->gestion.')
+                where cite_activo=\'1\'';
 
 /*        $sql = 'select *
                 from cite_mod_requerimientos ci

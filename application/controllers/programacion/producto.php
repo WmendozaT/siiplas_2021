@@ -1416,6 +1416,7 @@ class Producto extends CI_Controller {
                               'ins_id' => $ins_id, /// Id Insumo
                               'mes_id' => $p, /// Mes 
                               'ipm_fis' => $m[$p], /// Valor mes
+                              'g_id' => $this->gestion, /// Gestion
                             );
                             $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
                           }
