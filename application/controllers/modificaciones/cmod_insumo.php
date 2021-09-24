@@ -165,6 +165,7 @@ class Cmod_insumo extends CI_Controller {
     /*----- LISTA REQUERIMIENTOS AUXILIAR (2020) en casos de que sean muchos requerimientos ------*/
     public function lista_requerimientos_auxiliar($cite){
       $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id']);
+   //   $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($cite[0]['com_id']); /// Lista requerimientos
 
       $tabla='';
       $total=0;
@@ -208,14 +209,14 @@ class Cmod_insumo extends CI_Controller {
                   if(count($cert)!=0){
                     $monto_cert=$cert[0]['certificado'];
                     
-                      if($monto_cert==$row['ins_costo_total']){
-                        $color_tr='#f9d8e0';
-                        $valor_mod=1;
-                        $valor_delete=1;
-                      }
-                      elseif ($monto_cert<$row['ins_costo_total']) {
-                        $valor_delete=1;
-                      }
+                    if($monto_cert==$row['ins_costo_total']){
+                      $color_tr='#f9d8e0';
+                      $valor_mod=1;
+                      $valor_delete=1;
+                    }
+                    elseif ($monto_cert<$row['ins_costo_total']) {
+                      $valor_delete=1;
+                    }
                   }
                   $cont++;
                     $tabla .='<tr bgcolor='.$color_tr.'>';
