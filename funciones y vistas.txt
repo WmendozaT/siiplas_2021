@@ -1342,6 +1342,8 @@ ALTER TABLE public.vista_subactividades
 SE REALIZO LA CREACION DE UNA VISTA  vista_operaciones_por_subactividad_ppto, CON EL PROPOSITO DE LISTAR LAS OPERACIONES CON PRESUPUESTO POR SUBACTIVIDAD, ESTO PARA PODER LISTAR EN LAS CERTIFICACIONES POA, LAS CONSULTAS SE LAS PODRIA HACER POR EL ID DEL PROYECTO.
 
 
+
+
 CREATE OR REPLACE VIEW public.vista_operaciones_por_subactividad_ppto AS 
 SELECT 
     pfe.proy_id,
@@ -1373,7 +1375,7 @@ Inner Join _productos as pr On pr.com_id=c.com_id
 Inner Join _insumoproducto as ip On ip.prod_id=pr.prod_id
 Inner Join insumos as i On i.ins_id=ip.ins_id
 
-where pfe.pfec_estado=1 and c.estado!=3 and apg.aper_estado!=3 and pr.estado!=3
+where pfe.pfec_estado=1 and c.estado!=3 and apg.aper_estado!=3 and pr.estado!=3 and i.ins_estado!=3 and i.aper_id!=0
 group by pfe.proy_id,c.com_id,c.com_componente,c.com_ponderacion,sa.serv_id,sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad,pr.prod_id,
 pr.prod_cod,pr.prod_producto,pr.prod_indicador,pr.prod_fuente_verificacion,pr.prod_resultado,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion
 order by apg.aper_gestion,sa.serv_cod, pr.prod_cod asc;

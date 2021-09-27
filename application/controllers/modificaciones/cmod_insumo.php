@@ -23,6 +23,8 @@ class Cmod_insumo extends CI_Controller {
             $this->gestion = $this->session->userData('gestion'); /// Gestion
             $this->fun_id = $this->session->userData('fun_id'); /// Fun id
             $this->rol_id = $this->session->userData('rol_id'); /// Rol Id
+            $this->conf_mod_ope = $this->session->userData('conf_mod_ope');
+            $this->conf_mod_req = $this->session->userData('conf_mod_req');
             $this->fecha_entrada = strtotime("20-09-2021 00:00:00");
             $this->load->library('modificacionpoa');
         }

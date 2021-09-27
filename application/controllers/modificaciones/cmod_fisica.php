@@ -41,6 +41,8 @@ class Cmod_fisica extends CI_Controller {
             $this->verif_mes=$this->session->userdata('mes_actual');
             $this->tmes = $this->session->userData('trimestre');
             $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
+            $this->conf_mod_ope = $this->session->userData('conf_mod_ope');
+            $this->conf_mod_req = $this->session->userData('conf_mod_req');
             $this->fecha_entrada = strtotime("16-09-2021 00:00:00");
             $this->load->library('modificacionpoa');
             }else{
@@ -85,19 +87,23 @@ class Cmod_fisica extends CI_Controller {
                 $nro=0;
                 foreach($componente as $row){
                   $nro++;
-                  $tabla.='<tr>';
-                    $tabla.='<td>'.$nro.'</td>';
-                    $tabla.='<td align=center>
-                              <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" title="MODIFICAR OPERACIONES" name="'.$row['com_id'].'">
-                                <img src="'.base_url().'assets/ifinal/mod_money.png" width="35" height="35"/>
-                              </a>
-                            </td>';
-                    $tabla.='<td>'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>';
-                    $tabla.='<td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>';
-                    $tabla.='<td align=center>'.round($row['com_ponderacion'],2).' %</td>';
-                    $tabla.='<td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>';
-                    
-                  $tabla.='</tr>';
+                  $tabla.='
+                  <tr>
+                    <td>'.$nro.'</td>
+                    <td align=center>';
+                      if($this->conf_mod_ope==1 || $this->tp_adm==1){
+                        $tabla.='
+                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" title="MODIFICAR OPERACIONES" name="'.$row['com_id'].'">
+                          <img src="'.base_url().'assets/ifinal/mod_money.png" width="35" height="35"/>
+                        </a>';
+                      }
+                      $tabla.='
+                    </td>
+                    <td>'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
+                    <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
+                    <td align=center>'.round($row['com_ponderacion'],2).' %</td>
+                    <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
+                  </tr>';
                 }
         $tabla.='</tbody>
               </table>';        

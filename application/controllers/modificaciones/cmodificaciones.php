@@ -27,6 +27,8 @@ class Cmodificaciones extends CI_Controller {
             $this->dist = $this->session->userData('dist');
             $this->dist_tp = $this->session->userData('dist_tp');
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->conf_mod_ope = $this->session->userData('conf_mod_ope');
+            $this->conf_mod_req = $this->session->userData('conf_mod_req');
             $this->load->library('modificacionpoa');
 
             }else{

@@ -180,7 +180,7 @@ class Certificacionpoa extends CI_Controller{
                   <th style="width:1%;" bgcolor="#474544">#</th>
                   <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR"></th>
                   <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">PROGRAMA '.$this->gestion.'</th>
-                  <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N ACTIVIDAD">ACTIVIDAD</th>
+                  <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N ACTIVIDAD">GASTO CORRIENTE</th>
                   <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
                   <th style="width:10%;" bgcolor="#474544" title="NIVEL">NIVEL</th>
                   <th style="width:10%;" bgcolor="#474544" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
@@ -202,7 +202,7 @@ class Certificacionpoa extends CI_Controller{
                         <td align=center title="'.$row['proy_id'].'-'.$row['aper_id'].'"><b>'.$nro.'</b></td>
                         <td align=center>
                           <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" style="color: green; background-color: #eeeeee;border-bottom-width: 5px;" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" title="SELECCIONAR ACTIVIDAD"> 
-                          <i class="glyphicon glyphicon-list"></i> SELECCIONAR OPERACION</a>
+                          <i class="glyphicon glyphicon-list"></i> SELECCIONAR ACTIVIDAD (FORM. N° 4)</a>
                         </td>
                         <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
                         <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
@@ -299,7 +299,7 @@ class Certificacionpoa extends CI_Controller{
                       if($row['pfec_estado']==1){
                         $tabla.='
                           <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success enlace" style="color: green; background-color: #eeeeee;border-bottom-width: 5px;" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).'">
-                          <i class="glyphicon glyphicon-list"></i> SELECCIONAR OPERACIÓN</a>';
+                          <i class="glyphicon glyphicon-list"></i> SELECCIONAR ACTIVIDAD (FROM. N° 4)</a>';
                       }
                       else{
                         $tabla.='FASE NO ACTIVA';
@@ -371,10 +371,10 @@ class Certificacionpoa extends CI_Controller{
   /*------ GET PRODUCTOS -----*/
     public function mis_productos($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
-      $titulo='UNIDAD RESPONSABLE';
+      /*$titulo='UNIDAD RESPONSABLE';
       if($proyecto[0]['tp_id']==4){
         $titulo='SUBACTIVIDAD';
-      }
+      }*/
 
 
       $productos = $this->model_certificacion->list_operaciones_x_subactividad_ppto($proy_id); /// PRODUCTOS
@@ -390,14 +390,10 @@ class Certificacionpoa extends CI_Controller{
         <table class="table table-bordered" border=1 style="width:100%;" id="datos">
           <thead>
             <tr>
-              <th style="width:1%;" bgcolor="#3276b1">#</th>
-              <th style="width:9%;" bgcolor="#3276b1" title="SUB ACTIVIDAD">'.$titulo.'</th>';
-              if($proyecto[0]['tp_id']==1){
-                $tabla.='<th style="width:10%;" bgcolor="#3276b1" title="COMPONENTE">COMPONENTE</th>';
-              }
-              $tabla.='
-              <th style="width:1%;" bgcolor="#3276b1" title="CÓDIGO">COD. OPE.</th>
-              <th style="width:17%;" bgcolor="#3276b1" title="OPERACIÓN">OPERACI&Oacute;N</th>
+              <th style="width:1%;" bgcolor="#3276b1" title="'.$proy_id.'">#</th>
+              <th style="width:9%;" bgcolor="#3276b1" title="UNIDAD RESPONSABLE">UNIDAD RESPONSABLE</th>
+              <th style="width:1%;" bgcolor="#3276b1" title="CÓDIGO">COD. ACT.</th>
+              <th style="width:17%;" bgcolor="#3276b1" title="DESCRIPCION ACTIVIDAD">ACTIVIDAD (FORMULARIO N° 4)</th>
               <th style="width:17%;" bgcolor="#3276b1" title="RESULTADO">RESULTADO</th>
               <th style="width:3%;" bgcolor="#3276b1" title="MONTO PRESUPUESTO POA">PPTO. POA '.$this->gestion.'</th>
               <th style="width:3%;" bgcolor="#3276b1" title="ITEMS A CERTIFICAR"></th>
@@ -412,11 +408,7 @@ class Certificacionpoa extends CI_Controller{
               $tabla.=
               '<tr>
                 <td align=center>'.$nro.'</td>
-                <td><b>'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</b></td>';
-                if($proyecto[0]['tp_id']==1){
-                  $tabla.='<td>'.$row['com_componente'].'</td>';
-                }
-                $tabla.='
+                <td><b>'.$row['tipo_subactividad'].' '.$row['serv_cod'].' '.$row['serv_descripcion'].'</b></td>
                 <td align=center><span class="badge bg-color-blue txt-color-white">'.$row['prod_cod'].'</span></td>
                 <td>'.$row['prod_producto'].'</td>
                 <td>'.$row['prod_resultado'].'</td>
@@ -842,13 +834,13 @@ class Certificacionpoa extends CI_Controller{
         $nro=0;
         foreach($requerimientos as $row){
           $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-          $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
+         /* $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
 
           if(count($mcertificado)!=0){
             $monto_certificado=$mcertificado[0]['certificado'];
-          }
+          }*/
 
-          if($monto_certificado!=$row['ins_costo_total']){
+          if($row['ins_monto_certificado']!=$row['ins_costo_total']){
               $nro++;
               $tabla.='
               <tr  title='.$row['ins_id'].' id="tr'.$nro.'" >

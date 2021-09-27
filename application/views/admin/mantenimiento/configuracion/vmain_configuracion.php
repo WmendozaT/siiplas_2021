@@ -204,7 +204,7 @@
                                                     <a href="#tab-r8" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">8</span>CONF. EVALUACI&Oacute;N POA</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#tab-r9" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">9</span>CONF. PROGRAMACIÓN POA</a>
+                                                    <a href="#tab-r9" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">9</span>CONF. OPCIONES POA-SIIPLAS</a>
                                                 </li>
                                                 <li>
                                                     <a href="#tab-r10" data-toggle="tab"><span class="badge bg-color-greenLight txt-color-white">10</span>CONF. MENSAJES SISTEMA</a>
@@ -459,7 +459,7 @@
                                                                 <form id="formulario" name="formulario" novalidate="novalidate" method="post" action="<?php echo site_url("").'/mantenimiento/cconfiguracion/update_datos_evaluacion'?>">
                                                                     <input type="hidden" name="ide" id="ide" value="<?php echo $conf[0]['ide'] ?>">
                                                                     <fieldset>
-                                                                        <legend>CONFIGURACI&Oacute;N EVALUACI&Oacute;N POA</legend>
+                                                                        <legend>CONFIGURACI&Oacute;N ACCESO A EVALUACI&Oacute;N POA</legend>
                                                                         <div class="row">
                                                                             <div class="col-sm-6">
                                                                                 <div class="">
@@ -512,8 +512,8 @@
                                                                 <form method="post" class="form-horizontal">
                                                                     <input type="hidden" name="ide" id="ide" value="<?php echo $conf[0]['ide'] ?>">
                                                                     <fieldset>
-                                                                        <legend>CONFIGURAR PROGRAMACIÓN POA</legend>
-                                                                        
+                                                                        <legend>CONFIGURAR OPCIONES DISPONIBLES PROG/MOD/CERT POA</legend>
+                                                                        <div style="font-size: 30px">PROGRAMACIÓN POA</div><br>
                                                                         <div class="form-group">
                                                                             <label class="col-md-2 control-label">TIPO DE PRESUPUESTO</label>
                                                                             <div class="col-md-10">
@@ -594,6 +594,69 @@
                                                                                         }
                                                                                         else{ ?>
                                                                                             <option value="1">HABILITADO PARA REGISTRO </option>
+                                                                                            <option value="0" selected>NO HABILITADO</option> 
+                                                                                            <?php
+                                                                                        }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <hr>
+                                                                        <div style="font-size: 30px">MODIFICACIÓN POA</div><br>
+                                                                         <div class="form-group">
+                                                                            <label class="col-md-2 control-label">MODIFICACIÓN FORM. N°4</label>
+                                                                            <div class="col-md-10">
+                                                                                <select class="form-control" id="estado_modpoa_form4" name="estado_modpoa_form4" title="SELECCIONE ESTADO FORMULARIO MODIFICACIÓN N4">
+                                                                                    <?php 
+                                                                                        if($this->session->userData('conf_mod_ope')==1){ ?>
+                                                                                            <option value="1" selected>HABILITADO PARA MODIFICAR FORM 4</option>
+                                                                                            <option value="0">NO HABILITADO</option>     
+                                                                                            <?php
+                                                                                        }
+                                                                                        else{ ?>
+                                                                                            <option value="1">HABILITADO PARA MODIFICAR FORM 4</option>
+                                                                                            <option value="0" selected>NO HABILITADO</option> 
+                                                                                            <?php
+                                                                                        }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-2 control-label">MODIFICACIÓN FORM. N°5</label>
+                                                                            <div class="col-md-10">
+                                                                                <select class="form-control" id="estado_modpoa_form5" name="estado_modpoa_form5" title="SELECCIONE ESTADO FORMULARIO MODIFICACIÓN N5">
+                                                                                    <?php 
+                                                                                        if($this->session->userData('conf_mod_req')==1){ ?>
+                                                                                            <option value="1" selected>HABILITADO PARA MODIFICAR FORM 5</option>
+                                                                                            <option value="0">NO HABILITADO</option>     
+                                                                                            <?php
+                                                                                        }
+                                                                                        else{ ?>
+                                                                                            <option value="1">HABILITADO PARA MODIFICAR FORM 5</option>
+                                                                                            <option value="0" selected>NO HABILITADO</option> 
+                                                                                            <?php
+                                                                                        }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <hr>
+                                                                        <div style="font-size: 30px">CERTIFICACIÓN POA</div><br>
+                                                                         <div class="form-group">
+                                                                            <label class="col-md-2 control-label">CERTIFICACIÓN FORM. N°5</label>
+                                                                            <div class="col-md-10">
+                                                                                <select class="form-control" id="estado_certpoa_form5" name="estado_certpoa_form5" title="SELECCIONE ESTADO FORMULARIO CERTIFICAICÓN N 5">
+                                                                                    <?php 
+                                                                                        if($this->session->userData('conf_certificacion')==1){ ?>
+                                                                                            <option value="1" selected>HABILITADO PARA CERTIFICAR </option>
+                                                                                            <option value="0">NO HABILITADO</option>     
+                                                                                            <?php
+                                                                                        }
+                                                                                        else{ ?>
+                                                                                            <option value="1">HABILITADO PARA CERTIFICAR </option>
                                                                                             <option value="0" selected>NO HABILITADO</option> 
                                                                                             <?php
                                                                                         }
@@ -1122,6 +1185,109 @@
                 alertify.confirm(mensaje, function (a) {
                     if (a) {
                         var url = "<?php echo site_url().'/mantenimiento/cconfiguracion/valida_update_estadoform5'?>";
+                        $.ajax({
+                            type:"post",
+                            url:url,
+                            data:{estado:estado,g_id:id},
+                            success:function(datos){
+                                if(datos.trim() =='true'){
+                                    window.location.reload(true);
+                                }else{
+                                    alertify.error("Error al Actualizar ..");
+                                }
+                        }});
+                    } else {
+                        alertify.error("OPCI\u00D3N CANCELADA");
+                    }
+                  });
+
+                });
+
+                //// ESTADO MODIFICACION POA FORM 4
+                $("#estado_modpoa_form4").change(function () {            
+                var estado = $(this).val();
+                var id = <?php echo $conf[0]['ide'];?>;
+
+                var mensaje='';
+                if(estado==1){
+                    mensaje='HABILITAR FORMULARIO MODIFICACIÓN N° 4 ?';
+                }
+                else{
+                    mensaje='DESHABILITAR FORMULARIO MODIFICACIÓN N° 4 ?';
+                }
+
+                alertify.confirm(mensaje, function (a) {
+                    if (a) {
+                        var url = "<?php echo site_url().'/mantenimiento/cconfiguracion/valida_update_estadomodform4'?>";
+                        $.ajax({
+                            type:"post",
+                            url:url,
+                            data:{estado:estado,g_id:id},
+                            success:function(datos){
+                                if(datos.trim() =='true'){
+                                    window.location.reload(true);
+                                }else{
+                                    alertify.error("Error al Actualizar ..");
+                                }
+                        }});
+                    } else {
+                        alertify.error("OPCI\u00D3N CANCELADA");
+                    }
+                  });
+
+                });
+
+                //// ESTADO MODIFICACION POA FORM 5
+                $("#estado_modpoa_form5").change(function () {            
+                var estado = $(this).val();
+                var id = <?php echo $conf[0]['ide'];?>;
+
+                var mensaje='';
+                if(estado==1){
+                    mensaje='HABILITAR FORMULARIO MODIFICACIÓN N° 5 ?';
+                }
+                else{
+                    mensaje='DESHABILITAR FORMULARIO MODIFICACIÓN N° 5 ?';
+                }
+
+                alertify.confirm(mensaje, function (a) {
+                    if (a) {
+                        var url = "<?php echo site_url().'/mantenimiento/cconfiguracion/valida_update_estadomodform5'?>";
+                        $.ajax({
+                            type:"post",
+                            url:url,
+                            data:{estado:estado,g_id:id},
+                            success:function(datos){
+                                if(datos.trim() =='true'){
+                                    window.location.reload(true);
+                                }else{
+                                    alertify.error("Error al Actualizar ..");
+                                }
+                        }});
+                    } else {
+                        alertify.error("OPCI\u00D3N CANCELADA");
+                    }
+                  });
+
+                });
+
+
+                //// ESTADO CERTIFICACION POA FORM 5
+                $("#estado_certpoa_form5").change(function () {            
+                var estado = $(this).val();
+                var id = <?php echo $conf[0]['ide'];?>;
+
+                var mensaje='';
+                if(estado==1){
+                    mensaje='HABILITAR FORMULARIO CERTIFICACION POA N° 5 ?';
+                }
+                else{
+                    mensaje='DESHABILITAR FORMULARIO CERTIFICACION POA N° 5 ?';
+                }
+
+                alertify.confirm(mensaje, function (a) {
+                    if (a) {
+                        var url = "<?php echo site_url().'/mantenimiento/cconfiguracion/valida_update_estadocertform5'?>";
                         $.ajax({
                             type:"post",
                             url:url,

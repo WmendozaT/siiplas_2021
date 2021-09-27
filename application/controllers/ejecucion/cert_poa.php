@@ -36,6 +36,7 @@ class Cert_poa extends CI_Controller {
         $this->fun_adm = $this->session->userData('adm');
         $this->fecha_entrada = strtotime("31-05-2021 00:00:00");
         $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
+        $this->conf_certificacion = $this->session->userData('conf_certificacion'); /// conf estado Certificacion POA (1: activo, 0: no activo)
         }
         else{
             $this->session->sess_destroy();
@@ -707,7 +708,7 @@ class Cert_poa extends CI_Controller {
 
           $monto_asig=0;
           if(count($ptto_asig)!=0){
-            $monto_asig=$ptto_asig[0]['monto'];
+            $monto_asig=($ptto_asig[0]['monto']+$ptto_asig[0]['ppto_saldo_ncert']);
           }
           $saldo=$monto_asig-$monto_prog;
 

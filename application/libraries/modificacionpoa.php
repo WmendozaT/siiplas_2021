@@ -39,11 +39,10 @@ class Modificacionpoa extends CI_Controller{
         $this->verif_mes=$this->session->userData('mes_actual');
         $this->resolucion=$this->session->userdata('rd_poa');
         $this->tp_adm = $this->session->userData('tp_adm');
+        $this->conf_mod_ope = $this->session->userData('conf_mod_ope');
+        $this->conf_mod_req = $this->session->userData('conf_mod_req');
         $this->mes = $this->mes_nombre();
     }
-
-
-
 
 
     /*---- Lista de Unidades / Establecimientos de Salud (2020) -----*/
@@ -91,23 +90,36 @@ class Modificacionpoa extends CI_Controller{
                               </div>
                               <div class="modal-body no-padding">
                                   <div class="row">
-                                    <h2 class="alert alert-success"><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].' - '.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</center></h2>
-                                    
-                                    <a onclick="mod_operacion'.$row['proy_id'].'()" class="ruta" title="MODIFICAR FORMULARIO N° 4">
+                                    <h2 class="alert alert-success"><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].' - '.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</center></h2>';
+                                    $link1=''; $color1='red'; $titulo1='MODIFICACI&Oacute;N NO HABILITADO';
+                                      if($this->conf_mod_ope==1 || $this->tp_adm==1){
+                                      $link1='onclick="mod_operacion'.$row['proy_id'].'()"';
+                                      $color1='teal';
+                                      $titulo1='MODIFICAR FORMULARIO N° 4';
+                                    }
+
+                                    $link2=''; $color2='red'; $titulo2='MODIFICACI&Oacute;N NO HABILITADO';
+                                      if($this->conf_mod_req==1 || $this->tp_adm==1){
+                                      $link2='onclick="mod_insumo'.$row['proy_id'].'()"';
+                                      $color2='teal';
+                                      $titulo2='MODIFICAR FORMULARIO N° 5';
+                                    }
+                                    $tabla.='
+                                    <a '.$link1.' class="ruta" title="'.$titulo1.'" >
                                       <div class="well well-sm col-sm-4">
-                                          <div class="well well-sm bg-color-teal txt-color-white text-center">
-                                            <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 4 - '.$this->gestion.'</h5>
-                                            <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                          </div>
+                                        <div class="well well-sm bg-color-'.$color1.' txt-color-white text-center">
+                                          <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 4 - '.$this->gestion.'</h5>
+                                          <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                                        </div>
                                       </div>
                                     </a>
                                     
-                                    <a onclick="mod_insumo'.$row['proy_id'].'()"  class="ruta" title="MODIFICAR FORMULARIO N° 5">
+                                    <a '.$link2.' class="ruta" title="'.$titulo2.'" >
                                       <div class="well well-sm col-sm-4">
-                                          <div class="well well-sm bg-color-teal txt-color-white text-center">
-                                            <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 5 - '.$this->gestion.'</h5>
-                                            <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                          </div>
+                                        <div class="well well-sm bg-color-'.$color2.' txt-color-white text-center">
+                                          <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 5 - '.$this->gestion.'</h5>
+                                          <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                                        </div>
                                       </div>
                                     </a>';
 
@@ -139,23 +151,24 @@ class Modificacionpoa extends CI_Controller{
                           </div>
                         </div>';
                         $tabla.='
-                            <script>
-                              function mod_operacion'.$row['proy_id'].'(){
-                                document.getElementById("load1'.$row['proy_id'].'").style.display = "block";
-                                window.location="'.site_url("").'/mod/list_componentes/'.$row['proy_id'].'"
-                              }
-                              
-                              function mod_insumo'.$row['proy_id'].'(){
-                                document.getElementById("load2'.$row['proy_id'].'").style.display = "block";
-                                window.location="'.site_url("").'/mod/procesos/'.$row['proy_id'].'"
-                              }
+                          <script>
+                            function mod_operacion'.$row['proy_id'].'(){
+                              document.getElementById("load1'.$row['proy_id'].'").style.display = "block";
+                              window.location="'.site_url("").'/mod/list_componentes/'.$row['proy_id'].'"
+                            }
+                            
+                            function mod_insumo'.$row['proy_id'].'(){
+                              document.getElementById("load2'.$row['proy_id'].'").style.display = "block";
+                              window.location="'.site_url("").'/mod/procesos/'.$row['proy_id'].'"
+                            }
 
-                              function mod_techo'.$row['proy_id'].'(){
-                                document.getElementById("load3'.$row['proy_id'].'").style.display = "block";
-                                window.location="'.site_url("").'/mod/cite_techo/'.$row['proy_id'].'"
-                              }
-                            </script>';
+                            function mod_techo'.$row['proy_id'].'(){
+                              document.getElementById("load3'.$row['proy_id'].'").style.display = "block";
+                              window.location="'.site_url("").'/mod/cite_techo/'.$row['proy_id'].'"
+                            }
+                          </script>';
                 $tabla .= '
+
                     </td>
                     <td align=center><a href="'.site_url("").'/mod/list_cites/'.$row['proy_id'].'" title="LISTA DE CITES GENERADOS POR MODIFICACI&Oacute;N" target="_blank" class="btn btn-default"><font size=1>LISTA DE CITES</font></a></td>
                     <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
@@ -890,11 +903,11 @@ class Modificacionpoa extends CI_Controller{
                 <thead>
                     <tr style="height:45px;">
                         <th style="width:1%;">#</th>
-                        <th style="width:5%;">COD. SUBACTIVIDAD</th>
-                        <th style="width:20%;">SUBACTIVIDAD</th>
+                        <th style="width:5%;">COD. UNIDAD</th>
+                        <th style="width:20%;">UNIDAD RESPONSABLE</th>
                         <th style="width:15%;">RESPONSABLE</th>
                         <th style="width:5%;">PONDERACI&Oacute;N</th>
-                        <th style="width:5%;">OPERACIONES PROGRAMADOS</th>
+                        <th style="width:5%;">ACT. PROGRAMADOS</th>
                         <th style="width:5%;">PRESUPUESTO POA</th>
                         <th style="width:5%;"></th>
                     </tr>
@@ -912,15 +925,18 @@ class Modificacionpoa extends CI_Controller{
                   $num++;
                   $tabla.='
                   <tr>
-                      <td align=center>'.$num.'</td><td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO SERVICIO : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
-                      <td title='.$row['com_id'].'>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
-                      <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
-                      <td align=center>'.$row['com_ponderacion'].' %</td>
-                      <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
-                      <td align=right>'.$ppto.'</td>
-                      <td>
-                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" style="width:100%; color: green; background-color: #eeeeee;border-bottom-width: 5px;" title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'"><i class="glyphicon glyphicon-file"></i> INGRESAR CITE</a>
-                      </td>
+                    <td align=center>'.$num.'</td><td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO UNIDAD : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
+                    <td title='.$row['com_id'].'>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
+                    <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
+                    <td align=center>'.$row['com_ponderacion'].' %</td>
+                    <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
+                    <td align=right>'.$ppto.'</td>
+                    <td>';
+                      if($this->conf_mod_req==1 || $this->tp_adm==1){
+                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" style="width:100%; color: green; background-color: #eeeeee;border-bottom-width: 5px;" title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'"><i class="glyphicon glyphicon-file"></i> INGRESAR CITE</a>';
+                      }
+                    $tabla.='
+                    </td>
                   </tr>';
                   $sum=$sum+count($this->model_producto->list_prod($row['com_id']));
                   $ponderacion=$ponderacion+$row['com_ponderacion'];

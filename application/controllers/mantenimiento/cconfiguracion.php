@@ -873,6 +873,77 @@ echo "post_max_size = 2000M";*/
     }
 
 
+    /*--- ESTADO DEL FORMULARIO MODIFICACION N° 4 ---*/
+    function valida_update_estadomodform4(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $estado = $post['estado'];
+          $g_id= $post['g_id'];
+
+          $update_conf = array(
+            'conf_mod_ope' => $estado,
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('ide', $this->gestion);
+          $this->db->update('configuracion', $update_conf);
+
+          $this->session->set_userdata('conf_mod_ope', $estado);
+
+          echo "true";
+
+      }else{
+        show_404();
+      }
+    }
+
+
+    /*--- ESTADO DEL FORMULARIO MODIFICACION N° 5 ---*/
+    function valida_update_estadomodform5(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $estado = $post['estado'];
+          $g_id= $post['g_id'];
+
+          $update_conf = array(
+            'conf_mod_req' => $estado,
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('ide', $this->gestion);
+          $this->db->update('configuracion', $update_conf);
+
+          $this->session->set_userdata('conf_mod_req', $estado);
+
+          echo "true";
+
+      }else{
+        show_404();
+      }
+    }
+
+
+    /*--- ESTADO DEL FORMULARIO CERTIFCACION POA N° 5 ---*/
+    function valida_update_estadocertform5(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $estado = $post['estado'];
+          $g_id= $post['g_id'];
+
+          $update_conf = array(
+            'conf_certificacion' => $estado,
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('ide', $this->gestion);
+          $this->db->update('configuracion', $update_conf);
+
+          $this->session->set_userdata('conf_certificacion', $estado);
+
+          echo "true";
+
+      }else{
+        show_404();
+      }
+    }
+
     function mes_nombre(){
         $mes[1] = 'ENE.';
         $mes[2] = 'FEB.';

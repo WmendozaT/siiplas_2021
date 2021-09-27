@@ -52,10 +52,7 @@ class Ccertificacion_poa extends CI_Controller {
         $data['reg'] = $this->model_proyecto->dep_dist($this->dist);
         $data['res_dep']=$this->certificacionpoa->tp_resp();
 
-        $data['titulo']='SELECCIONAR ACTIVIDAD - '.$this->gestion.'';
-        if($this->gestion>2020){
-          $data['titulo']='SELECCIONAR OPERACI&Oacute;N - '.$this->gestion.'';
-        }
+        $data['titulo']='SELECCIONAR ALINEACIÓN ACTIVIDAD - '.$this->gestion.'';
 
         $data['proyectos']=$this->certificacionpoa->list_pinversion(4);
         $data['operacion']=$this->certificacionpoa->list_unidades_es(4);
@@ -80,7 +77,7 @@ class Ccertificacion_poa extends CI_Controller {
         $data['res_dep']=$this->certificacionpoa->tp_resp();
         $data['titulo']=$this->certificacionpoa->titulo_cabecera($data['datos']);
         $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
-        $this->update_gestion_temporalidad($requerimientos);
+      //  $this->update_gestion_temporalidad($requerimientos);
         $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
         $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/form_items_prevista', $data);
     }
