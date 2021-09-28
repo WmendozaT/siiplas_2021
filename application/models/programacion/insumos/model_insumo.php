@@ -165,7 +165,17 @@ class Model_insumo extends CI_Model{
 
     /*---- LISTA CONSOLIDADO DE PRODUCTOS PARTIDAS POR SUB ACTIVIDADES (COMPONENTES)-----*/
     function list_consolidado_partidas_componentes($com_id){
-        $sql = 'select c.com_id, c.pfec_id,par.par_id, par.par_codigo,par.par_nombre, SUM(i.ins_costo_total) as monto
+        if($this->gestion>2021){ /// 2022
+            $sql = 'select c.com_id, c.pfec_id,par.par_id, par.par_codigo,par.par_nombre, SUM(i.ins_costo_total) as monto
+                from _componentes c
+                Inner Join insumos as i On i.com_id=c.com_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                where c.com_id='.$com_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
+                group by c.com_id, c.pfec_id,par.par_id,   par.par_codigo,par.par_nombre
+                order by par.par_codigo asc';
+        }
+        else{
+            $sql = 'select c.com_id, c.pfec_id,par.par_id, par.par_codigo,par.par_nombre, SUM(i.ins_costo_total) as monto
                 from _componentes c
                 Inner Join _productos as p On c.com_id=p.com_id
                 Inner Join _insumoproducto as ip On ip.prod_id=p.prod_id
@@ -174,7 +184,8 @@ class Model_insumo extends CI_Model{
                 where c.com_id='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
                 group by c.com_id, c.pfec_id,par.par_id,   par.par_codigo,par.par_nombre
                 order by par.par_codigo asc';
-        
+        }
+
         $query = $this->db->query($sql);
         return $query->result_array();
     }

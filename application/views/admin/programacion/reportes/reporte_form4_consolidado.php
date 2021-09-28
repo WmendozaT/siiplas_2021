@@ -1,4 +1,6 @@
 <?php
+ini_set('max_execution_time', 0); 
+ini_set('memory_limit','2048M');
 ob_start();
 ?>
     <style type="text/css">
@@ -25,7 +27,7 @@ try{
     $html2pdf = new HTML2PDF('L', 'Letter', 'fr', true, 'UTF-8', 0);
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-    $html2pdf->Output('FORM SPO N 4-'.$pie_rep.'.pdf');
+    $html2pdf->Output('FORM POA-'.$pie_rep.'.pdf');
 }
 catch(HTML2PDF_exception $e) {
     echo $e;

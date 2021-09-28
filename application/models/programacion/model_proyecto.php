@@ -78,7 +78,7 @@ class Model_proyecto extends CI_Model{
         /// Administrador Nacional
         if($this->adm==1){
             $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
+                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -94,7 +94,7 @@ class Model_proyecto extends CI_Model{
         else{
             if($this->dist_tp==1){ /// Regional
                 $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
+                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -108,7 +108,7 @@ class Model_proyecto extends CI_Model{
             }
             else{ /// Distrital
                 $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
+                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -132,7 +132,7 @@ class Model_proyecto extends CI_Model{
         /// Administrador Nacional
         if($this->adm==1){
             $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
+                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -149,7 +149,7 @@ class Model_proyecto extends CI_Model{
         else{
             if($this->dist_tp==1){ /// Regional
                 $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
+                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -164,7 +164,7 @@ class Model_proyecto extends CI_Model{
             }
             else{ /// Distrital
                 $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
+                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -194,7 +194,7 @@ class Model_proyecto extends CI_Model{
             /// Administrador Nacional
             if($this->adm==1){
                 $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
-                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
+                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -208,7 +208,7 @@ class Model_proyecto extends CI_Model{
             else{
                 if($this->dist_tp==1){ /// Regional
                     $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
-                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
+                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -220,7 +220,7 @@ class Model_proyecto extends CI_Model{
                 }
                 else{ /// Distrital
                     $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
-                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
+                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -280,7 +280,7 @@ class Model_proyecto extends CI_Model{
         if($this->adm==1){
             if($this->rol==1){
                 $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.tp_id,p.proy_sisin,p.proy_mod,tp.tp_tipo,apg.aper_id,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
+                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -295,7 +295,7 @@ class Model_proyecto extends CI_Model{
             }
             else{
                 $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,p.proy_mod,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
+                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -313,7 +313,7 @@ class Model_proyecto extends CI_Model{
                 if($this->rol==1){
                     if($this->dist_tp==1){
                         $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,p.proy_mod,
-                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
+                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -328,7 +328,7 @@ class Model_proyecto extends CI_Model{
                     }
                     elseif($this->dist_tp==0){
                         $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,p.proy_mod,
-                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
+                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -343,7 +343,7 @@ class Model_proyecto extends CI_Model{
                     }
                     else{
                         $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,p.proy_mod,
-                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
+                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -359,7 +359,7 @@ class Model_proyecto extends CI_Model{
             }
             else{
                 $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,p.proy_mod,
-                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
+                            apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id

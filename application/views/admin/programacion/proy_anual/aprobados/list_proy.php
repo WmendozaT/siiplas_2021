@@ -139,6 +139,7 @@
 																			<?php
 																		}
 																	?>
+																	<th style="width:5%;" title="REPORTE POA APROBADO">REP. POA <?php echo $this->session->userData('gestion');?></th>
 																	<th style="width:10%;" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA <?php echo $this->session->userdata("gestion");?></th>
 																	<th style="width:20%;" title="DESCRIPCI&Oacute;N">DESCRIPCI&Oacute;N</th>
 																	<th style="width:10%;" title="NIVEL">ESCALON</th>

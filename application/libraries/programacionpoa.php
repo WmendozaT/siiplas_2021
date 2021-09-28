@@ -404,14 +404,14 @@ class Programacionpoa extends CI_Controller{
                       
                     }
                   $tabla.='</tbody>';
-                    if($this->gestion>2021){
+                    /*if($this->gestion>2021){
                       $tabla.='
                       <tr bgcolor="#d3e2f3">
                         <td colspan=3><b>CONSOLIDADO POA UNIDADES RESPONSABLES FORM 4 - GESTIÓN '.$this->gestion.'</b></td>
                         <td align=center ><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proy_id.'\');" title="REPORTE FORM. 4 CONSOLIDADO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
                         <td></td>
                       </tr>';
-                    }
+                    }*/
                     if($nro_ppto>0){
                       $tabla.='
                       <tr>
@@ -906,7 +906,7 @@ class Programacionpoa extends CI_Controller{
 
     //// ======== CABECERA Y PIE PARA LOS REPORTES POA 2022
   //// Cabecera Reporte form 3, 4 y 5
-  public function cabecera($tp_id,$tp_rep,$proyecto,$com_id){
+    public function cabecera($tp_id,$tp_rep,$proyecto,$com_id){
     /// tp_rep : 3 (Foda), 4 (Actividades), 5 (requerimientos), 0 (consolidado ppto)
     
     if($tp_rep==0){
@@ -979,12 +979,16 @@ class Programacionpoa extends CI_Controller{
       <hr>
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px black; text-align: center;">
-              <td style="width:10%; text-align:center;">
+              <td style="width:12%; text-align:center;">';
+              if($proyecto[0]['aper_proy_estado']==4 && $this->gestion>2021){
+                $tabla.='<qrcode value="'.$this->session->userdata('rd_poa').'" style="border: none; width: 14mm; color: #1c7368"></qrcode><br><b>POA APROBADO</b>';
+              }
+              $tabla.='
               </td>
               <td style="width:80%; height: 5%">
                   <table align="center" border="0" style="width:100%;">
                       <tr style="font-size: 23px;font-family: Arial;">
-                          <td style="height: 30%;"><b>PLAN OPERATIVO ANUAL GESTION - '.$this->gestion.'</b></td>
+                          <td style="height: 30%;"><b>PLAN OPERATIVO ANUAL GESTIÓN - '.$this->gestion.'</b></td>
                       </tr>
                       <tr style="font-size: 20px;font-family: Arial;">
                         <td style="height: 5%;">'.$titulo_rep.'</td>
@@ -1011,15 +1015,15 @@ class Programacionpoa extends CI_Controller{
       
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
          <tr>
-            <td style="width:2%;"></td>
-            <td style="width:96%;height: 1%;">
+            <td style="width:1.5%;"></td>
+            <td style="width:97%;height: 1%;">
               <hr>
             </td>
-            <td style="width:2%;"></td>
+            <td style="width:1.5%;"></td>
         </tr>
         <tr>
-            <td style="width:2%;"></td>
-            <td style="width:96%;height: 3%;">
+            <td style="width:1.5%;"></td>
+            <td style="width:97%;height: 3%;">
              
               <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                 <tr>
@@ -1078,15 +1082,15 @@ class Programacionpoa extends CI_Controller{
                 '.$comp.'
             </table>
           </td>
-          <td style="width:2%;"></td>
+          <td style="width:1.5%;"></td>
         </tr>
         <tr>
-          <td style="width:2%;"></td>
-          <td style="width:96%;height: 1%;">
+          <td style="width:1.5%;"></td>
+          <td style="width:97%;height: 1%;">
             <hr>
             <br><b style="font-size: 8px;font-family: Arial;">DETALLE : </b>
           </td>
-          <td style="width:2%;"></td>
+          <td style="width:1.5%;"></td>
         </tr>
       </table>';
     return $tabla;
@@ -1187,7 +1191,7 @@ class Programacionpoa extends CI_Controller{
                 $tabla.='POA - '.$this->session->userdata('gestion');
               }
               else{
-                $tabla.='POA - '.$this->session->userdata('gestion').' '.$this->session->userdata('rd_poa');
+                $tabla.='<b>POA - '.$this->session->userdata('gestion').' '.strtoupper($this->session->userdata('rd_poa')).'</b>';
               } 
             $tabla.='
             </td>

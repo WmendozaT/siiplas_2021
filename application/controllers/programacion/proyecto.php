@@ -55,7 +55,6 @@ class Proyecto extends CI_Controller {
       $data['opc1']=$opc1;
       $data['gasto_corriente']=$this->list_unidades_es(1); /// Gasto Corriente
       
-
       //---- Proyecto de Inversion
       $data['proyectos']=$this->list_pinversion(1); /// Proyecto de Inversion
 
@@ -140,8 +139,13 @@ class Proyecto extends CI_Controller {
                             </center>
                           </td>';
             }
-           
-            $tabla .= '<td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>';
+            
+            $tabla .= '<td>';
+              if($row['aper_proy_estado']==4){
+                 $tabla.='<center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" title="REPORTE POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></center>';
+              }
+            $tabla.='</td>';
+            $tabla.='<td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>';
             $tabla.='<td title='.$row['proy_id'].'>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</td>';
             $tabla.='<td>'.$row['escalon'].'</td>';
             $tabla.='<td>'.$row['nivel'].'</td>';
@@ -300,7 +304,7 @@ class Proyecto extends CI_Controller {
         $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
         $tabla='';
         
-        if(count($this->model_insumo->insumos_por_unidad($proyecto[0]['aper_id']))!=0){
+        if(count($this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],1))==0 || count($this->model_insumo->insumos_por_unidad($proyecto[0]['aper_id']))!=0){
           $nro_dif=$this->verif_cuadro_comparativo($proyecto);
 
           if($nro_dif==0){
@@ -346,7 +350,7 @@ class Proyecto extends CI_Controller {
       $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],2); // Prog
 
       $nro_dif=0;
-      foreach($partidas_asig  as $row){
+      foreach($partidas_asig as $row){
         $part=$this->model_ptto_sigep->get_partida_accion_regional($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
         $prog=0;
         

@@ -231,7 +231,7 @@ class Creporte extends CI_Controller {
                         <th style="width:3%;"style="height:11px;">N°</th>
                         <th style="width:10%;">C&Oacute;DIGO</th>
                         <th style="width:50%;">DETALLE PARTIDA</th>
-                        <th style="width:9%;">MONTO PROGRAMADO</th>
+                        <th style="width:12%;">MONTO PROGRAMADO</th>
                     </tr>
                 </thead>
                 <tbody>';
@@ -243,14 +243,14 @@ class Creporte extends CI_Controller {
                             <td style="width: 3%; height:11px; text-align: center">'.$nro.'</td>
                             <td style="width: 10%; text-align: center;font-size: 8px;"><b>'.$row['par_codigo'].'</b></td>
                             <td style="width: 50%; text-align: left;">'.$row['par_nombre'].'</td>
-                            <td style="width: 9%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
+                            <td style="width: 12%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
                         </tr>';
                     }
             $tabla.=
                 '</tbody>
                     <tr style="font-size: 7px;" bgcolor="#eceaea">
                         <td style="width: 50%; height:10px; text-align: left;" colspan=3><b>TOTAL PROGRAMADO </b></td>
-                        <td style="width: 9%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
+                        <td style="width: 12%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
                     </tr>
             </table>';
         return $tabla;
@@ -490,7 +490,10 @@ class Creporte extends CI_Controller {
                 if(count($this->model_producto->list_prod($pr['com_id']))!=0){
                     $componente=$this->model_componente->get_componente($pr['com_id'],$this->gestion);
                     $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$pr['com_id']);
-                    $operaciones=$this->programacionpoa->operaciones_form4($componente,$proyecto); /// Reporte Gasto Corriente, Proyecto de Inversion 2022
+                    $operaciones=$this->programacionpoa->operaciones_form4($componente,$proyecto); /// Reporte Form 4 Gasto Corriente, Proyecto de Inversion 2022
+                    $cabecera_f5=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$pr['com_id']);
+                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($pr['com_id'],$proyecto[0]['tp_id']);
+                    $partidas=$this->consolidado_partida_reporte($pr['com_id'],$proyecto[0]['tp_id']);
 
                     $tabla.='
                     <page orientation="paysage" backtop="75mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
@@ -502,6 +505,26 @@ class Creporte extends CI_Controller {
                             '.$pie.'
                         </page_footer>
                         '.$operaciones.'
+                    </page>
+                    <page backtop="75mm" backbottom="29mm" backleft="5mm" backright="5mm" pagegroup="new">
+                        <page_header>
+                            <br><div class="verde"></div>
+                            '.$cabecera_f5.'
+                        </page_header>
+                        <page_footer>
+                            '.$pie.'
+                        </page_footer>
+                        '.$requerimientos.'
+                    </page>
+                    <page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
+                        <page_header>
+                            <br><div class="verde"></div>
+                            '.$cabecera_f5.'
+                        </page_header>
+                        <page_footer>
+                            '.$pie.'
+                        </page_footer>
+                        '.$partidas.'
                     </page>';
                 }
             }

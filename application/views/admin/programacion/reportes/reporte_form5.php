@@ -17,7 +17,7 @@ ob_start();
         }
     </style>
 
-<page backtop="75mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="75mm" backbottom="29mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <?php echo $cabecera; ?>
@@ -29,7 +29,7 @@ ob_start();
 
 </page>
 
-<page backtop="75mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <?php echo $cabecera; ?>
@@ -40,6 +40,7 @@ ob_start();
     <?php echo $partidas;?>
 
 </page>
+
 <?php
 $content = ob_get_clean();
 //require_once(dirname(__FILE__).'/../html2pdf.class.php');
@@ -54,3 +55,4 @@ catch(HTML2PDF_exception $e) {
     echo $e;
     exit;
 }
+

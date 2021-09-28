@@ -281,6 +281,7 @@ class Rep_operaciones extends CI_Controller {
           <tr style="background-color: #66b2e8">
             <th style="width:1%;"></th>
             <th style="width:5%;"></th>
+            <th style="width:3%;">REP. POA <br>'.$this->gestion.'</th>
             <th style="width:5%;"></th>
             <th style="width:5%;">COD. DA.</th>
             <th style="width:5%;">COD. UE.</th>
@@ -294,6 +295,7 @@ class Rep_operaciones extends CI_Controller {
             <th style="width:8%;" title="">'.$titulo_ppto.'</th>
             <th style="width:8%;" title="">PPTO. POA '.$this->gestion.'</th>
             <th style="width:8%;" title="">SALDO</th>
+            <th style="width:10%;" title=""></th>
           </tr>
         </thead>
         <tbody id="bdi">';
@@ -308,6 +310,13 @@ class Rep_operaciones extends CI_Controller {
             $color='#e4f7f4'; 
           }
           
+          $rep='';
+          $estado='<font color="red"><b>NO APROBADO</b></font>';
+          if($row['aper_proy_estado']==4){
+            $rep='<center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" title="REPORTE POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></center>';
+            $estado='<font color="#1c7368"><b>APROBADO</b></font>'; 
+          }
+
           $nro++;
           $tabla.='
           <tr style="height:35px;" bgcolor="'.$color.'" title="'.$row['aper_id'].'">
@@ -320,14 +329,19 @@ class Rep_operaciones extends CI_Controller {
               $tabla.='<b>FASE NO ACTIVA</b>';
             }
             $tabla.='
-             <td align=center>';
-            if($row['pfec_estado']==1 & $this->gestion!=2022){
-              $tabla.=' <a href="'.site_url("").'/seg/notificacion_operaciones_mensual/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="NOTIFICACIÓN POA">NOTIFICACI&Oacute;N POA '.$this->verif_mes[2].'</a>';
+            </td>
+            <td>'.$rep.'</td>
+            <td align=center>';
+            if($row['pfec_estado']==1){
+              if($this->gestion==2021){
+                $tabla.=' <a href="'.site_url("").'/seg/notificacion_operaciones_mensual/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="NOTIFICACIÓN POA">NOTIFICACI&Oacute;N POA '.$this->verif_mes[2].'</a>';
+              }
             }
             else{
               $tabla.='<b>FASE NO ACTIVA</b>';
             }
             $tabla.='
+            </td>
             <td align=center>'.$row['da'].'</td>
             <td align=center>'.$row['ue'].'</td>
             <td align=center>'.$row['prog'].'</td>
@@ -340,13 +354,15 @@ class Rep_operaciones extends CI_Controller {
             else{
               $tabla.='<b>'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</b>';
             }
-            $tabla.='</td>
+            $tabla.='
+            </td>
             <td>'.$titulo.'</td>
             <td>'.strtoupper($row['dep_departamento']).'</td>
             <td>'.strtoupper($row['dist_distrital']).'</td>
             <td align=right>'.number_format($ppto[1], 2, ',', '.').'</td>
             <td align=right>'.number_format($ppto[2], 2, ',', '.').'</td>
             <td align=right>'.number_format($ppto[3], 2, ',', '.').'</td>
+            <td align=center>'.$estado.'</td>
           </tr>';
         }
         $tabla.='</tbody>
