@@ -1208,6 +1208,240 @@ class Programacionpoa extends CI_Controller{
   }
 
 
+  //// Caratula POA 2022 (GASTO CORRIENTE)
+  public function caratula_poa_gacorriente($proyecto){
+    $tabla='';
+    $tabla.='
+        <page orientation="portrait" backtop="50mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
+            <page_header>
+                <br><div class="verde"></div>
+                    <table class="page_header" border="0">
+                      <tr>
+                        <td style="width: 100%; text-align: left">
+                          <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
+                              <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
+                                <td width=20%; text-align:center;"">
+                                </td>
+                                <td width=60%; align=left>
+                                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                                    <tr>
+                                      <td style="width:100%; height: 1.2%; font-size: 25pt; font-family: Arial;" align="center"><b>'.$this->session->userdata('entidad').'</b></td>
+                                    </tr>
+                                    <tr>
+                                      <td style="width:100%; height: 1.2%; font-size: 20pt; font-family: Arial;" align="center">'.strtoupper($proyecto[0]['dep_departamento']).'</td>
+                                    </tr>
+                                    <tr>
+                                      <td style="width:100%; height: 1.2%; font-size: 15pt; font-family: Arial;" align="center">'.strtoupper($proyecto[0]['dist_distrital']).'</td>
+                                    </tr>
+                                  </table>
+                                </td>
+                                <td width=20%; align=left style="font-size: 8px;">
+                                </td>
+                              </tr>
+                          </table>
+                        </td>
+                      </tr>
+                  </table><br>
+                  <div align="center"></div>
+            </page_header>
+            <page_footer>
+            <hr>
+            <div style="width:100%; height: 1.2%; font-size: 9px; font-family: Arial;">&nbsp;&nbsp;&nbsp;<b>SISTEMA DE PLANIFICACIÓN DE SALUD - SIIPLAS @Wmendoza7</b><br><br></div>
+            </page_footer>
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                  <tr>
+                    <td style="width:100%; height: 50%; font-size: 18pt;" align="center">';
+                       if($proyecto[0]['img']!=''){
+                            $tabla.='<img src="'.base_url().'fotos/'.$proyecto[0]['img'].'" class="img-responsive" style="width:80%; height:90%;" align=center />';
+                        }
+                        else{
+                            $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:50%; height:60%;"/>';
+                        }
+                        $tabla.='
+                        <br>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">
+                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                          <tr>
+                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 50px;" align="center"><b>POA '.$this->gestion.'</b></td>
+                          </tr>';
+                            if($proyecto[0]['tn_id']!=0){ 
+                                $tabla.='
+                                <tr>
+                                    <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 20px;" align="center"><br>'.$proyecto[0]['tipo_adm'].'</td>
+                                </tr>';
+                            }
+                          $tabla.='
+                          <tr>
+                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 26px;" align="center"><b>'.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev'].'</b></td>
+                          </tr>
+                        </table>
+                    </td>
+                  </tr>
+                </table>';
+                 if($proyecto[0]['tn_id']==0){
+                    $servicios=$this->model_componente->lista_subactividad($proyecto[0]['proy_id']);
+                    $size='font-size: 13px;';
+                    if(count($servicios)>12){
+                      $size='font-size: 13px;';
+                    }
+
+                     $tabla.="<br>
+                            <table border=0 style='width:90%;' align=center>
+                            <tr>
+                              <td style='width:50%;'>
+                                <ul>";
+                                $cont=0;
+                                foreach($servicios as $row){
+                                  if(count($this->model_producto->list_prod($row['com_id']))!=0){
+                                    $cont++;
+                                    if($cont<=8){
+                                      $tabla.="<li style='font-family: Arial;height: 12px; ".$size."'><b>".$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion']."</b></li>";
+                                    }
+                                  }
+                                }
+                        $tabla.="  </ul>
+                              </td>
+                              <td style='width:50%;'>
+                                <ul>";
+                                $cont=0;
+                                foreach($servicios as $row){
+                                  if(count($this->model_producto->list_prod($row['com_id']))!=0){
+                                    $cont++;
+                                    if($cont>8){
+                                      $tabla.= "<li style='height: 15px; ".$size."'><b>".$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion']."</b></li>";
+                                    }
+                                  }
+                                }
+
+                                if($proyecto[0]['te_id']==16){
+                                  if($this->gestion==2020){
+                                    $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>97 - SERVICIO DE LA DEUDA Y TRANSFERENCIAS ".$proyecto[0]['abrev']."</b></li>";
+                                    $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
+                                  }
+                                  else{
+                                    $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
+                                    $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>99 - PAGO DE BENEFICIOS SOCIALES".$proyecto[0]['abrev']."</b></li>";
+                                  }
+                                 
+                                }
+                                elseif ($proyecto[0]['te_id']==12) {
+                                  $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>72 - BIENES Y SERVICIOS ".$proyecto[0]['abrev']."</b></li>";
+                                  $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>96 - GESTI&Oacute;N DE RIESGOS ".$proyecto[0]['abrev']."</b></li>";
+                                }
+                                elseif($proyecto[0]['te_id']==10 & $proyecto[0]['act_id']!=39){
+                                  $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>72 - BIENES Y SERVICIOS ".$proyecto[0]['abrev']."</b></li>";
+                                  $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>96 - GESTI&Oacute;N DE RIESGOS ".$proyecto[0]['abrev']."</b></li>";
+                                  
+                                  if($this->gestion==2020){
+                                    $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>97 - SERVICIO DE LA DEUDA Y TRANSFERENCIAS ".$proyecto[0]['abrev']."</b></li>";
+                                    $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
+                                  }
+                                  else{
+                                    $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
+                                    $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>99 - PAGO DE BENEFICIOS SOCIALES ".$proyecto[0]['abrev']."</b></li>";
+                                  }
+                                  
+                                }
+                                elseif ($proyecto[0]['act_id']==250) {
+                                  if($this->gestion==2020){
+                                    $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>97 - SERVICIO DE LA DEUDA Y TRANSFERENCIAS ".$proyecto[0]['abrev']."</b></li>";
+                                    $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
+                                  }
+                                  else{
+                                    $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
+                                    $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>99 - PAGO DE BENEFICIOS SOCIALES ".$proyecto[0]['abrev']."</b></li>";
+                                  }
+                                  
+                                }
+                                elseif ($proyecto[0]['act_id']==252) {
+                                  $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>96 - GESTIÓN DE RIESGOS ".$proyecto[0]['abrev']."</b></li>";
+                                  $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>72 - BIENES Y SERVICIOS ".$proyecto[0]['abrev']."</b></li>";
+                                  $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>73 - MEDICINA DEL TRABAJO ".$proyecto[0]['abrev']."</b></li>";
+                                }
+                        $tabla.= "  </ul>
+                              </td>
+                            </tr>";
+                      $tabla.= "</table>";
+                  }
+        $tabla.='
+        </page>';
+
+      return $tabla;
+  }
+
+
+  //// Caratula POA 2022 (GASTO CORRIENTE)
+  public function caratula_poa_pinversion($proyecto){
+    $tabla='';
+    $tabla.='
+        <page orientation="portrait" backtop="50mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
+            <page_header>
+                <br><div class="verde"></div>
+                    <table class="page_header" border="0">
+                      <tr>
+                        <td style="width: 100%; text-align: left">
+                          <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
+                              <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
+                                <td width=20%; text-align:center;"">
+                                </td>
+                                <td width=60%; align=left>
+                                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                                    <tr>
+                                      <td style="width:100%; height: 1.2%; font-size: 25pt; font-family: Arial;" align="center"><b>'.$this->session->userdata('entidad').'</b></td>
+                                    </tr>
+                                    <tr>
+                                      <td style="width:100%; height: 1.2%; font-size: 20pt; font-family: Arial;" align="center">'.strtoupper($proyecto[0]['dep_departamento']).'</td>
+                                    </tr>
+                                    <tr>
+                                      <td style="width:100%; height: 1.2%; font-size: 15pt; font-family: Arial;" align="center">'.strtoupper($proyecto[0]['dist_distrital']).'</td>
+                                    </tr>
+                                  </table>
+                                </td>
+                                <td width=20%; align=left style="font-size: 8px;">
+                                </td>
+                              </tr>
+                          </table>
+                        </td>
+                      </tr>
+                  </table><br>
+                  <div align="center"></div>
+            </page_header>
+            <page_footer>
+            <hr>
+            <div style="width:100%; height: 1.2%; font-size: 9px; font-family: Arial;">&nbsp;&nbsp;&nbsp;<b>SISTEMA DE PLANIFICACIÓN DE SALUD - SIIPLAS @Wmendoza7</b><br><br></div>
+            </page_footer>
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                  <tr>
+                    <td style="width:100%; height: 50%; font-size: 18pt;" align="center">
+                      <img src="'.base_url().'fotos/209-6b01a.JPG" class="img-responsive" style="width:50%; height:100%;"/><br>
+                        <br>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">
+                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                          <tr>
+                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 55px;" align="center"><b>POA '.$this->gestion.'</b></td>
+                          </tr>
+                          <tr>
+                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 35px;" align="center">PROYECTO DE INVERSI&Oacute;N</td>
+                          </tr>
+                          <tr>
+                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 25px;" align="center"><b><br>'.$proyecto[0]['proy_sisin'].' - '.$proyecto[0]['proy_nombre'].'</b></td>
+                          </tr>
+                        </table>
+                    </td>
+                  </tr>
+                </table>';
+                
+        $tabla.='
+        </page>';
+
+      return $tabla;
+  }
 
   /*----- REPORTE FORMULARIO 4 (2021 - Operaciones, Proyectos de Inversion) ----*/
   public function operaciones_form4($componente,$proyecto){

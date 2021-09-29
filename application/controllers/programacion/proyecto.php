@@ -218,6 +218,11 @@ class Proyecto extends CI_Controller {
            $tabla .= '<td title='.$row['proy_id'].'><center>'.$nro.'</center></td>';
             $tabla .= '<td><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success enlace" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).')">VER POA</a></center></td>';
             $tabla .= '<td>';
+              if($row['aper_proy_estado']==4){
+                 $tabla.='<center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" title="REPORTE POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></center>';
+              }
+            $tabla.='</td>';
+            $tabla .= '<td>';
               if($this->adm==1){ 
                 $tabla.='<center><a href="#" data-toggle="modal" data-target="#modal_neg_ff" class="btn btn-default neg_ff" title="OBSERVAR PROYECTO"  name="'.$row['proy_id'].'" ><img src="'.base_url().'assets/img/neg.jpg" WIDTH="35" HEIGHT="35"/></center>';
               }

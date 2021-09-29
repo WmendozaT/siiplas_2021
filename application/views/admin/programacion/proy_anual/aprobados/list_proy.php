@@ -183,6 +183,7 @@
 									                                    </a> 
 																		</th>
 																		<th style="width:5%;"title="REPORTE POA">REPORTE POA</th>
+																		<th style="width:5%;" title="REPORTE POA APROBADO">REP. POA <?php echo $this->session->userData('gestion');?></th>
 																		<th style="width:5%;" title="ERROR EN EL POA"></th>
 																		<th style="width:10%;" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA <?php echo $this->session->userdata("gestion");?></th>
 																		<th style="width:25%;" title="NOMBRE DEL PROYECTO DE INVERSI&Oacute;N">NOMBRE_PROYECTO_INVERSI&Oacute;N</th>
