@@ -142,7 +142,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Mantenimiento</li><li>Ptto. Asignado POA</li><li>Mis POAS - <?php echo $this->session->userdata("gestion");?></li>
+                    <li>Mantenimiento</li><li>Asignar presupuesto POA</li><li>Mis POAS - <?php echo $this->session->userdata("gestion");?></li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -265,26 +265,37 @@
                     </div>
                     <div class="modal-body">
                         <h2><center>SUBIR ARCHIVO PPTO ASIGNADO.CSV</center></h2>
-                    
                         <div class="row">
                          <!--    <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script> -->
-                              <form action="<?php echo site_url().'/mantenimiento/cptto_poa/importar_archivo_sigep' ?>" method="post" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep">
-                                <input name="tp" type="hidden" value="0">
-                                
-                                <div class="input-group">
-                                  <span class="input-group-btn">
-                                    <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
-                                    <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
-                                    <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
-                                  </span>
-                                  <span class="form-control"></span>
-                                </div>
-                                <hr>
-                                <div >
-                                    <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR REQUERIMIENTOS .CSV</button><br>
-                                    <center><img id="loads" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                                </div>
-                              </form> 
+                          <form action="<?php echo site_url().'/mantenimiento/cptto_poa/importar_archivo_sigep' ?>" method="post" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep">
+                            <input name="tp" type="hidden" value="0">
+                            
+                            <div class="input-group">
+                              <span class="input-group-btn">
+                                <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+                                <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+                                <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+                              </span>
+                              <span class="form-control"></span>
+                            </div>
+
+                          
+                            <section class="col col-3">
+                                <label class="label">TIPO DE GASTO</label>
+                                <select class="form-control" id="tp_id" name="tp_id" title="SELECCIONE TIPO DE GASTO">
+                                    <option value="0">Seleccione tipo de Gasto</option>
+                                    <option value="4">GASTO CORRIENTE</option>
+                                    <option value="1">PROYECTO DE INVERSIÓN</option>
+                                </select>
+                            </section>
+                           
+
+                            <hr>
+                            <div >
+                                <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR REQUERIMIENTOS .CSV</button><br>
+                                <center><img id="loads" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                            </div>
+                          </form> 
                         </div>
                     </div>
                 </div>
@@ -355,6 +366,11 @@
                 } else {
                     if(document.getElementById('archivo').value==''){
                         alertify.alert('POR FAVOR SELECCIONE ARCHIVO .CSV');
+                        return false;
+                    }
+
+                    if(document.getElementById('tp_id').value==0){
+                        alertify.alert('POR FAVOR SELECCIONE TIPO DE GASTO');
                         return false;
                     }
                    

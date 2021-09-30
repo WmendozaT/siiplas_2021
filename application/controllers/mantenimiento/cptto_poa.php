@@ -665,6 +665,7 @@ class Cptto_poa extends CI_Controller {
       if ($this->input->post()) {
           $post = $this->input->post();
           $tp = $this->security->xss_clean($post['tp']);
+          $tp_id = $this->security->xss_clean($post['tp_id']);
 
           $tipo = $_FILES['archivo']['type'];
           $tamanio = $_FILES['archivo']['size'];
@@ -678,10 +679,10 @@ class Cptto_poa extends CI_Controller {
                
             /*--------------------------------------------------------------*/
               if($tp==0){
-                $lineas=$this->subir_archivo($archivotmp); /// Techo Inicial
+                $lineas=$this->subir_archivo($archivotmp,$tp_id); /// Techo Inicial
               }
               else{
-                $lineas=$this->subir_archivo_aprobado($archivotmp); /// Techo Aprobado
+                $lineas=$this->subir_archivo_aprobado($archivotmp,$tp_id); /// Techo Aprobado
               }
               $this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO ('.$lineas.')');
               redirect(site_url("").'/ptto_asig_poa');
@@ -704,12 +705,75 @@ class Cptto_poa extends CI_Controller {
     }
 
     /*-------- Subir Archivo SIgep -----------*/
-    public function subir_archivo($archivotmp){  
+    public function subir_archivo($archivotmp,$tp_id){  
         $i=0;
         $nro=0;
         $lineas = file($archivotmp);
-        
-        foreach ($lineas as $linea_num => $linea){ 
+
+        if($tp_id==1){
+          foreach ($lineas as $linea_num => $linea){ 
+            if($i != 0){ 
+              $datos = explode(";",$linea);
+                if(count($datos)==4){
+                  $aper_id = intval(trim($datos[0])); //// aper_id
+                  $cod_sisin = utf8_encode(trim($datos[1])); //// Sisin
+                  $cod_part = intval(trim($datos[2])); //// partida
+                  $importe = floatval(trim($datos[3])); //// monto
+
+                  if(count($this->model_proyecto->get_aper_programa($aper_id))!=0){ /// Datos ya almacenados
+                      $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                      $par_id=0;
+                        if(count($partida)!=0){
+                          $par_id=$partida[0]['par_id'];
+                        }
+
+                      $ptto=$this->model_ptto_sigep->get_ptto_sigep_pi($aper_id,$cod_part);
+                      if(count($ptto)!=0){
+                        /*-------- Update Datos ---------*/
+                        $query=$this->db->query('set datestyle to DMY');
+                        $update_ptto = array(
+                          'aper_id' => $aper_id,
+                          'importe' => $importe,
+                          'fun_id' => $this->fun_id
+                        );
+
+                        $this->db->where('sp_id', $ptto[0]['sp_id']);
+                        $this->db->update('ptto_partidas_sigep', $update_ptto);
+                       /*---------------------------------*/
+                      }
+                      else{
+                        // adicionando
+                        /*------ Guardando Datos -----*/
+                        $query=$this->db->query('set datestyle to DMY');
+                        $data_to_store = array( 
+                          'aper_id' => $aper_id,
+                          'da' => '0',
+                          'ue' => '0',
+                          'aper_programa' => 72,
+                          'aper_proyecto' => $cod_sisin,
+                          'aper_actividad' => '00',
+                          'par_id' => $par_id,
+                          'partida' => $cod_part,
+                          'importe' => $importe,
+                          'g_id' => $this->gestion,
+                          'fun_id' => $this->fun_id,
+                        );
+                        $this->db->insert('ptto_partidas_sigep', $data_to_store);
+                        $sp_id=$this->db->insert_id();
+                        /*------------------------------*/ 
+                      }
+
+                    $nro++;
+                  }
+                  
+                }
+              }
+
+              $i++;
+            }
+        }
+        else{
+          foreach ($lineas as $linea_num => $linea){ 
             if($i != 0){ 
                 $datos = explode(";",$linea);
                 if(count($datos)==7){
@@ -826,13 +890,15 @@ class Cptto_poa extends CI_Controller {
             }
 
             $i++;
+          }
         }
+
         return $nro;
      }
 
 
     /*--------- Subir Archivo SIgep Aprobado ----------*/
-    public function subir_archivo_aprobado($archivotmp){  
+    public function subir_archivo_aprobado($archivotmp,$tp_id){  
         $i=0;
         $nro=0;
         $lineas = file($archivotmp);

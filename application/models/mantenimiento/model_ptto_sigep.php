@@ -98,11 +98,20 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------------------- Presupuesto Sigep Inicial ------------------------*/
+    /*------- Presupuesto Sigep Inicial (Gasto Corriente) ----------*/
     public function get_ptto_sigep($programa,$proyecto,$actividad,$partida){
         $sql = 'select *
                 from ptto_partidas_sigep
                 where aper_programa=\''.$programa.'\' and aper_proyecto=\''.$proyecto.'\' and aper_actividad=\''.$actividad.'\' and partida=\''.$partida.'\' and g_id='.$this->gestion.' and estado!=\'3\'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*------- Presupuesto Sigep Inicial (Proyecto de Inversion) ----------*/
+    public function get_ptto_sigep_pi($aper_id,$partida){
+        $sql = 'select *
+                from ptto_partidas_sigep
+                where aper_id='.$aper_id.' and partida=\''.$partida.'\' and g_id='.$this->gestion.' and estado!=\'3\'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
