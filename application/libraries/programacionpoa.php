@@ -466,7 +466,7 @@ class Programacionpoa extends CI_Controller{
                             <td>'.$pr['com_componente'].'</td>
                             <td align=center>'.round($pr['com_ponderacion'],2).'%</td>
                             <td align=center>';
-                              if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399){
+                              if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399 || $this->fun_id==583 || $this->fun_id==600){
                                 $tabla.='<center><a href="'.site_url("").'/admin/prog/list_prod/'.$pr['com_id'].'" title="MODIFICAR DATOS POA " class="btn btn-default" target="_blank"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="34" HEIGHT="30"/></a></center>';
                               }
                             $tabla.='  
@@ -578,7 +578,7 @@ class Programacionpoa extends CI_Controller{
     /*--- BOTON REPORTE SEGUIMIENTO POA (MES VIGENTE)---*/
     function button_form4($nro){
       $tabla='';
-      if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399){
+      if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399 || $this->fun_id==583 || $this->fun_id==600){
       //if($this->tp_adm==1 || $this->conf_form4==1){
         $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO FORM N 4" >
                     <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;NUEVO REGISTRO
@@ -590,7 +590,7 @@ class Programacionpoa extends CI_Controller{
 
         
       }
-      if($this->conf_form5==1 || $this->fun_id==401 || $this->fun_id==399){
+      if($this->conf_form5==1 || $this->fun_id==401 || $this->fun_id==399 || $this->fun_id==583 || $this->fun_id==600){
      // if($this->tp_adm==1 || $this->conf_form5==1){
         if($nro!=0){
           $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="2" title="SUBIR ARCHIVO REQUERIMIENTO (GLOBAL)" >
@@ -842,7 +842,7 @@ class Programacionpoa extends CI_Controller{
     /*--- BOTON ESTADO FORM 5---*/
     function button_form5(){
       $tabla='';
-      if($this->conf_form5==1 || $this->fun_id==401 || $this->fun_id==399){
+      if($this->conf_form5==1 || $this->fun_id==401 || $this->fun_id==399 || $this->fun_id==583 || $this->fun_id==600){
       //if($this->tp_adm==1 || $this->conf_form5==1){
         $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" title="NUEVO REGISTRO FORM N 5" class="btn btn-success">
                     <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;NUEVO REGISTRO
