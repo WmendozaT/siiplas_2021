@@ -27,7 +27,8 @@ class Rep_operaciones extends CI_Controller {
         $this->fun_id = $this->session->userdata("fun_id");
         $this->tmes = $this->session->userData('trimestre');
         $this->ppto= $this->session->userData('verif_ppto');
-        $this->verif_mes=$this->session->userData('mes_actual');
+        $this->verif_mes=$this->session->userData('mes_actual'); /// mes por decfecto
+        $this->mes_sistema=$this->session->userData('mes'); /// mes sistema
         $this->load->library('genera_informacion');
         }else{
             redirect('/','refresh');

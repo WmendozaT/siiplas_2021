@@ -31,6 +31,7 @@ class Cseguimiento extends CI_Controller {
         
         $this->resolucion=$this->session->userdata('rd_poa');
         $this->com_id=$this->session->userdata('com_id');
+        $this->mes_sistema=$this->session->userData('mes'); /// mes sistema
        // $this->load->library('menu');
         $this->verif_mes=$this->session->userdata('mes_actual');
         $this->load->library('seguimientopoa');

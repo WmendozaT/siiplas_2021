@@ -31,7 +31,8 @@ class User extends CI_Controller{
         $this->modulo = $this->session->userdata('modulos');
         $this->tp_adm = $this->session->userdata("tp_adm");
         $this->tmes = $this->session->userData('trimestre');
-        $this->verif_mes=$this->verif_mes_gestion();
+        $this->verif_mes=$this->session->userData('mes_actual');
+        $this->notificaciones=$this->session->userData('estado_notificaciones');
     }
 
     /*----------- Lista de Gestiones Disponibles ---------*/
@@ -88,6 +89,8 @@ class User extends CI_Controller{
          $data = array(
                 'gestion' => $conf[0]['ide'],
                 'mes' => $conf[0]['conf_mes'],
+                'mes_actual'=>$this->verif_mes_gestion($conf[0]['conf_mes']),
+                'estado_notificaciones' => $conf[0]['conf_poa'], /// Estado para las Notificaciones 0:no activo, 1: Habilitado
                 'conf_estado' => $conf[0]['conf_estado'], //7 Estado 1: Activo, 0: No activo
                 'conf_poa_estado' => $conf[0]['conf_poa_estado'], //7 Estado poa-presupuesto 1: inicial, 2 ajustado, 3 aprobado
                 'trimestre' => $conf[0]['conf_mes_otro'], /// Trimestre 1,2,3,4
@@ -112,6 +115,8 @@ class User extends CI_Controller{
 
          $data = array(
                 'gestion' => $conf[0]['ide'],
+                'mes_actual'=>$this->verif_mes_gestion($conf[0]['conf_mes']),
+                'estado_notificaciones' => $conf[0]['conf_poa'], /// Estado para las Notificaciones 0:no activo, 1: Habilitado
                 'conf_estado' => $conf[0]['conf_estado'], //7 Estado 1: Activo, 0: No activo
                 'conf_poa_estado' => $conf[0]['conf_poa_estado'], //7 Estado poa-presupuesto 1: inicial, 2 ajustado, 3 aprobado
                 'trimestre' => $this->input->post('trimestre_usu'), /// Trimestre 1,2,3,4
@@ -194,6 +199,7 @@ class User extends CI_Controller{
             $ddep = $this->model_proyecto->dep_dist($this->dist_id);
             $data['dep_id']=$ddep[0]['dep_id'];
             $data['tmes']=$this->model_evaluacion->trimestre();
+            $data['mes']=$this->verif_mes;
             //$data['conf'] = $this->model_configuracion->get_configuracion_session();
             $data['gestiones']=$this->list_gestiones();
             $data['list_trimestre']=$this->list_trimestre();
@@ -254,11 +260,11 @@ class User extends CI_Controller{
         $tabla.='
             <div class="alert alert-success" role="alert" title='.$this->dist_id.'>
                 <h4 class="alert-heading"><b>SEGUIMIENTO y SOLICITUD CERTIFICACIÓN POA '.$this->gestion.' !!</b></h4>
-                <p>Hola '.$this->session->userdata('funcionario').', la '.strtoupper($ddep[0]['dist_distrital']).' tiene programado en su POA '.$this->gestion.' para el mes de '.$this->verif_mes[2].' : '.$nro.' Operaciones a ser ejecutados '.$tit_requerimiento.',
+                <p>Hola '.$this->session->userdata('funcionario').', la '.strtoupper($ddep[0]['dist_distrital']).' tiene programado en su POA '.$this->gestion.' para el mes de '.$this->verif_mes[2].' : '.$nro.' Actividades a ser ejecutados '.$tit_requerimiento.',
                 las mismas se las deben realizar a traves del modulo de EVALUACI&Oacute;N y CERTIFICACI&Oacute;N POA. </p>
                 <hr>
                 <p class="mb-0">
-                    <a data-toggle="modal" data-target="#modal_ope_mes" id="'.$this->dist_id.'" class="btn btn-success ope_mes" title=""><img src="'.base_url().'assets/Iconos/application_cascade.png" width="20" height="20"/>&nbsp;Ver Operaciones Programadas</a>
+                    <a data-toggle="modal" data-target="#modal_ope_mes" id="'.$this->dist_id.'" class="btn btn-success ope_mes" title=""><img src="'.base_url().'assets/Iconos/application_cascade.png" width="20" height="20"/>&nbsp;Ver Actividades Programadas</a>
                     '.$solicitudes_cpoa.'
                 </p>
             </div>';
@@ -717,6 +723,7 @@ class User extends CI_Controller{
             'dep_id' => $data[0]['dep_id'],
             'gestion' => $gestion[0]['ide'],
             'mes' => $gestion[0]['conf_mes'],
+            'estado_notificaciones' => $gestion[0]['conf_poa'], /// Estado para las Notificaciones 0:no activo, 1: Habilitado
             'entidad' => $gestion[0]['conf_nombre_entidad'],
             'trimestre' => $gestion[0]['conf_mes_otro'], /// Trimestre 1,2,3,4
             'verif_ppto' => $gestion[0]['ppto_poa'], /// Ppto poa : 0 (Ante proyecto), 1: (Aprobado)
@@ -734,7 +741,7 @@ class User extends CI_Controller{
             'tp_usuario' => 0,
             'img' => base_url().'assets/ifinal/cns_logo.JPG',
            // 'img' => 'assets/ifinal/cns_logo.JPG',
-            'mes_actual'=>$this->verif_mes_gestion(),
+            'mes_actual'=>$this->verif_mes_gestion($gestion[0]['conf_mes']),
             'modulos' => $modulos,
             'desc_mes' => $this->mes_texto($gestion[0]['conf_mes']),
             'name' => 'SIIPLAS V1.0',
@@ -770,6 +777,7 @@ class User extends CI_Controller{
             'tp_adm' => 0,
             'gestion' => $gestion[0]['ide'],
             'mes' => $gestion[0]['conf_mes'],
+            'estado_notificaciones' => $gestion[0]['conf_poa'], /// Estado para las Notificaciones 0:no activo, 1: Habilitado
             'entidad' => $gestion[0]['conf_nombre_entidad'],
             'trimestre' => $gestion[0]['conf_mes_otro'], /// Trimestre 1,2,3,4
             'verif_ppto' => $gestion[0]['ppto_poa'], /// Ppto poa : 0 (Vigente), 1: (Aprobado)
@@ -780,7 +788,7 @@ class User extends CI_Controller{
             'tp_usuario' => 1,
             'img' => base_url().'assets/ifinal/cns_logo.JPG',
            // 'img' => 'assets/ifinal/cns_logo.JPG',
-            'mes_actual'=>$this->verif_mes_gestion(),
+            'mes_actual'=>$this->verif_mes_gestion($gestion[0]['conf_mes']),
             'desc_mes' => $this->mes_texto($gestion[0]['conf_mes']),
             'name' => 'SIIPLAS V1.0',
             'direccion' => 'DEPARTAMENTO NACIONAL DE PLANIFICACI&Oacute;N',
@@ -1103,9 +1111,9 @@ class User extends CI_Controller{
 
 
     /*--- verifica datos del mes y año ---*/
-    public function verif_mes_gestion(){
-      $valor=8;
-      //$valor=ltrim(date("m"), "0"); // numero mes
+    public function verif_mes_gestion($mes_sistema){
+      $valor=$mes_sistema; // numero mes segun el sistema
+      //$valor=ltrim(date("m"), "0"); // numero mes por defecto
       $mes=$this->mes_nombre_completo($valor);
 
       $datos[1]=$valor; // numero del mes

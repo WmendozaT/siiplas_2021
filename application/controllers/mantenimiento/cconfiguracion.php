@@ -6,23 +6,23 @@ class Cconfiguracion extends CI_Controller {
         if($this->session->userdata('fun_id')!=null){
             $this->load->model('Users_model','',true);
             if($this->rolfun($this->rol)){ 
-                $this->load->library('pdf');
-                $this->load->library('pdf2');
-                $this->load->model('Users_model','',true);
-                $this->load->model('menu_modelo');
-                $this->load->model('mantenimiento/model_configuracion');
-                $this->load->model('mantenimiento/model_estructura_org');
-                $this->load->model('programacion/model_proyecto');
-                $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
-                $this->load->library("security");
-                $this->gestion = $this->session->userData('gestion');
-                $this->adm = $this->session->userData('adm');
-                $this->rol = $this->session->userData('rol_id');
-                $this->dist = $this->session->userData('dist');
-                $this->dist_tp = $this->session->userData('dist_tp');
-                $this->tmes = $this->session->userData('trimestre');
-                $this->fun_id = $this->session->userData('fun_id');
-                $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
+              $this->load->library('pdf');
+              $this->load->library('pdf2');
+              $this->load->model('Users_model','',true);
+              $this->load->model('menu_modelo');
+              $this->load->model('mantenimiento/model_configuracion');
+              $this->load->model('mantenimiento/model_estructura_org');
+              $this->load->model('programacion/model_proyecto');
+              $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
+              $this->load->library("security");
+              $this->gestion = $this->session->userData('gestion');
+              $this->adm = $this->session->userData('adm');
+              $this->rol = $this->session->userData('rol_id');
+              $this->dist = $this->session->userData('dist');
+              $this->dist_tp = $this->session->userData('dist_tp');
+              $this->tmes = $this->session->userData('trimestre');
+              $this->fun_id = $this->session->userData('fun_id');
+              $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
             }
             else{
                 redirect('admin/dashboard');
@@ -100,92 +100,6 @@ class Cconfiguracion extends CI_Controller {
 
       return $tabla;
     }
-
-    /*----- CONFIGURAR REGIONALES ----*/
-/*    public function conf_regionales(){ 
-        $tabla='';
-        $distritales=$this->model_configuracion->regionales_distritales();
-
-        $tabla.='<table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col" style="width:1%;">#</th>
-                      <th scope="col" style="width:20%;">REGIONAL / DISTRITAL</th>
-                      <th scope="col" style="width:5%;"></th>
-                      <th scope="col" style="width:10%;"></th>
-                    </tr>
-                  </thead>
-                    <tbody>';
-                    $nro=0;
-                    foreach($distritales as $row){
-                        $verif=$this->model_configuracion->verif_cert($row['dist_id']);
-                        $nro++;
-                        $dist=$row['dist_distrital'];
-                        $color='';
-                        if($row['dist_adm']==1){
-                            $dist='<b>'.strtoupper($row['dist_distrital']).'</b>';
-                            $color='#caf7f1';
-                        }
-
-                        $tabla.='<tr bgcolor='.$color.'>';
-                            $tabla.='<td align=center><input type="hidden" name="id[]" value="'.$row['dist_id'].'"/>'.$nro.'</td>';
-                            $tabla.='<td>'.$dist.'</td>';
-                            if(count($verif)!=0){
-                                $tabla.='
-                                    <td>
-                                    <center>
-                                        <input type="checkbox" onclick="checkedd'.$nro.'(this.checked,'.$nro.');" title="ACTIVADO" checked/>
-                                        <input type="hidden" name="cert[]" id="vcert'.$nro.'" value="1"/>
-                                    </center>
-                                    </td>';
-                            }
-                            else{
-                                $tabla.='
-                                    <td>
-                                    <center>
-                                        <input type="checkbox" onclick="checkedd'.$nro.'(this.checked,'.$nro.');" title="DESACTIVADO"/>
-                                        <input type="hidden" name="cert[]" id="vcert'.$nro.'" value="0"/>
-                                    </center>
-                                    </td>';
-                            }
-
-                            $tabla.='<td align=center>
-                                        <a href="#" data-toggle="modal" data-target="#modal_mod_file" class="btn btn-primary mod_file" name="'.$row['dist_id'].'" id="'.strtoupper($row['dist_distrital']).'" title="SUBIR ARCHIVO PDF">SUBIR ARCHIVO .PDF</a>
-                                    </td>';
-                        $tabla.='</tr>';
-                        ?>
-                        <script>
-                            function checkedd<?php echo $nro;?>(estaChequeado,nro) {
-                              val = parseInt($('[name="totc"]').val());
-                              if (estaChequeado == true) {
-                                val = val + 1;
-                                $('[id="vcert'+nro+'"]').val((1).toFixed());
-                                valor = parseFloat($('[id="vcert'+nro+'"]').val());
-                              } else {
-                                val = val - 1;
-                                $('[id="vcert'+nro+'"]').val((0).toFixed());
-                                valor = parseFloat($('[id="vcert'+nro+'"]').val());
-                              }
-
-                              $('[name="totc"]').val((val).toFixed(0));
-                              total = parseFloat($('[name="totc"]').val());
-                              if(total!=0){
-                                $('#but').slideDown();
-                              }
-                              else{
-                                $('#but').slideUp();
-                              }
-                            }
-                        </script>
-                        <?php
-                    }
-                    $tabla.='
-                    </tbody>
-                    <input type="hidden" name="totc" id="totc" value="'.count($this->model_configuracion->verif_region_cert()).'">
-                </table>';
-        return $tabla;
-    }*/
-
 
 
      function importar_archivo_pdf3(){
@@ -936,6 +850,30 @@ echo "post_max_size = 2000M";*/
           $this->db->update('configuracion', $update_conf);
 
           $this->session->set_userdata('conf_certificacion', $estado);
+
+          echo "true";
+
+      }else{
+        show_404();
+      }
+    }
+
+
+    /*--- ESTADO DE LA NOTIFICACION POA ---*/
+    function valida_update_notificacionpoa(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $estado = $post['estado'];
+          $g_id= $post['g_id'];
+
+          $update_conf = array(
+            'conf_poa' => $estado, //// Notificaciones poa
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('ide', $this->gestion);
+          $this->db->update('configuracion', $update_conf);
+
+          $this->session->set_userdata('conf_poa', $estado);
 
           echo "true";
 

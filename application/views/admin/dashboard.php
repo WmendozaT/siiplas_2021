@@ -112,18 +112,18 @@
       <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
         <div class="row box-green1">
-      <div class="col-md-8">
-        <!-- <?php echo $_SERVER["HTTP_HOST"].''.$_SERVER["REQUEST_URI"].'-----'.base_url(); ?> -->
-        <h3>BIENVENIDO : <?php echo $resp; ?></h3>
-        <h4><?php echo $res_dep; ?></h4>
-        <h4><b>CARGO : </b><?php echo $this->session->userdata("cargo");?></h4>
-        <h4><b>GESTI&Oacute;N ACTUAL : </b><?php echo $this->session->userdata("gestion");?></h4>
-        <h4><b>TRIMESTRE VIGENTE : </b><?php echo $tmes[0]['trm_descripcion'];?></h4>
+        <div class="col-md-8">
+          <!-- <?php echo $_SERVER["HTTP_HOST"].''.$_SERVER["REQUEST_URI"].'-----'.base_url(); ?> -->
+          <h3>BIENVENIDO : <?php echo $resp; ?></h3>
+          <h4><?php echo $res_dep; ?></h4>
+          <h4><b>CARGO : </b><?php echo $this->session->userdata("cargo");?></h4>
+          <h4><b>MES / GESTI&Oacute;N VIGENTE : </b><?php echo $mes[2].' / '.$this->session->userdata("gestion");?></h4>
+          <h4><b>TRIMESTRE VIGENTE : </b><?php echo $tmes[0]['trm_descripcion'];?></h4>
+        </div>
+        <div class="col-md-4" align="center">
+          <img src="<?php echo base_url('assets/img_v1.1/moni.png');?>" style="width:85%;">
+        </div>
       </div>
-      <div class="col-md-4" align="center">
-        <img src="<?php echo base_url('assets/img_v1.1/moni.png');?>" style="width:85%;">
-      </div>
-    </div>
       <div id="load" class="col-lg-12" id="load" style="display: none" align="center">
         <img  src="<?php echo base_url()?>/assets/img_v1.1/loading.gif" width="60" height="60" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO.."><br><font size="1"><b>ESPERE UN MOMENTO, CARGANDO MODULO ........</b></font>
       </div>
@@ -134,7 +134,7 @@
       
       <?php echo $mensaje;?>
       <?php 
-        if($this->session->userdata('gestion')!=2022){
+        if($this->session->userdata('estado_notificaciones')==1){
           echo $seguimiento_poa;
         }
       ?>
@@ -165,40 +165,40 @@
         <div class="modal fade" id="modal_nuevo_ff" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-body">
-                    <form action="<?php echo site_url().'/cambiar_session'?>" id="form_nuevo" name="form_nuevo" class="form-horizontal" method="post">
-                        <h3 class="alert alert-info"><center>CAMBIAR GESTI&Oacute;N - <?php echo $this->session->userdata('gestion')?></center></h3>   
-                        <fieldset>
+              <div class="modal-body">
+                <form action="<?php echo site_url().'/cambiar_session'?>" id="form_nuevo" name="form_nuevo" class="form-horizontal" method="post">
+                    <h3 class="alert alert-info"><center>CAMBIAR GESTI&Oacute;N - <?php echo $this->session->userdata('gestion')?></center></h3>   
+                    <fieldset>
+                      <div class="form-group">
                           <div class="form-group">
-                              <div class="form-group">
-                                  <label class="col-md-2 control-label">GESTI&Oacute;N</label>
-                                  <div class="col-md-10">
-                                      <?php echo $gestiones;?>
-                                  </div>
+                              <label class="col-md-2 control-label">GESTI&Oacute;N</label>
+                              <div class="col-md-10">
+                                  <?php echo $gestiones;?>
+                              </div>
 
-                              </div>
                           </div>
-                        </fieldset>                    
-                        <div class="form-actions">
-                            <div class="row">
-                              <div class="col-md-12" align="right">
-                                <button class="btn btn-default" data-dismiss="modal" id="cl" title="CANCELAR">CANCELAR</button>
-                                <button type="button" name="subir_form" id="subir_form" class="btn btn-info" >CAMBIAR GESTI&Oacute;N</button>
-                                <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                              </div>
-                            </div>
+                      </div>
+                    </fieldset>                    
+                    <div class="form-actions">
+                        <div class="row">
+                          <div class="col-md-12" align="right">
+                            <button class="btn btn-default" data-dismiss="modal" id="cl" title="CANCELAR">CANCELAR</button>
+                            <button type="button" name="subir_form" id="subir_form" class="btn btn-info" >CAMBIAR GESTI&Oacute;N</button>
+                            <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                          </div>
                         </div>
-                    </form>
                     </div>
-                </div>
+                </form>
+              </div>
             </div>
+          </div>
         </div>
 
         <div class="modal fade" id="modal_ope_mes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document" id="mdialTamanio">
             <div class="modal-content">
               <div class="modal-header">
-                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
               </div>
               <div class="modal-body" align="center">
                 <div id="operaciones"></div>
@@ -210,32 +210,32 @@
         <div class="modal fade" id="modal_nuevo_tr" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-body">
-                    <form action="<?php echo site_url().'/cambiar_session_trimestre'?>" id="form_trimestre" name="form_trimestre" class="form-horizontal" method="post">
-                        <h4 class="alert alert-info"><center>CAMBIAR TRIMESTRE - <?php echo $tmes[0]['trm_descripcion']; ?></center></h4>   
-                        <fieldset>
+              <div class="modal-body">
+                <form action="<?php echo site_url().'/cambiar_session_trimestre'?>" id="form_trimestre" name="form_trimestre" class="form-horizontal" method="post">
+                    <h4 class="alert alert-info"><center>CAMBIAR TRIMESTRE - <?php echo $tmes[0]['trm_descripcion']; ?></center></h4>   
+                    <fieldset>
+                      <div class="form-group">
                           <div class="form-group">
-                              <div class="form-group">
-                                  <label class="col-md-2 control-label">TRIMESTRE</label>
-                                  <div class="col-md-10">
-                                      <?php echo $list_trimestre;?>
-                                  </div>
+                              <label class="col-md-2 control-label">TRIMESTRE</label>
+                              <div class="col-md-10">
+                                  <?php echo $list_trimestre;?>
                               </div>
                           </div>
-                        </fieldset>                    
-                        <div class="form-actions">
-                            <div class="row">
-                              <div class="col-md-12" align="right">
-                                <button class="btn btn-default" data-dismiss="modal" id="cl" title="CANCELAR">CANCELAR</button>
-                                <button type="button" name="subir_formt" id="subir_formt" class="btn btn-info" >CAMBIAR TRIMESTRE</button>
-                                <center><img id="loadt" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                              </div>
-                            </div>
+                      </div>
+                    </fieldset>                    
+                    <div class="form-actions">
+                        <div class="row">
+                          <div class="col-md-12" align="right">
+                            <button class="btn btn-default" data-dismiss="modal" id="cl" title="CANCELAR">CANCELAR</button>
+                            <button type="button" name="subir_formt" id="subir_formt" class="btn btn-info" >CAMBIAR TRIMESTRE</button>
+                            <center><img id="loadt" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                          </div>
                         </div>
-                    </form>
                     </div>
-                </div>
+                </form>
+              </div>
             </div>
+          </div>
         </div>
 
     <!-- Bootstrap core JavaScript
