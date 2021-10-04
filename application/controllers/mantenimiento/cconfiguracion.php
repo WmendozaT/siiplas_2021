@@ -593,7 +593,7 @@ echo "post_max_size = 2000M";*/
 
     /*------- PRESENTACION POA (CARATULA REGIONAL) ----------*/
     public function presentacion_poa(){ 
-        $data['menu']=$this->menu(9);
+        $data['menu']=$this->menu(7);
         $data['resp']=$this->session->userdata('funcionario');
         $data['res_dep']=$this->tp_resp();
         $data['regiones']=$this->departamentos();
