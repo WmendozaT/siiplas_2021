@@ -354,27 +354,31 @@ class Creporte extends CI_Controller {
                             '.$pie.'
                         </page_footer>
                         '.$operaciones.'
-                    </page>
-                    <page backtop="75mm" backbottom="29mm" backleft="5mm" backright="5mm" pagegroup="new">
-                        <page_header>
-                            <br><div class="verde"></div>
-                            '.$cabecera_f5.'
-                        </page_header>
-                        <page_footer>
-                            '.$pie.'
-                        </page_footer>
-                        '.$requerimientos.'
-                    </page>
-                    <page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
-                        <page_header>
-                            <br><div class="verde"></div>
-                            '.$cabecera_f5.'
-                        </page_header>
-                        <page_footer>
-                            '.$pie.'
-                        </page_footer>
-                        '.$partidas.'
                     </page>';
+                    if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
+                        $tabla.='
+                        <page backtop="75mm" backbottom="29mm" backleft="5mm" backright="5mm" pagegroup="new">
+                            <page_header>
+                                <br><div class="verde"></div>
+                                '.$cabecera_f5.'
+                            </page_header>
+                            <page_footer>
+                                '.$pie.'
+                            </page_footer>
+                            '.$requerimientos.'
+                        </page>
+                        <page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
+                            <page_header>
+                                <br><div class="verde"></div>
+                                '.$cabecera_f5.'
+                            </page_header>
+                            <page_footer>
+                                '.$pie.'
+                            </page_footer>
+                            '.$partidas.'
+                        </page>';
+                    }
+                    
                 }
             }
 

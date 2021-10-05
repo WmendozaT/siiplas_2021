@@ -557,9 +557,10 @@ $route['admin/partidas_del']='mantenimiento/partidas/del_par';// vista partidas 
 
 //--------------------------- CONF. PROYECTOS DE INVERSIÓN ----------------------//
 $route['proy_inversion']='mantenimiento/cconf_pinversion/list_proyectos';// Lista Proyectos de Inversion
-$route['mnt/activar_fase']='mantenimiento/cconf_pinversion/activar_fase';// Lista Proyectos de Inversion
+$route['proy_ver_fases/(:any)']='mantenimiento/cconf_pinversion/ver_fases/$1';// Ver Fases del Proyecto
+//$route['mnt/activar_fase']='mantenimiento/cconf_pinversion/activar_fase';// Lista Proyectos de Inversion
 
-$route['ver_consolidado/(:any)']='mantenimiento/cconf_pinversion/consolidado_temporalidad/$1/$2';// Consolidado de Temporalidad - Programado,Ejecutado (EVALUACION)
+//$route['ver_consolidado/(:any)']='mantenimiento/cconf_pinversion/consolidado_temporalidad/$1/$2';// Consolidado de Temporalidad - Programado,Ejecutado (EVALUACION)
 
 //--------------------------- MANTENIMIENTO EDICIONES ----------------------//
 $route['ediciones']='mantenimiento/cediciones/menu_ediciones';// Menu de Ediciones- Certificaciones-Modificaciones

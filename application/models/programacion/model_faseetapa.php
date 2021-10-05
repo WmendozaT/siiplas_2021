@@ -7,14 +7,14 @@ class Model_faseetapa extends CI_Model{
     //lista de organismo financiador
 
     /*============================ LISTA UNIDAD EJECUTORA NUEVO =============================*/
-    public function list_fases_gestiones($pfec_id){
+/*    public function list_fases_gestiones($pfec_id){
         $sql = 'select *
                 from ptto_fase_gestion
                 where pfec_id='.$pfec_id.' and estado!=\'3\'';
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------- fechas - gestiones , fase etapa componente ---------------*/
     function fechas_fase($pfec_id){
@@ -37,13 +37,13 @@ class Model_faseetapa extends CI_Model{
     }
 
     /*=================== FASE GESTION VIGENTE ===============*/
-    public function fase_gestion($id_f,$gest){
+/*    public function fase_gestion($id_f,$gest){
         $this->db->from('ptto_fase_gestion');
         $this->db->where('pfec_id', $id_f);
         $this->db->where('g_id', $gest);
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
     /*======================================================*/
 
     /*==================== VERIF FUENTE DE FINANCIAMIENTO ======================*/

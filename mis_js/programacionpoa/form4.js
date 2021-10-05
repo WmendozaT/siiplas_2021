@@ -870,7 +870,7 @@ function abreVentana(PDF){
 
     //// ELiminar Actividad
   $(function () {
-/*      function reset() {
+      function reset() {
         $("#toggleCSS").attr("href", base+"/assets/themes_alerta/alertify.default.css");
         alertify.set({
             labels: {
@@ -881,7 +881,7 @@ function abreVentana(PDF){
             buttonReverse: false,
             buttonFocus: "ok"
         });
-      }*/
+      }
 
       // =====================================================================
     $(".del_ff").on("click", function (e) {

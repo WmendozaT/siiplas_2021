@@ -14,7 +14,7 @@ class Model_componente extends CI_Model{
     /*--  Lista de Unidades --*/
     function lista_unidades($dist_id){
         $sql = 'select * 
-                    from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.')'; 
+                from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.')'; 
         $query = $this->db->query($sql);
         return $query->result_array();
     }

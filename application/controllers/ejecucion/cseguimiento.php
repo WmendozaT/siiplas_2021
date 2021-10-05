@@ -171,7 +171,7 @@ class Cseguimiento extends CI_Controller {
                     <i class="glyphicon glyphicon-list"></i> MIS COMPONENTES</a>';
                   }
                   else{
-                    $tabla.='FASE NO ACTIVA';
+                    $tabla.='SIN FASE ACTIVA';
                   }
                   $tabla.='
                   </td>
@@ -216,53 +216,50 @@ class Cseguimiento extends CI_Controller {
     /*------ GET SUBACTIVIDADES 2021 -----*/
     public function mis_subactividades($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); ////// DATOS DEL PROYECTO
-      $titulo='SUBACTIVIDAD';
-      
-      if($proyecto[0]['tp_id']==1){
-        $titulo='UNIDAD RESPONSABLE';  
-      }
-
+      $titulo='UNIDAD RESPONSABLE';
       $tabla='';
-      $tabla.=' <table class="table table-bordered">
-                  <thead>
-                  <tr>
-                    <th style="width:3%;" bgcolor="#474544"> COD.</th>
-                    <th style="width:50%;" bgcolor="#474544"> '.$titulo.'</th>
-                    <th style="width:10%;" bgcolor="#474544">PONDERACI&Oacute;N</th>
-                    <th style="width:10%;" bgcolor="#474544"></th>
-                    <th style="width:1%;" bgcolor="#474544"></th>
-                  </tr>
-                  </thead>
-                  <tbody>';
-                  $nro_c=0;
-                    $componentes=$this->model_componente->lista_subactividad($proy_id);
-                    foreach($componentes as $rowc){
-                      if(count($this->model_producto->list_prod($rowc['com_id']))!=0){
-                        $verif=$this->model_seguimientopoa->get_seguimiento_poa_mes_subactividad($rowc['com_id'],$this->verif_mes[1]);
-                        $nro_c++;
-                        $tabla.='
-                        <tr>
-                          <td><b>'.$rowc['serv_cod'].'</b></td>
-                          <td><b>'.$rowc['tipo_subactividad'].' '.$rowc['serv_descripcion'].'</b></td>
-                          <td>'.$rowc['com_ponderacion'].'%</td>
-                          <td>
-                            <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">
-                              '.$this->btn_seguimiento_evaluacion_poa().'
-                            </a>
-                          </td>
-                          <td align=center><img id="load'.$rowc['com_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="25" height="25" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO.."></td>
-                        </tr>';
-                        $tabla.=' <script>
-                                    document.getElementById("myBtn'.$rowc['com_id'].'").addEventListener("click", function(){
-                                    this.disabled = true;
-                                    document.getElementById("load'.$rowc['com_id'].'").style.display = "block";
-                                    });
-                                  </script>';
-                      }
-                    }
-                  $tabla.='
-                  </tbody>
-                </table>';
+
+      $tabla.=' 
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th style="width:3%;" bgcolor="#474544"> COD.</th>
+            <th style="width:50%;" bgcolor="#474544">UNIDAD RESPONSABLE</th>
+            <th style="width:10%;" bgcolor="#474544">PONDERACI&Oacute;N</th>
+            <th style="width:10%;" bgcolor="#474544"></th>
+            <th style="width:1%;" bgcolor="#474544"></th>
+          </tr>
+          </thead>
+          <tbody>';
+          $nro_c=0;
+            $componentes=$this->model_componente->lista_subactividad($proy_id);
+            foreach($componentes as $rowc){
+              if(count($this->model_producto->list_prod($rowc['com_id']))!=0){
+                $verif=$this->model_seguimientopoa->get_seguimiento_poa_mes_subactividad($rowc['com_id'],$this->verif_mes[1]);
+                $nro_c++;
+                $tabla.='
+                <tr>
+                  <td><b>'.$rowc['serv_cod'].'</b></td>
+                  <td><b>'.$rowc['tipo_subactividad'].' '.$rowc['serv_descripcion'].'</b></td>
+                  <td>'.$rowc['com_ponderacion'].'%</td>
+                  <td>
+                    <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">
+                      '.$this->btn_seguimiento_evaluacion_poa().'
+                    </a>
+                  </td>
+                  <td align=center><img id="load'.$rowc['com_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="25" height="25" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO.."></td>
+                </tr>';
+                $tabla.=' <script>
+                            document.getElementById("myBtn'.$rowc['com_id'].'").addEventListener("click", function(){
+                            this.disabled = true;
+                            document.getElementById("load'.$rowc['com_id'].'").style.display = "block";
+                            });
+                          </script>';
+              }
+            }
+          $tabla.='
+          </tbody>
+        </table>';
 
       return $tabla;
     }
@@ -310,8 +307,8 @@ class Cseguimiento extends CI_Controller {
       $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
       $titulo=
-      '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>ACTIVIDAD : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
-      <h1><small>SUBACTIVIDAD : </small> '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h1>
+      '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
+      <h1><small>UNIDAD RESPONSABLE : </small> '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h1>
       <h1><small>TRIMESTRE VIGENTE : </small> '.$data['tmes'][0]['trm_descripcion'].'</h1>';
 
       if($data['proyecto'][0]['tp_id']==1){

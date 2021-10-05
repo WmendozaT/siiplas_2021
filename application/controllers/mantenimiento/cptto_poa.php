@@ -678,25 +678,25 @@ class Cptto_poa extends CI_Controller {
           if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
                
             /*--------------------------------------------------------------*/
-              if($tp==0){
-                $lineas=$this->subir_archivo($archivotmp,$tp_id); /// Techo Inicial
-              }
-              else{
-                $lineas=$this->subir_archivo_aprobado($archivotmp,$tp_id); /// Techo Aprobado
-              }
-              $this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO ('.$lineas.')');
-              redirect(site_url("").'/ptto_asig_poa');
+            if($tp==0){
+              $lineas=$this->subir_archivo($archivotmp,$tp_id); /// Techo Inicial
+            }
+            else{
+              $lineas=$this->subir_archivo_aprobado($archivotmp,$tp_id); /// Techo Aprobado
+            }
+            $this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO ('.$lineas.')');
+            redirect(site_url("").'/ptto_asig_poa');
             /*--------------------------------------------------------------*/
           } 
           elseif (empty($file_basename)) {
-              echo "<script>alert('SELECCIONE ARCHIVO .CSV')</script>";
+            echo "<script>alert('SELECCIONE ARCHIVO .CSV')</script>";
           } 
           elseif ($filesize > 100000000) {
-              //redirect('');
+            //redirect('');
           } 
           else {
-              $mensaje = "Sólo estos tipos de archivo se permiten para la carga: " . implode(', ', $allowed_file_types);
-              echo '<script>alert("' . $mensaje . '")</script>';
+            $mensaje = "Sólo estos tipos de archivo se permiten para la carga: " . implode(', ', $allowed_file_types);
+            echo '<script>alert("' . $mensaje . '")</script>';
           }
 
       } else {

@@ -127,7 +127,7 @@
                         <div id="tabs">
                             <ul>
                                 <li>
-                                    <a href="#tabs-c">REPORTE GENERAL CONSOLIDADO</a>
+                                    <a href="#tabs-c">MIR PROYECTOS DE INVERSI&Oacute;N</a>
                                 </li>
                                 <li>
                                     <a href="#tabs-a">MIS PROYECTOS DE INVERSÍ&Oacute;N </a>
@@ -135,9 +135,38 @@
                             </ul>
                             <div id="tabs-c">
                                 <div class="row">
-                                    MUESTRA EL CONSOLIDADO PROGRAMADO - MODIFICADO - EVALUADO
-                                    <hr>
-                                    <?php echo $regionales;?>
+                                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="jarviswidget jarviswidget-color-darken" >
+                                          <header>
+                                              <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                                              <h2 class="font-md"><strong>PROYECTOS DE INVERSI&Oacute;N - <?php echo $this->session->userdata('gestion')?></strong></h2>  
+                                          </header>
+                                            <div>
+                                                <div class="widget-body no-padding">
+                                                    <table id="dt_basic2" class="table table-bordered" style="width:100%;">
+                                                        <thead>
+                                                            <tr style="height:35px;" align="center">
+                                                                <th style="width:1%;" align="center">#</th>
+                                                                <th style="width:2%;" align="center">VER FASES</th>
+                                                                <th style="width:5%;" title="APERTURA PROGRAM&Aacute;TICA"><center>APERTURA PROGRAM&Aacute;TICA</center></th>
+                                                                <th style="width:20%;" title="PROYECTO DE INVERSI&Oacute;N"><center>PROYECTO DE INVERSI&Oacute;N</center></th>
+                                                                <th style="width:8%;" title="CÓDIGO SISIN"><center>C&Oacute;DIGO SISIN</center></th>
+                                                                <th style="width:8%;" title="RESPONSABLE UNIDAD EJECUTORA"><center>RESPONSABLE UNIDAD EJECUTORA</center></th>
+                                                                <th style="width:8%;" title="UNIDAD ADMINISTRATIVA"><center>UNIDAD ADMINISTRATIVA</center></th>
+                                                                <th style="width:8%;" title="UNIDAD EJECUTORA"><center>UNIDAD EJECUTORA</center></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php echo $proyectos1;?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- end widget content -->
+                                            </div>
+                                            <!-- end widget div -->
+                                        </div>
+                                        <!-- end widget -->
+                                    </article>
                                 </div>
                             </div>
                             <div id="tabs-a">
@@ -167,7 +196,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <?php echo $proyectos;?>
+                                                            <?php echo $proyectos2;?>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -189,7 +218,7 @@
         <!-- END MAIN PANEL -->
     </div>
 
-    <script>
+<!--     <script>
     function doSelectAlert(event,pfec_id,proy_id) {
         var option = event.srcElement.children[event.srcElement.selectedIndex];
         if (option.dataset.noAlert !== undefined) {
@@ -216,7 +245,7 @@
         }
 
     }
-    </script>
+    </script> -->
     <!-- ========================================================================================================= -->
         <!-- PAGE FOOTER -->
         <div class="page-footer">
