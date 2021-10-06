@@ -118,7 +118,7 @@
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <section id="widget-grid" class="well">
                                 <div class="">
-                                  <h1>PROYECTOS DE INVERSI&Oacute;N - <?php echo $this->session->userdata('gestion')?>
+                                  <h2><b>PROYECTOS DE INVERSI&Oacute;N - GESTI&Oacute;N <?php echo $this->session->userdata('gestion')?></b></h2>
                                 </div>
                             </section>
                         </article>
@@ -128,9 +128,6 @@
                             <ul>
                                 <li>
                                     <a href="#tabs-c">MIR PROYECTOS DE INVERSI&Oacute;N</a>
-                                </li>
-                                <li>
-                                    <a href="#tabs-a">MIS PROYECTOS DE INVERSÍ&Oacute;N </a>
                                 </li>
                             </ul>
                             <div id="tabs-c">
@@ -169,46 +166,6 @@
                                     </article>
                                 </div>
                             </div>
-                            <div id="tabs-a">
-                                <div class="row">
-                                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div class="jarviswidget jarviswidget-color-darken" >
-                                          <header>
-                                              <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                                              <h2 class="font-md"><strong>PROYECTOS DE INVERSI&Oacute;N - <?php echo $this->session->userdata('gestion')?></strong></h2>  
-                                          </header>
-                                            <div>
-                                                <div class="widget-body no-padding">
-                                                    <table id="dt_basic2" class="table table-bordered" style="width:100%;">
-                                                        <thead>
-                                                            <tr style="height:35px;" align="center">
-                                                                <th style="width:1%;" title=""><center>#</center></th>
-                                                                <th style="width:5%;" title="APERTURA PROGRAM&Aacute;TICA"><center>APERTURA PROGRAM&Aacute;TICA</center></th>
-                                                                <th style="width:10%;" title="PROYECTO DE INVERSI&Oacute;N"><center>PROYECTO DE INVERSI&Oacute;N</center></th>
-                                                                <th style="width:8%;" title="CÓDIGO SISIN"><center>C&Oacute;DIGO SISIN</center></th>
-                                                                <th style="width:8%;" title="RESPONSABLE UNIDAD EJECUTORA"><center>RESPONSABLE UNIDAD EJECUTORA</center></th>
-                                                                <th style="width:8%;" title="UNIDAD ADMINISTRATIVA"><center>UNIDAD ADMINISTRATIVA</center></th>
-                                                                <th style="width:8%;" title="UNIDAD EJECUTORA"><center>UNIDAD EJECUTORA</center></th>
-                                                                <th style="width:2%;" title="FASE ETAPA"><center>FASE</center></th>
-                                                                <th style="width:12%;" title="FASE ETAPA"><center>DESCRIPCI&Oacute;N</center></th>
-                                                                <th style="width:8%;" title="PRESUPUESTO"><center>PRESUPUESTO</center></th>
-                                                                <th style="width:30%;" title="FASE ETAPA"><center>FASES DEL PROYECTO</center></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php echo $proyectos2;?>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <!-- end widget content -->
-                                            </div>
-                                            <!-- end widget div -->
-                                        </div>
-                                        <!-- end widget -->
-                                    </article>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </section>
@@ -218,35 +175,7 @@
         <!-- END MAIN PANEL -->
     </div>
 
-<!--     <script>
-    function doSelectAlert(event,pfec_id,proy_id) {
-        var option = event.srcElement.children[event.srcElement.selectedIndex];
-        if (option.dataset.noAlert !== undefined) {
-            return;
-        }
-
-        var OK = confirm("ACTIVAR FASE DEL PROYECTO ?");
-        if (OK) {
-        var url = "<?php echo site_url("")?>/mnt/activar_fase";
-            $.ajax({
-                type: "post",
-                url: url,
-                data:{proy_id:proy_id,pfec_id:pfec_id},
-                    success: function (data) {
-                    if(data.trim()=='true'){
-                        window.location.reload(true);
-                        alertify.success("SE ACTUALIZO CORRECTAMENTE LA FASE DEL PROYECTO");
-                    }
-                    else{
-                        alertify.error("NOSE PUEDO ACTUALIZAR FASE");
-                    }
-                }
-            });
-        }
-
-    }
-    </script> -->
-    <!-- ========================================================================================================= -->
+    <!-- ============================== -->
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">

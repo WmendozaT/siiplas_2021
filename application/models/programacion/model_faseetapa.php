@@ -232,6 +232,7 @@ class Model_faseetapa extends CI_Model{
                                     p.unidad_ejec,
                                     ue.uni_unidad,
                                     apg.aper_gestion,
+                                    apg.aper_proy_estado,
                                     apg.aper_id
                                     ");
         $this->db->from('_proyectofaseetapacomponente p');

@@ -244,6 +244,29 @@ class Faseetapa extends CI_Controller {
       }
     }
     /*----------------------------*/
+
+
+    /*----- ENCENDER FASE ETAPA (mantenimiento)-----*/
+   public function encender_fase_gestion(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $pfec_id = $post['pfec_id'];
+          $valor = $post['valor'];
+          
+          $update_pfe = array(
+            'pfec_estado' => $valor
+          );
+          $this->db->where('pfec_id', $pfec_id);
+          $this->db->update('_proyectofaseetapacomponente', $update_pfe);
+
+          echo "true"; /////fase encendido
+
+      }else{
+        show_404();
+      }
+    }
+    /*----------------------------*/
+
     
     /*------- VALIDA FASE ETAPA -------*/
     function add_fase(){ 

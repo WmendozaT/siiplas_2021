@@ -28,23 +28,13 @@
             }                                               
         </script>
         <style>
-            .table1{
-              display: inline-block;
-              width:100%;
-              max-width:1550px;
-              overflow-x: scroll;
-            }
-            table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-            overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              font-size: 10px;
-            }
-            td{
-              font-size: 10px;
+            input[type="checkbox"] {
+              display:inline-block;
+              width:20px;
+              height:20px;
+              margin:-1px 6px 0 0;
+              vertical-align:middle;
+              cursor:pointer;
             }
         </style>
     </head>
@@ -115,12 +105,21 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
                             <?php echo $titulo;?>
                         </article>
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                            <div class="well">
+                                <div class="btn-group btn-group-justified">
+                                    <a class="btn btn-default" href="<?php echo base_url().'index.php/proy_inversion';?>" title="SALIR A LISTA DE CERTIFICACIONES POA"><i class="fa fa-caret-square-o-left"></i> SALIR</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="row">
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <section id="widget-grid" class="well">
-                                
+                            <?php echo $fases;?>
                             </section>
                         </article>
                     </div>
@@ -131,35 +130,7 @@
         <!-- END MAIN PANEL -->
     </div>
 
-<!--     <script>
-    function doSelectAlert(event,pfec_id,proy_id) {
-        var option = event.srcElement.children[event.srcElement.selectedIndex];
-        if (option.dataset.noAlert !== undefined) {
-            return;
-        }
-
-        var OK = confirm("ACTIVAR FASE DEL PROYECTO ?");
-        if (OK) {
-        var url = "<?php echo site_url("")?>/mnt/activar_fase";
-            $.ajax({
-                type: "post",
-                url: url,
-                data:{proy_id:proy_id,pfec_id:pfec_id},
-                    success: function (data) {
-                    if(data.trim()=='true'){
-                        window.location.reload(true);
-                        alertify.success("SE ACTUALIZO CORRECTAMENTE LA FASE DEL PROYECTO");
-                    }
-                    else{
-                        alertify.error("NOSE PUEDO ACTUALIZAR FASE");
-                    }
-                }
-            });
-        }
-
-    }
-    </script> -->
-    <!-- ========================================================================================================= -->
+    <!-- ============================= -->
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
@@ -185,7 +156,6 @@
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
-        <script src = "<?php echo base_url(); ?>mis_js/control_session.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
         <!-- BOOTSTRAP JS -->
@@ -229,5 +199,47 @@
                 $('#tabs').tabs();
             })
         </script>
+
+        <script type="text/javascript">
+        $(document).on('change','input[type="checkbox"]' ,function(e) {
+            if(this.id=="uno") {
+                var OK = confirm("¿Esta seguro que quiere DESHABILITAR LA FASE ?");
+                if (OK) {
+                    off_on_fase(this.value,0)
+                }
+            }
+            if(this.id=="cero") {
+                var OK = confirm("¿Esta seguro que quiere HABILITAR LA FASE ?");
+                if (OK) {
+                    off_on_fase(this.value,1)
+                }
+            }
+        });
+
+        function off_on_fase(pfec_id,valor) {
+            var url = "<?php echo site_url("")?>/programacion/faseetapa/encender_fase_gestion";
+            $.ajax({
+                type: "post",
+                url: url,
+                data:{pfec_id:pfec_id,valor:valor},
+                    success: function (data) {
+                    if(data.trim()=='true'){
+                        window.location.reload(true);
+                        if(valor==0){
+                            alertify.success("SE APAGO LA FASE");
+                          }
+                          else{
+                            alertify.success("SE ACTIVO LA FASE");
+                          }
+
+                        
+                    }
+                    else{
+                        alertify.error("NOSE PUEDO ACTUALIZAR FASE");
+                    }
+                }
+            });
+        }
+    </script>
     </body>
 </html>

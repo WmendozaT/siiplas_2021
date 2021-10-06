@@ -48,14 +48,17 @@ class Cconf_pinversion extends CI_Controller {
     /*------- FASES DEL PROYECTO --------*/
     public function ver_fases($proy_id){ 
       $data['menu']=$this->menu(9);
-      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
+      $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
+
       if(count($proyecto)!=0){
         $data['titulo']='
             <section id="widget-grid" class="well">
                 <div class="">
-                  <h1> PROYECTO DE INVERSI&Oacute;N : <small>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['proy_sisin'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'].'</small></h1>
+                  <h2> PROYECTO DE INVERSI&Oacute;N : <small>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['proy_sisin'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'].'</small></h2>
                 </div>
             </section>';
+
+        $data['fases']=$this->lista_fases_pi($proy_id);
         $this->load->view('admin/mantenimiento/reportes_consolidados/mis_fases', $data);
       }
       else{
@@ -64,16 +67,84 @@ class Cconf_pinversion extends CI_Controller {
     }
 
 
- /*Lista de Proyectos de Inversion-activar fases*/
+    /*Lista de fases del proyecto*/
+    public function lista_fases_pi($proy_id){ 
+      $fases=$this->model_faseetapa->fase_etapa_proy($proy_id);
+      $tabla='';
+      $tabla.='
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th style="width:1%; text-align=center" scope="col">#</th>
+              <th style="width:3%; text-align=center" scope="col">Fase</th>
+              <th style="width:3%; text-align=center" scope="col">etapa</th>
+              <th style="width:15%; text-align=center" scope="col">Descripción Fase</th>
+              <th style="width:5%; text-align=center" scope="col">Unidad Ejecutora</th>
+              <th style="width:5%; text-align=center" scope="col">Fecha de Inicio</th>
+              <th style="width:5%; text-align=center" scope="col">Fecha de Conclusión</th>
+              <th style="width:5%; text-align=center" scope="col">Ejecución</th>
+              <th style="width:5%; text-align=center" scope="col">Tiempo</th>
+              <th style="width:2%; text-align=center" scope="col">Gestión</th>
+              <th style="width:2%; text-align=center" scope="col">Estado Proyecto</th>
+              <th style="width:2%; text-align=center" scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>';
+          $nro=0;
+            foreach($fases as $row){
+              $titulo_estado='<font color=red><b>INICIAL</b></font>';
+              if($row['aper_proy_estado']==4){
+                $titulo_estado='<font color=green><b>APROBADO</b></font>';
+              }
+              $nro++;
+              $tabla.='
+              <tr title='.$row['id'].'>
+                <td scope="row">'.$nro.'</td>
+                <td>'.$row['fase'].'</td>
+                <td>'.$row['etapa'].'</td>
+                <td>'.$row['descripcion'].'</td>
+                <td>'.$row['uni_unidad'].'</td>
+                <td>'.date('d-m-Y',strtotime($row['inicio'])).'</td>
+                <td>'.date('d-m-Y',strtotime($row['final'])).'</td>
+                <td>'.$row['ejec'].'</td>
+                <td>'.$this->model_faseetapa->calcula_ap($row['pfec_fecha_inicio'],$row['pfec_fecha_fin']).'</td>
+                <td align=center><b>'.$row['aper_gestion'].'</b></td>
+                <td align=center>'.$titulo_estado.'</td>
+                <td>
+                  <center>';
+                  if($row['pfec_estado']==1){
+                    $tabla.='<input type="checkbox" id="uno" value="'.$row['id'].'" class="check" checked><span class="lever">';
+                  }
+                  else{
+                    $tabla.='<input type="checkbox" id="cero" value="'.$row['id'].'" class="check"><span class="lever">';
+                  }
+                
+                $tabla.='
+                  </center>
+                </td>
+              </tr>';
+            }
+          $tabla.='
+        </table>';
+
+      return $tabla;
+    }
+
+
+    /*Lista de Proyectos de Inversion-activar fases*/
     public function proyectos_inversion1(){ 
         $tabla='';
         $proyectos = $this->model_proyecto->list_proyectos_inversion();//lista de proyectos de inversion
         $nro=0;
         foreach($proyectos  as $row){
             $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
+            $color='';
+            if(count($fase)==0){
+              $color='#f1cfcf';
+            }
             $nro++;
             $tabla.=
-                '<tr style="height:25px;">
+                '<tr style="height:25px;" bgcolor='.$color.'>
                     <td title='.$row['proy_id'].' align=center>'.$nro.'</td>
                     <td align=center><a href="'.site_url("").'/proy_ver_fases/'.$row['proy_id'].'" title="VER FASES DEL PROYECTO" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="34" HEIGHT="30"/></a></td>
                     <td align=center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</td>
@@ -82,7 +153,6 @@ class Cconf_pinversion extends CI_Controller {
                     <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
                     <td>'.strtoupper($row['dep_departamento']).'</td>
                     <td>'.strtoupper($row['dist_distrital']).'</td>';
-                   
             $tabla.='
                 </tr>';
         }
@@ -140,7 +210,7 @@ class Cconf_pinversion extends CI_Controller {
 
     /*======= ACTIVAR FASE DEL PROYECTO =======*/
 
-    function activar_fase(){
+/*    function activar_fase(){
         if($this->input->is_ajax_request() && $this->input->post()){
             $this->form_validation->set_rules('proy id', 'Proyecto Id', 'required|trim');
             $this->form_validation->set_rules('fase id', 'Fase Id', 'required|trim');
@@ -177,7 +247,7 @@ class Cconf_pinversion extends CI_Controller {
             show_404();
         }
            
-    }
+    }*/
 
     /*---------- Menu --------------*/
     function menu($mod){
