@@ -38,7 +38,7 @@ class Cseguimiento_establecimiento extends CI_Controller {
     $com_id=$this->establecimiento[0]['com_id'];
     $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
     $data['menu'] = $this->seguimientopoa->menu_segpoa($com_id);
-    $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+    $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
     $data['com_id']=$com_id;
     $data['proy_id']=$this->establecimiento[0]['proy_id'];
 
@@ -130,7 +130,7 @@ class Cseguimiento_establecimiento extends CI_Controller {
 
     /*----- REPORTE SEGUIMIENTO POA PDF 2021 MENSUAL POR SUBACTIVIDAD-------*/
     public function ver_reporte_seguimientopoa_esalud($com_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id); ///// DATOS DEL COMPONENTE
+      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
         $data['mes'] = $this->seguimientopoa->mes_nombre();
         $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
