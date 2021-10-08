@@ -40,7 +40,7 @@ class Crep_evalobjetivos extends CI_Controller {
       if($this->gestion>2019){
         $data['menu']=$this->menu(7); //// genera menu
         $data['regional']=$this->regionales();
-        $eval=$this->tabla_evaluacion_meta_institucional();
+      //  $eval=$this->tabla_evaluacion_meta_institucional();
         $this->load->view('admin/reportes_cns/repevaluacion_objetivos/rep_menu', $data);
       }
       else{
@@ -254,7 +254,7 @@ class Crep_evalobjetivos extends CI_Controller {
         $nro++;
         $tab[$nro][1]=$row['pog_id'];
         $tab[$nro][2]=$row['acc_codigo'];
-        $tab[$nro][3]='OPE '.$row['og_codigo'];
+        $tab[$nro][3]='OPE '.$row['og_codigo'].'.'.$row['or_codigo'].'.';
         $tab[$nro][4]=$row['or_codigo'];
         $tab[$nro][5]=$row['or_objetivo'];
         $tab[$nro][6]=$row['or_resultado'];
@@ -262,7 +262,12 @@ class Crep_evalobjetivos extends CI_Controller {
         $tab[$nro][8]=round($row['or_meta'],2);
 
         $tab[$nro][9]=round($suma_mevaluado,2);
-        $tab[$nro][10]=round((($suma_mevaluado/$row['or_meta'])*100),2);
+        $tab[$nro][10]=0;
+
+        if($row['or_meta']!=0){
+          $tab[$nro][10]=round((($suma_mevaluado/$row['or_meta'])*100),2);
+        }
+        
 
         if(count($evaluado)!=0){
           $tab[$nro][11]=$evaluado[0]['tpeval_descripcion'];
