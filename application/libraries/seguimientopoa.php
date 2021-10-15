@@ -15,6 +15,7 @@ class Seguimientopoa extends CI_Controller{
             $this->load->model('programacion/model_producto');
             $this->load->model('ejecucion/model_evaluacion');
             $this->load->model('mantenimiento/model_configuracion');
+            $this->load->model('programacion/model_faseetapa');
             $this->load->model('menu_modelo');
             $this->load->library('security');
             $this->gestion = $this->session->userData('gestion');
@@ -77,6 +78,8 @@ class Seguimientopoa extends CI_Controller{
 
       /*------- CABECERA REPORTE SEGUIMIENTO POA (GRAFICO)------*/
     function cabecera_seguimiento($establecimiento,$subactividad,$tipo_titulo){
+      $fase=$this->model_faseetapa->get_fase($subactividad[0]['pfec_id']);
+      $proyecto=$this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
       /// tipo_titulo 1 : Seguimiento Mensual
       /// tipo_titulo 2 : Evaluacion por Trimestre
@@ -138,21 +141,41 @@ class Seguimientopoa extends CI_Controller{
                     <td style="width:25%;height: 14px;">
                       <b>UNIDAD EJECUTORA</b>
                     </td>
-                    <td style="width:75%;">
-                        &nbsp;'.$establecimiento[0]['dist_cod'].' '.strtoupper($establecimiento[0]['dist_distrital']).'
+                    <td style="width:75%;">';
+                      if($proyecto[0]['tp_id']==4){
+                        $tabla.='&nbsp;'.$establecimiento[0]['dist_cod'].' '.strtoupper($establecimiento[0]['dist_distrital']).'';
+                      }
+                      else{
+                        $tabla.='&nbsp;'.$proyecto[0]['dist_cod'].' '.strtoupper($proyecto[0]['dist_distrital']).'';
+                      }
+                    $tabla.='
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:25%;height: 14px;">';
+                      if($proyecto[0]['tp_id']==4){
+                        $tabla.='<b>'.$establecimiento[0]['tp_adm'].'<b>';
+                      }
+                      else{
+                        $tabla.='<b>PROYECTO INVERSIÓN</b>';
+                      }
+                    $tabla.='
+                      
+                    </td>
+                    <td style="width:75%;">';
+                      if($proyecto[0]['tp_id']==4){
+                        $tabla.='&nbsp;'.$establecimiento[0]['aper_actividad'].' '.strtoupper ($establecimiento[0]['act_descripcion']).' '.$establecimiento[0]['abrev'].'';
+                      }
+                      else{
+                        $tabla.='&nbsp;'.$proyecto[0]['proy_sisin'].' '.strtoupper($proyecto[0]['proy_nombre']).'';
+                      }
+                    $tabla.='
+                        
                     </td>
                 </tr>
                 <tr>
                     <td style="width:25%;height: 14px;">
-                      <b>ACTIVIDAD</b>
-                    </td>
-                    <td style="width:75%;">
-                        &nbsp;'.$establecimiento[0]['aper_actividad'].' '.strtoupper ($establecimiento[0]['act_descripcion']).' '.$establecimiento[0]['abrev'].'
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width:25%;height: 14px;">
-                      <b>SUBACTIVIDAD</b>
+                      <b>UNIDAD RESPONSABLE</b>
                     </td>
                     <td style="width:75%;">
                         &nbsp;'.$subactividad[0]['tipo_subactividad'].' '.$subactividad[0]['serv_descripcion'].'

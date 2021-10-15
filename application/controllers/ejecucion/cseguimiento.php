@@ -355,7 +355,7 @@ class Cseguimiento extends CI_Controller {
       
     // $temporalidad=$this->seguimientopoa->obtiene_suma_temporalidad_prog_ejec(52547);
     // echo $temporalidad[1].'-'.$temporalidad[2].'-'.$temporalidad[3].'-'.$temporalidad[4];
-
+//echo $data['cabecera2'];
       $this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
     }
     else{
