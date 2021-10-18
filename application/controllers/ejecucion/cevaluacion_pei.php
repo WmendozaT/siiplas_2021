@@ -189,7 +189,7 @@ class Cevaluacion_pei extends CI_Controller {
               <td style="width:15%;" bgcolor="#dfefe4">'.$evaluado[0]['tacciones'].'</td>
               <td style="width:3%;" align=center>';
               if($this->conf_estado==0){
-                if($suma_mevaluado<round($row['or_meta'],2) & $this->tp_adm==1) {
+                if($suma_mevaluado<round($row['or_meta'],2) || $this->tp_adm==1) {
                   $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff" title="MODIFICAR EVALUACI&Oacute;N META OPERACIÓN" name="'.$evaluado[0]['epog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/evalok.jpg" WIDTH="45" HEIGHT="45"/><br>MOD.EV.OPE.</a>';
                 }
                 else{
@@ -197,7 +197,7 @@ class Cevaluacion_pei extends CI_Controller {
                 }
               }
               else{
-                if($suma_mevaluado<round($row['or_meta'],2)) {
+                if($suma_mevaluado<round($row['or_meta'],2) || $this->tp_adm==1) {
                   $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff" title="MODIFICAR EVALUACI&Oacute;N META OPERACIÓN" name="'.$evaluado[0]['epog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/evalok.jpg" WIDTH="45" HEIGHT="45"/><br>MOD.EV.OPE.</a>';
                 }
                 else{

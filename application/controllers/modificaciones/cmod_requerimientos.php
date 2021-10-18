@@ -631,11 +631,15 @@ class Cmod_requerimientos extends CI_Controller {
     }
 
 
-    /*------------- REPORTE CITE TECHO -------------*/
+    /*----- REPORTE CITE TECHO -------*/
     public function reporte_techo($cppto_id){
       $data['cite']=$this->model_ptto_sigep->get_cite_techo($cppto_id);
       if(count($data['cite'])!=0){
-        $data['proyecto']=$this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
+        $data['proyecto']=$this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); /// PROY INVERSION
+        if($data['proyecto'][0]['tp_id']==4){
+          $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']); /// GASTO CORRIENTE
+        }
+
         $data['mes'] = $this->mes_nombre();
         $data['lista']=$this->mis_modificaciones_techo($cppto_id);
 

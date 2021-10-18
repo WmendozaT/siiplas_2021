@@ -65,13 +65,13 @@ ob_start();
                 <td style="width: 100%; text-align: left">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                         <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td width=20%; text-align:center;"">
-                            <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:34%;">
+                          <td width=13%; text-align:center;"">
+                            <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:60%;">
                           </td>
-                          <td width=80%; align=left>
+                          <td width=87%; align=left>
                             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                                 <tr>
-                                    <td colspan="2" style="width:100%; height: 1.2%; font-size: 9pt;"><b><?php echo $this->session->userdata('entidad')?></b></td>
+                                    <td colspan="2" style="width:100%; height: 1.2%; font-size: 15pt;"><b><?php echo $this->session->userdata('entidad')?></b></td>
                                 </tr>
                                 <tr style="font-size: 8pt;">
                                     <td style="width:10%; height: 1.2%"><b>DIR. ADM.</b></td>
@@ -82,8 +82,18 @@ ob_start();
                                     <td style="width:90%;">: <?php echo strtoupper($proyecto[0]['dist_distrital']);?></td>
                                 </tr>
                                 <tr style="font-size: 8pt;">
-                                    <td style="height: 1.2%"><b><?php if($proyecto[0]['tp_id']==1){ echo "PROY. INV. ";}else{ echo "ACTIVIDAD ";} ?></b></td>
-                                    <td>: <?php echo $proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['proy_nombre']);?></td>
+                                    <?php
+                                        if($proyecto[0]['tp_id']==1){ ?>
+                                            <td style="width:10%; height: 1.2%"><b>PROY. INV.</b></td>}
+                                            <td style="width:90%;">: <?php echo $proyecto[0]['proy_sisin'].' - '.strtoupper($proyecto[0]['proy_nombre']);?></td>
+                                            <?php
+                                        }
+                                        else{ ?>
+                                            <td style="width:10%; height: 1.2%"><b>GASTO CORRIENTE</b></td>}
+                                            <td style="width:90%;">: <?php echo $proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.strtoupper ($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'];?></td>
+                                            <?php
+                                        }
+                                    ?>
                                 </tr>
                                 <tr style="font-size: 8pt;">
                                     <td style="width:10%; height: 1.2%"><b>CITE :</b></td>
@@ -138,7 +148,7 @@ ob_start();
             </tr>
             <tr>
                 <td style="width: 33%; text-align: left">
-                    POA - <?php echo $this->session->userdata('gestion')?>, Aprobado mediante RD. Nro 116/18 de 05.09.2018
+                    POA - <?php echo $this->session->userdata('gestion').' '.$this->session->userdata('rd_poa')?>
                 </td>
                 <td style="width: 33%; text-align: center">
                     <?php echo $this->session->userdata('sistema')?>
@@ -162,7 +172,7 @@ try {
     $html2pdf = new HTML2PDF('P', 'Letter', 'fr', true, 'UTF-8', 0);
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-    $html2pdf->Output('Modificacion_requerimientos.pdf');
+    $html2pdf->Output('Modificacion_Presupuesto.pdf');
 }
 catch(HTML2PDF_exception $e) {
     echo $e;
