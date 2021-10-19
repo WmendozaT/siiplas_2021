@@ -587,17 +587,17 @@ class Rep_operaciones extends CI_Controller {
             <tr style="background-color: #66b2e8">
               <th style="width:3%;">COD. DA.</th>
               <th style="width:3%;">COD. UE.</th>
-              <th style="width:3%;">COD. PROG.</th>
-              <th style="width:10%;">COD. PROY.</th>
-              <th style="width:3%;">COD. ACT.</th>
+              <th style="width:3%;">COD. PROGRAMA</th>
+              <th style="width:10%;">COD. PROYECTO</th>
+              <th style="width:3%;">COD. ACTIVIDAD</th>
               <th style="width:35%;">'.$titulo.'</th>
-              <th style="width:3%;">COD. SUBACT.</th>
-              <th style="width:15%;">SUBACTIVIDAD</th>
+              <th style="width:3%;">COD. UNIDAD RESP.</th>
+              <th style="width:15%;">UNIDAD RESPONSABLE</th>
               <th style="width:3%;">COD. ACE.</th>
               <th style="width:3%;">COD. ACP.</th>
-              <th style="width:3%;">COD. OR.</th>
               <th style="width:3%;">COD. OPE.</th>
-              <th style="width:25%;">OPERACI&Oacute;N</th>
+              <th style="width:3%;">COD. ACT.</th>
+              <th style="width:25%;">DESCRIPCION ACTIVIDAD</th>
               <th style="width:15%;">RESULTADO</th>
               <th style="width:15%;">INDICADOR</th>
               <th style="width:5%;">LINEA BASE</th>
@@ -646,16 +646,16 @@ class Rep_operaciones extends CI_Controller {
             $tabla.='<tr>';
                 $tabla.='<td style="height:50px;">'.strtoupper($row['dep_cod']).'</td>';
                 $tabla.='<td>'.strtoupper($row['dist_cod']).'</td>';
-                $tabla.='<td>'.$row['aper_prog'].'</td>';
+                $tabla.='<td>'.$row['aper_programa'].'</td>';
                 $tabla.='<td>';
                 if($tp_id==1){
                   $tabla.=''.$row['proy_sisin'].'';
                 }
                 else{
-                  $tabla.=''.$row['aper_proy'].'';
+                  $tabla.=''.$row['aper_proyecto'].'';
                 }
                 $tabla.='</td>';
-                $tabla.='<td>'.$row['aper_act'].'</td>';
+                $tabla.='<td>'.$row['aper_actividad'].'</td>';
                 $tabla.='<td>';
                   if($row['tp_id']==1){
                     $tabla.=''.$row['proy_nombre'].'';

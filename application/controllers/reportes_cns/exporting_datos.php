@@ -215,14 +215,15 @@
                   <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
                   <th style="width:10%;background-color: #eceaea;">COD. PROY.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
-                  <th style="width:35%;background-color: #eceaea;">ACTIVIDAD</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. SUBACT.</th>
-                  <th style="width:15%;background-color: #eceaea;">SUBACTIVIDAD</th>
+                  <th style="width:35%;background-color: #eceaea;">'.$titulo.'</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. UNI. RESP.</th>
+                  <th style="width:15%;background-color: #eceaea;">UNIDAD RESPONSABLE</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACE.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACP.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. OR.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. OPE.</th>
-                  <th style="width:25%;background-color: #eceaea;">OPERACI&Oacute;N</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
+                  <th style="width:1%;background-color: #eceaea;">ID</th>
+                  <th style="width:25%;background-color: #eceaea;">DESCRIPCION ACTIVIDAD</th>
                   <th style="width:15%;background-color: #eceaea;">RESULTADO</th>
                   <th style="width:15%;background-color: #eceaea;">INDICADOR</th>
                   <th style="width:5%;background-color: #eceaea;">LINEA BASE</th>
@@ -272,16 +273,16 @@
                $tabla.='<tr>';
                 $tabla.='<td style="height:50px;">\''.strtoupper($row['dep_cod']).'\'</td>';
                 $tabla.='<td>\''.strtoupper($row['dist_cod']).'\'</td>';
-                $tabla.='<td>\''.strtoupper($row['aper_prog']).'\'</td>';
+                $tabla.='<td>\''.strtoupper($row['aper_programa']).'\'</td>';
                 $tabla.='<td>';
                 if($row['tp_id']==1){
                   $tabla.=''.$row['proy_sisin'].'';
                 }
                 else{
-                  $tabla.='\''.strtoupper($row['aper_proy']).'\'';
+                  $tabla.='\''.strtoupper($row['aper_proyecto']).'\'';
                 }
                 $tabla.='</td>';
-                $tabla.='<td>\''.strtoupper($row['aper_act']).'\'</td>';
+                $tabla.='<td>\''.strtoupper($row['aper_actividad']).'\'</td>';
                 $tabla.='<td>';
                   if($row['tp_id']==1){
                     $tabla.=''.mb_convert_encoding($row['proy_nombre'], 'cp1252', 'UTF-8').'';
@@ -296,6 +297,7 @@
                 $tabla.='<td>'.$row['og_codigo'].'</td>';
                 $tabla.='<td>'.$row['or_codigo'].'</td>';
                 $tabla.='<td>'.$row['prod_cod'].'</td>';
+                $tabla.='<td>'.$row['prod_id'].'</td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_producto'], 'cp1252', 'UTF-8').'</td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_resultado'], 'cp1252', 'UTF-8').'</td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_indicador'], 'cp1252', 'UTF-8').'</td>';
