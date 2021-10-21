@@ -786,11 +786,148 @@ class Certificacionpoa extends CI_Controller{
   }
 
 
+/*------- LISTA DE REQUERIMIENTOS PRE LISTA ------*/
+  public function list_requerimientos_prelista($prod_id){
+    $tabla='';
+    $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
+    $tabla='<style>
+            input[type="checkbox"] {
+              display:inline-block;
+              width:20px;
+              height:20px;
+              margin:-1px 6px 0 0;
+              vertical-align:middle;
+              cursor:pointer;
+            }
+          </style>';
+    $tabla.='
+      <table class="table table-bordered" style="width:97%;" align="center" id="datos">
+        <thead >
+          <tr>
+            <th style="width:1%;">#</th>
+            <th style="width:2%;"></th>
+            <th style="width:4%;">PARTIDA</th>
+            <th style="width:16%;">REQUERIMIENTO</th>
+            <th style="width:5%;">UNIDAD DE MEDIDA</th>
+            <th style="width:3%;">CANTIDAD</th>
+            <th style="width:5%;">PRECIO</th>
+            <th style="width:5%;">COSTO TOTAL</th>
+            <th style="width:4.5%;">ENE.</th>
+            <th style="width:4.5%;">FEB.</th>
+            <th style="width:4.5%;">MAR.</th>
+            <th style="width:4.5%;">ABR.</th>
+            <th style="width:4.5%;">MAY.</th>
+            <th style="width:4.5%;">JUN.</th>
+            <th style="width:4.5%;">JUL.</th>
+            <th style="width:4.5%;">AGO.</th>
+            <th style="width:4.5%;">SEPT.</th>
+            <th style="width:4.5%;">OCT.</th>
+            <th style="width:4.5%;">NOV.</th>
+            <th style="width:4.5%;">DIC.</th>
+            <th style="width:8%;">OBSERVACIÓN</th>
+          </tr>
+        </thead>
+        <tbody>';
+        $nro=0;
+        foreach($requerimientos as $row){
+          $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
+          $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
 
+          if(count($mcertificado)!=0){
+            $monto_certificado=$mcertificado[0]['certificado'];
+          }
+
+          if($monto_certificado!=$row['ins_costo_total']){
+          //  if($row['ins_monto_certificado']!=$row['ins_costo_total']){
+              $nro++;
+              $tabla.='
+              <tr  title='.$row['ins_id'].' id="tr'.$nro.'" >
+                <td>'.$nro.'</td>
+                <td>';
+                if(count($this->model_certificacion->get_items_solicitado($row['ins_id']))==0){
+                    if($this->model_certificacion->get_insumo_programado($row['ins_id'])>1){
+                      $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila(this.value, this.checked);"/><br>';
+                    }
+                    else{
+                      $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFilacompleta(this.value,'.$nro.',this.checked);"/><br>';
+                    }
+                }
+                else{
+                  $tabla.='<img src="'.base_url().'assets/Iconos/cancel.png" WIDTH="20" HEIGHT="20"/>';
+                }
+                $tabla.='
+                <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
+                </td>
+                <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
+                <td>'.$row['ins_detalle'].'</td>
+                <td>'.$row['ins_unidad_medida'].'</td>
+                <td align=right>'.$row['ins_cant_requerida'].'</td>
+                <td align=right>'.$row['ins_costo_unitario'].'</td>
+                <td align=right>'.$row['ins_costo_total'].'</td>';
+                if($this->model_certificacion->get_insumo_programado($row['ins_id'])>1){
+                  for ($i=1; $i <=12 ; $i++) {
+                    $color=''; 
+                    $m=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
+                    $tabla.='
+                    <td align=right>
+                      <table align=right>
+                        <tr>
+                          <td>
+                            <div id="m'.$i.''.$row['ins_id'].'" style="display: none;">';
+                            if(count($m)!=0){
+                              if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
+                                $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value, this.checked);"/>';
+                              }
+                              else{
+                                $color='green';
+                              }
+                            }
+                    $tabla.='
+                          </td>
+                          <td align=right>';
+                          if(count($m)!=0){
+                            $tabla.='<font color="'.$color.'">'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</font>';
+                          }
+                          else{
+                            $tabla.='0,00';
+                          }
+                    $tabla.='
+                          </td>
+
+                        </tr>
+                      </table>
+                    </td>';
+                  }
+                }
+                else{
+                  $temp=$this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                  for ($j=1; $j <=12 ; $j++) {
+                    $bgcolor='';
+                    if($temp[0]['mes'.$j.'']!=0){
+                      $bgcolor='#d5f5f0';
+                    }
+                    $tabla.='
+                    <td align="right" bgcolor='.$bgcolor.'>
+                      '.number_format($temp[0]['mes'.$j.''], 2, ',', '.').'
+                    </td>';
+                  }
+                }
+
+                $tabla.='
+                <td>'.$row['ins_observacion'].'</td>
+              </tr>';
+          }
+        }
+      $tabla.='
+        </tbody>
+      </table>';
+
+    return $tabla;
+  }
 
 
 /*------- LISTA DE REQUERIMIENTOS PRE LISTA ------*/
-  public function list_requerimientos_prelista($prod_id){
+  public function list_requerimientos_prelista2($prod_id){
     $tabla='';
     $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
     $tabla='<style>

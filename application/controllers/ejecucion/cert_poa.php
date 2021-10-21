@@ -346,7 +346,7 @@ class Cert_poa extends CI_Controller {
                         </td>
                         <td>';
                           if($this->fun_id==399){ /// Eliminar Certificacion POA
-                            //$tabla.='<center><a href="'.site_url("").'/cert/eliminar_certificacion/'.$row['cpoa_id'].'" title="ELIMINAR CERTIFICACIÓN" class="btn btn-default">DELETE CERTIFICACI&Oacute;N</a></center>';
+                          //  $tabla.='<center><a href="'.site_url("").'/cert/eliminar_certificacion/'.$row['cpoa_id'].'" title="ELIMINAR CERTIFICACIÓN" class="btn btn-default">DELETE CERTIFICACI&Oacute;N</a></center>';
                           }
                         $tabla.='
                         </td>';
@@ -780,10 +780,43 @@ class Cert_poa extends CI_Controller {
 
 
   /*--- ELIMINA ITEMS CERTIFICADOS (Formulacion) ---*/
-  public function delete_certificacion_item($cpoa_id){
+/*  public function delete_certificacion_item($cpoa_id){
     $list_cpoas_anterior=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
 
     foreach ($list_cpoas_anterior as $row){
+      $this->db->where('cpoad_id',$row['cpoad_id']);
+      $this->db->delete('cert_temporalidad_prog_insumo');
+
+      $this->db->where('cpoad_id',$row['cpoad_id']);
+      $this->db->delete('certificacionpoadetalle');
+    }
+  }*/
+
+
+    public function delete_certificacion_item($cpoa_id){
+    $list_cpoas_anterior=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
+
+    foreach ($list_cpoas_anterior as $row){
+      $temp_cert=$this->model_certificacion->get_meses_certificacion_items($row['cpoad_id']);
+      $sum_cert=0;
+      foreach ($temp_cert as $row_temp){
+        $sum_cert=$sum_cert+$row_temp['ipm_fis'];
+        $update_temp = array(
+          'estado_cert' => 0,
+        );
+        $this->db->where('tins_id', $row_temp['tins_id']);
+        $this->db->update('temporalidad_prog_insumo', $update_temp);
+        /*----------------------------------*/
+      }
+
+      ///-----------------------------------------------------------
+        $update_ins = array(
+          'ins_monto_certificado' => ($row['ins_monto_certificado']-$sum_cert),
+        );
+        $this->db->where('ins_id', $row['ins_id']);
+        $this->db->update('insumos', $update_ins);
+      ///-----------------------------------------------------------
+        
       $this->db->where('cpoad_id',$row['cpoad_id']);
       $this->db->delete('cert_temporalidad_prog_insumo');
 

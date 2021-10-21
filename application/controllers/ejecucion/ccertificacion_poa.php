@@ -437,6 +437,26 @@ class Ccertificacion_poa extends CI_Controller {
     $list_cpoas_anterior=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
 
     foreach ($list_cpoas_anterior as $row){
+      $temp_cert=$this->model_certificacion->get_meses_certificacion_items($row['cpoad_id']);
+      $sum_cert=0;
+      foreach ($temp_cert as $row_temp){
+        $sum_cert=$sum_cert+$row_temp['ipm_fis'];
+        $update_temp = array(
+          'estado_cert' => 0,
+        );
+        $this->db->where('tins_id', $row_temp['tins_id']);
+        $this->db->update('temporalidad_prog_insumo', $update_temp);
+        /*----------------------------------*/
+      }
+
+      ///-----------------------------------------------------------
+        $update_ins = array(
+          'ins_monto_certificado' => ($row['ins_monto_certificado']-$sum_cert),
+        );
+        $this->db->where('ins_id', $row['ins_id']);
+        $this->db->update('insumos', $update_ins);
+      ///-----------------------------------------------------------
+        
       $this->db->where('cpoad_id',$row['cpoad_id']);
       $this->db->delete('cert_temporalidad_prog_insumo');
 
