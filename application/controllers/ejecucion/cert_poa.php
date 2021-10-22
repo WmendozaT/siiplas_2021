@@ -817,11 +817,11 @@ class Cert_poa extends CI_Controller {
         $this->db->update('insumos', $update_ins);
       ///-----------------------------------------------------------
         
-      $this->db->where('cpoad_id',$row['cpoad_id']);
-      $this->db->delete('cert_temporalidad_prog_insumo');
+        $this->db->where('cpoad_id',$row['cpoad_id']);
+        $this->db->delete('cert_temporalidad_prog_insumo');
 
-      $this->db->where('cpoad_id',$row['cpoad_id']);
-      $this->db->delete('certificacionpoadetalle');
+        $this->db->where('cpoad_id',$row['cpoad_id']);
+        $this->db->delete('certificacionpoadetalle');
     }
   }
 
