@@ -154,7 +154,7 @@ class Seguimientopoa extends CI_Controller{
                 <tr>
                     <td style="width:25%;height: 14px;">';
                       if($proyecto[0]['tp_id']==4){
-                        $tabla.='<b>'.$establecimiento[0]['tp_adm'].'<b>';
+                        $tabla.='<b>GASTO CORRIENTE<b>';
                       }
                       else{
                         $tabla.='<b>PROYECTO INVERSIÓN</b>';
@@ -1579,8 +1579,13 @@ class Seguimientopoa extends CI_Controller{
         }
         else{ /// ==== ABSOLUTO
 
+        //$vector[1]=$acu_prog_actual; /// Suma Programado al trimestre Actual 
+        //$vector[2]=$acu_ejec_actual; /// Suma Ejecutado al trimestre Actual
+        //$vector[3]=$acu_prog_anterior; /// Suma Programado al trimestre Anterior
+        //$vector[4]=$acu_ejec_anterior; /// Suma Ejecutado al trimestre Anterior
+
             /*----- Temporalidad Programado / Ejecutado -----*/
-            if($temporalidad[1]!=0 & $temporalidad[4]<$row['prod_meta'] & $temporalidad[2]>0 & ($temporalidad[2]<=$temporalidad[1]) & ($temporalidad[1]!=$temporalidad[3] & $temporalidad[2]!=$temporalidad[4])){
+            if($temporalidad[1]!=0 & $temporalidad[4]<$row['prod_meta'] & $temporalidad[2]>0 & ($temporalidad[2]<=$temporalidad[1]) & (/*$temporalidad[1]!=$temporalidad[3] & */$temporalidad[2]!=$temporalidad[4])){
                 if($temporalidad[3]==$temporalidad[4]){
                   $tp=2;
                   $activo=0;

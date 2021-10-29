@@ -1955,12 +1955,13 @@ act_cod varchar,
 act_descripcion varchar,
 tipo varchar,
 ta_id integer,
+tipo_adm varchar,
 g_id integer
 ) AS
 
 $$
 
-select dep.dep_id,dep.dep_cod,dep.dep_departamento,dist.dist_id,dist.dist_distrital,dist.dist_cod,dist.abrev,ua.act_id,ua.act_cod,ua.act_descripcion,te.tipo,te.ta_id,ug.g_id
+select dep.dep_id,dep.dep_cod,dep.dep_departamento,dist.dist_id,dist.dist_distrital,dist.dist_cod,dist.abrev,ua.act_id,ua.act_cod,ua.act_descripcion,te.tipo,te.ta_id,te.tipo_adm,ug.g_id
 from unidad_actividad ua
 Inner Join _distritales as dist On dist.dist_id=ua.dist_id
 Inner Join _departamentos as dep On dep.dep_id=dist.dep_id
