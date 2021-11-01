@@ -125,6 +125,9 @@
                                             <th></th>
 
                                             <th class="hasinput">
+                                                <input type="text" class="form-control" placeholder="CODIGO SISIN"/>
+                                            </th>
+                                            <th class="hasinput">
                                                 <input type="text" class="form-control" placeholder="GASTO CORRIENTE"/>
                                             </th>
                                             <th class="hasinput">
@@ -162,8 +165,8 @@
                                             <th style="width:8%;">RESULTADO</th>
                                             <th style="width:3%;">META OPERACI&Oacute;N</th>
 
-                                            
-                                            <th style="width:10%;">GASTO CORRIENTE</th>
+                                            <th style="width:5%;">CÓDIGO SISIN</th>
+                                            <th style="width:10%;">GASTO CORRIENTE / PROY. INVERSIÓN</th>
                                             <th style="width:10%;">UNIDAD RESPONSABLE</th>
                                             <th style="width:3%;">IR A FORMULARIO</th>
 

@@ -559,6 +559,11 @@ class Cobjetivo_gestion extends CI_Controller {
         $por=''; 
         if($row['indi_id']==2){
           $por='%';
+        
+        }
+        $nombre=strtoupper($row['tipo']).' '.strtoupper($row['act_descripcion']).' '.$row['abrev'];
+        if($row['tp_id']==1){
+          $nombre=strtoupper($row['proy_nombre']);
         }
         $tabla.='
         <tr>
@@ -570,8 +575,8 @@ class Cobjetivo_gestion extends CI_Controller {
           <td>'.strtoupper($row['or_producto']).'</td>
           <td>'.strtoupper($row['or_resultado']).'</td>
           <td align=right>'.round($row['or_meta'],2).'</td>
-
-          <td bgcolor="#eaf2fd">'.strtoupper($row['tipo']).' '.strtoupper($row['act_descripcion']).' '.$row['abrev'].'</td>
+          <td bgcolor="#eaf2fd">'.$row['proy_sisin'].'</td>
+          <td bgcolor="#eaf2fd">'.$nombre.'</td>
           <td bgcolor="#eaf2fd">'.$row['serv_cod'].' '.strtoupper($row['tipo_subactividad']).' '.strtoupper($row['serv_descripcion']).'</td>
           <td>';
             if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401){

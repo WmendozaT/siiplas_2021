@@ -2592,6 +2592,9 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
           oreg.or_verificacion,
 
           p.proy_id,
+          p.tp_id,
+          p.proy_nombre,
+          p.proy_sisin,
           ua.dist_id,
           ua.act_descripcion,
           te.tipo,
