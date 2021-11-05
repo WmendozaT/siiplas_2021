@@ -26,6 +26,7 @@ ob_start();
             <?php echo $pie_certpoa;?>
         </page_footer>
         <?php echo $items_certificados;?>
+       <!--  <br><div style="font-size: 25px;font-family: Arial; color: red; text-align: center;" ><b>CERTIFICACIÓN POA ANULADO !!</b></div> -->
     </page>
     <?php
     }

@@ -1433,6 +1433,7 @@
             var par_id = $(this).val();
             proy=<?php echo $proyecto[0]['proy_id']; ?>;
             costo = parseFloat($('[name="costot"]').val()); //// costo
+            alert(par_id)
 
             	var url = "<?php echo site_url().'/modificaciones/cmod_insumo/get_monto_partida'?>";
                 var request;

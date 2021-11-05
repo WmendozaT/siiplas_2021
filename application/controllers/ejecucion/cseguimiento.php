@@ -66,6 +66,7 @@ class Cseguimiento extends CI_Controller {
     public function list_gasto_corriente($proy_estado){
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
       $meses = $this->model_configuracion->get_mes();
+
       $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);
       $tabla='';
       
@@ -90,7 +91,8 @@ class Cseguimiento extends CI_Controller {
         <tbody>';
           $nro=0;
           foreach($unidades as $row){
-            $nro++;
+            if($row['proy_estado']==4){
+              $nro++;
               $tabla.='
               <tr style="height:45px;">
                 <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>
@@ -129,6 +131,7 @@ class Cseguimiento extends CI_Controller {
                 <td>'.strtoupper($row['dep_departamento']).'</td>
                 <td>'.strtoupper($row['dist_distrital']).'</td>
               </tr>';
+            }
           }
         $tabla.='
         </tbody>

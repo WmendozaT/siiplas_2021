@@ -114,19 +114,7 @@
                                 <h1>RESPONSABLE : <?php echo $resp; ?> -> <small><?php echo $res_dep;?></small>
                             </section>
                         </article>
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-                            <div class="well">
-                                <div class="btn-group btn-group-justified">
-                                <?php
-                                    if($this->session->userData('conf_certificacion')==1 || $this->session->userData('tp_adm')==1){
-                                        ?>
-                                        <a class="btn btn-warning" href="<?php echo base_url().'index.php/cert/list_poas'?>"  title="GENERAR NUEVA CERTIFICACI&Oacute;N POA"><i class="fa fa-folder-o"></i> GENERAR NUEVA CERTIFICACI&Oacute;N POA</a>
-                                        <?php
-                                    }
-                                ?>
-                                </div>
-                            </div>
-                        </article>
+                        <?php echo $generar_certpoa;?>
                     </div>
 
                     <div class="row">

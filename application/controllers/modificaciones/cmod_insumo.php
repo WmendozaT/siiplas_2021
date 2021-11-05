@@ -135,7 +135,7 @@ class Cmod_insumo extends CI_Controller {
 
             $data['verif_mod']=$this->verif_mod_req($cite_id);
             $data['tit']=$tit;
-            $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
+           // $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
       }
       else{
         redirect('mod/list_top');

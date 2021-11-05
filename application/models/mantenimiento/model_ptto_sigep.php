@@ -858,8 +858,9 @@ class Model_ptto_sigep extends CI_Model{
             $sql = 'select i.aper_id,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(i.ins_costo_total) as monto
                     from vlista_insumos i
                     Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
+                    Inner Join _proyectos as p On p.proy_id=ap.proy_id
                   
-                    where i.aper_id='.$aper_id.' and i.aper_id!=\'0\'
+                    where p.dep_id='.$dep_id.' and i.aper_id='.$aper_id.' and i.aper_id!=\'0\'
                     group by i.aper_id,i.par_id, i.par_codigo, i.par_nombre
                     order by i.par_codigo';
 

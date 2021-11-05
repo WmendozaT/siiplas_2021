@@ -522,13 +522,13 @@ class Ccertificacion_poa extends CI_Controller {
       $data['opciones']=' <a class="btn btn-default" href="'.base_url().'index.php/cert/form_items/'.$certificacion[0]['prod_id'].'" target="_blank" title="NUEVA CERTIFICACI&Oacute;N"><i class="fa fa-rotate-left"></i> NUEVA CERTIFICACI&Oacute;N</a>
                 <a class="btn btn-default" href="'.base_url().'index.php/ejec/menu_cpoa" title="SALIR"><i class="fa fa-caret-square-o-left"></i> SALIR</a>';
 
-      if(strtotime($certificacion[0]['cpoa_fecha'])>$this->fecha_entrada){
+      $data['cuerpo']='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/cert/rep_cert_poa/'.$certificacion[0]['cpoa_id'].'"></iframe>'; /// Antiguo
+      /*if(strtotime($certificacion[0]['cpoa_fecha'])>$this->fecha_entrada){
         $data['cuerpo']='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/cert/rep_cert_poa_editado/'.$certificacion[0]['cpoa_id'].'"></iframe>'; /// nuevo
       }
       else{
         $data['cuerpo']='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/cert/rep_cert_poa/'.$certificacion[0]['cpoa_id'].'"></iframe>'; /// Antiguo
-        
-      }
+      }*/
 
       $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/ver_certificado_poa', $data);
     }
@@ -637,7 +637,7 @@ class Ccertificacion_poa extends CI_Controller {
           $data['items']=$this->mis_items_certificados($cpoa_id);
           $data['nro']=count($this->model_certificacion->lista_items_certificados($cpoa_id));
      
-          if($this->gestion!=2021){ /// Gestion 2020
+          if($this->gestion==2020){ /// Gestion 2020
             $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/reporte_cert_poa_2020', $data);
           }
           else{ /// Gestion 2021
