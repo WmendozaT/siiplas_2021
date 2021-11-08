@@ -51,7 +51,16 @@ class Model_modrequerimiento extends CI_Model{
 
     /*---- LISTA DE REQUERIMIENTOS ----*/
     function lista_requerimientos($com_id){
-        $sql = 'select p.com_id, p.prod_id,p.prod_cod,par.*,i.*
+        if($this->gestion==2022){
+            $sql = 'select *,i.form4_cod as prod_cod
+                from insumos i
+                Inner Join partidas as par On par.par_id=i.par_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
+                where i.com_id='.$com_id.' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
+                order by i.form4_cod asc';
+        }
+        else{
+            $sql = 'select p.com_id, p.prod_id,p.prod_cod,par.*,i.*
                 from _productos p
                 Inner Join _insumoproducto as ip On ip.prod_id=p.prod_id
                 Inner Join insumos as i On i.ins_id=ip.ins_id
@@ -59,6 +68,8 @@ class Model_modrequerimiento extends CI_Model{
                 Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
                 where p.com_id='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
                 order by p.prod_cod asc';
+        }
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }

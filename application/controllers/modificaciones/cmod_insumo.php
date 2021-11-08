@@ -135,7 +135,7 @@ class Cmod_insumo extends CI_Controller {
 
             $data['verif_mod']=$this->verif_mod_req($cite_id);
             $data['tit']=$tit;
-           // $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
+            $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
       }
       else{
         redirect('mod/list_top');
@@ -222,11 +222,11 @@ class Cmod_insumo extends CI_Controller {
                   }
                   $cont++;
                     $tabla .='<tr bgcolor='.$color_tr.'>';
-                    $tabla .='<td title='.$row['ins_id'].'>'.$cont.' --'.count($cert).'</td>';
+                    $tabla .='<td title='.$row['ins_id'].'>'.$cont.'</td>';
                     $tabla .='<td align=center bgcolor="#ecf9f7" title="CODIGO ACTIVIDAD"><font size=3 color=blue><br>'.$row['prod_cod'].'</font></td>';
                     $tabla .='<td align=center>';
                       if($valor_mod==0 & $valor_delete==0){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>
+                        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>
                                   <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-xs del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'" >
                                     <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
                                   </a>';
