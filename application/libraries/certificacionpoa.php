@@ -64,46 +64,33 @@ class Certificacionpoa extends CI_Controller{
   /*------ TITULO CABECERA (2020)-----*/
   public function titulo_cabecera($datos){
     $tabla='';
-    if($this->gestion>2020){ /// 2021
-      if($datos[0]['tp_id']==1){ /// Proyecto de Inversion
-        $tabla.=' <h1><b>PROYECTO : </b><small>'.$datos[0]['aper_programa'].' '.$datos[0]['proy_sisin'].' 00 - '.$datos[0]['proy_nombre'].'</small>
-                  <h1><b>UNIDAD RESPONSABLE : </b><small>'.$datos[0]['serv_cod'].' '.$datos[0]['tipo_subactividad'].' '.$datos[0]['serv_descripcion'].'</small></h1>
-                  <h1><b>OPERACI&Oacute;N : </b><small>'.$datos[0]['prod_cod'].'.- '.$datos[0]['prod_producto'].'</small></h1>';
-      }
-      else{ /// Gasto Corriente
-        $tabla.=' <h1><b>ACTIVIDAD : <b><small>'.$datos[0]['aper_programa'].' '.$datos[0]['aper_proyecto'].' '.$datos[0]['aper_actividad'].' - '.$datos[0]['tipo'].' '.$datos[0]['act_descripcion'].' '.$datos[0]['abrev'].'</small></h1>
-                  <h1><b>SUBACTIVIDAD : <b><small>'.$datos[0]['serv_cod'].' '.$datos[0]['tipo_subactividad'].' '.$datos[0]['serv_descripcion'].'</small></h1>
-                  <h1><b>OPERACI&Oacute;N : </b><small>'.$datos[0]['prod_cod'].'.- '.$datos[0]['prod_producto'].'</small></h1>';
-      }
+    if($datos[0]['tp_id']==1){ /// Proyecto de Inversion
+      $tabla.=' <h1><b>PROYECTO INVERSIÓN: </b><small>'.$datos[0]['aper_programa'].' '.$datos[0]['proy_sisin'].' - '.$datos[0]['proy_nombre'].'</small>
+                <h1><b>UNIDAD RESPONSABLE : </b><small>'.$datos[0]['serv_cod'].' '.$datos[0]['tipo_subactividad'].' '.$datos[0]['serv_descripcion'].'</small></h1>
+                <h1><b>ACTIVIDAD : </b><small>'.$datos[0]['prod_cod'].'.- '.$datos[0]['prod_producto'].'</small></h1>';
     }
-    else{ /// 2020
-      if($datos[0]['tp_id']==1){ /// Proyecto de Inversion
-        $tabla.=' <h1><b>APERTURA PROGRAM&Aacute;TICA : </b><small>'.$datos[0]['aper_programa'].''.$datos[0]['aper_proyecto'].''.$datos[0]['aper_actividad'].' - '.$datos[0]['proy_nombre'].'</small>
-                  <h1><b>COMPONENTE : </b><small>'.$datos[0]['com_componente'].'</small></h1>
-                  <h1><b>ACTIVIDAD : </b><small>'.$datos[0]['prod_cod'].'.- '.$datos[0]['prod_producto'].'</small></h1>';
-      }
-      else{ /// Gasto Corriente
-        $tabla.=' <h1><b> '.$datos[0]['tipo_adm'].' : <b><small>'.$datos[0]['aper_programa'].''.$datos[0]['aper_proyecto'].''.$datos[0]['aper_actividad'].' - '.$datos[0]['tipo'].' '.$datos[0]['act_descripcion'].' '.$datos[0]['abrev'].'</small></h1>
-                  <h1><b> SERVICIO : <b><small>'.$datos[0]['com_componente'].'</small></h1>
-                  <h1><b>ACTIVIDAD : </b><small>'.$datos[0]['prod_cod'].'.- '.$datos[0]['prod_producto'].'</small></h1>';
-      }
+    else{ /// Gasto Corriente
+      $tabla.=' <h1><b>'.$datos[0]['tipo_adm'].' : <b><small>'.$datos[0]['aper_programa'].' '.$datos[0]['aper_proyecto'].' '.$datos[0]['aper_actividad'].' - '.$datos[0]['tipo'].' '.$datos[0]['act_descripcion'].' '.$datos[0]['abrev'].'</small></h1>
+                <h1><b>UNIDAD RESPONSABLE : <b><small>'.$datos[0]['serv_cod'].' '.$datos[0]['tipo_subactividad'].' '.$datos[0]['serv_descripcion'].'</small></h1>
+                <h1><b>ACTIVIDAD : </b><small>'.$datos[0]['prod_cod'].'.- '.$datos[0]['prod_producto'].'</small></h1>';
     }
+
 
     return $tabla;
   }
 
-    /*---- TIPO DE RESPONSABLE ---*/
-    public function tp_resp(){
-      $ddep = $this->model_proyecto->dep_dist($this->dist);
-      if($this->adm==1){
-        $titulo='RESPONSABLE NACIONAL';
-      }
-      elseif($this->adm==2){
-        $titulo='RESPONSABLE '.strtoupper($ddep[0]['dist_distrital']);
-      }
-
-      return $titulo;
+  /*---- TIPO DE RESPONSABLE ---*/
+  public function tp_resp(){
+    $ddep = $this->model_proyecto->dep_dist($this->dist);
+    if($this->adm==1){
+      $titulo='RESPONSABLE NACIONAL';
     }
+    elseif($this->adm==2){
+      $titulo='RESPONSABLE '.strtoupper($ddep[0]['dist_distrital']);
+    }
+
+    return $titulo;
+  }
 
 
   /*--- GENERAR CÓDIGO CERTIFICACION POA ---*/
@@ -144,23 +131,23 @@ class Certificacionpoa extends CI_Controller{
         }
 
         if(count($this->model_certificacion->get_codigo_certpoa($codigo))==0){
-            /*---- Update Estado Certificacion POA ----*/
-            $update_cpoa= array(
-              'cpoa_codigo' => $codigo,
-              'cpoa_estado' => 1,
-              'fun_id'=>$this->fun_id
-            );
-            $this->db->where('cpoa_id', $cpoa_id);
-            $this->db->update('certificacionpoa', $this->security->xss_clean($update_cpoa));
-            /*-----------------------------------------*/
+          /*---- Update Estado Certificacion POA ----*/
+          $update_cpoa= array(
+            'cpoa_codigo' => $codigo,
+            'cpoa_estado' => 1,
+            'fun_id'=>$this->fun_id
+          );
+          $this->db->where('cpoa_id', $cpoa_id);
+          $this->db->update('certificacionpoa', $this->security->xss_clean($update_cpoa));
+          /*-----------------------------------------*/
 
-            /*----- Update Configuracion Cert distrital -----*/
-            $update_conf= array(
-              'cert_poa' => $nro_cpoa
-            );
-            $this->db->where('mod_id', $verificando[0]['mod_id']);
-            $this->db->update('conf_modificaciones_distrital', $this->security->xss_clean($update_conf));
-            /*----------------------------------------------*/
+          /*----- Update Configuracion Cert distrital -----*/
+          $update_conf= array(
+            'cert_poa' => $nro_cpoa
+          );
+          $this->db->where('mod_id', $verificando[0]['mod_id']);
+          $this->db->update('conf_modificaciones_distrital', $this->security->xss_clean($update_conf));
+          /*----------------------------------------------*/
         }
     }
   }
@@ -169,100 +156,100 @@ class Certificacionpoa extends CI_Controller{
   
     /*---- Lista de Unidades / Establecimientos de Salud (2020-2021) -----*/
     public function list_unidades_es($proy_estado){
-        $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);
-        $tabla='';
-        
-        if($this->gestion>2020){ /// 2021
-           $tabla.='
-            <table id="dt_basic1" class="table1 table-bordered" style="width:100%;">
-              <thead>
-                <tr style="height:35px;">
-                  <th style="width:1%;" bgcolor="#474544">#</th>
-                  <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR"></th>
-                  <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">PROGRAMA '.$this->gestion.'</th>
-                  <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N ACTIVIDAD">GASTO CORRIENTE</th>
-                  <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
-                  <th style="width:10%;" bgcolor="#474544" title="NIVEL">NIVEL</th>
-                  <th style="width:10%;" bgcolor="#474544" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
-                  <th style="width:10%;" bgcolor="#474544" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
-                  <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>';
-                  if($this->fun_id==399){
-                    $tabla.='<th style="width:5%;" bgcolor="#474544" title="UPDATE CERT. POA.">UPDATE CERT. POA</th>';
-                  }
+      $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);
+      $tabla='';
+      
+      if($this->gestion>2020){ /// 2021
+         $tabla.='
+          <table id="dt_basic1" class="table1 table-bordered" style="width:100%;">
+            <thead>
+              <tr style="height:35px;">
+                <th style="width:1%;" bgcolor="#474544">#</th>
+                <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR"></th>
+                <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">PROGRAMA '.$this->gestion.'</th>
+                <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N ACTIVIDAD">GASTO CORRIENTE</th>
+                <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
+                <th style="width:10%;" bgcolor="#474544" title="NIVEL">NIVEL</th>
+                <th style="width:10%;" bgcolor="#474544" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
+                <th style="width:10%;" bgcolor="#474544" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
+                <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>';
+                if($this->fun_id==399){
+                  $tabla.='<th style="width:5%;" bgcolor="#474544" title="UPDATE CERT. POA.">UPDATE CERT. POA</th>';
+                }
+                $tabla.='
+              </tr>
+            </thead>
+            <tbody>';
+              $nro=0;
+              foreach($unidades as $row){
+                if($row['proy_estado']==4){
+                  $nro++;
                   $tabla.='
-                </tr>
-              </thead>
-              <tbody>';
-                $nro=0;
-                foreach($unidades as $row){
-                  if($row['proy_estado']==4){
-                    $nro++;
-                    $tabla.='
-                      <tr style="height:45px;">
-                        <td align=center title="'.$row['proy_id'].'-'.$row['aper_id'].'"><b>'.$nro.'</b></td>
-                        <td align=center>
-                          <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" style="color: green; background-color: #eeeeee;border-bottom-width: 5px;" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" title="SELECCIONAR ACTIVIDAD"> 
-                          <i class="glyphicon glyphicon-list"></i> SELECCIONAR ACTIVIDAD (FORM. N° 4)</a>
-                        </td>
-                        <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
-                        <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
-                        <td>'.$row['escalon'].'</td>
-                        <td>'.$row['nivel'].'</td>
-                        <td>'.$row['tipo_adm'].'</td>
-                        <td>'.strtoupper($row['dep_departamento']).'</td>
-                        <td>'.strtoupper($row['dist_distrital']).'</td>';
-                          if($this->fun_id==399){
-                            $tabla.='<td><a href="'.site_url("").'/cert/update_certpoa_insumo/'.$row['proy_id'].'" title="UPDATE DATOS CERT. POA." class="btn btn-primary">UPDATE CPOA.</a></td>';
-                          }
-                        $tabla.='
-                      </tr>';
-                  }
+                    <tr style="height:45px;">
+                      <td align=center title="'.$row['proy_id'].'-'.$row['aper_id'].'"><b>'.$nro.'</b></td>
+                      <td align=center>
+                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" style="color: green; background-color: #eeeeee;border-bottom-width: 5px;" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" title="SELECCIONAR ACTIVIDAD"> 
+                        <i class="glyphicon glyphicon-list"></i> SELECCIONAR ACTIVIDAD (FORM. N° 4)</a>
+                      </td>
+                      <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
+                      <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
+                      <td>'.$row['escalon'].'</td>
+                      <td>'.$row['nivel'].'</td>
+                      <td>'.$row['tipo_adm'].'</td>
+                      <td>'.strtoupper($row['dep_departamento']).'</td>
+                      <td>'.strtoupper($row['dist_distrital']).'</td>';
+                        if($this->fun_id==399){
+                          $tabla.='<td><a href="'.site_url("").'/cert/update_certpoa_insumo/'.$row['proy_id'].'" title="UPDATE DATOS CERT. POA." class="btn btn-primary">UPDATE CPOA.</a></td>';
+                        }
+                      $tabla.='
+                    </tr>';
                 }
-              $tabla.='
-              </tbody>
-            </table>';
-        }
-        else{ /// 2020
-           $tabla.='
-            <table id="dt_basic1" class="table1 table-bordered" style="width:100%;">
-              <thead>
-                <tr style="height:35px;">
-                  <th style="width:1%;" bgcolor="#474544">#</th>
-                  <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR"></th>
-                  <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
-                  <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">UNIDAD / ESTABLECIMIENTO DE SALUD</th>
-                  <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
-                  <th style="width:10%;" bgcolor="#474544" title="NIVEL">NIVEL</th>
-                  <th style="width:10%;" bgcolor="#474544" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
-                  <th style="width:10%;" bgcolor="#474544" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
-                  <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
-                </tr>
-              </thead>
-              <tbody>';
-                $nro=0;
-                foreach($unidades as $row){
-                  if($row['proy_estado']==4){
-                    $nro++;
-                    $tabla.='
-                      <tr style="height:45px;">
-                        <td align=center><b>'.$nro.'</b></td>
-                        <td align=center>
-                          <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" style="color: green; background-color: #eeeeee;border-bottom-width: 5px;" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" title="SELECCIONAR ACTIVIDAD"> 
-                          <i class="glyphicon glyphicon-list"></i> MIS ACTIVIDADES</a>
-                        </td>
-                        <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
-                        <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
-                        <td>'.$row['escalon'].'</td>
-                        <td>'.$row['nivel'].'</td>
-                        <td>'.$row['tipo_adm'].'</td>
-                        <td>'.strtoupper($row['dep_departamento']).'</td>
-                        <td>'.strtoupper($row['dist_distrital']).'</td>
-                      </tr>';
-                  }
+              }
+            $tabla.='
+            </tbody>
+          </table>';
+      }
+      else{ /// 2020
+         $tabla.='
+          <table id="dt_basic1" class="table1 table-bordered" style="width:100%;">
+            <thead>
+              <tr style="height:35px;">
+                <th style="width:1%;" bgcolor="#474544">#</th>
+                <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR"></th>
+                <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
+                <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">UNIDAD / ESTABLECIMIENTO DE SALUD</th>
+                <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
+                <th style="width:10%;" bgcolor="#474544" title="NIVEL">NIVEL</th>
+                <th style="width:10%;" bgcolor="#474544" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
+                <th style="width:10%;" bgcolor="#474544" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
+                <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
+              </tr>
+            </thead>
+            <tbody>';
+              $nro=0;
+              foreach($unidades as $row){
+                if($row['proy_estado']==4){
+                  $nro++;
+                  $tabla.='
+                    <tr style="height:45px;">
+                      <td align=center><b>'.$nro.'</b></td>
+                      <td align=center>
+                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" style="color: green; background-color: #eeeeee;border-bottom-width: 5px;" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" title="SELECCIONAR ACTIVIDAD"> 
+                        <i class="glyphicon glyphicon-list"></i> MIS ACTIVIDADES</a>
+                      </td>
+                      <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
+                      <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
+                      <td>'.$row['escalon'].'</td>
+                      <td>'.$row['nivel'].'</td>
+                      <td>'.$row['tipo_adm'].'</td>
+                      <td>'.strtoupper($row['dep_departamento']).'</td>
+                      <td>'.strtoupper($row['dist_distrital']).'</td>
+                    </tr>';
                 }
-              $tabla.='
-              </tbody>
-            </table>';
+              }
+            $tabla.='
+            </tbody>
+          </table>';
         }
 
       return $tabla;
@@ -383,7 +370,7 @@ class Certificacionpoa extends CI_Controller{
       $tabla='          
           ';
       $tabla.='
-      <form >
+      <form>
         <section class="col col-6">
           <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
         </section>
@@ -786,7 +773,7 @@ class Certificacionpoa extends CI_Controller{
   }
 
 
-/*------- LISTA DE REQUERIMIENTOS PRE LISTA ------*/
+/*------- LISTA DE REQUERIMIENTOS PRE LISTA 2021 ------*/
   public function list_requerimientos_prelista($prod_id){
     $tabla='';
     $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
@@ -926,8 +913,8 @@ class Certificacionpoa extends CI_Controller{
   }
 
 
-/*------- LISTA DE REQUERIMIENTOS PRE LISTA ------*/
-  public function list_requerimientos_prelista2($prod_id){
+/*------- LISTA DE REQUERIMIENTOS PRE LISTA (2022) ------*/
+  public function list_requerimientos_2022($prod_id){
     $tabla='';
     $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
     $tabla='<style>
@@ -984,12 +971,12 @@ class Certificacionpoa extends CI_Controller{
                 <td>'.$nro.'</td>
                 <td>';
                 if(count($this->model_certificacion->get_items_solicitado($row['ins_id']))==0){
-                    if($this->model_certificacion->get_insumo_programado($row['ins_id'])>1){
-                      $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila(this.value, this.checked);"/><br>';
-                    }
-                    else{
-                      $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFilacompleta(this.value,'.$nro.',this.checked);"/><br>';
-                    }
+                  if($this->model_certificacion->get_insumo_programado($row['ins_id'])>1){
+                    $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila(this.value, this.checked);"/><br>';
+                  }
+                  else{
+                    $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFilacompleta(this.value,'.$nro.',this.checked);"/><br>';
+                  }
                 }
                 else{
                   $tabla.='<img src="'.base_url().'assets/Iconos/cancel.png" WIDTH="20" HEIGHT="20"/>';
@@ -997,12 +984,12 @@ class Certificacionpoa extends CI_Controller{
                 $tabla.='
                 <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
                 </td>
-                <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
-                <td>'.$row['ins_detalle'].'</td>
-                <td>'.$row['ins_unidad_medida'].'</td>
-                <td align=right>'.$row['ins_cant_requerida'].'</td>
-                <td align=right>'.$row['ins_costo_unitario'].'</td>
-                <td align=right>'.$row['ins_costo_total'].'</td>';
+                <td style="font-size: 15px;" align=center><b>'.$row['par_codigo'].'</b></td>
+                <td style="font-size: 10px;" >'.$row['ins_detalle'].'</td>
+                <td style="font-size: 10px;">'.$row['ins_unidad_medida'].'</td>
+                <td style="font-size: 10px;" align=right>'.$row['ins_cant_requerida'].'</td>
+                <td style="font-size: 10px;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                <td style="font-size: 10px;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
                 if($this->model_certificacion->get_insumo_programado($row['ins_id'])>1){
                   for ($i=1; $i <=12 ; $i++) {
                     $color=''; 
@@ -1014,16 +1001,22 @@ class Certificacionpoa extends CI_Controller{
                           <td>
                             <div id="m'.$i.''.$row['ins_id'].'" style="display: none;">';
                             if(count($m)!=0){
-                              if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
+                              if($m[0]['estado_cert']==0){
                                 $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value, this.checked);"/>';
                               }
                               else{
                                 $color='green';
                               }
+                              /*if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
+                                $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value, this.checked);"/>';
+                              }
+                              else{
+                                $color='green';
+                              }*/
                             }
                     $tabla.='
                           </td>
-                          <td align=right>';
+                          <td style="font-size: 10px;" align=right>';
                           if(count($m)!=0){
                             $tabla.='<font color="'.$color.'">'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</font>';
                           }
@@ -1046,7 +1039,7 @@ class Certificacionpoa extends CI_Controller{
                       $bgcolor='#d5f5f0';
                     }
                     $tabla.='
-                    <td align="right" bgcolor='.$bgcolor.'>
+                    <td style="font-size: 10px;" align="right" bgcolor='.$bgcolor.'>
                       '.number_format($temp[0]['mes'.$j.''], 2, ',', '.').'
                     </td>';
                   }

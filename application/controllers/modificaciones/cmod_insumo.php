@@ -705,7 +705,18 @@ class Cmod_insumo extends CI_Controller {
 
               ///------ cambiando de estado de certificacion poa la temporalidad
               $get_list_temp_prog=$this->model_certificacion->get_list_cert_temporalidad_prog_insumo($detalle_cert[0]['cpoad_id']);
+            //  $suma_cert=0;
               foreach($get_list_temp_prog as $row){
+                $datos_temp=$this->model_certificacion->get_id_insumo_programado_mes($row['tins_id']);
+              //  $suma_cert=$suma_cert+$datos_temp[0]['ipm_fis'];
+
+                $update_ins= array(
+                  'ins_monto_certificado' => ($insumo[0]['ins_monto_certificado']-$datos_temp[0]['ipm_fis']),
+                  'fun_id' => $this->fun_id
+                );
+                $this->db->where('ins_id', $ins_id);
+                $this->db->update('insumos', $this->security->xss_clean($update_ins));
+
                 /// Actualizando el estado de la temporalidad
                 $update_temp = array(
                   'estado_cert' => 0
@@ -722,7 +733,7 @@ class Cmod_insumo extends CI_Controller {
 
             if(count($this->model_certificacion->verif_insumo_certificado($ins_id))==1){
                 $detalle = $this->security->xss_clean($post['detalle']); /// Detalle
-                $unidad = $this->security->xss_clean($post['umedida']); /// Unidad de Medida
+                $unidad = $this->security->xss_clean($post['umedida']);  /// Unidad de Medida
 
                 $update_ins= array(
                 'ins_detalle' => $detalle,

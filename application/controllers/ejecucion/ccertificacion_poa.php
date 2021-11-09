@@ -78,7 +78,13 @@ class Ccertificacion_poa extends CI_Controller {
         $data['titulo']=$this->certificacionpoa->titulo_cabecera($data['datos']);
         $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
       //  $this->update_gestion_temporalidad($requerimientos);
-        $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
+        if($this->gestion==2022){
+          $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_2022($prod_id); /// para listas mayores a 500 (2022)
+        }
+        else{
+          $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
+        }
+        
         $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/form_items_prevista', $data);
     }
     else{

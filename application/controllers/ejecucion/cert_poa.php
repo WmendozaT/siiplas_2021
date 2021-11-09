@@ -37,6 +37,7 @@ class Cert_poa extends CI_Controller {
         $this->fecha_entrada = strtotime("31-05-2021 00:00:00");
         $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
         $this->conf_certificacion = $this->session->userData('conf_certificacion'); /// conf estado Certificacion POA (1: activo, 0: no activo)
+        $this->load->library('certificacionpoa');
         }
         else{
             $this->session->sess_destroy();
@@ -60,7 +61,7 @@ class Cert_poa extends CI_Controller {
     /*------ LISTA DE CERTIFICACIONES POA REGISTRADOS -------*/
     public function menu_certificacion_poa(){
       if($this->rolfunn(3)){
-        $data['menu']=$this->menu(4);
+        $data['menu']=$this->certificacionpoa->menu(4);
         $data['resp']=$this->session->userdata('funcionario');
         $data['reg'] = $this->model_proyecto->dep_dist($this->dist);
         $data['res_dep']=$this->tp_resp();
@@ -219,7 +220,7 @@ class Cert_poa extends CI_Controller {
                   <th style="width:10%;">UNIDAD RESPONSABLE</th>
                   <th style="width:5%;">GESTI&Oacute;N</th>
                   <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">MODIFICAR CERTIFICACIÓN</th>
-                  <th style="width:7%;" title="ELIMINAR CERTIFICACI&Oacute;N">ELIMINAR CERTIFICACIÓN</th>
+                  <th style="width:7%;" title="ANULAR CERTIFICACI&Oacute;N">ANULAR CERTIFICACIÓN</th>
                   <th style="width:5%;">VER CERTIFICADO POA</th>';
                   if($this->tp_adm==1){
                     $tabla.='
@@ -267,7 +268,7 @@ class Cert_poa extends CI_Controller {
                   <th style="width:10%;">UNIDAD RESPONSABLE</th>
                   <th style="width:5%;">GESTI&Oacute;N</th>
                   <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">MODIFICAR CERTIFICACIÓN</th>
-                  <th style="width:7%;" title="ELIMINAR CERTIFICACI&Oacute;N">ELIMINAR CERTIFICACIÓN</th>
+                  <th style="width:7%;" title="ANULAR CERTIFICACI&Oacute;N">ANULAR CERTIFICACIÓN</th>
                   <th style="width:5%;">VER CERTIFICADO POA</th>';
                   if($this->tp_adm==1){
                     $tabla.='
@@ -321,13 +322,13 @@ class Cert_poa extends CI_Controller {
                         <td align=center>';
                           if(($row['cpoa_ref']==0 & $row['cpoa_estado']!=0 & $this->conf_certificacion==1)) {
                             $tabla.='<a href="#" data-toggle="modal" data-target="#modal_anular_cert" '.$opcion_edit.' title="EDITAR CERTIFICACI&Oacute;N" name="'.$row['cpoa_id'].'" id="'.$row['proy_id'].'" class="btn btn-default btn-lg">
-                                      <img src="'.base_url().'assets/img/neg.jpg" WIDTH="35" HEIGHT="35"/></a>';
+                                      <img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a>';
 
                           }
                           elseif($row['cpoa_ref']==1 and $this->tp_adm==1){
                             $cite_mod_poa=$this->model_certificacion->get_certpoa_vigente_modificado($row['cpoa_id']); /// Datos de editado, modificado poa
                             if(count($cite_mod_poa)!=0){
-                              $tabla.='<a href="'.site_url("").'/cert/edit_certificacion/'.$cite_mod_poa[0]['cpoaa_id'].'" title="FORMULARIO DE MODIFICACIÓN CERT. POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/><br>FORM. CPOA</a>';
+                              $tabla.='<a href="'.site_url("").'/cert/edit_certificacion/'.$cite_mod_poa[0]['cpoaa_id'].'" title="FORMULARIO DE MODIFICACIÓN CERT. POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/><br>FORM. CPOA<br>ADM.</a>';
                             }
                           }
                         $tabla.='
@@ -377,7 +378,7 @@ class Cert_poa extends CI_Controller {
 
 
     /*------------------------------------- MENU -----------------------------------*/
-    function menu($mod){
+/*    function menu($mod){
         $enlaces=$this->menu_modelo->get_Modulos($mod);
         for($i=0;$i<count($enlaces);$i++){
           $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
@@ -399,7 +400,7 @@ class Cert_poa extends CI_Controller {
         }
 
         return $tabla;
-    }
+    }*/
     /*=============================================================================================*/
 
     /*---- Obtiene Datos de la Certificacion 2020 (en uso) ---*/
@@ -672,7 +673,7 @@ class Cert_poa extends CI_Controller {
                     redirect('cert/ver_cpoa_anulado/'.$cpoa_id);
                 }
                 else{
-                  $this->session->set_flashdata('danger','NOSE PUEDO ELIMINAR !!!');
+                  $this->session->set_flashdata('danger','NOSE PUEDE ELIMINAR !!!');
                   redirect('ejec/menu_cpoa');
                 }
               /*------------------------------------------*/

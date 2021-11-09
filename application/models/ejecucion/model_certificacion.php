@@ -183,6 +183,16 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*------- OBTIENE DATOS PROG. FIN POR ID ----*/
+    public function get_id_insumo_programado_mes($tins_id){
+        $sql = 'select *
+                from temporalidad_prog_insumo
+                where tins_id='.$tins_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*------- GET CODIGO CERTIFICACIÓN POA  ----*/
     public function get_codigo_certpoa($codigo){
         $sql = 'select *
