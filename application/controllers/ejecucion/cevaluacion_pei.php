@@ -156,10 +156,11 @@ class Cevaluacion_pei extends CI_Controller {
           $evaluado=$this->model_evaluacion->get_meta_oregional($row['pog_id'],$this->tmes);
           $suma_mevaluado=$this->get_suma_total_evaluado($row['pog_id']);
           $color='';
+
           if(count($evaluado)!=0){
             $color='#eef5f0';
           }
-          
+
           $nro++;
           $tabla.='
           <tr style="font-size: 10px;" bgcolor='.$color.'>
