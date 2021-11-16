@@ -446,7 +446,7 @@ class Cert_poa extends CI_Controller {
                 $mprog[$i]='mes'.$i;
               }
 
-              if($cpoa[0]['cpoa_ref']==0){
+              if($this->tp_adm==1){
                 $cert_anulado=$this->model_certificacion->certificado_anulado($cpoa_id);
                   if (count($cert_anulado)==0) {
                     /*-------- Certificacion Anulado ------*/

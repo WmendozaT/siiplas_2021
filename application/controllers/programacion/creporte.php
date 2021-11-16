@@ -392,11 +392,6 @@ class Creporte extends CI_Controller {
     }
 
 
-
-
-
-
-
     //// REPORTE FORMULARIO POA N 5
     public function reporte_formulario5($com_id){
         $componente=$this->model_componente->get_componente($com_id,$this->gestion);
