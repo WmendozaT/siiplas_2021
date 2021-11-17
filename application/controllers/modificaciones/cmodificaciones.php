@@ -47,14 +47,8 @@ class Cmodificaciones extends CI_Controller {
       $data['proyectos']='';
       $data['gasto_corriente']='';
       
-      if($this->gestion>=2020){
-        $data['proyectos']=$this->modificacionpoa->list_pinversion(4); // Aprobados
-        $data['gasto_corriente']=$this->modificacionpoa->list_unidades_es(4); // Aprobados
-      }
-      else{
-        $data['proyectos']='OPCIÓN NULA';
-        $data['gasto_corriente']='OPCIÓN NULA';
-      }
+      $data['proyectos']=$this->modificacionpoa->list_pinversion(4); // Aprobados
+      $data['gasto_corriente']=$this->modificacionpoa->list_unidades_es(4); // Aprobados
 
       $this->load->view('admin/modificacion/list_poa_aprobados',$data);
     }
@@ -136,26 +130,28 @@ class Cmodificaciones extends CI_Controller {
               $codigo='<font color=red><b>SIN CÓDIGO</b></font>';
             }
 
-                $nro++;
-                $tabla .='<tr bgcolor='.$color.'>';
-                  $tabla .='<td align="center">'.$nro.'</td>';
-                  $tabla .='<td><b>'.$cit['cite_nota'].'</b></td>';
-                  $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
-                  $tabla .='<td>'.$codigo.'</td>';
-                  $tabla .='<td>'.$cit['com_componente'].'</td>';
-                  $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/rep_mod_financiera/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE REQUERIMIENTOS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
-                  $tabla .='<td align="center">'.$cit['cite_estado'].' - '.$cit['cite_activo'].'';
-                      $tabla .='<a href="'.base_url().'index.php/mod/update_cite/'.$cit['cite_id'].'" id="myBtn'.$cit['cite_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
-                              <img id="load'.$cit['cite_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
-                  $tabla .='</td>';
+              $nro++;
+              $tabla .='<tr bgcolor='.$color.'>';
+                $tabla .='<td align="center">'.$nro.'</td>';
+                $tabla .='<td><b>'.$cit['cite_nota'].'</b></td>';
+                $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
+                $tabla .='<td>'.$codigo.'</td>';
+                $tabla .='<td>'.$cit['com_componente'].'</td>';
+                $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/rep_mod_financiera/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE REQUERIMIENTOS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
+                $tabla .='<td align="center">';
+                  if($this->conf_mod_ope==1 || $this->tp_adm==1){
+                    $tabla .='<a href="'.base_url().'index.php/mod/update_cite/'.$cit['cite_id'].'" id="myBtn'.$cit['cite_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
+                            <img id="load'.$cit['cite_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
+                  }
+                $tabla .='</td>';
 
-                $tabla .='</tr>';
-                $tabla.='<script>
-                            document.getElementById("myBtn'.$cit['cite_id'].'").addEventListener("click", function(){
-                            this.disabled = true;
-                            document.getElementById("load'.$cit['cite_id'].'").style.display = "block";
-                          });
-                        </script>';
+              $tabla .='</tr>';
+              $tabla.='<script>
+                          document.getElementById("myBtn'.$cit['cite_id'].'").addEventListener("click", function(){
+                          this.disabled = true;
+                          document.getElementById("load'.$cit['cite_id'].'").style.display = "block";
+                        });
+                      </script>';
             }
         }
       }
@@ -179,8 +175,10 @@ class Cmodificaciones extends CI_Controller {
                     $tabla .='<td>'.$cit['com_componente'].'</td>';
                     $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/reporte_modfis/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE OPERACIONES"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
                     $tabla .='<td align=center>';
-                    $tabla .='<a href="'.base_url().'index.php/mod/lista_operaciones/'.$cit['cite_id'].'" id="myBtn'.$cit['cite_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
+                    if($this->conf_mod_ope==1 || $this->tp_adm==1){
+                        $tabla .='<a href="'.base_url().'index.php/mod/lista_operaciones/'.$cit['cite_id'].'" id="myBtn'.$cit['cite_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
                                 <img id="load'.$cit['cite_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
+                    }
                       /*if($this->tp_adm==1){
                       $tabla .='<a href="'.base_url().'index.php/mod/cites_mod_ope/'.$cit['ope_id'].'" id="myBtn'.$cit['ope_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
                                 <img id="load'.$cit['ope_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';

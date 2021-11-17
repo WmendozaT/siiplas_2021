@@ -189,9 +189,22 @@ class Model_modrequerimiento extends CI_Model{
 
     /*---- Get cite Proyecto - Requerimientos ----*/
     function list_cites_requerimientos_proy($proy_id){
-        $sql = 'select *
+        if($this->gestion==2020){
+            $sql = 'select *
+                from cite_mod_requerimientos ci
+                Inner Join funcionario as f On ci.fun_id=f.fun_id
+                Inner Join _componentes as c On ci.com_id=c.com_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                where p.proy_id='.$proy_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and ci.cite_estado!=\'3\'
+                order by ci.cite_id asc';
+        }
+        else{
+            $sql = 'select *
                 from lista_modificacion_requerimiento('.$proy_id.','.$this->gestion.')
                 where cite_activo=\'1\'';
+        }
+        
 
 /*        $sql = 'select *
                 from cite_mod_requerimientos ci
