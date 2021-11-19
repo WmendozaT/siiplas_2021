@@ -504,6 +504,47 @@ class User extends CI_Controller{
         return $enlace;
     }
 
+    /// DASHBOARD SEGUIMIENTO POA
+    public function dashboard_seguimientopoa(){
+      $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa();
+      $data['resp']=$this->session->userdata('funcionario');
+      $data['tmes']=$this->model_evaluacion->trimestre();
+      $data['mes']=$this->verif_mes;
+      $data['mensaje']=$this->mensaje_sistema();
+
+      $this->load->view('admin/dashboard_seguimiento',$data);
+    }
+
+
+     /*----- MENU PRINCIPAL SEGUIMIENTO POA -----*/
+    public function menu_principal_roles_seguimientopoa(){
+        $fun_id = $this->session->userdata('fun_id');
+        $menus = $this->model_configuracion->modulos($this->gestion);
+        //$menus = $this->model_control_menus->menu_segun_roles($fun_id);
+        
+        $vector;
+        $n = 0;
+        $vector[0]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+                        <a href="'.base_url().'index.php/seguimiento_poa" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <div class="well1" align="center">
+                            <img class="img-circle" src="'.base_url().'assets/img/trabajo_social.png" style="margin-left:0px; width: 95px"/>
+                            <h1 style="font-size: 11px;">SEGUIMIENTO POA '.$this->gestion.'</h1>
+                        </div>
+                        </a>
+                    </div>';
+        $vector[1]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+                        <a href="'.base_url().'index.php/eval/mis_operaciones" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <div class="well1" align="center">
+                            <img class="img-circle" src="'.base_url().'assets/img/impresora.png" style="margin-left:0px; width: 95px"/>
+                            <h1 style="font-size: 11px;">REPORTE POA '.$this->gestion.'</h1>
+                        </div>
+                        </a>
+                    </div>';
+        
+        return $vector;
+    }
+
+
 
     public function dashboard_menu($opcion){
         if($this->session->userdata('logged')){
@@ -642,7 +683,7 @@ class User extends CI_Controller{
                             }
                             else{
                                 if(count($this->model_componente->get_componente($this->session->userData('com_id'),$this->session->userData('gestion')))!=0){
-                                    redirect('seguimiento_poa');
+                                    redirect('dashboar_seguimiento_poa');
                                 }
                                 else{
                                     $this->session->sess_destroy();

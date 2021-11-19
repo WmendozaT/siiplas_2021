@@ -360,6 +360,7 @@ $route['seguimiento_establecimientos'] = 'ejecucion/cseguimiento_establecimiento
 $route['seg/ver_reporte_evaluacionpoa_es/(:any)'] = 'ejecucion/cseguimiento_establecimiento/ver_reporte_seguimientopoa_esalud/$1'; ///// Ver Reporte Evaluacion POA Mensual
 
 //====== SEGUIMIENTO POA A SUBACTIVIDADES DE LAS AREAS ADMINISTRATIVAS 2021 (MODULO PARA CADA SUBUNIDAD)
+$route['dashboar_seguimiento_poa'] = 'user/dashboard_seguimientopoa';  /// DASHBOAR SEGUIMIENTO POA
 $route['seguimiento_poa'] = 'ejecucion/cseguimiento/formulario_subactividad';  /// FORMULARIO SEGUIMIENTO POA - SUBACTIVIDAD
 $route['seguimiento_poa/reporte_seguimientopoa_mensual/(:any)'] = 'ejecucion/cseguimiento/reporte_formulario_subactividad_mes/$1/$2';  /// REPORTE FORMULARIO SEGUIMIENTO POA - SUBACTIVIDAD
 ///Solitiud de Certificacion POA

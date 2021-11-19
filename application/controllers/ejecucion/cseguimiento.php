@@ -852,6 +852,16 @@ class Cseguimiento extends CI_Controller {
 
 
     //// ================= SEGUIMIENTO POA SUBACTIVIDAD
+/*    public function formulario_subactividad(){
+      $data['vector_menus'] = $this->seguimientopoa->menu_principal_roles_seguimientopoa();
+      $data['resp']=$this->session->userdata('funcionario');
+      $data['tmes']=$this->model_evaluacion->trimestre();
+      $data['mes']=$this->verif_mes;
+      $data['mensaje']=$this->seguimientopoa->mensaje_sistema();
+
+      $this->load->view('admin/dashboard_seguimiento',$data);
+    }*/
+    
     /*------ Formulario Subactividad-----*/
     public function formulario_subactividad(){
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre

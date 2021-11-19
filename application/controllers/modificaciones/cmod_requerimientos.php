@@ -333,7 +333,7 @@ class Cmod_requerimientos extends CI_Controller {
                 <table class="table table-bordered" id="table" style="width:80%;" align="center">
                   <thead>
                     <tr>
-                      <th bgcolor="#1c7368"><font color="#ffffff">#</font></th>
+                      <th bgcolor="#1c7368"><font color="#ffffff">'.$proyecto[0]['aper_id'].'#</font></th>
                       <th style="width:5%;" bgcolor="#1c7368"><font color="#ffffff">C&Oacute;DIGO PARTIDA</font></th>
                       <th style="width:15%;"bgcolor="#1c7368"><font color="#ffffff">DESCRIPCI&Oacute;N PARTIDA</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff">MONTO ASIGNADO INICIAL</font></th>

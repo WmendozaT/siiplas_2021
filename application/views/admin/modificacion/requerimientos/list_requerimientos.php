@@ -989,6 +989,7 @@
                     ins_id = $(this).attr('name');
                     document.getElementById("ins_id").value=ins_id;
            			cite_id=document.getElementById("cite_id").value;
+           		
            			//alert(ins_id+'--'+cite_id)
            			var url = "<?php echo site_url().'/modificaciones/cmod_insumo/get_requerimiento'?>";
                     var request;
@@ -1008,7 +1009,7 @@
 
                     	if(response.verif_cert==1){
                     		$( "#detalle" ).prop( "disabled", true );
-                    		$( "#costou" ).prop( "disabled", true );
+                    		//$( "#costou" ).prop( "disabled", true );
                     		$( "#umedida" ).prop( "disabled", true );
                     		$( "#par_padre" ).prop( "disabled", true );
                     		$( "#par_hijo" ).prop( "disabled", true );
@@ -1020,7 +1021,7 @@
                     	else{
                     		$( "#detalle" ).prop( "disabled", false );
                     		$( "#cantidad" ).prop( "disabled", false );
-                    		$( "#costou" ).prop( "disabled", false );
+                    		//$( "#costou" ).prop( "disabled", false );
                     		$( "#umedida" ).prop( "disabled", false );
                     		$( "#par_padre" ).prop( "disabled", false );
                     		$( "#par_hijo" ).prop( "disabled", false );
