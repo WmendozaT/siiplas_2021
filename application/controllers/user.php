@@ -506,11 +506,13 @@ class User extends CI_Controller{
 
     /// DASHBOARD SEGUIMIENTO POA
     public function dashboard_seguimientopoa(){
-      $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa();
-      $data['resp']=$this->session->userdata('funcionario');
-      $data['tmes']=$this->model_evaluacion->trimestre();
-      $data['mes']=$this->verif_mes;
-      $data['mensaje']=$this->mensaje_sistema();
+        $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa();
+        $data['resp']=$this->session->userdata('funcionario');
+        $data['tmes']=$this->model_evaluacion->trimestre();
+        $data['mes']=$this->verif_mes;
+        $data['mensaje']=$this->mensaje_sistema();
+        $data['gestiones']=$this->list_gestiones();
+        $data['list_trimestre']=$this->list_trimestre();
 
       $this->load->view('admin/dashboard_seguimiento',$data);
     }
@@ -540,6 +542,13 @@ class User extends CI_Controller{
                         </div>
                         </a>
                     </div>';
+                    ?>
+                    <script>
+                      function evaluacion(){
+                        document.getElementById("load").style.display = "block";
+                      }
+                    </script>
+                    <?php
         
         return $vector;
     }

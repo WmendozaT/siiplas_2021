@@ -83,6 +83,7 @@
             <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li>
             <?php
               if($this->session->userdata('tp_adm')==1){ ?>
+                <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_tr" title="CAMBIAR TRIMESTRE">Trimestre</a></li>
                 <?php
               }
@@ -108,10 +109,9 @@
 
     <div class="container">
 
-
-      <!-- Main component for a primary marketing message or call to action -->
+    <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
-        <div class="row box-green1">
+      <div class="row box-green1">
         <div class="col-md-8">
           <!-- <?php echo $_SERVER["HTTP_HOST"].''.$_SERVER["REQUEST_URI"].'-----'.base_url(); ?> -->
           <h2><b>BIENVENIDO : <?php echo $resp; ?></b></h2>
@@ -167,7 +167,6 @@
                               <div class="col-md-10">
                                   <?php echo $gestiones;?>
                               </div>
-
                           </div>
                       </div>
                     </fieldset>                    
