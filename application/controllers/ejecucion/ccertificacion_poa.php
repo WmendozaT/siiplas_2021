@@ -921,7 +921,7 @@ class Ccertificacion_poa extends CI_Controller {
     $componente = $this->model_componente->get_componente($com_id,$this->gestion);
     if(count($componente)!=0){
 
-      $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
+      $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id,2);
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
       $titulo='<div style="font-family: new times roman;">'.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].' / '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'</div>';
       
@@ -1141,19 +1141,23 @@ class Ccertificacion_poa extends CI_Controller {
   public function solicitud_certpoa($sol_id){
     $solicitud = $this->model_certificacion->get_solicitud_cpoa($sol_id);
     if(count($solicitud)!=0){
-        $data['menu'] = $this->certificacionpoa->menu_segpoa($solicitud[0]['com_id']);
+        $data['menu'] = $this->certificacionpoa->menu_segpoa($solicitud[0]['com_id'],2);
         $data['li']='<li>Solicitar Certificación POA</li><li>Solicitud de Certificación POA</li>';
         if(count($solicitud)!=0 & $solicitud[0]['estado']!=3){
           
           $data['titulo']='<div style="font-size: 15px; font-family: Arial;"><b>SOLICITUD DE CERTIFICACIÓN POA GENERADO </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
           $data['opcion']='
             <div class="btn-group btn-group-justified">
-              <a href="'.site_url("").'/solicitar_certpoa/'.$solicitud[0]['com_id'].'" class="btn btn-default" style="width:50%;" title="NUEVA SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'">
+              <a href="'.site_url("").'/solicitar_certpoa/'.$solicitud[0]['com_id'].'" class="btn btn-default" style="width:35%;" title="NUEVA SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'">
                 <img src="'.base_url().'assets/img/add_icon.png" width="20" height="20"/>&nbsp;&nbsp;<b>NUEVA SOLICITUD</b>
               </a>
          
-              <a href="#" class="btn btn-default del_solicitud" style="width:50%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'">
+              <a href="#" class="btn btn-default del_solicitud" style="width:35%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$sol_id.'">
                 <img src="'.base_url().'assets/img/delete.png" width="20" height="20"/>&nbsp;&nbsp;<b>ANULAR SOLICITUD</b>
+              </a>
+
+              <a href="'.site_url("").'/dashboar_seguimiento_poa" class="btn btn-success" style="width:30%;" title="SALIR A MENU">
+                <i class="fa fa-caret-square-o-left"></i>&nbsp;&nbsp;<b>SALIR A MENU</b>
               </a>
             </div>';
           $data['cuerpo']='
@@ -1298,14 +1302,19 @@ class Ccertificacion_poa extends CI_Controller {
   public function mis_solicitudes_certificacionespoa($com_id){
     $componente = $this->model_componente->get_componente($com_id,$this->gestion);
     if(count($componente)!=0){
-      $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id);
+      $data['menu'] = $this->certificacionpoa->menu_segpoa($com_id,2);
       $data['li']='<li>Mis Solicitudes de Certificación POA</li>';
       $data['titulo']='<div style="font-size: x-large; font-variant: small-caps;"><b>MIS SOLICITUDES </b>(En menos de 24 horas se tendra aprobado su solicitud)</div>';
-      $data['opcion']='<a href="'.base_url().'index.php/solicitar_certpoa/'.$com_id.'" title="GENERAR NUEVA SOLICITUD" class="btn btn-default" style="width:100%;"><img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;GENERAR SOLICITUD</a>';
-      $data['cuerpo']='<article class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+      $data['opcion']='
+        <a href="'.base_url().'index.php/solicitar_certpoa/'.$com_id.'" title="GENERAR NUEVA SOLICITUD" class="btn btn-default" style="width:45%;"><img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;GENERAR SOLICITUD</a>
+        <a href="'.site_url().'/dashboar_seguimiento_poa" class="btn btn-success" style="width:45%;" title="SALIR A MENU">
+          <i class="fa fa-caret-square-o-left"></i>&nbsp;&nbsp;<b>SALIR A MENU</b>
+        </a>';
+      
+      $data['cuerpo']='<article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         '.$this->certificacionpoa->lista_solicitudes_certificacionespoa($com_id).'
                       </article>
-                      <article class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                      <article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="well" id="ver"></div>
                       </article>';
 

@@ -67,7 +67,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Certificaci&oacute;n POA</li><li>Solicitar Certificación POA</li><li>Solicitud de Certidicación POA</li>
+                    <li>Certificaci&oacute;n POA</li><li>Solicitar Certificación POA</li><li>Solicitud de Certificación POA</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->

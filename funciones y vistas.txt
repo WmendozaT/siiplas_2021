@@ -2112,11 +2112,13 @@ CREATE OR REPLACE VIEW public.vista_solicitud_certificacionpoa AS
     sa.serv_descripcion,
     apg.aper_id,
     apg.aper_programa,
+    apg.aper_proyecto,
     apg.aper_actividad,
     p.proy_id,
     p.proy_nombre,
     p.tp_id,
     te.tipo,
+    te.tipo_adm,
     ua.act_descripcion,
     p.dep_id,
     dep.dep_cod,
@@ -2151,6 +2153,12 @@ order by c.com_id,sol.sol_id asc;
 
 ALTER TABLE public.vista_solicitud_certificacionpoa
   OWNER TO postgres
+
+
+
+
+
+
 
 
 

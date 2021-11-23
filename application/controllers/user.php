@@ -530,15 +530,23 @@ class User extends CI_Controller{
                         <a href="'.base_url().'index.php/seguimiento_poa" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/trabajo_social.png" style="margin-left:0px; width: 95px"/>
-                            <h1 style="font-size: 11px;">SEGUIMIENTO POA '.$this->gestion.'</h1>
+                            <h1 style="font-size: 11px;">SEGUIMIENTO POA</h1>
                         </div>
                         </a>
                     </div>';
         $vector[1]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
-                        <a href="'.base_url().'index.php/eval/mis_operaciones" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <a href="'.base_url().'index.php/solicitar_certpoa/'.$this->session->userData('com_id').'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <div class="well1" align="center">
+                            <img class="img-circle" src="'.base_url().'assets/img/icon11.JPG" style="margin-left:0px; width: 95px"/>
+                            <h1 style="font-size: 11px;">SOLICITUD CERTIFICACIÓN POA</h1>
+                        </div>
+                        </a>
+                    </div>';
+        $vector[2]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+                        <a href="'.base_url().'index.php/reporte_segpoa/'.$this->session->userData('com_id').'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/impresora.png" style="margin-left:0px; width: 95px"/>
-                            <h1 style="font-size: 11px;">REPORTE POA '.$this->gestion.'</h1>
+                            <h1 style="font-size: 11px;">REPORTE POA</h1>
                         </div>
                         </a>
                     </div>';

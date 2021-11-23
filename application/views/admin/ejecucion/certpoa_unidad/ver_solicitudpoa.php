@@ -74,13 +74,13 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-10 col-lg-9">
+                        <article class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                             <section id="widget-grid" class="well">
                                 <?php echo $titulo;?>
                             </section>
                         </article>
-                        <article class="col-xs-12 col-sm-12 col-md-2 col-lg-3">
-                            <section id="widget-grid" class="well">
+                        <article class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                            <section id="widget-grid" class="well" align="center">
                                 <?php echo $opcion;?>
                             </section>
                         </article>

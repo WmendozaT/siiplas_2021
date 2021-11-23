@@ -851,21 +851,11 @@ class Cseguimiento extends CI_Controller {
     }
 
 
-    //// ================= SEGUIMIENTO POA SUBACTIVIDAD
-/*    public function formulario_subactividad(){
-      $data['vector_menus'] = $this->seguimientopoa->menu_principal_roles_seguimientopoa();
-      $data['resp']=$this->session->userdata('funcionario');
-      $data['tmes']=$this->model_evaluacion->trimestre();
-      $data['mes']=$this->verif_mes;
-      $data['mensaje']=$this->seguimientopoa->mensaje_sistema();
 
-      $this->load->view('admin/dashboard_seguimiento',$data);
-    }*/
-    
     /*------ Formulario Subactividad-----*/
     public function formulario_subactividad(){
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      $data['menu'] = $this->seguimientopoa->menu_segpoa($this->com_id);
+      $data['menu'] = $this->seguimientopoa->menu_segpoa($this->com_id,1);
       $data['componente']=$this->model_componente->get_componente($this->com_id,$this->gestion);
       if(count($data['componente'])!=0){
         $data['com_id']=$this->com_id;
@@ -873,8 +863,8 @@ class Cseguimiento extends CI_Controller {
         $data['titulo']=
         '
         <h2>BIENVENIDO : '.$this->session->userdata('funcionario').'</h2>
-        <h1 title='.$data['proyecto'][0]['aper_id'].'><small>ACTIVIDAD : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
-        <h1><small>SUBACTIVIDAD : </small> '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h1>
+        <h1 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
+        <h1><small>UNIDAD RESPONSABLE : </small> '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h1>
         <h1><small>FORMULARIO DE SEGUIMIENTO POA : </small> <b>'.$this->verif_mes[2].' / '.$this->gestion.'</b></h1>';
       
         $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1);
@@ -903,8 +893,6 @@ class Cseguimiento extends CI_Controller {
 
         $data['formularios_poa']=$this->seguimientopoa->formularios_poa($this->com_id,$data['componente'][0]['proy_id']);
         $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($this->com_id);
-
-
 
 
         $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($this->com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes

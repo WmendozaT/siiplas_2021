@@ -754,12 +754,12 @@ class Certificacionpoa extends CI_Controller{
         <input name="base" type="hidden" value="'.base_url().'">
         <fieldset>
           <legend><b>'.$titulo.'</b></legend>
-          <span class="badge bg-color-green" style="font-size: 35px;">Paso 1)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Seleccione la Operación donde se encuentre alineado el items a Certificar</span><hr>
+          <span class="badge bg-color-green" style="font-size: 35px;">Paso 1)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Seleccione la Actividad donde se encuentre alineado el items a Certificar</span><hr>
           <div class="form-group">
-            <label class="col-md-2 control-label"><b>OPERACI&Oacute;N</b></label>
+            <label class="col-md-2 control-label"><b>ACTIVIDAD (FORMULARIO N° 4)</b></label>
             <div class="col-md-6">
               <select class="form-control" name="prod_id" id="prod_id">
-                <option value="0">Seleccione Operación</option>';
+                <option value="0">Seleccione Actividad</option>';
                foreach($productos as $row){
                   $tabla.='<option value="'.$row['prod_id'].'">'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
                 }
@@ -1290,19 +1290,19 @@ class Certificacionpoa extends CI_Controller{
                         <tr>
                             <td style="width:20%;">
                                 <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                                    <tr><td style="width:95%;height: 1.5%;" bgcolor="#f0f1f0"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                    <tr><td style="width:95%;height: 1.5%;" bgcolor="#f0f1f0"><b>'.$solicitud[0]['tipo_adm'].'</b></td><td style="width:5%;"></td></tr>
                                 </table>
                             </td>
                             <td style="width:80%;">
                                 <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                                    <tr><td style="width:100%;height: 1.5%;">&nbsp;'.$solicitud[0]['aper_actividad'].' '.strtoupper ($solicitud[0]['act_descripcion']).' '.$solicitud[0]['abrev'].'</td></tr>
+                                    <tr><td style="width:100%;height: 1.5%;">&nbsp;'.$solicitud[0]['aper_programa'].' '.$solicitud[0]['aper_proyecto'].' '.$solicitud[0]['aper_actividad'].' '.strtoupper ($solicitud[0]['act_descripcion']).' '.$solicitud[0]['abrev'].'</td></tr>
                                 </table>
                             </td>
                         </tr>
                         <tr>
                             <td style="width:20%;">
                                 <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                                    <tr><td style="width:95%;height: 1.5%;" bgcolor="#f0f1f0"><b>SUBACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                    <tr><td style="width:95%;height: 1.5%;" bgcolor="#f0f1f0"><b>UNIDAD RESPONSABLE</b></td><td style="width:5%;"></td></tr>
                                 </table>
                             </td>
                             <td style="width:80%;">
@@ -1325,26 +1325,24 @@ class Certificacionpoa extends CI_Controller{
                 <td style="width:98%;">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                         <tr>
-                            <td style="width:100%;height: 2%;font-size: 12px; font-family: Arial;" bgcolor="#a4cdf1"><b>II. ARTICULACI&Oacute;N POA 2021 Y PEI 2016-2020</b></td>
+                            <td style="width:100%;height: 2%;font-size: 12px; font-family: Arial;" bgcolor="#a4cdf1"><b>II. ARTICULACI&Oacute;N POA '.$this->gestion.' Y PEI</b></td>
                         </tr>
                     </table><br>
-                    <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                         <thead>
                             <tr style="font-size: 8px; font-family: Arial;" align="center" >
-                                <th style="width:5%;height: 1.5%;">COD. OPE.</th>
-                                <th style="width:30%;">OPERACI&Oacute;N</th>
-                                <th style="width:5%;">COD. OR.</th>
-                                <th style="width:30%;">OBJETIVO REGIONAL</th>
-                                <th style="width:30%;">ACCIÓN ESTRATEGICA</th>
+                                <th style="width:4%;height: 1.5%;">COD. ACT.</th>
+                                <th style="width:32%;">DESCRIPCIÓN ACTIVIDAD</th>
+                                <th style="width:32%;">OPERACIÓN '.$this->gestion.'</th>
+                                <th style="width:32%;">ACCIÓN DE CORTO PLAZO '.$this->gestion.'</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="width:5%;height: 4%;font-size: 13px;" align="center"><b>'.$solicitud[0]['prod_cod'].'</b></td>
-                                <td style="width:30%;">'.$solicitud[0]['prod_producto'].'</td>
-                                <td style="width:5%;font-size: 13px;" align="center"><b>'.$solicitud[0]['or_codigo'].'</b></td>
-                                <td style="width:30%;">'.$solicitud[0]['or_objetivo'].'</td>
-                                <td style="width:30%;"><b>'.$solicitud[0]['acc_codigo'].'</b> '.$solicitud[0]['acc_descripcion'].'</td>
+                                <td style="width:4%;height: 4%;font-size: 15px;" align="center"><b>'.$solicitud[0]['prod_cod'].'</b></td>
+                                <td style="width:32%;">'.$solicitud[0]['prod_producto'].'</td>
+                                <td style="width:32%;"><b>'.$solicitud[0]['or_codigo'].'</b>.- '.$solicitud[0]['or_objetivo'].'</td>
+                                <td style="width:32%;"><b>'.$solicitud[0]['og_codigo'].'</b>.- '.$solicitud[0]['og_objetivo'].'</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1626,7 +1624,7 @@ class Certificacionpoa extends CI_Controller{
     $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Certificacion
     $requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id); /// lista de items certificados  
     $tabla.='
-        <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;" align=center>
+        <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;" align=center>
           <thead>
               <tr style="font-size: 8px; font-family: Arial;" align="center" bgcolor="#efefef">
                 <th style="width:3%;height: 4%;">N°</th>
@@ -1892,7 +1890,7 @@ class Certificacionpoa extends CI_Controller{
     $requerimientos=$this->model_certificacion->get_lista_requerimientos_solicitados($sol_id);
     $tabla.='
     <div class="table-responsive">
-      <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+      <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <thead>
               <tr style="font-size: 8px; font-family: Arial;" align="center" >
                 <th style="width:3%;height: 1.5%;">N°</th>
@@ -1912,7 +1910,7 @@ class Certificacionpoa extends CI_Controller{
               $nro++;
               $suma_monto=$suma_monto+$row['monto_solicitado'];
               $tabla.='
-              <tr style="font-size: 8px; font-family: Arial;">
+              <tr style="font-size: 7.5px; font-family: Arial;">
                 <td style="width:3%;height: 3%;" align=center>'.$nro.'</td>
                 <td style="width:7%;" align=center>'.$row['par_codigo'].'</td>
                 <td style="width:28.9%;">'.$row['ins_detalle'].'</td>
@@ -2640,7 +2638,7 @@ class Certificacionpoa extends CI_Controller{
   }
 
   /// Menu Seguimiento POA (Sub Actividad)
-    public function menu_segpoa($com_id){
+   public function menu_segpoa($com_id,$tp){
       $tabla='';
       $tabla.='
       <aside id="left-panel">
@@ -2656,33 +2654,46 @@ class Certificacionpoa extends CI_Controller{
         </div>
         <nav>
           <ul>
-              <li class="">
-              <a href="#" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-              </li>
-              <li class="text-center">
-                  <a href="#" title="REGISTRO DE SEGUIMIENTO, EVALUACIÓN Y CERTIFICACIÓN POA"> <span class="menu-item-parent">SEG. EVAL. POA</span></a>
-              </li>
-              <li>';
-              if($this->session->userData('tp_usuario')==0){
-                $tabla.='<a href="'.site_url("").'/seguimiento_poa"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Seg. y eval. POA</span></a>';
+            <li class="">
+            <a href="'.site_url("").'/dashboar_seguimiento_poa" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+            </li>';
+              if($tp==1){
+                $tabla.='
+                <li class="text-center">
+                  <a href="#" title="REGISTRO DE SEGUIMIENTO"> <span class="menu-item-parent">SEG. EVAL. POA</span></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Seg. y eval. POA</span></a>
+                </li>';
               }
-              elseif($this->session->userData('tp_usuario')==1){
-                $tabla.='<a href="'.site_url("").'/seguimiento_establecimientos"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Seg. y eval. POA</span></a>';
+              elseif ($tp==2) {
+                $tabla.='
+                <li class="text-center">
+                  <a href="#" title="SOLICITUD DE CERTIFICACION POA"> <span class="menu-item-parent">CERTIFICACIÓN POA</span></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Certificación POA</span></a>
+                  <ul>
+                    <li>
+                      <a href="'.site_url("").'/solicitar_certpoa/'.$com_id.'">Solicitar Certificación POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
+                    </li>
+                    <li>
+                      <a href="'.site_url("").'/mis_solicitudes_cpoa/'.$com_id.'">Mis Solicitudes POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
+                    </li>
+                  </ul>
+                </li>';
               }
-              $tabla.='
-              
-              </li>
-              <li>
-                <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Certificación POA</span></a>
-                <ul>
-                  <li>
-                    <a href="'.site_url("").'/solicitar_certpoa/'.$com_id.'">Solicitar Certificación POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
-                  </li>
-                  <li>
-                    <a href="'.site_url("").'/mis_solicitudes_cpoa/'.$com_id.'">Mis Solicitudes POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
-                  </li>
-                </ul>
-              </li>
+              elseif ($tp==3) {
+                $tabla.='
+                <li class="text-center">
+                  <a href="#" title="REPORTE POA"> <span class="menu-item-parent">REPORTES POA</span></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Reportes POA</span></a>
+                </li>';
+              }
+            $tabla.='
+            
           </ul>
         </nav>
         <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>

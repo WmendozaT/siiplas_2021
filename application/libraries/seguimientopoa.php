@@ -2022,9 +2022,9 @@ class Seguimientopoa extends CI_Controller{
               <thead>                 
                 <tr>
                   <th style="width:1%;"></th>
-                  <th style="width:1%;"><b>COD. OR.</b></th>
                   <th style="width:1%;"><b>COD. OPE.</b></th>
-                  <th style="width:13%;">OPERACI&Oacute;N</th>
+                  <th style="width:1%;"><b>COD. ACT.</b></th>
+                  <th style="width:13%;">ACTIVIDAD</th>
                   <th style="width:8%;">INDICADOR</th>
                   <th style="width:3%;">META TOTAL</th>
                   <th style="width:5%;">META NO EJECUTADO</th>
@@ -2420,7 +2420,7 @@ class Seguimientopoa extends CI_Controller{
     }
 
   /// Menu Seguimiento POA (Sub Actividad)
-    public function menu_segpoa($com_id){
+    public function menu_segpoa($com_id,$tp){
       $tabla='';
       $tabla.='
       <aside id="left-panel">
@@ -2436,26 +2436,46 @@ class Seguimientopoa extends CI_Controller{
         </div>
         <nav>
           <ul>
-              <li class="">
-              <a href="#" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-              </li>
-              <li class="text-center">
-                  <a href="#" title="REGISTRO DE SEGUIMIENTO, EVALUACIÓN Y CERTIFICACIÓN POA"> <span class="menu-item-parent">SEG. EVAL. POA</span></a>
-              </li>
-              <li>
-                <a href="'.site_url("").'/seguimiento_establecimientos"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Seg. y eval. POA</span></a>
-              </li>
-              <li>
-                <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Certificación POA</span></a>
-                <ul>
-                  <li>
-                    <a href="'.site_url("").'/solicitar_certpoa/'.$com_id.'">Solicitar Certificación POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
-                  </li>
-                  <li>
-                    <a href="'.site_url("").'/mis_solicitudes_cpoa/'.$com_id.'">Mis Solicitudes POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
-                  </li>
-                </ul>
-              </li>
+            <li class="">
+            <a href="'.site_url("").'/dashboar_seguimiento_poa" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+            </li>';
+              if($tp==1){
+                $tabla.='
+                <li class="text-center">
+                  <a href="#" title="REGISTRO DE SEGUIMIENTO"> <span class="menu-item-parent">SEG. EVAL. POA</span></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Seg. y eval. POA</span></a>
+                </li>';
+              }
+              elseif ($tp==2) {
+                $tabla.='
+                <li class="text-center">
+                  <a href="#" title="SOLICITUD DE CERTIFICACION POA"> <span class="menu-item-parent">CERTIFICACIÓN POA</span></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Certificación POA</span></a>
+                  <ul>
+                    <li>
+                      <a href="'.site_url("").'/solicitar_certpoa/'.$com_id.'">Solicitar Certificación POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
+                    </li>
+                    <li>
+                      <a href="'.site_url("").'/mis_solicitudes_cpoa/'.$com_id.'">Mis Solicitudes POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
+                    </li>
+                  </ul>
+                </li>';
+              }
+              elseif ($tp==3) {
+                $tabla.='
+                <li class="text-center">
+                  <a href="#" title="REPORTE POA"> <span class="menu-item-parent">REPORTES POA</span></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Reportes POA</span></a>
+                </li>';
+              }
+            $tabla.='
+            
           </ul>
         </nav>
         <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
@@ -2464,6 +2484,7 @@ class Seguimientopoa extends CI_Controller{
       return $tabla;
     }
 
+    
 }
 
 ?>

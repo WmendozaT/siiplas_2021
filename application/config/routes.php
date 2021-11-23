@@ -369,6 +369,13 @@ $route['form_certpoa/(:any)'] = 'ejecucion/ccertificacion_poa/formulario_certpoa
 $route['solicitud_poa/(:any)'] = 'ejecucion/ccertificacion_poa/solicitud_certpoa/$1';  /// SOLICITUD CERTIFICACION POA
 $route['reporte_solicitud_poa/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_solicitud_certpoa/$1';  /// FORMULARIO SOLICITUD CERTIFICACION POA
 $route['mis_solicitudes_cpoa/(:any)'] = 'ejecucion/ccertificacion_poa/mis_solicitudes_certificacionespoa/$1';  /// MIS SOLICITUDES CERTIFICACION POA
+///reportes POA por Unidad Responsable
+$route['reporte_segpoa/(:any)'] = 'reporte_subactividad/crep_subactividad/menu_reporte_subactividad/$1';  /// SOLICITAR CERTIFICACION POA
+
+
+
+
+
 
 /*-- Aprobar Solicitud Certificacion POA ---*/
 $route['ejec/mis_solicitudes_certpoa'] = 'ejecucion/ccertificacion_poa/ver_mis_solicitudes_certpoa';  ///// VER MIS SOLICITUDES DE CERTIFICACION POA
