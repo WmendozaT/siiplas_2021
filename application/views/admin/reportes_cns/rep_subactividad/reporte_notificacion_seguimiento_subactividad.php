@@ -20,10 +20,6 @@ ob_start();
 </style>
 
 <?php
-    if($proyecto[0]['ta_id']!=2 & $proyecto[0]['ta_id']!=5){
-        echo $principal;
-    }
-    
     echo $cuerpo;
 $content = ob_get_clean();
 //require_once(dirname(__FILE__).'/../html2pdf.class.php');
@@ -32,7 +28,7 @@ try{
     $html2pdf = new HTML2PDF('P', 'Letter', 'fr', true, 'UTF-8', 0);
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-    $html2pdf->Output('Notificacion_POA_'.$verif_mes[2].'.pdf');
+    $html2pdf->Output($titulo_pie.'.pdf');
 }
 catch(HTML2PDF_exception $e) {
     echo $e;

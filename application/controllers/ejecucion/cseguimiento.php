@@ -814,10 +814,10 @@ class Cseguimiento extends CI_Controller {
     public function reporte_notificacion_operaciones_mensual($proy_id){
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
       if(count($data['proyecto'])!=0){
-        $data['mes'] = $this->seguimientopoa->mes_nombre();
-        $data['subactividades']=$this->model_seguimientopoa->get_lista_subactividades_operaciones_programados($data['proyecto'][0]['dist_id'],$this->verif_mes[1],$this->gestion,$proy_id);
+        $subactividades=$this->model_seguimientopoa->get_lista_subactividades_operaciones_programados($data['proyecto'][0]['dist_id'],$this->verif_mes[1],$this->gestion,$proy_id);
         $data['verif_mes']=$this->verif_mes;
         $data['principal']=$this->seguimientopoa->cuerpo_nota_notificacion($proy_id); /// Cuerpo Nota Principal
+        $data['cuerpo']=$this->seguimientopoa->lista_subactividades_a_notificar($subactividades);
 
         $this->load->view('admin/evaluacion/seguimiento_poa/reporte_notificacion_seguimiento', $data); 
       }

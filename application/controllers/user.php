@@ -506,24 +506,25 @@ class User extends CI_Controller{
 
     /// DASHBOARD SEGUIMIENTO POA
     public function dashboard_seguimientopoa(){
-        $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa();
-        $data['resp']=$this->session->userdata('funcionario');
-        $data['tmes']=$this->model_evaluacion->trimestre();
-        $data['mes']=$this->verif_mes;
-        $data['mensaje']=$this->mensaje_sistema();
-        $data['gestiones']=$this->list_gestiones();
-        $data['list_trimestre']=$this->list_trimestre();
+        if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
+            $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa();
+            $data['resp']=$this->session->userdata('funcionario');
+            $data['tmes']=$this->model_evaluacion->trimestre();
+            $data['mes']=$this->verif_mes;
+            $data['mensaje']=$this->mensaje_sistema();
+            $data['gestiones']=$this->list_gestiones();
+            $data['list_trimestre']=$this->list_trimestre();
 
-      $this->load->view('admin/dashboard_seguimiento',$data);
+            $this->load->view('admin/dashboard_seguimiento',$data);   
+        } else{
+            $this->session->sess_destroy();
+            redirect('/','refresh');
+        }
     }
 
 
      /*----- MENU PRINCIPAL SEGUIMIENTO POA -----*/
     public function menu_principal_roles_seguimientopoa(){
-        $fun_id = $this->session->userdata('fun_id');
-        $menus = $this->model_configuracion->modulos($this->gestion);
-        //$menus = $this->model_control_menus->menu_segun_roles($fun_id);
-        
         $vector;
         $n = 0;
         $vector[0]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">

@@ -363,15 +363,15 @@ $route['seg/ver_reporte_evaluacionpoa_es/(:any)'] = 'ejecucion/cseguimiento_esta
 $route['dashboar_seguimiento_poa'] = 'user/dashboard_seguimientopoa';  /// DASHBOAR SEGUIMIENTO POA
 $route['seguimiento_poa'] = 'ejecucion/cseguimiento/formulario_subactividad';  /// FORMULARIO SEGUIMIENTO POA - SUBACTIVIDAD
 $route['seguimiento_poa/reporte_seguimientopoa_mensual/(:any)'] = 'ejecucion/cseguimiento/reporte_formulario_subactividad_mes/$1/$2';  /// REPORTE FORMULARIO SEGUIMIENTO POA - SUBACTIVIDAD
-///Solitiud de Certificacion POA
+///Solitiud de Certificacion POA (Subactividad)
 $route['solicitar_certpoa/(:any)'] = 'ejecucion/ccertificacion_poa/solicitar_certpoa/$1';  /// SOLICITAR CERTIFICACION POA
 $route['form_certpoa/(:any)'] = 'ejecucion/ccertificacion_poa/formulario_certpoa/$1';  /// FORMULARIO CERTIFICACION POA
 $route['solicitud_poa/(:any)'] = 'ejecucion/ccertificacion_poa/solicitud_certpoa/$1';  /// SOLICITUD CERTIFICACION POA
 $route['reporte_solicitud_poa/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_solicitud_certpoa/$1';  /// FORMULARIO SOLICITUD CERTIFICACION POA
 $route['mis_solicitudes_cpoa/(:any)'] = 'ejecucion/ccertificacion_poa/mis_solicitudes_certificacionespoa/$1';  /// MIS SOLICITUDES CERTIFICACION POA
-///reportes POA por Unidad Responsable
+///reportes POA por Unidad Responsable (Subactividad)
 $route['reporte_segpoa/(:any)'] = 'reporte_subactividad/crep_subactividad/menu_reporte_subactividad/$1';  /// SOLICITAR CERTIFICACION POA
-
+$route['get_notificacion_subactividad_mensual/(:any)'] = 'reporte_subactividad/crep_subactividad/get_notificacion_subactividad/$1'; ///// Reporte Notificacion Seguimiento POA Mensual - SubActividad
 
 
 
