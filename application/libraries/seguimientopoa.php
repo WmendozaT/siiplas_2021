@@ -2633,7 +2633,7 @@ class Seguimientopoa extends CI_Controller{
     }
 
   /// Menu Seguimiento POA (Sub Actividad)
-    public function menu_segpoa($com_id,$tp){
+    public function menu_segpoa($com_id,$tp,$link_menu){
       $tabla='';
       $tabla.='
       <aside id="left-panel">
@@ -2650,7 +2650,7 @@ class Seguimientopoa extends CI_Controller{
         <nav>
           <ul>
             <li class="">
-            <a href="'.site_url("").'/dashboar_seguimiento_poa" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+            <a href="'.site_url("").'/'.$link_menu.'" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
             </li>';
               if($tp==1){
                 $tabla.='

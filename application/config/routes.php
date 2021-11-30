@@ -356,10 +356,11 @@ $route['rep/get_seguimiento_da'] = 'reporte_seguimiento_poa/crep_seguimientopoa/
 $route['rep/get_reporte_seguimientopoa/(:any)'] = 'reporte_seguimiento_poa/crep_seguimientopoa/reporte_seguimiento_poa_unidades/$1/$2/$3/$4'; ////// Reporte Seguimiento POA por Unidades,Distrital,Regional
 
 //====== MENU SEGUIMIENTO A ESTABLECIMIENTOS DE SALUD 2021
+$route['dashboar_seguimiento_establecimientos'] = 'user/dashboard_seguimientopoa_es';  /// DASHBOAR SEGUIMIENTO POA (ESTABLECIMIENTO DE SALUD)
 $route['seguimiento_establecimientos'] = 'ejecucion/cseguimiento_establecimiento/formulario_establecimiento';  /// MENU SEGUIMIENTO POA 2021
 $route['seg/ver_reporte_evaluacionpoa_es/(:any)'] = 'ejecucion/cseguimiento_establecimiento/ver_reporte_seguimientopoa_esalud/$1'; ///// Ver Reporte Evaluacion POA Mensual
 
-//====== SEGUIMIENTO POA A SUBACTIVIDADES DE LAS AREAS ADMINISTRATIVAS 2021 (MODULO PARA CADA SUBUNIDAD)
+//====== SEGUIMIENTO POA A SUBACTIVIDADES DE LAS AREAS ADMINISTRATIVAS 2021 (MODULO PARA CADA SUB UNIDAD)
 $route['dashboar_seguimiento_poa'] = 'user/dashboard_seguimientopoa';  /// DASHBOAR SEGUIMIENTO POA
 $route['seguimiento_poa'] = 'ejecucion/cseguimiento/formulario_subactividad';  /// FORMULARIO SEGUIMIENTO POA - SUBACTIVIDAD
 $route['seguimiento_poa/reporte_seguimientopoa_mensual/(:any)'] = 'ejecucion/cseguimiento/reporte_formulario_subactividad_mes/$1/$2';  /// REPORTE FORMULARIO SEGUIMIENTO POA - SUBACTIVIDAD

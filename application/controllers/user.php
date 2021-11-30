@@ -504,11 +504,12 @@ class User extends CI_Controller{
         return $enlace;
     }
 
-    /// DASHBOARD SEGUIMIENTO POA
+    /// DASHBOARD SEGUIMIENTO POA (UNIDAD ADMINISTRATIVA)
     public function dashboard_seguimientopoa(){
         if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
-            $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa();
             $data['resp']=$this->session->userdata('funcionario');
+            $link_form1='seguimiento_poa';
+            $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa($link_form1,$this->session->userData('com_id'));
             $data['tmes']=$this->model_evaluacion->trimestre();
             $data['mes']=$this->verif_mes;
             $data['mensaje']=$this->mensaje_sistema();
@@ -523,12 +524,33 @@ class User extends CI_Controller{
     }
 
 
-     /*----- MENU PRINCIPAL SEGUIMIENTO POA -----*/
-    public function menu_principal_roles_seguimientopoa(){
+    /// DASHBOARD SEGUIMIENTO POA (ESTABLECIMIENTO DE SALUD)
+    public function dashboard_seguimientopoa_es(){
+        if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
+            $establecimiento=$this->model_seguimientopoa->get_unidad_programado_gestion($this->session->userData('act_id'));
+            $data['resp']=$establecimiento[0]['tipo'].' '.$establecimiento[0]['act_descripcion'].' '.$establecimiento[0]['abrev'];
+            $link_form1='seguimiento_establecimientos';
+            $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa($link_form1,$establecimiento[0]['com_id']);
+            $data['tmes']=$this->model_evaluacion->trimestre();
+            $data['mes']=$this->verif_mes;
+            $data['mensaje']=$this->mensaje_sistema();
+            $data['gestiones']=$this->list_gestiones();
+            $data['list_trimestre']=$this->list_trimestre();
+
+            $this->load->view('admin/dashboard_seguimiento',$data);  
+        } else{
+            $this->session->sess_destroy();
+            redirect('/','refresh');
+        }
+    }
+
+
+    /*----- MENU PRINCIPAL SEGUIMIENTO POA -----*/
+    public function menu_principal_roles_seguimientopoa($link_seguimiento,$id){
         $vector;
         $n = 0;
         $vector[0]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
-                        <a href="'.base_url().'index.php/seguimiento_poa" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <a href="'.base_url().'index.php/'.$link_seguimiento.'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/trabajo_social.png" style="margin-left:0px; width: 95px"/>
                             <h1 style="font-size: 11px;">SEGUIMIENTO POA</h1>
@@ -536,7 +558,7 @@ class User extends CI_Controller{
                         </a>
                     </div>';
         $vector[1]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
-                        <a href="'.base_url().'index.php/solicitar_certpoa/'.$this->session->userData('com_id').'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <a href="'.base_url().'index.php/solicitar_certpoa/'.$id.'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/icon11.JPG" style="margin-left:0px; width: 95px"/>
                             <h1 style="font-size: 11px;">SOLICITUD CERTIFICACIÓN POA</h1>
@@ -544,7 +566,7 @@ class User extends CI_Controller{
                         </a>
                     </div>';
         $vector[2]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
-                        <a href="'.base_url().'index.php/reporte_segpoa/'.$this->session->userData('com_id').'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <a href="'.base_url().'index.php/reporte_segpoa/'.$id.'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/impresora.png" style="margin-left:0px; width: 95px"/>
                             <h1 style="font-size: 11px;">REPORTE POA</h1>
@@ -723,7 +745,7 @@ class User extends CI_Controller{
           
                         if($is_valid['bool']){
                             $this->session->set_userdata($this->session_establecimiento($is_valid['act_id']));
-                            redirect('seguimiento_establecimientos');
+                            redirect('dashboar_seguimiento_establecimientos');
                         }
                         else{
                             $this->session->sess_destroy();

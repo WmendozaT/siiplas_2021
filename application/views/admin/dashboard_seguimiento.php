@@ -115,7 +115,7 @@
         <div class="col-md-8">
           <!-- <?php echo $_SERVER["HTTP_HOST"].''.$_SERVER["REQUEST_URI"].'-----'.base_url(); ?> -->
           <h2><b>BIENVENIDO : <?php echo $resp; ?></b></h2>
-          <h4><b>CARGO : </b><?php echo $this->session->userdata("cargo");?></h4>
+          <h4><b>CARGO : </b>SEGUIMIENTO POA</h4>
           <h4><b>MES / GESTI&Oacute;N VIGENTE : </b><?php echo $mes[2].' / '.$this->session->userdata("gestion");?></h4>
           <h4><b>TRIMESTRE VIGENTE : </b><?php echo $tmes[0]['trm_descripcion'];?></h4>
         </div>
@@ -133,20 +133,9 @@
       <?php echo $mensaje;?>
       <div class="row" >
         <?php 
-          $rol = $this->session->userdata('rol_id');
-          if($rol!=''){
-            for ($i=0; $i < count($vector_menus); $i++) { 
-              echo $vector_menus[$i]; 
-            }
+          for ($i=0; $i < count($vector_menus); $i++) { 
+            echo $vector_menus[$i]; 
           }
-          else{ ?>
-            <div class="alert alert-danger alert-block">
-              <a class="close" data-dismiss="alert" href="#">×</a>
-              <h4 class="alert-heading">Error!</h4>
-              EL USUARIO RESPONSABLE NO CUENTA CON UN ROL ESPECIFICO, CONTACTESE CON EL ADMINISTRADOR
-            </div>
-            <?php
-          } 
         ?>
       </div>
       <!-- end row -->
