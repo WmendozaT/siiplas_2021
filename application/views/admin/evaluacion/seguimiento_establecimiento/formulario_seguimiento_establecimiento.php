@@ -141,6 +141,7 @@
                                                <div class="row"><br>
                                                     <div align="right">
                                                         <?php echo $boton_reporte_seguimiento_poa;?>
+                                                        <a class="btn btn-success" href="<?php echo base_url().'index.php/dashboar_seguimiento_poa';?>" title="SALIR A MENU PRINCIPAL"><i class="fa fa-caret-square-o-left"></i> SALIR A MENU</a>
                                                     </div>
                                                     <div class="jarviswidget jarviswidget-color-darken" >
                                                       <?php echo $operaciones_programados;?>

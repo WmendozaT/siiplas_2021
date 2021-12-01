@@ -38,7 +38,7 @@ class Cseguimiento_establecimiento extends CI_Controller {
     $com_id=$this->establecimiento[0]['com_id'];
     $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
     $link_menu='dashboar_seguimiento_establecimientos';
-    $data['menu'] = $this->seguimientopoa->menu_segpoa($com_id,1,$link_menu);
+    $data['menu'] = $this->seguimientopoa->menu_segpoa($com_id,1);
     $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
     $data['com_id']=$com_id;
     $data['proy_id']=$this->establecimiento[0]['proy_id'];

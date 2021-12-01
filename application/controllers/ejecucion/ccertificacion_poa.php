@@ -918,6 +918,7 @@ class Ccertificacion_poa extends CI_Controller {
   //// CERTIFICACION POA POR SUBACTIVIDAD
   /*------ SOLICITAR CERTIFICACION POA  -------*/
   public function solicitar_certpoa($com_id){
+
     $componente = $this->model_componente->get_componente($com_id,$this->gestion);
     if(count($componente)!=0){
 
@@ -930,9 +931,10 @@ class Ccertificacion_poa extends CI_Controller {
         $data['select_ope']=$this->certificacionpoa->select_mis_productos($com_id,$titulo); /// Seleccion de productos
       }
       else{
-        $data['select_ope']='<div class="alert alert-danger" role="alert">
-                  SE DEBE AJUSTAR EL PRESUPUESTO POA DEBIDO A QUE EXISTE UN SOBREGIRO NEGATIVO : '.number_format($presupuesto[0]['saldo'], 2, ',', '.').' Bs.
-                </div>';
+        $data['select_ope']='
+          <div class="alert alert-danger" role="alert">
+            SE DEBE AJUSTAR EL PRESUPUESTO POA DEBIDO A QUE EXISTE UN SOBREGIRO NEGATIVO : '.number_format($presupuesto[0]['saldo'], 2, ',', '.').' Bs.
+          </div>';
       }
 
       $data['loading']='

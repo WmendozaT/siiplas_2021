@@ -157,10 +157,109 @@
                 $("#rep_id option:selected").each(function () {
                     rep_id=$(this).val();
                     com_id=$('[name="com_id"]').val();
+                    m_id=$('[name="m_id"]').val();
+                    trm_id=$('[name="trm_id"]').val();
                     
                     if(rep_id!=0){
+                        if(rep_id!=5 & rep_id!=6){
+                            $('#seg_poa').slideUp();
+                            $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
+                            var url = "<?php echo site_url("")?>/reporte_subactividad/crep_subactividad/get_lista_reportepoa";
+                            var request;
+                            if (request) {
+                                request.abort();
+                            }
+                            request = $.ajax({
+                                url: url,
+                                type: "POST",
+                                dataType: 'json',
+                                data: "com_id="+com_id+"&rep_id="+rep_id
+                            });
+
+                            request.done(function (response, textStatus, jqXHR) {
+                                if (response.respuesta == 'correcto') {
+                                    $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                                }
+                                else{
+                                    alertify.error("ERROR AL LISTAR");
+                                }
+                            }); 
+                        }
+                        else{
+
+                            if(rep_id==5){
+                                $('#seg_poa').slideDown();
+                                $("#lista_consolidado").html('');
+                                var url = "<?php echo site_url("")?>/reporte_subactividad/crep_subactividad/get_seguimiento_poa";
+                                var request;
+                                if (request) {
+                                    request.abort();
+                                }
+                                request = $.ajax({
+                                    url: url,
+                                    type: "POST",
+                                    dataType: 'json',
+                                    data: "com_id="+com_id+"&m_id="+m_id
+                                });
+
+                                request.done(function (response, textStatus, jqXHR) {
+                                    if (response.respuesta == 'correcto') {
+                                        $('#mes_id').fadeIn(1000).html(response.lista);
+                                        $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                                    }
+                                    else{
+                                        alertify.error("ERROR AL LISTAR");
+                                    }
+                                }); 
+                            }
+                            else{
+                                $('#seg_poa').slideUp();
+                                $('#eval_poa').slideDown();
+                                $("#lista_consolidado").html('');
+                                var url = "<?php echo site_url("")?>/reporte_subactividad/crep_subactividad/get_evaluacion_poa";
+                                var request;
+                                if (request) {
+                                    request.abort();
+                                }
+                                request = $.ajax({
+                                    url: url,
+                                    type: "POST",
+                                    dataType: 'json',
+                                    data: "com_id="+com_id+"&trm_id="+trm_id
+                                });
+
+                                request.done(function (response, textStatus, jqXHR) {
+                                    if (response.respuesta == 'correcto') {
+                                        $('#trimestre_id').fadeIn(1000).html(response.lista_evaluacion);
+                                      //  $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                                    }
+                                    else{
+                                        alertify.error("ERROR AL LISTAR");
+                                    }
+                                }); 
+                            }
+                        }
+
+                    }
+                    else{
+                       // alert('vacio')
+                        $('#lista_consolidado').fadeIn(1000).html('campo no seleccionado !!!');
+                    }
+                });
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            pageSetUp();
+            $("#mes_id").change(function () {
+                $("#mes_id option:selected").each(function () {
+                    mes_id=$(this).val();
+                    com_id=$('[name="com_id"]').val();
+
+                    //$('#seg_poa').slideUp();
                         $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
-                        var url = "<?php echo site_url("")?>/reporte_subactividad/crep_subactividad/get_lista_reportepoa";
+                        var url = "<?php echo site_url("")?>/reporte_subactividad/crep_subactividad/get_rep_seguimientopoa";
                         var request;
                         if (request) {
                             request.abort();
@@ -169,7 +268,7 @@
                             url: url,
                             type: "POST",
                             dataType: 'json',
-                            data: "com_id="+com_id+"&rep_id="+rep_id
+                            data: "com_id="+com_id+"&mes_id="+mes_id
                         });
 
                         request.done(function (response, textStatus, jqXHR) {
@@ -177,14 +276,10 @@
                                 $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
                             }
                             else{
-                                alertify.error("ERROR AL LISTAR");
+                                alertify.error("ERROR!!");
                             }
                         }); 
-                    }
-                    else{
-                       // alert('vacio')
-                        $('#lista_consolidado').fadeIn(1000).html('campo no seleccionado !!!');
-                    }
+
                 });
             });
         });

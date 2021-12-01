@@ -855,8 +855,7 @@ class Cseguimiento extends CI_Controller {
     /*------ Formulario Subactividad-----*/
     public function formulario_subactividad(){
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      $link_menu='dashboar_seguimiento_poa';
-      $data['menu'] = $this->seguimientopoa->menu_segpoa($this->com_id,1,$link_menu);
+      $data['menu'] = $this->seguimientopoa->menu_segpoa($this->com_id,1);
       $data['componente']=$this->model_componente->get_componente($this->com_id,$this->gestion);
 
       if(count($data['componente'])!=0){

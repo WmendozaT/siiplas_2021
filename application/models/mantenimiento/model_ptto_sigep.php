@@ -510,7 +510,7 @@ class Model_ptto_sigep extends CI_Model{
                 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                 Inner Join partidas as par On par.par_id=i.par_id
                 Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
-                where pfe.proy_id='.$proy_id.' and i.par_id='.$par_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and c.estado!=\'3\' and pr.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and apg.aper_gestion='.$this->gestion.'
+                where pfe.proy_id='.$proy_id.' and i.par_id='.$par_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and c.estado!=\'3\' and pr.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and apg.aper_gestion='.$this->gestion.' and i.ins_gestion='.$this->gestion.'
                 group by pfe.proy_id,i.par_id, par.par_codigo, par.par_nombre';
         
         $query = $this->db->query($sql);

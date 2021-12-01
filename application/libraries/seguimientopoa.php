@@ -406,17 +406,17 @@ class Seguimientopoa extends CI_Controller{
         $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
         $tabla='';
         $tabla.='
-            <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+            <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
                 <thead>
                   <tr bgcolor=#f8f2f2 align=center>
-                    <th style="font-size: 7px; height:17px;" colspan=9>DATOS POA (OPERACIONES)</th>
+                    <th style="font-size: 7px; height:17px;" colspan=9>DATOS POA (FORMULARIO N° 4 - ACTIVIDADES)</th>
                     <th colspan=3>DATOS SEGUIMIENTO</th>
                   </tr>   
                   <tr style="font-size: 7px; height:17px;" bgcolor=#f8f2f2 align=center>
                     <th style="width:1%;"></th>
-                    <th style="width:3%;"><b>COD. OR.</b></th>
                     <th style="width:3%;"><b>COD. OPE.</b></th>
-                    <th style="width:20%;">OPERACI&Oacute;N</th>
+                    <th style="width:3%;"><b>COD. ACT.</b></th>
+                    <th style="width:20%;">DESCRIPCI&Oacute;N ACTIVIDAD</th>
                     <th style="width:16%;">MEDIO DE VERIFICACI&Oacute;N</th>
                     <th style="width:4%;">META ANUAL</th>
                     <th style="width:4%;">PROG. MES '.$verif_mes[2].'</th>
@@ -2633,7 +2633,7 @@ class Seguimientopoa extends CI_Controller{
     }
 
   /// Menu Seguimiento POA (Sub Actividad)
-    public function menu_segpoa($com_id,$tp,$link_menu){
+    public function menu_segpoa($com_id,$tp){
       $tabla='';
       $tabla.='
       <aside id="left-panel">
@@ -2650,7 +2650,7 @@ class Seguimientopoa extends CI_Controller{
         <nav>
           <ul>
             <li class="">
-            <a href="'.site_url("").'/'.$link_menu.'" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+            <a href="'.site_url("").'/dashboar_seguimiento_poa" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
             </li>';
               if($tp==1){
                 $tabla.='

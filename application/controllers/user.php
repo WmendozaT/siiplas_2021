@@ -507,37 +507,30 @@ class User extends CI_Controller{
     /// DASHBOARD SEGUIMIENTO POA (UNIDAD ADMINISTRATIVA)
     public function dashboard_seguimientopoa(){
         if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
-            $data['resp']=$this->session->userdata('funcionario');
-            $link_form1='seguimiento_poa';
-            $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa($link_form1,$this->session->userData('com_id'));
-            $data['tmes']=$this->model_evaluacion->trimestre();
-            $data['mes']=$this->verif_mes;
-            $data['mensaje']=$this->mensaje_sistema();
-            $data['gestiones']=$this->list_gestiones();
-            $data['list_trimestre']=$this->list_trimestre();
+            if($this->session->userdata('tp_usuario')==0){ /// Unidad Administrativa
+                $data['resp']=$this->session->userdata('funcionario');
+                $link_form1='seguimiento_poa';
+                $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa($link_form1,$this->session->userData('com_id'));
+                $data['tmes']=$this->model_evaluacion->trimestre();
+                $data['mes']=$this->verif_mes;
+                $data['mensaje']=$this->mensaje_sistema();
+                $data['gestiones']=$this->list_gestiones();
+                $data['list_trimestre']=$this->list_trimestre();
+            }
+            else{ /// Establecimiento de Salud
+                $establecimiento=$this->model_seguimientopoa->get_unidad_programado_gestion($this->session->userData('act_id'));
+                $data['resp']=$establecimiento[0]['tipo'].' '.$establecimiento[0]['act_descripcion'].' '.$establecimiento[0]['abrev'];
+                $link_form1='seguimiento_establecimientos';
+                $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa($link_form1,$establecimiento[0]['com_id']);
+                $data['tmes']=$this->model_evaluacion->trimestre();
+                $data['mes']=$this->verif_mes;
+                $data['mensaje']=$this->mensaje_sistema();
+                $data['gestiones']=$this->list_gestiones();
+                $data['list_trimestre']=$this->list_trimestre();
+            }
 
-            $this->load->view('admin/dashboard_seguimiento',$data);   
-        } else{
-            $this->session->sess_destroy();
-            redirect('/','refresh');
-        }
-    }
+            $this->load->view('admin/dashboard_seguimiento',$data); 
 
-
-    /// DASHBOARD SEGUIMIENTO POA (ESTABLECIMIENTO DE SALUD)
-    public function dashboard_seguimientopoa_es(){
-        if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
-            $establecimiento=$this->model_seguimientopoa->get_unidad_programado_gestion($this->session->userData('act_id'));
-            $data['resp']=$establecimiento[0]['tipo'].' '.$establecimiento[0]['act_descripcion'].' '.$establecimiento[0]['abrev'];
-            $link_form1='seguimiento_establecimientos';
-            $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa($link_form1,$establecimiento[0]['com_id']);
-            $data['tmes']=$this->model_evaluacion->trimestre();
-            $data['mes']=$this->verif_mes;
-            $data['mensaje']=$this->mensaje_sistema();
-            $data['gestiones']=$this->list_gestiones();
-            $data['list_trimestre']=$this->list_trimestre();
-
-            $this->load->view('admin/dashboard_seguimiento',$data);  
         } else{
             $this->session->sess_destroy();
             redirect('/','refresh');
@@ -745,7 +738,7 @@ class User extends CI_Controller{
           
                         if($is_valid['bool']){
                             $this->session->set_userdata($this->session_establecimiento($is_valid['act_id']));
-                            redirect('dashboar_seguimiento_establecimientos');
+                            redirect('dashboar_seguimiento_poa');
                         }
                         else{
                             $this->session->sess_destroy();
