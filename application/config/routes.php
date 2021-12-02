@@ -373,7 +373,7 @@ $route['mis_solicitudes_cpoa/(:any)'] = 'ejecucion/ccertificacion_poa/mis_solici
 ///reportes POA por Unidad Responsable (Subactividad)
 $route['reporte_segpoa/(:any)'] = 'reporte_subactividad/crep_subactividad/menu_reporte_subactividad/$1';  /// SOLICITAR CERTIFICACION POA
 $route['get_notificacion_subactividad_mensual/(:any)'] = 'reporte_subactividad/crep_subactividad/get_notificacion_subactividad/$1'; ///// Reporte Notificacion Seguimiento POA Mensual - SubActividad
-
+$route['iframe_rep_evaluacionpoa_subactividad/(:any)'] = 'reporte_subactividad/crep_subactividad/iframe_evaluacion_poa_subactividad/$1/$2';  /// Iframe Reporte Evaluacion Subactividad POA 2022
 
 
 

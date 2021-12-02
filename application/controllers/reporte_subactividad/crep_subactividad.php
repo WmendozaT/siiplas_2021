@@ -11,6 +11,7 @@ class Crep_subactividad extends CI_Controller {
             $this->load->model('programacion/model_componente');
             $this->load->model('mantenimiento/model_configuracion');
             $this->load->model('ejecucion/model_evaluacion');
+            $this->load->model('ejecucion/model_seguimientopoa');
 
             $this->gestion = $this->session->userData('gestion');
             $this->adm = $this->session->userData('adm');
@@ -233,32 +234,34 @@ class Crep_subactividad extends CI_Controller {
         $trm_id = $this->security->xss_clean($post['trm_id']);
         $trimestre=$this->model_evaluacion->trimestre();
         $listar_trimestre= $this->model_configuracion->get_mes_trimestre();
-        //$m_id = $this->security->xss_clean($post['m_id']);
-        //$meses = $this->model_configuracion->get_mes();
-        //$mes=$this->model_evaluacion->get_mes($m_id);
+
         $tabla='';
           $tabla.='<option value="0">Seleccione Trimestre de Evaluación POA ..</option>';
           foreach($listar_trimestre as $row){
             if($row['trm_id']!=0){
-              $tabla.='<option value="'.$row['trm_id'].'" >EVALUACION POA - '.$row['trm_descripcion'].' / '.$this->gestion.'</option>';
+              if($row['trm_id']<=$trm_id){
+                if($row['trm_id']==$trm_id){
+                  $tabla.='<option value="'.$row['trm_id'].'" selected>EVALUACION POA - '.$row['trm_descripcion'].' / '.$this->gestion.'</option>';
+                }
+                else{
+                  $tabla.='<option value="'.$row['trm_id'].'">EVALUACION POA - '.$row['trm_descripcion'].' / '.$this->gestion.'</option>';
+                }
+              }
             }
           }
 
 
-
-          /*
-
           $salida='';
           $salida.='
           <form class="smart-form">
-            <header><b>FORMULARIO SEGUIMIENTO POA - '.$mes[0]['m_descripcion'].' / '.$this->gestion.'</b></header>
-            <iframe id="ipdf" width="100%"  height="800px;" src="'.base_url().'index.php/seguimiento_poa/reporte_seguimientopoa_mensual/'.$com_id.'/'.$m_id.'"></iframe>
-          </form>';*/
+            <header><b>EVALUACION POA - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
+            <iframe id="ipdf" width="100%"  height="800px;" src="'.base_url().'index.php/iframe_rep_evaluacionpoa_subactividad/'.$com_id.'/'.$trm_id.'"></iframe>
+          </form>';
 
         $result = array(
           'respuesta' => 'correcto',
           'lista_evaluacion' => $tabla,
-         // 'lista_reporte' => $salida,
+          'lista_reporte' => $salida,
         );
           
         echo json_encode($result);
@@ -266,6 +269,88 @@ class Crep_subactividad extends CI_Controller {
           show_404();
       }
     }
+
+
+
+    //// IFRAME EVAL SUBACTIVIDAD
+    public function iframe_evaluacion_poa_subactividad($com_id,$trm_id){
+      $data['componente']=$this->model_componente->get_componente($com_id,$this->gestion);
+      $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
+      $data['trimestre']=$this->model_evaluacion->get_trimestre($trm_id);
+
+      if(count($data['componente'])!=0){
+        if($this->session->userdata('tp_usuario')==0){ /// Unidad Administrativa
+           $data['titulo']=
+            '<h2><b>'.strtoupper($data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion']).' - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
+        }
+        else{
+          $establecimiento=$this->model_seguimientopoa->get_unidad_programado_gestion($this->session->userData('act_id'));
+          $data['titulo']=
+            '<h2><b>'.strtoupper($establecimiento[0]['tipo'].' '.$establecimiento[0]['act_descripcion'].' '.$establecimiento[0]['abrev']).' - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
+        }
+
+        $data['cabecera_regresion']='';
+        $data['cabecera_pastel']='';
+        $data['cabecera_regresion_total']='';
+
+
+       
+        $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id); /// Tabla para el grafico al trimestre
+        $data['calificacion']=$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]);
+
+
+        $data['tabla_regresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion Vista
+        $data['tabla_regresion_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
+        
+        /*--- grafico Pastel trimestral ---*/
+        $data['tabla_pastel_todo']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
+        $data['tabla_pastel_todo_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
+
+
+        $data['tabla_gestion']=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($com_id); /// Matriz para el grafico Total Gestion
+        $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
+        $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
+
+        $this->load->view('admin/reportes_cns/rep_subactividad/iframe_evaluacion_subactividad', $data); 
+      }
+      else{
+        echo "Error !!!";
+      }
+
+    }
+
+
+
+    /*--- GET LISTA DE REPORTES SEGUIMIENTO POA ---*/
+    public function get_rep_evaluacionpoa(){
+      //$data['tmes']=$this->model_evaluacion->trimestre();
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $trm_id = $this->security->xss_clean($post['trm_id']);
+        $com_id = $this->security->xss_clean($post['com_id']);
+
+        $trimestre=$this->model_evaluacion->get_trimestre($trm_id);
+        $salida='';
+          $salida.='
+          <form class="smart-form">
+            <header><b>EVALUACION POA - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
+            <iframe id="ipdf" width="100%"  height="800px;" src="'.base_url().'index.php/iframe_rep_evaluacionpoa_subactividad/'.$com_id.'/'.$trm_id.'"></iframe>
+          </form>';
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'lista_reporte' => $salida,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+
 
 
 }
