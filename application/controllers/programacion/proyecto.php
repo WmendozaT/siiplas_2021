@@ -878,6 +878,9 @@ class Proyecto extends CI_Controller {
     if(count($data['proyecto'])!=0){
       $data['mes'] = $this->mes_nombre();
       $this->load->view('admin/programacion/reportes/presentacion_poa', $data);
+
+     // $data['regional']=$this->model
+     // $this->load->view('admin/mantenimiento/caratula_poa/caratula_regional', $data);
     }
     else{
       echo "ERROR !!!!";

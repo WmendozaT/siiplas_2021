@@ -295,7 +295,7 @@ class Cmod_fisica extends CI_Controller {
           /*--------- Update Producto --------*/
           $update_prod = array(
           //  'com_id' => $com_id, // com id
-            'prod_producto' => strtoupper($prod), // Producto
+            'prod_producto' => strtoupper($this->security->xss_clean($post['mprod'])), // Producto
             'prod_resultado' => strtoupper($resultado),
             'indi_id' => $indi_id,
             'prod_indicador' => strtoupper($indicador),
