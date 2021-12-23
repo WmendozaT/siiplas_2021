@@ -109,6 +109,35 @@ class User extends CI_Controller{
         redirect('admin/dashboard','refresh');
     }
 
+
+    /*-------- Valida Cambio gestion Session (Seguimiento POA)-----------*/
+    public function cambiar_gestion_uresponsable(){
+        $conf=$this->model_proyecto->get_configuracion($this->input->post('gestion_usu'));
+
+         $data = array(
+                'gestion' => $conf[0]['ide'],
+                'mes' => $conf[0]['conf_mes'],
+                'mes_actual'=>$this->verif_mes_gestion($conf[0]['conf_mes']),
+                'estado_notificaciones' => $conf[0]['conf_poa'], /// Estado para las Notificaciones 0:no activo, 1: Habilitado
+                'conf_estado' => $conf[0]['conf_estado'], //7 Estado 1: Activo, 0: No activo
+                'conf_poa_estado' => $conf[0]['conf_poa_estado'], //7 Estado poa-presupuesto 1: inicial, 2 ajustado, 3 aprobado
+                'trimestre' => $conf[0]['conf_mes_otro'], /// Trimestre 1,2,3,4
+                'tr_id' => ($conf[0]['conf_mes_otro']+$conf[0]['conf_mes_otro']*2), /// Trimestre 3,6,9,12
+                'desc_mes' => $this->mes_texto($conf[0]['conf_mes']),
+                'verif_ppto' => $conf[0]['ppto_poa'], /// Ppto poa : 0 (Vigente), 1: (Aprobado)
+                'conf_form4' => $conf[0]['conf_form4'], /// Estado de Registro del formulario N4, 0 (Inactivo), 1 (Activo)
+                'conf_form5' => $conf[0]['conf_form5'], /// Estado de Registro del formulario N5, 0 (Inactivo), 1 (Activo)
+                'conf_mod_ope' => $conf[0]['conf_mod_ope'], /// Estado de Modificacion del formulario N4, 0 (Inactivo), 1 (Activo)
+                'conf_mod_req' => $conf[0]['conf_mod_req'], /// Estado de Modificacion del formulario N5, 0 (Inactivo), 1 (Activo)
+                'conf_certificacion' => $conf[0]['conf_certificacion'], /// Estado de Certificacion del formulario N5, 0 (Inactivo), 1 (Activo)
+                'rd_poa' => $conf[0]['rd_aprobacion_poa'] /// Ppto poa : 0 (Vigente), 1: (Aprobado)
+            );
+            $this->session->set_userdata($data);
+
+       // echo $this->session->userData('act_id');
+        //redirect('dashboar_seguimiento_poa','refresh');
+    }
+
     /*-------- Valida Cambio trimestre Session -----------*/
     public function cambiar_trimestre(){
         $conf=$this->model_proyecto->get_configuracion($this->gestion);
@@ -553,7 +582,7 @@ class User extends CI_Controller{
         $vector[1]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                         <a href="'.base_url().'index.php/solicitar_certpoa/'.$id.'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
-                            <img class="img-circle" src="'.base_url().'assets/img/icon11.JPG" style="margin-left:0px; width: 95px"/>
+                            <img class="img-circle" src="'.base_url().'assets/img/icon11.jpg" style="margin-left:0px; width: 95px"/>
                             <h1 style="font-size: 11px;">SOLICITUD CERTIFICACIÓN POA</h1>
                         </div>
                         </a>

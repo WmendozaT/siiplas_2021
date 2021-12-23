@@ -147,7 +147,7 @@
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-body">
-                <form action="<?php echo site_url().'/cambiar_session'?>" id="form_nuevo" name="form_nuevo" class="form-horizontal" method="post">
+                <form action="<?php echo site_url().'/cambiar_session_uresponsable'?>" id="form_nuevo" name="form_nuevo" class="form-horizontal" method="post">
                     <h3 class="alert alert-info"><center>CAMBIAR GESTI&Oacute;N - <?php echo $this->session->userdata('gestion')?></center></h3>   
                     <fieldset>
                       <div class="form-group">
