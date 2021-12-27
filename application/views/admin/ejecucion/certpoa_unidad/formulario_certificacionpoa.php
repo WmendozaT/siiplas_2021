@@ -110,9 +110,12 @@
                                     </div>
 
                                     <div align="center">
-                                        <input type="button" value="GENERAR SOLICITUD DE CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success btn-lg" title="SOLICITUD CERTIFICACION POA">
+                                        <div class="btn-toolbar" role="toolbar">
+                                            <button type="button" class="btn btn-success btn-lg" id="btsubmit">
+                                                <span class="glyphicon glyphicon-floppy-saved"></span>&nbsp;&nbsp;GENERAR SOLICITUD DE CERTIFICACIÓN POA&nbsp;&nbsp;<span class="glyphicon glyphicon-ok"></span>
+                                            </button>
+                                        </div>
                                     </div>
-                                    
                                   </div>
                                 </footer>
                             </form>

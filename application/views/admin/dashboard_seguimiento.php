@@ -81,13 +81,6 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
             <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li>
-            <?php
-              if($this->session->userdata('tp_adm')==1){ ?>
-                <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_tr" title="CAMBIAR TRIMESTRE">Trimestre</a></li>
-                <?php
-              }
-            ?>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Descarga de Archivos / Documentos">Descargas <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -149,6 +142,7 @@
               <div class="modal-body">
                 <form action="<?php echo site_url().'/cambiar_session_uresponsable'?>" id="form_nuevo" name="form_nuevo" class="form-horizontal" method="post">
                     <h3 class="alert alert-info"><center>CAMBIAR GESTI&Oacute;N - <?php echo $this->session->userdata('gestion')?></center></h3>   
+                    <input type="text" name="com_id" value="<?php echo $com_id; ?>">
                     <fieldset>
                       <div class="form-group">
                           <div class="form-group">
@@ -174,7 +168,7 @@
           </div>
         </div>
 
-        <div class="modal fade" id="modal_ope_mes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--         <div class="modal fade" id="modal_ope_mes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document" id="mdialTamanio">
             <div class="modal-content">
               <div class="modal-header">
@@ -185,9 +179,9 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="modal fade" id="modal_nuevo_tr" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--         <div class="modal fade" id="modal_nuevo_tr" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-body">
@@ -216,7 +210,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -234,7 +228,7 @@
         document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
       }
     </script>
-    <script type="text/javascript">
+<!--     <script type="text/javascript">
         /*------ Evaluacion de Operaciones ------*/
         $(function () {
             var prod_id = ''; var proy_id = '';
@@ -264,7 +258,7 @@
 
             });
         });
-      </script>
+      </script> -->
 
     <script type="text/javascript">
       $(function () {
@@ -293,7 +287,7 @@
               
           });
 
-          $("#subir_formt").on("click", function () {
+         /* $("#subir_formt").on("click", function () {
             val=document.getElementById("trimestre_usu").value;
 
             if(val!=0 & val!=''){
@@ -316,7 +310,7 @@
               alertify.error("SELECCIONE TRIMESTRE");
             }
               
-          });
+          });*/
       });
     </script>
 

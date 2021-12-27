@@ -113,7 +113,7 @@ class User extends CI_Controller{
     /*-------- Valida Cambio gestion Session (Seguimiento POA)-----------*/
     public function cambiar_gestion_uresponsable(){
         $conf=$this->model_proyecto->get_configuracion($this->input->post('gestion_usu'));
-
+     //   echo $this->security->xss_clean($post['com_id']);;
          $data = array(
                 'gestion' => $conf[0]['ide'],
                 'mes' => $conf[0]['conf_mes'],
@@ -134,8 +134,8 @@ class User extends CI_Controller{
             );
             $this->session->set_userdata($data);
 
-       // echo $this->session->userData('act_id');
-        //redirect('dashboar_seguimiento_poa','refresh');
+        //echo $this->session->userData('com_id');
+        redirect('dashboar_seguimiento_poa','refresh');
     }
 
     /*-------- Valida Cambio trimestre Session -----------*/
@@ -541,6 +541,7 @@ class User extends CI_Controller{
                 $link_form1='seguimiento_poa';
                 $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa($link_form1,$this->session->userData('com_id'));
                 $data['tmes']=$this->model_evaluacion->trimestre();
+                $data['com_id']=$this->session->userData('com_id');
                 $data['mes']=$this->verif_mes;
                 $data['mensaje']=$this->mensaje_sistema();
                 $data['gestiones']=$this->list_gestiones();
@@ -552,6 +553,7 @@ class User extends CI_Controller{
                 $link_form1='seguimiento_establecimientos';
                 $data['vector_menus'] = $this->menu_principal_roles_seguimientopoa($link_form1,$establecimiento[0]['com_id']);
                 $data['tmes']=$this->model_evaluacion->trimestre();
+                $data['com_id']=$establecimiento[0]['com_id'];
                 $data['mes']=$this->verif_mes;
                 $data['mensaje']=$this->mensaje_sistema();
                 $data['gestiones']=$this->list_gestiones();
@@ -739,7 +741,8 @@ class User extends CI_Controller{
                         
                         $is_valid = $this->model_funcionario->verificar_loggin($this->security->xss_clean($user_name), $this->security->xss_clean($password));
                         if($is_valid['bool']){
-                            $this->session->set_userdata($this->session_administrador($is_valid['fun_id']));
+                            $this->session->set_userdata($this->session_administrador($is_valid['fun_id'])); /// Sesion Administrador
+                            
                             if($this->session->userData('rol_id')!=9){
                                 redirect('admin/dashboard');
                             }
@@ -871,7 +874,7 @@ class User extends CI_Controller{
             'estado' => $actividad[0]['act_estado'],
             'dist' => $actividad[0]['dist_id'], /// Distrital
             'name_distrital' => $actividad[0]['dist_distrital'],
-            'com_id' => 0,
+            'com_id' => $actividad[0]['act_id'],
             'adm' => 2,
             'fun_id' => 399,
             'fun_estado' => 1,
