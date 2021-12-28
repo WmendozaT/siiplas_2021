@@ -134,12 +134,12 @@
                                         <li>
                                             <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE SEGUIMIENTO POA (MENSUAL)</span></a>
                                         </li>
-                                        <li>
+                                       <!--  <li>
                                             <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</span></a>
                                         </li>
                                         <li>
                                             <a data-toggle="tab" href="#s5"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (GESTI&Oacute;N)</span></a>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                 </header>
 
@@ -200,7 +200,7 @@
                                             </div>
                                             <!-- end s3 tab pane -->
 
-                                            <div class="tab-pane fade" id="s4" title="CUADRO DE EVALUACIÓN POA">
+                                            <!-- <div class="tab-pane fade" id="s4" title="CUADRO DE EVALUACIÓN POA">
                                                <div class="row">
                                                 <div class="well">
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -254,10 +254,10 @@
                                                     </div>
                                                 </div>
                                                </div>
-                                            </div>
+                                            </div> -->
                                             <!-- end s4 tab pane -->
 
-                                            <div class="tab-pane fade" id="s5" title="CUADRO DE EVALUACIÓN POA GESTIÓN">
+                                            <!-- <div class="tab-pane fade" id="s5" title="CUADRO DE EVALUACIÓN POA GESTIÓN">
                                                <div class="row">
                                                 <div class="well">
                                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
@@ -288,7 +288,7 @@
                                                     </div>
                                                 </div>
                                                </div>
-                                            </div>
+                                            </div> -->
                                             <!-- end s5 tab pane -->
 
                                         </div>
@@ -398,7 +398,7 @@
         <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento.js"></script> 
         
         <!-- REGRESION LINEAL AL TRIMESTRE -->
-        <script type="text/javascript">
+    <!--     <script type="text/javascript">
           var chart1;
           $(document).ready(function() {
             chart1 = new Highcharts.Chart({
@@ -515,8 +515,8 @@
                 ?>
             });
           });
-        </script>
-        <script type="text/javascript">
+        </script> -->
+<!--         <script type="text/javascript">
             $(document).ready(function() {  
                Highcharts.chart('pastel_todos', {
                 chart: {
@@ -571,7 +571,7 @@
                 }]
               });
             });
-        </script>
+        </script> -->
         <script type="text/javascript">
             Highcharts.chart('container', {
             chart: {
@@ -644,7 +644,7 @@
         });
         </script>
 
-        <script type="text/javascript">
+<!--         <script type="text/javascript">
           var chart1;
           $(document).ready(function() {
             chart1 = new Highcharts.Chart({
@@ -694,6 +694,6 @@
                 ]
             });
           });
-        </script>
+        </script> -->
     </body>
 </html>

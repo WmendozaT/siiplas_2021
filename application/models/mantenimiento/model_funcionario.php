@@ -87,8 +87,14 @@ class Model_funcionario extends CI_Model {
                         where cm_id=\'0\''; 
             }
             else{
-                $sql = 'select * from vlist_funcionario
-                        where cm_id!=\'0\''; 
+                $sql = 'select * 
+                        from vlist_funcionario vf
+                        Inner Join _componentes as c On c.com_id=vf.cm_id
+                        Inner Join tipo_subactividad as tpa On tpa.tp_sact=c.tp_sact
+                        Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                        where vf.cm_id!=\'0\' and apg.aper_gestion='.$this->gestion.''; 
             }
             
         }

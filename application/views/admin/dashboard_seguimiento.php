@@ -80,7 +80,7 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li>
+            <!-- <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li> -->
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Descarga de Archivos / Documentos">Descargas <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -136,82 +136,6 @@
 
     </div> <!-- /container -->
 
-        <div class="modal fade" id="modal_nuevo_ff" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              <div class="modal-body">
-                <form action="<?php echo site_url().'/cambiar_session_uresponsable'?>" id="form_nuevo" name="form_nuevo" class="form-horizontal" method="post">
-                    <h3 class="alert alert-info"><center>CAMBIAR GESTI&Oacute;N - <?php echo $this->session->userdata('gestion')?></center></h3>   
-                    <input type="text" name="com_id" value="<?php echo $com_id; ?>">
-                    <fieldset>
-                      <div class="form-group">
-                          <div class="form-group">
-                              <label class="col-md-2 control-label">GESTI&Oacute;N</label>
-                              <div class="col-md-10">
-                                  <?php echo $gestiones;?>
-                              </div>
-                          </div>
-                      </div>
-                    </fieldset>                    
-                    <div class="form-actions">
-                        <div class="row">
-                          <div class="col-md-12" align="right">
-                            <button class="btn btn-default" data-dismiss="modal" id="cl" title="CANCELAR">CANCELAR</button>
-                            <button type="button" name="subir_form" id="subir_form" class="btn btn-info" >CAMBIAR GESTI&Oacute;N</button>
-                            <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                          </div>
-                        </div>
-                    </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
-<!--         <div class="modal fade" id="modal_ope_mes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document" id="mdialTamanio">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-              </div>
-              <div class="modal-body" align="center">
-                <div id="operaciones"></div>
-              </div>
-            </div>
-          </div>
-        </div> -->
-
-<!--         <div class="modal fade" id="modal_nuevo_tr" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              <div class="modal-body">
-                <form action="<?php echo site_url().'/cambiar_session_trimestre'?>" id="form_trimestre" name="form_trimestre" class="form-horizontal" method="post">
-                    <h4 class="alert alert-info"><center>CAMBIAR TRIMESTRE - <?php echo $tmes[0]['trm_descripcion']; ?></center></h4>   
-                    <fieldset>
-                      <div class="form-group">
-                          <div class="form-group">
-                              <label class="col-md-2 control-label">TRIMESTRE</label>
-                              <div class="col-md-10">
-                                  <?php echo $list_trimestre;?>
-                              </div>
-                          </div>
-                      </div>
-                    </fieldset>                    
-                    <div class="form-actions">
-                        <div class="row">
-                          <div class="col-md-12" align="right">
-                            <button class="btn btn-default" data-dismiss="modal" id="cl" title="CANCELAR">CANCELAR</button>
-                            <button type="button" name="subir_formt" id="subir_formt" class="btn btn-info" >CAMBIAR TRIMESTRE</button>
-                            <center><img id="loadt" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-                          </div>
-                        </div>
-                    </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div> -->
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -227,91 +151,6 @@
       if (!window.jQuery.ui) {
         document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
       }
-    </script>
-<!--     <script type="text/javascript">
-        /*------ Evaluacion de Operaciones ------*/
-        $(function () {
-            var prod_id = ''; var proy_id = '';
-            $(".ope_mes").on("click", function (e) {
-                dist_id = $(this).attr('id');
-                $('#operaciones').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando lista de Operaciones a ejecutar este mes ...</div>');
-                var url = "<?php echo site_url("")?>/ejecucion/cseguimiento/get_operaciones_mes";
-                var request;
-                if (request) {
-                    request.abort();
-                }
-                request = $.ajax({
-                    url: url,
-                    type: "POST",
-                    dataType: 'json',
-                    data: "dist_id="+dist_id
-                });
-
-                request.done(function (response, textStatus, jqXHR) { 
-                    if (response.respuesta == 'correcto') {
-                        $('#operaciones').html(response.tabla);
-                    } else {
-                        alertify.error("ERROR AL RECUPERAR DATOS, PORFAVOR CONTACTESE CON EL ADMINISTRADOR"); 
-                    }
-                });
-
-
-            });
-        });
-      </script> -->
-
-    <script type="text/javascript">
-      $(function () {
-          $("#subir_form").on("click", function () {
-            val=document.getElementById("gestion_usu").value;
-
-            if(val!=0 & val!=''){
-              if(document.getElementById("gest").value!=document.getElementById("gestion_usu").value){
-                alertify.confirm("CAMBIAR GESTI&Oacute;N ?", function (a) {
-                    if (a) {
-                        document.getElementById("load").style.display = 'block';
-                        document.getElementById('subir_form').disabled = true;
-                        document.forms['form_nuevo'].submit();
-                    } else {
-                        alertify.error("OPCI\u00D3N CANCELADA");
-                    }
-                });
-              }
-              else{
-                alertify.success("GESTI&Oacute;N SELECCIONADA");
-              }
-            }
-            else{
-              alertify.error("SELECCIONE GESTI&Oacute;N");
-            }
-              
-          });
-
-         /* $("#subir_formt").on("click", function () {
-            val=document.getElementById("trimestre_usu").value;
-
-            if(val!=0 & val!=''){
-              if(document.getElementById("tmes").value!=document.getElementById("trimestre_usu").value){
-                alertify.confirm("CAMBIAR TRIMESTRE ?", function (a) {
-                    if (a) {
-                        document.getElementById("loadt").style.display = 'block';
-                        document.getElementById('subir_formt').disabled = true;
-                        document.forms['form_trimestre'].submit();
-                    } else {
-                        alertify.error("OPCI\u00D3N CANCELADA");
-                    }
-                });
-              }
-              else{
-                alertify.success("TRIMESTRE SELECCIONADO");
-              }
-            }
-            else{
-              alertify.error("SELECCIONE TRIMESTRE");
-            }
-              
-          });*/
-      });
     </script>
 
 </body>
