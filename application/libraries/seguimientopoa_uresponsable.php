@@ -72,10 +72,10 @@ class Seguimientopoa extends CI_Controller{
     }
 
       /*------- CABECERA REPORTE SEGUIMIENTO POA (GRAFICO)------*/
-    function cabecera_seguimiento($establecimiento,$subactividad,$tipo_titulo,$trm_id){
+    function cabecera_seguimiento($establecimiento,$subactividad,$tipo_titulo){
       $fase=$this->model_faseetapa->get_fase($subactividad[0]['pfec_id']);
       $proyecto=$this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
-      $trimestre=$this->model_evaluacion->get_trimestre($trm_id);
+      $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
       /// tipo_titulo 1 : Seguimiento Mensual
       /// tipo_titulo 2 : Evaluacion por Trimestre
       /// tipo_titulo 3 : Evaluacion POA Gestion
@@ -159,7 +159,7 @@ class Seguimientopoa extends CI_Controller{
                     </td>
                     <td style="width:75%;">';
                       if($proyecto[0]['tp_id']==4){
-                        $tabla.='&nbsp;'.$establecimiento[0]['aper_actividad'].' - '.$establecimiento[0]['tipo'].' '.strtoupper ($establecimiento[0]['act_descripcion']).' '.$establecimiento[0]['abrev'].'';
+                        $tabla.='&nbsp;'.$establecimiento[0]['aper_actividad'].' '.strtoupper ($establecimiento[0]['act_descripcion']).' '.$establecimiento[0]['abrev'].'';
                       }
                       else{
                         $tabla.='&nbsp;'.$proyecto[0]['proy_sisin'].' '.strtoupper($proyecto[0]['proy_nombre']).'';
@@ -506,9 +506,9 @@ class Seguimientopoa extends CI_Controller{
                 <thead>
                  <tr style="font-size: 7px;" align=center>
                     <th style="width:1%;height:15px;">#</th>
-                    <th style="width:1%;">COD.<br>OPE.</th>
-                    <th style="width:1%;">COD.<br>ACT.</th> 
-                    <th style="width:7%;">DESCRIPCIÓN ACTIVIDAD</th>
+                    <th style="width:1%;">COD.<br>OR.</th>
+                    <th style="width:1%;">COD.<br>OPE.</th> 
+                    <th style="width:7%;">OPERACI&Oacute;N</th>
                     <th style="width:7%;">RESULTADO</th>
                     <th style="width:7%;">INDICADOR</th>
                     <th style="width:2%;">META</th>
@@ -1169,14 +1169,14 @@ class Seguimientopoa extends CI_Controller{
 
     ///// SEGUIMIENTO POA 
     /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE -------*/
-    public function tabla_regresion_lineal_servicio($com_id,$trm_id){
+    public function tabla_regresion_lineal_servicio($com_id){
       $m[0]='';
       $m[1]='I TRIMESTRE.';
       $m[2]='II TRIMESTRE';
       $m[3]='III TRIMESTRE';
       $m[4]='IV TRIMESTRE';
 
-      for ($i=0; $i <=$trm_id; $i++){ 
+      for ($i=0; $i <=$this->tmes; $i++){ 
         $tr[1][$i]=$m[$i]; /// Trimestre
         $tr[2][$i]=0; /// Prog
         $tr[3][$i]=0; /// cumplidas
@@ -1187,7 +1187,7 @@ class Seguimientopoa extends CI_Controller{
         $tr[8][$i]=0; /// en proceso %
       }
 
-      for ($i=1; $i <=$trm_id; $i++) {
+      for ($i=1; $i <=$this->tmes; $i++) {
         $valor=$this->obtiene_datos_evaluacíon($com_id,$i,1);
         $tr[2][$i]=$valor[1]; /// Prog
         $tr[3][$i]=$valor[2]; /// cumplidas
@@ -1202,41 +1202,6 @@ class Seguimientopoa extends CI_Controller{
 
     return $tr;
     }
-
-    /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO POR TRIMESTRE -------*/
-/*    public function tabla_regresion_lineal_servicio_trimestre($com_id,$trm_id){
-      $m[0]='';
-      $m[1]='I TRIMESTRE.';
-      $m[2]='II TRIMESTRE';
-      $m[3]='III TRIMESTRE';
-      $m[4]='IV TRIMESTRE';
-
-      for ($i=0; $i <=$trm_id; $i++){ 
-        $tr[1][$i]=$m[$i]; /// Trimestre
-        $tr[2][$i]=0; /// Prog
-        $tr[3][$i]=0; /// cumplidas
-        $tr[4][$i]=0; /// no cumplidas
-        $tr[5][$i]=0; /// eficacia %
-        $tr[6][$i]=0; /// no eficacia %
-        $tr[7][$i]=0; /// en proceso
-        $tr[8][$i]=0; /// en proceso %
-      }
-
-      for ($i=1; $i <=$trm_id; $i++) {
-        $valor=$this->obtiene_datos_evaluacíon($com_id,$i,1);
-        $tr[2][$i]=$valor[1]; /// Prog
-        $tr[3][$i]=$valor[2]; /// cumplidas
-        $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
-        if($tr[2][$i]!=0){
-          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
-        }
-        $tr[6][$i]=(100-$tr[5][$i]);
-        $proceso=$this->obtiene_datos_evaluacíon($com_id,$i,2);
-        $tr[7][$i]=$proceso[2]; /// En Proceso
-      }
-
-    return $tr;
-    }*/
 
 
 
@@ -1325,7 +1290,7 @@ class Seguimientopoa extends CI_Controller{
 
 
     /// GRAFICOS DE EVALUACION POA 
- public function tabla_acumulada_evaluacion_servicio($regresion,$trm_id,$tp_graf,$tip_rep){
+ public function tabla_acumulada_evaluacion_servicio($regresion,$tp_graf,$tip_rep){
       $tabla='';
       $tit[2]='<b>NRO. ACT. PROGRAMADAS</b>';
       $tit[3]='<b>NRO. ACT. CUMPLIDAS</b>';
@@ -1362,12 +1327,12 @@ class Seguimientopoa extends CI_Controller{
               </thead>
             <tbody>
               <tr align=right>
-                <td><b>'.$regresion[2][$trm_id].'</b></td>
-                <td><b>'.$regresion[2][$trm_id].'</b></td>
-                <td><b>'.$regresion[3][$trm_id].'</b></td>
-                <td><b>'.$regresion[4][$trm_id].'</b></td>
-                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$trm_id].'%</b></button></td>
-                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$trm_id].'%</b></button></td>
+                <td><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td><b>'.$regresion[4][$this->tmes].'</b></td>
+                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
+                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
               </tr>
             </tbody>
         </table>';
@@ -1378,7 +1343,7 @@ class Seguimientopoa extends CI_Controller{
           <thead>
               <tr >
                 <th></th>';
-                for ($i=1; $i <=$trm_id; $i++) { 
+                for ($i=1; $i <=$this->tmes; $i++) { 
                   $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
                 }
               $tabla.='
@@ -1397,7 +1362,7 @@ class Seguimientopoa extends CI_Controller{
                 }
                 $tabla.='<tr bgcolor='.$color.' >
                   <td>'.$tit[$i].'</td>';
-                  for ($j=1; $j <=$trm_id; $j++) { 
+                  for ($j=1; $j <=$this->tmes; $j++) { 
                     $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
                   }
                 $tabla.='</tr>';
@@ -1408,7 +1373,7 @@ class Seguimientopoa extends CI_Controller{
       }
       elseif($tp_graf==3){ /// Regresion Gestion
         $tabla.='
-        <h4><b>'.$regresion[5][$trm_id].'%</b> CUMPLIMIENTO DE '.$regresion[1][$trm_id].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
+        <h4><b>'.$regresion[5][$this->tmes].'%</b> CUMPLIMIENTO DE '.$regresion[1][$this->tmes].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
         <table '.$tab.'>
           <thead>
               <tr>
@@ -1453,13 +1418,13 @@ class Seguimientopoa extends CI_Controller{
               </thead>
             <tbody>
               <tr align=right>
-                <td><b>'.$regresion[2][$trm_id].'</b></td>
-                <td><b>'.$regresion[2][$trm_id].'</b></td>
-                <td><b>'.$regresion[3][$trm_id].'</b></td>
-                <td><b>'.$regresion[7][$trm_id].'</b></td>
-                <td><b>'.($regresion[2][$trm_id]-($regresion[7][$trm_id]+$regresion[3][$trm_id])).'</b></td>
-                <td><b>'.$regresion[5][$trm_id].'%</b></td>
-                <td><b>'.$regresion[6][$trm_id].'%</b></td>
+                <td><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td><b>'.$regresion[7][$this->tmes].'</b></td>
+                <td><b>'.($regresion[2][$this->tmes]-($regresion[7][$this->tmes]+$regresion[3][$this->tmes])).'</b></td>
+                <td><b>'.$regresion[5][$this->tmes].'%</b></td>
+                <td><b>'.$regresion[6][$this->tmes].'%</b></td>
               </tr>
             </tbody>
         </table>';

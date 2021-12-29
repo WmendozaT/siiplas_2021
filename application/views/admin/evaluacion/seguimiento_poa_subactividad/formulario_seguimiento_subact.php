@@ -91,19 +91,12 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <section id="widget-grid" class="well">
                                 <div class="">
                                     <?php echo $titulo;?>
+                                    <?php echo $formularios_seguimiento.' '.$salir;?>
                                 </div>
-                            </section>
-                        </article>
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-                            <section id="widget-grid" class="well" align="center">
-                                <?php echo $formularios_poa;?>
-                            </section>
-                            <section id="widget-grid" class="well" align="center">
-                                <?php echo $formularios_seguimiento;?>
                             </section>
                         </article>
                     </div>
@@ -155,10 +148,10 @@
                                         <div id="myTabContent" class="tab-content">
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
                                                <div class="row">
-                                                    <div align="right">
+                                                    <!-- <div align="right">
                                                         <?php echo $boton_reporte_seguimiento_poa;?>
                                                         <a class="btn btn-success" href="<?php echo base_url().'index.php/dashboar_seguimiento_poa';?>" title="SALIR A MENU PRINCIPAL"><i class="fa fa-caret-square-o-left"></i> SALIR A MENU</a>
-                                                    </div>
+                                                    </div> -->
                                                     <div class="jarviswidget jarviswidget-color-darken" >
                                                       <?php echo $operaciones_programados;?>
                                                     </div>

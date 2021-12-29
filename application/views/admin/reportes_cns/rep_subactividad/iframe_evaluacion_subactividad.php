@@ -146,7 +146,6 @@
                                   </div>
                                 </div>
 
-                               
                             </div>
     
                         </div>
@@ -253,9 +252,9 @@ window.onload = function () {
         toolTipContent: "{name}: <strong>{y} %</strong>",
         indexLabel: "{name} - {y} %",
         dataPoints: [
-          { y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>, name: "ACT. CUMPLIDAS", color: '#57889c', exploded: true },
-          { y: <?php echo $tabla[8][$this->session->userData('trimestre')];?>, name: "ACT. EN PROCESO",color: '#f5e218' },
-          { y: <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?>, name: "ACT. NO CUMPLIDAS", color: '#a90329'}
+          { y: <?php echo $tabla[5][$trimestre[0]['trm_id']];?>, name: "ACT. CUMPLIDAS", color: '#57889c', exploded: true },
+          { y: <?php echo $tabla[8][$trimestre[0]['trm_id']];?>, name: "ACT. EN PROCESO",color: '#f5e218' },
+          { y: <?php echo ($tabla[6][$trimestre[0]['trm_id']]-$tabla[8][$trimestre[0]['trm_id']]);?>, name: "ACT. NO CUMPLIDAS", color: '#a90329'}
         ]
       }]
     });
@@ -285,25 +284,25 @@ var chart = new CanvasJS.Chart("regresion_canvasjs", {
         showInLegend: true,
         dataPoints: [
         <?php 
-          if($this->session->userdata('trimestre')==1){ ?>
+          if($trimestre[0]['trm_id']==1){ ?>
             { label: "-", y: 0},     
             { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> Act.", markerType: "square",  markerColor: "blue"}
               <?php
           }
-          elseif ($this->session->userdata('trimestre')==2) { ?>
+          elseif ($trimestre[0]['trm_id']==2) { ?>
             { label: "-", y: 0},     
             { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> Act.", markerType: "square",  markerColor: "blue"},     
             { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> Act.", markerType: "square",  markerColor: "blue"}
               <?php
           }
-          elseif ($this->session->userdata('trimestre')==3) { ?>
+          elseif ($trimestre[0]['trm_id']==3) { ?>
             { label: "-", y: 0},     
             { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> Act.", markerType: "square",  markerColor: "blue"},     
             { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> Act.", markerType: "square",  markerColor: "blue"},     
             { label: "3er. Trimestre", y: <?php echo $tabla[2][3];?>,indexLabel: "<?php echo $tabla[2][3];?> Act.", markerType: "square",  markerColor: "blue"}
               <?php
           }
-          elseif ($this->session->userdata('trimestre')==4) { ?>
+          elseif ($trimestre[0]['trm_id']==4) { ?>
             { label: "-", y: 0},   
             { label: "1er. Trimestre", y: <?php echo $tabla[2][1];?>,indexLabel: "<?php echo $tabla[2][1];?> Act.", markerType: "square",  markerColor: "blue"},     
             { label: "2do. Trimestre", y: <?php echo $tabla[2][2];?>,indexLabel: "<?php echo $tabla[2][2];?> Act.", markerType: "square",  markerColor: "blue"},     
@@ -321,25 +320,25 @@ var chart = new CanvasJS.Chart("regresion_canvasjs", {
         showInLegend: true,
         dataPoints: [
         <?php 
-          if($this->session->userdata('trimestre')==1){ ?>
+          if($trimestre[0]['trm_id']==1){ ?>
             { label: "-", y: 0},  
             { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> Act.", markerType: "square",  markerColor: "green"}
               <?php
           }
-          elseif ($this->session->userdata('trimestre')==2) { ?>
+          elseif ($trimestre[0]['trm_id']==2) { ?>
             { label: "-", y: 0},  
             { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> Act.", markerType: "square",  markerColor: "green"},     
             { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> Act.", markerType: "square",  markerColor: "green"}
               <?php
           }
-          elseif ($this->session->userdata('trimestre')==3) { ?>
+          elseif ($trimestre[0]['trm_id']==3) { ?>
             { label: "-", y: 0},  
             { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> Act.", markerType: "square",  markerColor: "green"},     
             { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> Act.", markerType: "square",  markerColor: "green"},     
             { label: "3er. Trimestre", y: <?php echo $tabla[3][3];?>,indexLabel: "<?php echo $tabla[3][3];?> Act.", markerType: "square",  markerColor: "green"}
               <?php
           }
-          elseif ($this->session->userdata('trimestre')==4) { ?>
+          elseif ($trimestre[0]['trm_id']==4) { ?>
             { label: "-", y: 0},  
             { label: "1er. Trimestre", y: <?php echo $tabla[3][1];?>,indexLabel: "<?php echo $tabla[3][1];?> Act.", markerType: "square",  markerColor: "green"},     
             { label: "2do. Trimestre", y: <?php echo $tabla[3][2];?>,indexLabel: "<?php echo $tabla[3][2];?> Act.", markerType: "square",  markerColor: "green"},     
@@ -449,25 +448,25 @@ chart_gestion.render();
           text: ''
         },
         <?php 
-          if($this->session->userdata('trimestre')==1){ ?>
+          if($trimestre[0]['trm_id']==1){ ?>
               xAxis: {
                   categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>']
               },
               <?php
           }
-          elseif ($this->session->userdata('trimestre')==2) { ?>
+          elseif ($trimestre[0]['trm_id']==2) { ?>
               xAxis: {
                   categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][2];?>']
               },
               <?php
           }
-          elseif ($this->session->userdata('trimestre')==3) { ?>
+          elseif ($trimestre[0]['trm_id']==3) { ?>
               xAxis: {
                   categories: ['p :<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][3];?>']
               },
               <?php
           }
-          elseif ($this->session->userdata('trimestre')==4) { ?>
+          elseif ($trimestre[0]['trm_id']==4) { ?>
               xAxis: {
                   categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][3];?>', '<?php echo $tabla[1][4];?>']
               },
@@ -496,7 +495,7 @@ chart_gestion.render();
         },
 
           <?php 
-              if($this->session->userdata('trimestre')==1){ ?>
+              if($trimestre[0]['trm_id']==1){ ?>
                   series: [
                       {
                         name: 'ACT. PROGRAMADAS',
@@ -509,7 +508,7 @@ chart_gestion.render();
                   ]
                   <?php
               }
-              elseif ($this->session->userdata('trimestre')==2) { ?>
+              elseif ($trimestre[0]['trm_id']==2) { ?>
                       series: [
                           {
                             name: 'ACT. PROGRAMADAS',
@@ -522,7 +521,7 @@ chart_gestion.render();
                       ]
                   <?php
               }
-              elseif ($this->session->userdata('trimestre')==3) { ?>
+              elseif ($trimestre[0]['trm_id']==3) { ?>
                       series: [
                           {
                             name: 'ACT. PROGRAMADAS',
@@ -535,7 +534,7 @@ chart_gestion.render();
                       ]
                   <?php
               }
-              elseif ($this->session->userdata('trimestre')==4) { ?>
+              elseif ($trimestre[0]['trm_id']==4) { ?>
                       series: [
                           {
                             name: 'ACT. PROGRAMADAS',

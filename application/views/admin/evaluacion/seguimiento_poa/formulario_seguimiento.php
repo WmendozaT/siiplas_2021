@@ -124,8 +124,6 @@
                         </article>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
                             <section id="widget-grid" class="well" align="center">
-                                <?php echo $formularios_poa;?>
-                                <br><br>
                                 <?php echo $formularios_seguimiento;?>
                             </section>
                         </article>
@@ -166,7 +164,7 @@
                                             <a data-toggle="tab" href="#s5"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (GESTI&Oacute;N)</span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">MIS OPERACIONES (CONSOLIDADO)</span></a>
+                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">MIS ACTIVIDADES (CONSOLIDADO)</span></a>
                                         </li>
                                     </ul>
                                 </header>

@@ -36,6 +36,7 @@ class Crep_subactividad extends CI_Controller {
       if(count($data['componente'])!=0){
         $data['menu'] = $this->seguimientopoa->menu_segpoa($com_id,3);
         $data['resp']=$this->session->userdata('funcionario');
+        $trimestre=$this->model_evaluacion->trimestre();
         $data['select']=' 
         <div class="well">
           <form class="smart-form">
@@ -48,21 +49,21 @@ class Crep_subactividad extends CI_Controller {
             </header>
             <fieldset>          
               <div class="row">
-                <section class="col col-2">
+                <section class="col col-3">
                   <label class="label"></label>
                   <select class="form-control" id="rep_id" name="rep_id" title="SELECCIONE TIPO DE REPORTE">
-                    <option value="0">SELECCIONE TIPO DE REPORTE</option>
-                    <option value="1">1.- Actividades - Formulario N° 4</option>
-                    <option value="2">2.- Requerimientos - formulario N° 5</option>
-                    <option value="3">3.- Ejecución Requerimientos - Formulario N° 5</option>
-                    <option value="4">4.- Notificación POA - '.$this->verif_mes[2].'/'.$this->gestion.'</option>
-                    <option value="5">5.- SEGUIMIENTO POA - '.$this->gestion.'</option>
-                    <option value="6">6.- EVALUACIÓN POA - '.$this->gestion.'</option>
+                    <option value="0">SELECCIONE TIPO DE REPORTE POA '.$this->gestion.'</option>
+                    <option value="1">1.- FORMULARIO N° 4 - ACTIVIDADES</option>
+                    <option value="2">2.- FORMULARIO N° 5 - REQUERIMIENTOS</option>
+                    <option value="3">3.- EJECUCIÓN POA - REQUERIMIENTOS</option>
+                    <option value="4">4.- NOTIFICACIÓN POA - '.$this->verif_mes[2].'/'.$this->gestion.'</option>
+                    <option value="5">5.- SEGUIMIENTO MENSUAL POA - '.$this->gestion.'</option>
+                    <option value="6">6.- EVALUACIÓN TRIMESTRAL POA - '.$this->gestion.'</option>
                   </select>
                 </section>
 
                   <div id="seg_poa" style="display:none;">
-                    <section class="col col-2">
+                    <section class="col col-3">
                       <label class="label"></label>
                       <select class="form-control" id="mes_id" name="mes_id" title="SELECCIONE MES DE SEGUIMIENTO POA">
                         <option value="0">Seleccione mes del Seguimiento POA ..</option>
@@ -194,7 +195,7 @@ class Crep_subactividad extends CI_Controller {
         $tabla='';
 
           foreach($meses as $rowm){
-            if($rowm['m_id']<=ltrim(date("m"), "0")){
+            if($rowm['m_id']<=$this->verif_mes[1]){
 
               if($rowm['m_id']==$m_id){
                 $tabla.='<option value="'.$rowm['m_id'].'" selected>SEGUIMIENTO POA - '.$rowm['m_descripcion'].' / '.$this->gestion.'</option>';
@@ -277,6 +278,9 @@ class Crep_subactividad extends CI_Controller {
       $data['componente']=$this->model_componente->get_componente($com_id,$this->gestion);
       $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
       $data['trimestre']=$this->model_evaluacion->get_trimestre($trm_id);
+      $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
+      $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
+
 
       if(count($data['componente'])!=0){
         if($this->session->userdata('tp_usuario')==0){ /// Unidad Administrativa
@@ -289,28 +293,29 @@ class Crep_subactividad extends CI_Controller {
             '<h2><b>'.strtoupper($establecimiento[0]['tipo'].' '.$establecimiento[0]['act_descripcion'].' '.$establecimiento[0]['abrev']).' - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>';
         }
 
-        $data['cabecera_regresion']='';
+        $data['cabecera_regresion']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],2,$trm_id);
         $data['cabecera_pastel']='';
-        $data['cabecera_regresion_total']='';
+        $data['cabecera_regresion_total']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],3,$trm_id);
 
 
        
-        $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id); /// Tabla para el grafico al trimestre
-        $data['calificacion']=$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]);
+        $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id,$trm_id); /// Tabla para el grafico por trimestre
+        $data['calificacion']=$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$trm_id]);
 
 
-        $data['tabla_regresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion Vista
-        $data['tabla_regresion_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
+        $data['tabla_regresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$trm_id,2,1); /// Tabla que muestra el acumulado por trimestres Regresion Vista
+        $data['tabla_regresion_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$trm_id,2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
         
         /*--- grafico Pastel trimestral ---*/
-        $data['tabla_pastel_todo']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
-        $data['tabla_pastel_todo_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
+        $data['tabla_pastel_todo']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$trm_id,4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
+        $data['tabla_pastel_todo_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$trm_id,4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
 
 
         $data['tabla_gestion']=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($com_id); /// Matriz para el grafico Total Gestion
-        $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
-        $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
+        $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$trm_id,3,1); /// Tabla que muestra el acumulado Gestion Vista
+        $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$trm_id,3,0); /// Tabla que muestra el acumulado Gestion Impresion
 
+        //echo $data['trimestre'][0]['trm_id'];
         $this->load->view('admin/reportes_cns/rep_subactividad/iframe_evaluacion_subactividad', $data); 
       }
       else{
