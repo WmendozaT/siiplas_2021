@@ -33,6 +33,9 @@
               text-align: center;
               font-size: 10px;
             }
+            #mdialTamanio{
+              width: 45% !important;
+            }
         </style>
 
     </head>
@@ -67,7 +70,7 @@
         </header>
         <!-- END HEADER -->
         <!-- Left panel : Navigation area -->
-        <?php echo $menu;?>
+        <?php echo $menu; ?>
 
         <!-- MAIN PANEL -->
         <div id="main" role="main">
@@ -80,7 +83,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Seguimiento y Evaluaci&oacute;n POA - FORM. N° 4</li>
+                    <li>Seguimiento y Evaluaci&oacute;n POA</li><li>Formulario N° 4</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -88,27 +91,33 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <section id="widget-grid" class="well">
                                 <div class="">
                                     <?php echo $titulo;?>
+                                    <?php echo $formularios_seguimiento.' '.$salir;?>
                                 </div>
                             </section>
                         </article>
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-                            <section id="widget-grid" class="well" align="center">
-                                <?php echo $formularios_poa;?>
-                            </section>
-                            <section id="widget-grid" class="well" align="center">
-                                <?php echo $formularios_seguimiento;?>
-                            </section>
-                        </article>
+                    </div>
+                    <div class="row">
                         <article class="col-sm-12">
+                            <?php 
+                              if($this->session->flashdata('success')){ ?>
+                                <div class="alert alert-success">
+                                  <?php echo $this->session->flashdata('success'); ?>
+                                </div>
+                            <?php }
+                                elseif($this->session->flashdata('danger')){ ?>
+                                <div class="alert alert-danger">
+                                  <?php echo $this->session->flashdata('danger'); ?>
+                                </div><?php }
+                            ?>
                             <!-- new widget -->
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                                 <header>
                                     <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                                    <h2><b>SEGUIMIENTO POA <?php echo $this->session->userData('mes_actual')[2].' / '.$this->session->userData('gestion');?></b></h2>
+                                    <h2>SEGUIMIENTO POA </h2>
 
                                     <ul class="nav nav-tabs pull-right in" id="myTab">
                                         <li class="active">
@@ -116,12 +125,6 @@
                                         </li>
                                         <li>
                                             <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE SEGUIMIENTO POA (MENSUAL)</span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s5"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (GESTI&Oacute;N)</span></a>
                                         </li>
                                     </ul>
                                 </header>
@@ -136,13 +139,8 @@
                                     <div class="widget-body">
                                         <!-- content -->
                                         <div id="myTabContent" class="tab-content">
-
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
-                                               <div class="row"><br>
-                                                    <div align="right">
-                                                        <?php echo $boton_reporte_seguimiento_poa;?>
-                                                        <a class="btn btn-success" href="<?php echo base_url().'index.php/dashboar_seguimiento_poa';?>" title="SALIR A MENU PRINCIPAL"><i class="fa fa-caret-square-o-left"></i> SALIR A MENU</a>
-                                                    </div>
+                                               <div class="row">
                                                     <div class="jarviswidget jarviswidget-color-darken" >
                                                       <?php echo $operaciones_programados;?>
                                                     </div>
@@ -183,98 +181,6 @@
                                                </div>
                                             </div>
                                             <!-- end s3 tab pane -->
-
-                                            <div class="tab-pane fade" id="s4" title="CUADRO DE EVALUACIÓN POA">
-                                               <div class="row">
-                                                <div class="well">
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                        <div id="cabecera2" style="display: none"><?php echo $cabecera2;?></div>
-                                                        <hr>
-                                                        <table>
-                                                            <tr>
-                                                                <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE AVANCE EVALUACI&Oacute;N POA AL <?php echo $tmes[0]['trm_descripcion'].' DE '.$this->session->userData('gestion');?></b></td>
-                                                            </tr>
-                                                        </table>
-                                                        <hr>
-                                                        <div id="evaluacion_trimestre">
-                                                            <div id="regresion" style="width: 600px; height: 390px; margin: 0 auto"></div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="table-responsive" id="tabla_regresion_vista">
-                                                            <?php echo $tabla_regresion;?>
-                                                        </div>
-                                                        <div id="tabla_regresion_impresion" style="display: none">
-                                                            <?php echo $tabla_regresion_impresion;?>
-                                                        </div>
-                                                        <hr>
-                                                        <div align="right">
-                                                            <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</b></button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                        <div id="cabecera2" style="display: none"><?php echo $cabecera2;?></div>
-                                                        <hr>
-                                                        <table>
-                                                            <tr>
-                                                                <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DETALLE EVALUACI&Oacute;N POA AL <?php echo $tmes[0]['trm_descripcion'].' DE '.$this->session->userData('gestion');?></b></td>
-                                                            </tr>
-                                                        </table>
-                                                        <hr>
-                                                        <div id="evaluacion_pastel">
-                                                            <div id="pastel_todos" style="width: 600px; height: 420px; margin: 0 auto"></div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="table-responsive" id="tabla_pastel_vista">
-                                                            <?php echo $tabla_pastel_todo;?>
-                                                        </div>
-                                                        <div id="tabla_pastel_impresion" style="display: none">
-                                                            <?php echo $tabla_pastel_todo_impresion;?>
-                                                        </div>
-                                                        <hr>
-                                                        <div align="right">
-                                                            <button id="btnImprimir_evaluacion_pastel" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</b></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                               </div>
-                                            </div>
-                                            <!-- end s4 tab pane -->
-
-                                            <div class="tab-pane fade" id="s5" title="CUADRO DE EVALUACIÓN POA GESTIÓN">
-                                               <div class="row">
-                                                <div class="well">
-                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-                                                        <div id="cabecera3" style="display: none"><?php echo $cabecera3;?></div>
-                                                        <hr>
-                                                        <table>
-                                                            <tr>
-                                                                <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE EVALUACI&Oacute;N POA <?php echo $this->session->userData('gestion');?></b></td>
-                                                            </tr>
-                                                        </table>
-                                                        <hr>
-                                                        <div id="evaluacion_gestion">
-                                                          <div id="regresion_gestion" style="width: 700px; height: 400px; margin: 0 auto"></div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="table-responsive" id="tabla_regresion_total_vista">
-                                                            <?php echo $tabla_regresion_total;?>
-                                                        </div>
-                                                        <div id="tabla_regresion_total_impresion" style="display: none">
-                                                            <?php echo $tabla_regresion_total_impresion;?>
-                                                        </div>
-                                                      <hr>
-                                                        <div align="right">
-                                                            <button id="btnImprimir_evaluacion_gestion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (GESTIÓN)</b></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                               </div>
-                                            </div>
-                                            <!-- end s5 tab pane -->
-
                                         </div>
                                         <!-- end content -->
                                     </div>
@@ -282,6 +188,7 @@
                                 <!-- end widget div -->
                             </div>
                             <!-- end widget -->
+                            
                         </article>
                     </div>
                 </section>
@@ -307,6 +214,26 @@
             </div>
         </div>
 
+        <!-- MODAL UPDATE SEG POA   -->
+        <div class="modal fade" id="modal_update_eval" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="mdialTamanio">
+                <div class="modal-content">
+                    <form id="form_update" novalidate="novalidate" method="post">
+                        <input type="hidden" name="com_id" id="com_id">
+                        <div id="content_valida">
+                            <center><div class="loading" align="center"><h2>Actualizando Evaluaci&oacute;n  POA <br><div id="tit"></div></h2><br><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /></div></center>
+                        </div>
+                        <div id="load" style="display: none;"><center><img src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"><hr><b>ACTUALIZANDO FORMULARIO SEGUIMIENTO POA ...</b></center></div>
+                            <p>
+                                <div id="but" align="right" style="display:none;">
+                                    <button type="button" name="but_update" id="but_update" class="btn btn-success">ACEPTAR EVALUACI&Oacute;N</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                            </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+     <!--  =============== -->
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
@@ -359,182 +286,6 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento.js"></script> 
-        
-        <!-- REGRESION LINEAL AL TRIMESTRE -->
-        <script type="text/javascript">
-          var chart1;
-          $(document).ready(function() {
-            chart1 = new Highcharts.Chart({
-              chart: {
-                renderTo: 'regresion',
-                defaultSeriesType: 'line'
-              },
-              title: {
-                text: '' 
-              },
-              subtitle: {
-                text: ''
-              },
-              <?php 
-                if($this->session->userdata('trimestre')==1){ ?>
-                    xAxis: {
-                        categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>']
-                    },
-                    <?php
-                }
-                elseif ($this->session->userdata('trimestre')==2) { ?>
-                    xAxis: {
-                        categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][2];?>']
-                    },
-                    <?php
-                }
-                elseif ($this->session->userdata('trimestre')==3) { ?>
-                    xAxis: {
-                        categories: ['p :<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][3];?>']
-                    },
-                    <?php
-                }
-                elseif ($this->session->userdata('trimestre')==4) { ?>
-                    xAxis: {
-                        categories: ['<?php echo $tabla[1][0];?>', '<?php echo $tabla[1][1];?>', '<?php echo $tabla[1][2];?>', '<?php echo $tabla[1][3];?>', '<?php echo $tabla[1][4];?>']
-                    },
-                    <?php
-                }
-              ?>
-              yAxis: {
-                title: {
-                  text: 'Promedio (%)'
-                }
-              },
-              tooltip: {
-                enabled: false,
-                formatter: function() {
-                  return '<b>'+ this.series.name +'</b><br/>'+
-                    this.x +': '+ this.y +'%';
-                }
-              },
-              plotOptions: {
-                line: {
-                  dataLabels: {
-                    enabled: true
-                  },
-                  enableMouseTracking: false
-                }
-              },
-
-                <?php 
-                    if($this->session->userdata('trimestre')==1){ ?>
-                        series: [
-                            {
-                                name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
-                                data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>]
-                            },
-                            {
-                                name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
-                                data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>]
-                            }
-                        ]
-                        <?php
-                    }
-                    elseif ($this->session->userdata('trimestre')==2) { ?>
-                            series: [
-                                {
-                                    name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>]
-                                },
-                                {
-                                    name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>]
-                                }
-                            ]
-                        <?php
-                    }
-                    elseif ($this->session->userdata('trimestre')==3) { ?>
-                            series: [
-                                {
-                                    name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>]
-                                },
-                                {
-                                    name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>]
-                                }
-                            ]
-                        <?php
-                    }
-                    elseif ($this->session->userdata('trimestre')==4) { ?>
-                            series: [
-                                {
-                                    name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>, <?php echo $tabla[2][4];?>]
-                                },
-                                {
-                                    name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
-                                    data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>, <?php echo $tabla[3][4];?>]
-                                }
-                            ]
-                        <?php
-                    }
-                ?>
-            });
-          });
-        </script>
-        <script type="text/javascript">
-            $(document).ready(function() {  
-               Highcharts.chart('pastel_todos', {
-                chart: {
-                    type: 'pie',
-                    options3d: {
-                        enabled: true,
-                        alpha: 45,
-                        beta: 0
-                    }
-                },
-                title: {
-                    text: ''
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        depth: 35,
-                        dataLabels: {
-                            enabled: true,
-                            format: '{point.name}'
-                        }
-                    }
-                },
-                series: [{
-                    type: 'pie',
-                    name: 'Actividades',
-                    data: [
-                        {
-                          name: 'NO CUMPLIDO : <?php echo (100-($tabla[5][$this->session->userData('trimestre')]+round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2)));?> %',
-                          y: <?php echo $tabla[6][$this->session->userData('trimestre')];?>,
-                          color: '#f98178',
-                        },
-
-                        {
-                          name: 'EN PROCESO : <?php echo round((($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100),2);?> %',
-                          y: <?php echo round(($tabla[7][$this->session->userData('trimestre')]/$tabla[2][$this->session->userData('trimestre')])*100,2);?>,
-                          color: '#f5eea3',
-                        },
-
-                        {
-                          name: 'CUMPLIDO : <?php echo $tabla[5][$this->session->userData('trimestre')];?> %',
-                          y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>,
-                          color: '#2CC8DC',
-                          sliced: true,
-                          selected: true
-                        }
-                    ]
-                }]
-              });
-            });
-        </script>
         <script type="text/javascript">
             Highcharts.chart('container', {
             chart: {
@@ -605,58 +356,6 @@
                 ]
             }]
         });
-        </script>
-
-        <script type="text/javascript">
-          var chart1;
-          $(document).ready(function() {
-            chart1 = new Highcharts.Chart({
-              chart: {
-                renderTo: 'regresion_gestion',
-                defaultSeriesType: 'line'
-              },
-              title: {
-                text: ''
-              },
-              subtitle: {
-                text: ''
-              },
-              xAxis: {
-                        categories: ['<?php echo $tabla_gestion[1][0];?>', '<?php echo $tabla_gestion[1][1];?>', '<?php echo $tabla_gestion[1][2];?>', '<?php echo $tabla_gestion[1][3];?>', '<?php echo $tabla_gestion[1][4];?>']
-                    },
-              yAxis: {
-                title: {
-                  text: 'Promedio (%)'
-                }
-              },
-              tooltip: {
-                enabled: false,
-                formatter: function() {
-                  return '<b>'+ this.series.name +'</b><br/>'+
-                    this.x +': '+ this.y +'%';
-                }
-              },
-              plotOptions: {
-                line: {
-                  dataLabels: {
-                    enabled: true
-                  },
-                  enableMouseTracking: false
-                }
-              },
-
-                series: [
-                    {
-                        name: '% META PROGRAMADAS EN EL TRIMESTRE',
-                        data: [ <?php echo $tabla_gestion[4][0];?> , <?php echo $tabla_gestion[4][1];?>, <?php echo $tabla_gestion[4][2];?>, <?php echo $tabla_gestion[4][3];?>, <?php echo $tabla_gestion[4][4];?>]
-                    },
-                    {
-                        name: '% META CUMPLIDAS EN EL TRIMESTRE',
-                        data: [ <?php echo $tabla_gestion[5][0];?>, <?php echo $tabla_gestion[5][1];?>, <?php echo $tabla_gestion[5][2];?>, <?php echo $tabla_gestion[5][3];?>, <?php echo $tabla_gestion[5][4];?>]
-                    }
-                ]
-            });
-          });
         </script>
     </body>
 </html>

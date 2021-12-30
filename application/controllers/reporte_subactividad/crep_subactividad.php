@@ -294,14 +294,11 @@ class Crep_subactividad extends CI_Controller {
         }
 
         $data['cabecera_regresion']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],2,$trm_id);
-        $data['cabecera_pastel']='';
+        $data['cabecera_pastel']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],2,$trm_id);
         $data['cabecera_regresion_total']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],3,$trm_id);
-
-
        
         $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id,$trm_id); /// Tabla para el grafico por trimestre
         $data['calificacion']=$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$trm_id]);
-
 
         $data['tabla_regresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$trm_id,2,1); /// Tabla que muestra el acumulado por trimestres Regresion Vista
         $data['tabla_regresion_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$trm_id,2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
@@ -310,10 +307,22 @@ class Crep_subactividad extends CI_Controller {
         $data['tabla_pastel_todo']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$trm_id,4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
         $data['tabla_pastel_todo_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$trm_id,4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
 
-
         $data['tabla_gestion']=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($com_id); /// Matriz para el grafico Total Gestion
         $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$trm_id,3,1); /// Tabla que muestra el acumulado Gestion Vista
         $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$trm_id,3,0); /// Tabla que muestra el acumulado Gestion Impresion
+
+        $tit='HOLA MUNDO';
+
+        $data['base']='
+        <input name="tabla2" type="hidden" value="'.$data['tabla'][2][$trm_id].'">
+        <input name="tabla3" type="hidden" value="'.$data['tabla'][3][$trm_id].'">
+        <input name="tabla4" type="hidden" value="'.$data['tabla'][4][$trm_id].'">
+        <input name="tabla5" type="hidden" value="'.$data['tabla'][5][$trm_id].'">
+        <input name="tabla6" type="hidden" value="'.$data['tabla'][6][$trm_id].'">
+        <input name="tabla7" type="hidden" value="'.$data['tabla'][7][$trm_id].'">
+        <input name="tabla8" type="hidden" value="'.$data['tabla'][8][$trm_id].'">
+        <input name="tit" type="hidden" value="'.$tit.'">';
+
 
         //echo $data['trimestre'][0]['trm_id'];
         $this->load->view('admin/reportes_cns/rep_subactividad/iframe_evaluacion_subactividad', $data); 

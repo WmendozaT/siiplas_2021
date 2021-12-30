@@ -491,9 +491,9 @@ function abreVentana_eficiencia(PDF){
       chart: {
           type: 'pie',
           options3d: {
-              enabled: true,
-              alpha: 45,
-              beta: 0
+            enabled: true,
+            alpha: 45,
+            beta: 0
           }
       },
       title: {
@@ -504,38 +504,38 @@ function abreVentana_eficiencia(PDF){
       },
       plotOptions: {
           pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              depth: 35,
-              dataLabels: {
-                  enabled: true,
-                  format: '{point.name}'
-              }
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
           }
       },
       series: [{
           type: 'pie',
           name: 'Actividades',
           data: [
-              {
-                name: 'NO CUMPLIDO : '+(tab6-tab8)+'%',
-                y: +(tab6-tab8),
-                color: '#f98178',
-              },
+            {
+              name: 'ACT. NO CUMPLIDO : '+(tab6-tab8)+'%',
+              y: +(tab6-tab8),
+              color: '#f98178',
+            },
 
-              {
-                name: 'EN PROCESO : '+tab8+'%',
-                y: +tab8,
-                color: '#f5eea3',
-              },
+            {
+              name: 'ACT. EN PROCESO : '+tab8+'%',
+              y: +tab8,
+              color: '#f5eea3',
+            },
 
-              {
-                name: 'CUMPLIDO : '+tab5+'%',
-                y: +tab5,
-                color: '#2CC8DC',
-                sliced: true,
-                selected: true
-              }
+            {
+              name: 'ACT. CUMPLIDO : '+tab5+'%',
+              y: +tab5,
+              color: '#2CC8DC',
+              sliced: true,
+              selected: true
+            }
           ]
       }]
     });

@@ -870,9 +870,8 @@ class Cseguimiento extends CI_Controller {
       
         $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1,$this->tmes);
        // $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($this->com_id); /// temporalidad Programado-Ejecutado Subactividad
-        $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($this->com_id); /// grafico
         
-        $data['matriz_temporalidad_subactividad']=$matriz_temporalidad_subactividad;
+        $data['matriz_temporalidad_subactividad']=$this->seguimientopoa->temporalizacion_x_componente($this->com_id); /// grafico
         $data['tabla_temporalidad_componente']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],1); /// Vista 
         $data['tabla_temporalidad_componente_impresion']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],0); /// Impresion 
 
