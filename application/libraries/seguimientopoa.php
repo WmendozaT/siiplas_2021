@@ -296,7 +296,7 @@ class Seguimientopoa extends CI_Controller{
                             <tr>
                               <td style="width:20%;">
                                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>'.$proyecto[0]['tipo_adm'].'</b></td><td style="width:5%;"></td></tr>
                                   </table>
                               </td>
                               <td style="width:80%;">
@@ -308,7 +308,7 @@ class Seguimientopoa extends CI_Controller{
                             <tr>
                             <td style="width:20%;">
                                 <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>SUBACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                                    <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESP.</b></td><td style="width:5%;"></td></tr>
                                 </table>
                             </td>
                             <td style="width:80%;">
@@ -1807,7 +1807,7 @@ class Seguimientopoa extends CI_Controller{
                 <div id="row">
                   <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="alert alert-info" role="alert">
-                      <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-info update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR EVALUACI&Oacute;N POA</a>    
+                      <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-primary update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="30"/>&nbsp;ACTUALIZAR DATOS PARA EVALUACI&Oacute;N POA</a>    
                     </div>
                   </article>
                 </div>';
@@ -1838,13 +1838,13 @@ class Seguimientopoa extends CI_Controller{
 
           if (($date_actual >= $date_inicio) && ($date_actual <= $date_final)){
             $tabla.='   
-                <div id="row">
-                  <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="alert alert-info" role="alert">
-                      <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-info update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR EVALUACI&Oacute;N POA</a>    
-                    </div>
-                  </article>
-                </div>';
+              <div id="row">
+                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <div class="alert alert-info" role="alert">
+                    <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-primary update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR DATOS PARA EVALUACI&Oacute;N POA</a>    
+                  </div>
+                </article>
+              </div>';
           }
       }
 
@@ -1981,14 +1981,14 @@ class Seguimientopoa extends CI_Controller{
                 <select class="form-control" id="mes_id" name="mes_id" title="SELECCIONE MES A EVALUAR">
                   <option value="0" selected>Seleccione mes para Evaluacion POA ...</option>';
                 foreach($meses as $row){
-                  if($row['m_id']<=ltrim(date("m"), "0")){
+                  //if($this->verif_mes[1]<=$row['m_id']){
                     if($row['m_id']==$this->verif_mes[1]){ 
                       $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
                     }
                     else{ 
                       $tabla.='<option value="'.$row['m_id'].'" >'.$row['m_descripcion'].'</option>';
                     } 
-                  }                     
+                  //}                     
                 }
                $tabla.='
                 </select>

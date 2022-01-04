@@ -100,6 +100,9 @@
                             </section>
                         </article>
                     </div>
+                    
+                    <?php echo $update_eval;?>
+
                     <div class="row">
                         <article class="col-sm-12">
                             <?php 

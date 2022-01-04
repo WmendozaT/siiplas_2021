@@ -62,6 +62,7 @@
                             <div id="myTabContent1" class="tab-content padding-10">
                                 
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                  <div align="right"><?php echo $boton_reporte_evaluacion_poa;?><hr></div>
                                   <div id="eficacia"><?php echo $calificacion;?></div><div id="efi"></div>
                                 
                                     <div align="right" title="CAPTURAR PANTALLA">

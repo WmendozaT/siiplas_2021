@@ -311,7 +311,12 @@ class Crep_subactividad extends CI_Controller {
         $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$trm_id,3,1); /// Tabla que muestra el acumulado Gestion Vista
         $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$trm_id,3,0); /// Tabla que muestra el acumulado Gestion Impresion
 
-        $tit='HOLA MUNDO';
+        $data['boton_reporte_evaluacion_poa']='
+                <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$com_id.'/'.$trm_id.'\');" class="btn btn-default" title="IMPRIMIR EVALUACIÓN POA">
+                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR EVALUACI&Oacute;N TRIMESTRAL POA '.$this->gestion.'</b>
+                </a>';
+
+        $tit='';
 
         $data['base']='
         <input name="tabla2" type="hidden" value="'.$data['tabla'][2][$trm_id].'">

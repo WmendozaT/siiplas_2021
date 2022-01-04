@@ -546,14 +546,15 @@ class Cseguimiento extends CI_Controller {
         $data['cabecera']=$this->seguimientopoa->cabecera_evaluacion_trimestral($data['componente'],$data['proyecto'],$trm_id);
         $data['pie']=$this->seguimientopoa->pie_evaluacionpoa();
         /// ----------------------------------------------------
-        $this->seguimientopoa->update_evaluacion_operaciones($com_id);
+        if($this->tmes==$trm_id){
+          $this->seguimientopoa->update_evaluacion_operaciones($com_id);
+        }
+        
         /// -----------------------------------------------------
         $data['operaciones']=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$trm_id); /// Reporte Gasto Corriente, Proyecto de Inversion 2020
         $data['ejecucion_ppto']=$this->seguimientopoa->ejecucion_presupuestaria_acumulado_total($com_id); /// Ejecucion ppto
 
-
         $this->load->view('admin/evaluacion/seguimiento_poa/reporte_evaluacion_trimestral', $data);
-
       }
       else{
         echo "Error !!!";

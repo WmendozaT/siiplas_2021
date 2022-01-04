@@ -83,6 +83,7 @@ class Cseguimiento_establecimiento extends CI_Controller {
 
       //$data['calificacion']=$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]);
      // $data['nota']=$this->notificacion();
+      $data['update_eval']=$this->seguimientopoa->button_update_($com_id);
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
       
     //  $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
