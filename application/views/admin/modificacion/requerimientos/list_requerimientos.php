@@ -255,6 +255,21 @@
 			</div>
 		</div>
 
+		<!--  Lista de Certificaciones POAS   -->
+		<div class="modal fade" id="modal_certpoas" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	        <div class="modal-dialog" id="mdialTamanio">
+	            <div class="modal-content">
+	            	<div class="modal-header">
+                    	<button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; Salir Formulario</span></button>
+                    </div>
+	              	<div class="modal-body">
+
+	              	</div>
+	            </div>
+	        </div>
+	    </div>
+
+
 		<!-- MODAL NUEVO REGISTRO DE REQUERIMIENTOS   -->
         <div class="modal fade" id="modal_nuevo_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog" id="mdialTamanio">
@@ -982,6 +997,46 @@
                 });
             });
         </script>
+       	<script type="text/javascript">
+            /*------ LISTA DE CERTIFICACIONES POA -----*/
+            $(function () {
+                $(".certpoas").on("click", function (e) {
+                    ins_id = $(this).attr('name');
+
+           			var url = "<?php echo site_url().'/modificaciones/cmod_insumo/get_requerimiento'?>";
+                    var request;
+                    if (request) {
+                        request.abort();
+                    }
+                    request = $.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: 'json',
+                        data: "ins_id="+ins_id
+                    });
+
+                    request.done(function (response, textStatus, jqXHR) {
+
+                    if (response.respuesta == 'correcto') {
+                    	alert('jhola mundo')
+                    }
+                    else{
+                        alertify.error("ERROR AL RECUPERAR DATOS DEL REQUERIMIENTO");
+                    }
+
+                    });
+                    request.fail(function (jqXHR, textStatus, thrown) {
+                        console.log("ERROR: " + textStatus);
+                    });
+                    request.always(function () {
+                        //console.log("termino la ejecuicion de ajax");
+                    });
+                    e.preventDefault();
+                   
+                });
+            });
+        </script>
+
 		<script type="text/javascript">
             /*------ MODIFICAR REQUERIMIENTO -----*/
             $(function () {
@@ -990,7 +1045,7 @@
                     document.getElementById("ins_id").value=ins_id;
            			cite_id=document.getElementById("cite_id").value;
            		
-           			//alert(ins_id+'--'+cite_id)
+           		
            			var url = "<?php echo site_url().'/modificaciones/cmod_insumo/get_requerimiento'?>";
                     var request;
                     if (request) {

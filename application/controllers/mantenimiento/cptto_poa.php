@@ -1087,12 +1087,12 @@ class Cptto_poa extends CI_Controller {
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
       if(count($data['proyecto'])!=0){
         $data['partidas']= $this->comparativo_partidas_ppto_final($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],1);
+      //echo $data['partidas'];
+        $this->load->view('admin/mantenimiento/ptto_sigep/comparativo_partidas', $data);
       }
       else{
         redirect('ptto_asig_poa');
       }
-      
-      $this->load->view('admin/mantenimiento/ptto_sigep/comparativo_partidas', $data);
     }
 
 
@@ -1100,7 +1100,7 @@ class Cptto_poa extends CI_Controller {
     public function comparativo_partidas_ppto_final($dep_id,$aper_id,$tp_tab){ 
      // echo "DEP : ".$dep_id." aper_id : ".$aper_id."<br>";
       $tabla ='';
-      $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,2); // Presupuesto Partidas Programado
+      $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,1); // Presupuesto Partidas Programado
       $partidas_aprobados=$this->model_ptto_sigep->list_ppto_final_aprobado($aper_id); // Presupuesto Partidas Aprobado
       if($tp_tab==1){
         $tab='id="table" class="table table-bordered"';
@@ -1113,11 +1113,12 @@ class Cptto_poa extends CI_Controller {
         <table '.$tab.'>
           <thead>
             <tr style="font-size: 7px;" align=center>
-              <th bgcolor="#1c7368" style="width:2%;color:#FFF;height:15px;">NRO.</th>
+              <th bgcolor="#1c7368" style="width:2%;color:#FFF;height:15px;">NRO. '.$aper_id.' -- '.$dep_id.'</th>
               <th bgcolor="#1c7368" style="width:5%;color:#FFF;" title="CODIGO PARTIDA">C&Oacute;DIGO</th>
               <th bgcolor="#1c7368" style="width:40%;color:#FFF;" title="DESCRIPCI&Oacute;N PARTIDA">DETALLE PARTIDA</th>
-              <th bgcolor="#1c7368" style="width:12%;color:#FFF;" title="MONTO PRESUPUESTO ASIGNADO APROBADO">PPTO. PROGRAMADO POA (SIIPLAS)</th>
-              <th bgcolor="#1c7368" style="width:12%;color:#FFF;" title="MONTO PRESUPUESTO INICIAL APROBADO">PPTO. FINAL APROBADO (SIGEP)</th>
+              <th bgcolor="#1c7368" style="width:12%;color:#FFF;" title="MONTO PRESUPUESTO PROGRAMADO">PPTO. PROGRAMADO POA (SIIPLAS)</th>
+              <th bgcolor="#1c7368" style="width:5%;color:#FFF;" title="AJUSTAR"></th>
+              <th bgcolor="#1c7368" style="width:12%;color:#FFF;" title="MONTO PRESUPUESTO FINAL APROBADO">PPTO. FINAL APROBADO (SIGEP)</th>
               <th bgcolor="#1c7368" style="width:12%;color:#FFF;" title="MONTO DIFERENCIA (INICIAL - FINAL)">MONTO DIFERENCIA (SIGEP-SIIPLAS)</th>
             </tr>
           </thead>
@@ -1127,6 +1128,7 @@ class Cptto_poa extends CI_Controller {
           $monto_final=0;
           $monto_diferencia=0;
           foreach($partidas_prog as $row){
+            $boton='';
             $ppto=$this->model_ptto_sigep->get_ptto_aprobado($aper_id,$row['par_id']);
             $monto_final_partida=0;
             $dif_monto=0;
@@ -1137,10 +1139,18 @@ class Cptto_poa extends CI_Controller {
             $color='';$sig='';
             if($dif_monto<0){
               $color='#f7b1b0';
+              $boton='
+              <a href="#" data-toggle="modal" data-target="#modal_update_ff" class="btn btn-danger update_ff" title="AJUSTAR PRESUPUESTO"  name="'.$row['sp_id'].'" id="'.$row['codigo'].'">
+                AJUSTAR PPTO.
+              </a>';
             }
             elseif ($dif_monto>0) {
               $sig='+';
               $color='#dff0d8';
+              $boton='
+              <a href="#" data-toggle="modal" data-target="#modal_update_ff" class="btn btn-success update_ff" title="AJUSTAR PRESUPUESTO"  name="'.$row['sp_id'].'" id="'.$row['codigo'].'">
+                AJUSTAR PPTO.
+              </a>';
             }
 
             $nro++;
@@ -1148,8 +1158,9 @@ class Cptto_poa extends CI_Controller {
               <tr bgcolor='.$color.'>
                 <td style="width:2%;height:12px;" align=center>'.$nro.'</td>
                 <td style="width:5%;" align=center><b>'.$row['codigo'].'</b></td>
-                <td style="width:40%;">'.$row['nombre'].'</td>
-                <td style="width:12%;" align=right>'.number_format($row['monto'], 2, ',', '.').'</td>
+                <td style="width:30%;">'.$row['nombre'].'</td>
+                <td style="width:10%;" align=right><input type="text" class="form-control" name="monto'.$row['sp_id'].'" id="monto'.$row['sp_id'].'" value="'.round($row['monto'],2).'" title="MODIFICAR MONTO"></td>
+                <td align=center>'.$boton.' <div id="load'.$row['sp_id'].'" style="display: none"><br><img src="'.base_url().'assets/img/loading.gif" width="25" height="25"/></div></td>
                 <td style="width:12%;" align=right>'.number_format($monto_final_partida, 2, ',', '.').'</td>
                 <td style="width:12%;" align=right>'.$sig.''.number_format($dif_monto, 2, ',', '.').'</td>
               </tr>';
@@ -1158,16 +1169,26 @@ class Cptto_poa extends CI_Controller {
           }
           
           foreach($partidas_aprobados as $row){
-            $ppto=$this->model_ptto_sigep->get_partida_accion($aper_id,$row['par_id']);
+            //$ppto=$this->model_ptto_sigep->get_partida_accion($aper_id,$row['par_id']); /// programado
+            $ppto=$this->model_ptto_sigep->get_partida_asignado_sigep($aper_id,$row['par_id']); /// Asignado Anteproyecto
+
             if(count($ppto)==0){
               $dif_monto=$row['importe']-0;
               $nro++;
               $tabla.='
-                <tr bgcolor="#f7b1b0">
-                  <td style="width:2%;height:12px;" align=center>'.$nro.'</td>
+                <tr bgcolor="#f7e1b4">
+                  <td style="width:2%;height:12px;" align=center title="'.$row['sp_id'].'">'.$nro.'</td>
                   <td style="width:5%;" align=center><b>'.$row['partida'].'</b></td>
-                  <td style="width:40%;">'.$row['par_nombre'].'</td>
-                  <td style="width:12%;" align=right>'.number_format(0, 2, ',', '.').'</td>
+                  <td style="width:30%;">'.$row['par_nombre'].'</td>
+                  <td style="width:10%;" align=right>
+                    <input type="text" class="form-control" name="monto'.$row['sp_id'].'" id="monto'.$row['sp_id'].'" value="'.round($row['importe'],2).'" title="MODIFICAR MONTO">
+                  </td>
+                  <td align=center>
+                    <a href="#" data-toggle="modal" data-target="#modal_add_ff" class="btn btn-warning add_ff" title="AGREGAR PRESUPUESTO"  name="'.$row['sp_id'].'" id="'.$row['par_codigo'].'">
+                      AGREGAR PPTO.
+                    </a>
+                    <div id="loadd'.$row['sp_id'].'" style="display: none"><br><img src="'.base_url().'assets/img/loading.gif" width="25" height="25"/></div>
+                  </td>
                   <td style="width:12%;" align=right>'.number_format($row['importe'], 2, ',', '.').'</td>
                   <td style="width:12%;" align=right>'.number_format($dif_monto, 2, ',', '.').'</td>
                 </tr>';
@@ -1178,6 +1199,7 @@ class Cptto_poa extends CI_Controller {
             <tr>
               <td colspan=3>TOTAL</td>
               <td style="height:12px;" align=right>'.number_format($monto_poa, 2, ',', '.').'</td>
+              <td></td>
               <td align=right>'.number_format($monto_final, 2, ',', '.').'</td>
               <td align=right>'.number_format(($monto_final-$monto_poa), 2, ',', '.').'</td>
             </tr>
@@ -1186,6 +1208,83 @@ class Cptto_poa extends CI_Controller {
 
         return $tabla;
     }
+
+
+    /*------ ACTUALIZA PRESUPUESTO POR PARTIDA ------*/
+    function update_ppto_aprobado(){
+      if ($this->input->is_ajax_request() && $this->input->post()) {
+          $post = $this->input->post();
+          $sp_id = $this->security->xss_clean($post['sp_id']); // sp id
+          $monto_final = $this->security->xss_clean($post['ppto']); // monto
+        
+          /*--------- Update ppto Sigep ----------*/
+          $update_ppto= array(
+            'importe' => $monto_final,
+            'estado' => 2,
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('sp_id', $sp_id);
+          $this->db->update('ptto_partidas_sigep', $this->security->xss_clean($update_ppto));
+          /*----------------------------------------*/
+
+
+          $result = array(
+              'respuesta' => 'correcto'
+          );
+
+        echo json_encode($result);
+
+      } else {
+          echo 'DATOS ERRONEOS';
+      }
+    }
+
+
+
+    /*------ ADICIONA PRESUPUESTO POR PARTIDA ------*/
+    function add_ppto_aprobado(){
+      if ($this->input->is_ajax_request() && $this->input->post()) {
+          $post = $this->input->post();
+          $sp_id = $this->security->xss_clean($post['sp_id']); // sp id
+          $monto_final = $this->security->xss_clean($post['ppto']); // monto
+          $ppto_aprobado=$this->model_ptto_sigep->get_ppto_aprobado($sp_id);
+
+          if(count($ppto_aprobado)!=0){
+          
+            $data_to_store = array( 
+              'aper_id' => $ppto_aprobado[0]['aper_id'],
+              'aper_programa' => $ppto_aprobado[0]['aper_programa'],
+              'aper_proyecto' => $ppto_aprobado[0]['aper_proyecto'],
+              'aper_actividad' => $ppto_aprobado[0]['aper_actividad'],
+              'par_id' => $ppto_aprobado[0]['par_id'],
+              'partida' => $ppto_aprobado[0]['partida'],
+              'importe' => $ppto_aprobado[0]['importe'],
+              'g_id' => $ppto_aprobado[0]['g_id'],
+              'estado' => 2,
+              'fun_id' => $this->fun_id,
+            );
+            $this->db->insert('ptto_partidas_sigep', $data_to_store);
+          
+            $result = array(
+              'respuesta' => 'correcto'
+            );
+          }
+          else{
+            $result = array(
+              'respuesta' => 'error'
+            );
+          }
+
+        echo json_encode($result);
+
+      } else {
+          echo 'DATOS ERRONEOS';
+      }
+    }
+
+
+
+
 
 
     /*------ Ver Lista de Partidas Comparativos 2019 -------*/
@@ -1396,7 +1495,7 @@ class Cptto_poa extends CI_Controller {
         <tbody>';
         
         foreach($unidades_proy as $rowp){
-          $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$rowp['aper_id'],2); // Presupuesto Partidas Programado
+          $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$rowp['aper_id'],1); // Presupuesto Partidas Programado
           $partidas_aprobados=$this->model_ptto_sigep->list_ppto_final_aprobado($rowp['aper_id']); // Presupuesto Partidas Aprobado
           
           foreach($partidas_prog as $row){
@@ -1437,7 +1536,9 @@ class Cptto_poa extends CI_Controller {
           }
 
           foreach($partidas_aprobados as $row){
-            $ppto=$this->model_ptto_sigep->get_partida_accion($rowp['aper_id'],$row['par_id']);
+            //$ppto=$this->model_ptto_sigep->get_partida_accion($rowp['aper_id'],$row['par_id']);
+
+            $ppto=$this->model_ptto_sigep->get_partida_asignado_sigep($rowp['aper_id'],$row['par_id']);
             if(count($ppto)==0){
               $dif_monto=$row['importe']-0;
               $tabla.='

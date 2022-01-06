@@ -238,21 +238,6 @@
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <script type="text/javascript">
-            function update_partidas(){
-                alertify.confirm("DESEA ACTUALIZAR MONTOS ASIGNADOS ?", function (a) {
-                      if (a) {
-                          document.getElementById("btsubmit").value = "ACTUALIZANDO PARTIDAS...";
-                          document.getElementById("btsubmit").disabled = true;
-                          document.formulario.submit();
-                          return true;
-                      } else {
-                          alertify.error("OPCI\u00D3N CANCELADA");
-                      }
-                  });    
-            }
-        </script>
-
-        <script type="text/javascript">
             $(function () {
                 function reset() {
                     $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
@@ -267,15 +252,17 @@
                     });
                 }
 
-                $(".del_ff").on("click", function (e) {
+                $(".update_ff").on("click", function (e) {
                     reset();
                     var sp_id = $(this).attr('name');
-                    var proy_id = $(this).attr('id');
+                    var partida = $(this).attr('id');
+                    var monto= parseFloat($('[name="monto'+sp_id+'"]').val()); //// total
                     var request;
+
                     // confirm dialog
-                    alertify.confirm("DESEA ELIMINAR MONTO PARTIDA ?", function (a) {
+                    alertify.confirm("AJUSTAR PRESUPUESTO DE LA PARTIDA "+partida+" ?", function (a) {
                         if (a) { 
-                            url = "<?php echo site_url("")?>/mnt/delete_partida";
+                            var url = "<?php echo site_url().'/mantenimiento/cptto_poa/update_ppto_aprobado'?>";
                             if (request) {
                                 request.abort();
                             }
@@ -283,20 +270,21 @@
                                 url: url,
                                 type: "POST",
                                 dataType: "json",
-                                data: "sp_id="+sp_id+"&proy_id="+proy_id
-
+                                data: "sp_id="+sp_id+"&ppto="+monto
                             });
 
                             request.done(function (response, textStatus, jqXHR) { 
                                 reset();
                                 if (response.respuesta == 'correcto') {
-                                    alertify.alert("LA PARTIDA FUE ELIMINADO CORRECTAMENTE", function (e) {
+                                    alertify.alert("EL PRESUPUESTO SE AJUSTO CORRECTAMENTE ", function (e) {
                                         if (e) {
+                                            document.getElementById("load"+sp_id).style.display = 'block';
+                                         //   document.getElementById(+sp_id).value = "AJUSTANDO MONTO"
                                             window.location.reload(true);
                                         }
                                     })
                                 } else {
-                                    alertify.error("Error al Eliminar");
+                                    alertify.error("Error al Ajustar");
                                 }
                             });
                             request.fail(function (jqXHR, textStatus, thrown) {
@@ -310,14 +298,68 @@
 
                         } else {
                             // user clicked "cancel"
-                            alertify.error("Opcion cancelada");
+                            alertify.error("OPCIÓN CANCELADA");
                         }
                     });
                     return false;
                 });
 
+
+                $(".add_ff").on("click", function (e) {
+                    reset();
+                    var sp_id = $(this).attr('name');
+                    var partida = $(this).attr('id');
+                    var monto= parseFloat($('[name="monto'+sp_id+'"]').val()); //// total
+                    var request;
+
+                    // confirm dialog
+                    alertify.confirm("AJUSTAR PRESUPUESTO DE LA PARTIDA "+partida+" ?", function (a) {
+                        if (a) { 
+                            var url = "<?php echo site_url().'/mantenimiento/cptto_poa/add_ppto_aprobado'?>";
+                            if (request) {
+                                request.abort();
+                            }
+                            request = $.ajax({
+                                url: url,
+                                type: "POST",
+                                dataType: "json",
+                                data: "sp_id="+sp_id+"&ppto="+monto
+                            });
+
+                            request.done(function (response, textStatus, jqXHR) { 
+                                reset();
+                                if (response.respuesta == 'correcto') {
+                                    alertify.alert("SE ADICIONO  CORRECTAMENTE ", function (e) {
+                                        if (e) {
+                                            document.getElementById("loadd"+sp_id).style.display = 'block';
+                                         //   document.getElementById(+sp_id).value = "AJUSTANDO MONTO"
+                                            window.location.reload(true);
+                                        }
+                                    })
+                                } else {
+                                    alertify.error("Error al Ajustar");
+                                }
+                            });
+                            request.fail(function (jqXHR, textStatus, thrown) {
+                                console.log("ERROR: " + textStatus);
+                            });
+                            request.always(function () {
+                                //console.log("termino la ejecuicion de ajax");
+                            });
+
+                            e.preventDefault();
+
+                        } else {
+                            // user clicked "cancel"
+                            alertify.error("OPCIÓN CANCELADA");
+                        }
+                    });
+                    return false;
+                });
             });
         </script>
+
+        </script>-->
         <script type="text/javascript">
         $(document).ready(function(){
           $("#kwd_search").keyup(function(){
@@ -337,6 +379,6 @@
             return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
           }
         });
-        </script>
+        </script> 
     </body>
 </html>

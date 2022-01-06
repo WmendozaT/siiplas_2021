@@ -111,6 +111,7 @@ class Cmod_insumo extends CI_Controller {
       if(count($data['cite'])!=0){
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); /// Proyecto de Inversion
         $data['tit_comp']=$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'];
+          
           if($data['proyecto'][0]['tp_id']==4){ /// Gasto Corriente
             $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
             $data['tit_comp']=$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'];
@@ -121,20 +122,31 @@ class Cmod_insumo extends CI_Controller {
             $data['cite_id']=$cite_id;
             $data['monto']=$this->modificacionpoa->ppto($data['proyecto']);
 
-            if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>500){
-              $data['tabla']=$this->lista_requerimientos_auxiliar($data['cite']);
+            if($this->gestion>2021){ /// Gestion 2022
+              if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>1000){
+                $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2022
+              }
+              else{
+                $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022
+              }
             }
-            else{
-              $data['tabla']=$this->lista_requerimientos($data['cite']); /// LISTA DE REQUERIMIENTO
+            else{ /// Gestion 2020-2021
+              if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>1000){
+                $data['tabla']=$this->lista_requerimientos_auxiliar($data['cite']); /// 2021  
+              }
+              else{
+                $data['tabla']=$this->lista_requerimientos($data['cite']); /// LISTA DE REQUERIMIENTO 2021
+              }
             }
 
             $data['part_padres'] = $this->model_modificacion->list_part_padres_asig($data['proyecto'][0]['aper_id']);//partidas padres
             $data['lista']=$this->tipo_lista_ope_act($data['cite']);
 
-            $tit='ALINEACI&Oacute;N OPERACIÓN';
+            $tit='ALINEACI&Oacute;N ACTIVIDAD';
 
             $data['verif_mod']=$this->verif_mod_req($cite_id);
             $data['tit']=$tit;
+
             $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
       }
       else{
@@ -164,7 +176,11 @@ class Cmod_insumo extends CI_Controller {
       return $tabla;
     }
 
-    /*----- LISTA REQUERIMIENTOS AUXILIAR (2020) en casos de que sean muchos requerimientos ------*/
+
+    
+
+
+    /*----- LISTA REQUERIMIENTOS AUXILIAR (2021) en casos de que sean muchos requerimientos ------*/
     public function lista_requerimientos_auxiliar($cite){
       $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id']);
    //   $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($cite[0]['com_id']); /// Lista requerimientos
@@ -911,7 +927,7 @@ class Cmod_insumo extends CI_Controller {
     //     echo $data['items_modificados'];
           $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
         }
-        else{ /// Formato Antiguo de Reporte
+        else{ /// Formato Antiguo de Reporte 2020
           $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); 
           if($data['proyecto'][0]['tp_id']==1){
             $titulo='

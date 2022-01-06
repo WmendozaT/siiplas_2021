@@ -136,6 +136,15 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+    /*-- Get Presupuesto Aprobado Final ---*/
+    public function get_ppto_aprobado($sp_id){
+        $sql = 'select *
+                from ptto_partidas_sigep_aprobado pa
+                where pa.sp_id='.$sp_id.' and pa.g_id='.$this->gestion.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*-- Lista de Presupuesto de partidas (Final-Aprobado) ---*/
     public function list_ppto_final_aprobado($aper_id){
         $sql = 'select *
@@ -178,65 +187,6 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------------------- Partidas a Nivel Nacional ------------------------*/
-/*    public function partidas_nacional($tp){
-        if($tp==1){
-            $sql = ' select pg.par_id,pg.partida as codigo ,p.par_nombre as nombre ,SUM(pg.importe) as monto
-                     from ptto_partidas_sigep pg
-                     Inner Join partidas as p On p.par_id=pg.par_id
-                     where pg.estado!=\'3\' and pg.g_id='.$this->gestion.'
-                     group by pg.par_id,pg.partida,p.par_nombre
-                     order by pg.partida';
-        }
-        else{
-            $sql = 'select i.par_id,i.par_codigo as codigo,i.par_nombre as nombre,SUM(ip.programado_total) as monto
-                    from vlista_insumos i
-                    JOIN insumo_gestion ig ON ig.ins_id = i.ins_id
-                    JOIN vifin_prog_mes ip ON ip.insg_id = ig.insg_id
-                    where ig.g_id='.$this->gestion.'
-                    group by i.par_id,i.par_codigo,i.par_nombre
-                    order by i.par_codigo';
-        }
-        
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-/*    public function suma_partidas_nacional($tp){
-        if($tp==1){
-            $sql = 'select SUM(pg.importe) as monto
-                    from ptto_partidas_sigep pg
-                    Inner Join partidas as p On p.par_id=pg.par_id
-                    where pg.estado!=\'3\' and pg.g_id='.$this->gestion.'';
-        }
-        else{
-            $sql = 'select SUM(ip.programado_total) as monto
-                    from _proyectos as p
-                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id 
-                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                    Inner Join vlista_insumos as i on i.aper_id = apg.aper_id
-                    Inner Join insumo_gestion as ig on ig.ins_id = i.ins_id
-                    Inner Join vifin_prog_mes as ip on ip.insg_id = ig.insg_id
-                    where  p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and ig.g_id='.$this->gestion.'';
-        }
-        
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*-------------------- Get Partida Nacional ------------------------*/
-/*    public function get_partida_nacional($par_id){
-        $sql = 'select i.par_id,i.par_codigo as codigo,i.par_nombre as nombre ,SUM(ip.programado_total) as monto
-                from vlista_insumos i
-                JOIN insumo_gestion ig ON ig.ins_id = i.ins_id
-                JOIN vifin_prog_mes ip ON ip.insg_id = ig.insg_id
-                where ig.g_id='.$this->gestion.' and par_id='.$par_id.'
-                group by i.par_id,i.par_codigo,i.par_nombre
-                order by i.par_codigo';
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
     /*-------------------- Suma Ponderacion Programas ------------------------*/
     public function sum_ponderacion_programas(){
         $sql = 'select SUM(aper_ponderacion) as ponderacion
@@ -247,112 +197,6 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*================================================== PROGRAMAS ===================================================*/
-    /*-------------------- Partidas Programas ------------------------*/
-/*    public function partidas_programas($prog,$tp){
-        if($tp==1){
-            $sql = 'select sig.aper_programa,sig.par_id,sig.partida as codigo,par.par_nombre as nombre,SUM(sig.importe) as monto
-                from  ptto_partidas_sigep as sig 
-                Inner Join partidas as par On par.par_id=sig.par_id
-                where sig.aper_programa=\''.$prog.'\' and sig.estado!=3 and sig.g_id='.$this->gestion.'
-                group by sig.aper_programa,sig.par_id,sig.partida,par.par_nombre
-                order by sig.partida';
-        }
-        else{
-            $sql = 'select apg.aper_programa,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(ip.programado_total) as monto
-                from _proyectos as p
-                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id 
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join vlista_insumos as i on i.aper_id = apg.aper_id
-                Inner Join insumo_gestion as ig on ig.ins_id = i.ins_id
-                Inner Join vifin_prog_mes as ip on ip.insg_id = ig.insg_id
-                where apg.aper_programa=\''.$prog.'\' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and ig.g_id='.$this->gestion.'
-                group by apg.aper_programa,i.par_id, i.par_codigo, i.par_nombre
-                order by i.par_codigo';
-        }
-    
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-/*    public function suma_partidas_programas($prog,$tp){
-        if($tp==1){
-            $sql = 'select sig.aper_programa,SUM(sig.importe) as monto
-                from  ptto_partidas_sigep as sig 
-                Inner Join partidas as par On par.par_id=sig.par_id
-                where sig.aper_programa=\''.$prog.'\' and sig.estado!=3 and sig.g_id='.$this->gestion.'
-                group by sig.aper_programa';
-        }
-        else{
-            $sql = 'select apg.aper_programa,SUM(ip.programado_total) as monto
-                    from _proyectos as p
-                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id 
-                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                    Inner Join insumos as i on i.aper_id = apg.aper_id
-                    Inner Join insumo_gestion as ig on ig.ins_id = i.ins_id
-                    Inner Join vifin_prog_mes as ip on ip.insg_id = ig.insg_id
-                    where apg.aper_programa=\''.$prog.'\' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and ig.g_id='.$this->gestion.'
-                    group by apg.aper_programa';
-        }
-    
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-/*    public function suma_partidas_regiones($dep_id){
-         $sql = 'select p.dep_id,SUM(ip.programado_total) as monto
-                    from _proyectos as p
-                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id 
-                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                    Inner Join insumos as i on i.aper_id = apg.aper_id
-                    Inner Join insumo_gestion as ig on ig.ins_id = i.ins_id
-                    Inner Join vifin_prog_mes as ip on ip.insg_id = ig.insg_id
-                    where p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and ig.g_id='.$this->gestion.' and p.dep_id='.$dep_id.'
-                    group by p.dep_id';
-    
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-
-    /*-------------------- Get Partida Programas ------------------------*/
-/*    public function get_partida_programa($prog,$par_id){
-        $sql = 'select apg.aper_programa,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(ip.programado_total) as monto
-                from _proyectos as p
-                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id 
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join vlista_insumos as i on i.aper_id = apg.aper_id
-                Inner Join insumo_gestion as ig on ig.ins_id = i.ins_id
-                Inner Join vifin_prog_mes as ip on ip.insg_id = ig.insg_id
-                where apg.aper_programa=\''.$prog.'\' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and ig.g_id='.$this->gestion.' and i.par_id='.$par_id.'
-                group by apg.aper_programa,i.par_id, i.par_codigo, i.par_nombre';
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*=================================== UNIDAD EJECUTORA ====================================*/
-/*    public function partidas_accion($aper_id,$tp){
-        if($tp==1){
-            $sql = 'select pg.par_id,pg.partida as codigo,p.par_nombre as nombre,SUM(pg.importe) as monto 
-                    from ptto_partidas_sigep pg
-                    Inner Join partidas as p On p.par_id=pg.par_id
-                    where pg.aper_id='.$aper_id.' and pg.estado!=\'3\' and pg.g_id='.$this->gestion.'
-                    group by pg.par_id,pg.partida,p.par_nombre,pg.importe
-                    order by pg.partida';
-        }
-        else{
-            $sql = 'select i.aper_id,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(ip.programado_total) as monto
-                    from vlista_insumos i
-                    Inner Join insumo_gestion as ig on ig.ins_id = i.ins_id
-                    Inner Join vifin_prog_mes as ip on ip.insg_id = ig.insg_id
-                    where i.aper_id='.$aper_id.' and ig.g_id='.$this->gestion.' and i.aper_id!=\'0\'
-                    group by i.aper_id,i.par_id, i.par_codigo, i.par_nombre
-                    order by i.par_codigo';
-        }
-    
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
     /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO (2019 - 2020 - 2021) -----*/
     public function suma_ptto_accion($aper_id,$tp){
@@ -844,13 +688,13 @@ class Model_ptto_sigep extends CI_Model{
     /*============ PARTIDAS UNIDAD EJECUTORA POR REGIONAL ============*/
     public function partidas_accion_region($dep_id,$aper_id,$tp){
         if($tp==1){ /// asignado
-            $sql = 'select p.dep_id,pg.par_id,pg.partida as codigo,par.par_nombre as nombre,SUM(pg.importe) as monto ,pg.ppto_saldo_ncert as saldo
+            $sql = 'select pg.sp_id,p.dep_id,pg.par_id,pg.partida as codigo,par.par_nombre as nombre,SUM(pg.importe) as monto ,pg.ppto_saldo_ncert as saldo
                     from ptto_partidas_sigep pg 
                     Inner Join aperturaproyectos as ap On ap.aper_id=pg.aper_id 
                     Inner Join _proyectos as p On p.proy_id=ap.proy_id 
                     Inner Join partidas as par On par.par_id=pg.par_id 
                     where p.dep_id='.$dep_id.' and p.estado!=\'3\' and pg.aper_id='.$aper_id.'and pg.estado!=\'3\' and pg.g_id='.$this->gestion.'
-                    group by p.dep_id,pg.par_id,pg.partida,par.par_nombre,pg.importe ,pg.ppto_saldo_ncert
+                    group by pg.sp_id,p.dep_id,pg.par_id,pg.partida,par.par_nombre,pg.importe ,pg.ppto_saldo_ncert
                     order by pg.partida';
         }
         else{ /// programado
