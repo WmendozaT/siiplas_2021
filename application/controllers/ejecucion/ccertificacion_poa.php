@@ -65,6 +65,47 @@ class Ccertificacion_poa extends CI_Controller {
     }
 
 
+  /*--- GET LISTA DE CERTIFICACIONES POR ITEMS ---*/
+  public function get_lista_certificaciones_por_items(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $ins_id = $this->security->xss_clean($post['ins_id']); // ins id
+
+        $tabla='';
+        $ins_certificado=$this->model_certificacion->verif_insumo_certificados($ins_id);
+        if(count($ins_certificado)!=0){
+          $tabla.='
+            <center>
+              <table border=1>
+                <tr>';
+              for ($i=1; $i <=count($ins_certificado); $i++) { 
+                $tabla.='<td>dsadadsa</td>';
+              }
+            $tabla.='
+                </tr>
+              </table>
+            </center>';
+
+
+         // $tabla.='<a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$ins_certificado[0]['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="30" HEIGHT="30"/><br>CERT. POA</a>';
+        }
+
+
+      //$tabla=$this->formulario_certpoa($prod_id);
+      //$tabla='hola mundo';
+      $result = array(
+        'respuesta' => 'correcto',
+        'lista'=>$tabla,
+      );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
 
 
   /*---- Lista de Proyectos de Inversion (2020) -----*/

@@ -972,7 +972,11 @@ class Modificacionpoa extends CI_Controller{
       $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id']);
       $tabla='';
       $total=0;
-      $tabla.='<table id="dt_basic" class="table table table-bordered" width="100%">
+      $tabla.=' <input type="hidden" name="base" value="'.base_url().'">
+                <input type="hidden" name="proy_id" value="'.$cite[0]['proy_id'].'">
+                <input type="hidden" name="aper_id" value="'.$cite[0]['aper_id'].'">
+                <input type="hidden" name="cite_id" value="'.$cite[0]['cite_id'].'">
+                <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                   <tr class="modo1">
                     <th style="width:2%;">#</th>
@@ -1107,7 +1111,11 @@ class Modificacionpoa extends CI_Controller{
 
       $tabla='';
       $total=0;
-      $tabla.='<table id="dt_basic" class="table table table-bordered" width="100%">
+      $tabla.=' <input type="hidden" name="proy_id" value="'.$cite[0]['proy_id'].'">
+                <input type="hidden" name="aper_id" value="'.$cite[0]['aper_id'].'">
+                <input type="hidden" name="cite_id" value="'.$cite[0]['cite_id'].'">
+                <input type="hidden" name="base" value="'.base_url().'">
+                <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                   <tr class="modo1">
                     <th style="width:2%;">#</th>
@@ -1150,6 +1158,7 @@ class Modificacionpoa extends CI_Controller{
                       $valor_delete=1;
                     }
                     elseif ($row['ins_monto_certificado']<$prog[0]['programado_total']) {
+                      $color_tr='#f7ebd3';
                       $valor_delete=1;
                     }
                   }
@@ -1160,16 +1169,18 @@ class Modificacionpoa extends CI_Controller{
                     $tabla .='<td align=center bgcolor="#ecf9f7" title="CODIGO ACTIVIDAD"><font size=3 color=blue><br>'.$row['prod_cod'].'</font></td>';
                     $tabla .='<td align=center>';
                       if($valor_mod==0 & $valor_delete==0){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>
-                                  <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-xs del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'" >
-                                    <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
+                        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
+                                  <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'" >
+                                    <img src="'.base_url().'assets/img/delete.png" width="35" height="35"/>
                                   </a>';
                       }
                       elseif($valor_mod==0 & $valor_delete==1){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br><br>';
+                        $tabla.='
+                            <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
+                            <a href="#" data-toggle="modal" data-target="#modal_certpoas" class="btn btn-default certpoas" name="'.$row['ins_id'].'" title="VER MIS CERTIFICACIONES POA- '.$row['ins_id'].'"><img src="'.base_url().'assets/img/ifinal/doc.jpg" WIDTH="35" HEIGHT="35"/></a>';
                       }
                       else{
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_certpoas" class="btn btn-default certpoas" name="'.$row['ins_id'].'" title="VER MIS CERTIFICACIONES POA- '.$row['ins_id'].'"><img src="'.base_url().'assets/img/ifinal/doc.jpg" WIDTH="40" HEIGHT="40"/><br>CERT. POA.</a><br>';
+                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_certpoas" class="btn btn-default certpoas" name="'.$row['ins_id'].'" title="VER MIS CERTIFICACIONES POA- '.$row['ins_id'].'"><img src="'.base_url().'assets/img/ifinal/doc.jpg" WIDTH="35" HEIGHT="35"/></a><br>';
                       }
 
                      /* $ins_certificado=$this->model_certificacion->verif_insumo_certificados($row['ins_id']);
@@ -1186,36 +1197,16 @@ class Modificacionpoa extends CI_Controller{
                     $tabla .= '<td style="width:5%;" bgcolor="#f1dfb9">'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</td>';
 
                     if(count($prog)!=0){
-                      $tabla.='
-                      <td style="width:5%;">'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td> 
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes2'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes3'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes4'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes5'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes6'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes7'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes8'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes9'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes10'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes11'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes12'], 2, ',', '.').'</td>';
+                      $tabla.='<td style="width:5%;">'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td> ';
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla.='<td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
+                      }
                     }
                     else{
-                      $tabla.='
-                      <td style="width:5%;">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>';
+                      $tabla.='<td style="width:5%;">0</td>';
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla.='<td style="width:5%;" bgcolor="#ffeeeb">0</td>';
+                      }
                     }
                     
                     $tabla .= ' 

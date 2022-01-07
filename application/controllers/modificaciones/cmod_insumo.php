@@ -103,7 +103,7 @@ class Cmod_insumo extends CI_Controller {
       }
     }
 
-    /*----- REQUERIMIENTOS 2020-2021 ------*/
+    /*----- REQUERIMIENTOS 2020-2021-2022 ------*/
     public function mis_requerimientos($cite_id){
       $data['menu']=$this->menu(3); //// genera menu
       $data['cite'] = $this->model_modrequerimiento->get_cite_insumo($cite_id);
@@ -187,7 +187,11 @@ class Cmod_insumo extends CI_Controller {
 
       $tabla='';
       $total=0;
-      $tabla.='<table id="dt_basic" class="table table table-bordered" width="100%">
+      $tabla.=' <input type="hidden" name="proy_id" value="'.$cite[0]['proy_id'].'">
+                <input type="hidden" name="aper_id" value="'.$cite[0]['aper_id'].'">
+                <input type="hidden" name="cite_id" value="'.$cite[0]['cite_id'].'">
+                <input type="hidden" name="base" value="'.base_url().'">
+                <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                   <tr class="modo1">
                     <th style="width:2%;">#</th>
@@ -321,7 +325,11 @@ class Cmod_insumo extends CI_Controller {
 
       $tabla='';
       $total=0;
-      $tabla.='<table id="dt_basic" class="table table table-bordered" width="100%">
+      $tabla.=' <input type="hidden" name="proy_id" value="'.$cite[0]['proy_id'].'">
+                <input type="hidden" name="aper_id" value="'.$cite[0]['aper_id'].'">
+                <input type="hidden" name="cite_id" value="'.$cite[0]['cite_id'].'">
+                <input type="hidden" name="base" value="'.base_url().'">
+                <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                   <tr class="modo1">
                     <th style="width:2%;">#</th>
