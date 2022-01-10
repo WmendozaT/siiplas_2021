@@ -1263,7 +1263,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:1%;height:20px;">#</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
                 $tabla.='<th style="width:3.8%;">PARTIDA</th>';
-                $tabla.='<th style="width:14%;">DETALLE REQUERIMIENTO</th>';
+                $tabla.='<th style="width:16%;">DETALLE REQUERIMIENTO</th>';
                 $tabla.='<th style="width:4.6%;">UNIDAD MEDIDA</th>';
                 $tabla.='<th style="width:4%;">CANTIDAD</th>';
                 $tabla.='<th style="width:4%;">PRECIO UNITARIO</th>';
@@ -1280,7 +1280,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:4.4%;">OCT.</th>';
                 $tabla.='<th style="width:4.4%;">NOV.</th>';
                 $tabla.='<th style="width:4.4%;">DIC.</th>';
-                $tabla.='<th style="width:7%;">OBSERVACIÓN</th>';
+                $tabla.='<th style="width:6%;">OBSERVACIÓN</th>';
               $tabla.='</tr>';
               $tabla.='</thead>';
               $tabla.='<tbody>';
@@ -1293,7 +1293,7 @@ class Modificacionpoa extends CI_Controller{
                   $tabla.='<td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>';
                   $tabla.='<td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>';
                   $tabla.='<td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>';
-                  $tabla.='<td style="width: 14%; text-align: left;">'.$row['ins_detalle'].'</td>';
+                  $tabla.='<td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>';
                   $tabla.='<td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
@@ -1326,7 +1326,7 @@ class Modificacionpoa extends CI_Controller{
                     $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
                     $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
                   }
-                  $tabla.='<td style="width: 7%; text-align: left;">'.$row['ins_observacion'].'</td>';
+                  $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
                 $tabla.='</tr>';
                 $monto=$monto+$row['ins_costo_total'];
               }
@@ -1348,7 +1348,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:1%;height:20px;">#</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
                 $tabla.='<th style="width:3.8%;">PARTIDA</th>';
-                $tabla.='<th style="width:14%;">DETALLE REQUERIMIENTO</th>';
+                $tabla.='<th style="width:16%;">DETALLE REQUERIMIENTO</th>';
                 $tabla.='<th style="width:4.6%;">UNIDAD MEDIDA</th>';
                 $tabla.='<th style="width:4%;">CANTIDAD</th>';
                 $tabla.='<th style="width:4%;">PRECIO UNITARIO</th>';
@@ -1365,7 +1365,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:4.4%;">OCT.</th>';
                 $tabla.='<th style="width:4.4%;">NOV.</th>';
                 $tabla.='<th style="width:4.4%;">DIC.</th>';
-                $tabla.='<th style="width:7%;">OBSERVACIÓN</th>';
+                $tabla.='<th style="width:6%;">OBSERVACIÓN</th>';
               $tabla.='</tr>';
               $tabla.='</thead>';
               $tabla.='<tbody>';
@@ -1378,7 +1378,7 @@ class Modificacionpoa extends CI_Controller{
                   $tabla.='<td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>';
                   $tabla.='<td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>';
                   $tabla.='<td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>';
-                  $tabla.='<td style="width: 14%; text-align: left;">'.$row['ins_detalle'].'</td>';
+                  $tabla.='<td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>';
                   $tabla.='<td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
@@ -1411,7 +1411,7 @@ class Modificacionpoa extends CI_Controller{
                     $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
                     $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
                   }
-                  $tabla.='<td style="width: 7%; text-align: left;">'.$row['ins_observacion'].'</td>';
+                  $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
                 $tabla.='</tr>';
                 $monto=$monto+$row['ins_costo_total'];
               }
@@ -1433,7 +1433,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:1%;height:20px;">#</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
                 $tabla.='<th style="width:3.8%;">PARTIDA</th>';
-                $tabla.='<th style="width:14%;">DETALLE REQUERIMIENTO</th>';
+                $tabla.='<th style="width:16%;">DETALLE REQUERIMIENTO</th>';
                 $tabla.='<th style="width:4.6%;">UNIDAD MEDIDA</th>';
                 $tabla.='<th style="width:4%;">CANTIDAD</th>';
                 $tabla.='<th style="width:4%;">PRECIO UNITARIO</th>';
@@ -1450,7 +1450,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:4.4%;">OCT.</th>';
                 $tabla.='<th style="width:4.4%;">NOV.</th>';
                 $tabla.='<th style="width:4.4%;">DIC.</th>';
-                $tabla.='<th style="width:7%;">OBSERVACIÓN</th>';
+                $tabla.='<th style="width:6%;">OBSERVACIÓN</th>';
               $tabla.='</tr>';
               $tabla.='</thead>';
               $tabla.='<tbody>';
@@ -1462,7 +1462,7 @@ class Modificacionpoa extends CI_Controller{
                   $tabla.='<td style="width: 1%; height:11px;text-align: center;font-size: 6px;">'.$nro.'</td>';
                   $tabla.='<td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>';
                   $tabla.='<td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>';
-                  $tabla.='<td style="width: 14%; text-align: left;">'.$row['ins_detalle'].'</td>';
+                  $tabla.='<td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>';
                   $tabla.='<td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
@@ -1479,7 +1479,7 @@ class Modificacionpoa extends CI_Controller{
                   $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes10'], 2, ',', '.') . '</td>';
                   $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes11'], 2, ',', '.') . '</td>';
                   $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes12'], 2, ',', '.') . '</td>';
-                $tabla.='<td style="width: 7%; text-align: left;">'.$row['ins_observacion'].'</td>';
+                $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
                 $tabla.='</tr>';
                 $monto=$monto+$row['ins_costo_total'];
               }
@@ -1703,7 +1703,7 @@ class Modificacionpoa extends CI_Controller{
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;">
         <tr>
           <td style="width: 1%;"></td>
-          <td style="width: 55%;">
+          <td style="width: 75%;">
               <b>OBSERVACIÓN</b><hr>
               <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                 <tr bgcolor="#cae4fb">

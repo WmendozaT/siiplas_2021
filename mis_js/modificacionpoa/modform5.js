@@ -5,11 +5,17 @@ aper_id = $('[name="aper_id"]').val();
 cite_id = $('[name="cite_id"]').val();
 
 
-function abreVentana(PDF){             
-  var direccion;
-  direccion = '' + PDF;
-  window.open(direccion, "REPORTE FORMULARIO N° 5" , "width=800,height=700,scrollbars=NO") ; 
-}
+  function abreVentana(PDF){             
+    var direccion;
+    direccion = '' + PDF;
+    window.open(direccion, "REPORTE FORMULARIO N° 5" , "width=800,height=700,scrollbars=NO") ; 
+  }
+
+  function abreVentana_comparativo(PDF){             
+    var direccion;
+    direccion = '' + PDF;
+    window.open(direccion, "Cuadro Comparativo" , "width=700,height=600,scrollbars=NO") ; 
+  }
 
 $(function () {
     //SUBIR ARCHIVO
@@ -157,40 +163,40 @@ $(function () {
 
   //// VER LISTA DE CERTIFICACIONES POA POR ITEMS
   $(function () {
-      $(".certpoas").on("click", function (e) {
-          ins_id = $(this).attr('name');
+    $(".certpoas").on("click", function (e) {
+        ins_id = $(this).attr('name');
 
       var url = base+"index.php/ejecucion/ccertificacion_poa/get_lista_certificaciones_por_items";
-        var request;
-        if (request) {
-            request.abort();
-        }
-        request = $.ajax({
-            url: url,
-            type: "POST",
-            dataType: 'json',
-            data: "ins_id="+ins_id
-        });
-
-        request.done(function (response, textStatus, jqXHR) {
-
-        if (response.respuesta == 'correcto') {
-          $("#cpoas").html(response.lista);
-        }
-        else{
-            alertify.error("ERROR AL RECUPERAR DATOS DEL REQUERIMIENTO");
-        }
-
-        });
-        request.fail(function (jqXHR, textStatus, thrown) {
-            console.log("ERROR: " + textStatus);
-        });
-        request.always(function () {
-            //console.log("termino la ejecuicion de ajax");
-        });
-        e.preventDefault();
-         
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "ins_id="+ins_id
       });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+        $("#cpoas").html(response.lista);
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR DATOS DEL REQUERIMIENTO");
+      }
+
+      });
+      request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+      });
+      request.always(function () {
+          //console.log("termino la ejecuicion de ajax");
+      });
+      e.preventDefault();
+       
+    });
   });
 
 
@@ -791,66 +797,66 @@ $(document).ready(function() {
     }
 
     function costo_totalm(){ 
-        s = parseFloat($('[name="sal"]').val()); //// saldo
-        a = parseFloat($('[name="cantidad"]').val()); //// cantidad
-        b = parseFloat($('[name="costou"]').val()); //// Costo
-        
-        $('[name="costot"]').val((b*a).toFixed(2) );
-        $('[name="costot2"]').val((b*a).toFixed(2) );
+      s = parseFloat($('[name="sal"]').val()); //// saldo
+      a = parseFloat($('[name="cantidad"]').val()); //// cantidad
+      b = parseFloat($('[name="costou"]').val()); //// Costo
+      
+      $('[name="costot"]').val((b*a).toFixed(2) );
+      $('[name="costot2"]').val((b*a).toFixed(2) );
 
-        ct = parseFloat($('[name="costot"]').val()); //// total
-        mt = parseFloat($('[name="mtot"]').val()); //// prog
+      ct = parseFloat($('[name="costot"]').val()); //// total
+      mt = parseFloat($('[name="mtot"]').val()); //// prog
 
-        saldo_partida = parseFloat($('[name="sal"]').val()); //// saldo partida
-        $('[name="monto_dif"]').val((saldo_partida-ct).toFixed(2) ); // Saldo Disponible
+      saldo_partida = parseFloat($('[name="sal"]').val()); //// saldo partida
+      $('[name="monto_dif"]').val((saldo_partida-ct).toFixed(2) ); // Saldo Disponible
 
-        if(ct!=mt ||  isNaN(a)){
-          $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
+      if(ct!=mt ||  isNaN(a)){
+        $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
+            $('#mbut').slideUp();
+      }
+      else{
+        if(ct>saldo_partida){
+          $('#amtit').html('<center><div class="alert alert-danger alert-block">COSTO TOTAL SUPERA AL SALDO DE LA PARTIDA, VERIFIQUE MONTOS</div></center>');
               $('#mbut').slideUp();
         }
         else{
-          if(ct>saldo_partida){
-            $('#amtit').html('<center><div class="alert alert-danger alert-block">COSTO TOTAL SUPERA AL SALDO DE LA PARTIDA, VERIFIQUE MONTOS</div></center>');
-                $('#mbut').slideUp();
-          }
-          else{
-            $('#amtit').html('');
-            $('#mbut').slideDown();
-          }
-          
+          $('#amtit').html('');
+          $('#mbut').slideDown();
         }
+        
+      }
     }
 
     function costo_total(){ 
-        a = parseFloat($('[name="ins_cantidad"]').val()); //// cantidad
-        b = parseFloat($('[name="ins_costo_u"]').val()); //// Costo unitario
-        
-    $('[name="costo"]').val((b*a).toFixed(2) );
-        $('[name="costo2"]').val((b*a).toFixed(2) );
+      a = parseFloat($('[name="ins_cantidad"]').val()); //// cantidad
+      b = parseFloat($('[name="ins_costo_u"]').val()); //// Costo unitario
+      
+      $('[name="costo"]').val((b*a).toFixed(2) );
+      $('[name="costo2"]').val((b*a).toFixed(2) );
 
-        ct = parseFloat($('[name="costo"]').val()); //// total
-        mt = parseFloat($('[name="tot"]').val()); //// prog
-        saldo_partida = parseFloat($('[name="saldo"]').val()); //// saldo partida
-        $('[name="saldo_disp"]').val((saldo_partida-ct).toFixed(2) ); // Saldo Disponible
+      ct = parseFloat($('[name="costo"]').val()); //// total
+      mt = parseFloat($('[name="tot"]').val()); //// prog
+      saldo_partida = parseFloat($('[name="saldo"]').val()); //// saldo partida
+      $('[name="saldo_disp"]').val((saldo_partida-ct).toFixed(2) ); // Saldo Disponible
 
-        if(ct!=mt ||  isNaN(a) || ct==0){
-          $('#atit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
+      if(ct!=mt ||  isNaN(a) || ct==0){
+        $('#atit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
+            $('#but').slideUp();
+      }
+      else{
+        if(ct>saldo_partida){
+          $('#atit').html('<center><div class="alert alert-danger alert-block">COSTO TOTAL SUPERA AL SALDO DE LA PARTIDA, VERIFIQUE MONTOS</div></center>');
               $('#but').slideUp();
         }
         else{
-          if(ct>saldo_partida){
-            $('#atit').html('<center><div class="alert alert-danger alert-block">COSTO TOTAL SUPERA AL SALDO DE LA PARTIDA, VERIFIQUE MONTOS</div></center>');
-                $('#but').slideUp();
-          }
-          else{
-            $('#atit').html('');
-                $('#but').slideDown();
-          }
+          $('#atit').html('');
+              $('#but').slideDown();
         }
+      }
     }
 
     function verif(){ 
-    a = parseFloat($('[name="costot"]').val()); //// total
+      a = parseFloat($('[name="costot"]').val()); //// total
       b = parseFloat($('[name="mtot"]').val()); //// prog
       if(a!=b){
         $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
@@ -865,45 +871,45 @@ $(document).ready(function() {
 
     function mes_texto(mes){
       switch (mes) {
-          case 1:
-              texto = 'ENERO';
-              break;
-          case 2:
-              texto = 'FEBRERO';
-              break;
-          case 3:
-              texto = 'MARZO';
-              break;
-          case 4:
-              texto = 'ABRIL';
-              break;
-          case 5:
-              texto = 'MAYO';
-              break;
-          case 6:
-              texto = 'JUNIO';
-              break;
-          case 7:
-              texto = 'JULIO';
-              break;
-          case 8:
-              texto = 'AGOSTO';
-              break;
-          case 9:
-              texto = 'SEPTIEMBRE';
-              break;
-          case 10:
-              texto = 'OCTUBRE';
-              break;
-          case 11:
-              texto = 'NOVIEMBRE';
-              break;
-          case 12:
-              texto = 'DICIEMBRE';
-              break;
-          default:
-              texto = 'SIN REGISTRO';
-              break;
+        case 1:
+            texto = 'ENERO';
+            break;
+        case 2:
+            texto = 'FEBRERO';
+            break;
+        case 3:
+            texto = 'MARZO';
+            break;
+        case 4:
+            texto = 'ABRIL';
+            break;
+        case 5:
+            texto = 'MAYO';
+            break;
+        case 6:
+            texto = 'JUNIO';
+            break;
+        case 7:
+            texto = 'JULIO';
+            break;
+        case 8:
+            texto = 'AGOSTO';
+            break;
+        case 9:
+            texto = 'SEPTIEMBRE';
+            break;
+        case 10:
+            texto = 'OCTUBRE';
+            break;
+        case 11:
+            texto = 'NOVIEMBRE';
+            break;
+        case 12:
+            texto = 'DICIEMBRE';
+            break;
+        default:
+            texto = 'SIN REGISTRO';
+            break;
       }
       return texto;
     }

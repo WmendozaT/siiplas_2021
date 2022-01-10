@@ -106,16 +106,16 @@ h1 {
 <body>
 <div id="sidebar" class="sidebar">
 <a href="#" class="boton-cerrar" onclick="ocultar()">&times;</a>
-<center><h1>ARCHIVOS DE MIGRACI&Oacute;N POA 2021</h1></center>
+<center><h1>ARCHIVOS DE MIGRACI&Oacute;N POA 2022</h1></center>
 <ul class="menu">
   <li><a href="<?php echo base_url(); ?>assets/video/plantilla_actividades.xlsx" download  title="ARCHIVO DE MIGRACION - OPERACIONES">1.- ARCHIVO DE MIGRACI&Oacute;N - FORMULARIO 4</a></li>
-  <li><a href="<?php echo base_url(); ?>assets/video/Requerimientos_x_actividad.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS POR CADA OPERACIÓN">2.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS POR OPERACIÓN</a></li>
+  <li><a href="<?php echo base_url(); ?>assets/video/Requerimientos_x_actividad.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS POR CADA OPERACIÓN">2.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS POR ACTIVIDAD</a></li>
   <li><a href="<?php echo base_url(); ?>assets/video/Requerimientos_global_actividad.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS DE MANERA GLOBAL">3.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS (GLOBAL)</a></li>
 </ul>
-<center><h1>FORMULARIOS EDICI&Oacute;N POA 2021</h1></center>
+<center><h1>FORMULARIOS EDICI&Oacute;N POA 2022</h1></center>
 <ul class="menu">
-  <li><a href="<?php echo base_url(); ?>assets/video/SOLICITUD CERTIFICACION POA 04_01_21.xlsx" download  title="FORMULARIO DE CERTIFICACIÓN POA">1.- FORMATO DE SOLICITUD DE CERTIFICACI&Oacute;N POA</a></li>
-  <li><a href="<?php echo base_url(); ?>assets/video/FORMULARIO SOLICITUD DE MODIFICACION POA 04_01_21.xlsx" download  title="FORMULARIO DE MODIFICACION POA - ACTIVIDADES Y REQUERIMIENTOS">2.- FORMATO DE SOLICITUD DE MODIFICACI&Oacute;N POA</a></li>
+  <li><a href="<?php echo base_url(); ?>assets/video/FORM_SOL_POA_5_2022.xlsx" download  title="FORMULARIO DE CERTIFICACIÓN POA">1.- FORMATO DE SOLICITUD DE CERTIFICACI&Oacute;N POA</a></li>
+  <li><a href="<?php echo base_url(); ?>assets/video/FORM_MOD_4_Y_5_2022.xlsx" download  title="FORMULARIO DE MODIFICACION POA - ACTIVIDADES Y REQUERIMIENTOS">2.- FORMATO DE SOLICITUD DE MODIFICACI&Oacute;N POA</a></li>
 </ul>
 </div>
 

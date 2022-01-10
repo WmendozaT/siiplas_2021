@@ -76,23 +76,33 @@ class Ccertificacion_poa extends CI_Controller {
         if(count($ins_certificado)!=0){
           $tabla.='
             <center>
-              <table border=1>
+              <table>
                 <tr>';
-              for ($i=1; $i <=count($ins_certificado); $i++) { 
-                $tabla.='<td>dsadadsa</td>';
-              }
+                foreach ($ins_certificado as $row){
+                  $tabla.='
+                  <td>
+                    <center>
+                      <table class="table table-bordered" style="width:85%;">
+                        <tr>
+                          <td align=center>
+                            <b>'.$row['cpoa_codigo'].'</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td align=center>
+                            <a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="60" HEIGHT="60"/></a>
+                          </td>
+                        </tr>
+                      </table>
+                    </center>
+                  </td>';
+                }
             $tabla.='
                 </tr>
               </table>
             </center>';
-
-
-         // $tabla.='<a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$ins_certificado[0]['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="30" HEIGHT="30"/><br>CERT. POA</a>';
         }
 
-
-      //$tabla=$this->formulario_certpoa($prod_id);
-      //$tabla='hola mundo';
       $result = array(
         'respuesta' => 'correcto',
         'lista'=>$tabla,

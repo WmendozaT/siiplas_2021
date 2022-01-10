@@ -21,45 +21,7 @@
 		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
 		<!--para las alertas-->
     	<meta name="viewport" content="width=device-width">
-		<script type="text/javascript">
-		  function abreVentana_comparativo(PDF){             
-		      var direccion;
-		      direccion = '' + PDF;
-		      window.open(direccion, "Cuadro Comparativo" , "width=700,height=600,scrollbars=NO") ; 
-		  }
-		</script>
-		<style>
-			table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-			overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-            #mdialTamanio{
-		      width: 80% !important;
-		    }
-		    #mdialTamanio2{
-		      width: 45% !important;
-		    }
-		    #comparativo{
-		      width: 50% !important;
-		    }
-		    #csv{
-		      width: 30% !important;
-		    }
-		    input[type="checkbox"] {
-                display:inline-block;
-                width:25px;
-                height:25px;
-                margin:-1px 4px 0 0;
-                vertical-align:middle;
-                cursor:pointer;
-            }
-		</style>
+    	<?php echo $style;?>
 	</head>
 	<body class="">
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -256,19 +218,21 @@
 		</div>
 
 		<!--  Lista de Certificaciones POAS   -->
-		<div class="modal fade" id="modal_certpoas" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-	        <div class="modal-dialog" id="mdialTamanio">
-	            <div class="modal-content">
-	            	<div class="modal-header">
-                    	<button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; Salir Formulario</span></button>
-                    </div>
-	              	<div class="modal-body" id="cpoas">
-
-	              	</div>
-	            </div>
-	        </div>
-	    </div>
-
+		<div class="modal fade" id="modal_certpoas" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document" class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">MIS CERTIFICACIONES POAS</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <div class="modal-body" id="cpoas"></div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 
 		<!-- MODAL NUEVO REGISTRO DE REQUERIMIENTOS   -->
         <div class="modal fade" id="modal_nuevo_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -721,7 +685,7 @@
 
 	    <!-- MODAL COMPARATIVO   -->
 	    <div class="modal fade" id="modal_comparativo" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-	        <div class="modal-dialog" id="comparativo">
+	        <div  role="document" class="modal-dialog modal-lg">
 	            <div class="modal-content">
 	                <div class="modal-header">
 	                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
@@ -741,7 +705,7 @@
 	 	<!--  =============== -->
 	 <!-- MODAL CERRAR   -->
         <div class="modal fade" id="modal_cerrar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-	          <div class="modal-dialog" id="csv">
+	          <div class="modal-dialog modal-dialog-centered" role="document" class="modal-dialog modal-sm">
 	            <div class="modal-content">
 	            	<div class="modal-header">
                     	<button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; Salir Formulario</span></button>
@@ -789,7 +753,7 @@
 
 	    <!-- ================== MODAL SUBIR ARCHIVO ========================== -->
 	  	<div class="modal fade" id="modal_importar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-	        <div class="modal-dialog" id="csv">
+	        <div class="modal-dialog modal-dialog-centered" role="document" class="modal-dialog modal-sm">
 	            <div class="modal-content">
 	                <div class="modal-header">
 	                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>

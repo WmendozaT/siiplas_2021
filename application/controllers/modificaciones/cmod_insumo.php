@@ -146,6 +146,7 @@ class Cmod_insumo extends CI_Controller {
 
             $data['verif_mod']=$this->verif_mod_req($cite_id);
             $data['tit']=$tit;
+            $data['style']=$this->style();
 
             $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
       }
@@ -153,6 +154,49 @@ class Cmod_insumo extends CI_Controller {
         redirect('mod/list_top');
       }
     }
+
+
+    /// ---- STYLE -----
+    public function style(){
+      $tabla='';
+
+      $tabla.='   
+      <style>
+        table{font-size: 10px;
+            width: 100%;
+            max-width:1550px;;
+            overflow-x: scroll;
+        }
+        th{
+            padding: 1.4px;
+            text-align: center;
+            font-size: 10px;
+        }
+            #mdialTamanio{
+            width: 80% !important;
+        }
+        #comparativo{
+          width: 50% !important;
+        }
+        #csv{
+          width: 30% !important;
+        }
+          input[type="checkbox"] {
+          display:inline-block;
+          width:25px;
+          height:25px;
+          margin:-1px 4px 0 0;
+          vertical-align:middle;
+          cursor:pointer;
+        }
+    </style>';
+
+      return $tabla;
+    }
+
+
+
+
 
 
     /*---- tipo lista : Operacion-Actividad ----*/
