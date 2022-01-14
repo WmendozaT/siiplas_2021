@@ -1023,10 +1023,10 @@ dist_id integer,
 dist_cod varchar,
 dist_distrital varchar,
 aper_id numeric,
-aper_prog text,
-aper_proy text,
+aper_prog varchar,
+aper_proy varchar,
 proy_sisin varchar,
-aper_act text,
+aper_act varchar,
 proy_id numeric,
 proy_nombre varchar,
 tp_id numeric,
@@ -1071,7 +1071,7 @@ fun_materno varchar) AS
 
 $$
 
-select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,apg.aper_id,apg.aper_prog,apg.aper_proy,p.proy_sisin,apg.aper_act,p.proy_id,p.proy_nombre,p.tp_id,ds.abrev,ua.act_descripcion, te.tipo,
+select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,apg.aper_id,apg.aper_programa as aper_prog,apg.aper_proyecto as aper_proy,p.proy_sisin,apg.aper_actividad as aper_act,p.proy_id,p.proy_nombre,p.tp_id,ds.abrev,ua.act_descripcion, te.tipo,
      ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_cod,prod.prod_producto,prod.or_id,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_detalle,i.ins_unidad_medida,
      i.ins_gestion,i.ins_observacion,i.par_id,par.par_codigo,par.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
      itemp.mes11,itemp.mes12,fun.fun_nombre,fun.fun_paterno,fun.fun_materno
