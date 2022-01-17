@@ -232,7 +232,7 @@ class Certificacionpoa extends CI_Controller{
                   $nro++;
                   $tabla.='
                     <tr style="height:45px;">
-                      <td align=center><b>'.$nro.'</b></td>
+                      <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>
                       <td align=center>
                         <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" style="color: green; background-color: #eeeeee;border-bottom-width: 5px;" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" title="SELECCIONAR ACTIVIDAD"> 
                         <i class="glyphicon glyphicon-list"></i> MIS ACTIVIDADES</a>
@@ -243,7 +243,7 @@ class Certificacionpoa extends CI_Controller{
                       <td>'.$row['nivel'].'</td>
                       <td>'.$row['tipo_adm'].'</td>
                       <td>'.strtoupper($row['dep_departamento']).'</td>
-                      <td>'.strtoupper($row['dist_distrital']).'</td>
+                      <td>'.strtoupper($row['dist_distrital']).'<br><a href="'.site_url("").'/cert/update_certpoa_insumo/'.$row['proy_id'].'" title="UPDATE DATOS CERT. POA." class="btn btn-primary">UPDATE CPOA.</a></td>
                     </tr>';
                 }
               }

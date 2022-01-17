@@ -959,7 +959,7 @@
        // $data['ejecucion']=$this->ejecucion_presupuestaria_acumulado_total($com_id);
         //$data['ejecucion']=$this->ejecucion_presupuestaria_acumulado($com_id); /// anterior
         $this->load->view('admin/reportes_cns/programacion_poa/reporte_poa_form5', $data);
-      
+      //echo $data['requerimientos'];
       }
     }
 
@@ -995,7 +995,7 @@
               </thead>
             <tbody>';
             $nro=0;$sum_programado=0;$sum_certificado=0;
-            if(count($requerimientos)>150){ /// items mayores a 150 sin color de marcado
+            /*if(count($requerimientos)>150){ /// items mayores a 150 sin color de marcado
 
                   foreach ($requerimientos as $row){
                     $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
@@ -1077,24 +1077,57 @@
                     $sum_programado=$sum_programado+$prog[0]['programado_total'];
                     $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];  
                 }
-            }
+            }*/
 
+foreach ($requerimientos as $row){
+                  $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                  $nro++;
+                  $tabla.='<tr>';
+                    $tabla.='<td style="width: 2%; font-size: 8px; text-align: center;height:13px;"><b>'.$row['prod_cod'].'</b></td>';
+                    $tabla.='<td style="width: 3.5%; text-align: center;font-size: 8px;" bgcolor="#eceaea">'.$row['par_codigo'].'</td>';
+                    $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'DDDD</td>';
+                    $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
+                    $tabla.='<td style="width: 4.3%; text-align: right;font-size: 7.5px;">'.round($row['ins_cant_requerida'],2).'</td>';
+                    $tabla.='<td style="width: 4.5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+                    $tabla.='<td style="width: 5.2%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                    $tabla.='<td style="width: 5.2%;" bgcolor="#c1f5ee" align=right><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
+                    if(count($prog)!=0){
+                      if($prog[0]['programado_total']==$row['ins_monto_certificado']){
+                        for ($i=1; $i<=12 ; $i++) {
+                          $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
+                        }
+                      }
+                      elseif($prog[0]['programado_total']>$row['ins_monto_certificado']){
+                          for ($i=1; $i<=12 ; $i++) {
+                            $mes=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
+                            $color='';
+                            if(count($mes)==1){
+                              if($mes[0]['estado_cert']==1){
+                                $color='#ddf7dd';
+                              }
+                            }
+                            
+                            $tabla.='<td style="width:4%;" align=right bgcolor="'.$color.'">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
+                          }
+                      }
+                      elseif($row['ins_monto_certificado']==0){
+                        $tabla.='<td style="width:4%;" align=right>'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
+                      }
+                    }
+                    else{
+                      for ($i=1; $i<=12 ; $i++) {
+                        $tabla.='<td style="width:4%;" align=right bgcolor="red">'.number_format(0, 2, ',', '.').'</td>';
+                      }
+                    }
 
-            $ejecucion=0;
-            if($sum_certificado!=0){
-              $ejecucion=round((($sum_certificado/$sum_programado)*100),2);
-            }
+                    $tabla.='
+                      <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+                    </tr>';
+                  //  $sum_programado=$sum_programado+$prog[0]['programado_total'];
+                  //  $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];  
+                }
 
-            $tabla.='
-            </tbody>
-            <tr>
-              <td colspan=6 style="height:20px;"></td>
-              <td align=right>'.number_format($sum_programado, 2, ',', '.').'</td>
-              <td align=right>'.number_format($sum_certificado, 2, ',', '.').'</td>
-              <td colspan=13> &nbsp;&nbsp;EJECUCI&Oacute;N POA '.$this->gestion.' : <b>'.$ejecucion.'%</b></td>
-            </tr>
-        </table>';
-
+                $tabla.='</tbody></table>';
       return $tabla;
     }
 
