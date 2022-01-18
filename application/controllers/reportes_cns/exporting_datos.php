@@ -805,7 +805,7 @@
 
 
       header('Content-type: application/vnd.ms-excel');
-      header("Content-Disposition: attachment; filename=Consolidado_Ejecucion_Requerimiento_".$distrital."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Content-Disposition: attachment; filename=Consolidado_Ejecucion_Requerimiento_$fecha.xls"); //Indica el nombre del archivo resultante
       header("Pragma: no-cache");
       header("Expires: 0");
       echo "";
@@ -823,7 +823,7 @@
         $tit_proy=''.$proyecto[0]['aper_prog'].' '.$proyecto[0]['proy_sisin'].' '.$proyecto[0]['aper_act'].' '.$proyecto[0]['proy_nombre'];
         if($proyecto[0]['tp_id']==4){
           $tit_proy=''.$proyecto[0]['aper_prog'].' '.$proyecto[0]['aper_proy'].' '.$proyecto[0]['aper_act'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
-          $tit='ACTIVIDAD';
+          $tit=$proyecto[0]['tipo_adm'];
         }
 
         $tabla='';
@@ -848,14 +848,14 @@
                 <b> DA : </b> '.$proyecto[0]['dep_cod'].' .-'.strtoupper($proyecto[0]['dep_departamento']).'<br>
                 <b> UE : </b> '.$proyecto[0]['dist_cod'].' .-'.strtoupper($proyecto[0]['dist_distrital']).'<br>
                 <b> '.$tit.' : </b> '.$tit_proy.'<br>
-                <b> SUBACTIVIDAD : </b> '.$componente[0]['serv_cod'].' '.$componente[0]['serv_descripcion'].'<br>
+                <b> UNIDAD RESPONSABLE : </b> '.$componente[0]['serv_cod'].' '.$componente[0]['serv_descripcion'].'<br>
               </td>
             </tr>
           </table><br>
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                  <tr style="background-color: #66b2e8">
-                    <th style="width:2%;height:50px;background-color: #eceaea;">COD. OPE.</th>
+                    <th style="width:2%;height:50px;background-color: #eceaea;">COD. ACT.</th>
                     <th style="width:2%;background-color: #eceaea;">PARTIDA</th>
                     <th style="width:20%;background-color: #eceaea;">REQUERIMIENTO</th>
                     <th style="width:5%;background-color: #eceaea;">UNIDAD DE MEDIDA</th>
@@ -970,7 +970,7 @@
           <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;">
               <thead>
                <tr style="font-size: 7px;" bgcolor="#1c7368" align=center>
-                    <th style="width:2%;height:18px;color:#FFF;">COD. OPE.</th>
+                    <th style="width:2%;height:18px;color:#FFF;">COD. ACT.</th>
                     <th style="width:3.5%;color:#FFF;">PARTIDA</th>
                     <th style="width:15%;color:#FFF;">DETALLE REQUERIMIENTO</th>
                     <th style="width:5%;color:#FFF;">UNIDAD</th>
@@ -1082,10 +1082,10 @@
 foreach ($requerimientos as $row){
                   $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
                   $nro++;
-                  $tabla.='<tr>';
+                  $tabla.='<tr title='.$row['ins_id'].'>';
                     $tabla.='<td style="width: 2%; font-size: 8px; text-align: center;height:13px;"><b>'.$row['prod_cod'].'</b></td>';
                     $tabla.='<td style="width: 3.5%; text-align: center;font-size: 8px;" bgcolor="#eceaea">'.$row['par_codigo'].'</td>';
-                    $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'DDDD</td>';
+                    $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'</td>';
                     $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
                     $tabla.='<td style="width: 4.3%; text-align: right;font-size: 7.5px;">'.round($row['ins_cant_requerida'],2).'</td>';
                     $tabla.='<td style="width: 4.5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
@@ -1123,11 +1123,20 @@ foreach ($requerimientos as $row){
                     $tabla.='
                       <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
                     </tr>';
-                  //  $sum_programado=$sum_programado+$prog[0]['programado_total'];
-                  //  $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];  
+                    $sum_programado=$sum_programado+$prog[0]['programado_total'];
+                    $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];  
                 }
 
-                $tabla.='</tbody></table>';
+                $tabla.='
+                </tbody>
+                  <tr>
+                    <td style="font-size: 8px;height:13px;" colspan=6></td>
+                    <td align=right>'.number_format($sum_programado, 2, ',', '.').'</td>
+                    <td align=right>'.number_format($sum_certificado, 2, ',', '.').'</td>
+                    <td colspan=13></td>
+                  </tr>
+
+                </table>';
       return $tabla;
     }
 
