@@ -372,7 +372,7 @@ class Rep_operaciones extends CI_Controller {
     }
 
     /*----- Calculo de Presupuesto Asignado-Programado ----*/
-/*    public function ppto_actividad($proyecto,$tp_id){
+    public function ppto_actividad($proyecto,$tp_id){
         $salida[1]=0;$salida[2]=0;$salida[3]=0;
 
         $ppto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto['aper_id'],1); /// Asignado
@@ -398,7 +398,7 @@ class Rep_operaciones extends CI_Controller {
         $salida[3]=$saldo; /// Saldo
 
         return $salida;
-    }*/
+    }
 
     /*-----REPORTE ESTABLECIMIENTOS DE SALUD (DISTRITAL) 2020-2021-----*/
     public function establecimientos_salud($dist_id){

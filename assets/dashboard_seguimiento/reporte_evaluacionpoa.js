@@ -142,7 +142,7 @@ function abreVentana_eficiencia(PDF){
     $("#dist_id").change(function () {
       $("#dist_id option:selected").each(function () {
           elegido=$(this).val();
-          $.post(base+"/index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'tipo' }, function(data){
+          $.post(base+"index.php/rep/get_seguimiento_da", { elegido: elegido,accion:'tipo' }, function(data){
               $("#tp_id").html(data);
               $("#lista_consolidado").html('');
           });

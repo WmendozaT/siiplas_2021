@@ -138,6 +138,15 @@ class Cppto_comparativo extends CI_Controller {
               $data['titulo']='<div align="center">PLAN OPERATIVO ANUAL '.$this->gestion.' - PROGRAMACI&Oacute;N F&Iacute;SICO FINANCIERO <br><b>CONSOLIDADO CUADRO COMPARATIVO DE PRESUPUESTO FINAL (APROBADO - ANTEPROYECTO)</b></div>';
             }
 
+/*            echo "proy_id : ".$proy_id." ------ ".$data['proyecto'][0]['proy_id']."<br>";
+            echo "aper_id : ".$data['proyecto'][0]['aper_id'];
+            echo "<br>";
+            echo count($cod_part_asig);
+            echo "<br>";
+            echo $monto_asignado.'---'.$cod_part_prog[0]['sum_cod_partida'];
+            echo "<br>";
+            echo count($partidas_asig).'---'.count($partidas_prog);*/
+
           $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo', $data);
       }
       else{
@@ -168,7 +177,7 @@ class Cppto_comparativo extends CI_Controller {
       <table '.$tab.' align=center>
         <thead>
           <tr style="height:13px;" bgcolor="#eceaea" align=center>
-            <th style="width:3%;" align=center>#</th>
+            <th style="width:3%;" align=center># ASIG</th>
             <th style="width:10%;">C&Oacute;DIGO PARTIDA</th>
             <th style="width:35%;">DETALLE PARTIDA</th>
             <th style="width:12%;">'.$titulo.' '.$this->gestion.'</th>

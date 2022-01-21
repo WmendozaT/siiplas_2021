@@ -724,6 +724,19 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*-------------------- Get Partida insumos programados por partida------------------------*/
+    public function get_lista_insumos_por_partida($aper_id,$par_id){
+        $sql = 'select i.par_codigo,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_observacion
+                    from vlista_insumos i
+                    where i.aper_id='.$aper_id.' and i.aper_id!=\'0\' and i.par_id='.$par_id.'
+                    order by i.par_codigo';
+        
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
     /*============ PARTIDAS PROYECTO DE INVERSION POR REGIONAL ============*/
     public function partidas_pi_prog_region($dep_id,$proy_id){
         $sql = 'select p.dep_id,p.proy_id,par.par_id,par.par_codigo as codigo, par.par_nombre as nombre, SUM(ip.programado_total) as monto

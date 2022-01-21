@@ -1804,6 +1804,8 @@ class Cmod_insumo extends CI_Controller {
                             'fun_id' => $this->fun_id, /// Funcionario
                             'ins_gestion' => $this->gestion, /// Gestion
                             'aper_id' => $proyecto[0]['aper_id'], /// aper id
+                            'com_id' => $cite[0]['com_id'], /// com id 
+                            'form4_cod' => $cod_ope, /// cod act
                             'num_ip' => $this->input->ip_address(), 
                             'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
                             'ins_mod' => 2,

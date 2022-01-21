@@ -4,6 +4,7 @@ class Capertura_programatica extends CI_Controller{
         parent::__construct();
         $this->load->model('mantenimiento/mapertura_programatica');
         $this->load->model('mantenimiento/munidad_organizacional');
+        $this->load->model('mantenimiento/model_ptto_sigep');
         $this->gestion = $this->session->userData('gestion'); /// Gestion
         $this->fun_id = $this->session->userData('fun_id'); /// Fun id
         //llamar a mi menu
@@ -15,7 +16,55 @@ class Capertura_programatica extends CI_Controller{
     public function main_apertura_programatica_padres(){
         $data['menu'] = $this->menu->genera_menu();
         $data['lista']=$this->lista_programas();
-        $this->load->view('admin/mantenimiento/programas/vlist_programas', $data);
+      //  $this->load->view('admin/mantenimiento/programas/vlist_programas', $data);
+    
+        $insumos=$this->model_ptto_sigep->get_lista_insumos_por_partida(15271,153);
+        $tabla='';
+
+        $tabla.='
+        <table border=1 cellpadding="0" cellspacing="0" style="width:90%;" align=center>
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">PARTIDA</th>
+                      <th scope="col">REQUERIMIENTO</th>
+                      <th scope="col">CANTIDAD</th>
+                      <th scope="col">COSTO UNITARIO</th>
+                      <th scope="col">COSTO TOTAL</th>
+                      <th scope="col">OBSERVACIÓN</th>
+                    </tr>
+                  </thead>
+                  <tbody>';
+                  $nro=0;$sum=0;
+                  foreach ($insumos as $row) {
+                    $nro++;
+                    $tabla.='
+                    <tr>
+                        <th>'.$nro.'</th>
+                        <th>'.$row['par_codigo'].'</th>
+                        <td>'.$row['ins_detalle'].'</td>
+                        <td>'.round($row['ins_cant_requerida'],2).'</td>
+                        <td>'.round($row['ins_costo_unitario'],2).'</td>
+                        <td>'.round($row['ins_costo_total'],2).'</td>
+                        <td>'.$row['ins_observacion'].'</td>
+                       
+                    </tr>';
+                    $sum=$sum+$row['ins_costo_total'];
+                  }
+                  $tabla.='
+                  </tbody>
+                  <tr>
+                    <td colspan=5></td>
+                    <td>'.$sum.'</td>
+                    <td></td>
+                  </tr>
+                </table>';
+
+
+                echo $tabla;
+
+
+
     }
 
     function lista_programas(){

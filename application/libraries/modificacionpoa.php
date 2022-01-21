@@ -1118,7 +1118,7 @@ class Modificacionpoa extends CI_Controller{
                 <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                   <tr class="modo1">
-                    <th style="width:2%;">#</th>
+                    <th style="width:2%;">#'.$cite[0]['com_id'].'</th>
                     <th style="width:2%;">COD. ACT.</th>
                     <th style="width:2%;"></th>
                     <th style="width:5%;">PARTIDA</th>
