@@ -66,7 +66,7 @@ class Cmodificaciones extends CI_Controller {
       $titulo='<h1> PROYECTO : <small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small></h1>';
       if($data['proyecto'][0]['tp_id']==4){
         $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-        $titulo='<h1> '.$proyecto[0]['tipo_adm'].' : <small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>';
+        $titulo='<h1> '.$proyecto[0]['tipo_adm'].' : <small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small></h1>';
       }
 
       $data['titulo']=$titulo;

@@ -74,6 +74,24 @@ class Model_modrequerimiento extends CI_Model{
         return $query->result_array();
     }
 
+
+
+    /*---- LISTA DE REQUERIMIENTOS ELIMINADOS POR UNIDAD ----*/
+    function lista_requerimientos_eliminados($com_id){
+        $sql = 'select p.com_id, p.prod_id,p.prod_cod,par.*,i.*
+                from _productos p
+                Inner Join _insumoproducto as ip On ip.prod_id=p.prod_id
+                Inner Join insumos as i On i.ins_id=ip.ins_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                where p.com_id='.$com_id.' and p.estado!=\'3\' and i.ins_estado=\'3\' and i.ins_gestion='.$this->gestion.'
+                order by p.prod_cod asc';
+        
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
     /*---- LISTA DE PARTIDAS DEPENDIENTES (ASIGNADAS) ----*/
     function lista_partidas_dependientes($aper_id,$par_depende){
         $sql = 'select pg.par_id,pg.partida as par_codigo,p.par_nombre,p.par_depende,pg.importe

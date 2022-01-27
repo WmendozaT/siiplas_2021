@@ -1541,7 +1541,7 @@ class Certificacionpoa extends CI_Controller{
               <tr>
               <td style="width:20%;">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESP.</b></td><td style="width:5%;"></td></tr>
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESPONSABLE</b></td><td style="width:5%;"></td></tr>
                   </table>
               </td>
               <td style="width:80%;">
@@ -1558,7 +1558,7 @@ class Certificacionpoa extends CI_Controller{
               <tr>
                 <td style="width:20%;">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                        <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                        <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>'.$certpoa[0]['tipo_adm'].'</b></td><td style="width:5%;"></td></tr>
                     </table>
                 </td>
                 <td style="width:80%;">
@@ -1570,7 +1570,7 @@ class Certificacionpoa extends CI_Controller{
               <tr>
               <td style="width:20%;">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>SUBACTIVIDAD</b></td><td style="width:5%;"></td></tr>
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESPONSABLE</b></td><td style="width:5%;"></td></tr>
                   </table>
               </td>
               <td style="width:80%;">
@@ -1588,7 +1588,7 @@ class Certificacionpoa extends CI_Controller{
           <tr>
               <td style="width:20%;">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACCI&Oacute;N DE CORTO PLAZO</b></td><td style="width:5%;"></td></tr>
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>OPERACI&Oacute;N</b></td><td style="width:5%;"></td></tr>
                   </table>
               </td>
               <td style="width:80%;">
@@ -1602,7 +1602,7 @@ class Certificacionpoa extends CI_Controller{
           <tr>
               <td style="width:20%;">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>OPERACI&Oacute;N</b></td><td style="width:5%;"></td></tr>
+                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>ACTIVIDAD</b></td><td style="width:5%;"></td></tr>
                   </table>
               </td>
               <td style="width:80%;">
