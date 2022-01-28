@@ -493,6 +493,7 @@ function abreVentana(PDF){
                 } else {
 
                   $('#matit').html('');
+                //  alert(document.getElementById("mlbase").value)
                     alertify.confirm("MODIFICAR DATOS DE LA ACTIVIDAD ?", function (a) {
                       if (a) {
                         document.getElementById("loadm").style.display = 'block';
@@ -550,7 +551,7 @@ function abreVentana(PDF){
            document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
            document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
 
-           if(response.mes_actual==1){ /// el tipo de indicador solo se podra modificar el primer mes del año
+           /*if(response.mes_actual==1){ /// el tipo de indicador solo se podra modificar el primer mes del año
               document.getElementById("mtipo_i").disabled = false;
               document.getElementById("mlbase").disabled = false;
               document.getElementById("mtp_met").disabled = false;
@@ -559,7 +560,8 @@ function abreVentana(PDF){
               document.getElementById("mtipo_i").disabled = true;
               document.getElementById("mlbase").disabled = true;
               document.getElementById("mtp_met").disabled = true;
-           }
+           }*/
+
 
            document.getElementById("mindicador").value = response.producto[0]['prod_indicador'];
            document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
@@ -688,6 +690,7 @@ function abreVentana(PDF){
             } else {
 
               $('#matit').html('');
+
                 alertify.confirm("MODIFICAR DATOS DE LA ACTIVIDAD ?", function (a) {
                   if (a) {
                     document.getElementById("loadm").style.display = 'block';
