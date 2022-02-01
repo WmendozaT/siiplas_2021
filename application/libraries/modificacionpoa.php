@@ -910,6 +910,7 @@ class Modificacionpoa extends CI_Controller{
                         <th style="width:5%;">ACT. PROGRAMADOS</th>
                         <th style="width:5%;">PRESUPUESTO POA</th>
                         <th style="width:5%;"></th>
+                        <th style="width:2%;"></th>
                     </tr>
                 </thead>
                 <tbody>';
@@ -934,6 +935,15 @@ class Modificacionpoa extends CI_Controller{
                     <td>';
                       if($this->conf_mod_req==1 || $this->tp_adm==1){
                         $tabla.='<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" style="width:100%; color: green; background-color: #eeeeee;border-bottom-width: 5px;" title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'"><i class="glyphicon glyphicon-file"></i> INGRESAR CITE</a>';
+                      }
+                    $tabla.='
+                    </td>
+                    <td align=center>';
+                      if($this->fun_id==399){
+                        $tabla.='
+                        <a href="'.site_url("").'/mod/delete_insumos_eliminados/'.$row['com_id'].'" title="LIMPIAR" class="btn btn-default">
+                        <img src="'.base_url().'assets/ifinal/registrono.png" WIDTH="34" HEIGHT="30"/>
+                        </a>';
                       }
                     $tabla.='
                     </td>
@@ -1034,10 +1044,12 @@ class Modificacionpoa extends CI_Controller{
                                   </a>';
                       }
                       elseif($valor_mod==0 & $valor_delete==1){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br><br>';
+                        $tabla.='
+                            <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
+                            <a href="#" data-toggle="modal" data-target="#modal_certpoas" class="btn btn-default certpoas" name="'.$row['ins_id'].'" title="VER MIS CERTIFICACIONES POA- '.$row['ins_id'].'"><img src="'.base_url().'assets/img/ifinal/doc.jpg" WIDTH="35" HEIGHT="35"/></a>';
                       }
                       else{
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_certpoas" class="btn btn-default certpoas" name="'.$row['ins_id'].'" id="btn_m" title="VER MIS CERTIFICACIONES POA- '.$row['ins_id'].'">VER CERT. POAS</a><br>';
+                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_certpoas" class="btn btn-default certpoas" name="'.$row['ins_id'].'" title="VER MIS CERTIFICACIONES POA- '.$row['ins_id'].'"><img src="'.base_url().'assets/img/ifinal/doc.jpg" WIDTH="35" HEIGHT="35"/></a><br>';
                       }
 
                       /*$ins_certificado=$this->model_certificacion->verif_insumo_certificados($row['ins_id']);

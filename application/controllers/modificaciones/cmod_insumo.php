@@ -59,6 +59,38 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
+    //// Limpiar ITEMS ELIMINAODS
+    public function limpiar_insumos_eliminados($com_id){
+      $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+      $requerimientos_del = $this->model_modrequerimiento->lista_requerimientos_eliminados($com_id);
+      foreach ($requerimientos_del as $row) {
+          $get_insumo_add=$this->model_modrequerimiento->get_insumo_adicionado_id($row['ins_id']); /// Add
+          $get_insumo_mod=$this->model_modrequerimiento->get_insumo_modificado_id($row['ins_id']); /// Update
+
+          if(count($get_insumo_add)==0 & count($get_insumo_mod)==0){
+              /*-------- DELETE INSUMO PROGRAMADO --------*/  
+                $this->db->where('ins_id', $row['ins_id']);
+                $this->db->delete('temporalidad_prog_insumo');
+              /*------------------------------------------*/
+              /*-------- DELETE INSUMO --------*/
+                $this->db->where('prod_id', $row['prod_id']);
+                $this->db->where('ins_id', $row['ins_id']);
+                $this->db->delete('_insumoproducto');
+              /*--------------------------------*/
+              /*-------- DELETE INSUMO  --------*/  
+                $this->db->where('ins_id', $row['ins_id']);
+                $this->db->delete('insumos');
+              /*--------------------------------*/
+          }
+      }
+
+     // redirect(site_url("").'/mod/procesos/'.$componente[0]['proy_id'].'');
+    }
+
+
+
+
+
     /*------- Valida Cite Para Modificacion -------*/
     public function valida_cite_modificacion(){
       if ($this->input->post()) {

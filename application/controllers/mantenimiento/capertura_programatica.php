@@ -17,22 +17,9 @@ class Capertura_programatica extends CI_Controller{
     public function main_apertura_programatica_padres(){
         $data['menu'] = $this->menu->genera_menu();
         $data['lista']=$this->lista_programas();
-      //  $this->load->view('admin/mantenimiento/programas/vlist_programas', $data);
+        $this->load->view('admin/mantenimiento/programas/vlist_programas', $data);
 
-
-        $requerimientos_del = $this->model_modrequerimiento->lista_requerimientos_eliminados(6016);
-       // echo count($requerimientos_del);
-        foreach ($requerimientos_del as $row) {
-            echo $row['ins_id'].'--'.$row['ins_detalle'].'<br>';
-        }
-
-
-
-
-
-
-
-
+        
     /*
         $insumos=$this->model_ptto_sigep->get_lista_insumos_por_partida(15271,153);
         $tabla='';

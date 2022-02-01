@@ -113,12 +113,31 @@ class Model_modrequerimiento extends CI_Model{
         return $query->result_array();
     }
 
+    /*------ GET ID INSUMO ADICIONADO --------*/
+    function get_insumo_adicionado_id($ins_id){
+        $sql = 'select *
+            from insumo_add 
+            where ins_id='.$ins_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
     /*------ GET INSUMO MODIFICADO --------*/
     function get_insumo_modificado($update_id){
         $sql = 'select *
             from insumo_update 
             where update_id='.$update_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*------ GET VERIF INSUMO MODIFICADO --------*/
+    function get_insumo_modificado_id($ins_id){
+        $sql = 'select *
+            from insumo_update 
+            where ins_id='.$ins_id.'';
 
         $query = $this->db->query($sql);
         return $query->result_array();
