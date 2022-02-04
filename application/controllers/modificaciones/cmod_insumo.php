@@ -84,7 +84,7 @@ class Cmod_insumo extends CI_Controller {
           }
       }
 
-     // redirect(site_url("").'/mod/procesos/'.$componente[0]['proy_id'].'');
+      redirect(site_url("").'/mod/procesos/'.$componente[0]['proy_id'].'');
     }
 
 
