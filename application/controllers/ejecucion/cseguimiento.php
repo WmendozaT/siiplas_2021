@@ -104,7 +104,7 @@ class Cseguimiento extends CI_Controller {
                 </td>
                 <td align=center>
                   <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">
-                  <i class="glyphicon glyphicon-list"></i> MIS SUBACTIVIDADES</a>
+                  <i class="glyphicon glyphicon-list"></i> MIS UNIDADES RESPONSABLES</a>
                 </td>
                 <td align=center>
                   <div class="btn-group">
@@ -112,7 +112,8 @@ class Cseguimiento extends CI_Controller {
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
                     <ul class="dropdown-menu">';
                       foreach($meses as $rowm){
-                      if($rowm['m_id']<=ltrim(date("m"), "0")){
+                    //  if($rowm['m_id']<=ltrim(date("m"), "0")){
+                      if($rowm['m_id']<=$this->verif_mes[1]){
                         $tabla.='
                         <li>
                           <a href="'.site_url("").'/seg/reporte_consolidado_seguimientopoa_mensual/'.$row['proy_id'].'/'.$rowm['m_id'].'" target="_blank">REPORTE SEG. '.$rowm['m_descripcion'].'</a>
@@ -152,7 +153,7 @@ class Cseguimiento extends CI_Controller {
           <thead>
             <tr>
               <th style="width:1%;" bgcolor="#474544">#</th>
-              <th style="width:5%;" bgcolor="#474544" title="MIS COMPONENTES"></th>
+              <th style="width:5%;" bgcolor="#474544" title="MIS UNIDADES RESPONSABLES"></th>
               <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
               <th style="width:25%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">PROYECTO DE INVERSI&Oacute;N</th>
               <th style="width:10%;" bgcolor="#474544" title="SISIN">C&Oacute;DIGO_SISIN</th>
@@ -171,7 +172,7 @@ class Cseguimiento extends CI_Controller {
                   <td align=center>';
                   if($row['pfec_estado']==1){
                     $tabla.='<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).'">
-                    <i class="glyphicon glyphicon-list"></i> MIS COMPONENTES</a>';
+                    <i class="glyphicon glyphicon-list"></i> MIS UNIDADES RESPONABLES</a>';
                   }
                   else{
                     $tabla.='SIN FASE ACTIVA';
