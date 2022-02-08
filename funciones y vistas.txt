@@ -2626,6 +2626,7 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
           prod.prod_meta,
           prod.prod_fuente_verificacion,
           prod.prod_unidades,
+          prod.prod_priori,
           prod.prod_resultado
           
           from objetivo_gestion oge
@@ -2701,6 +2702,7 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
           prod.prod_meta,
           prod.prod_fuente_verificacion,
           prod.prod_unidades,
+          prod.prod_priori,
           prod.prod_resultado,
           temp.enero mes1,
           temp.febrero mes2,

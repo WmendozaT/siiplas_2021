@@ -101,6 +101,7 @@
                             <div class="widget-body no-padding">
                               <div class="table-responsive">
                                 <table id="datatable_fixed_column" class="table table-bordered" width="100%">
+                                <!-- <table id="datatable_fixed_column" class="table table-bordered" width="100%"> -->
                                     <thead>
                                         <tr>
                                             <th></th>
@@ -123,7 +124,7 @@
                                                 <input type="text" class="form-control" placeholder="RESULTADO"/>
                                             </th>
                                             <th></th>
-
+                                            
                                             <th class="hasinput">
                                                 <input type="text" class="form-control" placeholder="CODIGO SISIN"/>
                                             </th>
@@ -134,6 +135,7 @@
                                                 <input type="text" class="form-control" placeholder="UNIDAD RESPONSABLE"/>
                                             </th>
 
+                                            <th></th>
                                             <th></th>
 
                                             <th class="hasinput">
@@ -165,11 +167,13 @@
                                             <th style="width:8%;">RESULTADO</th>
                                             <th style="width:3%;">META OPERACI&Oacute;N</th>
 
+                                            
                                             <th style="width:5%;">CÓDIGO SISIN</th>
                                             <th style="width:10%;">GASTO CORRIENTE / PROY. INVERSIÓN</th>
                                             <th style="width:10%;">UNIDAD RESPONSABLE</th>
                                             <th style="width:3%;">IR A FORMULARIO</th>
 
+                                            <th style="width:5%;">PRIORIDAD</th>
                                             <th style="width:5%;">COD. ACT.</th>
                                             <th style="width:10%;">ACTIVIDAD</th>
                                             <th style="width:10%;">INDICADOR</th>
@@ -245,9 +249,10 @@
 		<!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
 		<!-- Voice command : plugin -->
 		<script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
-		        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
+		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+        <script src="<?php echo base_url(); ?>mis_js/programacionpoa/form4.js"></script> 
 		<!-- PAGE RELATED PLUGIN(S) -->
 
 		 <script type="text/javascript">

@@ -266,7 +266,7 @@ class crequerimiento extends CI_Controller{
               <th style="background-color: #0AA699;color: #FFFFFF">DIC.</th>
               <th>OBSERVACIONES</th>
               <th>ELIMINAR</th>
-              <th>COD. OPE.</th>';
+              <th>COD. ACT.</th>';
               $tabla.='
             </tr>
           </thead>

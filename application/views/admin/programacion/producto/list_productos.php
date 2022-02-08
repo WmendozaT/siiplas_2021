@@ -526,7 +526,7 @@
                       </select>
                     </section>
 
-                    <section class="col col-5">
+                    <section class="col col-4">
                       <label class="label"><b>ALINEACIÓN OPERACI&Oacute;N REGIONAL</b></label>
                       <select class="form-control" id="mor_id" name="mor_id" title="SELECCIONE ALINEACIÓN REGIONAL">
                           <option value="">SELECCIONE ALINEACIÓN OPERACIÓN</option>
@@ -538,7 +538,7 @@
                     </section>
 
                     <div id="mtrep" style="display:none;" >
-                      <section class="col col-3">
+                      <section class="col col-2">
                         <label class="label"><b>TIPO DE META</b></label>
                           <select class="form-control" id="mtp_met" name="mtp_met" title="SELECCIONE TIPO DE META">
                             <option value="">Seleccione Tipo de Meta</option>
@@ -551,7 +551,10 @@
                         </select>
                       </section><br>  
                     </div>
-                  </div>
+
+                    <div id="priori"></div>
+
+                </div>
               <br>
               <div id="matit"></div>
               <header><b>DISTRIBUCI&Oacute;N F&Iacute;SICA : <?php echo $this->session->userdata('gestion')?></b><br>

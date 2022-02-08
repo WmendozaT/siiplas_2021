@@ -244,6 +244,39 @@ function abreVentana(PDF){
         });
       }
 
+
+    function doSelectAlert(event,priori,prod_id) {
+     //  alert(event+'--'+priori+'--'+prod_id)
+        var option = event.srcElement.children[event.srcElement.selectedIndex];
+        if (option.dataset.noAlert !== undefined) {
+            return;
+        }
+
+          var mensaje='QUITAR PRIORIDAD';
+          var mensaje_resultado='SIN PRIORIDAD';
+          if(priori==1){
+              var mensaje='ASIGNAR PRIORIDAD';
+              var mensaje_resultado='PRIORIDAD ASIGNADO';
+          }
+          alertify.confirm("DESEA "+mensaje+" ?", function (a) {
+            if (a) {
+            var url = base+"index.php/programacion/producto/asignar_prioridad";
+            $.ajax({
+                type: "post",
+                url: url,
+                data:{prod_id:prod_id,prioridad:priori},
+                    success: function (data) {
+                    alertify.success(mensaje_resultado);  
+                    //window.location.reload(true);
+                }
+            });
+            } else {
+                alertify.error("OPCI\u00D3N CANCELADA");
+            }
+      });
+    }
+
+
     /// GUARDAR NUEVO FORMULARIO N4 
     $(function () {
         $("#subir_ope").on("click", function () {
@@ -395,7 +428,8 @@ function abreVentana(PDF){
                 }
                }
                 
-
+              // alert(response.prioridad)
+               $('#priori').html(response.prioridad);
                
                if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
                 $('[name="mtotal"]').val((parseInt(response.producto[0]['prod_meta'])).toFixed(0));

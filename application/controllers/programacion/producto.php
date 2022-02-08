@@ -104,6 +104,25 @@ class Producto extends CI_Controller {
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
         $temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
         
+        $prioridad='';
+        $prioridad.='<section class="col col-2">
+                      <label class="label"><b style="color:blue">ACTIVIDAD CON PRIORIDAD ?</b></label>
+                      <select class="form-control" id="priori" name="priori" title="ACTIVIDAD PRIORITARIO">';
+                        if($producto[0]['prod_priori']==1){
+                          $prioridad.='
+                          <option value="1" selected>SI</option>
+                          <option value="0">NO</option>';
+                        }
+                        else{
+                          $prioridad.='
+                          <option value="1">SI</option>
+                          <option value="0" selected>NO</option>';
+                        }
+                      $prioridad.='      
+                      </select>
+                    </section>';
+
+
         $sum_temp=0;
         $sum=$this->model_producto->meta_prod_gest($prod_id);
         if(count($sum)!=0){
@@ -122,6 +141,7 @@ class Producto extends CI_Controller {
             'producto'=>$producto,
             'temp'=>$this->prog_mes,
             'sum_temp'=>$sum_temp,
+            'prioridad'=>$prioridad,
           );
         }
         else{
@@ -247,6 +267,7 @@ class Producto extends CI_Controller {
         $presupuesto = $this->security->xss_clean($post['mppto']); /// Presupuesto
         $or_id = $this->security->xss_clean($post['mor_id']); /// Objetivo Regional
         $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
+        $prioridad = $this->security->xss_clean($post['priori']); /// prioridad
 
         $ae=0;
         $get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
@@ -278,6 +299,7 @@ class Producto extends CI_Controller {
             'mt_id' => $tp_meta,
             'fun_id' => $this->fun_id,
             'prod_ppto' => $presupuesto,
+            'prod_priori' => $prioridad,
             'num_ip' => $this->input->ip_address(), 
             'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
             );
@@ -426,33 +448,33 @@ class Producto extends CI_Controller {
           <table id="dt_basic" class="table table-bordered">
             <thead>
                   <tr class="modo1">
-                    <th style="width:1%; text-align=center">#</th>
+                    <th style="width:2%; text-align=center">#</th>
                     <th style="width:1%; text-align=center"><b>E/B</b></th>
-                    <th style="width:2%;"><b>COD. ACP.</b></th>
-                    <th style="width:2%;"><b>COD. OPE.</b></th>
-                    <th style="width:2%;"><b>COD. ACT.</b></th>
-                    <th style="width:15%;"><b>ACTIVIDAD</b></th>
-                    <th style="width:15%;"><b>RESULTADO</b></th>
-                    <th style="width:10%;"><b>TIP. IND.</b></th>
-                    <th style="width:10%;"><b>INDICADOR</b></th>
-                    <th style="width:1%;"><b>LINEA BASE '.($this->gestion-1).'</b></th>
-                    <th style="width:1%;"><b>META</b></th>
-                    <th style="width:4%;"><b>ENE.</b></th>
-                    <th style="width:4%;"><b>FEB.</b></th>
-                    <th style="width:4%;"><b>MAR.</b></th>
-                    <th style="width:4%;"><b>ABR.</b></th>
-                    <th style="width:4%;"><b>MAY.</b></th>
-                    <th style="width:4%;"><b>JUN.</b></th>
-                    <th style="width:4%;"><b>JUL.</b></th>
-                    <th style="width:4%;"><b>AGO.</b></th>
-                    <th style="width:4%;"><b>SEP.</b></th>
-                    <th style="width:4%;"><b>OCT.</b></th>
-                    <th style="width:4%;"><b>NOV.</b></th>
-                    <th style="width:4%;"><b>DIC.</b></th>
-                    <th style="width:10%;"><b>MEDIO DE VERIFICACI&Oacute;N</b></th>
-                    <th style="width:7%;"><b>ELIMINAR ACTIVIDAD</b></th>
-                    <th style="width:7%;"><b>PTTO.</b></th>
-                    <th style="width:7%;"><b>NRO. REQ.</b></th>
+                    <th style="width:2%; text-align=center"><b>COD. ACP.</b></th>
+                    <th style="width:2%; text-align=center"><b>COD. OPE.</b></th>
+                    <th style="width:2%; text-align=center"><b>COD. ACT.</b></th>
+                    <th style="width:15%; text-align=center"><b>ACTIVIDAD</b></th>
+                    <th style="width:15%; text-align=center"><b>RESULTADO</b></th>
+                    <th style="width:10%; text-align=center"><b>TIP. IND.</b></th>
+                    <th style="width:10%; text-align=center"><b>INDICADOR</b></th>
+                    <th style="width:1%; text-align=center"><b>LINEA BASE '.($this->gestion-1).'</b></th>
+                    <th style="width:1%; text-align=center"><b>META</b></th>
+                    <th style="width:4%; text-align=center"><b>ENE.</b></th>
+                    <th style="width:4%; text-align=center"><b>FEB.</b></th>
+                    <th style="width:4%; text-align=center"><b>MAR.</b></th>
+                    <th style="width:4%; text-align=center"><b>ABR.</b></th>
+                    <th style="width:4%; text-align=center"><b>MAY.</b></th>
+                    <th style="width:4%; text-align=center"><b>JUN.</b></th>
+                    <th style="width:4%; text-align=center"><b>JUL.</b></th>
+                    <th style="width:4%; text-align=center"><b>AGO.</b></th>
+                    <th style="width:4%; text-align=center"><b>SEP.</b></th>
+                    <th style="width:4%; text-align=center"><b>OCT.</b></th>
+                    <th style="width:4%; text-align=center"><b>NOV.</b></th>
+                    <th style="width:4%; text-align=center"><b>DIC.</b></th>
+                    <th style="width:10%; text-align=center"><b>MEDIO DE VERIFICACI&Oacute;N</b></th>
+                    <th style="width:7%; text-align=center"><b>ELIMINAR ACTIVIDAD</b></th>
+                    <th style="width:7%; text-align=center"><b>PTTO.</b></th>
+                    <th style="width:7%; text-align=center"><b>NRO. REQ.</b></th>
                   </tr>
                 </thead>
                 <tbody>';
@@ -493,8 +515,12 @@ class Producto extends CI_Controller {
                   
                   
                   $tabla .='<tr bgcolor="'.$color.'" class="modo1" title='.$titulo.'>';
-                    $tabla.='<td align="center"><font color="blue" size="2" title='.$rowp['prod_id'].'><b>'.$rowp['prod_cod'].'</b></font></td>';
                     $tabla.='<td align="center">';
+                      if($rowp['prod_priori']==1){
+                        $tabla.='<br><img src="'.base_url().'assets/ifinal/ok.png" WIDTH="40" HEIGHT="33"/><br><font size=1 color=green><b>PRIORITARIO</b></font>';
+                      }
+                    $tabla.='</td>';
+                    $tabla.='<td align="center" title='.$rowp['prod_id'].'>';
                     if($this->tp_adm==1 || $this->conf_form4==1){
                       $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff" name="'.$rowp['prod_id'].'" title="MODIFICAR ACTIVIDAD"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
                     }
@@ -511,7 +537,7 @@ class Producto extends CI_Controller {
                     $tabla.='<td style="width:5%;" bgcolor="'.$color.'"><b>'.strtoupper($rowp['indi_abreviacion']).'</b></td>';
                     $tabla.='<td style="width:10%;" bgcolor="'.$color.'">'.$rowp['prod_indicador'].'</td>';
                     $tabla.='<td style="width:5%;" bgcolor="'.$color.'">'.round($rowp['prod_linea_base'],2).'</td>';
-                    $tabla.='<td style="width:5%;" bgcolor="'.$color.'">'.round($rowp['prod_meta'],2).'</td>';
+                    $tabla.='<td style="width:5%;" bgcolor="'.$color.'" align=center><b><font size=3>'.round($rowp['prod_meta'],2).'</font></b></td>';
                     if(count($programado)!=0){
                       $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['enero'],2).' '.$por.'</td>';
                       $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['febrero'],2).' '.$por.'</td>';
@@ -574,6 +600,26 @@ class Producto extends CI_Controller {
     }
 
 
+    /*------ CAMBIA PRIORIDAD DE LA ACTIVIDAD---------*/
+    function asignar_prioridad(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+          $this->form_validation->set_rules('prod_id', 'id producto', 'required|trim');
+          $this->form_validation->set_message('required', 'El campo es es obligatorio');
+        
+          $post = $this->input->post();
+          $prod_id= $this->security->xss_clean($post['prod_id']);
+          $prioridad= $this->security->xss_clean($post['prioridad']);
+           
+          $update_prod = array(
+            'prod_priori' => $prioridad,
+          );
+          $this->db->where('prod_id', $prod_id);
+          $this->db->update('_productos', $update_prod);
+              
+      }else{
+          show_404();
+      }
+    }
 
     /*--- ELIMINAR TOD@S LOS REQUERIMIENTOS DEL SERVICIO (SOLO REQUERIMIENTOS) (2020) ---*/
     public function delete_insumos_servicios($com_id){

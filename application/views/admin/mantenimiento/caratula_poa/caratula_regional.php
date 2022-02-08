@@ -36,7 +36,10 @@ ob_start();
                           <td width=70%; align=center>
                             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                               <tr>
-                                <td style="width:100%; height: 4%; font-size: 20pt;" align="center"><b><?php echo $this->session->userdata('entidad');?></b></td>
+                                <td style="width:100%; font-size: 25pt;" align="center"><b><?php echo $this->session->userdata('entidad');?></b></td>
+                              </tr>
+                              <tr>
+                                <td style="width:100%;  font-size: 12pt;" align="center">DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
                               </tr>
                             </table>
                           </td>
@@ -93,10 +96,10 @@ ob_start();
             <hr>
             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                 <tr>
-                    <td style="width:100%; height: 5.5%; font-size: 30pt;" align="center">REGIONAL</td>
+                    <td style="width:100%; height: 5.5%; font-size: 30pt;" align="center">REGIONAL <?php echo strtoupper($regional[0]['dep_departamento']);?></td>
                 </tr>
                 <tr>
-                    <td style="width:100%; height: 1.2%; font-size: 40pt;" align="center"><?php echo strtoupper($regional[0]['dep_departamento']);?> - II</td>
+                    <td style="width:100%; height: 1.2%; font-size: 40pt;" align="center">TOMO I de I</td>
                 </tr>
             </table>
             <hr>

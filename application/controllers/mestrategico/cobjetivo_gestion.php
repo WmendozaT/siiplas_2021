@@ -496,6 +496,7 @@ class Cobjetivo_gestion extends CI_Controller {
     $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id);
     $data['titulo']='
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <input type="hidden" name="base" value="'.base_url().'">
           <div class="well">
             <h2>ACP. : '.$ogestion[0]['og_codigo'].' .- '.$ogestion[0]['og_objetivo'].'</h2>
             <a href="'.site_url("").'/me/exportar_alineacion_ope_acp/'.$og_id.'" title="EXPORTAR EN EXCEL" class="btn btn-default">
@@ -584,6 +585,20 @@ class Cobjetivo_gestion extends CI_Controller {
             }
           $tabla.='
           </td>
+          <td>
+            <select class="form-control" onchange="doSelectAlert(event,this.value,'.$row['prod_id'].');">';
+              if($row['prod_priori']==1){
+                $tabla .="
+                <option value=1 selected>PRIORIDAD</option>
+                <option value=0>NO</option>";
+              }
+              else{
+                $tabla .="
+                <option value=1>PRIORIDAD</option>
+                <option value=0 selected>NO</option>";
+              }
+            $tabla.='</select>
+          </td>
           <td style="font-size: 20px;font-family: Arial;" bgcolor="#e7f3f1" align=center><b>'.strtoupper($row['prod_cod']).'</b></td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_producto']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_indicador']).'</td>
@@ -599,6 +614,9 @@ class Cobjetivo_gestion extends CI_Controller {
     $data['tabla']=$tabla;
     $this->load->view('admin/mestrategico/objetivos_gestion/ver_alineacion_acp_act', $data); 
   }
+
+
+
 
 
     /*------ EXPORTAR ALINEACION ACP-FORM 2 Y 3-----*/
