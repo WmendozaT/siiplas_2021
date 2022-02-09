@@ -152,8 +152,8 @@ $route['rep/rep_requerimientos_ejecucion_servicio/(:any)'] = 'reportes_cns/expor
 //$route['rep/ver_partida_uni/(:any)'] = 'reportes_cns/exporting_datos/consolidado_partidas_unidad/$1/$2'; ///// Exportar Consolidado de partidas de cada unidad/Establecimiento por REGIONAL
 //$route['rep/ver_partida_consolidado_uni/(:any)'] = 'reportes_cns/exporting_datos/consolidado_nacional_partidas_unidad/$1'; ///// Exportar Consolidado Nacional de partidas de cada unidad/Establecimiento por REGIONAL
 
-$route['rep/comparativo_unidad_ppto/(:any)'] = 'reportes_cns/rep_operaciones/comparativo_presupuesto_distrital/$1/$2'; ///// cuadro comparativo pto asig. poa - Partidas por unidad (DISTRITAL) 2020-2021
-$route['rep/establecimientos/(:any)'] = 'reportes_cns/rep_operaciones/establecimientos_salud/$1'; ///// cuadro Establecimientos de salud (DISTRITAL) 2020-2021
+$route['rep/comparativo_unidad_ppto/(:any)'] = 'reportes_cns/rep_operaciones/comparativo_presupuesto_distrital/$1/$2/$3'; ///// cuadro comparativo pto asig. poa - Partidas por unidad (DISTRITAL) 2020-2021
+$route['rep/establecimientos/(:any)'] = 'reportes_cns/rep_operaciones/establecimientos_salud/$1/$2'; ///// cuadro Establecimientos de salud (DISTRITAL) 2020-2021
 $route['rep/print_modificaciones_poa/(:any)'] = 'reportes_cns/rep_operaciones/rep_cuadro_modificacion_poa/$1/$2'; ///// cuadro Modificacion poa (DISTRITAL) 2020-2021
 $route['rep/comparativo_xsl/(:any)'] = 'reportes_cns/exporting_datos/comparativo_presupuesto_xls/$1/$2'; ///// cuadro comparativo pto asig. poa - Partidas Xcel
 
@@ -417,10 +417,16 @@ $route['ejec/menu_cpoa'] = 'ejecucion/cert_poa/menu_certificacion_poa'; //// Men
 $route['ejec/get_uadministrativas'] = 'ejecucion/cert_poa/get_unidades_administrativas'; ////// Combo Unidades Administrativas
 
 
-/*-- EVALUACION PEI - OBJETIVOS REGIONALES 2020 ---*/
+/*-- EVALUACION PEI - OBJETIVOS REGIONALES 2020 - 2021 (vigente)---*/
 $route['eval_obj/objetivos_regionales'] = 'ejecucion/cevaluacion_pei/objetivos_regionales';  ///// Objetivos Estrategicos
 $route['eval_obj/rep_meta_oregional/(:any)'] = 'ejecucion/cevaluacion_pei/reporte_meta_oregional/$1'; //// Reporte Meta Objetivo Regional
 $route['eval_obj/rep_meta_oregional_grafico/(:any)'] = 'ejecucion/cevaluacion_pei/cuadro_evaluacion_grafico/$1'; //// Reporte Meta Objetivo Regional Grafico
+
+/*-- EVALUACION OBJETIVOS REGIONALES (OPERACIONES) --*/
+$route['eval_oregionales'] = 'ejecucion/cevaluacion_oregional/menu_regional';  ///// Objetivos Estrategicos
+
+
+
 
 
 /*--FORM. CERT---*/

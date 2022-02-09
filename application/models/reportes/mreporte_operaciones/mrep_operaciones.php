@@ -28,6 +28,20 @@ class Mrep_operaciones extends CI_Model {
         return $query->result_array();
     }
 
+    /*------ Lista Establecimientos de Salud 2021 ------*/
+    public function establecimientos_salud_regional($dep_id){
+         $sql = 'select *
+                from vlista_establecimientos_salud es
+                Inner Join _proyectos as p On p.act_id=es.act_id
+                Inner Join aperturaproyectos as pp On pp.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pp.aper_id
+                where es.dep_id='.$dep_id.' and es.aper_gestion='.$this->gestion.' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
+                order by es.dist_cod asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*------ LISTA DE UNIDADES/PROYECTOS  (Todos) ------*/
     public function list_unidades_proyectos($tp_id){
          $sql = '

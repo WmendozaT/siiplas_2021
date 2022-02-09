@@ -1,5 +1,5 @@
 <?php
-class Cevaluacion_pei extends CI_Controller {
+class Cevaluacion_oregional extends CI_Controller {
   public $rol = array('1' => '3','2' => '4');
   public function __construct (){
         parent::__construct();
@@ -28,6 +28,7 @@ class Cevaluacion_pei extends CI_Controller {
         $this->fun_id = $this->session->userData('fun_id');
         $this->tp_adm = $this->session->userData('tp_adm');
         $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
+        $this->load->library('eval_oregional');
 
         }else{
           $this->session->sess_destroy();
@@ -35,29 +36,24 @@ class Cevaluacion_pei extends CI_Controller {
         }
     }
 
-    /*-- Mis Objetivos Regionales (Operaciones) --*/
-    public function objetivos_regionales(){
-      if($this->gestion>2021){
-          redirect(site_url("").'/eval_oregionales');
+    /*-- Menu Regional 2022 --*/
+    public function menu_regional(){
+      $data['menu']=$this->eval_oregional->menu(4); //// genera menu
+      $data['titulo']=$this->eval_oregional->titulo();
+      
+      if($this->tp_adm==1){
+        $data['tabla']=$this->eval_oregional->regionales();
       }
-      else{ ///// 2020-2021
-        $data['menu']=$this->menu(4); //// genera menu
-        $data['departamento']=$this->model_proyecto->get_departamento($this->dep_id);
-        $data['trimestre']=$this->model_evaluacion->trimestre();
-        if($this->tp_adm==1){
-          $data['tabla']=$this->regionales();
-        }
-        else{
-          $data['tabla']=$this->ver_relacion_ogestion($this->dep_id);
-        }
+      else{
+        $data['tabla']=$this->eval_oregional->ver_relacion_ogestion($this->dep_id);
+      }
 
-        $this->load->view('admin/evaluacion/objetivo_regional/objetivos_regionales', $data);
-      }
+      $this->load->view('admin/evaluacion/evaluacion_oregional/menu_regionales', $data);
     }
 
 
     /*-------- LISTA DE REGIONALES ----------*/
-    public function regionales(){
+   /* public function regionales(){
       $regionales=$this->model_proyecto->list_departamentos();
       $tabla='
           <div>
@@ -107,10 +103,10 @@ class Cevaluacion_pei extends CI_Controller {
           </div>';
 
       return $tabla;
-    }
+    }*/
 
     //// REGIONAL ALINEADO A OBJETIVOS REGIONALES 2020-2021
-    public function ver_relacion_ogestion($dep_id){
+   /* public function ver_relacion_ogestion($dep_id){
       $departamento=$this->model_proyecto->get_departamento($dep_id);
       $tabla='';
       $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
@@ -122,7 +118,7 @@ class Cevaluacion_pei extends CI_Controller {
       <table class="table table-bordered" border=0.2 style="width:100%;" align=center>
         <thead>
         <tr style="font-size: 11px;" align=center>
-          <th style="width:1%;height:10px;color:#FFF;" bgcolor="#1c7368">N° '.$this->conf_estado.'</th>
+          <th style="width:1%;height:10px;color:#FFF;" bgcolor="#1c7368">#</th>
           <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACE.</b></th>
           <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACP.</b></th>
           <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. OPE.</b></th>
@@ -239,7 +235,7 @@ class Cevaluacion_pei extends CI_Controller {
       </table> ';
 
       return $tabla;
-    }
+    }*/
 
     /*-------- GET CUADRO EVALUACION --------*/
     public function get_cuadro_evaluacion(){
@@ -709,7 +705,7 @@ class Cevaluacion_pei extends CI_Controller {
     }
 
     /*-------------------------- MENU -------------------*/
-    function menu($mod){
+/*    function menu($mod){
         $enlaces=$this->menu_modelo->get_Modulos($mod);
         for($i=0;$i<count($enlaces);$i++){
           $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
@@ -731,7 +727,7 @@ class Cevaluacion_pei extends CI_Controller {
         }
 
         return $tabla;
-    }
+    }*/
     /*=============================================================================================*/
     /*------ NOMBRE MES -------*/
     function mes_nombre(){
@@ -784,7 +780,7 @@ class Cevaluacion_pei extends CI_Controller {
     }
 
     /*------------------------------------- ROLES DE USUARIOS ------------------------------*/
-    function rolfun($rol){
+/*    function rolfun($rol){
       $valor=false;
       for ($i=1; $i <=count($rol) ; $i++) { 
         $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$rol[$i]);
@@ -803,7 +799,7 @@ class Cevaluacion_pei extends CI_Controller {
         $valor=true;
       }
       return $valor;
-    }
+    }*/
     /*-------------------------------------------------------------------------------------*/
 
 }

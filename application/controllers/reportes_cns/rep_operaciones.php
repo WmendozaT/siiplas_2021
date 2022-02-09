@@ -57,6 +57,7 @@ class Rep_operaciones extends CI_Controller {
       $data['mensaje']='<div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';
       $this->load->view('admin/reportes_cns/programacion_poa/menu_consolidado_poa', $data);
     
+    //echo $this->lista_gastocorriente_pinversion(1,0,4);
    // echo $this->consolidado_operaciones_distrital(5,4);
     }
 
@@ -138,13 +139,16 @@ class Rep_operaciones extends CI_Controller {
         case 'distrital':
         $salida="";
           $dep_id=$_POST["elegido"];
+          $regional=$this->model_proyecto->get_departamento($dep_id);
           
           $combog = pg_query('SELECT *
           from _distritales 
           where  dep_id='.$dep_id.' and dist_estado!=0
           order by dist_id asc');
 
-          $salida.= "<option value='0'>SELECCIONE UNIDAD ADMINISTRATIVA</option>";
+          $salida.= "
+          <option value=''>SELECCIONE UNIDAD EJECUTORA</option>
+          <option value='0'><b>".$regional[0]['dep_cod']." - CONSOLIDADO REGIONAL ".strtoupper($regional[0]['dep_departamento'])."</b></option>";
           while($sql_p = pg_fetch_row($combog)){
             $salida.= "<option value='".$sql_p[0]."'>".$sql_p[5]." - ".strtoupper ($sql_p[2])."</option>";
           }
@@ -208,19 +212,20 @@ class Rep_operaciones extends CI_Controller {
     public function get_lista_reportepoa(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
-        $dist_id = $this->security->xss_clean($post['dist_id']);
-        $tp_id = $this->security->xss_clean($post['tp_id']);
-        $tp_rep = $this->security->xss_clean($post['tp_rep']);
+        $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+        $dist_id = $this->security->xss_clean($post['dist_id']); /// Distrital
+        $tp_id = $this->security->xss_clean($post['tp_id']); /// tipo de proyecto
+        $tp_rep = $this->security->xss_clean($post['tp_rep']); /// tipo de Reporte
         
         $salida='';
         if($tp_rep==1){
-          $salida=$this->lista_gastocorriente_pinversion($dist_id,$tp_id);
+          $salida=$this->lista_gastocorriente_pinversion($dep_id,$dist_id,$tp_id);
         }
         elseif ($tp_rep==2) {
-          $salida=$this->consolidado_operaciones_distrital($dist_id,$tp_id);
+          $salida=$this->consolidado_operaciones_distrital($dep_id,$dist_id,$tp_id); /// Consolidado Formulario N° 4 
         }
         elseif ($tp_rep==3) {
-          $salida=$this->consolidado_requerimientos_distrital($dist_id,$tp_id);
+          $salida=$this->consolidado_requerimientos_distrital($dist_id,$tp_id); /// Consolidado formulario N° 5
         }
         elseif ($tp_rep==4) {
           $salida='';
@@ -252,9 +257,16 @@ class Rep_operaciones extends CI_Controller {
 
 
     /*-- REPORTE 1 (LISTA DE UNIDADES/PROYECTOS DE INVERSIÓN)--*/
-    public function lista_gastocorriente_pinversion($dist_id,$tp_id){
+    public function lista_gastocorriente_pinversion($dep_id,$dist_id,$tp_id){
       $dist=$this->model_proyecto->dep_dist($dist_id);
-      $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id);
+
+        if($dist_id!=0){
+          $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id); /// unidades de la distrital
+        }
+        else{
+          $unidades=$this->mrep_operaciones->list_poa_gacorriente_pinversion_regional($dep_id,$tp_id); /// unidades de la Regional
+        }
+      
         $titulo='GASTO CORRIENTE';
         if($tp_id==1){
           $titulo='PROYECTO DE INVERSI&Oacute;N';
@@ -270,8 +282,8 @@ class Rep_operaciones extends CI_Controller {
       <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
         <br>
         <div align=right>
-          <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR UNIDADES / PROYECTOS DE INVERSI&Oacute;N</a>&nbsp;&nbsp;&nbsp;&nbsp;
-          <a href="'.site_url("").'/rep/establecimientos/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR UNIDADES / PROYECTOS DE INVERSI&Oacute;N</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <br>
       <div class="alert alert-warning">
@@ -401,9 +413,19 @@ class Rep_operaciones extends CI_Controller {
     }
 
     /*-----REPORTE ESTABLECIMIENTOS DE SALUD (DISTRITAL) 2020-2021-----*/
-    public function establecimientos_salud($dist_id){
-      $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
-      $establecimientos=$this->mrep_operaciones->establecimientos_salud_distrital($dist_id);
+    public function establecimientos_salud($dep_id,$dist_id){
+      if($dist_id==0){
+        $regional=$this->model_proyecto->get_departamento($dep_id);
+        $establecimientos=$this->mrep_operaciones->establecimientos_salud_regional($dep_id);
+        $data['titulo_reporte_pie']=$regional[0]['dep_departamento'];
+      }
+      else{
+        $distrital=$this->model_proyecto->dep_dist($dist_id);
+        $establecimientos=$this->mrep_operaciones->establecimientos_salud_distrital($dist_id);
+        $data['titulo_reporte_pie']=$distrital[0]['dist_distrital'];
+      }
+
+
         $tabla='';
         $tabla.='
           <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
@@ -452,24 +474,32 @@ class Rep_operaciones extends CI_Controller {
     
 
     /*-----REPORTE COMPARATIVO PRESUPUESTO ASIG-POA (DISTRITAL) 2020-2021-----*/
-    public function comparativo_presupuesto_distrital($dist_id,$tp_id){
-      $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
+    public function comparativo_presupuesto_distrital($dep_id,$dist_id,$tp_id){
+      
       $data['mes'] = $this->mes_nombre();
       if($dist_id==0){ // Nacional
-        $data['titulo']='GASTO CORRIENTE '.$this->gestion.'';
+        
+       /* $data['titulo']='GASTO CORRIENTE '.$this->gestion.'';
         if($tp_id==1){
           $data['titulo']='PROYECTO DE INVERSI&Oacute;N '.$this->gestion.'';
         }
 
-        $unidades=$this->mrep_operaciones->list_poa_gastocorriente_pinversion($tp_id);
+        $unidades=$this->mrep_operaciones->list_poa_gastocorriente_pinversion($tp_id);*/
+        $regional=$this->model_proyecto->get_departamento($dep_id);
+        $data['titulo']='REGIONAL - '.strtoupper($regional[0]['dep_departamento']).'';
+        $unidades=$this->mrep_operaciones->list_poa_gacorriente_pinversion_regional($dep_id,$tp_id);
+        $data['titulo_reporte_pie']=$regional[0]['dep_departamento'];
+
       }
       else{ /// Distrital
-        $data['titulo']='DISTRITAL - '.strtoupper($data['distrital'][0]['dist_distrital']).'';
+        $distrital=$this->model_proyecto->dep_dist($dist_id);
+        $data['titulo']='DISTRITAL - '.strtoupper($distrital[0]['dist_distrital']).'';
         $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id);
+        $data['titulo_reporte_pie']=$distrital[0]['dist_distrital'];
       }
 
       
-      if(count($data['distrital'])!=0){
+    //  if(count($data['distrital'])!=0){
           $titulo='GASTO CORRIENTE';
           if($tp_id==1){
             $titulo='PROYECTO DE INVERSI&Oacute;N';
@@ -547,17 +577,18 @@ class Rep_operaciones extends CI_Controller {
           $data['titulo_reporte']='CUADRO COMPARATIVO - '.$titulo_ppto.' '.$this->gestion.' Vs MONTO PROGRAMADO '.$this->gestion.'';
           
           $data['lista']=$tabla;
+        
           $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_comparativo', $data);
-      }
+/*      }
       else{
         echo "Error !!!";
-      }
+      }*/
     }
 
     /////-------------------------------------------------------
 
     /*-- REPORTE 2 (CONSOLIDADO OPERACIONES DIST) 2020-2021--*/
-    public function consolidado_operaciones_distrital($dist_id,$tp_id){
+    public function consolidado_operaciones_distrital($dep_id,$dist_id,$tp_id){
       $dist=$this->model_proyecto->dep_dist($dist_id);
       $tabla='';
       $tabla.='
@@ -580,7 +611,7 @@ class Rep_operaciones extends CI_Controller {
         </div>
         <br>
         <div class="alert alert-warning">
-          <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO DE OPERACIONES '.$this->gestion.' - '.strtoupper($dist[0]['dist_distrital']).' ('.$titulo.')</b></center></a>
+          <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO DE ACTIVIDADES '.$this->gestion.' - '.strtoupper($dist[0]['dist_distrital']).' ('.$titulo.')</b></center></a>
         </div>
         <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
           <thead>
@@ -862,6 +893,7 @@ class Rep_operaciones extends CI_Controller {
     public function get_unidades(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
+        $dep_id = $this->security->xss_clean($post['dep_id']);
         $dist_id = $this->security->xss_clean($post['dist_id']);
         $tp_id = $this->security->xss_clean($post['tp_id']);
         

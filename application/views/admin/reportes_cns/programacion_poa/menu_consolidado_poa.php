@@ -285,6 +285,7 @@
             $("#rep_id").change(function () {
                 $("#rep_id option:selected").each(function () {
                     elegido=$(this).val();
+
                     $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'tipo' }, function(data){
                         $("#tp_id").html(data);
                         $('#unidad').slideUp();
@@ -296,11 +297,14 @@
 
             $("#tp_id").change(function () {
                 $("#tp_id option:selected").each(function () {
+                    dep_id=$('[name="dep_id"]').val();
                     dist_id=$('[name="dist_id"]').val();
                     rep_id=$('[name="rep_id"]').val();
                     tp_id=$(this).val();
 
+                  //  alert(dep_id+'--'+dist_id)
                     if(rep_id!=4){
+                      //  alert("dep_id="+dep_id+"dist_id="+dist_id+" &tp_id="+tp_id+" &tp_rep="+rep_id)
                         $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
                         var url = "<?php echo site_url("")?>/reportes_cns/rep_operaciones/get_lista_reportepoa";
                         var request;
@@ -311,7 +315,7 @@
                             url: url,
                             type: "POST",
                             dataType: 'json',
-                            data: "dist_id="+dist_id+"&tp_id="+tp_id+"&tp_rep="+rep_id
+                            data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id+"&tp_rep="+rep_id
                         });
 
                         request.done(function (response, textStatus, jqXHR) {
@@ -335,7 +339,7 @@
                             url: url,
                             type: "POST",
                             dataType: 'json',
-                            data: "dist_id="+dist_id+"&tp_id="+tp_id
+                            data: "dep_id="+dep_id+"dist_id="+dist_id+"&tp_id="+tp_id
                         });
 
                         request.done(function (response, textStatus, jqXHR) {

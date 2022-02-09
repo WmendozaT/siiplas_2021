@@ -69,7 +69,7 @@ try{
     $html2pdf = new HTML2PDF('P', 'Letter', 'fr', true, 'UTF-8', 0);
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-    $html2pdf->Output('Ptto_Comparativo_'.$distrital[0]['dist_distrital'].'_'.$this->session->userdata('gestion').'.pdf');
+    $html2pdf->Output('Ptto_Comparativo_'.$titulo_reporte_pie.'_'.$this->session->userdata('gestion').'.pdf');
 }
 catch(HTML2PDF_exception $e) {
     echo $e;
