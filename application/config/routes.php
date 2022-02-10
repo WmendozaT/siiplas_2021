@@ -128,7 +128,7 @@ $route['prog/update_insumos/(:any)'] = 'programacion/crequerimiento/update_id_re
 $route['rep/list_operaciones_req'] = 'reportes_cns/rep_operaciones/list_regiones'; ///// Menu Lista de Regiones Consolidado POA (2020-2021)
 $route['rep/get_uadministrativas'] = 'reportes_cns/rep_operaciones/get_unidades_administrativas'; ////// Combo Unidades Administrativas (CONSOLIDADO REPORTES 2020-2021)
 //$route['rep/exportar_operaciones_regional/(:any)'] = 'reportes_cns/exporting_datos/operaciones_regional_nacional/$1/$2'; ///// Exportar Operaciones por regional 
-$route['rep/exportar_operaciones_distrital/(:any)'] = 'reportes_cns/exporting_datos/operaciones_distrital/$1/$2'; ///// Exportar Operaciones por distrital 2020-2021
+$route['rep/exportar_operaciones_distrital/(:any)'] = 'reportes_cns/exporting_datos/operaciones_distrital/$1/$2/$3'; ///// Exportar Operaciones por distrital 2020-2021
 //$route['rep/exportar_operaciones_unidad/(:any)'] = 'reportes_cns/exporting_datos/operaciones_unidad/$1'; ///// Exportar Operaciones por Unidad
 
 //$route['rep/ver_consolidado_operaciones/(:any)'] = 'reportes_cns/exporting_datos/operaciones_nacional/$1'; ///// Exportar Actividades,Operaciones Nacional (Consolidado)
@@ -138,8 +138,8 @@ $route['rep/exportar_plantilla_migracion/(:any)'] = 'reportes_cns/exporting_dato
 
 
 //$route['rep/exportar_requerimientos_regional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_regional/$1/$2'; ///// Exportar Requerimientos por regional
-$route['rep/exportar_requerimientos_distrital/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_distrital/$1/$2'; ///// Exportar Requerimientos por Distrital 2020-2021
-$route['rep/exportar_requerimientos_regional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_regional/$1/$2'; ///// Exportar Requerimientos por Regional 2020-2021
+$route['rep/exportar_requerimientos_distrital/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_distrital/$1/$2/$3'; ///// Exportar Requerimientos por Distrital 2020-2021
+//$route['rep/exportar_requerimientos_regional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_regional/$1/$2'; ///// Exportar Requerimientos por Regional 2020-2021
 //$route['rep/xls_unidades/(:any)'] = 'reportes_cns/exporting_datos/mis_unidades_pinversion/$1'; ///// Lista de Unidades, Establecimientos de la regional
 //$route['rep/ver_consolidado_requerimientos/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_consolidado/$1'; ///// Exportar Requerimientos Nacional (Consolidado)
 

@@ -157,37 +157,38 @@
 
 
     /*------ EXPORTAR FORM 2 LISTA DE OPERACIONES POR DISTRITAL (2020-2021) -------*/
-    public function operaciones_distrital($dist_id,$tp_id){
+    public function operaciones_distrital($dep_id,$dist_id,$tp_id){
+        $tip_rep='PROYECTO DE INVERSION';
+        if($tp_id==4){
+          $tip_rep='GASTO CORRIENTE';
+        }
 
-      $dist=$this->model_proyecto->dep_dist($dist_id);
-      $distrital = strtoupper($dist[0]['dist_distrital']);
-      if(count($dist)!=0){
-        if($this->gestion==2019){
-          //$tabla=$this->lista_operaciones_por_regional_distrital($dist_id,2,$tp_id); // Distrital Operaciones 2019
-          $tabla='No disponible';
+
+        if($dist_id==0){
+          $regional=$this->model_proyecto->get_departamento($dep_id);
+          $operaciones=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de distritales
+          $titulo='CONSOLIDADO : '.mb_convert_encoding($regional[0]['dep_departamento'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
         }
         else{
           $dist=$this->model_proyecto->dep_dist($dist_id);
-          $titulo='DISTRITAL : '.mb_convert_encoding($dist[0]['dist_distrital'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
+          $titulo=' '.mb_convert_encoding($dist[0]['dist_distrital'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
           $operaciones=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Operaciones a Nivel de distritales
-          $tabla=$this->lista_operaciones_regional_distrital($operaciones,$titulo); // Regional Operaciones Distrital 2020-2021
+          
         }
         
+        $tabla=$this->lista_operaciones_regional_distrital($operaciones,$titulo,$tip_rep); // Regional Operaciones Distrital 2020-2021
+
         date_default_timezone_set('America/Lima');
         $fecha = date("d-m-Y H:i:s");
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment; filename=CONSOLIDADO_OPERACIONES_DISTRITAL_".$distrital."_$fecha.xls"); //Indica el nombre del archivo resultante
+        header("Content-Disposition: attachment; filename=CONSOLIDADO_FORMULARIO N4_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
         header("Pragma: no-cache");
         header("Expires: 0");
         echo $tabla;
-      }
-      else{
-        echo "Error !!! ";
-      }
     }
 
-     /*----- LISTA DE OPERACIONES POR DISTRITAL (2020-2021) ----*/
-    public function lista_operaciones_regional_distrital($operaciones,$titulo){
+     /*----- LISTA DE OPERACIONES POR DISTRITAL, REGIONAL (2020-2021) ----*/
+    public function lista_operaciones_regional_distrital($operaciones,$titulo,$tip_rep){
         $tabla='';
         $tabla .='
           <style>
@@ -207,7 +208,7 @@
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                 <tr class="modo1">
-                  <td colspan=45 align=center style="height:50px;"><b> CONSOLIDADO OPERACIONES '.strtoupper($titulo).'</b></td>
+                  <td colspan=45 align=center style="height:50px;"><b> FORMULARIO N° 4 - '.strtoupper($titulo).'</b></td>
                 </tr>
                 <tr style="background-color: #66b2e8">
                   <th style="width:3%; height:50px;background-color: #eceaea;">COD. DA.</th>
@@ -215,7 +216,7 @@
                   <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
                   <th style="width:10%;background-color: #eceaea;">COD. PROY.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
-                  <th style="width:35%;background-color: #eceaea;">'.$titulo.'</th>
+                  <th style="width:35%;background-color: #eceaea;">'.$tip_rep.'</th>
                   <th style="width:3%;background-color: #eceaea;">COD. UNI. RESP.</th>
                   <th style="width:15%;background-color: #eceaea;">UNIDAD RESPONSABLE</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACE.</th>
@@ -328,18 +329,18 @@
 
                 if(count($ejec)!=0){
                   $tabla.='
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['enero'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['febrero'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['marzo'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['abril'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['mayo'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['junio'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['julio'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['agosto'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['septiembre'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['octubre'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['noviembre'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['diciembre'].'</b></td>';
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['enero'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['febrero'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['marzo'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['abril'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['mayo'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['junio'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['julio'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['agosto'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['septiembre'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['octubre'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['noviembre'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['diciembre'],2).'</b></td>';
                 }
                 else{
                   for ($i=1; $i <=12 ; $i++) { 
@@ -358,7 +359,7 @@
     }
 
     /*------ EXPORTAR FORM 2 LISTA DE OPERACIONES POR REGIONAL (2020-2021) -------*/
-    public function operaciones_regional($dep_id,$tp_id){
+/*    public function operaciones_regional($dep_id,$tp_id){
 
       $dep=$this->model_proyecto->get_departamento($dep_id);
       if(count($dep)!=0){
@@ -377,10 +378,10 @@
       else{
         echo "Error !!! ";
       }
-    }
+    }*/
 
      /*----- LISTA DE OPERACIONES POR REGIONAL (2020-2021) ----*/
-    public function lista_operaciones_regional_regional($operaciones,$titulo,$tp_id){
+/*    public function lista_operaciones_regional_regional($operaciones,$titulo,$tp_id){
         $titulo_sub='UNIDAD RESPONSABLE';
         if($tp_id==4){
           $titulo_sub='SUBACTIVIDAD';
@@ -514,13 +515,13 @@
           </table>';
 
       return $tabla;
-    }
+    }*/
 
     /// --------------------------------------------------------
 
-    /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR DISTRITAL (2020 - 2021) ---*/
-    public function requerimientos_distrital($dist_id,$tp_id){
-      $dist=$this->model_proyecto->dep_dist($dist_id);
+    /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR DISTRITAL, REGIONAL (2020 - 2021) ---*/
+    public function requerimientos_distrital($dep_id,$dist_id,$tp_id){
+      
       date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");
 
@@ -529,14 +530,23 @@
         $tabla='No disponible';
       }
       else{
-        $titulo='CONSOLIDADO REQUERIMIENTOS : DISTRITAL - '.mb_convert_encoding(strtoupper($dist[0]['dist_distrital']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
-        $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-        $tabla=$this->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
+
+        if($dist_id==0){
+          $regional=$this->model_proyecto->get_departamento($dep_id);
+          $titulo='CONSOLIDADO REGIONAL FORMULARIO N° 5 - '.mb_convert_encoding(strtoupper($regional[0]['dep_departamento']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
+          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021
+          $tabla=$this->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
+        }
+        else{
+          $dist=$this->model_proyecto->dep_dist($dist_id);
+          $titulo='CONSOLIDADO FORMULARIO N° 5 - '.mb_convert_encoding(strtoupper($dist[0]['dist_distrital']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
+          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
+          $tabla=$this->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
+        }
       }
 
-
       header('Content-type: application/vnd.ms-excel');
-      header("Content-Disposition: attachment; filename=Consolidado_Requerimiento_".$dist[0]['dist_distrital']."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Content-Disposition: attachment; filename=Consolidado_Requerimiento_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
       header("Pragma: no-cache");
       header("Expires: 0");
       echo "";
@@ -566,7 +576,7 @@
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                 <tr class="modo1">
-                  <td colspan=29 align=center style="height:50px;"><b> CONSOLIDADO REQUERIMIENTO '.strtoupper($titulo).'</b></td>
+                  <td colspan=29 align=center style="height:50px;"><b> CONSOLIDADO FORMULARIO N° 5 '.strtoupper($titulo).'</b></td>
                 </tr>
                 <tr style="background-color: #66b2e8">
                   <th style="width:3%;height:50px;background-color: #eceaea;">COD. DA.</th>
@@ -574,13 +584,13 @@
                   <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
                   <th style="width:10%;background-color: #eceaea;">COD. PROY.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
-                  <th style="width:35%;background-color: #eceaea;">DESCRIPCI&Oacute;N</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. SUBACT.</th>
-                  <th style="width:15%;background-color: #eceaea;">SUBACTIVIDAD</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. OPE.</th>
-                  <th style="width:25%;background-color: #eceaea;">OPERACI&Oacute;N</th>
+                  <th style="width:35%;background-color: #eceaea;">GASTO CORRIENTE / PROY. INVERSION</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. U.RESP..</th>
+                  <th style="width:15%;background-color: #eceaea;">UNIDAD RESPONSABLE</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
+                  <th style="width:25%;background-color: #eceaea;">DESCRIPCION ACTIVIDAD</th>
                   <th style="width:15%;background-color: #eceaea;">PARTIDA</th>
-                  <th style="width:25%;background-color: #eceaea;">REQUERIMIENTO</th>
+                  <th style="width:25%;background-color: #eceaea;">DETALLE REQUERIMIENTO</th>
                   <th style="width:10%;background-color: #eceaea;">UNIDAD DE MEDIDA</th>
                   <th style="width:5%;background-color: #eceaea;">CANTIDAD</th>
                   <th style="width:5%;background-color: #eceaea;">PRECIO</th>
@@ -604,7 +614,7 @@
             <tbody>';
             $nro=0;
             foreach ($requerimientos as $row){
-              $prog="'".$row['aper_prog']."'";
+              $prog="'".$row['aper_programa']."'";
             $nro++;
             $tabla.='<tr>';
                 $tabla.='<td style="height:50px;">'.$row['dep_cod'].'</td>';
@@ -615,10 +625,10 @@
                   $tabla.=$row['proy_sisin'];
                 }
                 else{
-                  $tabla.="'".$row['aper_proy']."'";
+                  $tabla.="'".$row['aper_proyecto']."'";
                 }
                 $tabla.='</td>';
-                $tabla.='<td>'."'".$row['aper_act']."'".'</td>';
+                $tabla.='<td>'."'".$row['aper_actividad']."'".'</td>';
                 $tabla.='<td>';
                   if($row['tp_id']==1){
                     $tabla.=''.mb_convert_encoding($row['proy_nombre'], 'cp1252', 'UTF-8').'';
@@ -654,7 +664,7 @@
 
 
      /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR REGIONAL (2020 - 2021) ---*/
-    public function requerimientos_regional($dep_id,$tp_id){
+/*    public function requerimientos_regional($dep_id,$tp_id){
       $tipo='GASTO CORRIENTE';
       if($tipo==4){
         $tipo='PROYECTO DE INVERSION';
@@ -675,10 +685,10 @@
       ini_set('max_execution_time', 0); 
       ini_set('memory_limit','3072M');
       echo $tabla;
-    }
+    }*/
 
      /*----- LISTA DE REQUERIMIENTOS REGIONAL (2020-2021) ----*/
-    public function lista_requerimientos_regional($requerimientos,$titulo,$tp_id){
+/*    public function lista_requerimientos_regional($requerimientos,$titulo,$tp_id){
         $tit='ACTIVIDAD';
         if($tp_id==1){
           $tit='PROYECTO DE INVERSION';
@@ -787,7 +797,7 @@
           </table>';
 
       return $tabla;
-    }
+    }*/
     /// ---------------------------------------------------
 
     /*--- FORM 4 EJECUCION PRESUPUESTARIA (PROG-CERT) POR SUBACTIVIDAD (2020 - 2021) EXCEL ---*/
@@ -1579,7 +1589,7 @@ foreach ($requerimientos as $row){
     }
 
     /*-------- TABLA LISTA DE DISTRITALES --------*/
-    public function list_distritales($dep_id){
+   /* public function list_distritales($dep_id){
       $distritales=$this->model_proyecto->list_distritales($dep_id);
       $tabla='';
       $tabla.='
@@ -1646,7 +1656,7 @@ foreach ($requerimientos as $row){
         </tbody>
       </table>';
       return $tabla;
-    }
+    }*/
 
 
     /*--- LISTA DE UNIDADES, PROYECTOS DE INVERSION ---*/

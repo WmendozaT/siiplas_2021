@@ -56,7 +56,7 @@ class Rep_operaciones extends CI_Controller {
       $data['list']=$this->menu_nacional();
       $data['mensaje']='<div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';
       $this->load->view('admin/reportes_cns/programacion_poa/menu_consolidado_poa', $data);
-    
+
     //echo $this->lista_gastocorriente_pinversion(1,0,4);
    // echo $this->consolidado_operaciones_distrital(5,4);
     }
@@ -147,7 +147,7 @@ class Rep_operaciones extends CI_Controller {
           order by dist_id asc');
 
           $salida.= "
-          <option value=''>SELECCIONE UNIDAD EJECUTORA</option>
+          <option value=''>Selecciones Unidad Ejecutora ...</option>
           <option value='0'><b>".$regional[0]['dep_cod']." - CONSOLIDADO REGIONAL ".strtoupper($regional[0]['dep_departamento'])."</b></option>";
           while($sql_p = pg_fetch_row($combog)){
             $salida.= "<option value='".$sql_p[0]."'>".$sql_p[5]." - ".strtoupper ($sql_p[2])."</option>";
@@ -160,7 +160,7 @@ class Rep_operaciones extends CI_Controller {
         case 'tipo':
         $salida="";
           $dep_id=$_POST["elegido"];
-          $salida.= "<option value='0'>SELECCIONE TIPO</option>";
+          $salida.= "<option value='0'>Seleccione Tipo de Gasto</option>";
           $salida.= "<option value='4'>GASTO CORRIENTE</option>";
           $salida.= "<option value='1'>PROYECTO DE INVERSIÓN</option>";
 
@@ -170,7 +170,7 @@ class Rep_operaciones extends CI_Controller {
 
         case 'rep':
         $salida="";
-          $salida.= "<option value='0'>SELECCIONE REPORTE</option>";
+          $salida.= "<option value='0'>Seleccione Tipo de Reporte</option>";
           $salida.= "<option value='1'>1-LISTA DE UNIDADES / PROY. INVERSIÓN</option>";
           $salida.= "<option value='2'>2- CONSOLIDADO ACTIVIDADES (FORM 4)</option>";
           $salida.= "<option value='3'>3- CONSOLIDADO REQUERIMIENTOS (FORM 5)</option>";
@@ -196,7 +196,7 @@ class Rep_operaciones extends CI_Controller {
             where pfe.pfec_estado=1 and c.estado!=3 and pfe.proy_id='.$proy_id.'
             order by ser.serv_cod asc');
 
-          $salida.= "<option value='0'>SELECCIONE UNIDAD RESPONSABLE</option>";
+          $salida.= "<option value='0'>Seleccione Unidad Responsable</option>";
           while($sql_p = pg_fetch_row($combog)){
             $salida.= "<option value='".$sql_p[0]."'>".$sql_p[1]." ".strtoupper ($sql_p[3])." ".strtoupper ($sql_p[2])."</option>";
           }
@@ -225,7 +225,7 @@ class Rep_operaciones extends CI_Controller {
           $salida=$this->consolidado_operaciones_distrital($dep_id,$dist_id,$tp_id); /// Consolidado Formulario N° 4 
         }
         elseif ($tp_rep==3) {
-          $salida=$this->consolidado_requerimientos_distrital($dist_id,$tp_id); /// Consolidado formulario N° 5
+          $salida=$this->consolidado_requerimientos_distrital($dep_id,$dist_id,$tp_id); /// Consolidado formulario N° 5
         }
         elseif ($tp_rep==4) {
           $salida='';
@@ -475,7 +475,6 @@ class Rep_operaciones extends CI_Controller {
 
     /*-----REPORTE COMPARATIVO PRESUPUESTO ASIG-POA (DISTRITAL) 2020-2021-----*/
     public function comparativo_presupuesto_distrital($dep_id,$dist_id,$tp_id){
-      
       $data['mes'] = $this->mes_nombre();
       if($dist_id==0){ // Nacional
         
@@ -486,20 +485,19 @@ class Rep_operaciones extends CI_Controller {
 
         $unidades=$this->mrep_operaciones->list_poa_gastocorriente_pinversion($tp_id);*/
         $regional=$this->model_proyecto->get_departamento($dep_id);
-        $data['titulo']='REGIONAL - '.strtoupper($regional[0]['dep_departamento']).'';
+        $data['titulo']='CONSOLIDADO - '.strtoupper($regional[0]['dep_departamento']).'';
         $unidades=$this->mrep_operaciones->list_poa_gacorriente_pinversion_regional($dep_id,$tp_id);
         $data['titulo_reporte_pie']=$regional[0]['dep_departamento'];
 
       }
       else{ /// Distrital
         $distrital=$this->model_proyecto->dep_dist($dist_id);
-        $data['titulo']='DISTRITAL - '.strtoupper($distrital[0]['dist_distrital']).'';
+        $data['titulo']=''.strtoupper($distrital[0]['dist_distrital']).'';
         $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id);
         $data['titulo_reporte_pie']=$distrital[0]['dist_distrital'];
       }
 
       
-    //  if(count($data['distrital'])!=0){
           $titulo='GASTO CORRIENTE';
           if($tp_id==1){
             $titulo='PROYECTO DE INVERSI&Oacute;N';
@@ -579,17 +577,13 @@ class Rep_operaciones extends CI_Controller {
           $data['lista']=$tabla;
         
           $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_comparativo', $data);
-/*      }
-      else{
-        echo "Error !!!";
-      }*/
     }
 
     /////-------------------------------------------------------
 
     /*-- REPORTE 2 (CONSOLIDADO OPERACIONES DIST) 2020-2021--*/
     public function consolidado_operaciones_distrital($dep_id,$dist_id,$tp_id){
-      $dist=$this->model_proyecto->dep_dist($dist_id);
+      
       $tabla='';
       $tabla.='
       <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
@@ -598,7 +592,17 @@ class Rep_operaciones extends CI_Controller {
         $tabla='No disponible';
       }
       else{
-        $operaciones=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Operaciones a Nivel de distritales
+        if($dist_id==0){
+          $regional=$this->model_proyecto->get_departamento($dep_id);
+          $operaciones=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de distritales
+          $tit='CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']);
+        }
+        else{
+          $dist=$this->model_proyecto->dep_dist($dist_id);
+          $operaciones=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Actividades a Nivel de distritales
+          $tit=strtoupper($dist[0]['dist_distrital']);
+        }
+        
         $titulo='GASTO CORRIENTE';
         if($tp_id==1){
           $titulo='PROYECTO DE INVERSI&Oacute;N';
@@ -607,11 +611,11 @@ class Rep_operaciones extends CI_Controller {
         $tabla.='
         <br>
         <div align=right>
-          <a href="'.site_url("").'/rep/exportar_operaciones_distrital/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR CONSOLIDADO</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/exportar_operaciones_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO FORMULARIO n° 4"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR CONSOLIDADO FORMULARIO N° 4</a>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <br>
-        <div class="alert alert-warning">
-          <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO DE ACTIVIDADES '.$this->gestion.' - '.strtoupper($dist[0]['dist_distrital']).' ('.$titulo.')</b></center></a>
+        <div class="alert alert-success">
+          <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO DE FORMULARIO N° 4 '.$this->gestion.' - '.$tit.' ('.$titulo.')</b></center></a>
         </div>
         <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
           <thead>
@@ -723,42 +727,30 @@ class Rep_operaciones extends CI_Controller {
                     }
                     else{
                       for ($i=1; $i <=12 ; $i++) { 
-                        $tabla.='<td bgcolor="#f5cace">0.00</td>';
+                        $tabla.='<td bgcolor="#f5cace">0</td>';
                       }
                     }
-                /*$tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['enero'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['febrero'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['marzo'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['abril'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mayo'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['junio'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['julio'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['agosto'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['septiembre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['octubre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['noviembre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['diciembre'],2).'</td>';*/
 
                 $tabla.='<td style="width: 5%; text-align: right;">'.round($ptto,2).'</td>';
 
                 if(count($ejec)!=0){
                   $tabla.='
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['enero'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['febrero'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['marzo'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['abril'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['mayo'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['junio'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['julio'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['agosto'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['septiembre'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['octubre'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['noviembre'].'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.$ejec[0]['diciembre'].'</b></td>';
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['enero'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['febrero'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['marzo'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['abril'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['mayo'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['junio'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['julio'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['agosto'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['septiembre'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['octubre'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['noviembre'],2).'</b></td>
+                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['diciembre'],2).'</b></td>';
                 }
                 else{
                   for ($i=1; $i <=12 ; $i++) { 
-                    $tabla.='<td bgcolor="#d2f5f0">0.00</td>';
+                    $tabla.='<td bgcolor="#d2f5f0">0</td>';
                   }
                 }
 
@@ -774,8 +766,8 @@ class Rep_operaciones extends CI_Controller {
 
 
     /*-- REPORTE 3 (CONSOLIDADO REQUERIMIENTOS DIST) 2020-2021--*/
-    public function consolidado_requerimientos_distrital($dist_id,$tp_id){
-      $dist=$this->model_proyecto->dep_dist($dist_id);
+    public function consolidado_requerimientos_distrital($dep_id,$dist_id,$tp_id){
+      
       $tabla='';
       $tabla.='
       <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
@@ -784,8 +776,18 @@ class Rep_operaciones extends CI_Controller {
         $tabla='No disponible';
       }
       else{
-        $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
+        if($dist_id==0){
+          $regional=$this->model_proyecto->get_departamento($dep_id);
+          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021
+          $titulo_reporte='CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']);
+        }
+        else{
+          $dist=$this->model_proyecto->dep_dist($dist_id);
+          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
+          $titulo_reporte=strtoupper($dist[0]['dist_distrital']);
+        }
 
+       
         $titulo='GASTO CORRIENTE';
         if($tp_id==1){
           $titulo='PROYECTO DE INVERSI&Oacute;N';
@@ -794,11 +796,11 @@ class Rep_operaciones extends CI_Controller {
         $tabla.='
         <br>
         <div align=right>
-          <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR CONSOLIDADO</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR CONSOLIDADO FORMULARION N° 5</a>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <br>
         <div class="alert alert-warning">
-          <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO DE REQUERIMIENTOS '.$this->gestion.' - '.strtoupper($dist[0]['dist_distrital']).' ('.$titulo.')</b></center></a>
+          <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO FORMULARIO N° 5 '.$this->gestion.' - '.$titulo_reporte.' ('.$titulo.')</b></center></a>
         </div>
         <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
           <thead>
@@ -842,16 +844,16 @@ class Rep_operaciones extends CI_Controller {
             $tabla.='<tr>';
                 $tabla.='<td style="height:50px;">'.$row['dep_cod'].'</td>';
                 $tabla.='<td>'.$row['dist_cod'].'</td>';
-                $tabla.='<td>'.$row['aper_prog'].'</td>';
+                $tabla.='<td>'.$row['aper_programa'].'</td>';
                 $tabla.='<td>';
                 if($tp_id==1){
                   $tabla.=''.$row['proy_sisin'].'';
                 }
                 else{
-                  $tabla.=''.$row['aper_proy'].'';
+                  $tabla.=''.$row['aper_proyecto'].'';
                 }
                 $tabla.='</td>';
-                $tabla.='<td>'.$row['aper_act'].'</td>';
+                $tabla.='<td>'.$row['aper_actividad'].'</td>';
                 $tabla.='<td>';
                   if($row['tp_id']==1){
                     $tabla.=''.$row['proy_nombre'].'';

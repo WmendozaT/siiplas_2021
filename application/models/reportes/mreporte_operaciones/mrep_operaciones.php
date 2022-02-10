@@ -310,59 +310,6 @@ class Mrep_operaciones extends CI_Model {
         return $query->result_array();
     }
 
-    /*---------------- OPERACIONES (Productos) POR REGIONALES ----------------*/
-/*    public function operaciones_por_regionales($dep_id){
-        if($this->gestion!=2020){  /// 2018-2019
-            $sql = '
-                select *
-                from _proyectos as p
-                Inner Join _proyectofaseetapacomponente as pf On pf.proy_id=p.proy_id
-                Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _departamentos as d On d.dep_id=p.dep_id
-                Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                Inner Join _componentes as c On c.pfec_id=pf.pfec_id
-                Inner Join _productos as pr On pr.com_id=c.com_id
-                Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=pr.prod_id
-
-                Inner Join _acciones_estrategicas as ae On ae.ae=pr.acc_id
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
-
-                where p.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and ae.g_id='.$this->gestion.' and p.estado!=\'3\' and apg.aper_estado!=\'3\' and pf.pfec_estado=\'1\' and c.estado!=\'3\' and pr.estado!=\'3\' and prog.g_id='.$this->gestion.'
-                order by p.tp_id, apg.aper_programa,apg.aper_proyecto, apg.aper_actividad, c.com_id, pr.prod_cod asc';
-        }
-        else{ /// 2020
-            $sql = '
-                select *
-                from _proyectos as p
-                Inner Join _proyectofaseetapacomponente as pf On pf.proy_id=p.proy_id
-                Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _departamentos as d On d.dep_id=p.dep_id
-                Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                Inner Join _componentes as c On c.pfec_id=pf.pfec_id
-                Inner Join _productos as pr On pr.com_id=c.com_id
-
-                Inner Join objetivos_regionales as ore On ore.or_id=pr.or_id
-                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
-                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-    
-                Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
-
-                where p.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and p.estado!=\'3\' and apg.aper_estado!=\'3\' and pf.pfec_estado=\'1\' and c.estado!=\'3\' and pr.estado!=\'3\' 
-                order by p.tp_id, apg.aper_programa,apg.aper_proyecto, apg.aper_actividad, p.tp_id, c.com_id, pr.prod_cod asc';
-        } 
-         
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
         /*------ OPERACIONES (Productos) POR REGIONALES -------*/
         public function consolidado_operaciones_regionales($dep_id,$tp_id){
