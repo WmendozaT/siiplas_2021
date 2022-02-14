@@ -689,7 +689,7 @@ class Ccertificacion_poa extends CI_Controller {
     public function reporte_cpoa($cpoa_id){
       $data['cpoa']=$this->model_certificacion->get_certificacion_poa($cpoa_id); /// Datos Certificacion
       if (count($data['cpoa'])!=0) {
-          $data['programa'] = $this->model_ejecucion->get_apertura_programatica($data['cpoa'][0]['aper_id']);
+          $data['programa'] = $this->model_certificacion->get_apertura_programatica($data['cpoa'][0]['aper_id']);
           $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cpoa'][0]['prod_id']); // Datos completos hasta apertura
           $data['items']=$this->mis_items_certificados($cpoa_id);
           $data['nro']=count($this->model_certificacion->lista_items_certificados($cpoa_id));

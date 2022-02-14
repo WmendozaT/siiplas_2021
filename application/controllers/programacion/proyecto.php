@@ -48,9 +48,10 @@ class Proyecto extends CI_Controller {
       $data['estilo']=$this->programacionpoa->estilo_tabla();
       //----- Gasto Corriente
       $opc1='';
-      if ($this->session->userData('conf_poa_estado')!=3) {
+      $opc1.='<a href="'.site_url("").'/proy/verif_plantillas" title="VERIFICAR PLANTILLA DE MIGRACIÓN" class="btn btn-info " style="width:13%;">VERIFICAR PLANTILLA DE MIGRACI&Oacute;N</a>';
+      /*if ($this->session->userData('conf_poa_estado')!=3) {
         $opc1.='<a href="'.site_url("").'/proy/verif_plantillas" title="VERIFICAR PLANTILLA DE MIGRACIÓN" class="btn btn-default" style="width:13%;">VERIFICAR PLANTILLA DE MIGRACI&Oacute;N</a>';
-      }
+      }*/
                   
       $data['opc1']=$opc1;
       $data['gasto_corriente']=$this->list_unidades_es(1); /// Gasto Corriente

@@ -291,4 +291,32 @@ class Model_objetivoregion extends CI_Model{
         return $query->result_array();
     }
 
+
+
+
+/////// EVALUACION DE OBJETIVOS REGIONALES (OPERACIONES) 2022
+
+    /*----- GRUPO DE OBJETIVOS REGIONALES -----*/
+    public function get_suma_meta_form4_x_oregional($or_id){
+        $sql = 'select * 
+        from vista_suma_meta_form4_x_oregional
+        where or_id='.$or_id.' and aper_gestion='.$this->gestion.'';
+
+        $query = $this->db->query($sql);
+
+        //// en caso de que no haya la vista
+        /*$sql = '
+        select p.or_id, SUM(p.prod_meta) as meta_prog_actividades, apg.aper_gestion
+        from _productos p
+        Inner Join _componentes as c On c.com_id=p.com_id
+        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+        where p.or_id='.$or_id.' and apg.aper_gestion='.$this->gestion.' and p.estado!=\'3\' and p.prod_priori=\'1\' and apg.aper_estado!=\'3\'
+        group by p.or_id,apg.aper_gestion';*/
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
 }

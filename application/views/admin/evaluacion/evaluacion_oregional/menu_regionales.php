@@ -24,6 +24,9 @@
 		    #comparativo{
 		      width: 90% !important;
 		    }
+		    #mdialTamanio{
+              width: 45% !important;
+            }
 		</style>
 	</head>
 	<body class="">
@@ -372,6 +375,27 @@
 	    </div>
 	 	<!--  =============== -->
 
+
+ 	<!-- MODAL UPDATE TEMPORALIDAD PROG/EJEC POR OBJETIVO REGIONAL   -->
+        <div class="modal fade" id="modal_update_temporalidad" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="mdialTamanio">
+                <div class="modal-content">
+                    <form id="form_update" novalidate="novalidate" method="post">
+                        <input type="hidden" name="com_id" id="com_id">
+                        <div id="content_valida">
+                            <center><div class="loading" align="center"><h2>Actualizando Temporalidad Programado/Ejecucion de OBJETIVOS REGIONALES <br><div id="tit"></div></h2><br><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /></div></center>
+                        </div>
+                        <div id="load" style="display: none;"><center><img src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"><hr><b>ACTUALIZANDO TEMPORALIDAD OPERACIONES ...</b></center></div>
+                            <p>
+                                <div id="but" align="right" style="display:none;">
+                                    <button type="button" name="but_update" id="but_update" class="btn btn-success">ACEPTAR </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                            </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+     <!--  =============== -->
 		<!-- PAGE FOOTER -->
 		<div class="page-footer">
 			<div class="row">
@@ -443,7 +467,8 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-		<script type="text/javascript">
+		<script src="<?php echo base_url(); ?>mis_js/seguimientooregional/seguimiento_oregional.js"></script> 
+		<!-- <script type="text/javascript">
             $(function () {
                 $(".evaluacion").on("click", function (e) {
                     dep_id = $(this).attr('name');
@@ -483,11 +508,11 @@
                   
                 });
             });
-        </script>
+        </script> -->
 
 
 
-		<script type="text/javascript">
+		<!-- <script type="text/javascript">
         /*------ Evaluacion de Operaciones ------*/
         $(function () {
             $(".add_ff").on("click", function (e) {
@@ -609,8 +634,8 @@
                 });
             });
         });
-        </script>
-        <script type="text/javascript">
+        </script> -->
+       <!--  <script type="text/javascript">
         /*---- Modificar Evaluacion de Operaciones -----*/
         $(function () {
             var prod_id = ''; var proy_id = '';
@@ -762,9 +787,9 @@
                 });
             });
         });
-        </script>
+        </script> -->
 
-        <script type="text/javascript">
+       <!--  <script type="text/javascript">
             function verif_evaluacion(){
 
             meta = parseFloat($('[name="meta"]').val()); /// meta           
@@ -855,7 +880,7 @@
             	
             }
         }
-        </script>
+        </script> -->
         <script type="text/javascript">
 			$(document).ready(function() {
 				pageSetUp();

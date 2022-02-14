@@ -52,6 +52,36 @@ class Cevaluacion_oregional extends CI_Controller {
     }
 
 
+
+    /*---- FUNCION ACTUALIZA INFORMACION EVALUACION POA AL TRIMESTRE --------*/
+    public function update_temporalidad_oregional(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $com_id = $this->security->xss_clean($post['com_id']);
+        $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
+        $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+        $this->seguimientopoa->update_evaluacion_operaciones($com_id);
+        $tabla='';
+        $tabla.='
+              <hr><h3><b>&nbsp;&nbsp;'.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_cod'].' '.$componente[0]['serv_descripcion'].' '.$proyecto[0]['abrev'].'</b></h3><hr>
+              <div class="alert alert-success alert-block" align=center>
+                <h2> EVALUACI&Oacute;N POA '.$trimestre[0]['trm_descripcion'].' '.$this->gestion.' ACTUALIZADO !!!</2> 
+              </div>';
+
+          $result = array(
+            'respuesta' => 'correcto',
+            'tabla'=>$tabla,
+          );
+
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
     /*-------- LISTA DE REGIONALES ----------*/
    /* public function regionales(){
       $regionales=$this->model_proyecto->list_departamentos();

@@ -72,59 +72,6 @@ class Model_proyecto extends CI_Model{
         $this->db->delete('aperturaprogramatica');
     }
 
-    /*---------- LISTA UNIDADES (2018) ----------*/
-    public function list_unidades_2018($tp_id,$est_proy){
- $dep=$this->dep_dist($this->dist);
-        /// Administrador Nacional
-        if($this->adm==1){
-            $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
-                        from _proyectos as p
-                        Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                        Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                        Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                        Inner Join _departamentos as d On d.dep_id=p.dep_id
-                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                        Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                        Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                        where p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and p.tp_id='.$tp_id.' and apg.aper_proy_estado='.$est_proy.'
-                        ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,te.tn_id, te.te_id asc';
-        }
-        /// Administrador Regional/Distrital
-        else{
-            if($this->dist_tp==1){ /// Regional
-                $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
-                        from _proyectos as p
-                        Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                        Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                        Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                        Inner Join _departamentos as d On d.dep_id=p.dep_id
-                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                        Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                        Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                        where p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and p.tp_id='.$tp_id.' and p.dep_id='.$dep[0]['dep_id'].' and apg.aper_proy_estado='.$est_proy.'
-                        ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,te.tn_id, te.te_id asc';
-            }
-            else{ /// Distrital
-                $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
-                        from _proyectos as p
-                        Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                        Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                        Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                        Inner Join _departamentos as d On d.dep_id=p.dep_id
-                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                        Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                        Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                        where p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and p.tp_id='.$tp_id.' and p.dep_id='.$dep[0]['dep_id'].' and p.dist_id='.$this->dist.' and apg.aper_proy_estado='.$est_proy.'
-                        ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,te.tn_id, te.te_id asc';
-            }
-        }
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
 
     /*---------- LISTA UNIDADES (2019-2020) ----------*/
     public function list_unidades($tp_id,$est_proy){

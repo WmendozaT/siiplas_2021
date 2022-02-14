@@ -478,7 +478,7 @@ class Modificacionpoa extends CI_Controller{
                   <a href="#" data-toggle="modal" data-target="#modal_mod_form4" class="btn btn-default mod_form4" name="'.$rowp['prod_id'].'" title="MODIFICAR ACTIVIDAD"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
                   
                   if(count($monto)==0){
-                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR ACTIVIDAD"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
+                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
                   }
                   $tabla.='
                 </td>
@@ -541,13 +541,13 @@ class Modificacionpoa extends CI_Controller{
               $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
                 $tabla.='<th style="width:1%;height:20px;">#</th>';
                 $tabla.='<th style="width:2.2%;">COD.<br>ACE.</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>ACP.</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>OPE.</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>ACT.</th>';
-                $tabla.='<th style="width:10.3%;">ACTIVIDAD</th>';
-                $tabla.='<th style="width:10%;">RESULTADO</th>';
-                $tabla.='<th style="width:10%;">UNIDAD RESPONSABLE</th>';
-                $tabla.='<th style="width:10%;">INDICADOR</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>ACP.</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>OPE.</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
+                $tabla.='<th style="width:13%;">ACTIVIDAD</th>';
+                $tabla.='<th style="width:13%;">RESULTADO</th>';
+                $tabla.='<th style="width:7%;">UNIDAD RESPONSABLE</th>';
+                $tabla.='<th style="width:8%;">INDICADOR</th>';
                 $tabla.='<th style="width:2%;">L.B.</th>';
                 $tabla.='<th style="width:2%;">META</th>';
                 $tabla.='<th style="width:2.5%;">ENE.</th>';
@@ -562,7 +562,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:2.5%;">OCT.</th>';
                 $tabla.='<th style="width:2.5%;">NOV.</th>';
                 $tabla.='<th style="width:2.5%;">DIC.</th>';
-                $tabla.='<th style="width:10%;">MEDIO DE VERIFICACIÓN</th>';
+                $tabla.='<th style="width:9%;">MEDIO DE VERIFICACIÓN</th>';
                 $tabla.='<th style="width:5%;">PPTO.</th>';
               $tabla.='</tr>';
               $tabla.='</thead>';
@@ -602,13 +602,13 @@ class Modificacionpoa extends CI_Controller{
                 '<tr style="font-size: 6.5px;" bgcolor="'.$color.'">
                   <td style="width: 1%; height:12px;text-align: center;" bgcolor='.$color_or.'>'.$nro.'</td>
                   <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
-                  <td style="width: 2.2%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
-                  <td style="width: 10.3%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
-                  <td style="width: 10%; text-align: left;">'.$rowp['prod_resultado'].'</td>
-                  <td style="width: 10%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
-                  <td style="width: 10%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
+                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
+                  <td style="width: 2.1%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 13%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 13%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
+                  <td style="width: 8%; text-align: left;">'.$rowp['prod_indicador'].'</td>
                   <td style="width: 2%; text-align: right;">'.round($rowp['prod_linea_base'],2).'</td>
                   <td style="width: 3%; text-align: right;" bgcolor="#eceaea"><b>'.round($rowp['prod_meta'],2).' '.$tp.'</b></td>';
 
@@ -633,7 +633,7 @@ class Modificacionpoa extends CI_Controller{
                   }
 
                   $tabla.='
-                  <td style="width: 10%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                  <td style="width: 9%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
                   <td style="width: 5%; text-align: right;">'.$ptto.'</td>
                 </tr>';
 
@@ -650,13 +650,13 @@ class Modificacionpoa extends CI_Controller{
               $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
                 $tabla.='<th style="width:1%;height:20px;">#</th>';
                 $tabla.='<th style="width:2.2%;">COD.<br>ACE.</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>ACP.</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>OPE.</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>ACT.</th>';
-                $tabla.='<th style="width:10.3%;">ACTIVIDAD</th>';
-                $tabla.='<th style="width:10%;">RESULTADO</th>';
-                $tabla.='<th style="width:10%;">UNIDAD RESPONSABLE</th>';
-                $tabla.='<th style="width:10%;">INDICADOR</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>ACP.</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>OPE.</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
+                $tabla.='<th style="width:13%;">ACTIVIDAD</th>';
+                $tabla.='<th style="width:13%;">RESULTADO</th>';
+                $tabla.='<th style="width:7%;">UNIDAD RESPONSABLE</th>';
+                $tabla.='<th style="width:8%;">INDICADOR</th>';
                 $tabla.='<th style="width:2%;">L.B.</th>';
                 $tabla.='<th style="width:2%;">META</th>';
                 $tabla.='<th style="width:2.5%;">ENE.</th>';
@@ -671,7 +671,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:2.5%;">OCT.</th>';
                 $tabla.='<th style="width:2.5%;">NOV.</th>';
                 $tabla.='<th style="width:2.5%;">DIC.</th>';
-                $tabla.='<th style="width:10%;">MEDIO DE VERIFICACIÓN</th>';
+                $tabla.='<th style="width:9%;">MEDIO DE VERIFICACIÓN</th>';
                 $tabla.='<th style="width:5%;">PPTO.</th>';
               $tabla.='</tr>';
               $tabla.='</thead>';
@@ -711,13 +711,13 @@ class Modificacionpoa extends CI_Controller{
                 '<tr style="font-size: 6.5px;" bgcolor="'.$color.'">
                   <td style="width: 1%; height:12px;text-align: center;" bgcolor='.$color_or.'>'.$nro.'</td>
                   <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
-                  <td style="width: 2.2%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
-                  <td style="width: 10.3%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
-                  <td style="width: 10%; text-align: left;">'.$rowp['prod_resultado'].'</td>
-                  <td style="width: 10%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
-                  <td style="width: 10%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
+                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
+                  <td style="width: 2.1%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 13%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 13%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
+                  <td style="width: 8%; text-align: left;">'.$rowp['prod_indicador'].'</td>
                   <td style="width: 2%; text-align: right;">'.round($rowp['prod_linea_base'],2).'</td>
                   <td style="width: 3%; text-align: right;" bgcolor="#eceaea"><b>'.round($rowp['prod_meta'],2).' '.$tp.'</b></td>';
 
@@ -742,7 +742,7 @@ class Modificacionpoa extends CI_Controller{
                   }
 
                   $tabla.='
-                  <td style="width: 10%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                  <td style="width: 9%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
                   <td style="width: 5%; text-align: right;">'.$ptto.'</td>
                 </tr>';
 
@@ -759,13 +759,13 @@ class Modificacionpoa extends CI_Controller{
               $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
                 $tabla.='<th style="width:1%;height:20px;">#</th>';
                 $tabla.='<th style="width:2.2%;">COD.<br>ACE.</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>ACP.</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>OPE.</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>ACT.</th>';
-                $tabla.='<th style="width:10.3%;">ACTIVIDAD</th>';
-                $tabla.='<th style="width:10%;">RESULTADO</th>';
-                $tabla.='<th style="width:10%;">UNIDAD RESPONSABLE</th>';
-                $tabla.='<th style="width:10%;">INDICADOR</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>ACP.</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>OPE.</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
+                $tabla.='<th style="width:13%;">ACTIVIDAD</th>';
+                $tabla.='<th style="width:13%;">RESULTADO</th>';
+                $tabla.='<th style="width:7%;">UNIDAD RESPONSABLE</th>';
+                $tabla.='<th style="width:8%;">INDICADOR</th>';
                 $tabla.='<th style="width:2%;">L.B.</th>';
                 $tabla.='<th style="width:2%;">META</th>';
                 $tabla.='<th style="width:2.5%;">ENE.</th>';
@@ -780,7 +780,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:2.5%;">OCT.</th>';
                 $tabla.='<th style="width:2.5%;">NOV.</th>';
                 $tabla.='<th style="width:2.5%;">DIC.</th>';
-                $tabla.='<th style="width:10%;">MEDIO DE VERIFICACIÓN</th>';
+                $tabla.='<th style="width:9%;">MEDIO DE VERIFICACIÓN</th>';
                 $tabla.='<th style="width:5%;">PPTO.</th>';
               $tabla.='</tr>';
               $tabla.='</thead>';
@@ -820,13 +820,13 @@ class Modificacionpoa extends CI_Controller{
                 '<tr style="font-size: 6.5px;" bgcolor="'.$color.'">
                   <td style="width: 1%; height:12px;text-align: center;" bgcolor='.$color_or.'>'.$nro.'</td>
                   <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
-                  <td style="width: 2.2%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
-                  <td style="width: 10.3%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
-                  <td style="width: 10%; text-align: left;">'.$rowp['prod_resultado'].'</td>
-                  <td style="width: 10%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
-                  <td style="width: 10%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
+                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
+                  <td style="width: 2.1%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 13%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 12%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
+                  <td style="width: 8%; text-align: left;">'.$rowp['prod_indicador'].'</td>
                   <td style="width: 2%; text-align: right;">'.round($rowp['prod_linea_base'],2).'</td>
                   <td style="width: 3%; text-align: right;" bgcolor="#eceaea"><b>'.round($rowp['prod_meta'],2).' '.$tp.'</b></td>';
 
@@ -851,7 +851,7 @@ class Modificacionpoa extends CI_Controller{
                   }
 
                   $tabla.='
-                  <td style="width: 10%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                  <td style="width: 9%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
                   <td style="width: 5%; text-align: right;">'.$ptto.'</td>
                 </tr>';
 
@@ -861,7 +861,8 @@ class Modificacionpoa extends CI_Controller{
             }
 
           $tabla.='
-            <div style="font-size: 8px;font-family: Arial;">
+
+            <div style="font-size: 7.5px;font-family: Arial;">
               En atención a requerimiento de su unidad, comunicamos a usted que se ha procedido a efectivizar la modificación solicitada, toda vez que:<br>
 
               &nbsp;&nbsp;&nbsp;a)&nbsp;&nbsp;No compromete u obstaculiza el cumplimiento de los objetivos previstos en la gestión fiscal.<br>
@@ -869,6 +870,7 @@ class Modificacionpoa extends CI_Controller{
               &nbsp;&nbsp;&nbsp;c)&nbsp;&nbsp;No genera obligaciones o deudas por las modificaciones efectuadas.<br>
               &nbsp;&nbsp;&nbsp;d)&nbsp;&nbsp;No compromete el pago de obligaciones previstas en el presupuesto.
             </div>
+
           </td>
           <td style="width:1%;"></td>
         </tr>
@@ -1130,7 +1132,7 @@ class Modificacionpoa extends CI_Controller{
                 <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                   <tr class="modo1">
-                    <th style="width:2%;">#'.$cite[0]['com_id'].'</th>
+                    <th style="width:2%;">#</th>
                     <th style="width:2%;">COD. ACT.</th>
                     <th style="width:2%;"></th>
                     <th style="width:5%;">PARTIDA</th>
@@ -1555,7 +1557,7 @@ class Modificacionpoa extends CI_Controller{
                 </table>
               </td>
               <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
-                '.strtoupper($cite[0]['dist_distrital']).' '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                '.strtoupper($cite[0]['dist_distrital']).' '.$this->mes[ltrim(date("m"), "0")].' de '.date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               </td>
           </tr>
         </table>
@@ -1660,7 +1662,7 @@ class Modificacionpoa extends CI_Controller{
                               </tr>
                           </table>
                       </td>
-                  </tr>';
+                    </tr>';
                     }
                     else{
                       $tabla.='

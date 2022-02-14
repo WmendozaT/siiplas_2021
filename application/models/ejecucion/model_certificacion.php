@@ -11,6 +11,16 @@ class Model_certificacion extends CI_Model{
         $this->tmes = $this->session->userData('trimestre');
     }
     
+    /*--------------------- GET APERTURA PROGRAMATICA PADRE ----------------------*/
+    public function get_apertura_programatica($aper_id){
+        $sql = 'select *
+                from aperturaprogramatica
+                where aper_id='.$aper_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*--------- DEPARTAMENTO - DISTRITAL ------*/
     public function dep_dist($dist_id){
         $sql = 'select *
@@ -342,6 +352,18 @@ class Model_certificacion extends CI_Model{
         $sql = 'select *
                 from certificacionpoadetalle
                 where ins_id='.$ins_id.' and cpoa_id='.$cpoa_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*--------------------- GET CERTIFICADO POA ----------------------*/
+    public function get_certificado_poa($cpoa_id){
+        $sql = 'select *
+                from certificacionpoa cp
+                Inner Join funcionario as f On f.fun_id=cp.fun_id
+                Inner Join _proyectos as p On p.proy_id=cp.proy_id
+                where cp.cpoa_id='.$cpoa_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
