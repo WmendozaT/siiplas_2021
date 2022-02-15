@@ -57,17 +57,17 @@ class Cevaluacion_oregional extends CI_Controller {
     public function update_temporalidad_oregional(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
-        $com_id = $this->security->xss_clean($post['com_id']);
-        $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
-        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
-        $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-        $this->seguimientopoa->update_evaluacion_operaciones($com_id);
+        $dep_id = $this->security->xss_clean($post['dep_id']);
+        $departamento=$this->model_proyecto->get_departamento($dep_id);
+
+        $this->eval_oregional->create_temporalidad_oregional($dep_id); /// creando la temporalidad de los Objetivos REgioanles
+
         $tabla='';
         $tabla.='
-              <hr><h3><b>&nbsp;&nbsp;'.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_cod'].' '.$componente[0]['serv_descripcion'].' '.$proyecto[0]['abrev'].'</b></h3><hr>
-              <div class="alert alert-success alert-block" align=center>
-                <h2> EVALUACI&Oacute;N POA '.$trimestre[0]['trm_descripcion'].' '.$this->gestion.' ACTUALIZADO !!!</2> 
-              </div>';
+          <hr><h3><b>&nbsp;&nbsp;OPERACIONES '.$this->gestion.': REGIONAL '.strtoupper($departamento[0]['dep_departamento']).'</b></h3><hr>
+          <div class="alert alert-success alert-block" align=center>
+            <h2> LA TEMPORALIDAD DE OBJETIVOS DE GESTIÓN FUE ACTUALIZADO EXITOSAMENTE !!!</2> 
+          </div>';
 
           $result = array(
             'respuesta' => 'correcto',
@@ -82,190 +82,47 @@ class Cevaluacion_oregional extends CI_Controller {
 
 
 
-    /*-------- LISTA DE REGIONALES ----------*/
-   /* public function regionales(){
-      $regionales=$this->model_proyecto->list_departamentos();
-      $tabla='
-          <div>
-            <div id="tabs">
-              <ul>
-                <li>
-                  <a href="#tabs-1" style="width:100%;">CHUQUISACA</a>
-                </li>
-                <li>
-                  <a href="#tabs-2">LA PAZ</a>
-                </li>
-                <li>
-                  <a href="#tabs-3">COCHABAMBA</a>
-                </li>
-                <li>
-                  <a href="#tabs-4">ORURO</a>
-                </li>
-                <li>
-                  <a href="#tabs-5">POTOSI</a>
-                </li>
-                <li>
-                  <a href="#tabs-6">TARIJA</a>
-                </li>
-                <li>
-                  <a href="#tabs-7">SANTA CRUZ</a>
-                </li>
-                <li>
-                  <a href="#tabs-8">BENI</a>
-                </li>
-                <li>
-                  <a href="#tabs-9">PANDO</a>
-                </li>
-                <li>
-                  <a href="#tabs-10">OFICINA NACIONAL</a>
-                </li>
-              </ul>';
-              for ($i=1; $i <=10 ; $i++) { 
-                $tabla.='
-                <div id="tabs-'.$i.'">
-                  <div class="row">
-                    '.$this->ver_relacion_ogestion($i).'
-                  </div>
-                </div>';
-              }
-              $tabla.='
-            </div>
-          </div>';
 
-      return $tabla;
-    }*/
 
-    //// REGIONAL ALINEADO A OBJETIVOS REGIONALES 2020-2021
-   /* public function ver_relacion_ogestion($dep_id){
-      $departamento=$this->model_proyecto->get_departamento($dep_id);
-      $tabla='';
-      $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
-      $tabla.='
-      <div align="right">
-        <a href="javascript:abreVentana(\''.site_url("").'/eval_obj/rep_meta_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>EVALUACI&Oacute;N METAS REGIONALES (.PDF)</b></a>&nbsp;&nbsp;
-        <a href="#" data-toggle="modal" data-target="#modal_evaluacion" name="'.$dep_id.'" class="btn btn-default evaluacion" title="MOSTRAR CUADRO DE EVALUACIÓN DE METAS"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>CUADRO DE EVALUACI&Oacute;N (GRAFICO)</b></a>
-      </div><br>
-      <table class="table table-bordered" border=0.2 style="width:100%;" align=center>
-        <thead>
-        <tr style="font-size: 11px;" align=center>
-          <th style="width:1%;height:10px;color:#FFF;" bgcolor="#1c7368">#</th>
-          <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACE.</b></th>
-          <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. ACP.</b></th>
-          <th style="width:2%;color:#FFF;" bgcolor="#1c7368"><b>COD. OPE.</b></th>
-          <th style="width:11%;color:#FFF;" bgcolor="#1c7368">OPERACI&Oacute;N</th>
-          <th style="width:11%;color:#FFF;" bgcolor="#1c7368">RESULTADO</th>
-          <th style="width:10%;color:#FFF;" bgcolor="#1c7368">INDICADOR</th>
-          <th style="width:10%;color:#FFF;" bgcolor="#1c7368">MEDIO VERIFICACI&Oacute;N</th>
-          <th style="width:4%;color:#FFF;" bgcolor="#1c7368">META</th>
-          <th style="width:4%;color:#FFF;" bgcolor="#1c7368">EVALUADO</th>
-          <th style="width:4%;color:#FFF;" bgcolor="#1c7368">%EFICACIA</th>
-          <th style="width:4%;color:#FFF;" bgcolor="#1c7368"></th>
-          <th style="width:15%;color:#FFF;" bgcolor="#1c7368">MEDIO DE VERIFICACI&Oacute;N</th>
-          <th style="width:15%;color:#FFF;" bgcolor="#1c7368">PROBLEMAS</th>
-          <th style="width:15%;color:#FFF;" bgcolor="#1c7368">ACCIONES</th>
-          <th style="width:3%;color:#FFF;" bgcolor="#1c7368">EVALUAR</th>
-        </tr>
-        </thead>
-        <tbody>';
-        $nro=0;
-        foreach($lista_ogestion as $row){
-          $evaluado=$this->model_evaluacion->get_meta_oregional($row['pog_id'],$this->tmes);
-          $suma_mevaluado=$this->get_suma_total_evaluado($row['pog_id']);
-          $color='';
 
-          if(count($evaluado)!=0){
-            $color='#eef5f0';
-          }
 
-          $nro++;
-          $tabla.='
-          <tr style="font-size: 10px;" bgcolor='.$color.'>
-            <td style="width:1%; height:10px;" align=center title='.$row['pog_id'].'>'.$nro.'</td>
-            <td style="width:2%;" align="center">'.$row['acc_codigo'].'</td>
-            <td style="width:2%;" align="center">'.$row['og_codigo'].'</td>
-            <td style="width:2%; font-size: 11px;" align="center" bgcolor="#f1eeee"><b>'.$row['or_codigo'].'</b></td>
-            <td style="width:11%;">'.$row['or_objetivo'].'</td>
-            <td style="width:11%;">'.$row['or_resultado'].'</td>
-            <td style="width:10%;">'.$row['or_indicador'].'</td>
-            <td style="width:10%;">'.$row['or_verificacion'].'</td>
-            <td style="width:4%; font-size: 11px;" align=center><b>'.round($row['or_meta'],2).'</b></td>';
-            
-            if(count($evaluado)!=0){
-                $but='btn btn-default';
-                if($evaluado[0]['tpeval_id']==1){
-                  $but='btn btn-success';
-                }
-              $tabla.='
-              <td style="width:4%; font-size: 11px;" align=center><b>'.round($suma_mevaluado,2).'</b></td>
-              <td style="width:4%; font-size: 11px;" align=right bgcolor="#dfefe4"><b>'.round((($suma_mevaluado/$row['or_meta'])*100),2).'%</b></td>
-              <td style="width:4%; font-size: 5px;" bgcolor="#dfefe4" align=center>
-                <button type="button" style="font-size: 10px;" class="'.$but.'"><b>'.$evaluado[0]['tpeval_descripcion'].'</b></button>
-              </td>
-              <td style="width:15%;" bgcolor="#dfefe4">'.$evaluado[0]['tmed_verif'].'</td>
-              <td style="width:15%;" bgcolor="#dfefe4">'.$evaluado[0]['tprob'].'</td>
-              <td style="width:15%;" bgcolor="#dfefe4">'.$evaluado[0]['tacciones'].'</td>
-              <td style="width:3%;" align=center>';
-              if($this->conf_estado==1){ /// Habilitado
-                if($suma_mevaluado<round($row['or_meta'],2) || $this->tp_adm==1) {
-                  $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff" title="MODIFICAR EVALUACI&Oacute;N META OPERACIÓN" name="'.$evaluado[0]['epog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/evalok.jpg" WIDTH="45" HEIGHT="45"/><br>MOD.EV.OPE.</a>';
-                }
-                else{
-                  $tabla.='<b>EVALUADO</b>';
-                }
-              }
-              $tabla.='
-              </td>';
-            }
-            else{
 
-              $tabla.='
-              <td style="width:4%; font-size: 11px;" align=center><b>'.round($suma_mevaluado,2).'</b></td>
-              <td style="width:4%; font-size: 11px;" align=right bgcolor="#dfefe4"><b>'.round((($suma_mevaluado/$row['or_meta'])*100),2).'%</b></td>';
-              if($suma_mevaluado==$row['or_meta']){
-                $get_ultimo=$this->model_evaluacion->get_ultimo_eval_oregional($row['pog_id']);
-                $tabla.='
-                <td style="width:4%;" bgcolor="#dfefe4" align=center> 
-                  <button type="button" style="font-size: 10px;" class="btn btn-success"><b>'.$get_ultimo[0]['tpeval_descripcion'].'</b></button>
-                </td>
-                <td style="width:15%;" bgcolor="#dfefe4">'.$get_ultimo[0]['tmed_verif'].'</td>
-                <td style="width:15%;" bgcolor="#dfefe4">'.$get_ultimo[0]['tprob'].'</td>
-                <td style="width:15%;" bgcolor="#dfefe4">'.$get_ultimo[0]['tacciones'].'</td>
-                <td style="width:3%;" align=center>';
-                  if($this->conf_estado==1 || $this->tp_adm==1){
-                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff" title="MODIFICAR EVALUACI&Oacute;N META OPERACIÓN" name="'.$get_ultimo[0]['epog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/evalok.jpg" WIDTH="45" HEIGHT="45"/><br>MOD.EV.OPE.</a>';
-                  }
-                  else{
-                    $tabla.='<b>EVALUADO</b>';
-                  }
-                $tabla.='
-                </td>';
-              }
-              else{
-                $tabla.='
-                <td style="width:4%;" bgcolor="#dfefe4"></td>
-                <td style="width:15%;" bgcolor="#dfefe4"></td>
-                <td style="width:15%;" bgcolor="#dfefe4"></td>
-                <td style="width:15%;" bgcolor="#dfefe4"></td>
-                <td style="width:3%;" align=center>';
-                if($this->conf_estado==1 || $this->tp_adm==1){
-                  $tabla.='<a href="#" data-toggle="modal" data-target="#modal_add_ff" class="btn btn-xs add_ff" title="EVALUAR META OPERACIÓN" name="'.$row['pog_id'].'" class="btn btn-default btn-lg"><img src="'.base_url().'assets/ifinal/eval.jpg" WIDTH="45" HEIGHT="45"/><br>EV. OPE.</a>';
-                }
-                else{
-                  $tabla.='<b>EVALUADO</b>';
-                }
-                $tabla.='
-                </td>';
-              }
-            }
-            $tabla.='
-          </tr>';
-        }
-        $tabla.='
-        </tbody>
-      </table> ';
 
-      return $tabla;
-    }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /*-------- GET CUADRO EVALUACION --------*/
     public function get_cuadro_evaluacion(){

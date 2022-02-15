@@ -2776,7 +2776,7 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
        trm_id integer NOT NULL,
        pg_fis numeric(18,2) NOT NULL DEFAULT 0,
        g_id integer NOT NULL,
-       tp_id integer NOT NULL,
+       tp_id integer NOT NULL DEFAULT 0,
        primary key(temp_or)
      );
 
@@ -2788,7 +2788,7 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
        trm_id integer NOT NULL,
        ejec_fis numeric(18,2) NOT NULL DEFAULT 0,
        g_id integer NOT NULL,
-       tp_id integer NOT NULL,
+       tp_id integer NOT NULL DEFAULT 0,
        observacion character varying(5000),
        medio_verificacion text,
        acciones character varying(200),

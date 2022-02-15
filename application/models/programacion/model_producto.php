@@ -491,7 +491,7 @@ class model_producto extends CI_Model {
 
 
     /*---- LISTA DE REQUERIMIENTOS POR COMPONENTES ----*/
-    public function requerimientos_componentes($com_id){
+/*    public function requerimientos_componentes($com_id){
         $sql = 'select *
                 from _productos p
                 Inner Join _insumoproducto as ip On ip.prod_id=p.prod_id
@@ -503,7 +503,7 @@ class model_producto extends CI_Model {
                 order by p.prod_cod, i.ins_id asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*---- LISTA DE PRODUCTOS-OPERACIONES ----*/
     public function list_ope_proy($proy_id){

@@ -155,7 +155,7 @@ class Cmod_insumo extends CI_Controller {
             $data['monto']=$this->modificacionpoa->ppto($data['proyecto']);
 
             if($this->gestion>2021){ /// Gestion 2022
-              if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>1000){
+              if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>700){
                 $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2022
               }
               else{

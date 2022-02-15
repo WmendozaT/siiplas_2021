@@ -28,6 +28,7 @@ class Eval_oregional extends CI_Controller{
       $this->conf_form4 = $this->session->userData('conf_form4');
       $this->conf_form5 = $this->session->userData('conf_form5');
       $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
+      $this->fecha_plazo_actualizacion = strtotime(date('2022-03-20'));
     }
 
     
@@ -103,14 +104,20 @@ class Eval_oregional extends CI_Controller{
       $departamento=$this->model_proyecto->get_departamento($dep_id);
       $tabla='';
       $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
-      $tabla.='
-        <div id="row">
-          <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="alert alert-info" role="alert">
-              <a href="#" data-toggle="modal" data-target="#modal_update_temporalidad" class="btn btn-primary update_temporalidad" style="width:20%;" name="'.$dep_id.'" id="'.strtoupper($departamento[0]['dep_departamento']).'" title="ACTUALIZAR EVALUACION OBJETIVO REGIONAL" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="30"/>&nbsp;ACTUALIZAR TEMPORALIDAD - OBJETIVO REGIONAL</a>    
-            </div>
-          </article>
-        </div>';
+      //$fecha_actual = date('Y-m-d');
+      $date_actual = strtotime(date('Y-m-d')); //// fecha Actual
+
+      if(($date_actual<=$this->fecha_plazo_actualizacion) & $this->tp_adm==1) {
+          $tabla.='
+          <div id="row">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div class="alert alert-info" role="alert">
+                <a href="#" data-toggle="modal" data-target="#modal_update_temporalidad" class="btn btn-primary update_temporalidad" style="width:20%;" name="'.$dep_id.'" id="'.strtoupper($departamento[0]['dep_departamento']).'" title="ACTUALIZAR EVALUACION OBJETIVO REGIONAL" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="30"/>&nbsp;ACTUALIZAR TEMPORALIDAD - OBJETIVO REGIONAL</a>    
+              </div>
+            </article>
+          </div>';
+      }
+      
       $tabla.=' 
       <div align="right">
         <a href="javascript:abreVentana(\''.site_url("").'/eval_obj/rep_meta_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>EVALUACI&Oacute;N METAS REGIONALES (.PDF)</b></a>&nbsp;&nbsp;
@@ -130,10 +137,10 @@ class Eval_oregional extends CI_Controller{
           <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">MEDIO VERIFICACI&Oacute;N</th>
           <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META</th>
           <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META ALINEADO</th>
-          <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">META (I) TRIMESTRE</th>
-          <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">META (II) TRIMESTRE</th>
-          <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">META (III) TRIMESTRE</th>
-          <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">META (IV) TRIMESTRE</th>
+          <th style="width:8%;color:#FFF; text-align: center" bgcolor="#1c7368">META (I) TRIMESTRE</th>
+          <th style="width:8%;color:#FFF; text-align: center" bgcolor="#1c7368">META (II) TRIMESTRE</th>
+          <th style="width:8%;color:#FFF; text-align: center" bgcolor="#1c7368">META (III) TRIMESTRE</th>
+          <th style="width:8%;color:#FFF; text-align: center" bgcolor="#1c7368">META (IV) TRIMESTRE</th>
           <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
           <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
         </tr>
@@ -142,8 +149,8 @@ class Eval_oregional extends CI_Controller{
         $nro=0;
         foreach($lista_ogestion as $row){
           $color='';
-          $meta_priorizado=0;
           $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
+          $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
           $boton_ajustar_apriorizados='
               <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
               <br>AJUSTAR ALINEACIÓN</center>';
@@ -157,19 +164,19 @@ class Eval_oregional extends CI_Controller{
           $nro++;
           $tabla.='
           <tr style="font-size: 10px;" bgcolor='.$color.'>
-            <td style="width:1%; height:10px;" align=center title='.$row['pog_id'].'>'.$nro.' '.$row['og_id'].'</td>
-            <td style="width:2%;" align="center">'.$row['acc_codigo'].'</td>
-            <td style="width:2%;" align="center">'.$row['og_codigo'].'</td>
-            <td style="width:2%; font-size: 11px;" align="center" bgcolor="#f1eeee" title='.$row['or_id'].'><b>'.$row['or_codigo'].'</b></td>
+            <td style="width:1%; height:10px;" align=center title='.$row['pog_id'].'>'.$nro.'</td>
+            <td style="width:2%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
+            <td style="width:2%; font-size: 17px; color:blue" align="center"><b>'.$row['og_codigo'].'</b></td>
+            <td style="width:2%; font-size: 17px;" align="center" bgcolor="#f1eeee" title='.$row['or_id'].'><b>'.$row['or_codigo'].'</b></td>
             <td style="width:11%;">'.$row['or_objetivo'].'</td>
             <td style="width:11%;">'.$row['or_resultado'].'</td>
             <td style="width:10%;">'.$row['or_indicador'].'</td>
             <td style="width:10%;">'.$row['or_verificacion'].'</td>
             <td style="width:2%; font-size: 15px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
-            <td style="width:2%;">'.$boton_ajustar_apriorizados.'</td>';
-            
-            
-            $tabla.='
+            <td style="width:2%;">'.$boton_ajustar_apriorizados.'</td>
+            '.$this->get_temporalidad_objetivo_regional($row['or_id']).'
+            <td style="font-size: 13pt;font-family:Verdana;font-size: 20px;" align=center><b>'.$calificacion[3].' %</b></td>
+            <td><a href="#" data-toggle="modal" data-target="#modal_act_priorizados" class="btn btn-default" name="'.$row['or_id'].'"  onclick="ver_poa('.$row['or_id'].');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a></td>
           </tr>';
         }
         $tabla.='
@@ -178,6 +185,135 @@ class Eval_oregional extends CI_Controller{
 
       return $tabla;
     }
+
+
+
+    /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL --*/
+    public function get_temporalidad_objetivo_regional($or_id){
+      $verif_temp=$this->model_objetivoregion->verif_temporalidad_oregional($or_id);
+      $tabla='';
+
+      if(count($verif_temp)!=0){
+        for ($i=1; $i <=4 ; $i++) {
+         $valor=$this->calificacion_trimestral_acumulado_x_oregional($or_id,$i);
+
+          $color='#f1f5f4';
+          if($i<=$this->tmes){
+            $color='#e4fdf7';
+          }
+
+          $tabla.='
+            <td bgcolor="'.$color.'" align=center>
+              <table class="table table-bordered" border=0.2 style="width:80%;">
+                <tr>
+                  <td style="width:50%;"><b>PROG.</b></td>
+                  <td style="width:50%;font-size: 12px; color:blue" align=right><b>'.$valor[1].'</b></td>
+                </tr>
+                <tr>
+                  <td><b>EJEC.</b></td>
+                  <td style="font-size: 12px; color:blue" align=right><b>'.$valor[2].'</b></td>
+                </tr>
+                <tr>
+                  <td><b>EFI.</b></td>
+                  <td style="font-size: 13px; color:blue" align=right><b>'.$valor[3].'%</b></td>
+                </tr>
+              </table>
+            </td>';
+        }
+      }
+      else{
+        for ($i=1; $i <=4 ; $i++) { 
+          $color='#fbf6f6';
+          if($i<=$this->tmes){
+            $color='#f7e0e0';
+          }
+          $tabla.='<td bgcolor="'.$color.'" align=center title="SIN TEMPORALIDAD">-</td>';
+        }
+      }
+
+      return $tabla;
+    }
+
+
+    /*-- CALIFICACION TRIMESTRAL POR OBJETIVO REGIONAL --*/
+    public function calificacion_trimestral_acumulado_x_oregional($or_id,$trimestre){
+      $valor = array( '1' => '0','2' => '0','3' => '0');
+
+      if(count($this->model_objetivoregion->verif_temporalidad_oregional($or_id))!=0){
+        $suma_prog=0; $suma_ejec=0;
+        
+        for ($i=1; $i <=$trimestre ; $i++) {
+          $get_trm=$this->model_objetivoregion->get_trm_temporalidad_prog_oregional($or_id,$trimestre); /// Temporalidad Programado
+          $get_trm_ejec=$this->model_objetivoregion->get_trm_temporalidad_ejec_oregional($or_id,$trimestre); /// Temporalidad Ejecutado
+
+          if(count($get_trm)!=0){
+            $suma_prog=$suma_prog+$get_trm[0]['pg_fis'];
+          }
+
+          if(count($get_trm_ejec)!=0){
+            $suma_ejec=$suma_ejec+$get_trm_ejec[0]['ejec_fis'];
+          }
+
+          $ejecucion=0;
+          if($suma_ejec!=0){
+            $ejecucion=round((($suma_ejec/$suma_prog)*100),2);
+          }
+
+          $valor[1]=$suma_prog; /// Programado Acumulado
+          $valor[2]=$suma_ejec; /// Ejecutado Acumulado
+          $valor[3]=$ejecucion; /// Ejecucion
+        }
+      }
+
+      return $valor; 
+    }
+
+
+    /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL --*/
+    public function create_temporalidad_oregional($dep_id){
+      $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
+      foreach($lista_ogestion as $row){
+
+        $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
+        if(count($metas_prior)!=0){
+            if(round($row['or_meta'],2)==round($metas_prior[0]['meta_prog_actividades'],2)) {
+               /// Crear o actualizar la tabla de temporalidad
+              if(count($this->model_objetivoregion->verif_temporalidad_oregional($row['or_id']))!=0){
+                $this->db->where('or_id', $row['or_id']);
+                $this->db->delete('temp_trm_prog_objetivos_regionales');
+              }
+
+              /// creamos registro
+              for ($i=1; $i <=4 ; $i++) { 
+                $get_dato_trimestre=$this->model_objetivoregion->get_suma_trimestre_para_oregional($row['or_id'],$i);
+                if(count($get_dato_trimestre)!=0){
+                  /*--------------------------------------------------------*/
+                  $data_to_store2 = array( ///// Tabla temp prog oregional
+                    'or_id' => $row['or_id'], /// or id
+                    'trm_id' => $i, /// trimestre
+                    'pg_fis' => $get_dato_trimestre[0]['trimestre'], /// valor
+                    'g_id' => $this->gestion, /// gestion                
+                  );
+                  $this->db->insert('temp_trm_prog_objetivos_regionales', $data_to_store2);
+                  /*----------------------------------------------------------*/
+                }
+              }
+              
+            }
+        }
+      }
+
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     /*--- GET TEMPORALIDAD PROGRAMADO TRIMESTRAL OBJETIVO REGIONAL ---*/
@@ -206,7 +342,7 @@ class Eval_oregional extends CI_Controller{
 
 
     /*--- GET SUMA TOTAL EVALUADO ---*/
-    public function get_suma_total_evaluado($pog_id){
+/*    public function get_suma_total_evaluado($pog_id){
       $sum=0;
       for ($i=1; $i <=$this->tmes; $i++) { 
         $obj_gestion_evaluado=$this->model_objetivogestion->get_objetivo_programado_evaluado_trimestral($i,$pog_id);
@@ -216,7 +352,7 @@ class Eval_oregional extends CI_Controller{
       }
 
       return $sum;
-    }
+    }*/
 
 
   /*-------- MENU -----*/

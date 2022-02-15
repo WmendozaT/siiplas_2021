@@ -57,7 +57,7 @@ function abreVentana(PDF){
         dep_id = $(this).attr('name');
         //document.getElementById("com_id").value=dep_id;
         $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');
-        $('#but').slideUp();
+        $('#but_update_temp').slideUp();
 
         var url = base+"index.php/ejecucion/cevaluacion_oregional/update_temporalidad_oregional";
         var request;
@@ -73,9 +73,8 @@ function abreVentana(PDF){
 
         request.done(function (response, textStatus, jqXHR) {
         if (response.respuesta == 'correcto') {
-          alert(response.respuesta)
-            /*$('#content_valida').fadeIn(1000).html(response.tabla);
-            $('#but').slideDown();*/
+            $('#content_valida').fadeIn(1000).html(response.tabla);
+            $('#but_update_temp').slideDown();
         }
         else{
             alertify.error("ERROR AL RECUPERAR DATOS");
@@ -89,17 +88,17 @@ function abreVentana(PDF){
         });
         e.preventDefault();
 
-        /*$("#but_update").on("click", function (e) {
+        $("#but_update").on("click", function (e) {
           var $valid = $("#form_update").valid();
           if (!$valid) {
               $validator.focusInvalid();
           } else {
               window.location.reload(true);
-              document.getElementById("but").style.display = 'none';
-              document.getElementById("load").style.display = 'block';
+              document.getElementById("but_update_temp").style.display = 'none';
+              document.getElementById("load_update_temp").style.display = 'block';
               alertify.success("ACTUALIZACIÓN EXITOSA ...");
           }
-        });*/
+        });
     });
   });
 

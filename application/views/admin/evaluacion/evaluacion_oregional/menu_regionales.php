@@ -385,9 +385,9 @@
                         <div id="content_valida">
                             <center><div class="loading" align="center"><h2>Actualizando Temporalidad Programado/Ejecucion de OBJETIVOS REGIONALES <br><div id="tit"></div></h2><br><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /></div></center>
                         </div>
-                        <div id="load" style="display: none;"><center><img src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"><hr><b>ACTUALIZANDO TEMPORALIDAD OPERACIONES ...</b></center></div>
+                        <div id="load_update_temp" style="display: none;"><center><img src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"><hr><b>ACTUALIZANDO TEMPORALIDAD OPERACIONES ...</b></center></div>
                             <p>
-                                <div id="but" align="right" style="display:none;">
+                                <div id="but_update_temp" align="right" style="display:none;">
                                     <button type="button" name="but_update" id="but_update" class="btn btn-success">ACEPTAR </button>&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
                             </p>
@@ -396,6 +396,25 @@
             </div>
         </div>
      <!--  =============== -->
+
+     <!-- MODAL LISTA DE ACTIVIDADES PRIORIZADOS -->
+        <div class="modal fade" id="modal_act_priorizados" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="mdialTamanio">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                    </div>
+                    <div class="modal-body">
+                    <h2 class="alert alert-info"><center>MIS ACTIVIDADES PRIORIZADOS - <?php echo $this->session->userData('gestion');?></center></h2>
+                        <div class="row">
+                            <div id="titulo"></div>
+                            <div id="content1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  =============== -->   
 		<!-- PAGE FOOTER -->
 		<div class="page-footer">
 			<div class="row">
@@ -468,6 +487,42 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 		<script src="<?php echo base_url(); ?>mis_js/seguimientooregional/seguimiento_oregional.js"></script> 
+		        <script type="text/javascript">
+            function ver_poa(proy_id) {
+                $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
+                $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
+                
+                var url = "<?php echo site_url("")?>/programacion/proyecto/get_poa";
+                var request;
+                if (request) {
+                    request.abort();
+                }
+                request = $.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: 'json',
+                    data: "proy_id="+proy_id
+                });
+
+                request.done(function (response, textStatus, jqXHR) {
+
+                if (response.respuesta == 'correcto') {
+                    if(response.proyecto[0]['tp_id']==1){
+                        $('#titulo').html('<font size=3><b>'+response.proyecto[0]['aper_programa']+' '+response.proyecto[0]['proy_sisin']+' 000 - '+response.proyecto[0]['proy_nombre']+'</b></font>');
+                    }
+                    else{
+                        $('#titulo').html('<font size=3><b>'+response.proyecto[0]['act_descripcion']+' '+response.proyecto[0]['abrev']+'</b></font>');
+                    }
+                    
+                    $('#content1').fadeIn(1000).html(response.tabla);
+                }
+                else{
+                    alertify.error("ERROR AL RECUPERAR INFORMACION");
+                }
+
+                });
+            }
+        </script>
 		<!-- <script type="text/javascript">
             $(function () {
                 $(".evaluacion").on("click", function (e) {
