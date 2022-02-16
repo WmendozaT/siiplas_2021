@@ -409,7 +409,7 @@ class Cert_poa extends CI_Controller {
           $post = $this->input->post();
           $cert_id = $this->security->xss_clean($post['cert_id']);
 
-          $cert_poa=$this->model_ejecucion->get_certificado_poa($cert_id);
+          $cert_poa=$this->model_certificacion->get_certificado_poa($cert_id);
 
           if(count($cert_poa)!=0){
             $result = array(

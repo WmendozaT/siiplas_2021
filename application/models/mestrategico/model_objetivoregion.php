@@ -389,4 +389,30 @@ class Model_objetivoregion extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*-- Get Lista de Actividades Priorizados --*/
+    public function get_lista_form_priorizados_x_oregional($or_id){
+        $sql = '
+        select apg.*,p.*,ua.*,te.*,dist.*,tpsa.*,sa.*,pr.*,prog.*
+        from _productos pr
+        Inner Join _componentes as c On c.com_id=pr.com_id
+        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+        Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+        Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+        Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+        Inner Join _distritales as dist On dist.dist_id=p.dist_id
+        Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+        Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+        Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=pr.prod_id
+        where pr.or_id='.$or_id.' and apg.aper_gestion='.$this->gestion.' and pr.estado!=\'3\' and pr.prod_priori=\'1\' and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\'
+        order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,sa.serv_cod,pr.prod_cod asc';
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+
+
 }

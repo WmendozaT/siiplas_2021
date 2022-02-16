@@ -575,7 +575,7 @@ class Cobjetivo_gestion extends CI_Controller {
           <td>'.strtoupper($row['or_indicador']).'</td>
           <td>'.strtoupper($row['or_producto']).'</td>
           <td>'.strtoupper($row['or_resultado']).'</td>
-          <td align=right>'.round($row['or_meta'],2).'</td>
+          <td style="font-size: 17px;font-family: Arial;" align=right>'.round($row['or_meta'],2).'</td>
           <td bgcolor="#eaf2fd">'.$row['proy_sisin'].'</td>
           <td bgcolor="#eaf2fd">'.$nombre.'</td>
           <td bgcolor="#eaf2fd">'.$row['serv_cod'].' '.strtoupper($row['tipo_subactividad']).' '.strtoupper($row['serv_descripcion']).'</td>
@@ -604,7 +604,7 @@ class Cobjetivo_gestion extends CI_Controller {
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_indicador']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_unidades']).'</td>
           <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_linea_base'],2).'</b></td>
-          <td bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).' '.$por.'</b></td>
+          <td style="font-size: 17px;font-family: Arial;" bgcolor="#e7f3f1" align=right><b>'.round($row['prod_meta'],2).' '.$por.'</b></td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['mt_tipo']).'</td>
           <td bgcolor="#e7f3f1">'.strtoupper($row['prod_fuente_verificacion']).'</td>';
         $tabla.='
