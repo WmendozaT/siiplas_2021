@@ -422,9 +422,9 @@ $route['eval_obj/objetivos_regionales'] = 'ejecucion/cevaluacion_pei/objetivos_r
 $route['eval_obj/rep_meta_oregional/(:any)'] = 'ejecucion/cevaluacion_pei/reporte_meta_oregional/$1'; //// Reporte Meta Objetivo Regional
 $route['eval_obj/rep_meta_oregional_grafico/(:any)'] = 'ejecucion/cevaluacion_pei/cuadro_evaluacion_grafico/$1'; //// Reporte Meta Objetivo Regional Grafico
 
-/*-- EVALUACION OBJETIVOS REGIONALES (OPERACIONES) --*/
-$route['eval_oregionales'] = 'ejecucion/cevaluacion_oregional/menu_regional';  ///// Objetivos Estrategicos
-
+/*-- EVALUACION OBJETIVOS REGIONALES (OPERACIONES) 2022--*/
+$route['eval_oregionales'] = 'ejecucion/cevaluacion_oregional/menu_regional';  ///// Objetivos Regionales 2022 
+$route['rep_eval_oregional/(:any)'] = 'ejecucion/cevaluacion_oregional/reporte_evaluacion_form2/$1'; //// Reporte Meta Objetivo Regional 2022
 
 
 

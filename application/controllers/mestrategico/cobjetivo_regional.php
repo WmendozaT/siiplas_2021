@@ -446,5 +446,4 @@ class Cobjetivo_regional extends CI_Controller {
     $this->load->view('admin/mestrategico/objetivos_region/reporte_form2', $data);
   }
 
-
 }

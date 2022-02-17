@@ -48,7 +48,7 @@ class model_producto extends CI_Model {
 
 
 
-    /*----- RELACION INSUMO PRODUCTO (2019) -----*/
+    /*----- RELACION INSUMO PRODUCTO (VIGENTE) -----*/
     function insumo_producto($prod_id){
         $sql = 'select *
                 from _insumoproducto ip
@@ -73,7 +73,7 @@ class model_producto extends CI_Model {
     }
 
     /*--------- ULTIMO PRODUCTO (2019) ----------*/
-    function ult_operacion($com_id){
+/*    function ult_operacion($com_id){
         $sql = 'select p.*
                 from _productos as p
                 Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=p.prod_id
@@ -81,10 +81,10 @@ class model_producto extends CI_Model {
                 ORDER BY p.prod_cod desc LIMIT 1'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*=========== LISTA DE PRODUCTOS  ==============*/
-    function list_prod2($com_id){
+/*    function list_prod2($com_id){
         $sql = 'select *
             from _productos as p
             Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
@@ -95,7 +95,7 @@ class model_producto extends CI_Model {
             ORDER BY p.prod_cod asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
         function list_prod($com_id){
         $sql = 'select *
@@ -382,7 +382,7 @@ class model_producto extends CI_Model {
     }
     /*=================================================================================================*/
     /*=================================== LISTA DE PRODUCTOS 2018 ====================================*/
-    public function prod_terminal($prog){
+/*    public function prod_terminal($prog){
         $sql = 'select *
                 from poa_accionmplazo pam
                 Inner Join poa as poa On poa.poa_id=pam.poa_id
@@ -396,9 +396,9 @@ class model_producto extends CI_Model {
                 order by pt.ptm_id asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
-    public function prod_terminal2($prog){
+/*    public function prod_terminal2($prog){
         $sql = 'select pt.*
                 from aperturaprogramatica as ap
                 Inner Join resultado_corto_plazo as rc On rc.aper_id=ap.aper_id
@@ -407,7 +407,7 @@ class model_producto extends CI_Model {
                 ORDER BY pt.pt_id  asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
     /*==============================================================================================================*/
     /*================================= NRO DE PRODUCTOS ======================================*/
     public function productos_nro($id_c){
@@ -445,6 +445,15 @@ class model_producto extends CI_Model {
         $sql = 'select *
                 from prod_programado_mensual
                 where prod_id='.$prod_id.''; 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*------------------ GET PRODUCTO PROGRAMADO MES-------------------*/
+    public function get_mes_programado_form4($prod_id,$mes_id){ 
+        $sql = 'select *
+                from prod_programado_mensual
+                where prod_id='.$prod_id.' and m_id='.$mes_id.''; 
         $query = $this->db->query($sql);
         return $query->result_array();
     }

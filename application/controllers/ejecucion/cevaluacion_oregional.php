@@ -110,6 +110,36 @@ class Cevaluacion_oregional extends CI_Controller {
     }
 
 
+   //// Reporte de Evaluacion formulario N° 2
+  public function reporte_evaluacion_form2($dep_id){
+    $regional=$this->model_proyecto->get_departamento($dep_id);
+    $data['mes'] = $this->eval_oregional->mes_nombre();
+    $data['cabecera']=$this->eval_oregional->cabecera_form2($regional);
+    $data['oregional']=$this->eval_oregional->rep_lista_form2($dep_id);
+    $data['pie']=$this->eval_oregional->pie_form2($regional);
+    $data['titulo_pie']='EVALUACION_FORM2_'.$regional[0]['dep_departamento'].'_'.$this->gestion.'';
+
+    $this->load->view('admin/evaluacion/evaluacion_oregional/reporte_eval_form2', $data);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -617,102 +647,5 @@ class Cevaluacion_oregional extends CI_Controller {
       $this->load->view('admin/evaluacion/objetivo_regional/reporte_meta_oregion', $data);
     }
 
-    /*-------------------------- MENU -------------------*/
-/*    function menu($mod){
-        $enlaces=$this->menu_modelo->get_Modulos($mod);
-        for($i=0;$i<count($enlaces);$i++){
-          $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
-        }
-
-        $tabla ='';
-        for($i=0;$i<count($enlaces);$i++){
-            if(count($subenlaces[$enlaces[$i]['o_child']])>0){
-                $tabla .='<li>';
-                    $tabla .='<a href="#">';
-                        $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
-                        $tabla .='<ul>';    
-                            foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
-                            $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
-                        }
-                        $tabla .='</ul>';
-                $tabla .='</li>';
-            }
-        }
-
-        return $tabla;
-    }*/
-    /*=============================================================================================*/
-    /*------ NOMBRE MES -------*/
-    function mes_nombre(){
-        $mes[1] = 'ENE.';
-        $mes[2] = 'FEB.';
-        $mes[3] = 'MAR.';
-        $mes[4] = 'ABR.';
-        $mes[5] = 'MAY.';
-        $mes[6] = 'JUN.';
-        $mes[7] = 'JUL.';
-        $mes[8] = 'AGOS.';
-        $mes[9] = 'SEPT.';
-        $mes[10] = 'OCT.';
-        $mes[11] = 'NOV.';
-        $mes[12] = 'DIC.';
-        return $mes;
-    }
-
-    public function get_mes($mes_id){
-      $mes[1]='ENERO';
-      $mes[2]='FEBRERO';
-      $mes[3]='MARZO';
-      $mes[4]='ABRIL';
-      $mes[5]='MAYO';
-      $mes[6]='JUNIO';
-      $mes[7]='JULIO';
-      $mes[8]='AGOSTO';
-      $mes[9]='SEPTIEMBRE';
-      $mes[10]='OCTUBRE';
-      $mes[11]='NOVIEMBRE';
-      $mes[12]='DICIEMBRE';
-
-      $dias[1]='31';
-      $dias[2]='28';
-      $dias[3]='31';
-      $dias[4]='30';
-      $dias[5]='31';
-      $dias[6]='30';
-      $dias[7]='31';
-      $dias[8]='31';
-      $dias[9]='30';
-      $dias[10]='31';
-      $dias[11]='30';
-      $dias[12]='31';
-
-      $valor[1]=$mes[$mes_id];
-      $valor[2]=$dias[$mes_id];
-
-      return $valor;
-    }
-
-    /*------------------------------------- ROLES DE USUARIOS ------------------------------*/
-/*    function rolfun($rol){
-      $valor=false;
-      for ($i=1; $i <=count($rol) ; $i++) { 
-        $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$rol[$i]);
-        if(count($data)!=0){
-          $valor=true;
-          break;
-        }
-      }
-      return $valor;
-    }
-
-    function rolfunn($tp_rol){
-      $valor=false;
-      $data = $this->Users_model->get_datos_usuario_roles($this->session->userdata('fun_id'),$tp_rol);
-      if(count($data)!=0){
-        $valor=true;
-      }
-      return $valor;
-    }*/
-    /*-------------------------------------------------------------------------------------*/
 
 }
