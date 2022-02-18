@@ -189,9 +189,11 @@ class Eval_oregional extends CI_Controller{
               <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
               '.$this->get_temporalidad_objetivo_regional($row['or_id'],0).'
               <td style="font-family:Verdana;font-size: 20px;" align=center><b>'.$calificacion[3].' %</b></td>
-              <td><a href="#" data-toggle="modal" data-target="#modal_act_priorizados" class="btn btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a></td>
-              <td align=center><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/></a></td>
-              <td></td>
+              <td>
+                <a href="#" data-toggle="modal" data-target="#modal_act_priorizados" class="btn btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a>
+              </td>
+              <td align=center><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/></a></td>
+              <td><input type="button" id="btnGrafico" value="Dibuja"></td>
             </tr>';
           }
           $tabla.='

@@ -139,6 +139,7 @@
 								<!-- widget div-->
 								<div>
 									<?php echo $tabla;?>
+									
 								</div>
 								<!-- end widget div -->
 							</div>
@@ -201,9 +202,39 @@
                     <div class="modal-body">
                     <h2 class="alert alert-info"><center>% CUMPLIMIENTO - <?php echo $this->session->userData('gestion');?></center></h2>
                         <div class="row">
-                        	TRABAJANDO ... !!!!
-                           <!--  <div id="titulo"></div>
-                            <div id="content1"></div> -->
+                        	<div> 
+                       			<h3 class="text-primary" id="titulo_grafico"></h3><hr>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="well">
+											<center><div id="parametro_efi" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
+										</div>
+										
+										<!-- <div class="highlight">
+											<pre>
+												<code class="html">
+													<center><div id="parametro_efi"></div></center>
+												</code>
+											</pre>
+										</div> -->
+									</div>
+						
+													
+									<div class="col-sm-6">
+										<div class="well">
+											<center><div id="parametro_efi2" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
+										</div>
+										<!-- <div class="highlight">
+											<pre>
+												<code class="html">
+
+												</code>
+											</pre>
+										</div> -->
+									</div>
+								</div>
+								<hr>
+							</div>
                         </div>
                     </div>
                 </div>
@@ -235,12 +266,12 @@
 		<!-- IMPORTANT: APP CONFIG -->
 		<script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
-		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
-		<script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
 
 		<script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/modules/exporting.js"></script> 
+
+        <script src="<?php echo base_url(); ?>assets/captura/html2canvas.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/captura/canvasjs.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/captura/jsPdf.debug.js"></script>
 
 		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
@@ -282,7 +313,6 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 		<script src="<?php echo base_url(); ?>mis_js/seguimientooregional/seguimiento_oregional.js"></script> 
-
         <script type="text/javascript">
 			$(document).ready(function() {
 				pageSetUp();
@@ -292,6 +322,5 @@
 				$('#tabs').tabs();
 			})
 		</script>
-		
 	</body>
 </html>

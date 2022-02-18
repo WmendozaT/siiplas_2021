@@ -110,6 +110,38 @@ class Cevaluacion_oregional extends CI_Controller {
     }
 
 
+    /*---- FUNCION GET NIVEL DE CUMPLIMIENTO DE LA OPERACION (GRAFICOS) --------*/
+    public function ver_datos_avance_oregional(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $or_id = $this->security->xss_clean($post['or_id']); /// or id
+        $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+        $detalle_oregional=$this->model_objetivoregion->get_objetivosregional($post['or_id']); /// Objetivo Regional
+        $regional=$this->model_proyecto->get_departamento($dep_id);
+        $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($or_id,$this->tmes);
+
+        $titulo='
+        <b style="font-family:Verdana;font-size: 16px;">
+          OBJ. REGIONAL ('.strtoupper($regional[0]['dep_departamento']).'): '.$detalle_oregional[0]['or_codigo'].' '.$detalle_oregional[0]['or_objetivo'].'<br>
+          META '.$this->gestion.' : '.round($detalle_oregional[0]['or_meta'],2).'
+        </b>';
+
+
+          $result = array(
+            'respuesta' => 'correcto',
+            //'tabla'=>$this->eval_oregional->get_mis_form4_priorizados_x_oregional($or_id),
+            'titulo'=>$titulo,
+            'datos'=>$calificacion,
+            'trimestre'=>$this->tmes,
+          );
+
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
    //// Reporte de Evaluacion formulario N° 2
   public function reporte_evaluacion_form2($dep_id){
     $regional=$this->model_proyecto->get_departamento($dep_id);
