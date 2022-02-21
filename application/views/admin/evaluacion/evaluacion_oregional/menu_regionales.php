@@ -205,33 +205,45 @@
                         	<div> 
                        			<h3 class="text-primary" id="titulo_grafico"></h3><hr>
 								<div class="row">
-									<div class="col-sm-6">
+									<article class="col-sm-12 col-md-12 col-lg-6">
 										<div class="well">
 											<center><div id="parametro_efi" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
 										</div>
-										
-										<!-- <div class="highlight">
-											<pre>
-												<code class="html">
-													<center><div id="parametro_efi"></div></center>
-												</code>
-											</pre>
-										</div> -->
-									</div>
-						
-													
-									<div class="col-sm-6">
+										<hr>
+											<table class="table table-bordered" border=0.2 style="width:100%;">
+												<thead>
+													<tr>
+														<th><center>I TRIMESTRE</center></th>
+														<th><center>II TRIMESTRE</center></th>
+														<th><center>III TRIMESTRE</center></th>
+														<th><center>IV TRIMESTRE</center></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr id="tab"></tr>  
+												</tbody>
+								            </table>
+									</article>
+								
+									<article class="col-sm-12 col-md-12 col-lg-6">
 										<div class="well">
 											<center><div id="parametro_efi2" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
 										</div>
-										<!-- <div class="highlight">
-											<pre>
-												<code class="html">
-
-												</code>
-											</pre>
-										</div> -->
-									</div>
+										<hr>
+											<table class="table table-bordered" border=0.2 style="width:100%;">
+												<thead>
+													<tr>
+														<th><center>I TRIMESTRE</center></th>
+														<th><center>II TRIMESTRE</center></th>
+														<th><center>III TRIMESTRE</center></th>
+														<th><center>IV TRIMESTRE</center></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr id="tab_acumulado"></tr>  
+												</tbody>
+								            </table>
+									</article>
 								</div>
 								<hr>
 							</div>

@@ -138,200 +138,129 @@
     });
 
     request.done(function (response, textStatus, jqXHR) {
-
       if (response.respuesta == 'correcto') {
 
-          $('#titulo_grafico').html(response.titulo);
+        $('#titulo_grafico').html(response.titulo);
+        $('#tab').html(response.tab);
+        $('#tab_acumulado').html(response.tab_acu);
 
-          var chart = new CanvasJS.Chart("parametro_efi", {
-              animationEnabled: true,
-              exportEnabled: true,
-              title:{
-                  text: "EVALUACION POA ACUMULADO AL"             
-              }, 
-              axisY:{
-                  title: "Nro. de Act. Programadas y Cumplidas"
-              },
-              toolTip: {
-                  shared: true
-              },
-              legend:{
-                  cursor:"pointer",
-                  itemclick: toggleDataSeries
-              },
-              data: [{        
-                  type: "area",  
-                  name: "ACT. PROGRAMADAS",        
-                  showInLegend: true,
-                  dataPoints: [
-                    { label: "-", y: 0},   
-                    { label: "1er. Trimestre", y: 2,indexLabel: "a Act.", markerType: "square",  markerColor: "blue"},     
-                    { label: "2do. Trimestre", y: 3,indexLabel: "3 Act.", markerType: "square",  markerColor: "blue"},     
-                    { label: "3er. Trimestre", y: 2,indexLabel: "2 Act.", markerType: "square",  markerColor: "blue"},     
-                    { label: "4to. Trimestre", y: 5,indexLabel: "5 Act.", markerType: "square",  markerColor: "blue"}
-                  ]
-              }, 
-              {        
-                  type: "area",
-                  color: "green",
-                  name: "ACT. CUMPLIDAS",        
-                  showInLegend: true,
-                  dataPoints: [
-                    { label: "-", y: 0},  
-                    { label: "1er. Trimestre", y: 2,indexLabel: "2 Act.", markerType: "square",  markerColor: "green"},     
-                    { label: "2do. Trimestre", y: 3,indexLabel: "3 Act.", markerType: "square",  markerColor: "green"},     
-                    { label: "3er. Trimestre", y: 1,indexLabel: "1 Act.", markerType: "square",  markerColor: "green"},     
-                    { label: "4to. Trimestre", y: 3,indexLabel: "3 Act.", markerType: "square",  markerColor: "green"}
-                  ]
-              }]
-          });
-
-          chart.render();
-
-      
-
-
-
-
-
-      chart = new Highcharts.Chart({
-      chart: {
-        renderTo: 'parametro_efi2',  // Le doy el nombre a la gráfica
-        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
-      },
-      title: {
-        text: 'Datos de las Visitas'  // Titulo (Opcional)
-      },
-      subtitle: {
-        text: 'Jarroba.com'   // Subtitulo (Opcional)
-      },
-      // Pongo los datos en el eje de las 'X'
-      xAxis: {
-        categories: ['','Mar12','Abr12','May12','Jun12'],
-        // Pongo el título para el eje de las 'X'
+        ////////// TRIMESTRAL
+        chart = new Highcharts.Chart({
+        chart: {
+          renderTo: 'parametro_efi',  // Le doy el nombre a la gráfica
+          defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+        },
         title: {
-          text: 'Trimestres'
-        }
-      },
-      yAxis: {
-        // Pongo el título para el eje de las 'Y'
+          text: 'EJECUCIÓN DE OPERACIONES POR TRIMESTRE'  // Titulo (Opcional)
+        },
+        subtitle: {
+          text: ''   // Subtitulo (Opcional)
+        },
+        // Pongo los datos en el eje de las 'X'
+        xAxis: {
+          categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
+          // Pongo el título para el eje de las 'X'
+          title: {
+            text: 'N° Operaciones por Trimestre'
+          }
+        },
+        yAxis: {
+          // Pongo el título para el eje de las 'Y'
+          title: {
+            text: 'N° operaciones'
+          }
+        },
+        // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+        tooltip: {
+          enabled: true,
+          formatter: function() {
+            return '<b>'+ this.series.name +'</b><br/>'+
+              this.x +': '+ this.y +' '+this.series.name;
+          }
+        },
+        // Doy opciones a la gráfica
+        plotOptions: {
+          line: {
+            dataLabels: {
+              enabled: true
+            },
+            enableMouseTracking: true
+          }
+        },
+        // Doy los datos de la gráfica para dibujarlas
+        series: [
+            {
+              name: 'Meta Programado',
+              data: [0,response.matriz_acumulado[1][1],response.matriz_acumulado[1][2],response.matriz_acumulado[1][3],response.matriz_acumulado[1][4]]
+            },
+            {
+              name: 'Meta Ejecutado',
+              data: [0,response.matriz_acumulado[2][1],response.matriz_acumulado[2][2],response.matriz_acumulado[2][3],response.matriz_acumulado[2][4]]
+            },
+            {
+              name: '% Cumplimiento',
+              data: [0,response.matriz_acumulado[3][1],response.matriz_acumulado[3][2],response.matriz_acumulado[3][3],response.matriz_acumulado[3][4]]
+            }
+          ],
+          
+        });
+
+        /////////// ACUMULADO
+
+
+        chart = new Highcharts.Chart({
+        chart: {
+          renderTo: 'parametro_efi2',  // Le doy el nombre a la gráfica
+          defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+        },
         title: {
-          text: 'Nº Visitas'
-        }
-      },
-      // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
-      tooltip: {
-        enabled: true,
-        formatter: function() {
-          return '<b>'+ this.series.name +'</b><br/>'+
-            this.x +': '+ this.y +' '+this.series.name;
-        }
-      },
-      // Doy opciones a la gráfica
-      plotOptions: {
-        line: {
-          dataLabels: {
-            enabled: true
+          text: '% EJECUCIÓN ACUMULADO TRIMESTRAL'  // Titulo (Opcional)
+        },
+        subtitle: {
+          text: ''   // Subtitulo (Opcional)
+        },
+        // Pongo los datos en el eje de las 'X'
+        xAxis: {
+          categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
+          // Pongo el título para el eje de las 'X'
+          title: {
+            text: '% Operaciones Acumulados por Trimestre'
+          }
+        },
+        yAxis: {
+          // Pongo el título para el eje de las 'Y'
+          title: {
+            text: '% Ejecucion'
+          }
+        },
+        // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+        tooltip: {
+          enabled: true,
+          formatter: function() {
+            return '<b>'+ this.series.name +'</b><br/>'+
+              this.x +': '+ this.y +' '+this.series.name;
+          }
+        },
+        // Doy opciones a la gráfica
+        plotOptions: {
+          line: {
+            dataLabels: {
+              enabled: true
+            },
+            enableMouseTracking: true
+          }
+        },
+        // Doy los datos de la gráfica para dibujarlas
+        series: [{
+            name: '(%) Programado',
+            data: [0,response.matriz_acumulado[5][1],response.matriz_acumulado[5][2],response.matriz_acumulado[5][3],response.matriz_acumulado[5][4]]
           },
-          enableMouseTracking: true
-        }
-      },
-      // Doy los datos de la gráfica para dibujarlas
-      series: [{
-                    name: 'Visitas',
-                    data: [0,474,402,536,1041]
-                },
-                {
-                    name: 'Visitantes Únicos',
-                    data: [0,278,203,370,810]
-                },
-                {
-                    name: 'Páginas Vistas',
-                    data: [0,1648,1040,1076,2012]
-                }],
-    });
-/*var chart1 = new CanvasJS.Chart("parametro_efi", {
-      exportEnabled: true,
-      animationEnabled: true,
-      title:{
-        text: "EVALUACION POA AL " 
-      },
-      legend:{
-        cursor: "pointer",
-        itemclick: explodePastel
-      },
-      data: [{
-        type: "pie",
-        showInLegend: true,
-        toolTipContent: "{name}: <strong>{y} %</strong>",
-        indexLabel: "{name} - {y} %",
-        dataPoints: [
-          { y: response.datos[1], name: "CUMPLIDAS", color: '#57889c', exploded: true },
-          { y: response.datos[2], name: "EN PROCESO",color: '#f5e218' },
-          { y: response.datos[3], name: "NO CUMPLIDAS", color: '#a90329'}
-        ]
-      }]
-    });
-    chart1.render();*/
+          {
+            name: '(%) Ejecutado',
+            data: [0,response.matriz_acumulado[6][1],response.matriz_acumulado[6][2],response.matriz_acumulado[6][3],response.matriz_acumulado[6][4]]
+          }],
+        });
 
-/*          Highcharts.chart('parametro_efi', {
-            chart: {
-                type: 'pie',
-                options3d: {
-                    enabled: true,
-                    alpha: 45,
-                    beta: 0
-                }
-            },
-            title: {
-                text: ''
-            },
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    depth: 35,
-                    dataLabels: {
-                        enabled: true,
-                        format: '{point.name}'
-                    }
-                }
-            },
-            series: [{
-                type: 'pie',
-                name: 'Unidades',
-                data: [
-                    {
-                      name: 'INSATISFACTORIO : '+response.datos[1]+' %',
-                      y: response.datos[1],
-                      color: '#f95b4f',
-                    },
-
-                    {
-                      name: 'REGULAR : 3 %',
-                      y: 3,
-                      color: '#edd094',
-                    },
-
-                    {
-                     name: 'BUENO : 5 %',
-                      y: 5,
-                      color: '#afd5e5',
-                    },
-
-                    {
-                      name: 'OPTIMO : 6%',
-                      y: 6,
-                      color: '#4caf50',
-                      sliced: true,
-                      selected: true
-                    }
-                ]
-            }]
-          });*/
       }
       else{
           alertify.error("ERROR AL RECUPERAR INFORMACION");
@@ -340,101 +269,3 @@
     });
   }
 
-    function toggleDataSeries(e) {
-        if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) { 
-            e.dataSeries.visible = false;
-        }
-        else {
-            e.dataSeries.visible = true;            
-        }
-        chart.render();
-    }
-/*    function explodePastel (e) {
-        if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-        } else {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-        }
-        e.chart1.render();
-    }*/
-/* $(document).ready(function() {  
-     Highcharts.chart('parametro_efi', {
-      chart: {
-          type: 'pie',
-          options3d: {
-              enabled: true,
-              alpha: 45,
-              beta: 0
-          }
-      },
-      title: {
-          text: 'PARAMETRO DE EFICACIA AL '
-      },
-      tooltip: {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-      },
-      plotOptions: {
-          pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              depth: 35,
-              dataLabels: {
-                  enabled: true,
-                  format: '{point.name}'
-              }
-          }
-      },
-      series: [{
-          type: 'pie',
-          name: 'Unidades',
-          data: [
-              {
-                name: 'INSATISFACTORIO : 2 %',
-                y: 2,
-                color: '#f95b4f',
-              },
-
-              {
-                name: 'REGULAR : 3 %',
-                y: 3,
-                color: '#edd094',
-              },
-
-              {
-               name: 'BUENO : 5 %',
-                y: 5,
-                color: '#afd5e5',
-              },
-
-              {
-                name: 'OPTIMO : 6%',
-                y: 6,
-                color: '#4caf50',
-                sliced: true,
-                selected: true
-              }
-          ]
-      }]
-    });
-  });*/
-
-
-  /// srcip para graficos
-  $(document).ready(function () {
-    $("#btnGrafico").click(function () {
-      alert('hola mundo')
-      /*var asesor = $("asesor").val;
-      var v_neta_tot = $("v_neta_tot").val;
-      if (asesor && v_neta_tot != null)
-      {
-         var data = [];
-          var serie = new Array(asesor, v_neta_tot);
-          data.push(serie);
-          alert(serie);
-         // DibujarGrafico(data);
-
-      }else {
-              toastr["error"]('Atencion!No se  Cargaron los Datos ' + ' Estado ' + result.status + '  ' + result.statusText);
-     }*/
-    });
-  });

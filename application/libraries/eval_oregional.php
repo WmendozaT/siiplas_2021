@@ -150,7 +150,6 @@ class Eval_oregional extends CI_Controller{
             <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
             <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
             <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
-            <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
           </tr>
           </thead>
           <tbody>';
@@ -163,9 +162,11 @@ class Eval_oregional extends CI_Controller{
                 <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
                 <br>AJUSTAR ALINEACIÓN</center>';
 
+            $grafico='';
             if(count($metas_prior)!=0){
                 if(round($row['or_meta'],2)==$metas_prior[0]['meta_prog_actividades']){
                   $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.round($metas_prior[0]['meta_prog_actividades'],2).'</b></div>';
+                  $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/></a>';
                 }
                 else{
                   $boton_ajustar_apriorizados='
@@ -192,8 +193,7 @@ class Eval_oregional extends CI_Controller{
               <td>
                 <a href="#" data-toggle="modal" data-target="#modal_act_priorizados" class="btn btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a>
               </td>
-              <td align=center><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/></a></td>
-              <td><input type="button" id="btnGrafico" value="Dibuja"></td>
+              <td align=center>'.$grafico.'</td>
             </tr>';
           }
           $tabla.='
@@ -206,7 +206,7 @@ class Eval_oregional extends CI_Controller{
 
 
 
-    /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL --*/
+    /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL (TRIMESTRAL) --*/
     public function get_temporalidad_objetivo_regional($or_id,$tp_rep){
       /// tp_rep=0 normal
       /// tp_rep=1 Reporte
@@ -224,7 +224,7 @@ class Eval_oregional extends CI_Controller{
           }
 
 
-          if($tp_rep==0){
+          if($tp_rep==0){ /// VISTA NORMAL
             $tabla.='
             <td style="width:6%;" bgcolor="'.$color.'" align=center>
               <table class="table table-bordered" border=0.2 style="width:80%;">
@@ -243,7 +243,7 @@ class Eval_oregional extends CI_Controller{
               </table>
             </td>';
           }
-          else{
+          else{ /// VISTA PARA REPORTES
             $tabla.='
             <td style="width:4.5%;" align=center>
               <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:90%;" align=center>
@@ -259,7 +259,6 @@ class Eval_oregional extends CI_Controller{
             </td>';
           }
 
-          
         }
       }
       else{
@@ -271,6 +270,51 @@ class Eval_oregional extends CI_Controller{
           $tabla.='<td bgcolor="'.$color.'" align=center title="SIN TEMPORALIDAD">-</td>';
         }
       }
+
+      return $tabla;
+    }
+
+
+    /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL (ACUMULADO) --*/
+    public function get_temporalidad_acumulado_objetivo_regional($or_id,$tp_rep){
+      /// tp_rep=0 normal
+      /// tp_rep=1 Reporte
+
+      $valor=$this->tabla_trimestral_acumulado_x_oregional($or_id);
+      $tabla='';
+
+          if($tp_rep==0){ /// VISTA NORMAL
+            for ($i=1; $i <=4 ; $i++) {
+              $tabla.='
+              <td style="width:6%;" align=center>
+                <table class="table table-bordered" border=0.2 style="width:80%;">
+                  <tr>
+                    <td style="width:50%;"><b>(%) PROG.</b></td>
+                    <td style="width:50%;font-size: 12px; color:blue" align=right><b>'.$valor[5][$i].'%</b></td>
+                  </tr>
+                  <tr>
+                    <td><b>(%) EJEC.</b></td>
+                    <td style="font-size: 12px; color:blue" align=right><b>'.$valor[6][$i].'%</b></td>
+                  </tr>
+                </table>
+              </td>';
+            }
+          }
+          else{ /// VISTA PARA REPORTES
+            $tabla.='
+            <td style="width:4.5%;" align=center>
+              <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:90%;" align=center>
+                <tr>
+                  <td style="width:50%; font-size: 8px;"><b>%P.</b></td>
+                  <td style="width:50%;font-size: 8.5px;" align=right><b>'.$valor[5][$i].'%</b></td>
+                </tr>
+                <tr>
+                  <td style="width:50%; font-size: 8px;"><b>%E.</b></td>
+                  <td style="font-size: 8.5px;" align=right><b>'.$valor[2][$i].'%</b></td>
+                </tr>
+              </table>
+            </td>';
+          }
 
       return $tabla;
     }
@@ -301,6 +345,7 @@ class Eval_oregional extends CI_Controller{
           }
         }
 
+        //  $text=strval( $suma_prog);
           $valor[1]=$suma_prog; /// Programado Acumulado
           $valor[2]=$suma_ejec; /// Ejecutado Acumulado
           $valor[3]=$ejecucion; /// Ejecucion
@@ -310,6 +355,27 @@ class Eval_oregional extends CI_Controller{
     }
 
 
+    /*-- GENERA TABLA PARA EVALUACION TRIMESTRAL POR OBJETIVO REGIONAL --*/
+    public function tabla_trimestral_acumulado_x_oregional($or_id){
+
+        for ($i=1; $i <=4 ; $i++) { 
+          $valor=$this->calificacion_trimestral_acumulado_x_oregional($or_id,$i);
+          $matriz[1][$i]=$valor[1];  /// prog
+          $matriz[2][$i]=$valor[2];  /// ejec
+          $matriz[3][$i]=$valor[3];  /// % cumplimiento trimestral
+          $matriz[4][$i]=(100-$valor[3]);  /// % no cumplido
+        }
+
+        $total=$matriz[1][4];
+
+        for ($i=1; $i <=4 ; $i++) { 
+          $matriz[5][$i]=round((($matriz[1][$i]/$total)*100),2);  /// % Programado con respecto al total acumulado
+          $matriz[6][$i]=round((($matriz[2][$i]/$total)*100),2);  /// % Ejecutado con respecto al total acumulado
+        }
+
+      return $matriz;
+    }
+    
     /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL --*/
     public function create_temporalidad_oregional($dep_id){
       $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
@@ -389,6 +455,11 @@ class Eval_oregional extends CI_Controller{
         foreach($form4 as $row){
           $nro++;
           $suma_meta=$suma_meta+$row['prod_meta'];
+          $tp_indi='';
+          if($row['indi_id']==2){
+            $tp_indi='%';
+          }
+
           $tabla.='
           <tr style="font-size: 10px;">
             <td style="width:1%; height:5px;" align=center title='.$row['prod_id'].' bgcolor="#f9fdfc">'.$nro.'</td>';
@@ -410,8 +481,8 @@ class Eval_oregional extends CI_Controller{
             <td style="width:9%;">'.$row['prod_resultado'].'</td>
             <td style="width:5%;">'.$row['prod_unidades'].'</td>
             <td style="width:9%;">'.$row['prod_indicador'].'</td>
-            <td style="width:2%; font-size: 15px;" align=right><b>'.round($row['prod_meta'],2).'</b></td>
-            '.$this->genera_temporalidad_form4($row['prod_id']).'
+            <td style="width:2%; font-size: 15px;" align=right><b>'.round($row['prod_meta'],2).''.$tp_indi.'</b></td>
+            '.$this->genera_temporalidad_form4($row['prod_id'],$tp_indi).'
             <td style="width:8%;">'.$row['prod_fuente_verificacion'].'</td>
           </tr>';
         }
@@ -429,7 +500,7 @@ class Eval_oregional extends CI_Controller{
     }
 
     /// arma temoralidad de formulario N 4
-    public function genera_temporalidad_form4($prod_id){
+    public function genera_temporalidad_form4($prod_id,$tp_indi){
       $tabla='';
 
       if(count($this->model_producto->programado_producto($prod_id))!=0){
@@ -444,7 +515,7 @@ class Eval_oregional extends CI_Controller{
           if($i<=($this->tmes*3)){
             $color='#ecfbf9';
           }
-          $tabla.='<td align=right bgcolor="'.$color.'"><b>'.round($mes,2).'</b></td>';
+          $tabla.='<td align=right bgcolor="'.$color.'"><b>'.round($mes,2).''.$tp_indi.'</b></td>';
         }
       }
       else{
