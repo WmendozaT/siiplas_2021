@@ -249,7 +249,7 @@ class Model_objetivogestion extends CI_Model{
                 order by oge.og_codigo,oreg.or_codigo asc';
         }
         else{
-            $sql = 'select opge.*,oreg.*,oge.*,ae.*,oe.*
+            /*$sql = 'select opge.*,oge.*,ae.*,oe.*,oreg.*
                 from objetivo_gestion oge
                 Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
                 Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
@@ -257,20 +257,23 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
                 Inner Join _objetivos_estrategicos as oe on oe.obj_id = ae.obj_id
 
-                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and opge.prog_fis!=\'0\' and oreg.or_meta!=0
+                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and opge.prog_fis!=\'0\' and oreg.or_meta!=0 
+                order by oge.og_codigo,oreg.or_codigo asc';*/
+
+
+                $sql = 'select opge.*,oge.*,ae.*,oe.*,oreg.*
+                from objetivo_gestion oge
+                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+
+                Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
+                Inner Join _objetivos_estrategicos as oe on oe.obj_id = ae.obj_id
+
+                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.'
                 order by oge.og_codigo,oreg.or_codigo asc';
         }
         
-        /*$sql = 'select opge.*,oreg.*,oge.*,ae.*,oe.*
-                from objetivo_gestion oge
-                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
-                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
-
-                Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
-                Inner Join _objetivos_estrategicos as oe on oe.obj_id = ae.obj_id
-
-                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and opge.prog_fis!=\'0\'
-                order by oge.og_codigo,oreg.or_codigo asc';*/
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }

@@ -155,6 +155,10 @@ class Eval_oregional extends CI_Controller{
           <tbody>';
           $nro=0;
           foreach($lista_ogestion as $row){
+            $meta='';
+            if($row['indi_id']==2){
+              $meta='%';
+            }
             $color='';
             $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
             $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
@@ -186,7 +190,7 @@ class Eval_oregional extends CI_Controller{
               <td style="width:11%;">'.$row['or_resultado'].'</td>
               <td style="width:10%;">'.$row['or_indicador'].'</td>
               <td style="width:10%;">'.$row['or_verificacion'].'</td>
-              <td style="width:2%; font-size: 15px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
+              <td style="width:2%; font-size: 15px;" align=center><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
               <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
               '.$this->get_temporalidad_objetivo_regional($row['or_id'],0).'
               <td style="font-family:Verdana;font-size: 20px;" align=center><b>'.$calificacion[3].' %</b></td>

@@ -913,6 +913,11 @@ class Oregional extends CI_Controller{
       <tbody>';
     $nro=0;$monto_total=0;
     foreach($lista_ogestion as $row){
+      $meta='';
+      if($row['indi_id']==2){
+        $meta='%';
+      }
+
       $nro++;
       $tabla.='
       <tr style="font-size: 6.5px;">
@@ -924,7 +929,7 @@ class Oregional extends CI_Controller{
         <td style="width:16%;">'.$row['or_producto'].'</td>
         <td style="width:16%;">'.$row['or_resultado'].'</td>
         <td style="width:16%;">'.$row['or_indicador'].'</td>
-        <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
+        <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).''.$meta.'</b></td>
         <td style="width:18%;">'.$row['or_verificacion'].'</td>
       </tr>';
     }
@@ -972,6 +977,12 @@ class Oregional extends CI_Controller{
         if(count($presupuesto_pi)!=0){
           $ppto_pi=$presupuesto_pi[0]['presupuesto'];
         }
+
+        $meta='';
+        if($row['indi_id']==2){
+          $meta='%';
+        }
+
       $nro++;
       $tabla.='
       <tr style="font-size: 6.5px;">
@@ -983,7 +994,7 @@ class Oregional extends CI_Controller{
         <td style="width:15%;">'.$row['or_producto'].'</td>
         <td style="width:15%;">'.$row['or_resultado'].'</td>
         <td style="width:15%;">'.$row['or_indicador'].'</td>
-        <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
+        <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).''.$meta.'</b></td>
         <td style="width:18%;">'.$row['or_verificacion'].'</td>
         <td style="width:7%;text-align: right;">'.number_format(($ppto_gc+$ppto_pi), 2, ',', '.').'</td>
       </tr>';
