@@ -87,13 +87,17 @@ class Cevaluacion_oregional extends CI_Controller {
         $post = $this->input->post();
         $or_id = $this->security->xss_clean($post['or_id']); /// or id
         $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
-        $detalle_oregional=$this->model_objetivoregion->get_objetivosregional($post['or_id']); /// Objetivo Regional
+        $detalle_oregional=$this->model_objetivoregion->get_objetivosregional($or_id); /// Objetivo Regional
         $regional=$this->model_proyecto->get_departamento($dep_id);
+        $meta='';
+        if($detalle_oregional[0]['indi_id']==2){
+          $meta='%';
+        }
 
         $titulo='
         <b style="font-family:Verdana;font-size: 16px;">
           OBJ. REGIONAL ('.strtoupper($regional[0]['dep_departamento']).'): '.$detalle_oregional[0]['or_codigo'].' '.$detalle_oregional[0]['or_objetivo'].'<br>
-          META '.$this->gestion.' : '.round($detalle_oregional[0]['or_meta'],2).'
+          META '.$this->gestion.' : '.round($detalle_oregional[0]['or_meta'],2).' '.$meta.'
         </b>';
 
 

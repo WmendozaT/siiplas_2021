@@ -142,7 +142,37 @@ class Model_objetivoregion extends CI_Model{
 
     /*---------- GET OBJETIVO REGIONAL --------------*/
     public function get_objetivosregional($or_id){
-        $sql = 'select *
+        $sql = 'select 
+
+                oreg.or_id,
+                oreg.or_objetivo,
+                oreg.indi_id,
+                oreg.or_indicador,
+                oreg.or_producto,
+                oreg.or_resultado,
+                oreg.or_linea_base,
+                oreg.or_meta,
+                oreg.or_verificacion,
+                oreg.g_id,
+                oreg.estado,
+                oreg.or_codigo,
+                oreg.or_meta,
+                ogp.pog_id,
+                ogp.og_id,
+                ogp.dep_id,
+                ogp.prog_fis,
+                og.og_objetivo,
+                og.og_indicador,
+                og.og_producto,
+                og.og_resultado,
+                og.og_meta,
+                og.og_verificacion,
+                og.og_unidad,
+                og.estado,
+                ae.acc_id,
+                ae.obj_id,
+                ae.acc_descripcion
+
                 from objetivos_regionales oreg
                 Inner Join objetivo_programado_mensual as ogp On ogp.pog_id=oreg.pog_id
                 Inner Join objetivo_gestion as og On og.og_id=ogp.og_id
@@ -296,7 +326,7 @@ class Model_objetivoregion extends CI_Model{
 
 /////// EVALUACION DE OBJETIVOS REGIONALES (OPERACIONES) 2022
 
-    /*----- Obtiene suma de metas priorizados -----*/
+    /*----- Obtiene suma de metas priorizados (meta acumulado)-----*/
     public function get_suma_meta_form4_x_oregional($or_id){
         $sql = 'select * 
         from vista_suma_meta_form4_x_oregional
@@ -313,6 +343,22 @@ class Model_objetivoregion extends CI_Model{
         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
         where p.or_id='.$or_id.' and apg.aper_gestion='.$this->gestion.' and p.estado!=\'3\' and p.prod_priori=\'1\' and apg.aper_estado!=\'3\'
         group by p.or_id,apg.aper_gestion';*/
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+    /*----- Obtiene suma de metas priorizados (meta Recurrentes)-----*/
+    public function get_suma_meta_form4_x_oregional_recurrentes($or_id){
+        $sql = '
+        select pr.or_id, SUM(pr.prod_meta) suma, COUNT(pr.or_id) nro, round((SUM(pr.prod_meta)/COUNT(pr.or_id)),2) meta_prog_actividades
+        from _productos pr
+        Inner Join _componentes as c On c.com_id=pr.com_id
+        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+        where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\' and pr.indi_id=\'2\' and pr.mt_id=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\'
+        group by pr.or_id';
 
         $query = $this->db->query($sql);
 
