@@ -94,6 +94,7 @@
   function ver_actividades_priorizados(or_id,dep_id) {
     $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
     $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
+    $('#imprimir_act_priori').html('');
   //  alert(dep_id)
     var url = base+"index.php/ejecucion/cevaluacion_oregional/ver_actividades_priorizados";
     var request;
@@ -112,6 +113,7 @@
     if (response.respuesta == 'correcto') {
         $('#titulo').html(response.titulo);
         $('#content1').fadeIn(1000).html(response.tabla);
+        $('#imprimir_act_priori').fadeIn(1000).html(response.imprimir_act_priori);
     }
     else{
         alertify.error("ERROR AL RECUPERAR INFORMACION");

@@ -181,11 +181,12 @@
                         <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                     </div>
                     <div class="modal-body">
-                    <h2 class="alert alert-info"><center>MIS ACTIVIDADES PRIORIZADOS - <?php echo $this->session->userData('gestion');?></center></h2>
+                    	<h2 class="alert alert-info"><center>MIS ACTIVIDADES PRIORIZADOS - <?php echo $this->session->userData('gestion');?></center></h2>
                         <div class="row">
                             <div id="titulo"></div>
                             <div id="content1"></div>
                         </div>
+                        <div id="imprimir_act_priori"></div>
                     </div>
                 </div>
             </div>

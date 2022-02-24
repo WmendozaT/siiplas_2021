@@ -439,38 +439,72 @@ class Eval_oregional extends CI_Controller{
 
 
     //// LISTA DE ACTIVIDADES PRIORIZADOS POR OBJ REGIONAL
-    public function get_mis_form4_priorizados_x_oregional($or_id){
-      $tabla='<script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
+    public function get_mis_form4_priorizados_x_oregional($or_id,$tp_rep){
+      /// tp rep 0: normal
+      /// tprep 1: reporte 
+      $tabla='';
+      $tab='';
+      $titulo='';
+      $detalle_oregional=$this->model_objetivoregion->get_objetivosregional($or_id);
+      $regional=$this->model_proyecto->get_departamento($detalle_oregional[0]['dep_id']);
+
+        $meta='';
+        if($detalle_oregional[0]['indi_id']==2){
+          $meta='%';
+        }
+
+      if($tp_rep==0){
+        $tabla='<script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
+        $tab='id="dt_basic" class="table table-bordered" border=0.2 style="width:100%;"';
+        $size_th='font-size: 11px;';
+        $size_td='font-size: 10.5px;';
+        $size_meta='font-size: 16px;';
+      }
+      elseif($tp_rep==1){
+        $tab='cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center';
+        $size_th='font-size: 6.7px;';
+        $size_td='font-size: 6.5px;';
+        $size_meta='font-size: 7px;';
+        $titulo='
+
+        <b style="font-family:Arial;font-size: 10px;height:10px;>ACTIVIDADES PRIORIZADOS</b><br>
+        <div style="font-family:Arial;font-size: 10px;height:8px;">
+          OBJ. REGIONAL ('.strtoupper($regional[0]['dep_departamento']).'): '.$detalle_oregional[0]['og_codigo'].'.'.$detalle_oregional[0]['or_codigo'].'. '.$detalle_oregional[0]['or_objetivo'].'<br>
+          META '.$this->gestion.' : '.round($detalle_oregional[0]['or_meta'],2).' '.$meta.'<br>
+        </div><br>';
+      }
+
         $form4=$this->model_objetivoregion->get_lista_form_priorizados_x_oregional($or_id);
         $tabla.='
-        <hr>
+        
+        '.$titulo.'
         <div class="table-responsive">
-        <table id="dt_basic" class="table table-bordered" border=0.2 style="width:100%;">
+        <table '.$tab.'>
           <thead>
-            <tr style="font-size: 11px;" >
-              <th style="width:1%;height:10px;color:#FFF; text-align: center" bgcolor="#1c7368">#</th>
-              <th style="width:5%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>PROGRAMA</b></th>
-              <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>GASTO CORRIENTE / PROY. INVERSIÓN</b></th>
-              <th style="width:8%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>UNIDAD RESPONSABLE</b></th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">COD. ACT.</th>
-              <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">ACTIVIDAD</th>
-              <th style="width:9%;color:#FFF; text-align: center" bgcolor="#1c7368">RESULTADO</th>
-              <th style="width:5%;color:#FFF; text-align: center" bgcolor="#1c7368">RESPONSABLE</th>
-              <th style="width:9%;color:#FFF; text-align: center" bgcolor="#1c7368">INDICADOR</th>
-              <th style="width:2.5%;color:#FFF; text-align: center" bgcolor="#1c7368">META</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">ENE.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">FEB.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">MAR.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">ABR.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">MAY.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">JUN.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">JUL.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">AGO.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">SEPT.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">OCT.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">NOV.</th>
-              <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">DIC.</th>
-              <th style="width:8%;color:#FFF; text-align: center" bgcolor="#1c7368">MEDIO DE VERIFICACIÓN</th>
+            <tr style="'.$size_th.'" bgcolor="#eceaea" >
+              <th style="width:1%;height:10px; text-align: center">#</th>
+              <th style="width:5%; text-align: center"><b>PROGRAMA</b></th>
+              <th style="width:11%; text-align: center"><b>GASTO CORRIENTE / PROY. INVERSIÓN</b></th>
+              <th style="width:9%; text-align: center"><b>UNIDAD RESPONSABLE</b></th>
+              <th style="width:2%; text-align: center">COD. ACT.</th>
+              <th style="width:11%; text-align: center">ACTIVIDAD</th>
+              <th style="width:10%; text-align: center">RESULTADO</th>
+              <th style="width:7%; text-align: center">RESPONSABLE</th>
+              <th style="width:9%; text-align: center">INDICADOR</th>
+              <th style="width:3%; text-align: center">META</th>
+              <th style="width:2%; text-align: center">ENE.</th>
+              <th style="width:2%; text-align: center">FEB.</th>
+              <th style="width:2%; text-align: center">MAR.</th>
+              <th style="width:2%; text-align: center">ABR.</th>
+              <th style="width:2%; text-align: center">MAY.</th>
+              <th style="width:2%; text-align: center">JUN.</th>
+              <th style="width:2%; text-align: center">JUL.</th>
+              <th style="width:2%; text-align: center">AGO.</th>
+              <th style="width:2%; text-align: center">SEPT.</th>
+              <th style="width:2%; text-align: center">OCT.</th>
+              <th style="width:2%; text-align: center">NOV.</th>
+              <th style="width:2%; text-align: center">DIC.</th>
+              <th style="width:8%; text-align: center">MEDIO DE VERIFICACIÓN</th>
             </tr>
           </thead>
           <tbody>';
@@ -485,27 +519,27 @@ class Eval_oregional extends CI_Controller{
           }
 
           $tabla.='
-          <tr style="font-size: 10px;">
+          <tr style="'.$size_td.'">
             <td style="width:1%; height:5px;" align=center title='.$row['prod_id'].' bgcolor="#f9fdfc">'.$nro.'</td>';
               if($row['tp_id']==1){
                 $tabla.='
                 <td style="width:5%;" bgcolor="#f9fdfc"><b>'.$row['aper_programa'].' '.$row['proy_sisin'].' '.$row['aper_actividad'].'</b></td>
-                <td style="width:10%;" bgcolor="#f9fdfc"><b>'.$row['proy_nombre'].'</b></td>';
+                <td style="width:11%;" bgcolor="#f9fdfc"><b>'.$row['proy_nombre'].'</b></td>';
               }
               else{
                 $tabla.='
                 <td style="width:5%;" bgcolor="#f9fdfc"><b>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</b></td>
-                <td style="width:10%;" bgcolor="#f9fdfc"><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>';
+                <td style="width:11%;" bgcolor="#f9fdfc"><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>';
               }
             $tabla.='
             
-            <td style="width:8%;" bgcolor="#f9fdfc"><b>'.$row['serv_cod'].' .- '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</b></td>
-            <td style="width:2%; font-size: 15px;" align=center><b>'.$row['prod_cod'].'</b></td>
-            <td style="width:10%;">'.$row['prod_producto'].'</td>
-            <td style="width:9%;">'.$row['prod_resultado'].'</td>
-            <td style="width:5%;">'.$row['prod_unidades'].'</td>
+            <td style="width:9%;" bgcolor="#f9fdfc"><b>'.$row['serv_cod'].' .- '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</b></td>
+            <td style="width:2%; '.$size_meta.'" align=center><b>'.$row['prod_cod'].'</b></td>
+            <td style="width:11%;">'.$row['prod_producto'].'</td>
+            <td style="width:10%;">'.$row['prod_resultado'].'</td>
+            <td style="width:7%;">'.$row['prod_unidades'].'</td>
             <td style="width:9%;">'.$row['prod_indicador'].'</td>
-            <td style="width:2%; font-size: 15px;" align=right><b>'.round($row['prod_meta'],2).''.$tp_indi.'</b></td>
+            <td style="width:3%; '.$size_meta.'" align=right><b>'.round($row['prod_meta'],2).''.$tp_indi.'</b></td>
             '.$this->genera_temporalidad_form4($row['prod_id'],$tp_indi).'
             <td style="width:8%;">'.$row['prod_fuente_verificacion'].'</td>
           </tr>';
@@ -518,8 +552,8 @@ class Eval_oregional extends CI_Controller{
         $tabla.='
           </tbody>
           <tr>
-            <td colspan=9 align=right><b>META PRIORIZADO : </b></td>
-            <td style="width:2%; font-size: 15px;" align=right><b>'.round($suma_meta,2).''.$tp_indi.'</b></td>
+            <td style="height:10px;"colspan=9 align=right><b>META PRIORIZADO : </b></td>
+            <td style="width:2%; height:5px;'.$size_meta.'" align=right><b>'.round($suma_meta,2).''.$tp_indi.'</b></td>
             <td colspan=13></td>
           </tr>
         </table>
@@ -686,6 +720,60 @@ class Eval_oregional extends CI_Controller{
 
 
 
+  //// Lista de Formulario N° 4 priorizados por Operaciones Regional form 2
+  public function rep_lista_form4_priorizados($or_id,$tp_rep){ 
+   
+    $priorizados=$this->get_mis_form4_priorizados_x_oregional($or_id,$tp_rep);
+ //   $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
+
+/*    $tabla.='
+    <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+      <thead>
+        <tr style="font-size: 6.7px;" bgcolor="#eceaea" align=center>
+          <th style="width:0.9%;height:20px;">#</th>
+          <th style="width:2.2%;"><b>COD. ACE.</b></th>
+          <th style="width:2.2%;"><b>COD. ACP.</b></th>
+          <th style="width:2.2%;"><b>COD. OPE.</b></th>
+          <th style="width:12%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
+          <th style="width:12%;">PRODUCTO</th>
+          <th style="width:12%;">RESULTADO</th>
+          <th style="width:12%;">INDICADOR</th>
+          <th style="width:4%;">META</th>
+          <th style="width:4.5%;">I TRIM.</th>
+          <th style="width:4.5%;">II. TRIM.</th>
+          <th style="width:4.5%;">III. TRIM.</th>
+          <th style="width:4.5%;">IV. TRIM.</th>
+          <th style="width:8%;">CALIFICACIÓN</th>
+          <th style="width:10%;">MEDIO DE VERIFICACI&Oacute;N</th>
+        </tr>
+      </thead>
+      <tbody>';
+    $nro=0;$monto_total=0;
+    foreach($lista_ogestion as $row){
+      $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+      $nro++;
+      $tabla.='
+      <tr style="font-size: 6.5px;">
+        <td style="width:0.9%; height:18px;" align=center>'.$nro.'</td>
+        <td style="width:2.2%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
+        <td style="width:2.2%; font-size: 8px;" align="center"><b>'.$row['og_codigo'].'</b></td>
+        <td style="width:2.2%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
+        <td style="width:12%;">'.$row['or_objetivo'].'</td>
+        <td style="width:12%;">'.$row['or_producto'].'</td>
+        <td style="width:12%;">'.$row['or_resultado'].'</td>
+        <td style="width:12%;">'.$row['or_indicador'].'</td>
+        <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
+        '.$this->get_temporalidad_objetivo_regional($row['or_id'],1).'
+        <td style="font-family:Arial;font-size: 8px;" align=right><b>'.$calificacion[3].'%</b></td>
+        <td style="width:10%;">'.$row['or_verificacion'].'</td>
+      </tr>';
+    }
+    $tabla.='
+      </tbody>
+    </table>';*/
+
+    return $priorizados;
+  }
 
 
 
@@ -762,7 +850,27 @@ class Eval_oregional extends CI_Controller{
     return $tabla;
   }
 
+  //// Pie Regional act priorizados
+  public function pie_form4_priorizados(){ 
+    $tabla='';
+    $tabla.='
+    <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:97.5%;" align="center">
+          <tr>
+            <td style="width: 33%; height:18px;text-align: left">
+              POA - '.$this->session->userdata('gestion').". ".$this->session->userdata('rd_poa').'
+            </td>
+            <td style="width: 33%; text-align: center">
+              '.$this->session->userdata('sistema').'
+            </td>
+            <td style="width: 33%; text-align: right">
+              '.$this->session->userdata('funcionario').' - pag. [[page_cu]]/[[page_nb]]
+            </td>
+          </tr>
+      </table>';
 
+    return $tabla;
+  }
 
 
 

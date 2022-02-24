@@ -161,6 +161,7 @@ class Model_objetivoregion extends CI_Model{
                 ogp.og_id,
                 ogp.dep_id,
                 ogp.prog_fis,
+                og.og_codigo,
                 og.og_objetivo,
                 og.og_indicador,
                 og.og_producto,

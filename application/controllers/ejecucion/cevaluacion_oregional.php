@@ -100,11 +100,20 @@ class Cevaluacion_oregional extends CI_Controller {
           META '.$this->gestion.' : '.round($detalle_oregional[0]['or_meta'],2).' '.$meta.'
         </b>';
 
+        $boton_imprimir='
+          <hr>
+            <div align=right>
+              <a href="javascript:abreVentana(\''.site_url("").'/rep_list_form4_priori_oregional/'.$or_id.'\');" title="IMPRIMIR ACP DISTRIBUCION REGIONAL" class="btn btn-default">
+                <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR ACTIVIDADES PRIORITARIOS
+              </a>
+            </div>
+          </hr>';
 
           $result = array(
             'respuesta' => 'correcto',
-            'tabla'=>$this->eval_oregional->get_mis_form4_priorizados_x_oregional($or_id),
+            'tabla'=>$this->eval_oregional->get_mis_form4_priorizados_x_oregional($or_id,0),
             'titulo'=>$titulo,
+            'imprimir_act_priori'=>$boton_imprimir,
           );
 
         echo json_encode($result);
@@ -132,7 +141,6 @@ class Cevaluacion_oregional extends CI_Controller {
           OBJ. REGIONAL ('.strtoupper($regional[0]['dep_departamento']).'): '.$detalle_oregional[0]['or_codigo'].' '.$detalle_oregional[0]['or_objetivo'].'<br>
           META '.$this->gestion.' : '.round($detalle_oregional[0]['or_meta'],2).'
         </b>';
-
 
           $result = array(
             'respuesta' => 'correcto',
@@ -164,7 +172,26 @@ class Cevaluacion_oregional extends CI_Controller {
 
 
 
+  //// Reporte Lista de Actividades Priorizados por Objetivos Regioanles
+  public function reporte_act_priorizados_oregional($or_id){
+    $detalle_oregional=$this->model_objetivoregion->get_objetivosregional($or_id); /// Objetivo Regional
+    if(count($detalle_oregional)!=0){
+      $regional=$this->model_proyecto->get_departamento($detalle_oregional[0]['dep_id']);
+      $data['mes'] = $this->eval_oregional->mes_nombre();
+      $data['cabecera']=$this->eval_oregional->cabecera_form2($regional);
+      //$data['oregional']=$this->eval_oregional->rep_lista_form2($detalle_oregional[0]['dep_id']);
+      $data['oregional']=$this->eval_oregional->rep_lista_form4_priorizados($or_id,1);
 
+      $data['pie']=$this->eval_oregional->pie_form4_priorizados();
 
+      $data['titulo_pie']='LIST_FORM4_PRIORIZADOS_'.$regional[0]['dep_departamento'].'_'.$detalle_oregional[0]['og_codigo'].'.'.$detalle_oregional[0]['or_codigo'].'_'.$this->gestion.'';
+
+    //  echo $data['oregional'];
+      $this->load->view('admin/evaluacion/evaluacion_oregional/reporte_eval_form2', $data);
+    }
+    else{
+      echo "Error !!!!";
+    }
+  }
 
 }
