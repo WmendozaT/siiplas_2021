@@ -165,7 +165,9 @@ class Cevaluacion_oregional extends CI_Controller {
     $data['cabecera']=$this->eval_oregional->cabecera_form2($regional);
     $data['oregional']=$this->eval_oregional->rep_lista_form2($dep_id);
     $data['pie']=$this->eval_oregional->pie_form2($regional);
+    $data['cuadro_consolidado']=false;
     $data['titulo_pie']='EVALUACION_FORM2_'.$regional[0]['dep_departamento'].'_'.$this->gestion.'';
+    $data['dimension_inferior']='26mm';
 
     $this->load->view('admin/evaluacion/evaluacion_oregional/reporte_eval_form2', $data);
   }
@@ -179,14 +181,12 @@ class Cevaluacion_oregional extends CI_Controller {
       $regional=$this->model_proyecto->get_departamento($detalle_oregional[0]['dep_id']);
       $data['mes'] = $this->eval_oregional->mes_nombre();
       $data['cabecera']=$this->eval_oregional->cabecera_form2($regional);
-      //$data['oregional']=$this->eval_oregional->rep_lista_form2($detalle_oregional[0]['dep_id']);
       $data['oregional']=$this->eval_oregional->rep_lista_form4_priorizados($or_id,1);
-
       $data['pie']=$this->eval_oregional->pie_form4_priorizados();
-
       $data['titulo_pie']='LIST_FORM4_PRIORIZADOS_'.$regional[0]['dep_departamento'].'_'.$detalle_oregional[0]['og_codigo'].'.'.$detalle_oregional[0]['or_codigo'].'_'.$this->gestion.'';
+      $data['cuadro_consolidado']=true;
+      $data['dimension_inferior']='10mm';
 
-    //  echo $data['oregional'];
       $this->load->view('admin/evaluacion/evaluacion_oregional/reporte_eval_form2', $data);
     }
     else{

@@ -15,7 +15,7 @@ ob_start();
 </style>
 
 
-<page backtop="48mm" backbottom="26mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="48mm" backbottom="<?php echo $dimension_inferior; ?>" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <?php echo $cabecera;?>
