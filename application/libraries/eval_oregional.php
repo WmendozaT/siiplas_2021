@@ -132,7 +132,7 @@ class Eval_oregional extends CI_Controller{
         <div class="table-responsive">
         <table class="table table-bordered" border=0.2 style="width:100%;" id="datos">
           <thead>
-          <tr style="font-size: 11px;" >
+          <tr style="font-size: 11px;">
             <th style="width:1%;height:10px;color:#FFF; text-align: center" bgcolor="#1c7368">N° '.$this->conf_estado.'</th>
             <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACE.</b></th>
             <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACP.</b></th>
@@ -253,11 +253,11 @@ class Eval_oregional extends CI_Controller{
             <td style="width:4.5%;" align=center>
               <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:90%;" align=center>
                 <tr>
-                  <td style="width:50%; font-size: 8px;"><b>P.</b></td>
+                  <td style="width:50%; height: 1.5%; font-size: 8px;"><b>P.</b></td>
                   <td style="width:50%;font-size: 8.5px;" align=right><b>'.$valor[1].'</b></td>
                 </tr>
                 <tr>
-                  <td style="width:50%; font-size: 8px;"><b>E.</b></td>
+                  <td style="width:50%; height: 1.5%; font-size: 8px;"><b>E.</b></td>
                   <td style="font-size: 8.5px;" align=right><b>'.$valor[2].'</b></td>
                 </tr>
               </table>
@@ -306,19 +306,21 @@ class Eval_oregional extends CI_Controller{
             }
           }
           else{ /// VISTA PARA REPORTES
-            $tabla.='
-            <td style="width:4.5%;" align=center>
-              <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:90%;" align=center>
-                <tr>
-                  <td style="width:50%; font-size: 8px;"><b>%P.</b></td>
-                  <td style="width:50%;font-size: 8.5px;" align=right><b>'.$valor[5][$i].'%</b></td>
-                </tr>
-                <tr>
-                  <td style="width:50%; font-size: 8px;"><b>%E.</b></td>
-                  <td style="font-size: 8.5px;" align=right><b>'.$valor[2][$i].'%</b></td>
-                </tr>
-              </table>
-            </td>';
+            for ($i=1; $i <=4 ; $i++) {
+              $tabla.='
+              <td style="width:4.5%;" align=center>
+                <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:90%;" align=center>
+                  <tr>
+                    <td style="width:50%; height: 2%; font-size: 8px;"><b>%PROG.</b></td>
+                    <td style="width:50%;font-size: 8.5px;" align=right><b>'.$valor[5][$i].'%</b></td>
+                  </tr>
+                  <tr>
+                    <td style="width:50%; height: 2%; font-size: 8px;"><b>%EJEC.</b></td>
+                    <td style="font-size: 8.5px;" align=right><b>'.$valor[2][$i].'%</b></td>
+                  </tr>
+                </table>
+              </td>';
+            }
           }
 
       return $tabla;
@@ -722,57 +724,59 @@ class Eval_oregional extends CI_Controller{
 
   //// Lista de Formulario N° 4 priorizados por Operaciones Regional form 2
   public function rep_lista_form4_priorizados($or_id,$tp_rep){ 
-   
-    $priorizados=$this->get_mis_form4_priorizados_x_oregional($or_id,$tp_rep);
- //   $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
+    return $this->get_mis_form4_priorizados_x_oregional($or_id,$tp_rep);
+  }
 
-/*    $tabla.='
-    <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
-      <thead>
-        <tr style="font-size: 6.7px;" bgcolor="#eceaea" align=center>
-          <th style="width:0.9%;height:20px;">#</th>
-          <th style="width:2.2%;"><b>COD. ACE.</b></th>
-          <th style="width:2.2%;"><b>COD. ACP.</b></th>
-          <th style="width:2.2%;"><b>COD. OPE.</b></th>
-          <th style="width:12%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
-          <th style="width:12%;">PRODUCTO</th>
-          <th style="width:12%;">RESULTADO</th>
-          <th style="width:12%;">INDICADOR</th>
-          <th style="width:4%;">META</th>
-          <th style="width:4.5%;">I TRIM.</th>
-          <th style="width:4.5%;">II. TRIM.</th>
-          <th style="width:4.5%;">III. TRIM.</th>
-          <th style="width:4.5%;">IV. TRIM.</th>
-          <th style="width:8%;">CALIFICACIÓN</th>
-          <th style="width:10%;">MEDIO DE VERIFICACI&Oacute;N</th>
-        </tr>
-      </thead>
-      <tbody>';
-    $nro=0;$monto_total=0;
-    foreach($lista_ogestion as $row){
-      $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
-      $nro++;
-      $tabla.='
-      <tr style="font-size: 6.5px;">
-        <td style="width:0.9%; height:18px;" align=center>'.$nro.'</td>
-        <td style="width:2.2%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
-        <td style="width:2.2%; font-size: 8px;" align="center"><b>'.$row['og_codigo'].'</b></td>
-        <td style="width:2.2%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
-        <td style="width:12%;">'.$row['or_objetivo'].'</td>
-        <td style="width:12%;">'.$row['or_producto'].'</td>
-        <td style="width:12%;">'.$row['or_resultado'].'</td>
-        <td style="width:12%;">'.$row['or_indicador'].'</td>
-        <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
-        '.$this->get_temporalidad_objetivo_regional($row['or_id'],1).'
-        <td style="font-family:Arial;font-size: 8px;" align=right><b>'.$calificacion[3].'%</b></td>
-        <td style="width:10%;">'.$row['or_verificacion'].'</td>
-      </tr>';
+
+
+  //// REPORTE DE AVANCE TRIMESTRAL Y ACUMULADO POR CADA OPERACION
+  public function reporte_avance_trimestral_acumulado($or_id){ 
+    $detalle_oregional=$this->model_objetivoregion->get_objetivosregional($or_id); /// Objetivo Regional
+    $regional=$this->model_proyecto->get_departamento($detalle_oregional[0]['dep_id']);
+    $meta='';
+    if($detalle_oregional[0]['indi_id']==2){
+      $meta='%';
     }
-    $tabla.='
-      </tbody>
-    </table>';*/
 
-    return $priorizados;
+    $tabla='';
+    $tabla.='
+     <b style="font-family:Arial;font-size: 10px;height:10px;>ACTIVIDADES PRIORIZADOS</b><br>
+        <div style="font-family:Arial;font-size: 10px;height:8px;">
+          OBJ. REGIONAL ('.strtoupper($regional[0]['dep_departamento']).'): '.$detalle_oregional[0]['og_codigo'].'.'.$detalle_oregional[0]['or_codigo'].'. '.$detalle_oregional[0]['or_objetivo'].'<br>
+          META '.$this->gestion.' : '.round($detalle_oregional[0]['or_meta'],2).' '.$meta.'<br>
+        </div><br><br>
+
+        <div style="font-family:Arial;font-size: 10px;height:2%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AVANCE TRIMESTRAL</div>
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+          <thead>
+            <tr align=center>
+              <th style="width:20%; height:18px;">I TRIMESTRE</th>
+              <th style="width:20%;">II TRIMESTRE</th>
+              <th style="width:20%;">III TRIMESTRE</th>
+              <th style="width:20%;">IV TRIMESTRE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>'.$this->get_temporalidad_objetivo_regional($or_id,1).'</tr>  
+          </tbody>
+        </table>
+        <br><br>
+        <div style="font-family:Arial;font-size: 10px;height:2%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AVANCE TRIMESTRAL ACUMULADO</div>
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+          <thead>
+            <tr align=center>
+              <th style="width:20%; height:18px;">I TRIMESTRE</th>
+              <th style="width:20%;">II TRIMESTRE</th>
+              <th style="width:20%;">III TRIMESTRE</th>
+              <th style="width:20%;">IV TRIMESTRE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>'.$this->get_temporalidad_acumulado_objetivo_regional($or_id,1).'</tr>  
+          </tbody>
+        </table>';
+
+    return $tabla;
   }
 
 

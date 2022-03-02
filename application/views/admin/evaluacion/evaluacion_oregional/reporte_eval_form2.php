@@ -25,7 +25,23 @@ ob_start();
     </page_footer>
     <?php echo $oregional;?>
 </page>
+
+
 <?php
+    if ($cuadro_consolidado) {?>
+    <page orientation="portrait" backtop="48mm" backbottom="<?php echo $dimension_inferior; ?>" backleft="5mm" backright="5mm" pagegroup="new">
+        <page_header>
+            <br><div class="verde"></div>
+            <?php echo $cabecera;?>
+        </page_header>
+        <page_footer>
+            <?php echo $pie;?>
+        </page_footer>
+        
+        <?php echo $temporalidad;?>
+    </page>
+    <?php   
+}
 $content = ob_get_clean();
 //require_once(dirname(__FILE__).'/../html2pdf.class.php');
 require_once('assets/html2pdf-4.4.0/html2pdf.class.php');
@@ -39,3 +55,6 @@ catch(HTML2PDF_exception $e) {
     echo $e;
     exit;
 }
+
+
+

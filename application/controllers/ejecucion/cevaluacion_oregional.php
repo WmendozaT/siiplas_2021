@@ -184,9 +184,16 @@ class Cevaluacion_oregional extends CI_Controller {
       $data['oregional']=$this->eval_oregional->rep_lista_form4_priorizados($or_id,1);
       $data['pie']=$this->eval_oregional->pie_form4_priorizados();
       $data['titulo_pie']='LIST_FORM4_PRIORIZADOS_'.$regional[0]['dep_departamento'].'_'.$detalle_oregional[0]['og_codigo'].'.'.$detalle_oregional[0]['or_codigo'].'_'.$this->gestion.'';
-      $data['cuadro_consolidado']=true;
-      $data['dimension_inferior']='10mm';
+      $data['cuadro_consolidado']=false;
+      
+      $verif_temp=$this->model_objetivoregion->verif_temporalidad_oregional($or_id);
+      if(count($verif_temp)!=0){
+        $data['cuadro_consolidado']=true;
+        $data['temporalidad']=$this->eval_oregional->reporte_avance_trimestral_acumulado($or_id);
+      }
 
+      $data['dimension_inferior']='10mm';
+      
       $this->load->view('admin/evaluacion/evaluacion_oregional/reporte_eval_form2', $data);
     }
     else{
