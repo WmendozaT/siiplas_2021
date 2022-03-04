@@ -37,8 +37,29 @@
   }
 
 
+/*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL (EJECUCION)------*/
+$(function() {
+  $(".update_evaluacion").on("click", function(e) {
+  //  alert('hola mundo !!!')
+   
+    e.preventDefault();
+    var url = base+"index.php/ejecucion/cevaluacion_oregional/update_evaluacion_oregional";
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: $("#form").serialize(),
+      success: function(data) {
+        alert('todo bien !!!')
+        //$("#contenedor").html(data);
+      }
+    });
+    return false;
 
-  /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL ------*/
+  });
+});
+
+
+  /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL (PROGRAMACION)------*/
   $(function () {
     $(".update_temporalidad").on("click", function (e) {
         dep_id = $(this).attr('name');

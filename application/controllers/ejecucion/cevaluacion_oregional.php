@@ -40,6 +40,18 @@ class Cevaluacion_oregional extends CI_Controller {
     public function menu_regional(){
       $data['menu']=$this->eval_oregional->menu(4); //// genera menu
       $data['titulo']=$this->eval_oregional->titulo();
+      $data['update_eval_operacion']='';
+
+      if ($this->tp_adm==1) {
+        $data['update_eval_operacion']='
+          <div id="row">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div class="alert alert-info" role="alert">
+                <a href="#" data-toggle="modal" data-target="#modal_update_evaluacion" class="btn btn-primary update_evaluacion" style="width:20%;" title="ACTUALIZAR EVALUACION OBJETIVO REGIONAL" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="30"/>&nbsp;ACTUALIZAR DATOS PARA EVALUACIÓN DE OPERACIONES</a>    
+              </div>
+            </article>
+          </div>';
+      }
       
       if($this->tp_adm==1){
         $data['tabla']=$this->eval_oregional->regionales();
@@ -77,6 +89,15 @@ class Cevaluacion_oregional extends CI_Controller {
         echo json_encode($result);
       }else{
           show_404();
+      }
+    }
+
+
+    /*---- FUNCION EVALUACION POA (OBJETIVOS REGIONALES--------*/
+    public function update_evaluacion_oregional(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+          $post = $this->input->post();
+    
       }
     }
 

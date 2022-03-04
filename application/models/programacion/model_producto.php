@@ -11,11 +11,44 @@ class model_producto extends CI_Model {
     }
 
     
-    /*----- LISTA DE OPERACIONES (2021) para el SEguimiento POA -----*/
+    /*----- LISTA DE FORMULARIO 4 (2022) para el SEguimiento POA -----*/
     function list_operaciones_subactividad($com_id){
-        $sql = 'select *
+        /*$sql = 'select *
                 from v_operaciones_subactividad
-                where com_id='.$com_id.''; 
+                where com_id='.$com_id.''; */
+
+        $sql = '
+        select 
+            p.prod_id,
+            p.com_id,
+            p.prod_cod,
+            p.prod_producto,
+            p.indi_id,
+            mt.mt_id,
+            p.prod_indicador,
+            p.prod_linea_base,
+            p.prod_meta,
+            p.prod_fuente_verificacion,
+            p.prod_unidades,
+            p.prod_resultado,
+            p.acc_id,
+            p.prod_priori,
+            ore.or_id,
+            ore.or_codigo,
+            ore.or_objetivo,
+            ore.or_indicador,
+            ore.or_producto,
+            ore.or_resultado,
+            ore.or_verificacion,
+            mt.mt_tipo,
+            mt.mt_descripcion
+        
+          from _productos as p
+          Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
+          Inner Join indicador as tp On p.indi_id=tp.indi_id
+          Inner Join meta_relativo as mt On mt.mt_id=p.mt_id
+          where p.estado!=\'3\' and p.com_id='.$com_id.'
+          ORDER BY p.prod_cod asc'; 
 
         $query = $this->db->query($sql);
         return $query->result_array();

@@ -1611,7 +1611,7 @@ CREATE OR REPLACE VIEW public.v_operaciones_subactividad AS
 	    select 
 	    p.prod_id,
 	    p.com_id,
-            p.prod_cod,
+          p.prod_cod,
 	    p.prod_producto,
 	    p.indi_id,
 	    mt.mt_id,
@@ -1622,8 +1622,9 @@ CREATE OR REPLACE VIEW public.v_operaciones_subactividad AS
 	    p.prod_unidades,
 	    p.prod_resultado,
 	    p.acc_id,
+         p.prod_priori,
 	    ore.or_id,
-            ore.or_codigo,
+          ore.or_codigo,
 	    ore.or_objetivo,
 	    ore.or_indicador,
 	    ore.or_producto,
@@ -1632,12 +1633,12 @@ CREATE OR REPLACE VIEW public.v_operaciones_subactividad AS
 	    mt.mt_tipo,
 	    mt.mt_descripcion
 	    
-            from _productos as p
-            Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
-            Inner Join indicador as tp On p.indi_id=tp.indi_id
-            Inner Join meta_relativo as mt On mt.mt_id=p.mt_id
-            where p.estado!=3
-            ORDER BY p.prod_cod asc;
+          from _productos as p
+          Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
+          Inner Join indicador as tp On p.indi_id=tp.indi_id
+          Inner Join meta_relativo as mt On mt.mt_id=p.mt_id
+          where p.estado!=3
+          ORDER BY p.prod_cod asc;
 
 ALTER TABLE public.v_operaciones_subactividad
 OWNER TO postgres;

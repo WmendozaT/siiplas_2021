@@ -128,6 +128,7 @@
 				<section id="widget-grid" class="">
 					<div class="row">
 						<?php echo $titulo;?>
+						<?php echo $update_eval_operacion;?>
 	                </div>
 	                <div class="row">
 	                   <article class="col-sm-12 col-md-12 col-lg-12">
@@ -171,6 +172,26 @@
                 </div>
             </div>
         </div>
+     <!--  =============== -->
+
+      <!-- MODAL UPDATE DE EVALUACION POA - OBJETIVOS REGIONALES   -->
+<!--         <div class="modal fade" id="modal_update_evaluacion" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="mdialTamanio">
+                <div class="modal-content">
+                    <form id="form" novalidate="novalidate" method="post">
+                        <div id="content_valida">
+                            <center><div class="loading_evaluacion" align="center"><h2>Actualizando Evaluación de Operaciones <br><div id="tit"></div></h2><br><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /></div></center>
+                        </div>
+                        <div id="load_update_temp" style="display: none;"><center><img src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"><hr><b>ACTUALIZANDO EVALUACIÓN DE OPERACIONES ...</b></center></div>
+                            <p>
+                                <div id="but_update_temp" align="right" style="display:none;">
+                                    <button type="button" name="but_update" id="but_update" class="btn btn-success">ACEPTAR </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                            </p>
+                    </form>
+                </div>
+            </div>
+        </div> -->
      <!--  =============== -->
 
      <!-- MODAL LISTA DE ACTIVIDADES PRIORIZADOS -->

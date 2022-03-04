@@ -113,14 +113,13 @@ class Eval_oregional extends CI_Controller{
           <div id="row">
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <div class="alert alert-info" role="alert">
-                <a href="#" data-toggle="modal" data-target="#modal_update_temporalidad" class="btn btn-primary update_temporalidad" style="width:20%;" name="'.$dep_id.'" id="'.strtoupper($departamento[0]['dep_departamento']).'" title="ACTUALIZAR EVALUACION OBJETIVO REGIONAL" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="30"/>&nbsp;ACTUALIZAR TEMPORALIDAD - OBJETIVO REGIONAL</a>    
+                <a href="#" data-toggle="modal" data-target="#modal_update_temporalidad" class="btn btn-primary update_temporalidad" style="width:20%;" name="'.$dep_id.'" id="'.strtoupper($departamento[0]['dep_departamento']).'" title="ACTUALIZAR TEMPORALIDAD DE EVALUACION OBJETIVO REGIONAL" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="30"/>&nbsp;ACTUALIZAR TEMPORALIDAD - OBJETIVO REGIONAL</a>    
               </div>
             </article>
           </div>';
       }
-      
+
       $tabla.=' 
-      
         <div align="right">
           <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>EVALUACI&Oacute;N METAS REGIONALES (.PDF)</b></a>&nbsp;&nbsp;
           <a href="#" data-toggle="modal" data-target="#modal_evaluacion" name="'.$dep_id.'" class="btn btn-default evaluacion" title="MOSTRAR CUADRO DE EVALUACIÓN DE METAS"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>CUADRO DE EVALUACI&Oacute;N (GRAFICO)</b></a>
