@@ -40,19 +40,7 @@ class Cevaluacion_oregional extends CI_Controller {
     public function menu_regional(){
       $data['menu']=$this->eval_oregional->menu(4); //// genera menu
       $data['titulo']=$this->eval_oregional->titulo();
-      $data['update_eval_operacion']='';
 
-      if ($this->tp_adm==1) {
-        $data['update_eval_operacion']='
-          <div id="row">
-            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <div class="alert alert-info" role="alert">
-                <a href="#" data-toggle="modal" data-target="#modal_update_evaluacion" class="btn btn-primary update_evaluacion" style="width:20%;" title="ACTUALIZAR EVALUACION OBJETIVO REGIONAL" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="30"/>&nbsp;ACTUALIZAR DATOS PARA EVALUACIÓN DE OPERACIONES</a>    
-              </div>
-            </article>
-          </div>';
-      }
-      
       if($this->tp_adm==1){
         $data['tabla']=$this->eval_oregional->regionales();
       }
@@ -95,9 +83,52 @@ class Cevaluacion_oregional extends CI_Controller {
 
     /*---- FUNCION EVALUACION POA (OBJETIVOS REGIONALES--------*/
     public function update_evaluacion_oregional(){
-      if($this->input->is_ajax_request() && $this->input->post()){
-          $post = $this->input->post();
-    
+      if($this->input->is_ajax_request()){
+        $regionales=$this->model_proyecto->list_departamentos();
+        $return=false;
+        foreach($regionales as $reg){
+          $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($reg['dep_id']);
+          foreach($lista_ogestion as $row){
+            if($row['indi_id']==1){
+              $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
+              $denominador=1;
+            }
+            else{
+              $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
+              $denominador=$metas_prior[0]['nro']*3;
+            }
+
+            if(count($metas_prior)!=0){
+                /// --- eliminando ejecucion de Objetivos Regionales
+                  $this->db->where('or_id', $row['or_id']);
+                  $this->db->delete('temp_trm_ejec_objetivos_regionales');
+                /// ---->
+
+              if(round($row['or_meta'],2)==round($metas_prior[0]['meta_prog_actividades'],2)) { /// META == META ACUMULADO FORN 4
+                /// creamos registro ejecucion
+                for ($i=1; $i <=4 ; $i++) { 
+                  $get_dato_trimestre=$this->model_objetivoregion->get_suma_trimestre_ejecucion_oregional($row['or_id'],$i);
+                  if(count($get_dato_trimestre)!=0){
+                      /*--------------------------------------------------------*/
+                      $data_to_store2 = array( ///// Tabla temp prog oregional
+                        'or_id' => $row['or_id'], /// or id
+                        'trm_id' => $i, /// trimestre
+                        'ejec_fis' => ($get_dato_trimestre[0]['trimestre']/$denominador), /// valor
+                        'g_id' => $this->gestion, /// gestion                
+                      );
+                      $this->db->insert('temp_trm_ejec_objetivos_regionales', $data_to_store2);
+                      /*----------------------------------------------------------*/
+                  }
+                }
+              }
+            }
+
+          }
+
+          $return=true;
+        }
+
+        echo $return;
       }
     }
 

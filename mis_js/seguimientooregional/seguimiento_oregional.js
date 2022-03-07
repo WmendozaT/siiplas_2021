@@ -40,17 +40,22 @@
 /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL (EJECUCION)------*/
 $(function() {
   $(".update_evaluacion").on("click", function(e) {
-  //  alert('hola mundo !!!')
-   
+    document.getElementById("load_update_temp_general").style.display = 'block';
     e.preventDefault();
     var url = base+"index.php/ejecucion/cevaluacion_oregional/update_evaluacion_oregional";
     $.ajax({
       type: "POST",
       url: url,
-      data: $("#form").serialize(),
+    //  data: $("#form").serialize(),
       success: function(data) {
-        alert('todo bien !!!')
-        //$("#contenedor").html(data);
+       if(data.trim()){
+          window.location.reload(true);
+          alertify.success("ACTUALIZACIÓN EXITOSA ...");
+       }
+       else{
+        alertify.error("ERROR AL ACTUALIZAR DATOS DE EVALUACIÓN POA !!!");
+       }
+
       }
     });
     return false;

@@ -360,7 +360,7 @@ class model_producto extends CI_Model {
     }
     /*==============================================================================================================*/
 
-    /*--------- VERIF MES EVALUADO-OPERACION ---------*/
+    /*--------- VERIF MES EVALUADO-FORM 4 ---------*/
     public function verif_ope_evaluado_mes($prod_id,$mes_id){
         $sql = 'select *
                 from prod_ejecutado_mensual

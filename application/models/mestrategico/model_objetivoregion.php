@@ -327,6 +327,23 @@ class Model_objetivoregion extends CI_Model{
 
 /////// EVALUACION DE OBJETIVOS REGIONALES (OPERACIONES) 2022
 
+    /*---- lista Objetivo Regional General ----*/
+    public function lista_objetivosregionales_general(){
+        $sql = 'select opge.*,oge.*,ae.*,oe.*,oreg.*
+                from objetivo_gestion oge
+                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+
+                Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
+                Inner Join _objetivos_estrategicos as oe on oe.obj_id = ae.obj_id
+
+                where oge.g_id='.$this->gestion.'
+                order by oge.og_codigo,oreg.or_codigo asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*----- Obtiene suma de metas priorizados (meta acumulado)-----*/
     public function get_suma_meta_form4_x_oregional($or_id){
         $sql = 'select * 
@@ -401,7 +418,7 @@ class Model_objetivoregion extends CI_Model{
 
 
 
-    /*-- Obtiene suma total por trimestre para armar la tenporalidad por Objetivo Regional --*/
+    /*-- Obtiene suma total por trimestre para armar la tenporalidad por Objetivo Regional (Programacion) --*/
     public function get_suma_trimestre_para_oregional($or_id,$trimestre){
         $mes_ini=0; $mes_final=3;
 
@@ -433,6 +450,41 @@ class Model_objetivoregion extends CI_Model{
 
         $query = $this->db->query($sql);
 
+        return $query->result_array();
+    }
+
+
+    /*-- Obtiene suma total por trimestre para armar la tenporalidad por Objetivo Regional (Ejecucion) --*/
+    public function get_suma_trimestre_ejecucion_oregional($or_id,$trimestre){
+        $mes_ini=0; $mes_final=3;
+
+        if($trimestre==2) {
+          $mes_ini=3; $mes_final=6;
+        }
+        elseif ($trimestre==3) {
+          $mes_ini=6; $mes_final=9;
+        }
+        elseif ($trimestre==4) {
+          $mes_ini=9; $mes_final=12;
+        }
+
+
+        $sql = '
+        select p.or_id,SUM(pprog.trm) trimestre
+        from _productos p
+        Inner Join _componentes as c On c.com_id=p.com_id
+        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+        Inner Join (
+            select prod_id, SUM(pejec_fis) trm
+            from prod_ejecutado_mensual
+            where g_id='.$this->gestion.' and (m_id>'.$mes_ini.' and m_id<='.$mes_final.') and pejec_fis!=\'0\'
+            group by prod_id
+        ) as pprog On pprog.prod_id=p.prod_id
+        where p.or_id='.$or_id.' and apg.aper_gestion='.$this->gestion.' and p.estado!=\'3\' and p.prod_priori=\'1\' and apg.aper_estado!=\'3\'
+        group by p.or_id';
+
+        $query = $this->db->query($sql);
         return $query->result_array();
     }
 

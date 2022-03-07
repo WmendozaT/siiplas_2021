@@ -38,11 +38,27 @@ class Eval_oregional extends CI_Controller{
       $tabla='';
       $trimestre=$this->model_evaluacion->trimestre();
       $tabla.='
-        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <article class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
             <div class="well">
               <h2>EVALUACI&Oacute;N DE OBJETIVOS REGIONALES (OPERACIONES) '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2>
             </div>
         </article>';
+
+      if ($this->tp_adm==1) {
+        $tabla.='
+          <div id="row">
+            <article class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                <a href="#" data-toggle="modal" data-target="#modal_update_evaluacion" class="btn btn-default update_evaluacion" style="width:100%;" title="ACTUALIZAR EVALUACION OBJETIVO REGIONAL" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="30"/>&nbsp;UPDATE EVALUACIÓN DE OPERACIONES</a>    
+            </article>
+          </div>';
+      }
+
+      $tabla.='
+      <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="well" id="load_update_temp_general" style="display: none;" >
+          <center><img src="'.base_url().'/assets/img_v1.1/preloader.gif" style="width:13%; height:2.5%"><br><b>ACTUALIZANDO EVALUACIÓN POA - OPERACIONES ...</b></center>
+        </div>
+      </article>';
 
       return $tabla;
     } 
@@ -393,24 +409,23 @@ class Eval_oregional extends CI_Controller{
         }
         else{
           $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
-          $denominador=3;
+          $denominador=$metas_prior[0]['nro']*3;
         }
 
 
         
         if(count($metas_prior)!=0){
+
+            /// Borrando temporalidad programado de Objetivos Regionales
+            $this->db->where('or_id', $row['or_id']);
+            $this->db->delete('temp_trm_prog_objetivos_regionales');
+
+            /// --- eliminando ejecucion de Objetivos Regionales
+            $this->db->where('or_id', $row['or_id']);
+            $this->db->delete('temp_trm_ejec_objetivos_regionales');
+
+
             if(round($row['or_meta'],2)==round($metas_prior[0]['meta_prog_actividades'],2)) { /// META == META ACUMULADO FORN 4
-               /// Crear o actualizar la tabla de temporalidad
-              if(count($this->model_objetivoregion->verif_temporalidad_oregional($row['or_id']))!=0){
-                $this->db->where('or_id', $row['or_id']);
-                $this->db->delete('temp_trm_prog_objetivos_regionales');
-              }
-
-              if($row['indi_id']==2){
-                $denominador=$metas_prior[0]['nro']*3;
-              }
-
-
               /// creamos registro
                 for ($i=1; $i <=4 ; $i++) { 
                   $get_dato_trimestre=$this->model_objetivoregion->get_suma_trimestre_para_oregional($row['or_id'],$i);
@@ -425,12 +440,22 @@ class Eval_oregional extends CI_Controller{
                       $this->db->insert('temp_trm_prog_objetivos_regionales', $data_to_store2);
                       /*----------------------------------------------------------*/
                   }
+
+
+                  $get_dato_trimestre=$this->model_objetivoregion->get_suma_trimestre_ejecucion_oregional($row['or_id'],$i);
+                  if(count($get_dato_trimestre)!=0){
+                      /*--------------------------------------------------------*/
+                      $data_to_store2 = array( ///// Tabla temp prog oregional
+                        'or_id' => $row['or_id'], /// or id
+                        'trm_id' => $i, /// trimestre
+                        'ejec_fis' => ($get_dato_trimestre[0]['trimestre']/$denominador), /// valor
+                        'g_id' => $this->gestion, /// gestion                
+                      );
+                      $this->db->insert('temp_trm_ejec_objetivos_regionales', $data_to_store2);
+                      /*----------------------------------------------------------*/
+                  }
                 }
               
-            }
-            else{ /// ELIMINAMOS LA TEMPORALIDAD
-              $this->db->where('or_id', $row['or_id']);
-              $this->db->delete('temp_trm_prog_objetivos_regionales');
             }
         }
       }
@@ -570,21 +595,27 @@ class Eval_oregional extends CI_Controller{
       if(count($this->model_producto->programado_producto($prod_id))!=0){
         for ($i=1; $i <=12 ; $i++) { 
           $mes_prog=$this->model_producto->get_mes_programado_form4($prod_id,$i);
-          $mes=0;
+          $mes_ejec=$this->model_producto->verif_ope_evaluado_mes($prod_id,$i);
+          $mes=0;$mes_e=' 0';
+
           if(count($mes_prog)!=0){
             $mes=$mes_prog[0]['pg_fis'];
+          }
+
+          if(count($mes_ejec)!=0){
+            $mes_e=$mes_ejec[0]['pejec_fis'];
           }
 
           $color='';
           if($i<=($this->tmes*3)){
             $color='#ecfbf9';
           }
-          $tabla.='<td align=right bgcolor="'.$color.'"><b>'.round($mes,2).''.$tp_indi.'</b></td>';
+          $tabla.='<td style="width:2%; text-align: right" bgcolor="'.$color.'"><b>P:'.round($mes,2).''.$tp_indi.'</b><br><b>E:'.round($mes_e,2).''.$tp_indi.'</b></td>';
         }
       }
       else{
         for ($i=1; $i <=12 ; $i++) { 
-          $tabla.='<td align=right> - </td>';
+          $tabla.='<td style="width:2%; text-align: right" > - </td>';
         }
       }
 

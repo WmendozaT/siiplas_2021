@@ -233,7 +233,6 @@ class Model_objetivogestion extends CI_Model{
 
 
     /*=========== REPORTE OBJETIVO GESTION ===========*/
-
     /*---- lista Objetivo Regional,Gestion segun su regional ----*/
     public function get_list_ogestion_por_regional($dep_id){
         if($this->gestion==2021){
