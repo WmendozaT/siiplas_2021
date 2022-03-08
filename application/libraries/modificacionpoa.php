@@ -1001,7 +1001,7 @@ class Modificacionpoa extends CI_Controller{
                     <th style="width:2%;"></th>
                     <th style="width:5%;">PARTIDA</th>
                     <th style="width:15%;">DETALLE REQUERIMIENTO</th>
-                    <th style="width:10%;">UNIDAD</th>
+                    <th style="width:10%;">UNIDAD DE MEDIDA</th>
                     <th style="width:5%;">CANTIDAD</th>
                     <th style="width:5%;">UNITARIO</th>
                     <th style="width:5%;">TOTAL</th>
@@ -1019,7 +1019,12 @@ class Modificacionpoa extends CI_Controller{
                     <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">OCT.</th>
                     <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">NOV.</th>
                     <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">DIC.</th>
-                    <th style="width:8%;">OBSERVACIONES</th>
+                    <th style="width:8%;">OBSERVACIONES</th>';
+                    if($this->tp_adm==1){
+                      $tabla.='
+                      <th style="width:5%;"></th>';
+                    }
+                    $tabla.='
                     <th style="width:2%;">DELETE</th>
                   </tr>
                 </thead>
@@ -1087,7 +1092,26 @@ class Modificacionpoa extends CI_Controller{
                           <td>0</td>
                           <td>0</td>';
                     $tabla .= ' 
-                      <td style="width:8%;">'.$row['ins_observacion'].'</td>
+                      <td style="width:8%;">'.$row['ins_observacion'].'</td>';
+                      if($this->tp_adm==1){
+                        $tabla.='
+                        <td style="width:5%;">';
+                          $uresponsables = $this->model_modrequerimiento->list_uresponsables(); // Lista de productos
+                            $tabla .='<select class="form-control" style="width:100%;" onchange="doSelectAlert(event,this.value,'.$row['ins_id'].');">
+                              <option value="0">Seleccione ...</option>';
+                              foreach($uresponsables as $pr){
+                                if($pr['serv_id']==$row['com_id']){
+                                  $tabla .="<option value=".$pr['serv_id']." selected>".$pr['tipo_subactividad']." ".$pr['serv_descripcion']."</option>";
+                                }
+                                else{
+                                  $tabla .="<option value=".$pr['serv_id'].">".$pr['tipo_subactividad']." ".$pr['serv_descripcion']."</option>"; 
+                                }
+                              }
+                            $tabla.='</select>';
+                        $tabla.='
+                        </td>';
+                      }
+                      $tabla.='
                       <td style="width:2%;" bgcolor="#f3cbcb">';
                         if($valor_mod==0 & $valor_delete==0){
                           $tabla.='<center><input type="checkbox" name="ins[]" value="'.$row['ins_id'].'" onclick="scheck'.$cont.'(this.checked);"/></center>';

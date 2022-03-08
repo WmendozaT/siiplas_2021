@@ -69,6 +69,40 @@ function valida_eliminar(){
   }
 }
 
+
+    /// asignar unidad responsable para Bienes y Servicios 2022
+    function doSelectAlert(event,com_id,ins_id) {
+       alert(event+'--'+com_id+'--'+ins_id)
+        /*var option = event.srcElement.children[event.srcElement.selectedIndex];
+        if (option.dataset.noAlert !== undefined) {
+            return;
+        }
+
+          var mensaje='QUITAR PRIORIDAD';
+          var mensaje_resultado='SIN PRIORIDAD';
+          if(priori==1){
+              var mensaje='ASIGNAR PRIORIDAD';
+              var mensaje_resultado='PRIORIDAD ASIGNADO';
+          }
+          alertify.confirm("DESEA "+mensaje+" ?", function (a) {
+            if (a) {
+            var url = base+"index.php/programacion/producto/asignar_prioridad";
+            $.ajax({
+                type: "post",
+                url: url,
+                data:{prod_id:prod_id,prioridad:priori},
+                    success: function (data) {
+                    alertify.success(mensaje_resultado);  
+                    //window.location.reload(true);
+                }
+            });
+            } else {
+                alertify.error("OPCI\u00D3N CANCELADA");
+            }
+      });*/
+    }
+
+
  //// Cerrar Modificacion POA (Requerimientos)
   $(function () {
     $("#cerrar_mod").on("click", function () {

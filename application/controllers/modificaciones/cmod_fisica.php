@@ -257,7 +257,7 @@ class Cmod_fisica extends CI_Controller {
         $cite_id = $this->security->xss_clean($post['mcite_id']); /// Cite id
         $cite=$this->model_modfisica->get_cite_fis($cite_id); /// Datos cite
 
-        if($this->verif_mes==1){
+/*        if($this->verif_mes==3){
           $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
           $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
           $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
@@ -266,17 +266,23 @@ class Cmod_fisica extends CI_Controller {
           $prod = $producto[0]['prod_producto']; /// detalle producto
           $resultado = $producto[0]['prod_resultado']; /// Resultado
           $mverificacion = $producto[0]['prod_fuente_verificacion']; /// Medio de Verificacion
-        }
+        }*/
 
         if($this->tmes==1){
           $indi_id = $this->security->xss_clean($post['mtipo_i']); /// Tipo de Indicador
           $linea_base = $this->security->xss_clean($post['mlbase']); /// Linea Base
           $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
+          $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
+          $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
+          $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
         }
         else{
           $indi_id = $producto[0]['indi_id']; /// Tipo de Indicador
           $linea_base = $producto[0]['prod_linea_base']; /// Linea Base
           $tp_meta = $producto[0]['mt_id']; /// Tipo de Meta
+          $prod = $producto[0]['prod_producto']; /// detalle producto
+          $resultado = $producto[0]['prod_resultado']; /// Resultado
+          $mverificacion = $producto[0]['prod_fuente_verificacion']; /// Medio de Verificacion
         }
 
           $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador

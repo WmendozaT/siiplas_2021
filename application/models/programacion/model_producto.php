@@ -105,8 +105,8 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-    /*--------- ULTIMO PRODUCTO (2019) ----------*/
-/*    function ult_operacion($com_id){
+    /*--------- ULTIMO PRODUCTO (2021-2022) ----------*/
+    function ult_operacion($com_id){
         $sql = 'select p.*
                 from _productos as p
                 Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=p.prod_id
@@ -114,7 +114,7 @@ class model_producto extends CI_Model {
                 ORDER BY p.prod_cod desc LIMIT 1'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
     /*=========== LISTA DE PRODUCTOS  ==============*/
 /*    function list_prod2($com_id){

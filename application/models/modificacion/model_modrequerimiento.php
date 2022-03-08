@@ -509,4 +509,19 @@ class Model_modrequerimiento extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+    /*-------- Lista de Unidades Reponsables para alinear a bienes y servicios --------*/
+    public function list_uresponsables(){
+        $sql = 'select tpsa.*,sa.*
+                from _proyectos as p
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                where p.proy_id!=\'2647\' and p.proy_id!=\'2648\' and p.proy_id!=\'2650\' and p.proy_id!=\'2651\' and p.proy_id!=\'2653\' and p.proy_id!=\'2646\' and p.dist_id=\'22\' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and p.tp_id=\'4\' and apg.aper_proy_estado=\'4\' and apg.aper_estado!=\'3\' and c.estado!=\'3\'
+                ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }
