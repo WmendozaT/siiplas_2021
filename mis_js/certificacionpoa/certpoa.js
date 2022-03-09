@@ -254,6 +254,10 @@
     $("#prod_id").change(function () {
       $("#prod_id option:selected").each(function () {
         prod_id=$(this).val();
+        tp = $('[name="tp"]').val();
+        com_id = $('[name="com_id"]').val();
+
+      //  alert(prod_id+'--'+tp+'--'+com_id)
         if(prod_id!=0){
           document.getElementById("loading").style.display = 'block';
           document.getElementById("but").style.display = 'none';
@@ -267,7 +271,7 @@
               url: url,
               type: "POST",
               dataType: 'json',
-              data: "prod_id="+prod_id
+              data: "prod_id="+prod_id+"&tp="+tp+"&com_id="+com_id
           });
 
           request.done(function (response, textStatus, jqXHR) {

@@ -57,7 +57,7 @@ class Model_modrequerimiento extends CI_Model{
                 Inner Join partidas as par On par.par_id=i.par_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
                 where i.com_id='.$com_id.' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
-                order by i.form4_cod asc';
+                order by i.form4_cod, par.par_codigo, i.ins_id asc';
         }
         else{
             $sql = 'select p.com_id, p.prod_id,p.prod_cod,par.*,i.*
@@ -512,7 +512,7 @@ class Model_modrequerimiento extends CI_Model{
 
     /*-------- Lista de Unidades Reponsables para alinear a bienes y servicios --------*/
     public function list_uresponsables(){
-        $sql = 'select tpsa.*,sa.*
+        $sql = 'select c.*,tpsa.*,sa.*
                 from _proyectos as p
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id

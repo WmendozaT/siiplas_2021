@@ -2325,6 +2325,28 @@ class Cmod_insumo extends CI_Controller {
       return $valor;
     }
 
+
+
+    /*------ ASIGNAR UNIDAD RESPONSABLE AL PROGRAMA 72 (BIENES Y SERVICIO) ---------*/
+    function asignar_uresponsable(){
+      if($this->input->is_ajax_request()){
+          $this->form_validation->set_rules('com_id', 'id componente', 'required|trim');
+          $post = $this->input->post();
+          $com_id= $this->security->xss_clean($post['com_id']);
+          $ins_id= $this->security->xss_clean($post['ins_id']);
+           
+          $update_insumo = array(
+            'serv_id' => $com_id,
+          );
+          $this->db->where('ins_id', $ins_id);
+          $this->db->update('insumos', $update_insumo);
+              
+      }else{
+          show_404();
+      }
+    }
+
+
     /*---- GENERAR MENU -----*/
     function menu($mod){
       $enlaces=$this->menu_modelo->get_Modulos($mod);

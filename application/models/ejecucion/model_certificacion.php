@@ -74,12 +74,27 @@ class Model_certificacion extends CI_Model{
     }
 
 
-    /*------- LISTA OPERACIONES POR SUBACTIVIDAD CON SU PRESUPUESTO (2021) --------*/
+    /*------- LISTA FORM 4 POR SUBACTIVIDAD CON SU PRESUPUESTO (2021) --------*/
     public function get_operaciones_x_subactividad_ppto($com_id){
         $sql = '
             select *
             from vista_operaciones_por_subactividad_ppto
             where com_id='.$com_id.' and aper_gestion='.$this->gestion.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*------- LISTA FORM 4  PROG 72 - BIENES Y SERVICIOS (2022) --------*/
+    public function get_operaciones_x_subactividad_ppto_bienes_servicios($com_id){
+        $sql = '
+            select prod.prod_id,prod.prod_cod,prod.prod_producto
+            from insumos i
+            Inner Join _insumoproducto as iprod On iprod.ins_id=i.ins_id
+            Inner Join _productos as prod On prod.prod_id=iprod.prod_id
+            where i.serv_id='.$com_id.' and i.aper_id!=\'0\' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.' and prod.estado!=\'3\'
+            group by prod.prod_id,prod.prod_cod,prod.prod_producto
+            order by prod.prod_cod asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -151,13 +166,27 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
-    /*------- LISTA DE REQUERIMIENTOS POR PRODUCTOS--------*/
+    /*------- LISTA DE REQUERIMIENTOS POR FORM 4 --------*/
     public function requerimientos_operacion($prod_id){
         $sql = 'select *
                 from _insumoproducto ip
                 Inner Join insumos as i On i.ins_id=ip.ins_id
                 Inner Join partidas as par On par.par_id=i.par_id
                 where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
+                order by par.par_codigo,i.ins_id asc';
+            $query = $this->db->query($sql);
+        
+        return $query->result_array();
+    }
+
+
+    /*------- LISTA DE REQUERIMIENTOS POR FORM 4 EN EL PROG. BIENES Y SERVICIOS ------*/
+    public function requerimientos_x_uresponsables_bienes_servicios($prod_id,$com_id){
+        $sql = 'select *
+                from _insumoproducto ip
+                Inner Join insumos as i On i.ins_id=ip.ins_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                where ip.prod_id='.$prod_id.' and i.serv_id='.$com_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
                 order by par.par_codigo,i.ins_id asc';
             $query = $this->db->query($sql);
         
@@ -1112,11 +1141,20 @@ class Model_certificacion extends CI_Model{
 
     //// ====== SOLICITUD DE CERTIFICACION POA
 
-    /*---- Get Solicitud de Certificacion POA ----*/
+    /*---- Get Solicitud de Certificacion POA (datos completos)----*/
     public function get_solicitud_cpoa($sol_id){
         $sql = 'select *
                 from vista_solicitud_certificacionpoa s
                 where s.sol_id='.$sol_id.' and g_id='.$this->gestion.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*---- Get Solicitud de Certificacion POA (simpel consulta)----*/
+    public function get_solicitud_cpoa_aux($sol_id){
+        $sql = 'select *
+                from solicitud_cpoa_subactividad s
+                where s.sol_id='.$sol_id.' and s.g_id='.$this->gestion.'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

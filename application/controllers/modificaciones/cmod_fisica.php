@@ -218,7 +218,8 @@ class Cmod_fisica extends CI_Controller {
         }
 
         for ($i=1; $i <=12 ; $i++) { 
-          if($i<$this->verif_mes[1]){ /// Meses ejecutados
+          //if($i<$this->verif_mes[1]){ /// Meses ejecutados
+          if($i<2){ /// Meses ejecutados
             $this->prog_mes_eval[$i]=1;
           }
         }
@@ -324,7 +325,7 @@ class Cmod_fisica extends CI_Controller {
           $mes=0; 
           // $this->verif_mes[1]
           if($indi_id==1){
-            for ($i=$this->verif_mes[1]; $i <=12 ; $i++) { 
+            for ($i=$this->verif_mes[1]; $i <=12 ; $i++) {
               if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$i))==0){
               
                 $this->db->where('prod_id', $prod_id);

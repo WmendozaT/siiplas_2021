@@ -745,13 +745,24 @@ class Certificacionpoa extends CI_Controller{
 
 
  ///// SUBACTIVIDAD
-    //// SELECCION DE OPERACIONES 
-  public function select_mis_productos($com_id,$titulo){
-    $productos=$this->model_certificacion->get_operaciones_x_subactividad_ppto($com_id);
+    //// SELECCION DE FORMULARIO N 4 PARA SELECCIONAR REQUERIMIENTOS 
+  public function select_mis_productos($com_id,$titulo,$tp){
+    /// tp : 0 (Normal)
+    /// tp : 1 (Prog 72 - Bienes y Servicios)
+
+    if($tp==0){
+      $productos=$this->model_certificacion->get_operaciones_x_subactividad_ppto($com_id);
+    }
+    else{
+      $productos=$this->model_certificacion->get_operaciones_x_subactividad_ppto_bienes_servicios($com_id);
+    }
+
     $tabla='';
     $tabla='
       <form class="form-horizontal">
         <input name="base" type="hidden" value="'.base_url().'">
+        <input name="tp" type="hidden" value="'.$tp.'">
+        <input name="com_id" type="hidden" value="'.$com_id.'">
         <fieldset>
           <legend><b>'.$titulo.'</b></legend>
           <span class="badge bg-color-green" style="font-size: 35px;">Paso 1)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Seleccione la Actividad donde se encuentre alineado el items a Certificar</span><hr>
@@ -914,9 +925,18 @@ class Certificacionpoa extends CI_Controller{
 
 
 /*------- LISTA DE REQUERIMIENTOS PRE LISTA (2022) ------*/
-  public function list_requerimientos_2022($prod_id){
+  public function list_requerimientos_2022($prod_id,$tp,$com_id){
+    /// tp 0: lista de requerimientos por unidad responsable
+    /// tp 1: lista de requerimientos del prog 72 BIENES Y SERVICIOS
+
     $tabla='';
-    $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
+    if($tp==0){ /// Filtrado normal
+      $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
+    }
+    else{ /// filtrado para el programa 72 BIENES Y SERVICIO por unidad responsable
+      $requerimientos=$this->model_certificacion->requerimientos_x_uresponsables_bienes_servicios($prod_id,$com_id);
+    }
+
     $tabla='<style>
             input[type="checkbox"] {
               display:inline-block;
@@ -2261,6 +2281,23 @@ class Certificacionpoa extends CI_Controller{
                       </td>
                     </tr>';
                   }
+
+                  /*-----  Lista de Solicitudes filtrando a Bienes y servicios  -----*/
+                  if(count($this->model_certificacion->get_operaciones_x_subactividad_ppto_bienes_servicios($com_id))!=0){
+                    
+                    $tabla.='
+                    <tr>
+                      <td>ss</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>';
+                  }
                   $tabla.='
                   </tbody>
                 </table>
@@ -2676,6 +2713,9 @@ class Certificacionpoa extends CI_Controller{
                   <ul>
                     <li>
                       <a href="'.site_url("").'/solicitar_certpoa/'.$com_id.'">Solicitar Certificación POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
+                    </li>
+                    <li>
+                      <a href="'.site_url("").'/solicitar_certpoa_bservicios/'.$com_id.'">Solicitar Certificación POA (72 Bienes y Servicios)<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
                     </li>
                     <li>
                       <a href="'.site_url("").'/mis_solicitudes_cpoa/'.$com_id.'">Mis Solicitudes POA<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>

@@ -1020,9 +1020,9 @@ class Modificacionpoa extends CI_Controller{
                     <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">NOV.</th>
                     <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">DIC.</th>
                     <th style="width:8%;">OBSERVACIONES</th>';
-                    if($this->tp_adm==1){
+                    if($this->tp_adm==1 & $cite[0]['proy_id']==2651){
                       $tabla.='
-                      <th style="width:5%;"></th>';
+                      <th style="width:10%;"></th>';
                     }
                     $tabla.='
                     <th style="width:2%;">DELETE</th>
@@ -1093,18 +1093,18 @@ class Modificacionpoa extends CI_Controller{
                           <td>0</td>';
                     $tabla .= ' 
                       <td style="width:8%;">'.$row['ins_observacion'].'</td>';
-                      if($this->tp_adm==1){
+                      if($this->tp_adm==1 & $cite[0]['proy_id']==2651){
                         $tabla.='
-                        <td style="width:5%;">';
+                        <td style="width:10%;">';
                           $uresponsables = $this->model_modrequerimiento->list_uresponsables(); // Lista de productos
                             $tabla .='<select class="form-control" style="width:100%;" onchange="doSelectAlert(event,this.value,'.$row['ins_id'].');">
-                              <option value="0">Seleccione ...</option>';
+                              <option value="0">Seleccione unidad ..</option>';
                               foreach($uresponsables as $pr){
-                                if($pr['serv_id']==$row['com_id']){
-                                  $tabla .="<option value=".$pr['serv_id']." selected>".$pr['tipo_subactividad']." ".$pr['serv_descripcion']."</option>";
+                                if($pr['com_id']==$row['serv_id']){
+                                  $tabla .="<option value=".$pr['com_id']." selected>".$pr['tipo_subactividad']." ".$pr['serv_descripcion']."</option>";
                                 }
                                 else{
-                                  $tabla .="<option value=".$pr['serv_id'].">".$pr['tipo_subactividad']." ".$pr['serv_descripcion']."</option>"; 
+                                  $tabla .="<option value=".$pr['com_id'].">".$pr['tipo_subactividad']." ".$pr['serv_descripcion']."</option>"; 
                                 }
                               }
                             $tabla.='</select>';
