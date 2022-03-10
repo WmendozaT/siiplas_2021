@@ -1114,7 +1114,6 @@ class Ccertificacion_poa extends CI_Controller {
       }
 
       
-
       $tabla=$this->formulario_certpoa($prod_id,$tp,$com_id);
       
       $result = array(
@@ -1140,6 +1139,7 @@ class Ccertificacion_poa extends CI_Controller {
         <input type="hidden" name="tot_temp" id="tot_temp" value="0">
         <input type="hidden" name="prod_id" id="prod_id" value="'.$prod_id.'">
         <input type="hidden" name="com_id" id="com_id" value="'.$com_id.'">
+        <input type="hidden" name="tp" id="tp" value="'.$tp.'">
         <fieldset>
           <span class="badge bg-color-green" style="font-size: 35px;">Paso 2)</span> <span class="badge bg-color-green" style="font-size: 25px;"> Seleccione Items a certificar </span><hr>
         </fieldset>
@@ -1183,6 +1183,7 @@ class Ccertificacion_poa extends CI_Controller {
       $post = $this->input->post();
       $prod_id = $this->security->xss_clean($post['prod_id']);
       $com_id = $this->security->xss_clean($post['com_id']);
+      $tp = $this->security->xss_clean($post['tp']);
       $total = $this->security->xss_clean($post['tot']);
       $producto=$this->model_producto->get_producto_id($post['prod_id']);
       $verif_nro_cite=$this->model_modrequerimiento->verif_modificaciones_distrital($producto[0]['dist_id']);
@@ -1206,6 +1207,7 @@ class Ccertificacion_poa extends CI_Controller {
         'prod_id' => $prod_id,
         'g_id' => $this->gestion,
         'cite' => $nro_cite,
+        'tp' => $tp, /// normal o prog 72
         'num_ip' => $this->input->ip_address(), 
         'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
       );
