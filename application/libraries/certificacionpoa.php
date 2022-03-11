@@ -2085,7 +2085,7 @@ class Certificacionpoa extends CI_Controller{
                         <th style="width:5%;">CITE SOLICITUD</th>
                         <th style="width:5%;">FECHA SOLICITUD</th>
                         <th style="width:10%;">UNIDAD SOLICITANTE</th>
-                        <th style="width:15%;">OPERACIÓN</th>
+                        <th style="width:15%;">DESCRIPCIÓN ACTIVIDAD</th>
                         <th style="width:5%;">ESTADO</th>
                         <th style="width:20%;">OBSERVACIÓN</th>
                         <th style="width:10%;">SOLICITUD</th>
@@ -2230,7 +2230,8 @@ class Certificacionpoa extends CI_Controller{
                       <th style="width:1%;">#</th>
                       <th style="width:5%;">CITE SOLICITUD</th>
                       <th style="width:5%;">FECHA SOLICTUD</th>
-                      <th style="width:15%;">OPERACIÓN</th>
+                      <th style="width:5%;">UNIDAD RESPONSABLE</th>
+                      <th style="width:15%;">DETALLE ACTIVIDAD</th>
                       <th style="width:6%;">ESTADO</th>
                       <th style="width:8%;">CERTIFICACIÓN POA</th>
                       <th style="width:12%;">OBSERVACIÓN</th>
@@ -2261,6 +2262,7 @@ class Certificacionpoa extends CI_Controller{
                       <td title="'.$row['sol_id'].'">'.$nro.'</td>
                       <td>'.$row['cite'].'</td>
                       <td>'.date('d-m-Y',strtotime($row['fecha'])).'</td>
+                      <td><b>'.$row['tipo_subactividad'].'.- '.$row['serv_descripcion'].'</b></td>
                       <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
                       <td align=center><b>'.$estado.'</b></td>
                       <td><b>'.$codigo_cpoa.'</b></td>
@@ -2283,19 +2285,47 @@ class Certificacionpoa extends CI_Controller{
                   }
 
                   /*-----  Lista de Solicitudes filtrando a Bienes y servicios  -----*/
-                  if(count($this->model_certificacion->get_operaciones_x_subactividad_ppto_bienes_servicios($com_id))!=0){
-                    
+                  $solicitudes=$this->model_certificacion->lista_solicitudes_cpoa_bienes_servicios($com_id);
+                  foreach($solicitudes as $row){
+                    $nro++;
+                    $codigo_cpoa='';
+                    $color='#f7cbcb';
+                    $estado='EN REVISIÓN';
+
+                    if($row['estado']==1){
+                      $certpoa=$this->model_certificacion->get_solicitud_certificado($row['sol_id']);
+                      $codigo_cpoa=$certpoa[0]['cpoa_codigo'];
+                      $color='#d9f9f5';
+                      $estado='APROBADO';
+                    }
+                    elseif($row['estado']==2){
+                      $color='#fbecdb';
+                      $estado='RECHAZADO';
+                    }
                     $tabla.='
-                    <tr>
-                      <td>ss</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                    <tr bgcolor='.$color.'>
+                      <td title="'.$row['sol_id'].'">'.$nro.'</td>
+                      <td>'.$row['cite'].'</td>
+                      <td>'.date('d-m-Y',strtotime($row['fecha'])).'</td>
+                      <td><b>72 - BIENES Y SERVICIOS</b></td>
+                      <td>'.$row['prod_cod'].'.- '.$row['prod_producto'].'</td>
+                      <td align=center><b>'.$estado.'</b></td>
+                      <td><b>'.$codigo_cpoa.'</b></td>
+                      <td>'.$row['aclaracion'].'</td>
+                      <td align=center>
+                        <a href="#" class="btn btn-default ver_solicitud" style="width:100%;" title="VER SOLICITUD DE CERTIFICACION POA" name="'.$row['sol_id'].'">
+                          <img src="'.base_url().'assets/ifinal/requerimiento.png" width="22" height="22"/>
+                        </a>
+                      </td>
+                      <td align=center>';
+                        if($row['estado']==0 || $row['estado']==2){
+                          $tabla.='
+                          <a href="#" class="btn btn-default del_solicitud" style="width:100%;" title="ELIMINAR SOLICITUD CERTIFICACION POA"  name="'.$row['sol_id'].'">
+                            <img src="'.base_url().'assets/img/delete.png" width="22" height="22"/>
+                          </a>';
+                        }
+                      $tabla.='
+                      </td>
                     </tr>';
                   }
                   $tabla.='

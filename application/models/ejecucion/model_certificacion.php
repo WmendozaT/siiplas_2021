@@ -1169,6 +1169,21 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*---- Lista de Solicitud de Certificacion POA de una unidad al Programa 72 - Bienes y SErvicios ----*/
+    public function lista_solicitudes_cpoa_bienes_servicios($com_id){
+        $sql = 'select sol.*,p.prod_cod,p.prod_producto,sa.*,tpsa.*
+                from solicitud_cpoa_subactividad sol
+                Inner Join _componentes as c On c.com_id=sol.com_id
+                Inner Join _productos as p On p.prod_id=sol.prod_id
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact = c.tp_sact
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id = c.pfec_id
+                where sol.tp=\'1\' and sol.com_id='.$com_id.' and sol.estado!=\'3\' and sol.g_id='.$this->gestion.' and c.estado!=\'3\' and pfe.pfec_estado=\'1\'
+                ORDER BY c.com_id, sol.sol_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*---- Lista de Solicitud de Certificacion POA por Regional (SOLICITUDES)----*/
     public function lista_solicitudes_cpoa_regional($dep_id){
         $sql = 'select *

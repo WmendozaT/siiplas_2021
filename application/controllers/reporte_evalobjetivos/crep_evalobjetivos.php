@@ -407,7 +407,7 @@ class Crep_evalobjetivos extends CI_Controller {
                               <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">PLAN OPERATIVO ANUAL - '.$this->session->userdata('gestion').'</td>
                             </tr>
                             <tr>
-                              <td style="width:100%; height: 1.2%; font-size: 13pt;" align="center"><b>EVALUACI&Oacute;N DE OBJETIVOS REGIONALES </b></td>
+                              <td style="width:100%; height: 1.2%; font-size: 13pt;" align="center"><b>EVALUACI&Oacute;N DE ACCIONES DE CORTO PLAZO </b></td>
                             </tr>
                           </table>
                         </td>

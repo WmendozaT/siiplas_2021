@@ -661,7 +661,7 @@
                       request.done(function (response, textStatus, jqXHR) { 
                         reset();
                         if (response.respuesta == 'correcto') {
-                          //$("#modal_aprobar_solcert").modal("hide");
+                          $("#modal_aprobar_solcert").modal("hide");
 
                           $('#solicitudes').fadeIn(1000).html(response.certpoa);
                         } 
