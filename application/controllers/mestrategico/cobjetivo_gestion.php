@@ -549,7 +549,7 @@ class Cobjetivo_gestion extends CI_Controller {
           </div>
         </article>';
 
-        if($this->fun_id==399 || $this->fun_id==401){
+        if($this->fun_id==399 || $this->fun_id==401  || $this->fun_id==418){
           $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT. (Todos)
         }
         else{
@@ -580,7 +580,7 @@ class Cobjetivo_gestion extends CI_Controller {
           <td bgcolor="#eaf2fd">'.$nombre.'</td>
           <td bgcolor="#eaf2fd">'.$row['serv_cod'].' '.strtoupper($row['tipo_subactividad']).' '.strtoupper($row['serv_descripcion']).'</td>
           <td>';
-            if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401){
+            if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401 || $this->fun_id==418){
               $tabla.='<a href="'.site_url("").'/admin/prog/list_prod/'.$row['com_id'].'" target="_blank" class="btn btn-default" target title="MIS ACTIVIDADES"><img src="'.base_url().'assets/Iconos/folder_go.png" WIDTH="30" HEIGHT="30"/></a>';
             }
           $tabla.='
