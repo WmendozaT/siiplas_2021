@@ -171,11 +171,14 @@ class Eval_oregional extends CI_Controller{
           $nro=0;
           foreach($lista_ogestion as $row){
             $meta='';
-            $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
-            if($row['indi_id']==2){
-              $meta='%';
-              $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
+            if ($row['indi_id']==1 || $row['indi_id']==3) {
+              $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
             }
+            elseif ($row['indi_id']==2) {
+              $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
+              $meta='%';
+            }
+
             $color='';$grafico='';
             
             $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
@@ -184,8 +187,16 @@ class Eval_oregional extends CI_Controller{
                 <br>AJUSTAR ALINEACIÓN</center>';
 
             if(count($metas_prior)!=0){
-              if(round($row['or_meta'],2)==$metas_prior[0]['meta_prog_actividades']){
-                $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.round($metas_prior[0]['meta_prog_actividades'],2).''.$meta.'</b></div>';
+              if($row['indi_id']==1 || $row['indi_id']==2){
+                $meta_priorizado=round($metas_prior[0]['meta_prog_actividades'],2);
+              }
+              else{
+                $meta_priorizado=round($metas_prior[0]['nro'],2);
+              }
+
+
+              if(round($row['or_meta'],2)==$meta_priorizado){
+                $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.$meta_priorizado.''.$meta.'</b></div>';
                 $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/></a>';
               }
               else{
@@ -403,19 +414,17 @@ class Eval_oregional extends CI_Controller{
       $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
       foreach($lista_ogestion as $row){
 
-        if($row['indi_id']==1){
+        if($row['indi_id']==1 || $row['indi_id']==3){
           $denominador=1;
           $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
         }
         else{
           $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
-          $denominador=$metas_prior[0]['nro']*3;
+         // $denominador=3;
         }
 
 
-        
         if(count($metas_prior)!=0){
-
             /// Borrando temporalidad programado de Objetivos Regionales
             $this->db->where('or_id', $row['or_id']);
             $this->db->delete('temp_trm_prog_objetivos_regionales');
@@ -424,8 +433,19 @@ class Eval_oregional extends CI_Controller{
             $this->db->where('or_id', $row['or_id']);
             $this->db->delete('temp_trm_ejec_objetivos_regionales');
 
+            $metas_prioritarios=0;
+            if($row['indi_id']==1){ /// absoluto
+              $metas_prioritarios=round($metas_prior[0]['meta_prog_actividades'],2);
+            }
+            elseif($row['indi_id']==2) { /// Recurrente
+              $metas_prioritarios=round($metas_prior[0]['meta_prog_actividades'],2);
+              $denominador=$metas_prior[0]['nro']*3;
+            }
+            elseif($row['indi_id']==3){ /// Acumulativo 
+              $metas_prioritarios=round($metas_prior[0]['nro'],2);
+            } 
 
-            if(round($row['or_meta'],2)==round($metas_prior[0]['meta_prog_actividades'],2)) { /// META == META ACUMULADO FORN 4
+            if(round($row['or_meta'],2)==$metas_prioritarios) { /// META == META ACUMULADO FORN 4
               /// creamos registro
                 for ($i=1; $i <=4 ; $i++) { 
                   $get_dato_trimestre=$this->model_objetivoregion->get_suma_trimestre_para_oregional($row['or_id'],$i);

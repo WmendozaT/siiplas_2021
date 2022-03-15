@@ -48,6 +48,7 @@ class Cevaluacion_oregional extends CI_Controller {
         $data['tabla']=$this->eval_oregional->ver_relacion_ogestion($this->dep_id);
       }
 
+      //echo $this->eval_oregional->create_temporalidad_oregional(1);
       $this->load->view('admin/evaluacion/evaluacion_oregional/menu_regionales', $data);
     }
 

@@ -480,14 +480,30 @@ class Oregional extends CI_Controller{
                         </div>
 
                         <div class="row">
-                          <section class="col col-3">
+                          <section class="col col-2">
+                          <label class="label">TIPO DE INDICADOR</label>
+                              <select class="form-control" name="indi_id" id="indi_id">
+                                <option value="0">Seleccione tipo Indicador</option>';
+                                foreach($indi as $row){
+                                  if($row['indi_id']==$oregion[0]['indi_id']){
+                                    $tabla.='<option value="'.$row['indi_id'].'"selected>'.$row['indi_descripcion'].'</option>';
+                                  }
+                                  else{
+                                    $tabla.='<option value="'.$row['indi_id'].'">'.$row['indi_descripcion'].'</option>';
+                                  }
+                                }
+                               $tabla.='
+                              </select> 
+                            
+                          </section>
+                          <section class="col col-2">
                           <label class="label">LINEA BASE</label>
                             <label class="input">
                               <i class="icon-append fa fa-tag"></i>
                               <input type="text" name="lbase" id="lbase" title="LINEA BASE" value='.round($oregion[0]['or_linea_base'],2).' onkeyup="suma_programado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true">
                             </label>
                           </section>
-                          <section class="col col-3">
+                          <section class="col col-2">
                           <label class="label">META</label>
                             <label class="input">
                               <i class="icon-append fa fa-tag"></i>

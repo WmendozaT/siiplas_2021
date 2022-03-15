@@ -157,6 +157,7 @@ class Model_objetivoregion extends CI_Model{
                 oreg.estado,
                 oreg.or_codigo,
                 oreg.or_meta,
+                oreg.or_observacion,
                 ogp.pog_id,
                 ogp.og_id,
                 ogp.dep_id,
@@ -346,21 +347,21 @@ class Model_objetivoregion extends CI_Model{
 
     /*----- Obtiene suma de metas priorizados (meta acumulado)-----*/
     public function get_suma_meta_form4_x_oregional($or_id){
-        $sql = 'select * 
+        /*$sql = 'select * 
         from vista_suma_meta_form4_x_oregional
-        where or_id='.$or_id.' and aper_gestion='.$this->gestion.'';
+        where or_id='.$or_id.' and aper_gestion='.$this->gestion.'';*/
 
       //  $query = $this->db->query($sql);
 
         //// en caso de que no haya la vista
-        /*$sql = '
-        select p.or_id, SUM(p.prod_meta) as meta_prog_actividades, apg.aper_gestion
+        $sql = '
+        select p.or_id, SUM(p.prod_meta) as meta_prog_actividades, COUNT(p.or_id) nro
         from _productos p
         Inner Join _componentes as c On c.com_id=p.com_id
         Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
         where p.or_id='.$or_id.' and apg.aper_gestion='.$this->gestion.' and p.estado!=\'3\' and p.prod_priori=\'1\' and apg.aper_estado!=\'3\'
-        group by p.or_id,apg.aper_gestion';*/
+        group by p.or_id';
 
         $query = $this->db->query($sql);
 

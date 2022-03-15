@@ -137,6 +137,7 @@ class Cobjetivo_regional extends CI_Controller {
             'or_indicador' => strtoupper($this->security->xss_clean($post['indicador'])),
             'or_resultado' => strtoupper($this->security->xss_clean($post['resultado'])),
             'or_linea_base' => $this->security->xss_clean($post['lbase']),
+            'indi_id' => $this->security->xss_clean($post['indi_id']),
             'or_meta' => $this->security->xss_clean($post['meta']),
             'or_verificacion' => strtoupper($this->security->xss_clean($post['mverificacion'])),
             'or_observacion' => strtoupper($this->security->xss_clean($post['observaciones'])),
