@@ -811,10 +811,13 @@ class Rep_operaciones extends CI_Controller {
               <th style="width:10%;">COD. PROY.</th>
               <th style="width:3%;">COD. ACT.</th>
               <th style="width:35%;">'.$titulo.'</th>
-              <th style="width:3%;">COD. SUBACT.</th>
-              <th style="width:15%;">SUBACTIVIDAD</th>
+              <th style="width:3%;">COD. UNI.RESP.</th>
+              <th style="width:15%;">UNIDAD RESPONSABLE</th>
+              <th style="width:3%;">COD. ACP.</th>
               <th style="width:3%;">COD. OPE.</th>
-              <th style="width:25%;">OPERACI&Oacute;N</th>
+              <th style="width:25%;">DESCRIPCIÓN OPERACIÓN '.$this->gestion.'</th>
+              <th style="width:3%;">COD. ACT.</th>
+              <th style="width:25%;">DESCRIPCIÓN ACTIVIDAD</th>
               <th style="width:15%;">PARTIDA</th>
               <th style="width:25%;">REQUERIMIENTO</th>
               <th style="width:10%;">UNIDAD DE MEDIDA</th>
@@ -864,21 +867,26 @@ class Rep_operaciones extends CI_Controller {
                 $tabla.='</td>';
                 $tabla.='<td>'.$row['serv_cod'].'</td>';
                 $tabla.='<td>'.$row['tipo_subactividad'].' '.strtoupper($row['serv_descripcion']).'</td>';
-                $tabla.='<td>'.$row['prod_cod'].'</td>';
-                $tabla.='<td>'.$row['prod_producto'].'</td>';
-                $tabla.='<td>'.$row['par_codigo'].'</td>';
-                $tabla.='<td>'.strtoupper($row['ins_detalle']).'</td>';
-                $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                $tabla.='<td align="right">'.round($row['ins_cant_requerida'],2).'</td>';
-                $tabla.='<td align="right">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                $tabla.='<td align="right">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                $tabla.='<td align="right" bgcolor="#c1f5ee"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
+                
+                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#d9f5c9"><b>'.$row['og_codigo'].'</b></td>';
+                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#d9f5c9"><b>'.$row['or_codigo'].'</b></td>';
+                $tabla.='<td bgcolor="#d9f5c9">'.$row['or_objetivo'].'</td>';
+
+                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#e4f3dc"><b>'.$row['prod_cod'].'</b></td>';
+                $tabla.='<td bgcolor="#e4f3dc">'.$row['prod_producto'].'</td>';
+                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3"><b>'.$row['par_codigo'].'</b></td>';
+                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_detalle']).'</td>';
+                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_unidad_medida']).'</td>';
+                $tabla.='<td bgcolor="#f4f5f3" align="right">'.round($row['ins_cant_requerida'],2).'</td>';
+                $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+                $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                $tabla.='<td style="font-size: 13px;" align="right" bgcolor="#c1f5ee"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
 
                 for ($i=1; $i <=12 ; $i++) { 
-                  $tabla.='<td style="width:3%;">'.number_format($row['mes'.$i], 2, ',', '.').'</td>';
+                  $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.number_format($row['mes'.$i], 2, ',', '.').'</td>';
                 }
 
-                $tabla.='<td>'.strtoupper($row['ins_observacion']).'</td>';
+                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_observacion']).'</td>';
             $tabla.='</tr>';
           }
           $tabla.='

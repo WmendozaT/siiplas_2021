@@ -110,6 +110,11 @@ class Crep_subactividad extends CI_Controller {
           $salida='
           <form class="smart-form">
             <header><b>FORMULARIO N° 5 - REQUERIMIENTOS '.$this->gestion.'</b></header>
+            <br>
+            <div align=right>
+              <a href="'.site_url("").'/rep/exportar_requerimientos_servicio/'.$com_id.'" target=_blank class="btn btn-success btn-lg" title="EXPORTAR EN FORMATO EXCEL"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR EN FORMATO EXCEL</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <br>
             <iframe id="ipdf" width="100%"  height="800px;" src="'.base_url().'index.php/proy/orequerimiento_proceso/'.$com_id.'"></iframe>
           </form>';
         }
@@ -117,6 +122,11 @@ class Crep_subactividad extends CI_Controller {
           $salida='
           <form class="smart-form">
             <header><b>CERTIFICACIÓN POA, FORMULARIO N° 5 - REQUERIMIENTOS '.$this->gestion.'</b></header>
+            <br>
+            <div align=right>
+              <a href="'.site_url("").'/rep/exportar_requerimientos_servicio/'.$com_id.'" target=_blank class="btn btn-success btn-lg" title="EXPORTAR EN FORMATO EXCEL"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR EN FORMATO EXCEL</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <br>
             <iframe id="ipdf" width="100%"  height="800px;" src="'.base_url().'index.php/rep/rep_requerimientos_ejecucion_servicio/'.$com_id.'"></iframe>
           </form>';
         }

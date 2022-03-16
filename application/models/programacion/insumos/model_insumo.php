@@ -139,6 +139,7 @@ class Model_insumo extends CI_Model{
                 i.ins_unidad_medida,
                 i.ins_gestion,
                 i.ins_observacion,
+                i.ins_monto_certificado,
                 par.par_id,
                 par.par_codigo,
                 par.par_nombre

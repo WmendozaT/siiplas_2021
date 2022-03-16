@@ -358,166 +358,6 @@
       return $tabla;
     }
 
-    /*------ EXPORTAR FORM 2 LISTA DE OPERACIONES POR REGIONAL (2020-2021) -------*/
-/*    public function operaciones_regional($dep_id,$tp_id){
-
-      $dep=$this->model_proyecto->get_departamento($dep_id);
-      if(count($dep)!=0){
-        $titulo='REGIONAL : '.mb_convert_encoding($dep[0]['dep_departamento'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
-        $operaciones=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Operaciones a Nivel de Regionales
-        $tabla=$this->lista_operaciones_regional_regional($operaciones,$titulo,$tp_id); // Regional Operaciones Distrital 2020-2021
-
-        date_default_timezone_set('America/Lima');
-        $fecha = date("d-m-Y H:i:s");
-        header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment; filename=CONSOLIDADO_OPERACIONES_REGIONAL_".$dep[0]['dep_departamento']."_$fecha.xls"); //Indica el nombre del archivo resultante
-        header("Pragma: no-cache");
-        header("Expires: 0");
-        echo $tabla;
-      }
-      else{
-        echo "Error !!! ";
-      }
-    }*/
-
-     /*----- LISTA DE OPERACIONES POR REGIONAL (2020-2021) ----*/
-/*    public function lista_operaciones_regional_regional($operaciones,$titulo,$tp_id){
-        $titulo_sub='UNIDAD RESPONSABLE';
-        if($tp_id==4){
-          $titulo_sub='SUBACTIVIDAD';
-        }
-
-        $tabla='';
-        $tabla .='
-          <style>
-            table{font-size: 9px;
-              width: 100%;
-              max-width:1550px;
-              overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-          </style>';
-
-        $tabla.='
-          <table border="1" cellpadding="0" cellspacing="0" class="tabla">
-              <thead>
-                <tr class="modo1">
-                  <td colspan=31 align=center style="height:50px;"><b> CONSOLIDADO OPERACIONES '.strtoupper($titulo).'</b><br></td>
-                </tr>
-                <tr style="background-color: #66b2e8">
-                  <th style="width:3%; height:50px;background-color: #eceaea;">COD. DA.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. UE.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
-                  <th style="width:10%;background-color: #eceaea;">COD. PROY.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
-                  <th style="width:35%;background-color: #eceaea;">ACTIVIDAD</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. SUBACT.</th>
-                  <th style="width:15%;background-color: #eceaea;">'.$titulo_sub.'</th>';
-                  if($tp_id==1){
-                    $tabla.='<th style="width:10%;background-color: #eceaea;">COMPONENTE</th>';
-                  }
-                  $tabla.='
-                  <th style="width:3%;background-color: #eceaea;">COD. ACE.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. ACP.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. OR.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. OPE.</th>
-                  <th style="width:25%;background-color: #eceaea;">OPERACI&Oacute;N</th>
-                  <th style="width:15%;background-color: #eceaea;">RESULTADO</th>
-                  <th style="width:15%;background-color: #eceaea;">INDICADOR</th>
-                  <th style="width:5%;background-color: #eceaea;">LINEA BASE</th>
-                  <th style="width:5%;background-color: #eceaea;">META</th>
-                  <th style="width:15%;background-color: #eceaea;">MEDIO DE VERIFICACIÓN</th>
-                  <th style="width:4%;background-color: #eceaea;">P. ENE.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. FEB.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. MAR.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. ABR.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. MAY.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. JUN.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. JUL.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. AGOS.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. SEPT.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. OCT.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. NOV.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. DIC.</th>
-                  <th style="width:6%;background-color: #eceaea;">PRESUPUESTO POA</th>
-                </tr>
-              </thead>
-            <tbody>';
-            $nro=0;
-            foreach ($operaciones as $row){
-              $monto=$this->model_producto->monto_insumoproducto($row['prod_id']);
-              $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
-              
-              $ptto=0;
-              if(count($monto)!=0){
-                $ptto=$monto[0]['total'];
-              }
-              $nro++;
-
-               $tabla.='<tr>';
-                $tabla.='<td style="height:50px;">\''.strtoupper($row['dep_cod']).'\'</td>';
-                $tabla.='<td>\''.strtoupper($row['dist_cod']).'\'</td>';
-                $tabla.='<td>\''.strtoupper($row['aper_prog']).'\'</td>';
-                $tabla.='<td>';
-                if($row['tp_id']==1){
-                  $tabla.=''.$row['proy_sisin'].'';
-                }
-                else{
-                  $tabla.='\''.strtoupper($row['aper_proy']).'\'';
-                }
-                $tabla.='</td>';
-                $tabla.='<td>\''.strtoupper($row['aper_act']).'\'</td>';
-                $tabla.='<td>';
-                  if($row['tp_id']==1){
-                    $tabla.=''.mb_convert_encoding($row['proy_nombre'], 'cp1252', 'UTF-8').'';
-                  }
-                  else{
-                    $tabla.=''.mb_convert_encoding($row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'], 'cp1252', 'UTF-8').'';
-                  }
-                $tabla.='</td>';
-                $tabla.='<td>\''.strtoupper($row['serv_cod']).'\'</td>';
-                $tabla.='<td>'.$row['serv_cod'].' '.strtoupper($row['tipo_subactividad']).' '.mb_convert_encoding($row['serv_descripcion'], 'cp1252', 'UTF-8').'</td>';
-                if($tp_id==1){
-                  $tabla.='<td>'.$row['com_componente'].'</td>';
-                }
-                $tabla.='<td>'.$row['acc_codigo'].'</td>';
-                $tabla.='<td>'.$row['og_codigo'].'</td>';
-                $tabla.='<td>'.$row['or_codigo'].'</td>';
-                $tabla.='<td>'.$row['prod_cod'].'</td>';
-                $tabla.='<td>'.mb_convert_encoding($row['prod_producto'], 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td>'.mb_convert_encoding($row['prod_resultado'], 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td>'.mb_convert_encoding($row['prod_indicador'], 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td>'.round($row['prod_linea_base'],2).'</td>';
-                $tabla.='<td>'.round($row['prod_meta'],2).'</td>';
-                $tabla.='<td>'.mb_convert_encoding($row['prod_fuente_verificacion'], 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['enero'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['febrero'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['marzo'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['abril'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mayo'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['junio'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['julio'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['agosto'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['septiembre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['octubre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['noviembre'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['diciembre'],2).'</td>';
-                $tabla.='<td style="width: 5%; text-align: right;">'.round($ptto,2).'</td>';
-            $tabla.='</tr>';
-            }
-
-            $tabla.='
-            </tbody>
-          </table>';
-
-      return $tabla;
-    }*/
-
-    /// --------------------------------------------------------
 
     /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR DISTRITAL, REGIONAL (2020 - 2021) ---*/
     public function requerimientos_distrital($dep_id,$dist_id,$tp_id){
@@ -533,13 +373,13 @@
 
         if($dist_id==0){
           $regional=$this->model_proyecto->get_departamento($dep_id);
-          $titulo='CONSOLIDADO REGIONAL FORMULARIO N° 5 - '.mb_convert_encoding(strtoupper($regional[0]['dep_departamento']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
+          $titulo='CONSOLIDADO REGIONAL FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($regional[0]['dep_departamento']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
           $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021
           $tabla=$this->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
         }
         else{
           $dist=$this->model_proyecto->dep_dist($dist_id);
-          $titulo='CONSOLIDADO FORMULARIO N° 5 - '.mb_convert_encoding(strtoupper($dist[0]['dist_distrital']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
+          $titulo='CONSOLIDADO FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($dist[0]['dist_distrital']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
           $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
           $tabla=$this->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
         }
@@ -576,7 +416,7 @@
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                 <tr class="modo1">
-                  <td colspan=29 align=center style="height:50px;"><b> CONSOLIDADO FORMULARIO N° 5 '.strtoupper($titulo).'</b></td>
+                  <td colspan=33 align=center style="height:50px;"><b>'.strtoupper($titulo).'<br></b></td>
                 </tr>
                 <tr style="background-color: #66b2e8">
                   <th style="width:3%;height:50px;background-color: #eceaea;">COD. DA.</th>
@@ -587,6 +427,9 @@
                   <th style="width:35%;background-color: #eceaea;">GASTO CORRIENTE / PROY. INVERSION</th>
                   <th style="width:3%;background-color: #eceaea;">COD. U.RESP..</th>
                   <th style="width:15%;background-color: #eceaea;">UNIDAD RESPONSABLE</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. ACP.</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. OPE.</th>
+                  <th style="width:15%;background-color: #eceaea;">DESCRIPCION OPERACION '.$this->gestion.'</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
                   <th style="width:25%;background-color: #eceaea;">DESCRIPCION ACTIVIDAD</th>
                   <th style="width:15%;background-color: #eceaea;">PARTIDA</th>
@@ -617,7 +460,7 @@
               $prog="'".$row['aper_programa']."'";
             $nro++;
             $tabla.='<tr>';
-                $tabla.='<td style="height:50px;">'.$row['dep_cod'].'</td>';
+                $tabla.='<td style="height:70px;">'.$row['dep_cod'].'</td>';
                 $tabla.='<td>'.$row['dist_cod'].'</td>';
                 $tabla.='<td>'.$prog.'</td>';
                 $tabla.='<td>';
@@ -639,19 +482,24 @@
                 $tabla.='</td>';
                 $tabla.='<td>'."'".$row['serv_cod']."'".'</td>';
                 $tabla.='<td>'.$row['tipo_subactividad'].' '.mb_convert_encoding(strtoupper($row['serv_descripcion']), 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td>'.$row['prod_cod'].'</td>';
-                $tabla.='<td>'.mb_convert_encoding(strtoupper($row['prod_producto']), 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td>'.$row['par_codigo'].'</td>';
-                $tabla.='<td>'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                $tabla.='<td align="right">'.round($row['ins_cant_requerida'],2).'</td>';
-                $tabla.='<td align="right">'.round($row['ins_costo_unitario'],2).'</td>';
-                $tabla.='<td align="right">'.round($row['ins_costo_total'],2).'</td>';
-                $tabla.='<td align="right" bgcolor="#c1f5ee"><b>'.round($row['ins_monto_certificado'],2).'</b></td>';
+                
+                $tabla.='<td style="font-size: 15px;" bgcolor="#d9f5c9" align=center><b>'.$row['og_codigo'].'</b></td>';
+                $tabla.='<td style="font-size: 15px;" bgcolor="#d9f5c9" align=center><b>'.$row['or_codigo'].'</b></td>';
+                $tabla.='<td bgcolor="#d9f5c9">'.$row['or_objetivo'].'</td>';
+
+                $tabla.='<td bgcolor="#e4f3dc" align=center><b>'.$row['prod_cod'].'</b></td>';
+                $tabla.='<td style="font-family: Arial;" bgcolor="#e4f3dc">'.mb_convert_encoding(strtoupper($row['prod_producto']), 'cp1252', 'UTF-8').'</td>';
+                $tabla.='<td style="font-size: 15px;" bgcolor="#f4f5f3" align=center>'.$row['par_codigo'].'</td>';
+                $tabla.='<td bgcolor="#f4f5f3">'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
+                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_unidad_medida']).'</td>';
+                $tabla.='<td align="right" bgcolor="#f4f5f3">'.round($row['ins_cant_requerida'],2).'</td>';
+                $tabla.='<td align="right" bgcolor="#f4f5f3">'.round($row['ins_costo_unitario'],2).'</td>';
+                $tabla.='<td align="right" bgcolor="#f4f5f3">'.round($row['ins_costo_total'],2).'</td>';
+                $tabla.='<td style="font-size: 15px;" align="right" bgcolor="#c1f5ee"><b>'.round($row['ins_monto_certificado'],2).'</b></td>';
                 for ($i=1; $i <=12 ; $i++) { 
-                  $tabla.='<td style="width:3%;">'.round($row['mes'.$i],2).'</td>';
+                  $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.round($row['mes'.$i],2).'</td>';
                 }
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>';
             $tabla.='</tr>';
           }
 
@@ -663,142 +511,6 @@
     }
 
 
-     /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR REGIONAL (2020 - 2021) ---*/
-/*    public function requerimientos_regional($dep_id,$tp_id){
-      $tipo='GASTO CORRIENTE';
-      if($tipo==4){
-        $tipo='PROYECTO DE INVERSION';
-      }
-      $dep=$this->model_proyecto->get_departamento($dep_id);
-      date_default_timezone_set('America/Lima');
-      $fecha = date("d-m-Y H:i:s");
-
-      $titulo='CONSOLIDADO REQUERIMIENTOS : REGIONAL - '.mb_convert_encoding(strtoupper($dep[0]['dep_departamento']), 'cp1252', 'UTF-8').' '.$this->gestion.' ('.$tipo.')';
-      $requerimientos=$this->mrep_operaciones->consolidado_directo_requerimientos_regional($dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-      $tabla=$this->lista_requerimientos_regional($requerimientos,$titulo,$tp_id); // Requerimientos Regional 2020-2021
-
-      header('Content-type: application/vnd.ms-excel');
-      header("Content-Disposition: attachment; filename=Consolidado_Requerimiento_".$dep[0]['dep_departamento']."_$fecha.xls"); //Indica el nombre del archivo resultante
-      header("Pragma: no-cache");
-      header("Expires: 0");
-      echo "";
-      ini_set('max_execution_time', 0); 
-      ini_set('memory_limit','3072M');
-      echo $tabla;
-    }*/
-
-     /*----- LISTA DE REQUERIMIENTOS REGIONAL (2020-2021) ----*/
-/*    public function lista_requerimientos_regional($requerimientos,$titulo,$tp_id){
-        $tit='ACTIVIDAD';
-        if($tp_id==1){
-          $tit='PROYECTO DE INVERSION';
-        }
-
-        $tabla='';
-        $tabla .='
-          <style>
-            table{font-size: 9px;
-              width: 100%;
-              max-width:1550px;
-              overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-          </style>';
-
-        $tabla.='
-          <table border="1" cellpadding="0" cellspacing="0" class="tabla">
-              <thead>
-                <tr class="modo1">
-                  <td colspan=25 align=center style="height:50px;"><b>'.strtoupper($titulo).'</b></td>
-                </tr>
-                <tr style="background-color: #66b2e8">
-                  <th style="width:3%;height:50px;background-color: #eceaea;">COD. DA.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. UE.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
-                  <th style="width:10%;background-color: #eceaea;">COD. PROY.</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
-                  <th style="width:35%;background-color: #eceaea;">'.$tit.'</th>
-                  <th style="width:15%;background-color: #eceaea;">PARTIDA</th>
-                  <th style="width:25%;background-color: #eceaea;">REQUERIMIENTO</th>
-                  <th style="width:10%;background-color: #eceaea;">UNIDAD DE MEDIDA</th>
-                  <th style="width:5%;background-color: #eceaea;">CANTIDAD</th>
-                  <th style="width:5%;background-color: #eceaea;">PRECIO</th>
-                  <th style="width:15%;background-color: #eceaea;">COSTO TOTAL</th>
-                  <th style="width:4%;background-color: #eceaea;">P. ENE.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. FEB.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. MAR.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. ABR.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. MAY.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. JUN.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. JUL.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. AGOS.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. SEPT.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. OCT.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. NOV.</th>
-                  <th style="width:4%;background-color: #eceaea;">P. DIC.</th>
-                  <th style="width:10%;background-color: #eceaea;">OBSERVACIÓN</th>
-                </tr>
-              </thead>
-            <tbody>';
-            $nro=0;
-            foreach ($requerimientos as $row){
-              $prog=$row['aper_programa'];
-            $nro++;
-            $tabla.='<tr>';
-                $tabla.='<td style="height:50px;">'.$row['dep_cod'].'</td>';
-                $tabla.='<td>'.$row['dist_cod'].'</td>';
-                $tabla.='<td>'.$prog.'</td>';
-                $tabla.='<td>';
-                if($row['tp_id']==1){
-                  $tabla.=$row['proy_sisin'];
-                }
-                else{
-                  $tabla.="'".$row['aper_proyecto']."'";
-                }
-                $tabla.='</td>';
-                $tabla.='<td>'."'".$row['aper_actividad']."'".'</td>';
-                $tabla.='<td>';
-                  if($row['tp_id']==1){
-                    $tabla.=''.mb_convert_encoding($row['proy_nombre'], 'cp1252', 'UTF-8').'';
-                  }
-                  else{
-                    $tabla.=''.mb_convert_encoding($row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'], 'cp1252', 'UTF-8').'';
-                  }
-                $tabla.='</td>';
-                $tabla.='<td>'.$row['par_codigo'].'</td>';
-                $tabla.='<td>'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                $tabla.='<td>'.round($row['ins_cant_requerida'],2).'</td>';
-                $tabla.='<td>'.round($row['ins_costo_unitario'],2).'</td>';
-                $tabla.='<td>'.round($row['ins_costo_total'],2).'</td>';
-
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes1'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes2'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes3'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes4'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes5'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes6'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes7'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes8'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes9'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes10'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes11'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mes12'],2).'</td>';
-                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>';
-            $tabla.='</tr>';
-          }
-
-            $tabla.='
-            </tbody>
-          </table>';
-
-      return $tabla;
-    }*/
-    /// ---------------------------------------------------
 
     /*--- FORM 4 EJECUCION PRESUPUESTARIA (PROG-CERT) POR SUBACTIVIDAD (2020 - 2021) EXCEL ---*/
     public function requerimientos_servicio($com_id){
@@ -809,13 +521,13 @@
         $tabla='No disponible';
       }
       else{
-        $requerimientos=$this->mrep_operaciones->lista_insumo_subactividad($com_id); /// Lista de requerimientos certificados por Subactividad (2020-2021)
+        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+        $requerimientos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id);
         $tabla=$this->lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id); // Requerimientos Distrital 2020-2021
       }
 
-
       header('Content-type: application/vnd.ms-excel');
-      header("Content-Disposition: attachment; filename=Consolidado_Ejecucion_Requerimiento_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Content-Disposition: attachment; filename=formulario_N5_".$componente[0]['tipo_subactividad']."_".$componente[0]['serv_descripcion']."_$fecha.xls"); //Indica el nombre del archivo resultante
       header("Pragma: no-cache");
       header("Expires: 0");
       echo "";
@@ -854,18 +566,18 @@
         $tabla.='
           <table border="0" cellpadding="0" cellspacing="0" class="tabla">
             <tr class="modo1">
-              <td colspan=2 align=left style="height:50px;">
-                <b> DA : </b> '.$proyecto[0]['dep_cod'].' .-'.strtoupper($proyecto[0]['dep_departamento']).'<br>
-                <b> UE : </b> '.$proyecto[0]['dist_cod'].' .-'.strtoupper($proyecto[0]['dist_distrital']).'<br>
-                <b> '.$tit.' : </b> '.$tit_proy.'<br>
-                <b> UNIDAD RESPONSABLE : </b> '.$componente[0]['serv_cod'].' '.$componente[0]['serv_descripcion'].'<br>
+              <td colspan=5 align=left style="height:50px;">
+                <b> DA : </b> '.$proyecto[0]['dep_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dep_departamento']), 'cp1252', 'UTF-8').'<br>
+                <b> UE : </b> '.$proyecto[0]['dist_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dist_distrital']), 'cp1252', 'UTF-8').'<br>
+                <b> '.mb_convert_encoding($tit, 'cp1252', 'UTF-8').' : </b> '.mb_convert_encoding($tit_proy, 'cp1252', 'UTF-8').'<br>
+                <b> UNIDAD RESPONSABLE : </b> '.$componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'<br>
               </td>
             </tr>
           </table><br>
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                  <tr style="background-color: #66b2e8">
-                    <th style="width:2%;height:50px;background-color: #eceaea;">COD. ACT.</th>
+                    <th style="width:2%;height:40px;background-color: #eceaea;">COD. ACT.</th>
                     <th style="width:2%;background-color: #eceaea;">PARTIDA</th>
                     <th style="width:20%;background-color: #eceaea;">REQUERIMIENTO</th>
                     <th style="width:5%;background-color: #eceaea;">UNIDAD DE MEDIDA</th>
@@ -891,58 +603,42 @@
             <tbody>';
             $nro=0;$sum_programado=0;$sum_certificado=0;
             foreach ($requerimientos as $row){
-              $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-              $monto_certificado=0;$color='';
-              $m_cert=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']); /// Monto Certificado
-                if(count($m_cert)!=0){
-                  $monto_certificado=$m_cert[0]['certificado'];
-                }
-           
+              $prog=$this->model_insumo->lista_prog_fin($row['ins_id']);
               $nro++;
               $tabla.='<tr>';
-                  $tabla.='<td style="height:50px;" align=center><b>'.$row['prod_cod'].'</b></td>';
-                  $tabla.='<td>'.$row['par_codigo'].'</td>';
-                  $tabla.='<td>'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
-                  $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                  $tabla.='<td>'.round($row['ins_cant_requerida'],2).'</td>';
-                  $tabla.='<td>'.round($row['ins_costo_unitario'],2).'</td>';
-                  $tabla.='<td>'.round($row['ins_costo_total'],2).'</td>';
-                  $tabla.='<td style="width:5%;" bgcolor="#c1f5ee" align=right><b>'.round($monto_certificado,2).'</b></td>';
-                        if(count($prog)!=0){
-                          if($monto_certificado==$prog[0]['programado_total']){
-                            for ($i=1; $i<=12 ; $i++) {
-                            $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.round($prog[0]['mes'.$i],2).'</td>';
-                            }
-                          }
-                          else{
-                            for ($i=1; $i<=12 ; $i++) {
-                              $color_td='';
-                              $mes_cert=$this->model_certificacion->get_insumo_programado_certificado_mes($row['ins_id'],$i);
-                              if(count($mes_cert)!=0){
-                                $color_td='#ddf7dd';
-                              }
-                              $tabla.='<td style="width:4%;" align=right bgcolor='.$color_td.'>'.round($prog[0]['mes'.$i],2).'</td>';
-                            }
-                          }
-                        }
-                        else{
-                          for ($i=1; $i<=12 ; $i++) {
-                            $tabla.='<td style="width:4%;" align=right><font color=red><b>0</b></font></td>';
-                          }
-                        }
-                  $tabla.='
-                    <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
-                  </tr>';
-                  $sum_programado=$sum_programado+$prog[0]['programado_total'];
-                  $sum_certificado=$sum_certificado+$monto_certificado;
+                $tabla.='<td style="width:2%; font-size: 15px; height:50px;" align=center><b>'.$row['prod_cod'].'</b></td>';
+                $tabla.='<td style="width:2%; font-size: 15px;" align=center><b>'.$row['par_codigo'].'</b></td>';
+                $tabla.='<td>'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
+                $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
+                $tabla.='<td>'.round($row['ins_cant_requerida'],2).'</td>';
+                $tabla.='<td>'.round($row['ins_costo_unitario'],2).'</td>';
+                $tabla.='<td>'.round($row['ins_costo_total'],2).'</td>';
+                $tabla.='<td style="width:5%; font-size: 15px;" bgcolor="#c1f5ee" align=right><b>'.round($row['ins_monto_certificado'],2).'</b></td>';
+                if(count($prog)!=0){
+                  $temporalidad = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                  if(round($row['ins_costo_total'],2)==round($row['ins_monto_certificado'],2)){
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.$temporalidad[0]['mes'.$i].'</td>';
+                    }
+                  }
+                  else{
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla.='<td style="width:4%;" align=right>'.$temporalidad[0]['mes'.$i].'</td>';
+                    }
+                  }
+                }
+                $tabla.='
+                  <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+                </tr>';
+                $sum_programado=$sum_programado+$row['ins_costo_total'];
+                $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];
             }
-
             $tabla.='
             </tbody>
             <tr>
               <td colspan=6 style="height:30px;"></td>
-              <td align=right>'.round($sum_programado,2).'</td>
-              <td align=right>'.round($sum_certificado,2).'</td>
+              <td style="font-size: 15px;"  align=right><b>'.round($sum_programado,2).'</b></td>
+              <td style="font-size: 15px;" align=right><b>'.round($sum_certificado,2).'</b></td>
               <td colspan=13></td>
             </tr>
         </table>';
@@ -1005,148 +701,50 @@
               </thead>
             <tbody>';
             $nro=0;$sum_programado=0;$sum_certificado=0;
-            /*if(count($requerimientos)>150){ /// items mayores a 150 sin color de marcado
-
-                  foreach ($requerimientos as $row){
-                    $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-                    $nro++;
-                    $tabla.='<tr>';
-                      $tabla.='<td style="width: 2%; font-size: 8px; text-align: center;height:13px;"><b>'.$row['prod_cod'].'</b></td>';
-                      $tabla.='<td style="width: 3.5%; text-align: center;font-size: 8px;" bgcolor="#eceaea">'.$row['par_codigo'].'</td>';
-                      $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'DDDD</td>';
-                      $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                      $tabla.='<td style="width: 4.3%; text-align: right;font-size: 7.5px;">'.round($row['ins_cant_requerida'],2).'</td>';
-                      $tabla.='<td style="width: 4.5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                      $tabla.='<td style="width: 5.2%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                      $tabla.='<td style="width: 5.2%;" bgcolor="#c1f5ee" align=right><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
-                      if(count($prog)!=0){
-                        for ($i=1; $i<=12 ; $i++) {
-                            $tabla.='<td style="width:4%;" align=right >'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                          }
-                      }
-                      else{
-                        for ($i=1; $i<=12 ; $i++) {
-                          $tabla.='<td style="width:4%;" align=right bgcolor="red">'.number_format(0, 2, ',', '.').'</td>';
-                        }
-                      }
-
-                      $tabla.='
-                        <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
-                      </tr>';
-                      $sum_programado=$sum_programado+$prog[0]['programado_total'];
-                      $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];  
-                  }
-
-            }
-            else{
+            foreach ($requerimientos as $row){
+              $prog=$this->model_insumo->lista_prog_fin($row['ins_id']);
               
-                foreach ($requerimientos as $row){
-                  $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-                  $nro++;
-                  $tabla.='<tr>';
-                    $tabla.='<td style="width: 2%; font-size: 8px; text-align: center;height:13px;"><b>'.$row['prod_cod'].'</b></td>';
-                    $tabla.='<td style="width: 3.5%; text-align: center;font-size: 8px;" bgcolor="#eceaea">'.$row['par_codigo'].'</td>';
-                    $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'DDDD</td>';
-                    $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                    $tabla.='<td style="width: 4.3%; text-align: right;font-size: 7.5px;">'.round($row['ins_cant_requerida'],2).'</td>';
-                    $tabla.='<td style="width: 4.5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                    $tabla.='<td style="width: 5.2%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                    $tabla.='<td style="width: 5.2%;" bgcolor="#c1f5ee" align=right><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
-                    if(count($prog)!=0){
-                      if($prog[0]['programado_total']==$row['ins_monto_certificado']){
-                        for ($i=1; $i<=12 ; $i++) {
-                          $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                        }
-                      }
-                      elseif($prog[0]['programado_total']>$row['ins_monto_certificado']){
-                          for ($i=1; $i<=12 ; $i++) {
-                            $mes=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
-                            $color='';
-                            if(count($mes)==1){
-                              if($mes[0]['estado_cert']==1){
-                                $color='#ddf7dd';
-                              }
-                            }
-                            
-                            $tabla.='<td style="width:4%;" align=right bgcolor="'.$color.'">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                          }
-                      }
-                      elseif($row['ins_monto_certificado']==0){
-                        $tabla.='<td style="width:4%;" align=right>'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                      }
+              $nro++;
+              $tabla.='<tr title='.$row['ins_id'].'>';
+                $tabla.='<td style="width: 2%; font-size: 8px; text-align: center;height:13px;"><b>'.$row['prod_cod'].'</b></td>';
+                $tabla.='<td style="width: 3.5%; text-align: center;font-size: 8px;" bgcolor="#eceaea">'.$row['par_codigo'].'</td>';
+                $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'</td>';
+                $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
+                $tabla.='<td style="width: 4.3%; text-align: right;font-size: 7.5px;">'.round($row['ins_cant_requerida'],2).'</td>';
+                $tabla.='<td style="width: 4.5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width: 5.2%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                $tabla.='<td style="width: 5.2%;" bgcolor="#c1f5ee" align=right><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
+                if(count($prog)!=0){
+                  $temporalidad = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                  if(round($row['ins_costo_total'],2)==round($row['ins_monto_certificado'],2)){
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.number_format($temporalidad[0]['mes'.$i], 2, ',', '.').'</td>';
                     }
-                    else{
-                      for ($i=1; $i<=12 ; $i++) {
-                        $tabla.='<td style="width:4%;" align=right bgcolor="red">'.number_format(0, 2, ',', '.').'</td>';
-                      }
+                  }
+                  else{
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla.='<td style="width:4%;" align=right>'.number_format($temporalidad[0]['mes'.$i], 2, ',', '.').'</td>';
                     }
-
-                    $tabla.='
-                      <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
-                    </tr>';
-                    $sum_programado=$sum_programado+$prog[0]['programado_total'];
-                    $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];  
-                }
-            }*/
-
-foreach ($requerimientos as $row){
-                  $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-                  $nro++;
-                  $tabla.='<tr title='.$row['ins_id'].'>';
-                    $tabla.='<td style="width: 2%; font-size: 8px; text-align: center;height:13px;"><b>'.$row['prod_cod'].'</b></td>';
-                    $tabla.='<td style="width: 3.5%; text-align: center;font-size: 8px;" bgcolor="#eceaea">'.$row['par_codigo'].'</td>';
-                    $tabla.='<td style="width: 15%; text-align: left;font-size: 7.2px;">'.strtoupper($row['ins_detalle']).'</td>';
-                    $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                    $tabla.='<td style="width: 4.3%; text-align: right;font-size: 7.5px;">'.round($row['ins_cant_requerida'],2).'</td>';
-                    $tabla.='<td style="width: 4.5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                    $tabla.='<td style="width: 5.2%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                    $tabla.='<td style="width: 5.2%;" bgcolor="#c1f5ee" align=right><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
-                    if(count($prog)!=0){
-                      if($prog[0]['programado_total']==$row['ins_monto_certificado']){
-                        for ($i=1; $i<=12 ; $i++) {
-                          $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                        }
-                      }
-                      elseif($prog[0]['programado_total']>$row['ins_monto_certificado']){
-                          for ($i=1; $i<=12 ; $i++) {
-                            $mes=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
-                            $color='';
-                            if(count($mes)==1){
-                              if($mes[0]['estado_cert']==1){
-                                $color='#ddf7dd';
-                              }
-                            }
-                            
-                            $tabla.='<td style="width:4%;" align=right bgcolor="'.$color.'">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                          }
-                      }
-                      elseif($row['ins_monto_certificado']==0){
-                        $tabla.='<td style="width:4%;" align=right>'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                      }
-                    }
-                    else{
-                      for ($i=1; $i<=12 ; $i++) {
-                        $tabla.='<td style="width:4%;" align=right bgcolor="red">'.number_format(0, 2, ',', '.').'</td>';
-                      }
-                    }
-
-                    $tabla.='
-                      <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
-                    </tr>';
-                    $sum_programado=$sum_programado+$prog[0]['programado_total'];
-                    $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];  
+                  }
                 }
 
                 $tabla.='
-                </tbody>
-                  <tr>
-                    <td style="font-size: 8px;height:13px;" colspan=6></td>
-                    <td align=right>'.number_format($sum_programado, 2, ',', '.').'</td>
-                    <td align=right>'.number_format($sum_certificado, 2, ',', '.').'</td>
-                    <td colspan=13></td>
-                  </tr>
+                  <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+                </tr>';
+                $sum_programado=$sum_programado+$row['ins_costo_total'];
+                $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];
+            }
 
-                </table>';
+            $tabla.='
+            </tbody>
+              <tr>
+                <td style="font-size: 8px;height:13px;" colspan=6></td>
+                <td align=right><b>'.number_format($sum_programado, 2, ',', '.').'</b></td>
+                <td align=right><b>'.number_format($sum_certificado, 2, ',', '.').'</b></td>
+                <td colspan=13></td>
+              </tr>
+
+            </table>';
       return $tabla;
     }
 
