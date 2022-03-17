@@ -805,6 +805,8 @@
               reset();
               var prod_id = $(this).attr('name');
               var cite_id = $(this).attr('id');
+
+              alert(prod_id+'--'+cite_id)
               var request;
               // confirm dialog
               alertify.confirm("DESEA ELIMINAR ACTIVIDAD ?", function (a) {

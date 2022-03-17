@@ -234,7 +234,9 @@
                                     <div class="row" align="center">
                                       <div class="table-responsive" align="center">
                                         <center>
-                                        <?php echo $requerimientos;?>
+                                          <?php echo $requerimientos;?>
+                                        <a href="#" class="btn btn-primary update_eval" style="width:20%;" name="<?php echo $datos[0]['prod_id'];?>" title="GENERAR ">&nbsp;ACTUALIZAR DATOS PARA EVALUACI&Oacute;N POA</a>    
+                                        <div id="lista"></div>
                                         </center>
                                       </div>
                                     </div>
@@ -255,8 +257,14 @@
                             </div>
                           </div>
                         </article>
-                        
                     </div>
+
+                    
+
+
+
+
+
                 </section>
             </div>
             <!-- END MAIN CONTENT -->
@@ -324,6 +332,44 @@
         </script>
 
         <script type="text/javascript">
+          /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL ------*/
+        $(function () {
+          $(".update_eval").on("click", function (e) {
+              prod_id = $(this).attr('name');
+
+              var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/get_insumos";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "prod_id="+prod_id
+              });
+
+              request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                  $('#lista').fadeIn(1000).html(response.lista);
+                //  $('#but').slideDown();
+              }
+              else{
+                  alertify.error("ERROR AL RECUPERAR DATOS");
+              }
+
+              });
+              request.fail(function (jqXHR, textStatus, thrown) {
+                  console.log("ERROR: " + textStatus);
+              });
+              request.always(function () {
+              });
+              e.preventDefault();
+          });
+        });
+
+
+
         function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
           if (estaChequeado == true) { 
             document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
@@ -388,7 +434,7 @@
           
           if (estaChequeado == true) { 
             val = parseInt($('[name="tot_temp"]').val());
-          var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/verif_mes_certificado";
+            var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/verif_mes_certificado";
             $.ajax({
               type:"post",
               url:url,

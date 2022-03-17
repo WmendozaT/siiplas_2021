@@ -189,6 +189,38 @@ class Cmod_fisica extends CI_Controller {
         $data['formulario_N4']=$this->modificacionpoa->mis_formulario4($data['cite']); /// Lista Operaciones
         $this->load->view('admin/modificacion/moperaciones/productos/list_productos', $data);
 
+
+/*
+         $cite_id = 496; /// Cite Id
+          $prod_id = 61387; /// Prod Id
+          $cite=$this->model_modfisica->get_cite_fis($cite_id); /// Datos cite
+          $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// Datos del Proyecto
+
+
+          if($this->copia_operacion($cite,$prod_id,3)){
+            $update_prod = array(
+              'prod_mod' => 2,
+              'estado' => 3,
+              'num_ip' => $this->input->ip_address(), 
+              'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+              'fun_id' => $this->fun_id,
+              );
+            $this->db->where('prod_id', $prod_id);
+            $this->db->update('_productos', $update_prod);
+
+            $result = array(
+              'respuesta' => 'correcto'
+            );
+          }
+          else{
+            $result = array(
+              'respuesta' => 'error'
+            );
+          }
+
+          echo json_encode($result);*/
+
+
       }
       else{
         $this->session->set_flashdata('danger','ERROR AL INGRESAR');
