@@ -974,6 +974,83 @@ function abreVentana(PDF){
     });
   });
 
+
+  //// MODIFICACION POA (ELIMINAR FORM 4)
+    $(function () {
+          function reset() {
+            $("#toggleCSS").attr("href", base+"/assets/themes_alerta/alertify.default.css");
+            alertify.set({
+                labels: {
+                    ok: "ACEPTAR",
+                    cancel: "CANCELAR"
+                },
+                delay: 5000,
+                buttonReverse: false,
+                buttonFocus: "ok"
+            });
+          }
+
+          // =====================================================================
+          $(".mdel_ff").on("click", function (e) {
+              reset();
+              var prod_id = $(this).attr('name');
+              var cite_id = $(this).attr('id');
+
+            //  alert(prod_id+'--'+cite_id)
+              var request;
+              // confirm dialog
+              alertify.confirm("DESEA ELIMINAR ACTIVIDAD ?", function (a) {
+                if (a) {
+                  var url = base+"index.php/modificaciones/cmod_fisica/delete_operacion";
+                    if (request) {
+                      request.abort();
+                    }
+                    request = $.ajax({
+                      url: url,
+                      type: "POST",
+                      dataType: "json",
+                      data: "prod_id="+prod_id+"&cite_id="+cite_id
+                    });
+
+                    request.done(function (response, textStatus, jqXHR) { 
+                      reset();
+                      if (response.respuesta == 'correcto') {
+                        alertify.alert("LA ACTIVIDAD SE ELIMINO CORRECTAMENTE ", function (e) {
+                          if (e) {
+                            window.location.reload(true);
+                          }
+                        });
+                      } else {
+                        alertify.alert("ERROR AL ELIMINAR LA ACTIVIDAD !!!", function (e) {
+                          if (e) {
+                            window.location.reload(true);
+                          }
+                        });
+                      }
+                  });
+                    request.fail(function (jqXHR, textStatus, thrown) {
+                      console.log("ERROR: " + textStatus);
+                    });
+                    request.always(function () {
+                        //console.log("termino la ejecuicion de ajax");
+                    });
+
+                    e.preventDefault();
+
+                } else {
+                    // user clicked "cancel"
+                    alertify.error("OPCI&Oacute;N CANCELADA");
+                }
+              });
+            return false;
+          });
+      });
+
+
+
+
+
+
 ////////////////////////////// MODIFICACION POA
   $(function () {
       $("#cerrar_mod").on("click", function () {

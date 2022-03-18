@@ -235,16 +235,15 @@
                                       <div class="table-responsive" align="center">
                                         <center>
                                           <?php echo $requerimientos;?>
-                                        <a href="#" class="btn btn-primary update_eval" style="width:20%;" name="<?php echo $datos[0]['prod_id'];?>" title="GENERAR ">&nbsp;ACTUALIZAR DATOS PARA EVALUACI&Oacute;N POA</a>    
-                                        <div id="lista"></div>
                                         </center>
                                       </div>
                                     </div>
                                   </fieldset>
+
                                   <footer>
                                     <input type="hidden" name="tot" id="tot" value="0">
                                     <input type="hidden" name="tot_temp" id="tot_temp" value="0">
-                                    <div id="but" style="display:none;">
+                                    <div id="but" style="display:none;" align="right">
                                       <input type="button" value="GENERAR CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success" title="APROBAR REQUERIMIENTOS PARA CERTIFICACION POA">
                                       <a href="<?php echo base_url().'index.php/cert/list_poas'; ?>" class="btn btn-default" title="MIS OPERACIONES"> CANCELAR </a>
                                     </div>
@@ -258,12 +257,6 @@
                           </div>
                         </article>
                     </div>
-
-                    
-
-
-
-
 
                 </section>
             </div>
@@ -336,7 +329,8 @@
         $(function () {
           $(".update_eval").on("click", function (e) {
               prod_id = $(this).attr('name');
-
+              document.getElementById("load_insumo").style.display = 'block';
+              document.getElementById("btn_insumos").style.display = 'none';
               var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/get_insumos";
               var request;
               if (request) {
@@ -351,8 +345,8 @@
 
               request.done(function (response, textStatus, jqXHR) {
               if (response.respuesta == 'correcto') {
+                document.getElementById("load_insumo").style.display = 'none';
                   $('#lista').fadeIn(1000).html(response.lista);
-                //  $('#but').slideDown();
               }
               else{
                   alertify.error("ERROR AL RECUPERAR DATOS");
