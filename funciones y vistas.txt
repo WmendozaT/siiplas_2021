@@ -2820,3 +2820,14 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
        fun_id integer,
        primary key(tempe_or)
      );
+
+
+     /// Creamos la tabla para almacenar los saldos disponibles por partida
+
+     create table saldo_partida(
+       saldo_id serial NOT NULL,
+       sp_id integer NOT NULL,
+       monto_revertido numeric(18,2) NOT NULL DEFAULT 0,
+       fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
+       primary key(saldo_id)
+     );
