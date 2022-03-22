@@ -219,6 +219,58 @@
         </div>
         <!-- END PAGE FOOTER -->
 
+        <!-- ============ Modal Reversion de Saldos ========= -->
+        <div class="modal fade" id="modal_add_saldo" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document" class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; Salir Formulario</span></button>
+                    </div>
+                  <div class="modal-body">
+                        <form action="<?php echo site_url().'/modificaciones/cmod_insumo/cerrar_modificacion'?>" method="post" id="form_cerrar" name="form_cerrar" class="smart-form">
+                            <input type="hidden" name="sp_id" id="sp_id">
+                            <header>
+                                <b><div id="titulo"></div></b>
+                            </header>
+                            <fieldset>
+                                <div class="row">
+                                    <section >
+                                        <label class="label"><b>JUSTIFICACI&Oacute;N</b></label>
+                                        <label class="textarea">
+                                            <i class="icon-append fa fa-tag"></i>
+                                            <textarea rows="4" name="observacion" id="observacion" title="OBSERVACI&Oacute;N"></textarea>
+                                        </label>
+                                    </section>
+                                </div>
+                                 <div class="row">
+                                    <section >
+                                        <label class="label"><b>SALDO A REVERTIR</b></label>
+                                        <label class="input">
+                                            <i class="icon-append fa fa-tag"></i>
+                                            <input class="form-control" type="text" name="saldo" id="saldo" onkeyup="verif();" value="0" onkeypress="return justNumbers(event);" onpaste="return false">
+                                        </label>
+                                    </section>
+                                </div>
+                            </fieldset>
+                            <div class="row">
+                                <div id="mbut">
+                                    <footer>
+                                        <button type="button" name="cerrar_mod" id="cerrar_mod" class="btn btn-info" >CERRAR MODIFICACI&Oacute;N</button>
+                                        <button class="btn btn-default" data-dismiss="modal" id="amcl" title="CANCELAR">CANCELAR</button>
+                                    </footer>
+                                </div>
+                                <div id="mload" style="display: none" align="center">
+                                    <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>CERRANDO MODIFICACI&Oacute;N FINANCIERA</b>
+                                </div>
+                            </div>
+                        </form>
+                </div>
+              </div>
+            </div>
+        </div>
+     <!--  =============== -->
+
+
         <!-- MODAL NUEVO REGISTRO DE ACTIVIDADES   -->
         <div class="modal fade" id="modal_nuevo_ff" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
@@ -325,6 +377,136 @@
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <script type="text/javascript">
+        /*------ MODIFICAR REQUERIMIENTO -----*/
+          $(function () {
+              $(".add_saldo").on("click", function (e) {
+                sp_id = $(this).attr('name');
+                document.getElementById("sp_id").value=sp_id;
+            
+                var url = "<?php echo site_url().'/modificaciones/cmod_requerimientos/get_partida'?>";
+                  var request;
+                  if (request) {
+                      request.abort();
+                  }
+                  request = $.ajax({
+                      url: url,
+                      type: "POST",
+                      dataType: 'json',
+                      data: "sp_id="+sp_id
+                  });
+
+                  request.done(function (response, textStatus, jqXHR) {
+
+                  if (response.respuesta == 'correcto') {
+                    $('#titulo').html('<font size=3><b>PARTIDA : '+response.ppto_asignado[0]['par_codigo']+' - '+response.ppto_asignado[0]['par_nombre'].toUpperCase()+'</b></font>');
+                    $('#monto').html('<b>PTTO. ASIGNADO : '+response.ppto_asignado[0]['importe']+'</b>');
+                  }
+                  else{
+                      alertify.error("ERROR AL RECUPERAR DATOS DEL REQUERIMIENTO");
+                  }
+
+                  });
+                  request.fail(function (jqXHR, textStatus, thrown) {
+                      console.log("ERROR: " + textStatus);
+                  });
+                  request.always(function () {
+                      //console.log("termino la ejecuicion de ajax");
+                  });
+                  e.preventDefault();
+                  // =============================VALIDAR EL FORMULARIO DE MODIFICACION
+                  $("#subir_mins").on("click", function (e) {
+                      var $validator = $("#form_mod").validate({
+                             rules: {
+                              ins_id: { //// Insumo
+                              required: true,
+                              },
+                              proy_id: { //// Proyecto
+                                  required: true,
+                              },
+                              detalle: { //// Detalle
+                                  required: true,
+                              },
+                              cantidad: { //// Cantidad
+                                  required: true,
+                              },
+                              id: { //// id
+                                  required: true,
+                              },
+                              costou: { //// Costo U
+                                  required: true,
+                              },
+                              costot: { //// costo tot
+                                  required: true,
+                              },
+                              umedida: { //// unidad medida
+                                  required: true,
+                              },
+                              par_padre: { //// par padre
+                                  required: true,
+                              },
+                              par_hijo: { //// par hijo
+                                  required: true,
+                              }
+                          },
+                          messages: {
+                              ins_id: "<font color=red>ID</font>",
+                              detalle: "<font color=red>REGISTRE DETALLE DEL REQUERIMIENTO</font>", 
+                              cantidad: "<font color=red>CANTIDAD</font>",
+                              costou: "<font color=red>COSTO UNITARIO</font>",
+                              costot: "<font color=red>COSTO TOTAL</font>",
+                              umedida: "<font color=red>REGISTRE UNIDAD DE MEDIDA</font>",
+                              par_padre: "<font color=red>SELECCIONE GRUPO DE PARTIDAS</font>",
+                              par_hijo: "<font color=red>SELECCIONE PARTIDA</font>", 
+                              id: "<font color=red>SELECCIONE VINCULACIÓN</font>",                     
+                          },
+                          highlight: function (element) {
+                              $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                          },
+                          unhighlight: function (element) {
+                              $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                          },
+                          errorElement: 'span',
+                          errorClass: 'help-block',
+                          errorPlacement: function (error, element) {
+                              if (element.parent('.input-group').length) {
+                                  error.insertAfter(element.parent());
+                              } else {
+                                  error.insertAfter(element);
+                              }
+                          }
+                      });
+                      var $valid = $("#form_mod").valid();
+                      if (!$valid) {
+                          $validator.focusInvalid();
+                      } else {
+                        saldo=document.getElementById("sal").value;
+                        programado=document.getElementById("mtot").value;
+                        dif=saldo-programado;
+                  
+                        if(dif>=0){
+                            alertify.confirm("MODIFICAR REQUERIMIENTO ?", function (a) {
+                                if (a) {
+                                    document.getElementById("loadm").style.display = 'block';
+                                    document.getElementById("subir_mins").value = "MODIFICANDO REQUERIMIENTO...";
+                                    document.getElementById('subir_mins').disabled = true;
+                                    document.forms['form_mod'].submit();
+                                } else {
+                                    alertify.error("OPCI\u00D3N CANCELADA");
+                                }
+                            });
+                        }
+                        else{
+                          $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO, VERIFIQUE DATOS</div></center>');
+                          alertify.error("EL MONTO PROGRAMADO NO PUEDE SER MAYO AL MONTO SALDO DE LA OPERACIÓN, VERIFIQUE MONTOS");
+                        }
+                      }
+                  });
+              });
+          });    
+        </script>
+
+
+        <script type="text/javascript">
         function justNumbers(e){
             var keynum = window.event ? window.event.keyCode : e.which;
             if ((keynum == 8) || (keynum == 46))
@@ -387,7 +569,6 @@
             function guardar(sp_id,nro){
                 saldo=parseFloat($('[id="saldo'+nro+'"]').val());
                 observacion=$('[id="obs_saldo'+nro+'"]').val();
-
 
                 alertify.confirm("GUARDAR SALDO PRESUPUESTO NO EJECUTADO POA?", function (a) {
                     if (a) {

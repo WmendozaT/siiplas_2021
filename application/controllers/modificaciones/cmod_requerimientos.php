@@ -344,70 +344,75 @@ class Cmod_requerimientos extends CI_Controller {
                       <th bgcolor="#1c7368"><font color="#ffffff" style="width:8%;">SALDO NO EJECUTADO</font></th>
                       <th style="width:20%;" bgcolor="#1c7368"><font color="#ffffff" style="width:10%;">OBSERVACIÓN</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff"></font></th>
+                      <th bgcolor="#1c7368"><font color="#ffffff">SALDO</font></th>
                     </tr>
                   </thead>
                   <tbody>';
-      foreach($partidas  as $row){
-        $programado=$this->model_ptto_sigep->get_partida_accion($proyecto[0]['aper_id'],$row['par_id']);
-        $monto_poa=0;
+                  foreach($partidas  as $row){
+                    $programado=$this->model_ptto_sigep->get_partida_accion($proyecto[0]['aper_id'],$row['par_id']);
+                    $monto_poa=0;
 
-        if(count($programado)!=0){
-          $monto_poa=$programado[0]['monto'];          
-        }
+                    if(count($programado)!=0){
+                      $monto_poa=$programado[0]['monto'];          
+                    }
 
-        $nro++;
-        $tabla .='
-                <tr class="modo1">
-                  <td align=center>'.$nro.'<input type="hidden" name="sp_id[]" value="'.$row['sp_id'].'"></td>
-                  <td align=center>'.$row['partida'].'</td>
-                  <td align=left>'.$row['par_nombre'].'</td>
-                  <td align=right><input type="hidden" id="monto'.$nro.'" name="monto_inicial[]" value="'.$row['importe'].'">
-                    <b>'.number_format($row['importe'], 2, ',', '.').'</b>
-                  </td>
-                  <td align=right>
-                    <b>'.number_format($monto_poa, 2, ',', '.').'</b>
-                  </td>
-                  <td align=center><input type="number" class="form-control" onkeyup="suma_monto_partida('.$nro.');" name="monto_dif[]" id="dif'.$nro.'" value="0" title="MONTO A INCREMENTAR" pattern="^[0-9]" pattern="^[0-9]"  min="1" step="1"></td>
-                  <td align=center>
-                    <input type="text" class="form-control" id="mpartida'.$nro.'" value="'.$row['importe'].'" title="MONTO FINAL" disabled>
-                    <input type="hidden" name="monto_partida[]" id="mpartida'.$nro.'" value="'.$row['importe'].'">
-                  </td>
-                  <td align=center><a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR MONTO PARTIDA"  name="'.$row['sp_id'].'" id="'.$proy_id.'" ><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a></td>
-                  <td align="center" style="width:8%;">';
-                    if($row['importe']!=0){
-                      $tabla.='<input type="number" class="form-control" id="saldo'.$nro.'" name="saldo'.$nro.'" value="'.round($row['ppto_saldo_ncert'],2).'" onkeyup="verif_monto_saldo('.$row['ppto_saldo_ncert'].',this.value,'.$nro.');" title="SALDO NO EJECUTADO" pattern="^[0-9]" pattern="^[0-9]"  min="1" step="1">';
-                    }
-                  $tabla.='
-                  </td>
-                  <td><textarea name="obs_saldo'.$nro.'" id="obs_saldo'.$nro.'" rows="5" class="form-control" cols="25">'.$row['ppto_saldo_observacion'].'</textarea></td>
-                  <td align="center">';
-                    if($row['importe']!=0){
-                      if($row['ppto_saldo_ncert']!=0){
-                        $tabla.='<div id="but'.$nro.'" ><button type="button" name="'.$row['sp_id'].'" id="'.$nro.'" onclick="guardar('.$row['sp_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="32" HEIGHT="32"/><br>MODIFICAR</button></div>';
-                      }
-                      else{
-                        $tabla.='<div id="but'.$nro.'" style="display:none;"><button type="button" name="'.$row['sp_id'].'" id="'.$nro.'" onclick="guardar('.$row['sp_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="32" HEIGHT="32"/><br>GUARDAR</button></div>';
-                      }
-                      
-                    }
-                  $tabla.='
-                  </td>
-                </tr>';
-      }
-      $tabla.='</tbody>
-      <tr>
-        <td colspan="3">TOTAL </td>
-        <td align=center>'.$monto_total.'</td>
-        <td align=center></td>
-        <td align=center></td>
-        <td align=center><input type="text" class="form-control" name="total" value="'.$monto_total.'" disabled="true"></td>
-        <td align=center></td>
-        <td align=center></td>
-        <td align=center></td>
-      </tr>
-      
-    </table>
-    </center>';
+                    $nro++;
+                    $tabla .='
+                            <tr class="modo1">
+                              <td align=center>'.$nro.'<input type="hidden" name="sp_id[]" value="'.$row['sp_id'].'"></td>
+                              <td align=center>'.$row['partida'].'</td>
+                              <td align=left>'.$row['par_nombre'].'</td>
+                              <td align=right><input type="hidden" id="monto'.$nro.'" name="monto_inicial[]" value="'.$row['importe'].'">
+                                <b>'.number_format($row['importe'], 2, ',', '.').'</b>
+                              </td>
+                              <td align=right>
+                                <b>'.number_format($monto_poa, 2, ',', '.').'</b>
+                              </td>
+                              <td align=center><input type="number" class="form-control" onkeyup="suma_monto_partida('.$nro.');" name="monto_dif[]" id="dif'.$nro.'" value="0" title="MONTO A INCREMENTAR" pattern="^[0-9]" pattern="^[0-9]"  min="1" step="1"></td>
+                              <td align=center>
+                                <input type="text" class="form-control" id="mpartida'.$nro.'" value="'.$row['importe'].'" title="MONTO FINAL" disabled>
+                                <input type="hidden" name="monto_partida[]" id="mpartida'.$nro.'" value="'.$row['importe'].'">
+                              </td>
+                              <td align=center><a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR MONTO PARTIDA"  name="'.$row['sp_id'].'" id="'.$proy_id.'" ><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a></td>
+                              <td align="center" style="width:8%;">';
+                                if($row['importe']!=0){
+                                  $tabla.='<input type="number" class="form-control" id="saldo'.$nro.'" name="saldo'.$nro.'" value="'.round($row['ppto_saldo_ncert'],2).'" onkeyup="verif_monto_saldo('.$row['ppto_saldo_ncert'].',this.value,'.$nro.');" title="SALDO NO EJECUTADO" pattern="^[0-9]" pattern="^[0-9]"  min="1" step="1">';
+                                }
+                              $tabla.='
+                              </td>
+                              <td><textarea name="obs_saldo'.$nro.'" id="obs_saldo'.$nro.'" rows="5" class="form-control" cols="25">'.$row['ppto_saldo_observacion'].'</textarea></td>
+                              <td align="center">';
+                                if($row['importe']!=0){
+                                  if($row['ppto_saldo_ncert']!=0){
+                                    $tabla.='<div id="but'.$nro.'" ><button type="button" name="'.$row['sp_id'].'" id="'.$nro.'" onclick="guardar('.$row['sp_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="32" HEIGHT="32"/><br>MODIFICAR</button></div>';
+                                  }
+                                  else{
+                                    $tabla.='<div id="but'.$nro.'" style="display:none;"><button type="button" name="'.$row['sp_id'].'" id="'.$nro.'" onclick="guardar('.$row['sp_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="32" HEIGHT="32"/><br>GUARDAR</button></div>';
+                                  }
+                                  
+                                }
+                              $tabla.='
+                              </td>
+                              <td>
+                                <a href="#" data-toggle="modal" data-target="#modal_add_saldo" class="btn btn-default add_saldo" name="'.$row['sp_id'].'" title="SALDO REVERTIDO"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a>
+                              </td>
+                            </tr>';
+                  }
+                  $tabla.='</tbody>
+                  <tr>
+                    <td colspan="3">TOTAL </td>
+                    <td align=center>'.$monto_total.'</td>
+                    <td align=center></td>
+                    <td align=center></td>
+                    <td align=center><input type="text" class="form-control" name="total" value="'.$monto_total.'" disabled="true"></td>
+                    <td align=center></td>
+                    <td align=center></td>
+                    <td align=center></td>
+                    <td align=center></td>
+                  </tr>
+                  
+                </table>
+                </center>';
       ?>
       <script type="text/javascript">
         function suma_monto_partida(nro){
@@ -452,6 +457,35 @@ class Cmod_requerimientos extends CI_Controller {
         </script>
       <?php
       return $tabla;
+    }
+
+
+
+
+    /*---- GET DATOS REQUERIMIENTO ----*/
+    public function get_partida(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $sp_id = $this->security->xss_clean($post['sp_id']);
+        $ppto_asignado=$this->model_ptto_sigep->get_sp_id($sp_id);
+
+
+          if(count($ppto_asignado)!=0){
+            $result = array(
+              'respuesta' => 'correcto',
+              'ppto_asignado' => $ppto_asignado,
+            );
+          }
+          else{
+            $result = array(
+              'respuesta' => 'error',
+            );
+          }
+          /// --------------------------------------
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
     }
 
 

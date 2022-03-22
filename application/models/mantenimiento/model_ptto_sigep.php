@@ -22,8 +22,9 @@ class Model_ptto_sigep extends CI_Model{
 
     public function get_sp_id($sp_id){
         $sql = 'select *
-                from ptto_partidas_sigep
-                where sp_id='.$sp_id.' and estado!=\'3\'';
+                from ptto_partidas_sigep pg
+                Inner Join partidas as p On p.par_id=pg.par_id
+                where pg.sp_id='.$sp_id.' and pg.estado!=\'3\'';
 
         $query = $this->db->query($sql);
         return $query->result_array();
