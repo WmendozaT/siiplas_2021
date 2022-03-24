@@ -117,7 +117,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>....</li><li>Mis Operaciones</li><li>T&eacute;cnico de Unidad Ejecutora</li><li>Modificar Techo Presupuestario</li>
+					<li>Modificaciones</li><li>Modificar Techo Presupuestario</li>
 				</ol>
 			</div>
 			<!-- END RIBBON -->
@@ -126,52 +126,14 @@
 			<div class="row">
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<section id="widget-grid" class="well">
-						<div class="">
-							<h1> APERTURA PROGRAM&Aacute;TICA : <small><?php echo $proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'];?></small>
-							<h1><small>MODIFICAR TECHO PRESUPUESTARIO</small></h1>
-						</div>
+						<?php echo $datos_proyecto; ?>
 					</section>
 				</article>
 			</div>
 			<div class="row">
 				<article class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 				</article>
-				<article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-					<div class="well">
-						<h2 class="alert alert-info"><center>INGRESAR DATOS CITE </center></h2>
-                		<form action="<?php echo site_url("").'/modificaciones/cmod_requerimientos/valida_cite'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
-						   	<input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-						   	<fieldset>
-								<section>
-									<div class="row">
-										<label class="label col col-2">NRO CITE</label>
-										<div class="col col-10">
-											<label class="input"> <i class="icon-append fa fa-user"></i>
-												<input type="text" name="cite" id="cite" placeholder="XX-XX-XXX">
-											</label>
-										</div>
-									</div>
-								</section>
-								<section>
-									<div class="row">
-										<label class="label col col-2">FECHA CITE</label>
-										<div class="col col-10">
-											<label class="input"> <i class="icon-append fa fa-calendar"></i>
-											<input type="text" name="fm" id="fm" class="form-control datepicker" data-dateformat="dd/mm/yy" onKeyUp="this.value=formateafecha(this.value);" placeholder="dd/mm/YY">
-										</label>
-										</div>
-									</div>
-								</section>
-							</fieldset>
-							
-							<footer>
-								<button type="button" name="add_form" id="add_form" class="btn btn-primary">Ingresar a Modificar</button>
-								<a href="<?php echo base_url().'index.php/mod/list_top'?>" class="btn btn-default" title="Volver atras">Cancelar</a>
-							</footer>
-							<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="35" height="35"></center></td>
-						</form>	
-					</div>
-				</article>		
+				<?php echo $formulario; ?>	
 			</div>
 			<!-- END MAIN CONTENT -->
 			</div>
@@ -235,6 +197,19 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+		<script type="text/javascript">
+			function radioChange( that ){
+			  let val = that.value;
+			  document.getElementById("btn").style.display = 'block';
+			  if(val==0){
+			  	document.getElementById("obs").style.display = 'none';
+			  }
+			  else{
+			  	document.getElementById("obs").style.display = 'block';
+			  }
+			  
+			}
+		</script>
 		<script type="text/javascript">
 		// DO NOT REMOVE : GLOBAL FUNCTIONS!
 		$(document).ready(function() {

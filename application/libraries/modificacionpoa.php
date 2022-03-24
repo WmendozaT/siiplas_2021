@@ -479,7 +479,7 @@ class Modificacionpoa extends CI_Controller{
                     <a href="#" data-toggle="modal" data-target="#modal_mod_form4" class="btn btn-default mod_form4" name="'.$rowp['prod_id'].'" title="MODIFICAR ACTIVIDAD"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
                     
                     if(count($monto)==0){
-                      $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mdel_ff" class="btn btn-default mdel_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
+                      $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mdel_ff" class="btn btn-default mdel_ff" title="ELIMINAR FORM 4"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
                     }
                   }
                   else{
@@ -531,16 +531,9 @@ class Modificacionpoa extends CI_Controller{
   //// Lista de Items Modificados en la Edicion
   public function items_modificados_form4($cite_id){
     $tabla='';
-      $tabla.='
-      <table border=0 style="width:100%;">
-        <tr>
-          <td style="width:1%;"></td>
-          <td style="width:98%;">';
-
-          //  $requerimientos_mod = $this->model_modrequerimiento->list_requerimientos_modificados($cite_id);
             $ope_adicionados=$this->model_modfisica->operaciones_adicionados($cite_id);
             if(count($ope_adicionados)!=0){
-              $tabla.='<div style="font-size: 10px;height:16px;"><b>ACTIVIDADES AGREGADOS ('.count($ope_adicionados).')</b></div>';
+              $tabla.='<div style="font-size: 10px;height:16px;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACTIVIDADES AGREGADOS ('.count($ope_adicionados).')</b></div>';
               $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
               $tabla.='<thead>';
               $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
@@ -549,8 +542,8 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:2.1%;">COD.<br>ACP.</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>OPE.</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
-                $tabla.='<th style="width:13%;">ACTIVIDAD</th>';
-                $tabla.='<th style="width:13%;">RESULTADO</th>';
+                $tabla.='<th style="width:14%;">ACTIVIDAD</th>';
+                $tabla.='<th style="width:14%;">RESULTADO</th>';
                 $tabla.='<th style="width:7%;">UNIDAD RESPONSABLE</th>';
                 $tabla.='<th style="width:8%;">INDICADOR</th>';
                 $tabla.='<th style="width:2%;">L.B.</th>';
@@ -567,15 +560,15 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:2.5%;">OCT.</th>';
                 $tabla.='<th style="width:2.5%;">NOV.</th>';
                 $tabla.='<th style="width:2.5%;">DIC.</th>';
-                $tabla.='<th style="width:9%;">MEDIO DE VERIFICACIÓN</th>';
-                $tabla.='<th style="width:5%;">PPTO.</th>';
+                $tabla.='<th style="width:10%;">MEDIO DE VERIFICACIÓN</th>';
+             
               $tabla.='</tr>';
               $tabla.='</thead>';
               $tabla.='<tbody>';
               $nro=0;
               foreach($ope_adicionados as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+              //  $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                 $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
                 $color=''; $tp='';
                 if($rowp['indi_id']==1){
@@ -592,10 +585,10 @@ class Modificacionpoa extends CI_Controller{
                   }
                 }
 
-                $ptto=number_format(0, 2, '.', ',');
+                /*$ptto=number_format(0, 2, '.', ',');
                 if(count($monto)!=0){
                   $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                }
+                }*/
 
                 $color_or='';
                 if($rowp['or_id']==0){
@@ -610,8 +603,8 @@ class Modificacionpoa extends CI_Controller{
                   <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
                   <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
                   <td style="width: 2.1%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
-                  <td style="width: 13%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
-                  <td style="width: 13%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 14%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 14%; text-align: left;">'.$rowp['prod_resultado'].'</td>
                   <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
                   <td style="width: 8%; text-align: left;">'.$rowp['prod_indicador'].'</td>
                   <td style="width: 2%; text-align: right;">'.round($rowp['prod_linea_base'],2).'</td>
@@ -638,8 +631,8 @@ class Modificacionpoa extends CI_Controller{
                   }
 
                   $tabla.='
-                  <td style="width: 9%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
-                  <td style="width: 5%; text-align: right;">'.$ptto.'</td>
+                  <td style="width: 10%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                 
                 </tr>';
 
               }
@@ -649,7 +642,7 @@ class Modificacionpoa extends CI_Controller{
 
             $ope_modificados=$this->model_modfisica->operaciones_modificados($cite_id);
             if(count($ope_modificados)!=0){
-              $tabla.='<div style="font-size: 10px;height:16px;"><b>ACTIVIDADES MODIFICADOS ('.count($ope_modificados).')</b></div>';
+              $tabla.='<div style="font-size: 10px;height:16px;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACTIVIDADES MODIFICADOS ('.count($ope_modificados).')</b></div>';
               $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
               $tabla.='<thead>';
               $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
@@ -658,8 +651,8 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:2.1%;">COD.<br>ACP.</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>OPE.</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
-                $tabla.='<th style="width:13%;">ACTIVIDAD</th>';
-                $tabla.='<th style="width:13%;">RESULTADO</th>';
+                $tabla.='<th style="width:14%;">ACTIVIDAD</th>';
+                $tabla.='<th style="width:14%;">RESULTADO</th>';
                 $tabla.='<th style="width:7%;">UNIDAD RESPONSABLE</th>';
                 $tabla.='<th style="width:8%;">INDICADOR</th>';
                 $tabla.='<th style="width:2%;">L.B.</th>';
@@ -676,15 +669,15 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:2.5%;">OCT.</th>';
                 $tabla.='<th style="width:2.5%;">NOV.</th>';
                 $tabla.='<th style="width:2.5%;">DIC.</th>';
-                $tabla.='<th style="width:9%;">MEDIO DE VERIFICACIÓN</th>';
-                $tabla.='<th style="width:5%;">PPTO.</th>';
+                $tabla.='<th style="width:10%;">MEDIO DE VERIFICACIÓN</th>';
+              //  $tabla.='<th style="width:5%;">PPTO.</th>';
               $tabla.='</tr>';
               $tabla.='</thead>';
               $tabla.='<tbody>';
               $nro=0;
               foreach($ope_modificados as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+               // $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                 $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
                 $color=''; $tp='';
                 if($rowp['indi_id']==1){
@@ -701,10 +694,10 @@ class Modificacionpoa extends CI_Controller{
                   }
                 }
 
-                $ptto=number_format(0, 2, '.', ',');
+               /* $ptto=number_format(0, 2, '.', ',');
                 if(count($monto)!=0){
                   $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                }
+                }*/
 
                 $color_or='';
                 if($rowp['or_id']==0){
@@ -719,8 +712,8 @@ class Modificacionpoa extends CI_Controller{
                   <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
                   <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
                   <td style="width: 2.1%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
-                  <td style="width: 13%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
-                  <td style="width: 13%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 14%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 14%; text-align: left;">'.$rowp['prod_resultado'].'</td>
                   <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
                   <td style="width: 8%; text-align: left;">'.$rowp['prod_indicador'].'</td>
                   <td style="width: 2%; text-align: right;">'.round($rowp['prod_linea_base'],2).'</td>
@@ -747,8 +740,8 @@ class Modificacionpoa extends CI_Controller{
                   }
 
                   $tabla.='
-                  <td style="width: 9%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
-                  <td style="width: 5%; text-align: right;">'.$ptto.'</td>
+                  <td style="width: 10%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                 
                 </tr>';
 
               }
@@ -758,7 +751,7 @@ class Modificacionpoa extends CI_Controller{
 
             $ope_eliminados=$this->model_modfisica->operaciones_eliminados($cite_id);
             if(count($ope_eliminados)!=0){
-              $tabla.='<div style="font-size: 10px;height:16px;"><b>ACTIVIDADES ELIMINADOS ('.count($ope_eliminados).')</b></div>';
+              $tabla.='<div style="font-size: 10px;height:16px;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACTIVIDADES ELIMINADOS ('.count($ope_eliminados).')</b></div>';
               $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
               $tabla.='<thead>';
               $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
@@ -767,8 +760,8 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:2.1%;">COD.<br>ACP.</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>OPE.</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
-                $tabla.='<th style="width:13%;">ACTIVIDAD</th>';
-                $tabla.='<th style="width:13%;">RESULTADO</th>';
+                $tabla.='<th style="width:14%;">ACTIVIDAD</th>';
+                $tabla.='<th style="width:14%;">RESULTADO</th>';
                 $tabla.='<th style="width:7%;">UNIDAD RESPONSABLE</th>';
                 $tabla.='<th style="width:8%;">INDICADOR</th>';
                 $tabla.='<th style="width:2%;">L.B.</th>';
@@ -785,15 +778,15 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<th style="width:2.5%;">OCT.</th>';
                 $tabla.='<th style="width:2.5%;">NOV.</th>';
                 $tabla.='<th style="width:2.5%;">DIC.</th>';
-                $tabla.='<th style="width:9%;">MEDIO DE VERIFICACIÓN</th>';
-                $tabla.='<th style="width:5%;">PPTO.</th>';
+                $tabla.='<th style="width:10%;">MEDIO DE VERIFICACIÓN</th>';
+              //  $tabla.='<th style="width:5%;">PPTO.</th>';
               $tabla.='</tr>';
               $tabla.='</thead>';
               $tabla.='<tbody>';
               $nro=0;
               foreach($ope_eliminados as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+              //  $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                 $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
                 $color=''; $tp='';
                 if($rowp['indi_id']==1){
@@ -810,10 +803,10 @@ class Modificacionpoa extends CI_Controller{
                   }
                 }
 
-                $ptto=number_format(0, 2, '.', ',');
+              /*  $ptto=number_format(0, 2, '.', ',');
                 if(count($monto)!=0){
                   $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                }
+                }*/
 
                 $color_or='';
                 if($rowp['or_id']==0){
@@ -828,8 +821,8 @@ class Modificacionpoa extends CI_Controller{
                   <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
                   <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
                   <td style="width: 2.1%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
-                  <td style="width: 13%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
-                  <td style="width: 12%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 14%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 14%; text-align: left;">'.$rowp['prod_resultado'].'</td>
                   <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
                   <td style="width: 8%; text-align: left;">'.$rowp['prod_indicador'].'</td>
                   <td style="width: 2%; text-align: right;">'.round($rowp['prod_linea_base'],2).'</td>
@@ -856,8 +849,8 @@ class Modificacionpoa extends CI_Controller{
                   }
 
                   $tabla.='
-                  <td style="width: 9%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
-                  <td style="width: 5%; text-align: right;">'.$ptto.'</td>
+                  <td style="width: 10%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                 
                 </tr>';
 
               }
@@ -865,21 +858,15 @@ class Modificacionpoa extends CI_Controller{
               </table><br>';
             }
 
-          $tabla.='
-
+            $tabla.='
             <div style="font-size: 7.5px;font-family: Arial;">
-              En atención a requerimiento de su unidad, comunicamos a usted que se ha procedido a efectivizar la modificación solicitada, toda vez que:<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; En atención a requerimiento de su unidad, comunicamos a usted que se ha procedido a efectivizar la modificación solicitada, toda vez que:<br>
 
-              &nbsp;&nbsp;&nbsp;a)&nbsp;&nbsp;No compromete u obstaculiza el cumplimiento de los objetivos previstos en la gestión fiscal.<br>
-              &nbsp;&nbsp;&nbsp;b)&nbsp;&nbsp;No vulnera o contraviene disposiciones legales.<br>
-              &nbsp;&nbsp;&nbsp;c)&nbsp;&nbsp;No genera obligaciones o deudas por las modificaciones efectuadas.<br>
-              &nbsp;&nbsp;&nbsp;d)&nbsp;&nbsp;No compromete el pago de obligaciones previstas en el presupuesto.
-            </div>
-
-          </td>
-          <td style="width:1%;"></td>
-        </tr>
-      </table>';
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a)&nbsp;&nbsp;&nbsp;No compromete u obstaculiza el cumplimiento de los objetivos previstos en la gestión fiscal.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b)&nbsp;&nbsp;&nbsp;No vulnera o contraviene disposiciones legales.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c)&nbsp;&nbsp;&nbsp;No genera obligaciones o deudas por las modificaciones efectuadas.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d)&nbsp;&nbsp;&nbsp;No compromete el pago de obligaciones previstas en el presupuesto.
+            </div>';
     
     return $tabla;
   }

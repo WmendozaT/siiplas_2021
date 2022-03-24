@@ -880,4 +880,26 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
     
+
+    /*-------- SUMA SALDOS REVERTIDOS POR PARTIDA Y CITE --------*/
+    public function suma_saldo_revertido($sp_id){
+        $sql = 'select SUM(monto_revertido) saldo
+                from saldo_partida
+                where sp_id='.$sp_id.' and saldo_estado!=\'3\'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*-------- LISTA DE SALDOS REVERTIDOS POR PARTIDA Y CITE --------*/
+    public function lista_saldos_revertidos($sp_id){
+        $sql = 'select saldo.*,mod.*
+                from saldo_partida saldo
+                Inner Join ppto_cite as mod On mod.cppto_id=saldo.cppto_id
+                where saldo.sp_id='.$sp_id.' and saldo.saldo_estado!=\'3\'
+                order by saldo.saldo_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 }

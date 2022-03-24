@@ -2827,6 +2827,8 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
      create table saldo_partida(
        saldo_id serial NOT NULL,
        sp_id integer NOT NULL,
+       cppto_id integer DEFAULT 0,
+       saldo_estado integer DEFAULT 1,
        monto_revertido numeric(18,2) NOT NULL DEFAULT 0,
        fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
        primary key(saldo_id)

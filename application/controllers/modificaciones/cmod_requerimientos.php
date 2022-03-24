@@ -37,32 +37,6 @@ class Cmod_requerimientos extends CI_Controller {
     }
 
 
-    /*----- */
-/*    public function ppto($proyecto){
-      $monto_a=0;$monto_p=0;$monto_saldo=0;
-      $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
-      
-      if($proyecto[0]['tp_id']==1){
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto[0]['proy_id']);
-      }
-      else{
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
-      }
-
-      if(count($monto_asig)!=0){
-        $monto_a=$monto_asig[0]['monto'];
-      }
-      if(count($monto_prog)!=0){
-        $monto_p=$monto_prog[0]['monto'];
-      }
-
-      $monto[1]=$monto_a; /// Monto Asignado
-      $monto[2]=$monto_p; /// Monto Programado
-      $monto[3]=($monto_a-$monto_p); /// Saldo
-
-      return $monto;
-    }*/
-
 
     /*----------------- GET REQUERIMIENTO -------------------*/
     public function get_requerimiento(){
@@ -240,13 +214,81 @@ class Cmod_requerimientos extends CI_Controller {
     /*----------- Cite Techo Presupuestario -----------*/
     public function cite_techo($proy_id){
       $data['menu']=$this->menu(3); //// genera menu
-      $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
-      $data['titulo_proy'] = strtoupper($data['proyecto'][0]['tipo']);
+      $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
+      $data['datos_proyecto']='<h1> PROYECTO : <small> '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['proy_nombre'].'</small></h1>';
+      
+      if($proyecto[0]['tp_id']==4){
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+        $data['datos_proyecto']='<h1> '.$proyecto[0]['establecimiento'].' : <small> '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev'].'</small></h1>';
+      }
+
+      $data['formulario']='
+        <article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <div class="well">
+            <h2 class="alert alert-info"><center>INGRESAR CITE </center></h2>
+                <form action="'.site_url("").'/modificaciones/cmod_requerimientos/valida_cite" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
+                <input type="hidden" name="proy_id" id="proy_id" value="'.$proy_id.'">
+                <fieldset>
+                <section>
+                  <div class="row">
+                    <label class="label col col-2">NRO CITE</label>
+                    <div class="col col-10">
+                      <label class="input"> <i class="icon-append fa fa-user"></i>
+                        <input type="text" name="cite" id="cite" placeholder="XX-XX-XXX">
+                      </label>
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div class="row">
+                    <label class="label col col-2">FECHA CITE</label>
+                    <div class="col col-10">
+                      <label class="input"> <i class="icon-append fa fa-calendar"></i>
+                      <input type="text" name="fm" id="fm" class="form-control datepicker" data-dateformat="dd/mm/yy" onKeyUp="this.value=formateafecha(this.value);" placeholder="dd/mm/YY">
+                    </label>
+                    </div>
+                  </div>
+                </section>
+                <section>
+                  <div class="inline-group">
+                    <label class="radio">
+                      <input type="radio" name="tp" onchange="radioChange(this);" id="ppto" value="0">
+                      <i></i>TECHO PRESUPUESTARIO</label>
+                    <label class="radio">
+                      <input type="radio" name="tp" onchange="radioChange(this);" id="saldo" value="1">
+                      <i></i>REVERSION DE SALDOS</label>
+                  </div>
+                </section>
+                <div id="obs" style="display: none">
+                  <section>
+                    <div class="row">
+                      <label class="label col col-2">OBSERVACIÓN</label>
+                      <div class="col col-10">
+                        <label class="textarea"> <i class="icon-append fa fa-comment"></i>                    
+                          <textarea rows="5" name="observacion"></textarea> 
+                        </label>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </fieldset>
+                
+              <div id="btn" style="display: none">
+                <footer>
+                  <button type="button" name="add_form" id="add_form" class="btn btn-primary">INGRESAR</button>
+                  <a href="'.base_url().'index.php/mod/list_top" class="btn btn-default" title="Volver atras">CANCELAR</a>
+                </footer>
+              </div>
+              <center><img id="load" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="35" height="35"></center></td>
+            </form> 
+          </div>
+        </article> ';
+
 
       $this->load->view('admin/modificacion/techo/cite_ppto', $data);
     }
 
-    /*--------- VALIDA CITES (MODIFICACIONES)----------*/
+    /*--------- VALIDA CITES TECHO PRESUPUESTARIO (MODIFICACIONES)----------*/
     public function valida_cite(){
       if ($this->input->post()) {
           $post = $this->input->post();
@@ -254,12 +296,21 @@ class Cmod_requerimientos extends CI_Controller {
           $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
           $cite = $this->security->xss_clean($post['cite']);
           $fecha = $this->security->xss_clean($post['fm']);
+          $tp = $this->security->xss_clean($post['tp']);
+          
+          $obs='';
+          if($tp==1){ //// Reversion de Saldos
+            $obs = $this->security->xss_clean($post['observacion']);
+          }
 
+        //  echo "proy ".$proy_id." - ".$cite." - ".$fecha." - ".$tp.' - '.$obs;
           /*--------- GUARDANDO CITE PRESUPUESTO ---------*/
             $data_to_store = array(
               'proy_id' => $proy_id,
               'cppto_cite' => strtoupper($cite),
               'cppto_fecha' => $fecha,
+              'tp' => $tp,
+              'observacion' => $obs,
               'fun_id' => $this->fun_id,
               );
             $this->db->insert('ppto_cite',$data_to_store);
@@ -297,7 +348,7 @@ class Cmod_requerimientos extends CI_Controller {
 
 
         $data['titulo']=$titulo;
-        $data['partidas_asig']=$this->list_partidas($data['proyecto'][0]['proy_id']); /// Partidas Asignadas
+        $data['partidas_asig']=$this->list_partidas($data['cite']); /// Partidas Asignadas
         $data['list_partidas']=$this->model_ptto_sigep->list_partidas_noasig($data['proyecto'][0]['aper_id']); /// Aper id
 
         $this->load->view('admin/modificacion/techo/edit_partidas', $data);
@@ -309,8 +360,8 @@ class Cmod_requerimientos extends CI_Controller {
     }
 
     /*------ Lista de Partidas a modificar (2019-220-2021) -------*/
-    function list_partidas($proy_id){
-      $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); //// DATOS DEL PROYECTO
+    function list_partidas($cite){
+      $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); //// DATOS DEL PROYECTO
       $partidas=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']);
       $total=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
       $monto_total=0;
@@ -322,10 +373,14 @@ class Cmod_requerimientos extends CI_Controller {
 
       $tabla.='<center>
                 <table class="table table-bordered" style="width:80%;" align="center">
-                  <tr title="'.$proyecto[0]['aper_id'].'">
-                    <td style="width:15%;">
+                  <tr title="'.$proyecto[0]['aper_id'].'">';
+                    if($cite[0]['tp']==0){
+                      $tabla.='
+                      <td style="width:15%;">
                       <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary nuevo_ff btn-lg" title="NUEVO REGISTRO PARTIDA" style="width:100%; height:100%;">NUEVO PARTIDA</a>
-                    </td>
+                    </td>';
+                    }
+                    $tabla.='
                     <td style="width:5%;">BUSCADOR</td>
                     <td style="width:80%;"><input type="text" class="form-control" id="kwd_search" value="" style="width:100%;"/></td>
                   </tr>
@@ -336,15 +391,21 @@ class Cmod_requerimientos extends CI_Controller {
                       <th bgcolor="#1c7368"><font color="#ffffff">'.$proyecto[0]['aper_id'].'#</font></th>
                       <th style="width:5%;" bgcolor="#1c7368"><font color="#ffffff">C&Oacute;DIGO PARTIDA</font></th>
                       <th style="width:15%;"bgcolor="#1c7368"><font color="#ffffff">DESCRIPCI&Oacute;N PARTIDA</font></th>
-                      <th bgcolor="#1c7368"><font color="#ffffff">MONTO ASIGNADO INICIAL</font></th>
-                      <th bgcolor="#1c7368"><font color="#ffffff">MONTO PROGRAMADO POA</font></th>
-                      <th bgcolor="#1c7368"><font color="#ffffff">MONTO A INCREMENTAR.</font></th>
-                      <th bgcolor="#1c7368"><font color="#ffffff">MONTO FINAL</font></th>
+                      <th bgcolor="#1c7368"><font color="#ffffff">MONTO ASIGNADO</font></th>
+                      <th bgcolor="#1c7368"><font color="#ffffff">MONTO PROGRAMADO POA</font></th>';
+                      if($cite[0]['tp']==0){
+                        $tabla.='<th bgcolor="#1c7368"><font color="#ffffff">MONTO A MODIFICAR.</font></th>';
+                      }
+                      $tabla.='
+                      <th bgcolor="#1c7368"><font color="#ffffff">PRESUPUESTO FINAL</font></th>
                       <th bgcolor="#1c7368"><font color="#ffffff">ELIMINAR</font></th>
-                      <th bgcolor="#1c7368"><font color="#ffffff" style="width:8%;">SALDO NO EJECUTADO</font></th>
-                      <th style="width:20%;" bgcolor="#1c7368"><font color="#ffffff" style="width:10%;">OBSERVACIÓN</font></th>
-                      <th bgcolor="#1c7368"><font color="#ffffff"></font></th>
-                      <th bgcolor="#1c7368"><font color="#ffffff">SALDO</font></th>
+                      <th bgcolor="#1c7368"><font color="#ffffff" style="width:8%;">MONTO REVERTIDO</font></th>';
+                      if($cite[0]['tp']==1){
+                        $tabla.='
+                        <th bgcolor="#1c7368"><font color="#ffffff">REGISTRAR SALDO</font></th>
+                        <th bgcolor="#1c7368"></th>';
+                      }
+                      $tabla.='
                     </tr>
                   </thead>
                   <tbody>';
@@ -358,57 +419,52 @@ class Cmod_requerimientos extends CI_Controller {
 
                     $nro++;
                     $tabla .='
-                            <tr class="modo1">
-                              <td align=center>'.$nro.'<input type="hidden" name="sp_id[]" value="'.$row['sp_id'].'"></td>
-                              <td align=center>'.$row['partida'].'</td>
-                              <td align=left>'.$row['par_nombre'].'</td>
-                              <td align=right><input type="hidden" id="monto'.$nro.'" name="monto_inicial[]" value="'.$row['importe'].'">
-                                <b>'.number_format($row['importe'], 2, ',', '.').'</b>
-                              </td>
-                              <td align=right>
-                                <b>'.number_format($monto_poa, 2, ',', '.').'</b>
-                              </td>
-                              <td align=center><input type="number" class="form-control" onkeyup="suma_monto_partida('.$nro.');" name="monto_dif[]" id="dif'.$nro.'" value="0" title="MONTO A INCREMENTAR" pattern="^[0-9]" pattern="^[0-9]"  min="1" step="1"></td>
-                              <td align=center>
-                                <input type="text" class="form-control" id="mpartida'.$nro.'" value="'.$row['importe'].'" title="MONTO FINAL" disabled>
-                                <input type="hidden" name="monto_partida[]" id="mpartida'.$nro.'" value="'.$row['importe'].'">
-                              </td>
-                              <td align=center><a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR MONTO PARTIDA"  name="'.$row['sp_id'].'" id="'.$proy_id.'" ><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a></td>
-                              <td align="center" style="width:8%;">';
-                                if($row['importe']!=0){
-                                  $tabla.='<input type="number" class="form-control" id="saldo'.$nro.'" name="saldo'.$nro.'" value="'.round($row['ppto_saldo_ncert'],2).'" onkeyup="verif_monto_saldo('.$row['ppto_saldo_ncert'].',this.value,'.$nro.');" title="SALDO NO EJECUTADO" pattern="^[0-9]" pattern="^[0-9]"  min="1" step="1">';
-                                }
-                              $tabla.='
-                              </td>
-                              <td><textarea name="obs_saldo'.$nro.'" id="obs_saldo'.$nro.'" rows="5" class="form-control" cols="25">'.$row['ppto_saldo_observacion'].'</textarea></td>
-                              <td align="center">';
-                                if($row['importe']!=0){
-                                  if($row['ppto_saldo_ncert']!=0){
-                                    $tabla.='<div id="but'.$nro.'" ><button type="button" name="'.$row['sp_id'].'" id="'.$nro.'" onclick="guardar('.$row['sp_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="32" HEIGHT="32"/><br>MODIFICAR</button></div>';
-                                  }
-                                  else{
-                                    $tabla.='<div id="but'.$nro.'" style="display:none;"><button type="button" name="'.$row['sp_id'].'" id="'.$nro.'" onclick="guardar('.$row['sp_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="32" HEIGHT="32"/><br>GUARDAR</button></div>';
-                                  }
-                                  
-                                }
-                              $tabla.='
-                              </td>
-                              <td>
-                                <a href="#" data-toggle="modal" data-target="#modal_add_saldo" class="btn btn-default add_saldo" name="'.$row['sp_id'].'" title="SALDO REVERTIDO"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a>
-                              </td>
-                            </tr>';
+                    <tr class="modo1">
+                      <td align=center>'.$nro.'<input type="hidden" name="sp_id[]" value="'.$row['sp_id'].'"></td>
+                      <td align=center><b>'.$row['partida'].'</b></td>
+                      <td align=left><b>'.$row['par_nombre'].'</b></td>
+                      <td align=right><input type="hidden" id="monto'.$nro.'" name="monto_inicial[]" value="'.$row['importe'].'">
+                        <b>'.number_format($row['importe'], 2, ',', '.').'</b>
+                      </td>
+                      <td align=right>
+                        <b>'.number_format($monto_poa, 2, ',', '.').'</b>
+                      </td>';
+                      if($cite[0]['tp']==0){
+                        $tabla.='<td align=center><input type="number" class="form-control" onkeyup="suma_monto_partida('.$nro.');" name="monto_dif[]" id="dif'.$nro.'" value="0" title="MONTO A INCREMENTAR" pattern="^[0-9]" pattern="^[0-9]"  min="1" step="1"></td>';
+                      }
+                      $tabla.='
+                      <td align=center>
+                        <input type="text" class="form-control" id="mpartida'.$nro.'" value="'.$row['importe'].'" title="MONTO FINAL" disabled>
+                        <input type="hidden" name="monto_partida[]" id="mpartida'.$nro.'" value="'.$row['importe'].'">
+                      </td>
+                      <td align=center><a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR MONTO PARTIDA"  name="'.$row['sp_id'].'" id="'.$cite[0]['proy_id'].'" ><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a></td>
+                      <td align="right" style="width:8%;"><b>'.number_format($row['ppto_saldo_ncert'], 2, '.', ',').'</b></td>';
+                        if($cite[0]['tp']==1){
+                          $tabla.='
+                          <td align="center">
+                            <a href="#" data-toggle="modal" data-target="#modal_add_saldo" class="btn btn-default add_saldo" name="'.$row['sp_id'].'" title="SALDO REVERTIDO"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a>
+                          </td>
+                          <td align="center">
+                          </td>';
+                        }
+                      $tabla.='
+                    </tr>';
                   }
                   $tabla.='</tbody>
                   <tr>
                     <td colspan="3">TOTAL </td>
                     <td align=center>'.$monto_total.'</td>
-                    <td align=center></td>
-                    <td align=center></td>
+                    <td align=center></td>';
+                    if($cite[0]['tp']==0){
+                      $tabla.='<td align=center></td>';
+                    }
+                    $tabla.='
                     <td align=center><input type="text" class="form-control" name="total" value="'.$monto_total.'" disabled="true"></td>
-                    <td align=center></td>
-                    <td align=center></td>
-                    <td align=center></td>
-                    <td align=center></td>
+                    <td align=center></td>';
+                    if($cite[0]['tp']==1){
+                      $tabla.='<td align=center colspan="2"></td>';
+                    }
+                    $tabla.='
                   </tr>
                   
                 </table>
@@ -469,7 +525,6 @@ class Cmod_requerimientos extends CI_Controller {
         $sp_id = $this->security->xss_clean($post['sp_id']);
         $ppto_asignado=$this->model_ptto_sigep->get_sp_id($sp_id);
 
-
           if(count($ppto_asignado)!=0){
             $result = array(
               'respuesta' => 'correcto',
@@ -489,27 +544,36 @@ class Cmod_requerimientos extends CI_Controller {
     }
 
 
+
     /*---- VALIDA SALDO NO EJECUTADO ----*/
     public function guardar_saldo_ppto(){
-      if($this->input->is_ajax_request() && $this->input->post()){
+      if($this->input->post()){
         $post = $this->input->post();
         $sp_id = $this->security->xss_clean($post['sp_id']);
+        $cite_id = $this->security->xss_clean($post['cite_id']);
         $saldo = $this->security->xss_clean($post['saldo']);
-        $observacion = $this->security->xss_clean($post['obs']);
 
+        /*-------- Insert historial de saldos -------*/
+        $data_to_store = array(
+          'sp_id' => $sp_id,
+          'monto_revertido' => $saldo,
+          'cppto_id' => $cite_id,
+        );
+        $this->db->insert('saldo_partida',$data_to_store);
+        /*------------------------------------------*/
+
+        $saldo=$this->model_ptto_sigep->suma_saldo_revertido($sp_id);
+
+        if(count($saldo)!=0){
           $update_saldo = array(
-            'ppto_saldo_ncert' => $saldo,
-            'ppto_saldo_observacion' => $observacion
+            'ppto_saldo_ncert' => $saldo[0]['saldo']
           );
           $this->db->where('sp_id', $sp_id);
           $this->db->update('ptto_partidas_sigep', $update_saldo);
-        
+        }
 
-        $result = array(
-          'respuesta' => 'correcto',
-        );
-  
-        echo json_encode($result);
+        redirect(site_url("").'/mod/techo/'.$cite_id);
+
       }else{
           show_404();
       }
@@ -4497,7 +4561,7 @@ class Cmod_requerimientos extends CI_Controller {
     }
 
     /*----- ESTILOS PARA LOS RE´PORTES -----*/
-    function estilo_vertical(){
+/*    function estilo_vertical(){
         $estilo_vertical = '<style>
         body{
             font-family: sans-serif;
@@ -4556,7 +4620,7 @@ class Cmod_requerimientos extends CI_Controller {
         }
     </style>';
         return $estilo_vertical;
-    }
+    }*/
 
     function mes_nombre(){
         $mes[1] = 'ENE.';
