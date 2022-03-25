@@ -29,7 +29,7 @@ class Eval_oregional extends CI_Controller{
       $this->conf_form4 = $this->session->userData('conf_form4');
       $this->conf_form5 = $this->session->userData('conf_form5');
       $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
-      $this->fecha_plazo_actualizacion = strtotime(date('2022-03-20'));
+      $this->fecha_plazo_actualizacion = strtotime(date('2022-04-5'));
     }
 
     

@@ -36,7 +36,6 @@ class Rep_operaciones extends CI_Controller {
     }
     
 
-    
     //// TIPO DE RESPONSABLE
     public function tp_resp(){
       $ddep = $this->model_proyecto->dep_dist($this->dist);
@@ -56,9 +55,6 @@ class Rep_operaciones extends CI_Controller {
       $data['list']=$this->menu_nacional();
       $data['mensaje']='<div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';
       $this->load->view('admin/reportes_cns/programacion_poa/menu_consolidado_poa', $data);
-
-    //echo $this->lista_gastocorriente_pinversion(1,0,4);
-   // echo $this->consolidado_operaciones_distrital(5,4);
     }
 
 
@@ -68,64 +64,64 @@ class Rep_operaciones extends CI_Controller {
     $regionales=$this->model_proyecto->list_departamentos();
     $unidades=$this->model_estructura_org->list_unidades_apertura();
       $tabla.='
-          <input name="base" type="hidden" value="'.base_url().'">
-          <article class="col-sm-12">
-            <div class="well">
-              <form class="smart-form">
-                  <header><b>RESUMEN CONSOLIDADO PROGRAMACI&Oacute;N POA '.$this->gestion.'</b></header>
-                  <fieldset>          
-                    <div class="row">
-                      <section class="col col-2">
-                        <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
-                        <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
-                        <option value="0">SELECCIONE REGIONAL</option>';
-                        foreach($regionales as $row){
-                          if($row['dep_id']!=0){
-                            $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
-                          }
-                        }
-                        $tabla.='
-                        </select>
-                      </section>
+      <input name="base" type="hidden" value="'.base_url().'">
+      <article class="col-sm-12">
+        <div class="well">
+          <form class="smart-form">
+              <header><b>RESUMEN CONSOLIDADO PROGRAMACI&Oacute;N POA '.$this->gestion.'</b></header>
+              <fieldset>          
+                <div class="row">
+                  <section class="col col-2">
+                    <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
+                    <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
+                    <option value="0">SELECCIONE REGIONAL</option>';
+                    foreach($regionales as $row){
+                      if($row['dep_id']!=0){
+                        $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                      }
+                    }
+                    $tabla.='
+                    </select>
+                  </section>
 
-                      <section class="col col-2">
-                        <label class="label">UNIDAD EJECUTORA</label>
-                        <select class="form-control" id="dist_id" name="dist_id" title="SELECCIONE DISTRITAL">
-                        </select>
-                      </section>
+                  <section class="col col-2">
+                    <label class="label">UNIDAD EJECUTORA</label>
+                    <select class="form-control" id="dist_id" name="dist_id" title="SELECCIONE DISTRITAL">
+                    </select>
+                  </section>
 
-                      <section class="col col-2">
-                        <label class="label">TIPO DE REPORTE</label>
-                        <select class="form-control" id="rep_id" name="rep_id" title="SELECCIONE TIPO REPORTE">
-                        </select>
-                      </section>
+                  <section class="col col-2">
+                    <label class="label">TIPO DE REPORTE</label>
+                    <select class="form-control" id="rep_id" name="rep_id" title="SELECCIONE TIPO REPORTE">
+                    </select>
+                  </section>
 
-                      <section class="col col-2">
-                        <label class="label">TIPO DE GASTO</label>
-                        <select class="form-control" id="tp_id" name="tp_id" title="SELECCIONE TIPO">
-                        </select>
-                      </section>
+                  <section class="col col-2">
+                    <label class="label">TIPO DE GASTO</label>
+                    <select class="form-control" id="tp_id" name="tp_id" title="SELECCIONE TIPO">
+                    </select>
+                  </section>
 
-                      <div id="unidad" style="display:none;">
-                        <section class="col col-2">
-                          <label class="label">GASTO CORRIENTE / PROYECTO DE INVERSI&Oacute;N</label>
-                          <select class="form-control" id="proy_id" name="proy_id" title="SELECCIONE GASTO CORRIENTE/PROYECTO DE INVERSION">
-                            <option value="0">SELECCIONE GASTO CORRIENTE / PROYECTO</option>
-                          </select>
-                        </section>
+                  <div id="unidad" style="display:none;">
+                    <section class="col col-2">
+                      <label class="label">GASTO CORRIENTE / PROYECTO DE INVERSI&Oacute;N</label>
+                      <select class="form-control" id="proy_id" name="proy_id" title="SELECCIONE GASTO CORRIENTE/PROYECTO DE INVERSION">
+                        <option value="0">SELECCIONE GASTO CORRIENTE / PROYECTO</option>
+                      </select>
+                    </section>
 
-                        <section class="col col-2">
-                          <label class="label">UNIDAD RESPONSABLE</label>
-                          <select class="form-control"id="sub_act" name="sub_act" title="SELECCIONE UNIDAD RESPONSABLE">
-                          </select>
-                        </section>
-                      </div>
+                    <section class="col col-2">
+                      <label class="label">UNIDAD RESPONSABLE</label>
+                      <select class="form-control"id="sub_act" name="sub_act" title="SELECCIONE UNIDAD RESPONSABLE">
+                      </select>
+                    </section>
+                  </div>
 
-                    </div>
-                  </fieldset>
-              </form>
-              </div>
-            </article>';
+                </div>
+              </fieldset>
+          </form>
+          </div>
+        </article>';
     return $tabla;
   }
 
@@ -219,13 +215,13 @@ class Rep_operaciones extends CI_Controller {
         
         $salida='';
         if($tp_rep==1){
-          $salida=$this->lista_gastocorriente_pinversion($dep_id,$dist_id,$tp_id);
+          $salida=$this->genera_informacion->lista_gastocorriente_pinversion($dep_id,$dist_id,$tp_id);
         }
         elseif ($tp_rep==2) {
-          $salida=$this->consolidado_operaciones_distrital($dep_id,$dist_id,$tp_id); /// Consolidado Formulario N° 4 
+          $salida=$this->genera_informacion->consolidado_operaciones_distrital($dep_id,$dist_id,$tp_id); /// Consolidado Formulario N° 4 
         }
         elseif ($tp_rep==3) {
-          $salida=$this->consolidado_requerimientos_distrital($dep_id,$dist_id,$tp_id); /// Consolidado formulario N° 5
+          $salida=$this->genera_informacion->consolidado_requerimientos_distrital($dep_id,$dist_id,$tp_id); /// Consolidado formulario N° 5
         }
         elseif ($tp_rep==4) {
           $salida='';
@@ -256,646 +252,26 @@ class Rep_operaciones extends CI_Controller {
     }
 
 
-    /*-- REPORTE 1 (LISTA DE UNIDADES/PROYECTOS DE INVERSIÓN)--*/
-    public function lista_gastocorriente_pinversion($dep_id,$dist_id,$tp_id){
-      $dist=$this->model_proyecto->dep_dist($dist_id);
-
-        if($dist_id!=0){
-          $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id); /// unidades de la distrital
-        }
-        else{
-          $unidades=$this->mrep_operaciones->list_poa_gacorriente_pinversion_regional($dep_id,$tp_id); /// unidades de la Regional
-        }
-      
-        $titulo='GASTO CORRIENTE';
-        if($tp_id==1){
-          $titulo='PROYECTO DE INVERSI&Oacute;N';
-        }
-
-        $titulo_ppto='PPTO. ASIGNADO '.$this->gestion.'';
-        if($this->ppto==1){
-          $titulo_ppto='PPTO. APROBADO '.$this->gestion.'';
-        }
-
-      $tabla='';
-      $tabla.='
-      <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
-        <br>
-        <div align=right>
-          <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR UNIDADES / PROYECTOS DE INVERSI&Oacute;N</a>&nbsp;&nbsp;&nbsp;&nbsp;
-          <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-        <br>
-      <div class="alert alert-warning">
-        <a href="#" class="alert-link" align=center><center><b>LISTA DE '.$titulo.' '.$this->gestion.' - '.strtoupper($dist[0]['dist_distrital']).'</b></center></a>
-      </div>
-      <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
-        <thead>
-          <tr style="background-color: #66b2e8">
-            <th style="width:1%;"></th>
-            <th style="width:5%;"></th>
-            <th style="width:3%;">REP. POA <br>'.$this->gestion.'</th>
-            <th style="width:5%;"></th>
-            <th style="width:5%;">COD. DA.</th>
-            <th style="width:5%;">COD. UE.</th>
-            <th style="width:5%;">COD. PROG.</th>
-            <th style="width:5%;">COD. PROY.</th>
-            <th style="width:5%;">COD. ACT.</th>
-            <th style="width:20%;">'.$titulo.'</th>
-            <th style="width:10%;"></th>
-            <th style="width:10%;" title="">UNIDAD ADMINISTRATIVA</th>
-            <th style="width:10%;" title="">UNIDAD EJECUTORA</th>
-            <th style="width:8%;" title="">'.$titulo_ppto.'</th>
-            <th style="width:8%;" title="">PPTO. POA '.$this->gestion.'</th>
-            <th style="width:8%;" title="">SALDO</th>
-            <th style="width:10%;" title=""></th>
-          </tr>
-        </thead>
-        <tbody id="bdi">';
-        $nro=0;
-        foreach ($unidades as $row){
-          $ppto=$this->genera_informacion->ppto_actividad($row,$tp_id);
-          $color='';
-          if($ppto[3]<0){
-            $color='#f3d8d7';
-          }
-          elseif($ppto[3]>0){
-            $color='#e4f7f4'; 
-          }
-          
-          $rep='';
-          $estado='<font color="red"><b>NO APROBADO</b></font>';
-          if($row['aper_proy_estado']==4){
-            $rep='<center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" title="REPORTE POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></center>';
-            $estado='<font color="#1c7368"><b>APROBADO</b></font>'; 
-          }
-
-          $nro++;
-          $tabla.='
-          <tr style="height:35px;" bgcolor="'.$color.'" title="'.$row['aper_id'].'">
-            <td>'.$nro.'</td>
-            <td align=center>';
-            if($row['pfec_estado']==1){
-              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_poa" class="btn btn-default enlace" name="'.$row['proy_id'].'"  onclick="ver_poa('.$row['proy_id'].');" title="FORMULARIO POA">FORMULARIOS POA</a>';
-            }
-            else{
-              $tabla.='<b>FASE NO ACTIVA</b>';
-            }
-            $tabla.='
-            </td>
-            <td>'.$rep.'</td>
-            <td align=center>';
-            if($row['pfec_estado']==1){
-              if($this->gestion==2021){
-                $tabla.=' <a href="'.site_url("").'/seg/notificacion_operaciones_mensual/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="NOTIFICACIÓN POA">NOTIFICACI&Oacute;N POA '.$this->verif_mes[2].'</a>';
-              }
-            }
-            else{
-              $tabla.='<b>FASE NO ACTIVA</b>';
-            }
-            $tabla.='
-            </td>
-            <td align=center>'.$row['da'].'</td>
-            <td align=center>'.$row['ue'].'</td>
-            <td align=center>'.$row['prog'].'</td>
-            <td align=center>'.$row['proy'].'</td>
-            <td align=center>'.$row['act'].'</td>
-            <td>';
-              if($tp_id==1){
-              $tabla.='<b>'.$row['proyecto'].'</b>';
-            }
-            else{
-              $tabla.='<b>'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</b>';
-            }
-            $tabla.='
-            </td>
-            <td>'.$titulo.'</td>
-            <td>'.strtoupper($row['dep_departamento']).'</td>
-            <td>'.strtoupper($row['dist_distrital']).'</td>
-            <td align=right>'.number_format($ppto[1], 2, ',', '.').'</td>
-            <td align=right>'.number_format($ppto[2], 2, ',', '.').'</td>
-            <td align=right>'.number_format($ppto[3], 2, ',', '.').'</td>
-            <td align=center>'.$estado.'</td>
-          </tr>';
-        }
-        $tabla.='</tbody>
-        </table>';
-      return $tabla;
-    }
-
-    /*----- Calculo de Presupuesto Asignado-Programado ----*/
-    public function ppto_actividad($proyecto,$tp_id){
-        $salida[1]=0;$salida[2]=0;$salida[3]=0;
-
-        $ppto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto['aper_id'],1); /// Asignado
-        if($tp_id==1){
-          $ppto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto['proy_id']); /// Programado Proyecto Inversion
-        }
-        else{
-          $ppto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto['aper_id'],2); /// Programado Gasto Corriente
-        }
-
-        $monto_asignado=0;$monto_programado=0;$saldo=0;
-        if(count($ppto_asig)!=0){
-          $monto_asignado=$ppto_asig[0]['monto'];
-        }
-
-        if(count($ppto_prog)!=0){
-          $monto_programado=$ppto_prog[0]['monto'];
-        }
-
-        $saldo=($monto_asignado-$monto_programado);
-        $salida[1]=$monto_asignado; /// asignado
-        $salida[2]=$monto_programado; /// Programado
-        $salida[3]=$saldo; /// Saldo
-
-        return $salida;
-    }
-
     /*-----REPORTE ESTABLECIMIENTOS DE SALUD (DISTRITAL) 2020-2021-----*/
     public function establecimientos_salud($dep_id,$dist_id){
-      if($dist_id==0){
-        $regional=$this->model_proyecto->get_departamento($dep_id);
-        $establecimientos=$this->mrep_operaciones->establecimientos_salud_regional($dep_id);
-        $data['titulo_reporte_pie']=$regional[0]['dep_departamento'];
-      }
-      else{
-        $distrital=$this->model_proyecto->dep_dist($dist_id);
-        $establecimientos=$this->mrep_operaciones->establecimientos_salud_distrital($dist_id);
-        $data['titulo_reporte_pie']=$distrital[0]['dist_distrital'];
-      }
-
-
-        $tabla='';
-        $tabla.='
-          <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
-            <thead>
-              <tr style="font-size: 7px;" align=center bgcolor="#f5f7f8">
-                <th style="width:1%;height:15px;">#</th>
-                <th style="width:8%;">COD. DA.</th>
-                <th style="width:8%;">COD. ACT.</th>
-                <th style="width:50%;">ESTABLECIMIENTO DE SALUD</th>
-                <th style="width:15%;" title="">PPTO. ASIGNADO '.$this->gestion.'</th>
-              </tr>
-            </thead>
-            <tbody>';
-             $nro=0;
-              foreach ($establecimientos as $row){
-                $ppto=$this->genera_informacion->ppto_actividad($row,4);
-                $color='';
-                if($ppto[3]<0){
-                  $color='#f3d8d7';
-                }
-                elseif($ppto[3]>0){
-                  $color='#e4f7f4'; 
-                }
-                
-                $nro++;
-                $tabla.='
-                <tr bgcolor="'.$color.'" >
-                  <td style="width:1%;height:15px;" align=center>'.$nro.'</td>
-                  <td style="width:8;" align=center>'.$row['dep_cod'].'</td>
-                  <td style="width:8%;" align=center>'.$row['act_cod'].'</td>
-                  <td style="width:50%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
-                  <td style="width:15%;" align=right>'.number_format($ppto[1], 2, ',', '.').'</td>
-                </tr>';
-              }
-              $tabla.='
-            </tbody>
-          </table>';
-
-          $data['titulo_reporte']='ESTABLECIMIENTOS DE SALUD';
-          $data['mes'] = $this->mes_nombre();
-          $data['titulo']='';
-          $data['lista']=$tabla;
-          $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_comparativo', $data);
+     $this->genera_informacion->establecimientos_salud($dep_id,$dist_id);
     }
 
     
 
     /*-----REPORTE COMPARATIVO PRESUPUESTO ASIG-POA (DISTRITAL) 2020-2021-----*/
     public function comparativo_presupuesto_distrital($dep_id,$dist_id,$tp_id){
-      $data['mes'] = $this->mes_nombre();
-      if($dist_id==0){ // Nacional
-        
-       /* $data['titulo']='GASTO CORRIENTE '.$this->gestion.'';
-        if($tp_id==1){
-          $data['titulo']='PROYECTO DE INVERSI&Oacute;N '.$this->gestion.'';
-        }
-
-        $unidades=$this->mrep_operaciones->list_poa_gastocorriente_pinversion($tp_id);*/
-        $regional=$this->model_proyecto->get_departamento($dep_id);
-        $data['titulo']='CONSOLIDADO - '.strtoupper($regional[0]['dep_departamento']).'';
-        $unidades=$this->mrep_operaciones->list_poa_gacorriente_pinversion_regional($dep_id,$tp_id);
-        $data['titulo_reporte_pie']=$regional[0]['dep_departamento'];
-
-      }
-      else{ /// Distrital
-        $distrital=$this->model_proyecto->dep_dist($dist_id);
-        $data['titulo']=''.strtoupper($distrital[0]['dist_distrital']).'';
-        $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id);
-        $data['titulo_reporte_pie']=$distrital[0]['dist_distrital'];
-      }
-
-      
-          $titulo='GASTO CORRIENTE';
-          if($tp_id==1){
-            $titulo='PROYECTO DE INVERSI&Oacute;N';
-          }
-
-        $titulo_ppto='PPTO. ASIGNADO '.$this->gestion.'';
-        if($this->ppto==1){
-          $titulo_ppto='PPTO. APROBADO '.$this->gestion.'';
-        }
-
-        $tabla='';
-        $tabla.='
-              <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
-                <thead>
-                  <tr style="font-size: 7px;" align=center bgcolor="#f5f7f8">
-                    <th style="width:1%;">#</th>
-                    <th style="width:5%;">COD. DA.</th>
-                    <th style="width:5%;">COD. UE.</th>
-                    <th style="width:5%;">COD. PROG.</th>
-                    <th style="width:10%;">COD. PROY.</th>
-                    <th style="width:5%;">COD. ACT.</th>
-                    <th style="width:30%;">'.$titulo.'</th>
-                    <th style="width:8%;" title="">'.$titulo_ppto.'</th>
-                    <th style="width:8%;" title="">PPTO. POA '.$this->gestion.'</th>
-                    <th style="width:8%;" title="">SALDO</th>
-                  </tr>
-                </thead>
-                <tbody>';
-                 $nro=0;
-                  foreach ($unidades as $row){
-                    $ppto=$this->genera_informacion->ppto_actividad($row,$tp_id);
-                    $color='';
-                    if($ppto[3]<0){
-                      $color='#f3d8d7';
-                    }
-                    elseif($ppto[3]>0){
-                      $color='#e4f7f4'; 
-                    }
-                    
-                    $nro++;
-                    $tabla.='
-                    <tr bgcolor="'.$color.'" title="'.$row['aper_id'].'">
-                      <td style="height:1px;" align=center>'.$nro.'</td>
-                      <td style="height:15px;" align=center>'.$row['da'].'</td>
-                      <td style="width:5%;" align=center>'.$row['ue'].'</td>
-                      <td style="width:5%;" align=center>'.$row['prog'].'</td>
-                      <td style="width:10%;" align=center>';
-                      if($tp_id==1){
-                        $tabla.=''.$row['proy'].'';
-                      }
-                      else{
-                        $tabla.='0000';
-                      }
-                      $tabla.='
-                      </td>
-                      <td style="width:5%;" align=center>'.$row['act'].'</td>
-                      <td style="width:30%;">';
-                        if($tp_id==1){
-                        $tabla.=''.$row['proyecto'].'';
-                      }
-                      else{
-                        $tabla.=''.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'';
-                      }
-                      $tabla.='</td>
-                      <td style="width:8%;" align=right>'.number_format($ppto[1], 2, ',', '.').'</td>
-                      <td style="width:8%;" align=right>'.number_format($ppto[2], 2, ',', '.').'</td>
-                      <td style="width:8%;" align=right>'.number_format($ppto[3], 2, ',', '.').'</td>
-                    </tr>';
-                  }
-                  $tabla.='
-                </tbody>
-              </table>';
-
-          $data['titulo_ppto']=$titulo_ppto;
-          $data['titulo_reporte']='CUADRO COMPARATIVO - '.$titulo_ppto.' '.$this->gestion.' Vs MONTO PROGRAMADO '.$this->gestion.'';
-          
-          $data['lista']=$tabla;
-        
-          $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_comparativo', $data);
+      $this->genera_informacion->comparativo_presupuesto_distrital($dep_id,$dist_id,$tp_id);
     }
+
+
 
     /////-------------------------------------------------------
 
-    /*-- REPORTE 2 (CONSOLIDADO OPERACIONES DIST) 2020-2021--*/
-    public function consolidado_operaciones_distrital($dep_id,$dist_id,$tp_id){
-      
-      $tabla='';
-      $tabla.='
-      <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
-
-      if($this->gestion==2019){
-        $tabla='No disponible';
-      }
-      else{
-        if($dist_id==0){
-          $regional=$this->model_proyecto->get_departamento($dep_id);
-          $operaciones=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de distritales
-          $tit='CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']);
-        }
-        else{
-          $dist=$this->model_proyecto->dep_dist($dist_id);
-          $operaciones=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Actividades a Nivel de distritales
-          $tit=strtoupper($dist[0]['dist_distrital']);
-        }
-        
-        $titulo='GASTO CORRIENTE';
-        if($tp_id==1){
-          $titulo='PROYECTO DE INVERSI&Oacute;N';
-        }
-
-        $tabla.='
-        <br>
-        <div align=right>
-          <a href="'.site_url("").'/rep/exportar_operaciones_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO FORMULARIO n° 4"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR CONSOLIDADO FORMULARIO N° 4</a>&nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-        <br>
-        <div class="alert alert-success">
-          <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO DE FORMULARIO N° 4 '.$this->gestion.' - '.$tit.' ('.$titulo.')</b></center></a>
-        </div>
-        <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
-          <thead>
-            <tr style="background-color: #66b2e8">
-              <th style="width:3%;">COD. DA.</th>
-              <th style="width:3%;">COD. UE.</th>
-              <th style="width:3%;">COD. PROGRAMA</th>
-              <th style="width:10%;">COD. PROYECTO</th>
-              <th style="width:3%;">COD. ACTIVIDAD</th>
-              <th style="width:35%;">'.$titulo.'</th>
-              <th style="width:3%;">COD. UNIDAD RESP.</th>
-              <th style="width:15%;">UNIDAD RESPONSABLE</th>
-              <th style="width:3%;">COD. ACE.</th>
-              <th style="width:3%;">COD. ACP.</th>
-              <th style="width:3%;">COD. OPE.</th>
-              <th style="width:3%;">COD. ACT.</th>
-              <th style="width:25%;">DESCRIPCION ACTIVIDAD</th>
-              <th style="width:15%;">RESULTADO</th>
-              <th style="width:15%;">INDICADOR</th>
-              <th style="width:5%;">LINEA BASE</th>
-              <th style="width:5%;">META</th>
-              <th style="width:15%;">MEDIO DE VERIFICACIÓN</th>
-              <th style="width:4%;">P. ENE.</th>
-              <th style="width:4%;">P. FEB.</th>
-              <th style="width:4%;">P. MAR.</th>
-              <th style="width:4%;">P. ABR.</th>
-              <th style="width:4%;">P. MAY.</th>
-              <th style="width:4%;">P. JUN.</th>
-              <th style="width:4%;">P. JUL.</th>
-              <th style="width:4%;">P. AGOS.</th>
-              <th style="width:4%;">P. SEPT.</th>
-              <th style="width:4%;">P. OCT.</th>
-              <th style="width:4%;">P. NOV.</th>
-              <th style="width:4%;">P. DIC.</th>
-              <th style="width:6%;">PRESUPUESTO POA</th>
-              <th style="width:4%;">E. ENE.</th>
-              <th style="width:4%;">E. FEB.</th>
-              <th style="width:4%;">E. MAR.</th>
-              <th style="width:4%;">E. ABR.</th>
-              <th style="width:4%;">E. MAY.</th>
-              <th style="width:4%;">E. JUN.</th>
-              <th style="width:4%;">E. JUL.</th>
-              <th style="width:4%;">E. AGOS.</th>
-              <th style="width:4%;">E. SEPT.</th>
-              <th style="width:4%;">E. OCT.</th>
-              <th style="width:4%;">E. NOV.</th>
-              <th style="width:4%;">E. DIC.</th>
-            </tr>
-          </thead>
-          <tbody id="bdi">';
-          $nro=0;
-          foreach ($operaciones as $row){
-            $monto=$this->model_producto->monto_insumoproducto($row['prod_id']);
-            $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
-            $ejec=$this->model_producto->producto_ejecutado($row['prod_id'],$this->gestion);
-              
-            $ptto=0;
-            if(count($monto)!=0){
-              $ptto=$monto[0]['total'];
-            }
-
-            $nro++;
-            $tabla.='<tr>';
-                $tabla.='<td style="height:50px;">'.strtoupper($row['dep_cod']).'</td>';
-                $tabla.='<td>'.strtoupper($row['dist_cod']).'</td>';
-                $tabla.='<td>'.$row['aper_programa'].'</td>';
-                $tabla.='<td>';
-                if($tp_id==1){
-                  $tabla.=''.$row['proy_sisin'].'';
-                }
-                else{
-                  $tabla.=''.$row['aper_proyecto'].'';
-                }
-                $tabla.='</td>';
-                $tabla.='<td>'.$row['aper_actividad'].'</td>';
-                $tabla.='<td>';
-                  if($row['tp_id']==1){
-                    $tabla.=''.$row['proy_nombre'].'';
-                  }
-                  else{
-                    $tabla.=''.$row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'].'';
-                  }
-                $tabla.='</td>';
-                $tabla.='<td>'.$row['serv_cod'].'</td>';
-                $tabla.='<td>'.$row['tipo_subactividad'].' '.strtoupper($row['serv_descripcion']).'</td>';
-                $tabla.='<td>'.$row['acc_codigo'].'</td>';
-                $tabla.='<td>'.$row['og_codigo'].'</td>';
-                $tabla.='<td>'.$row['or_codigo'].'</td>';
-                $tabla.='<td>'.$row['prod_cod'].'</td>';
-                $tabla.='<td>'.$row['prod_producto'].'</td>';
-                $tabla.='<td>'.$row['prod_resultado'].'</td>';
-                $tabla.='<td>'.$row['prod_indicador'].'</td>';
-                $tabla.='<td>'.$row['prod_linea_base'].'</td>';
-                $tabla.='<td>'.$row['prod_meta'].'</td>';
-                $tabla.='<td>'.$row['prod_fuente_verificacion'].'</td>';
-                if(count($programado)!=0){
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['enero'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['febrero'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['marzo'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['abril'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['mayo'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['junio'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['julio'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['agosto'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['septiembre'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['octubre'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['noviembre'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['diciembre'],2).'</td>';
-                    }
-                    else{
-                      for ($i=1; $i <=12 ; $i++) { 
-                        $tabla.='<td bgcolor="#f5cace">0</td>';
-                      }
-                    }
-
-                $tabla.='<td style="width: 5%; text-align: right;">'.round($ptto,2).'</td>';
-
-                if(count($ejec)!=0){
-                  $tabla.='
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['enero'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['febrero'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['marzo'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['abril'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['mayo'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['junio'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['julio'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['agosto'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['septiembre'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['octubre'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['noviembre'],2).'</b></td>
-                  <td bgcolor="#d2f5f0"><b>'.round($ejec[0]['diciembre'],2).'</b></td>';
-                }
-                else{
-                  for ($i=1; $i <=12 ; $i++) { 
-                    $tabla.='<td bgcolor="#d2f5f0">0</td>';
-                  }
-                }
-
-            $tabla.='</tr>';
-          }
-          $tabla.='
-          </tbody>
-        </table>';
-      }
-
-      return $tabla;
-    }
+    
 
 
-    /*-- REPORTE 3 (CONSOLIDADO REQUERIMIENTOS DIST) 2020-2021--*/
-    public function consolidado_requerimientos_distrital($dep_id,$dist_id,$tp_id){
-      
-      $tabla='';
-      $tabla.='
-      <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
-
-      if($this->gestion==2019){
-        $tabla='No disponible';
-      }
-      else{
-        if($dist_id==0){
-          $regional=$this->model_proyecto->get_departamento($dep_id);
-          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-          $titulo_reporte='CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']);
-        }
-        else{
-          $dist=$this->model_proyecto->dep_dist($dist_id);
-          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-          $titulo_reporte=strtoupper($dist[0]['dist_distrital']);
-        }
-
-       
-        $titulo='GASTO CORRIENTE';
-        if($tp_id==1){
-          $titulo='PROYECTO DE INVERSI&Oacute;N';
-        }
-
-        $tabla.='
-        <br>
-        <div align=right>
-          <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR CONSOLIDADO FORMULARION N° 5</a>&nbsp;&nbsp;&nbsp;&nbsp;
-        </div>
-        <br>
-        <div class="alert alert-warning">
-          <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO FORMULARIO N° 5 '.$this->gestion.' - '.$titulo_reporte.' ('.$titulo.')</b></center></a>
-        </div>
-        <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
-          <thead>
-            <tr style="background-color: #66b2e8">
-              <th style="width:3%;">COD. DA.</th>
-              <th style="width:3%;">COD. UE.</th>
-              <th style="width:3%;">COD. PROG.</th>
-              <th style="width:10%;">COD. PROY.</th>
-              <th style="width:3%;">COD. ACT.</th>
-              <th style="width:35%;">'.$titulo.'</th>
-              <th style="width:3%;">COD. UNI.RESP.</th>
-              <th style="width:15%;">UNIDAD RESPONSABLE</th>
-              <th style="width:3%;">COD. ACP.</th>
-              <th style="width:3%;">COD. OPE.</th>
-              <th style="width:25%;">DESCRIPCIÓN OPERACIÓN '.$this->gestion.'</th>
-              <th style="width:3%;">COD. ACT.</th>
-              <th style="width:25%;">DESCRIPCIÓN ACTIVIDAD</th>
-              <th style="width:15%;">PARTIDA</th>
-              <th style="width:25%;">REQUERIMIENTO</th>
-              <th style="width:10%;">UNIDAD DE MEDIDA</th>
-              <th style="width:5%;">CANTIDAD</th>
-              <th style="width:5%;">PRECIO</th>
-              <th style="width:10%;">COSTO TOTAL</th>
-              <th style="width:10%;">MONTO CERTIFICADO</th>
-              <th style="width:4%;">P. ENE.</th>
-              <th style="width:4%;">P. FEB.</th>
-              <th style="width:4%;">P. MAR.</th>
-              <th style="width:4%;">P. ABR.</th>
-              <th style="width:4%;">P. MAY.</th>
-              <th style="width:4%;">P. JUN.</th>
-              <th style="width:4%;">P. JUL.</th>
-              <th style="width:4%;">P. AGOS.</th>
-              <th style="width:4%;">P. SEPT.</th>
-              <th style="width:4%;">P. OCT.</th>
-              <th style="width:4%;">P. NOV.</th>
-              <th style="width:4%;">P. DIC.</th>
-              <th style="width:10%;">OBSERVACI&Oacute;N</th>
-            </tr>
-          </thead>
-          <tbody id="bdi">';
-          $nro=0;
-          foreach ($requerimientos as $row){
-            $nro++;
-            $tabla.='<tr>';
-                $tabla.='<td style="height:50px;">'.$row['dep_cod'].'</td>';
-                $tabla.='<td>'.$row['dist_cod'].'</td>';
-                $tabla.='<td>'.$row['aper_programa'].'</td>';
-                $tabla.='<td>';
-                if($tp_id==1){
-                  $tabla.=''.$row['proy_sisin'].'';
-                }
-                else{
-                  $tabla.=''.$row['aper_proyecto'].'';
-                }
-                $tabla.='</td>';
-                $tabla.='<td>'.$row['aper_actividad'].'</td>';
-                $tabla.='<td>';
-                  if($row['tp_id']==1){
-                    $tabla.=''.$row['proy_nombre'].'';
-                  }
-                  else{
-                    $tabla.=''.$row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'].'';
-                  }
-                $tabla.='</td>';
-                $tabla.='<td>'.$row['serv_cod'].'</td>';
-                $tabla.='<td>'.$row['tipo_subactividad'].' '.strtoupper($row['serv_descripcion']).'</td>';
-                
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#d9f5c9"><b>'.$row['og_codigo'].'</b></td>';
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#d9f5c9"><b>'.$row['or_codigo'].'</b></td>';
-                $tabla.='<td bgcolor="#d9f5c9">'.$row['or_objetivo'].'</td>';
-
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#e4f3dc"><b>'.$row['prod_cod'].'</b></td>';
-                $tabla.='<td bgcolor="#e4f3dc">'.$row['prod_producto'].'</td>';
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3"><b>'.$row['par_codigo'].'</b></td>';
-                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_detalle']).'</td>';
-                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_unidad_medida']).'</td>';
-                $tabla.='<td bgcolor="#f4f5f3" align="right">'.round($row['ins_cant_requerida'],2).'</td>';
-                $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                $tabla.='<td style="font-size: 13px;" align="right" bgcolor="#c1f5ee"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
-
-                for ($i=1; $i <=12 ; $i++) { 
-                  $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.number_format($row['mes'.$i], 2, ',', '.').'</td>';
-                }
-
-                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_observacion']).'</td>';
-            $tabla.='</tr>';
-          }
-          $tabla.='
-          </tbody>
-        </table>';
-      }
-
-      return $tabla;
-    }
+    
 
 
 
@@ -1117,7 +493,7 @@ class Rep_operaciones extends CI_Controller {
                   <th style="width:20%;">DESCRIPCI&Oacute;N OBJ. REGIONAL</th>
                   <th style="width:10%;">TIPO DE ADMINISTRACI&Oacute;N</th>
                   <th style="width:30%;">'.$titulo.'</th>
-                  <th style="width:5%;">Nro. OPERACIONES</th>
+                  <th style="width:5%;">Nro. ACTIVIDAD</th>
                   <th style="width:10%;">PPTO. PROGRAMADO</th>
                 </tr>
                 <thead>
@@ -1181,49 +557,49 @@ class Rep_operaciones extends CI_Controller {
     <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
 
     $tabla.='
-            <br>
-            <div class="alert alert-warning">
-              <a href="#" class="alert-link" align=center><center><b><b>CONSOLIDADO DE OPERACIONES POR CATEGORIA PROGRAMATICA '.$titulo.' - '.$this->gestion.'<br>'.strtoupper($distrital[0]['dist_distrital']).'</b></center></a>
-            </div>
-            <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
-              <thead>
-                <tr >
-                  <th style="width:1%; height:30px;">N°</th>
-                  <th style="width:5%;">PROGRAMA</th>
-                  <th style="width:10%;">ADMINISTRACI&Oacute;N</th>
-                  <th style="width:30%;">'.$titulo.'</th>
-                  <th style="width:5%;">Nro. OPERACIONES</th>
-                  <th style="width:10%;">PPTO. PROGRAMADO</th>
-                </tr>
-                <thead>
-                <tbody id="bdi">';
-                $nro=0;$suma_monto=0;
-                foreach($unidades as $uni){
-                  $ppto=$this->model_ptto_sigep->suma_ptto_accion($uni['aper_id'],2);
-                  $monto=0;
-                  if(count($ppto)!=0){
-                    $monto=$ppto[0]['monto'];
-                  }
+    <br>
+    <div class="alert alert-warning">
+      <a href="#" class="alert-link" align=center><center><b><b>CONSOLIDADO DE OPERACIONES POR CATEGORIA PROGRAMATICA '.$titulo.' - '.$this->gestion.'<br>'.strtoupper($distrital[0]['dist_distrital']).'</b></center></a>
+    </div>
+    <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
+      <thead>
+        <tr >
+          <th style="width:1%; height:30px;">N°</th>
+          <th style="width:5%;">PROGRAMA</th>
+          <th style="width:10%;">ADMINISTRACI&Oacute;N</th>
+          <th style="width:30%;">'.$titulo.'</th>
+          <th style="width:5%;">Nro. ACTIVIDADES</th>
+          <th style="width:10%;">PPTO. PROGRAMADO</th>
+        </tr>
+        <thead>
+        <tbody id="bdi">';
+        $nro=0;$suma_monto=0;
+        foreach($unidades as $uni){
+          $ppto=$this->model_ptto_sigep->suma_ptto_accion($uni['aper_id'],2);
+          $monto=0;
+          if(count($ppto)!=0){
+            $monto=$ppto[0]['monto'];
+          }
 
-                $nro++;
-                $tabla.='<tr>
-                          <td style="width:1%; height:25px;" align=center>'.$nro.'</td>
-                          <td align=center><b>'.strtoupper($uni['aper_programa']).'<b></td>
-                          <td>'.$uni['dist_cod'].' .-'.strtoupper($uni['dist_distrital']).'</td>';
-                            if($tp_id==1){
-                              $tabla.='<td>'.$uni['aper_programa'].' '.$uni['proy_sisin'].' '.$uni['aper_proyecto'].' - '.$uni['proy_nombre'].'</td>';
-                            }
-                            else{
-                              $tabla.='<td>'.strtoupper($uni['tipo'].' '.$uni['act_descripcion'].' '.$uni['abrev']).'</td>';  
-                            }
-                            
-                          $tabla.='
-                          <td align=right>'.$uni['operaciones'].'</td>
-                          <td align=right>'.number_format($monto, 2, ',', '.').'</td>
-                        </tr>';
-                $sum_ope=$sum_ope+$uni['operaciones'];
-                $suma_monto=$suma_monto+$monto;
-                }
+        $nro++;
+        $tabla.='<tr>
+                  <td style="width:1%; height:25px;" align=center>'.$nro.'</td>
+                  <td align=center><b>'.strtoupper($uni['aper_programa']).'<b></td>
+                  <td>'.$uni['dist_cod'].' .-'.strtoupper($uni['dist_distrital']).'</td>';
+                    if($tp_id==1){
+                      $tabla.='<td>'.$uni['aper_programa'].' '.$uni['proy_sisin'].' '.$uni['aper_proyecto'].' - '.$uni['proy_nombre'].'</td>';
+                    }
+                    else{
+                      $tabla.='<td>'.strtoupper($uni['tipo'].' '.$uni['act_descripcion'].' '.$uni['abrev']).'</td>';  
+                    }
+                    
+                  $tabla.='
+                  <td align=right>'.$uni['operaciones'].'</td>
+                  <td align=right>'.number_format($monto, 2, ',', '.').'</td>
+                </tr>';
+        $sum_ope=$sum_ope+$uni['operaciones'];
+        $suma_monto=$suma_monto+$monto;
+        }
 
         $tabla.='
           </tbody>

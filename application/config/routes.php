@@ -607,8 +607,8 @@ $route['rep/regional_ogestion/(:any)'] = 'reportes_cns/crep_ogestion/list_region
 $route['consulta/mis_operaciones'] = 'consultas_cns/c_consultas/mis_operaciones'; ///// Mis operaciones
 $route['consulta/cambiar'] = 'consultas_cns/c_consultas/cambiar_gestion';//cambiar contralador
 $route['rep/get_consultas_da'] = 'consultas_cns/c_consultas/get_opciones'; ////// Combo Unidades Administrativas Seguimiento POA
-$route['rep/comparativo_unidad_ppto_regional/(:any)'] = 'consultas_cns/c_consultas/comparativo_presupuesto_regional/$1/$2'; ///// cuadro comparativo pto asig. poa - Partidas por unidad (REGIONAL) 2020-2021
-$route['rep/exportar_operaciones_regional/(:any)'] = 'reportes_cns/exporting_datos/operaciones_regional/$1/$2'; ///// Exportar Operaciones por distrital 2020-2021
+//$route['rep/comparativo_unidad_ppto_regional/(:any)'] = 'consultas_cns/c_consultas/comparativo_presupuesto_regional/$1/$2'; ///// cuadro comparativo pto asig. poa - Partidas por unidad (REGIONAL) 2020-2021
+//$route['rep/exportar_operaciones_regional/(:any)'] = 'reportes_cns/exporting_datos/operaciones_regional/$1/$2'; ///// Exportar Operaciones por distrital 2020-2021
 
 ///////// REPORTE RESUMEN DE ALINEACION ACTIVIDAD A CATEGORIA PROGRAMATICA 2021
 $route['rep/resumen_act_programa'] = 'reporte_resumen_alineacion_poa/crep_actprog/regional';  //// Menu Regional act-prog (2020-2021)
