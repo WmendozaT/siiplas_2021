@@ -474,7 +474,7 @@ $route['mod/list_cites/(:any)'] = 'modificaciones/cmodificaciones/lista_cites/$1
 /*------- Modificar Techo - Partidas Asignadas (TECHO PRESUPUESTARIO)-------*/
 $route['mod/cite_techo/(:any)'] = 'modificaciones/cmod_requerimientos/cite_techo/$1'; //// Cite Techo 
 $route['mod/techo/(:any)'] = 'modificaciones/cmod_requerimientos/techo/$1'; //// Modificar Techo
-$route['mod/rep_mod_req/(:any)'] = 'modificaciones/cmod_requerimientos/reporte_modificacion/$1/$2';  ///// Reporte Modificaciones Requerimientos 2019
+//$route['mod/rep_mod_req/(:any)'] = 'modificaciones/cmod_requerimientos/reporte_modificacion/$1/$2';  ///// Reporte Modificaciones Requerimientos 2019
 $route['mod/rep_mod_techo/(:any)'] = 'modificaciones/cmod_requerimientos/reporte_techo/$1';  ///// Reporte Modificaciones Techo 2019
 //$route['mod/techo/(:any)'] = 'modificaciones/cmod_requerimientos/techo/$1'; //// Ver Modificacion de  Techo
 

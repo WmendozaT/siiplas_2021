@@ -1,0 +1,270 @@
+base = $('[name="base"]').val();
+
+
+function abreVentana(PDF){             
+  var direccion;
+  direccion = '' + PDF;
+  window.open(direccion, "REPORTE PROGRAMACIÓN POA" , "width=800,height=700,scrollbars=NO") ; 
+}
+
+  function confirmar(){
+    if(confirm('¿Estas seguro de Eliminar ?'))
+      return true;
+    else
+    return false;
+  }
+
+
+    function doSearch(){
+      var tableReg = document.getElementById('datos');
+      var searchText = document.getElementById('searchTerm').value.toLowerCase();
+      var cellsOfRow="";
+      var found=false;
+      var compareWith="";
+ 
+      // Recorremos todas las filas con contenido de la tabla
+      for (var i = 1; i < tableReg.rows.length; i++){
+        cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+        found = false;
+        // Recorremos todas las celdas
+        for (var j = 0; j < cellsOfRow.length && !found; j++){
+          compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+          // Buscamos el texto en el contenido de la celda
+          if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+            found = true;
+          }
+        }
+        if(found) {
+          tableReg.rows[i].style.display = '';
+        } else {
+          // si no ha encontrado ninguna coincidencia, esconde la
+          // fila de la tabla
+          tableReg.rows[i].style.display = 'none';
+        }
+      }
+    }
+
+
+    function doSearch_form4(){
+      var tableReg = document.getElementById('datos_form4');
+      var searchText = document.getElementById('searchTerm_form4').value.toLowerCase();
+      var cellsOfRow="";
+      var found=false;
+      var compareWith="";
+ 
+      // Recorremos todas las filas con contenido de la tabla
+      for (var i = 1; i < tableReg.rows.length; i++){
+        cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+        found = false;
+        // Recorremos todas las celdas
+        for (var j = 0; j < cellsOfRow.length && !found; j++){
+          compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+          // Buscamos el texto en el contenido de la celda
+          if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+            found = true;
+          }
+        }
+        if(found) {
+          tableReg.rows[i].style.display = '';
+        } else {
+          // si no ha encontrado ninguna coincidencia, esconde la
+          // fila de la tabla
+          tableReg.rows[i].style.display = 'none';
+        }
+      }
+    }
+
+    function doSearch_form5(){
+      var tableReg = document.getElementById('datos_form5');
+      var searchText = document.getElementById('searchTerm_form5').value.toLowerCase();
+      var cellsOfRow="";
+      var found=false;
+      var compareWith="";
+ 
+      // Recorremos todas las filas con contenido de la tabla
+      for (var i = 1; i < tableReg.rows.length; i++){
+        cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+        found = false;
+        // Recorremos todas las celdas
+        for (var j = 0; j < cellsOfRow.length && !found; j++){
+          compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+          // Buscamos el texto en el contenido de la celda
+          if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+            found = true;
+          }
+        }
+        if(found) {
+          tableReg.rows[i].style.display = '';
+        } else {
+          // si no ha encontrado ninguna coincidencia, esconde la
+          // fila de la tabla
+          tableReg.rows[i].style.display = 'none';
+        }
+      }
+    }
+
+
+  $( function() {
+    $( "#grupoTablas" ).tabs();
+  } );
+
+  function justNumbers(e){
+    var keynum = window.event ? window.event.keyCode : e.which;
+    if ((keynum == 8) || (keynum == 46))
+    return true;           
+    return /\d/.test(String.fromCharCode(keynum));
+  }
+
+
+  /// ver reportes POA FORMULARIO 4 Y 5
+  function ver_poa(proy_id) {
+    $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
+    $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion</div>');
+    var url = base+"index.php/programacion/proyecto/get_poa";
+    var request;
+    if (request) {
+        request.abort();
+    }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+        $('#titulo').html('<font size=3><b>'+response.titulo_poa+'</b></font>');
+        $('#content1').fadeIn(1000).html(response.tabla);
+      }
+      else{
+        alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+    });
+  }
+
+  /// ver reportes MODIFICACION POA FORMULARIO 4 Y 5
+  function ver_mpoa(proy_id) {
+   // alert(proy_id)
+    $('#titulo_mod').html('<font size=3><b>Cargando ..</b></font>');
+    $('#content_mod').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion</div>');
+    var url = base+"index.php/consultas_cns/c_consultas/get_mpoa";
+    var request;
+    if (request) {
+        request.abort();
+    }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+        $('#titulo_mod').html('<font size=3><b>'+response.titulo_poa+'</b></font>');
+        $('#content_mod').fadeIn(1000).html(response.tabla);
+      }
+      else{
+        alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+    });
+  }
+
+
+  /// ver reportes CERTIFICACION POA FORMULARIO 5
+  function ver_certpoa(proy_id) {
+   // alert(proy_id)
+    $('#titulo_certpoa').html('<font size=3><b>Cargando ..</b></font>');
+    $('#content_certpoa').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion</div>');
+    var url = base+"index.php/consultas_cns/c_consultas/get_certpoa";
+    var request;
+    if (request) {
+        request.abort();
+    }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+        $('#titulo_certpoa').html('<font size=3><b>'+response.titulo_poa+'</b></font>');
+        $('#content_certpoa').fadeIn(1000).html(response.tabla);
+      }
+      else{
+        alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+    });
+  }
+
+
+$(document).ready(function() {
+  pageSetUp();
+    $("#dep_id").change(function () {
+        $("#dep_id option:selected").each(function () {
+          elegido=$(this).val();
+
+          if(elegido!=0){
+            $('#ue').slideDown();
+            $('#tp').slideDown();
+            $.post(base+"index.php/rep/get_consultas_da", { elegido: elegido,accion:'reporte' }, function(data){
+                $("#tp_rep").html(data);
+                $("#lista_consolidado").html('');
+            });
+          }
+        });
+    });
+
+    $("#tp_rep").change(function () {
+        $("#tp_rep option:selected").each(function () {
+          elegido=$(this).val();
+          $.post(base+"index.php/rep/get_consultas_da", { elegido: elegido,accion:'tipo' }, function(data){
+              $("#tipo").html(data);
+              $("#lista_consolidado").html('');
+          });
+        });
+    });
+
+
+
+    $("#tipo").change(function () {
+      $("#tipo option:selected").each(function () {
+        dep_id=$('[name="dep_id"]').val();
+        tp_rep=$('[name="tp_rep"]').val();
+        tp_id=$(this).val();
+        $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información POA ...</div>');
+          var url = base+"index.php/consultas_cns/c_consultas/get_lista_reportepoa";
+          var request;
+          if (request) {
+              request.abort();
+          }
+          request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "dep_id="+dep_id+"&tp_rep="+tp_rep+"&tp_id="+tp_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                  $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+              }
+              else{
+                  alertify.error("ERROR AL LISTAR");
+              }
+          }); 
+          
+      });
+    });
+})
+
+

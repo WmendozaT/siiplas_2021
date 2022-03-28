@@ -6,22 +6,22 @@ class Cert_poa extends CI_Controller {
         if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
         $this->load->library('pdf2');
         $this->load->model('programacion/model_proyecto');
-        $this->load->model('programacion/model_faseetapa');
-        $this->load->model('programacion/model_actividad');
-        $this->load->model('programacion/model_producto');
-        $this->load->model('programacion/model_componente');
-        $this->load->model('programacion/model_mantenimiento');
-        $this->load->model('ejecucion/model_ejecucion');
+      //  $this->load->model('programacion/model_faseetapa');
+      //  $this->load->model('programacion/model_actividad');
+      //  $this->load->model('programacion/model_producto');
+      //  $this->load->model('programacion/model_componente');
+      //  $this->load->model('programacion/model_mantenimiento');
+        //$this->load->model('ejecucion/model_ejecucion');
         $this->load->model('ejecucion/model_certificacion');
         $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
         $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020
         //$this->load->model('programacion/marco_estrategico/mobjetivos');
         $this->load->model('programacion/insumos/minsumos');
         $this->load->model('mestrategico/model_mestrategico');
-        $this->load->model('mantenimiento/model_partidas');
+      //  $this->load->model('mantenimiento/model_partidas');
         $this->load->model('mantenimiento/model_ptto_sigep');
         $this->load->model('modificacion/model_modificacion');
-        $this->load->model('mantenimiento/model_configuracion');
+      //  $this->load->model('mantenimiento/model_configuracion');
         $this->load->model('mantenimiento/model_estructura_org');
         $this->load->model('menu_modelo');
         $this->load->model('Users_model','',true);

@@ -2,29 +2,30 @@
 
 class Genera_informacion extends CI_Controller{
 
-        public function __construct (){
-            parent::__construct();
-            $this->load->model('programacion/model_proyecto');
-            $this->load->model('mantenimiento/model_entidad_tras');
-            $this->load->model('mantenimiento/model_partidas');
-            $this->load->model('mantenimiento/model_ptto_sigep');
-            $this->load->model('modificacion/model_modrequerimiento');
-            $this->load->model('programacion/insumos/minsumos');
-            $this->load->model('ejecucion/model_seguimientopoa');
-            $this->load->model('programacion/model_componente');
-            $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
-            $this->load->model('ejecucion/model_certificacion');
-            $this->load->model('menu_modelo');
-            $this->load->library('security');
-            $this->gestion = $this->session->userData('gestion');
-            $this->adm = $this->session->userData('adm');
-            $this->dist = $this->session->userData('dist');
-            $this->dist_tp = $this->session->userData('dist_tp');
-            $this->fun_id = $this->session->userdata("fun_id");
-            $this->tmes = $this->session->userData('trimestre');
-            $this->ppto= $this->session->userData('verif_ppto');
-            $this->verif_mes=$this->session->userData('mes_actual'); /// mes por decfecto
-            $this->mes_sistema=$this->session->userData('mes'); /// mes sistema
+    public function __construct (){
+        parent::__construct();
+        $this->load->model('programacion/model_proyecto');
+        $this->load->model('mantenimiento/model_entidad_tras');
+        $this->load->model('mantenimiento/model_partidas');
+        $this->load->model('mantenimiento/model_ptto_sigep');
+        $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020
+        $this->load->model('modificacion/model_modfisica'); /// Gestion 2020
+        $this->load->model('programacion/insumos/minsumos');
+        $this->load->model('ejecucion/model_seguimientopoa');
+        $this->load->model('programacion/model_componente');
+        $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
+        $this->load->model('ejecucion/model_certificacion');
+        $this->load->model('menu_modelo');
+        $this->load->library('security');
+        $this->gestion = $this->session->userData('gestion');
+        $this->adm = $this->session->userData('adm');
+        $this->dist = $this->session->userData('dist');
+        $this->dist_tp = $this->session->userData('dist_tp');
+        $this->fun_id = $this->session->userdata("fun_id");
+        $this->tmes = $this->session->userData('trimestre');
+        $this->ppto= $this->session->userData('verif_ppto');
+        $this->verif_mes=$this->session->userData('mes_actual'); /// mes por decfecto
+        $this->mes_sistema=$this->session->userData('mes'); /// mes sistema
     }
 
     ////// LIBRERIAS PARA REPORTES GERENCIALES
@@ -112,7 +113,7 @@ class Genera_informacion extends CI_Controller{
             <td>'.$nro.'</td>
             <td align=center>';
             if($row['pfec_estado']==1){
-              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_poa" class="btn btn-default enlace" name="'.$row['proy_id'].'"  onclick="ver_poa('.$row['proy_id'].');" title="FORMULARIO POA">FORMULARIOS POA</a>';
+              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_poa" class="btn btn-default" name="'.$row['proy_id'].'"  onclick="ver_poa('.$row['proy_id'].');" title="FORMULARIO POA">FORMULARIOS POA</a>';
             }
             else{
               $tabla.='<b>FASE NO ACTIVA</b>';
@@ -129,8 +130,22 @@ class Genera_informacion extends CI_Controller{
             }
             $tabla.='
             </td>
-            <td align=center></td>
-            <td align=center></td>
+            <td align=center>';
+            if($row['pfec_estado']==1){
+              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mpoa" class="btn btn-default" name="'.$row['proy_id'].'"  onclick="ver_mpoa('.$row['proy_id'].');" title="MODIFICACIONES POA">VER</a>';
+            }
+            else{
+              $tabla.='<b>FASE NO ACTIVA</b>';
+            }
+            $tabla.='</td>
+            <td align=center>';
+            if($row['pfec_estado']==1){
+              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_certpoa" class="btn btn-default" name="'.$row['proy_id'].'"  onclick="ver_certpoa('.$row['proy_id'].');" title="CERTIFICACIONES POA">VER</a>';
+            }
+            else{
+              $tabla.='<b>FASE NO ACTIVA</b>';
+            }
+            $tabla.='</td>
             <td align=center></td>
             <td align=center>'.$row['da'].'</td>
             <td align=center>'.$row['ue'].'</td>
@@ -1110,6 +1125,51 @@ class Genera_informacion extends CI_Controller{
       $valor[2]=$dias[$mes_id];
 
       return $valor;
+    }
+
+
+        /// ---- STYLE -----
+    public function style(){
+      $tabla='';
+
+      $tabla.='   
+      <style>
+        table{font-size: 10px;
+            width: 100%;
+            max-width:1550px;;
+            overflow-x: scroll;
+        }
+        th{
+            padding: 1.4px;
+            text-align: center;
+            font-size: 10px;
+        }
+            #mdialTamanio{
+            width: 80% !important;
+        }
+        #modificacion{
+          width: 80% !important;
+        }
+        #programacion{
+          width: 50% !important;
+        }
+        #certificacion{
+          width: 50% !important;
+        }
+        #csv{
+          width: 30% !important;
+        }
+          input[type="checkbox"] {
+          display:inline-block;
+          width:25px;
+          height:25px;
+          margin:-1px 4px 0 0;
+          vertical-align:middle;
+          cursor:pointer;
+        }
+    </style>';
+
+      return $tabla;
     }
 }
 ?>

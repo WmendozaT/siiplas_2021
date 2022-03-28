@@ -551,10 +551,10 @@ class Model_certificacion extends CI_Model{
         cp.sol_id,
         cp.fun_id as fun_id_edicion,
         mod.cite_id
-                from certificacionpoa_anulado ca
-                Inner Join certificacionpoa as cp On cp.cpoa_id=ca.cpoa_id
-                Inner Join cite_mod_requerimientos as mod On mod.cpoaa_id=ca.cpoaa_id
-                where ca.cpoa_id='.$cpoa_id.'';
+        from certificacionpoa_anulado ca
+        Inner Join certificacionpoa as cp On cp.cpoa_id=ca.cpoa_id
+        Inner Join cite_mod_requerimientos as mod On mod.cpoaa_id=ca.cpoaa_id
+        where ca.cpoa_id='.$cpoa_id.'';
 
         $query = $this->db->query($sql);
         return $query->result_array();

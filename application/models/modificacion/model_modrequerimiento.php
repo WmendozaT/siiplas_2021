@@ -200,7 +200,7 @@ class Model_modrequerimiento extends CI_Model{
                 Inner Join partidas as pa On pa.par_id=i.par_id
                 Inner Join _insumoproducto as ip On ip.ins_id=i.ins_id
                 Inner Join _productos as p On p.prod_id=ip.prod_id
-                where cite_id='.$cite_id.' and p.estado!=\'3\' and ia.estado!=\'3\'  
+                where ia.cite_id='.$cite_id.' and p.estado!=\'3\' and ia.estado!=\'3\'  
                 group by ia.ins_id,i.ins_codigo,i.ins_costo_unitario,i.ins_cant_requerida, i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_observacion,pa.par_codigo,pa.par_nombre,p.prod_cod,p.or_id
                 order by p.prod_cod asc';
 

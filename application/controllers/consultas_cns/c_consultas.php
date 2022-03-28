@@ -10,20 +10,15 @@ class C_consultas extends CI_Controller {
             $this->load->model('menu_modelo');
             $this->load->model('consultas/model_consultas');
             $this->load->model('programacion/model_proyecto');
-            $this->load->model('modificacion/model_modificacion');
-            $this->load->model('programacion/model_faseetapa');
-            $this->load->model('programacion/model_actividad');
-            $this->load->model('programacion/model_producto');
-            $this->load->model('programacion/model_componente');
+          //  $this->load->model('programacion/model_faseetapa');
+          //  $this->load->model('programacion/model_actividad');
+          //  $this->load->model('programacion/model_producto');
+          //  $this->load->model('programacion/model_componente');
             $this->load->model('ejecucion/model_certificacion');
-/*            $this->load->model('reporte_eval/model_evalnacional');
-            $this->load->model('reporte_eval/model_evalregional');
-            $this->load->model('mantenimiento/mapertura_programatica');*/
-          //  $this->load->model('mantenimiento/model_ptto_sigep');
             $this->load->model('ejecucion/model_evaluacion');
-          //  $this->load->model('mantenimiento/model_configuracion');
             $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
-
+            $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020
+            $this->load->model('modificacion/model_modfisica'); /// Gestion 2020
             $this->pcion = $this->session->userData('pcion');
             $this->gestion = $this->session->userData('gestion');
             $this->adm = $this->session->userData('adm');
@@ -65,6 +60,7 @@ class C_consultas extends CI_Controller {
     public function mis_operaciones(){
       $data['menu']=$this->genera_informacion->menu(10);
       $data['list']=$this->menu_nacional();
+      $data['style']=$this->genera_informacion->style();
 
       $this->load->view('admin/consultas_internas/menu_consultas_poa', $data);
     }
@@ -109,7 +105,8 @@ class C_consultas extends CI_Controller {
       <article class="col-sm-12">
         <div class="well">
           <form class="smart-form">
-              <header><b>SEGUIMIENTO POA '.$this->gestion.'</b></header>
+              <input type="hidden" name="base" value="'.base_url().'">
+              <header><b>PLAN OPERATIVO ANUAL - POA '.$this->gestion.'</b></header>
               <fieldset>          
                 <div class="row">
                   <section class="col col-3">
@@ -178,6 +175,201 @@ class C_consultas extends CI_Controller {
           show_404();
       }
     }
+
+
+    /*-------- GET DATOS MODIFICACION POA --------*/
+    public function get_mpoa(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $proy_id = $this->security->xss_clean($post['proy_id']);
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
+
+        $caratula_poa='';
+        $titulo_poa=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'];
+        if($proyecto[0]['tp_id']==4){
+          $titulo_poa=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
+          $caratula_poa='
+            <a href="javascript:abreVentana(\''.site_url("").'/proy/presentacion/'.$proy_id.'\');" title="CARATULA POA"  class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="45" HEIGHT="45"/><br>CARATULA POA</a>';
+        }
+
+        $tabla=$this->list_cites_generados($proy_id,1); /// Mis Subactividades
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+          'proyecto'=>$proyecto,
+          'titulo_poa'=>$titulo_poa,
+          'caratula'=>$caratula_poa,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+    /*--- LISTA DE MODIFCACIONES FORMULARIO 4 Y 5 ---*/
+    public function list_cites_generados($proy_id){
+      $tabla='';
+      // === LIST CITES REQUERIMIENTOS 
+        $cites_form5=$this->model_modrequerimiento->list_cites_requerimientos_proy($proy_id);
+        $cites_form4=$this->model_modfisica->list_cites_Operaciones_proy($proy_id);
+
+        $tabla.='
+        <hr>
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+          <section id="widget-grid" >
+            <section class="col col-6">
+              <input id="searchTerm_form4" type="text" onkeyup="doSearch_form4()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
+            </section>
+            <b>FORMULARIO N° 4 - ACTIVIDADES</b>
+            <table class="table table-bordered" id="datos_form4">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">CITE</th>
+                  <th scope="col">FECHA CITE</th>
+                  <th scope="col">COD. MOD. POA.</th>
+                  <th scope="col">UNIDAD RESPONSABLE</th>
+                  <th scope="col">REPORTE</th>
+                </tr>
+              </thead>
+              <tbody>';
+                $nro=0;
+                foreach($cites_form4 as $cit){
+                  $ca=$this->model_modfisica->operaciones_adicionados($cit['cite_id']);
+                  $cm=$this->model_modfisica->operaciones_modificados($cit['cite_id']);
+                  $cd=$this->model_modfisica->operaciones_eliminados($cit['cite_id']);
+
+                  if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
+                    $nro++;
+                    $tabla .='<tr>';
+                      $tabla .='<td align="center">'.$nro.'</td>';
+                      $tabla .='<td><b>'.$cit['cite_nota'].'</b></td>';
+                      $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
+                      $tabla .='<td></td>';
+                      $tabla .='<td>'.$cit['com_componente'].'</td>';
+                      $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/reporte_modfis/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE ACTIVIDADES"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
+                    $tabla .='</tr>';
+                  }
+                }
+              $tabla.='
+              </tbody>
+            </table>
+          </section>
+        </article>
+
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+          <section id="widget-grid">
+            <section class="col col-6">
+              <input id="searchTerm_form5" type="text" onkeyup="doSearch_form5()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
+            </section>
+            <b>FORMULARIO N° 5 - REQUERIMIENTOS</b>
+            <table class="table table-bordered" id="datos_form5">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">CITE</th>
+                  <th scope="col">FECHA CITE</th>
+                  <th scope="col">COD. MOD. POA.</th>
+                  <th scope="col">UNIDAD RESPONSABLE</th>
+                  <th scope="col">REPORTE</th>
+                </tr>
+              </thead>
+              <tbody>';
+               $nro=0;
+                foreach($cites_form5 as $cit){
+                  $color='';
+                  $codigo='<font color=blue><b>'.$cit['cite_codigo'].'</b></font>';
+                  if($cit['cite_estado']==0){
+                    $color='#fbdfdf';
+                    $codigo='<font color=red><b>SIN CÓDIGO</b></font>';
+                  }
+
+                    $nro++;
+                    $tabla .='<tr bgcolor='.$color.'>';
+                      $tabla .='<td align="center">'.$nro.'</td>';
+                      $tabla .='<td><b>'.$cit['cite_nota'].'</b></td>';
+                      $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
+                      $tabla .='<td>'.$codigo.'</td>';
+                      $tabla .='<td>'.$cit['com_componente'].'</td>';
+                      $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/rep_mod_financiera/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE REQUERIMIENTOS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
+                    $tabla .='</tr>';
+                  }
+              $tabla.=' 
+              </tbody>
+            </table>
+          </section>
+        </article>';
+
+      return $tabla;
+    }
+
+
+
+    /*-------- GET DATOS CERTIFICACION POA --------*/
+    public function get_certpoa(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $proy_id = $this->security->xss_clean($post['proy_id']);
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
+
+        $caratula_poa='';
+        $titulo_poa=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'];
+        if($proyecto[0]['tp_id']==4){
+          $titulo_poa=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
+          $caratula_poa='
+            <a href="javascript:abreVentana(\''.site_url("").'/proy/presentacion/'.$proy_id.'\');" title="CARATULA POA"  class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="45" HEIGHT="45"/><br>CARATULA POA</a>';
+        }
+
+        $tabla=$this->list_cites_generados($proy_id,1); /// Mis Subactividades
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+          'proyecto'=>$proyecto,
+          'titulo_poa'=>$titulo_poa,
+          'caratula'=>$caratula_poa,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+    /*--- LISTA DE CERTIFICACIONES POA ---*/
+    public function list_certificacionpoa($proy_id){
+      $tabla='';
+
+
+      return $tabla;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
