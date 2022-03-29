@@ -62,7 +62,7 @@ class C_consultas extends CI_Controller {
       $data['list']=$this->menu_nacional();
       $data['style']=$this->genera_informacion->style();
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      
+
       $data['mensaje']='<div class="jumbotron"><h1>RESUMEN POA '.$this->gestion.'</h1><p>Reporte Resumen consolidado de Programación POA a nivel Regional, segun la siguiente Clasificación :</p><ol style="font-size:16px;"><li>Genera informacion de Programación, Modificacion, Evaluación y Certificacion POA, segun el tipo de Gasto</li><li>Genera Reporte Consolidado del Fornulario N° 4 (Actividades) por Regional.</li><li>Genera Reporte Consolidado del Fornulario N° 5 (requerimientos) por Regional.</li><li>Genera el listado de Certificaciones POA por Regional.</li><li>Genera Informacion sobre la Evaluación POA a nivel Regional</li></ol></div>';
       $this->load->view('admin/consultas_internas/menu_consultas_poa', $data);
      // echo $this->list_certificacionpoa(2361,4);
@@ -308,6 +308,34 @@ class C_consultas extends CI_Controller {
 
 
     /*--- GET DATOS CERTIFICACION POA POR UNIDAD 2022 ---*/
+    public function get_certpoa(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $proy_id = $this->security->xss_clean($post['proy_id']);
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
+
+        $titulo_poa=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'];
+        if($proyecto[0]['tp_id']==4){
+          $titulo_poa=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
+        }
+
+        $tabla=$this->genera_informacion->list_certificacionpoa($proy_id,$proyecto[0]['tp_id']); /// Mi evaluacion
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+          'proyecto'=>$proyecto,
+          'titulo_poa'=>$titulo_poa,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+    /*--- GET DATOS EVALUACION POA POR UNIDAD 2022 ---*/
     public function get_evalpoa(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -332,10 +360,6 @@ class C_consultas extends CI_Controller {
           show_404();
       }
     }
-
-
-
-
 
 
 
