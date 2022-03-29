@@ -96,7 +96,7 @@
                               </header>
                                 <div>
                                     <div class="widget-body no-padding">
-                                       <div id="lista_consolidado"></div>
+                                       <div id="lista_consolidado"><?php echo $mensaje;?></div>
                                     </div>
                                     <!-- end widget content -->
                                 </div>
@@ -163,6 +163,24 @@
                     </div>
                 </div>
             </div>
+
+            <!-- MODAL EVALUACION POA -->
+            <div class="modal fade" id="modal_eval" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog" id="evaluacion">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                        </div>
+                        <div class="modal-body">
+                        <h2><center>CUADRO DE EVALUACI&Oacute;N POA - <?php echo $tmes[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></center></h2>
+                            <div class="row">
+                                <div id="titulo_evalpoa"></div>
+                                <div id="content_evalpoa"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- ========================================================================================================= -->
         <!-- PAGE FOOTER -->
@@ -206,21 +224,25 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
         <!-- JQUERY MASKED INPUT -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-        <!-- JQUERY SELECT2 INPUT -->
-        <script src="<?php echo base_url();?>/assets/js/plugin/select2/select2.min.js"></script>
         <!-- JQUERY UI + Bootstrap Slider -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
         <!-- FastClick: For mobile devices -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
-        <!-- Demo purpose only -->
-        <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+       <!-- <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script> -->
         <script src="<?php echo base_url(); ?>mis_js/consultapoa/consultaspoa.js"></script> 
 
-        <script type="text/javascript">
+        
+
+      <!--   <script type="text/javascript">
             function ver_operaciones(proy_id) {
                 $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
                 $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando informacion </div>');
@@ -249,11 +271,7 @@
 
                 });
             }
-        </script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+        </script> -->
+
     </body>
 </html>

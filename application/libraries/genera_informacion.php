@@ -15,6 +15,8 @@ class Genera_informacion extends CI_Controller{
         $this->load->model('programacion/model_componente');
         $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
         $this->load->model('ejecucion/model_certificacion');
+        $this->load->model('reporte_eval/model_evalunidad'); /// Model Evaluacion Unidad
+        $this->load->model('ejecucion/model_evaluacion');
         $this->load->model('menu_modelo');
         $this->load->library('security');
         $this->gestion = $this->session->userData('gestion');
@@ -26,19 +28,24 @@ class Genera_informacion extends CI_Controller{
         $this->ppto= $this->session->userData('verif_ppto');
         $this->verif_mes=$this->session->userData('mes_actual'); /// mes por decfecto
         $this->mes_sistema=$this->session->userData('mes'); /// mes sistema
+
     }
 
     ////// LIBRERIAS PARA REPORTES GERENCIALES
 
  /*-- REPORTE 1 (LISTA DE UNIDADES/PROYECTOS DE INVERSIÓN)--*/
     public function lista_gastocorriente_pinversion($dep_id,$dist_id,$tp_id){
-      $dist=$this->model_proyecto->dep_dist($dist_id);
+      
 
         if($dist_id!=0){
           $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id); /// unidades de la distrital
+          $distrital=$this->model_proyecto->dep_dist($dist_id);
+          $tit_reg=$dist[0]['dist_distrital'];
         }
         else{
           $unidades=$this->mrep_operaciones->list_poa_gacorriente_pinversion_regional($dep_id,$tp_id); /// unidades de la Regional
+          $regional=$this->model_proyecto->get_departamento($dep_id);
+          $tit_reg=$regional[0]['dep_departamento'];
         }
       
         $titulo='GASTO CORRIENTE';
@@ -53,7 +60,7 @@ class Genera_informacion extends CI_Controller{
 
       $tabla='';
       $tabla.='
-      <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
+     
         <br>
         <div align=right>
           <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR UNIDADES / PROYECTOS DE INVERSI&Oacute;N</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -61,18 +68,21 @@ class Genera_informacion extends CI_Controller{
         </div>
         <br>
       <div class="alert alert-warning">
-        <a href="#" class="alert-link" align=center><center><b>LISTA DE '.$titulo.' '.$this->gestion.' - '.strtoupper($dist[0]['dist_distrital']).'</b></center></a>
+        <a href="#" class="alert-link" align=center><center><b>LISTA DE '.$titulo.' '.$this->gestion.' - '.strtoupper($tit_reg).'</b></center></a>
       </div>
-      <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
+      <section class="col col-6">
+            <input id="searchTerm_lista" type="text" onkeyup="doSearch_lista()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
+      </section>
+      <table id="datos_lista" class="table table-bordered" style="width:100%;" border=1>
         <thead>
           <tr style="background-color: #66b2e8">
             <th style="width:1%;"></th>
             <th style="width:5%;">PROGRAMACIÓN POA</th>
             <th style="width:3%;">REP. POA <br>'.$this->gestion.'</th>
             <th style="width:5%;">NOTIFICACIÓN POA '.$this->verif_mes[2].' / '.$this->gestion.'</th>
-            <th style="width:5%;">MODIFICACIÓN POA</th>
-            <th style="width:5%;">CERTIFICACIÓN POA</th>
-            <th style="width:5%;">EVALUACIÓN POA</th>
+            <th style="width:5%;">MODIFICACIÓN POA '.$this->gestion.'</th>
+            <th style="width:5%;">CERTIFICACIÓN POA '.$this->gestion.'</th>
+            <th style="width:5%;">EVALUACIÓN POA '.$this->gestion.'</th>
             <th style="width:5%;">COD. DA.</th>
             <th style="width:5%;">COD. UE.</th>
             <th style="width:5%;">COD. PROG.</th>
@@ -146,7 +156,14 @@ class Genera_informacion extends CI_Controller{
               $tabla.='<b>FASE NO ACTIVA</b>';
             }
             $tabla.='</td>
-            <td align=center></td>
+            <td align=center>';
+            if($row['pfec_estado']==1){
+              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_eval" class="btn btn-default" name="'.$row['proy_id'].'"  onclick="ver_evaluacionpoa('.$row['proy_id'].');" title="EVALUACION POA">VER</a>';
+            }
+            else{
+              $tabla.='<b>FASE NO ACTIVA</b>';
+            }
+            $tabla.='</td>
             <td align=center>'.$row['da'].'</td>
             <td align=center>'.$row['ue'].'</td>
             <td align=center>'.$row['prog'].'</td>
@@ -1045,12 +1062,435 @@ class Genera_informacion extends CI_Controller{
 
 
 
+    /*--- LISTA DE CERTIFICACIONES POA 2022 ---*/
+    public function list_certificacionpoa($proy_id,$tp_id){
+      $tabla='';
+      $certificacionespoa=$this->model_certificacion->list_certpoa_unidad($proy_id);
+
+      $tabla.='<script src = "'.base_url().'mis_js/programacion/programacion/tablas1.js"></script>';
+      $tabla.='
+      <hr>
+      <table id="dt_basic1" class="table table-bordered" border=0.2 style="width:100%;">
+        <thead>
+          <tr>
+            <th style="width:1%;height:20px">#</th>
+            <th style="width:10%;">C&Oacute;DIGO</th>
+            <th style="width:5%;">FECHA</th>
+            <th style="width:10%;">UNIDAD RESPONSABLE</th>';
+            if($tp_id==1){
+              $tabla.='<th style="width:10%;">COMPONENTE</th>';
+            }
+            $tabla.='
+            <th style="width:5%;">VER CERTIFICADO POA</th>
+          </tr>
+        </thead>
+         <tbody>';
+          $nro=0;
+          foreach ($certificacionespoa as $row){
+            $nro++; $color='';$codigo=$row['cpoa_codigo'];
+            if($row['cpoa_estado']==0){
+              $color='#fddddd';
+              $codigo='<font color=red>SIN CÓDIGO</font>';
+            }
+
+            $tabla .='<tr>';
+              $tabla .='<td title='.$row['cpoa_id'].' align="center">'.$nro.'</td>';
+              $tabla .='<td><b>'.$codigo.'</b></td>';
+              $tabla .='<td>'.date('d-m-Y',strtotime($row['cpoa_fecha'])).'</td>';
+              $tabla .='<td>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>';
+              if($tp_id==1){
+                $tabla .='<td>'.$row['com_componente'].'</td>';
+              }
+              $tabla .='<td align=center><a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>';
+            $tabla .='</tr>';
+          }
+          
+          $tabla.='
+          </tbody>
+        </table>';
+
+      return $tabla;
+    }
+
+
+    /*--- REPORTE EVALUACION POA POR UNIDAD 2022 ---*/
+    public function detalle_evaluacionpoa($proy_id){
+        $tabla='';
+        $evaluacion=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
+       // $calificacion=$evaluacion[5][$this->tmes];
+        //$tabla_evaluacion=$this->tabla_acumulada_evaluacion_unidad($evaluacion,2,1); /// Tabla que muestra el acumulado por trimestres Regresion
+     //   $unidades_responsables=$this->mis_servicios(1,$proy_id); /// Lista de Subactividades
+
+        $tabla.='
+        <hr>
+        '.$this->calificacion_eficacia($evaluacion[5][$this->tmes]).'
+        <hr>
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+          <section id="widget-grid">
+            <b>CUADRO DE CUMPLIMIENTO POA</b>
+            '.$this->tabla_acumulada_evaluacion_unidad($evaluacion,2,1).'
+          </section>
+        </article>
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+          <section id="widget-grid">
+            <b>CUADRO DE CUMPLIMIENTO POR UNIDAD RESPONSABLE</b>
+            '.$this->mis_servicios(1,$proy_id).'
+          </section>
+        </article>';
+
+      //  $tabla=$unidades_responsables;
+
+
+        return $tabla;
+    }
+
+
+    /*------ Parametro de eficacia ------*/
+    public function calificacion_eficacia($eficacia){
+      $tabla='';
+      $tp='danger';
+      $titulo='ERROR EN LOS VALORES';
+      if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
+      if ($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
+      if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
+      if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+
+      $tabla.='<h4 class="alert alert-'.$tp.'" style="font-family: Arial;" align="center"><b>'.$titulo.'</b></h4>';
+
+      return $tabla;
+    }
+
+
+/*------ TABLA ACUMULADA EVALUACIÓN 2020 -------*/
+    public function tabla_acumulada_evaluacion_unidad($regresion,$tp_graf,$tip_rep){
+      $tabla='';
+      $tit[2]='<b>NRO. ACT. PROGRAMADAS</b>';
+      $tit[3]='<b>NRO. ACT. CUMPLIDAS</b>';
+      $tit[4]='<b>NRO. ACT. NO CUMPLIDAS</b>';
+      $tit[5]='<b>% CUMPLIDOS</b>';
+      $tit[6]='<b>% NO CUMPLIDOS</b>';
+
+      $tit_total[2]='<b>NRO. ACT. PROGRAMADAS</b>';
+      $tit_total[3]='<b>NRO. ACT. CUMPLIDOS</b>';
+      $tit_total[4]='<b>% ACT. PROGRAMADOS</b>';
+      $tit_total[5]='<b>% ACT. CUMPLIDOS</b>';
+
+      if($tip_rep==1){ /// Normal
+        $tab='class="table table-bordered" align=center style="width:100%;"';
+        $color='#e9edec';
+      } 
+      else{ /// Impresion
+        $tab='class="change_order_items" border=1 align=center style="width:100%;"';
+        $color='#e9edec';
+      }
+
+      if($tp_graf==1){ // pastel : Programado-Cumplido
+        $tabla.='
+        <table '.$tab.'>
+          <thead>
+              <tr align=center bgcolor='.$color.' style="font-family: Arial;">
+                <th>NRO. ACT. PROGRAMADAS</th>
+                <th>ACT. EVALUADAS</th>
+                <th>ACT. CUMPLIDAS</th>
+                <th>ACT. NO CUMPLIDAS</th>
+                <th>% CUMPLIDAS</th>
+                <th>% NO CUMPLIDAS</th>
+              </tr>
+              </thead>
+            <tbody>
+              <tr align=right >
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[4][$this->tmes].'</b></td>
+                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
+                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
+              </tr>
+            </tbody>
+        </table>';
+      }
+      elseif($tp_graf==2){ /// Regresion Acumulado al Trimestre
+        $tabla.='
+        <table '.$tab.'>
+          <thead>
+              <tr bgcolor='.$color.'>
+                <th></th>';
+                for ($i=1; $i <=$this->tmes; $i++) { 
+                  $tabla.='<th align=center style="font-family: Arial;"><b>'.$regresion[1][$i].'</b></th>';
+                }
+              $tabla.='
+              </tr>
+            </thead>
+            <tbody>';
+              $color=''; $por='';
+              for ($i=2; $i <=6; $i++) {
+                if($i==5){
+                  $por='%';
+                  $color='#9de9f3';
+                }
+                elseif ($i==6) {
+                  $por='%';
+                  $color='#f7d3d0';
+                }
+                $tabla.='<tr bgcolor='.$color.'>
+                  <td style="font-family: Arial;">'.$tit[$i].'</td>';
+                  for ($j=1; $j <=$this->tmes; $j++) { 
+                    $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
+                  }
+                $tabla.='</tr>';
+              }
+            $tabla.='
+            </tbody>
+        </table>';
+      }
+      elseif($tp_graf==3){ /// Regresion Gestion
+        $tabla.='
+        <h4><b>'.$regresion[5][$this->tmes].'%</b> CUMPLIMIENTO DE '.$regresion[1][$this->tmes].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
+        <table '.$tab.'>
+          <thead>
+              <tr bgcolor='.$color.' >
+                <th></th>';
+                for ($i=1; $i <=4; $i++) { 
+                  $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
+                }
+              $tabla.='
+              </tr>
+              </thead>
+            <tbody>';
+              $color=''; $por='';
+              for ($i=2; $i <=5; $i++) {
+                if($i==4 || $i==5){
+                  $por='%';
+                  $color='#9de9f3';
+                }
+                $tabla.='<tr bgcolor='.$color.' >
+                  <td>'.$tit_total[$i].'</td>';
+                  for ($j=1; $j <=4; $j++) { 
+                    $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
+                  }
+                $tabla.='</tr>';
+              }
+            $tabla.='
+            </tbody>
+        </table>';
+      }
+      else{
+        $tabla.='
+        <table '.$tab.'>
+            <thead>
+              <tr align=center style="font-family: Arial;" >
+                <th>NRO. ACT. PROGRAMADAS</th>
+                <th>NRO. ACT. EVALUADAS</th>
+                <th>NRO. ACT. CUMPLIDAS</th>
+                <th>NRO. ACT. EN PROCESO</th>
+                <th>NRO. ACT. NO CUMPLIDAS</th>
+                <th>% CUMPLIDAS</th>
+                <th>% NO CUMPLIDAS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr align=right >
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[3][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.$regresion[7][$this->tmes].'</b></td>
+                <td style="font-family: Arial;"><b>'.($regresion[2][$this->tmes]-($regresion[7][$this->tmes]+$regresion[3][$this->tmes])).'</b></td>
+                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
+                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
+              </tr>
+            </tbody>
+        </table>';
+      }
+
+      return $tabla;
+    }
+
+
+    /*--------- Mis Servicios -------------*/
+    public function mis_servicios($tp_rep,$proy_id){
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); 
+      $componentes=$this->model_componente->proyecto_componente($proy_id);           
+      $tabla='';
+      // 1 : normal, 2 : Impresion
+      if($tp_rep==1){ /// Normal
+        $tab='class="table table-bordered" align=center style="width:100%;"';
+        $det='';
+      } 
+      else{ /// Impresion
+        $tab='border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align=center';
+        $det='
+        <div style="font-size: 10px;font-family: Arial;height: 2.5%;">
+          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.- DETALLE (%) DE CUMPLIMIENTO DE UNIDADES DEPENDIENTES</b>
+        </div>';
+      }
+
+      $tabla.='
+        '.$det.'
+        <table '.$tab.'>
+          <thead>
+          <tr align=center bgcolor=#f4f4f4>
+            <th style="width:3%;height:2%;">#</th>
+            <th style="width:20%;">UNIDAD RESPONSABLE</th>
+            <th style="width:8%;">TOTAL PROGRAMADO</th>
+            <th style="width:8%;">TOTAL EVALUADO</th>
+            <th style="width:8%;">TOTAL CUMPLIDOS</th>
+            <th style="width:8%;">EN PROCESO</th>
+            <th style="width:8%;">NO CUMPLIDOS</th>
+            <th style="width:8%;">% CUMPLIDO</th>
+            <th style="width:8%;">% NO CUMPLIDO</th>
+          </tr>
+          </thead>
+          <tbody>';
+          $nro=0;
+          foreach($componentes as $rowc){
+            $eval=$this->tabla_regresion_lineal_servicio($rowc['com_id']);
+            $nro++;
+            $tabla.='<tr>';
+              $tabla.='<td style="height:2%;" align=center>'.$nro.'</td>';
+              $tabla.='<td>'.$rowc['com_componente'].'</td>';
+              $tabla.='<td align=right><b>'.$eval[2][$this->tmes].'</b></td>';
+              $tabla.='<td align=right><b>'.$eval[2][$this->tmes].'</b></td>';
+              $tabla.='<td align=right><b>'.$eval[3][$this->tmes].'</b></td>';
+              $tabla.='<td align=right><b>'.$eval[7][$this->tmes].'</b></td>';
+              $tabla.='<td align=right><b>'.($eval[2][$this->tmes]-($eval[7][$this->tmes]+$eval[3][$this->tmes])).'</b></td>';
+              if($tp_rep==1){
+                $tabla.='<td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$eval[5][$this->tmes].'%</b></button></td>';
+                $tabla.='<td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$eval[6][$this->tmes].'%</b></button></td>';
+              }
+              else{
+                $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[5][$this->tmes].'%</b></td>';
+                $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[6][$this->tmes].'%</b></td>';
+              }
+            $tabla.='</tr>';
+          }
+        $tabla.='
+          </tbody>
+        </table>';
+      return $tabla;
+    }
+
+
+    /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE -------*/
+    public function tabla_regresion_lineal_unidad($proy_id){
+      $m[0]='';
+      $m[1]='I TRIMESTRE.';
+      $m[2]='II TRIMESTRE';
+      $m[3]='III TRIMESTRE';
+      $m[4]='IV TRIMESTRE';
+
+      for ($i=0; $i <=$this->tmes; $i++){ 
+        $tr[1][$i]=$m[$i]; /// Trimestre
+        $tr[2][$i]=0; /// Prog
+        $tr[3][$i]=0; /// cumplidas
+        $tr[4][$i]=0; /// no cumplidas
+        $tr[5][$i]=0; /// eficacia %
+        $tr[6][$i]=0; /// no eficacia %
+        $tr[7][$i]=0; /// en proceso
+        $tr[8][$i]=0; /// en proceso %
+      }
+
+      for ($i=1; $i <=$this->tmes; $i++) {
+        $valor=$this->obtiene_datos_evaluacíon($proy_id,$i,1);
+        $tr[2][$i]=$valor[1]; /// Prog
+        $tr[3][$i]=$valor[2]; /// cumplidas
+        $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
+        if($tr[2][$i]!=0){
+          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+        }
+        $tr[6][$i]=(100-$tr[5][$i]);
+        $proceso=$this->obtiene_datos_evaluacíon($proy_id,$i,2);
+        $tr[7][$i]=$proceso[2]; /// En Proceso
+        if($tr[2][$i]!=0){
+          $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
+        }
+      }
+
+    return $tr;
+    }
+
+    /*------ OBTIENE DATOS DE EVALUACIÓN 2020 -------*/
+    public function obtiene_datos_evaluacíon($proy_id,$trimestre,$tipo_evaluacion){
+      $nro_ope_eval=0; $nro_cumplidas=0;
+      for ($i=1; $i <=$trimestre; $i++) {
+        $programadas=$this->model_evalunidad->nro_operaciones_programadas($proy_id,$i);
+        if(count($programadas)!=0){
+          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
+        }
+
+        if(count($this->model_evalunidad->list_operaciones_evaluadas_unidad_trimestre_tipo($proy_id,$i,$tipo_evaluacion))!=0){
+          $nro_cumplidas=$nro_cumplidas+count($this->model_evalunidad->list_operaciones_evaluadas_unidad_trimestre_tipo($proy_id,$i,$tipo_evaluacion));
+        }
+      }
+
+      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
+      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
+
+      return $vtrimestre;
+    }
 
 
 
+ /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO AL TRIMESTRE -------*/
+    public function tabla_regresion_lineal_servicio($com_id){
+      $m[0]='';
+      $m[1]='I TRIMESTRE.';
+      $m[2]='II TRIMESTRE';
+      $m[3]='III TRIMESTRE';
+      $m[4]='IV TRIMESTRE';
+
+      for ($i=0; $i <=$this->tmes; $i++){ 
+        $tr[1][$i]=$m[$i]; /// Trimestre
+        $tr[2][$i]=0; /// Prog
+        $tr[3][$i]=0; /// cumplidas
+        $tr[4][$i]=0; /// no cumplidas
+        $tr[5][$i]=0; /// eficacia %
+        $tr[6][$i]=0; /// no eficacia %
+        $tr[7][$i]=0; /// en proceso
+        $tr[8][$i]=0; /// en proceso %
+      }
+
+      for ($i=1; $i <=$this->tmes; $i++) {
+        $valor=$this->obtiene_datos_evaluacíon_servicio($com_id,$i,1);
+        $tr[2][$i]=$valor[1]; /// Prog
+        $tr[3][$i]=$valor[2]; /// cumplidas
+        $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
+        if($tr[2][$i]!=0){
+          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+        }
+        $tr[6][$i]=(100-$tr[5][$i]);
+        $proceso=$this->obtiene_datos_evaluacíon_servicio($com_id,$i,2);
+        $tr[7][$i]=$proceso[2]; /// En Proceso
+        if($tr[2][$i]!=0){
+          $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
+        }
+        
+      }
+
+    return $tr;
+    }
+
+    /*------ OBTIENE DATOS DE EVALUACIÓN 2020 - SERVICIO -------*/
+    public function obtiene_datos_evaluacíon_servicio($com_id,$trimestre,$tipo_evaluacion){
+      $nro_ope_eval=0; $nro_cumplidas=0;
+      for ($i=1; $i <=$trimestre; $i++) {
+        $programadas=$this->model_evaluacion->nro_operaciones_programadas($com_id,$i);
+        if(count($programadas)!=0){
+          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
+        }
+
+        if(count($this->model_evaluacion->list_operaciones_evaluadas_servicio_trimestre_tipo($com_id,$i,$tipo_evaluacion))!=0){
+          $nro_cumplidas=$nro_cumplidas+count($this->model_evaluacion->list_operaciones_evaluadas_servicio_trimestre_tipo($com_id,$i,$tipo_evaluacion));
+        }
+      }
+
+      $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
+      $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
+
+      return $vtrimestre;
+    }
 
 
-
+    /////========================================
 
     public function menu($mod){
         $enlaces=$this->menu_modelo->get_Modulos($mod);
@@ -1154,10 +1594,10 @@ class Genera_informacion extends CI_Controller{
           width: 50% !important;
         }
         #certificacion{
-          width: 50% !important;
+          width: 40% !important;
         }
-        #csv{
-          width: 30% !important;
+        #evaluacion{
+          width: 80% !important;
         }
           input[type="checkbox"] {
           display:inline-block;

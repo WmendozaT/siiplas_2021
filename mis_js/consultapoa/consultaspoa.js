@@ -45,6 +45,36 @@ function abreVentana(PDF){
     }
 
 
+    function doSearch_lista(){
+      var tableReg = document.getElementById('datos_lista');
+      var searchText = document.getElementById('searchTerm_lista').value.toLowerCase();
+      var cellsOfRow="";
+      var found=false;
+      var compareWith="";
+ 
+      // Recorremos todas las filas con contenido de la tabla
+      for (var i = 1; i < tableReg.rows.length; i++){
+        cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+        found = false;
+        // Recorremos todas las celdas
+        for (var j = 0; j < cellsOfRow.length && !found; j++){
+          compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+          // Buscamos el texto en el contenido de la celda
+          if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+            found = true;
+          }
+        }
+        if(found) {
+          tableReg.rows[i].style.display = '';
+        } else {
+          // si no ha encontrado ninguna coincidencia, esconde la
+          // fila de la tabla
+          tableReg.rows[i].style.display = 'none';
+        }
+      }
+    }
+
+
     function doSearch_form4(){
       var tableReg = document.getElementById('datos_form4');
       var searchText = document.getElementById('searchTerm_form4').value.toLowerCase();
@@ -198,6 +228,37 @@ function abreVentana(PDF){
       if (response.respuesta == 'correcto') {
         $('#titulo_certpoa').html('<font size=3><b>'+response.titulo_poa+'</b></font>');
         $('#content_certpoa').fadeIn(1000).html(response.tabla);
+      }
+      else{
+        alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+    });
+  }
+
+
+  /// ver reportes EVALUACION POA
+  function ver_evaluacionpoa(proy_id) {
+   // alert(proy_id)
+    $('#titulo_evalpoa').html('<font size=3><b>Cargando ..</b></font>');
+    $('#content_evalpoa').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion</div>');
+    var url = base+"index.php/consultas_cns/c_consultas/get_evalpoa";
+    var request;
+    if (request) {
+        request.abort();
+    }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+        $('#titulo_evalpoa').html('<font size=3><b>'+response.titulo_poa+'</b></font>');
+        $('#content_evalpoa').fadeIn(1000).html(response.tabla);
       }
       else{
         alertify.error("ERROR AL RECUPERAR INFORMACION");

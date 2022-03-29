@@ -61,8 +61,12 @@ class C_consultas extends CI_Controller {
       $data['menu']=$this->genera_informacion->menu(10);
       $data['list']=$this->menu_nacional();
       $data['style']=$this->genera_informacion->style();
-
+      $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+      
+      $data['mensaje']='<div class="jumbotron"><h1>RESUMEN POA '.$this->gestion.'</h1><p>Reporte Resumen consolidado de Programación POA a nivel Regional, segun la siguiente Clasificación :</p><ol style="font-size:16px;"><li>Genera informacion de Programación, Modificacion, Evaluación y Certificacion POA, segun el tipo de Gasto</li><li>Genera Reporte Consolidado del Fornulario N° 4 (Actividades) por Regional.</li><li>Genera Reporte Consolidado del Fornulario N° 5 (requerimientos) por Regional.</li><li>Genera el listado de Certificaciones POA por Regional.</li><li>Genera Informacion sobre la Evaluación POA a nivel Regional</li></ol></div>';
       $this->load->view('admin/consultas_internas/menu_consultas_poa', $data);
+     // echo $this->list_certificacionpoa(2361,4);
+    //  echo $this->genera_informacion->mis_servicios(1,2361);
     }
 
   /*-----  OPCIONES 2020-2021 -----*/
@@ -74,11 +78,11 @@ class C_consultas extends CI_Controller {
         case 'reporte':
         $salida="";
           $salida.= "<option value='0'>Seleccione tipo Reporte....</option>";
-          $salida.= "<option value='1'>LISTA DE UNIDADES / PROYECTOS DE INVERSIÓN</option>";
-          $salida.= "<option value='2'>CONSOLIDADO FORMULARIO 4 (ACTIVIDADES)</option>";
-          $salida.= "<option value='3'>CONSOLIDADO FORMULARIO 5 (REQUERIMEINTOS)</option>";
-          $salida.= "<option value='4'>LISTA DE CERTIFICACIONES POA</option>";
-          $salida.= "<option value='5'>EVALUACION POA REGIONAL</option>";
+          $salida.= "<option value='1'>1.- CONSOLIDADO POA SEGUN TIPO DE GASTO</option>";
+          $salida.= "<option value='2'>2.- CONSOLIDADO FORMULARIO 4 (ACTIVIDADES)</option>";
+          $salida.= "<option value='3'>3.- CONSOLIDADO FORMULARIO 5 (REQUERIMEINTOS)</option>";
+          $salida.= "<option value='4'>4.- LISTA DE CERTIFICACIONES POA</option>";
+          $salida.= "<option value='5'>5.- EVALUACION POA REGIONAL</option>";
 
         echo $salida; 
         //return $salida;
@@ -184,21 +188,17 @@ class C_consultas extends CI_Controller {
         $proy_id = $this->security->xss_clean($post['proy_id']);
         $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
 
-        $caratula_poa='';
         $titulo_poa=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'];
         if($proyecto[0]['tp_id']==4){
           $titulo_poa=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
-          $caratula_poa='
-            <a href="javascript:abreVentana(\''.site_url("").'/proy/presentacion/'.$proy_id.'\');" title="CARATULA POA"  class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="45" HEIGHT="45"/><br>CARATULA POA</a>';
         }
 
-        $tabla=$this->list_cites_generados($proy_id,1); /// Mis Subactividades
+        $tabla=$this->list_cites_generados($proy_id); /// Mis Modificaciones POA
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
           'proyecto'=>$proyecto,
           'titulo_poa'=>$titulo_poa,
-          'caratula'=>$caratula_poa,
         );
           
         echo json_encode($result);
@@ -307,28 +307,24 @@ class C_consultas extends CI_Controller {
 
 
 
-    /*-------- GET DATOS CERTIFICACION POA --------*/
-    public function get_certpoa(){
+    /*--- GET DATOS CERTIFICACION POA POR UNIDAD 2022 ---*/
+    public function get_evalpoa(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $proy_id = $this->security->xss_clean($post['proy_id']);
         $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
 
-        $caratula_poa='';
         $titulo_poa=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'];
         if($proyecto[0]['tp_id']==4){
           $titulo_poa=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
-          $caratula_poa='
-            <a href="javascript:abreVentana(\''.site_url("").'/proy/presentacion/'.$proy_id.'\');" title="CARATULA POA"  class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="45" HEIGHT="45"/><br>CARATULA POA</a>';
         }
 
-        $tabla=$this->list_cites_generados($proy_id,1); /// Mis Subactividades
+        $tabla=$this->genera_informacion->detalle_evaluacionpoa($proy_id); /// Mi evaluacion
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
           'proyecto'=>$proyecto,
           'titulo_poa'=>$titulo_poa,
-          'caratula'=>$caratula_poa,
         );
           
         echo json_encode($result);
@@ -336,40 +332,6 @@ class C_consultas extends CI_Controller {
           show_404();
       }
     }
-
-
-    /*--- LISTA DE CERTIFICACIONES POA ---*/
-    public function list_certificacionpoa($proy_id){
-      $tabla='';
-
-
-      return $tabla;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

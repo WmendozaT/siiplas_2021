@@ -32,6 +32,20 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*--------- LISTA DE CERTIFICACIONES POA POR UNIDAD, PROYECTO ------*/
+    public function list_certpoa_unidad($proy_id){
+        $sql = 'select *
+                from certificacionpoa cpoa
+                Inner Join _componentes as c On c.com_id=cpoa.com_id
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                where cpoa.proy_id='.$proy_id.' and cpoa.cpoa_estado!=\'3\' and cpoa.cpoa_gestion='.$this->gestion.'
+                order by cpoa_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*--------- VERIFICA SALDO PRESUPUESTO (PROGRAMADO-ASIGNADO) ------*/
     public function saldo_presupuesto_unidad($proy_id){
         $sql = 'select *
