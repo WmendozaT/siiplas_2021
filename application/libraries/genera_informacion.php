@@ -77,9 +77,9 @@ class Genera_informacion extends CI_Controller{
         <thead>
           <tr style="background-color: #66b2e8">
             <th style="width:1%;"></th>
-            <th style="width:5%;">PROGRAMACIÓN POA</th>
             <th style="width:3%;">REP. POA <br>'.$this->gestion.'</th>
             <th style="width:5%;">NOTIFICACIÓN POA '.$this->verif_mes[2].' / '.$this->gestion.'</th>
+            <th style="width:5%;">PROGRAMACIÓN POA '.$this->gestion.'</th>
             <th style="width:5%;">MODIFICACIÓN POA '.$this->gestion.'</th>
             <th style="width:5%;">CERTIFICACIÓN POA '.$this->gestion.'</th>
             <th style="width:5%;">EVALUACIÓN POA '.$this->gestion.'</th>
@@ -123,7 +123,7 @@ class Genera_informacion extends CI_Controller{
             <td>'.$nro.'</td>
             <td align=center>';
             if($row['pfec_estado']==1){
-              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_poa" class="btn btn-default" name="'.$row['proy_id'].'"  onclick="ver_poa('.$row['proy_id'].');" title="FORMULARIO POA">FORMULARIOS POA</a>';
+              $tabla.=' <a href="'.site_url("").'/seg/notificacion_operaciones_mensual/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="NOTIFICACIÓN POA">NOTIFICACIÓN POA</a>';
             }
             else{
               $tabla.='<b>FASE NO ACTIVA</b>';
@@ -133,7 +133,7 @@ class Genera_informacion extends CI_Controller{
             <td>'.$rep.'</td>
             <td align=center>';
             if($row['pfec_estado']==1){
-              $tabla.=' <a href="'.site_url("").'/seg/notificacion_operaciones_mensual/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="NOTIFICACIÓN POA">NOTIFICACIÓN POA</a>';
+              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_poa" class="btn btn-default" name="'.$row['proy_id'].'"  onclick="ver_poa('.$row['proy_id'].');" title="FORMULARIO POA"><i class="fa fa-gear fa-2x fa-spin"></i> VER</a>';
             }
             else{
               $tabla.='<b>FASE NO ACTIVA</b>';
@@ -142,7 +142,7 @@ class Genera_informacion extends CI_Controller{
             </td>
             <td align=center>';
             if($row['pfec_estado']==1){
-              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mpoa" class="btn btn-default" name="'.$row['proy_id'].'"  onclick="ver_mpoa('.$row['proy_id'].');" title="MODIFICACIONES POA">VER</a>';
+              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mpoa" class="btn bg-color-green txt-color-white" name="'.$row['proy_id'].'"  onclick="ver_mpoa('.$row['proy_id'].');" title="MODIFICACIONES POA"><i class="fa fa-gear fa-2x fa-spin"></i> VER</a>';
             }
             else{
               $tabla.='<b>FASE NO ACTIVA</b>';
@@ -150,7 +150,7 @@ class Genera_informacion extends CI_Controller{
             $tabla.='</td>
             <td align=center>';
             if($row['pfec_estado']==1){
-              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_certpoa" class="btn btn-default" name="'.$row['proy_id'].'"  onclick="ver_certpoa('.$row['proy_id'].');" title="CERTIFICACIONES POA">VER</a>';
+              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_certpoa" class="btn bg-color-blue txt-color-white" name="'.$row['proy_id'].'"  onclick="ver_certpoa('.$row['proy_id'].');" title="CERTIFICACIONES POA"><i class="fa fa-gear fa-2x fa-spin"></i> VER</a>';
             }
             else{
               $tabla.='<b>FASE NO ACTIVA</b>';
@@ -158,7 +158,7 @@ class Genera_informacion extends CI_Controller{
             $tabla.='</td>
             <td align=center>';
             if($row['pfec_estado']==1){
-              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_eval" class="btn btn-default" name="'.$row['proy_id'].'"  onclick="ver_evaluacionpoa('.$row['proy_id'].');" title="EVALUACION POA">VER</a>';
+              $tabla.='<a href="#" data-toggle="modal" data-target="#modal_eval" class="btn bg-color-orange txt-color-white" name="'.$row['proy_id'].'"  onclick="ver_evaluacionpoa('.$row['proy_id'].');" title="EVALUACION POA"><i class="fa fa-gear fa-2x fa-spin"></i> VER</a>';
             }
             else{
               $tabla.='<b>FASE NO ACTIVA</b>';
@@ -358,7 +358,7 @@ class Genera_informacion extends CI_Controller{
             <tbody>';
              $nro=0;
               foreach ($establecimientos as $row){
-                $ppto=$this->genera_informacion->ppto_actividad($row,4);
+                $ppto=$this->ppto_actividad($row,4);
                 $color='';
                 if($ppto[3]<0){
                   $color='#f3d8d7';
@@ -1114,9 +1114,9 @@ class Genera_informacion extends CI_Controller{
 
 
     /*--- REPORTE EVALUACION POA POR UNIDAD 2022 ---*/
-    public function detalle_evaluacionpoa($proy_id){
+    public function detalle_evaluacionpoa($evaluacion,$proy_id){
         $tabla='';
-        $evaluacion=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
+        //$evaluacion=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
        // $calificacion=$evaluacion[5][$this->tmes];
         //$tabla_evaluacion=$this->tabla_acumulada_evaluacion_unidad($evaluacion,2,1); /// Tabla que muestra el acumulado por trimestres Regresion
      //   $unidades_responsables=$this->mis_servicios(1,$proy_id); /// Lista de Subactividades
@@ -1128,6 +1128,9 @@ class Genera_informacion extends CI_Controller{
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
           <section id="widget-grid">
             <b>CUADRO DE CUMPLIMIENTO POA</b>
+            <div class="well">
+                <center><div id="parametro_efi" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
+            </div>
             '.$this->tabla_acumulada_evaluacion_unidad($evaluacion,2,1).'
           </section>
         </article>
@@ -1184,32 +1187,7 @@ class Genera_informacion extends CI_Controller{
         $color='#e9edec';
       }
 
-      if($tp_graf==1){ // pastel : Programado-Cumplido
-        $tabla.='
-        <table '.$tab.'>
-          <thead>
-              <tr align=center bgcolor='.$color.' style="font-family: Arial;">
-                <th>NRO. ACT. PROGRAMADAS</th>
-                <th>ACT. EVALUADAS</th>
-                <th>ACT. CUMPLIDAS</th>
-                <th>ACT. NO CUMPLIDAS</th>
-                <th>% CUMPLIDAS</th>
-                <th>% NO CUMPLIDAS</th>
-              </tr>
-              </thead>
-            <tbody>
-              <tr align=right >
-                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.$regresion[3][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.$regresion[4][$this->tmes].'</b></td>
-                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
-                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
-              </tr>
-            </tbody>
-        </table>';
-      }
-      elseif($tp_graf==2){ /// Regresion Acumulado al Trimestre
+        if($tp_graf==2){ /// Regresion Acumulado al Trimestre
         $tabla.='
         <table '.$tab.'>
           <thead>

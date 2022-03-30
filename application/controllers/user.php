@@ -324,7 +324,7 @@ class User extends CI_Controller{
                         <a href="'.base_url().'index.php/consulta/mis_operaciones"  onclick="reporte_internos()" class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/impresora.png"  style="margin-left:0px; width: 95px"/>
-                            <h1 style="font-size: 11px;">REPORTES POA-INTERNOS</h1>
+                            <h1 style="font-size: 11px;">RESUMEN POA '.$this->gestion.'</h1>
                         </div>
                         </a>
                     </div>';

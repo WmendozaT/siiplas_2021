@@ -57,12 +57,12 @@
             <nav>
                 <ul>
                     <li class="">
-                    <a href="<?php echo site_url("admin").'/dashboard';?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+                    <a href="<?php echo site_url("admin").'/dashboard';?>" title="VOLVER A MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
                     </li>
                     <li class="text-center">
-                        <a href="#" title="EVALUACIÓN POA"> <span class="menu-item-parent">REPORTES POA</span></a>
+                        <a href="#" title="EVALUACIÓN POA"> <span class="menu-item-parent">RESUMEN POA <?php echo $this->session->userdata("gestion");?></span></a>
                     </li>
-                    <?php echo $menu;?>
+                    
                 </ul>
             </nav>
             <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
@@ -79,7 +79,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Reportes POA</li><li>Plan Operativo Anual <?php echo $this->session->userdata('gestion');?></li>
+                    <li>Plan Operativo Anual <?php echo $this->session->userdata('gestion');?></li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -118,7 +118,7 @@
                             <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                         </div>
                         <div class="modal-body">
-                        <h2 class="alert alert-info"><center>MIS FORMULARIOS POA - <?php echo $this->session->userData('gestion');?></center></h2>
+                        <h2 class="alert alert-secondary "><center>MIS FORMULARIOS POA - <?php echo $this->session->userData('gestion');?></center></h2>
                             <div class="row">
                                 <div id="titulo"></div>
                                 <div id="content1"></div>
@@ -136,7 +136,7 @@
                             <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                         </div>
                         <div class="modal-body">
-                        <h2 class="alert alert-info"><center>MIS MODIFICACIONES POA - <?php echo $this->session->userData('gestion');?></center></h2>
+                        <h2 class="alert alert-success"><center>MIS MODIFICACIONES POA - <?php echo $this->session->userData('gestion');?></center></h2>
                             <div class="row">
                                 <div id="titulo_mod"></div>
                                 <div id="content_mod"></div>
@@ -172,7 +172,7 @@
                             <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                         </div>
                         <div class="modal-body">
-                        <h2><center>CUADRO DE EVALUACI&Oacute;N POA - <?php echo $tmes[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></center></h2>
+                        <h2 class="alert alert-warning"><center>CUADRO DE EVALUACI&Oacute;N POA - <?php echo $tmes[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></center></h2>
                             <div class="row">
                                 <div id="titulo_evalpoa"></div>
                                 <div id="content_evalpoa"></div>
@@ -208,6 +208,7 @@
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
         <!-- BOOTSTRAP JS -->
@@ -237,41 +238,5 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-       <!-- <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script> -->
         <script src="<?php echo base_url(); ?>mis_js/consultapoa/consultaspoa.js"></script> 
-
-        
-
-      <!--   <script type="text/javascript">
-            function ver_operaciones(proy_id) {
-                $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
-                $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando informacion </div>');
-            
-                var url = "<?php echo site_url("")?>/reporte_seguimiento_poa/crep_seguimientopoa/get_operaciones_subactividad";
-                var request;
-                if (request) {
-                    request.abort();
-                }
-                request = $.ajax({
-                    url: url,
-                    type: "POST",
-                    dataType: 'json',
-                    data: "proy_id="+proy_id
-                });
-
-                request.done(function (response, textStatus, jqXHR) {
-
-                if (response.respuesta == 'correcto') {
-                    $('#titulo').fadeIn(1000).html('<font size=3><b>'+response.titulo+'</b></font>');
-                    $('#content1').fadeIn(1000).html(response.tabla);
-                }
-                else{
-                    alertify.error("ERROR AL RECUPERAR INFORMACION");
-                }
-
-                });
-            }
-        </script> -->
-
-    </body>
 </html>

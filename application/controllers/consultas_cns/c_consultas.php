@@ -65,8 +65,6 @@ class C_consultas extends CI_Controller {
 
       $data['mensaje']='<div class="jumbotron"><h1>RESUMEN POA '.$this->gestion.'</h1><p>Reporte Resumen consolidado de Programación POA a nivel Regional, segun la siguiente Clasificación :</p><ol style="font-size:16px;"><li>Genera informacion de Programación, Modificacion, Evaluación y Certificacion POA, segun el tipo de Gasto</li><li>Genera Reporte Consolidado del Fornulario N° 4 (Actividades) por Regional.</li><li>Genera Reporte Consolidado del Fornulario N° 5 (requerimientos) por Regional.</li><li>Genera el listado de Certificaciones POA por Regional.</li><li>Genera Informacion sobre la Evaluación POA a nivel Regional</li></ol></div>';
       $this->load->view('admin/consultas_internas/menu_consultas_poa', $data);
-     // echo $this->list_certificacionpoa(2361,4);
-    //  echo $this->genera_informacion->mis_servicios(1,2361);
     }
 
   /*-----  OPCIONES 2020-2021 -----*/
@@ -82,7 +80,7 @@ class C_consultas extends CI_Controller {
           $salida.= "<option value='2'>2.- CONSOLIDADO FORMULARIO 4 (ACTIVIDADES)</option>";
           $salida.= "<option value='3'>3.- CONSOLIDADO FORMULARIO 5 (REQUERIMEINTOS)</option>";
           $salida.= "<option value='4'>4.- LISTA DE CERTIFICACIONES POA</option>";
-          $salida.= "<option value='5'>5.- EVALUACION POA REGIONAL</option>";
+          $salida.= "<option value='5'>5.- CUADRO DE EVALUACION POA REGIONAL</option>";
 
         echo $salida; 
         //return $salida;
@@ -166,6 +164,9 @@ class C_consultas extends CI_Controller {
         }
         elseif ($tp_rep==4) {
           $salida=$this->genera_informacion->lista_certificaciones_poa($dep_id,$tp_id);
+        }
+        elseif ($tp_rep==5) {
+          $salida='<hr><center><iframe id="ipdf" width="99%" height="1000px;" src="'.base_url().'index.php/rep_eval_poa/iframe_rep_evaluacionpoa/'.$dep_id.'/0/'.$tp_id.'"></iframe></center>';
         }
 
         //$lista=$this->lista_certificaciones_poa($dist_id,$tp_id);
@@ -347,12 +348,16 @@ class C_consultas extends CI_Controller {
           $titulo_poa=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
         }
 
-        $tabla=$this->genera_informacion->detalle_evaluacionpoa($proy_id); /// Mi evaluacion
+        $evaluacion=$this->genera_informacion->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
+
+        $tabla=$this->genera_informacion->detalle_evaluacionpoa($evaluacion,$proy_id); /// Mi evaluacion
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
           'proyecto'=>$proyecto,
           'titulo_poa'=>$titulo_poa,
+          'evaluacion'=>$evaluacion,
+
         );
           
         echo json_encode($result);

@@ -259,6 +259,73 @@ function abreVentana(PDF){
       if (response.respuesta == 'correcto') {
         $('#titulo_evalpoa').html('<font size=3><b>'+response.titulo_poa+'</b></font>');
         $('#content_evalpoa').fadeIn(1000).html(response.tabla);
+
+
+        /////////// ACUMULADO
+
+        chart = new Highcharts.Chart({
+        chart: {
+          renderTo: 'parametro_efi',  // Le doy el nombre a la gráfica
+          defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+        },
+        title: {
+          text: 'CUADRO DE CUMPLIMIENTO POA'  // Titulo (Opcional)
+        },
+        subtitle: {
+          text: ''   // Subtitulo (Opcional)
+        },
+        // Pongo los datos en el eje de las 'X'
+        xAxis: {
+          categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
+          // Pongo el título para el eje de las 'X'
+          title: {
+            text: '% Operaciones Acumulados por Trimestre'
+          }
+        },
+        yAxis: {
+          // Pongo el título para el eje de las 'Y'
+          title: {
+            text: '% Ejecucion'
+          }
+        },
+        // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+        tooltip: {
+          enabled: true,
+          formatter: function() {
+            return '<b>'+ this.series.name +'</b><br/>'+
+              this.x +': '+ this.y +' '+this.series.name;
+          }
+        },
+        // Doy opciones a la gráfica
+        plotOptions: {
+          line: {
+            dataLabels: {
+              enabled: true
+            },
+            enableMouseTracking: true
+          }
+        },
+        // Doy los datos de la gráfica para dibujarlas
+        series: [
+            {
+              name: 'Nro. ACT. Programado',
+              data: [0,response.evaluacion[2][1],response.evaluacion[2][2],response.evaluacion[2][3],response.evaluacion[2][4]]
+            },
+            {
+              name: 'Nro. ACT, Cumplidas',
+              data: [0,response.evaluacion[3][1],response.evaluacion[3][2],response.evaluacion[3][3],response.evaluacion[3][4]]
+            }
+           /* ,
+            {
+            name: '(%) cumplimiento',
+            data: [0,response.evaluacion[5][1],response.evaluacion[5][2],response.evaluacion[5][3],response.evaluacion[5][4]]
+            },
+            {
+            name: '(%) no cumplido',
+            data: [0,response.evaluacion[6][1],response.evaluacion[6][2],response.evaluacion[6][3],response.evaluacion[6][4]]
+            }*/
+            ],
+        });
       }
       else{
         alertify.error("ERROR AL RECUPERAR INFORMACION");
