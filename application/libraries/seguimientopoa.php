@@ -2082,11 +2082,17 @@ class Seguimientopoa extends CI_Controller{
                   $nro++;
                   $tabla.='
                   <tr>
-                    <td align=center bgcolor="#f6fbf4">
-                      '.$nro.'
+                    <td align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'">';
+                    if($row['prod_priori']==0){
+                      $tabla.=$nro;
+                    }
+                    else{
+                      $tabla.='<br><img src="'.base_url().'assets/ifinal/ok.png" WIDTH="37" HEIGHT="30"/><br><font size=1 color=green><b>ACTIVIDAD<br>PRIORIZADO</b></font>';
+                    }
+                    $tabla.='
                     </td>
                     <td style="width:1%;" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
-                    <td style="width:1%;" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
+                    <td style="width:1%;font-size: 17px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
                     <td bgcolor="#f6fbf4">'.$row['prod_producto'].'</td>
                     <td bgcolor="#f6fbf4">'.$row['prod_indicador'].'</td>
                     <td align=right bgcolor="#f6fbf4"><b>'.round($row['prod_meta'],2).''.$indi_id.'</b></td>
@@ -2097,7 +2103,7 @@ class Seguimientopoa extends CI_Controller{
                       <td>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" id=ejec'.$nro.' value="'.round($ejec[0]['pejec_fis'],2).'" onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$nro.');" title="'.($diferencia[1]+$diferencia[2]).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                          <input type="text" id=ejec'.$nro.' value="'.round($ejec[0]['pejec_fis'],2).'" onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$row['prod_id'].','.$nro.',1,'.$mes_id.');" title="'.($diferencia[1]+$diferencia[2]).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                         </label>
                       </td>
                       <td>
@@ -2133,7 +2139,7 @@ class Seguimientopoa extends CI_Controller{
                       <td>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" id=ejec'.$nro.' value="0" onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$nro.');" title="'.($diferencia[1]+$diferencia[2]).'"  onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                          <input type="text" id=ejec'.$nro.' value="" onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$row['prod_id'].','.$nro.',0,'.$mes_id.');" title="'.($diferencia[1]+$diferencia[2]).'"  onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                         </label>
                       </td>';
                       $no_ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($row['prod_id'],$mes_id);
@@ -2210,6 +2216,8 @@ class Seguimientopoa extends CI_Controller{
 
       return $tabla;
     }
+
+
 
 
     /*---- CALIFICACIÓN POR CADA OPERACION ----*/

@@ -103,8 +103,6 @@ class Cseguimiento_establecimiento extends CI_Controller {
 
 
 
-
-
     /*------- NOTIFICACION POA ------*/
     function notificacion(){
       $tabla='';

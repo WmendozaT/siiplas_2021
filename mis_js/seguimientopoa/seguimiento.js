@@ -49,18 +49,33 @@ function abreVentana(PDF){
   }
 
 
-    function verif_valor(programado,ejecutado,nro){
-      if(ejecutado!== '' & ejecutado!== 0){
-        if(ejecutado<=programado){
+  //// Verificando valor ejecutado por form 4
+    function verif_valor(programado,ejecutado,prod_id,nro,tp,mes_id){
+     /// tp 0 : Registro
+     /// tp 1 : modifcacion  
+    
+      if(ejecutado!= ''){
+      //  alert(ejecutado+'-'+prod_id+'-'+nro+'-'+tp+'-'+mes_id)
+        var url = base+"index.php/ejecucion/cseguimiento/verif_valor_ejecutado_x_form4";
+        $.ajax({
+          type:"post",
+          url:url,
+          data:{ejec:ejecutado,prod_id:prod_id,tp:tp,mes_id:mes_id},
+          success:function(datos){
+
+           if(datos.trim() =='true'){
+
             $('#but'+nro).slideDown();
             document.getElementById("ejec"+nro).style.backgroundColor = "#ffffff";
             document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
-        }
-        else{
+           }
+           else{
             alertify.error("ERROR EN EL DATO REGISTRADO !");
              document.getElementById("ejec"+nro).style.backgroundColor = "#fdeaeb";
             $('#but'+nro).slideUp();
-        }
+           }
+
+        }});
       }
       else{
         $('#but'+nro).slideUp();
