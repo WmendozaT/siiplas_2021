@@ -414,34 +414,7 @@ class model_producto extends CI_Model {
         $this->db->delete('prod_ejecutado_mensual_relativo'); 
     }
     /*=================================================================================================*/
-    /*=================================== LISTA DE PRODUCTOS 2018 ====================================*/
-/*    public function prod_terminal($prog){
-        $sql = 'select *
-                from poa_accionmplazo pam
-                Inner Join poa as poa On poa.poa_id=pam.poa_id
-                Inner Join aperturaprogramatica as aper On poa.aper_id=aper.aper_id
-                Inner Join _acciones_estrategicas as ae On ae.acc_id=pam.acc_id
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
-                Inner Join _resultado_mplazo as re On re.acc_id=ae.acc_id
-                Inner Join _pterminal_mplazo as pt On pt.rm_id=re.rm_id
-                Inner Join _pterminal_mplazo_programado as ptp On ptp.ptm_id=pt.ptm_id
-                where aper.aper_programa=\''.$prog.'\' and aper.aper_proyecto=\'0000\' and aper.aper_actividad=\'000\' and poa.poa_gestion='.$this->gestion.' and ae.acc_estado!=\'3\' and oe.obj_estado!=\'3\' and (oe.obj_gestion_inicio<='.$this->gestion.' and oe.obj_gestion_fin>='.$this->gestion.') and ptp.g_id='.$this->gestion.'
-                order by pt.ptm_id asc'; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
-/*    public function prod_terminal2($prog){
-        $sql = 'select pt.*
-                from aperturaprogramatica as ap
-                Inner Join resultado_corto_plazo as rc On rc.aper_id=ap.aper_id
-                Inner Join _productoterminal as pt On pt.rc_id=rc.rc_id
-                where ap.aper_gestion='.$this->session->userdata("gestion").' and ap.aper_programa=\''.$prog.'\' and ap.aper_proyecto=\'0000\' and ap.aper_actividad=\'000\' and pt.pt_gestion='.$this->session->userdata("gestion").' and pt.pt_estado!=\'3\'
-                ORDER BY pt.pt_id  asc'; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-    /*==============================================================================================================*/
     /*================================= NRO DE PRODUCTOS ======================================*/
     public function productos_nro($id_c){
         $this->db->from('_productos');

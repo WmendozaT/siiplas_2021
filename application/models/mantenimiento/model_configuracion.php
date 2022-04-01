@@ -12,10 +12,26 @@ class Model_configuracion extends CI_Model {
 
     /*--------- Lista de responsables para evaluacion ----------*/
     public function get_list_responsables_evaluacion(){
-        $sql = 'select * from vlist_funcionario'; 
+        $sql = 'select * from vlist_funcionario
+                where cm_id=\'0\''; 
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+    /*--------- Lista de unidades responsables habilitados para evaluacion ----------*/
+    public function get_list_uresponsables_evaluacion(){
+        $sql = 'select * 
+                from vlist_funcionario vf
+                Inner Join _componentes as c On c.com_id=vf.cm_id
+                Inner Join tipo_subactividad as tpa On tpa.tp_sact=c.tp_sact
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                where vf.cm_id!=\'0\' and apg.aper_gestion='.$this->gestion.''; 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
     /*--------- get responsable Seleccionado ----------*/
     public function get_responsables_evaluacion($fun_id){

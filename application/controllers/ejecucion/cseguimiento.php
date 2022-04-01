@@ -958,53 +958,66 @@ class Cseguimiento extends CI_Controller {
         $tp = $this->security->xss_clean($post['tp']); /// tp
         $ejec= $this->security->xss_clean($post['ejec']);/// prod id
         $mes_id= $this->security->xss_clean($post['mes_id']);/// mes id
+        $producto=$this->model_producto->get_producto_id($prod_id); /// datos del formulario N° 4
 
-        $valor_ejecutado=0;
-        $programado=$this->model_seguimientopoa->rango_programado_trimestral_productos($prod_id,$this->tmes); /// Programado
-        $ejecutado=$this->model_seguimientopoa->rango_ejecutado_trimestral_productos($prod_id,$this->tmes); /// Ejecutado
+        if($producto[0]['indi_id']==2 & $producto[0]['mt_id']==1){ //// INDICADOR RECURRENTE
+          $programado=$this->model_producto->get_mes_programado_form4($prod_id,$mes_id); /// Programado del mes
 
-        if(count($programado)!=0){
-          if(count($ejecutado)!=0){
-            $valor_ejecutado=$ejecutado[0]['trimestre'];
-          }
-
-            if($tp==0){ /// registro
-              if($valor_ejecutado<$programado[0]['trimestre']){
-                if(($ejec+$valor_ejecutado)<=$programado[0]['trimestre'] ){
-                  echo 'true';
-                }
-                else{
-                  echo 'false';
-                }
-                
-              }
-              else{
-                echo 'false';
-              }
+            if($ejec<=$programado[0]['pg_fis']){
+              echo "true";
             }
-            else{ /// modificacion
-              $valor_ejec=$this->model_producto->verif_ope_evaluado_mes($prod_id,$mes_id);
-              if(count($valor_ejec)==0){ /// no existe valor registrado
-                echo "true";
-              }
-              else{
-                $valor_registrado=$valor_ejec[0]['pejec_fis'];
-                $valor_ejecutado=$valor_ejecutado-$valor_registrado;
-
-                if(($ejec+$valor_ejecutado)<=$programado[0]['trimestre'] ){
-                  echo 'true';
-                }
-                else{
-                  echo 'false';
-                }
-              }
+            else{
+              echo "false";
             }
+        }
+        else{ /// INDICADOR ABSOLUTO, RELATIVO
+            $valor_ejecutado=0;
+            $programado=$this->model_seguimientopoa->rango_programado_trimestral_productos($prod_id,$this->tmes); /// Programado
+            $ejecutado=$this->model_seguimientopoa->rango_ejecutado_trimestral_productos($prod_id,$this->tmes); /// Ejecutado
 
+            if(count($programado)!=0){
+              if(count($ejecutado)!=0){
+                $valor_ejecutado=$ejecutado[0]['trimestre'];
+              }
+
+                if($tp==0){ /// registro
+                  if($valor_ejecutado<$programado[0]['trimestre']){
+                    if(($ejec+$valor_ejecutado)<=$programado[0]['trimestre'] ){
+                      echo 'true';
+                    }
+                    else{
+                      echo 'false';
+                    }
+                    
+                  }
+                  else{
+                    echo 'false';
+                  }
+                }
+                else{ /// modificacion
+                  $valor_ejec=$this->model_producto->verif_ope_evaluado_mes($prod_id,$mes_id);
+                  if(count($valor_ejec)==0){ /// no existe valor registrado
+                    echo "true";
+                  }
+                  else{
+                    $valor_registrado=$valor_ejec[0]['pejec_fis'];
+                    $valor_ejecutado=$valor_ejecutado-$valor_registrado;
+
+                    if(($ejec+$valor_ejecutado)<=$programado[0]['trimestre'] ){
+                      echo 'true';
+                    }
+                    else{
+                      echo 'false';
+                    }
+                  }
+                }
+
+            }
+            else{
+              echo 'false';
+            }
         }
-        else{
-          echo 'false';
-        }
- 
+
       }else{
         show_404();
       }

@@ -41,8 +41,7 @@ class Cconfiguracion extends CI_Controller {
       $data['trimestre'] = $this->model_configuracion->get_mes_trimestre();
       $data['gestion'] = $this->model_configuracion->get_gestion();
       $data['modulos'] = $this->conf_modulos();
-      //$data['regionales'] = $this->conf_regionales();
-      //$data['mensajes'] = $this->mensajes_panel_control();
+
       $data['responsables_evaluadores'] = $this->responsables_evaluadores(); /// Lista de Responsables para evaluar
 
       //phpinfo();
@@ -51,7 +50,8 @@ class Cconfiguracion extends CI_Controller {
 
     /*----- LISTA DE PERSONAL A EVALUAR ----*/
     public function responsables_evaluadores(){ 
-      $responsables=$this->model_configuracion->get_list_responsables_evaluacion();
+      $responsables=$this->model_configuracion->get_list_responsables_evaluacion(); // responsables
+      $uresponsables=$this->model_configuracion->get_list_uresponsables_evaluacion(); // unidades responsables
       $tabla='';
 
       $tabla.=' <section class="col col-4">
@@ -63,6 +63,7 @@ class Cconfiguracion extends CI_Controller {
                       <th scope="col" style="width:1%;">#</th>
                       <th scope="col" style="width:20%;">RESPONSABLE</th>
                       <th scope="col" style="width:15%;">DISTRITAL</th>
+                      <th scope="col" style="width:15%;">USUARIO</th>
                       <th scope="col" style="width:5%;"></th>
                     </tr>
                   </thead>
@@ -74,6 +75,35 @@ class Cconfiguracion extends CI_Controller {
                         $tabla.='<td>'.$nro.'</td>';
                         $tabla.='<td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>';
                         $tabla.='<td>'.strtoupper($row['dist_distrital']).'</td>';
+                        $tabla.='<td><b>'.strtoupper($row['fun_usuario']).'</b></td>';
+                        $tabla.='<td>';
+                        if(count($this->model_configuracion->get_responsables_evaluacion($row['id']))!=0){
+                          $tabla.='<div class="checkbox">
+                                      <label>
+                                        <input type="checkbox" name="fun[]" value="'.$row['id'].'" checked="checked">
+                                        <i></i>
+                                      </label>
+                                    </div>';
+                        }
+                        else{
+                          $tabla.='<div class="checkbox">
+                                      <label>
+                                        <input type="checkbox" name="fun[]" value="'.$row['id'].'">
+                                        <i></i>
+                                      </label>
+                                    </div>';
+                        }
+                        $tabla.='</td>';
+                      $tabla.='</tr>';
+                    }
+                    /// Unidades Responsables
+                    foreach($uresponsables as $row){
+                      $nro++;
+                      $tabla.='<tr bgcolor="#e7eef7">';
+                        $tabla.='<td>'.$nro.'</td>';
+                        $tabla.='<td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>';
+                        $tabla.='<td>'.strtoupper($row['dist_distrital']).'</td>';
+                        $tabla.='<td><b>'.strtoupper($row['fun_usuario']).'</b></td>';
                         $tabla.='<td>';
                         if(count($this->model_configuracion->get_responsables_evaluacion($row['id']))!=0){
                           $tabla.='<div class="checkbox">

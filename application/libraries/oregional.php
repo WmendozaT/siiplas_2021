@@ -42,7 +42,7 @@ class Oregional extends CI_Controller{
     }  
 
 
-    /*---------- LISTA REGIONALES SEGUN OBJETIVO DE GESTION ------------*/
+    /*---------- LISTA REGIONALES SEGUN OBJETIVO DE GESTION DETALLE COMPLETO------------*/
     public function regionales_seleccionados($og_id){
       $regionales=$this->model_objetivogestion->list_temporalidad_regional($og_id);
       $tabla='';
@@ -128,7 +128,7 @@ class Oregional extends CI_Controller{
                   $tabla.='
                   <td><b>'.$nro.'</b></td>
                   <td>';
-                  if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401){
+                  if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401 || $this->fun_id==418){
                     $tabla.='<a href="'.site_url("").'/me/update_oregional/'.$row_or['or_id'].'" title="MODIFICAR DATOS" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>';
                   }
                   $tabla.='
@@ -152,8 +152,8 @@ class Oregional extends CI_Controller{
                 $tabla.='</tr>
                 </tbody>
                 </table>';
-                $num=0;
-             /*   $distritales=$this->model_proyecto->list_distritales($row['dep_id']);
+                /*$num=0;
+                $distritales=$this->model_proyecto->list_distritales($row['dep_id']);
                 foreach($distritales as $rowd){
                   $niveles=$this->model_objetivoregion->list_niveles();
                   $tabla.=
