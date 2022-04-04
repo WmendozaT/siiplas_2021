@@ -345,4 +345,17 @@ class Model_objetivogestion extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*----- Lista de Objetivos Regionales por Regional (para evaluacion de Operaciones)-----*/
+    public function lista_oregionales_x_regional($dep_id){
+        $sql = 'select opge.*,oge.*
+                from objetivo_gestion oge
+                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oge.estado!=\'3\'
+                order by oge.og_codigo asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 }
