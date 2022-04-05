@@ -126,51 +126,14 @@
 			<div id="content">
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
-					<div class="row">
-						<?php echo $titulo;?>
-	                </div>
 	                <div class="row">
-	                   <article class="col-sm-12 col-md-12 col-lg-12">
-							<div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-10" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
-								<header>
-									<span class="widget-icon"> <i class="fa fa-list-alt"></i></span>
-									<h2><b>EVALUACI&Oacute;N OPERACIONES</b></h2>
-								</header>
-								<!-- widget div-->
-								<div>
-									<?php echo $tabla;?>
-								</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-						</article>
+	                	<?php echo $tabla;?>
 					</div>
 				</section>
 			</div>
 			<!-- END MAIN CONTENT -->
 		</div>
 		<!-- END MAIN PANEL -->
-
- 	<!-- MODAL UPDATE TEMPORALIDAD PROG/EJEC POR OBJETIVO REGIONAL   -->
-        <div class="modal fade" id="modal_update_temporalidad" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" id="mdialTamanio">
-                <div class="modal-content">
-                    <form id="form_update" novalidate="novalidate" method="post">
-                        <input type="hidden" name="com_id" id="com_id">
-                        <div id="content_valida">
-                            <center><div class="loading" align="center"><h2>Actualizando Temporalidad Programado/Ejecucion de OBJETIVOS REGIONALES <br><div id="tit"></div></h2><br><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /></div></center>
-                        </div>
-                        <div id="load_update_temp" style="display: none;"><center><img src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"><hr><b>ACTUALIZANDO TEMPORALIDAD OPERACIONES ...</b></center></div>
-                            <p>
-                                <div id="but_update_temp" align="right" style="display:none;">
-                                    <button type="button" name="but_update" id="but_update" class="btn btn-success">ACEPTAR </button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                </div>
-                            </p>
-                    </form>
-                </div>
-            </div>
-        </div>
-     <!--  =============== -->
 
      <!-- MODAL LISTA DE ACTIVIDADES PRIORIZADOS -->
         <div class="modal fade" id="modal_act_priorizados" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -325,14 +288,6 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 		<script src="<?php echo base_url(); ?>mis_js/seguimientooregional/seguimiento_oregional.js"></script> 
-        <script type="text/javascript">
-			$(document).ready(function() {
-				pageSetUp();
-				// menu
-				$("#menu").menu();
-				$('.ui-dialog :button').blur();
-				$('#tabs').tabs();
-			})
-		</script>
+
 	</body>
 </html>

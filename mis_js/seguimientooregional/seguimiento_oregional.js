@@ -61,13 +61,57 @@ $(function() {
     return false;
 
   });
+
+
+  //// LISTA DE OPERACIONES POR REGIONAL
+  $("#dep_id").change(function () {
+    $("#dep_id option:selected").each(function () {
+        dep_id=$(this).val();
+        
+        if(dep_id!=0){
+          $('#titulo_lista').html('<font size=3><b>Cargando Informacion ..... </b></font>');
+            var url = base+"index.php/ejecucion/cevaluacion_oregional/get_lista_operaciones_x_regionales";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "dep_id="+dep_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+
+            if (response.respuesta == 'correcto') {
+                $('#titulo_lista').html(response.tabla);
+                $('#detalles').slideDown();
+                $('#update').slideDown();
+                $('#btn_update').html(response.btn_update);
+            }
+            else{
+                alertify.error("ERROR AL RECUPERAR INFORMACION");
+            }
+
+          });
+        }
+        else{
+          $('#titulo_lista').html('');
+          $('#detalles').slideUp();
+        }
+
+    });
+  });
+
 });
 
 
   /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL (PROGRAMACION)------*/
-  $(function () {
+/*  $(function () {
     $(".update_temporalidad").on("click", function (e) {
         dep_id = $(this).attr('name');
+        alert(dep_id)
         //document.getElementById("com_id").value=dep_id;
         $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');
         $('#but_update_temp').slideUp();
@@ -113,8 +157,41 @@ $(function() {
           }
         });
     });
-  });
+  });*/
 
+
+
+  /// Lista de Actividades Priorizados por cada Objetivo Regional
+  function update_temp(dep_id) {
+      $('#load_update').fadeIn(1000).html('<font size=4><b>Actualizando Temporalidad de Operaciones .....</b></font>');
+      var url = base+"index.php/ejecucion/cevaluacion_oregional/update_temporalidad_oregional";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "dep_id="+dep_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+      if (response.respuesta == 'correcto') {
+          $('#load_update').fadeIn(1000).html('<font color=green size=5><b>Temporalidad Actualizado !!! .....</b></font>');
+          $('#titulo_lista').html(response.tabla);
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR DATOS");
+      }
+
+      });
+      request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+      });
+      request.always(function () {
+      });
+  }
 
   /// Lista de Actividades Priorizados por cada Objetivo Regional
   function ver_actividades_priorizados(or_id,dep_id) {

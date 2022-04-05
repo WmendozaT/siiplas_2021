@@ -66,304 +66,234 @@ class Eval_oregional extends CI_Controller{
     /*-------- LISTA DE REGIONALES ----------*/
     public function regionales(){
       $regionales=$this->model_proyecto->list_departamentos();
+      $trimestre=$this->model_evaluacion->trimestre();
       $tabla='
-          <div>
-            <div id="tabs">
-              <ul>
-                <li>
-                  <a href="#tabs-1" style="width:100%;">CHUQUISACA</a>
-                </li>
-                <li>
-                  <a href="#tabs-2">LA PAZ</a>
-                </li>
-                <li>
-                  <a href="#tabs-3">COCHABAMBA</a>
-                </li>
-                <li>
-                  <a href="#tabs-4">ORURO</a>
-                </li>
-                <li>
-                  <a href="#tabs-5">POTOSI</a>
-                </li>
-                <li>
-                  <a href="#tabs-6">TARIJA</a>
-                </li>
-                <li>
-                  <a href="#tabs-7">SANTA CRUZ</a>
-                </li>
-                <li>
-                  <a href="#tabs-8">BENI</a>
-                </li>
-                <li>
-                  <a href="#tabs-9">PANDO</a>
-                </li>
-                <li>
-                  <a href="#tabs-10">OFICINA NACIONAL</a>
-                </li>
-              </ul>';
-              for ($i=1; $i <=10 ; $i++) { 
-                $tabla.='
-                <div id="tabs-'.$i.'">
-                  <div class="row">
-                    '.$this->ver_relacion_ogestion($i).'
-                  </div>
-                </div>';
-              }
-              $tabla.='
-            </div>
-          </div>';
+      <input name="base" type="hidden" value="'.base_url().'">
+      <article class="col-sm-12">
+        <div class="well">
+          <form class="smart-form">
+            <header><b><h2>EVALUACI&Oacute;N DE OBJETIVOS REGIONALES (OPERACIONES) '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2></b></header>
+            <fieldset>          
+              <div class="row">
+                <section class="col col-2">
+                  <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
+                  <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
+                  <option value="0"><b>SELECCIONE REGIONAL</b></option>';
+                  foreach($regionales as $row){
+                    if($row['dep_id']!=0){
+                      $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                    }
+                  }
+                  $tabla.='
+                  </select>
+                </section>
+
+                <div id="update" style="display:none;">
+                  <section class="col col-2">
+                    <label class="label"></label>
+                    <div id="btn_update"></div>
+                  </section>
+                </div>
+            </fieldset>
+            <div id="load_update"></div>
+          </form>
+          </div>
+        </article>
+        <article class="col-sm-12">
+          <div id="titulo_lista"></div>
+        </article>';
 
       return $tabla;
     }
 
-   
-
-
-
+  
 
     //// REGIONAL ALINEADO A OBJETIVOS REGIONALES 2020-2021
     public function ver_relacion_ogestion($dep_id){
       $tabla='';
       $oregionales=$this->model_objetivogestion->lista_oregionales_x_regional($dep_id);
-    //  $regionales=$this->model_proyecto->list_departamentos();
-      $tabla='
-          <input name="base" type="hidden" value="'.base_url().'">
-          <div>
-            <div id="tabs">
-              <ul>';
-              $nro=0;
-              foreach($oregionales as $row){
-                $nro++;
-                $tabla.='
-                <li>
-                  <a href="#tabs-'.$nro.'" style="width:100%;"><b>ACCIÓN DE CORTO PLAZO '.$row['og_codigo'].'</b></a>
-                </li>';
-              }
-              $tabla.='
-              </ul>';
-              $nro=0;
-              foreach($oregionales as $oge){
-                $lista_ogestion=$this->model_objetivoregion->list_oregional_regional($oge['og_id'],$dep_id);
-                $nro++;
-                $tabla.='
-                <div id="tabs-'.$nro.'">
-                  <div class="row">
-                    <b>A.C.P. '.$oge['og_codigo'].'.- '.$oge['og_objetivo'].'</b><hr>
-
-                    <table class="table table-bordered" border=0.2 style="width:100%;" id="datos">
-                      <thead>
-                      <tr style="font-size: 11px;">
-                        <th style="width:1%;height:10px;color:#FFF; text-align: center" bgcolor="#1c7368">N°</th>
-                        <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACE.</b></th>
-                        <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACP.</b></th>
-                        <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. OPE.</b></th>
-                        <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">OPERACI&Oacute;N</th>
-                        <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">RESULTADO</th>
-                        <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">INDICADOR</th>
-                        <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">MEDIO VERIFICACI&Oacute;N</th>
-                        <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META</th>
-                        <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META ALINEADO</th>
-                        <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (I) TRIMESTRE</th>
-                        <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (II) TRIMESTRE</th>
-                        <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (III) TRIMESTRE</th>
-                        <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (IV) TRIMESTRE</th>
-                        <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
-                        <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
-                        <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
-                      </tr>
-                      </thead>
-                      <tbody>';
-                       $nro_ope=0;
-                      foreach($lista_ogestion as $row){
-                        $meta='';
-                        if ($row['indi_id']==1 || $row['indi_id']==3) {
-                          $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
-                        }
-                        elseif ($row['indi_id']==2) {
-                          $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
-                          $meta='%';
-                        }
-
-                        $color='';$grafico='';
-                        $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
-                        $boton_ajustar_apriorizados='
-                            <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
-                            <br>AJUSTAR ALINEACIÓN</center>';
-
-                        if(count($metas_prior)!=0){
-                          if($row['indi_id']==1 || $row['indi_id']==2){
-                            $meta_priorizado=round($metas_prior[0]['meta_prog_actividades'],2);
-                          }
-                          else{
-                            $meta_priorizado=round($metas_prior[0]['nro'],2);
-                          }
-
-
-                          if(round($row['or_meta'],2)==$meta_priorizado){
-                            $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.$meta_priorizado.''.$meta.'</b></div>';
-                            $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/></a>';
-                          }
-                          else{
-                            $boton_ajustar_apriorizados='
-                            <center><b>('.round($metas_prior[0]['meta_prog_actividades'],2).')</b><br><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
-                            <br>AJUSTAR ALINEACIÓN</center>';
-                          }
-                        }
-
-                        $nro_ope++;
-                        $tabla.='
-                          <tr style="font-size: 10px;" bgcolor='.$color.'>
-                            <td style="width:1%; height:10px;" align=center title='.$row['pog_id'].'>'.$nro_ope.'</td>
-                            <td style="width:2%;" align="center"><b></b></td>
-                            <td style="width:2%; font-size: 17px; color:blue" align="center"><b>'.$row['og_codigo'].'</b></td>
-                            <td style="width:2%; font-size: 17px;" align="center" bgcolor="#f1eeee" title='.$row['or_id'].'><b>'.$row['or_codigo'].'</b></td>
-                            <td style="width:11%;">'.$row['or_objetivo'].'</td>
-                            <td style="width:11%;">'.$row['or_resultado'].'</td>
-                            <td style="width:10%;">'.$row['or_indicador'].'</td>
-                            <td style="width:10%;">'.$row['or_verificacion'].'</td>
-                            <td style="width:2%; font-size: 15px;" align=center><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
-                            <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
-                            '.$this->get_temporalidad_objetivo_regional($row['or_id'],0).'
-                            <td style="font-family:Verdana;font-size: 20px;" align=center><b>'.$calificacion[3].' %</b></td>
-                            <td>
-                              <a href="#" data-toggle="modal" data-target="#modal_act_priorizados" class="btn btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a>
-                            </td>
-                            <td align=center>'.$grafico.'</td>
-                          </tr>';
-
-                      }
-                      $tabla.='
-                      </tbody>
-                    </table>
-                  </div>
-                </div>';
-              }
-              $tabla.='
-            </div>
-          </div>';
-
-      return $tabla;
-    }
-
-    public function ver_relacion_ogestion2($dep_id){
       $departamento=$this->model_proyecto->get_departamento($dep_id);
-      
-      $tabla='';
-      $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
-      //$fecha_actual = date('Y-m-d');
       $date_actual = strtotime(date('Y-m-d')); //// fecha Actual
 
-      if(($date_actual<=$this->fecha_plazo_actualizacion) & $this->tp_adm==1) {
-          $tabla.='
-          <div id="row">
-            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <div class="alert alert-info" role="alert">
-                <a href="#" data-toggle="modal" data-target="#modal_update_temporalidad" class="btn btn-primary update_temporalidad" style="width:20%;" name="'.$dep_id.'" id="'.strtoupper($departamento[0]['dep_departamento']).'" title="ACTUALIZAR TEMPORALIDAD DE EVALUACION OBJETIVO REGIONAL" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="30"/>&nbsp;ACTUALIZAR TEMPORALIDAD - OBJETIVO REGIONAL</a>    
+      $tabla.='
+        <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+          <header>
+            <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+            <h2>...</h2>
+          </header>
+          <div>
+            <div class="jarviswidget-editbox">
+            </div>
+            <div class="widget-body">
+              <p>
+                <b>EVALUACIÓN POA (OPERACIONES) - '.strtoupper($departamento[0]['dep_departamento']).' / '.$this->gestion.'</b>
+              </p>
+              <hr class="simple">
+              <ul id="myTab1" class="nav nav-tabs bordered">';
+                $nro=0;
+                foreach($oregionales as $row){
+                  $nro++;
+                  $activo='';
+                  if($nro==1){
+                    $activo='class="active"';
+                  }
+                  $tabla.='
+                  <li '.$activo.'>
+                    <a href="#s'.$nro.'" data-toggle="tab">ACCIÓN DE CORTO PLAZO<span class="badge bg-color-blue txt-color-white">'.$row['og_codigo'].'</span></a>
+                  </li>';
+                }
+              $tabla.='
+              </ul>
+  
+              <div id="myTabContent1" class="tab-content padding-10">';
+              $nro2=0;
+              foreach($oregionales as $oge){
+                $lista_ogestion=$this->model_objetivoregion->list_oregional_regional($oge['og_id'],$dep_id);
+                $nro2++;
+                $active='class="tab-pane fade"';
+                if($nro2==1){
+                  $active='class="tab-pane fade in active"';
+                }
+
+                $tabla.='
+                <div '.$active.' id="s'.$nro2.'">
+                  <div class="row">
+                  <div class="widget-body">
+                    <form action="php/demo-comment.php" method="post" id="comment-form" class="smart-form">
+                      <legend><b>A.C.P. '.$oge['og_codigo'].'</b>.- '.$oge['og_objetivo'].'</legend>
+                      <fieldset>
+                        <div class="row">
+                          <section class="col col-2">
+                            <label class="label">META ACP.</label>
+                            <label class="input"> <i class="icon-append fa fa-tag"></i>
+                              <input type="text" name="name" value='.round($oge['og_meta'],2).' disabled=true>
+                            </label>
+                          </section>
+                          <section class="col col-2">
+                            <label class="label">EJECUCIÓN</label>
+                            <label class="input"> <i class="icon-append fa fa-tag"></i>
+                              <input type="text" name="ejec" value="0">
+                            </label>
+                          </section>
+                          <section class="col col-8">
+                            <label class="label">MEDIO DE VERIFICACIÓN</label>
+                          <label class="textarea"> <i class="icon-append fa fa-tag"></i><textarea rows="4" name="mverificacion"></textarea> </label>
+                          </section>
+                        </div>
+                      </fieldset>
+
+                      <footer>
+                        <button type="submit" name="submit" class="btn btn-primary">
+                          GUARDAR DATOS
+                        </button>
+                      </footer>
+                    </form>
+                  </div>  
+
+                  <form class="smart-form">
+                  <legend>
+                    DETALLE DE OPERACIONES (OBJETIVOS REGIONALES) <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></a>';
+                  $tabla.='
+                  </legend>
+                  <fieldset>
+                  <table class="table table-bordered" border=0.2 style="width:100%;" id="datos">
+                    <thead>
+                    <tr style="font-size: 11px;">
+                      <th style="width:1%;height:10px;color:#FFF; text-align: center" bgcolor="#1c7368">N°</th>
+                      <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACE.</b></th>
+                      <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACP.</b></th>
+                      <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. OPE.</b></th>
+                      <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">OPERACI&Oacute;N</th>
+                      <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">RESULTADO</th>
+                      <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">INDICADOR</th>
+                      <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">MEDIO VERIFICACI&Oacute;N</th>
+                      <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META</th>
+                      <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META ALINEADO</th>
+                      <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (I) TRIMESTRE</th>
+                      <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (II) TRIMESTRE</th>
+                      <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (III) TRIMESTRE</th>
+                      <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (IV) TRIMESTRE</th>
+                      <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
+                      <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
+                      <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
+                    </tr>
+                    </thead>
+                    <tbody>';
+                     $nro_ope=0;
+                    foreach($lista_ogestion as $row){
+                      $meta='';
+                      if ($row['indi_id']==1 || $row['indi_id']==3) {
+                        $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
+                      }
+                      elseif ($row['indi_id']==2) {
+                        $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
+                        $meta='%';
+                      }
+
+                      $color='';$grafico='';
+                      $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+                      $boton_ajustar_apriorizados='
+                          <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
+                          <br>AJUSTAR ALINEACIÓN</center>';
+
+                      if(count($metas_prior)!=0){
+                        if($row['indi_id']==1 || $row['indi_id']==2){
+                          $meta_priorizado=round($metas_prior[0]['meta_prog_actividades'],2);
+                        }
+                        else{
+                          $meta_priorizado=round($metas_prior[0]['nro'],2);
+                        }
+
+
+                        if(round($row['or_meta'],2)==$meta_priorizado){
+                          $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.$meta_priorizado.''.$meta.'</b></div>';
+                          $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/></a>';
+                        }
+                        else{
+                          $boton_ajustar_apriorizados='
+                          <center><b>('.round($metas_prior[0]['meta_prog_actividades'],2).')</b><br><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
+                          <br>AJUSTAR ALINEACIÓN</center>';
+                        }
+                      }
+
+                      $nro_ope++;
+                      $tabla.='
+                        <tr style="font-size: 10px;" bgcolor='.$color.'>
+                          <td style="width:1%; height:10px;" align=center title='.$row['pog_id'].'>'.$nro_ope.'</td>
+                          <td style="width:2%;" align="center"><b></b></td>
+                          <td style="width:2%; font-size: 17px; color:blue" align="center"><b>'.$row['og_codigo'].'</b></td>
+                          <td style="width:2%; font-size: 17px;" align="center" bgcolor="#f1eeee" title='.$row['or_id'].'><b>'.$row['or_codigo'].'</b></td>
+                          <td style="width:11%;">'.$row['or_objetivo'].'</td>
+                          <td style="width:11%;">'.$row['or_resultado'].'</td>
+                          <td style="width:10%;">'.$row['or_indicador'].'</td>
+                          <td style="width:10%;">'.$row['or_verificacion'].'</td>
+                          <td style="width:2%; font-size: 15px;" align=center><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
+                          <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
+                          '.$this->get_temporalidad_objetivo_regional($row['or_id'],0).'
+                          <td style="font-family:Verdana;font-size: 20px;" align=center><b>'.$calificacion[3].' %</b></td>
+                          <td>
+                            <a href="#" data-toggle="modal" data-target="#modal_act_priorizados" class="btn btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a>
+                          </td>
+                          <td align=center>'.$grafico.'</td>
+                        </tr>';
+                    }
+                    $tabla.='
+                    </tbody>
+                  </table>
+                  </fieldset>
+                  </form>
+                </div>
+                </div>';
+              }
+
+              $tabla.='
               </div>
-            </article>
-          </div>';
-      }
-
-      $tabla.=' 
-        <div align="right">
-          <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>EVALUACI&Oacute;N METAS REGIONALES (.PDF)</b></a>&nbsp;&nbsp;
-          <a href="#" data-toggle="modal" data-target="#modal_evaluacion" name="'.$dep_id.'" class="btn btn-default evaluacion" title="MOSTRAR CUADRO DE EVALUACIÓN DE METAS"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>CUADRO DE EVALUACI&Oacute;N (GRAFICO)</b></a>
-        </div><br>
-        <input name="base" type="hidden" value="'.base_url().'">
-        <section class="col col-6">
-          <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
-        </section>
-        <div class="table-responsive">
-        <table class="table table-bordered" border=0.2 style="width:100%;" id="datos">
-          <thead>
-          <tr style="font-size: 11px;">
-            <th style="width:1%;height:10px;color:#FFF; text-align: center" bgcolor="#1c7368">N° '.$this->conf_estado.'</th>
-            <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACE.</b></th>
-            <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACP.</b></th>
-            <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. OPE.</b></th>
-            <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">OPERACI&Oacute;N</th>
-            <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">RESULTADO</th>
-            <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">INDICADOR</th>
-            <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">MEDIO VERIFICACI&Oacute;N</th>
-            <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META</th>
-            <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META ALINEADO</th>
-            <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (I) TRIMESTRE</th>
-            <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (II) TRIMESTRE</th>
-            <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (III) TRIMESTRE</th>
-            <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (IV) TRIMESTRE</th>
-            <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
-            <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
-            <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
-          </tr>
-          </thead>
-          <tbody>';
-          $nro=0;
-          foreach($lista_ogestion as $row){
-            $meta='';
-            if ($row['indi_id']==1 || $row['indi_id']==3) {
-              $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
-            }
-            elseif ($row['indi_id']==2) {
-              $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
-              $meta='%';
-            }
-
-            $color='';$grafico='';
-            
-            $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
-            $boton_ajustar_apriorizados='
-                <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
-                <br>AJUSTAR ALINEACIÓN</center>';
-
-            if(count($metas_prior)!=0){
-              if($row['indi_id']==1 || $row['indi_id']==2){
-                $meta_priorizado=round($metas_prior[0]['meta_prog_actividades'],2);
-              }
-              else{
-                $meta_priorizado=round($metas_prior[0]['nro'],2);
-              }
-
-
-              if(round($row['or_meta'],2)==$meta_priorizado){
-                $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.$meta_priorizado.''.$meta.'</b></div>';
-                $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/></a>';
-              }
-              else{
-                $boton_ajustar_apriorizados='
-                <center><b>('.round($metas_prior[0]['meta_prog_actividades'],2).')</b><br><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
-                <br>AJUSTAR ALINEACIÓN</center>';
-              }
-            }
-
-            $nro++;
-            $tabla.='
-            <tr style="font-size: 10px;" bgcolor='.$color.'>
-              <td style="width:1%; height:10px;" align=center title='.$row['pog_id'].'>'.$nro.'</td>
-              <td style="width:2%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
-              <td style="width:2%; font-size: 17px; color:blue" align="center"><b>'.$row['og_codigo'].'</b></td>
-              <td style="width:2%; font-size: 17px;" align="center" bgcolor="#f1eeee" title='.$row['or_id'].'><b>'.$row['or_codigo'].'</b></td>
-              <td style="width:11%;">'.$row['or_objetivo'].'</td>
-              <td style="width:11%;">'.$row['or_resultado'].'</td>
-              <td style="width:10%;">'.$row['or_indicador'].'</td>
-              <td style="width:10%;">'.$row['or_verificacion'].'</td>
-              <td style="width:2%; font-size: 15px;" align=center><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
-              <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
-              '.$this->get_temporalidad_objetivo_regional($row['or_id'],0).'
-              <td style="font-family:Verdana;font-size: 20px;" align=center><b>'.$calificacion[3].' %</b></td>
-              <td>
-                <a href="#" data-toggle="modal" data-target="#modal_act_priorizados" class="btn btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a>
-              </td>
-              <td align=center>'.$grafico.'</td>
-            </tr>';
-          }
-          $tabla.='
-          </tbody>
-        </table>
-      </div>';
+            </div>
+          </div>
+        </div>';
 
       return $tabla;
     }
-
 
 
     /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL (TRIMESTRAL) --*/

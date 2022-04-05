@@ -28,6 +28,7 @@ class Cevaluacion_oregional extends CI_Controller {
         $this->fun_id = $this->session->userData('fun_id');
         $this->tp_adm = $this->session->userData('tp_adm');
         $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
+        $this->fecha_plazo_actualizacion = strtotime(date('2022-04-5'));
         $this->load->library('eval_oregional');
 
         }else{
@@ -48,8 +49,35 @@ class Cevaluacion_oregional extends CI_Controller {
         $data['tabla']=$this->eval_oregional->ver_relacion_ogestion($this->dep_id);
       }
 
-      //echo $this->eval_oregional->create_temporalidad_oregional(1);
       $this->load->view('admin/evaluacion/evaluacion_oregional/menu_regionales', $data);
+    }
+
+
+    /*---- FUNCION GET LISTA DE OPERACIONES POR REGIONAL --------*/
+    public function get_lista_operaciones_x_regionales(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+        $departamento=$this->model_proyecto->get_departamento($dep_id);
+        $date_actual = strtotime(date('Y-m-d')); //// fecha Actual
+
+        $tabla='';
+        if(($date_actual<=$this->fecha_plazo_actualizacion) & $this->tp_adm==1) {
+          $tabla.='
+          <a href="#" class="btn btn-lg btn-default" onclick="update_temp('.$dep_id.');" style="width:35%;" title="ACTUALIZAR TEMPORALIDAD DE EVALUACION OBJETIVO REGIONAL"><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;</a>';
+        }
+
+          $result = array(
+            'respuesta' => 'correcto',
+            'tabla'=>$this->eval_oregional->ver_relacion_ogestion($dep_id),
+            'rep'=>'<a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EVALUACIÓN POA</b></a>',
+            'btn_update'=>$tabla,
+          );
+
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
     }
 
 
@@ -64,15 +92,15 @@ class Cevaluacion_oregional extends CI_Controller {
         $this->eval_oregional->create_temporalidad_oregional($dep_id); /// creando la temporalidad de los Objetivos REgioanles
 
         $tabla='';
-        $tabla.='
+/*        $tabla.='
           <hr><h3><b>&nbsp;&nbsp;OPERACIONES '.$this->gestion.': REGIONAL '.strtoupper($departamento[0]['dep_departamento']).'</b></h3><hr>
           <div class="alert alert-success alert-block" align=center>
             <h2> LA TEMPORALIDAD DE OBJETIVOS DE GESTIÓN FUE ACTUALIZADO EXITOSAMENTE !!!</2> 
-          </div>';
+          </div>';*/
 
           $result = array(
             'respuesta' => 'correcto',
-            'tabla'=>$tabla,
+            'tabla'=>$this->eval_oregional->ver_relacion_ogestion($dep_id),
           );
 
         echo json_encode($result);
@@ -174,6 +202,7 @@ class Cevaluacion_oregional extends CI_Controller {
           show_404();
       }
     }
+
 
 
     /*---- FUNCION GET NIVEL DE CUMPLIMIENTO DE LA OPERACION (GRAFICOS) --------*/

@@ -1006,12 +1006,13 @@ class Cmod_insumo extends CI_Controller {
       if(count($data['cite'])!=0){ /// Nuevo formato de Reporte
         if($this->fecha_entrada<strtotime($data['cite'][0]['cite_fecha'])){
           $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],2);
-          if(($data['cite'][0]['cite_codigo']!='' && $this->gestion==2022) || $this->tp_adm==1){
+          $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id);
+          /*if(($data['cite'][0]['cite_codigo']!='' && $this->gestion==2022) || $this->tp_adm==1){
             $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id);
           }
           else{
             $data['items_modificados']='<div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>PARA GENERAR EL DETALLE DE LA MODIFICACIÓN, DEBE CERRAR LA MODIFICACIÓN !!</b></div>';
-          }
+          }*/
           
           $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
           $data['pie_rep']='MOD_POA_FORM5_'.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
