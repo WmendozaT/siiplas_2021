@@ -139,7 +139,7 @@ class Eval_oregional extends CI_Controller{
                   }
                   $tabla.='
                   <li '.$activo.'>
-                    <a href="#s'.$nro.'" data-toggle="tab">ACCIÓN DE CORTO PLAZO<span class="badge bg-color-blue txt-color-white">'.$row['og_codigo'].'</span></a>
+                    <a href="#s'.$nro.'" data-toggle="tab"><b>A. C. P.</b><span class="badge bg-color-green txt-color-white">'.$row['og_codigo'].'</span></a>
                   </li>';
                 }
               $tabla.='
@@ -164,9 +164,9 @@ class Eval_oregional extends CI_Controller{
                       <fieldset>
                         <div class="row">
                           <section class="col col-2">
-                            <label class="label">META ACP.</label>
+                            <label class="label">META REGIONAL.</label>
                             <label class="input"> <i class="icon-append fa fa-tag"></i>
-                              <input type="text" name="name" value='.round($oge['og_meta'],2).' disabled=true>
+                              <input type="text" name="name" value='.round($oge['prog_fis'],2).' disabled=true>
                             </label>
                           </section>
                           <section class="col col-2">

@@ -67,7 +67,7 @@ $(function() {
   $("#dep_id").change(function () {
     $("#dep_id option:selected").each(function () {
         dep_id=$(this).val();
-        
+        $('#load_update').html('');
         if(dep_id!=0){
           $('#titulo_lista').html('<font size=3><b>Cargando Informacion ..... </b></font>');
             var url = base+"index.php/ejecucion/cevaluacion_oregional/get_lista_operaciones_x_regionales";

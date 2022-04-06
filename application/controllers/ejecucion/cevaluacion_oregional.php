@@ -28,7 +28,7 @@ class Cevaluacion_oregional extends CI_Controller {
         $this->fun_id = $this->session->userData('fun_id');
         $this->tp_adm = $this->session->userData('tp_adm');
         $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
-        $this->fecha_plazo_actualizacion = strtotime(date('2022-04-5'));
+        $this->fecha_plazo_actualizacion = strtotime(date('2022-04-30'));
         $this->load->library('eval_oregional');
 
         }else{
