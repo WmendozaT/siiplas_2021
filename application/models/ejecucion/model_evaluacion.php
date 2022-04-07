@@ -550,6 +550,16 @@ class Model_evaluacion extends CI_Model{
         return $query->result_array();
     }
 
+    /*---- Get Objetivo Programado Gestion - Evaluado Trimestral ----*/
+    public function get_objetivo_programado_evaluado_trimestral($trimestre,$pog_id){
+        $sql = 'select *
+                from objetivo_programado_gestion_evaluado
+                where trm_id='.$trimestre.' and pog_id='.$pog_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+    
     /*--- GET EVALUACION META TRIMESTRAL - OBJETIVO REGIONAL ---*/
     public function get_evaluacion_meta_oregional($epog_id){
         $sql = 'select *

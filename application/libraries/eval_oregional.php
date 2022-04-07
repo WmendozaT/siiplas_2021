@@ -113,9 +113,11 @@ class Eval_oregional extends CI_Controller{
       $tabla='';
       $oregionales=$this->model_objetivogestion->lista_oregionales_x_regional($dep_id);
       $departamento=$this->model_proyecto->get_departamento($dep_id);
+      $trimestre=$this->model_evaluacion->trimestre();
       $date_actual = strtotime(date('Y-m-d')); //// fecha Actual
 
       $tabla.='
+        <input name="base" type="hidden" value="'.base_url().'">
         <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
           <header>
             <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
@@ -126,7 +128,7 @@ class Eval_oregional extends CI_Controller{
             </div>
             <div class="widget-body">
               <p>
-                <b>EVALUACIÓN POA (OPERACIONES) - '.strtoupper($departamento[0]['dep_departamento']).' / '.$this->gestion.'</b>
+                <h2><b>EVALUACIÓN POA (OPERACIONES) '.strtoupper($departamento[0]['dep_departamento']).' - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>
               </p>
               <hr class="simple">
               <ul id="myTab1" class="nav nav-tabs bordered">';
@@ -149,43 +151,62 @@ class Eval_oregional extends CI_Controller{
               $nro2=0;
               foreach($oregionales as $oge){
                 $lista_ogestion=$this->model_objetivoregion->list_oregional_regional($oge['og_id'],$dep_id);
+                $acp_eval_regional=$this->model_evaluacion->get_meta_oregional($oge['pog_id'],$this->tmes);/// datos de evaluacion al trimestre actual
                 $nro2++;
                 $active='class="tab-pane fade"';
                 if($nro2==1){
                   $active='class="tab-pane fade in active"';
                 }
 
-                $tabla.='
+                $tabla.=' '.count($acp_eval_regional).'
                 <div '.$active.' id="s'.$nro2.'">
                   <div class="row">
                   <div class="widget-body">
-                    <form action="php/demo-comment.php" method="post" id="comment-form" class="smart-form">
+                    <form action="'.site_url().'/ejecucion/cevaluacion_pei/valida_update_evaluacion_acp" method="post" id="form_eval" class="smart-form">
                       <legend><b>A.C.P. '.$oge['og_codigo'].'</b>.- '.$oge['og_objetivo'].'</legend>
+                      <input type="hidden" name="pog_id" value='.$oge['pog_id'].'>
                       <fieldset>
-                        <div class="row">
+                        <div class="row">';
+                          $ejec=0;
+                          $mverificacion='';
+                          $tp=0;
+                          $tit='GUARDAR DATOS DE EVALUACION';
+                          if(count($acp_eval_regional)!=0){ /// Evaluado al Trimestre
+                            $tp=1;
+                            $ejec=$acp_eval_regional[0]['ejec_fis'];
+                            $mverificacion=$acp_eval_regional[0]['tmed_verif'];
+                            $tit='MODIFICACIÓN DATOS DE EVALUACION';
+                          }
+
+                        $tabla.='
+                          <input type="hidden" name="tp" value='.$tp.'>
                           <section class="col col-2">
-                            <label class="label">META REGIONAL.</label>
+                            <label class="label"><b>META REGIONAL</b></label>
                             <label class="input"> <i class="icon-append fa fa-tag"></i>
-                              <input type="text" name="name" value='.round($oge['prog_fis'],2).' disabled=true>
+                              <input type="text"  value='.round($oge['prog_fis'],2).' disabled=true>
                             </label>
                           </section>
                           <section class="col col-2">
-                            <label class="label">EJECUCIÓN</label>
+                            <label class="label"><b>EJECUCIÓN ACUMULADO</b></label>
                             <label class="input"> <i class="icon-append fa fa-tag"></i>
-                              <input type="text" name="ejec" value="0">
+                              <input type="text" name="ejec_registrado" value="'.round($ejec,2).'" disabled=true>
                             </label>
                           </section>
-                          <section class="col col-8">
-                            <label class="label">MEDIO DE VERIFICACIÓN</label>
-                          <label class="textarea"> <i class="icon-append fa fa-tag"></i><textarea rows="4" name="mverificacion"></textarea> </label>
+                          <section class="col col-2">
+                            <label class="label" style="color:#0000ff;"><b>REGISTRO DE EJECUCIÓN (*)</b></label>
+                            <label class="input"> <i class="icon-append fa fa-tag"></i>
+                              <input type="text" name="ejec" id="ejec" value="'.round($ejec,2).'">
+                            </label>
+                          </section>
+                          <section class="col col-6">
+                            <label class="label" style="color:#0000ff;"><b>MEDIO DE VERIFICACIÓN (*)</b></label>
+                          <label class="textarea"> <i class="icon-append fa fa-tag"></i><textarea rows="4" name="mverificacion"  id="mverificacion">'.$mverificacion.'</textarea></label>
                           </section>
                         </div>
                       </fieldset>
 
                       <footer>
-                        <button type="submit" name="submit" class="btn btn-primary">
-                          GUARDAR DATOS
-                        </button>
+                        <button type="button" id="subir_eval" class="btn btn-info">'.$tit.'</button>
                       </footer>
                     </form>
                   </div>  
@@ -247,7 +268,7 @@ class Eval_oregional extends CI_Controller{
 
                         if(round($row['or_meta'],2)==$meta_priorizado){
                           $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.$meta_priorizado.''.$meta.'</b></div>';
-                          $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/></a>';
+                          $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="30" HEIGHT="30"/></a>';
                         }
                         else{
                           $boton_ajustar_apriorizados='
@@ -272,7 +293,7 @@ class Eval_oregional extends CI_Controller{
                           '.$this->get_temporalidad_objetivo_regional($row['or_id'],0).'
                           <td style="font-family:Verdana;font-size: 20px;" align=center><b>'.$calificacion[3].' %</b></td>
                           <td>
-                            <a href="#" data-toggle="modal" data-target="#modal_act_priorizados" class="btn btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a>
+                            <a href="#" data-toggle="modal" data-target="#modal_act_priorizados" style="font-size: 10px;" class="btn btn-lg btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a>
                           </td>
                           <td align=center>'.$grafico.'</td>
                         </tr>';

@@ -484,7 +484,7 @@ class Cevaluacion_pei extends CI_Controller {
       }
     }
 
-    /*--- Valida Modificación Evaluacion Objetivos (2020) ---*/
+    /*--- Valida Modificación Evaluacion Objetivos (2020-2021) ---*/
     public function valida_update_evalmeta(){
       if ($this->input->post()) {
           $post = $this->input->post();
@@ -533,6 +533,72 @@ class Cevaluacion_pei extends CI_Controller {
           }
 
           redirect(site_url("").'/eval_obj/objetivos_regionales');
+
+      } else {
+          show_404();
+      }
+    }
+
+
+    /*--- Valida Modificación Evaluacion Objetivos de Gestion (2022) ---*/
+    public function valida_update_evaluacion_acp(){
+      if ($this->input->post()) {
+        $post = $this->input->post();
+        $tmes=$this->model_evaluacion->trimestre();
+        $tipo = $this->security->xss_clean($post['tp']); /// tipo
+        $pog_id = $this->security->xss_clean($post['pog_id']); /// id meta regional
+        $ejec = $this->security->xss_clean($post['ejec']); /// meta ejecutado
+        $mverificacion = $this->security->xss_clean($post['mverificacion']); /// medio de verificacion
+
+        if($tp==0){ /// Registro Nuevo
+
+        }
+        else{ /// Modificar Registro
+
+        }
+
+
+
+
+
+/*        $pog_id = $this->security->xss_clean($post['pog_id']); /// id meta regional
+        $tp_eval = $this->security->xss_clean($post['tp']); /// Tipo de evaluacion 1: Cumplido, 2: En Proceso
+        $ejec_meta = $this->security->xss_clean($post['ejec_meta']); /// Valor ejecutado
+
+        if($tp_eval==1){
+          $medio_verificacion=$this->security->xss_clean($post['mverif']);
+          $problemas='';
+          $acciones='';
+        }
+        else{
+          $medio_verificacion=$this->security->xss_clean($post['mverif']);
+          $problemas=$this->security->xss_clean($post['prob']);
+          $acciones=$this->security->xss_clean($post['acc']);
+        }
+
+        $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id); /// Meta Regional
+       
+        $data = array(
+          'pog_id' => $pog_id,
+          'ejec_fis' => $ejec_meta, 
+          'trm_id' => $this->tmes,
+          'tp_eval' => $tp_eval, 
+          'tmed_verif' => strtoupper($medio_verificacion),
+          'tprob' => strtoupper($problemas),
+          'tacciones' => strtoupper($acciones),
+        );
+        $this->db->insert('objetivo_programado_gestion_evaluado',$data);
+        $epog_id=$this->db->insert_id();
+
+
+        if(count($this->model_evaluacion->get_meta_oregional($pog_id,$this->tmes))!=0){
+          $this->session->set_flashdata('success','SE REGISTRO CORRECTAMENTE LA EVALUACIÓN');
+        }
+        else{
+          $this->session->set_flashdata('danger','ERROR EN EL REGISTRO DE LA EVALUACIÓN');
+        }
+
+        redirect(site_url("").'/eval_obj/objetivos_regionales');*/
 
       } else {
           show_404();

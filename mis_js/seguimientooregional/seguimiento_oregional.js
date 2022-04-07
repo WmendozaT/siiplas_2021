@@ -107,6 +107,41 @@ $(function() {
 });
 
 
+//// GUARDAR DATOS DE EVALUACION DE ACP. (OBJETIVO REGIONAL)
+  $(function () {
+      $("#subir_eval").on("click", function () {
+          var $validator = $("#form_eval").validate({
+            rules: {
+              ejec: { //// ejecucion
+                required: true,
+              },
+              mverificacion: { //// medio de verificacion
+                required: true,
+              }
+            },
+            messages: {
+              ejec: "<font color=red>REGISTRE VALOR DE EJECUCION</font>",
+              mverificacion: "<font color=red>REGISTRE MEDIO DE VERIFICACION</font>",
+            }
+          });
+
+          var $valid = $("#form_eval").valid();
+          if (!$valid) {
+              $validator.focusInvalid();
+          } else {
+            alertify.confirm("GUARDAR DATOS DE EVALUACION ?", function (a) {
+              if (a) {
+                  document.getElementById('subir_eval').disabled = true;
+                  document.forms['form_eval'].submit();
+              } else {
+                  alertify.error("OPCI\u00D3N CANCELADA");
+              }
+            });
+          }
+      });
+  }); 
+
+
   /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL (PROGRAMACION)------*/
 /*  $(function () {
     $(".update_temporalidad").on("click", function (e) {
