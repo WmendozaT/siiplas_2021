@@ -131,6 +131,7 @@ $(function() {
           } else {
             alertify.confirm("GUARDAR DATOS DE EVALUACION ?", function (a) {
               if (a) {
+                  $('#log').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading"/><br><b>ACTUALIZANDO DATOS DE EVALUACIÓN POA</b></center>');
                   document.getElementById('subir_eval').disabled = true;
                   document.forms['form_eval'].submit();
               } else {
@@ -142,58 +143,49 @@ $(function() {
   }); 
 
 
-  /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL (PROGRAMACION)------*/
-/*  $(function () {
-    $(".update_temporalidad").on("click", function (e) {
-        dep_id = $(this).attr('name');
-        alert(dep_id)
-        //document.getElementById("com_id").value=dep_id;
-        $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');
-        $('#but_update_temp').slideUp();
+  //// Verificando valor ejecutado registrado
+    function verif_valor_ejecucion(valor_registrado){
+   // document.getElementById("ejec").value =0;
+      var meta = document.getElementById("meta_prog").value;
+      var num1 = document.getElementById("ejec_registrado").value;
+      var num2 = document.getElementById("ejec").value;
+      
+      if((parseFloat(num1) + parseFloat(num2))<=meta ){
+        document.getElementById("ejec").style.backgroundColor = "#ffffff";
+        $('#subir_eval').slideDown();
 
-        var url = base+"index.php/ejecucion/cevaluacion_oregional/update_temporalidad_oregional";
-        var request;
-        if (request) {
-            request.abort();
-        }
-        request = $.ajax({
-            url: url,
-            type: "POST",
-            dataType: 'json',
-            data: "dep_id="+dep_id
-        });
+        cumplimiento=(((parseFloat(num1) + parseFloat(num2))/meta)*100);
+        document.getElementById('porcentaje').innerHTML = '<center><font size=50>'+cumplimiento+'%</font><br>'+parametros_cumplimiento(cumplimiento)+'</center>';
+      }
+      else{
+        document.getElementById("ejec").style.backgroundColor = "#fff0f0";
+        $('#subir_eval').slideUp();
 
-        request.done(function (response, textStatus, jqXHR) {
-        if (response.respuesta == 'correcto') {
-            $('#content_valida').fadeIn(1000).html(response.tabla);
-            $('#but_update_temp').slideDown();
-        }
-        else{
-            alertify.error("ERROR AL RECUPERAR DATOS");
-        }
+        document.getElementById('porcentaje').innerHTML = '<center>---</center>';
+      }
 
-        });
-        request.fail(function (jqXHR, textStatus, thrown) {
-            console.log("ERROR: " + textStatus);
-        });
-        request.always(function () {
-        });
-        e.preventDefault();
+    
+    }
 
-        $("#but_update").on("click", function (e) {
-          var $valid = $("#form_update").valid();
-          if (!$valid) {
-              $validator.focusInvalid();
-          } else {
-              window.location.reload(true);
-              document.getElementById("but_update_temp").style.display = 'none';
-              document.getElementById("load_update_temp").style.display = 'block';
-              alertify.success("ACTUALIZACIÓN EXITOSA ...");
-          }
-        });
-    });
-  });*/
 
+  /// Parametros de cumplimiento
+  function parametros_cumplimiento(valor) {
+    resp='';
+    if(valor>0 & valor<=50){
+      resp='<b>INSATISFACTORIO</b>';
+    }
+    if(valor>50 & valor<=75){
+     resp='<b>REGULAR</b>'; 
+    }
+    if(valor>75 & valor<=99){
+     resp='<b>BUENO</b>'; 
+    }
+    if(valor==100){
+     resp='<b>OPTIMO</b>'; 
+    }
+
+    return resp;
+  }
 
 
   /// Lista de Actividades Priorizados por cada Objetivo Regional

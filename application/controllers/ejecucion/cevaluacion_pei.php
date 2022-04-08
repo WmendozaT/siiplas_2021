@@ -547,49 +547,33 @@ class Cevaluacion_pei extends CI_Controller {
         $tmes=$this->model_evaluacion->trimestre();
         $tipo = $this->security->xss_clean($post['tp']); /// tipo
         $pog_id = $this->security->xss_clean($post['pog_id']); /// id meta regional
-        $ejec = $this->security->xss_clean($post['ejec']); /// meta ejecutado
+        $ejec_meta = $this->security->xss_clean($post['ejec']); /// meta ejecutado
         $mverificacion = $this->security->xss_clean($post['mverificacion']); /// medio de verificacion
 
-        if($tp==0){ /// Registro Nuevo
+        $this->db->where('pog_id', $pog_id);
+        $this->db->where('trm_id', $this->tmes);
+        $this->db->delete('objetivo_programado_gestion_evaluado');
 
-        }
-        else{ /// Modificar Registro
-
-        }
-
-
-
-
-
-/*        $pog_id = $this->security->xss_clean($post['pog_id']); /// id meta regional
-        $tp_eval = $this->security->xss_clean($post['tp']); /// Tipo de evaluacion 1: Cumplido, 2: En Proceso
-        $ejec_meta = $this->security->xss_clean($post['ejec_meta']); /// Valor ejecutado
-
-        if($tp_eval==1){
-          $medio_verificacion=$this->security->xss_clean($post['mverif']);
-          $problemas='';
-          $acciones='';
-        }
-        else{
-          $medio_verificacion=$this->security->xss_clean($post['mverif']);
-          $problemas=$this->security->xss_clean($post['prob']);
-          $acciones=$this->security->xss_clean($post['acc']);
-        }
-
+        $suma_ejec=$this->get_suma_evaluado($pog_id,$this->tmes); ///suma de ejecucion registrado al trimestre anterior
         $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id); /// Meta Regional
-       
+
+        $tp_eval=0;
+        if($meta_regional[0]['prog_fis']==($suma_ejec+$ejec_meta)){
+          $tp_eval=1;
+        }
+
+
+        //// ------ insert evaluado
         $data = array(
           'pog_id' => $pog_id,
           'ejec_fis' => $ejec_meta, 
           'trm_id' => $this->tmes,
           'tp_eval' => $tp_eval, 
-          'tmed_verif' => strtoupper($medio_verificacion),
-          'tprob' => strtoupper($problemas),
-          'tacciones' => strtoupper($acciones),
+          'tmed_verif' => strtoupper($mverificacion),
         );
         $this->db->insert('objetivo_programado_gestion_evaluado',$data);
         $epog_id=$this->db->insert_id();
-
+        //// --------- End
 
         if(count($this->model_evaluacion->get_meta_oregional($pog_id,$this->tmes))!=0){
           $this->session->set_flashdata('success','SE REGISTRO CORRECTAMENTE LA EVALUACIÓN');
@@ -598,7 +582,7 @@ class Cevaluacion_pei extends CI_Controller {
           $this->session->set_flashdata('danger','ERROR EN EL REGISTRO DE LA EVALUACIÓN');
         }
 
-        redirect(site_url("").'/eval_obj/objetivos_regionales');*/
+        redirect(site_url("").'/eval_obj/objetivos_regionales');
 
       } else {
           show_404();
@@ -632,11 +616,13 @@ class Cevaluacion_pei extends CI_Controller {
       }
     }
 
+
+
     /*--- GET SUMA EVALUADO ANTES DEL TRIMESTRE ACTUAL ---*/
     public function get_suma_evaluado($pog_id,$trimestre){
       $sum=0;
       for ($i=1; $i <$trimestre ; $i++) { 
-        $obj_gestion_evaluado=$this->model_objetivogestion->get_objetivo_programado_evaluado_trimestral($i,$pog_id);
+        $obj_gestion_evaluado=$this->model_evaluacion->get_objetivo_programado_evaluado_trimestral($i,$pog_id);
         if(count($obj_gestion_evaluado)!=0){
           $sum=$sum+$obj_gestion_evaluado[0]['ejec_fis'];
         }

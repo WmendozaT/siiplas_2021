@@ -158,7 +158,7 @@ class Eval_oregional extends CI_Controller{
                   $active='class="tab-pane fade in active"';
                 }
 
-                $tabla.=' '.count($acp_eval_regional).'
+                $tabla.='
                 <div '.$active.' id="s'.$nro2.'">
                   <div class="row">
                   <div class="widget-body">
@@ -175,36 +175,40 @@ class Eval_oregional extends CI_Controller{
                             $tp=1;
                             $ejec=$acp_eval_regional[0]['ejec_fis'];
                             $mverificacion=$acp_eval_regional[0]['tmed_verif'];
-                            $tit='MODIFICACIÓN DATOS DE EVALUACION';
+                            $tit='MODIFICAR DATOS DE EVALUACION';
                           }
 
                         $tabla.='
                           <input type="hidden" name="tp" value='.$tp.'>
+                          <section class="col col-1">
+                            <label class="label"><b>(%) CUMPLIMIENTO</b></label>
+                            <div id="porcentaje"></div>
+                          </section>
                           <section class="col col-2">
                             <label class="label"><b>META REGIONAL</b></label>
                             <label class="input"> <i class="icon-append fa fa-tag"></i>
-                              <input type="text"  value='.round($oge['prog_fis'],2).' disabled=true>
+                              <input type="text" name="meta_prog" id="meta_prog" value='.round($oge['prog_fis'],2).' disabled=true>
                             </label>
                           </section>
                           <section class="col col-2">
                             <label class="label"><b>EJECUCIÓN ACUMULADO</b></label>
                             <label class="input"> <i class="icon-append fa fa-tag"></i>
-                              <input type="text" name="ejec_registrado" value="'.round($ejec,2).'" disabled=true>
+                              <input type="text" name="ejec_registrado" id="ejec_registrado" value="'.round($this->get_suma_evaluado($oge['pog_id'],$this->tmes),2).'" disabled=true>
                             </label>
                           </section>
                           <section class="col col-2">
                             <label class="label" style="color:#0000ff;"><b>REGISTRO DE EJECUCIÓN (*)</b></label>
                             <label class="input"> <i class="icon-append fa fa-tag"></i>
-                              <input type="text" name="ejec" id="ejec" value="'.round($ejec,2).'">
+                              <input type="text" name="ejec" id="ejec" value="'.round($ejec,2).'" onkeyup="verif_valor_ejecucion(this.value);">
                             </label>
                           </section>
-                          <section class="col col-6">
+                          <section class="col col-5">
                             <label class="label" style="color:#0000ff;"><b>MEDIO DE VERIFICACIÓN (*)</b></label>
                           <label class="textarea"> <i class="icon-append fa fa-tag"></i><textarea rows="4" name="mverificacion"  id="mverificacion">'.$mverificacion.'</textarea></label>
                           </section>
                         </div>
                       </fieldset>
-
+                      <div id="log"></div>
                       <footer>
                         <button type="button" id="subir_eval" class="btn btn-info">'.$tit.'</button>
                       </footer>
@@ -314,6 +318,20 @@ class Eval_oregional extends CI_Controller{
         </div>';
 
       return $tabla;
+    }
+
+
+    /*--- GET SUMA EVALUADO ANTES DEL TRIMESTRE ACTUAL ---*/
+    public function get_suma_evaluado($pog_id,$trimestre){
+      $sum=0;
+      for ($i=1; $i <$trimestre ; $i++) { 
+        $obj_gestion_evaluado=$this->model_evaluacion->get_objetivo_programado_evaluado_trimestral($i,$pog_id);
+        if(count($obj_gestion_evaluado)!=0){
+          $sum=$sum+$obj_gestion_evaluado[0]['ejec_fis'];
+        }
+      }
+
+      return $sum;
     }
 
 
