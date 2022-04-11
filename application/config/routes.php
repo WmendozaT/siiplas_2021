@@ -392,7 +392,7 @@ $route['menu_eval_poa'] = 'reporte_evaluacion/crep_evalinstitucional/menu_eval_p
 $route['rep_eval_poa/iframe_rep_evaluacionpoa/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/iframe_evaluacion_poa/$1/$2/$3';  /// IFRAME NACIONA, REGIONAL, DISTRITAL 2021
 
 
-$route['rep_eval_poa/evaluacion_poa_onacional/(:any)'] = 'reporte_evaluacion/crep_evalofinacional/evaluacion_poa_onacional/$1';  /// REPORTES GRAFICOS OFICINA NACIONAL
+//$route['rep_eval_poa/evaluacion_poa_onacional/(:any)'] = 'reporte_evaluacion/crep_evalofinacional/evaluacion_poa_onacional/$1';  /// REPORTES GRAFICOS OFICINA NACIONAL
 //$route['rep_eval_poa/rep_eficacia/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/reporte_parametros/$1/$2';  /// REPORTE EVALUACION GASTO CORRIENTE
 
 /*---------- EVALUACION DE LA OPERACION - UNIDAD, PROYECTO ----------*/

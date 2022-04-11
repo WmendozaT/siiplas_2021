@@ -39,7 +39,6 @@ class Crep_evalinstitucional extends CI_Controller {
 
     /// MENU EVALUACIÓN POA 
     public function menu_eval_poa(){
-      if($this->gestion>2019){
         $data['menu']=$this->menu(7); //// genera menu
         $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
         $data['regional']=$this->evaluacionpoa->listado_regionales();
@@ -64,10 +63,6 @@ class Crep_evalinstitucional extends CI_Controller {
         $data['titulo_modulo']=$tabla;
 
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_menu', $data);
-      }
-      else{
-        redirect('regionales'); // Rideccionando a Evaluacion anterior 2019
-      }
     }
 
 

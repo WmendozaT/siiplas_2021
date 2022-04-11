@@ -240,12 +240,21 @@ class Evaluacionpoa extends CI_Controller{
       $tabla='';
       $tp='danger';
       $titulo='ERROR EN LOS VALORES';
-      if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
-      if ($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
-      if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
-      if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
-
-      $tabla.='<h4 style="font-family: Arial;" class="alert alert-'.$tp.'" align="center">'.$titulo.'</h4>';
+      
+      if($this->gestion>2021){
+        if($eficacia<=50){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
+        if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
+        if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
+        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+      }
+      else{ /// Gestiones Anteriores
+        if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
+        if($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
+        if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
+        if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+      }
+      
+      $tabla.='<h4 class="alert alert-'.$tp.'" style="font-family: Arial;" align="center"><b>'.$titulo.'</b></h4>';
 
       return $tabla;
     }
@@ -253,6 +262,17 @@ class Evaluacionpoa extends CI_Controller{
 
         /*----- Parametros de Eficacia Concolidado por Unidad  -----*/
     public function parametros_eficacia($matriz,$tp_rep){
+      $insatisfactorio='0% a 75%';
+      $regular='75% a 90%';
+      $bueno='90% a 99%';
+
+      if($this->gestion>2021){
+        $insatisfactorio='0% a 50%';
+        $regular='51% a 75%';
+        $bueno='76% a 99%';
+      }
+
+
       if($tp_rep==1){ //// Normal
         $class='class="table table-bordered" align=center style="width:60%;"';
        // $tit='<div style="font-size: 25px;font-family: Arial;"><b>PARAMETROS DE CUMPLIMIENTO</b></div><br>';
@@ -275,17 +295,17 @@ class Evaluacionpoa extends CI_Controller{
                     <tbody>
                       <tr>
                         <td>INSATISFACTORIO</td>
-                        <td>0% a 75%</td>
+                        <td>'.$insatisfactorio.'</td>
                         <td align="center"><a class="btn btn-danger" style="width: 100%" align="left" title="'.$matriz[1][2].' Unidades/Proyectos">'.$matriz[1][2].'</a></td>
                       </tr>
                       <tr>
                         <td>REGULAR</td>
-                        <td>75% a 90% </td>
+                        <td>'.$regular.'</td>
                         <td align="center"><a class="btn btn-warning" style="width: 100%" align="left" title="'.$matriz[2][2].' Unidades/Proyectos">'.$matriz[2][2].'</a></td>
                       </tr>
                       <tr>
                         <td>BUENO</td>
-                        <td>90% a 99%</td>
+                        <td>'.$bueno.'</td>
                         <td align="center"><a class="btn btn-info" style="width: 100%" align="left" title="'.$matriz[3][2].' Unidades/Proyectos">'.$matriz[3][2].'</a></td>
                       </tr>
                       <tr>
@@ -591,11 +611,19 @@ class Evaluacionpoa extends CI_Controller{
             $eficiencia=$this->eficiencia_unidad($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
 
             $color='';
-            if($eficacia[5][$this->tmes]<=75){$color='#f9e1e7';} /// Insatisfactorio - Rojo (1)
-            if($eficacia[5][$this->tmes] > 75 & $eficacia[5][$this->tmes] <= 90){$color='#f3e8d2';} /// Regular - Amarillo (2)
-            if($eficacia[5][$this->tmes] > 90 & $eficacia[5][$this->tmes] <= 99){$color='#def0f7';} /// Bueno - Azul (3)
-            if($eficacia[5][$this->tmes] > 99 & $eficacia[5][$this->tmes] <= 100){$color='#d1f5d1';} /// Optimo - verde (4)
-
+            if($this->gestion>2021){
+              if($eficacia[5][$this->tmes]<=50){$color='#f9e1e7';} /// Insatisfactorio - Rojo (1)
+              if($eficacia[5][$this->tmes] > 50 & $eficacia[5][$this->tmes] <= 75){$color='#f3e8d2';} /// Regular - Amarillo (2)
+              if($eficacia[5][$this->tmes] > 75 & $eficacia[5][$this->tmes] <= 99){$color='#def0f7';} /// Bueno - Azul (3)
+              if($eficacia[5][$this->tmes] > 99 & $eficacia[5][$this->tmes] <= 100){$color='#d1f5d1';} /// Optimo - verde (4)
+            }
+            else{
+              if($eficacia[5][$this->tmes]<=75){$color='#f9e1e7';} /// Insatisfactorio - Rojo (1)
+              if($eficacia[5][$this->tmes] > 75 & $eficacia[5][$this->tmes] <= 90){$color='#f3e8d2';} /// Regular - Amarillo (2)
+              if($eficacia[5][$this->tmes] > 90 & $eficacia[5][$this->tmes] <= 99){$color='#def0f7';} /// Bueno - Azul (3)
+              if($eficacia[5][$this->tmes] > 99 & $eficacia[5][$this->tmes] <= 100){$color='#d1f5d1';} /// Optimo - verde (4)
+            }
+            
             $nro++;
             $tabla.='<tr style="font-size: 10px;" bgcolor='.$color.'>';
             $tabla.='<td style="width:1;height:10px;" align=center>'.$nro.'</td>';
@@ -737,10 +765,20 @@ class Evaluacionpoa extends CI_Controller{
       foreach($regionales as $row){
         $eval=$this->eficacia_por_regional($row['dep_id']); /// Eficacia
         $eficacia=$eval[5][$this->tmes];
-        if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
-        if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
-        if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
-        if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+        
+          if($this->gestion>2021){
+            if($eficacia<=50){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+            if($eficacia > 50 & $eficacia <= 75){$par[2][2]++;} /// Regular - Amarillo (2)
+            if($eficacia > 75 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
+            if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+          }
+          else{ /// Gestiones Anteriores
+            if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+            if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
+            if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
+            if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+          }
+
       }
 
       for ($i=1; $i <=4 ; $i++) { 
@@ -767,9 +805,18 @@ class Evaluacionpoa extends CI_Controller{
           $eval=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
           $eficacia=$eval[5][$this->tmes];
           if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
-          if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
-          if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
-          if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+            if($this->gestion>2021){
+              if($eficacia<=50){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+              if($eficacia > 50 & $eficacia <= 75){$par[2][2]++;} /// Regular - Amarillo (2)
+              if($eficacia > 75 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
+              if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+            }
+            else{ /// Gestiones Anteriores
+              if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+              if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
+              if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
+              if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+            }
         }
       }
 
@@ -798,10 +845,20 @@ class Evaluacionpoa extends CI_Controller{
           $nro_dist++;
           $eval=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
           $eficacia=$eval[5][$this->tmes];
-          if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
-          if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
-          if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
-          if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+
+          if($this->gestion>2021){
+            if($eficacia<=50){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+            if($eficacia > 50 & $eficacia <= 75){$par[2][2]++;} /// Regular - Amarillo (2)
+            if($eficacia > 75 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
+            if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+          }
+          else{ /// Gestiones Anteriores
+            if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+            if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
+            if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
+            if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
+          }
+
         }
       }
 

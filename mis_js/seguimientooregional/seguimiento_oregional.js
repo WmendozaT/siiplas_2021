@@ -109,62 +109,157 @@ $(function() {
 
 //// GUARDAR DATOS DE EVALUACION DE ACP. (OBJETIVO REGIONAL)
   $(function () {
-      $("#subir_eval").on("click", function () {
-          var $validator = $("#form_eval").validate({
-            rules: {
-              ejec: { //// ejecucion
-                required: true,
-              },
-              mverificacion: { //// medio de verificacion
-                required: true,
-              }
-            },
-            messages: {
-              ejec: "<font color=red>REGISTRE VALOR DE EJECUCION</font>",
-              mverificacion: "<font color=red>REGISTRE MEDIO DE VERIFICACION</font>",
-            }
-          });
-
-          var $valid = $("#form_eval").valid();
-          if (!$valid) {
-              $validator.focusInvalid();
-          } else {
-            alertify.confirm("GUARDAR DATOS DE EVALUACION ?", function (a) {
-              if (a) {
-                  $('#log').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading"/><br><b>ACTUALIZANDO DATOS DE EVALUACIÓN POA</b></center>');
-                  document.getElementById('subir_eval').disabled = true;
-                  document.forms['form_eval'].submit();
-              } else {
-                  alertify.error("OPCI\u00D3N CANCELADA");
-              }
-            });
+    $("#subir_eval").on("click", function () {
+      var $validator = $("#form_eval").validate({
+        rules: {
+          ejec: { //// ejecucion
+            required: true,
+          },
+          mverificacion: { //// medio de verificacion
+            required: true,
           }
+        },
+        messages: {
+          ejec: "<font color=red>REGISTRE VALOR DE EJECUCION</font>",
+          mverificacion: "<font color=red>REGISTRE MEDIO DE VERIFICACION</font>",
+        }
       });
+
+      var $valid = $("#form_eval").valid();
+      if (!$valid) {
+          $validator.focusInvalid();
+      } else {
+        alertify.confirm("GUARDAR DATOS DE EVALUACION ?", function (a) {
+          if (a) {
+              $('#log').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading"/><br><b>ACTUALIZANDO DATOS DE EVALUACIÓN POA</b></center>');
+              document.getElementById('subir_eval').disabled = true;
+              document.forms['form_eval'].submit();
+          } else {
+              alertify.error("OPCI\u00D3N CANCELADA");
+          }
+        });
+      }
+    });
   }); 
 
 
-  //// Verificando valor ejecutado registrado
-    function verif_valor_ejecucion(valor_registrado){
-   // document.getElementById("ejec").value =0;
-      var meta = document.getElementById("meta_prog").value;
-      var num1 = document.getElementById("ejec_registrado").value;
-      var num2 = document.getElementById("ejec").value;
-      
-      if((parseFloat(num1) + parseFloat(num2))<=meta ){
-        document.getElementById("ejec").style.backgroundColor = "#ffffff";
-        $('#subir_eval').slideDown();
 
-        cumplimiento=(((parseFloat(num1) + parseFloat(num2))/meta)*100);
-        document.getElementById('porcentaje').innerHTML = '<center><font size=50>'+cumplimiento+'%</font><br>'+parametros_cumplimiento(cumplimiento)+'</center>';
+    /// Funcion para guardar datos de Evaluacion POA ACP Regional
+    function guardar_acp_regional(pog_id){
+      tp=($('[id="tp'+pog_id+'"]').val());
+      ejec=($('[id="ejec'+pog_id+'"]').val());
+      mverificacion=($('[id="mverificacion'+pog_id+'"]').val());
+
+      var $validator = $("#form_eval"+pog_id).validate({
+        rules: {
+          ejec: { //// ejecucion
+            required: true,
+          },
+          mverificacion: { //// medio de verificacion
+            required: true,
+          }
+        },
+        messages: {
+          ejec: "<font color=red>REGISTRE VALOR DE EJECUCION</font>",
+          mverificacion: "<font color=red>REGISTRE MEDIO DE VERIFICACION</font>",
+        }
+      });
+
+      var $valid = $("#form_eval"+pog_id).valid();
+      if (!$valid) {
+          $validator.focusInvalid();
+      } else {
+
+          alertify.confirm("GUARDAR EVALUACIÓN POA?", function (a) {
+          if (a) {
+              var url = base+"index.php/ejecucion/cevaluacion_pei/valida_update_evaluacion_acp";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "pog_id="+pog_id+"&ejec="+ejec+"&mv="+mverificacion+"&tp="+tp
+              });
+
+              request.done(function (response, textStatus, jqXHR) {
+
+              if (response.respuesta == 'correcto') {
+                alert(response.respuesta)
+                  /*alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
+                      if (e) {
+                          window.location.reload(true);
+                          document.getElementById("loading").style.display = 'block';
+                          alertify.success("REGISTRO EXITOSO ...");
+                      }
+                  });*/
+              }
+              else{
+                  alertify.error("ERROR AL GUARDAR INFORMACION POA");
+              }
+
+              });
+          } else {
+              alertify.error("OPCI\u00D3N CANCELADA");
+          }
+        });
+
+        /*alertify.confirm("GUARDAR DATOS DE EVALUACION ?", function (a) {
+          if (a) {
+              $('#log'+pog_id).html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading"/><br><b>ACTUALIZANDO DATOS DE EVALUACIÓN POA</b></center>');
+              document.getElementById('subir_eval'+pog_id).disabled = true;
+              document.forms['form_eval'+pog_id].submit();
+          } else {
+              alertify.error("OPCI\u00D3N CANCELADA");
+          }
+        });*/
+      }
+    }
+
+
+
+
+
+
+  //// Verificando valor ejecutado registrado
+    function verif_valor_ejecucion(pog_id,valor_registrado){
+
+      var url = base+"index.php/ejecucion/cevaluacion_pei/get_objetivo_regional";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "pog_id="+pog_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+      if (response.respuesta == 'correcto') {
+        
+        if((parseFloat(valor_registrado) + parseFloat(response.evaluado))<=response.meta_regional[0]['prog_fis']){
+          cumplimiento=(((parseFloat(valor_registrado) + parseFloat(response.evaluado))/response.meta_regional[0]['prog_fis'])*100);
+          document.getElementById('porcentaje'+pog_id).innerHTML = '<center><font size=50>'+cumplimiento+'%</font><br>'+parametros_cumplimiento(cumplimiento)+'</center>';
+          document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
+          document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
+          $('#btn_eval'+pog_id).slideDown();
+        }
+        else{
+          document.getElementById('porcentaje'+pog_id).innerHTML = '<center>---</center>';
+          document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#fff0f0";
+          document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#fff0f0";
+          $('#btn_eval'+pog_id).slideUp();
+        }
       }
       else{
-        document.getElementById("ejec").style.backgroundColor = "#fff0f0";
-        $('#subir_eval').slideUp();
-
-        document.getElementById('porcentaje').innerHTML = '<center>---</center>';
+          alertify.error("ERROR AL RECUPERAR DATOS");
       }
 
-    
+      });
     }
 
 

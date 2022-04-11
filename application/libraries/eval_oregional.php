@@ -162,9 +162,9 @@ class Eval_oregional extends CI_Controller{
                 <div '.$active.' id="s'.$nro2.'">
                   <div class="row">
                   <div class="widget-body">
-                    <form action="'.site_url().'/ejecucion/cevaluacion_pei/valida_update_evaluacion_acp" method="post" id="form_eval" class="smart-form">
+                    <form action="'.site_url().'/ejecucion/cevaluacion_pei/valida_update_evaluacion_acp" method="post" id="form_eval'.$oge['pog_id'].'" class="smart-form">
                       <legend><b>A.C.P. '.$oge['og_codigo'].'</b>.- '.$oge['og_objetivo'].'</legend>
-                      <input type="hidden" name="pog_id" value='.$oge['pog_id'].'>
+                      <input type="text" name="pog_id" value='.$oge['pog_id'].'>
                       <fieldset>
                         <div class="row">';
                           $ejec=0;
@@ -179,10 +179,10 @@ class Eval_oregional extends CI_Controller{
                           }
 
                         $tabla.='
-                          <input type="hidden" name="tp" value='.$tp.'>
+                          <input type="hidden" name="tp" id="tp'.$oge['pog_id'].'" value='.$tp.'>
                           <section class="col col-1">
                             <label class="label"><b>(%) CUMPLIMIENTO</b></label>
-                            <div id="porcentaje"></div>
+                            <div id="porcentaje'.$oge['pog_id'].'"></div>
                           </section>
                           <section class="col col-2">
                             <label class="label"><b>META REGIONAL</b></label>
@@ -199,19 +199,21 @@ class Eval_oregional extends CI_Controller{
                           <section class="col col-2">
                             <label class="label" style="color:#0000ff;"><b>REGISTRO DE EJECUCIÓN (*)</b></label>
                             <label class="input"> <i class="icon-append fa fa-tag"></i>
-                              <input type="text" name="ejec" id="ejec" value="'.round($ejec,2).'" onkeyup="verif_valor_ejecucion(this.value);">
+                              <input type="text" name="ejec" id="ejec'.$oge['pog_id'].'" value="'.round($ejec,2).'" onkeyup="verif_valor_ejecucion('.$oge['pog_id'].',this.value);">
                             </label>
                           </section>
                           <section class="col col-5">
                             <label class="label" style="color:#0000ff;"><b>MEDIO DE VERIFICACIÓN (*)</b></label>
-                          <label class="textarea"> <i class="icon-append fa fa-tag"></i><textarea rows="4" name="mverificacion"  id="mverificacion">'.$mverificacion.'</textarea></label>
+                          <label class="textarea"> <i class="icon-append fa fa-tag"></i><textarea rows="4" name="mverificacion"  id="mverificacion'.$oge['pog_id'].'">'.$mverificacion.'</textarea></label>
                           </section>
                         </div>
                       </fieldset>
-                      <div id="log"></div>
-                      <footer>
-                        <button type="button" id="subir_eval" class="btn btn-info">'.$tit.'</button>
-                      </footer>
+                      <div id="log'.$oge['pog_id'].'"></div>
+                      <div id="btn_eval'.$oge['pog_id'].'">
+                        <footer>
+                          <button type="button" id="subir_eval'.$oge['pog_id'].'" onclick="guardar_acp_regional('.$oge['pog_id'].');" class="btn btn-info">'.$tit.'</button>
+                        </footer>
+                      </div>
                     </form>
                   </div>  
 

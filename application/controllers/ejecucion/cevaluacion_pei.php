@@ -541,7 +541,7 @@ class Cevaluacion_pei extends CI_Controller {
 
 
     /*--- Valida Modificación Evaluacion Objetivos de Gestion (2022) ---*/
-    public function valida_update_evaluacion_acp(){
+/*    public function valida_update_evaluacion_acp(){
       if ($this->input->post()) {
         $post = $this->input->post();
         $tmes=$this->model_evaluacion->trimestre();
@@ -563,7 +563,7 @@ class Cevaluacion_pei extends CI_Controller {
         }
 
 
-        //// ------ insert evaluado
+
         $data = array(
           'pog_id' => $pog_id,
           'ejec_fis' => $ejec_meta, 
@@ -573,7 +573,7 @@ class Cevaluacion_pei extends CI_Controller {
         );
         $this->db->insert('objetivo_programado_gestion_evaluado',$data);
         $epog_id=$this->db->insert_id();
-        //// --------- End
+   
 
         if(count($this->model_evaluacion->get_meta_oregional($pog_id,$this->tmes))!=0){
           $this->session->set_flashdata('success','SE REGISTRO CORRECTAMENTE LA EVALUACIÓN');
@@ -587,7 +587,61 @@ class Cevaluacion_pei extends CI_Controller {
       } else {
           show_404();
       }
+    }*/
+
+
+        /*---- VALIDA ADD/UPDATE EVALUACION POA ACP ----*/
+    public function valida_update_evaluacion_acp(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $pog_id = $this->security->xss_clean($post['pog_id']);
+        $ejec_meta = $this->security->xss_clean($post['ejec']);
+        $mverificacion = $this->security->xss_clean($post['mv']);
+        $tp = $this->security->xss_clean($post['tp']);
+
+        $this->db->where('pog_id', $pog_id);
+        $this->db->where('trm_id', $this->tmes);
+        $this->db->delete('objetivo_programado_gestion_evaluado');
+
+        $suma_ejec=$this->get_suma_evaluado($pog_id,$this->tmes); ///suma de ejecucion registrado al trimestre anterior
+        $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id); /// Meta Regional
+
+        $tp_eval=0;
+        if($meta_regional[0]['prog_fis']==($suma_ejec+$ejec_meta)){
+          $tp_eval=1;
+        }
+
+
+        $data = array(
+          'pog_id' => $pog_id,
+          'ejec_fis' => $ejec_meta, 
+          'trm_id' => $this->tmes,
+          'tp_eval' => $tp_eval, 
+          'tmed_verif' => strtoupper($mverificacion),
+        );
+        $this->db->insert('objetivo_programado_gestion_evaluado',$data);
+        $epog_id=$this->db->insert_id();
+
+        $result = array(
+          'respuesta' => 'correcto',
+        );
+  
+        echo json_encode($result);
+
+      }else{
+          show_404();
+      }
     }
+
+
+
+
+
+
+
+
+
+
 
     /*------- GET OBJETIVO REGIONAL -------*/
     public function get_objetivo_regional(){

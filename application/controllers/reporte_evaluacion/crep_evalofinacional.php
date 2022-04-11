@@ -32,7 +32,7 @@ class Crep_evalofinacional extends CI_Controller {
         }
     }
 
-
+///// CONTROLADOR A ELIMINAR
 
     /*-------- GET CUADRO EVALUACION OFICINA NACIONAL --------*/
     public function get_cuadro_evaluacion_onacional(){
