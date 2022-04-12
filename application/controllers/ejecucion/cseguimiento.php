@@ -323,7 +323,7 @@ class Cseguimiento extends CI_Controller {
       }
       
       $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1,$this->tmes);
-      $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($com_id); /// temporalidad Programado-Ejecutado Subactividad
+    //  $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($com_id); /// temporalidad Programado-Ejecutado Subactividad
       $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($com_id); /// grafico
       $data['titulo']=$titulo; /// Titulo de la cabecera
       

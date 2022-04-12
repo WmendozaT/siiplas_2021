@@ -540,57 +540,7 @@ class Cevaluacion_pei extends CI_Controller {
     }
 
 
-    /*--- Valida Modificación Evaluacion Objetivos de Gestion (2022) ---*/
-/*    public function valida_update_evaluacion_acp(){
-      if ($this->input->post()) {
-        $post = $this->input->post();
-        $tmes=$this->model_evaluacion->trimestre();
-        $tipo = $this->security->xss_clean($post['tp']); /// tipo
-        $pog_id = $this->security->xss_clean($post['pog_id']); /// id meta regional
-        $ejec_meta = $this->security->xss_clean($post['ejec']); /// meta ejecutado
-        $mverificacion = $this->security->xss_clean($post['mverificacion']); /// medio de verificacion
-
-        $this->db->where('pog_id', $pog_id);
-        $this->db->where('trm_id', $this->tmes);
-        $this->db->delete('objetivo_programado_gestion_evaluado');
-
-        $suma_ejec=$this->get_suma_evaluado($pog_id,$this->tmes); ///suma de ejecucion registrado al trimestre anterior
-        $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id); /// Meta Regional
-
-        $tp_eval=0;
-        if($meta_regional[0]['prog_fis']==($suma_ejec+$ejec_meta)){
-          $tp_eval=1;
-        }
-
-
-
-        $data = array(
-          'pog_id' => $pog_id,
-          'ejec_fis' => $ejec_meta, 
-          'trm_id' => $this->tmes,
-          'tp_eval' => $tp_eval, 
-          'tmed_verif' => strtoupper($mverificacion),
-        );
-        $this->db->insert('objetivo_programado_gestion_evaluado',$data);
-        $epog_id=$this->db->insert_id();
-   
-
-        if(count($this->model_evaluacion->get_meta_oregional($pog_id,$this->tmes))!=0){
-          $this->session->set_flashdata('success','SE REGISTRO CORRECTAMENTE LA EVALUACIÓN');
-        }
-        else{
-          $this->session->set_flashdata('danger','ERROR EN EL REGISTRO DE LA EVALUACIÓN');
-        }
-
-        redirect(site_url("").'/eval_obj/objetivos_regionales');
-
-      } else {
-          show_404();
-      }
-    }*/
-
-
-        /*---- VALIDA ADD/UPDATE EVALUACION POA ACP ----*/
+    /*---- VALIDA ADD/UPDATE EVALUACION POA ACP 2022 ----*/
     public function valida_update_evaluacion_acp(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -611,7 +561,6 @@ class Cevaluacion_pei extends CI_Controller {
           $tp_eval=1;
         }
 
-
         $data = array(
           'pog_id' => $pog_id,
           'ejec_fis' => $ejec_meta, 
@@ -622,10 +571,23 @@ class Cevaluacion_pei extends CI_Controller {
         $this->db->insert('objetivo_programado_gestion_evaluado',$data);
         $epog_id=$this->db->insert_id();
 
-        $result = array(
+        $eval_registrado=$this->model_evaluacion->get_evaluacion_meta_oregional($epog_id);
+
+        if(count($eval_registrado)!=0){
+          $result = array(
           'respuesta' => 'correcto',
-        );
-  
+          'meta_regional' => $meta_regional, /// Datos Meta Regional
+          'info_evaluado' => $eval_registrado, /// Informacion evaluada al trimestre
+         // 'evaluado' => $this->get_suma_evaluado($pog_id,$this->tmes), /// Valor Evaluado
+          'calificacion' => $this->calificacion_acp_regional($this->get_suma_evaluado($pog_id,$this->tmes),$ejec_meta,$meta_regional[0]['prog_fis']), /// Valor Evaluado 
+          );
+        }
+        else{
+          $result = array(
+          'respuesta' => 'error',
+         
+          );
+        }
         echo json_encode($result);
 
       }else{
@@ -635,19 +597,12 @@ class Cevaluacion_pei extends CI_Controller {
 
 
 
-
-
-
-
-
-
-
-
     /*------- GET OBJETIVO REGIONAL -------*/
     public function get_objetivo_regional(){
       if($this->input->is_ajax_request() && $this->input->post()){
           $post = $this->input->post();
           $pog_id = $this->security->xss_clean($post['pog_id']);
+          $ejec = $this->security->xss_clean($post['ejec']);
           
           $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id);
           if(count($meta_regional)!=0){
@@ -656,6 +611,7 @@ class Cevaluacion_pei extends CI_Controller {
               'meta_regional' => $meta_regional, /// Datos Meta Regional
               'trimestre' => $this->model_evaluacion->trimestre(), /// Datos Trimestre
               'evaluado' => $this->get_suma_evaluado($pog_id,$this->tmes), /// Valor Evaluado 
+              'calificacion' => $this->calificacion_acp_regional($this->get_suma_evaluado($pog_id,$this->tmes),$ejec,$meta_regional[0]['prog_fis']), /// Valor Evaluado 
             );
           }
           else{
@@ -672,7 +628,7 @@ class Cevaluacion_pei extends CI_Controller {
 
 
 
-    /*--- GET SUMA EVALUADO ANTES DEL TRIMESTRE ACTUAL ---*/
+    /*--- GET SUMA EVALUADO ANTES DEL TRIMESTRE ACTUAL 2022---*/
     public function get_suma_evaluado($pog_id,$trimestre){
       $sum=0;
       for ($i=1; $i <$trimestre ; $i++) { 
@@ -684,6 +640,41 @@ class Cevaluacion_pei extends CI_Controller {
 
       return $sum;
     }
+
+
+    /*--- PARAMETRO DE CALIFICACION ACP REGIONAL ---*/
+    public function calificacion_acp_regional($eval_acumulado,$ejec,$meta){
+      $calificacion='';$resp='';
+      $valor=0;$color='';
+      if($meta!=0){
+        $valor=round(((($eval_acumulado+$ejec)/$meta)*100),0);
+      }
+
+      if($valor>0 & $valor<=50){
+        $resp='<b>INSATISFACTORIO</b>';
+        $color='#f95b4f';
+      }
+      elseif($valor>50 & $valor<=75){
+       $resp='<b>REGULAR</b>';
+       $color='#edd094';
+      }
+      elseif($valor>75 & $valor<=99){
+       $resp='<b>BUENO</b>';
+       $color='#83bad1';
+      }
+      elseif($valor==100){
+       $resp='<b>OPTIMO</b>';
+       $color='#4caf50';
+      }
+/*      else{
+        $resp='<b>INSATISFACTORIO</b>';
+        $color='#f95b4f';
+      }*/
+
+      $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size=50>'.$valor.'%</font><br>'.$resp.'</center></div>';
+      return $calificacion;
+    }
+
 
 
     /*------- GET UPDATE OBJETIVO REGIONAL -------*/

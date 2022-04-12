@@ -930,13 +930,8 @@ class Seguimientopoa extends CI_Controller{
 
 
 
-
-
-
-
-
-    /*---- VERIFICA OPERACION TRIMESTRAL -----*/
-    public function verif_medios_verificacion($prod_id,$tipo_medio,$trimestre){
+  /*---- VERIFICA OPERACION TRIMESTRAL -----*/
+  public function verif_medios_verificacion($prod_id,$tipo_medio,$trimestre){
       $tabla='';
       $mes_inicio=0;
       $mes_final=0;
@@ -952,7 +947,13 @@ class Seguimientopoa extends CI_Controller{
         if(count($medio)!=0){
             if($tipo_medio==1){
               if($medio[0]['medio_verificacion']!=''){
-                $tabla.='<li>'.$medio[0]['medio_verificacion'].'</li>';
+                if(strlen($medio[0]['medio_verificacion'])>400){
+                  $tabla.='<li>'.substr($medio[0]['medio_verificacion'], 0, 400).'</li>';
+                }
+                else{
+                  $tabla.='<li>'.$medio[0]['medio_verificacion'].'</li>';
+                }
+                
               }
             }
             elseif($tipo_medio==2){
