@@ -115,16 +115,11 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <section id="widget-grid" class="well">
                                 <div class="">
-                                    <?php echo $titulo;?>
+                                    <?php echo $cabecera_formulario;?>
                                 </div>
-                            </section>
-                        </article>
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
-                            <section id="widget-grid" class="well" align="center">
-                                <?php echo $formularios_seguimiento;?>
                             </section>
                         </article>
                     </div>
@@ -133,22 +128,11 @@
 
                     <div class="row">
                         <article class="col-sm-12">
-                            <?php 
-                              if($this->session->flashdata('success')){ ?>
-                                <div class="alert alert-success">
-                                  <?php echo $this->session->flashdata('success'); ?>
-                                </div>
-                            <?php }
-                                elseif($this->session->flashdata('danger')){ ?>
-                                <div class="alert alert-danger">
-                                  <?php echo $this->session->flashdata('danger'); ?>
-                                </div><?php }
-                            ?>
                             <!-- new widget -->
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                                 <header>
                                     <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                                    <h2>SEGUIMIENTO POA </h2>
+                                    <h2>SEGUIMIENTO Y EVALUACION POA </h2>
 
                                     <ul class="nav nav-tabs pull-right in" id="myTab">
                                         <li class="active">
@@ -179,24 +163,15 @@
                                     <div class="widget-body">
                                         <!-- content -->
                                         <div id="myTabContent" class="tab-content">
+                                            <?php echo $calificacion;?>
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
-                                               <div class="row">
-                                                    <div style="font-size: 13pt;font-family:Verdana;"><b>FORMULARIO DE SEGUIMIENTO POA - <?php echo $datos_mes[2].' '.$this->session->userData('gestion');?></b></div>
-                                                    <hr>
-                                                        <div align="right">
-                                                            <a href="<?php echo base_url().'index.php/seg/seguimiento_poa';?>" title="SALIR" class="btn btn-danger"><img src="<?php echo base_url(); ?>assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>SALIR</b></a>
-                                                            <?php echo $boton_reporte_seguimiento_poa;?>
-                                                            <?php echo $boton_reporte_evaluacion_poa;?>
-                                                        </div>
-                                                    <div class="jarviswidget jarviswidget-color-darken" >
-                                                      <?php echo $operaciones_programados;?>
-                                                    </div>
-                                               </div>
+                                               <?php echo $s1;?>
                                             </div>
                                             <!-- end s1 tab pane -->
 
                                             <div class="tab-pane fade" id="s3" title="CUADRO DE SEGUIMIENTO POA">
-                                               <div class="row">
+                                                <?php echo $s2;?>
+                                               <!-- <div class="row">
                                                 <div class="well">
                                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
                                                     </div>
@@ -225,7 +200,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                               </div>
+                                               </div> -->
                                             </div>
                                             <!-- end s3 tab pane -->
 
@@ -322,7 +297,7 @@
 
                                             <div class="tab-pane fade" id="s2" title="CUADRO DE SEGUIMIENTO POA">
                                                <div class="well">
-                                                <div style="font-size: 13pt;font-family:Verdana;"><b>MIS OPERACIONES <?php echo $componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].' '.$proyecto[0]['abrev'].' - '.$this->session->userData('gestion');?></b></div>
+                                                <div style="font-size: 13pt;font-family:Verdana;"><b>MIS ACTIVIDADES <?php echo $componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].' '.$proyecto[0]['abrev'].' - '.$this->session->userData('gestion');?></b></div>
                                                 <hr>
                                                     <div align="right">
                                                         <a href="javascript:abreVentana('<?php echo base_url().'index.php/seg/ver_reporte_evaluacionpoa_temporalidad/'.$com_id;?>');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
@@ -452,7 +427,7 @@
         <!-- <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/seguimiento.js"></script>  -->
         <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento.js"></script> 
         <!-- REGRESION LINEAL AL TRIMESTRE -->
-        <script type="text/javascript">
+<!--         <script type="text/javascript">
           var chart1;
           $(document).ready(function() {
             chart1 = new Highcharts.Chart({
@@ -748,6 +723,6 @@
                 ]
             });
           });
-        </script>
+        </script> -->
     </body>
 </html>

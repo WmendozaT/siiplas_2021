@@ -298,8 +298,8 @@ class Cseguimiento extends CI_Controller {
 
 
 
-  /*------ EVALUAR OPERACION (Gasto Corriente-Proyecto de Inversion) 2021 ------*/
-  public function formulario_segpoa($com_id){
+  /*------ EVALUAR OPERACION (Gasto Corriente-Proyecto de Inversion) 2022 ------*/
+  public function formulario_segpoa_anterior($com_id){
     $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
     $data['menu'] = $this->seguimientopoa->menu(4);
     $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
@@ -367,6 +367,161 @@ class Cseguimiento extends CI_Controller {
     }
   }
 
+
+
+
+
+
+
+
+
+  //// FORMULARIO DE SEGUIMIENTO POA 2022
+  public function formulario_segpoa($com_id){
+    $data['menu'] = $this->seguimientopoa->menu(4);
+    $data['base'] = $this->seguimientopoa->menu(4);
+    $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
+    $s1=' <input type="hidden" name="mes_activo" value='.$this->verif_mes[1].'>
+          <input type="hidden" name="base" value="'.base_url().'">';
+    $s2='';
+
+    if(count($componente)!=0){
+      $data['cabecera_formulario']=$this->seguimientopoa->cabecera_formulario($componente);
+      $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id,$this->tmes); /// Tabla para el grafico al trimestre
+      $data['calificacion']='<hr>
+        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div></fieldset>';
+      
+      $s1.='
+      <div class="row">
+        <div style="font-size: 13pt;font-family:Verdana;"><b>FORMULARIO DE SEGUIMIENTO POA - '.$this->verif_mes[2].' '.$this->gestion.'</b></div>
+        <hr>
+            <div align="right">
+              '.$this->seguimientopoa->button_rep_seguimientopoa($com_id).'
+              '.$this->seguimientopoa->button_rep_evaluacion($com_id).'
+            </div>
+        <div class="jarviswidget jarviswidget-color-darken" >
+          '.$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']).'
+        </div>
+      </div>';
+
+      $data['s1']=$s1;
+      $data['update_eval']=$this->seguimientopoa->button_update_($com_id); /// para actualizar la Evaluacion POA
+
+      $data['s2']='
+      <div class="row" id="btn_generar">
+        <center><button type="button" onclick="generar_cuadro_seguimiento('.$com_id.','.$this->verif_mes[1].');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE SEGUIMIENTO POA</b></button></center>
+      </div>
+
+      <div id="loading_sepoa"></div>
+      <div class="well" id="cuerpo_segpoa" style="display:none">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+            <div id="cabecera" style="display: none"></div>
+            <hr>
+            <table>
+                <tr>
+                    <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE SEGUIMIENTO POA AL MES DE '.$this->verif_mes[2].' / '.$this->gestion.'</b></td>
+                </tr>
+            </table>
+            <hr>
+                <div id="Seguimiento">
+                    <div id="container" style="width: 700px; height: 400px; margin: 0 auto" align="center"></div>
+                </div>
+            <hr>
+                <div class="table-responsive" id="tabla_componente_vista"></div>
+                <div id="tabla_componente_impresion" style="display: none"></div>
+            <hr>
+            <div align="right">
+                <button id="btnImprimir_seguimiento" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE SEGUIMIENTO MENSUAL POA</b></button>
+            </div>
+        </div>
+      </div>';
+      
+     /* 
+      $data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($com_id); /// Reporte Seguimiento (Mes vigente) POA
+      $data['boton_reporte_evaluacion_poa']=$this->seguimientopoa->button_rep_evaluacion($com_id); /// Reporte Evaluacion (Trimestre vigente) POA
+
+
+      $data['form4_programados_mes']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Actividades programados en el mes
+*/
+
+    //  $data['datos_mes'] = $this->verif_mes;
+     
+
+     // $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($com_id); /// temporalidad Programado-Ejecutado Subactividad
+
+      /*$data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1,$this->tmes);
+      $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($com_id); /// temporalidad Programado-Ejecutado Subactividad
+      $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($com_id); /// grafico
+      
+      
+      $data['matriz_temporalidad_subactividad']=$matriz_temporalidad_subactividad;
+      $data['tabla_temporalidad_componente']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],1); /// Vista 
+      $data['tabla_temporalidad_componente_impresion']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],0); /// Impresion 
+
+*/
+      /*--- Regresion lineal trimestral ---*/
+      /*$data['cabecera2']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],2,$this->tmes);
+      $data['tabla_regresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$this->tmes,2,1); /// Tabla que muestra el acumulado por trimestres Regresion Vista
+      $data['tabla_regresion_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$this->tmes,2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
+*/
+      /*--- grafico Pastel trimestral ---*/
+      /*$data['tabla_pastel_todo']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$this->tmes,4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
+      $data['tabla_pastel_todo_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$this->tmes,4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
+*/
+      /*--- Regresion lineal Gestion */
+      /*$data['cabecera3']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],3,$this->tmes);
+      $data['tabla_gestion']=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($com_id); /// Matriz para el grafico Total Gestion
+      $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$this->tmes,3,1); /// Tabla que muestra el acumulado Gestion Vista
+      $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$this->tmes,3,0); /// Tabla que muestra el acumulado Gestion Impresion
+
+      
+*/
+    //  $this->seguimientopoa->update_evaluacion_operaciones($com_id);
+      
+    //  $data['formularios_poa']=$this->seguimientopoa->formularios_poa($com_id,$data['proyecto'][0]['proy_id']);
+    //  $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($com_id);
+      
+   //  $temporalidad=$this->seguimientopoa->obtiene_suma_temporalidad_prog_ejec(47852);
+   //  echo $temporalidad[1].' - '.$temporalidad[2].' - '.$temporalidad[3].' - '.$temporalidad[4];
+  //echo $data['cabecera2'];
+      $this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
+
+
+    /*------ GET CUADRO DE SEGUIMIENTO POA MENSUAL-----*/
+    public function get_cuadro_seguimientopoa(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $com_id = $this->security->xss_clean($post['com_id']);
+        $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
+        $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
+
+        $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($com_id); /// grafico
+        $tabla_temporalidad_componente=$this->seguimientopoa->tabla_temporalidad_componente($this->seguimientopoa->temporalizacion_x_componente($com_id),1); /// Vista 
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'matriz' => $matriz_temporalidad_subactividad,
+          'cabecera1' => $this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($proyecto[0]['act_id']),$componente,1,$this->tmes),
+          'tabla_vista' => $this->seguimientopoa->tabla_temporalidad_componente($this->seguimientopoa->temporalizacion_x_componente($com_id),1),
+          'tabla_impresion' => $this->seguimientopoa->tabla_temporalidad_componente($this->seguimientopoa->temporalizacion_x_componente($com_id),0),
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+//$data['tabla_temporalidad_componente']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],1); /// Vista 
 
 
     /*---- FUNCION ACTUALIZA INFORMACION EVALUACION POA AL TRIMESTRE --------*/

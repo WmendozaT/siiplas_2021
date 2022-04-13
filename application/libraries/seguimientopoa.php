@@ -27,6 +27,41 @@ class Seguimientopoa extends CI_Controller{
             $this->mes = $this->mes_nombre();
     }
 
+    /// Cabecera Formulario de Seguimiento y Evaluacion POA 2022
+    public function cabecera_formulario($componente){
+      $tabla='';
+      $trimestre=$this->model_evaluacion->trimestre();
+      $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
+      $tabla.=
+      '<h1 title='.$proyecto[0]['aper_id'].'><small>'.$proyecto[0]['tipo_adm'].' : </small>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['proy_nombre'].' - '.$proyecto[0]['abrev'].'</h1>
+      <h1><small>UNIDAD RESPONSABLE : </small> '.$componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'</h1>
+      <h1><small>TRIMESTRE VIGENTE : </small> '.$trimestre[0]['trm_descripcion'].'</h1>';
+
+      if($proyecto[0]['tp_id']==1){
+        $tabla.=
+        '<h1 title='.$proyecto[0]['aper_id'].'><small>PROYECTO : </small>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['proy_nombre'].' - '.$proyecto[0]['abrev'].'</h1>
+        <h1><small>UNIDAD. RESP. : </small> '.$componente[0]['serv_descripcion'].'</h1>
+        <h1><small>TRIMESTRE VIGENTE : </small> '.$trimestre[0]['trm_descripcion'].'</h1>';
+      }
+
+      $tabla.='
+              '.$this->formularios_poa($componente[0]['com_id'],$proyecto[0]['proy_id']).'
+              '.$this->formularios_mensual($componente[0]['com_id']).'
+              <a href="'.site_url("").'/seg/seguimiento_poa" title="SALIR" class="btn btn-default">
+                <img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp; SALIR
+              </a>';
+
+      return $tabla;
+    }
+
+
+
+
+
+
+
+
     /// Cabecera Reporte de Seguimiento POA Mensual 2021
     public function cabecera($componente,$proyecto){
       $tabla='';
@@ -2020,11 +2055,6 @@ class Seguimientopoa extends CI_Controller{
       $tabla='';
       $tabla.=' 
       <form class="smart-form" method="post">
-        <input name="mes_activo" type="hidden" value='.$this->verif_mes[1].'>
-        <input name="base" type="hidden" value="'.base_url().'">
-        <fieldset><div id="eficacia" style="font-family: Arial;font-size: 10%;">'.$this->calificacion_eficacia($regresion[5][$this->tmes]).'</div></fieldset>
-        <div id="efi"></div> 
-        <fieldset>          
           <div class="row">
             <section class="col col-3">
               <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>

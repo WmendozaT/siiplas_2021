@@ -48,45 +48,134 @@ function abreVentana(PDF){
     return /\d/.test(String.fromCharCode(keynum));
   }
 
-
-  //// Verificando valor ejecutado por form 4
-    function verif_valor(programado,ejecutado,prod_id,nro,tp,mes_id){
-     /// tp 0 : Registro
-     /// tp 1 : modifcacion  
+  //// funcion para generar el cuadro de seguimiento POa Mensual (cuadro, grafico)
+  function generar_cuadro_seguimiento(com_id,mes){
+    $('#loading_sepoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
     
-      if(ejecutado!= ''){
-      //  alert(ejecutado+'-'+prod_id+'-'+nro+'-'+tp+'-'+mes_id)
-        var url = base+"index.php/ejecucion/cseguimiento/verif_valor_ejecutado_x_form4";
-        $.ajax({
-          type:"post",
-          url:url,
-          data:{ejec:ejecutado,prod_id:prod_id,tp:tp,mes_id:mes_id},
-          success:function(datos){
+    var url = base+"index.php/ejecucion/cseguimiento/get_cuadro_seguimientopoa";
+    var request;
+    if (request) {
+        request.abort();
+    }
+    request = $.ajax({
+      url: url,
+      type: "POST",
+      dataType: 'json',
+      data: "com_id="+com_id
+    });
 
-           if(datos.trim() =='true'){
+    request.done(function (response, textStatus, jqXHR) {
+        
+      if (response.respuesta == 'correcto') {
+        document.getElementById('btn_generar').innerHTML = '';
+        document.getElementById('loading_sepoa').innerHTML = '';
+        document.getElementById("cuerpo_segpoa").style.display = 'block';
+        document.getElementById('cabecera').innerHTML = response.cabecera1;
+        document.getElementById('tabla_componente_vista').innerHTML = response.tabla_vista;
+        document.getElementById('tabla_componente_impresion').innerHTML = response.tabla_impresion;
 
-            $('#but'+nro).slideDown();
-            document.getElementById("ejec"+nro).style.backgroundColor = "#ffffff";
-            document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
-           }
-           else{
-            alertify.error("ERROR EN EL DATO REGISTRADO !");
-             document.getElementById("ejec"+nro).style.backgroundColor = "#fdeaeb";
-            $('#but'+nro).slideUp();
-           }
-
-        }});
+        graf_seguimiento_poa(response.matriz);             
       }
       else{
-        $('#but'+nro).slideUp();
+          alertify.error("ERROR !!!");
       }
+    }); 
+  }
+
+    /// Grafico Seguimiento POA Mensual
+    function graf_seguimiento_poa(matriz) {
+      Highcharts.chart('container', {
+            chart: {
+                type: 'column',
+                options3d: {
+                    enabled: true,
+                    alpha: 0,
+                    beta: 0,
+                    depth: 100
+                }
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            
+            plotOptions: {
+                column: {
+                    depth: 25
+                }
+            },
+            xAxis: {
+                categories: Highcharts.getOptions().lang.shortMonths,
+                labels: {
+                    skew3d: true,
+                    style: {
+                        fontSize: '16px'
+                    }
+                }
+            },
+            yAxis: {
+                title: {
+                  text: 'cumplimiento (%)'
+                }
+            },
+            xAxis: {
+                categories: [
+                    'ENE.', 
+                    'FEB.', 
+                    'MAR.', 
+                    'ABR.', 
+                    'MAY.', 
+                    'JUN.', 
+                    'JUL.', 
+                    'AGO.', 
+                    'SEPT.', 
+                    'OCT.', 
+                    'NOV.', 
+                    'DIC.'
+                ]
+            },
+            series: [{
+              name: 'Eficiencia',
+              data: [matriz[4][1],matriz[4][2],matriz[4][3],matriz[4][4],matriz[4][5],matriz[4][6],matriz[4][7],matriz[4][8],matriz[4][9],matriz[4][10],matriz[4][11],matriz[4][12]]
+            }]
+        });
     }
 
 
+  //// Verificando valor ejecutado por form 4
+  function verif_valor(programado,ejecutado,prod_id,nro,tp,mes_id){
+   /// tp 0 : Registro
+   /// tp 1 : modifcacion  
+  
+    if(ejecutado!= ''){
+    //  alert(ejecutado+'-'+prod_id+'-'+nro+'-'+tp+'-'+mes_id)
+      var url = base+"index.php/ejecucion/cseguimiento/verif_valor_ejecutado_x_form4";
+      $.ajax({
+        type:"post",
+        url:url,
+        data:{ejec:ejecutado,prod_id:prod_id,tp:tp,mes_id:mes_id},
+        success:function(datos){
 
+         if(datos.trim() =='true'){
 
+          $('#but'+nro).slideDown();
+          document.getElementById("ejec"+nro).style.backgroundColor = "#ffffff";
+          document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
+         }
+         else{
+          alertify.error("ERROR EN EL DATO REGISTRADO !");
+           document.getElementById("ejec"+nro).style.backgroundColor = "#fdeaeb";
+          $('#but'+nro).slideUp();
+         }
 
-
+      }});
+    }
+    else{
+      $('#but'+nro).slideUp();
+    }
+  }
 
     /// Funcion para guardar datos de seguimiento POA
     function guardar(prod_id,nro){
