@@ -57,11 +57,6 @@ class Seguimientopoa extends CI_Controller{
 
 
 
-
-
-
-
-
     /// Cabecera Reporte de Seguimiento POA Mensual 2021
     public function cabecera($componente,$proyecto){
       $tabla='';
@@ -535,7 +530,12 @@ class Seguimientopoa extends CI_Controller{
     $tabla='';
     $operaciones=$this->model_producto->list_operaciones_subactividad($com_id);
 
-    $tabla.=' <hr>
+    $tabla.=' <div align="right">
+                <a href="javascript:abreVentana(\''.site_url("").'/seg/ver_reporte_evaluacionpoa_temporalidad/'.$com_id.'\');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
+                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR AVANCE DEL PLAN OPERATIVO ANUAL POA</b>
+                </a>
+              </div>
+              <hr>
               <div class="table-responsive">
               <table class="table table-bordered" width="100%" align=center>
                 <thead>
@@ -600,7 +600,7 @@ class Seguimientopoa extends CI_Controller{
                 $tabla.='
                 </tbody>
               </table>
-              </div>';
+            </div>';
 
     return $tabla;
   }
@@ -1900,9 +1900,9 @@ class Seguimientopoa extends CI_Controller{
     function button_rep_seguimientopoa($com_id){
       $tabla='';
         $tabla.='
-                <a href="javascript:abreVentana(\''.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$com_id.'/'.$this->verif_mes[1].'\');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
-                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;&nbsp;<b>IMPRIMIR SEGUIMIENTO POA ('.$this->verif_mes[2].')</b>
-                </a>';
+          <a href="javascript:abreVentana(\''.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$com_id.'/'.$this->verif_mes[1].'\');" class="btn btn-default" title="IMPRIMIR SEGUIMIENTO POA">
+            <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;&nbsp;<b>IMPRIMIR SEGUIMIENTO POA ('.$this->verif_mes[2].')</b>
+          </a>';
       return $tabla;
     }
 
@@ -2055,6 +2055,7 @@ class Seguimientopoa extends CI_Controller{
       $tabla='';
       $tabla.=' 
       <form class="smart-form" method="post">
+      <input type="hidden" name="base" value="'.base_url().'">
           <div class="row">
             <section class="col col-3">
               <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
@@ -2243,7 +2244,7 @@ class Seguimientopoa extends CI_Controller{
                       
                     }
                     $tabla.='
-                    <td align="center"><br>'.$this->calificacion_operacion($row['prod_id'],$diferencia).'</td>
+                    <td align="center"><br>'.$this->calificacion_form4($row['prod_id'],$diferencia).'</td>
                   </tr>';
                 }
               }
@@ -2261,7 +2262,7 @@ class Seguimientopoa extends CI_Controller{
 
 
     /*---- CALIFICACIÓN POR CADA OPERACION ----*/
-    public function calificacion_operacion($prod_id,$valor){
+    public function calificacion_form4($prod_id,$valor){
       $programado=($valor[1]+$valor[2]);
       $ejecutado=$valor[3];
 

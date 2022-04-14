@@ -41,7 +41,6 @@ class Cseguimiento_establecimiento extends CI_Controller {
     $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
     $data['com_id']=$com_id;
     $data['proy_id']=$this->establecimiento[0]['proy_id'];
-
     if(count($data['componente'])!=0){
 
       $data['datos_mes'] = $this->verif_mes;
@@ -83,6 +82,8 @@ class Cseguimiento_establecimiento extends CI_Controller {
 
       //$data['calificacion']=$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]);
      // $data['nota']=$this->notificacion();
+      $data['calificacion']='<hr>
+        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div></fieldset>';
       $data['update_eval']=$this->seguimientopoa->button_update_($com_id);
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
       

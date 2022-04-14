@@ -7,34 +7,34 @@ function abreVentana(PDF){
 }
 
 
-    function doSearch(){
-      var tableReg = document.getElementById('datos');
-      var searchText = document.getElementById('searchTerm').value.toLowerCase();
-      var cellsOfRow="";
-      var found=false;
-      var compareWith="";
- 
-      // Recorremos todas las filas con contenido de la tabla
-      for (var i = 1; i < tableReg.rows.length; i++){
-        cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
-        found = false;
-        // Recorremos todas las celdas
-        for (var j = 0; j < cellsOfRow.length && !found; j++){
-          compareWith = cellsOfRow[j].innerHTML.toLowerCase();
-          // Buscamos el texto en el contenido de la celda
-          if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
-            found = true;
-          }
-        }
-        if(found) {
-          tableReg.rows[i].style.display = '';
-        } else {
-          // si no ha encontrado ninguna coincidencia, esconde la
-          // fila de la tabla
-          tableReg.rows[i].style.display = 'none';
+  function doSearch(){
+    var tableReg = document.getElementById('datos');
+    var searchText = document.getElementById('searchTerm').value.toLowerCase();
+    var cellsOfRow="";
+    var found=false;
+    var compareWith="";
+
+    // Recorremos todas las filas con contenido de la tabla
+    for (var i = 1; i < tableReg.rows.length; i++){
+      cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+      found = false;
+      // Recorremos todas las celdas
+      for (var j = 0; j < cellsOfRow.length && !found; j++){
+        compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+        // Buscamos el texto en el contenido de la celda
+        if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+          found = true;
         }
       }
+      if(found) {
+        tableReg.rows[i].style.display = '';
+      } else {
+        // si no ha encontrado ninguna coincidencia, esconde la
+        // fila de la tabla
+        tableReg.rows[i].style.display = 'none';
+      }
     }
+  }
 
 
   $( function() {
@@ -49,8 +49,10 @@ function abreVentana(PDF){
   }
 
   //// funcion para generar el cuadro de seguimiento POa Mensual (cuadro, grafico)
-  function generar_cuadro_seguimiento(com_id,mes){
+  function generar_cuadro_seguimiento_evalpoa(com_id,mes,trimestre){
     $('#loading_sepoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
+    $('#loading_evalpoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
+    $('#loading_evalpoa2').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
     
     var url = base+"index.php/ejecucion/cseguimiento/get_cuadro_seguimientopoa";
     var request;
@@ -61,20 +63,47 @@ function abreVentana(PDF){
       url: url,
       type: "POST",
       dataType: 'json',
-      data: "com_id="+com_id
+      data: "com_id="+com_id+"&mes_id="+mes+"&trm_id="+trimestre
     });
 
     request.done(function (response, textStatus, jqXHR) {
         
       if (response.respuesta == 'correcto') {
         document.getElementById('btn_generar').innerHTML = '';
+
+        //------ Seguimiento poa
         document.getElementById('loading_sepoa').innerHTML = '';
         document.getElementById("cuerpo_segpoa").style.display = 'block';
         document.getElementById('cabecera').innerHTML = response.cabecera1;
         document.getElementById('tabla_componente_vista').innerHTML = response.tabla_vista;
         document.getElementById('tabla_componente_impresion').innerHTML = response.tabla_impresion;
+        graf_seguimiento_poa(response.matriz);
+        /// ---- end 
 
-        graf_seguimiento_poa(response.matriz);             
+        //------ Evaluacion POA
+        document.getElementById('loading_evalpoa').innerHTML = '';
+        document.getElementById("cuerpo_evalpoa").style.display = 'block';
+        document.getElementById('cabecera2').innerHTML = response.cabecera2;
+        document.getElementById('tabla_regresion_vista').innerHTML = response.tabla_regresion;
+        document.getElementById('tabla_regresion_impresion').innerHTML = response.tabla_regresion_impresion;
+        graf_regresion_trimestral(response.matriz_regresion);
+
+        document.getElementById('tabla_pastel_vista').innerHTML = response.tabla_pastel_todo;
+        document.getElementById('tabla_pastel_impresion').innerHTML = response.tabla_pastel_todo_impresion;
+        graf_regresion_pastel(response.matriz_regresion,trimestre);
+
+        document.getElementById('loading_evalpoa2').innerHTML = '';
+        document.getElementById("cuerpo_evalpoa2").style.display = 'block';
+        document.getElementById('cabecera3').innerHTML = response.cabecera3;
+        document.getElementById('tabla_regresion_total_vista').innerHTML = response.tabla_regresion_total;
+        document.getElementById('tabla_regresion_total_impresion').innerHTML = response.tabla_regresion_total_impresion;
+        graf_regresion_anual(response.matriz_gestion);
+        // ---- end
+
+
+        /// ---- lista de form completa
+        document.getElementById('list_form4_temporalidad').innerHTML = response.form4_temporalidad;
+        ///------ end
       }
       else{
           alertify.error("ERROR !!!");
@@ -82,65 +111,245 @@ function abreVentana(PDF){
     }); 
   }
 
+
+
+    /// Grafico regresion por trimestre
+    function graf_regresion_trimestral(matriz) {
+      chart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'regresion',  // Le doy el nombre a la gráfica
+        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+      },
+      title: {
+        text: ''  // Titulo (Opcional)
+      },
+      subtitle: {
+        text: ''   // Subtitulo (Opcional)
+      },
+      // Pongo los datos en el eje de las 'X'
+      xAxis: {
+        categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
+        // Pongo el título para el eje de las 'X'
+        title: {
+          text: 'N° Actividades por Trimestre'
+        }
+      },
+      yAxis: {
+        // Pongo el título para el eje de las 'Y'
+        title: {
+          text: 'N° Act'
+        }
+      },
+      // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+      tooltip: {
+        enabled: true,
+        formatter: function() {
+          return '<b>'+ this.series.name +'</b><br/>'+
+            this.x +': '+ this.y +' '+this.series.name;
+        }
+      },
+      // Doy opciones a la gráfica
+      plotOptions: {
+        line: {
+          dataLabels: {
+            enabled: true
+          },
+          enableMouseTracking: true
+        }
+      },
+      // Doy los datos de la gráfica para dibujarlas
+      series: [
+          {
+            name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
+            data: [0,matriz[2][1],matriz[2][2],matriz[2][3],matriz[2][4]]
+          },
+          {
+            name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
+            data: [0,matriz[3][1],matriz[3][2],matriz[3][3],matriz[3][4]]
+          }
+        ],
+        
+      });
+    }
+
+
+    /// Grafico regresion Anual
+    function graf_regresion_anual(matriz) {
+      chart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'regresion_gestion',  // Le doy el nombre a la gráfica
+        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+      },
+      title: {
+        text: ''  // Titulo (Opcional)
+      },
+      subtitle: {
+        text: ''   // Subtitulo (Opcional)
+      },
+      // Pongo los datos en el eje de las 'X'
+      xAxis: {
+        categories: ['','I TRIMESTRE','II TRIMESTRE','III TRIMESTRE','IV TRIMESTRE'],
+        // Pongo el título para el eje de las 'X'
+        title: {
+          text: '% CUMPLIMIENTO DE ACTIVIDADES'
+        }
+      },
+      yAxis: {
+        // Pongo el título para el eje de las 'Y'
+        title: {
+          text: ''
+        }
+      },
+      // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+      tooltip: {
+        enabled: true,
+        formatter: function() {
+          return '<b>'+ this.series.name +'</b><br/>'+
+            this.x +': '+ this.y +' '+this.series.name;
+        }
+      },
+      // Doy opciones a la gráfica
+      plotOptions: {
+        line: {
+          dataLabels: {
+            enabled: true
+          },
+          enableMouseTracking: true
+        }
+      },
+      // Doy los datos de la gráfica para dibujarlas
+      series: [
+          {
+            name: '% ACT. PROGRAMADAS EN EL TRIMESTRE',
+            data: [0,matriz[4][1],matriz[4][2],matriz[4][3],matriz[4][4]]
+          },
+          {
+            name: '% ACT. CUMPLIDAS EN EL TRIMESTRE',
+            data: [0,matriz[5][1],matriz[5][2],matriz[5][3],matriz[5][4]]
+          }
+        ],
+        
+      });
+    }
+
+
+    /// Grafico pastel
+  function graf_regresion_pastel(matriz,trimestre) {
+      Highcharts.chart('pastel_todos', {
+        chart: {
+          type: 'pie',
+          options3d: {
+              enabled: true,
+              alpha: 45,
+              beta: 0
+          }
+        },
+        title: {
+            text: ''
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              depth: 35,
+              dataLabels: {
+                  enabled: true,
+                  format: '{point.name}'
+              }
+          }
+        },
+        series: [{
+          type: 'pie',
+          name: 'Actividades',
+          data: [
+              {
+                name: 'NO CUMPLIDO : '+Math.round(100-(matriz[5][trimestre]+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)))+' %',
+                y: matriz[6][trimestre],
+                color: '#f98178',
+              },
+
+              {
+                name: 'EN PROCESO : '+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)+' %',
+                y: Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100),
+                color: '#f5eea3',
+              },
+
+              {
+                name: 'CUMPLIDO : '+matriz[5][trimestre]+' %',
+                y: matriz[5][trimestre],
+                color: '#2CC8DC',
+                sliced: true,
+                selected: true
+              }
+          ]
+        }]
+      });
+
+    }
+
+
     /// Grafico Seguimiento POA Mensual
     function graf_seguimiento_poa(matriz) {
       Highcharts.chart('container', {
-            chart: {
-                type: 'column',
-                options3d: {
-                    enabled: true,
-                    alpha: 0,
-                    beta: 0,
-                    depth: 100
+        chart: {
+          type: 'column',
+          options3d: {
+              enabled: true,
+              alpha: 0,
+              beta: 0,
+              depth: 100
+          }
+        },
+        title: {
+            text: ''
+        },
+        subtitle: {
+            text: ''
+        },
+        
+        plotOptions: {
+            column: {
+                depth: 25
+            }
+        },
+        xAxis: {
+            categories: Highcharts.getOptions().lang.shortMonths,
+            labels: {
+                skew3d: true,
+                style: {
+                    fontSize: '16px'
                 }
-            },
+            }
+        },
+        yAxis: {
             title: {
-                text: ''
-            },
-            subtitle: {
-                text: ''
-            },
-            
-            plotOptions: {
-                column: {
-                    depth: 25
-                }
-            },
-            xAxis: {
-                categories: Highcharts.getOptions().lang.shortMonths,
-                labels: {
-                    skew3d: true,
-                    style: {
-                        fontSize: '16px'
-                    }
-                }
-            },
-            yAxis: {
-                title: {
-                  text: 'cumplimiento (%)'
-                }
-            },
-            xAxis: {
-                categories: [
-                    'ENE.', 
-                    'FEB.', 
-                    'MAR.', 
-                    'ABR.', 
-                    'MAY.', 
-                    'JUN.', 
-                    'JUL.', 
-                    'AGO.', 
-                    'SEPT.', 
-                    'OCT.', 
-                    'NOV.', 
-                    'DIC.'
-                ]
-            },
-            series: [{
-              name: 'Eficiencia',
-              data: [matriz[4][1],matriz[4][2],matriz[4][3],matriz[4][4],matriz[4][5],matriz[4][6],matriz[4][7],matriz[4][8],matriz[4][9],matriz[4][10],matriz[4][11],matriz[4][12]]
-            }]
-        });
+              text: 'cumplimiento (%)'
+            }
+        },
+        xAxis: {
+          categories: [
+              'ENE.', 
+              'FEB.', 
+              'MAR.', 
+              'ABR.', 
+              'MAY.', 
+              'JUN.', 
+              'JUL.', 
+              'AGO.', 
+              'SEPT.', 
+              'OCT.', 
+              'NOV.', 
+              'DIC.'
+          ]
+        },
+        series: [{
+          name: 'Eficiencia',
+          data: [matriz[4][1],matriz[4][2],matriz[4][3],matriz[4][4],matriz[4][5],matriz[4][6],matriz[4][7],matriz[4][8],matriz[4][9],matriz[4][10],matriz[4][11],matriz[4][12]]
+        }]
+      });
     }
 
 
@@ -270,7 +479,7 @@ function abreVentana(PDF){
     $(function () {
         $(".enlace").on("click", function (e) {
           prod_id = $(this).attr('name');
-          //alert('hola mundi')
+          //alert(prod_id)
            //$('#temporalidad').html('<div class="loading" align="center"><img src='+base+'"/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando Información</div>');
             var url = base+"index.php/ejecucion/cseguimiento/get_temporalidad";
             var request;
@@ -287,7 +496,7 @@ function abreVentana(PDF){
             request.done(function (response, textStatus, jqXHR) {
             if (response.respuesta == 'correcto') {
               $('#temporalidad').fadeIn(1000).html(response.tabla);
-              $('#calificacion').fadeIn(1000).html(response.calificacion);
+              $('#calificacion_form4').fadeIn(1000).html(response.calificacion);
             }
             else{
                 alertify.error("ERROR AL RECUPERAR TEMPORALIDAD");
@@ -443,7 +652,7 @@ function abreVentana(PDF){
       ventana.document.write('<hr>');
       ventana.document.write(cabecera.innerHTML);
       ventana.document.write('<hr>');
-      ventana.document.write(eficacia.innerHTML);
+    //  ventana.document.write(eficacia.innerHTML);
       ventana.document.write(grafico.innerHTML);
       ventana.document.write('<hr>');
       ventana.document.write(tabla.innerHTML);
@@ -468,7 +677,8 @@ function abreVentana(PDF){
       document.getElementById("cabecera").style.display = 'block';
       var cabecera = document.querySelector("#cabecera");
 
-      var eficacia = document.querySelector("#efi");
+      //var eficacia = document.querySelector("#efi");
+      var eficacia = '';
 
       document.getElementById("tabla_componente_impresion").style.display = 'block';
       document.getElementById("tabla_componente_vista").style.display = 'none';

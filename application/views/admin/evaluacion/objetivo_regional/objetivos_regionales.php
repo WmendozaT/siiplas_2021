@@ -454,6 +454,7 @@
             $(function () {
                 $(".evaluacion").on("click", function (e) {
                     dep_id = $(this).attr('name');
+         
                     $('#cuadro_comparativo').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Cuadro de Evaluación</div>');
                     
                     var url = "<?php echo site_url("")?>/ejecucion/cevaluacion_pei/get_cuadro_evaluacion";

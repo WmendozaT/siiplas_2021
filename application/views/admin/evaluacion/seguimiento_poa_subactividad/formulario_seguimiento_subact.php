@@ -103,17 +103,6 @@
                     <?php echo $update_eval;?>
                     <div class="row">
                         <article class="col-sm-12">
-                            <?php 
-                              if($this->session->flashdata('success')){ ?>
-                                <div class="alert alert-success">
-                                  <?php echo $this->session->flashdata('success'); ?>
-                                </div>
-                            <?php }
-                                elseif($this->session->flashdata('danger')){ ?>
-                                <div class="alert alert-danger">
-                                  <?php echo $this->session->flashdata('danger'); ?>
-                                </div><?php }
-                            ?>
                             <!-- new widget -->
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                                 <header>
@@ -140,6 +129,7 @@
                                     <div class="widget-body">
                                         <!-- content -->
                                         <div id="myTabContent" class="tab-content">
+                                            <?php echo $calificacion;?>
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
                                                <div class="row">
                                                     <div class="jarviswidget jarviswidget-color-darken" >
@@ -206,7 +196,7 @@
                         <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                     </div>
                     <div class="modal-body">
-                        <div id="calificacion"></div>
+                        <div id="calificacion_form4"></div>
                         <div class="row">
                             <div id="temporalidad"></div>
                         </div>
