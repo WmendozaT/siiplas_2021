@@ -129,6 +129,8 @@ class Eval_oregional extends CI_Controller{
           <div class="widget-body">
             <p>
               <h2><b>EVALUACIÓN POA (OPERACIONES) '.strtoupper($departamento[0]['dep_departamento']).' - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>
+              <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp; &nbsp;IMPRIMIR DETALLE DE OPERACIONES</a>
+              <a href="#" data-toggle="modal" data-target="#modal_cumplimiento_grafico" class="btn btn-default" name="'.$dep_id.'" onclick="nivel_cumplimiento_operaciones_grafico('.$dep_id.','.$this->tmes.');" title="NIVEL DE CUMPLIMIENTO DE OPERACIONES (GRAFICO)"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/>&nbsp; &nbsp;DETALLE DE OPERACIONES (GRAFICO)</a>
             </p>
             <hr class="simple">
             <ul id="myTab1" class="nav nav-tabs bordered">';
@@ -219,7 +221,7 @@ class Eval_oregional extends CI_Controller{
 
                 <form class="smart-form">
                 <legend>
-                  DETALLE DE OPERACIONES (OBJETIVOS REGIONALES) <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></a>';
+                  DETALLE DE OPERACIONES (OBJETIVOS REGIONALES)';
                 $tabla.='
                 </legend>
                 <fieldset>
@@ -1065,7 +1067,18 @@ class Eval_oregional extends CI_Controller{
   }
 
 
+  //// Matriz lista de cumplimiento de Operaciones por Regional 
+  public function matriz_cumplimiento_operaciones_regional($dep_id){
+   $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
+     for ($i=1; $i <=count($lista_ogestion); $i++) { 
+      for ($j=1; $j <=4 ; $j++) { 
+        $matriz[$i][$j]=0;
+      } 
+     }
 
+
+     return $matriz;
+  }
 
 
 

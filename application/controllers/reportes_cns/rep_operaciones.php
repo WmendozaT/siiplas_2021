@@ -650,7 +650,7 @@ class Rep_operaciones extends CI_Controller {
         $sum_ope=0;$sum_req=0;$sum_total=0;
         $tabla.='
           <tr>
-            <td>OPERACIONES</td>';
+            <td>FORMULARIO N° 4</td>';
             for ($i=1; $i <=$trimestre[$this->tmes] ; $i++) {
               $num_ope=$this->nro_mod_operaciones($dist_id,$i,$tp_id);
               $tabla.='<td align=right>'.$num_ope.'</td>'; /// Operaciones
@@ -660,7 +660,7 @@ class Rep_operaciones extends CI_Controller {
             <td align=right bgcolor="#c8eff5"><b>'.$sum_ope.'</b></td>
           </tr>
           <tr>
-            <td>REQUERIMIENTOS</td>';
+            <td>FORMULARIO N° 5</td>';
             for ($i=1; $i <=$trimestre[$this->tmes] ; $i++) {
               $num_req=$this->nro_mod_requerimientos($dist_id,$i,$tp_id);
               $tabla.='<td align=right>'.$num_req.'</td>'; /// Requerimientos

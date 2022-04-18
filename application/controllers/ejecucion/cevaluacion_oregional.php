@@ -283,4 +283,28 @@ class Cevaluacion_oregional extends CI_Controller {
     }
   }
 
+
+
+
+    /*---- GRAFICO CONSOLIDADO DE OPERACIONES POR REGIONAL --------*/
+    public function get_cumplimiento_operaciones_grafico(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+        $trm_id = $this->security->xss_clean($post['trm_id']); /// Trimestre
+        $regional=$this->model_proyecto->get_departamento($dep_id);
+        $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);
+
+
+          $result = array(
+            'respuesta' => 'correcto',
+            'titulo_graf'=> '<b>REGIONAL : '.strtoupper($regional[0]['dep_departamento']).'</b>',
+            'matriz'=> $matriz,
+          );
+
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
 }

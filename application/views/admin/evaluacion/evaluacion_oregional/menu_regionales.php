@@ -216,6 +216,71 @@
             </div>
         </div>
         <!--  =============== -->   
+
+        <!-- MODAL LISTA DE ACTIVIDADES PRIORIZADOS -->
+        <div class="modal fade" id="modal_cumplimiento_grafico" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="mdialTamanio3">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                    </div>
+                    <div class="modal-body">
+                    <h2 class="alert alert-info"><center>CUADRO DE EVALUACI&Oacute;N DE OPERACIONES - GESTI&Oacute;N <?php echo $this->session->userData('gestion');?></center></h2>
+                        <div class="row">
+                        	<h3 class="text-primary" id="titulo_graf"></h3><hr>
+                        	HOLA MUNDO !!!
+                        	<!-- <div> 
+                       			<h3 class="text-primary" id="titulo_grafico"></h3><hr>
+								<div class="row">
+									<article class="col-sm-12 col-md-12 col-lg-6">
+										<div class="well">
+											<center><div id="parametro_efi" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
+										</div>
+										<hr>
+											<table class="table table-bordered" border=0.2 style="width:100%;">
+												<thead>
+													<tr>
+														<th><center>I TRIMESTRE</center></th>
+														<th><center>II TRIMESTRE</center></th>
+														<th><center>III TRIMESTRE</center></th>
+														<th><center>IV TRIMESTRE</center></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr id="tab"></tr>  
+												</tbody>
+								            </table>
+									</article>
+								
+									<article class="col-sm-12 col-md-12 col-lg-6">
+										<div class="well">
+											<center><div id="parametro_efi2" style="width: 750px; height: 390px; margin: 0 auto"></div></center>
+										</div>
+										<hr>
+											<table class="table table-bordered" border=0.2 style="width:100%;">
+												<thead>
+													<tr>
+														<th><center>I TRIMESTRE</center></th>
+														<th><center>II TRIMESTRE</center></th>
+														<th><center>III TRIMESTRE</center></th>
+														<th><center>IV TRIMESTRE</center></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr id="tab_acumulado"></tr>  
+												</tbody>
+								            </table>
+									</article>
+								</div>
+								<hr>
+							</div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  =============== -->   
+
 		<!-- PAGE FOOTER -->
 		<div class="page-footer">
 			<div class="row">
