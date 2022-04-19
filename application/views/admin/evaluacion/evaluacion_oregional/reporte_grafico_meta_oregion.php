@@ -28,14 +28,16 @@
         </td>
     </tr>
     <tr>
-        <td><div id="container" style="width: 1000px; height: 600px; margin: 0 auto"></div></td>
+        <td>
+            <div id="container" style="width: 50%; height: 700px; margin: 0 auto"></div>
+        </td>
     </tr>
 </table>
 
 
 <div id="areaImprimir">
-    <script>alert('GENERAR CUADRO DE EVALUACIÓN ..')</script>
-    <?php echo $print_evaluacion;?>
+<!--     <script>alert('GENERAR CUADRO DE EVALUACIÓN ..')</script>
+    <?php echo $print_evaluacion;?> -->
 </div>
 <script>
 if (!window.jQuery) {
@@ -63,15 +65,15 @@ Highcharts.chart('container', {
     xAxis: {
         categories: [
             <?php 
-              for ($i=1; $i <=$nro-1 ; $i++){ 
-                if($i==$nro-1){
+              for ($i=1; $i <=$nro ; $i++){ 
+                if($i==$nro){
                   ?>
-                  '<?php echo $eval[$i][3];?>'
+                  '<?php echo 'OPE. '.$eval[$i][1].'.'.$eval[$i][2];?>'
                   <?php
                 }
                 else{
                   ?>
-                  '<?php echo $eval[$i][3];?>',
+                  '<?php echo 'OPE. '.$eval[$i][1].'.'.$eval[$i][2];?>',
                   <?php
                 }
               } 
@@ -84,11 +86,11 @@ Highcharts.chart('container', {
     yAxis: {
         min: 0,
         title: {
-            text: 'Eficacia (%)',
+            text: 'CUMPLIMIENTO DE METAS',
             align: 'high'
         },
         labels: {
-            overflow: 'Objetivos'
+            overflow: 'Operaciones'
         }
     },
     tooltip: {
@@ -107,18 +109,18 @@ Highcharts.chart('container', {
     },
 
     series: [{
-        name: 'EFICACIA %',
+        name: 'CUMPLIMIENTO %',
         data: [
             <?php 
-              for ($i=1; $i <=$nro-1 ; $i++){ 
-                if($i==$nro-1){
+              for ($i=1; $i <=$nro ; $i++){ 
+                if($i==$nro){
                   ?>
-                  <?php echo $eval[$i][10];?>
+                  <?php echo $eval[$i][5];?>
                   <?php
                 }
                 else{
                   ?>
-                  <?php echo $eval[$i][10];?>,
+                  <?php echo $eval[$i][5];?>,
                   <?php
                 }
               } 
@@ -127,7 +129,7 @@ Highcharts.chart('container', {
     }]
 });
 
-Highcharts.chart('container_print', {
+/*Highcharts.chart('container_print', {
     chart: {
         type: 'bar'
     },
@@ -202,7 +204,7 @@ Highcharts.chart('container_print', {
             ?>
         ]
     }]
-});
+});*/
 </script>
 </body>
 </html>

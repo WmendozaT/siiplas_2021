@@ -293,18 +293,31 @@ class Cevaluacion_oregional extends CI_Controller {
         $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
         $trm_id = $this->security->xss_clean($post['trm_id']); /// Trimestre
         $regional=$this->model_proyecto->get_departamento($dep_id);
-        $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);
-
+        $tabla='<iframe id="ipdf" width="100%" height="950px;" src="'.base_url().'index.php/rep_meta_oregional_grafico/'.$dep_id.'"></iframe>';
+      //  
 
           $result = array(
             'respuesta' => 'correcto',
             'titulo_graf'=> '<b>REGIONAL : '.strtoupper($regional[0]['dep_departamento']).'</b>',
-            'matriz'=> $matriz,
+            'tabla' => $tabla,
           );
 
         echo json_encode($result);
       }else{
           show_404();
       }
+    }
+
+
+        /*----- CUADRO EVALUACION OPERACIONES REGIONALES  ----*/
+    public function cuadro_evaluacion_grafico($dep_id){
+      $data['regional']=$this->model_proyecto->get_departamento($dep_id);
+      $data['trimestre']=$this->model_evaluacion->trimestre();
+      $data['nro']=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
+      $data['eval']=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);      
+      $data['print_evaluacion']='';
+
+      $this->load->view('admin/evaluacion/evaluacion_oregional/reporte_grafico_meta_oregion', $data);
+
     }
 }

@@ -228,10 +228,9 @@ class Eval_oregional extends CI_Controller{
                 <table class="table table-bordered" border=0.2 style="width:100%;" id="datos">
                   <thead>
                   <tr style="font-size: 11px;">
-                    <th style="width:1%;height:10px;color:#FFF; text-align: center" bgcolor="#1c7368">N°</th>
-                    <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACE.</b></th>
-                    <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACP.</b></th>
-                    <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. OPE.</b></th>
+                    <th style="width:1%;height:10px;color:#FFF; text-align: center" bgcolor="#1c7368">#</th>
+                    <th style="width:1.5%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. ACP.</b></th>
+                    <th style="width:1.5%;color:#FFF; text-align: center" bgcolor="#1c7368"><b>COD. OPE.</b></th>
                     <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">OPERACI&Oacute;N</th>
                     <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">RESULTADO</th>
                     <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">INDICADOR</th>
@@ -242,7 +241,8 @@ class Eval_oregional extends CI_Controller{
                     <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (II) TRIMESTRE</th>
                     <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (III) TRIMESTRE</th>
                     <th style="width:6%;color:#FFF; text-align: center" bgcolor="#1c7368">META (IV) TRIMESTRE</th>
-                    <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
+                    <th style="width:5%;color:#FFF;" bgcolor="#1c7368">% CUMP. AL TRIMESTRE</th>
+                    <th style="width:5%;color:#FFF;" bgcolor="#1c7368">% CUMP. A LA GESTIÓN</th>
                     <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
                     <th style="width:5%;color:#FFF;" bgcolor="#1c7368"></th>
                   </tr>
@@ -289,9 +289,8 @@ class Eval_oregional extends CI_Controller{
                     $tabla.='
                       <tr style="font-size: 10px;" bgcolor='.$color.'>
                         <td style="width:1%; height:10px;" align=center title='.$row['pog_id'].'>'.$nro_ope.'</td>
-                        <td style="width:2%;" align="center"><b></b></td>
-                        <td style="width:2%; font-size: 17px; color:blue" align="center"><b>'.$row['og_codigo'].'</b></td>
-                        <td style="width:2%; font-size: 17px;" align="center" bgcolor="#f1eeee" title='.$row['or_id'].'><b>'.$row['or_codigo'].'</b></td>
+                        <td style="width:1.5%; font-size: 17px; color:blue" align="center"><b>'.$row['og_codigo'].'</b></td>
+                        <td style="width:1.5%; font-size: 17px;" align="center" bgcolor="#f1eeee" title='.$row['or_id'].'><b>'.$row['or_codigo'].'</b></td>
                         <td style="width:11%;">'.$row['or_objetivo'].'</td>
                         <td style="width:11%;">'.$row['or_resultado'].'</td>
                         <td style="width:10%;">'.$row['or_indicador'].'</td>
@@ -299,7 +298,8 @@ class Eval_oregional extends CI_Controller{
                         <td style="width:2%; font-size: 15px;" align=center><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
                         <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
                         '.$this->get_temporalidad_objetivo_regional($row['or_id'],0).'
-                        <td style="font-family:Verdana;font-size: 20px;" align=center><b>'.$calificacion[3].' %</b></td>
+                        <td style="font-family:Verdana;font-size: 18px;" align=center><b>'.$calificacion[3].' %</b></td>
+                        <td style="font-family:Verdana;font-size: 18px;" align=center><b>'.$calificacion[4].' %</b></td>
                         <td>
                           <a href="#" data-toggle="modal" data-target="#modal_act_priorizados" style="font-size: 10px;" class="btn btn-lg btn-default" name="'.$row['or_id'].'"  onclick="ver_actividades_priorizados('.$row['or_id'].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a>
                         </td>
@@ -495,17 +495,26 @@ class Eval_oregional extends CI_Controller{
 
     /*-- CALIFICACION TRIMESTRAL POR OBJETIVO REGIONAL --*/
     public function calificacion_trimestral_acumulado_x_oregional($or_id,$trimestre){
-      $valor = array( '1' => '0','2' => '0','3' => '0');
+      $valor = array( '1' => '0','2' => '0','3' => '0','4' => '0');
 
       if(count($this->model_objetivoregion->verif_temporalidad_oregional($or_id))!=0){
-        $suma_prog=0; $suma_ejec=0;
+        $suma_total_prog=0; $suma_prog=0; $suma_ejec=0;
         
-        for ($i=1; $i <=$trimestre ; $i++) {
+        //// Suma total programado por operacion
+        $prog_total=$this->model_objetivoregion->get_trm_temporalidad_prog_total_oregional($or_id);
+        if(count($prog_total)!=0){
+          $suma_total_prog=$prog_total[0]['total_prog'];
+        }
+        ///-----
+
+
+
+        for ($i=1; $i <=$trimestre; $i++) {
           $get_trm=$this->model_objetivoregion->get_trm_temporalidad_prog_oregional($or_id,$i); /// Temporalidad Programado
           $get_trm_ejec=$this->model_objetivoregion->get_trm_temporalidad_ejec_oregional($or_id,$i); /// Temporalidad Ejecutado
 
           if(count($get_trm)!=0){
-            $suma_prog=$suma_prog+$get_trm[0]['pg_fis'];
+            $suma_prog=$suma_prog+$get_trm[0]['pg_fis']; 
           }
 
           if(count($get_trm_ejec)!=0){
@@ -516,12 +525,18 @@ class Eval_oregional extends CI_Controller{
           if($suma_ejec!=0){
             $ejecucion=round((($suma_ejec/$suma_prog)*100),2);
           }
+
+          $cumplimiento_gestion=0;
+          if($suma_total_prog!=0){
+            $cumplimiento_gestion=round((($suma_ejec/$suma_total_prog)*100),2);
+          }
         }
 
         //  $text=strval( $suma_prog);
-          $valor[1]=$suma_prog; /// Programado Acumulado
-          $valor[2]=$suma_ejec; /// Ejecutado Acumulado
-          $valor[3]=$ejecucion; /// Ejecucion
+          $valor[1]=$suma_prog; /// Programado Acumulado al trimestre
+          $valor[2]=$suma_ejec; /// Ejecutado Acumulado al trimestre
+          $valor[3]=$ejecucion; /// Cumplimiento al trimestre
+          $valor[4]=$cumplimiento_gestion; /// Cumplimiento a la Gestion
       }
 
       return $valor; 
@@ -1069,22 +1084,26 @@ class Eval_oregional extends CI_Controller{
 
   //// Matriz lista de cumplimiento de Operaciones por Regional 
   public function matriz_cumplimiento_operaciones_regional($dep_id){
-   $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
+    $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
      for ($i=1; $i <=count($lista_ogestion); $i++) { 
-      for ($j=1; $j <=4 ; $j++) { 
+      for ($j=1; $j <=5 ; $j++) { 
         $matriz[$i][$j]=0;
       } 
      }
 
+     $nro=0;
+     foreach($lista_ogestion as $row){
+      $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+        $nro++;
+        $matriz[$nro][1]=$row['og_codigo']; /// cod OG
+        $matriz[$nro][2]=$row['or_codigo']; /// cod OR
+        $matriz[$nro][3]=$row['or_objetivo']; /// Descripcion
+        $matriz[$nro][4]=$calificacion[3]; /// Cumplimiento al Trimestre
+        $matriz[$nro][5]=$calificacion[4]; /// Cumplimiento a la Gestion
+     }
 
      return $matriz;
   }
-
-
-
-
-
-
 
 
 

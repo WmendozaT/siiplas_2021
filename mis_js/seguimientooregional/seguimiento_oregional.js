@@ -451,8 +451,6 @@ $(function() {
 
   /// GRADO DE CUMPLIMIENTO DE OPERACIONES CONSOLIDADO POR REGIONAL (GRAFICO)
   function nivel_cumplimiento_operaciones_grafico(dep_id,trm_id) {
-  //  $('#titulo_grafico_cumplimiento').html('<font size=3><b>Cargando Grafico..</b></font>');
-  //  $('#content_cumplimiento').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
     var url = base+"index.php/ejecucion/cevaluacion_oregional/get_cumplimiento_operaciones_grafico";
     var request;
     if (request) {
@@ -467,134 +465,8 @@ $(function() {
 
     request.done(function (response, textStatus, jqXHR) {
       if (response.respuesta == 'correcto') {
-          $('#titulo_graf').html(response.titulo_graf);
-
-
-
-
-
-          
-       /* 
-        $('#tab').html(response.tab);
-        $('#tab_acumulado').html(response.tab_acu);*/
-
-        ////////// TRIMESTRAL
-       /* chart = new Highcharts.Chart({
-        chart: {
-          renderTo: 'parametro_efi',  // Le doy el nombre a la gráfica
-          defaultSeriesType: 'line' // Pongo que tipo de gráfica es
-        },
-        title: {
-          text: 'EJECUCIÓN DE OPERACIONES POR TRIMESTRE'  // Titulo (Opcional)
-        },
-        subtitle: {
-          text: ''   // Subtitulo (Opcional)
-        },
-        // Pongo los datos en el eje de las 'X'
-        xAxis: {
-          categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
-          // Pongo el título para el eje de las 'X'
-          title: {
-            text: 'N° Operaciones por Trimestre'
-          }
-        },
-        yAxis: {
-          // Pongo el título para el eje de las 'Y'
-          title: {
-            text: 'N° operaciones'
-          }
-        },
-        // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
-        tooltip: {
-          enabled: true,
-          formatter: function() {
-            return '<b>'+ this.series.name +'</b><br/>'+
-              this.x +': '+ this.y +' '+this.series.name;
-          }
-        },
-        // Doy opciones a la gráfica
-        plotOptions: {
-          line: {
-            dataLabels: {
-              enabled: true
-            },
-            enableMouseTracking: true
-          }
-        },
-        // Doy los datos de la gráfica para dibujarlas
-        series: [
-            {
-              name: 'Meta Programado',
-              data: [0,response.matriz_acumulado[1][1],response.matriz_acumulado[1][2],response.matriz_acumulado[1][3],response.matriz_acumulado[1][4]]
-            },
-            {
-              name: 'Meta Ejecutado',
-              data: [0,response.matriz_acumulado[2][1],response.matriz_acumulado[2][2],response.matriz_acumulado[2][3],response.matriz_acumulado[2][4]]
-            },
-            {
-              name: '% Cumplimiento',
-              data: [0,response.matriz_acumulado[3][1],response.matriz_acumulado[3][2],response.matriz_acumulado[3][3],response.matriz_acumulado[3][4]]
-            }
-          ],
-          
-        });*/
-
-        /////////// ACUMULADO
-
-
-        /*chart = new Highcharts.Chart({
-        chart: {
-          renderTo: 'parametro_efi2',  // Le doy el nombre a la gráfica
-          defaultSeriesType: 'line' // Pongo que tipo de gráfica es
-        },
-        title: {
-          text: '% EJECUCIÓN ACUMULADO TRIMESTRAL'  // Titulo (Opcional)
-        },
-        subtitle: {
-          text: ''   // Subtitulo (Opcional)
-        },
-        // Pongo los datos en el eje de las 'X'
-        xAxis: {
-          categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
-          // Pongo el título para el eje de las 'X'
-          title: {
-            text: '% Operaciones Acumulados por Trimestre'
-          }
-        },
-        yAxis: {
-          // Pongo el título para el eje de las 'Y'
-          title: {
-            text: '% Ejecucion'
-          }
-        },
-        // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
-        tooltip: {
-          enabled: true,
-          formatter: function() {
-            return '<b>'+ this.series.name +'</b><br/>'+
-              this.x +': '+ this.y +' '+this.series.name;
-          }
-        },
-        // Doy opciones a la gráfica
-        plotOptions: {
-          line: {
-            dataLabels: {
-              enabled: true
-            },
-            enableMouseTracking: true
-          }
-        },
-        // Doy los datos de la gráfica para dibujarlas
-        series: [{
-            name: '(%) Programado',
-            data: [0,response.matriz_acumulado[5][1],response.matriz_acumulado[5][2],response.matriz_acumulado[5][3],response.matriz_acumulado[5][4]]
-          },
-          {
-            name: '(%) Ejecutado',
-            data: [0,response.matriz_acumulado[6][1],response.matriz_acumulado[6][2],response.matriz_acumulado[6][3],response.matriz_acumulado[6][4]]
-          }],
-        });*/
-
+        $('#titulo_graf').html(response.titulo_graf);
+        $('#tabla').html(response.tabla);
       }
       else{
           alertify.error("ERROR AL RECUPERAR INFORMACION");

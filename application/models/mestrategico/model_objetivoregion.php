@@ -406,6 +406,18 @@ class Model_objetivoregion extends CI_Model{
         return $query->result_array();
     }
 
+    /*-- Suma meta Total Programado por Operacion (Objetivo Regional) --*/
+    public function get_trm_temporalidad_prog_total_oregional($or_id){
+        $sql = 'select SUM(pg_fis) total_prog
+                from temp_trm_prog_objetivos_regionales
+                where or_id='.$or_id.' and g_id='.$this->gestion.'';
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+
     /*-- Get valor por trimestre Ejecutado Objetivo Regional --*/
     public function get_trm_temporalidad_ejec_oregional($or_id,$trm_id){
         $sql = 'select *

@@ -429,7 +429,7 @@ $route['eval_obj/rep_meta_oregional_grafico/(:any)'] = 'ejecucion/cevaluacion_pe
 $route['eval_oregionales'] = 'ejecucion/cevaluacion_oregional/menu_regional';  ///// Objetivos Regionales 2022 
 $route['rep_eval_oregional/(:any)'] = 'ejecucion/cevaluacion_oregional/reporte_evaluacion_form2/$1'; //// Reporte Meta Objetivo Regional 2022
 $route['rep_list_form4_priori_oregional/(:any)'] = 'ejecucion/cevaluacion_oregional/reporte_act_priorizados_oregional/$1'; //// Reporte Meta Objetivo Regional 2022
-
+$route['rep_meta_oregional_grafico/(:any)'] = 'ejecucion/cevaluacion_oregional/cuadro_evaluacion_grafico/$1'; //// Reporte Meta Objetivo Regional Grafico
 
 
 /*--FORM. CERT---*/
