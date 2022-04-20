@@ -4,41 +4,22 @@
       <title><?php echo $this->session->userData('sistema');?></title>
     </head>
     <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
-    <style type="text/css">
-        #areaImprimir{display:none}
-        @media print {
-            #areaImprimir {display:block}
-        }
-    </style>
-    <script type="text/javascript">
-        function printDiv(nombreDiv) {
-            var contenido= document.getElementById(nombreDiv).innerHTML;
-            var contenidoOriginal= document.body.innerHTML;
-            document.body.innerHTML = contenido;
-            window.print();
-            document.body.innerHTML = contenidoOriginal;
-        }
-    </script>
 <body>
-
-<table border="0" style="width:100%;">
-    <tr>
-        <td>
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="printDiv('areaImprimir')" title="IMPRIMIR CUADRO EVALUACIÓN" class="btn btn-default xs"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="18"/>&nbsp;&nbsp;<b>IMPRIMIR CUADRO DE EVALUACI&Oacute;N</b></a><br>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div id="container" style="width: 50%; height: 700px; margin: 0 auto"></div>
-        </td>
-    </tr>
-</table>
-
-
-<div id="areaImprimir">
-<!--     <script>alert('GENERAR CUADRO DE EVALUACIÓN ..')</script>
-    <?php echo $print_evaluacion;?> -->
+<div id="cabecera" style="display: none">
+    <?php echo $cabecera;?>
 </div>
+<div id="tabla_componente_impresion" style="display: none">
+    <?php echo $tabla_detalle;?>
+</div>
+<div id="Seguimiento">
+    <div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>
+</div>
+<div align="right">
+    <button id="btnImprimir_seguimiento" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO</b></button>
+</div>
+
+
+
 <script>
 if (!window.jQuery) {
     document.write('<script src="<?php echo base_url(); ?>assets/js/libs/jquery-2.0.2.min.js"><\/script>');
@@ -51,6 +32,44 @@ if (!window.jQuery.ui) {
 </script>
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
+
+<script type="text/javascript">
+          //// Seguimiento POA
+    function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
+
+      var ventana = window.open('Seguimiento Evaluacion POA ', 'PRINT', 'height=800,width=1000');
+      ventana.document.write('<html><head><title>EVALUACION POA</title>');
+      ventana.document.write('</head><body>');
+      ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+      ventana.document.write(cabecera.innerHTML);
+      ventana.document.write('<hr>');
+      ventana.document.write(grafico.innerHTML);
+      ventana.document.write('<hr>');
+      ventana.document.write(tabla.innerHTML);
+      ventana.document.write('</body></html>');
+      ventana.document.close();
+      ventana.focus();
+      ventana.onload = function() {
+        ventana.print();
+        ventana.close();
+      };
+      return true;
+    }
+
+
+    document.querySelector("#btnImprimir_seguimiento").addEventListener("click", function() {
+      var grafico = document.querySelector("#Seguimiento");
+      document.getElementById("cabecera").style.display = 'block';
+      var cabecera = document.querySelector("#cabecera");
+      var eficacia = '';
+      document.getElementById("tabla_componente_impresion").style.display = 'block';
+      var tabla = document.querySelector("#tabla_componente_impresion");
+      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
+      document.getElementById("cabecera").style.display = 'none';
+      document.getElementById("tabla_componente_impresion").style.display = 'none';
+    });
+</script>
+
 <script type="text/javascript">
 Highcharts.chart('container', {
     chart: {
@@ -60,7 +79,7 @@ Highcharts.chart('container', {
         text: ''
     },
     subtitle: {
-        text: ''
+        text: 'CUMPLIMIENTO DE OPERACIONES AL <?php echo $trimestre[0]['trm_descripcion']; ?>'
     },
     xAxis: {
         categories: [
@@ -112,8 +131,8 @@ Highcharts.chart('container', {
         name: 'CUMPLIMIENTO %',
         data: [
             <?php 
-              for ($i=1; $i <=$nro ; $i++){ 
-                if($i==$nro){
+              for ($i=1; $i <=$nro-1 ; $i++){ 
+                if($i==$nro-1){
                   ?>
                   <?php echo $eval[$i][5];?>
                   <?php
@@ -129,82 +148,6 @@ Highcharts.chart('container', {
     }]
 });
 
-/*Highcharts.chart('container_print', {
-    chart: {
-        type: 'bar'
-    },
-    title: {
-        text: '<?php echo 'REGIONAL : '.strtoupper($regional[0]['dep_departamento']);?>'
-    },
-    subtitle: {
-        text: 'OBJETIVOS <?php echo $trimestre[0]['trm_descripcion']; ?>'
-    },
-    xAxis: {
-        categories: [
-            <?php 
-              for ($i=1; $i <=$nro-1 ; $i++){ 
-                if($i==$nro-1){
-                  ?>
-                  '<?php echo $eval[$i][3];?>'
-                  <?php
-                }
-                else{
-                  ?>
-                  '<?php echo $eval[$i][3];?>',
-                  <?php
-                }
-              } 
-            ?>
-        ],
-        title: {
-            text: null
-        }
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Eficacia (%)',
-            align: 'high'
-        },
-        labels: {
-            overflow: 'Operaciones'
-        }
-    },
-    tooltip: {
-        valueSuffix: ' %'
-    },
-    plotOptions: {
-        bar: {
-            dataLabels: {
-                enabled: true
-            }
-        }
-    },
-
-    credits: {
-        enabled: false
-    },
-
-    series: [{
-        name: 'EFICACIA %',
-        data: [
-            <?php 
-              for ($i=1; $i <=$nro-1 ; $i++){ 
-                if($i==$nro-1){
-                  ?>
-                  <?php echo $eval[$i][10];?>
-                  <?php
-                }
-                else{
-                  ?>
-                  <?php echo $eval[$i][10];?>,
-                  <?php
-                }
-              } 
-            ?>
-        ]
-    }]
-});*/
 </script>
 </body>
 </html>

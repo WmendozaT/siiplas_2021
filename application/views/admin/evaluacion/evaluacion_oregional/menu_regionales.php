@@ -25,7 +25,7 @@
 		      width: 90% !important;
 		    }
 		    #mdialTamanio{
-              width: 45% !important;
+              width: 70% !important;
             }
             #mdialTamanio3{
               width: 90% !important;
@@ -217,9 +217,9 @@
         </div>
         <!--  =============== -->   
 
-        <!-- MODAL LISTA DE ACTIVIDADES PRIORIZADOS -->
+        <!-- MODAL CUMPLIMIENTO DE OPERACIONES (GRAFICOS) -->
         <div class="modal fade" id="modal_cumplimiento_grafico" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" id="mdialTamanio3">
+            <div class="modal-dialog" id="mdialTamanio">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>

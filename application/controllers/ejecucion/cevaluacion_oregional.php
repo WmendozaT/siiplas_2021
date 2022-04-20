@@ -315,9 +315,22 @@ class Cevaluacion_oregional extends CI_Controller {
       $data['trimestre']=$this->model_evaluacion->trimestre();
       $data['nro']=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
       $data['eval']=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);      
-      $data['print_evaluacion']='';
+      $data['cabecera']=$this->eval_oregional->cabecera_reporte_grafico($data['regional']);
+      
+      $tabla='';
+      $tabla.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>
+              <ul>';
+                for ($i=1; $i <=$data['nro'] ; $i++) { 
+                  $tabla.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$data['eval'][$i][1].'.'.$data['eval'][$i][2].'.- '.$data['eval'][$i][3].' - <b>'.$data['eval'][$i][5].' %</b></li>';
+                }
+                $tabla.='
+              </ul>
+              <hr>';
+      $data['tabla_detalle']=$tabla;
+
 
       $this->load->view('admin/evaluacion/evaluacion_oregional/reporte_grafico_meta_oregion', $data);
 
     }
+
 }

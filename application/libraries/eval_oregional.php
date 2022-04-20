@@ -129,8 +129,6 @@ class Eval_oregional extends CI_Controller{
           <div class="widget-body">
             <p>
               <h2><b>EVALUACIÓN POA (OPERACIONES) '.strtoupper($departamento[0]['dep_departamento']).' - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>
-              <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp; &nbsp;IMPRIMIR DETALLE DE OPERACIONES</a>
-              <a href="#" data-toggle="modal" data-target="#modal_cumplimiento_grafico" class="btn btn-default" name="'.$dep_id.'" onclick="nivel_cumplimiento_operaciones_grafico('.$dep_id.','.$this->tmes.');" title="NIVEL DE CUMPLIMIENTO DE OPERACIONES (GRAFICO)"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/>&nbsp; &nbsp;DETALLE DE OPERACIONES (GRAFICO)</a>
             </p>
             <hr class="simple">
             <ul id="myTab1" class="nav nav-tabs bordered">';
@@ -164,7 +162,7 @@ class Eval_oregional extends CI_Controller{
               <div '.$active.' id="s'.$nro2.'">
                 <div class="row">
                 <div class="widget-body">
-                  <form action="'.site_url().'/ejecucion/cevaluacion_pei/valida_update_evaluacion_acp" method="post" id="form_eval'.$oge['pog_id'].'" class="smart-form">
+                  <form action="'.site_url().'/ejecucion/cevaluacion_pei/valida_update_evaluacion_acp" method="post" id="form_eval'.$oge['pog_id'].'" class="smart-form" style="background-color:#a4caeb;">
                     <legend><b>A.C.P. '.$oge['og_codigo'].'</b>.- '.$oge['og_objetivo'].'</legend>
                     <input type="hidden" name="pog_id" value='.$oge['pog_id'].'>
                     <fieldset>
@@ -221,7 +219,9 @@ class Eval_oregional extends CI_Controller{
 
                 <form class="smart-form">
                 <legend>
-                  DETALLE DE OPERACIONES (OBJETIVOS REGIONALES)';
+                  <b>DETALLE DE OPERACIONES (OBJETIVOS REGIONALES)</b>
+                  <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>IMPRIMIR DETALLE</b></a>
+                  <a href="#" data-toggle="modal" data-target="#modal_cumplimiento_grafico" class="btn btn-lg btn-default" name="'.$dep_id.'" onclick="nivel_cumplimiento_operaciones_grafico('.$dep_id.','.$this->tmes.');" title="NIVEL DE CUMPLIMIENTO DE OPERACIONES (GRAFICO)" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>DETALLE CUMPLIMIENTO</b></a>';
                 $tabla.='
                 </legend>
                 <fieldset>
@@ -830,10 +830,10 @@ class Eval_oregional extends CI_Controller{
                 <td style="width:80%; height: 5%">
                   <table align="center" border="0" style="width:100%;">
                     <tr style="font-size: 23px;font-family: Arial;">
-                      <td style="height: 32%;"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
+                      <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
                     </tr>
                     <tr style="font-size: 20px;font-family: Arial;">
-                      <td style="height: 5%;">OPERACIONES - '.strtoupper($regional[0]['dep_departamento']).'</td>
+                      <td style="height: 5%; text-align:center">OPERACIONES - '.strtoupper($regional[0]['dep_departamento']).'</td>
                     </tr>
                   </table>
                 </td>
@@ -869,6 +869,50 @@ class Eval_oregional extends CI_Controller{
   }
 
 
+ /*------- CABECERA REPORTE SEGUIMIENTO POA (GRAFICO)------*/
+  function cabecera_reporte_grafico($regional){
+    $tabla='';
+
+    $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+        <tr style="border: solid 0px;">              
+            <td style="width:70%;height: 2%">
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="font-size: 15px;font-family: Arial;">
+                        <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+      </table>
+      <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px black; text-align: center;">
+              <td style="width:10%; text-align:center;">
+              </td>
+              <td style="width:80%; height: 5%">
+                <table align="center" border="0" style="width:100%;">
+                  <tr style="font-size: 23px;font-family: Arial;">
+                    <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
+                  </tr>
+                  <tr style="font-size: 20px;font-family: Arial;">
+                    <td style="height: 5%; text-align:center">OPERACIONES - '.strtoupper($regional[0]['dep_departamento']).'</td>
+                  </tr>
+                </table>
+              </td>
+              <td style="width:10%; text-align:center;">
+              </td>
+          </tr>
+      </table>';
+
+    return $tabla;
+  }
 
 
      //// Lista de OPeraciones Regional form 2
