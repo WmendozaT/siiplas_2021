@@ -55,7 +55,7 @@ class Cevaluacion extends CI_Controller {
         if($this->gestion>2020){
           redirect('seg/seguimiento_poa');
         }
-        else{
+        else{ //// Gestion 2020
           $data['proyectos']=$this->list_pinversion(4);
           $data['operacion']=$this->list_unidades_es(4);
           $this->load->view('admin/evaluacion/operaciones/list_poas_aprobados', $data);

@@ -1,4 +1,5 @@
 <?php
+/*controlador para evaluacion ACP GESTION 2021*/
 class Crep_evalobjetivos extends CI_Controller {  
     public function __construct (){
         parent::__construct();
@@ -26,6 +27,7 @@ class Crep_evalobjetivos extends CI_Controller {
             $this->dist = $this->session->userData('dist');
             $this->dist_tp = $this->session->userData('dist_tp');
             $this->tmes = $this->session->userData('trimestre');
+            $this->trimestre = $this->model_evaluacion->trimestre();
             $this->fun_id = $this->session->userData('fun_id');
             $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
             $this->tp_adm = $this->session->userData('tp_adm');
@@ -37,15 +39,14 @@ class Crep_evalobjetivos extends CI_Controller {
 
     /// MENU EVALUACIÓN POA 
     public function menu_eval_objetivos(){
-      if($this->gestion>2019){
-        $data['menu']=$this->menu(7); //// genera menu
-        $data['regional']=$this->regionales();
-      //  $eval=$this->tabla_evaluacion_meta_institucional();
-        $this->load->view('admin/reportes_cns/repevaluacion_objetivos/rep_menu', $data);
-      }
-      else{
-        redirect('regionales'); // Rediccionando a Evaluacion anterior 2019
-      }
+      $data['menu']=$this->menu(7); //// genera menu
+      $data['titulo']='<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <section id="widget-grid" class="well">
+                                <h2><b>EVALUACIÓN ACCIÓN DE CORTO PLAZO - '.$this->trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2>
+                            </section>
+                        </article>'; //// Titulo
+      $data['regional']=$this->regionales();
+      $this->load->view('admin/reportes_cns/repevaluacion_objetivos/rep_menu', $data);
     }
 
 
@@ -139,7 +140,7 @@ class Crep_evalobjetivos extends CI_Controller {
       return $tabla;
     }
 
-    /*-------- GET CUADRO EVALUACION REGIONALES OBJETIVOS--------*/
+    /*-------- GET CUADRO EVALUACION A.CP.--------*/
     public function get_cuadro_evaluacion_objetivos(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -170,8 +171,9 @@ class Crep_evalobjetivos extends CI_Controller {
 
         /*------- Primer cuadro ------- */
         $data['tipo_regional']='REGIONAL : '.strtoupper($data['regional'][0]['dep_departamento']);
-        $data['nro']=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
-        $data['eval']=$this->tabla_evaluacion_meta($dep_id);
+        $data['nro']=count($this->model_objetivogestion->lista_acp_x_regional($dep_id));
+        //$data['eval']=$this->tabla_evaluacion_meta($dep_id);
+        $data['eval']=$this->matriz_evaluacion_meta_acp_regional($dep_id);
       }
       else{ ///// INSTITUCIONAL
         $data['titulo']=
@@ -187,11 +189,11 @@ class Crep_evalobjetivos extends CI_Controller {
       
     
       /*-------Segundo Cuadro cuadro ------- */
-      $data['matriz']=$this->matriz_gcumplimiento($data['eval'],$data['nro']); /// matriz grado de cumplimiento
+     /* $data['matriz']=$this->matriz_gcumplimiento($data['eval'],$data['nro']); /// matriz grado de cumplimiento
       $data['tabla_pastel']=$this->tabla_gcumplimiento($data['matriz'],1,1);
       $data['tabla_pastel_todo']=$this->tabla_gcumplimiento($data['matriz'],2,1);
 
-      $data['print_gcumplimiento']=$this->print_gcumplimiento($this->tabla_gcumplimiento($data['matriz'],1,2),$this->tabla_gcumplimiento($data['matriz'],2,2));
+      $data['print_gcumplimiento']=$this->print_gcumplimiento($this->tabla_gcumplimiento($data['matriz'],1,2),$this->tabla_gcumplimiento($data['matriz'],2,2));*/
 
       $this->load->view('admin/reportes_cns/repevaluacion_objetivos/reporte_grafico_eval_consolidado_regional_objetivos', $data);
     }
@@ -244,7 +246,27 @@ class Crep_evalobjetivos extends CI_Controller {
     }
 
 
-    /*--- Tabla Evaluacion Meta Regional---*/
+
+    /*--- MATRIZ EVALUACION DE METAS ACP REGIONAL 2022 ---*/
+    public function matriz_evaluacion_meta_acp_regional($dep_id){
+      $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
+      $nro=0;
+      foreach($acp_regional as $row){
+        $suma_mevaluado=$this->get_suma_total_evaluado($row['pog_id']);
+        $nro++;
+        $tab[$nro][0]=$row['pog_id']; /// pog_id
+        $tab[$nro][1]='ACP. '.$row['og_codigo']; /// codigo
+        $tab[$nro][2]=$row['og_objetivo']; /// descripcion
+        $tab[$nro][3]=$row['indi_id']; /// indi id
+        $tab[$nro][4]=$row['prog_fis']; /// meta acp regional
+        $tab[$nro][5]=$suma_mevaluado; /// ejecutado
+        $tab[$nro][6]=0; /// % cumplimiento
+      }
+
+      return $tab;
+    }
+
+    /*--- Tabla Evaluacion Meta acp Regional 2021---*/
     public function tabla_evaluacion_meta($dep_id){
       $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
       $nro=0;
@@ -318,7 +340,7 @@ class Crep_evalobjetivos extends CI_Controller {
                 <hr>
                 <ul>';
                 for ($i=1; $i <=$nro ; $i++) { 
-                  $tabla.='<li '.$font_size.'>'.$eval[$i][3].'.- '.$eval[$i][5].'</li>';
+                  $tabla.='<li '.$font_size.'>'.$eval[$i][2].'</li>';
                 }
                 $tabla.='
                 </ul>
@@ -340,21 +362,21 @@ class Crep_evalobjetivos extends CI_Controller {
                       <tr>
                         <td align=left><b>META</b></td>';
                         for ($i=1; $i <=$nro ; $i++) { 
-                          $tabla.='<td align=right>'.$eval[$i][8].'</td>';
+                          $tabla.='<td align=right>'.$eval[$i][4].'</td>';
                         }
                         $tabla.='
                       </tr>
                       <tr>
                         <td align=left><b>EVAL.</b></td>';
                         for ($i=1; $i <=$nro ; $i++) { 
-                          $tabla.='<td align=right>'.$eval[$i][9].'</td>';
+                          $tabla.='<td align=right>'.$eval[$i][5].'</td>';
                         }
                         $tabla.='
                       </tr>
                       <tr>
                         <td align=left><b>% EFI.</b></td>';
                         for ($i=1; $i <=$nro ; $i++) { 
-                          $tabla.='<td align=right>'.$eval[$i][10].'</td>';
+                          $tabla.='<td align=right>'.$eval[$i][6].'</td>';
                         }
                         $tabla.='
                       </tr>
@@ -369,6 +391,9 @@ class Crep_evalobjetivos extends CI_Controller {
 
     /*--- Imprimir Evaluación Objetivos Regionales ---*/
     public function print_evaluacion_objetivos($nro,$eval){
+
+    }
+    /*public function print_evaluacion_objetivos($nro,$eval){
       $mes = $this->mes_nombre();
       $trimestre=$this->model_evaluacion->trimestre();
       $tr=($this->tmes*3);
@@ -481,12 +506,12 @@ class Crep_evalobjetivos extends CI_Controller {
       </html>
       <?php
       return $tabla;
-    }
+    }*/
     ///==================================
 
     /// ============== SEGUNDO CUADRO
     /*--- Matriz Grado de cumplimiento ---*/
-    public function matriz_gcumplimiento($objetivos,$nro){
+/*    public function matriz_gcumplimiento($objetivos,$nro){
       $cumplido=0;$proceso=0;$ncumplido=0;
       for ($i=1; $i <=$nro ; $i++) {
         if($objetivos[$i][8]==$objetivos[$i][9]){
@@ -509,10 +534,10 @@ class Crep_evalobjetivos extends CI_Controller {
       $matriz[7]=round((($ncumplido/$nro)*100),2); // % no cumplido
 
       return $matriz;
-    }
+    }*/
 
     /*--- Tabla cuadro de evaluacion ---*/
-    public function tabla_gcumplimiento($matriz,$tp_cuadro,$tp_rep){
+   /* public function tabla_gcumplimiento($matriz,$tp_cuadro,$tp_rep){
       $tabla='';
       if($tp_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -577,10 +602,10 @@ class Crep_evalobjetivos extends CI_Controller {
       }
 
       return $tabla;
-    }
+    }*/
 
      /*--- Imprimir Evaluación Objetivos Regionales ---*/
-    public function print_gcumplimiento($tabla_pastel,$tabla_pastel_todo){
+   /* public function print_gcumplimiento($tabla_pastel,$tabla_pastel_todo){
       $mes = $this->mes_nombre();
       $trimestre=$this->model_evaluacion->trimestre();
       $tr=($this->tmes*3);
@@ -661,7 +686,7 @@ class Crep_evalobjetivos extends CI_Controller {
       </html>
       <?php
       return $tabla;
-    }
+    }*/
     /// =============================
 
 

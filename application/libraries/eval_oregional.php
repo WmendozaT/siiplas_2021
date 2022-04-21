@@ -111,7 +111,7 @@ class Eval_oregional extends CI_Controller{
   //// REGIONAL ALINEADO A OBJETIVOS REGIONALES 2020-2021
   public function ver_relacion_ogestion($dep_id){
     $tabla='';
-    $oregionales=$this->model_objetivogestion->lista_oregionales_x_regional($dep_id);
+    $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
     $departamento=$this->model_proyecto->get_departamento($dep_id);
     $trimestre=$this->model_evaluacion->trimestre();
     $date_actual = strtotime(date('Y-m-d')); //// fecha Actual
@@ -133,7 +133,7 @@ class Eval_oregional extends CI_Controller{
             <hr class="simple">
             <ul id="myTab1" class="nav nav-tabs bordered">';
               $nro=0;
-              foreach($oregionales as $row){
+              foreach($acp_regional as $row){
                 $nro++;
                 $activo='';
                 if($nro==1){
@@ -149,7 +149,7 @@ class Eval_oregional extends CI_Controller{
 
             <div id="myTabContent1" class="tab-content padding-10">';
             $nro2=0;
-            foreach($oregionales as $oge){
+            foreach($acp_regional as $oge){
               $lista_ogestion=$this->model_objetivoregion->list_oregional_regional($oge['og_id'],$dep_id);
               $acp_eval_regional=$this->model_evaluacion->get_meta_oregional($oge['pog_id'],$this->tmes);/// datos de evaluacion al trimestre actual
               $nro2++;

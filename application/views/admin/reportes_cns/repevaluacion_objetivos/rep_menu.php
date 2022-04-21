@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
+   <!--  REPORTE PARA LA GESTION 2021 -->
     <head>
         <meta charset="utf-8">
         <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
@@ -16,11 +17,8 @@
         <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <!--estiloh-->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>  
-        <script>
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">  
+<!--         <script>
             function abreVentana(PDF){             
                 var direccion;
                 direccion = '' + PDF;
@@ -40,8 +38,8 @@
         @media print {
             #areaImprimir_eficacia {display:block}
         }
-        </style>
-        <style>
+        </style> -->
+<!--         <style>
          hr{ 
             height:3px;  
             background-color:#1C7366; 
@@ -60,8 +58,8 @@
               padding: 1.4px;
               font-size: 8px;
             }
-        </style>
-        <script type="text/javascript">
+        </style> -->
+        <!-- <script type="text/javascript">
         function printDiv(nombreDiv) {
             var contenido= document.getElementById(nombreDiv).innerHTML;
             var contenidoOriginal= document.body.innerHTML;
@@ -69,33 +67,12 @@
             window.print();
             document.body.innerHTML = contenidoOriginal;
         }
-        </script>
+        </script> -->
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
         <!-- HEADER -->
         <header id="header">
-            <div id="logo-group">
-                    <!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-                </div>
-                <div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-                    <span>
-                        &nbsp;&nbsp;&nbsp; 
-                        <div class="badge bg-color-blue">
-                            <span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-                        </div>
-                    </span>
-                    <div class="project-context hidden-xs">
-                        <span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-                            <i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-                        </span>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
           <!-- pulled right: nav area -->
           <div class="pull-right">
             <!-- collapse menu button -->
@@ -160,7 +137,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                   <li>Reportes POA</li><li>Evaluaci&oacute;n poa</li><li>Objetivos</li>
+                   <li>Reportes POA</li><li>Evaluaci&oacute;n Acp</li><li>Accion de Corto Plazo</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -168,16 +145,8 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <section id="widget-grid" class="well">
-                                <div class="">
-                                    <h4><b>CARGO : </b><?php echo $this->session->userdata("cargo");?></h4>
-                                    <h4><b>REPONSABLE : </b><?php echo $this->session->userdata("user_name");?></h4>
-                                </div>
-                            </section>
-                        </article>
+                        <?php echo $titulo;?>
                     </div>
-                    <h2 class="alert alert-success"><center>EVALUACI&Oacute;N OBJETIVOS - GESTI&Oacute;N <?php echo $this->session->userData('gestion');?></center></h2>
                     <div class="row">
                         <?php echo $regional;?>
                     </div>
@@ -205,9 +174,6 @@
                 document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
             }
         </script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/modules/exporting.js"></script>
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
@@ -227,23 +193,16 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
         <!-- JQUERY MASKED INPUT -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-        <!-- JQUERY SELECT2 INPUT -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/select2/select2.min.js"></script>
         <!-- JQUERY UI + Bootstrap Slider -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
         <!-- FastClick: For mobile devices -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <!-- Demo purpose only -->
-        <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
-        <!-- MAIN APP JS FILE -->
-        <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script type="text/javascript">
             $(function () {
                 $(".enlace").on("click", function (e) {
+
                     id = $(this).attr('name');
                     tp = $(this).attr('id');
                     titulo='Consolidado Regional';

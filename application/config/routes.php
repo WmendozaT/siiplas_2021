@@ -133,7 +133,7 @@ $route['rep/exportar_operaciones_distrital/(:any)'] = 'reportes_cns/exporting_da
 
 //$route['rep/ver_consolidado_operaciones/(:any)'] = 'reportes_cns/exporting_datos/operaciones_nacional/$1'; ///// Exportar Actividades,Operaciones Nacional (Consolidado)
 
-$route['rep/exportar_plantilla_migracion/(:any)'] = 'reportes_cns/exporting_datosmigracion/exportar_planilla_migracion_poa/$1/$2'; ///// Exportar Actividades,Requerimientos hacia plantilla de Migracion 2021
+//$route['rep/exportar_plantilla_migracion/(:any)'] = 'reportes_cns/exporting_datosmigracion/exportar_planilla_migracion_poa/$1/$2'; ///// Exportar Actividades,Requerimientos hacia plantilla de Migracion 2021
 
 
 
@@ -333,7 +333,7 @@ $route['eval/valida_eval_act'] = 'ejecucion/cevaluacion/valida_evaluacion_activi
 $route['eval/valida_meval_act'] = 'ejecucion/cevaluacion/valida_mod_evaluar_actividad';  ///// valida mod Evaluar Actividad
 
 /*---------- EVALUACION DE LA OPERACION 2020 (PROYECTO DE INVERSIÓN) ----------*/
-$route['eval/eval_pinversion/(:any)'] = 'ejecucion/cevaluacion_pi/evaluar_proyectoinversion/$1';  ///// Evaluar Operaciones - Proyecto de Inversión
+//$route['eval/eval_pinversion/(:any)'] = 'ejecucion/cevaluacion_pi/evaluar_proyectoinversion/$1';  ///// Evaluar Operaciones - Proyecto de Inversión
 
 
 /*--- SEGUIMIENTO POA (GASTO CORRIENTE-PROYECTO DE INVERSION 2021) ---*/
@@ -409,11 +409,12 @@ $route['menu_eval_prog'] = 'reporte_evaluacion/crep_evalprogramas/menu_eval_prog
 $route['rep_eval_prog/evaluacion_programas/(:any)'] = 'reporte_evaluacion/crep_evalprogramas/evaluacion_programas/$1/$2';  /// REPORTES GRAFICOS REGIONAL
 
 
-//====== REPORTE EVALUACION OBJETIVOS DE GESTION 2020
+//====== REPORTE EVALUACION OBJETIVOS DE GESTION 2020 - 2021 (Vigente)
 $route['menu_eval_objetivos'] = 'reporte_evalobjetivos/crep_evalobjetivos/menu_eval_objetivos';  /// MENU EVALUACION OBJETIVOS 
 $route['rep_eval_obj/evaluacion_objetivos/(:any)'] = 'reporte_evalobjetivos/crep_evalobjetivos/evaluacion_objetivos/$1';  /// REPORTES GRAFICOS REGIONAL
 
-
+//====== REPORTE EVALUACION A.C.P. 2022
+//$route['menu_eval_acp'] = 'reporte_evalobjetivos/crep_evalobjetivos/menu_eval_objetivos';  /// MENU EVALUACION OBJETIVOS 
 
 /*--------- EJECUCION - CERTIFICACION POA (TUE) 2019 -----------*/
 $route['ejec/menu_cpoa'] = 'ejecucion/cert_poa/menu_certificacion_poa'; //// Menu Tecnico de Unidad Ejecutora 2021

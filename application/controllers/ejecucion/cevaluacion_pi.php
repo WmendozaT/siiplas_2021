@@ -1,5 +1,5 @@
 <?php
-class Cevaluacion_pi extends CI_Controller {
+class Cevaluacion_pii extends CI_Controller {
   public $rol = array('1' => '3','2' => '4');
   public function __construct (){
         parent::__construct();

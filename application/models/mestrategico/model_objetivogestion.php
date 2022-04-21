@@ -346,8 +346,8 @@ class Model_objetivogestion extends CI_Model{
     }
 
 
-    /*----- Lista de Objetivos Regionales por Regional (para evaluacion de Operaciones)-----*/
-    public function lista_oregionales_x_regional($dep_id){
+    /*----- Lista de ACP por regional (para evaluacion de ACP)-----*/
+    public function lista_acp_x_regional($dep_id){
         $sql = 'select opge.*,oge.*
                 from objetivo_gestion oge
                 Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id

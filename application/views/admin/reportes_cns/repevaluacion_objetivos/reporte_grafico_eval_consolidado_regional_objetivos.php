@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+ <!-- REPORTE PARA LA GESTION 2021 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
       <title><?php echo $this->session->userData('sistema');?></title>
@@ -422,12 +423,12 @@ Highcharts.chart('container', {
           for ($i=1; $i <=$nro ; $i++){ 
             if($i==$nro-1){
               ?>
-              '<?php echo $eval[$i][3];?>',
+              '<?php echo $eval[$i][1];?>',
               <?php
             }
             else{
               ?>
-              '<?php echo $eval[$i][3];?>',
+              '<?php echo $eval[$i][1];?>',
               <?php
             }
           } 
@@ -469,12 +470,12 @@ Highcharts.chart('container', {
           for ($i=1; $i <=$nro ; $i++){ 
             if($i==$nro-1){
               ?>
-              <?php echo $eval[$i][10];?>,
+              <?php echo $eval[$i][4];?>,
               <?php
             }
             else{
               ?>
-              <?php echo $eval[$i][10];?>,
+              <?php echo $eval[$i][4];?>,
               <?php
             }
           } 
@@ -483,7 +484,7 @@ Highcharts.chart('container', {
     }]
 });
 
-Highcharts.chart('container_print', {
+/*Highcharts.chart('container_print', {
     chart: {
         type: 'bar'
     },
@@ -558,7 +559,7 @@ Highcharts.chart('container_print', {
           ?>
       ]
     }]
-});
+});*/
 </script>
 </body>
 </html>
