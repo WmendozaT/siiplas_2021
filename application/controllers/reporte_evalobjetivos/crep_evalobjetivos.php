@@ -31,6 +31,7 @@ class Crep_evalobjetivos extends CI_Controller {
             $this->fun_id = $this->session->userData('fun_id');
             $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->load->library('evaluacionacp');
         }
         else{
             redirect('/','refresh');
@@ -40,18 +41,26 @@ class Crep_evalobjetivos extends CI_Controller {
     /// MENU EVALUACIÓN POA 
     public function menu_eval_objetivos(){
       $data['menu']=$this->menu(7); //// genera menu
-      $data['titulo']='<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <section id="widget-grid" class="well">
-                                <h2><b>EVALUACIÓN ACCIÓN DE CORTO PLAZO - '.$this->trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2>
-                            </section>
-                        </article>'; //// Titulo
-      $data['regional']=$this->regionales();
+      $data['regional']=$this->evaluacionacp->listado_regionales();
+      $data['da']=$this->model_proyecto->list_departamentos();
+      $tabla='';
+      $tabla.='<div class="well">
+                <div class="jumbotron">
+                  <h1>Evaluaci&oacute;n A.C.P. '.$this->gestion.'</h1>
+                    <p>
+                      Reporte consolidado de evaluaci&oacute;n de Acciones de Corto Plazo acumulado al '.$this->trimestre[0]['trm_descripcion'].' de '.$this->gestion.' a nivel Institucional, Regional.
+                    </p>
+                </div>
+              </div>';
+
+      $data['titulo_modulo']=$tabla;
+
       $this->load->view('admin/reportes_cns/repevaluacion_objetivos/rep_menu', $data);
     }
 
 
     //// LISTA DE REGIONALES
-    public function regionales(){
+   /* public function regionales(){
       $regiones=$this->model_evalinstitucional->regiones();
       $nro=0;
       $tabla ='';
@@ -138,15 +147,15 @@ class Crep_evalobjetivos extends CI_Controller {
             <div id="content1"></div>
           </article>';
       return $tabla;
-    }
+    }*/
 
     /*-------- GET CUADRO EVALUACION A.CP.--------*/
     public function get_cuadro_evaluacion_objetivos(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
-        $id = $this->security->xss_clean($post['id']); // dep id, dist id , 0: Nacional
+        $dep_id = $this->security->xss_clean($post['dep_id']); // dep id, 0: Nacional
         
-        $tabla='<iframe id="ipdf" width="100%" height="1000px;" src="'.base_url().'index.php/rep_eval_obj/evaluacion_objetivos/'.$id.'"></iframe>';
+        $tabla='<center><iframe id="ipdf" width="100%" height="800px;" src="'.base_url().'index.php/rep_eval_obj/evaluacion_objetivos/'.$dep_id.'"></iframe></center>';
 
         $result = array(
           'respuesta' => 'correcto',
@@ -159,33 +168,36 @@ class Crep_evalobjetivos extends CI_Controller {
       }
     }
 
-    //// EVALUACIÓN OBJETIVOS - REGIONAL -DISTRITAL  - IFRAME
+    //// EVALUACIÓN ACP REGIONAL INSTITUCIONAL - IFRAME
     public function evaluacion_objetivos($id){
       $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
       $dep_id=$id;
       if($id!=0){ //// REGIONAL
-        $data['regional']=$this->model_proyecto->get_departamento($dep_id);
-        $data['titulo']=
+        $regional=$this->model_proyecto->get_departamento($dep_id);
+        $data['titulo_graf']=strtoupper($regional[0]['dep_departamento']);
+        $data['cabecera']=$this->evaluacionacp->cabecera_reporte_grafico($data['titulo_graf']);
+/*        $data['titulo']=
         '<h1><b>EVALUACI&Oacute;N OBJETIVOS -  REGIONAL '.strtoupper($data['regional'][0]['dep_departamento']).'</b></h1>
-        <h2><b>EVALUACI&Oacute;N OBJETIVOS AL '.$data['trimestre'][0]['trm_descripcion'].'</b></h2>';
+        <h2><b>EVALUACI&Oacute;N OBJETIVOS AL '.$data['trimestre'][0]['trm_descripcion'].'</b></h2>';*/
 
         /*------- Primer cuadro ------- */
-        $data['tipo_regional']='REGIONAL : '.strtoupper($data['regional'][0]['dep_departamento']);
+      //  $data['tipo_regional']='REGIONAL : '.strtoupper($data['regional'][0]['dep_departamento']);
         $data['nro']=count($this->model_objetivogestion->lista_acp_x_regional($dep_id));
         //$data['eval']=$this->tabla_evaluacion_meta($dep_id);
         $data['eval']=$this->matriz_evaluacion_meta_acp_regional($dep_id);
       }
       else{ ///// INSTITUCIONAL
-        $data['titulo']=
+        $data['titulo_graf']='INSTITUCIONAL';
+/*        $data['titulo']=
         '<h1><b>EVALUACI&Oacute;N OBJETIVOS - INSTITUCIONAL</b></h1>
-        <h2><b>EVALUACI&Oacute;N OBJETIVOS AL '.$data['trimestre'][0]['trm_descripcion'].'</b></h2>';
+        <h2><b>EVALUACI&Oacute;N OBJETIVOS AL '.$data['trimestre'][0]['trm_descripcion'].'</b></h2>';*/
         $data['tipo_regional']='INSTITUCIONAL';
-        $data['nro']=count($this->model_objetivogestion->list_objetivosgestion_general());
+      //  $data['nro']=count($this->model_objetivogestion->list_objetivosgestion_general());
         $data['eval']=$this->tabla_evaluacion_meta_institucional();
       }
       
       $data['detalle']=$this->detalle_objetivos($data['eval'],$data['nro'],1);
-      $data['print_objetivos']=$this->print_evaluacion_objetivos($data['nro'],$data['eval']);
+    //  $data['print_objetivos']=$this->print_evaluacion_objetivos($data['nro'],$data['eval']);
       
     
       /*-------Segundo Cuadro cuadro ------- */
@@ -255,19 +267,23 @@ class Crep_evalobjetivos extends CI_Controller {
         $suma_mevaluado=$this->get_suma_total_evaluado($row['pog_id']);
         $nro++;
         $tab[$nro][0]=$row['pog_id']; /// pog_id
-        $tab[$nro][1]='ACP. '.$row['og_codigo']; /// codigo
+        $tab[$nro][1]='<b>ACP. '.$row['og_codigo'].'</b>'; /// codigo
         $tab[$nro][2]=$row['og_objetivo']; /// descripcion
         $tab[$nro][3]=$row['indi_id']; /// indi id
-        $tab[$nro][4]=$row['prog_fis']; /// meta acp regional
+        $tab[$nro][4]=round($row['prog_fis'],2); /// meta acp regional
         $tab[$nro][5]=$suma_mevaluado; /// ejecutado
+
         $tab[$nro][6]=0; /// % cumplimiento
+        if($tab[$nro][4]!=0){
+          $tab[$nro][6]=round((($tab[$nro][5]/$tab[$nro][4])*100),2);
+        }
       }
 
       return $tab;
     }
 
     /*--- Tabla Evaluacion Meta acp Regional 2021---*/
-    public function tabla_evaluacion_meta($dep_id){
+  /*  public function tabla_evaluacion_meta($dep_id){
       $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
       $nro=0;
       foreach($lista_ogestion as $row){
@@ -306,7 +322,7 @@ class Crep_evalobjetivos extends CI_Controller {
       }
 
       return $tab;
-    }
+    }*/
 
     /*--- GET SUMA TOTAL EVALUADO ---*/
     public function get_suma_total_evaluado($pog_id){
@@ -334,57 +350,40 @@ class Crep_evalobjetivos extends CI_Controller {
       }
 
       $tabla.='
-          <table>
-            <tr>
-              <td>
-                <hr>
-                <ul>';
+          <table '.$tab.'>
+            <thead>
+              <tr align=center bgcolor="#f1eeee">
+                <th></th>';
                 for ($i=1; $i <=$nro ; $i++) { 
-                  $tabla.='<li '.$font_size.'>'.$eval[$i][2].'</li>';
+                  $tabla.='<th><b>'.$eval[$i][1].'</b></th>';
                 }
                 $tabla.='
-                </ul>
-              </td>
-            </tr>
-            <tr>
-              <td><hr>
-                <table '.$tab.'>
-                    <thead>
-                      <tr align=center bgcolor="#f1eeee">
-                        <th></th>';
-                        for ($i=1; $i <=$nro ; $i++) { 
-                          $tabla.='<th><b>'.$eval[$i][3].'</b></th>';
-                        }
-                        $tabla.='
-                        </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td align=left><b>META</b></td>';
-                        for ($i=1; $i <=$nro ; $i++) { 
-                          $tabla.='<td align=right>'.$eval[$i][4].'</td>';
-                        }
-                        $tabla.='
-                      </tr>
-                      <tr>
-                        <td align=left><b>EVAL.</b></td>';
-                        for ($i=1; $i <=$nro ; $i++) { 
-                          $tabla.='<td align=right>'.$eval[$i][5].'</td>';
-                        }
-                        $tabla.='
-                      </tr>
-                      <tr>
-                        <td align=left><b>% EFI.</b></td>';
-                        for ($i=1; $i <=$nro ; $i++) { 
-                          $tabla.='<td align=right>'.$eval[$i][6].'</td>';
-                        }
-                        $tabla.='
-                      </tr>
-                    </tbody>
-                </table>
-              </td>
-            </tr>
-          </table>';
+                </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align=left><b>META</b></td>';
+                for ($i=1; $i <=$nro ; $i++) { 
+                  $tabla.='<td align=right>'.$eval[$i][4].'</td>';
+                }
+                $tabla.='
+              </tr>
+              <tr>
+                <td align=left><b>EVAL.</b></td>';
+                for ($i=1; $i <=$nro ; $i++) { 
+                  $tabla.='<td align=right>'.$eval[$i][5].'</td>';
+                }
+                $tabla.='
+              </tr>
+              <tr>
+                <td align=left><b>% EFI.</b></td>';
+                for ($i=1; $i <=$nro ; $i++) { 
+                  $tabla.='<td align=right>'.$eval[$i][6].'</td>';
+                }
+                $tabla.='
+              </tr>
+            </tbody>
+        </table>';
 
       return $tabla;
     }

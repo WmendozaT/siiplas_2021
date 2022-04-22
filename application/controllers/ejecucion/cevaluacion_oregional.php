@@ -91,13 +91,6 @@ class Cevaluacion_oregional extends CI_Controller {
 
         $this->eval_oregional->create_temporalidad_oregional($dep_id); /// creando la temporalidad de los Objetivos REgioanles
 
-        $tabla='';
-/*        $tabla.='
-          <hr><h3><b>&nbsp;&nbsp;OPERACIONES '.$this->gestion.': REGIONAL '.strtoupper($departamento[0]['dep_departamento']).'</b></h3><hr>
-          <div class="alert alert-success alert-block" align=center>
-            <h2> LA TEMPORALIDAD DE OBJETIVOS DE GESTIÓN FUE ACTUALIZADO EXITOSAMENTE !!!</2> 
-          </div>';*/
-
           $result = array(
             'respuesta' => 'correcto',
             'tabla'=>$this->eval_oregional->ver_relacion_ogestion($dep_id),

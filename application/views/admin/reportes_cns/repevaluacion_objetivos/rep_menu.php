@@ -17,57 +17,7 @@
         <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <!--estiloh-->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">  
-<!--         <script>
-            function abreVentana(PDF){             
-                var direccion;
-                direccion = '' + PDF;
-                window.open(direccion, "Reporte de Evaluacion" , "width=800,height=650,scrollbars=SI") ;                                                                 
-            }                                            
-        </script>
-        <meta name="viewport" content="width=device-width">
-        <style>
-            #areaImprimir{display:none}
-        @media print {
-            #areaImprimir {display:block}
-        }
-            #areaImprimir_eval{display:none}
-        @media print {
-            #areaImprimir_eval {display:block}
-        }
-        @media print {
-            #areaImprimir_eficacia {display:block}
-        }
-        </style> -->
-<!--         <style>
-         hr{ 
-            height:3px;  
-            background-color:#1C7366; 
-            }
-            table{font-size: 9px;
-            width: 100%;
-            max-width:1550px;;
-            overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              font-size: 8px;
-              text-align: center;
-            }
-            td{
-              padding: 1.4px;
-              font-size: 8px;
-            }
-        </style> -->
-        <!-- <script type="text/javascript">
-        function printDiv(nombreDiv) {
-            var contenido= document.getElementById(nombreDiv).innerHTML;
-            var contenidoOriginal= document.body.innerHTML;
-            document.body.innerHTML = contenido;
-            window.print();
-            document.body.innerHTML = contenidoOriginal;
-        }
-        </script> -->
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -137,20 +87,18 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                   <li>Reportes POA</li><li>Evaluaci&oacute;n Acp</li><li>Accion de Corto Plazo</li>
+                   <li>Reportes POA</li><li>Evaluaci&oacute;n A.c.p.</li><li>Accion de Corto Plazo</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
                 <div id="content">
-                <!-- widget grid -->
-                <section id="widget-grid" class="">
-                    <div class="row">
-                        <?php echo $titulo;?>
-                    </div>
-                    <div class="row">
-                        <?php echo $regional;?>
-                    </div>
-                </section>
+                    <section id="widget-grid" class="">
+                        <div class="row">
+                            <?php echo $regional;?>
+                        </div>
+                        
+                        <div id="lista_consolidado"><?php echo $titulo_modulo;?></div>
+                    </section>
             </div>
             <!-- END MAIN CONTENT -->
         </div>
@@ -195,11 +143,10 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
         <!-- JQUERY UI + Bootstrap Slider -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+        <script src="<?php echo base_url(); ?>mis_js/seguimientoacp/reporte_evaluacionacp.js"></script> 
         <!-- browser msie issue fix -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
-        <!-- FastClick: For mobile devices -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
-        <script type="text/javascript">
+        <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
+       <!--  <script type="text/javascript">
             $(function () {
                 $(".enlace").on("click", function (e) {
 
@@ -247,6 +194,6 @@
                   
                 });
             });
-        </script>
+        </script> -->
     </body>
 </html>
