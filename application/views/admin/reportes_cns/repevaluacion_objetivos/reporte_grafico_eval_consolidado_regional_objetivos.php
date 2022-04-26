@@ -13,15 +13,6 @@
     <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
     <!--estiloh-->
     <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
-<!--     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" /> -->
-<!--     <script type="text/javascript">
-      function abreVentana_eficiencia(PDF){             
-          var direccion;
-          direccion = '' + PDF;
-          window.open(direccion, "Cuadro " , "width=700,height=600,scrollbars=NO") ; 
-      }
-    </script> -->
     <style type="text/css">
       table{font-size: 9.5px;
         width: 100%;
@@ -34,15 +25,6 @@
         font-size: 9.5px;
       }
     </style>
-   <!--  <script type="text/javascript">
-        function printDiv(nombreDiv) {
-            var contenido= document.getElementById(nombreDiv).innerHTML;
-            var contenidoOriginal= document.body.innerHTML;
-            document.body.innerHTML = contenido;
-            window.print();
-            document.body.innerHTML = contenidoOriginal;
-        }
-    </script> -->
 <body>
 
 <div id="content">
@@ -76,13 +58,22 @@
                             <!-- content -->
                             <div id="myTabContent" class="tab-content">
                                 <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="CUADRO DE EVALUACI&Oacute;N ">
-                                  <div id="cabecera"><?php echo $cabecera;?></div>
-                                  <div id="container" style="width: 1000px; height: 750px; margin: 0 auto"></div>
-                                  <?php echo $detalle;?>
+                                  <div id="cabecera" style="display: none"><?php echo $cabecera;?></div>
+                                  <div id="Evaluacion">
+                                    <div id="container" style="width: 1000px; height: 750px; margin: 0 auto"></div>
+                                  </div>
+                                  <?php echo $tabla;?>
+                                  <div id="detalle_impresion" style="display: none">
+                                    <?php echo $detalle_acp;?>
+                                  </div>
+                                  
+                                  <div align="right">
+                                    <button id="btnImprimir_evaluacionacp" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="40" HEIGHT="40"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  </div>
                                 </div>
                                 <!-- end s1 tab pane -->
                                 
-                                <div class="tab-pane fade" id="s2" title="CUADRO EVALUACIÓN DE OPERACIONES - DISTRITAL">
+                                <div class="tab-pane fade" id="s2" title="CUADRO EVALUACIÓN A.C.P.">
                                     <hr>
                                     <div class="row">
                                       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -90,12 +81,12 @@
                                             <table class="change_order_items" border=1>
                                               <tr>
                                                 <td>
-                                                <div id="pastel" style="width: 600px; height: 350px; margin: 0 auto"></div>
+                                                  <div id="pastel" style="width: 600px; height: 350px; margin: 0 auto"></div>
                                                 </td>
                                               </tr>
                                               <tr>
                                                 <td>
-                                                  <?php echo $tabla_pastel;?>
+                                                 <?php echo $tabla_pastel;?>
                                                 </td>
                                               </tr>
                                             </table>
@@ -144,8 +135,43 @@ if (!window.jQuery.ui) {
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript">
+  //// Evaluacion ACP
+  function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
 
-<!-- <script type="text/javascript">
+    var ventana = window.open('Evaluacion A.C.P. ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EVALUACION A.C.P.</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
+
+
+  document.querySelector("#btnImprimir_evaluacionacp").addEventListener("click", function() {
+    var grafico = document.querySelector("#Evaluacion");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    var eficacia = '';
+    document.getElementById("detalle_impresion").style.display = 'block';
+    var tabla = document.querySelector("#detalle_impresion");
+    imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("detalle_impresion").style.display = 'none';
+  });
+</script>
+<script type="text/javascript">
     $(document).ready(function() {  
        Highcharts.chart('pastel', {
         chart: {
@@ -175,17 +201,17 @@ if (!window.jQuery.ui) {
         },
         series: [{
             type: 'pie',
-            name: 'Objetivos',
+            name: 'A.C.P.',
             data: [
               {
-                name: 'NO CUMPLIDO : <?php echo ($matriz[6]+$matriz[7]);?>%',
-                y: <?php echo ($matriz[6]+$matriz[7]);?>,
+                name: 'NO CUMPLIDO : <?php echo ($matriz_pastel[6]+$matriz_pastel[7]);?>%',
+                y: <?php echo ($matriz_pastel[6]+$matriz_pastel[7]);?>,
                 color: '#f44336',
               },
 
               {
-                name: 'CUMPLIDO : <?php echo $matriz[5];?>%',
-                y: <?php echo $matriz[5];?>,
+                name: 'CUMPLIDO : <?php echo $matriz_pastel[5];?>%',
+                y: <?php echo $matriz_pastel[5];?>,
                 color: '#2CC8DC',
                 sliced: true,
                 selected: true
@@ -224,23 +250,23 @@ if (!window.jQuery.ui) {
         },
         series: [{
             type: 'pie',
-            name: 'Objetivos',
+            name: 'A.C.P.',
             data: [
               {
-                name: 'NO CUMPLIDO : <?php echo $matriz[7];?> %',
-                y: <?php echo $matriz[7];?>,
+                name: 'NO CUMPLIDO : <?php echo $matriz_pastel[7];?> %',
+                y: <?php echo $matriz_pastel[7];?>,
                 color: '#f98178',
               },
 
               {
-                name: 'EN PROCESO : <?php echo $matriz[6];?> %',
-                y: <?php echo $matriz[6];?>,
+                name: 'EN PROCESO : <?php echo $matriz_pastel[6];?> %',
+                y: <?php echo $matriz_pastel[6];?>,
                 color: '#f5eea3',
               },
 
               {
-                name: 'CUMPLIDO : <?php echo $matriz[5];?> %',
-                y: <?php echo $matriz[5];?>,
+                name: 'CUMPLIDO : <?php echo $matriz_pastel[5];?> %',
+                y: <?php echo $matriz_pastel[5];?>,
                 color: '#2CC8DC',
                 sliced: true,
                 selected: true
@@ -249,113 +275,8 @@ if (!window.jQuery.ui) {
         }]
       });
     });
-</script> -->
+</script>
 
-<!-- <script type="text/javascript">
-    $(document).ready(function() {  
-       Highcharts.chart('pastel_print', {
-        chart: {
-            type: 'pie',
-            options3d: {
-              enabled: true,
-              alpha: 45,
-              beta: 0
-            }
-        },
-        title: {
-            text: '<?php echo 'EVALUACIÓN '.$trimestre[0]['trm_descripcion'];?>'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              depth: 35,
-              dataLabels: {
-                  enabled: true,
-                  format: '{point.name}'
-              }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Objetivos',
-            data: [
-              {
-                name: 'NO CUMPLIDO : <?php echo ($matriz[6]+$matriz[7]);?>%',
-                y: <?php echo ($matriz[6]+$matriz[7]);?>,
-                color: '#f44336',
-              },
-
-              {
-                name: 'CUMPLIDO : <?php echo $matriz[5];?>%',
-                y: <?php echo $matriz[5];?>,
-                color: '#2CC8DC',
-                sliced: true,
-                selected: true
-              }
-            ]
-        }]
-      });
-    });
-
-    $(document).ready(function() {  
-       Highcharts.chart('pastel_todos_print', {
-        chart: {
-            type: 'pie',
-            options3d: {
-                enabled: true,
-                alpha: 45,
-                beta: 0
-            }
-        },
-        title: {
-            text: '<?php echo 'EVALUACIÓN '.$trimestre[0]['trm_descripcion'];?>'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                depth: 35,
-                dataLabels: {
-                    enabled: true,
-                    format: '{point.name}'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Objetivos',
-            data: [
-              {
-                name: 'NO CUMPLIDO : <?php echo $matriz[7];?> %',
-                y: <?php echo $matriz[7];?>,
-                color: '#f98178',
-              },
-
-              {
-                name: 'EN PROCESO : <?php echo $matriz[6];?> %',
-                y: <?php echo $matriz[6];?>,
-                color: '#f5eea3',
-              },
-
-              {
-                name: 'CUMPLIDO : <?php echo $matriz[5];?> %',
-                y: <?php echo $matriz[5];?>,
-                color: '#2CC8DC',
-                sliced: true,
-                selected: true
-              }
-            ]
-        }]
-      });
-    });
-</script> -->
 
 <script type="text/javascript">
 Highcharts.chart('container', {
@@ -400,7 +321,7 @@ Highcharts.chart('container', {
       }
     },
     tooltip: {
-        valueSuffix: ' %'
+        valueSuffix: '%'
     },
     plotOptions: {
       bar: {
@@ -415,7 +336,7 @@ Highcharts.chart('container', {
     },
 
     series: [{
-      name: 'EFICACIA %',
+      name: 'CUMPLIMIENTO %',
       data: [
         <?php 
           for ($i=1; $i <=$nro ; $i++){ 
@@ -435,82 +356,6 @@ Highcharts.chart('container', {
     }]
 });
 
-/*Highcharts.chart('container_print', {
-    chart: {
-        type: 'bar'
-    },
-    title: {
-        text: '<?php echo $tipo_regional;?>'
-    },
-    subtitle: {
-        text: 'OBJETIVOS <?php echo $trimestre[0]['trm_descripcion']; ?>'
-    },
-    xAxis: {
-      categories: [
-        <?php 
-          for ($i=1; $i <=$nro ; $i++){ 
-            if($i==$nro-1){
-              ?>
-              '<?php echo $eval[$i][3];?>',
-              <?php
-            }
-            else{
-              ?>
-              '<?php echo $eval[$i][3];?>',
-              <?php
-            }
-          } 
-        ?>
-      ],
-      title: {
-          text: null
-      }
-    },
-    yAxis: {
-      min: 0,
-      title: {
-          text: 'Eficacia (%)',
-          align: 'high'
-      },
-      labels: {
-          overflow: 'Operaciones'
-      }
-    },
-    tooltip: {
-        valueSuffix: ' %'
-    },
-    plotOptions: {
-      bar: {
-          dataLabels: {
-              enabled: true
-          }
-      }
-    },
-
-    credits: {
-        enabled: false
-    },
-
-    series: [{
-      name: 'EFICACIA %',
-      data: [
-          <?php 
-            for ($i=1; $i <=$nro ; $i++){ 
-              if($i==$nro-1){
-                ?>
-                <?php echo $eval[$i][10];?>,
-                <?php
-              }
-              else{
-                ?>
-                <?php echo $eval[$i][10];?>,
-                <?php
-              }
-            } 
-          ?>
-      ]
-    }]
-});*/
 </script>
 </body>
 </html>

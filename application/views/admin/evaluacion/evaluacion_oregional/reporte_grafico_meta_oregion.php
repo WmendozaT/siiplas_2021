@@ -34,40 +34,40 @@ if (!window.jQuery.ui) {
 <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
 
 <script type="text/javascript">
-          //// Seguimiento POA
-    function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
+  //// Seguimiento POA
+  function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
 
-      var ventana = window.open('Seguimiento Evaluacion POA ', 'PRINT', 'height=800,width=1000');
-      ventana.document.write('<html><head><title>EVALUACION POA</title>');
-      ventana.document.write('</head><body>');
-      ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
-      ventana.document.write(cabecera.innerHTML);
-      ventana.document.write('<hr>');
-      ventana.document.write(grafico.innerHTML);
-      ventana.document.write('<hr>');
-      ventana.document.write(tabla.innerHTML);
-      ventana.document.write('</body></html>');
-      ventana.document.close();
-      ventana.focus();
-      ventana.onload = function() {
-        ventana.print();
-        ventana.close();
-      };
-      return true;
-    }
+    var ventana = window.open('Seguimiento Evaluacion POA ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EVALUACION POA</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
 
 
-    document.querySelector("#btnImprimir_seguimiento").addEventListener("click", function() {
-      var grafico = document.querySelector("#Seguimiento");
-      document.getElementById("cabecera").style.display = 'block';
-      var cabecera = document.querySelector("#cabecera");
-      var eficacia = '';
-      document.getElementById("tabla_componente_impresion").style.display = 'block';
-      var tabla = document.querySelector("#tabla_componente_impresion");
-      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
-      document.getElementById("cabecera").style.display = 'none';
-      document.getElementById("tabla_componente_impresion").style.display = 'none';
-    });
+  document.querySelector("#btnImprimir_seguimiento").addEventListener("click", function() {
+    var grafico = document.querySelector("#Seguimiento");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    var eficacia = '';
+    document.getElementById("tabla_componente_impresion").style.display = 'block';
+    var tabla = document.querySelector("#tabla_componente_impresion");
+    imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("tabla_componente_impresion").style.display = 'none';
+  });
 </script>
 
 <script type="text/javascript">

@@ -65,7 +65,6 @@ class Crep_seguimientopoa extends CI_Controller {
      
       $data['titulo_modulo']=$tabla;
 
-
       $this->load->view('admin/reportes_cns/seguimiento_poa/menu_seguimiento_poa', $data);
     }
 
@@ -237,7 +236,7 @@ class Crep_seguimientopoa extends CI_Controller {
           <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
           <ul class="dropdown-menu">';
             foreach($meses as $rowm){
-            if($rowm['m_id']<=ltrim(date("m"), "0")){
+            if($rowm['m_id']<=$this->verif_mes[1]){
               $tabla.='
               <li>
                 <a href="'.site_url("").'/rep/get_reporte_seguimientopoa/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'/'.$rowm['m_id'].'" target="_blank">REPORTE SEGUIMIENTO POA - '.$rowm['m_descripcion'].'</a>
