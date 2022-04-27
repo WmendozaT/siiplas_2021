@@ -121,6 +121,7 @@ $(function() {
         },
         mverificacion: { //// medio de verificacion
           required: true,
+          minlength : 50,
         }
       },
       messages: {

@@ -309,6 +309,8 @@ class Cevaluacion_oregional extends CI_Controller {
       $data['nro']=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
       $data['eval']=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);      
       $data['cabecera']=$this->eval_oregional->cabecera_reporte_grafico($data['regional']);
+      $data['calificacion']=$this->eval_oregional->calificacion_total_form2_regional($dep_id);
+
       
       $tabla='';
       $tabla.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>

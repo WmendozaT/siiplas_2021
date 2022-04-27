@@ -527,4 +527,45 @@ class Model_objetivoregion extends CI_Model{
 
 
 
+    /*-- OBTIENE LA SUMATORIA TOTAL PROGRAMADO FORMULARIO 2 A LA GESTION POR REGIONALES --*/
+    public function get_suma_total_prog_form2_regional($dep_id){
+        $sql = '
+            select opge.dep_id,opge.g_id,SUM(temprog.pg_fis) programado_total
+                from temp_trm_prog_objetivos_regionales temprog
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
+                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+                where oreg.estado!=\'3\' and opge.dep_id='.$dep_id.'
+                group by opge.dep_id,opge.g_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-- OBTIENE LA SUMATORIA PROGRAMADO FORMULARIO 2 AL TRIMESTRE POR REGIONALES --*/
+    public function get_suma_trimestre_prog_form2_regional($dep_id,$trimestre){
+        $sql = '
+            select opge.dep_id,temprog.trm_id,opge.g_id,SUM(temprog.pg_fis) prog
+                from temp_trm_prog_objetivos_regionales temprog
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
+                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+                where oreg.estado!=\'3\' and opge.dep_id='.$dep_id.' and temprog.trm_id='.$trimestre.'
+                group by opge.dep_id,temprog.trm_id,opge.g_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-- OBTIENE LA SUMATORIA EJECUTADO FORMULARIO 2 AL TRIMESTRE POR REGIONALES --*/
+    public function get_suma_trimestre_ejec_form2_regional($dep_id,$trimestre){
+        $sql = '
+            select opge.dep_id,temejec.trm_id,opge.g_id,SUM(temejec.ejec_fis) ejec
+                from temp_trm_ejec_objetivos_regionales temejec
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temejec.or_id
+                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+                where oreg.estado!=\'3\' and opge.dep_id='.$dep_id.' and temejec.trm_id='.$trimestre.'
+                group by opge.dep_id,temejec.trm_id,opge.g_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }

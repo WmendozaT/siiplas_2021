@@ -12,7 +12,10 @@
     <?php echo $tabla_detalle;?>
 </div>
 <div id="Seguimiento">
+  <?php echo $calificacion;?>
+  <hr>
     <div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>
+
 </div>
 <div align="right">
     <button id="btnImprimir_seguimiento" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO</b></button>

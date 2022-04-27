@@ -128,7 +128,7 @@ class Eval_oregional extends CI_Controller{
           </div>
           <div class="widget-body">
             <p>
-              <h2><b>EVALUACIÓN POA (OPERACIONES) '.strtoupper($departamento[0]['dep_departamento']).' - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>
+              <h2><b>EVALUACIÓN A.C.P. '.strtoupper($departamento[0]['dep_departamento']).' - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>
             </p>
             <hr class="simple">
             <ul id="myTab1" class="nav nav-tabs bordered">';
@@ -219,11 +219,14 @@ class Eval_oregional extends CI_Controller{
 
                 <form class="smart-form">
                 <legend>
-                  <b>DETALLE DE OPERACIONES (OBJETIVOS REGIONALES)</b>
-                  <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>IMPRIMIR DETALLE</b></a>
-                  <a href="#" data-toggle="modal" data-target="#modal_cumplimiento_grafico" class="btn btn-lg btn-default" name="'.$dep_id.'" onclick="nivel_cumplimiento_operaciones_grafico('.$dep_id.','.$this->tmes.');" title="NIVEL DE CUMPLIMIENTO DE OPERACIONES (GRAFICO)" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>DETALLE CUMPLIMIENTO</b></a>';
+                  <b>DETALLE EVALUACIÓN DE OPERACIONES '.strtoupper($departamento[0]['dep_departamento']).'</b>:
+                  '.$this->calificacion_total_form2_regional($dep_id).'';
                 $tabla.='
                 </legend>
+                  <br>
+                  <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>IMPRIMIR DETALLE</b></a>
+                  <a href="#" data-toggle="modal" data-target="#modal_cumplimiento_grafico" class="btn btn-lg btn-default" name="'.$dep_id.'" onclick="nivel_cumplimiento_operaciones_grafico('.$dep_id.','.$this->tmes.');" title="NIVEL DE CUMPLIMIENTO DE OPERACIONES (GRAFICO)" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>DETALLE CUMPLIMIENTO</b></a>
+
                 <fieldset>
                 <table class="table table-bordered" border=0.2 style="width:100%;" id="datos">
                   <thead>
@@ -323,6 +326,64 @@ class Eval_oregional extends CI_Controller{
 
       return $tabla;
     }
+
+
+    /*--- PARAMETRO DE CALIFICACION OPERACIONES REGIONAL ---*/
+    public function calificacion_total_form2_regional($dep_id){
+      $prog_trimestre=0; $ejec_trimestre=0;$prog_total_form2=0;
+
+      $prog_total=$this->model_objetivoregion->get_suma_total_prog_form2_regional($dep_id);
+      if(count($prog_total)!=0){
+        $prog_total_form2=$prog_total[0]['programado_total'];
+      }
+
+      for ($i=1; $i <=$this->tmes; $i++) { 
+        $prog=$this->model_objetivoregion->get_suma_trimestre_prog_form2_regional($dep_id,$i);
+        if(count($prog)!=0){
+          $prog_trimestre=$prog_trimestre+$prog[0]['prog'];
+        }
+
+        $ejec=$this->model_objetivoregion->get_suma_trimestre_ejec_form2_regional($dep_id,$i);
+        if(count($ejec)!=0){
+          $ejec_trimestre=$ejec_trimestre+$ejec[0]['ejec'];
+        }
+      }
+
+      $calif[1]=$prog_trimestre; /// programado trimestral
+      $calif[2]=$ejec_trimestre; /// ejecutado trimestral
+      $calif[3]=$prog_total_form2; /// total programado Gestion
+      $calif[4]=0;
+
+      if($prog_total_form2!=0){
+        $calif[4]=round((($calif[2]/$prog_total_form2)*100),2);
+      }
+
+
+      $calificacion='';$resp='';
+      $valor=0;$color='';
+
+      if($calif[4]>0 & $calif[4]<=50){
+        $resp='<b>INSATISFACTORIO</b>';
+        $color='#f95b4f';
+      }
+      elseif($calif[4]>50 & $calif[4]<=75){
+       $resp='<b>REGULAR</b>';
+       $color='#edd094';
+      }
+      elseif($calif[4]>75 & $calif[4]<=99){
+       $resp='<b>BUENO</b>';
+       $color='#83bad1';
+      }
+      elseif($calif[4]==100){
+       $resp='<b>OPTIMO</b>';
+       $color='#4caf50';
+      }
+
+      $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size="7px">'.$calif[4].'%</font><br>'.$resp.'</center></div>';
+      return $calificacion;
+    }
+
+
 
 
 
@@ -942,7 +1003,7 @@ class Eval_oregional extends CI_Controller{
         </tr>
       </thead>
       <tbody>';
-    $nro=0;$monto_total=0;
+    $nro=0;$monto_total=0; $suma1=0;
     foreach($lista_ogestion as $row){
       $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
       $nro++;
