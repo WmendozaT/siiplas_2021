@@ -216,10 +216,10 @@ class Eval_oregional extends CI_Controller{
                     </div>
                   </form>
                 </div>  
-
+                <hr style="border-top: 3px double #8c8b8b">
                 <form class="smart-form">
                 <legend>
-                  <b>DETALLE EVALUACIÓN DE OPERACIONES '.strtoupper($departamento[0]['dep_departamento']).'</b>:
+                  <b>DETALLE EVALUACIÓN DE OPERACIONES - '.strtoupper($departamento[0]['dep_departamento']).'</b>:
                   '.$this->calificacion_total_form2_regional($dep_id).'';
                 $tabla.='
                 </legend>
@@ -264,6 +264,7 @@ class Eval_oregional extends CI_Controller{
 
                     $color='';$grafico='';
                     $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+                    
                     $boton_ajustar_apriorizados='
                         <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
                         <br>AJUSTAR ALINEACIÓN</center>';
@@ -275,7 +276,6 @@ class Eval_oregional extends CI_Controller{
                       else{
                         $meta_priorizado=round($metas_prior[0]['nro'],2);
                       }
-
 
                       if(round($row['or_meta'],2)==$meta_priorizado){
                         $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.$meta_priorizado.''.$meta.'</b></div>';

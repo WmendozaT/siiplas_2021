@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
+   <!--  REPORTE PARA LA GESTION 2021 -->
     <head>
         <meta charset="utf-8">
         <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
@@ -17,22 +18,11 @@
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <!--estiloh-->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <style>
-            #mdialTamanio{
-              width: 45% !important;
-            }
-        </style>
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
         <!-- HEADER -->
         <header id="header">
-                <div id="logo-group">
-                    <!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-                </div>
           <!-- pulled right: nav area -->
           <div class="pull-right">
             <!-- collapse menu button -->
@@ -97,62 +87,24 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                   <li>Reportes POA</li><li>Evaluaci&oacute;n poa</li><li>Consolidado Form N° 5</li>
+                   <li>Reportes POA</li><li>Evaluaci&oacute;n A.c.p.</li><li>Accion de Corto Plazo</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
-            <div id="content">
-                <!-- widget grid -->
-                <section id="widget-grid" class="">
-                    
-                    <div class="row">
-                        <?php echo $regional;?>
-                    </div>
-                    <?php echo $titulo_modulo;?>
-                    <div id="lista_consolidado"></div>
-                </section>
+                <div id="content">
+                    <section id="widget-grid" class="">
+                        <div class="row">
+                            <?php echo $regional;?>
+                        </div>
+                        
+                        <div id="lista_consolidado"><?php echo $titulo_modulo;?></div>
+                    </section>
             </div>
             <!-- END MAIN CONTENT -->
         </div>
         <!-- END MAIN PANEL -->
     </div>
     <!-- ========================================================================================================= -->
-        
-        <div class="modal fade" id="exampleModalCenter" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" id="mdialTamanio">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-                    </div>
-                    <div class="modal-body">
-                        
-                      <form method="post" enctype="multipart/form-data" id="form_eval" name="form_eval" class="form-horizontal">
-                            <h2><center>ACTUALIZAR EVALUACIÓN POA </center></h2>
-                            <fieldset>
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label">DIRECCIÓN ADMINISTRATIVA</label>
-                                    <div class="col-md-10">
-                                        <select class="form-control" id="da" name="da" title="Seleccione Direccion Administrativa">
-                                            <option value="">Seleccione DA</option>
-                                            <?php 
-                                                foreach($da as $row){ ?>
-                                                    <option value="<?php echo $row['dep_id'];?>"><?php echo $row['dep_cod'].' .-'.strtoupper($row['dep_departamento']);?></option>
-                                            <?php } ?>        
-                                        </select>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <div id="loadd" style="display: none;"><hr><center><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" style="width:25%;"><br><b>ACTUALIZANDO DATOS DE EVALUACIÓN...</b></center><hr></div>
-
-                      </form> 
-                    </div>
-                </div>
-            </div>
-        </div>
-
-     <!--  =============== -->
-
-
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
@@ -171,7 +123,6 @@
             }
         </script>
         <!-- IMPORTANT: APP CONFIG -->
-        <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/reporte_evaluacionpoa.js"></script> 
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
@@ -190,17 +141,10 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
         <!-- JQUERY MASKED INPUT -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-        <!-- JQUERY SELECT2 INPUT -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/select2/select2.min.js"></script>
         <!-- JQUERY UI + Bootstrap Slider -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+        <script src="<?php echo base_url(); ?>mis_js/seguimientoacp/reporte_evaluacionacp.js"></script> 
         <!-- browser msie issue fix -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
-        <!-- FastClick: For mobile devices -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
-        <!-- Demo purpose only -->
-        <script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
-        <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
     </body>
 </html>

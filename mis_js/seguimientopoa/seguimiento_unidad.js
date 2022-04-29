@@ -103,7 +103,7 @@ function abreVentana(PDF){
         $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');
         $('#butt').slideUp();
 
-        var url = base+"index.php/reporte_evaluacion/crep_evalunidad/update_evaluacion_trimestral";
+        var url = base+"index.php/reporte_evalform4/crep_evalunidad/update_evaluacion_trimestral";
         var request;
         if (request) {
             request.abort();

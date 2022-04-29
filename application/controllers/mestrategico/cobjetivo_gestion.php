@@ -21,6 +21,7 @@ class Cobjetivo_gestion extends CI_Controller {
           $this->dist_tp = $this->session->userData('dist_tp');
           $this->fun_id = $this->session->userData('fun_id');
           $this->dep_id = $this->session->userData('dep_id');
+          $this->tp_adm = $this->session->userData('tp_adm');
           $this->load->library('acortoplazo');
         }else{
             redirect('/','refresh');
@@ -611,8 +612,14 @@ class Cobjetivo_gestion extends CI_Controller {
         </tr>';
       }
 
-    $data['tabla']=$tabla;
-    $this->load->view('admin/mestrategico/objetivos_gestion/ver_alineacion_acp_act', $data); 
+    if($this->tp_adm==1){
+      $data['tabla']=$tabla;
+      $this->load->view('admin/mestrategico/objetivos_gestion/ver_alineacion_acp_act', $data); 
+    }
+    else{
+      redirect(site_url("").'/admin/dashboard');
+    }
+
   }
 
 

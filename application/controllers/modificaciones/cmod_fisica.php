@@ -250,8 +250,8 @@ class Cmod_fisica extends CI_Controller {
         }
 
         for ($i=1; $i <=12 ; $i++) { 
-          //if($i<$this->verif_mes[1]){ /// Meses ejecutados
-          if($i<2){ /// Meses ejecutados
+          if($i<$this->verif_mes[1]){ /// Meses ejecutados
+          //if($i<2){ /// Meses ejecutados
             $this->prog_mes_eval[$i]=1;
           }
         }

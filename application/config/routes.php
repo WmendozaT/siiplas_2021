@@ -386,32 +386,36 @@ $route['iframe_rep_evaluacionpoa_subactividad/(:any)'] = 'reporte_subactividad/c
 $route['ejec/mis_solicitudes_certpoa'] = 'ejecucion/ccertificacion_poa/ver_mis_solicitudes_certpoa';  ///// VER MIS SOLICITUDES DE CERTIFICACION POA
 $route['reporte_solicitud_poa_aprobado/(:any)'] = 'ejecucion/ccertificacion_poa/reporte_solicitud_probado_certpoa/$1';  /// REPORTE SOLICITUD CERTIFICADO POA (APROBADO)
 
-//====== REPORTE EVALUACION POA 2020
-/*---------- EVALUACION POA INSTITUCIONAL 2021 ----------*/
-$route['menu_eval_poa'] = 'reporte_evaluacion/crep_evalinstitucional/menu_eval_poa';  /// MENU EVALUACION POA 
-$route['rep_eval_poa/iframe_rep_evaluacionpoa/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/iframe_evaluacion_poa/$1/$2/$3';  /// IFRAME NACIONA, REGIONAL, DISTRITAL 2021
+//====== REPORTE EVALUACION POA 
+/*---------- EVALUACION POA INSTITUCIONAL FORM 5  ----------*/
+$route['menu_eval_poa'] = 'reporte_evalform4/crep_evalinstitucional/menu_eval_poa';  /// MENU EVALUACION POA 
+$route['rep_eval_poa/iframe_rep_evaluacionpoa/(:any)'] = 'reporte_evalform4/crep_evalinstitucional/iframe_evaluacion_poa/$1/$2/$3';  /// IFRAME NACIONA, REGIONAL, DISTRITAL 2021
 
 
 //$route['rep_eval_poa/evaluacion_poa_onacional/(:any)'] = 'reporte_evaluacion/crep_evalofinacional/evaluacion_poa_onacional/$1';  /// REPORTES GRAFICOS OFICINA NACIONAL
 //$route['rep_eval_poa/rep_eficacia/(:any)'] = 'reporte_evaluacion/crep_evalinstitucional/reporte_parametros/$1/$2';  /// REPORTE EVALUACION GASTO CORRIENTE
 
 /*---------- EVALUACION DE LA OPERACION - UNIDAD, PROYECTO ----------*/
-$route['eval/eval_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/evaluacion_poa_unidad/$1';  /// REDIRECCION EVALUACION POA - UNIDAD, PROY INV.
-$route['eval/eval_unidad_gcorriente/(:any)'] = 'reporte_evaluacion/crep_evalunidad/evaluacion_unidad_gcorriente/$1';  /// REPORTES GRAFICOS DE EVALUACION GASTO CORRIENTE
-$route['rep_eficacia_unidad/(:any)'] = 'reporte_evaluacion/crep_evalunidad/reporte_indicadores_unidad/$1';  /// REPORTE POR EFICIENCIA Y EFICACIA POR CADA UNIDAD O PROYECTO DE UNIDAD
+$route['eval/eval_unidad/(:any)'] = 'reporte_evalform4/crep_evalunidad/evaluacion_poa_unidad/$1';  /// REDIRECCION EVALUACION POA - UNIDAD, PROY INV.
+$route['eval/eval_unidad_gcorriente/(:any)'] = 'reporte_evalform4/crep_evalunidad/evaluacion_unidad_gcorriente/$1';  /// REPORTES GRAFICOS DE EVALUACION GASTO CORRIENTE
+$route['rep_eficacia_unidad/(:any)'] = 'reporte_evalform4/crep_evalunidad/reporte_indicadores_unidad/$1';  /// REPORTE POR EFICIENCIA Y EFICACIA POR CADA UNIDAD O PROYECTO DE UNIDAD
 
-$route['rep_indicadores_unidad/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_indicadores_unidades/$1/$2/$3';  /// REPORTE INDICADORES POR UNIDAD 2021
-$route['rep_indicadores_programa/(:any)'] = 'reporte_evaluacion/creportes_evaluacionpoa/reporte_categoria_programatica/$1/$2/$3';  /// REPORTE POR CATEGORIA PROGRAMATICA 2021
+$route['rep_indicadores_unidad/(:any)'] = 'reporte_evalform4/creportes_evaluacionpoa/reporte_indicadores_unidades/$1/$2/$3';  /// REPORTE INDICADORES POR UNIDAD 2021
+$route['rep_indicadores_programa/(:any)'] = 'reporte_evalform4/creportes_evaluacionpoa/reporte_categoria_programatica/$1/$2/$3';  /// REPORTE POR CATEGORIA PROGRAMATICA 2021
 
 
 /*---------- EVALUACION GASTO CORRIENTE - PROGRAMA ----------*/
-$route['menu_eval_prog'] = 'reporte_evaluacion/crep_evalprogramas/menu_eval_programas';  /// MENU EVALUACION PROGRAMA 
-$route['rep_eval_prog/evaluacion_programas/(:any)'] = 'reporte_evaluacion/crep_evalprogramas/evaluacion_programas/$1/$2';  /// REPORTES GRAFICOS REGIONAL
+//$route['menu_eval_prog'] = 'reporte_evaluacion/crep_evalprogramas/menu_eval_programas';  /// MENU EVALUACION PROGRAMA 
+//$route['rep_eval_prog/evaluacion_programas/(:any)'] = 'reporte_evaluacion/crep_evalprogramas/evaluacion_programas/$1/$2';  /// REPORTES GRAFICOS REGIONAL
 
 
-//====== REPORTE EVALUACION OBJETIVOS DE GESTION 2020 - 2021 (Vigente)
-$route['menu_eval_objetivos'] = 'reporte_evalobjetivos/crep_evalobjetivos/menu_eval_objetivos';  /// MENU EVALUACION OBJETIVOS 
-$route['rep_eval_obj/evaluacion_objetivos/(:any)'] = 'reporte_evalobjetivos/crep_evalobjetivos/evaluacion_objetivos/$1';  /// REPORTES GRAFICOS REGIONAL
+//====== REPORTE EVALUACION A.C.P. FORM 1 
+$route['menu_eval_objetivos'] = 'reporte_evalform1/crep_evalform1/menu_eval_objetivos';  /// MENU EVALUACION OBJETIVOS 
+$route['rep_eval_obj/evaluacion_objetivos/(:any)'] = 'reporte_evalform1/crep_evalform1/evaluacion_objetivos/$1';  /// REPORTES GRAFICOS REGIONAL
+
+//====== REPORTE EVALUACION OPERACIONES FORM 2 
+$route['menu_eval_form2'] = 'reporte_evalform2/crep_evalform2/menu_eval_form2';  /// MENU EVALUACION OPERACIONES FORM 2
+
 
 //====== REPORTE EVALUACION A.C.P. 2022
 //$route['menu_eval_acp'] = 'reporte_evalobjetivos/crep_evalobjetivos/menu_eval_objetivos';  /// MENU EVALUACION OBJETIVOS 

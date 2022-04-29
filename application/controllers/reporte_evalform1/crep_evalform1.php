@@ -1,6 +1,6 @@
 <?php
-/*controlador para evaluacion ACP GESTION 2021*/
-class Crep_evalobjetivos extends CI_Controller {  
+/*controlador para evaluacion ACP GESTION 2022*/
+class Crep_evalform1 extends CI_Controller {  
     public function __construct (){
         parent::__construct();
         if($this->session->userdata('fun_id')!=null){
@@ -55,7 +55,7 @@ class Crep_evalobjetivos extends CI_Controller {
 
       $data['titulo_modulo']=$tabla;
 
-      $this->load->view('admin/reportes_cns/repevaluacion_objetivos/rep_menu', $data);
+      $this->load->view('admin/reportes_cns/repevaluacion_form1/rep_menu', $data);
     }
 
 
@@ -113,7 +113,7 @@ class Crep_evalobjetivos extends CI_Controller {
       $data['tabla_pastel']=$this->evaluacionacp->tabla_gcumplimiento($data['matriz_pastel'],1,1);
       $data['tabla_pastel_todo']=$this->evaluacionacp->tabla_gcumplimiento($data['matriz_pastel'],2,1);
 
-      $this->load->view('admin/reportes_cns/repevaluacion_objetivos/reporte_grafico_eval_consolidado_regional_objetivos', $data);
+      $this->load->view('admin/reportes_cns/repevaluacion_form1/reporte_grafico_eval_consolidado_regional_form1', $data);
     }
 
 

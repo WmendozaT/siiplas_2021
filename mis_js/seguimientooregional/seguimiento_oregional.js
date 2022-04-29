@@ -126,7 +126,7 @@ $(function() {
       },
       messages: {
         ejec: "<font color=red>REGISTRE VALOR DE EJECUCION</font>",
-        mverificacion: "<font color=red>REGISTRE MEDIO DE VERIFICACION</font>",
+        mverificacion: "<font color=red>REGISTRE MEDIO DE VERIFICACION > 50 (Caracteres)</font>",
       }
     });
 

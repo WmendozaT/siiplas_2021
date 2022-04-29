@@ -4,7 +4,7 @@ gestion = $('[name="gestion"]').val();
 function abreVentana_eficiencia(PDF){             
   var direccion;
   direccion = '' + PDF;
-  window.open(direccion, "EVALUACION POA" , "width=800,height=700,scrollbars=NO") ; 
+  window.open(direccion, "EVALUACION ACP" , "width=800,height=700,scrollbars=NO") ; 
 }
 
 
@@ -58,7 +58,7 @@ function abreVentana_eficiencia(PDF){
     $("#dep_id option:selected").each(function () {
       dep_id=$(this).val();
       if(dep_id!=''){
-        var url = base+"index.php/reporte_evalobjetivos/crep_evalobjetivos/get_cuadro_evaluacion_objetivos";
+        var url = base+"index.php/reporte_evalform1/crep_evalform1/get_cuadro_evaluacion_objetivos";
         var request;
         if (request) {
             request.abort();

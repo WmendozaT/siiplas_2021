@@ -53,7 +53,7 @@ class Crep_evalinstitucional extends CI_Controller {
                         if($this->tp_adm==1){
                           $tabla.='
                           <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
-                            Actualizar Datos de Evaluación POA
+                            Actualizar Datos de Evaluación POA (Actividades)
                           </button>';
                         }
                         $tabla.=' 

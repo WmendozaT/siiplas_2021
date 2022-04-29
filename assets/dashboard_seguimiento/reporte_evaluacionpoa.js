@@ -114,7 +114,7 @@ function abreVentana_eficiencia(PDF){
               document.getElementById("update_eval").style.display = 'none';
        
               $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
-                var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
+                var url = base+"index.php/reporte_evalform4/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
                 var request;
                 if (request) {
                     request.abort();
@@ -158,7 +158,7 @@ function abreVentana_eficiencia(PDF){
           document.getElementById("update_eval").style.display = 'none';
           if(tp_id!=0){
               $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
-              var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
+              var url = base+"index.php/reporte_evalform4/crep_evalinstitucional/get_cuadro_evaluacion_institucional";
               var request;
               if (request) {
                   request.abort();
@@ -194,7 +194,7 @@ function abreVentana_eficiencia(PDF){
           tp_id=4;
           document.getElementById("da").disabled=true;
           document.getElementById("loadd").style.display = 'block';
-          var url = base+"index.php/reporte_evaluacion/crep_evalunidad/update_evaluacion_trimestral_institucional";
+          var url = base+"index.php/reporte_evalform4/crep_evalunidad/update_evaluacion_trimestral_institucional";
           var request;
           if (request) {
               request.abort();
@@ -257,7 +257,7 @@ function abreVentana_eficiencia(PDF){
             $('#parametro_eficacia').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
            
             document.getElementById("boton_eficacia").style.display = 'none';
-            var url = base+"index.php/reporte_evaluacion/crep_evalinstitucional/get_unidades_eficiencia";
+            var url = base+"index.php/reporte_evalform4/crep_evalinstitucional/get_unidades_eficiencia";
             var request;
             if (request) {
                 request.abort();
@@ -300,7 +300,7 @@ function abreVentana_eficiencia(PDF){
             $('#parametros_prog').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
            
             document.getElementById("boton_eficacia_prog").style.display = 'none';
-            var url = base+"index.php/reporte_evaluacion/creportes_evaluacionpoa/get_programas_parametros";
+            var url = base+"index.php/reporte_evalform4/creportes_evaluacionpoa/get_programas_parametros";
             var request;
             if (request) {
                 request.abort();
