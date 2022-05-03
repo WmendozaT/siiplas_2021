@@ -179,7 +179,6 @@ $(function() {
 
   //// Verificando valor ejecutado registrado 2022
   function verif_valor_ejecucion(pog_id,valor_registrado){
-
     var url = base+"index.php/ejecucion/cevaluacion_pei/get_objetivo_regional";
     var request;
     if (request) {
@@ -194,19 +193,44 @@ $(function() {
 
     request.done(function (response, textStatus, jqXHR) {
     if (response.respuesta == 'correcto') {
+       // alert(response.acp_regional[0]['tp_indi_og'])
+       if(response.acp_regional[0]['tp_indi_og']==0){
+          if((parseFloat(valor_registrado) + parseFloat(response.evaluado))<=response.meta_regional[0]['prog_fis']){
+            document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
+            document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
+            document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
+            $('#btn_eval'+pog_id).slideDown();
+          }
+          else{
+            document.getElementById('porcentaje'+pog_id).innerHTML = '<center>---</center>';
+            document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#fff0f0";
+            document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#fff0f0";
+            $('#btn_eval'+pog_id).slideUp();
+          }
+       }
+
+       if(response.acp_regional[0]['tp_indi_og']==1){
+          document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
+          document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
+          document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
+          $('#btn_eval'+pog_id).slideDown();
+       }
+
+       if(response.acp_regional[0]['tp_indi_og']==2){
+          if((parseFloat(valor_registrado) + parseFloat(response.evaluado))<=100){
+            document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
+            document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
+            document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
+            $('#btn_eval'+pog_id).slideDown();
+          }
+          else{
+            document.getElementById('porcentaje'+pog_id).innerHTML = '<center>---</center>';
+            document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#fff0f0";
+            document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#fff0f0";
+            $('#btn_eval'+pog_id).slideUp();
+          }
+       }
       
-      if((parseFloat(valor_registrado) + parseFloat(response.evaluado))<=response.meta_regional[0]['prog_fis']){
-        document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-        document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
-        document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
-        $('#btn_eval'+pog_id).slideDown();
-      }
-      else{
-        document.getElementById('porcentaje'+pog_id).innerHTML = '<center>---</center>';
-        document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#fff0f0";
-        document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#fff0f0";
-        $('#btn_eval'+pog_id).slideUp();
-      }
     }
     else{
         alertify.error("ERROR AL RECUPERAR DATOS");

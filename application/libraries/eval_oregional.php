@@ -182,10 +182,10 @@ class Eval_oregional extends CI_Controller{
                         <input type="hidden" name="tp" id="tp'.$oge['pog_id'].'" value='.$tp.'>
                         <section class="col col-1">
                           <label class="label"><b>(%) CUMPLIMIENTO</b></label>
-                          <div id="porcentaje'.$oge['pog_id'].'">'.$this->calificacion_acp_regional(round($this->get_suma_evaluado($oge['pog_id'],$this->tmes),2),round($ejec,2),round($oge['prog_fis'],2)).'</div>
+                          <div id="porcentaje'.$oge['pog_id'].'">'.$this->calificacion_acp_regional($oge['tp_indi_og'],round($this->get_suma_evaluado($oge['pog_id'],$this->tmes),2),round($ejec,2),round($oge['prog_fis'],2)).'</div>
                         </section>
                         <section class="col col-2">
-                          <label class="label"><b>META REGIONAL</b></label>
+                          <label class="label"><b>META (A.C.P.)</b></label>
                           <label class="input"> <i class="icon-append fa fa-tag"></i>
                             <input type="text" name="meta_prog" id="meta_prog" value='.round($oge['prog_fis'],2).' disabled=true>
                           </label>
@@ -328,7 +328,7 @@ class Eval_oregional extends CI_Controller{
     }
 
 
-    /*--- PARAMETRO DE CALIFICACION OPERACIONES REGIONAL ---*/
+    /*--- ACTUALIZA PARAMETRO DE CALIFICACION OPERACIONES REGIONAL ---*/
     public function calificacion_total_form2_regional($dep_id){
       $prog_trimestre=0; $ejec_trimestre=0;$prog_total_form2=0;
 
@@ -388,34 +388,59 @@ class Eval_oregional extends CI_Controller{
 
 
     /*--- PARAMETRO DE CALIFICACION ACP REGIONAL ---*/
-    public function calificacion_acp_regional($eval_acumulado,$ejec,$meta){
+    public function calificacion_acp_regional($tp_indicador_og,$eval_acumulado,$ejec,$meta){
+      /// $tp_indicador_og : 0 (parametro normal)
+      /// $tp_indicador_og : 1  x<=meta (optimo) , x>meta (insatisfactorio)
+      /// $tp_indicador_og : 2 x>=meta & x<=100 (optimo), x<meta (insatisfactorio)
       $calificacion='';$resp='';
       $valor=0;$color='';
-      if($meta!=0){
-        $valor=round(((($eval_acumulado+$ejec)/$meta)*100),0);
+
+      if($tp_indicador_og==0){
+          if($meta!=0){
+            $valor=round(((($eval_acumulado+$ejec)/$meta)*100),0);
+          }
+
+          if($valor>0 & $valor<=50){
+            $resp='<b>INSATISFACTORIO</b>';
+            $color='#f95b4f';
+          }
+          elseif($valor>50 & $valor<=75){
+           $resp='<b>REGULAR</b>';
+           $color='#edd094';
+          }
+          elseif($valor>75 & $valor<=99){
+           $resp='<b>BUENO</b>';
+           $color='#83bad1';
+          }
+          elseif($valor==100){
+           $resp='<b>OPTIMO</b>';
+           $color='#4caf50';
+          }
+      }
+      elseif ($tp_indicador_og==1) {
+        if(($eval_acumulado+$ejec)<=$meta){
+          $valor=100;
+          $resp='<b>OPTIMO</b>';
+          $color='#4caf50';
+        }
+        else{
+          $resp='<b>INSATISFACTORIO</b>';
+          $color='#f95b4f';
+        }
+      }
+      else{
+        if(($eval_acumulado+$ejec)>=$meta & ($eval_acumulado+$ejec)<=100){
+          $valor=100;
+          $resp='<b>OPTIMO</b>';
+          $color='#4caf50';
+        }
+        elseif(($eval_acumulado+$ejec)<$meta){
+          $resp='<b>INSATISFACTORIO</b>';
+          $color='#f95b4f';
+        }
       }
 
-      if($valor>0 & $valor<=50){
-        $resp='<b>INSATISFACTORIO</b>';
-        $color='#f95b4f';
-      }
-      elseif($valor>50 & $valor<=75){
-       $resp='<b>REGULAR</b>';
-       $color='#edd094';
-      }
-      elseif($valor>75 & $valor<=99){
-       $resp='<b>BUENO</b>';
-       $color='#83bad1';
-      }
-      elseif($valor==100){
-       $resp='<b>OPTIMO</b>';
-       $color='#4caf50';
-      }
-/*      else{
-        $resp='<b>INSATISFACTORIO</b>';
-        $color='#f95b4f';
-      }*/
-
+      
       $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size=50>'.$valor.'%</font><br>'.$resp.'</center></div>';
       return $calificacion;
     }

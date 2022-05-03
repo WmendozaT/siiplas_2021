@@ -605,13 +605,15 @@ class Cevaluacion_pei extends CI_Controller {
           $ejec = $this->security->xss_clean($post['ejec']);
           
           $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id);
+          $acp_regional=$this->model_objetivogestion->get_objetivo_temporalidad($pog_id);
           if(count($meta_regional)!=0){
             $result = array(
               'respuesta' => 'correcto',
+              'acp_regional' => $acp_regional, /// Datos Objetivo de Gestion ACP
               'meta_regional' => $meta_regional, /// Datos Meta Regional
               'trimestre' => $this->model_evaluacion->trimestre(), /// Datos Trimestre
               'evaluado' => $this->get_suma_evaluado($pog_id,$this->tmes), /// Valor Evaluado 
-              'calificacion' => $this->calificacion_acp_regional($this->get_suma_evaluado($pog_id,$this->tmes),$ejec,$meta_regional[0]['prog_fis']), /// Valor Evaluado 
+              'calificacion' => $this->calificacion_acp_regional($acp_regional[0]['tp_indi_og'],$this->get_suma_evaluado($pog_id,$this->tmes),$ejec,$meta_regional[0]['prog_fis']), /// Valor Evaluado 
             );
           }
           else{
@@ -643,34 +645,59 @@ class Cevaluacion_pei extends CI_Controller {
 
 
     /*--- PARAMETRO DE CALIFICACION ACP REGIONAL ---*/
-    public function calificacion_acp_regional($eval_acumulado,$ejec,$meta){
+    public function calificacion_acp_regional($tp_indicador_og,$eval_acumulado,$ejec,$meta){
+      /// $tp_indicador_og : 0 (parametro normal)
+      /// $tp_indicador_og : 1  x<=meta (optimo) , x>meta (insatisfactorio)
+      /// $tp_indicador_og : 2 x>=meta & x<=100 (optimo), x<meta (insatisfactorio)
       $calificacion='';$resp='';
       $valor=0;$color='';
-      if($meta!=0){
-        $valor=round(((($eval_acumulado+$ejec)/$meta)*100),0);
+
+      if($tp_indicador_og==0){
+          if($meta!=0){
+            $valor=round(((($eval_acumulado+$ejec)/$meta)*100),0);
+          }
+
+          if($valor>0 & $valor<=50){
+            $resp='<b>INSATISFACTORIO</b>';
+            $color='#f95b4f';
+          }
+          elseif($valor>50 & $valor<=75){
+           $resp='<b>REGULAR</b>';
+           $color='#edd094';
+          }
+          elseif($valor>75 & $valor<=99){
+           $resp='<b>BUENO</b>';
+           $color='#83bad1';
+          }
+          elseif($valor==100){
+           $resp='<b>OPTIMO</b>';
+           $color='#4caf50';
+          }
+      }
+      elseif ($tp_indicador_og==1) {
+        if(($eval_acumulado+$ejec)<=$meta){
+          $valor=100;
+          $resp='<b>OPTIMO</b>';
+          $color='#4caf50';
+        }
+        else{
+          $resp='<b>INSATISFACTORIO</b>';
+          $color='#f95b4f';
+        }
+      }
+      else{
+        if(($eval_acumulado+$ejec)>=$meta & ($eval_acumulado+$ejec)<=100){
+          $valor=100;
+          $resp='<b>OPTIMO</b>';
+          $color='#4caf50';
+        }
+        elseif(($eval_acumulado+$ejec)<$meta){
+          $resp='<b>INSATISFACTORIO</b>';
+          $color='#f95b4f';
+        }
       }
 
-      if($valor>0 & $valor<=50){
-        $resp='<b>INSATISFACTORIO</b>';
-        $color='#f95b4f';
-      }
-      elseif($valor>50 & $valor<=75){
-       $resp='<b>REGULAR</b>';
-       $color='#edd094';
-      }
-      elseif($valor>75 & $valor<=99){
-       $resp='<b>BUENO</b>';
-       $color='#83bad1';
-      }
-      elseif($valor==100){
-       $resp='<b>OPTIMO</b>';
-       $color='#4caf50';
-      }
-/*      else{
-        $resp='<b>INSATISFACTORIO</b>';
-        $color='#f95b4f';
-      }*/
-
+      
       $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size=50>'.$valor.'%</font><br>'.$resp.'</center></div>';
       return $calificacion;
     }
