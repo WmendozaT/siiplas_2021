@@ -10,6 +10,7 @@ class Eval_oregional extends CI_Controller{
       $this->load->model('mestrategico/model_objetivoregion');
       $this->load->model('ejecucion/model_evaluacion');
       $this->load->model('programacion/model_producto');
+      $this->load->model('mantenimiento/model_configuracion');
       $this->load->model('menu_modelo');
       $this->load->library('security');
 
@@ -114,7 +115,12 @@ class Eval_oregional extends CI_Controller{
     $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
     $departamento=$this->model_proyecto->get_departamento($dep_id);
     $trimestre=$this->model_evaluacion->trimestre();
-    $date_actual = strtotime(date('Y-m-d')); //// fecha Actual
+    
+      $configuracion=$this->model_configuracion->get_configuracion_session();
+      $date_actual = strtotime(date('Y-m-d')); //// fecha Actual
+      $date_inicio = strtotime($configuracion[0]['eval_inicio']); /// Fecha Inicio
+      $date_final = strtotime($configuracion[0]['eval_fin']); /// Fecha Final
+
 
     $tabla.='
       <input name="base" type="hidden" value="'.base_url().'">
@@ -158,6 +164,12 @@ class Eval_oregional extends CI_Controller{
                 $active='class="tab-pane fade in active"';
               }
 
+              $tipo=''; $size='col col-5';
+              if($oge['indi_id']==2){
+                $tipo='%';
+                $size='col col-7';
+              }
+
               $tabla.='
               <div '.$active.' id="s'.$nro2.'">
                 <div class="row">
@@ -165,6 +177,7 @@ class Eval_oregional extends CI_Controller{
                   <form action="'.site_url().'/ejecucion/cevaluacion_pei/valida_update_evaluacion_acp" method="post" id="form_eval'.$oge['pog_id'].'" class="smart-form" style="background-color:#a4caeb;">
                     <legend><b>A.C.P. '.$oge['og_codigo'].'</b>.- '.$oge['og_objetivo'].'</legend>
                     <input type="hidden" name="pog_id" value='.$oge['pog_id'].'>
+                    '.$oge['tp_indi_og'].'
                     <fieldset>
                       <div class="row">';
                         $ejec=0;
@@ -187,15 +200,21 @@ class Eval_oregional extends CI_Controller{
                         <section class="col col-2">
                           <label class="label"><b>META (A.C.P.)</b></label>
                           <label class="input"> <i class="icon-append fa fa-tag"></i>
-                            <input type="text" name="meta_prog" id="meta_prog" value='.round($oge['prog_fis'],2).' disabled=true>
+                            <input type="text" name="meta_prog" id="meta_prog" value="'.round($oge['prog_fis'],2).' '.$tipo.'" disabled=true>
                           </label>
-                        </section>
-                        <section class="col col-2">
-                          <label class="label"><b>EJECUCIÓN ACUMULADO</b></label>
-                          <label class="input"> <i class="icon-append fa fa-tag"></i>
-                            <input type="text" name="ejec_registrado" id="ejec_registrado" value="'.round($this->get_suma_evaluado($oge['pog_id'],$this->tmes),2).'" disabled=true>
-                          </label>
-                        </section>
+                        </section>';
+
+                        if($oge['tp_indi_og']==0){
+                          $tabla.='
+                          <section class="col col-2">
+                            <label class="label"><b>EJECUCIÓN ACUMULADO</b></label>
+                            <label class="input"> <i class="icon-append fa fa-tag"></i>
+                              <input type="text" name="ejec_registrado" id="ejec_registrado" value="'.round($this->get_suma_evaluado($oge['pog_id'],$this->tmes),2).'" disabled=true>
+                            </label>
+                          </section>';
+                        }
+
+                        $tabla.='
                         <section class="col col-2">
                           <label class="label" style="color:#0000ff;"><b>REGISTRO DE EJECUCIÓN (*)</b></label>
                           <label class="input"> <i class="icon-append fa fa-tag"></i>
