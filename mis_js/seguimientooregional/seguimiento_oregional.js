@@ -3,7 +3,7 @@
   function abreVentana(PDF){             
     var direccion;
     direccion = '' + PDF;
-    window.open(direccion, "EVALUACION OPERACION" , "width=800,height=700,scrollbars=NO") ; 
+    window.open(direccion, "EVALUACION FORM. N° 2" , "width=800,height=700,scrollbars=NO") ; 
   }
 
 
@@ -42,7 +42,7 @@ $(function() {
   $(".update_evaluacion").on("click", function(e) {
     document.getElementById("load_update_temp_general").style.display = 'block';
     e.preventDefault();
-    var url = base+"index.php/ejecucion/cevaluacion_oregional/update_evaluacion_oregional";
+    var url = base+"index.php/ejecucion/cevaluacion_form2/update_evaluacion_oregional";
     $.ajax({
       type: "POST",
       url: url,
@@ -70,7 +70,7 @@ $(function() {
         $('#load_update').html('');
         if(dep_id!=0){
           $('#titulo_lista').html('<font size=3><b>Cargando Informacion ..... </b></font>');
-            var url = base+"index.php/ejecucion/cevaluacion_oregional/get_lista_operaciones_x_regionales";
+            var url = base+"index.php/ejecucion/cevaluacion_form2/get_lista_operaciones_x_regionales";
             var request;
             if (request) {
                 request.abort();
@@ -100,144 +100,13 @@ $(function() {
           $('#titulo_lista').html('');
           $('#detalles').slideUp();
         }
-
     });
   });
 
 });
 
 
-
-  /// Funcion para guardar datos de Evaluacion POA ACP Regional 2022
-  function guardar_acp_regional(pog_id){
-    tp=($('[id="tp'+pog_id+'"]').val());
-    ejec=($('[id="ejec'+pog_id+'"]').val());
-    mverificacion=($('[id="mverificacion'+pog_id+'"]').val());
-
-    var $validator = $("#form_eval"+pog_id).validate({
-      rules: {
-        ejec: { //// ejecucion
-          required: true,
-        },
-        mverificacion: { //// medio de verificacion
-          required: true,
-          minlength : 50,
-        }
-      },
-      messages: {
-        ejec: "<font color=red>REGISTRE VALOR DE EJECUCION</font>",
-        mverificacion: "<font color=red>REGISTRE MEDIO DE VERIFICACION > 50 (Caracteres)</font>",
-      }
-    });
-
-    var $valid = $("#form_eval"+pog_id).valid();
-    if (!$valid) {
-        $validator.focusInvalid();
-    } else {
-
-      alertify.confirm("GUARDAR EVALUACIÓN POA?", function (a) {
-      if (a) {
-          var url = base+"index.php/ejecucion/cevaluacion_pei/valida_update_evaluacion_acp";
-          var request;
-          if (request) {
-              request.abort();
-          }
-          request = $.ajax({
-              url: url,
-              type: "POST",
-              dataType: 'json',
-              data: "pog_id="+pog_id+"&ejec="+ejec+"&mv="+mverificacion+"&tp="+tp
-          });
-
-          request.done(function (response, textStatus, jqXHR) {
-              document.getElementById('log'+pog_id).innerHTML = '<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/><b>GUARDANDO REGISTRO ....</b></div>';
-              $('#btn_eval'+pog_id).slideUp();
-          if (response.respuesta == 'correcto') {
-              
-              document.getElementById('log'+pog_id).innerHTML = '';
-              $('#btn_eval'+pog_id).slideDown();
-
-              document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-              
-              document.getElementById("ejec"+pog_id).value = response.info_evaluado[0]['ejec_fis'];
-              document.getElementById("mverificacion"+pog_id).value = response.info_evaluado[0]['tmed_verif'];
-              alertify.success("REGISTRO CORRECTAMENTE !!");
-          }
-          else{
-              alertify.error("ERROR AL GUARDAR INFORMACION POA");
-          }
-
-          });
-      } else {
-          alertify.error("OPCI\u00D3N CANCELADA");
-      }
-    });
-
-    }
-  }
-
-
-  //// Verificando valor ejecutado registrado 2022
-  function verif_valor_ejecucion(pog_id,valor_registrado){
-    var url = base+"index.php/ejecucion/cevaluacion_pei/get_objetivo_regional";
-    var request;
-    if (request) {
-        request.abort();
-    }
-    request = $.ajax({
-        url: url,
-        type: "POST",
-        dataType: 'json',
-        data: "pog_id="+pog_id+"&ejec="+valor_registrado
-    });
-
-    request.done(function (response, textStatus, jqXHR) {
-    if (response.respuesta == 'correcto') {
-       // alert(response.acp_regional[0]['tp_indi_og'])
-       if(response.acp_regional[0]['tp_indi_og']==0){
-          if((parseFloat(valor_registrado) + parseFloat(response.evaluado))<=response.meta_regional[0]['prog_fis']){
-            document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-            document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
-            document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
-            $('#btn_eval'+pog_id).slideDown();
-          }
-          else{
-            document.getElementById('porcentaje'+pog_id).innerHTML = '<center>---</center>';
-            document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#fff0f0";
-            document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#fff0f0";
-            $('#btn_eval'+pog_id).slideUp();
-          }
-       }
-
-       if(response.acp_regional[0]['tp_indi_og']==1){
-          document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-          document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
-          document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
-          $('#btn_eval'+pog_id).slideDown();
-       }
-
-       if(response.acp_regional[0]['tp_indi_og']==2){
-          if((parseFloat(valor_registrado) + parseFloat(response.evaluado))<=100){
-            document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-            document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
-            document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
-            $('#btn_eval'+pog_id).slideDown();
-          }
-          else{
-            document.getElementById('porcentaje'+pog_id).innerHTML = '<center>---</center>';
-            document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#fff0f0";
-            document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#fff0f0";
-            $('#btn_eval'+pog_id).slideUp();
-          }
-       }
-      
-    }
-    else{
-        alertify.error("ERROR AL RECUPERAR DATOS");
-    }
-
-    });
-  }
+ 
 
 
   /// Parametros de cumplimiento
@@ -260,10 +129,10 @@ $(function() {
   }
 
 
-  /// Lista de Actividades Priorizados por cada Objetivo Regional
+  /// Lista de Actividades Priorizados por cada Objetivo Regional FORM 2
   function update_temp(dep_id) {
       $('#load_update').fadeIn(1000).html('<font size=4><b>Actualizando Temporalidad de Operaciones .....</b></font>');
-      var url = base+"index.php/ejecucion/cevaluacion_oregional/update_temporalidad_oregional";
+      var url = base+"index.php/ejecucion/cevaluacion_form2/update_temporalidad_oregional";
       var request;
       if (request) {
           request.abort();
@@ -292,13 +161,13 @@ $(function() {
       });
   }
 
-  /// Lista de Actividades Priorizados por cada Objetivo Regional
+  /// Lista de Actividades Priorizados por cada Objetivo Regional FORM 2
   function ver_actividades_priorizados(or_id,dep_id) {
     $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
     $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
     $('#imprimir_act_priori').html('');
   //  alert(dep_id)
-    var url = base+"index.php/ejecucion/cevaluacion_oregional/ver_actividades_priorizados";
+    var url = base+"index.php/ejecucion/cevaluacion_form2/ver_actividades_priorizados";
     var request;
     if (request) {
         request.abort();
@@ -324,12 +193,12 @@ $(function() {
     });
   }
 
-  /// grado de cumplimiento por Objetivo Regional
+  /// grado de cumplimiento por Objetivo Regional FORM 2
   function nivel_cumplimiento(or_id,dep_id) {
     $('#titulo_grafico').html('<font size=3><b>Cargando ..</b></font>');
     $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
   //  alert(dep_id)
-    var url = base+"index.php/ejecucion/cevaluacion_oregional/ver_datos_avance_oregional";
+    var url = base+"index.php/ejecucion/cevaluacion_form2/ver_datos_avance_oregional";
     var request;
     if (request) {
         request.abort();
@@ -474,9 +343,9 @@ $(function() {
   }
 
 
-  /// GRADO DE CUMPLIMIENTO DE OPERACIONES CONSOLIDADO POR REGIONAL (GRAFICO)
+  /// GRADO DE CUMPLIMIENTO DE OPERACIONES CONSOLIDADO POR REGIONAL (GRAFICO) FORM 2
   function nivel_cumplimiento_operaciones_grafico(dep_id,trm_id) {
-    var url = base+"index.php/ejecucion/cevaluacion_oregional/get_cumplimiento_operaciones_grafico";
+    var url = base+"index.php/ejecucion/cevaluacion_form2/get_cumplimiento_operaciones_grafico";
     var request;
     if (request) {
         request.abort();

@@ -69,7 +69,7 @@ $route['me/exportar_alineacion_ope_acp/(:any)'] = 'mestrategico/cobjetivo_gestio
 $route['me/reporte_alineacion_ope_acp/(:any)'] = 'mestrategico/cobjetivo_gestion/reporte_alineacion_acp_act/$1'; ///// Reporte Alineacion completa de actividades a operaciones y acciones 2022 INSTITUCIONAL
 //$route['me/reporte_alineacion_ope_acp_regional/(:any)'] = 'mestrategico/cobjetivo_gestion/reporte_alineacion_acp_act_regional/$1/$2'; ///// Reporte Alineacion completa de actividades a operaciones y acciones 2022 REGIONAL
 
-/* ---- OBJETIVOS REGIONALES 2022 ---- */
+/* ---- PROGRAMACION OBJETIVOS REGIONALES 2022 ---- */
 $route['me/objetivos_regionales/(:any)'] = 'mestrategico/cobjetivo_regional/objetivos_regional/$1'; //// Lista Objetivos regional
 $route['me/new_oregional/(:any)'] = 'mestrategico/cobjetivo_regional/form_oregional/$1/$2'; //// Nuevo Objetivo Regional
 $route['me/update_oregional/(:any)'] = 'mestrategico/cobjetivo_regional/form_update_oregional/$1'; //// Modificar Objetivo Regional
@@ -425,16 +425,16 @@ $route['ejec/menu_cpoa'] = 'ejecucion/cert_poa/menu_certificacion_poa'; //// Men
 $route['ejec/get_uadministrativas'] = 'ejecucion/cert_poa/get_unidades_administrativas'; ////// Combo Unidades Administrativas
 
 
-/*-- EVALUACION PEI - OBJETIVOS REGIONALES 2020 - 2021 (vigente)---*/
-$route['eval_obj/objetivos_regionales'] = 'ejecucion/cevaluacion_pei/objetivos_regionales';  ///// Objetivos Estrategicos
+/*-- EVALUACION OBJETIVOS DE GESTION - FORMULARIO N° 1 (A.C.P.) ---*/
+$route['eval_acp'] = 'ejecucion/cevaluacion_form1/menu_acp';  ///// Objetivos Estrategicos
 $route['eval_obj/rep_meta_oregional/(:any)'] = 'ejecucion/cevaluacion_pei/reporte_meta_oregional/$1'; //// Reporte Meta Objetivo Regional
 $route['eval_obj/rep_meta_oregional_grafico/(:any)'] = 'ejecucion/cevaluacion_pei/cuadro_evaluacion_grafico/$1'; //// Reporte Meta Objetivo Regional Grafico
 
-/*-- EVALUACION OBJETIVOS REGIONALES (OPERACIONES) 2022--*/
-$route['eval_oregionales'] = 'ejecucion/cevaluacion_oregional/menu_regional';  ///// Objetivos Regionales 2022 
-$route['rep_eval_oregional/(:any)'] = 'ejecucion/cevaluacion_oregional/reporte_evaluacion_form2/$1'; //// Reporte Meta Objetivo Regional 2022
-$route['rep_list_form4_priori_oregional/(:any)'] = 'ejecucion/cevaluacion_oregional/reporte_act_priorizados_oregional/$1'; //// Reporte Meta Objetivo Regional 2022
-$route['rep_meta_oregional_grafico/(:any)'] = 'ejecucion/cevaluacion_oregional/cuadro_evaluacion_grafico/$1'; //// Reporte Meta Objetivo Regional Grafico
+/*-- EVALUACION OBJETIVOS REGIONALES - FORMULARIO N° 2 (OPERACIONES) 2022--*/
+$route['eval_oregionales'] = 'ejecucion/cevaluacion_form2/menu_regional';  ///// Objetivos Regionales 2022 - Formulario N° 2
+$route['rep_eval_oregional/(:any)'] = 'ejecucion/cevaluacion_form2/reporte_evaluacion_form2/$1'; //// Reporte Meta Objetivo Regional 2022
+$route['rep_list_form4_priori_oregional/(:any)'] = 'ejecucion/cevaluacion_form2/reporte_act_priorizados_oregional/$1'; //// Reporte Meta Objetivo Regional 2022
+$route['rep_meta_oregional_grafico/(:any)'] = 'ejecucion/cevaluacion_form2/cuadro_evaluacion_grafico_form2/$1'; //// Reporte Meta Objetivo Regional Grafico
 
 
 /*--FORM. CERT---*/

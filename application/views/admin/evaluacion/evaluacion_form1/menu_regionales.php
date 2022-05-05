@@ -20,15 +20,20 @@
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
 		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script> 
 		<meta name="viewport" content="width=device-width">
-		<style>
-			table{font-size: 11px;
-            width: 100%;
-            max-width:1550px;
+			<style>
+			.modal-content {
+			    border-radius: 0px 0px 0px 0px;
+			    border: 1px solid #3A3633;
+			}
+
+		    #comparativo{
+		      width: 90% !important;
+		    }
+		    #mdialTamanio{
+              width: 70% !important;
             }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 11px;
+            #mdialTamanio3{
+              width: 90% !important;
             }
 		</style>
 	</head>
@@ -36,24 +41,6 @@
 		<header id="header">
 			<div id="logo-group">
 				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
 			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
@@ -97,10 +84,10 @@
 			<nav>
 				<ul>
 					<li class="">
-	                <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+	                <a href="<?php echo site_url("admin").'/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
 	            	</li>
 		            <li class="text-center">
-		                <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">REGISTRO DE EJECUCI&Oacute;N</span></a>
+		                <a href="#" title="EVALUACION POA"> <span class="menu-item-parent">EVALUACI&Oacute;N POA</span></a>
 		            </li>
 				<?php echo $menu;?>
 				</ul>
@@ -119,47 +106,22 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Registro de Ejecuci&oacute;n</li><li>Evaluaci&oacute;n PEI</li><li>Objetivos Estrategicos</li>
+					<li>Evaluaci&oacute;n POA</li><li>Evaluaci&oacute;n Formulario N° 1 (A.C.P.)</li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->
 			<div id="content">
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
-					<div class="row">
-						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	                        <section id="widget-grid" class="well">
-	                            <div class="">
-	                            	<h1>EVALUACI&Oacute;N PEI</h1>
-	                              <h1>OBJETIVOS ESTRAT&Eacute;GICOS <?php echo $configuracion[0]['conf_gestion_desde'].' - '.$configuracion[0]['conf_gestion_hasta'];?></h1>
-	                            </div>
-	                        </section>
-	                    </article>
-	                </div>
 	                <div class="row">
-	                   <article class="col-sm-12 col-md-12 col-lg-2">
-	                   </article>
-	                   <article class="col-sm-12 col-md-12 col-lg-8">
-							<div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-10" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
-								<header>
-									<span class="widget-icon"> <i class="fa fa-list-alt"></i> </span>
-									<h2>OBJETIVOS ESTRAT&Eacute;GICOS <?php echo $configuracion[0]['conf_gestion_desde'].' - '.$configuracion[0]['conf_gestion_hasta'];?></h2>
-								</header>
-								<!-- widget div-->
-								<div>
-									<?php echo $obj_estrategicos;?>
-								</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-						</article>
+	                	<?php echo $tabla;?>
 					</div>
 				</section>
 			</div>
 			<!-- END MAIN CONTENT -->
 		</div>
 		<!-- END MAIN PANEL -->
-		<!-- ========================================================================================================= -->
+
 		<!-- PAGE FOOTER -->
 		<div class="page-footer">
 			<div class="row">
@@ -185,7 +147,8 @@
 		<!-- IMPORTANT: APP CONFIG -->
 		<script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
-		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+		<script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
+		<script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
 		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
 		<!-- BOOTSTRAP JS -->
@@ -225,5 +188,6 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+		<script src="<?php echo base_url(); ?>mis_js/seguimientoacp/evaluacionacp.js"></script> 
 	</body>
 </html>

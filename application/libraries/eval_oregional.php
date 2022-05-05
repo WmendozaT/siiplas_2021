@@ -30,18 +30,18 @@ class Eval_oregional extends CI_Controller{
       $this->conf_form4 = $this->session->userData('conf_form4');
       $this->conf_form5 = $this->session->userData('conf_form5');
       $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
-      $this->fecha_plazo_actualizacion = strtotime(date('2022-04-5'));
+      $this->fecha_plazo_actualizacion = strtotime(date('2022-05-6'));
     }
 
     
-    /*------- TIPO --------*/
+    /*------- TITULO --------*/
     public function titulo(){
       $tabla='';
       $trimestre=$this->model_evaluacion->trimestre();
       $tabla.='
         <article class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
             <div class="well">
-              <h2>EVALUACI&Oacute;N DE OBJETIVOS REGIONALES (OPERACIONES) '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2>
+              <h2>EVALUACI&Oacute;N DE OPERACIONES (FORMULARIO N° 2) '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2>
             </div>
         </article>';
 
@@ -73,7 +73,7 @@ class Eval_oregional extends CI_Controller{
       <article class="col-sm-12">
         <div class="well">
           <form class="smart-form">
-            <header><b><h2>EVALUACI&Oacute;N DE OBJETIVOS REGIONALES (OPERACIONES) '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2></b></header>
+            <header><h2><b>EVALUACI&Oacute;N DE OPERACIONES (FORMULARIO N° 2) </b> - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2></header>
             <fieldset>          
               <div class="row">
                 <section class="col col-2">
@@ -109,19 +109,13 @@ class Eval_oregional extends CI_Controller{
 
   
 
-  //// REGIONAL ALINEADO A OBJETIVOS REGIONALES 2020-2021
+  //// FORMULARIO DE EVALUACION DE FORMULARIO 2 - REGIONAL ALINEADO A OBJETIVOS REGIONALES 2020-2021
   public function ver_relacion_ogestion($dep_id){
     $tabla='';
     $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
     $departamento=$this->model_proyecto->get_departamento($dep_id);
     $trimestre=$this->model_evaluacion->trimestre();
     
-      $configuracion=$this->model_configuracion->get_configuracion_session();
-      $date_actual = strtotime(date('Y-m-d')); //// fecha Actual
-      $date_inicio = strtotime($configuracion[0]['eval_inicio']); /// Fecha Inicio
-      $date_final = strtotime($configuracion[0]['eval_fin']); /// Fecha Final
-
-
     $tabla.='
       <input name="base" type="hidden" value="'.base_url().'">
       <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
@@ -134,8 +128,13 @@ class Eval_oregional extends CI_Controller{
           </div>
           <div class="widget-body">
             <p>
-              <h2><b>EVALUACIÓN A.C.P. '.strtoupper($departamento[0]['dep_departamento']).' - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></h2>
+              <h2><b>EVALUACIÓN OPERACIONES '.strtoupper($departamento[0]['dep_departamento']).' </b> - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2>
+              <br>
+                  <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>IMPRIMIR DETALLE (Form N° 2)</b></a>
+                  <a href="#" data-toggle="modal" data-target="#modal_cumplimiento_grafico" class="btn btn-lg btn-default" name="'.$dep_id.'" onclick="nivel_cumplimiento_operaciones_grafico('.$dep_id.','.$this->tmes.');" title="NIVEL DE CUMPLIMIENTO DE OPERACIONES (GRAFICO)" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>DETALLE CUMPLIMIENTO (Form N° 2)</b></a>
             </p>
+            <hr class="simple">
+            '.$this->calificacion_total_form2_regional($dep_id).'
             <hr class="simple">
             <ul id="myTab1" class="nav nav-tabs bordered">';
               $nro=0;
@@ -157,7 +156,6 @@ class Eval_oregional extends CI_Controller{
             $nro2=0;
             foreach($acp_regional as $oge){
               $lista_ogestion=$this->model_objetivoregion->list_oregional_regional($oge['og_id'],$dep_id);
-              $acp_eval_regional=$this->model_evaluacion->get_meta_oregional($oge['pog_id'],$this->tmes);/// datos de evaluacion al trimestre actual
               $nro2++;
               $active='class="tab-pane fade"';
               if($nro2==1){
@@ -173,79 +171,8 @@ class Eval_oregional extends CI_Controller{
               $tabla.='
               <div '.$active.' id="s'.$nro2.'">
                 <div class="row">
-                <div class="widget-body">
-                  <form action="'.site_url().'/ejecucion/cevaluacion_pei/valida_update_evaluacion_acp" method="post" id="form_eval'.$oge['pog_id'].'" class="smart-form" style="background-color:#a4caeb;">
-                    <legend><b>A.C.P. '.$oge['og_codigo'].'</b>.- '.$oge['og_objetivo'].'</legend>
-                    <input type="hidden" name="pog_id" value='.$oge['pog_id'].'>
-                    '.$oge['tp_indi_og'].'
-                    <fieldset>
-                      <div class="row">';
-                        $ejec=0;
-                        $mverificacion='';
-                        $tp=0;
-                        $tit='GUARDAR DATOS DE EVALUACION';
-                        if(count($acp_eval_regional)!=0){ /// Evaluado al Trimestre
-                          $tp=1;
-                          $ejec=$acp_eval_regional[0]['ejec_fis'];
-                          $mverificacion=$acp_eval_regional[0]['tmed_verif'];
-                          $tit='MODIFICAR DATOS DE EVALUACION';
-                        }
-
-                      $tabla.='
-                        <input type="hidden" name="tp" id="tp'.$oge['pog_id'].'" value='.$tp.'>
-                        <section class="col col-1">
-                          <label class="label"><b>(%) CUMPLIMIENTO</b></label>
-                          <div id="porcentaje'.$oge['pog_id'].'">'.$this->calificacion_acp_regional($oge['tp_indi_og'],round($this->get_suma_evaluado($oge['pog_id'],$this->tmes),2),round($ejec,2),round($oge['prog_fis'],2)).'</div>
-                        </section>
-                        <section class="col col-2">
-                          <label class="label"><b>META (A.C.P.)</b></label>
-                          <label class="input"> <i class="icon-append fa fa-tag"></i>
-                            <input type="text" name="meta_prog" id="meta_prog" value="'.round($oge['prog_fis'],2).' '.$tipo.'" disabled=true>
-                          </label>
-                        </section>';
-
-                        if($oge['tp_indi_og']==0){
-                          $tabla.='
-                          <section class="col col-2">
-                            <label class="label"><b>EJECUCIÓN ACUMULADO</b></label>
-                            <label class="input"> <i class="icon-append fa fa-tag"></i>
-                              <input type="text" name="ejec_registrado" id="ejec_registrado" value="'.round($this->get_suma_evaluado($oge['pog_id'],$this->tmes),2).'" disabled=true>
-                            </label>
-                          </section>';
-                        }
-
-                        $tabla.='
-                        <section class="col col-2">
-                          <label class="label" style="color:#0000ff;"><b>REGISTRO DE EJECUCIÓN (*)</b></label>
-                          <label class="input"> <i class="icon-append fa fa-tag"></i>
-                            <input type="text" name="ejec" id="ejec'.$oge['pog_id'].'" value="'.round($ejec,2).'" onkeyup="verif_valor_ejecucion('.$oge['pog_id'].',this.value);">
-                          </label>
-                        </section>
-                        <section class="col col-5">
-                          <label class="label" style="color:#0000ff;"><b>MEDIO DE VERIFICACIÓN (*)</b></label>
-                        <label class="textarea"> <i class="icon-append fa fa-tag"></i><textarea rows="4" name="mverificacion"  id="mverificacion'.$oge['pog_id'].'">'.$mverificacion.'</textarea></label>
-                        </section>
-                      </div>
-                    </fieldset>
-                    <div id="log'.$oge['pog_id'].'"></div>
-                    <div id="btn_eval'.$oge['pog_id'].'">
-                      <footer>
-                        <button type="button" id="subir_eval'.$oge['pog_id'].'" onclick="guardar_acp_regional('.$oge['pog_id'].');" class="btn btn-info">'.$tit.'</button>
-                      </footer>
-                    </div>
-                  </form>
-                </div>  
-                <hr style="border-top: 3px double #8c8b8b">
                 <form class="smart-form">
-                <legend>
-                  <b>DETALLE EVALUACIÓN DE OPERACIONES - '.strtoupper($departamento[0]['dep_departamento']).'</b>:
-                  '.$this->calificacion_total_form2_regional($dep_id).'';
-                $tabla.='
-                </legend>
-                  <br>
-                  <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>IMPRIMIR DETALLE</b></a>
-                  <a href="#" data-toggle="modal" data-target="#modal_cumplimiento_grafico" class="btn btn-lg btn-default" name="'.$dep_id.'" onclick="nivel_cumplimiento_operaciones_grafico('.$dep_id.','.$this->tmes.');" title="NIVEL DE CUMPLIMIENTO DE OPERACIONES (GRAFICO)" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>DETALLE CUMPLIMIENTO</b></a>
-
+                <legend><b>A.C.P. '.$oge['og_codigo'].'</b>.- '.$oge['og_objetivo'].'</legend>
                 <fieldset>
                 <table class="table table-bordered" border=0.2 style="width:100%;" id="datos">
                   <thead>
@@ -406,80 +333,6 @@ class Eval_oregional extends CI_Controller{
 
 
 
-    /*--- PARAMETRO DE CALIFICACION ACP REGIONAL ---*/
-    public function calificacion_acp_regional($tp_indicador_og,$eval_acumulado,$ejec,$meta){
-      /// $tp_indicador_og : 0 (parametro normal)
-      /// $tp_indicador_og : 1  x<=meta (optimo) , x>meta (insatisfactorio)
-      /// $tp_indicador_og : 2 x>=meta & x<=100 (optimo), x<meta (insatisfactorio)
-      $calificacion='';$resp='';
-      $valor=0;$color='';
-
-      if($tp_indicador_og==0){
-          if($meta!=0){
-            $valor=round(((($eval_acumulado+$ejec)/$meta)*100),0);
-          }
-
-          if($valor>0 & $valor<=50){
-            $resp='<b>INSATISFACTORIO</b>';
-            $color='#f95b4f';
-          }
-          elseif($valor>50 & $valor<=75){
-           $resp='<b>REGULAR</b>';
-           $color='#edd094';
-          }
-          elseif($valor>75 & $valor<=99){
-           $resp='<b>BUENO</b>';
-           $color='#83bad1';
-          }
-          elseif($valor==100){
-           $resp='<b>OPTIMO</b>';
-           $color='#4caf50';
-          }
-      }
-      elseif ($tp_indicador_og==1) {
-        if(($eval_acumulado+$ejec)<=$meta){
-          $valor=100;
-          $resp='<b>OPTIMO</b>';
-          $color='#4caf50';
-        }
-        else{
-          $resp='<b>INSATISFACTORIO</b>';
-          $color='#f95b4f';
-        }
-      }
-      else{
-        if(($eval_acumulado+$ejec)>=$meta & ($eval_acumulado+$ejec)<=100){
-          $valor=100;
-          $resp='<b>OPTIMO</b>';
-          $color='#4caf50';
-        }
-        elseif(($eval_acumulado+$ejec)<$meta){
-          $resp='<b>INSATISFACTORIO</b>';
-          $color='#f95b4f';
-        }
-      }
-
-      
-      $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size=50>'.$valor.'%</font><br>'.$resp.'</center></div>';
-      return $calificacion;
-    }
-
-
-
-
-
-    /*--- GET SUMA EVALUADO ANTES DEL TRIMESTRE ACTUAL ---*/
-    public function get_suma_evaluado($pog_id,$trimestre){
-      $sum=0;
-      for ($i=1; $i <$trimestre ; $i++) { 
-        $obj_gestion_evaluado=$this->model_evaluacion->get_objetivo_programado_evaluado_trimestral($i,$pog_id);
-        if(count($obj_gestion_evaluado)!=0){
-          $sum=$sum+$obj_gestion_evaluado[0]['ejec_fis'];
-        }
-      }
-
-      return $sum;
-    }
 
 
     /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL (TRIMESTRAL) 2022 --*/

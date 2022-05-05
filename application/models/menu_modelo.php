@@ -19,7 +19,7 @@ class Menu_modelo extends CI_Model {
 		from opciones o
 		where (o.o_activo = 1 and o.o_parent = 0 and o_filtro = $dato_menu) or (o.o_activo = 1 and o.o_parent = 0 and o_filtro = 30)) b
 		ON a.o_id = b.o_id
-		ORDER BY b.o_child";
+		ORDER BY b.o_child asc";
 		$query = $this->db->query($query);
 		return $query->result_array();
 	}
@@ -39,7 +39,7 @@ class Menu_modelo extends CI_Model {
 		from opciones o
 		where (o.o_activo = 1 and o.o_parent = $sub_menus)) b
 		ON a.o_id = b.o_id
-		ORDER BY b.o_child";
+		ORDER BY b.o_id, b.o_child asc";
 		$query = $this->db->query($query);
 		return $query->result_array();
 	}

@@ -37,24 +37,6 @@
 			<div id="logo-group">
 				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
 			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -97,10 +79,10 @@
 			<nav>
 				<ul>
 					<li class="">
-	                <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+	                <a href="<?php echo site_url("admin").'/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
 	            	</li>
 		            <li class="text-center">
-		                <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">EVALUACI&Oacute;N POA</span></a>
+		                <a href="#" title="EVALUACION POA"> <span class="menu-item-parent">EVALUACI&Oacute;N POA</span></a>
 		            </li>
 				<?php echo $menu;?>
 				</ul>
@@ -119,7 +101,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Evaluaci&oacute;n POA</li><li>Evaluaci&oacute;n Operaciones (Objetivos Regionales)</li>
+					<li>Evaluaci&oacute;n POA</li><li>Evaluaci&oacute;n Formulario N° 2 (Objetivos Regionales)</li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->

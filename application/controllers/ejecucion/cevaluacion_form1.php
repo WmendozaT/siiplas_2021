@@ -1,64 +1,316 @@
 <?php
-class Cevaluacion_pei extends CI_Controller {
+class Cevaluacion_form1 extends CI_Controller {
   public $rol = array('1' => '3','2' => '4');
   public function __construct (){
-        parent::__construct();
-        if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
-        $this->load->library('pdf2');
-        $this->load->model('programacion/model_proyecto');
-        $this->load->model('programacion/model_faseetapa');
-        $this->load->model('programacion/model_actividad');
-        $this->load->model('programacion/model_producto');
-        $this->load->model('programacion/model_componente');
-        $this->load->model('ejecucion/model_evaluacion');
-        $this->load->model('ejecucion/model_ejecucion');
-        $this->load->model('mestrategico/model_mestrategico');
-        $this->load->model('mestrategico/model_objetivogestion');
-        $this->load->model('mestrategico/model_objetivoregion');
-        $this->load->model('menu_modelo');
-        $this->load->model('Users_model','',true);
-        $this->load->library('security');
-        $this->gestion = $this->session->userData('gestion');
-        $this->adm = $this->session->userData('adm');
-        $this->dep_id = $this->session->userData('dep_id');
-        $this->rol = $this->session->userData('rol_id');
-        $this->dist = $this->session->userData('dist');
-        $this->dist_tp = $this->session->userData('dist_tp');
-        $this->tmes = $this->session->userData('trimestre');
-        $this->fun_id = $this->session->userData('fun_id');
-        $this->tp_adm = $this->session->userData('tp_adm');
-        $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
-        $this->load->library('evaluacionacp');
+      parent::__construct();
+      if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
+      $this->load->model('programacion/model_proyecto');
+      $this->load->model('programacion/model_faseetapa');
+      $this->load->model('programacion/model_actividad');
+      $this->load->model('programacion/model_producto');
+      $this->load->model('programacion/model_componente');
+      $this->load->model('ejecucion/model_evaluacion');
+      $this->load->model('ejecucion/model_ejecucion');
+      $this->load->model('mestrategico/model_mestrategico');
+      $this->load->model('mestrategico/model_objetivogestion');
+      $this->load->model('mestrategico/model_objetivoregion');
+      $this->load->model('menu_modelo');
+      $this->load->model('Users_model','',true);
+      $this->load->library('security');
+      $this->gestion = $this->session->userData('gestion');
+      $this->adm = $this->session->userData('adm');
+      $this->dep_id = $this->session->userData('dep_id');
+      $this->rol = $this->session->userData('rol_id');
+      $this->dist = $this->session->userData('dist');
+      $this->dist_tp = $this->session->userData('dist_tp');
+      $this->tmes = $this->session->userData('trimestre');
+      $this->fun_id = $this->session->userData('fun_id');
+      $this->tp_adm = $this->session->userData('tp_adm');
+      $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
+      $this->load->library('eval_acp');
 
-        }else{
-          $this->session->sess_destroy();
-          redirect('/','refresh');
-        }
+      }else{
+        $this->session->sess_destroy();
+        redirect('/','refresh');
+      }
     }
 
-    /*-- Mis Objetivos Regionales (Operaciones) --*/
-    public function objetivos_regionales(){
-      if($this->gestion>2021){
-          redirect(site_url("").'/eval_oregionales');
-      }
-      else{ ///// 2020-2021
-        $data['menu']=$this->menu(4); //// genera menu
-        $data['departamento']=$this->model_proyecto->get_departamento($this->dep_id);
-        $data['trimestre']=$this->model_evaluacion->trimestre();
-        if($this->tp_adm==1){
-          $data['tabla']=$this->regionales();
+
+  /*-- MENU ACP --*/
+  public function menu_acp(){
+    $data['menu']=$this->eval_acp->menu(4); //// genera menu
+    $data['titulo']=$this->eval_acp->titulo();
+
+    if($this->tp_adm==1){
+      $data['tabla']=$this->eval_acp->regionales();
+    }
+    else{
+      $data['tabla']=$this->eval_acp->formulario_n1_regional($this->dep_id);
+    }
+
+    $this->load->view('admin/evaluacion/evaluacion_form1/menu_regionales', $data);
+  }
+
+
+
+  /*---- FUNCION GET LISTA DE FORMULARIO 1 POR REGIONAL --------*/
+  public function get_lista_form1_x_regionales(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+      $departamento=$this->model_proyecto->get_departamento($dep_id);
+      $date_actual = strtotime(date('Y-m-d')); //// fecha Actual
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$this->eval_acp->formulario_n1_regional($dep_id),
+        );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+  /*------- GET OBJETIVO REGIONAL -------*/
+  public function get_datos_acp_regional(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $pog_id = $this->security->xss_clean($post['pog_id']);
+        $ejec = $this->security->xss_clean($post['ejec']); /// valor ejecutado
+        
+        $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id); /// meta acp regional
+        $acp_regional=$this->model_objetivogestion->get_objetivo_temporalidad($pog_id); /// acp
+
+        if(count($meta_regional)!=0){
+          $result = array(
+            'respuesta' => 'correcto',
+            'acp_regional' => $acp_regional, /// Datos Objetivo de Gestion ACP
+            'meta_regional' => $meta_regional, /// Datos Meta Regional
+            'trimestre' => $this->model_evaluacion->trimestre(), /// Datos Trimestre
+            'evaluado' => $this->get_suma_evaluado($pog_id,$this->tmes), /// Valor Evaluado con anterioridad : tipo indicador : 0
+            'calificacion' => $this->calificacion_acp_regional($acp_regional[0]['tp_indi_og'],$this->get_suma_evaluado($pog_id,$this->tmes),$ejec,$meta_regional[0]['prog_fis']), /// Valor Evaluado 
+          );
         }
         else{
-          $data['tabla']=$this->ver_relacion_ogestion($this->dep_id);
+          $result = array(
+            'respuesta' => 'error',
+          );
         }
 
-        $this->load->view('admin/evaluacion/objetivo_regional/objetivos_regionales', $data);
+        echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+  /*--- GET SUMA EVALUADO ANTES DEL TRIMESTRE ACTUAL 2022---*/
+  public function get_suma_evaluado($pog_id,$trimestre){
+    $sum=0;
+    for ($i=1; $i <$trimestre ; $i++) { 
+      $obj_gestion_evaluado=$this->model_evaluacion->get_objetivo_programado_evaluado_trimestral($i,$pog_id);
+      if(count($obj_gestion_evaluado)!=0){
+        $sum=$sum+$obj_gestion_evaluado[0]['ejec_fis'];
       }
     }
+
+    return $sum;
+  }
+
+
+
+
+
+    /*---- VALIDA ADD/UPDATE EVALUACION POA ACP 2022 ----*/
+    public function valida_update_evaluacion_acp(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $pog_id = $this->security->xss_clean($post['pog_id']);
+        $ejec_meta = $this->security->xss_clean($post['ejec']);
+        $mverificacion = $this->security->xss_clean($post['mv']);
+        $tp = $this->security->xss_clean($post['tp']);
+
+        $this->db->where('pog_id', $pog_id);
+        $this->db->where('trm_id', $this->tmes);
+        $this->db->delete('objetivo_programado_gestion_evaluado');
+
+        $suma_ejec=$this->get_suma_evaluado($pog_id,$this->tmes); ///suma de ejecucion registrado al trimestre anterior
+        $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id); /// Meta Regional
+        $acp_regional=$this->model_objetivogestion->get_objetivo_temporalidad($pog_id); /// acp
+
+        $tp_eval=0;
+        if($acp_regional[0]['tp_indi_og']==0){ /// acumulado
+          if($meta_regional[0]['prog_fis']==($suma_ejec+$ejec_meta)){
+            $tp_eval=1;
+          }
+        }
+
+        elseif($acp_regional[0]['tp_indi_og']==1){
+          if($ejec_meta<=$meta_regional[0]['prog_fis']){
+            $tp_eval=1;
+          }
+          else{
+           $tp_eval=0; 
+          }
+
+        }
+        elseif ($acp_regional[0]['tp_indi_og']==2) {
+          if($ejec_meta>=$meta_regional[0]['prog_fis'] & $ejec_meta<=100){
+            $tp_eval=1;
+          }
+          else{
+            $tp_eval=0;
+          }
+        }
+
+
+        $data = array(
+          'pog_id' => $pog_id,
+          'ejec_fis' => $ejec_meta, 
+          'trm_id' => $this->tmes,
+          'tp_eval' => $tp_eval, 
+          'tmed_verif' => strtoupper($mverificacion),
+        );
+        $this->db->insert('objetivo_programado_gestion_evaluado',$data);
+        $epog_id=$this->db->insert_id();
+
+        $eval_registrado=$this->model_evaluacion->get_evaluacion_meta_oregional($epog_id);
+        
+
+        if(count($eval_registrado)!=0){
+          $result = array(
+          'respuesta' => 'correcto',
+          'meta_regional' => $meta_regional, /// Datos Meta Regional
+          'info_evaluado' => $eval_registrado, /// Informacion evaluada al trimestre
+          'evaluado' => $this->get_suma_evaluado($pog_id,$this->tmes), /// Valor Evaluado
+          'calificacion' => $this->calificacion_acp_regional($acp_regional[0]['tp_indi_og'],$this->get_suma_evaluado($pog_id,$this->tmes),$ejec_meta,$meta_regional[0]['prog_fis']), /// Valor Evaluado 
+          );
+        }
+        else{
+          $result = array(
+          'respuesta' => 'error',
+         
+          );
+        }
+
+        echo json_encode($result);
+
+      }else{
+          show_404();
+      }
+    }
+
+
+
+
+
+
+    /*--- PARAMETRO DE CALIFICACION ACP REGIONAL ---*/
+    public function calificacion_acp_regional($tp_indicador_og,$eval_acumulado,$ejec,$meta){
+      /// $tp_indicador_og : 0 (parametro normal)
+      /// $tp_indicador_og : 1  x<=meta (optimo) , x>meta (insatisfactorio)
+      /// $tp_indicador_og : 2 x>=meta & x<=100 (optimo), x<meta (insatisfactorio)
+      $calificacion='';$resp='';
+      $valor=0;$color='';
+
+      if($tp_indicador_og==0){ //// Acumulativo
+          if($meta!=0){
+            $valor=round(((($eval_acumulado+$ejec)/$meta)*100),0);
+          }
+
+          if($valor>0 & $valor<=50){
+            $resp='<b>INSATISFACTORIO</b>';
+            $color='#f95b4f';
+          }
+          elseif($valor>50 & $valor<=75){
+           $resp='<b>REGULAR</b>';
+           $color='#edd094';
+          }
+          elseif($valor>75 & $valor<=99){
+           $resp='<b>BUENO</b>';
+           $color='#83bad1';
+          }
+          elseif($valor==100){
+           $resp='<b>OPTIMO</b>';
+           $color='#4caf50';
+          }
+      }
+
+      elseif ($tp_indicador_og==1) { /// Al Trimestre
+        if($ejec<=$meta){
+          $valor=100;
+          $resp='<b>OPTIMO</b>';
+          $color='#4caf50';
+        }
+        else{
+          $resp='<b>INSATISFACTORIO</b>';
+          $color='#f95b4f';
+        }
+      }
+
+      else{ /// Al Trimestre
+        if(($ejec>=$meta) & ($ejec<=100)){
+          $valor=100;
+          $resp='<b>OPTIMO</b>';
+          $color='#4caf50';
+        }
+        elseif($ejec<$meta){
+          $resp='<b>INSATISFACTORIO</b>';
+          $color='#f95b4f';
+        }
+      }
+
+      
+      $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size=50>'.$valor.'%</font><br>'.$resp.'</center></div>';
+      return $calificacion;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /*-------- LISTA DE REGIONALES ----------*/
-    public function regionales(){
+/*    public function regionales(){
       $regionales=$this->model_proyecto->list_departamentos();
       $tabla='
           <div>
@@ -108,10 +360,10 @@ class Cevaluacion_pei extends CI_Controller {
           </div>';
 
       return $tabla;
-    }
+    }*/
 
     //// REGIONAL ALINEADO A OBJETIVOS REGIONALES 2020-2021
-    public function ver_relacion_ogestion($dep_id){
+   /* public function ver_relacion_ogestion($dep_id){
       $departamento=$this->model_proyecto->get_departamento($dep_id);
       $tabla='';
       $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
@@ -240,10 +492,10 @@ class Cevaluacion_pei extends CI_Controller {
       </table> ';
 
       return $tabla;
-    }
+    }*/
 
     /*-------- GET CUADRO EVALUACION --------*/
-    public function get_cuadro_evaluacion(){
+/*    public function get_cuadro_evaluacion(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $dep_id = $this->security->xss_clean($post['dep_id']);
@@ -268,10 +520,10 @@ class Cevaluacion_pei extends CI_Controller {
       }else{
           show_404();
       }
-    }
+    }*/
 
     /*----- CUADRO EVALUACION METAS REGIONALES  ----*/
-    public function cuadro_evaluacion_grafico($dep_id){
+/*    public function cuadro_evaluacion_grafico($dep_id){
       $data['regional']=$this->model_proyecto->get_departamento($dep_id);
       $data['trimestre']=$this->model_evaluacion->trimestre();
       $data['nro']=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
@@ -280,10 +532,10 @@ class Cevaluacion_pei extends CI_Controller {
      
       //echo $data['print_evaluacion'];
       $this->load->view('admin/evaluacion/objetivo_regional/reporte_grafico_meta_oregion', $data);
-    }
+    }*/
 
     /*--- Imprimir Evaluación Objetivos Regionales ---*/
-    public function print_evaluacion_objetivos($nro,$eval){
+   /* public function print_evaluacion_objetivos($nro,$eval){
       $mes = $this->mes_nombre();
       $trimestre=$this->model_evaluacion->trimestre();
       $tr=($this->tmes*3);
@@ -396,10 +648,10 @@ class Cevaluacion_pei extends CI_Controller {
       </html>
       <?php
       return $tabla;
-    }
+    }*/
 
     /*--- Tabla Evaluacion Meta ---*/
-    public function tabla_evaluacion_meta($dep_id){
+/*    public function tabla_evaluacion_meta($dep_id){
       $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
       $nro=0;
       foreach($lista_ogestion as $row){
@@ -433,11 +685,11 @@ class Cevaluacion_pei extends CI_Controller {
       }
 
       return $tab;
-    }
+    }*/
 
 
     /*--- Valida Evaluacion Objetivos (2020) ---*/
-    public function valida_evalmeta(){
+/*    public function valida_evalmeta(){
       if ($this->input->post()) {
         $post = $this->input->post();
         $tmes=$this->model_evaluacion->trimestre();
@@ -483,10 +735,10 @@ class Cevaluacion_pei extends CI_Controller {
       } else {
           show_404();
       }
-    }
+    }*/
 
     /*--- Valida Modificación Evaluacion Objetivos (2020-2021) ---*/
-    public function valida_update_evalmeta(){
+/*    public function valida_update_evalmeta(){
       if ($this->input->post()) {
           $post = $this->input->post();
           $tmes=$this->model_evaluacion->trimestre();
@@ -538,170 +790,10 @@ class Cevaluacion_pei extends CI_Controller {
       } else {
           show_404();
       }
-    }
-
-
-    /*---- VALIDA ADD/UPDATE EVALUACION POA ACP 2022 ----*/
-    public function valida_update_evaluacion_acp(){
-      if($this->input->is_ajax_request() && $this->input->post()){
-        $post = $this->input->post();
-        $pog_id = $this->security->xss_clean($post['pog_id']);
-        $ejec_meta = $this->security->xss_clean($post['ejec']);
-        $mverificacion = $this->security->xss_clean($post['mv']);
-        $tp = $this->security->xss_clean($post['tp']);
-
-        $this->db->where('pog_id', $pog_id);
-        $this->db->where('trm_id', $this->tmes);
-        $this->db->delete('objetivo_programado_gestion_evaluado');
-
-        $suma_ejec=$this->get_suma_evaluado($pog_id,$this->tmes); ///suma de ejecucion registrado al trimestre anterior
-        $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id); /// Meta Regional
-
-        $tp_eval=0;
-        if($meta_regional[0]['prog_fis']==($suma_ejec+$ejec_meta)){
-          $tp_eval=1;
-        }
-
-        $data = array(
-          'pog_id' => $pog_id,
-          'ejec_fis' => $ejec_meta, 
-          'trm_id' => $this->tmes,
-          'tp_eval' => $tp_eval, 
-          'tmed_verif' => strtoupper($mverificacion),
-        );
-        $this->db->insert('objetivo_programado_gestion_evaluado',$data);
-        $epog_id=$this->db->insert_id();
-
-        $eval_registrado=$this->model_evaluacion->get_evaluacion_meta_oregional($epog_id);
-
-        if(count($eval_registrado)!=0){
-          $result = array(
-          'respuesta' => 'correcto',
-          'meta_regional' => $meta_regional, /// Datos Meta Regional
-          'info_evaluado' => $eval_registrado, /// Informacion evaluada al trimestre
-         // 'evaluado' => $this->get_suma_evaluado($pog_id,$this->tmes), /// Valor Evaluado
-          'calificacion' => $this->calificacion_acp_regional($this->get_suma_evaluado($pog_id,$this->tmes),$ejec_meta,$meta_regional[0]['prog_fis']), /// Valor Evaluado 
-          );
-        }
-        else{
-          $result = array(
-          'respuesta' => 'error',
-         
-          );
-        }
-        echo json_encode($result);
-
-      }else{
-          show_404();
-      }
-    }
+    }*/
 
 
 
-    /*------- GET OBJETIVO REGIONAL -------*/
-    public function get_objetivo_regional(){
-      if($this->input->is_ajax_request() && $this->input->post()){
-          $post = $this->input->post();
-          $pog_id = $this->security->xss_clean($post['pog_id']);
-          $ejec = $this->security->xss_clean($post['ejec']);
-          
-          $meta_regional=$this->model_objetivoregion->get_oregional_por_progfis($pog_id);
-          $acp_regional=$this->model_objetivogestion->get_objetivo_temporalidad($pog_id);
-          if(count($meta_regional)!=0){
-            $result = array(
-              'respuesta' => 'correcto',
-              'acp_regional' => $acp_regional, /// Datos Objetivo de Gestion ACP
-              'meta_regional' => $meta_regional, /// Datos Meta Regional
-              'trimestre' => $this->model_evaluacion->trimestre(), /// Datos Trimestre
-              'evaluado' => $this->get_suma_evaluado($pog_id,$this->tmes), /// Valor Evaluado 
-              'calificacion' => $this->calificacion_acp_regional($acp_regional[0]['tp_indi_og'],$this->get_suma_evaluado($pog_id,$this->tmes),$ejec,$meta_regional[0]['prog_fis']), /// Valor Evaluado 
-            );
-          }
-          else{
-            $result = array(
-              'respuesta' => 'error',
-            );
-          }
-
-          echo json_encode($result);
-      }else{
-          show_404();
-      }
-    }
-
-
-
-    /*--- GET SUMA EVALUADO ANTES DEL TRIMESTRE ACTUAL 2022---*/
-    public function get_suma_evaluado($pog_id,$trimestre){
-      $sum=0;
-      for ($i=1; $i <$trimestre ; $i++) { 
-        $obj_gestion_evaluado=$this->model_evaluacion->get_objetivo_programado_evaluado_trimestral($i,$pog_id);
-        if(count($obj_gestion_evaluado)!=0){
-          $sum=$sum+$obj_gestion_evaluado[0]['ejec_fis'];
-        }
-      }
-
-      return $sum;
-    }
-
-
-    /*--- PARAMETRO DE CALIFICACION ACP REGIONAL ---*/
-    public function calificacion_acp_regional($tp_indicador_og,$eval_acumulado,$ejec,$meta){
-      /// $tp_indicador_og : 0 (parametro normal)
-      /// $tp_indicador_og : 1  x<=meta (optimo) , x>meta (insatisfactorio)
-      /// $tp_indicador_og : 2 x>=meta & x<=100 (optimo), x<meta (insatisfactorio)
-      $calificacion='';$resp='';
-      $valor=0;$color='';
-
-      if($tp_indicador_og==0){
-          if($meta!=0){
-            $valor=round(((($eval_acumulado+$ejec)/$meta)*100),0);
-          }
-
-          if($valor>0 & $valor<=50){
-            $resp='<b>INSATISFACTORIO</b>';
-            $color='#f95b4f';
-          }
-          elseif($valor>50 & $valor<=75){
-           $resp='<b>REGULAR</b>';
-           $color='#edd094';
-          }
-          elseif($valor>75 & $valor<=99){
-           $resp='<b>BUENO</b>';
-           $color='#83bad1';
-          }
-          elseif($valor==100){
-           $resp='<b>OPTIMO</b>';
-           $color='#4caf50';
-          }
-      }
-      elseif ($tp_indicador_og==1) {
-        if(($eval_acumulado+$ejec)<=$meta){
-          $valor=100;
-          $resp='<b>OPTIMO</b>';
-          $color='#4caf50';
-        }
-        else{
-          $resp='<b>INSATISFACTORIO</b>';
-          $color='#f95b4f';
-        }
-      }
-      else{
-        if(($eval_acumulado+$ejec)>=$meta & ($eval_acumulado+$ejec)<=100){
-          $valor=100;
-          $resp='<b>OPTIMO</b>';
-          $color='#4caf50';
-        }
-        elseif(($eval_acumulado+$ejec)<$meta){
-          $resp='<b>INSATISFACTORIO</b>';
-          $color='#f95b4f';
-        }
-      }
-
-      
-      $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size=50>'.$valor.'%</font><br>'.$resp.'</center></div>';
-      return $calificacion;
-    }
 
 
 
