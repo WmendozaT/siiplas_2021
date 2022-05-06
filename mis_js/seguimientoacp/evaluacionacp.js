@@ -133,22 +133,22 @@ function abreVentana_eficiencia(PDF){
           });
 
           request.done(function (response, textStatus, jqXHR) {
-              document.getElementById('log'+pog_id).innerHTML = '<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/><b>GUARDANDO REGISTRO ....</b></div>';
-              $('#btn_eval'+pog_id).slideUp();
-              
-              if (response.respuesta == 'correcto') {
-                  document.getElementById('log'+pog_id).innerHTML = '';
-                  $('#btn_eval'+pog_id).slideDown();
+            document.getElementById('log'+pog_id).innerHTML = '<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/><b>GUARDANDO REGISTRO ....</b></div>';
+            $('#btn_eval'+pog_id).slideUp();
+            
+            if (response.respuesta == 'correcto') {
+                document.getElementById('log'+pog_id).innerHTML = '';
+                $('#btn_eval'+pog_id).slideDown();
 
-                  document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-                  
-                  document.getElementById("ejec"+pog_id).value = response.info_evaluado[0]['ejec_fis'];
-                  document.getElementById("mverificacion"+pog_id).value = response.info_evaluado[0]['tmed_verif'];
-                  alertify.success("REGISTRO CORRECTAMENTE !!");
-              }
-              else{
-                  alertify.error("ERROR AL GUARDAR INFORMACION");
-              }
+                document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
+                
+                document.getElementById("ejec"+pog_id).value = response.info_evaluado[0]['ejec_fis'];
+                document.getElementById("mverificacion"+pog_id).value = response.info_evaluado[0]['tmed_verif'];
+                alertify.success("REGISTRO CORRECTAMENTE !!");
+            }
+            else{
+                alertify.error("ERROR AL GUARDAR INFORMACION");
+            }
 
           });
       } else {
@@ -178,7 +178,6 @@ function abreVentana_eficiencia(PDF){
 
         request.done(function (response, textStatus, jqXHR) {
         if (response.respuesta == 'correcto') {
-          //  alert(response.acp_regional[0]['tp_indi_og'])
            if(response.acp_regional[0]['tp_indi_og']==0){
               if((parseFloat(valor_registrado) + parseFloat(response.evaluado))<=response.meta_regional[0]['prog_fis']){
                 document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
