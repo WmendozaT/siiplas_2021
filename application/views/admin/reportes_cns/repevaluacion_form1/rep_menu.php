@@ -143,7 +143,7 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
         <!-- JQUERY UI + Bootstrap Slider -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
-        <script src="<?php echo base_url(); ?>mis_js/seguimientoacp/reporte_evaluacionacp.js"></script> 
+        <script src="<?php echo base_url(); ?>mis_js/seguimientoacp/evaluacionacp.js"></script> 
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
     </body>

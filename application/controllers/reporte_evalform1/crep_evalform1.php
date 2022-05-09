@@ -31,17 +31,17 @@ class Crep_evalform1 extends CI_Controller {
             $this->fun_id = $this->session->userData('fun_id');
             $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
             $this->tp_adm = $this->session->userData('tp_adm');
-            $this->load->library('evaluacionacp');
+            $this->load->library('eval_acp');
         }
         else{
             redirect('/','refresh');
         }
     }
 
-    /// MENU EVALUACIÓN POA 
-    public function menu_eval_objetivos(){
-      $data['menu']=$this->evaluacionacp->menu(7); //// genera menu
-      $data['regional']=$this->evaluacionacp->listado_regionales();
+    /// MENU EVALUACIÓN POA FORM 1
+    public function menu_eval_acp(){
+      $data['menu']=$this->eval_acp->menu(7); //// genera menu
+      $data['regional']=$this->eval_acp->listado_regionales();
       $data['da']=$this->model_proyecto->list_departamentos();
       $tabla='';
       $tabla.='<div class="well">
@@ -78,45 +78,45 @@ class Crep_evalform1 extends CI_Controller {
       }
     }
 
-    //// EVALUACIÓN ACP REGIONAL INSTITUCIONAL - IFRAME
-    public function evaluacion_objetivos($id){
-      $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      $tabla='';
-      $dep_id=$id;
-      if($id!=0){ //// REGIONAL
-        $regional=$this->model_proyecto->get_departamento($dep_id);
-        $data['titulo_graf']=strtoupper($regional[0]['dep_departamento']);
-        $data['cabecera']=$this->evaluacionacp->cabecera_reporte_grafico(); /// Cabecera Grafico
-        $data['nro']=count($this->model_objetivogestion->lista_acp_x_regional($dep_id));
-        $data['eval']=$this->evaluacionacp->matriz_evaluacion_meta_acp_regional($dep_id);
-      }
-      else{ ///// INSTITUCIONAL
-        $data['titulo_graf']='INSTITUCIONAL';
-        $data['cabecera']=$this->evaluacionacp->cabecera_reporte_grafico(); /// Cabecera Grafico
-        $data['nro']=count($this->model_objetivogestion->list_objetivosgestion_general());
-        $data['eval']=$this->evaluacionacp->tabla_evaluacion_meta_institucional();
-      }
-      
-      $data['tabla']=$this->evaluacionacp->detalle_acp($data['eval'],$data['nro'],1);
-      
-      $tabla.='<div style="font-family: Arial;">DETALLE A.C.P. '.$data['titulo_graf'].' / '.$this->gestion.'</div>
-                <ul>';
-                for ($i=1; $i <=$data['nro'] ; $i++) { 
-                  $tabla.='<li style="font-family: Arial;font-size: 11px;height: 1%;">'.$data['eval'][$i][1].'.- '.$data['eval'][$i][2].' - <b>'.$data['eval'][$i][6].' %</b></li>';
-                }
-                $tabla.='
-                </ul>
-              <hr>';
-      $data['detalle_acp']=$tabla;
 
-      $data['matriz_pastel']=$this->evaluacionacp->matriz_gcumplimiento($data['eval'],$data['nro']);
-      $data['tabla_pastel']=$this->evaluacionacp->tabla_gcumplimiento($data['matriz_pastel'],1,1);
-      $data['tabla_pastel_todo']=$this->evaluacionacp->tabla_gcumplimiento($data['matriz_pastel'],2,1);
-
-      $this->load->view('admin/reportes_cns/repevaluacion_form1/reporte_grafico_eval_consolidado_regional_form1', $data);
+  //// EVALUACIÓN ACP REGIONAL INSTITUCIONAL - IFRAME
+  public function evaluacion_objetivos($id){
+    $data['trimestre']=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
+    $tabla='';
+    $dep_id=$id;
+    if($id!=0){ //// REGIONAL
+      $regional=$this->model_proyecto->get_departamento($dep_id);
+      $data['titulo_graf']=strtoupper($regional[0]['dep_departamento']);
+      $data['cabecera']=$this->eval_acp->cabecera_reporte_grafico(); /// Cabecera Grafico
+      $data['nro']=count($this->model_objetivogestion->lista_acp_x_regional($dep_id));
+      $data['eval']=$this->eval_acp->matriz_evaluacion_meta_acp_regional($dep_id);
     }
+    else{ ///// INSTITUCIONAL
+      $data['titulo_graf']='INSTITUCIONAL';
+      $data['cabecera']=$this->eval_acp->cabecera_reporte_grafico(); /// Cabecera Grafico
+      $data['nro']=count($this->model_objetivogestion->list_objetivosgestion_general());
+      $data['eval']=$this->eval_acp->tabla_evaluacion_meta_institucional();
+    }
+    
+    $data['tabla']=$this->eval_acp->detalle_acp($data['eval'],$data['nro'],1);
+    
+    $tabla.='<div style="font-family: Arial;">DETALLE A.C.P. '.$data['titulo_graf'].' / '.$this->gestion.'</div>
+              <ul>';
+              for ($i=1; $i <=$data['nro'] ; $i++) { 
+               
+                $tabla.='<li style="font-family: Arial;font-size: 11px;height: 1%;">'.$data['eval'][$i][1].'.- '.$data['eval'][$i][2].' - <b>'.$data['eval'][$i][6].' %</b></li>';
+              }
+              $tabla.='
+              </ul>
+            <hr>';
+    $data['detalle_acp']=$tabla;
 
+    $data['matriz_pastel']=$this->eval_acp->matriz_gcumplimiento($data['eval'],$data['nro']);
+    $data['tabla_pastel']=$this->eval_acp->tabla_gcumplimiento($data['matriz_pastel'],1,1);
+    $data['tabla_pastel_todo']=$this->eval_acp->tabla_gcumplimiento($data['matriz_pastel'],2,1);
 
+    $this->load->view('admin/reportes_cns/repevaluacion_form1/reporte_grafico_eval_consolidado_regional_form1', $data);
+  }
 
 
 }

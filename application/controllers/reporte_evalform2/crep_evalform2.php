@@ -85,21 +85,7 @@ class Crep_evalform2 extends CI_Controller {
             </thead>
           <tbody>
             <tr>
-              <td style="height:20px;"><b>PROGRAMADO</b></td>';
-              for ($i=1; $i<=$nro; $i++) { 
-                $tabla.='<td align=right>'.$matriz[$i][3].'</td>';
-              }
-              $tabla.='
-            </tr>
-            <tr>
-              <td style="height:20px;"><b>EJECUTADO</b></td>';
-              for ($i=1; $i<=$nro; $i++) { 
-                $tabla.='<td align=right>'.$matriz[$i][4].'</td>';
-              }
-              $tabla.='
-            </tr>
-            <tr>
-              <td style="height:20px;"><b>(%)CUMPLIMIENTO</b></td>';
+              <td style="height:20px;"><b>(%) CUMPLIMIENTO</b></td>';
               for ($i=1; $i<=$nro; $i++) { 
                 $tabla.='<td align=right><b>'.$matriz[$i][6].' %</b></td>';
               }

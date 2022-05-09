@@ -895,7 +895,7 @@ class Eval_oregional extends CI_Controller{
           <th style="width:4.5%;">II. TRIM.</th>
           <th style="width:4.5%;">III. TRIM.</th>
           <th style="width:4.5%;">IV. TRIM.</th>
-          <th style="width:8%;">CALIFICACIÓN</th>
+          <th style="width:8%;">% CUMPLIMIENTO<br>A LA GESTIÓN '.$this->gestion.'</th>
           <th style="width:10%;">MEDIO DE VERIFICACI&Oacute;N</th>
         </tr>
       </thead>
@@ -916,7 +916,7 @@ class Eval_oregional extends CI_Controller{
         <td style="width:12%;">'.$row['or_indicador'].'</td>
         <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
         '.$this->get_temporalidad_objetivo_regional($row['or_id'],1).'
-        <td style="font-family:Arial;font-size: 8px;" align=right><b>'.$calificacion[3].'%</b></td>
+        <td style="font-family:Arial;font-size: 8px;" align=right><b>'.$calificacion[4].'%</b></td>
         <td style="width:10%;">'.$row['or_verificacion'].'</td>
       </tr>';
     }

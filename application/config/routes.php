@@ -410,7 +410,7 @@ $route['rep_indicadores_programa/(:any)'] = 'reporte_evalform4/creportes_evaluac
 
 
 //====== REPORTE EVALUACION A.C.P. FORM 1 
-$route['menu_eval_objetivos'] = 'reporte_evalform1/crep_evalform1/menu_eval_objetivos';  /// MENU EVALUACION OBJETIVOS 
+$route['menu_eval_objetivos'] = 'reporte_evalform1/crep_evalform1/menu_eval_acp';  /// MENU EVALUACION OBJETIVOS 
 $route['rep_eval_obj/evaluacion_objetivos/(:any)'] = 'reporte_evalform1/crep_evalform1/evaluacion_objetivos/$1';  /// REPORTES GRAFICOS REGIONAL
 
 //====== REPORTE EVALUACION OPERACIONES FORM 2 

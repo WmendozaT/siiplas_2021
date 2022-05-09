@@ -29,97 +29,98 @@
 
 <div id="content">
 <!-- widget grid -->
-    <section id="widget-grid" class="">
-        <div class="row">
-            <article class="col-sm-12">
-                <!-- new widget -->
-                <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
-                    <header>
-                        <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                        <h2>CUADRO DE EVALUACI&Oacute;N A.C.P. </h2>
-                        <ul class="nav nav-tabs pull-right in" id="myTab">
-                          <li class="active">
-                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">(%) CUMPLIMIENTO ACP.</span></a>
-                          </li>
-                          <li>
-                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE CUMPLIMIENTO</span></a>
-                          </li>
-                        </ul>
-                    </header>
+  <section id="widget-grid" class="">
+      <div class="row">
+          <article class="col-sm-12">
+              <!-- new widget -->
+              <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
+                  <header>
+                      <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+                      <h2>CUADRO DE EVALUACI&Oacute;N A.C.P. </h2>
+                      <ul class="nav nav-tabs pull-right in" id="myTab">
+                        <li class="active">
+                          <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">(%) CUMPLIMIENTO ACP.</span></a>
+                        </li>
+                        <li>
+                          <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE CUMPLIMIENTO</span></a>
+                        </li>
+                      </ul>
+                  </header>
 
-                    <!-- widget div-->
-                    <div class="no-padding">
-                        <!-- widget edit box -->
-                        <div class="jarviswidget-editbox">
-                            test
-                        </div>
-                        <!-- end widget edit box -->
-                        <div class="widget-body">
-                            <!-- content -->
-                            <div id="myTabContent" class="tab-content">
-                                <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="CUADRO DE EVALUACI&Oacute;N ">
-                                  <div id="cabecera" style="display: none"><?php echo $cabecera;?></div>
-                                  <div id="Evaluacion">
-                                    <div id="container" style="width: 1000px; height: 750px; margin: 0 auto"></div>
-                                  </div>
-                                  <?php echo $tabla;?>
-                                  <div id="detalle_impresion" style="display: none">
-                                    <?php echo $detalle_acp;?>
-                                  </div>
-                                  
-                                  <div align="right">
-                                    <button id="btnImprimir_evaluacionacp" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="40" HEIGHT="40"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                  </div>
+                  <!-- widget div-->
+                  <div class="no-padding">
+                      <!-- widget edit box -->
+                      <div class="jarviswidget-editbox">
+                          test
+                      </div>
+                      <!-- end widget edit box -->
+                      <div class="widget-body">
+                          <!-- content -->
+                          <div id="myTabContent" class="tab-content">
+                              <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="CUADRO DE EVALUACI&Oacute;N ">
+                                <div id="cabecera" style="display: none"><?php echo $cabecera;?></div>
+                                <div id="Evaluacion">
+                                  <div id="container" style="width: 1000px; height: 750px; margin: 0 auto"></div>
                                 </div>
-                                <!-- end s1 tab pane -->
-                                
-                                <div class="tab-pane fade" id="s2" title="CUADRO EVALUACIÓN A.C.P.">
-                                    <hr>
-                                    <div class="row">
-                                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                            <table class="change_order_items" border=1>
-                                              <tr>
-                                                <td>
-                                                  <div id="pastel" style="width: 600px; height: 350px; margin: 0 auto"></div>
-                                                </td>
-                                              </tr>
-                                              <tr>
-                                                <td>
-                                                 <?php echo $tabla_pastel;?>
-                                                </td>
-                                              </tr>
-                                            </table>
-                                          </div>
-                                          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                            <table class="change_order_items" border=1>
+                                <?php echo $tabla;?>
+
+                                <div id="detalle_impresion" style="display: none">
+                                  <?php echo $detalle_acp;?>
+                                </div>
+
+                                <div align="right">
+                                  <button id="btnImprimir_evaluacionacp" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="40" HEIGHT="40"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                              </div>
+                              <!-- end s1 tab pane -->
+                              
+                              <div class="tab-pane fade" id="s2" title="CUADRO EVALUACIÓN A.C.P.">
+                               <hr>
+                                  <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                          <table class="change_order_items" border=1>
                                             <tr>
                                               <td>
-                                                  <div id="pastel_todos" style="width: 600px; height: 350px; margin: 0 auto"></div>
+                                                <div id="pastel" style="width: 600px; height: 350px; margin: 0 auto"></div>
                                               </td>
                                             </tr>
                                             <tr>
                                               <td>
-                                              <div class="table-responsive">
-                                                <?php echo $tabla_pastel_todo;?>
-                                              </div>
+                                               <?php echo $tabla_pastel;?>
                                               </td>
                                             </tr>
-                                            </table>
-                                          </div>
-                                      </div>
+                                          </table>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                          <table class="change_order_items" border=1>
+                                          <tr>
+                                            <td>
+                                                <div id="pastel_todos" style="width: 600px; height: 350px; margin: 0 auto"></div>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                            <div class="table-responsive">
+                                              <?php echo $tabla_pastel_todo;?>
+                                            </div>
+                                            </td>
+                                          </tr>
+                                          </table>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <!-- end content -->
-                        </div>
-                    </div>
-                    <!-- end widget div -->
-                </div>
-                <!-- end widget -->
-            </article>
-        </div>
-    </section>
+                                  </div>
+                              </div>
+                          </div>
+                          <!-- end content -->
+                      </div>
+                  </div>
+                  <!-- end widget div -->
+              </div>
+              <!-- end widget -->
+          </article>
+      </div>
+  </section>
 </div>
 
 <script>
