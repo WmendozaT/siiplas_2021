@@ -155,7 +155,7 @@ class Eval_oregional extends CI_Controller{
             <div id="myTabContent1" class="tab-content padding-10">';
             $nro2=0;
             foreach($acp_regional as $oge){
-              $lista_ogestion=$this->model_objetivoregion->list_oregional_regional($oge['og_id'],$dep_id);
+              $lista_form2=$this->model_objetivoregion->list_oregional_regional($oge['og_id'],$dep_id);
               $nro2++;
               $active='class="tab-pane fade"';
               if($nro2==1){
@@ -198,7 +198,7 @@ class Eval_oregional extends CI_Controller{
                   </thead>
                   <tbody>';
                    $nro_ope=0;
-                  foreach($lista_ogestion as $row){
+                  foreach($lista_form2 as $row){
                     $meta='';
                     if ($row['indi_id']==1 || $row['indi_id']==3) {
                       $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);

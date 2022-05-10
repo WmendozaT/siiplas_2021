@@ -28,7 +28,7 @@ class Cevaluacion_form1 extends CI_Controller {
       $this->fun_id = $this->session->userData('fun_id');
       $this->tp_adm = $this->session->userData('tp_adm');
       $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
-      $this->fecha_final_evaluacionacp = strtotime(date('2022-05-10'));
+      $this->fecha_final_evaluacionacp = strtotime(date('2022-05-9'));
       $this->load->library('eval_acp');
 
       }else{
@@ -43,6 +43,7 @@ class Cevaluacion_form1 extends CI_Controller {
     $data['menu']=$this->eval_acp->menu(4); //// genera menu
     $data['titulo']=$this->eval_acp->titulo();
     $configuracion=$this->model_configuracion->get_configuracion_session();
+    $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
 
     if($this->tp_adm==1){
       $data['tabla']=$this->eval_acp->regionales();
@@ -57,7 +58,13 @@ class Cevaluacion_form1 extends CI_Controller {
         $data['tabla']=$this->eval_acp->formulario_n1_regional($this->dep_id);
       }
       else{
-        $data['tabla']=$this->eval_acp->cerrado($this->dep_id); 
+        $data['tabla']='<center>
+          <div class="widget-body">
+            <font color=red size="4"><b>EVALUACION A.C.P. '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.' CERRADO !!!!!</b></font>
+          </div>
+          <iframe id="ipdf" width="100%" height="1000px;" src="'.base_url().'index.php/rep_eval_obj/evaluacion_objetivos/'.$this->dep_id.'"></iframe></center>';
+
+       // $data['tabla']=$this->eval_acp->cerrado($this->dep_id); 
       }
     }
 
