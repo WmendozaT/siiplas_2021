@@ -440,6 +440,7 @@ class Genera_informacion extends CI_Controller{
               <th style="width:3%;">COD. ACP.</th>
               <th style="width:3%;">COD. OPE.</th>
               <th style="width:3%;">COD. ACT.</th>
+              <th style="width:3%;">PRIORITARIO</th>
               <th style="width:25%;">DESCRIPCION ACTIVIDAD</th>
               <th style="width:15%;">RESULTADO</th>
               <th style="width:15%;">INDICADOR</th>
@@ -485,6 +486,11 @@ class Genera_informacion extends CI_Controller{
               $ptto=$monto[0]['total'];
             }
 
+            $priori='';
+            if($row['prod_priori']==1){
+              $priori='<b>SI</b>';
+            }
+
             $nro++;
             $tabla.='<tr>';
                 $tabla.='<td style="height:50px;">'.strtoupper($row['dep_cod']).'</td>';
@@ -513,6 +519,7 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='<td>'.$row['og_codigo'].'</td>';
                 $tabla.='<td>'.$row['or_codigo'].'</td>';
                 $tabla.='<td>'.$row['prod_cod'].'</td>';
+                $tabla.='<td align=center><font size=5>'.$priori.'</font></td>';
                 $tabla.='<td>'.$row['prod_producto'].'</td>';
                 $tabla.='<td>'.$row['prod_resultado'].'</td>';
                 $tabla.='<td>'.$row['prod_indicador'].'</td>';
@@ -609,6 +616,7 @@ class Genera_informacion extends CI_Controller{
                   <th style="width:3%;background-color: #eceaea;">COD. OPE.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
                   <th style="width:1%;background-color: #eceaea;">ID</th>
+                  <th style="width:3%;background-color: #eceaea;">PRIORITARIO</th>
                   <th style="width:25%;background-color: #eceaea;">DESCRIPCION ACTIVIDAD</th>
                   <th style="width:15%;background-color: #eceaea;">RESULTADO</th>
                   <th style="width:15%;background-color: #eceaea;">INDICADOR</th>
@@ -653,6 +661,12 @@ class Genera_informacion extends CI_Controller{
               if(count($monto)!=0){
                 $ptto=$monto[0]['total'];
               }
+
+              $priori='';
+              if($row['prod_priori']==1){
+                $priori='<b>SI</b>';
+              }
+
               $nro++;
 
                $tabla.='<tr>';
@@ -683,6 +697,7 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='<td>'.$row['or_codigo'].'</td>';
                 $tabla.='<td>'.$row['prod_cod'].'</td>';
                 $tabla.='<td>'.$row['prod_id'].'</td>';
+                $tabla.='<td align=center><font size=5>'.$priori.'</font></td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_producto'], 'cp1252', 'UTF-8').'</td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_resultado'], 'cp1252', 'UTF-8').'</td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_indicador'], 'cp1252', 'UTF-8').'</td>';

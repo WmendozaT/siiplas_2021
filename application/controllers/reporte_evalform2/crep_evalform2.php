@@ -56,8 +56,96 @@ class Crep_evalform2 extends CI_Controller {
     $data['tabla_vista']=$this->tabla_eval_form2($data['matriz'],$data['nro'],0); /// Tabla Vista
     $data['tabla_impresion']=$this->tabla_eval_form2($data['matriz'],$data['nro'],1); /// Tabla Impresion
 
-    $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_form2', $data);
+  //  $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_form2', $data);
+
+
+/*    $prog_total=$this->model_objetivoregion->get_suma_total_prog_form2_institucional();
+    for ($i=1; $i <=4; $i++) { 
+      $prog_trimestre=$this->model_objetivoregion->get_suma_trimestre_prog_form2_institucional($i);
+    }*/
+
+    $tabla=$this->tabla_trimestral_acumulado_institucional();
+    for ($i=1; $i <=6 ; $i++) { 
+      for ($j=1; $j <=4 ; $j++) { 
+        echo "[".$tabla[$i][$j]."]";
+      }
+      echo "<br>";
+    }
+
   }
+
+
+  /*-- GENERA TABLA PARA EVALUACION TRIMESTRAL INSTITUCIONAL --*/
+  public function tabla_trimestral_acumulado_institucional(){
+
+      for ($i=1; $i <=4 ; $i++) { 
+        $valor=$this->calificacion_trimestral_acumulado_institucional($i);
+        $matriz[1][$i]=$valor[1];  /// prog
+        $matriz[2][$i]=$valor[2];  /// ejec
+        $matriz[3][$i]=$valor[3];  /// % cumplimiento trimestral
+        $matriz[4][$i]=(100-$valor[3]);  /// % no cumplido
+      }
+
+      $total=$matriz[1][4];
+
+      for ($i=1; $i <=4 ; $i++) { 
+        $matriz[5][$i]=round((($matriz[1][$i]/$total)*100),2);  /// % Programado con respecto al total acumulado
+        $matriz[6][$i]=round((($matriz[2][$i]/$total)*100),2);  /// % Ejecutado con respecto al total acumulado
+      }
+
+    return $matriz;
+  }
+
+
+ /*-- CALIFICACION TRIMESTRAL INSTITUCIONAL --*/
+  public function calificacion_trimestral_acumulado_institucional($trimestre){
+    $valor = array( '1' => '0','2' => '0','3' => '0','4' => '0');
+
+    if(count($this->model_objetivoregion->get_suma_total_prog_form2_institucional())!=0){
+      $suma_total_prog=0; $suma_prog=0; $suma_ejec=0;
+      //// Suma total programado por operacion
+      $prog_total=$this->model_objetivoregion->get_suma_total_prog_form2_institucional();
+      if(count($prog_total)!=0){
+        $suma_total_prog=$prog_total[0]['programado_total'];
+      }
+      ///-----
+
+      for ($i=1; $i <=$trimestre; $i++) {
+        $get_trm=$this->model_objetivoregion->get_suma_trimestre_prog_form2_institucional($i); /// Temporalidad Programado
+        $get_trm_ejec=$this->model_objetivoregion->get_suma_trimestre_ejec_form2_institucional($i); /// Temporalidad Ejecutado
+
+        if(count($get_trm)!=0){
+          $suma_prog=$suma_prog+$get_trm[0]['prog']; 
+        }
+
+        if(count($get_trm_ejec)!=0){
+          $suma_ejec=$suma_ejec+$get_trm_ejec[0]['ejec'];
+        }
+
+        $ejecucion=0;
+        if($suma_ejec!=0){
+          $ejecucion=round((($suma_ejec/$suma_prog)*100),2);
+        }
+
+        $cumplimiento_gestion=0;
+        if($suma_total_prog!=0){
+          $cumplimiento_gestion=round((($suma_ejec/$suma_total_prog)*100),2);
+        }
+      }
+
+
+      $valor[1]=$suma_prog; /// Programado Acumulado al trimestre
+      $valor[2]=$suma_ejec; /// Ejecutado Acumulado al trimestre
+      $valor[3]=$ejecucion; /// Cumplimiento al trimestre
+      $valor[4]=$cumplimiento_gestion; /// Cumplimiento a la Gestion
+    }
+
+    return $valor; 
+  }
+
+
+
+
 
 
 
@@ -84,6 +172,27 @@ class Crep_evalform2 extends CI_Controller {
               </tr>
             </thead>
           <tbody>
+            <tr>
+              <td style="height:20px;"><b>programado</b></td>';
+              for ($i=1; $i<=$nro; $i++) { 
+                $tabla.='<td align=right><b>'.$matriz[$i][3].'</b></td>';
+              }
+              $tabla.='
+            </tr>
+            <tr>
+              <td style="height:20px;"><b>ejecutado</b></td>';
+              for ($i=1; $i<=$nro; $i++) { 
+                $tabla.='<td align=right><b>'.$matriz[$i][4].'</b></td>';
+              }
+              $tabla.='
+            </tr>
+            <tr>
+              <td style="height:20px;"><b>total prog</b></td>';
+              for ($i=1; $i<=$nro; $i++) { 
+                $tabla.='<td align=right><b>'.$matriz[$i][5].'</b></td>';
+              }
+              $tabla.='
+            </tr>
             <tr>
               <td style="height:20px;"><b>(%) CUMPLIMIENTO</b></td>';
               for ($i=1; $i<=$nro; $i++) { 

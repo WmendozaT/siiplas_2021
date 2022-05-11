@@ -202,6 +202,7 @@
             document.getElementById("tabla_impresion").style.display = 'none';
           });
         </script>
+
         <script type="text/javascript">
         $(document).ready(function () {
 
@@ -270,6 +271,61 @@
                 }
               ]
             });
+
+
+        /// REGRESION LINEAL ACUMULADO
+        chart = new Highcharts.Chart({
+        chart: {
+          renderTo: 'parametro_efi2',  // Le doy el nombre a la gráfica
+          defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+        },
+        title: {
+          text: '% EJECUCIÓN ACUMULADO TRIMESTRAL'  // Titulo (Opcional)
+        },
+        subtitle: {
+          text: ''   // Subtitulo (Opcional)
+        },
+        // Pongo los datos en el eje de las 'X'
+        xAxis: {
+          categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
+          // Pongo el título para el eje de las 'X'
+          title: {
+            text: '% Operaciones Acumulados por Trimestre'
+          }
+        },
+        yAxis: {
+          // Pongo el título para el eje de las 'Y'
+          title: {
+            text: '% Ejecucion'
+          }
+        },
+        // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+        tooltip: {
+          enabled: true,
+          formatter: function() {
+            return '<b>'+ this.series.name +'</b><br/>'+
+              this.x +': '+ this.y +' '+this.series.name;
+          }
+        },
+        // Doy opciones a la gráfica
+        plotOptions: {
+          line: {
+            dataLabels: {
+              enabled: true
+            },
+            enableMouseTracking: true
+          }
+        },
+        // Doy los datos de la gráfica para dibujarlas
+        series: [{
+            name: '(%) Programado',
+            data: [0,response.matriz_acumulado[5][1],response.matriz_acumulado[5][2],response.matriz_acumulado[5][3],response.matriz_acumulado[5][4]]
+          },
+          {
+            name: '(%) Ejecutado',
+            data: [0,response.matriz_acumulado[6][1],response.matriz_acumulado[6][2],response.matriz_acumulado[6][3],response.matriz_acumulado[6][4]]
+          }],
+        });
         });
         </script>
     </body>
