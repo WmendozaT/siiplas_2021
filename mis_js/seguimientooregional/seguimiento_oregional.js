@@ -368,3 +368,12 @@ $(function() {
 
     });
   }
+
+
+  /////// ================== REPORTE DE FORMULARIO 2 
+
+
+
+
+
+  

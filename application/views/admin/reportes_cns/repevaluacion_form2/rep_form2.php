@@ -97,24 +97,47 @@
                             <?php echo $titulo;?>
                         </div>
                         <div id="cabecera" style="display: none"><?php echo $cabecera;?></div>
-                        <div class="well">
-                            <div id="grafico">
-                                <div id="container" style="min-width: 800px; height: 500px; max-width: 1000px; margin: 0 auto"></div>
-                            </div>
-                            <hr>
-                            <center>
-                                <?php echo $tabla_vista;?>    
-                            </center>
+                        
+                            <article class="col-sm-12 col-md-12 col-lg-6">
+                                <div class="well">
+                                    <div id="grafico">
+                                        <div id="container" style="min-width: 800px; height: 500px; max-width: 1000px; margin: 0 auto"></div>
+                                    </div>
+                                    <hr>
+                                    <center>
+                                        <?php echo $tabla_vista;?>    
+                                    </center>
 
-                            <div id="tabla_impresion" style="display: none">
-                                <?php echo $tabla_impresion;?>
-                            </div>
+                                    <div id="tabla_impresion" style="display: none">
+                                        <?php echo $tabla_impresion;?>
+                                    </div>
 
-                            <div align="right">
-                                <button id="btnImprimir_evaluacionform2" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="40" HEIGHT="40"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            </div>
+                                    <div align="right">
+                                        <button id="btnImprimir_evaluacionform2" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </div>
+                                </div>
+                            </article>
 
-                        </div>
+                            <article class="col-sm-12 col-md-12 col-lg-6">
+                                <div class="well">
+                                    <div id="grafico_regresion">
+                                        <div id="regresion" style="min-width: 800px; height: 500px; max-width: 1000px; margin: 0 auto"></div>
+                                    </div>
+                                    <hr>
+                                    <center>
+                                        <?php echo $tabla_vista_acumulado;?>  
+                                    </center>
+
+                                    <div id="tabla_impresion2" style="display: none">
+                                        <?php echo $tabla_vista_acumulado_impresion;?>
+                                    </div>
+
+                                    <div align="right">
+                                        <button id="btnImprimir_evaluacionform2_regresion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </div>
+                                </div>
+                            </article>
+
                     </section>
                 </div>
             <!-- END MAIN CONTENT -->
@@ -201,6 +224,41 @@
             document.getElementById("cabecera").style.display = 'none';
             document.getElementById("tabla_impresion").style.display = 'none';
           });
+
+
+
+            function imprimirSeguimiento_regresion(grafico,cabecera,eficacia,tabla) {
+
+            var ventana = window.open('Evaluacion FORMULARIO N° 2 ', 'PRINT', 'height=800,width=1000');
+            ventana.document.write('<html><head><title>EVALUACION OPERACIONES - FORM. N° 2</title>');
+            ventana.document.write('</head><body>');
+            ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+            ventana.document.write(cabecera.innerHTML);
+            ventana.document.write('<hr>');
+            ventana.document.write(grafico.innerHTML);
+            ventana.document.write('<hr>');
+            ventana.document.write(tabla.innerHTML);
+            ventana.document.write('</body></html>');
+            ventana.document.close();
+            ventana.focus();
+            ventana.onload = function() {
+              ventana.print();
+              ventana.close();
+            };
+            return true;
+          }
+
+          document.querySelector("#btnImprimir_evaluacionform2_regresion").addEventListener("click", function() {
+            var grafico = document.querySelector("#grafico_regresion");
+            document.getElementById("cabecera").style.display = 'block';
+            var cabecera = document.querySelector("#cabecera");
+            var eficacia = '';
+            document.getElementById("tabla_impresion2").style.display = 'block';
+            var tabla = document.querySelector("#tabla_impresion2");
+            imprimirSeguimiento_regresion(grafico,cabecera,eficacia,tabla);
+            document.getElementById("cabecera").style.display = 'none';
+            document.getElementById("tabla_impresion2").style.display = 'none';
+          });
         </script>
 
         <script type="text/javascript">
@@ -275,57 +333,57 @@
 
         /// REGRESION LINEAL ACUMULADO
         chart = new Highcharts.Chart({
-        chart: {
-          renderTo: 'parametro_efi2',  // Le doy el nombre a la gráfica
-          defaultSeriesType: 'line' // Pongo que tipo de gráfica es
-        },
-        title: {
-          text: '% EJECUCIÓN ACUMULADO TRIMESTRAL'  // Titulo (Opcional)
-        },
-        subtitle: {
-          text: ''   // Subtitulo (Opcional)
-        },
-        // Pongo los datos en el eje de las 'X'
-        xAxis: {
-          categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
-          // Pongo el título para el eje de las 'X'
-          title: {
-            text: '% Operaciones Acumulados por Trimestre'
-          }
-        },
-        yAxis: {
-          // Pongo el título para el eje de las 'Y'
-          title: {
-            text: '% Ejecucion'
-          }
-        },
-        // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
-        tooltip: {
-          enabled: true,
-          formatter: function() {
-            return '<b>'+ this.series.name +'</b><br/>'+
-              this.x +': '+ this.y +' '+this.series.name;
-          }
-        },
-        // Doy opciones a la gráfica
-        plotOptions: {
-          line: {
-            dataLabels: {
-              enabled: true
+            chart: {
+              renderTo: 'regresion',  // Le doy el nombre a la gráfica
+              defaultSeriesType: 'line' // Pongo que tipo de gráfica es
             },
-            enableMouseTracking: true
-          }
-        },
-        // Doy los datos de la gráfica para dibujarlas
-        series: [{
-            name: '(%) Programado',
-            data: [0,response.matriz_acumulado[5][1],response.matriz_acumulado[5][2],response.matriz_acumulado[5][3],response.matriz_acumulado[5][4]]
-          },
-          {
-            name: '(%) Ejecutado',
-            data: [0,response.matriz_acumulado[6][1],response.matriz_acumulado[6][2],response.matriz_acumulado[6][3],response.matriz_acumulado[6][4]]
-          }],
-        });
+            title: {
+              text: '% CUMPLIMIENTO DE OPERACIONES PRIORIZADOS <br><b><?php echo $trimestre;?></b>'  // Titulo (Opcional)
+            },
+            subtitle: {
+              text: ''   // Subtitulo (Opcional)
+            },
+            // Pongo los datos en el eje de las 'X'
+            xAxis: {
+              categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
+              // Pongo el título para el eje de las 'X'
+              title: {
+                text: '% Operaciones Acumulados por Trimestre'
+              }
+            },
+            yAxis: {
+              // Pongo el título para el eje de las 'Y'
+              title: {
+                text: '% Cumplimiento'
+              }
+            },
+            // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+            tooltip: {
+              enabled: true,
+              formatter: function() {
+                return '<b>'+ this.series.name +'</b><br/>'+
+                  this.x +': '+ this.y +' '+this.series.name;
+              }
+            },
+            // Doy opciones a la gráfica
+            plotOptions: {
+              line: {
+                dataLabels: {
+                  enabled: true
+                },
+                enableMouseTracking: true
+              }
+            },
+            // Doy los datos de la gráfica para dibujarlas
+            series: [{
+                name: '(%) Programado',
+                data: [0,<?php echo $matriz_form2_regresion[5][1];?>,<?php echo $matriz_form2_regresion[5][2];?>,<?php echo $matriz_form2_regresion[5][3];?>,<?php echo $matriz_form2_regresion[5][4];?>]
+              },
+              {
+                name: '(%) Cumplimiento',
+                data: [0,<?php echo $matriz_form2_regresion[6][1];?>,<?php echo $matriz_form2_regresion[6][2];?>,<?php echo $matriz_form2_regresion[6][3];?>,<?php echo $matriz_form2_regresion[6][4];?>]
+              }],
+            });
         });
         </script>
     </body>

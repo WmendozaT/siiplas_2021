@@ -56,42 +56,32 @@ class Crep_evalform2 extends CI_Controller {
     $data['tabla_vista']=$this->tabla_eval_form2($data['matriz'],$data['nro'],0); /// Tabla Vista
     $data['tabla_impresion']=$this->tabla_eval_form2($data['matriz'],$data['nro'],1); /// Tabla Impresion
 
-  //  $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_form2', $data);
+    //-------
+    $data['matriz_form2_regresion']=$this->tabla_trimestral_acumulado_institucional();
+    $data['tabla_vista_acumulado']=$this->get_tabla_cumplimiento_form2_priorizados_institucional(0);
+    $data['tabla_vista_acumulado_impresion']=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
 
-
-/*    $prog_total=$this->model_objetivoregion->get_suma_total_prog_form2_institucional();
-    for ($i=1; $i <=4; $i++) { 
-      $prog_trimestre=$this->model_objetivoregion->get_suma_trimestre_prog_form2_institucional($i);
-    }*/
-
-    $tabla=$this->tabla_trimestral_acumulado_institucional();
-    for ($i=1; $i <=6 ; $i++) { 
-      for ($j=1; $j <=4 ; $j++) { 
-        echo "[".$tabla[$i][$j]."]";
-      }
-      echo "<br>";
-    }
-
+    $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_form2', $data);
   }
 
 
   /*-- GENERA TABLA PARA EVALUACION TRIMESTRAL INSTITUCIONAL --*/
   public function tabla_trimestral_acumulado_institucional(){
 
-      for ($i=1; $i <=4 ; $i++) { 
-        $valor=$this->calificacion_trimestral_acumulado_institucional($i);
-        $matriz[1][$i]=$valor[1];  /// prog
-        $matriz[2][$i]=$valor[2];  /// ejec
-        $matriz[3][$i]=$valor[3];  /// % cumplimiento trimestral
-        $matriz[4][$i]=(100-$valor[3]);  /// % no cumplido
-      }
+    for ($i=1; $i <=4 ; $i++) { 
+      $valor=$this->calificacion_trimestral_acumulado_institucional($i);
+      $matriz[1][$i]=$valor[1];  /// prog
+      $matriz[2][$i]=$valor[2];  /// ejec
+      $matriz[3][$i]=$valor[3];  /// % cumplimiento trimestral
+      $matriz[4][$i]=(100-$valor[3]);  /// % no cumplido
+    }
 
-      $total=$matriz[1][4];
+    $total=$matriz[1][4];
 
-      for ($i=1; $i <=4 ; $i++) { 
-        $matriz[5][$i]=round((($matriz[1][$i]/$total)*100),2);  /// % Programado con respecto al total acumulado
-        $matriz[6][$i]=round((($matriz[2][$i]/$total)*100),2);  /// % Ejecutado con respecto al total acumulado
-      }
+    for ($i=1; $i <=4 ; $i++) { 
+      $matriz[5][$i]=round((($matriz[1][$i]/$total)*100),2);  /// % Programado con respecto al total acumulado
+      $matriz[6][$i]=round((($matriz[2][$i]/$total)*100),2);  /// % Ejecutado con respecto al total acumulado
+    }
 
     return $matriz;
   }
@@ -144,9 +134,83 @@ class Crep_evalform2 extends CI_Controller {
   }
 
 
+  /*-- VISTA DE TABLA CUMPLIMUENTO PARA IMPRESION (ACUMULADO) --*/
+  public function get_tabla_cumplimiento_form2_priorizados_institucional($tp_rep){
+    /// tp_rep=0 normal
+    /// tp_rep=1 Reporte
 
+    $valor=$this->tabla_trimestral_acumulado_institucional();
+    $tabla='';
 
+    if($tp_rep==0){ /// VISTA NORMAL
 
+      $tabla.='
+      <table class="table table-bordered" border=0.2 style="width:100%;">
+        <thead>
+          <tr align=center>
+            <th style="width:20%; height:30px; text-align:center">I TRIMESTRE</th>
+            <th style="width:20%;text-align:center">II TRIMESTRE</th>
+            <th style="width:20%;text-align:center">III TRIMESTRE</th>
+            <th style="width:20%;text-align:center">IV TRIMESTRE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>';
+          for ($i=1; $i <=4 ; $i++) {
+            $tabla.='
+            <td style="width:6%;" align=center>
+              <table class="table table-bordered" border=0.2 style="width:80%;">
+                <tr>
+                  <td style="width:50%;"><b>(%) PROG.</b></td>
+                  <td style="width:50%;font-size: 12px; color:blue" align=right><b>'.$valor[5][$i].'%</b></td>
+                </tr>
+                <tr>
+                  <td><b>(%) CUMP.</b></td>
+                  <td style="font-size: 12px; color:blue" align=right><b>'.$valor[6][$i].'%</b></td>
+                </tr>
+              </table>
+            </td>';
+          }
+          $tabla.='
+          </tr>  
+        </tbody>
+      </table>';
+    }
+    else{ /// VISTA PARA REPORTES
+      $tabla.='
+      <table class="change_order_items" border=1 style="width:100%;">
+        <thead>
+          <tr align=center>
+            <th style="width:10%; text-align:center"></th>
+            <th style="width:23%; height:20px; text-align:center">I TRIMESTRE</th>
+            <th style="width:23%;text-align:center">II TRIMESTRE</th>
+            <th style="width:23%;text-align:center">III TRIMESTRE</th>
+            <th style="width:23%;text-align:center">IV TRIMESTRE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="width:10%;"><b>(%) PROG.</b></td>';
+            for ($i=1; $i <=4 ; $i++) {
+              $tabla.='
+              <td style="width:20%; height:20px; color:blue" align=right><b>'.$valor[5][$i].'%</b></td>';
+            }
+          $tabla.='
+          </tr> 
+          <tr>
+            <td style="width:10%;"><b>(%) CUMP.</b></td>';
+            for ($i=1; $i <=4 ; $i++) {
+              $tabla.='
+              <td style="width:20%; height:20px; color:blue" align=right><b>'.$valor[6][$i].'%</b></td>';
+            }
+          $tabla.='
+          </tr>  
+        </tbody>
+      </table>';
+    }
+
+    return $tabla;
+  }
 
 
 
@@ -155,7 +219,7 @@ class Crep_evalform2 extends CI_Controller {
     $tabla='';
     // tp_rep : 0 normal
     // tp_rep : 1 impresion
-    $tyle='class="table table-bordered" border=0.2 style="width:60%;"';
+    $tyle='class="table table-bordered" border=0.2 style="width:100%;"';
     if($tp_rep==1){
       $tyle='class="change_order_items" border=1 style="width:100%;"';
     }
@@ -173,30 +237,9 @@ class Crep_evalform2 extends CI_Controller {
             </thead>
           <tbody>
             <tr>
-              <td style="height:20px;"><b>programado</b></td>';
-              for ($i=1; $i<=$nro; $i++) { 
-                $tabla.='<td align=right><b>'.$matriz[$i][3].'</b></td>';
-              }
-              $tabla.='
-            </tr>
-            <tr>
-              <td style="height:20px;"><b>ejecutado</b></td>';
-              for ($i=1; $i<=$nro; $i++) { 
-                $tabla.='<td align=right><b>'.$matriz[$i][4].'</b></td>';
-              }
-              $tabla.='
-            </tr>
-            <tr>
-              <td style="height:20px;"><b>total prog</b></td>';
-              for ($i=1; $i<=$nro; $i++) { 
-                $tabla.='<td align=right><b>'.$matriz[$i][5].'</b></td>';
-              }
-              $tabla.='
-            </tr>
-            <tr>
               <td style="height:20px;"><b>(%) CUMPLIMIENTO</b></td>';
               for ($i=1; $i<=$nro; $i++) { 
-                $tabla.='<td align=right><b>'.$matriz[$i][6].' %</b></td>';
+                $tabla.='<td style="width:9.09%;" align=right><b>'.$matriz[$i][6].' %</b></td>';
               }
               $tabla.='
             </tr>
@@ -215,7 +258,7 @@ class Crep_evalform2 extends CI_Controller {
       $calificacion=$this->calificacion_total_form2_regional($row['dep_id']);
       $nro++;
       $mat[$nro][1]=$row['dep_id'];
-      $mat[$nro][2]=strtoupper($row['dep_departamento']);
+      $mat[$nro][2]=strtoupper($row['dep_sigla']);
       $mat[$nro][3]=$calificacion[1]; /// programado trimestral
       $mat[$nro][4]=$calificacion[2]; /// ejecutado trimestral
       $mat[$nro][5]=$calificacion[3]; /// total programado Gestion

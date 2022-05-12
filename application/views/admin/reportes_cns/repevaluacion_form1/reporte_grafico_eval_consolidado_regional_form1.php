@@ -59,9 +59,15 @@
                           <div id="myTabContent" class="tab-content">
                               <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="CUADRO DE EVALUACI&Oacute;N ">
                                 <div id="cabecera" style="display: none"><?php echo $cabecera;?></div>
-                                <div id="Evaluacion">
-                                  <div id="container" style="width: 1000px; height: 750px; margin: 0 auto"></div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                  <div id="Evaluacion">
+                                    <div id="container" style="width: 1000px; height: 750px; margin: 0 auto"></div>
+                                  </div>
                                 </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                  <?php echo $detalle_eval;?>
+                                </div>
+
                                 <?php echo $tabla;?>
 
                                 <div id="detalle_impresion" style="display: none">

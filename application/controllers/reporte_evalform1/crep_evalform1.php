@@ -90,16 +90,20 @@ class Crep_evalform1 extends CI_Controller {
       $data['cabecera']=$this->eval_acp->cabecera_reporte_grafico(); /// Cabecera Grafico
       $data['nro']=count($this->model_objetivogestion->lista_acp_x_regional($dep_id));
       $data['eval']=$this->eval_acp->matriz_evaluacion_meta_acp_regional($dep_id);
+      
+      $data['detalle_eval']=$this->get_detalle_eval_trimestre($dep_id);
     }
     else{ ///// INSTITUCIONAL
       $data['titulo_graf']='INSTITUCIONAL';
       $data['cabecera']=$this->eval_acp->cabecera_reporte_grafico(); /// Cabecera Grafico
       $data['nro']=count($this->model_objetivogestion->list_objetivosgestion_general());
       $data['eval']=$this->eval_acp->tabla_evaluacion_meta_institucional();
+      $data['detalle_eval']='';
     }
     
     $data['tabla']=$this->eval_acp->detalle_acp($data['eval'],$data['nro'],1);
     
+    ///----- Para impresion
     $tabla.='<div style="font-family: Arial;">DETALLE A.C.P. '.$data['titulo_graf'].' / '.$this->gestion.'</div>
               <ul>';
               for ($i=1; $i <=$data['nro'] ; $i++) { 
@@ -110,6 +114,8 @@ class Crep_evalform1 extends CI_Controller {
               </ul>
             <hr>';
     $data['detalle_acp']=$tabla;
+    //// -------------------
+
 
     $data['matriz_pastel']=$this->eval_acp->matriz_gcumplimiento($data['eval'],$data['nro']);
     $data['tabla_pastel']=$this->eval_acp->tabla_gcumplimiento($data['matriz_pastel'],1,1);
@@ -118,5 +124,43 @@ class Crep_evalform1 extends CI_Controller {
     $this->load->view('admin/reportes_cns/repevaluacion_form1/reporte_grafico_eval_consolidado_regional_form1', $data);
   }
 
+  /*--- Detalle de evaluacion de informacion del trimestre ---*/
+  public function get_detalle_eval_trimestre($dep_id){
+    $tabla='';
+    $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
+    $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
 
+    $tabla.='
+    <div style="height:45px; font-size: 18px;font-family: Arial;"><b>DETALLE DE EVALUACION TRIMESTRAL '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></div>
+    <table class="table table-bordered" align=center style="width:90%;">';
+    foreach($acp_regional as $oge){
+      $acp_eval_regional=$this->model_evaluacion->get_meta_oregional($oge['pog_id'],$this->tmes);/// datos de evaluacion al trimestre actual
+      $indi='';
+      if($oge['indi_id']==2){
+        $indi='%';
+      }
+
+      $dato_evaluado='<font color=red>SIN REGISTRO</font>';
+      $ejec='';
+
+      if(count($acp_eval_regional)!=0){
+        $dato_evaluado=$acp_eval_regional[0]['tmed_verif'];
+        $ejec=' <b>| CUMPLIDO : '.round($acp_eval_regional[0]['ejec_fis'],2).' '.$indi.'</b>';
+      }
+
+      
+
+      $tabla.='
+      <tr style="height:25px; font-size: 13px;font-family: Arial;" bgcolor="#f0f0f0">
+        <td><b>A.C.P. '.$oge['og_codigo'].'.- </b>'.$oge['og_objetivo'].' <b>| META : </b>'.round($oge['prog_fis'],2).' '.$indi.'</td>
+      </tr>
+      <tr style="height:35px; font-size: 10px;font-family: Arial;">
+        <td><font color=blue>EVAL.: </font>'.$dato_evaluado.''.$ejec.'</td>
+      </tr>';
+    }
+
+    $tabla.='</table>';
+
+    return $tabla;
+  }
 }
