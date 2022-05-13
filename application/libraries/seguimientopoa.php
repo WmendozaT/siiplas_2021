@@ -828,9 +828,9 @@ class Seguimientopoa extends CI_Controller{
   }
     
 
-  /// Evaluación POA por Trimestre 2021
+  /// Evaluación POA por Trimestre 2021 - Formulario 4 (Actividades)
   public function tabla_reporte_evaluacion_poa($com_id,$trimestre){
-    $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
+    $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE FORMULARIO 4
     $tabla='';
 
     $tabla.=' 
@@ -838,9 +838,9 @@ class Seguimientopoa extends CI_Controller{
             <thead>
              <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
                 <th style="width:1%;height:15px;"># '.$trimestre.'</th>
-                <th style="width:2%;">COD.<br>OR.</th>
-                <th style="width:2%;">COD.<br>OPE.</th> 
-                <th style="width:10%;">OPERACI&Oacute;N</th>
+                <th style="width:2%;">COD.<br>OPE.</th>
+                <th style="width:2%;">COD.<br>ACT.</th> 
+                <th style="width:10%;">ACTIVIDAD</th>
                 <th style="width:10%;">RESULTADO</th>
                 <th style="width:10%;">INDICADOR</th>
                 <th style="width:3%;">META TOTAL</th>
