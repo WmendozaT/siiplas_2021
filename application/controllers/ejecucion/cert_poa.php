@@ -303,7 +303,7 @@ class Cert_poa extends CI_Controller {
               }
 
               $tabla .='<tr bgcolor='.$color.'>
-                        <td title='.$row['cpoa_id'].'>'.$nro.'</td>
+                        <td title='.$row['cpoa_id'].'>'.$nro.' '.$row['cpoa_ref'].'</td>
                         <td>'.$codigo.'</td>
                         <td>'.$row['cpoa_cite'].'</td>
                         <td>'.date('d-m-Y',strtotime($row['cite_fecha'])).'</td>
@@ -325,16 +325,16 @@ class Cert_poa extends CI_Controller {
                                       <img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a>';
 
                           }
-                          elseif($row['cpoa_ref']==1 and $this->tp_adm==1){
+                          elseif($row['cpoa_ref']==2 || $this->tp_adm==1){
                             $cite_mod_poa=$this->model_certificacion->get_certpoa_vigente_modificado($row['cpoa_id']); /// Datos de editado, modificado poa
                             if(count($cite_mod_poa)!=0){
-                              $tabla.='<a href="'.site_url("").'/cert/edit_certificacion/'.$cite_mod_poa[0]['cpoaa_id'].'" title="FORMULARIO DE MODIFICACIÓN CERT. POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/><br>FORM. CPOA<br>ADM.</a>';
+                              $tabla.='<a href="'.site_url("").'/cert/edit_certificacion/'.$cite_mod_poa[0]['cpoaa_id'].'" target="_blank" title="FORMULARIO DE MODIFICACIÓN CERT. POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/><br>FORM. CPOA<br>ADM.</a>';
                             }
                           }
                         $tabla.='
                         </td>
                         <td align=center>';
-                          if(($row['cpoa_ref']==0 & $row['cpoa_estado']!=0 & $this->conf_certificacion==1) || $this->tp_adm==1){
+                          if($row['cpoa_ref']==0 & $row['cpoa_estado']!=0 & $this->conf_certificacion==1){
                             $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_cert" '.$opcion_anulado.' title="ELIMINAR CERTIFICACI&Oacute;N" name="'.$row['cpoa_id'].'" id="'.$row['proy_id'].'" class="btn btn-default btn-lg">
                                     <img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
                           }

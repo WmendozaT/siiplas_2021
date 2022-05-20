@@ -497,6 +497,16 @@ class Ccertificacion_poa extends CI_Controller {
 
           }
 
+
+
+          /// Actualizando el estado de la certificacion a reformulado
+            $update_cerpoa = array(
+              'cpoa_ref' => 1
+            );
+            $this->db->where('cpoa_id', $cert_anulado[0]['cpoa_id']);
+            $this->db->update('certificacionpoa', $update_cerpoa);
+          ////-------------------------------------------------------
+
           if(count($this->model_modrequerimiento->list_requerimientos_modificados($cite_mod_req[0]['cite_id']))!=0){
             $this->genera_codigo_modreq($cite_mod_req,$cert_anulado[0]['justificacion']);
           }

@@ -1145,6 +1145,7 @@ class Modificacionpoa extends CI_Controller{
                 <input type="hidden" name="aper_id" value="'.$cite[0]['aper_id'].'">
                 <input type="hidden" name="cite_id" value="'.$cite[0]['cite_id'].'">
                 <input type="hidden" name="base" value="'.base_url().'">
+                
                 <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                   <tr class="modo1">
