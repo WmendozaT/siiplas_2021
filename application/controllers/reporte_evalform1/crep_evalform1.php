@@ -132,7 +132,7 @@ class Crep_evalform1 extends CI_Controller {
 
     $tabla.='
     <div style="height:45px; font-size: 18px;font-family: Arial;"><b>DETALLE DE EVALUACION TRIMESTRAL '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></div>
-    <table class="table table-bordered" align=center style="width:90%;">';
+    <table class="table table-bordered" align=center style="width:70%;">';
     foreach($acp_regional as $oge){
       $acp_eval_regional=$this->model_evaluacion->get_meta_oregional($oge['pog_id'],$this->tmes);/// datos de evaluacion al trimestre actual
       $indi='';
@@ -147,8 +147,6 @@ class Crep_evalform1 extends CI_Controller {
         $dato_evaluado=$acp_eval_regional[0]['tmed_verif'];
         $ejec=' <b>| CUMPLIDO : '.round($acp_eval_regional[0]['ejec_fis'],2).' '.$indi.'</b>';
       }
-
-      
 
       $tabla.='
       <tr style="height:25px; font-size: 13px;font-family: Arial;" bgcolor="#f0f0f0">

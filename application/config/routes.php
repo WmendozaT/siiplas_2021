@@ -232,8 +232,8 @@ $route['mnt/aper_prog'] = 'mantenimiento/capertura_programatica/main_apertura_pr
 $route['mnt/report_aper_prog'] = 'mantenimiento/capertura_programatica/reporte_apertura_programatica'; ///// Reporte
 //analisis ver si habra abm de las aperturas
 $route['admin/mantenimiento/add_aper'] = 'cmantenimiento/add_aper';
-$route['admin/mantenimiento/get_aper'] = 'cmantenimiento/get_aper';
-$route['admin/mantenimiento/del_aper'] = 'cmantenimiento/del_aper';
+/*$route['admin/mantenimiento/get_aper'] = 'cmantenimiento/get_aper';
+$route['admin/mantenimiento/del_aper'] = 'cmantenimiento/del_aper';*/
 /*-- Carpetas POA --*/
 //$route['mnt/poa'] = 'mantenimiento/cpoa';
 
