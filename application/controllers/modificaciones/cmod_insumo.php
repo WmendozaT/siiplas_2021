@@ -674,20 +674,21 @@ class Cmod_insumo extends CI_Controller {
         $insumo = $this->model_insumo->get_requerimiento($ins_id); //// DATOS DEL REQUERIMIENTO
         if(count($this->model_certificacion->get_insumo_monto_certificado($ins_id))!=0){ /// Cuando ya esta certificado
           $detalle = $insumo[0]['ins_detalle']; /// detalle
-          $costo_unitario = $insumo[0]['ins_costo_unitario']; /// costo unitario
+        //  $costo_unitario = $insumo[0]['ins_costo_unitario']; /// costo unitario
           $unidad = $insumo[0]['ins_unidad_medida']; /// Unidad de medida
           $partida = $insumo[0]['par_id']; /// costo unitario
           $observacion = $insumo[0]['ins_observacion']; /// Observacion
         }
         else{ /// Aun no esta certificado
           $detalle = $this->security->xss_clean($post['detalle']); /// detalle
-          $costo_unitario = $this->security->xss_clean($post['costou']); /// costo unitario
+        //  $costo_unitario = $this->security->xss_clean($post['costou']); /// costo unitario
           $unidad = $this->security->xss_clean($post['umedida']); /// Unidad de medida
           $partida = $this->security->xss_clean($post['par_hijo']); /// costo unitario
           $observacion = $this->security->xss_clean($post['observacion']); /// Observacion
         }
         
         $cantidad = $this->security->xss_clean($post['cantidad']); /// cantidad
+        $costo_unitario = $this->security->xss_clean($post['costou']); /// costo unitario /// temporal
         $costo_total = $this->security->xss_clean($post['costot']); /// costo Total
         $id = $this->security->xss_clean($post['id']); /// id : prod,act
         $producto=$this->model_producto->get_producto_id($id); /// Get producto

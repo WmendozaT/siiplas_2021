@@ -5,18 +5,17 @@ aper_id = $('[name="aper_id"]').val();
 cite_id = $('[name="cite_id"]').val();
 
 
-function abreVentana(PDF){             
-  var direccion;
-  direccion = '' + PDF;
-  window.open(direccion, "REPORTE FORMULARIO N° 5" , "width=800,height=700,scrollbars=NO") ; 
-}
+  function abreVentana(PDF){             
+    var direccion;
+    direccion = '' + PDF;
+    window.open(direccion, "REPORTE FORMULARIO N° 5" , "width=800,height=700,scrollbars=NO") ; 
+  }
 
-function abreVentana_comparativo(PDF){             
-  var direccion;
-  direccion = '' + PDF;
-  window.open(direccion, "Cuadro Comparativo" , "width=700,height=600,scrollbars=NO") ; 
-}
-
+  function abreVentana_comparativo(PDF){             
+    var direccion;
+    direccion = '' + PDF;
+    window.open(direccion, "Cuadro Comparativo" , "width=700,height=600,scrollbars=NO") ; 
+  }
 
 $(document).ready(function() {
   pageSetUp();
@@ -65,8 +64,6 @@ $(document).ready(function() {
   } );
   /* END COLUMN FILTER */   
 })
-
-
 
 
 $(function () {
@@ -383,9 +380,11 @@ $(function () {
 
           if (response.respuesta == 'correcto') {
 
+            $( "#costou" ).prop( "disabled", false );
+
             if(response.verif_cert==1){
               $( "#detalle" ).prop( "disabled", true );
-              $( "#costou" ).prop( "disabled", true );
+            //  $( "#costou" ).prop( "disabled", true );
               $( "#umedida" ).prop( "disabled", true );
               $( "#par_padre" ).prop( "disabled", true );
               $( "#par_hijo" ).prop( "disabled", true );
@@ -397,7 +396,7 @@ $(function () {
             else{
               $( "#detalle" ).prop( "disabled", false );
               $( "#cantidad" ).prop( "disabled", false );
-              $( "#costou" ).prop( "disabled", false );
+            //  $( "#costou" ).prop( "disabled", false );
               $( "#umedida" ).prop( "disabled", false );
               $( "#par_padre" ).prop( "disabled", false );
               $( "#par_hijo" ).prop( "disabled", false );
