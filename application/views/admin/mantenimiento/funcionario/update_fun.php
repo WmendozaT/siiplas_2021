@@ -297,13 +297,13 @@
                                                                                 if(count($rol)!=0){
                                                                                     if($row['r_id']==$rol[0]['r_id']){
                                                                                     echo '  <input type="radio" id="rol_id" name="rol_id" value="'.$row['r_id'].'" checked>
-                                                                                            <label for="male"><b>'.$row['r_nombre'].'</b></label><br>';
+                                                                                            <label for="male"><b>'.$row['r_id'].'-'.$row['r_nombre'].'</b></label><br>';
                                                                                     }
                                                                                     
                                                                                 }
                                                                                 else{
                                                                                     echo '  <input type="radio" id="rol_id" name="rol_id" value="'.$row['r_id'].'">
-                                                                                            <label for="male"><b>'.$row['r_nombre'].'</b></label><br>';
+                                                                                            <label for="male"><b>'.$row['r_id'].'-'.$row['r_nombre'].'</b></label><br>';
                                                                                 }
 
                                                                             }
@@ -321,7 +321,7 @@
                                                                 </label>
                                                             </section>
                                                             <section class="col col-3">
-                                                            <label class="label">SUBACTIVIDAD</label>
+                                                            <label class="label">UNIDAD RESPONSABLE</label>
                                                                 <label class="input">
                                                                     <select class="form-control" id="com_id" name="com_id" title="Seleccione Subactividad">
                                                                     <?php echo $subactividad;?>
@@ -410,6 +410,7 @@
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script type="text/javascript">
         function valida_envia() { 
+          //  alert(document.resp_form.rol_id.value)
             if (document.resp_form.nombre.value==""){ 
                 alert("REGISTRE NOMBRE DEL RESPONSABLE") 
                 document.resp_form.nombre.focus() 
@@ -461,6 +462,7 @@
                     return 0; 
                 }
             }
+          //  alert($('input[name=rol_id]:checked', '#resp_form').val())
 
             if ($('input[name=rol_id]:checked', '#resp_form').val()==9){
                 if ($('[id="com_id"]').val()==0 || $('[id="com_id"]').val()==null){
@@ -511,6 +513,7 @@
                 }}); 
             }
             else{
+                
                 var OK = confirm("GUARDAR INFORMACION DEL RESPONSABLE ?");
                 if (OK) {
                         document.resp_form.submit(); 
