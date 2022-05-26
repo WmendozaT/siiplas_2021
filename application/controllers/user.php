@@ -204,25 +204,21 @@ class User extends CI_Controller{
             //$data['conf'] = $this->model_configuracion->get_configuracion_session();
             $data['gestiones']=$this->list_gestiones();
             $data['list_trimestre']=$this->list_trimestre();
+
             
-            if($this->gestion>2020){
-                $data['mensaje']='';
-                $data['seguimiento_poa']='';
-                if($this->fun_id==592 || $this->fun_id==709){ //// Exclusivo para la Regional LA paz
-                    $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));
-                }
-                else{ /// Listado normal
-                    $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_distrital($this->dist_id,$this->verif_mes[1],$this->gestion));
-                }
-                
-                if($nro_poa!=0){
-                    $data['seguimiento_poa']=$this->mensaje_ejecucion_operaciones_mes($nro_poa);
-                }
+            $data['mensaje']='';
+            $data['seguimiento_poa']='';
+            if($this->fun_id==592 || $this->fun_id==709){ //// Exclusivo para la Regional LA paz
+                $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));
             }
-            else{
-                
-                $data['seguimiento_poa']='';
+            else{ /// Listado normal
+                $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_distrital($this->dist_id,$this->verif_mes[1],$this->gestion));
             }
+            
+            if($nro_poa!=0){
+                $data['seguimiento_poa']=$this->mensaje_ejecucion_operaciones_mes($nro_poa);
+            }
+
             $data['mensaje']=$this->mensaje_sistema();
             $this->load->view('admin/dashboard',$data);
         } else{
@@ -318,7 +314,38 @@ class User extends CI_Controller{
                     $n++;
                 }
             }
-            elseif($this->tp_adm==3){
+            else{
+                $rol=$this->model_funcionario->get_rol($fun_id);
+                if($rol[0]['r_id']==10){ /// REPORTES POA
+                    $vector[0]=
+                    '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+                        <a href="'.base_url().'index.php/consulta/mis_operaciones"  onclick="reporte_internos()" class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <div class="well1" align="center">
+                            <img class="img-circle" src="'.base_url().'assets/img/impresora.png"  style="margin-left:0px; width: 95px"/>
+                            <h1 style="font-size: 11px;">RESUMEN POA '.$this->gestion.'</h1>
+                        </div>
+                        </a>
+                    </div>';
+                }
+                elseif ($rol[0]['r_id']==11) { /// PARA PROYECTOS DE INVERSION
+                    $vector[0]=
+                    '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+                        <a href="'.base_url().'index.php/ejec_fin_pi" class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <div class="well1" align="center">
+                            <img class="img-circle" src="'.base_url().'assets/img/proyectos.png"  style="margin-left:0px; width: 95px"/>
+                            <h1 style="font-size: 11px;">PROYECTOS DE INVERSION '.$this->gestion.'</h1>
+                        </div>
+                        </a>
+                    </div>';
+                }
+                else{
+                    foreach ($menus as $fila) {
+                        $vector[$n] = $this->html_menu_opciones($fila['mod_id']);
+                        $n++;
+                    }
+                }
+            }
+          /*  elseif($this->tp_adm==3){
                 $vector[0]=
                     '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                         <a href="'.base_url().'index.php/consulta/mis_operaciones"  onclick="reporte_internos()" class="jarvismetro-tile big-cubes bg-color-greenLight">
@@ -334,7 +361,7 @@ class User extends CI_Controller{
                     $vector[$n] = $this->html_menu_opciones($fila['mod_id']);
                     $n++;
                 }
-            }
+            }*/
         }
         else{
             if($fun_id==399){

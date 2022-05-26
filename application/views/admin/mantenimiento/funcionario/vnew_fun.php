@@ -225,26 +225,17 @@
                                                         </section>
                                                         <section class="col col-3">
                                                             <label class="label">SELECCIONE ROL : <b id="titulo"></b></label>
-                                                                <div class="row">
-                                                                    <div class="col col-2"></div>
-                                                                    <div class="col col-10">
+                                                                <label class="input">
+                                                                    <select class="form-control" id="rol_id" name="rol_id">
+                                                                        <option value="0">Seleccione</option>
                                                                         <?php
-                                                                            foreach($listas_rol as $row){
-                                                                                if($row['r_id']==1){
-                                                                                    echo '
-                                                                                    <input type="radio" id="rol_id" name="rol_id" value="'.$row['r_id'].'" checked>
-                                                                                    <label for="male"><b>'.$row['r_nombre'].'</b></label><br>';
-                                                                                }
-                                                                                else{
-                                                                                    echo '
-                                                                                    <input type="radio" id="rol_id" name="rol_id" value="'.$row['r_id'].'">
-                                                                                    <label for="male"><b>'.$row['r_nombre'].'</b></label><br>';
-                                                                                }
-                                                                                
+                                                                            foreach($listas_rol as $row){ ?>
+                                                                                    <option value="<?php echo $row['r_id']; ?>"><?php echo $row['r_nombre']; ?></option>
+                                                                                <?php
                                                                             }
                                                                         ?>
-                                                                    </div>
-                                                                </div>
+                                                                    </select> 
+                                                                </label>
                                                         </section>
                                                         <div id="usu_sact" style="display:none;">
                                                             <section class="col col-3">
@@ -255,7 +246,7 @@
                                                                 </label>
                                                             </section>
                                                             <section class="col col-3">
-                                                            <label class="label">SUBACTIVIDAD</label>
+                                                            <label class="label">UNIDAD RESPONSABLE</label>
                                                                 <label class="input">
                                                                     <select class="form-control" id="com_id" name="com_id" title="Seleccione Sub Actividad">       
                                                                     </select> 
@@ -267,7 +258,8 @@
                                             </fieldset>
 
                                             <footer>
-                                                <div id="but_registro" style="display:none;">
+                                                <!-- <div id="but_registro" style="display:none;"> -->
+                                                <div >
                                                 <input type="button" value="GUARDAR INFORMACIÓN" id="btsubmit" class="btn btn-primary" onclick="valida_envia()" title="GUARDAR RESPONSABLE">
                                                 <a href="<?php echo base_url().'index.php/admin/mnt/list_usu'; ?>" class="btn btn-default" title="REQUERIMIENTOS DE LA OPERACION"> CANCELAR </a>
                                                 </div>
@@ -285,7 +277,7 @@
         <!-- END MAIN PANEL -->
     </div>
     <!-- ========================================================================================================= -->
-        <script type="text/javascript">
+        <!-- <script type="text/javascript">
         function fun_ci(){ 
             ci = $('[id="ci"]').val();
             usuario = $('[id="usuario"]').val();
@@ -326,7 +318,7 @@
 
             }});
         }
-        </script>
+        </script> -->
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
@@ -385,6 +377,21 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script type="text/javascript">
+            $(document).ready(function() {
+                pageSetUp();
+                $("#rol_id").change(function () {
+                      $("#rol_id option:selected").each(function () {
+                        rol_id=$(this).val();
+                        if(rol_id==9){// seguimiento poa
+                            $('#usu_sact').slideDown();
+                        }
+                        else{
+                            $('#usu_sact').slideUp();
+                        }  
+                  });
+                });  
+              })
+
         function valida_envia(){ 
 
             if (document.resp_form.nombre.value==""){ 
@@ -398,12 +405,6 @@
                 document.resp_form.prog.focus() 
                 return 0; 
             }
-
-/*            if (document.resp_form.ci.value==""){ 
-                alert("REGISTRE CI.") 
-                document.resp_form.ci.focus() 
-                return 0; 
-            }*/
 
             if (document.resp_form.crgo.value==""){ 
                 alert("REGISTRE CARGO") 
@@ -439,10 +440,9 @@
                 }
             }                
 
-
-            if ($('input[name=rol_id]:checked', '#resp_form').val()==9){
+            if(document.resp_form.rol_id.value==9){
                 if ($('[id="com_id"]').val()==0 || $('[id="com_id"]').val()==null){
-                    alert("SELECCIONE SUBACTIVIDAD") 
+                    alert("SELECCIONE UNIDAD RESPONSABLE") 
                     document.resp_form.com_id.focus() 
                     return 0;
                 }
@@ -453,9 +453,22 @@
             else{
                 $('[id="componente"]').val(0);
             }
+            /*if ($('input[name=rol_id]:checked', '#resp_form').val()==9){
+                if ($('[id="com_id"]').val()==0 || $('[id="com_id"]').val()==null){
+                    alert("SELECCIONE UNIDAD RESPONSABLE") 
+                    document.resp_form.com_id.focus() 
+                    return 0;
+                }
+                else{
+                    $('[id="componente"]').val($('[id="com_id"]').val());
+                }
+            }
+            else{
+                $('[id="componente"]').val(0);
+            }*/
 
 
-      
+           // alert(document.resp_form.rol_id.value)
 
             usuario=document.resp_form.usuario.value.trim();
             var url = "<?php echo site_url("")?>/funcionario/verif_usuario";

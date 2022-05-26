@@ -288,30 +288,28 @@
                                                         </section>
                                                         <section class="col col-3">
                                                             <label class="label">SELECCIONE ROL : <b id="titulo"></b></label>
-                                                                <div class="row">
-                                                                    <div class="col col-2"></div>
-                                                                    <div class="col col-10">
-                                                                        <?php
-                                                                            foreach($listas_rol as $row){
-                                                                                $rol=$this->model_funcionario->verif_rol($fun[0]['id'],$row['r_id']);
-                                                                                if(count($rol)!=0){
-                                                                                    if($row['r_id']==$rol[0]['r_id']){
-                                                                                    echo '  <input type="radio" id="rol_id" name="rol_id" value="'.$row['r_id'].'" checked>
-                                                                                            <label for="male"><b>'.$row['r_id'].'-'.$row['r_nombre'].'</b></label><br>';
-                                                                                    }
-                                                                                    
+                                                                <select class="form-control" id="rol_id" name="rol_id">
+                                                                    <option value="0">Seleccione</option>
+                                                                    <?php
+                                                                        foreach($listas_rol as $row){ 
+                                                                            $rol=$this->model_funcionario->verif_rol($fun[0]['id'],$row['r_id']);
+                                                                            if(count($rol)!=0){
+                                                                                if($row['r_id']==$rol[0]['r_id']){
+                                                                                    ?>
+                                                                                    <option value="<?php echo $row['r_id']; ?>" selected><?php echo $row['r_nombre']; ?></option>
+                                                                                    <?php 
                                                                                 }
-                                                                                else{
-                                                                                    echo '  <input type="radio" id="rol_id" name="rol_id" value="'.$row['r_id'].'">
-                                                                                            <label for="male"><b>'.$row['r_id'].'-'.$row['r_nombre'].'</b></label><br>';
-                                                                                }
-
                                                                             }
-                                                                        ?>
-                                                                    </div>
-                                                                </div>
+                                                                            else{
+                                                                                ?>
+                                                                                <option value="<?php echo $row['r_id']; ?>"><?php echo $row['r_nombre']; ?></option>
+                                                                                <?php 
+                                                                            }
+                                                                        }
+                                                                    ?>
+                                                                </select>
                                                         </section>
-                                                        <div id="usu_sact">
+                                                        <div id="usu_sact" <?php echo $display; ?>>
                                                             <section class="col col-3">
                                                             <label class="label">ACTIVIDAD</label>
                                                                 <label class="input">
@@ -409,8 +407,23 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script type="text/javascript">
+            $(document).ready(function() {
+                pageSetUp();
+                $("#rol_id").change(function () {
+                      $("#rol_id option:selected").each(function () {
+                        rol_id=$(this).val();
+                        if(rol_id==9){// seguimiento poa
+                            $('#usu_sact').slideDown();
+                        }
+                        else{
+                            $('#usu_sact').slideUp();
+                        }  
+                  });
+                });  
+              })
+
         function valida_envia() { 
-          //  alert(document.resp_form.rol_id.value)
+         //   alert(document.resp_form.rol_id.value)
             if (document.resp_form.nombre.value==""){ 
                 alert("REGISTRE NOMBRE DEL RESPONSABLE") 
                 document.resp_form.nombre.focus() 
@@ -496,19 +509,17 @@
                     success:function(datos){
                         
                         if(datos.trim() =='true'){
-                            alert(datos.trim())
-                            /*var OK = confirm("GUARDAR INFORMACION DEL RESPONSABLE ?");
+                            var OK = confirm("GUARDAR INFORMACION DEL RESPONSABLE ?");
                             if (OK) {
                                     document.resp_form.submit(); 
                                     document.getElementById("btsubmit").value = "MODIFICANDO...";
                                     document.getElementById("btsubmit").disabled = true;
                                     return true;
-                            }*/
+                            }
                         }else{
-                            alert(datos.trim())
-                            /*alert("EL USUARIO YA ESE ENCUENTRA REGISTRADO")
+                            alert("EL USUARIO YA ESE ENCUENTRA REGISTRADO")
                             document.resp_form.usuario.focus() 
-                            return 0;  */
+                            return 0;  
                         }
                 }}); 
             }

@@ -604,7 +604,7 @@ $route['trabajando'] = 'trabajando/vista';
 $route['error'] = 'trabajando/error';
 
 
-/*--------------------------- REPORTES - MARCO ESTRATEGICO INSTITUCIONAL ---------------------------*/
+/*------- REPORTES - MARCO ESTRATEGICO INSTITUCIONAL -------------*/
 $route['rep/ogestion/(:any)'] = 'reportes_cns/crep_ogestion/mis_ogestion/$1'; ///// Lista de Objetivos de Gestion - FORMULARIO SPO 01
 $route['rep/regional_ogestion/(:any)'] = 'reportes_cns/crep_ogestion/list_regionales_ogestion/$1'; ///// Lista de Regionales - FORMULARIO SPO 02
 
@@ -620,3 +620,5 @@ $route['rep/resumen_act_programa'] = 'reporte_resumen_alineacion_poa/crep_actpro
 $route['rep/rep_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_actprog/reporte_alineacion_poa/$1';  //// Reporte Alineacion POA (2020-2021)
 $route['rep/exportar_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_actprog/exportar_alineacion_poa/$1';  //// Exportar Alineacion POA (2020-2021)
 
+//// EJECUCION FINANCIERA DE PROYECTOS DE INVERSION
+$route['ejec_fin_pi'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_ppto'; ///// Mis operaciones

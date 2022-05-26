@@ -109,9 +109,11 @@ class Funcionario extends CI_Controller {
             $data['rol']=$this->model_funcionario->get_rol($fun_id);
             $data['componente']=$this->model_componente->get_componente($data['fun'][0]['cm_id'],$this->gestion);
             
+            $data['display']='style="display:none;"';
             $data['actividad']='';
             $data['subactividad']='';
-            if($data['rol'][0]['r_id']==9){
+            if($data['rol'][0]['r_id']==9){ // SEGUIMIENTO POA
+                $data['display']='style="display:block;"';
                 $data['actividad']=$this->list_actividades($data['fun'][0]['fun_dist'],$data['componente'][0]['proy_id']); /// Lista de Actividades
                 $data['subactividad']=$this->list_subactividades($data['componente']); /// Lista de Subactividades
             }
