@@ -64,6 +64,8 @@
                 <section id="widget-grid" class="">
                     <div class="row">
                         <?php echo $formulario;?>
+
+                        
                     </div>
                 </section>
             </div>
@@ -192,11 +194,5 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-        <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
-        <!-- <script src="<?php echo base_url(); ?>mis_js/consultapoa/consultaspoa.js"></script>  -->
+        <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
 </html>

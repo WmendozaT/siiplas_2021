@@ -48,60 +48,198 @@ class ejecucion_finpi extends CI_Controller{
     } 
 
 
-    /*------- TITULO --------*/
+
+    /*-- LISTA DE PROYECTOS DE INVERSION --*/
     public function lista_proyectos($dep_id){
       $proyectos=$this->model_proyecto->list_pinversion(1,4);
       $regional=$this->model_proyecto->get_departamento($dep_id);
       $tabla='';
 
-      $tabla.=' 
-      <div class="jarviswidget jarviswidget-color-darken" >
-            <header>
-              <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-              <h2 class="font-md"><strong>'.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'</strong></h2>  
-            </header>
-        <div>
+
+
+      $tabla.='
+      <form class="smart-form" method="post">
+      <input type="hidden" name="base" value="'.base_url().'">
+      <div class="panel-group smart-accordion-default" id="accordion-2">';
+        $nro=0;
+        foreach($proyectos as $row){
+          $nro++;
+          $class='class="panel-collapse collapse"';
+          $colapsed='class="collapsed"';
           
-          <div class="widget-body no-padding">
-            <table id="dt_basic" class="table table table-bordered" width="100%">
+          if($nro==1){
+            $class='class="panel-collapse collapse in"';
+            $colapsed='';
+          }
+          $tabla.='
+          <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion-2" href="#'.$nro.'" '.$colapsed.'> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i>'.$row['proy_sisin'].' - '.$row['proy_nombre'].'</a>
+            </h4>
+          </div>
+          <div id="'.$nro.'" '.$class.'>
+            <div class="panel-body">
+              <div class="table-responsive" align=center>
+              <br>
+              <table class="table table-bordered" style="width:95%;">
               <thead>
                 <tr>
                   <th style="width:1%;">#</th>
-                  <th style="width:7%;">DISTRITAL</th>
-                  <th style="width:10%;">CODIGO SISIN</th>
-                  <th style="width:15%;">NOMBRE DEL PROYECTO</th>
-                  <th style="width:5%;">FASE</th>
-                  <th style="width:5%;">PARTIDA</th>
-                  <th style="width:10%;">PPTO. INICIAL '.$this->gestion.'</th>
-                  <th style="width:10%;">PPTO. MODIFICADO '.$this->gestion.'</th>
-                  <th style="width:10%;">PPTO. AJUSTADO FINAL '.$this->gestion.'</th>
-                  <th style="width:5%;">CATEGORIA PROGRAMATICA</th>
-                  <th style="width:7%;">COSTO TOTAL DEL PROYECTO (Bs.)</th>
-                  <th style="width:7%;">EJECUCIÓN '.$this->verif_mes[2].' / '.$this->gestion.'</th>
-                  <th style="width:7%;">TOTAL EJECUTADO (Bs.)</th>
+                  <th style="width:5%;">DISTRITAL</th>
+                  <th style="width:12%;">FASE</th>
+                  <th style="width:3%;">PARTIDA</th>
+                  <th style="width:3%;">PPTO. INICIAL</th>
+                  <th style="width:3%;">PPTO. MODIFICADO</th>
+                  <th style="width:3%;">PPTO. AJUSTADO FINAL</th>
+                  <th style="width:5%;">CAT. PROGRAMATICA</th>
+                  <th style="width:5%;">COSTO TOTAL DEL PROYECTO (Bs.)</th>
+                  <th style="width:5%;">REGISTRO EJECUCIÓN '.$this->verif_mes[2].' / '.$this->gestion.'</th>
+                  <th style="width:15%;">OBSERVACI&Oacute;N</th>
+                  <th style="width:2%;"></th>
+                  <th style="width:3%;">TOTAL EJECUTADO (Bs.)</th>
                 </tr>
               </thead>
               <tbody>';
-                $nro=0;
-                foreach($proyectos as $row){
-                  $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
-                  $nro++;
+             
+                $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
+                  $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($row['aper_id']);
+                  $nroP=0;
+
+                  foreach($ppto_asig as $partida){
+                    $nroP++;
+                    $ppto_modificado=$this->model_ptto_sigep->monto_modificado_x_partida($partida['sp_id']);
+                    $monto_ini=$partida['importe'];
+                    $monto_mod=0;
+                    $monto_fin=$partida['importe'];
+                    if(count($ppto_modificado)!=0){
+                      $monto_ini=$ppto_modificado[0]['ppto_ini'];
+                      $monto_mod=$ppto_modificado[0]['ppto_modificado'];
+                      $monto_fin=$ppto_modificado[0]['ppto_final'];
+                    }
+                    $tabla.='
+                    <tr>
+                      <td title='.$partida['sp_id'].'>'.$nroP.'</td>
+                      <td>'.strtoupper($row['dist_distrital']).'</td>
+                      <td><b>'.strtoupper($fase[0]['fase']).'</b> - '.$fase[0]['descripcion'].'</td>
+                      <td style="font-size: 18px;font-family: Arial;" align=center><b>'.$partida['partida'].'</b></td>
+                      <td align=right>'.number_format($monto_ini, 2, ',', '.').'</td>
+                      <td align=right>'.number_format($monto_mod, 2, ',', '.').'</td>
+                      <td align=right>'.number_format($monto_fin, 2, ',', '.').'</td>
+                      <td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</td>
+                      <td>'.$partida['sp_id'].'</td>
+                      <td>
+                        <label class="input">
+                          <i class="icon-append fa fa-tag"></i>
+                          <input type="text" id=ejec'.$partida['sp_id'].' value="" onkeyup="verif_valor(this.value,'.$partida['sp_id'].','.$this->verif_mes[1].');"  onkeypress="if (this.value.length < 50) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                        </label>
+                      </td>
+                      <td>
+                        <label class="textarea">
+                          <i class="icon-append fa fa-tag"></i>
+                          <textarea rows="4" id=obs'.$partida['sp_id'].' title="OBSERVACION"></textarea>
+                        </label>
+                      </td>
+                      <td></td>
+                      <td></td>
+                    </tr>';
+                  }
+              $tabla.='
+              </tbody>
+            </table>
+            <br>
+            </div>
+            </div>
+          </div>
+        </div>';
+        }
+      $tabla.='
+      </div>
+      </form>';
+
+      return $tabla;
+    }
+
+
+
+
+
+
+    /*------- PARA EL EXCEL --------*/
+    public function lista_proyectoss($dep_id){
+      $proyectos=$this->model_proyecto->list_pinversion(1,4);
+      $regional=$this->model_proyecto->get_departamento($dep_id);
+      $tabla='';
+
+      $tabla.=' 
+        <form class="smart-form" method="post">
+          <input type="hidden" name="base" value="'.base_url().'">
+          <div class="row">
+            <section class="col col-3">
+              <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
+            </section>
+
+          <div class="table-responsive">
+          <table class="table table-bordered" style="width:100%;" id="datos">
+            <thead>
+              <tr>
+                <th style="width:1%;">#</th>
+                <th style="width:5%;">DISTRITAL</th>
+                <th style="width:5%;">CODIGO SISIN</th>
+                <th style="width:15%;">NOMBRE DEL PROYECTO</th>
+                <th style="width:10%;">FASE</th>
+                <th style="width:3%;">PARTIDA</th>
+                <th style="width:5%;">PPTO. INICIAL '.$this->gestion.'</th>
+                <th style="width:5%;">PPTO. MODIFICADO '.$this->gestion.'</th>
+                <th style="width:5%;">PPTO. AJUSTADO FINAL '.$this->gestion.'</th>
+                <th style="width:5%;">CATEGORIA PROGRAMATICA</th>
+                <th style="width:5%;">COSTO TOTAL DEL PROYECTO (Bs.)</th>
+                <th style="width:5%;">REGISTRO EJECUCIÓN '.$this->verif_mes[2].' / '.$this->gestion.'</th>
+                <th style="width:5%;"></th>
+                <th style="width:7%;">TOTAL EJECUTADO (Bs.)</th>
+              </tr>
+            </thead>
+            <tbody>';
+              $nro=0;
+              foreach($proyectos as $row){
+                $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
+                $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($row['aper_id']);
+                $nro++;
+
+                foreach($ppto_asig as $partida){
+                  $ppto_modificado=$this->model_ptto_sigep->monto_modificado_x_partida($partida['sp_id']);
+                  $monto_ini=$partida['importe'];
+                  $monto_mod=0;
+                  $monto_fin=$partida['importe'];
+                  if(count($ppto_modificado)!=0){
+                    $monto_ini=$ppto_modificado[0]['ppto_ini'];
+                    $monto_mod=$ppto_modificado[0]['ppto_modificado'];
+                    $monto_fin=$ppto_modificado[0]['ppto_final'];
+                  }
                   $tabla.='
                   <tr>
                     <td>'.$nro.'</td>
                     <td>'.strtoupper($row['dist_distrital']).'</td>
                     <td>'.$row['proy_sisin'].'</td>
-                    <td>'.$row['proy_nombre'].'</td>
-                    <td>'.$nro.'</td>
-                    <td>'.$nro.'</td>
-                    <td>'.$nro.'</td>
-                    <td>'.$nro.'</td>';
-                  $tabla.='</tr>';
+                    <td style="font-size: 13px;font-family: Arial;"><b>'.$row['proy_nombre'].'</b></td>
+                    <td>'.strtoupper($fase[0]['fase']).' - '.$fase[0]['descripcion'].'</td>
+                    <td style="font-size: 18px;font-family: Arial;" align=center><b>'.$partida['partida'].'</b></td>
+                    <td align=right>'.number_format($monto_ini, 2, ',', '.').'</td>
+                    <td align=right>'.number_format($monto_mod, 2, ',', '.').'</td>
+                    <td align=right>'.number_format($monto_fin, 2, ',', '.').'</td>
+                    <td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>';
                 }
-              $tabla.='
-              </tbody>
-            </table>
-          </div>';
+              }
+            $tabla.='
+            </tbody>
+          </table>
+        </div>
+        </form>';
 
       return $tabla;
     }

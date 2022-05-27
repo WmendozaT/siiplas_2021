@@ -107,6 +107,7 @@ class Model_faseetapa extends CI_Model{
                 pfe.pfec_eficiencia,
                 pfe.pfec_eficiencia_pe,
                 pfe.pfec_eficiencia_fi,
+                apg.aper_id,
                 apg.aper_gestion,
                 apg.aper_estado
                  

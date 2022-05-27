@@ -14,11 +14,7 @@ class Cejecucion_pi extends CI_Controller {
             $this->load->model('programacion/model_actividad');
             $this->load->model('programacion/model_producto');
             $this->load->model('programacion/model_componente');
-            $this->load->model('ejecucion/model_certificacion');
-            $this->load->model('ejecucion/model_evaluacion');
-            $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
-            $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020
-            $this->load->model('modificacion/model_modfisica'); /// Gestion 2020
+            $this->load->model('mantenimiento/model_ptto_sigep');
             $this->pcion = $this->session->userData('pcion');
             $this->gestion = $this->session->userData('gestion');
             $this->adm = $this->session->userData('adm');

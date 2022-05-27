@@ -868,6 +868,34 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+    /*-------- monto modificado por partidas --------*/
+    public function monto_modificado_x_partida($sp_id){
+        $sql = 'select ppto.sp_id, ppto_i.ppto_ini, (SUM(ppto.ppto_final)-SUM(ppto.ppto_ini)) ppto_modificado, ppto_f.ppto_final
+                from ppto_mod ppto
+                
+                Inner Join (
+                select sp_id,ppto_ini
+                from ppto_mod
+                where sp_id='.$sp_id.'
+                order by mppto_id ASC LIMIT 1
+
+                ) as ppto_i On ppto_i.sp_id=ppto.sp_id
+
+                Inner Join (
+                select sp_id,ppto_final
+                from ppto_mod
+                where sp_id='.$sp_id.'
+                order by mppto_id DESC LIMIT 1
+
+                ) as ppto_f On ppto_f.sp_id=ppto.sp_id
+
+                
+                where ppto.sp_id='.$sp_id.'
+                group by ppto.sp_id, ppto_i.ppto_ini, ppto_f.ppto_final';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*-------- Techo Partida Adcionado --------*/
     public function partida_del_techo($cppto_id){
         $sql = 'select ptto.*,pd.*,par.*
