@@ -55,8 +55,6 @@ class ejecucion_finpi extends CI_Controller{
       $regional=$this->model_proyecto->get_departamento($dep_id);
       $tabla='';
 
-
-
       $tabla.='
       <form class="smart-form" method="post">
       <input type="hidden" name="base" value="'.base_url().'">
@@ -108,7 +106,10 @@ class ejecucion_finpi extends CI_Controller{
 
                   foreach($ppto_asig as $partida){
                     $nroP++;
-                    $ppto_modificado=$this->model_ptto_sigep->monto_modificado_x_partida($partida['sp_id']);
+                    $ppto_modificado=$this->model_ptto_sigep->monto_modificado_x_partida($partida['sp_id']); /// ppto modificado por partida
+                    $ppto_ejecutado_mensual=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($partida['sp_id'],$this->verif_mes[1]); ///  monto ejecutado por partidas
+                    $obs_ejec_mensual=$this->model_ptto_sigep->get_obs_ejecucion_financiera_sigep($partida['sp_id'],$this->verif_mes[1]); /// Observacion
+
                     $monto_ini=$partida['importe'];
                     $monto_mod=0;
                     $monto_fin=$partida['importe'];
@@ -117,6 +118,24 @@ class ejecucion_finpi extends CI_Controller{
                       $monto_mod=$ppto_modificado[0]['ppto_modificado'];
                       $monto_fin=$ppto_modificado[0]['ppto_final'];
                     }
+
+
+                    $ppto_ejecutado=0;
+                    $tipo_registro=0;
+                    $display='style="display:none;"';
+                    $titulo_boton='GUARDAR';
+                    if(count($ppto_ejecutado_mensual)!=0){
+                      $ppto_ejecutado=$ppto_ejecutado_mensual[0]['ppto_ejec'];
+                      $tipo_registro=1;
+                      $display='';
+                      $titulo_boton='MODIFICAR';
+                    }
+
+                    $observacion_ejecutado='';
+                    if(count($obs_ejec_mensual)!=0){
+                      $observacion_ejecutado=$obs_ejec_mensual[0]['observacion'];
+                    }
+
                     $tabla.='
                     <tr>
                       <td title='.$partida['sp_id'].'>'.$nroP.'</td>
@@ -131,16 +150,18 @@ class ejecucion_finpi extends CI_Controller{
                       <td>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" id=ejec'.$partida['sp_id'].' value="" onkeyup="verif_valor(this.value,'.$partida['sp_id'].','.$this->verif_mes[1].');"  onkeypress="if (this.value.length < 50) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                          <input type="text" id=ejec'.$partida['sp_id'].' value="'.round($ppto_ejecutado,2).'" onkeyup="verif_valor(this.value,'.$partida['sp_id'].','.$this->verif_mes[1].','.$tipo_registro.');"  onkeypress="if (this.value.length < 50) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                         </label>
                       </td>
                       <td>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="4" id=obs'.$partida['sp_id'].' title="OBSERVACION"></textarea>
+                          <textarea rows="4" id=obs'.$partida['sp_id'].' onkeyup="verif_observacion(this.value,'.$partida['sp_id'].');"  title="OBSERVACION">'.$observacion_ejecutado.'</textarea>
                         </label>
                       </td>
-                      <td></td>
+                      <td>
+                        <div id="but'.$partida['sp_id'].'" '.$display.'><button type="button" name="'.$partida['sp_id'].'" id="'.$partida['sp_id'].'" onclick="guardar('.$partida['sp_id'].');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/drive_disk.png" WIDTH="40" HEIGHT="40"/><br>'.$titulo_boton.'</button></div>
+                      </td>
                       <td></td>
                     </tr>';
                   }

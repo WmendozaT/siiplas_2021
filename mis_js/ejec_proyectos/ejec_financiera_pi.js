@@ -49,92 +49,106 @@ function abreVentana(PDF){
   }
 
 
-  //// Verificando valor ejecutado por form 4
-  // this.value,'.$partida['sp_id'].','.$this->verif_mes[1].'
-  function verif_valor(monto,sp_id,mes_id){
-    alert(monto+'--'+sp_id+'--'+mes_id)
+  //// Verificando valor ejecutado por partida
+  function verif_valor(ejecutado,sp_id,mes_id,tp){
    /// tp 0 : Registro
    /// tp 1 : modifcacion  
-  
-/*    if(ejecutado!= ''){
-      var url = base+"index.php/ejecucion/cseguimiento/verif_valor_ejecutado_x_form4";
+
+    if(ejecutado!= ''){
+      var url = base+"index.php/ejecucion/cejecucion_pi/verif_valor_ejecutado_x_partida";
       $.ajax({
         type:"post",
         url:url,
-        data:{ejec:ejecutado,prod_id:prod_id,tp:tp,mes_id:mes_id},
+        data:{ejec:ejecutado,sp_id:sp_id,tp:tp,mes_id:mes_id},
         success:function(datos){
-
          if(datos.trim() =='true'){
 
-          $('#but'+nro).slideDown();
-          document.getElementById("ejec"+nro).style.backgroundColor = "#ffffff";
-          document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
+          $('#but'+sp_id).slideDown();
+          document.getElementById("ejec"+sp_id).style.backgroundColor = "#ffffff";
+        //  document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
          }
          else{
           alertify.error("ERROR EN EL DATO REGISTRADO !");
-           document.getElementById("ejec"+nro).style.backgroundColor = "#fdeaeb";
-          $('#but'+nro).slideUp();
+          document.getElementById("ejec"+sp_id).style.backgroundColor = "#fdeaeb";
+          $('#but'+sp_id).slideUp();
          }
 
       }});
     }
     else{
-      $('#but'+nro).slideUp();
-    }*/
-
-
+      $('#but'+sp_id).slideUp();
+    }
   }
 
 
-    /// Funcion para guardar datos de seguimiento POA
-    function guardar(prod_id,nro){
-      ejec=parseFloat($('[id="ejec'+nro+'"]').val());
-      mverificacion=($('[id="mv'+nro+'"]').val());
-      problemas=($('[id="obs'+nro+'"]').val());
-      accion=($('[id="acc'+nro+'"]').val());
+  //// Verificando valor ejecutado por partida
+  function verif_observacion(registro,sp_id){ 
+    ejec=parseFloat($('[id="ejec'+sp_id+'"]').val());
 
-      if(($('[id="mv'+nro+'"]').val())==0){
-          document.getElementById("mv"+nro).style.backgroundColor = "#fdeaeb";
-          alertify.error("REGISTRE MEDIO DE VERIFICACIÓN, Operación "+nro);
-          return 0; 
+    if(registro.length>30){
+      $('#but'+sp_id).slideDown();
+    }
+    else{
+      if(ejec!=0){
+        $('#but'+sp_id).slideUp();
       }
       else{
-          document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
-        //  alert("prod_id="+prod_id+" &ejec="+ejec+" &mv="+mverificacion+" &obs="+problemas+" &acc="+accion)
-          alertify.confirm("GUARDAR SEGUIMIENTO POA?", function (a) {
-          if (a) {
-              var url = base+"index.php/ejecucion/cseguimiento/guardar_seguimiento";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "prod_id="+prod_id+"&ejec="+ejec+"&mv="+mverificacion+"&obs="+problemas+"&acc="+accion
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-
-              if (response.respuesta == 'correcto') {
-                  alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
-                      if (e) {
-                          window.location.reload(true);
-                          document.getElementById("loading").style.display = 'block';
-                          alertify.success("REGISTRO EXITOSO ...");
-                      }
-                  });
-              }
-              else{
-                  alertify.error("ERROR AL GUARDAR SEGUIMIENTO POA");
-              }
-
-              });
-          } else {
-              alertify.error("OPCI\u00D3N CANCELADA");
-          }
-        });
+        $('#but'+sp_id).slideDown();  
       }
+      
     }
+  }
+
+
+  /// Funcion para guardar datos de la ejecucion presupuestaria
+  function guardar(sp_id){
+    ejec=parseFloat($('[id="ejec'+sp_id+'"]').val());
+    observacion=($('[id="obs'+sp_id+'"]').val());
+
+    if(observacion.length==0 & observacion.length<30){
+        document.getElementById("obs"+sp_id).style.backgroundColor = "#fdeaeb";
+        alertify.error("REGISTRE OBSERVACION > 30 CARACTERES");
+        return 0; 
+    }
+    else{
+        document.getElementById("obs"+sp_id).style.backgroundColor = "#ffffff";
+      //  alert("prod_id="+prod_id+" &ejec="+ejec+" &mv="+mverificacion+" &obs="+problemas+" &acc="+accion)
+        alertify.confirm("GUARDAR EJECUCION PRESUPUESTARIA ?", function (a) {
+        if (a) {
+            var url = base+"index.php/ejecucion/cejecucion_pi/guardar_ppto_ejecutado";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "sp_id="+sp_id+"&ejec="+ejec+"&obs="+observacion
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+
+            if (response.respuesta == 'correcto') {
+                alertify.alert("LA EJECUCION SE REGISTRO CORRECTAMENTE ", function (e) {
+                  if (e) {
+                    document.getElementById('ejec'+sp_id).innerHTML = response.ppto_mes;
+                    document.getElementById('obs'+sp_id).innerHTML = response.obs_mes;
+                     // window.location.reload(true);
+                      //document.getElementById("loading").style.display = 'block';
+                      alertify.success("REGISTRO EXITOSO ...");
+                  }
+                });
+            }
+            else{
+                alertify.error("ERROR AL GUARDAR EJECUCIÓN POA");
+            }
+
+            });
+        } else {
+            alertify.error("OPCI\u00D3N CANCELADA");
+        }
+      });
+    }
+  }
 

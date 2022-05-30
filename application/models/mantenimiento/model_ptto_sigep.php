@@ -236,6 +236,45 @@ class Model_ptto_sigep extends CI_Model{
     }
 
 
+    /*----- EJECUCION DE PRESUPUESTO POR PARTIDA  -----*/
+    public function get_monto_ejecutado_ppto_sigep($sp_id,$mes_id){
+        $sql = '
+            select *
+            from ejecucion_financiera_sigep
+            where sp_id='.$sp_id.' and m_id='.$mes_id.'';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*----- OBSERVACION A LA EJECUCION DE PRESUPUESTO POR PARTIDA  -----*/
+    public function get_obs_ejecucion_financiera_sigep($sp_id,$mes_id){
+        $sql = '
+            select *
+            from obs_ejecucion_financiera_sigep
+            where sp_id='.$sp_id.' and m_id='.$mes_id.'
+            order by sp_id DESC LIMIT 1';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*----- SUMA MONTO EJECUTADO DE PRESUPUESTO POR PARTIDA  -----*/
+    public function suma_monto_ppto_ejecutado($sp_id){
+        $sql = '
+            select ejec.sp_id,par.par_id,SUM(ejec.ppto_ejec) ejecutado
+            from ejecucion_financiera_sigep ejec
+            Inner Join ptto_partidas_sigep as ppto On ppto.sp_id=ejec.sp_id
+            Inner Join partidas as par On par.par_id=ppto.par_id
+            where ejec.sp_id='.$sp_id.'
+            group by ejec.sp_id,par.par_id';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
 
     /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO POR APERTURA PROGRAMADO - REGIONAL (2020) -----*/
     public function suma_ptto_apertura($aper_programa,$dep_id,$tp){

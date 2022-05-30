@@ -16,7 +16,9 @@
         <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script> 
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
+        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <meta name="viewport" content="width=device-width">
         <?php echo $style;?>
     </head>
@@ -65,14 +67,14 @@
                     <div class="row">
                         <?php echo $formulario;?>
 
-                        
+
                     </div>
                 </section>
             </div>
             <!-- END MAIN CONTENT -->
 
             <!-- MODAL REPORTE POA -->
-            <div class="modal fade" id="modal_poa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--             <div class="modal fade" id="modal_poa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog" id="programacion">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -87,10 +89,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- MODAL REPORTE MODIFICACION POA -->
-            <div class="modal fade" id="modal_mpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--             <div class="modal fade" id="modal_mpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog" id="modificacion">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -105,10 +107,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- MODAL REPORTE CERTIFICACION POA -->
-            <div class="modal fade" id="modal_certpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--             <div class="modal fade" id="modal_certpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog" id="certificacion">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -123,10 +125,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- MODAL EVALUACION POA -->
-            <div class="modal fade" id="modal_eval" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--             <div class="modal fade" id="modal_eval" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog" id="evaluacion">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -141,7 +143,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <!-- ========================================================================================================= -->
         <!-- PAGE FOOTER -->

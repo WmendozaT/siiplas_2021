@@ -2833,3 +2833,26 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
        fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
        primary key(saldo_id)
      );
+
+     /// === EJECUCION FINANCIERA PARA PROYECTOS DE INVERSION
+     /// Creacion de la tabla ejecucion financiera mensual
+     create table ejecucion_financiera_sigep(
+       ejec_ppto_id serial NOT NULL,
+       sp_id integer NOT NULL,
+       m_id integer NOT NULL DEFAULT 0,
+       ppto_ejec numeric(18,2) NOT NULL DEFAULT 0,
+       fun_id integer,
+       fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
+       primary key(ejec_ppto_id)
+     );
+
+     /// ------ creacion de la tabla para las observaciones de Ejecucion Presupuestaria
+     create table obs_ejecucion_financiera_sigep(
+          obs_ejec_id serial NOT NULL,
+          sp_id integer NOT NULL,
+          observacion character varying(5000),
+          m_id integer NOT NULL DEFAULT 0,
+          fun_id integer,
+          fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
+          primary key(obs_ejec_id)
+     );
