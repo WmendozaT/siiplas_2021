@@ -745,6 +745,7 @@ class Model_proyecto extends CI_Model{
                                       
                                         p."proy_ponderacion",
                                         p."proy_pcion_reg",
+                                        p."proy_ppto_total",
                                       
                                         p."proy_pr",
                                         p."dep_id",

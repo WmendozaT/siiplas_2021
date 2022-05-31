@@ -295,6 +295,11 @@
 																	}
 																?>
 															</label>
+														</section><br>
+														<section>
+															<label class="label" id="col"><b>PRESUPUESTO TOTAL PROYECTO</b></label>
+																<input class="form-control" type="text" name="ppto_proy" id="ppto_proy" value="<?php echo round($proyecto[0]['proy_ppto_total'],2);?>" onkeypress="if (this.value.length < 50) { return numerosDecimales(event);}else{return false; }" onpaste="return false" title="Ingrese Costo Total Proyecto">
+															</label>
 														</section>
 													</fieldset>
 												</div>
@@ -358,8 +363,8 @@
 										<hr>
 										<div class="col-sm-12">
 											<div id="but" align="right">
-												<a href='<?php echo site_url("admin").'/proy/list_proy#tabs-a'; ?>' title="CANCELAR Y SALIR A MIS OPERACIONES" class="btn btn-default">CANCELAR</a>
-												<input type="button" value="MODIFICAR OPERACI&Oacute;N" id="btsubmit" class="btn btn-primary" title="MODIFICAR REGISTRO"><br><br>
+												<a href='<?php echo site_url("admin").'/proy/list_proy#tabs-a'; ?>' title="CANCELAR Y SALIR A MIS POAS" class="btn btn-default">CANCELAR</a>
+												<input type="button" value="MODIFICAR REGISTRO" id="btsubmit" class="btn btn-primary" title="MODIFICAR REGISTRO"><br><br>
 											</div>
 										</div>
 									</div>

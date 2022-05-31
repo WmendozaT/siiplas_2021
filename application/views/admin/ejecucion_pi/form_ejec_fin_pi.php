@@ -171,6 +171,7 @@
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 

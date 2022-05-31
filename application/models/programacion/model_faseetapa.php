@@ -37,13 +37,13 @@ class Model_faseetapa extends CI_Model{
     }
 
     /*=================== FASE GESTION VIGENTE ===============*/
-/*    public function fase_gestion($id_f,$gest){
+    public function fase_gestion($id_f,$gest){
         $this->db->from('ptto_fase_gestion');
         $this->db->where('pfec_id', $id_f);
         $this->db->where('g_id', $gest);
         $query = $this->db->get();
         return $query->result_array();
-    }*/
+    }
     /*======================================================*/
 
     /*==================== VERIF FUENTE DE FINANCIAMIENTO ======================*/

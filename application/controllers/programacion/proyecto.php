@@ -1069,6 +1069,8 @@ class Proyecto extends CI_Controller {
           $dep_id = $this->security->xss_clean($post['dep_id']); /// Departamento id
           $dist_id = $this->security->xss_clean($post['ue_id']); /// Distrito id
 
+          $ppto = $this->security->xss_clean($post['ppto_proy']); /// presupuesto total
+
           $nombre = $this->security->xss_clean($post['nombre']); /// Nombre del Proyecto
           $cod_sisin = $this->security->xss_clean($post['cod_sisin']); /// Codigo SISIN
 
@@ -1110,6 +1112,7 @@ class Proyecto extends CI_Controller {
             'proy_gestion_fin_ddmmaaaa' => $ff,
             'dep_id' => $dep_id,
             'dist_id' => $dist_id,
+            'proy_ppto_total' => $ppto,
             'proy_fecha_registro' => date('d/m/Y h:i:s'),
             'fun_id' => $this->fun_id,
             'estado' => 2
