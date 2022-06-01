@@ -261,7 +261,7 @@ class Model_ptto_sigep extends CI_Model{
 
 
     /*----- SUMA MONTO EJECUTADO DE PRESUPUESTO POR PARTIDA  -----*/
-    public function suma_monto_ppto_ejecutado($sp_id){
+    public function suma_monto_ppto_ejecutado_partida($sp_id){
         $sql = '
             select ejec.sp_id,par.par_id,SUM(ejec.ppto_ejec) ejecutado
             from ejecucion_financiera_sigep ejec
@@ -269,6 +269,21 @@ class Model_ptto_sigep extends CI_Model{
             Inner Join partidas as par On par.par_id=ppto.par_id
             where ejec.sp_id='.$sp_id.'
             group by ejec.sp_id,par.par_id';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*----- SUMA MONTO EJECUTADO POR PROYECTO DE INVERSION  -----*/
+    public function suma_monto_ppto_ejecutado_pi($aper_id){
+        $sql = '
+            select ppto.aper_id,SUM(ejec.ppto_ejec) ejecutado
+            from ejecucion_financiera_sigep ejec
+            Inner Join ptto_partidas_sigep as ppto On ppto.sp_id=ejec.sp_id
+            Inner Join partidas as par On par.par_id=ppto.par_id
+            where ppto.aper_id='.$aper_id.'
+            group by ppto.aper_id';
     
         $query = $this->db->query($sql);
         return $query->result_array();

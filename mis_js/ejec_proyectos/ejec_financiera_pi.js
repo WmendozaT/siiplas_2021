@@ -50,30 +50,41 @@ function abreVentana(PDF){
 
 
   //// Verificando valor ejecutado por partida
-  function verif_valor(ejecutado,sp_id,mes_id,tp){
+  function verif_valor(valor_original,ejecutado,sp_id,mes_id,aper_id){
    /// tp 0 : Registro
    /// tp 1 : modifcacion  
-
     if(ejecutado!= ''){
       var url = base+"index.php/ejecucion/cejecucion_pi/verif_valor_ejecutado_x_partida";
-      $.ajax({
-        type:"post",
-        url:url,
-        data:{ejec:ejecutado,sp_id:sp_id,tp:tp,mes_id:mes_id},
-        success:function(datos){
-         if(datos.trim() =='true'){
+        var request;
+        if (request) {
+          request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "ejec="+ejecutado+"&sp_id="+sp_id+"&aper_id="+aper_id+"&mes_id="+mes_id+"&valor_inicial="+valor_original
+        });
 
-          $('#but'+sp_id).slideDown();
-          document.getElementById("ejec"+sp_id).style.backgroundColor = "#ffffff";
-        //  document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
-         }
-         else{
-          alertify.error("ERROR EN EL DATO REGISTRADO !");
-          document.getElementById("ejec"+sp_id).style.backgroundColor = "#fdeaeb";
-          $('#but'+sp_id).slideUp();
-         }
+        request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+            $('#but'+sp_id).slideDown();
+            document.getElementById("ejec"+sp_id).style.backgroundColor = "#ffffff";
+            document.getElementById('total_fin'+sp_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ejecucion_total_partida);
+            document.getElementById('avance_fin'+sp_id).innerHTML = response.avance_fin_partida+' %';
+            document.getElementById('ppto_total_ejec_proy'+aper_id).innerHTML = new Intl.NumberFormat().format(response.ejecucion_total_pi);
+            document.getElementById('ejec_pi'+aper_id).innerHTML = response.avance_fin_pi+' %';
+        }
+        else{
+            alertify.error("ERROR EN EL DATO REGISTRADO !");
+            document.getElementById("ejec"+sp_id).style.backgroundColor = "#fdeaeb";
+            document.getElementById('total_fin'+sp_id).innerHTML = 'null';
+            document.getElementById('avance_fin'+sp_id).innerHTML = 'null';
+            document.getElementById('ejec_pi'+aper_id).innerHTML = 'null %';
+            $('#but'+sp_id).slideUp();
+        }
 
-      }});
+      });
     }
     else{
       $('#but'+sp_id).slideUp();
@@ -134,9 +145,9 @@ function abreVentana(PDF){
                   if (e) {
                     document.getElementById('ejec'+sp_id).innerHTML = response.ppto_mes;
                     document.getElementById('obs'+sp_id).innerHTML = response.obs_mes;
-                     // window.location.reload(true);
-                      //document.getElementById("loading").style.display = 'block';
-                      alertify.success("REGISTRO EXITOSO ...");
+                    document.getElementById("tr_color_partida"+sp_id).style.backgroundColor = "#edf7ec";
+                    document.getElementById('success_partida'+sp_id).innerHTML = '<img src="'+base+'/assets/ifinal/ok1.png"/><br><font color=green><b>ACTUALIZADO !!</b></font>';
+                    alertify.success("REGISTRO EXITOSO ...");
                   }
                 });
             }
@@ -152,3 +163,55 @@ function abreVentana(PDF){
     }
   }
 
+  ////// FORMULARIO DE PROYECTOS DE INVERSION
+  /// Funcion para guardar datos del Proyecto de Inversion
+  function guardar_pi(proy_id){
+    estado=parseFloat($('[id="est_proy'+proy_id+'"]').val());
+    avance_fisico=($('[id="efis_pi'+proy_id+'"]').val());
+
+    alertify.confirm("GUARDAR DATOS DEL PROYECTO ?", function (a) {
+      if (a) {
+        var url = base+"index.php/ejecucion/cejecucion_pi/guardar_datos_proyecto";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "proy_id="+proy_id+"&estado="+estado+"&fis="+avance_fisico
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+
+        if (response.respuesta == 'correcto') {
+            alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
+              if (e) {
+                document.getElementById('efis_pi'+proy_id).innerHTML = response.proyecto[0]['avance_fisico'];
+                //document.getElementById('est_proy'+proy_id).innerHTML = response.proyecto[0]['proy_estado'];
+                document.getElementById("tr_color"+proy_id).style.backgroundColor = "#edf7ec";
+                document.getElementById('success'+proy_id).innerHTML = '<img src="'+base+'/assets/ifinal/ok1.png"/><br><font color=green><b>ACTUALIZADO !!</b></font>';
+                alertify.success("REGISTRO EXITOSO ...");
+              }
+            });
+        }
+        else{
+            alertify.error("ERROR AL GUARDAR INFORMACION POA");
+        }
+
+        });
+      } else {
+          alertify.error("OPCI\u00D3N CANCELADA");
+      }
+    });
+  }
+
+
+  //// verificando ejecucion fisica
+  function verif_pi_ejecfis(proy_id,valor_antiguo, valor_nuevo){
+    if(valor_antiguo!=valor_nuevo){
+      document.getElementById("tr_color"+proy_id).style.backgroundColor = "#ffffff";
+      document.getElementById('success'+proy_id).innerHTML = '<img src="'+base+'/assets/ifinal/interogacion.png" width:50px; height=50px;/><br><font color=green><b>ACTUALIZAR DATOS !!</b></font>';
+    }
+  }

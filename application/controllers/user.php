@@ -33,6 +33,7 @@ class User extends CI_Controller{
         $this->tmes = $this->session->userData('trimestre');
         $this->verif_mes=$this->session->userData('mes_actual');
         $this->notificaciones=$this->session->userData('estado_notificaciones');
+        $this->verif_mes=$this->session->userdata('mes_actual');
     }
 
     /*----------- Lista de Gestiones Disponibles ---------*/
@@ -204,22 +205,31 @@ class User extends CI_Controller{
             //$data['conf'] = $this->model_configuracion->get_configuracion_session();
             $data['gestiones']=$this->list_gestiones();
             $data['list_trimestre']=$this->list_trimestre();
-
+            $rol=$this->model_funcionario->get_rol($this->fun_id);
             
             $data['mensaje']='';
             $data['seguimiento_poa']='';
-            if($this->fun_id==592 || $this->fun_id==709){ //// Exclusivo para la Regional LA paz
-                $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));
+
+            if($rol[0]['r_id']==11){ /// Usuraio para proyectos de inversion
+                $data['mensaje']='<div class="alert alert-success" align="center">
+                  <a class="alert-link">EJECUCIÓN PRESUPUESTARIA - '.$this->verif_mes[2].' / '.$this->gestion.'</a>
+                </div>';
             }
-            else{ /// Listado normal
-                $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_distrital($this->dist_id,$this->verif_mes[1],$this->gestion));
+            else{
+                if($this->fun_id==592 || $this->fun_id==709){ //// Exclusivo para la Regional LA paz
+                $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));
+                }
+                else{ /// Listado normal
+                    $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_distrital($this->dist_id,$this->verif_mes[1],$this->gestion));
+                }
+                
+                if($nro_poa!=0){
+                    $data['seguimiento_poa']=$this->mensaje_ejecucion_operaciones_mes($nro_poa);
+                }
+
+                $data['mensaje']=$this->mensaje_sistema();
             }
             
-            if($nro_poa!=0){
-                $data['seguimiento_poa']=$this->mensaje_ejecucion_operaciones_mes($nro_poa);
-            }
-
-            $data['mensaje']=$this->mensaje_sistema();
             $this->load->view('admin/dashboard',$data);
         } else{
             $this->session->sess_destroy();

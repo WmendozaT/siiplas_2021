@@ -50,41 +50,73 @@ class Cejecucion_pi extends CI_Controller {
 
 
 
-  /*--- VERIFICANDO EL VALOR A EJECUTAR POR PARTIDA ---*/
-  function verif_valor_ejecutado_x_partida(){
-    if($this->input->is_ajax_request()){
-      /// tp 0 : registro
-      /// tp 1 : modificacion
-
+  /*---- VERIFICA MONTO A EJECUTAR POR PARTIDA ----*/
+  public function verif_valor_ejecutado_x_partida(){
+    if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
       $sp_id = $this->security->xss_clean($post['sp_id']); /// partida id
-      $tp = $this->security->xss_clean($post['tp']); /// tp
-      $ejec= $this->security->xss_clean($post['ejec']);/// prod id
+      $aper_id = $this->security->xss_clean($post['aper_id']); /// aper id
+      
+      $valor_inicial= $this->security->xss_clean($post['valor_inicial']);/// valo regitrado con anterioridad
+      $ejec= $this->security->xss_clean($post['ejec']);/// valor a actualizar
       $mes_id= $this->security->xss_clean($post['mes_id']);/// mes id
       
       $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($sp_id); /// Get partida sigep
-      $monto_total_ejecutado=$this->model_ptto_sigep->suma_monto_ppto_ejecutado($sp_id); /// monto total ejecutado
+      $monto_total_ejecutado=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_partida($sp_id); /// monto total ejecutado
 
       $monto_ejecutado=0;
       if(count($monto_total_ejecutado)!=0){
-        $monto_ejecutado=$monto_total_ejecutado[0]['ejecutado'];
-      }        
+        $monto_ejecutado=$monto_total_ejecutado[0]['ejecutado']-$valor_inicial;
+      }
+
+      $avance_fin_partida=0;
+      if($get_partida_sigep[0]['importe']!=0){
+        $avance_fin_partida=round(((($ejec+$monto_ejecutado)/$get_partida_sigep[0]['importe'])*100),2);
+      }
+
+
+      /// Suma Total presupuesto ejecutado por Proyectos
+      $ppto_total_pi=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_pi($aper_id);
+      $monto_ejec_pi=0;
+
+      if(count($ppto_total_pi)!=0){
+        $monto_ejec_pi=$ppto_total_pi[0]['ejecutado']-$valor_inicial;
+      }
+
+      //7 % de avance financiero por proyectos
+      $avance_fin_pi=0;
+      $ppto_asig=$this->model_ptto_sigep->suma_ptto_accion($aper_id,1);
+      if(count($ppto_asig)!=0){
+        $avance_fin_pi=round(((($ejec+$monto_ejec_pi)/$ppto_asig[0]['monto'])*100),2);
+      }
+
+
+
 
       if(($ejec+$monto_ejecutado)<=$get_partida_sigep[0]['importe']){
-        echo "true";
+        $result = array(
+          'respuesta' => 'correcto',
+          'ejecucion_total_partida'=>round(($ejec+$monto_ejecutado),2),
+          'avance_fin_partida'=>$avance_fin_partida, /// avance financiero por partida
+          'ejecucion_total_pi'=>$ejec+$monto_ejec_pi, /// monto ejeuctado total del proyectp
+          'avance_fin_pi'=>$avance_fin_pi, /// avance financiero por proyecto
+        );
       }
       else{
-        echo "false";
+        $result = array(
+          'respuesta' => 'error',
+        );
       }
 
+      
+
+      echo json_encode($result);
     }else{
-      show_404();
+        show_404();
     }
   }
 
 
-
-  /// data: "sp_id="+sp_id+"&ejec="+ejec+"&obs="+observacion
   /*---- VALIDA ADD MOD EJECUCION PRESUPUESTARIA ----*/
   public function guardar_ppto_ejecutado(){
     if($this->input->is_ajax_request() && $this->input->post()){
@@ -143,6 +175,40 @@ class Cejecucion_pi extends CI_Controller {
         'respuesta' => 'correcto',
         'ppto_mes'=>round($monto_ejec,2),
         'obs_mes'=>strtoupper($observacion_registrado),
+      );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+  /*---- VALIDA UPDATE DATOS PROYECTOS DE INVERSION ----*/
+  //data: "proy_id="+proy_id+"&estado="+estado+"&fis="+avance_fisico
+  public function guardar_datos_proyecto(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $proy_id = $this->security->xss_clean($post['proy_id']);
+      $estado = $this->security->xss_clean($post['estado']);
+      $avance_fisico = $this->security->xss_clean($post['fis']);
+      $mes_id=$this->verif_mes[1];
+      
+
+      $update_proyect = array(
+        'avance_fisico' => $avance_fisico,
+        'proy_estado' => $estado
+      );
+      $this->db->where('proy_id', $proy_id);
+      $this->db->update('_proyectos', $update_proyect);
+
+
+      $proyecto=$this->model_proyecto->get_id_proyecto($proy_id);
+
+      $result = array(
+        'respuesta' => 'correcto',
+        'proyecto'=>$proyecto,
+       // 'obs_mes'=>strtoupper($observacion_registrado),
       );
 
       echo json_encode($result);
