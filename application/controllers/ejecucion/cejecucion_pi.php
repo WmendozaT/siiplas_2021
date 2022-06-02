@@ -56,50 +56,20 @@ class Cejecucion_pi extends CI_Controller {
       $post = $this->input->post();
       $sp_id = $this->security->xss_clean($post['sp_id']); /// partida id
       $aper_id = $this->security->xss_clean($post['aper_id']); /// aper id
-      
-      $valor_inicial= $this->security->xss_clean($post['valor_inicial']);/// valo regitrado con anterioridad
       $ejec= $this->security->xss_clean($post['ejec']);/// valor a actualizar
       $mes_id= $this->security->xss_clean($post['mes_id']);/// mes id
       
+      /// Datos - Programado y Ejecutado por partidas
       $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($sp_id); /// Get partida sigep
-      $monto_total_ejecutado=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_partida($sp_id); /// monto total ejecutado
 
-      $monto_ejecutado=0;
-      if(count($monto_total_ejecutado)!=0){
-        $monto_ejecutado=$monto_total_ejecutado[0]['ejecutado']-$valor_inicial;
-      }
+      //// --- suma total del monto ejecutado antes del mes vigente
+      $monto_total_ejec_partida=$this->get_monto_ejec_partida_hasta_mes_anterior($sp_id,$mes_id);
+      //// ----------------------------------------------------------
 
-      $avance_fin_partida=0;
-      if($get_partida_sigep[0]['importe']!=0){
-        $avance_fin_partida=round(((($ejec+$monto_ejecutado)/$get_partida_sigep[0]['importe'])*100),2);
-      }
-
-
-      /// Suma Total presupuesto ejecutado por Proyectos
-      $ppto_total_pi=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_pi($aper_id);
-      $monto_ejec_pi=0;
-
-      if(count($ppto_total_pi)!=0){
-        $monto_ejec_pi=$ppto_total_pi[0]['ejecutado']-$valor_inicial;
-      }
-
-      //7 % de avance financiero por proyectos
-      $avance_fin_pi=0;
-      $ppto_asig=$this->model_ptto_sigep->suma_ptto_accion($aper_id,1);
-      if(count($ppto_asig)!=0){
-        $avance_fin_pi=round(((($ejec+$monto_ejec_pi)/$ppto_asig[0]['monto'])*100),2);
-      }
-
-
-
-
-      if(($ejec+$monto_ejecutado)<=$get_partida_sigep[0]['importe']){
+      if(($ejec+$monto_total_ejec_partida)<=$get_partida_sigep[0]['importe']){
         $result = array(
           'respuesta' => 'correcto',
-          'ejecucion_total_partida'=>round(($ejec+$monto_ejecutado),2),
-          'avance_fin_partida'=>$avance_fin_partida, /// avance financiero por partida
-          'ejecucion_total_pi'=>$ejec+$monto_ejec_pi, /// monto ejeuctado total del proyectp
-          'avance_fin_pi'=>$avance_fin_pi, /// avance financiero por proyecto
+          'ejecucion_total_partida'=>round(($ejec+$monto_total_ejec_partida),2),
         );
       }
       else{
@@ -108,13 +78,29 @@ class Cejecucion_pi extends CI_Controller {
         );
       }
 
-      
-
       echo json_encode($result);
     }else{
         show_404();
     }
   }
+
+
+  /*---- MONTO TOTAL EJECUTADO AL MES ANTERIOR POR PARTIDA----*/
+  public function get_monto_ejec_partida_hasta_mes_anterior($sp_id,$mes_id){
+    $suma_monto_ejecutado=0;
+    for ($i=1; $i <$mes_id ; $i++) { 
+      $ejec_mes=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($sp_id,$i);
+      $monto_mes=0;
+      if(count($ejec_mes)!=0){
+        $monto_mes=$ejec_mes[0]['ppto_ejec'];
+      }
+
+      $suma_monto_ejecutado=$suma_monto_ejecutado+$monto_mes;
+    }
+
+    return $suma_monto_ejecutado;
+  }
+
 
 
   /*---- VALIDA ADD MOD EJECUCION PRESUPUESTARIA ----*/
@@ -124,6 +110,7 @@ class Cejecucion_pi extends CI_Controller {
       $sp_id = $this->security->xss_clean($post['sp_id']);
       $ejec = $this->security->xss_clean($post['ejec']);
       $obs = $this->security->xss_clean($post['obs']);
+      $aper_id = $this->security->xss_clean($post['aper_id']);
       $mes_id=$this->verif_mes[1];
       
       $ppto_ejec_mensual=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($sp_id,$mes_id); ///
@@ -170,11 +157,44 @@ class Cejecucion_pi extends CI_Controller {
         }
 
 
+        //// --- suma total del monto ejecutado antes del mes vigente
+        $monto_total_ejec_partida=$this->get_monto_ejec_partida_hasta_mes_anterior($sp_id,$mes_id);
+        //// ----------------------------------------------------------
+
+        /// --- monto ejecutado del proyecto mensual
+        $monto_ejec_mensual=$this->model_ptto_sigep->suma_monto_ejecutado_mes_ppto_sigep($aper_id,$mes_id);
+        $ppto_ejec_mensual=0;
+
+        if(count($monto_ejec_mensual)!=0){
+          $ppto_ejec_mensual=$monto_ejec_mensual[0]['ejecutado_mes'];
+        }
+
+
+        /// --- monto total ejecutado del proyecto
+        $monto_ejec_total=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($aper_id);
+        $ppto_ejec_total=0;
+
+        if(count($monto_ejec_total)!=0){
+          $ppto_ejec_total=$monto_ejec_total[0]['ejecutado_total'];
+        }
+
+
+        /// Porcentaje de Avance por partidas
+        $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($sp_id); /// Get partida sigep
+        $porcentaje_avance_fin=0;
+        if(count($get_partida_sigep)!=0){
+          $porcentaje_avance_fin=round(((($monto_total_ejec_partida+$monto_ejec)/$get_partida_sigep[0]['importe'])*100),2);
+        }
+
 
       $result = array(
         'respuesta' => 'correcto',
-        'ppto_mes'=>round($monto_ejec,2),
-        'obs_mes'=>strtoupper($observacion_registrado),
+        'ppto_ejec_mes'=>round($ppto_ejec_mensual,2), /// monto ejecutado en el mes por proyecto de inversion
+        'ppto_ejec_total_pi'=>round($ppto_ejec_total,2), /// monto ejecutado total por proyecto de inversion
+        'ppto_total_ejec_partida'=>round(($monto_total_ejec_partida+$monto_ejec),2), /// ejecucion mes
+        'porcentaje_ejec_partida'=>$porcentaje_avance_fin, /// Avance Financiero ppto partida
+        'ppto_mes'=>round($monto_ejec,2), /// ejecucion mes
+        'obs_mes'=>strtoupper($observacion_registrado), /// observacion mes
       );
 
       echo json_encode($result);
@@ -182,6 +202,89 @@ class Cejecucion_pi extends CI_Controller {
         show_404();
     }
   }
+
+
+  /*----  GET DETALLE EJECUCION PRESUPUESTARIA ----*/
+  public function get_detalle_ejecucion_partida(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $sp_id = $this->security->xss_clean($post['sp_id']); /// partida id
+      $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($sp_id);
+
+      $tabla='';
+      $tabla.='<div class="table-responsive" align=center>
+                <table class="table table-bordered" style="width:100%;">
+                <thead>
+                  <tr>
+                    <th style="width:7%;">ENE.</th>
+                    <th style="width:7%;">FEB.</th>
+                    <th style="width:7%;">MAR.</th>
+                    <th style="width:7%;">ABR.</th>
+                    <th style="width:7%;">MAY.</th>
+                    <th style="width:7%;">JUN.</th>
+                    <th style="width:7%;">JUL.</th>
+                    <th style="width:7%;">AGO.</th>
+                    <th style="width:7%;">SEPT.</th>
+                    <th style="width:7%;">OCT.</th>
+                    <th style="width:7%;">NOV.</th>
+                    <th style="width:7%;">DIC.</th>
+                    <th style="width:10%;">TOTAL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>';
+                for ($i=1; $i <=12 ; $i++) { 
+                  $tabla.='
+                  <td align=right><b>Bs. '.number_format($temporalidad_ejec[0]['m'.$i], 2, ',', '.').'</b></td>';
+                }
+
+      $tabla.=' <td align=right style="color:blue;"><b>Bs. '.number_format($temporalidad_ejec[0]['ejecutado_total'], 2, ',', '.').'</b></td>
+                </tr>
+                </tbody>
+                </table>
+              </div>';
+
+      $result = array(
+        'respuesta' => 'correcto',
+        'tabla'=>$tabla,
+      );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   /*---- VALIDA UPDATE DATOS PROYECTOS DE INVERSION ----*/

@@ -50,9 +50,11 @@ function abreVentana(PDF){
 
 
   //// Verificando valor ejecutado por partida
-  function verif_valor(valor_original,ejecutado,sp_id,mes_id,aper_id){
+  function verif_valor(ejecutado,sp_id,mes_id,aper_id){
    /// tp 0 : Registro
-   /// tp 1 : modifcacion  
+   /// tp 1 : modifcacion
+    document.getElementById("tr_color_partida"+sp_id).style.backgroundColor = "#ffffff"; /// color de fila
+    document.getElementById('success_partida'+sp_id).innerHTML = '';
     if(ejecutado!= ''){
       var url = base+"index.php/ejecucion/cejecucion_pi/verif_valor_ejecutado_x_partida";
         var request;
@@ -63,24 +65,18 @@ function abreVentana(PDF){
           url: url,
           type: "POST",
           dataType: 'json',
-          data: "ejec="+ejecutado+"&sp_id="+sp_id+"&aper_id="+aper_id+"&mes_id="+mes_id+"&valor_inicial="+valor_original
+          data: "ejec="+ejecutado+"&sp_id="+sp_id+"&aper_id="+aper_id+"&mes_id="+mes_id
         });
 
         request.done(function (response, textStatus, jqXHR) {
         if (response.respuesta == 'correcto') {
             $('#but'+sp_id).slideDown();
             document.getElementById("ejec"+sp_id).style.backgroundColor = "#ffffff";
-            document.getElementById('total_fin'+sp_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ejecucion_total_partida);
-            document.getElementById('avance_fin'+sp_id).innerHTML = response.avance_fin_partida+' %';
-            document.getElementById('ppto_total_ejec_proy'+aper_id).innerHTML = new Intl.NumberFormat().format(response.ejecucion_total_pi);
-            document.getElementById('ejec_pi'+aper_id).innerHTML = response.avance_fin_pi+' %';
+            document.getElementById('ppto_fin_partida'+sp_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ejecucion_total_partida);
         }
         else{
             alertify.error("ERROR EN EL DATO REGISTRADO !");
             document.getElementById("ejec"+sp_id).style.backgroundColor = "#fdeaeb";
-            document.getElementById('total_fin'+sp_id).innerHTML = 'null';
-            document.getElementById('avance_fin'+sp_id).innerHTML = 'null';
-            document.getElementById('ejec_pi'+aper_id).innerHTML = 'null %';
             $('#but'+sp_id).slideUp();
         }
 
@@ -111,8 +107,8 @@ function abreVentana(PDF){
   }
 
 
-  /// Funcion para guardar datos de la ejecucion presupuestaria
-  function guardar(sp_id){
+  /// Funcion para guardar datos de la ejecucion presupuestaria por partida
+  function guardar(sp_id,aper_id){
     ejec=parseFloat($('[id="ejec'+sp_id+'"]').val());
     observacion=($('[id="obs'+sp_id+'"]').val());
 
@@ -123,7 +119,6 @@ function abreVentana(PDF){
     }
     else{
         document.getElementById("obs"+sp_id).style.backgroundColor = "#ffffff";
-      //  alert("prod_id="+prod_id+" &ejec="+ejec+" &mv="+mverificacion+" &obs="+problemas+" &acc="+accion)
         alertify.confirm("GUARDAR EJECUCION PRESUPUESTARIA ?", function (a) {
         if (a) {
             var url = base+"index.php/ejecucion/cejecucion_pi/guardar_ppto_ejecutado";
@@ -135,7 +130,7 @@ function abreVentana(PDF){
                 url: url,
                 type: "POST",
                 dataType: 'json',
-                data: "sp_id="+sp_id+"&ejec="+ejec+"&obs="+observacion
+                data: "sp_id="+sp_id+"&ejec="+ejec+"&obs="+observacion+"&aper_id="+aper_id
             });
 
             request.done(function (response, textStatus, jqXHR) {
@@ -143,9 +138,13 @@ function abreVentana(PDF){
             if (response.respuesta == 'correcto') {
                 alertify.alert("LA EJECUCION SE REGISTRO CORRECTAMENTE ", function (e) {
                   if (e) {
-                    document.getElementById('ejec'+sp_id).innerHTML = response.ppto_mes;
-                    document.getElementById('obs'+sp_id).innerHTML = response.obs_mes;
-                    document.getElementById("tr_color_partida"+sp_id).style.backgroundColor = "#edf7ec";
+                    document.getElementById('ejec'+sp_id).innerHTML = response.ppto_mes; /// ejecucion mes
+                    document.getElementById('obs'+sp_id).innerHTML = response.obs_mes; /// Observacion
+                    document.getElementById('ppto_fin_partida'+sp_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ppto_total_ejec_partida); /// ppto partida 
+                    document.getElementById('ppto_ejec_mes'+aper_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ppto_ejec_mes); /// ppto mes ejecutado proyetco inversion
+                    document.getElementById('ppto_ejec_total'+aper_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ppto_ejec_total_pi); /// ppto Total ejecutado proyetco inversion
+                    document.getElementById('avance_fin'+sp_id).innerHTML = response.porcentaje_ejec_partida+' %'; /// % avance financiero 
+                    document.getElementById("tr_color_partida"+sp_id).style.backgroundColor = "#edf7ec"; /// color de fila
                     document.getElementById('success_partida'+sp_id).innerHTML = '<img src="'+base+'/assets/ifinal/ok1.png"/><br><font color=green><b>ACTUALIZADO !!</b></font>';
                     alertify.success("REGISTRO EXITOSO ...");
                   }
@@ -162,6 +161,71 @@ function abreVentana(PDF){
       });
     }
   }
+
+
+  //// VER DETALLE DE EJECUCION PRESUPUESTARIA
+  $(function () {
+    $(".detalle_ejec_ppto_partidas").on("click", function (e) {
+      sp_id = $(this).attr('name');
+      partida = $(this).attr('id');
+      
+      $('#titulo').html('<div style="font-size: 15px;font-family: Arial;"><b>PARTIDA '+partida+'</b></div>');
+      $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando detalle</div>');
+      
+      var url = base+"index.php/ejecucion/cejecucion_pi/get_detalle_ejecucion_partida";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "sp_id="+sp_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+      if (response.respuesta == 'correcto') {
+          $('#content1').fadeIn(1000).html(response.tabla);
+        //  $('#caratula').fadeIn(1000).html(response.caratula);
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
+      request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+      });
+      request.always(function () {
+          //console.log("termino la ejecuicion de ajax");
+      });
+      e.preventDefault();
+        
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   ////// FORMULARIO DE PROYECTOS DE INVERSION
   /// Funcion para guardar datos del Proyecto de Inversion

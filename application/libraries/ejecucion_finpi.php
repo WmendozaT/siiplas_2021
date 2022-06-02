@@ -31,12 +31,6 @@ class ejecucion_finpi extends CI_Controller{
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           <div class="well">
             <h2>FORMULARIO DE EJECUCI&Oacute;N PRESUPUESTARIA - '.$this->verif_mes[2].' / '.$this->gestion.'</h2>
-            <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion\');" title="IMPRIMIR ACP DISTRIBUCION REGIONAL" class="btn btn-default">
-              <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR EJECUCIÓN (EXCEL)
-            </a>
-
-            <hr>
-
             '.$this->lista_proyectos($this->dep_id).'
           </div>
         </article>';
@@ -63,24 +57,21 @@ class ejecucion_finpi extends CI_Controller{
           $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
           $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($row['aper_id']); /// lista de partidas asignados por proyectos
 
-          //// para el avance financiero por proyectos
-        //  $avance_fin_pi=0;
-       //   $ppto_asig=$this->model_ptto_sigep->suma_ptto_accion($row['aper_id'],1); //// suma ppro total por proyectos
-        //  $ppto_ejec=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_pi($row['aper_id']); // suma ppto ejecutado por proyecto
-/*          $avance_fin_pi=0;
-          $ppto_asig=$this->model_ptto_sigep->suma_ptto_accion($row['aper_id'],1); //// suma ppro total por proyectos
-          $ppto_ejec=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_pi($row['aper_id']); // suma ppto ejecutado por proyecto
           
-          $monto_ejec=0;
-          if(count($ppto_ejec)!=0){
-            $monto_ejec=$ppto_ejec[0]['ejecutado'];
+          /// --- monto total ejecutado del proyecto
+          $monto_ejec_total=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($row['aper_id']);
+          $ppto_ejec_total=0;
+
+          if(count($monto_ejec_total)!=0){
+            $ppto_ejec_total=$monto_ejec_total[0]['ejecutado_total'];
           }
 
-          if(count($ppto_asig)!=0){
-            $avance_fin_pi=round((($monto_ejec/$ppto_asig[0]['monto'])*100),2);
-          }*/
+          ///---- Calculando Avance financiero
+          $avance_fin_total=0;
+          if($row['proy_ppto_total']!=0){
+            $avance_fin_total=round(($ppto_ejec_total/$row['proy_ppto_total'])*100,2);
+          }
 
-          ////
 
           $nroP=0;
           $nro++;
@@ -95,7 +86,7 @@ class ejecucion_finpi extends CI_Controller{
           <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion-2" href="#'.$nro.'" '.$colapsed.' title="'.$row['proy_id'].'"> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i>'.$row['proy_sisin'].' - '.$row['proy_nombre'].'</a>
+              <a data-toggle="collapse" data-parent="#accordion-2" href="#'.$nro.'" '.$colapsed.' title="'.$row['proy_id'].'"> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i><b>'.$row['proy_sisin'].' - '.$row['proy_nombre'].'</b></a>
             </h4>
           </div>
           <div id="'.$nro.'" '.$class.'>
@@ -107,14 +98,14 @@ class ejecucion_finpi extends CI_Controller{
                   <tr>
                     <td colspan=8 style="font-size: 18px;font-family: Arial;" align="left"><b>DATOS DEL PROYECTO</b></td>
                   </tr>
-                  <tr bgcolor="#f6f6f6" align="center">
-                    <td style="font-size: 12px;font-family: Arial; width:7%;"><b>DISTRITAL</b></td>
-                    <td style="font-size: 12px;font-family: Arial; width:10%;"><b>FASE</b></td>
-                    <td style="font-size: 12px;font-family: Arial; width:5%;"><b>CATEGORIA PROGRAMATICA</b></td>
-                    <td style="font-size: 12px;font-family: Arial; width:5%;"><b>COSTO TOTAL PROYECTO</b></td>
-                    <td style="font-size: 12px;font-family: Arial; width:5%;"><b>ESTADO PROYECTO</b></td>
-                    <td style="font-size: 12px;font-family: Arial; width:5%;"><b>AVANCE FÍSICO</b></td>
-                    <td style="font-size: 12px;font-family: Arial; width:5%;"><b>AVANCE FINANCIERO</b></td>
+                  <tr bgcolor="#3f3f46" align="center">
+                    <td style="font-size: 12px;font-family: Arial; width:7%; color:#fff"><b>DISTRITAL</b></td>
+                    <td style="font-size: 12px;font-family: Arial; width:10%; color:#fff"><b>FASE</b></td>
+                    <td style="font-size: 12px;font-family: Arial; width:5%; color:#fff"><b>CATEGORIA PROGRAMATICA</b></td>
+                    <td style="font-size: 12px;font-family: Arial; width:5%; color:#fff"><b>COSTO TOTAL PROYECTO</b></td>
+                    <td style="font-size: 12px;font-family: Arial; width:5%; color:#fff"><b>ESTADO PROYECTO</b></td>
+                    <td style="font-size: 12px;font-family: Arial; width:5%; color:#fff"><b>AVANCE FÍSICO</b></td>
+                    <td style="font-size: 12px;font-family: Arial; width:5%; color:#fff"><b>AVANCE FINANCIERO</b></td>
                     <td style="width:3%;"></td>
                     <td style="width:1%;"></td>
                   </tr>
@@ -146,7 +137,7 @@ class ejecucion_finpi extends CI_Controller{
                         <input type="text" id=efis_pi'.$row['proy_id'].' value="'.round($row['avance_fisico'],2).'" onkeyup="verif_pi_ejecfis('.$row['proy_id'].','.$row['avance_fisico'].',this.value);" onkeypress="if (this.value.length < 50) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                       </label>
                     </td>
-                    <td style="font-size: 11px;font-family: Arial"><div id="fin'.$row['proy_id'].'"></div></td>
+                    <td style="font-size: 18px;font-family: Arial;color:blue" align=center><div id="fin'.$row['proy_id'].'"><b>'.$avance_fin_total.' %</b></div></td>
                     <td style="font-size: 10px;font-family: Arial;" align=center>
                       <div id="but_pi'.$row['proy_id'].'"><button type="button" name="'.$row['proy_id'].'" id="'.$row['proy_id'].'" onclick="guardar_pi('.$row['proy_id'].');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="45" HEIGHT="45"/><br>ACTUALIZAR<br>INFORMACIÓN</button></div>
                     </td>
@@ -160,17 +151,18 @@ class ejecucion_finpi extends CI_Controller{
                 <tr title='.$row['aper_id'].'>
                   <td colspan=10 style="font-size: 18px;font-family: Arial;" align="left"><b>EJECUCIÓN PRESUPUESTARIA : '.$this->verif_mes[2].' / '.$this->gestion.'</b></td>
                 </tr>
-                <tr bgcolor="#f6f6f6" align="center">
-                  <td style="font-size: 12px;font-family: Arial; width:1%;"><b>#</b></td>
-                  <td style="font-size: 12px;font-family: Arial; width:3%;"><b>PARTIDA</b></td>
-                  <td style="font-size: 12px;font-family: Arial; width:3%;"><b>PPTO. INICIAL</b></td>
-                  <td style="font-size: 12px;font-family: Arial; width:3%;"><b>PPTO. MODIFICADO</b></td>
-                  <td style="font-size: 12px;font-family: Arial; width:3%;"><b>PPTO. AJUSTADO FINAL</b></td>
-                  <td style="font-size: 12px;font-family: Arial; width:5%;"><b>REGISTRO EJECUCIÓN '.$this->verif_mes[2].' / '.$this->gestion.'</b></td>
-                  <td style="font-size: 12px;font-family: Arial; width:15%;"><b>OBSERVACI&Oacute;N</b></td>
+                <tr bgcolor="#3f3f46" align="center">
+                  <td style="font-size: 12px;font-family: Arial; width:1%; color:#fff"><b>#</b></td>
+                  <td style="font-size: 12px;font-family: Arial; width:3%; color:#fff"><b>PARTIDA</b></td>
+                  <td style="font-size: 12px;font-family: Arial; width:3%; color:#fff"><b>PPTO. INICIAL</b></td>
+                  <td style="font-size: 12px;font-family: Arial; width:3%; color:#fff"><b>PPTO. MODIFICADO</b></td>
+                  <td style="font-size: 12px;font-family: Arial; width:3%; color:#fff"><b>PPTO. AJUSTADO FINAL</b></td>
+                  <td style="font-size: 12px;font-family: Arial; width:5%; color:#fff"><b>REGISTRO EJECUCIÓN '.$this->verif_mes[2].' / '.$this->gestion.'</b></td>
+                  <td style="font-size: 12px;font-family: Arial; width:15%; color:#fff"><b>OBSERVACI&Oacute;N</b></td>
                   <td style="width:2%;"></td>
-                  <td style="font-size: 12px;font-family: Arial; width:5%;"><b>TOTAL EJECUTADO (Bs.)</b></td>
-                  <td style="font-size: 12px;font-family: Arial; width:3%;"><b>(%) AVANCE FINANCIERO</b></td>
+                  <td style="font-size: 12px;font-family: Arial; width:5%; color:#fff"><b>TOTAL EJECUTADO (Bs.)</b></td>
+                  <td style="font-size: 12px;font-family: Arial; width:3%; color:#fff"><b>(%) AVANCE FINANCIERO</b></td>
+                  <td style="width:2%;"></td>
                   <td style="width:1%;"></td>
                 </tr>
               <tbody>';
@@ -225,6 +217,14 @@ class ejecucion_finpi extends CI_Controller{
                       $monto_ejecutado=$monto_total_ejecutado[0]['ejecutado'];
                     }
 
+                    /// Porcentaje de Avance por partidas
+                    $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($partida['sp_id']); /// Get partida sigep
+                    $porcentaje_avance_fin=0;
+                    if(count($get_partida_sigep)!=0){
+                      $porcentaje_avance_fin=round((($monto_ejecutado/$get_partida_sigep[0]['importe'])*100),2);
+                    }
+
+
                     $tabla.='
                     <tr id="tr_color_partida'.$partida['sp_id'].'">
                       <td align="center" title='.$partida['sp_id'].'>'.$nroP.'</td>
@@ -235,7 +235,7 @@ class ejecucion_finpi extends CI_Controller{
                       <td>
                         <label class="input">
                           <i class="icon-append fa fa-tag"></i>
-                          <input type="text" id=ejec'.$partida['sp_id'].' value="'.round($ppto_ejecutado,2).'" onkeyup="verif_valor('.$ppto_ejecutado.',this.value,'.$partida['sp_id'].','.$this->verif_mes[1].','.$row['aper_id'].');"  onkeypress="if (this.value.length < 50) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                          <input type="text" id=ejec'.$partida['sp_id'].' value="'.round($ppto_ejecutado,2).'" onkeyup="verif_valor(this.value,'.$partida['sp_id'].','.$this->verif_mes[1].','.$row['aper_id'].');"  onkeypress="if (this.value.length < 50) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                         </label>
                       </td>
                       <td>
@@ -245,10 +245,18 @@ class ejecucion_finpi extends CI_Controller{
                         </label>
                       </td>
                       <td align=center>
-                        <div id="but'.$partida['sp_id'].'" '.$display.'><button type="button" name="'.$partida['sp_id'].'" id="'.$partida['sp_id'].'" onclick="guardar('.$partida['sp_id'].');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/drive_disk.png" WIDTH="40" HEIGHT="40"/><br>'.$titulo_boton.'</button></div>
+                        <div id="but'.$partida['sp_id'].'" '.$display.'><button type="button" name="'.$partida['sp_id'].'" id="'.$partida['sp_id'].'" onclick="guardar('.$partida['sp_id'].','.$row['aper_id'].');"  class="btn btn-default"><img src="'.base_url().'assets/ifinal/guardar.png" WIDTH="40" HEIGHT="40"/><br>'.$titulo_boton.'</button></div>
                       </td>
-                      <td style="font-size: 15px;font-family: Arial; color:blue" align=right><b><div id="total_fin'.$partida['sp_id'].'">Bs. '.number_format($monto_ejecutado, 2, ',', '.').'</div></b></td>
-                      <td style="font-size: 15px;font-family: Arial; color:blue" align=center><b><div id="avance_fin'.$partida['sp_id'].'"></div></b></td>
+                      <td style="font-size: 15px;font-family: Arial; color:blue" align=right><b><div id="ppto_fin_partida'.$partida['sp_id'].'">Bs. '.number_format($monto_ejecutado, 2, ',', '.').'</div></b></td>
+                      <td style="font-size: 18px;font-family: Arial; color:blue" align=center><b><div id="avance_fin'.$partida['sp_id'].'">'.$porcentaje_avance_fin.' %</div></b></td>
+                      <td align=center>
+                        <center>';
+                          if(count($this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($partida['sp_id']))!=0){
+                            $tabla.='<a href="#" data-toggle="modal" data-target="#modal_detalle_ejec" class="btn btn-default detalle_ejec_ppto_partidas" name="'.$partida['sp_id'].'" id="'.$row['proy_nombre'].' - '.$partida['partida'].' : '.strtoupper($partida['par_nombre']).'" title="VER DETALLE EJECUCION PRESUPUESTARIA"><img src="'.base_url().'assets/ifinal/evalok.jpg" WIDTH="50" HEIGHT="50"/><br>VER DETALLE</a>';
+                          }
+                        $tabla.='
+                        </center>
+                      </td>
                       <td align=center><div id="success_partida'.$partida['sp_id'].'"></div></td>
                     </tr>';
                   }
@@ -259,9 +267,11 @@ class ejecucion_finpi extends CI_Controller{
                   <td align=right><b>'.number_format($suma_ppto_inicial, 2, ',', '.').'</b></td>
                   <td align=right><b>'.number_format($suma_ppto_modificado, 2, ',', '.').'</b></td>
                   <td align=right><b>'.number_format($suma_ppto_vigente, 2, ',', '.').'</b></td>
-                  <td align=right><b><div id="ppto_total_ejec_proy'.$row['aper_id'].'">'.number_format($suma_ppto_ejecutado, 2, ',', '.').'</div></b></td>
-                  <td colspan=3></td>
-                  <td align=center><b><div id="ejec_pi'.$row['aper_id'].'"></div></b></td>
+                  <td align=right><b><div id="ppto_ejec_mes'.$row['aper_id'].'">'.number_format($suma_ppto_ejecutado, 2, ',', '.').'</div></b></td>
+                  <td colspan=2></td>
+                  <td align=right><b><div id="ppto_ejec_total'.$row['aper_id'].'">Bs. '.number_format($ppto_ejec_total, 2, ',', '.').'</div></b></td>
+                  <td></td>
+                  <td></td>
                   <td></td>
                 </tr>
             </table>
@@ -392,10 +402,10 @@ class ejecucion_finpi extends CI_Controller{
               <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Ejecución financiera</span></a>
               <ul>
                 <li>
-                  <a href="'.site_url("").'/solicitar_certpoa/">Registro Ejecución<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
+                  <a href="'.site_url("").'/ejec_fin_pi">Registro Ejecución<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
                 </li>
                 <li>
-                  <a href="'.site_url("").'/mis_solicitudes_cpoa/">Reporte Financiero<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
+                  <a href="'.site_url("").'/rep_ejec_fin_pi/">Reporte Financiero<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>
                 </li>
               </ul>
             </li>

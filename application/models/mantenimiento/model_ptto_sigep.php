@@ -20,6 +20,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+    //// Get datos partida - ppto_sigep
     public function get_sp_id($sp_id){
         $sql = 'select *
                 from ptto_partidas_sigep pg
@@ -247,6 +248,33 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*----- EJECUCION DE PRESUPUESTO POR PROYECTO MENSUAL -----*/
+    public function suma_monto_ejecutado_mes_ppto_sigep($aper_id,$mes_id){
+        $sql = '
+            select ppto.aper_id,ejec.m_id, SUM(ejec.ppto_ejec) ejecutado_mes
+            from ptto_partidas_sigep ppto
+            Inner Join ejecucion_financiera_sigep as ejec On ppto.sp_id=ejec.sp_id
+            where ppto.aper_id='.$aper_id.' and ejec.m_id='.$mes_id.'
+            group by ppto.aper_id,ejec.m_id';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*----- EJECUCION DE PRESUPUESTO TOTAL POR PROYECTO -----*/
+    public function suma_monto_ejecutado_total_ppto_sigep($aper_id){
+        $sql = '
+            select ppto.aper_id,SUM(ejec.ppto_ejec) ejecutado_total
+            from ptto_partidas_sigep ppto
+            Inner Join ejecucion_financiera_sigep as ejec On ppto.sp_id=ejec.sp_id
+            where ppto.aper_id='.$aper_id.'
+            group by ppto.aper_id';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*----- OBSERVACION A LA EJECUCION DE PRESUPUESTO POR PARTIDA  -----*/
     public function get_obs_ejecucion_financiera_sigep($sp_id,$mes_id){
         $sql = '
@@ -258,6 +286,16 @@ class Model_ptto_sigep extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+    /*---- get Temporalidad Ejecucion Presupuestaria por partida -----*/
+    public function get_temporalidad_ejec_ppto_partida($sp_id){
+        $sql = 'select *
+                from v_ejec_ppto_partidas
+                where sp_id='.$sp_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
 
     /*----- SUMA MONTO EJECUTADO DE PRESUPUESTO POR PARTIDA  -----*/

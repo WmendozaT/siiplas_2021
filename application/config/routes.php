@@ -621,4 +621,5 @@ $route['rep/rep_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_a
 $route['rep/exportar_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_actprog/exportar_alineacion_poa/$1';  //// Exportar Alineacion POA (2020-2021)
 
 //// EJECUCION FINANCIERA DE PROYECTOS DE INVERSION
-$route['ejec_fin_pi'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_ppto'; ///// Mis operaciones
+$route['ejec_fin_pi'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_ppto'; ///// formulario de Ejecucion Resupuestaria
+$route['rep_ejec_fin_pi'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_ppto'; ///// Mis operaciones

@@ -2856,3 +2856,74 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
           fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
           primary key(obs_ejec_id)
      );
+
+
+     ///// VISTA Ejecucion de Partidas 
+      CREATE OR REPLACE VIEW public.v_ejec_ppto_partidas AS 
+ SELECT ejec.sp_id,
+    sum(ejec.ppto_ejec) AS ejecutado_total,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 1::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m1,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 2::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m2,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 3::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m3,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 4::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m4,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 5::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m5,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 6::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m6,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 7::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m7,
+     to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 8::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m8,
+     to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 9::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m9,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 10::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m10,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 11::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m11,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ejec.m_id = 12::numeric THEN to_char(ejec.ppto_ejec, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS m12
+   FROM ejecucion_financiera_sigep ejec
+  GROUP BY ejec.sp_id;
+
+ALTER TABLE public.v_ejec_ppto_partidas
+  OWNER TO postgres;

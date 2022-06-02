@@ -66,86 +66,33 @@
                 <section id="widget-grid" class="">
                     <div class="row">
                         <?php echo $formulario;?>
-
-
                     </div>
                 </section>
             </div>
             <!-- END MAIN CONTENT -->
-
-            <!-- MODAL REPORTE POA -->
-<!--             <div class="modal fade" id="modal_poa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog" id="programacion">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-                        </div>
-                        <div class="modal-body">
-                        <h2 class="alert alert-secondary "><center>MIS FORMULARIOS POA - <?php echo $this->session->userData('gestion');?></center></h2>
-                            <div class="row">
-                                <div id="titulo"></div>
-                                <div id="content1"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- MODAL REPORTE MODIFICACION POA -->
-<!--             <div class="modal fade" id="modal_mpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog" id="modificacion">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-                        </div>
-                        <div class="modal-body">
-                        <h2 class="alert alert-success"><center>MIS MODIFICACIONES POA - <?php echo $this->session->userData('gestion');?></center></h2>
-                            <div class="row">
-                                <div id="titulo_mod"></div>
-                                <div id="content_mod"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- MODAL REPORTE CERTIFICACION POA -->
-<!--             <div class="modal fade" id="modal_certpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog" id="certificacion">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-                        </div>
-                        <div class="modal-body">
-                        <h2 class="alert alert-info"><center>MIS CERTIFICACIONES POA - <?php echo $this->session->userData('gestion');?></center></h2>
-                            <div class="row">
-                                <div id="titulo_certpoa"></div>
-                                <div id="content_certpoa"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- MODAL EVALUACION POA -->
-<!--             <div class="modal fade" id="modal_eval" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog" id="evaluacion">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-                        </div>
-                        <div class="modal-body">
-                        <h2 class="alert alert-warning"><center>CUADRO DE EVALUACI&Oacute;N POA - <?php echo $tmes[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></center></h2>
-                            <div class="row">
-                                <div id="titulo_evalpoa"></div>
-                                <div id="content_evalpoa"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
         <!-- ========================================================================================================= -->
+
+        <!-- DETALLE EJECUCION PRESUPUESTARIA   -->
+        <div class="modal fade" id="modal_detalle_ejec" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="mdialTamanio">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="alert alert-info"><center>DETALLE EJECUCIÓN</center></h2>
+                    
+                        <div class="row">
+                            <div id="titulo"></div> 
+                            <div id="content1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
