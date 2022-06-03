@@ -134,8 +134,8 @@ Highcharts.chart('container', {
         name: 'CUMPLIMIENTO %',
         data: [
             <?php 
-              for ($i=1; $i <=$nro-1 ; $i++){ 
-                if($i==$nro-1){
+              for ($i=1; $i <=$nro ; $i++){ 
+                if($i==$nro){
                   ?>
                   <?php echo $eval[$i][5];?>
                   <?php

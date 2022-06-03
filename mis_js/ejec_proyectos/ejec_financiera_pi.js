@@ -3,7 +3,7 @@ base = $('[name="base"]').val();
 function abreVentana(PDF){             
   var direccion;
   direccion = '' + PDF;
-  window.open(direccion, "SEGUIMIENTO POA" , "width=800,height=700,scrollbars=NO") ; 
+  window.open(direccion, "FICHA TECNICA" , "width=800,height=700,scrollbars=NO") ; 
 }
 
 
@@ -210,23 +210,6 @@ function abreVentana(PDF){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   ////// FORMULARIO DE PROYECTOS DE INVERSION
   /// Funcion para guardar datos del Proyecto de Inversion
   function guardar_pi(proy_id){
@@ -279,3 +262,39 @@ function abreVentana(PDF){
       document.getElementById('success'+proy_id).innerHTML = '<img src="'+base+'/assets/ifinal/interogacion.png" width:50px; height=50px;/><br><font color=green><b>ACTUALIZAR DATOS !!</b></font>';
     }
   }
+
+///// ======REPORTE FINANCIEROS
+
+////------- menu select Opciones
+  $("#rep_id").change(function () {
+    $("#rep_id option:selected").each(function () {
+      rep_id=$(this).val();
+      dep_id=($('[id="dep_id"]').val());
+    //  alert(rep_id+'--'+dep_id)
+      if(rep_id!=0){
+        var url = base+"index.php/ejecucion/cejecucion_pi/get_tp_reporte";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "rep_id="+rep_id+"&dep_id="+dep_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+              $('#lista_consolidado').fadeIn(1000).html(response.tabla);
+          }
+          else{
+            alertify.error("ERROR AL LISTAR");
+          }
+        }); 
+      }
+      else{
+        $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Ejecucion Proyectos de Inversión '+gestion+'</h1></div></div>');
+      }
+    });
+  });

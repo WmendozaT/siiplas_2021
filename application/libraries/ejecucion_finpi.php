@@ -57,20 +57,7 @@ class ejecucion_finpi extends CI_Controller{
           $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
           $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($row['aper_id']); /// lista de partidas asignados por proyectos
 
-          
-          /// --- monto total ejecutado del proyecto
-          $monto_ejec_total=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($row['aper_id']);
-          $ppto_ejec_total=0;
-
-          if(count($monto_ejec_total)!=0){
-            $ppto_ejec_total=$monto_ejec_total[0]['ejecutado_total'];
-          }
-
-          ///---- Calculando Avance financiero
-          $avance_fin_total=0;
-          if($row['proy_ppto_total']!=0){
-            $avance_fin_total=round(($ppto_ejec_total/$row['proy_ppto_total'])*100,2);
-          }
+          $avance_fin_total=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']); /// % avance financiero PI
 
 
           $nroP=0;
@@ -137,7 +124,7 @@ class ejecucion_finpi extends CI_Controller{
                         <input type="text" id=efis_pi'.$row['proy_id'].' value="'.round($row['avance_fisico'],2).'" onkeyup="verif_pi_ejecfis('.$row['proy_id'].','.$row['avance_fisico'].',this.value);" onkeypress="if (this.value.length < 50) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                       </label>
                     </td>
-                    <td style="font-size: 18px;font-family: Arial;color:blue" align=center><div id="fin'.$row['proy_id'].'"><b>'.$avance_fin_total.' %</b></div></td>
+                    <td style="font-size: 18px;font-family: Arial;color:blue" align=center><div id="fin'.$row['proy_id'].'"><b>'.$avance_fin_total[2].' %</b></div></td>
                     <td style="font-size: 10px;font-family: Arial;" align=center>
                       <div id="but_pi'.$row['proy_id'].'"><button type="button" name="'.$row['proy_id'].'" id="'.$row['proy_id'].'" onclick="guardar_pi('.$row['proy_id'].');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="45" HEIGHT="45"/><br>ACTUALIZAR<br>INFORMACIÓN</button></div>
                     </td>
@@ -269,7 +256,7 @@ class ejecucion_finpi extends CI_Controller{
                   <td align=right><b>'.number_format($suma_ppto_vigente, 2, ',', '.').'</b></td>
                   <td align=right><b><div id="ppto_ejec_mes'.$row['aper_id'].'">'.number_format($suma_ppto_ejecutado, 2, ',', '.').'</div></b></td>
                   <td colspan=2></td>
-                  <td align=right><b><div id="ppto_ejec_total'.$row['aper_id'].'">Bs. '.number_format($ppto_ejec_total, 2, ',', '.').'</div></b></td>
+                  <td align=right><b><div id="ppto_ejec_total'.$row['aper_id'].'">Bs. '.number_format($avance_fin_total[1], 2, ',', '.').'</div></b></td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -289,93 +276,627 @@ class ejecucion_finpi extends CI_Controller{
     }
 
 
+  /*---- AVANCE FINANCIERA (%) PROY INV ----*/
+  public function avance_financiero_pi($aper_id,$ppto_total){
+    /// --- monto total ejecutado del proyecto
+      $monto_ejec_total=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($aper_id); // suma monto ejecutado de las partidas del proyecto
+      $ppto_ejec_total=0;
+
+      if(count($monto_ejec_total)!=0){
+        $ppto_ejec_total=$monto_ejec_total[0]['ejecutado_total'];
+      }
+
+      ///---- Calculando Avance financiero
+      $avance_fin_total=0;
+      if($ppto_total!=0){
+        $avance_fin_total=round(($ppto_ejec_total/$ppto_total)*100,2);
+      }
+
+      $result[1]=$ppto_ejec_total; /// Ejecutado total Gestion PI
+      $result[2]=$avance_fin_total; // Avance Financiero de la Gestion con respecto al Total de Proyecto
+
+    return $result;
+  }
+
+
+  ////// REPORTES
+
+  /*---- LISTA DE OPCIONES ----*/
+  public function listado_opciones_reportes($dep_id){
+  $tabla='';
+    $tabla.='
+      <input name="base" type="hidden" value="'.base_url().'">
+      <input name="dep_id" id="dep_id" type="hidden" value="'.$dep_id.'">
+      <article class="col-sm-12">
+        <div class="well">
+          <form class="smart-form">
+              <header><b>EJECUCION PRESUPUESTARIA '.$this->verif_mes[2].' / '.$this->gestion.'</b></header>
+              <fieldset>          
+                <div class="row">
+                  <section class="col col-3">
+                    <label class="label"><b>TIPO DE REPORTE</b></label>
+                    <select class="form-control" id="rep_id" name="rep_id" title="SELECCIONE OPCION DE REPORTE">
+                      <option value="0">Seleccione Opción ....</option>
+                      <option value="1">1.- MIS PROYECTOS DE INVERSION.</option>
+                      <option value="2">2.- EJECUCIÓN FISICO Y FINANCIERO.</option>
+                      <option value="3">3.- DETALLE EJECUCIÓN FISICO Y FINANCIERO.</option>
+                    </select>
+                  </section>
+                </div>
+              </fieldset>
+          </form>
+        </div>
+      </article>';
+    return $tabla;
+  }
 
 
 
+  /*------- REPORTE 1 LISTA DE PROYECTOS--------*/
+  public function proyectos_inversion($dep_id,$tp_rep){
+    $proyectos=$this->model_proyecto->list_pinversion(1,4);
+    $regional=$this->model_proyecto->get_departamento($dep_id);
+    $tabla='';
 
-    /*------- PARA EL EXCEL --------*/
-    public function lista_proyectoss($dep_id){
-      $proyectos=$this->model_proyecto->list_pinversion(1,4);
-      $regional=$this->model_proyecto->get_departamento($dep_id);
-      $tabla='';
+    $tabla.='
+    <article class="col-sm-12">
+      <div class="well">
+        <div style="font-size: 18px;font-family: Arial; text-align:center" ><b>MIS PROYECTOS DE INVERSIÓN</b></div>
+            <div class="row">
+              <div class="table-responsive" align=center>
+              <table style="width:80%;">
+                <tr>
+                  <td align=right>
+                    <a href="'.site_url("").'/xls_rep_ejec_fin_pi/'.$dep_id.'/1" target=black title="EXPORTAR DETALLE" class="btn btn-default">
+                      <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;EXPORTAR DETALLE (EXCEL)
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td><hr></td>
+                </tr>
+                <tr>
+                  <td>
+                    <form class="smart-form" method="post">
+                      <section class="col col-3">
+                        <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
+                      </section>
+                    </form>
+                  </td>
+                </tr>
+              </table>
+              </div>
 
-      $tabla.=' 
-        <form class="smart-form" method="post">
-          <input type="hidden" name="base" value="'.base_url().'">
-          <div class="row">
-            <section class="col col-3">
-              <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
-            </section>
 
-          <div class="table-responsive">
-          <table class="table table-bordered" style="width:100%;" id="datos">
-            <thead>
-              <tr>
-                <th style="width:1%;">#</th>
-                <th style="width:5%;">DISTRITAL</th>
-                <th style="width:5%;">CODIGO SISIN</th>
-                <th style="width:15%;">NOMBRE DEL PROYECTO</th>
-                <th style="width:10%;">FASE</th>
-                <th style="width:3%;">PARTIDA</th>
-                <th style="width:5%;">PPTO. INICIAL '.$this->gestion.'</th>
-                <th style="width:5%;">PPTO. MODIFICADO '.$this->gestion.'</th>
-                <th style="width:5%;">PPTO. AJUSTADO FINAL '.$this->gestion.'</th>
-                <th style="width:5%;">CATEGORIA PROGRAMATICA</th>
-                <th style="width:5%;">COSTO TOTAL DEL PROYECTO (Bs.)</th>
-                <th style="width:5%;">REGISTRO EJECUCIÓN '.$this->verif_mes[2].' / '.$this->gestion.'</th>
-                <th style="width:5%;"></th>
-                <th style="width:7%;">TOTAL EJECUTADO (Bs.)</th>
-              </tr>
-            </thead>
-            <tbody>';
-              $nro=0;
-              foreach($proyectos as $row){
-                $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
-                $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($row['aper_id']);
-                $nro++;
-
-                foreach($ppto_asig as $partida){
-                  $ppto_modificado=$this->model_ptto_sigep->monto_modificado_x_partida($partida['sp_id']);
-                  $monto_ini=$partida['importe'];
-                  $monto_mod=0;
-                  $monto_fin=$partida['importe'];
-                  if(count($ppto_modificado)!=0){
-                    $monto_ini=$ppto_modificado[0]['ppto_ini'];
-                    $monto_mod=$ppto_modificado[0]['ppto_modificado'];
-                    $monto_fin=$ppto_modificado[0]['ppto_final'];
-                  }
+            <div class="table-responsive" align=center>
+            <form class="smart-form" method="post">
+            <table class="table table-bordered" style="width:80%;" id="datos">
+              <thead>
+                <tr>
+                  <th style="width:1%; font-size: 10px; text-align:center"><b>#</b></th>
+                  <th style="width:2%; font-size: 10px; text-align:center"></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>REGIONAL</b></th>
+                  <th style="width:7%; font-size: 10px; text-align:center"><b>DISTRITAL</b></th>
+                  <th style="width:10%; font-size: 10px; text-align:center"><b>CODIGO SISIN</b></th>
+                  <th style="width:10%; font-size: 10px; text-align:center"><b>CATEGORIA PROGRAMATICA</b></th>
+                  <th style="width:25%; font-size: 10px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>COSTO TOTAL DEL PROYECTO (Bs.)</b></th>
+                </tr>
+              </thead>
+              <tbody>';
+                $nro=0;
+                foreach($proyectos as $row){
+                  $nro++;
                   $tabla.='
                   <tr>
-                    <td>'.$nro.'</td>
+                    <td align=center>'.$nro.'</td>
+                    <td align=center>
+                      <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$row['proy_id'].'\');" title="REPORTE FICHA TECNICA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>
+                    </td>
+                    <td>'.strtoupper($row['dep_departamento']).'</td>
                     <td>'.strtoupper($row['dist_distrital']).'</td>
                     <td>'.$row['proy_sisin'].'</td>
-                    <td style="font-size: 13px;font-family: Arial;"><b>'.$row['proy_nombre'].'</b></td>
-                    <td>'.strtoupper($fase[0]['fase']).' - '.$fase[0]['descripcion'].'</td>
-                    <td style="font-size: 18px;font-family: Arial;" align=center><b>'.$partida['partida'].'</b></td>
-                    <td align=right>'.number_format($monto_ini, 2, ',', '.').'</td>
-                    <td align=right>'.number_format($monto_mod, 2, ',', '.').'</td>
-                    <td align=right>'.number_format($monto_fin, 2, ',', '.').'</td>
-                    <td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' 000</td>
+                    <td>'.$row['proy_nombre'].'</td>
+                    <td align=right><b>'.number_format($row['proy_ppto_total'], 2, ',', '.').'</b></td>
                   </tr>';
                 }
-              }
-            $tabla.='
-            </tbody>
-          </table>
-        </div>
-        </form>';
+              $tabla.='
+              </tbody>
+            </table>
+            </form>
+          </div>
+      </div>
+    </article>';
 
-      return $tabla;
-    }
+    return $tabla;
+  }
+
+
+  /*------- DETALLE PI EXCEL--------*/
+  public function detalle_pi($dep_id){
+    $proyectos=$this->model_proyecto->list_pinversion(1,4);
+    $regional=$this->model_proyecto->get_departamento($dep_id);
+    $tabla='';
+     $tabla.='<table border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla">
+              <thead>
+                <tr bgcolor="#f4f4f4">
+                  <th style="width:1%; font-size: 12px; text-align:center;height:60px"><b>#</b></th>
+                  <th style="width:3%; font-size: 12px; text-align:center"><b>REGIONAL</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>DISTRITAL</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>CODIGO SISIN</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>CATEGORIA PROGRAMATICA</b></th>
+                  <th style="width:15%; font-size: 12px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>COSTO TOTAL<br>PROYECTO (Bs.)</b></th>
+                </tr>
+              </thead>
+              <tbody>';
+              $nro=0;
+                foreach($proyectos as $row){
+                  $nro++;
+                  $tabla.='
+                  <tr>
+                    <td align=center>'.$nro.'</td>
+                    <td style="font-size: 12px;font-family: Arial;height:50px">'.strtoupper($row['dep_departamento']).'</td>
+                    <td style="font-size: 12px;font-family: Arial;">'.strtoupper($row['dist_distrital']).'</td>
+                    <td style="font-size: 12px;font-family: Arial;">'.$row['proy_sisin'].'</td>
+                    <td style="font-size: 12px;font-family: Arial;">\''.$row['aper_programa'].' '.$row['aper_proyecto'].' 000\'</td>
+                    <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proy_nombre']), 'cp1252', 'UTF-8').'</td>
+                    <td style="font-size: 12px;font-family: Arial;" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
+                  </tr>';
+                }
+      $tabla.='</tbody>
+              </table>';
+
+
+    return $tabla;
+  }
 
 
 
 
-    ////// LIBRERIAS PARA REPORTES GERENCIALES  /// Menu Seguimiento POA (Sub Actividad)
+
+ /*------- REPORTE 2 EJECUCION FISICA Y FINANCIERA--------*/
+  public function avance_fisico_financiero_pi($dep_id,$tp_rep){
+    $proyectos=$this->model_proyecto->list_pinversion(1,4);
+    $regional=$this->model_proyecto->get_departamento($dep_id);
+    $tabla='';
+
+    $tabla.='
+    <article class="col-sm-12">
+      <div class="well">
+        <div style="font-size: 18px;font-family: Arial; text-align:center"><b>EJECUCIÓN FÍSICA Y FINANCIERA - MIS PROYECTOS DE INVERSIÓN</b></div>
+            <div class="row">
+              <div class="table-responsive" align=center>
+              <table style="width:90%;">
+                <tr>
+                  <td align=right>
+                    <a href="'.site_url("").'/xls_rep_ejec_fin_pi/'.$dep_id.'/2" target=black title="EXPORTAR DETALLE" class="btn btn-default">
+                      <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;EXPORTAR DETALLE (EXCEL)
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td><hr></td>
+                </tr>
+                <tr>
+                  <td>
+                    <form class="smart-form" method="post">
+                      <section class="col col-3">
+                        <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
+                      </section>
+                    </form>
+                  </td>
+                </tr>
+              </table>
+              </div>
+
+            <div class="table-responsive" align=center>
+            <form class="smart-form" method="post">
+            <table class="table table-bordered" style="width:90%;" id="datos">
+              <thead>
+                <tr>
+                  <th style="width:1%; font-size: 10px; text-align:center"><b>#</b></th>
+                  <th style="width:2%; font-size: 10px; text-align:center"></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>REGIONAL</b></th>
+                  <th style="width:7%; font-size: 10px; text-align:center"><b>DISTRITAL</b></th>
+                  <th style="width:7%; font-size: 10px; text-align:center"><b>CODIGO SISIN</b></th>
+                  <th style="width:7%; font-size: 10px; text-align:center"><b>CATEGORIA PROGRAMATICA</b></th>
+                  <th style="width:20%; font-size: 10px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>COSTO TOTAL DEL PROYECTO (Bs.)</b></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>ESTADO DEL PROYECTO</b></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>EJECUCIÓN FÍSICA</b></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>EJECUCIÓN FINANCIERA</b></th>
+                </tr>
+              </thead>
+              <tbody>';
+                $nro=0;
+                foreach($proyectos as $row){
+                  $ejec_fin=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']);
+                  $nro++;
+                  $tabla.='
+                  <tr>
+                    <td align=center>'.$nro.'</td>
+                    <td>
+                      <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$row['proy_id'].'\');" title="REPORTE FICHA TECNICA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>
+                    </td>
+                    <td>'.strtoupper($row['dep_departamento']).'</td>
+                    <td>'.strtoupper($row['dist_distrital']).'</td>
+                    <td>'.$row['proy_sisin'].'</td>
+                    <td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' 000</td>
+                    <td>'.$row['proy_nombre'].'</td>
+                    <td align=right><b>Bs. '.number_format($row['proy_ppto_total'], 2, ',', '.').'</b></td>
+                    <td>'.strtoupper($row['ep_descripcion']).'</td>
+                    <td align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
+                    <td align=right><b>'.$ejec_fin[2].' %</b></td>
+                  </tr>';
+                }
+              $tabla.='
+              </tbody>
+            </table>
+            </form>
+          </div>
+      </div>
+    </article>';
+
+    return $tabla;
+  }
+
+
+  /*------- DETALLE EJECUCION PI EXCEL--------*/
+  public function detalle_ejecucion_pi($dep_id){
+    $proyectos=$this->model_proyecto->list_pinversion(1,4);
+    $regional=$this->model_proyecto->get_departamento($dep_id);
+    $tabla='';
+     $tabla.='<table border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla">
+              <thead>
+                <tr bgcolor="#f4f4f4">
+                  <th style="width:1%; font-size: 12px; text-align:center;height:60px"><b>#</b></th>
+                  <th style="width:3%; font-size: 12px; text-align:center"><b>REGIONAL</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>DISTRITAL</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>CODIGO SISIN</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>CATEGORIA PROGRAMATICA</b></th>
+                  <th style="width:15%; font-size: 12px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>COSTO TOTAL<br>PROYECTO (Bs.)</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>ESTADO DEL PROYECTO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>EJECUCIÓN FÍSICA</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>EJECUCIÓN FINANCIERA</b></th>
+                </tr>
+              </thead>
+              <tbody>';
+              $nro=0;
+                foreach($proyectos as $row){
+                  $ejec_fin=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']);
+                  $nro++;
+                  $tabla.='
+                  <tr>
+                    <td align=center>'.$nro.'</td>
+                    <td style="font-size: 12px;font-family: Arial;height:50px">'.strtoupper($row['dep_departamento']).'</td>
+                    <td style="font-size: 12px;font-family: Arial;">'.strtoupper($row['dist_distrital']).'</td>
+                    <td style="font-size: 12px;font-family: Arial;">'.$row['proy_sisin'].'</td>
+                    <td style="font-size: 12px;font-family: Arial;">\''.$row['aper_programa'].' '.$row['aper_proyecto'].' 000\'</td>
+                    <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proy_nombre']), 'cp1252', 'UTF-8').'</td>
+                    <td style="font-size: 12px;font-family: Arial;" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
+                    <td>'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
+                    <td align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
+                    <td align=right><b>'.$ejec_fin[2].' %</b></td>
+                  </tr>';
+                }
+      $tabla.='</tbody>
+              </table>';
+
+
+    return $tabla;
+  }
+
+
+ /*------- REPORTE 3 DETALLE POR PARTIDA EJECUCION FISICA Y FINANCIERA--------*/
+  public function detalle_avance_fisico_financiero_pi($dep_id){
+    $proyectos=$this->model_proyecto->list_pinversion(1,4);
+    $regional=$this->model_proyecto->get_departamento($dep_id);
+    $tabla='';
+
+    $tabla.='
+    <article class="col-sm-12">
+      <div class="well">
+        <div style="font-size: 18px;font-family: Arial; text-align:center"><b>DETALLE EJECUCIÓN FÍSICA Y FINANCIERA - MIS PROYECTOS DE INVERSIÓN, GESTIÓN '.$this->gestion.'</b></div>
+            <div class="row">
+              <div class="table-responsive" align=center>
+              <table style="width:90%;">
+                <tr>
+                  <td align=right>
+                    <a href="'.site_url("").'/xls_rep_ejec_fin_pi/'.$dep_id.'/3" target=black title="EXPORTAR DETALLE" class="btn btn-default">
+                      <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;EXPORTAR DETALLE (EXCEL)
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td><hr></td>
+                </tr>
+                <tr>
+                  <td>
+                    <form class="smart-form" method="post">
+                      <section class="col col-3">
+                        <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
+                      </section>
+                    </form>
+                  </td>
+                </tr>
+              </table>
+              </div>
+
+            <div class="table-responsive" align=center>
+            <form class="smart-form" method="post">
+            <table class="table table-bordered" style="width:90%;" id="datos">
+              <thead>
+                <tr>
+                  <th style="width:1%; font-size: 10px; text-align:center"><b>#</b></th>
+                  <th style="width:2%; font-size: 10px; text-align:center"></th>
+                  <th style="width:3%; font-size: 10px; text-align:center"><b>REGIONAL</b></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>DISTRITAL</b></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>CODIGO SISIN</b></th>
+                  <th style="width:5%; font-size: 10px; text-align:center"><b>CATEGORIA PROGRAMATICA</b></th>
+                  <th style="width:10%; font-size: 10px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
+                  <th style="width:4%; font-size: 10px; text-align:center"><b>COSTO TOTAL DEL PROYECTO (Bs.)</b></th>
+                  <th style="width:4%; font-size: 10px; text-align:center"><b>ESTADO DEL PROYECTO</b></th>
+                  <th style="width:2%; font-size: 10px; text-align:center"><b>PARTIDA</b></th>
+                  <th style="width:3%; font-size: 10px; text-align:center"><b>PPTO. INICIAL '.$this->gestion.'</b></th>
+                  <th style="width:3%; font-size: 10px; text-align:center"><b>PPTO. MOD. '.$this->gestion.'</b></th>
+                  <th style="width:3%; font-size: 10px; text-align:center"><b>PPTO. VIGENTE '.$this->gestion.'</b></th>
+                  <th style="width:3%; font-size: 10px; text-align:center"><b>PPTO. EJECUTADO '.$this->gestion.'</b></th>
+                  <th style="width:3%; font-size: 10px; text-align:center"><b>EJEC. FIS.</b></th>
+                  <th style="width:3%; font-size: 10px; text-align:center"><b>EJEC. FIN.</b></th>
+                </tr>
+              </thead>
+              <tbody>';
+                $nro=0;
+                foreach($proyectos as $row){
+                  $ejec_fin=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']); /// Ejecucion Presupuestaria PI
+                  $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
+                  $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($row['aper_id']); /// lista de partidas asignados por proyectos
+                  $nro++;
+                  $tabla.='
+                  <tr>
+                    <td align=center>'.$nro.'</td>
+                    <td>
+                      <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$row['proy_id'].'\');" title="REPORTE FICHA TECNICA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>
+                    </td>
+                    <td>'.strtoupper($row['dep_departamento']).'</td>
+                    <td>'.strtoupper($row['dist_distrital']).'</td>
+                    <td>'.$row['proy_sisin'].'</td>
+                    <td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' 000</td>
+                    <td>'.$row['proy_nombre'].'</td>
+                    <td align=right><b>Bs. '.number_format($row['proy_ppto_total'], 2, ',', '.').'</b></td>
+                    <td>'.strtoupper($row['ep_descripcion']).'</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
+                    <td align=right><b>'.$ejec_fin[2].' %</b></td>
+                  </tr>';
+                  foreach($ppto_asig as $partida){
+
+                      /// ------ Datos de Modifcacion de la partida
+                      $ppto_modificado=$this->model_ptto_sigep->monto_modificado_x_partida($partida['sp_id']); /// ppto modificado por partida
+                      $monto_ini=$partida['importe'];
+                      $monto_mod=0;
+                      $monto_fin=$partida['importe'];
+                      if(count($ppto_modificado)!=0){
+                        $monto_ini=$ppto_modificado[0]['ppto_ini'];
+                        $monto_mod=$ppto_modificado[0]['ppto_modificado'];
+                        $monto_fin=$ppto_modificado[0]['ppto_final'];
+                      }
+                      //// -----------------------------------------
+
+                      /// montos ejecutados por partidas
+                      $monto_total_ejecutado=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_partida($partida['sp_id']); /// monto total ejecutado
+                      $monto_ejecutado=0;
+                      if(count($monto_total_ejecutado)!=0){
+                        $monto_ejecutado=$monto_total_ejecutado[0]['ejecutado'];
+                      }
+
+                      /// Porcentaje de Avance por partidas
+                      $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($partida['sp_id']); /// Get partida sigep
+                      $porcentaje_avance_fin=0;
+                      if(count($get_partida_sigep)!=0){
+                        $porcentaje_avance_fin=round((($monto_ejecutado/$get_partida_sigep[0]['importe'])*100),2);
+                      }
+
+                    $tabla.='
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td align=center><b>'.$partida['partida'].'</b></td>
+                      <td style="font-size: 11px;font-family: Arial;" align=right>'.number_format($monto_ini, 2, ',', '.').'</td>
+                      <td style="font-size: 11px;font-family: Arial;" align=right>'.number_format($monto_mod, 2, ',', '.').'</td>
+                      <td style="font-size: 11px;font-family: Arial;" align=right>'.number_format($monto_fin, 2, ',', '.').'</td>
+                      <td style="font-size: 11px;font-family: Arial;" align=right><b>Bs. '.number_format($monto_ejecutado, 2, ',', '.').'</b></td>
+                      <td></td>
+                      <td style="font-size: 11px;font-family: Arial;" align=right><b>'.$porcentaje_avance_fin.' %</b></td>
+                    </tr>';
+                  }
+                }
+              $tabla.='
+              </tbody>
+            </table>
+            </form>
+          </div>
+      </div>
+    </article>';
+
+    return $tabla;
+  }
+
+
+ /*------- REPORTE 3 DETALLE POR PARTIDA EJECUCION FISICA Y FINANCIERA--------*/
+  public function detalle_avance_fisico_financiero_pi_excel($dep_id){
+    $proyectos=$this->model_proyecto->list_pinversion(1,4);
+    $regional=$this->model_proyecto->get_departamento($dep_id);
+    $tabla='';
+    $tabla.='<table border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla">
+              <thead>
+                <tr bgcolor="#f4f4f4">
+                  <td style="width:40%; font-size: 15px; text-align:center;height:50px" colspan=13><b>DETALLE PROYECTO</b></td>
+                  <td style="width:60%; font-size: 15px; text-align:center;" colspan=13><b>EJECUCION FINANCIERA</b></td>
+                  <td colspan=2></td>
+                </tr>
+                <tr bgcolor="#f4f4f4">
+                  <th style="width:1%; font-size: 12px; text-align:center;height:60px"><b>#</b></th>
+                  <th style="width:3%; font-size: 12px; text-align:center"><b>REGIONAL</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>DISTRITAL</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>CODIGO SISIN</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>CATEGORIA PROGRAMATICA</b></th>
+                  <th style="width:15%; font-size: 12px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>COSTO TOTAL<br>PROYECTO (Bs.)</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>ESTADO<br>PROYECTO</b></th>
+                  <th style="width:10%; font-size: 12px; text-align:center"><b>FASE</b></th>
+                  <th style="width:2%; font-size: 12px; text-align:center"><b>PARTIDA</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. INICIAL <br>'.$this->gestion.'</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. MOD. <br>'.$this->gestion.'</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. VIGENTE <br>'.$this->gestion.'</b></th>
+
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>ENERO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>FEBRERO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>MARZO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>ABRIL</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>MAYO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>JUNIO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>JULIO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>AGOSTO</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>SEPTIEMBRE</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>OCTUBRE</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>NOVIEMBRE</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>DICIEMBRE</b></th>
+                  <th style="width:5%; font-size: 12px; text-align:center"><b>TOTAL EJECUTADO '.$this->gestion.'</b></th>
+                  <th style="width:8%; font-size: 12px; text-align:center"><b>ULTIMA OBSERVACION</b></th>
+                  <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIS.</b></th>
+                  <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIN.</b></th>
+                </tr>
+              </thead>
+              <tbody>';
+               $nro=0;
+                foreach($proyectos as $row){
+                  $ejec_fin=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']); /// Ejecucion Presupuestaria PI
+                  $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
+                  $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($row['aper_id']); /// lista de partidas asignados por proyectos
+                  $nro++;
+                  $tabla.='
+                  <tr>
+                    <td style="width:1%;font-size: 12px;font-family: Arial; height:50px; text-align:center">'.$nro.'</td>
+                    <td style="width:3%;font-size: 12px;font-family: Arial;">'.strtoupper($row['dep_departamento']).'</td>
+                    <td style="width:5%;font-size: 12px;font-family: Arial;">'.strtoupper($row['dist_distrital']).'</td>
+                    <td style="width:5%;font-size: 12px;font-family: Arial;">'.$row['proy_sisin'].'</td>
+                    <td style="width:5%;font-size: 12px;font-family: Arial;">\''.$row['aper_programa'].' '.$row['aper_proyecto'].' 000\'</td>
+                    <td style="width:15%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proy_nombre']), 'cp1252', 'UTF-8').'</td>
+                    <td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
+                    <td style="width:5%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
+                    <td style="width:10%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($fase[0]['fase'].' - '.$fase[0]['descripcion']), 'cp1252', 'UTF-8').'</td>
+                    <td style="width:2%;font-size: 12px;font-family: Arial;" bgcolor="#c4efe9"></td>
+                    <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#c4efe9"></td>
+                    <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#c4efe9"></td>
+                    <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#c4efe9"></td>';
+                    for ($i=1; $i <=13 ; $i++) { 
+                      $tabla.='<td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5"></td>';
+                    }
+
+                    $tabla.='
+                    <td bgcolor="#e5f7f5"></td>
+                    <td style="width:8%;font-size: 12px;font-family: Arial;" align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
+                    <td style="width:8%;font-size: 12px;font-family: Arial;" align=right><b>'.$ejec_fin[2].' %</b></td>
+                  </tr>';
+                  foreach($ppto_asig as $partida){
+                    $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($partida['sp_id']); /// temporalidad ejec partida
+
+                      /// ------ Datos de Modifcacion de la partida
+                      $ppto_modificado=$this->model_ptto_sigep->monto_modificado_x_partida($partida['sp_id']); /// ppto modificado por partida
+                      $monto_ini=$partida['importe'];
+                      $monto_mod=0;
+                      $monto_fin=$partida['importe'];
+                      if(count($ppto_modificado)!=0){
+                        $monto_ini=$ppto_modificado[0]['ppto_ini'];
+                        $monto_mod=$ppto_modificado[0]['ppto_modificado'];
+                        $monto_fin=$ppto_modificado[0]['ppto_final'];
+                      }
+                      //// -----------------------------------------
+
+                      /// montos ejecutados por partidas
+                      $monto_total_ejecutado=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_partida($partida['sp_id']); /// monto total ejecutado
+                      $monto_ejecutado=0;
+                      if(count($monto_total_ejecutado)!=0){
+                        $monto_ejecutado=$monto_total_ejecutado[0]['ejecutado'];
+                      }
+
+                      /// Porcentaje de Avance por partidas
+                      $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($partida['sp_id']); /// Get partida sigep
+                      $porcentaje_avance_fin=0;
+                      if(count($get_partida_sigep)!=0){
+                        $porcentaje_avance_fin=round((($monto_ejecutado/$get_partida_sigep[0]['importe'])*100),2);
+                      }
+
+                      /// Observacion
+                      $obs_ejec_mensual=$this->model_ptto_sigep->get_obs_ejecucion_financiera_sigep($partida['sp_id'],$this->verif_mes[1]); /// Observacion
+                      $observacion_ejecutado='';
+                      if(count($obs_ejec_mensual)!=0){
+                        $observacion_ejecutado=$obs_ejec_mensual[0]['observacion'];
+                      }
+                    $tabla.='
+                    <tr>
+                      <td style="font-size: 12px;font-family: Arial; height:50px"></td>
+                      <td style="font-size: 12px;font-family: Arial;">'.strtoupper($row['dep_departamento']).'</td>
+                      <td style="font-size: 12px;font-family: Arial;">'.strtoupper($row['dist_distrital']).'</td>
+                      <td style="font-size: 12px;font-family: Arial;">'.$row['proy_sisin'].'</td>
+                      <td style="font-size: 12px;font-family: Arial;">\''.$row['aper_programa'].' '.$row['aper_proyecto'].' 000\'</td>
+                      <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proy_nombre']), 'cp1252', 'UTF-8').'</td>
+                      <td style="font-size: 12px;font-family: Arial;" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
+                      <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
+                      <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($fase[0]['fase'].' - '.$fase[0]['descripcion']), 'cp1252', 'UTF-8').'</td>
+                      <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=center><b>'.$partida['partida'].'</b></td>
+                      <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=right><b>'.round($monto_ini,2).'</b></td>
+                      <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=right><b>'.round($monto_mod,2).'</b></td>
+                      <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=right><b>'.round($monto_fin,2).'</b></td>';
+
+                      if(count($temporalidad_ejec)!=0){
+                        for ($i=1; $i <=12; $i++) { 
+                          $tabla.='<td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right><b>'.round($temporalidad_ejec[0]['m'.$i],2).'</b></td>';
+                        }
+
+                          $tabla.='<td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right><b>'.round($temporalidad_ejec[0]['ejecutado_total'],2).'</b></td>';
+                      }
+                      else{
+                        for ($i=1; $i <=13; $i++) { 
+                          $tabla.='<td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right><b>0.00</b></td>';
+                        }
+                      }
+
+                    $tabla.='
+                      <td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right>'.mb_convert_encoding(strtoupper($observacion_ejecutado), 'cp1252', 'UTF-8').'</td>
+                      <td></td>
+                      <td style="font-size: 12px;font-family: Arial;" align=right><b>'.$porcentaje_avance_fin.' %</b></td>
+                    </tr>';
+                  }
+                }
+              $tabla.='
+              </tbody>
+            </table>';
+
+    return $tabla;
+  }
+
+
+
+
+
+
+    ////// MENU EJECUCION PI
     public function menu_pi(){
       $tabla='';
       $tabla.='
@@ -399,7 +920,7 @@ class ejecucion_finpi extends CI_Controller{
               <a href="#" title="EJECUCION PROYECTOS DE INVERSION"> <span class="menu-item-parent">EJECUCIÓN P.I.</span></a>
             </li>
             <li>
-              <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Ejecución financiera</span></a>
+              <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Ejecución Financiera</span></a>
               <ul>
                 <li>
                   <a href="'.site_url("").'/ejec_fin_pi">Registro Ejecución<span class="badge pull-right inbox-badge bg-color-yellow">nuevo</span></a>

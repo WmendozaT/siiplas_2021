@@ -140,10 +140,11 @@ class Model_proyecto extends CI_Model{
         if($est_proy==1){ /// Proyectos en etapa Inicial (Programacion Inicial)
             /// Administrador Nacional
             if($this->adm==1){
-                $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
+                $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,p.proy_estado,
                             apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                            Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                             Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
                             Inner Join _departamentos as d On d.dep_id=p.dep_id
@@ -158,6 +159,7 @@ class Model_proyecto extends CI_Model{
                             apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                            Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                             Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
                             Inner Join _departamentos as d On d.dep_id=p.dep_id
@@ -170,6 +172,7 @@ class Model_proyecto extends CI_Model{
                             apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                            Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                             Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
                             Inner Join _departamentos as d On d.dep_id=p.dep_id
@@ -186,6 +189,7 @@ class Model_proyecto extends CI_Model{
                         from _proyectofaseetapacomponente pfe
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                         Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                         Inner Join _departamentos as d On d.dep_id=p.dep_id
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
                         where apg.aper_gestion='.$this->gestion.' and pfe.estado!=\'3\' and p.estado!=\'3\' and p.tp_id=\'1\' and apg.aper_estado!=\'3\' and apg.aper_proy_estado=\'4\'
@@ -198,6 +202,7 @@ class Model_proyecto extends CI_Model{
                         from _proyectofaseetapacomponente pfe
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                         Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                         Inner Join _departamentos as d On d.dep_id=p.dep_id
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
                         where p.dep_id='.$dep[0]['dep_id'].' and apg.aper_gestion='.$this->gestion.' and pfe.estado!=\'3\' and p.estado!=\'3\' and p.tp_id=\'1\' and apg.aper_estado!=\'3\' and apg.aper_proy_estado=\'4\'
@@ -208,6 +213,7 @@ class Model_proyecto extends CI_Model{
                         from _proyectofaseetapacomponente pfe
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                         Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                         Inner Join _departamentos as d On d.dep_id=p.dep_id
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
                         where p.dep_id='.$dep[0]['dep_id'].' and p.dist_id='.$this->dist.' and apg.aper_gestion='.$this->gestion.' and pfe.estado!=\'3\' and p.estado!=\'3\' and p.tp_id=\'1\' and apg.aper_estado!=\'3\' and apg.aper_proy_estado=\'4\'
@@ -230,6 +236,7 @@ class Model_proyecto extends CI_Model{
                         apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                         Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
                         Inner Join _proyectofuncionario as pf On pf.proy_id=p.proy_id
@@ -245,6 +252,7 @@ class Model_proyecto extends CI_Model{
                         apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                         Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                         Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
                         Inner Join _proyectofuncionario as pf On pf.proy_id=p.proy_id
@@ -263,6 +271,7 @@ class Model_proyecto extends CI_Model{
                             apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                            Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                             Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
                             Inner Join _proyectofuncionario as pf On pf.proy_id=p.proy_id
@@ -278,6 +287,7 @@ class Model_proyecto extends CI_Model{
                             apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                            Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                             Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
                             Inner Join _proyectofuncionario as pf On pf.proy_id=p.proy_id
@@ -293,6 +303,7 @@ class Model_proyecto extends CI_Model{
                             apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                            Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                             Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
                             Inner Join _proyectofuncionario as pf On pf.proy_id=p.proy_id
@@ -309,6 +320,7 @@ class Model_proyecto extends CI_Model{
                             apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.aper_proy_estado,apg.tp_obs,p.proy_pr,p.proy_act,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,d.dep_departamento,ds.dist_distrital,pfe.*
                             from _proyectos as p
                             Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                            Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                             Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                             Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
                             Inner Join _proyectofuncionario as pf On pf.proy_id=p.proy_id
@@ -348,6 +360,7 @@ class Model_proyecto extends CI_Model{
          $sql = 'select tap.*,p.*,tp.*,fu.*
                     from _proyectos as p
                     Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                    Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                     Inner Join (select apy.*,apg.* from aperturaprogramatica as apg, aperturaproyectos as apy where apy.aper_id=apg.aper_id) as tap On p.proy_id=tap.proy_id
                     Inner Join (select pf."proy_id",f."fun_id",f."fun_nombre",f."fun_paterno",f."fun_materno",u."uni_unidad" as ue,ur."uni_unidad" as ur
                         from _proyectofuncionario pf

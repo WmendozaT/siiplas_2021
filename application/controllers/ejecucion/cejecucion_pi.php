@@ -21,6 +21,7 @@ class Cejecucion_pi extends CI_Controller {
         $this->rol = $this->session->userData('rol_id');
         $this->dist = $this->session->userData('dist');
         $this->dist_tp = $this->session->userData('dist_tp');
+        $this->dep_id = $this->session->userData('dep_id');
         $this->tmes = $this->session->userData('trimestre');
         $this->fun_id = $this->session->userData('fun_id');
         $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
@@ -204,7 +205,7 @@ class Cejecucion_pi extends CI_Controller {
   }
 
 
-  /*----  GET DETALLE EJECUCION PRESUPUESTARIA ----*/
+  /*----  GET DETALLE EJECUCION PRESUPUESTARIA POR PARTIDA----*/
   public function get_detalle_ejecucion_partida(){
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
@@ -257,36 +258,6 @@ class Cejecucion_pi extends CI_Controller {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   /*---- VALIDA UPDATE DATOS PROYECTOS DE INVERSION ----*/
   //data: "proy_id="+proy_id+"&estado="+estado+"&fis="+avance_fisico
   public function guardar_datos_proyecto(){
@@ -319,6 +290,92 @@ class Cejecucion_pi extends CI_Controller {
         show_404();
     }
   }
+
+
+///// =============== REPORTES
+/// Menu Reportes 
+public function menu_rep_ejecucion_ppto(){
+  $data['menu']=$this->ejecucion_finpi->menu_pi();
+  $data['opciones']=$this->ejecucion_finpi->listado_opciones_reportes($this->dep_id);
+  $regional=$this->model_proyecto->get_departamento($this->dep_id);
+  $tabla='';
+  $tabla.='<div class="well">
+            <div class="jumbotron">
+              <h1>Regional '.strtoupper($regional[0]['dep_departamento']).' - '.$this->verif_mes[2].' / '.$this->gestion.'</h1>
+                <p>
+                  Reporte consolidado de ejecución Presupuestaria de Proyectos de Inversion, gestión '.$this->gestion.' a nivel Regional.
+                </p>
+            </div>
+          </div>';
+
+  $data['titulo_modulo']=$tabla;
+
+  $this->load->view('admin/ejecucion_pi/rep_menu', $data);
+}
+
+
+  /*----  GET TIPO DE REPORTE ----*/
+  public function get_tp_reporte(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $rep_id = $this->security->xss_clean($post['rep_id']); /// tipo de reporte
+      $dep_id = $this->security->xss_clean($post['dep_id']); /// regional
+      $tabla='';
+
+
+      if($rep_id==1){
+        $tabla=$this->ejecucion_finpi->proyectos_inversion($dep_id,1); /// vista Lista de Proyectos
+      }
+      elseif ($rep_id==2) {
+        $tabla=$this->ejecucion_finpi->avance_fisico_financiero_pi($dep_id,1); /// vista Ejecucion Fisico y Financiero
+      }
+      elseif ($rep_id==3) {
+        $tabla=$this->ejecucion_finpi->detalle_avance_fisico_financiero_pi($dep_id); /// vista Ejecucion Fisico y Financiero
+      }
+
+      $result = array(
+        'respuesta' => 'correcto',
+        'tabla'=>$tabla,
+      );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+
+  /*---- EXPORTAR A EXCEL REPORTE SEGUN EL TIPO ----*/
+  public function exportar_ejecucion_pi($dep_id,$tip){
+      date_default_timezone_set('America/Lima');
+      $fecha = date("d-m-Y H:i:s");
+      $regional=$this->model_proyecto->get_departamento($dep_id);
+      $tabla='';
+
+      if($tip==1){
+        $tabla=$this->ejecucion_finpi->detalle_pi($dep_id);
+      }
+      elseif ($tip==2) {
+        $tabla=$this->ejecucion_finpi->detalle_ejecucion_pi($dep_id);
+      }
+      else{
+        $tabla=$this->ejecucion_finpi->detalle_avance_fisico_financiero_pi_excel($dep_id);
+      }
+
+
+      header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=Detalle_ejec_pi_".strtoupper($regional[0]['dep_departamento'])."/".$this->gestion."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      echo "";
+      ini_set('max_execution_time', 0); 
+      ini_set('memory_limit','3072M');
+      echo $tabla;
+  }
+
+
 
     /*----------------------------------------*/
     function rolfun($rol){

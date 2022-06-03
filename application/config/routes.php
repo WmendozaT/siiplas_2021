@@ -622,4 +622,5 @@ $route['rep/exportar_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/c
 
 //// EJECUCION FINANCIERA DE PROYECTOS DE INVERSION
 $route['ejec_fin_pi'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_ppto'; ///// formulario de Ejecucion Resupuestaria
-$route['rep_ejec_fin_pi'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_ppto'; ///// Mis operaciones
+$route['rep_ejec_fin_pi'] = 'ejecucion/cejecucion_pi/menu_rep_ejecucion_ppto'; ///// Menu para reportes
+$route['xls_rep_ejec_fin_pi/(:any)'] = 'ejecucion/cejecucion_pi/exportar_ejecucion_pi/$1/$2'; ///// exportar reporte a excel
