@@ -759,6 +759,7 @@ class Model_proyecto extends CI_Model{
                                         p."proy_ponderacion",
                                         p."proy_pcion_reg",
                                         p."proy_ppto_total",
+                                        p."avance_fisico",
                                       
                                         p."proy_pr",
                                         p."dep_id",
@@ -778,6 +779,7 @@ class Model_proyecto extends CI_Model{
                                         tap."aper_proy_estado",
 
                                         p."estado",
+                                        ep."ep_descripcion",
 
                                         fu.*,
                                         dep.*,
@@ -788,6 +790,7 @@ class Model_proyecto extends CI_Model{
         FROM "public"."_proyectos" as p
         Inner Join "public"."_tipoproyecto" as tp On p."tp_id"=tp."tp_id"
         Inner Join "public"."_departamentos" as dep On dep."dep_id"=p."dep_id"
+        Inner Join "public"."_estadoproyecto" as ep On ep."ep_id"=p."proy_estado"
         Inner Join "public"."_distritales" as ds On ds."dist_id"=p."dist_id"
         Inner Join "public"."tipo_gasto" as tg On p."tg_id"=tg."tg_id"
         Inner Join (select apy."proy_id", apg."aper_id",apg."aper_programa", apg."aper_proyecto", apg."aper_actividad",apg."aper_descripcion",apg."aper_proy_estado" from "public"."aperturaprogramatica" as apg, "public"."aperturaproyectos" as apy where apy."aper_id"=apg."aper_id" and apg."aper_gestion"='.$this->gestion.') as tap On p."proy_id"=tap."proy_id"

@@ -345,6 +345,16 @@ public function menu_rep_ejecucion_ppto(){
   }
 
 
+  /*--- REPORTE FICHA TECNICA PROY INVERSION ---*/
+  public function ficha_tecnica_pi($proy_id){
+    $regional=$this->model_proyecto->get_departamento($this->dep_id);
+    $data['titulo_pie_rep']='Ficha_Tecnica_PI'.strtoupper($regional[0]['dep_departamento']).' '.$this->gestion;
+    $data['cabecera']=$this->ejecucion_finpi->cabecera_ficha_tecnica();
+    $data['pie']=$this->ejecucion_finpi->pie_ficha_tecnica();
+    $data['datos_proyecto']=$this->ejecucion_finpi->datos_proyecto_inversion($proy_id);
+
+    $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
+  }
 
 
   /*---- EXPORTAR A EXCEL REPORTE SEGUN EL TIPO ----*/
