@@ -771,7 +771,9 @@ CREATE OR REPLACE FUNCTION lista_poa_pinversion_regional(id numeric, gestion int
 proy_id numeric,
 aper_id numeric,
 da varchar,
+dep_id numeric,
 dep_departamento varchar,
+dist_id integer,
 ue varchar,
 dist_distrital varchar,
 abrev varchar,
@@ -780,31 +782,44 @@ proy varchar,
 act varchar,
 proyecto varchar,
 proy_estado integer,
+ep_descripcion varchar,
+proy_ppto_total numeric,
+avance_fisico numeric,
 aper_proy_estado integer,
+avance_financiero numeric,
 pfec_id numeric,
+pfec_descripcion varchar,
 pfec_estado integer) AS
 
 $$
-		select 
-		p.proy_id,
-		apg.aper_id,
-		d.dep_cod as DA,
-		d.dep_departamento,
-		ds.dist_cod as UE,
-		ds.dist_distrital,
-		ds.abrev,
-		apg.aper_prog as PROG,
-		p.proy_sisin as PROY,
-		apg.aper_act as ACT,
-		p.proy_nombre as PROYECTO,
-		p.proy_estado,
-		apg.aper_proy_estado,
-		pfe.pfec_id,
-		pfe.pfec_estado
+          select 
+          p.proy_id,
+          apg.aper_id,
+          d.dep_cod as DA,
+          d.dep_id,
+          d.dep_departamento,
+          ds.dist_id,
+          ds.dist_cod as UE,
+          ds.dist_distrital,
+          ds.abrev,
+          apg.aper_prog as PROG,
+          p.proy_sisin as PROY,
+          apg.aper_act as ACT,
+          p.proy_nombre as PROYECTO,
+          p.proy_estado,
+          ep.ep_descripcion,
+          p.proy_ppto_total,
+          p.avance_fisico,
+          apg.aper_proy_estado,
+          apg.avance_financiero,
+          pfe.pfec_id,
+          pfe.pfec_descripcion,
+          pfe.pfec_estado
 
                 from _proyectofaseetapacomponente pfe
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                         Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                         Inner Join _departamentos as d On d.dep_id=p.dep_id
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
                         where p.dep_id=id and apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and p.tp_id=1 and apg.aper_estado!=3 and apg.aper_proy_estado=4
@@ -818,7 +833,9 @@ CREATE OR REPLACE FUNCTION lista_poa_pinversion_distrital(id numeric, gestion in
 proy_id numeric,
 aper_id numeric,
 da varchar,
+dep_id numeric,
 dep_departamento varchar,
+dist_id integer,
 ue varchar,
 dist_distrital varchar,
 abrev varchar,
@@ -827,31 +844,44 @@ proy varchar,
 act varchar,
 proyecto varchar,
 proy_estado integer,
+ep_descripcion varchar,
+proy_ppto_total numeric,
+avance_fisico numeric,
 aper_proy_estado integer,
+avance_financiero numeric,
 pfec_id numeric,
+pfec_descripcion varchar,
 pfec_estado integer) AS
 
 $$
-		select 
-		p.proy_id,
-		apg.aper_id,
-		d.dep_cod as DA,
-		d.dep_departamento,
-		ds.dist_cod as UE,
-		ds.dist_distrital,
-		ds.abrev,
-		apg.aper_prog as PROG,
-		p.proy_sisin as PROY,
-		apg.aper_act as ACT,
-		p.proy_nombre as PROYECTO,
-		p.proy_estado,
-		apg.aper_proy_estado,
-		pfe.pfec_id,
-		pfe.pfec_estado
+          select 
+          p.proy_id,
+          apg.aper_id,
+          d.dep_cod as DA,
+          d.dep_id,
+          d.dep_departamento,
+          ds.dist_id,
+          ds.dist_cod as UE,
+          ds.dist_distrital,
+          ds.abrev,
+          apg.aper_prog as PROG,
+          p.proy_sisin as PROY,
+          apg.aper_act as ACT,
+          p.proy_nombre as PROYECTO,
+          p.proy_estado,
+          ep.ep_descripcion,
+          p.proy_ppto_total,
+          p.avance_fisico,
+          apg.aper_proy_estado,
+          apg.avance_financiero,
+          pfe.pfec_id,
+          pfe.pfec_descripcion,
+          pfe.pfec_estado
 
                 from _proyectofaseetapacomponente pfe
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                         Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                         Inner Join _departamentos as d On d.dep_id=p.dep_id
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
                         where p.dist_id=id and apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and p.tp_id=1 and apg.aper_estado!=3 and apg.aper_proy_estado=4
@@ -861,12 +891,15 @@ $$ LANGUAGE sql;
 
 
 
+
 FUNCION POA NACIONAL (PROYECTOS DE INVERSION)
 CREATE OR REPLACE FUNCTION lista_poa_pinversion_nacional(gestion integer) RETURNS TABLE(
 proy_id numeric,
 aper_id numeric,
 da varchar,
+dep_id numeric,
 dep_departamento varchar,
+dist_id integer,
 ue varchar,
 dist_distrital varchar,
 abrev varchar,
@@ -875,10 +908,14 @@ proy varchar,
 act varchar,
 proyecto varchar,
 proy_estado integer,
+ep_descripcion varchar,
+proy_ppto_total numeric,
+avance_fisico numeric,
 aper_proy_estado integer,
 pfec_id numeric,
 pfec_estado integer,
 aper_gestion integer,
+avance_financiero numeric,
 pfec_descripcion varchar) AS
 
 $$
@@ -887,7 +924,9 @@ select
 p.proy_id,
 apg.aper_id,
 d.dep_cod as DA,
+d.dep_id,
 d.dep_departamento,
+ds.dist_id,
 ds.dist_cod as UE,
 ds.dist_distrital,
 ds.abrev,
@@ -896,15 +935,20 @@ p.proy_sisin as PROY,
 apg.aper_actividad as ACT,
 p.proy_nombre as PROYECTO,
 p.proy_estado,
+ep.ep_descripcion,
+p.proy_ppto_total,
+p.avance_fisico,
 apg.aper_proy_estado,
 pfe.pfec_id,
 pfe.pfec_estado,
 apg.aper_gestion,
+apg.avance_financiero,
 pfe.pfec_descripcion
 
                         from _proyectofaseetapacomponente pfe
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                         Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
                         Inner Join _departamentos as d On d.dep_id=p.dep_id
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
                         where apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and p.tp_id=1 and apg.aper_estado!=3 and apg.aper_proy_estado=4
@@ -2858,9 +2902,11 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
      );
 
 
-     ///// VISTA Ejecucion de Partidas 
-      CREATE OR REPLACE VIEW public.v_ejec_ppto_partidas AS 
- SELECT ejec.sp_id,
+///// VISTA Ejecucion de Partidas 
+CREATE OR REPLACE VIEW public.v_ejec_ppto_partidas AS 
+ SELECT 
+    ppto_asig.aper_id,
+    ejec.sp_id,
     sum(ejec.ppto_ejec) AS ejecutado_total,
     to_number(COALESCE(string_agg(
         CASE
@@ -2923,7 +2969,152 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
             ELSE NULL::text
         END, ''::text), '0'::text), '999999999999.99'::text) AS m12
    FROM ejecucion_financiera_sigep ejec
-  GROUP BY ejec.sp_id;
+   Inner Join ptto_partidas_sigep as ppto_asig On ppto_asig.sp_id=ejec.sp_id
+  GROUP BY ppto_asig.aper_id,ejec.sp_id;
 
 ALTER TABLE public.v_ejec_ppto_partidas
   OWNER TO postgres;
+
+
+  /////// ======= VISTA PRESUPUESTO ASIGNADO POR PROYECTO, UNIDAD
+     CREATE OR REPLACE VIEW public.vista_ppto_asignado_gestion_proyecto AS 
+    select aper_id, g_id, SUM(importe) ppto_asignado_gestion
+    from ptto_partidas_sigep
+    group by aper_id, g_id;
+
+     ALTER TABLE public.vista_ppto_asignado_gestion_proyecto
+     OWNER TO postgres;
+
+
+
+
+///// ==== LISTA DETALLE EJECUCION DE PROYECTOS DE INVERSION
+CREATE OR REPLACE FUNCTION lista_detalle_ejecucion_ppto_proyectos(gestion integer) RETURNS TABLE(
+proy_id numeric,
+aper_id numeric,
+da varchar,
+dep_id numeric,
+dep_departamento varchar,
+dist_id integer,
+dist_distrital varchar,
+prog varchar,
+proy varchar,
+act varchar, 
+proyecto varchar,
+ep_descripcion varchar,
+proy_ppto_total numeric,
+ppto_asignado_gestion numeric,
+pfec_descripcion varchar,
+avance_fisico numeric,
+avance_financiero numeric,
+ejecutado_total numeric,
+m1 numeric,
+m2 numeric,
+m3 numeric,
+m4 numeric,
+m5 numeric,
+m6 numeric,
+m7 numeric,
+m8 numeric,
+m9 numeric,
+m10 numeric,
+m11 numeric,
+m12 numeric) AS
+
+$$
+
+SELECT 
+p.proy_id,
+p.aper_id,
+p.da,
+p.dep_id,
+p.dep_departamento,
+p.dist_id,
+p.dist_distrital,
+p.prog,
+p.proy,
+p.act, 
+p.proyecto,
+p.ep_descripcion,
+p.proy_ppto_total,
+ppto_asig_gestion.ppto_asignado_gestion,
+p.pfec_descripcion,
+p.avance_fisico,
+p.avance_financiero,
+SUM(ppto_ejec.ejecutado_total) ejecutado_total,
+SUM(ppto_ejec.m1) m1,
+SUM(ppto_ejec.m2) m2,
+SUM(ppto_ejec.m3) m3,
+SUM(ppto_ejec.m4) m4,
+SUM(ppto_ejec.m5) m5,
+SUM(ppto_ejec.m6) m6,
+SUM(ppto_ejec.m7) m7,
+SUM(ppto_ejec.m8) m8,
+SUM(ppto_ejec.m9) m9,
+SUM(ppto_ejec.m10) m10,
+SUM(ppto_ejec.m11) m11,
+SUM(ppto_ejec.m12) m12
+
+FROM lista_poa_pinversion_nacional(gestion) p
+Inner Join vista_ppto_asignado_gestion_proyecto as ppto_asig_gestion On ppto_asig_gestion.aper_id=p.aper_id
+Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=p.aper_id
+Inner Join v_ejec_ppto_partidas as ppto_ejec On ppto_ejec.sp_id=partidas_asig.sp_id
+
+
+GROUP BY p.proy_id,
+p.aper_id,
+p.da,
+p.dep_id,
+p.dep_departamento,
+p.dist_id,
+p.dist_distrital,
+p.prog,
+p.proy,
+p.act, 
+p.proyecto,
+p.ep_descripcion,
+p.proy_ppto_total,
+ppto_asig_gestion.ppto_asignado_gestion,
+p.pfec_descripcion,
+p.avance_fisico,
+p.avance_financiero
+
+ORDER BY p.dep_id,p.dist_id, p.proy_id asc;
+$$ LANGUAGE sql;
+
+
+
+//////////////// ==== LISTA DE PARTIDAS ASIGNADOS EN LA GESTION PROYECTOS DE INVERSION
+CREATE OR REPLACE FUNCTION lista_partidas_ppto_asignadas_gestion(gestion integer) RETURNS TABLE(
+aper_id numeric,
+dep_id numeric,
+proy_id numeric,
+par_id integer,
+partida varchar,
+par_nombre varchar,
+ppto_partida_asignado_gestion numeric) AS
+
+$$
+
+SELECT 
+p.aper_id,
+p.dep_id,
+p.proy_id,
+partidas_asig.par_id, 
+partidas_asig.partida, 
+partidas.par_nombre,
+SUM(partidas_asig.importe) ppto_partida_asignado_gestion
+
+FROM lista_poa_pinversion_nacional(gestion) p
+Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=p.aper_id
+Inner Join partidas as partidas On partidas.par_id=partidas_asig.par_id
+GROUP BY
+p.aper_id, 
+p.dep_id,
+p.proy_id,
+partidas_asig.par_id, 
+partidas_asig.partida,
+partidas.par_nombre
+
+ORDER BY p.dep_id,p.proy_id asc;
+$$ LANGUAGE sql;

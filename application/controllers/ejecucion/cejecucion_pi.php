@@ -375,13 +375,13 @@ public function menu_rep_ejecucion_ppto(){
       }
 
 
-      header('Content-type: application/vnd.ms-excel');
+      /*header('Content-type: application/vnd.ms-excel');
       header("Content-Disposition: attachment; filename=Detalle_ejec_pi_".strtoupper($regional[0]['dep_departamento'])."/".$this->gestion."_$fecha.xls"); //Indica el nombre del archivo resultante
       header("Pragma: no-cache");
       header("Expires: 0");
       echo "";
       ini_set('max_execution_time', 0); 
-      ini_set('memory_limit','3072M');
+      ini_set('memory_limit','3072M');*/
       echo $tabla;
   }
 

@@ -960,7 +960,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------- monto modificado por partidas --------*/
+    /*-------- monto modificado por partidas 2022--------*/
     public function monto_modificado_x_partida($sp_id){
         $sql = 'select ppto.sp_id, ppto_i.ppto_ini, (SUM(ppto.ppto_final)-SUM(ppto.ppto_ini)) ppto_modificado, ppto_f.ppto_final
                 from ppto_mod ppto
@@ -987,6 +987,16 @@ class Model_ptto_sigep extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+    /*-------- Get Ptto Ejecutado x proyecto --------*/
+    public function get_ppto_ejecutado_proyecto($proy_id){
+        $sql = 'select *
+                from lista_detalle_ejecucion_ppto_proyectos('.$this->gestion.')
+                where proy_id='.$proy_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
     /*-------- Techo Partida Adcionado --------*/
     public function partida_del_techo($cppto_id){
