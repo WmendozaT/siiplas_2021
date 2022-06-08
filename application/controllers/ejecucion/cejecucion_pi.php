@@ -6,29 +6,29 @@ class Cejecucion_pi extends CI_Controller {
     if($this->session->userdata('fun_id')!=null){
         $this->load->model('Users_model','',true);
         if($this->rolfun($this->rol)){ 
-        $this->load->library('pdf2');
-        $this->load->model('menu_modelo');
-        $this->load->model('consultas/model_consultas');
-        $this->load->model('programacion/model_proyecto');
-        $this->load->model('programacion/model_faseetapa');
-        $this->load->model('programacion/model_actividad');
-        $this->load->model('programacion/model_producto');
-        $this->load->model('programacion/model_componente');
-        $this->load->model('mantenimiento/model_ptto_sigep');
-        $this->pcion = $this->session->userData('pcion');
-        $this->gestion = $this->session->userData('gestion');
-        $this->adm = $this->session->userData('adm');
-        $this->rol = $this->session->userData('rol_id');
-        $this->dist = $this->session->userData('dist');
-        $this->dist_tp = $this->session->userData('dist_tp');
-        $this->dep_id = $this->session->userData('dep_id');
-        $this->tmes = $this->session->userData('trimestre');
-        $this->fun_id = $this->session->userData('fun_id');
-        $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
-        $this->ppto= $this->session->userData('verif_ppto'); 
-        $this->verif_mes=$this->session->userData('mes_actual');
-        $this->tp_adm = $this->session->userData('tp_adm');
-        $this->load->library('ejecucion_finpi');
+          $this->load->library('pdf2');
+          $this->load->model('menu_modelo');
+          $this->load->model('consultas/model_consultas');
+          $this->load->model('programacion/model_proyecto');
+          $this->load->model('programacion/model_faseetapa');
+          $this->load->model('programacion/model_actividad');
+          $this->load->model('programacion/model_producto');
+          $this->load->model('programacion/model_componente');
+          $this->load->model('mantenimiento/model_ptto_sigep');
+          $this->pcion = $this->session->userData('pcion');
+          $this->gestion = $this->session->userData('gestion');
+          $this->adm = $this->session->userData('adm');
+          $this->rol = $this->session->userData('rol_id');
+          $this->dist = $this->session->userData('dist');
+          $this->dist_tp = $this->session->userData('dist_tp');
+          $this->dep_id = $this->session->userData('dep_id');
+          $this->tmes = $this->session->userData('trimestre');
+          $this->fun_id = $this->session->userData('fun_id');
+          $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
+          $this->ppto= $this->session->userData('verif_ppto'); 
+          $this->verif_mes=$this->session->userData('mes_actual');
+          $this->tp_adm = $this->session->userData('tp_adm');
+          $this->load->library('ejecucion_finpi');
         }else{
             redirect('admin/dashboard');
         }
@@ -309,40 +309,116 @@ public function menu_rep_ejecucion_ppto(){
           </div>';
 
   $data['titulo_modulo']=$tabla;
-
+  //echo $this->ejecucion_finpi->reporte_consolidado_partidas($this->dep_id);
   $this->load->view('admin/ejecucion_pi/rep_menu', $data);
 }
 
 
-  /*----  GET TIPO DE REPORTE ----*/
-  public function get_tp_reporte(){
-    if($this->input->is_ajax_request() && $this->input->post()){
-      $post = $this->input->post();
-      $rep_id = $this->security->xss_clean($post['rep_id']); /// tipo de reporte
-      $dep_id = $this->security->xss_clean($post['dep_id']); /// regional
-      $tabla='';
+/*----  GET TIPO DE REPORTE ----*/
+public function get_tp_reporte(){
+  if($this->input->is_ajax_request() && $this->input->post()){
+    $post = $this->input->post();
+    $rep_id = $this->security->xss_clean($post['rep_id']); /// tipo de reporte
+    $dep_id = $this->security->xss_clean($post['dep_id']); /// regional
+    $tabla='';
 
+    $regional=$this->model_proyecto->get_departamento($dep_id);
 
-      if($rep_id==1){
-        $tabla=$this->ejecucion_finpi->proyectos_inversion($dep_id,1); /// vista Lista de Proyectos
-      }
-      elseif ($rep_id==2) {
-        $tabla=$this->ejecucion_finpi->avance_fisico_financiero_pi($dep_id,1); /// vista Ejecucion Fisico y Financiero
-      }
-      elseif ($rep_id==3) {
-        $tabla=$this->ejecucion_finpi->detalle_avance_fisico_financiero_pi($dep_id); /// vista Ejecucion Fisico y Financiero
-      }
-
-      $result = array(
-        'respuesta' => 'correcto',
-        'tabla'=>$tabla,
-      );
-
-      echo json_encode($result);
-    }else{
-        show_404();
+    if($rep_id==1){
+      $titulo='MIS PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
+      $lista_detalle=$this->ejecucion_finpi->proyectos_inversion($dep_id,1); /// vista Lista de Proyectos
+      $consolidado='trabajando ...';
     }
+    elseif ($rep_id==2) {
+      $titulo='EJECUCIÓN FÍSICA Y FINANCIERA - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
+      $lista_detalle=$this->ejecucion_finpi->avance_fisico_financiero_pi($dep_id,1); /// vista Ejecucion Fisico y Financiero
+      $consolidado='trabajando ...';
+    }
+    elseif ($rep_id==3) {
+      $titulo='DETALLE EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
+      $lista_detalle=$this->ejecucion_finpi->detalle_avance_fisico_financiero_pi($dep_id); /// vista Ejecucion Fisico y Financiero
+      $consolidado=$this->ejecucion_finpi->reporte_consolidado_partidas($dep_id); /// Clasificacion de partidas asignados por regional
+    }
+
+
+     $tabla='
+      <input name="base" type="hidden" value="'.base_url().'">
+       <div class="row">
+          <article class="col-sm-12 col-md-12 col-lg-12">
+              <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+                    <h2>Ejecucion Presupuestaria</h2>
+                </header>
+                <div>
+                    <div class="jarviswidget-editbox">
+                    </div>
+                    <div class="widget-body">
+                        <p>
+                        <div style="font-size: 25px;font-family: Arial¨;"><b>'.$titulo.'</b></div>
+                        </p>
+                        <hr class="simple">
+                        <ul id="myTab1" class="nav nav-tabs bordered">
+                          <li class="active">
+                              <a href="#s1" data-toggle="tab"> Detalle Ejecución</a>
+                          </li>
+                          <li>
+                              <a href="#s2" data-toggle="tab"> Detalle consolidado</a>
+                          </li>
+                        </ul>
+
+                        <div id="myTabContent1" class="tab-content padding-10">
+                          <div class="tab-pane fade in active" id="s1">
+                              <div class="row">
+                                <div class="table-responsive" align=center>
+                                  <table style="width:90%;">
+                                    <tr>
+                                      <td align=right>
+                                        <a href="'.site_url("").'/xls_rep_ejec_fin_pi/'.$dep_id.'/'.$rep_id.'" target=black title="EXPORTAR DETALLE" class="btn btn-default">
+                                          <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;EXPORTAR DETALLE (EXCEL)
+                                        </a>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td><hr></td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <form class="smart-form" method="post">
+                                          <section class="col col-3">
+                                            <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
+                                          </section>
+                                        </form>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                                '.$lista_detalle.'
+                              </div>
+                          </div>
+                          
+                          <div class="tab-pane fade" id="s2">
+                            <div class="row">
+                            '.$consolidado.'
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+          </article>
+        </div>';
+
+    $result = array(
+      'respuesta' => 'correcto',
+      'tabla'=>$tabla,
+    );
+
+    echo json_encode($result);
+  }else{
+      show_404();
   }
+}
 
 
   /*--- REPORTE FICHA TECNICA PROY INVERSION ---*/
@@ -359,32 +435,30 @@ public function menu_rep_ejecucion_ppto(){
 
   /*---- EXPORTAR A EXCEL REPORTE SEGUN EL TIPO ----*/
   public function exportar_ejecucion_pi($dep_id,$tip){
-      date_default_timezone_set('America/Lima');
-      $fecha = date("d-m-Y H:i:s");
-      $regional=$this->model_proyecto->get_departamento($dep_id);
-      $tabla='';
+    date_default_timezone_set('America/Lima');
+    $fecha = date("d-m-Y H:i:s");
+    $regional=$this->model_proyecto->get_departamento($dep_id);
+    $tabla='';
 
-      if($tip==1){
-        $tabla=$this->ejecucion_finpi->detalle_pi($dep_id);
-      }
-      elseif ($tip==2) {
-        $tabla=$this->ejecucion_finpi->detalle_ejecucion_pi($dep_id);
-      }
-      else{
-        $tabla=$this->ejecucion_finpi->detalle_avance_fisico_financiero_pi_excel($dep_id);
-      }
+    if($tip==1){
+      $tabla=$this->ejecucion_finpi->reporte1_excel($dep_id);
+    }
+    elseif ($tip==2) {
+      $tabla=$this->ejecucion_finpi->reporte2_excel($dep_id);
+    }
+    else{
+      $tabla=$this->ejecucion_finpi->reporte3_excel($dep_id);
+    }
 
-
-      /*header('Content-type: application/vnd.ms-excel');
-      header("Content-Disposition: attachment; filename=Detalle_ejec_pi_".strtoupper($regional[0]['dep_departamento'])."/".$this->gestion."_$fecha.xls"); //Indica el nombre del archivo resultante
-      header("Pragma: no-cache");
-      header("Expires: 0");
-      echo "";
-      ini_set('max_execution_time', 0); 
-      ini_set('memory_limit','3072M');*/
-      echo $tabla;
+    header('Content-type: application/vnd.ms-excel');
+    header("Content-Disposition: attachment; filename=Detalle_ejec_pi_".strtoupper($regional[0]['dep_departamento'])."/".$this->gestion."_$fecha.xls"); //Indica el nombre del archivo resultante
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo "";
+    ini_set('max_execution_time', 0); 
+    ini_set('memory_limit','3072M');
+    echo $tabla;
   }
-
 
 
     /*----------------------------------------*/

@@ -2988,7 +2988,7 @@ ALTER TABLE public.v_ejec_ppto_partidas
 
 
 
-///// ==== LISTA DETALLE EJECUCION DE PROYECTOS DE INVERSION
+///// ==== LISTA DETALLE EJECUCION DE PROYECTOS DE INVERSION, MUESTRA LOS DATOS EJECUTADO POR MES
 CREATE OR REPLACE FUNCTION lista_detalle_ejecucion_ppto_proyectos(gestion integer) RETURNS TABLE(
 proy_id numeric,
 aper_id numeric,
@@ -3117,4 +3117,64 @@ partidas_asig.partida,
 partidas.par_nombre
 
 ORDER BY p.dep_id,p.proy_id asc;
+$$ LANGUAGE sql;
+
+
+
+//// FUNCION PARA LISTAR LAS PARTIDAS QUE FUERON EJECUTADAS
+CREATE OR REPLACE FUNCTION lista_partidas_ppto_ejecutado_gestion(gestion integer) RETURNS TABLE(
+dep_id numeric,
+aper_id numeric,
+par_id integer,
+partida varchar,
+par_nombre varchar,
+m1 numeric,
+m2 numeric,
+m3 numeric,
+m4 numeric,
+m5 numeric,
+m6 numeric,
+m7 numeric,
+m8 numeric,
+m9 numeric,
+m10 numeric,
+m11 numeric,
+m12 numeric,
+ejecutado_total numeric
+) AS
+
+$$
+
+SELECT 
+p.dep_id,
+partidas_asig.aper_id,
+partidas.par_id,
+partidas_asig.partida,
+partidas.par_nombre,
+SUM(m1) m1,
+SUM(m2) m2,
+SUM(m3) m3,
+SUM(m4) m4,
+SUM(m5) m5,
+SUM(m6) m6,
+SUM(m7) m7,
+SUM(m8) m8,
+SUM(m9) m9,
+SUM(m10) m10,
+SUM(m11) m11,
+SUM(m12) m12,
+SUM(ejecutado_total) ejecutado_total
+
+FROM lista_poa_pinversion_nacional(gestion) p
+Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=p.aper_id
+Inner Join partidas as partidas On partidas.par_id=partidas_asig.par_id
+Inner Join v_ejec_ppto_partidas as ppto_ejec On ppto_ejec.sp_id=partidas_asig.sp_id
+GROUP BY
+p.dep_id,
+partidas_asig.aper_id,
+partidas.par_id,
+partidas_asig.partida,
+partidas.par_nombre
+
+ORDER BY p.dep_id asc;
 $$ LANGUAGE sql;
