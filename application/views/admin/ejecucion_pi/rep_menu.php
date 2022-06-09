@@ -74,6 +74,7 @@
                         </div>
                         <div id="lista_consolidado"><?php echo $titulo_modulo;?></div>
                     </section>
+
                 </div>
             <!-- END MAIN CONTENT -->
         </div>
@@ -97,6 +98,8 @@
                 document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
             }
         </script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
@@ -121,5 +124,7 @@
         <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
+
+
     </body>
 </html>

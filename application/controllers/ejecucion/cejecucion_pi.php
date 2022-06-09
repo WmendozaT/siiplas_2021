@@ -309,8 +309,18 @@ public function menu_rep_ejecucion_ppto(){
           </div>';
 
   $data['titulo_modulo']=$tabla;
-  //echo $this->ejecucion_finpi->reporte_consolidado_partidas($this->dep_id);
   $this->load->view('admin/ejecucion_pi/rep_menu', $data);
+
+  //echo $this->ejecucion_finpi->reporte_consolidado_partidas($this->dep_id);
+/*  $matriz=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional(2);
+
+  for ($i=0; $i <=12 ; $i++) { 
+    for ($j=1; $j <=18 ; $j++) { 
+      echo "[".$matriz[$i][$j]."]";
+    }
+    echo "<br>";
+  }*/
+
 }
 
 
@@ -327,17 +337,23 @@ public function get_tp_reporte(){
     if($rep_id==1){
       $titulo='MIS PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->proyectos_inversion($dep_id,1); /// vista Lista de Proyectos
+      $nro='';
+      $matriz_partidas='';
       $consolidado='trabajando ...';
     }
     elseif ($rep_id==2) {
       $titulo='EJECUCIÓN FÍSICA Y FINANCIERA - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->avance_fisico_financiero_pi($dep_id,1); /// vista Ejecucion Fisico y Financiero
+      $nro='';
+      $matriz_partidas='';
       $consolidado='trabajando ...';
     }
     elseif ($rep_id==3) {
       $titulo='DETALLE EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->detalle_avance_fisico_financiero_pi($dep_id); /// vista Ejecucion Fisico y Financiero
-      $consolidado=$this->ejecucion_finpi->reporte_consolidado_partidas($dep_id); /// Clasificacion de partidas asignados por regional
+      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
+      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id);
+      $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($dep_id,0); /// Clasificacion de partidas asignados por regional
     }
 
 
@@ -399,7 +415,13 @@ public function get_tp_reporte(){
                           
                           <div class="tab-pane fade" id="s2">
                             <div class="row">
-                            '.$consolidado.'
+                              <article class="col-sm-12">
+                                <div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>
+                              </article>
+                              <hr>
+                              <article class="col-sm-12">
+                              '.$consolidado.'
+                              </article>
                             </div>
                           </div>
                         </div>
@@ -412,6 +434,8 @@ public function get_tp_reporte(){
     $result = array(
       'respuesta' => 'correcto',
       'tabla'=>$tabla,
+      'nro'=>$nro,
+      'matriz'=>$matriz_partidas,
     );
 
     echo json_encode($result);

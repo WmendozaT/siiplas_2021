@@ -192,9 +192,9 @@ class ejecucion_finpi extends CI_Controller{
                     }
 
                     //// suma montos programados totales
-                    $suma_ppto_inicial=$suma_ppto_inicial+$monto_ini;
-                    $suma_ppto_modificado=$suma_ppto_modificado+$monto_mod;
-                    $suma_ppto_vigente=$suma_ppto_vigente+$monto_fin;
+                    $suma_ppto_inicial=$suma_ppto_inicial+$monto_partida[1];
+                    $suma_ppto_modificado=$suma_ppto_modificado+$monto_partida[2];
+                    $suma_ppto_vigente=$suma_ppto_vigente+$monto_partida[3];
                     ///
 
                     $suma_ppto_ejecutado=$suma_ppto_ejecutado+$ppto_ejecutado;
@@ -750,74 +750,127 @@ class ejecucion_finpi extends CI_Controller{
                 }
               $tabla.='
               </tbody>
-            </table>';
+            </table>
+            <br>
+            CONSOLIDADO POR PARTIDAS
+            <br>
+            '.$this->tabla_consolidado_partidas_regional($dep_id,1).'';
 
     return $tabla;
   }
 
 
   /// reporte Consolidado de Partidas
-  public function reporte_consolidado_partidas($dep_id){
+  public function tabla_consolidado_partidas_regional($dep_id,$tp_reporte){
+    //// tp_reporte : 0 (Vista normal)
+    //// tp_reporte : 1 (Excel)
+    $class_table='class="table table-bordered" style="width:100%;"';
+    if($tp_reporte==1){
+      $class_table='border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla"';
+    }
+
     $tabla='';
     $partidas=$this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id);
-
+    $matriz=$this->matriz_consolidado_partidas_prog_ejec_regional($dep_id);
       $tabla.='
-      <table border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla">
+      <center>
+      <table '.$class_table.'>
         <thead>
           <tr>
-            <th>#</th>
-            <th>PARTIDA</th>
-            <th>DETALLE</th>
-            <th>PPTO. ASIGNADO '.$this->gestion.'</th>
+            <th style="text-align:center">#</th>
+            <th style="text-align:center">PARTIDA</th>
+            <th style="text-align:center">DETALLE</th>
+            <th style="text-align:center">PPTO. ASIGNADO '.$this->gestion.'</th>
 
-            <th>ENE.</th>
-            <th>FEB.</th>
-            <th>MAR.</th>
-            <th>ABR.</th>
-            <th>MAY.</th>
-            <th>JUN.</th>
-            <th>JUL.</th>
-            <th>AGO.</th>
-            <th>SEPT.</th>
-            <th>OCT.</th>
-            <th>NOV.</th>
-            <th>DIC.</th>
-            <th>PPTO. EJECUTADO</th>
+            <th style="text-align:center">ENE.</th>
+            <th style="text-align:center">FEB.</th>
+            <th style="text-align:center">MAR.</th>
+            <th style="text-align:center">ABR.</th>
+            <th style="text-align:center">MAY.</th>
+            <th style="text-align:center">JUN.</th>
+            <th style="text-align:center">JUL.</th>
+            <th style="text-align:center">AGO.</th>
+            <th style="text-align:center">SEPT.</th>
+            <th style="text-align:center">OCT.</th>
+            <th style="text-align:center">NOV.</th>
+            <th style="text-align:center">DIC.</th>
+            <th style="text-align:center">PPTO. EJECUTADO</th>
+            <th style="text-align:center">(%) EJECUCION</th>
           </tr>
         </thead>
         <tbody>';
-        $nro=0;
-        foreach($partidas as $partida){
-          $nro++;
-          $tabla.='
-          <tr>
-            <td>'.$nro.'</td>
-            <td>'.$partida['partida'].'</td>
-            <td>'.$partida['par_nombre'].'</td>
-            <td>'.$partida['ppto_partida_asignado_gestion'].'</td>';
-            $ejec=$this->model_ptto_sigep->get_partida_ejecutado_gestion_regional($partida['dep_id'],$partida['par_id']);
-            $total=0;
-            if(count($ejec)!=0){
-              $total=$ejec[0]['ejecutado_total'];
-              for ($i=1; $i <=12 ; $i++) { 
-                $tabla.='<td>'.$ejec[0]['m'.$i].'</td>';
+        for ($i=0; $i<count($partidas); $i++) { 
+            $tabla.='
+            <tr>
+            <td style="text-align:center">'.$i.'</td>
+            <td style="text-align:center">'.$matriz[$i][2].'</td>';
+            if($tp_reporte==0){
+              $tabla.='
+              <td style="text-align:left">'.$matriz[$i][3].'</td>
+              <td style="text-align:right">'.number_format($matriz[$i][4], 2, ',', '.').'</td>';
+              for ($j=5; $j <=18 ; $j++) { 
+                $tabla.='<td style="text-align:right">'.number_format($matriz[$i][$j], 2, ',', '.').'</td>';
               }
             }
             else{
-              for ($i=1; $i <=12 ; $i++) { 
-                $tabla.='<td>0</td>';
+              $tabla.='
+              <td style="text-align:left">'.mb_convert_encoding($matriz[$i][3], 'cp1252', 'UTF-8').'</td>
+              <td style="text-align:right">'.$matriz[$i][4].'</td>';
+              for ($j=5; $j <=18 ; $j++) { 
+                $tabla.='<td style="text-align:right">'.$matriz[$i][$j].' %</td>';
               }
             }
-              
-            $tabla.='
-            <td>'.$total.'</td>
-          </tr>';
+            
+          $tabla.='</tr>';
         }
       $tabla.='
         </tbody>
-      </table>';
+      </table>
+    </center>';
     return $tabla;
   }
+
+
+
+  /// Matriz Consolidado de partidas por REGIONAL
+  public function matriz_consolidado_partidas_prog_ejec_regional($dep_id){
+    $partidas=$this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id);
+
+    /// matriz vacia---
+    for ($i=0; $i <=count($partidas); $i++) { 
+      for ($j=1; $j <=18 ; $j++) { 
+        $matriz[$i][$j]=0;
+      } 
+     }
+    ///----------------
+
+    $nro=0;
+    foreach($partidas as $partida){
+      $ejec=$this->model_ptto_sigep->get_partida_ejecutado_gestion_regional($partida['dep_id'],$partida['par_id']);
+      
+      $matriz[$nro][1]=$partida['par_id']; /// par_id
+      $matriz[$nro][2]=$partida['partida']; /// codigo Partida
+      $matriz[$nro][3]=$partida['par_nombre']; /// descripcion partida
+      $matriz[$nro][4]=round($partida['ppto_partida_asignado_gestion'],2); /// monto asignado Gestion
+      
+      if(count($ejec)!=0){
+        $fila=5;
+        for ($i=1; $i <=12 ; $i++) { 
+          $matriz[$nro][$fila]=round($ejec[0]['m'.$i],2); /// temporalidad Ejecucion
+          $fila++;
+        } 
+
+        $matriz[$nro][17]=round($ejec[0]['ejecutado_total'],2); /// Ejecucion de partida
+        $matriz[$nro][18]=round((($ejec[0]['ejecutado_total']/$matriz[$nro][4])*100),2); // (% de cumplimiento)
+      }
+      $nro++;
+    }
+
+    return $matriz;
+  }
+
+
+
 
   /// detalle modificacion de partidas por proyecto
   public function detalle_modificacion_ppto_x_proyecto($aper_id){

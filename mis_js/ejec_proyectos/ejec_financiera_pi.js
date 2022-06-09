@@ -266,35 +266,66 @@ function abreVentana(PDF){
 ///// ======REPORTE FINANCIEROS
 
 ////------- menu select Opciones
-  $("#rep_id").change(function () {
-    $("#rep_id option:selected").each(function () {
-      rep_id=$(this).val();
-      dep_id=($('[id="dep_id"]').val());
-    //  alert(rep_id+'--'+dep_id)
-      if(rep_id!=0){
-        var url = base+"index.php/ejecucion/cejecucion_pi/get_tp_reporte";
-        var request;
-        if (request) {
-            request.abort();
-        }
-        request = $.ajax({
-          url: url,
-          type: "POST",
-          dataType: 'json',
-          data: "rep_id="+rep_id+"&dep_id="+dep_id
-        });
+$("#rep_id").change(function () {
+  $("#rep_id option:selected").each(function () {
+    rep_id=$(this).val();
+    dep_id=($('[id="dep_id"]').val());
+    if(rep_id!=0){
+      $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" width:30px; height=30px; alt="loading" /><br/>Cargando Información ....</div>');
+      var url = base+"index.php/ejecucion/cejecucion_pi/get_tp_reporte";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "rep_id="+rep_id+"&dep_id="+dep_id
+      });
 
-        request.done(function (response, textStatus, jqXHR) {
-          if (response.respuesta == 'correcto') {
-              $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-          }
-          else{
-            alertify.error("ERROR AL LISTAR");
-          }
-        }); 
-      }
-      else{
-        $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Ejecucion Proyectos de Inversión '+gestion+'</h1></div></div>');
-      }
-    });
+      request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+            $('#lista_consolidado').fadeIn(1000).html(response.tabla);
+
+            let texto=[];
+            for (var i = 0; i < response.nro; i++) {
+                texto[i]= 'PARTIDA '+response.matriz[i][2];
+            }
+
+            let ejecucion=[];
+            for (var i = 0; i < response.nro; i++) {
+                ejecucion[i]= response.matriz[i][18];
+            }
+
+            Highcharts.chart('container', {
+              chart: {
+                    type: 'bar'
+                },
+                title: {
+                    text: 'EJECUCIÓN PRESUPUESTARIA POR PARTIDAS'
+                },
+                xAxis: {
+                    categories: texto
+                },
+                yAxis: {
+                    title: {
+                        text: 'Fruit eaten'
+                    }
+                },
+                series: [{
+                    name: '% EJECUCIÓN',
+                    data: ejecucion
+                }]
+              });
+        }
+        else{
+          alertify.error("ERROR AL LISTAR");
+        }
+      }); 
+    }
+    else{
+      $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Ejecucion Proyectos de Inversión '+gestion+'</h1></div></div>');
+    }
   });
+});
