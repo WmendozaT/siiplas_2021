@@ -46,8 +46,113 @@ class Cejecucion_pi extends CI_Controller {
     $data['formulario']=$this->ejecucion_finpi->formulario();
 
     $this->load->view('admin/ejecucion_pi/form_ejec_fin_pi', $data);
-
   }
+
+
+  /*---- GET DATOS DEL PROYECTO Y PARTIDAS ----*/
+  public function get_formulario_proyecto_partidas(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
+      $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
+      $fase = $this->model_faseetapa->get_id_fase($proy_id); /// Fase
+      $estado_proyecto=$this->model_proyecto->proy_estado();
+
+      if(count($proyecto)!=0){
+        $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
+        $estado_proy='';
+        $lista_partidas='';
+
+        ///----------------------
+        $estado_proy.='
+        <select class="form-control" id="est_proy" name="est_proy" title="SELECCIONE ESTADO DE PROYECTO">
+          <option value="0" selected>Seleccione Estado Proyecto</option>';
+          foreach($estado_proyecto as $est){
+            if($est['ep_id']==$proyecto[0]['proy_estado']){ 
+              $estado_proy.='<option value="'.$est['ep_id'].'" selected>'.strtoupper($est['ep_descripcion']).'</option>';
+            }
+            else{ 
+              $estado_proy.='<option value="'.$est['ep_id'].'" >'.strtoupper($est['ep_descripcion']).'</option>';
+            }  
+          }
+          $estado_proy.='
+        </select>';
+        /// --------------------
+
+        ///----------------------
+        $lista_partidas.='';
+        $nro=0;
+        foreach($ppto_asignado as $partida){
+          $nro++;
+          $lista_partidas.='
+          <center>
+            <table class="table table-bordered" style="width:80%;">
+             <thead>
+              <tr>
+                <th style="width:1%; font-size: 10px; text-align:center"><b>#</b></th>
+                <th style="width:5%; font-size: 10px; text-align:center">PARTIDA</th>
+                <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. INICIAL</b></th>
+                <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO.MODIFICADO</b></th>
+                <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. VIGENTE</b></th>
+                <th style="width:7%; font-size: 10px; text-align:center"><b>REGISTRO EJECUCION</b></th>
+                <th style="width:20%; font-size: 10px; text-align:center"><b>OBSERVACIÓN</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>'.$nro.'</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  <input class="form-control" name="ejec_fis1" id="ejec_fis1" type="text" onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                </td>
+                <td>
+                  <textarea class="form-control" name="proy_nombre1" id="proy_nombre1" rows="3"></textarea>
+                </td>
+              </tr>
+            </tbody>
+            </table>
+          </center><br>';
+
+        }
+        /// --------------------
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'proyecto' => $proyecto,
+          'fase' => $fase,
+          'estado' => $estado_proy,
+          'partidas' => $lista_partidas,
+        );
+      }
+      else{
+        $result = array(
+          'respuesta' => 'error',
+        );
+      }
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -299,7 +404,13 @@ public function menu_rep_ejecucion_ppto(){
   $data['opciones']=$this->ejecucion_finpi->listado_opciones_reportes($this->dep_id);
   $regional=$this->model_proyecto->get_departamento($this->dep_id);
   $tabla='';
-  $tabla.='<div class="well">
+  $tabla.='
+      <input name="base" type="hidden" value="'.base_url().'">
+      <input name="mes" type="hidden" value="'.$this->verif_mes[1].'">
+      <input name="descripcion_mes" type="hidden" value="'.$this->verif_mes[2].'">
+      <input name="gestion" type="hidden" value="'.$this->gestion.'">
+      
+      <div class="well">
             <div class="jumbotron">
               <h1>Regional '.strtoupper($regional[0]['dep_departamento']).' - '.$this->verif_mes[2].' / '.$this->gestion.'</h1>
                 <p>
@@ -340,6 +451,7 @@ public function get_tp_reporte(){
       $nro='';
       $matriz_partidas='';
       $consolidado='trabajando ...';
+      $grafico_consolidado_partidas='';
     }
     elseif ($rep_id==2) {
       $titulo='EJECUCIÓN FÍSICA Y FINANCIERA - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
@@ -347,18 +459,20 @@ public function get_tp_reporte(){
       $nro='';
       $matriz_partidas='';
       $consolidado='trabajando ...';
+      $grafico_consolidado_partidas='';
     }
     elseif ($rep_id==3) {
       $titulo='DETALLE EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->detalle_avance_fisico_financiero_pi($dep_id); /// vista Ejecucion Fisico y Financiero
       $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
-      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id);
-      $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($dep_id,0); /// Clasificacion de partidas asignados por regional
+      
+      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id); /// Matriz consolidado de partidas
+      $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
+    
+      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
     }
 
-
      $tabla='
-      <input name="base" type="hidden" value="'.base_url().'">
        <div class="row">
           <article class="col-sm-12 col-md-12 col-lg-12">
               <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
@@ -416,11 +530,7 @@ public function get_tp_reporte(){
                           <div class="tab-pane fade" id="s2">
                             <div class="row">
                               <article class="col-sm-12">
-                                <div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>
-                              </article>
-                              <hr>
-                              <article class="col-sm-12">
-                              '.$consolidado.'
+                                '.$grafico_consolidado_partidas.'<hr>'.$consolidado.'
                               </article>
                             </div>
                           </div>

@@ -101,6 +101,81 @@
                 </div>
             </div>
         </div>
+
+
+    <!-- ============ Modal ejecucion Presupuestaria ========= -->
+    <div class="modal fade" id="modal_mod_ppto_pi" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" id="ejecucion_ppto">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+            <h2 class="alert alert-info"><center>REGISTRO DE EJECUCÍON PROYECTO DE INVERSIÓN</center></h2>
+            <!-- <form action="<?php echo site_url().'/modificaciones/cmod_fisica/valida_update_form4'?>" method="post" id="form_mod" name="form_mod" class="smart-form"> -->
+                <form class="form-horizontal" method="post" id="form_ejec" name="form_ejec">
+                    <input type="hidden" name="proy_id" id="proy_id">
+                    <fieldset>
+                        <legend>DATOS GENERALES DEL PROYECTO</legend>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Código SISIN</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="cod_sisin" id="cod_sisin"  disabled=true>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Proyecto de Inversión</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" name="proy_nombre" id="proy_nombre" rows="3" disabled=true></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Costo Total Proyecto</label>
+                            <div class="col-md-10">
+                                <input class="form-control" name="ppto_total" id="ppto_total" type="text" disabled=true>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Fase Proyecto</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" name="fase" id="fase" rows="2" disabled=true></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Estado del Proyecto</label>
+                            <div class="col-md-10">
+                                <div id="estado"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Avance Físico (%)</label>
+                            <div class="col-md-10">
+                                <input class="form-control" name="ejec_fis" id="ejec_fis" type="text" onkeypress="if (this.value.length < 4) { return soloNumeros(event);}else{return false; }" onpaste="return false">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>EJECUCIÓN PRESUPUESTARIA - GESTIÓN : <?php echo $this->session->userData('gestion') ?></legend>
+                        <div id="lista_partidas">Aqui ..</div>
+                    </fieldset>
+
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-default" data-dismiss="modal" title="CANCELAR">CANCELAR</button>
+                                <button type="button" name="subir_ejec" id="subir_ejec" class="btn btn-info">GUARDAR EJECUCION</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- ======================================================== -->
+
+
         <!-- END PAGE FOOTER -->
         <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
         <script data-pace-options='{ "restartOnRequestAfter": true }' src="<?php echo base_url(); ?>assets/js/plugin/pace/pace.min.js"></script>
@@ -120,6 +195,7 @@
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
+
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
         <!-- BOOTSTRAP JS -->
@@ -144,5 +220,11 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+        <script src="<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
 </html>

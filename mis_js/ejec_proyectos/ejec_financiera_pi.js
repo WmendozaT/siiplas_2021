@@ -1,4 +1,8 @@
 base = $('[name="base"]').val();
+mes = $('[name="mes"]').val();
+descripcion_mes = $('[name="descripcion_mes"]').val();
+gestion = $('[name="gestion"]').val();
+
 
 function abreVentana(PDF){             
   var direccion;
@@ -47,6 +51,149 @@ function abreVentana(PDF){
     return true;           
     return /\d/.test(String.fromCharCode(keynum));
   }
+
+
+ /// ------ Ejecutar Presupuesto
+  $(".ejec_ppto_pi").on("click", function (e) {
+      proy_id = $(this).attr('name');
+      document.getElementById("proy_id").value=proy_id;
+      
+      var url = base+"index.php/ejecucion/cejecucion_pi/get_formulario_proyecto_partidas";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+      if (response.respuesta == 'correcto') {
+        //alert(response.respuesta)
+
+        document.getElementById("cod_sisin").value = response.proyecto[0]['proy_sisin']; /// codigo sisin
+        document.getElementById("proy_nombre").value = response.proyecto[0]['proy_nombre']; /// nombre proyecto
+        document.getElementById("ppto_total").value = response.proyecto[0]['proy_ppto_total']; /// ppto total
+        document.getElementById("fase").value = response.fase[0]['fase']+' - '+response.fase[0]['descripcion']; /// fase
+        document.getElementById("estado").innerHTML = response.estado; /// estado
+        if(response.proyecto[0]['avance_fisico']!=0){
+          document.getElementById("ejec_fis").value = response.proyecto[0]['avance_fisico']; /// Ejecucion Fisica
+        }
+        else{
+          document.getElementById("ejec_fis").value = ''; /// Ejecucion Fisica
+        }
+        
+        document.getElementById("lista_partidas").innerHTML = response.partidas; /// partidas
+
+       // alert(response.trimestre)
+        /*  document.getElementById("mcod").value = response.producto[0]['prod_cod']; 
+          document.getElementById("mprod").value = response.producto[0]['prod_producto']; 
+          document.getElementById("mresultado").value = response.producto[0]['prod_resultado'];
+          document.getElementById("mverificacion").value = response.producto[0]['prod_fuente_verificacion'];
+         if(response.trimestre==1){
+          document.getElementById("mprod").disabled = false;
+          document.getElementById("mresultado").disabled = false;
+          document.getElementById("mverificacion").disabled = false;
+         }
+         else{
+          document.getElementById("mprod").disabled = true;
+          document.getElementById("mresultado").disabled = true;
+          document.getElementById("mverificacion").disabled = true;
+          
+         }
+         
+         document.getElementById("mtipo_i").value = response.producto[0]['indi_id'];
+         document.getElementById("mlbase").value = parseInt(response.producto[0]['prod_linea_base']);
+         document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
+         document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
+
+
+         document.getElementById("mindicador").value = response.producto[0]['prod_indicador'];
+         document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
+         document.getElementById("mor_id").value = response.producto[0]['or_id'];*/
+         
+
+
+
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
+      request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+      });
+      request.always(function () {
+          //console.log("termino la ejecuicion de ajax");
+      });
+      e.preventDefault();
+
+      // ===========VALIDAR EL FORMULARIO DE EJECUCION
+      $("#subir_ejec").on("click", function (e) {
+          var $validator = $("#form_ejec").validate({
+              rules: {
+              proy_id: { //// proy id
+                required: true,
+              },
+              est_proy: { //// estado
+                  required: true,
+              },
+              ejec_fis: { //// avance fisico
+                  required: true,
+                  min: 0,
+                  max: 100,
+              }
+            },
+            messages: {
+              proy_id: "<font color=red>PROYECTO/font>",
+              est_proy: "<font color=red>ESTADO DEL PROYECTO</font>", 
+              ejec_fis: "<font color=red>AVANCE FISICO DEL PROYECTO</font>",                
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+              if (element.parent('.input-group').length) {
+                  error.insertAfter(element.parent());
+              } else {
+                  error.insertAfter(element);
+              }
+            }
+          });
+          var $valid = $("#form_ejec").valid();
+          if (!$valid) {
+              $validator.focusInvalid();
+          } else {
+
+            proy_id=($('[id="proy_id"]').val());
+            avance_fisico=($('[id="est_proy"]').val());
+
+
+              alertify.confirm("MODIFICAR DATOS DE LA ACTIVIDAD ?", function (a) {
+                if (a) {
+                  //document.getElementById("loadm").style.display = 'block';
+                   /* document.getElementById('subir_mform4').disabled = true;
+                    document.getElementById("subir_mform4").value = "MODIFICANDO DATOS ACTIVIDAD...";
+                    document.forms['form_ejec'].submit();*/
+                } else {
+                    alertify.error("OPCI\u00D3N CANCELADA");
+                }
+            });
+          }
+      });
+  });
+
+
+
 
 
   //// Verificando valor ejecutado por partida
@@ -265,67 +412,99 @@ function abreVentana(PDF){
 
 ///// ======REPORTE FINANCIEROS
 
-////------- menu select Opciones
-$("#rep_id").change(function () {
-  $("#rep_id option:selected").each(function () {
-    rep_id=$(this).val();
-    dep_id=($('[id="dep_id"]').val());
-    if(rep_id!=0){
-      $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" width:30px; height=30px; alt="loading" /><br/>Cargando Información ....</div>');
-      var url = base+"index.php/ejecucion/cejecucion_pi/get_tp_reporte";
-      var request;
-      if (request) {
-          request.abort();
+  ////------- menu select Opciones
+  $("#rep_id").change(function () {
+    $("#rep_id option:selected").each(function () {
+      rep_id=$(this).val();
+      dep_id=($('[id="dep_id"]').val());
+
+      if(rep_id!=0){
+        $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" width:30px; height=30px; alt="loading" /><br/>Cargando Información ....</div>');
+        var url = base+"index.php/ejecucion/cejecucion_pi/get_tp_reporte";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "rep_id="+rep_id+"&dep_id="+dep_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+              $('#lista_consolidado').fadeIn(1000).html(response.tabla);
+              cuadro_grafico_partidas(response.matriz,response.nro)
+          }
+          else{
+            alertify.error("ERROR AL LISTAR");
+          }
+        }); 
       }
-      request = $.ajax({
-        url: url,
-        type: "POST",
-        dataType: 'json',
-        data: "rep_id="+rep_id+"&dep_id="+dep_id
-      });
-
-      request.done(function (response, textStatus, jqXHR) {
-        if (response.respuesta == 'correcto') {
-            $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-
-            let texto=[];
-            for (var i = 0; i < response.nro; i++) {
-                texto[i]= 'PARTIDA '+response.matriz[i][2];
-            }
-
-            let ejecucion=[];
-            for (var i = 0; i < response.nro; i++) {
-                ejecucion[i]= response.matriz[i][18];
-            }
-
-            Highcharts.chart('container', {
-              chart: {
-                    type: 'bar'
-                },
-                title: {
-                    text: 'EJECUCIÓN PRESUPUESTARIA POR PARTIDAS'
-                },
-                xAxis: {
-                    categories: texto
-                },
-                yAxis: {
-                    title: {
-                        text: 'Fruit eaten'
-                    }
-                },
-                series: [{
-                    name: '% EJECUCIÓN',
-                    data: ejecucion
-                }]
-              });
-        }
-        else{
-          alertify.error("ERROR AL LISTAR");
-        }
-      }); 
-    }
-    else{
-      $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Ejecucion Proyectos de Inversión '+gestion+'</h1></div></div>');
-    }
+      else{
+        $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Ejecucion Proyectos de Inversión '+gestion+'</h1></div></div>');
+      }
+    });
   });
-});
+
+  //// grafico barras consolidado por partidas
+  function cuadro_grafico_partidas(matriz,nro){
+    let texto=[];
+    for (var i = 0; i < nro; i++) {
+        texto[i]= 'PARTIDA '+matriz[i][2];
+    }
+
+    let ejecucion=[];
+    for (var i = 0; i < nro; i++) {
+        ejecucion[i]= matriz[i][18];
+    }
+
+
+    Highcharts.chart('container', {
+      chart: {
+          type: 'bar'
+      },
+      title: {
+          text: 'CUADRO DE EJECUCIÓN PRESUPUESTARIA AL MES DE '+descripcion_mes+' / '+gestion
+      },
+      subtitle: {
+          text: 'CONSOLIDADO POR PARTIDAS A NIVEL REGIONAL'
+      },
+      xAxis: {
+          categories: texto,
+          title: {
+              text: null
+          }
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: 'CUMPLIMIENTO DE METAS',
+              align: 'high'
+          },
+          labels: {
+              overflow: 'Partidas'
+          }
+      },
+      tooltip: {
+          valueSuffix: ' %'
+      },
+      plotOptions: {
+          bar: {
+              dataLabels: {
+                  enabled: true
+              }
+          }
+      },
+
+      credits: {
+          enabled: false
+      },
+
+      series: [{
+          name: '% EJEC. PRESUPUESTARIA A '+descripcion_mes,
+          data: ejecucion
+      }]
+    });
+  }

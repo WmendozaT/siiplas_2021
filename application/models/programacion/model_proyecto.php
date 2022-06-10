@@ -735,7 +735,7 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }
 
-    /*========================= DATOS DEL PROYECTO X ===================*/
+    /*====== DATOS DEL PROYECTO X INVERSION =======*/
     function get_id_proyecto($id_p){
         $query=$this->db->query('select p."proy_id", 
                                         p."proy_nombre",
@@ -1289,13 +1289,13 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }*/
 
-    /*================================= INDICADOR  ======================================*/
-/*    public function indicador(){
+    /*=== INDICADOR  ====*/
+    public function indicador(){
         $this->db->from('indicador');
         $this->db->where('indi_estado', 1);
         $query = $this->db->get();
         return $query->result_array();
-    }*/
+    }
     /*================================================================================================*/
 
     /*================================= APERTURA DE PROGRAMAS  ======================================*/

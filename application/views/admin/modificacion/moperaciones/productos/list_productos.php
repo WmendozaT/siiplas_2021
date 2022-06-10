@@ -28,7 +28,7 @@
 			table{font-size: 10px;
             width: 100%;
             max-width:1550px;;
-			overflow-x: scroll;
+						overflow-x: scroll;
             }
             th{
               padding: 1.4px;
