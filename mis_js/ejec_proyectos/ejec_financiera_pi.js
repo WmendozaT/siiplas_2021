@@ -58,6 +58,9 @@ function abreVentana(PDF){
       proy_id = $(this).attr('name');
       document.getElementById("proy_id").value=proy_id;
       
+      $('#load').html('');
+      $('#button').slideDown();
+
       var url = base+"index.php/ejecucion/cejecucion_pi/get_formulario_proyecto_partidas";
       var request;
       if (request) {
@@ -72,8 +75,6 @@ function abreVentana(PDF){
 
       request.done(function (response, textStatus, jqXHR) {
       if (response.respuesta == 'correcto') {
-        //alert(response.respuesta)
-
         document.getElementById("cod_sisin").value = response.proyecto[0]['proy_sisin']; /// codigo sisin
         document.getElementById("proy_nombre").value = response.proyecto[0]['proy_nombre']; /// nombre proyecto
         document.getElementById("ppto_total").value = response.proyecto[0]['proy_ppto_total']; /// ppto total
@@ -87,36 +88,6 @@ function abreVentana(PDF){
         }
         
         document.getElementById("lista_partidas").innerHTML = response.partidas; /// partidas
-
-       // alert(response.trimestre)
-        /*  document.getElementById("mcod").value = response.producto[0]['prod_cod']; 
-          document.getElementById("mprod").value = response.producto[0]['prod_producto']; 
-          document.getElementById("mresultado").value = response.producto[0]['prod_resultado'];
-          document.getElementById("mverificacion").value = response.producto[0]['prod_fuente_verificacion'];
-         if(response.trimestre==1){
-          document.getElementById("mprod").disabled = false;
-          document.getElementById("mresultado").disabled = false;
-          document.getElementById("mverificacion").disabled = false;
-         }
-         else{
-          document.getElementById("mprod").disabled = true;
-          document.getElementById("mresultado").disabled = true;
-          document.getElementById("mverificacion").disabled = true;
-          
-         }
-         
-         document.getElementById("mtipo_i").value = response.producto[0]['indi_id'];
-         document.getElementById("mlbase").value = parseInt(response.producto[0]['prod_linea_base']);
-         document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
-         document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
-
-
-         document.getElementById("mindicador").value = response.producto[0]['prod_indicador'];
-         document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
-         document.getElementById("mor_id").value = response.producto[0]['or_id'];*/
-         
-
-
 
       }
       else{
@@ -177,16 +148,14 @@ function abreVentana(PDF){
             proy_id=($('[id="proy_id"]').val());
             avance_fisico=($('[id="est_proy"]').val());
 
-
-              alertify.confirm("MODIFICAR DATOS DE LA ACTIVIDAD ?", function (a) {
-                if (a) {
-                  //document.getElementById("loadm").style.display = 'block';
-                   /* document.getElementById('subir_mform4').disabled = true;
-                    document.getElementById("subir_mform4").value = "MODIFICANDO DATOS ACTIVIDAD...";
-                    document.forms['form_ejec'].submit();*/
-                } else {
-                    alertify.error("OPCI\u00D3N CANCELADA");
-                }
+            alertify.confirm("MODIFICAR INFORMACION DE EJECUCIÓN ?", function (a) {
+              if (a) {
+                $('#button').slideUp();
+                $('#load').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>GUARDANDO INFORMACIÓN ...</div>');
+                document.forms['form_ejec'].submit();
+              } else {
+                  alertify.error("OPCI\u00D3N CANCELADA");
+              }
             });
           }
       });
@@ -196,47 +165,47 @@ function abreVentana(PDF){
 
 
 
-  //// Verificando valor ejecutado por partida
-  function verif_valor(ejecutado,sp_id,mes_id,aper_id){
-   /// tp 0 : Registro
-   /// tp 1 : modifcacion
-    document.getElementById("tr_color_partida"+sp_id).style.backgroundColor = "#ffffff"; /// color de fila
-    document.getElementById('success_partida'+sp_id).innerHTML = '';
-    if(ejecutado!= ''){
-      var url = base+"index.php/ejecucion/cejecucion_pi/verif_valor_ejecutado_x_partida";
-        var request;
-        if (request) {
-          request.abort();
-        }
-        request = $.ajax({
-          url: url,
-          type: "POST",
-          dataType: 'json',
-          data: "ejec="+ejecutado+"&sp_id="+sp_id+"&aper_id="+aper_id+"&mes_id="+mes_id
-        });
-
-        request.done(function (response, textStatus, jqXHR) {
-        if (response.respuesta == 'correcto') {
-            $('#but'+sp_id).slideDown();
-            document.getElementById("ejec"+sp_id).style.backgroundColor = "#ffffff";
-            document.getElementById('ppto_fin_partida'+sp_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ejecucion_total_partida);
-        }
-        else{
-            alertify.error("ERROR EN EL DATO REGISTRADO !");
-            document.getElementById("ejec"+sp_id).style.backgroundColor = "#fdeaeb";
-            $('#but'+sp_id).slideUp();
-        }
-
+//// Verificando valor ejecutado por partida
+function verif_valor(ejecutado,sp_id,mes_id,proy_id){
+ /// tp 0 : Registro
+ /// tp 1 : modifcacion
+ $('#button').slideDown();
+  document.getElementById("tr_color_partida"+sp_id).style.backgroundColor = "#ffffff"; /// color de fila
+  if(ejecutado!= ''){
+    var url = base+"index.php/ejecucion/cejecucion_pi/verif_valor_ejecutado_x_partida";
+      var request;
+      if (request) {
+        request.abort();
+      }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "ejec="+ejecutado+"&sp_id="+sp_id+"&mes_id="+mes_id
       });
-    }
-    else{
-      $('#but'+sp_id).slideUp();
-    }
+
+      request.done(function (response, textStatus, jqXHR) {
+      if (response.respuesta == 'correcto') {
+          $('#button').slideDown();
+          document.getElementById("ejec_fin"+sp_id).style.backgroundColor = "#ffffff";
+      }
+      else{
+          alertify.error("ERROR EN EL DATO REGISTRADO !");
+          document.getElementById("ejec_fin"+sp_id).style.backgroundColor = "#fdeaeb";
+          $('#button').slideUp();
+      }
+
+    });
   }
+  else{
+    $('#button').slideUp();
+    document.getElementById("ejec_fin"+sp_id).style.backgroundColor = "#fdeaeb";
+  }
+}
 
 
   //// Verificando valor ejecutado por partida
-  function verif_observacion(registro,sp_id){ 
+/*  function verif_observacion(registro,sp_id){ 
     ejec=parseFloat($('[id="ejec'+sp_id+'"]').val());
 
     if(registro.length>30){
@@ -251,7 +220,7 @@ function abreVentana(PDF){
       }
       
     }
-  }
+  }*/
 
 
   /// Funcion para guardar datos de la ejecucion presupuestaria por partida

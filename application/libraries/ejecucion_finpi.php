@@ -2,58 +2,58 @@
 
 class ejecucion_finpi extends CI_Controller{
 
-    public function __construct (){
-        parent::__construct();
-        $this->load->model('programacion/model_proyecto');
-        $this->load->model('programacion/model_faseetapa');
-        $this->load->model('mantenimiento/model_partidas');
-        $this->load->model('mantenimiento/model_ptto_sigep');
-        $this->load->model('programacion/model_componente');
-        $this->load->model('menu_modelo');
-        $this->load->library('security');
-        $this->gestion = $this->session->userData('gestion');
-        $this->adm = $this->session->userData('adm');
-        $this->dist = $this->session->userData('dist');
-        $this->dep_id = $this->session->userData('dep_id');
-        $this->dist_tp = $this->session->userData('dist_tp');
-        $this->fun_id = $this->session->userdata("fun_id");
-        $this->tmes = $this->session->userData('trimestre');
-        $this->tp_adm = $this->session->userData('tp_adm');
-        $this->mes = $this->mes_nombre();
-        $this->ppto= $this->session->userData('verif_ppto');
-        $this->verif_mes=$this->session->userData('mes_actual'); /// mes por decfecto
-        $this->mes_sistema=$this->session->userData('mes'); /// mes sistema
+  public function __construct (){
+    parent::__construct();
+    $this->load->model('programacion/model_proyecto');
+    $this->load->model('programacion/model_faseetapa');
+    $this->load->model('mantenimiento/model_partidas');
+    $this->load->model('mantenimiento/model_ptto_sigep');
+    $this->load->model('programacion/model_componente');
+    $this->load->model('menu_modelo');
+    $this->load->library('security');
+    $this->gestion = $this->session->userData('gestion');
+    $this->adm = $this->session->userData('adm');
+    $this->dist = $this->session->userData('dist');
+    $this->dep_id = $this->session->userData('dep_id');
+    $this->dist_tp = $this->session->userData('dist_tp');
+    $this->fun_id = $this->session->userdata("fun_id");
+    $this->tmes = $this->session->userData('trimestre');
+    $this->tp_adm = $this->session->userData('tp_adm');
+    $this->mes = $this->mes_nombre();
+    $this->ppto= $this->session->userData('verif_ppto');
+    $this->verif_mes=$this->session->userData('mes_actual'); /// mes por decfecto
+    $this->mes_sistema=$this->session->userData('mes'); /// mes sistema
 
-    }
+  }
 
-    /*------- TITULO --------*/
-    public function formulario(){
-      $regional=$this->model_proyecto->get_departamento($this->dep_id);
-      $tabla='';
-      $tabla.='
-      <input name="base" type="hidden" value="'.base_url().'">
-      <article class="col-sm-12">
-        <div class="well">
-          <form class="smart-form">
-            <header><h2><b>FORMULARIO DE EJECUCI&Oacute;N PRESUPUESTARIA - </b> '.strtoupper($regional[0]['dep_departamento']).' '.$this->verif_mes[2].' / '.$this->gestion.'</h2></header>
-          </form>
-          </div>
-        </article>
-        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <div class="jarviswidget jarviswidget-color-darken" >
-            <header>
-                <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                <h2 class="font-md"><strong>MIS PROYECTOS DE INVERSI&Oacute;N '.$this->gestion.'</strong></h2>  
-            </header>
-            <div>
-              <div class="widget-body no-padding">
-              '.$this->lista_proyectos($this->dep_id).'
-              </div>
+  /*------- TITULO --------*/
+  public function formulario(){
+    $regional=$this->model_proyecto->get_departamento($this->dep_id);
+    $tabla='';
+    $tabla.='
+    <input name="base" type="hidden" value="'.base_url().'">
+    <article class="col-sm-12">
+      <div class="well">
+        <form class="smart-form">
+          <header><h2><b>FORMULARIO DE EJECUCI&Oacute;N PRESUPUESTARIA - </b> '.strtoupper($regional[0]['dep_departamento']).' '.$this->verif_mes[2].' / '.$this->gestion.'</h2></header>
+        </form>
+        </div>
+      </article>
+      <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="jarviswidget jarviswidget-color-darken" >
+          <header>
+              <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+              <h2 class="font-md"><strong>MIS PROYECTOS DE INVERSI&Oacute;N '.$this->gestion.'</strong></h2>  
+          </header>
+          <div>
+            <div class="widget-body no-padding">
+            '.$this->lista_proyectos($this->dep_id).'
             </div>
           </div>
-        </article>';
-      return $tabla;
-    } 
+        </div>
+      </article>';
+    return $tabla;
+  } 
 
   /*-- LISTA DE PROYECTOS DE INVERSION APROBADOS --*/
   public function lista_proyectos($dep_id){

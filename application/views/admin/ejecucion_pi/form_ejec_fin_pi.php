@@ -112,8 +112,8 @@
           </div>
           <div class="modal-body">
             <h2 class="alert alert-info"><center>REGISTRO DE EJECUCÍON PROYECTO DE INVERSIÓN</center></h2>
-            <!-- <form action="<?php echo site_url().'/modificaciones/cmod_fisica/valida_update_form4'?>" method="post" id="form_mod" name="form_mod" class="smart-form"> -->
-                <form class="form-horizontal" method="post" id="form_ejec" name="form_ejec">
+            
+                <form class="form-horizontal" action="<?php echo site_url().'/ejecucion/cejecucion_pi/valida_update_pi'?>" method="post" id="form_ejec" name="form_ejec">
                     <input type="hidden" name="proy_id" id="proy_id">
                     <fieldset>
                         <legend>DATOS GENERALES DEL PROYECTO</legend>
@@ -154,19 +154,35 @@
                             </div>
                         </div>
                     </fieldset>
+
                     <fieldset>
-                        <legend>EJECUCIÓN PRESUPUESTARIA - GESTIÓN : <?php echo $this->session->userData('gestion') ?></legend>
-                        <div id="lista_partidas">Aqui ..</div>
+                        <legend>FOTO PROYECTO</legend>
+                    <input id="file1" name="file1" type="file" class="file" accept="image/png, .jpeg, .jpg, image/gif" multiple data-show-upload="false" data-show-caption="true" title="SELECCIONE EL ARCHIVO, DOCUMENTO">
+                        <!-- <div class="form-group">
+                            <label class="col-md-2 control-label">Foto Proyecto</label>
+                            <div class="col-md-10">
+                                <input type="file" name="file1" class="btn btn-default" id="file1" accept="image/png, .jpeg, .jpg, image/gif" multiple data-show-upload="false" data-show-caption="true">
+                                <p class="help-block">
+                                    Seleccione Fotografia del proyecto.
+                                </p>
+                            </div>
+                        </div> -->
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend>EJECUCIÓN PRESUPUESTARIA - GESTIÓN : <?php echo $this->verif_mes[2].' / '.$this->session->userData('gestion') ?></legend>
+                        <div id="lista_partidas"></div>
                     </fieldset>
 
-                    <div class="form-actions">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button class="btn btn-default" data-dismiss="modal" title="CANCELAR">CANCELAR</button>
-                                <button type="button" name="subir_ejec" id="subir_ejec" class="btn btn-info">GUARDAR EJECUCION</button>
-                            </div>
+                    <div class="form-actions" id="button">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-default" data-dismiss="modal" title="CANCELAR">CANCELAR</button>
+                            <button type="button" name="subir_ejec" id="subir_ejec" class="btn btn-info">GUARDAR EJECUCION</button>
                         </div>
                     </div>
+                  </div>
+                  <div id="load"></div>
                 </form>
 
             </div>

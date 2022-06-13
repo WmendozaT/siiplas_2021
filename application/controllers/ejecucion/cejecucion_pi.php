@@ -51,70 +51,84 @@ class Cejecucion_pi extends CI_Controller {
 
   /*---- GET DATOS DEL PROYECTO Y PARTIDAS ----*/
   public function get_formulario_proyecto_partidas(){
-      if($this->input->is_ajax_request() && $this->input->post()){
-      $post = $this->input->post();
-      $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
-      $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
-      $fase = $this->model_faseetapa->get_id_fase($proy_id); /// Fase
-      $estado_proyecto=$this->model_proyecto->proy_estado();
+    if($this->input->is_ajax_request() && $this->input->post()){
+    $post = $this->input->post();
+    $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
+    $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
+    $fase = $this->model_faseetapa->get_id_fase($proy_id); /// Fase
+    $estado_proyecto=$this->model_proyecto->proy_estado();
 
-      if(count($proyecto)!=0){
-        $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
-        $estado_proy='';
-        $lista_partidas='';
+    if(count($proyecto)!=0){
+      $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
+      $estado_proy='';
+      $lista_partidas='';
 
-        ///----------------------
-        $estado_proy.='
-        <select class="form-control" id="est_proy" name="est_proy" title="SELECCIONE ESTADO DE PROYECTO">
-          <option value="0" selected>Seleccione Estado Proyecto</option>';
-          foreach($estado_proyecto as $est){
-            if($est['ep_id']==$proyecto[0]['proy_estado']){ 
-              $estado_proy.='<option value="'.$est['ep_id'].'" selected>'.strtoupper($est['ep_descripcion']).'</option>';
-            }
-            else{ 
-              $estado_proy.='<option value="'.$est['ep_id'].'" >'.strtoupper($est['ep_descripcion']).'</option>';
-            }  
+      ///----------------------
+      $estado_proy.='
+      <select class="form-control" id="est_proy" name="est_proy" title="SELECCIONE ESTADO DE PROYECTO">
+        <option value="0" selected>Seleccione Estado Proyecto</option>';
+        foreach($estado_proyecto as $est){
+          if($est['ep_id']==$proyecto[0]['proy_estado']){ 
+            $estado_proy.='<option value="'.$est['ep_id'].'" selected>'.strtoupper($est['ep_descripcion']).'</option>';
           }
-          $estado_proy.='
-        </select>';
-        /// --------------------
+          else{ 
+            $estado_proy.='<option value="'.$est['ep_id'].'" >'.strtoupper($est['ep_descripcion']).'</option>';
+          }  
+        }
+        $estado_proy.='
+      </select>';
+      /// --------------------
 
-        ///----------------------
-        $lista_partidas.='';
-        $nro=0;
-        foreach($ppto_asignado as $partida){
-          $nro++;
-          $lista_partidas.='
-          <center>
-            <table class="table table-bordered" style="width:80%;">
-             <thead>
-              <tr>
-                <th style="width:1%; font-size: 10px; text-align:center"><b>#</b></th>
-                <th style="width:5%; font-size: 10px; text-align:center">PARTIDA</th>
-                <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. INICIAL</b></th>
-                <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO.MODIFICADO</b></th>
-                <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. VIGENTE</b></th>
-                <th style="width:7%; font-size: 10px; text-align:center"><b>REGISTRO EJECUCION</b></th>
-                <th style="width:20%; font-size: 10px; text-align:center"><b>OBSERVACIÓN</b></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>'.$nro.'</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                  <input class="form-control" name="ejec_fis1" id="ejec_fis1" type="text" onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
-                </td>
-                <td>
-                  <textarea class="form-control" name="proy_nombre1" id="proy_nombre1" rows="3"></textarea>
-                </td>
-              </tr>
-            </tbody>
-            </table>
-          </center><br>';
+      ///----------------------
+      $lista_partidas.='';
+      $nro=0;
+      foreach($ppto_asignado as $partida){
+        $monto_partida=$this->ejecucion_finpi->detalle_modificacion_partida($partida); /// detalle modificacion de ppto partidas
+        $ppto_ejecutado_mensual=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($partida['sp_id'],$this->verif_mes[1]); ///  monto ejecutado por partidas
+        $obs_ejec_mensual=$this->model_ptto_sigep->get_obs_ejecucion_financiera_sigep($partida['sp_id'],$this->verif_mes[1]); /// Observacion
+        
+        $ppto_ejecutado=0;
+        if(count($ppto_ejecutado_mensual)!=0){
+          $ppto_ejecutado=$ppto_ejecutado_mensual[0]['ppto_ejec'];
+        }
+
+        $observacion_ejecutado='';
+        if(count($obs_ejec_mensual)!=0){
+          $observacion_ejecutado=$obs_ejec_mensual[0]['observacion'];
+        }
+
+        $nro++;
+        $lista_partidas.='
+        <center>
+          <table class="table table-bordered" style="width:80%;">
+           <thead>
+            <tr>
+              <th style="width:1%; font-size: 10px; text-align:center"><b>#</b></th>
+              <th style="width:5%; font-size: 10px; text-align:center">PARTIDA</th>
+              <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. INICIAL</b></th>
+              <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO.MODIFICADO</b></th>
+              <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. VIGENTE</b></th>
+              <th style="width:7%; font-size: 10px; text-align:center"><b>REGISTRO EJECUCION</b></th>
+              <th style="width:20%; font-size: 10px; text-align:center"><b>OBSERVACIÓN</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="tr_color_partida'.$partida['sp_id'].'">
+              <td style="text-align:center">'.$nro.'</td>
+              <td style="text-align:center"><b>'.$partida['partida'].'</b></td>
+              <td style="text-align:right">'.number_format($monto_partida[1], 2, ',', '.').'</td>
+              <td style="text-align:right">'.number_format($monto_partida[2], 2, ',', '.').'</td>
+              <td style="text-align:right">'.number_format($monto_partida[3], 2, ',', '.').'</td>
+              <td>
+                <input class="form-control" name="ejec_fin'.$partida['sp_id'].'" id="ejec_fin'.$partida['sp_id'].'" type="text"  value='.round($ppto_ejecutado,2).' onkeyup="verif_valor(this.value,'.$partida['sp_id'].','.$this->verif_mes[1].','.$proy_id.');" onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+              </td>
+              <td>
+                <textarea class="form-control" name="observacion'.$partida['sp_id'].'" id="observacion'.$partida['sp_id'].'" rows="3">'.$observacion_ejecutado.'</textarea>
+              </td>
+            </tr>
+          </tbody>
+          </table>
+        </center><br>';
 
         }
         /// --------------------
@@ -125,6 +139,7 @@ class Cejecucion_pi extends CI_Controller {
           'fase' => $fase,
           'estado' => $estado_proy,
           'partidas' => $lista_partidas,
+          //'button' => $button,
         );
       }
       else{
@@ -140,55 +155,122 @@ class Cejecucion_pi extends CI_Controller {
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /*---- VERIFICA MONTO A EJECUTAR POR PARTIDA ----*/
-  public function verif_valor_ejecutado_x_partida(){
-    if($this->input->is_ajax_request() && $this->input->post()){
+ /*----- VALIDAR DATOS DE EJECUCION FINANCIERA ----*/
+  public function valida_update_pi(){
+    if($this->input->post()) {
       $post = $this->input->post();
-      $sp_id = $this->security->xss_clean($post['sp_id']); /// partida id
-      $aper_id = $this->security->xss_clean($post['aper_id']); /// aper id
-      $ejec= $this->security->xss_clean($post['ejec']);/// valor a actualizar
-      $mes_id= $this->security->xss_clean($post['mes_id']);/// mes id
+      $proy_id = $this->security->xss_clean($post['proy_id']); /// proy id
+      $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
+      $fase = $this->model_faseetapa->get_id_fase($proy_id); /// Fase
+
+      $estado = $this->security->xss_clean($post['est_proy']); /// estado
+      $avance_fisico = $this->security->xss_clean($post['ejec_fis']); /// Avance Fisico
+      $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
+
+
+      echo $_FILES["archivo"];
+
+     // $filename = $_FILES["file1"]["name"]; ////// datos del archivo 
+     // $file_basename = substr($filename, 0, strripos($filename, '.')); ///// nombre del archivo
+     // $file_ext = substr($filename, strripos($filename, '.')); ///// Extension del archivo
+     // $filesize = $_FILES["file1"]["size"]; //// Tamaño del archivo
+
+     /* if($filename!='' & $filesize!=0){
+        $newfilename = ''.$this->input->post('id').'-'.substr(md5(uniqid(rand())),0,5).$file_ext;
+
+        move_uploaded_file($_FILES["file1"]["tmp_name"],"fotos_proyectos/" . $newfilename); // Guardando la foto
+      }*/
+
+/*      /// ------ Update proyecto
+        $update_proyect = array(
+          'avance_fisico' => $avance_fisico,
+          'proy_estado' => $estado
+        );
+        $this->db->where('proy_id', $proy_id);
+        $this->db->update('_proyectos', $update_proyect);
+      /// ------ End Update proyecto
+
+
+      foreach($ppto_asignado as $partida){
+        $ejec=$this->security->xss_clean($post['ejec_fin'.$partida['sp_id']]); /// ejecutado 
+        $obs=$this->security->xss_clean($post['observacion'.$partida['sp_id']]); /// observacion
+
+      /// ----- Eliminando Registro de ejecucion --------
+        $this->db->where('sp_id', $partida['sp_id']);
+        $this->db->where('m_id', $this->verif_mes[1]);
+        $this->db->delete('ejecucion_financiera_sigep');
+
+      /// -----------------------------------
+        if($ejec!=0){
+          /// ----- Registro de Ejecucion --------
+          $data_to_store = array(
+            'sp_id' => $partida['sp_id'], /// Id sigep partida
+            'm_id' => $this->verif_mes[1], /// Mes 
+            'ppto_ejec' => $ejec, /// Valor ejecutado
+            'fun_id' => $this->fun_id, /// fun id
+          );
+          $this->db->insert('ejecucion_financiera_sigep', $data_to_store);
+          /// -----------------------------------
+        }
+
+        /// ----- Registro de Ejecucion --------
+        $data_to_store = array(
+          'sp_id' => $partida['sp_id'], /// Id sigep partida
+          'observacion' => strtoupper($obs), /// Observacion
+          'm_id' => $this->verif_mes[1], /// Mes 
+          'fun_id' => $this->fun_id, /// fun id
+        );
+        $this->db->insert('obs_ejecucion_financiera_sigep', $data_to_store);
+        /// -----------------------------------
+
+      }
+*/
       
-      /// Datos - Programado y Ejecutado por partidas
-      $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($sp_id); /// Get partida sigep
+      /*-------------- Redireccionando a lista de Operaciones -------*/
+       // $this->session->set_flashdata('success','REGISTRO EXITOSO .. :)');
+       // redirect(site_url("").'/ejec_fin_pi');
 
-      //// --- suma total del monto ejecutado antes del mes vigente
-      $monto_total_ejec_partida=$this->get_monto_ejec_partida_hasta_mes_anterior($sp_id,$mes_id);
-      //// ----------------------------------------------------------
-
-      if(($ejec+$monto_total_ejec_partida)<=$get_partida_sigep[0]['importe']){
-        $result = array(
-          'respuesta' => 'correcto',
-          'ejecucion_total_partida'=>round(($ejec+$monto_total_ejec_partida),2),
-        );
-      }
-      else{
-        $result = array(
-          'respuesta' => 'error',
-        );
-      }
-
-      echo json_encode($result);
-    }else{
+    } else {
         show_404();
     }
   }
+
+
+
+///===============================================
+/*---- VERIFICA MONTO A EJECUTAR POR PARTIDA ----*/
+public function verif_valor_ejecutado_x_partida(){
+  if($this->input->is_ajax_request() && $this->input->post()){
+    $post = $this->input->post();
+    $sp_id = $this->security->xss_clean($post['sp_id']); /// partida id
+   // $aper_id = $this->security->xss_clean($post['aper_id']); /// aper id
+    $ejec= $this->security->xss_clean($post['ejec']);/// valor a actualizar
+    $mes_id= $this->security->xss_clean($post['mes_id']);/// mes id
+    
+    /// Datos - Programado y Ejecutado por partidas
+    $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($sp_id); /// Get partida sigep
+
+    //// --- suma total del monto ejecutado antes del mes vigente
+    $monto_total_ejec_partida=$this->get_monto_ejec_partida_hasta_mes_anterior($sp_id,$mes_id);
+    //// ----------------------------------------------------------
+
+    if(($ejec+$monto_total_ejec_partida)<=$get_partida_sigep[0]['importe']){
+      $result = array(
+        'respuesta' => 'correcto',
+        'ejecucion_total_partida'=>round(($ejec+$monto_total_ejec_partida),2),
+      );
+    }
+    else{
+      $result = array(
+        'respuesta' => 'error',
+      );
+    }
+
+    echo json_encode($result);
+  }else{
+      show_404();
+  }
+}
 
 
   /*---- MONTO TOTAL EJECUTADO AL MES ANTERIOR POR PARTIDA----*/
@@ -207,107 +289,15 @@ class Cejecucion_pi extends CI_Controller {
     return $suma_monto_ejecutado;
   }
 
+///===============================================
 
 
-  /*---- VALIDA ADD MOD EJECUCION PRESUPUESTARIA ----*/
-  public function guardar_ppto_ejecutado(){
-    if($this->input->is_ajax_request() && $this->input->post()){
-      $post = $this->input->post();
-      $sp_id = $this->security->xss_clean($post['sp_id']);
-      $ejec = $this->security->xss_clean($post['ejec']);
-      $obs = $this->security->xss_clean($post['obs']);
-      $aper_id = $this->security->xss_clean($post['aper_id']);
-      $mes_id=$this->verif_mes[1];
-      
-      $ppto_ejec_mensual=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($sp_id,$mes_id); ///
-
-      /// ----- Eliminando Registro de ejecucion --------
-        $this->db->where('sp_id', $sp_id);
-        $this->db->where('m_id', $this->verif_mes[1]);
-        $this->db->delete('ejecucion_financiera_sigep');
-      /// -----------------------------------
-        if($ejec!=0){
-          /// ----- Registro de Ejecucion --------
-          $data_to_store = array(
-            'sp_id' => $sp_id, /// Id sigep partida
-            'm_id' => $this->verif_mes[1], /// Mes 
-            'ppto_ejec' => $ejec, /// Valor ejecutado
-            'fun_id' => $this->fun_id, /// fun id
-          );
-          $this->db->insert('ejecucion_financiera_sigep', $data_to_store);
-          /// -----------------------------------
-        }
-      
-        /// ----- Registro de Ejecucion --------
-        $data_to_store = array(
-          'sp_id' => $sp_id, /// Id sigep partida
-          'observacion' => strtoupper($obs), /// Observacion
-          'm_id' => $this->verif_mes[1], /// Mes 
-          'fun_id' => $this->fun_id, /// fun id
-        );
-        $this->db->insert('obs_ejecucion_financiera_sigep', $data_to_store);
-        /// -----------------------------------
-
-        $ppto_ejec_mensual=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($sp_id,$mes_id); /// Registro
-        $obs_ejec_mensual=$this->model_ptto_sigep->get_obs_ejecucion_financiera_sigep($sp_id,$mes_id); /// Observacion
-
-        $monto_ejec=0;
-        $observacion_registrado='';
-
-        if(count($ppto_ejec_mensual)!=0){
-          $monto_ejec=$ppto_ejec_mensual[0]['ppto_ejec'];
-        }
-
-        if(count($obs_ejec_mensual)!=0){
-          $observacion_registrado=$obs_ejec_mensual[0]['observacion'];
-        }
 
 
-        //// --- suma total del monto ejecutado antes del mes vigente
-        $monto_total_ejec_partida=$this->get_monto_ejec_partida_hasta_mes_anterior($sp_id,$mes_id);
-        //// ----------------------------------------------------------
-
-        /// --- monto ejecutado del proyecto mensual
-        $monto_ejec_mensual=$this->model_ptto_sigep->suma_monto_ejecutado_mes_ppto_sigep($aper_id,$mes_id);
-        $ppto_ejec_mensual=0;
-
-        if(count($monto_ejec_mensual)!=0){
-          $ppto_ejec_mensual=$monto_ejec_mensual[0]['ejecutado_mes'];
-        }
 
 
-        /// --- monto total ejecutado del proyecto
-        $monto_ejec_total=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($aper_id);
-        $ppto_ejec_total=0;
-
-        if(count($monto_ejec_total)!=0){
-          $ppto_ejec_total=$monto_ejec_total[0]['ejecutado_total'];
-        }
 
 
-        /// Porcentaje de Avance por partidas
-        $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($sp_id); /// Get partida sigep
-        $porcentaje_avance_fin=0;
-        if(count($get_partida_sigep)!=0){
-          $porcentaje_avance_fin=round(((($monto_total_ejec_partida+$monto_ejec)/$get_partida_sigep[0]['importe'])*100),2);
-        }
-
-
-      $result = array(
-        'respuesta' => 'correcto',
-        'ppto_ejec_mes'=>round($ppto_ejec_mensual,2), /// monto ejecutado en el mes por proyecto de inversion
-        'ppto_ejec_total_pi'=>round($ppto_ejec_total,2), /// monto ejecutado total por proyecto de inversion
-        'ppto_total_ejec_partida'=>round(($monto_total_ejec_partida+$monto_ejec),2), /// ejecucion mes
-        'porcentaje_ejec_partida'=>$porcentaje_avance_fin, /// Avance Financiero ppto partida
-        'ppto_mes'=>round($monto_ejec,2), /// ejecucion mes
-        'obs_mes'=>strtoupper($observacion_registrado), /// observacion mes
-      );
-
-      echo json_encode($result);
-    }else{
-        show_404();
-    }
-  }
 
 
   /*----  GET DETALLE EJECUCION PRESUPUESTARIA POR PARTIDA----*/
@@ -361,40 +351,6 @@ class Cejecucion_pi extends CI_Controller {
     }
   }
 
-
-
-  /*---- VALIDA UPDATE DATOS PROYECTOS DE INVERSION ----*/
-  //data: "proy_id="+proy_id+"&estado="+estado+"&fis="+avance_fisico
-  public function guardar_datos_proyecto(){
-    if($this->input->is_ajax_request() && $this->input->post()){
-      $post = $this->input->post();
-      $proy_id = $this->security->xss_clean($post['proy_id']);
-      $estado = $this->security->xss_clean($post['estado']);
-      $avance_fisico = $this->security->xss_clean($post['fis']);
-      $mes_id=$this->verif_mes[1];
-      
-
-      $update_proyect = array(
-        'avance_fisico' => $avance_fisico,
-        'proy_estado' => $estado
-      );
-      $this->db->where('proy_id', $proy_id);
-      $this->db->update('_proyectos', $update_proyect);
-
-
-      $proyecto=$this->model_proyecto->get_id_proyecto($proy_id);
-
-      $result = array(
-        'respuesta' => 'correcto',
-        'proyecto'=>$proyecto,
-       // 'obs_mes'=>strtoupper($observacion_registrado),
-      );
-
-      echo json_encode($result);
-    }else{
-        show_404();
-    }
-  }
 
 
 ///// =============== REPORTES

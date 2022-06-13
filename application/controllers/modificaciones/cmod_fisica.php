@@ -422,13 +422,6 @@ class Cmod_fisica extends CI_Controller {
 
 
 
-
-
-
-
-
-
-
     /*--- VALIDA NUEVA ACTIVIDAD (2020) ---*/
     public function valida_operacion(){
       if($this->input->post()) {
