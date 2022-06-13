@@ -168,7 +168,7 @@ class Cejecucion_pi extends CI_Controller {
       $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
 
 
-      echo $_FILES["archivo"];
+     // echo $_FILES["archivo"];
 
      // $filename = $_FILES["file1"]["name"]; ////// datos del archivo 
      // $file_basename = substr($filename, 0, strripos($filename, '.')); ///// nombre del archivo
@@ -181,7 +181,7 @@ class Cejecucion_pi extends CI_Controller {
         move_uploaded_file($_FILES["file1"]["tmp_name"],"fotos_proyectos/" . $newfilename); // Guardando la foto
       }*/
 
-/*      /// ------ Update proyecto
+      /// ------ Update proyecto
         $update_proyect = array(
           'avance_fisico' => $avance_fisico,
           'proy_estado' => $estado
@@ -224,11 +224,11 @@ class Cejecucion_pi extends CI_Controller {
         /// -----------------------------------
 
       }
-*/
+
       
       /*-------------- Redireccionando a lista de Operaciones -------*/
-       // $this->session->set_flashdata('success','REGISTRO EXITOSO .. :)');
-       // redirect(site_url("").'/ejec_fin_pi');
+        $this->session->set_flashdata('success','REGISTRO EXITOSO .. :)');
+        redirect(site_url("").'/ejec_fin_pi');
 
     } else {
         show_404();
