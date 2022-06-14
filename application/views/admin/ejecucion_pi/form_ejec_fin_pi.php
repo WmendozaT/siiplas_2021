@@ -65,6 +65,17 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
+                        <?php 
+                            if($this->session->flashdata('success')){ ?>
+                              <div class="alert alert-success">
+                                <?php echo $this->session->flashdata('success'); ?>
+                              </div>
+                          <?php }
+                              elseif($this->session->flashdata('danger')){ ?>
+                              <div class="alert alert-danger">
+                                <?php echo $this->session->flashdata('danger'); ?>
+                              </div><?php }
+                        ?>
                         <?php echo $formulario;?>
                     </div>
                 </section>
@@ -73,31 +84,90 @@
         </div>
         <!-- ========================================================================================================= -->
 
-        <!-- DETALLE EJECUCION PRESUPUESTARIA   -->
-        <div class="modal fade" id="modal_detalle_ejec" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" id="mdialTamanio">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-                    </div>
-                    <div class="modal-body">
-                        <h2 class="alert alert-info"><center>DETALLE EJECUCIÓN</center></h2>
-                    
-                        <div class="row">
-                            <div id="titulo"></div> 
-                            <div id="content1"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
                 <div class="col-xs-12 col-sm-6">
                     <span class="txt-color-white"><?php echo $this->session->userData('name').' @ '.$this->session->userData('gestion') ?></span>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- ============ Modal Subir Fotos del Proyecto ========= -->
+        <div class="modal fade" id="modal_mod_fotos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="csv">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="alert alert-info"><center>SUBIR FOTO DEL PROYECTO</center></h2>
+                        
+                        <form class="form-horizontal" action="<?php echo site_url().'/ejecucion/cejecucion_pi/add_img' ?>" method="post" enctype="multipart/form-data" id="form_subir_img" name="form_subir_img">
+                            <input type="hidden" name="p_id" id="p_id">
+                            <fieldset>
+                                <legend><div id="proyecto"></div></legend>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label"><b>Imagen</b></label>
+                                    <div class="col-md-10">
+                                        <input type="file" class="btn btn-default" id="archivo" name="archivo" accept="image/png, .jpeg, .jpg, .png, .PNG, image/gif" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());">
+                                        <p class="help-block">
+                                            Seleccione foto del proyecto.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label"><b>Descripcion de la Imagen</b></label>
+                                    <div class="col-md-10">
+                                        <textarea class="form-control" name="detalle_imagen" id="detalle_imagen" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label"><b>imagen portada para la Ficha Técnica ?</b></label>
+                                    <div class="col-md-10">
+                                        <select class="form-control" id="tp_img" name="tp_img" title="SELECCIONE OPCION">
+                                          <option value="0">1.- NO</option>
+                                          <option value="1">2.- SI (Imprimir en Ficha Técnica)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-default" data-dismiss="modal" title="CANCELAR">CANCELAR</button>
+                                        <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-info">SUBIR ARCHIVO</button>
+                                    </div>
+                                </div>
+                              </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- ============ Modal Avances del Proyecto ========= -->
+        <div class="modal fade" id="modal_mod_imagenes" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="imagenes_pi">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="alert alert-info"><center>GALERIA DE IMAGENES</center></h2>
+                        
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data" id="form_subir_img" name="form_subir_img">
+                            <input type="hidden" name="id_proy" id="id_proy">
+                            <fieldset>
+                                <legend><div id="dat_proyecto"></div></legend>
+                                <div id="lista_galeria"></div>
+                            </fieldset>
+                        </form>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,7 +181,7 @@
             <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
           </div>
           <div class="modal-body">
-            <h2 class="alert alert-info"><center>REGISTRO DE EJECUCÍON PROYECTO DE INVERSIÓN</center></h2>
+            <h2 class="alert alert-info"><center>REGISTRO DE EJECUCÍON PROYECTO DE INVERSIÓN - <?php echo $this->verif_mes[2].' / '.$this->session->userData('gestion') ?></center></h2>
             
                 <form class="form-horizontal" action="<?php echo site_url().'/ejecucion/cejecucion_pi/valida_update_pi'?>" method="post" id="form_ejec" name="form_ejec">
                     <input type="hidden" name="proy_id" id="proy_id">
@@ -154,25 +224,12 @@
                             </div>
                         </div>
                     </fieldset>
-
-                    <fieldset>
-                        <legend>FOTO PROYECTO</legend>
-                    <input id="file1" name="file1" type="file" class="file" accept="image/png, .jpeg, .jpg, image/gif" multiple data-show-upload="false" data-show-caption="true" title="SELECCIONE EL ARCHIVO, DOCUMENTO">
-                        <!-- <div class="form-group">
-                            <label class="col-md-2 control-label">Foto Proyecto</label>
-                            <div class="col-md-10">
-                                <input type="file" name="file1" class="btn btn-default" id="file1" accept="image/png, .jpeg, .jpg, image/gif" multiple data-show-upload="false" data-show-caption="true">
-                                <p class="help-block">
-                                    Seleccione Fotografia del proyecto.
-                                </p>
-                            </div>
-                        </div> -->
-                    </fieldset>
                     
                     <fieldset>
                         <legend>EJECUCIÓN PRESUPUESTARIA - GESTIÓN : <?php echo $this->verif_mes[2].' / '.$this->session->userData('gestion') ?></legend>
                         <div id="lista_partidas"></div>
                     </fieldset>
+
 
                     <div class="form-actions" id="button">
                     <div class="row">
@@ -192,55 +249,55 @@
     <!-- ======================================================== -->
 
 
-        <!-- END PAGE FOOTER -->
-        <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
-        <script data-pace-options='{ "restartOnRequestAfter": true }' src="<?php echo base_url(); ?>assets/js/plugin/pace/pace.min.js"></script>
-        <script>
-            if (!window.jQuery) {
-                document.write('<script src="<?php echo base_url(); ?>assets/js/libs/jquery-2.0.2.min.js"><\/script>');
-            }
-        </script>
-        <script>
-            if (!window.jQuery.ui) {
-                document.write('<script src="<?php echo base_url(); ?>assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
-            }
-        </script>
+    <!-- END PAGE FOOTER -->
+    <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
+    <script data-pace-options='{ "restartOnRequestAfter": true }' src="<?php echo base_url(); ?>assets/js/plugin/pace/pace.min.js"></script>
+    <script>
+        if (!window.jQuery) {
+            document.write('<script src="<?php echo base_url(); ?>assets/js/libs/jquery-2.0.2.min.js"><\/script>');
+        }
+    </script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="<?php echo base_url(); ?>assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+        }
+    </script>
 
-        <!-- IMPORTANT: APP CONFIG -->
-        <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
+    <!-- IMPORTANT: APP CONFIG -->
+    <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
+    <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
 
-        <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
-        <!-- BOOTSTRAP JS -->
-        <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
-        <!-- CUSTOM NOTIFICATION -->
-        <script src="<?php echo base_url(); ?>assets/js/notification/SmartNotification.min.js"></script>
-        <!-- JARVIS WIDGETS -->
-        <script src="<?php echo base_url(); ?>assets/js/smartwidgets/jarvis.widget.min.js"></script>
-        <!-- EASY PIE CHARTS -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
-        <!-- SPARKLINES -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/sparkline/jquery.sparkline.min.js"></script>
-        <!-- JQUERY VALIDATE -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
-        <!-- JQUERY MASKED INPUT -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-        <!-- JQUERY UI + Bootstrap Slider -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
-        <!-- browser msie issue fix -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
-        <!-- FastClick: For mobile devices -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
-        <!-- MAIN APP JS FILE -->
-        <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-        <script src="<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
-        <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
+    <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
+    <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
+    <!-- BOOTSTRAP JS -->
+    <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
+    <!-- CUSTOM NOTIFICATION -->
+    <script src="<?php echo base_url(); ?>assets/js/notification/SmartNotification.min.js"></script>
+    <!-- JARVIS WIDGETS -->
+    <script src="<?php echo base_url(); ?>assets/js/smartwidgets/jarvis.widget.min.js"></script>
+    <!-- EASY PIE CHARTS -->
+    <script src="<?php echo base_url(); ?>assets/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+    <!-- SPARKLINES -->
+    <script src="<?php echo base_url(); ?>assets/js/plugin/sparkline/jquery.sparkline.min.js"></script>
+    <!-- JQUERY VALIDATE -->
+    <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
+    <!-- JQUERY MASKED INPUT -->
+    <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+    <!-- JQUERY UI + Bootstrap Slider -->
+    <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+    <!-- browser msie issue fix -->
+    <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
+    <!-- FastClick: For mobile devices -->
+    <script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
+    <!-- MAIN APP JS FILE -->
+    <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+    <script src="<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+    <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
 </html>

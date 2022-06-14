@@ -281,7 +281,7 @@ class Model_ptto_sigep extends CI_Model{
             select *
             from obs_ejecucion_financiera_sigep
             where sp_id='.$sp_id.' and m_id='.$mes_id.'
-            order by sp_id DESC LIMIT 1';
+            order by obs_ejec_id DESC LIMIT 1';
     
         $query = $this->db->query($sql);
         return $query->result_array();

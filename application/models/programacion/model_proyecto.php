@@ -1825,31 +1825,6 @@ class Model_proyecto extends CI_Model{
     public function list_proy_inversion(){ /// aprobados
         $sql = 'select *
                 from lista_poa_pinversion_nacional('.$this->gestion.')';
-/*        $sql = 'select 
-                p.proy_id,
-                apg.aper_id,
-                d.dep_cod,
-                d.dep_departamento,
-                ds.dist_cod,
-                ds.dist_distrital,
-                ds.abrev,
-                apg.aper_programa,
-                apg.aper_proyecto,
-                p.proy_sisin,
-                apg.aper_actividad,
-                p.proy_nombre,
-                p.proy_estado,
-                apg.aper_proy_estado,
-                pfe.pfec_id,
-                pfe.pfec_estado
-
-                        from _proyectofaseetapacomponente pfe
-                        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                        Inner Join _proyectos as p On p.proy_id=pfe.proy_id
-                        Inner Join _departamentos as d On d.dep_id=p.dep_id
-                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                        where apg.aper_gestion='.$this->gestion.' and pfe.estado!=\'3\' and p.estado!=\'3\' and p.tp_id=\'1\' and apg.aper_estado!=\'3\' 
-                        order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc';*/
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -1858,16 +1833,27 @@ class Model_proyecto extends CI_Model{
     public function list_proy_inversion_regional($dep_id){ /// aprobados
         $sql = 'select *
                 from lista_poa_pinversion_regional('.$dep_id.','.$this->gestion.')';
-        /*$sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
-                        apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev
-                        from _proyectos as p
-                        Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                        Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                        Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                        Inner Join _departamentos as d On d.dep_id=p.dep_id
-                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                        where d.dep_id='.$dep_id.' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and p.tp_id=\'1\' and apg.aper_estado!=\'3\'
-                        ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc';*/
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-------- IMAGEN DEL PROYECTO (Ficha Tecnica) --------*/
+    public function get_img_ficha_tecnica($proy_id){ /// get imagen ficha tecnica
+        $sql = '
+            select *
+            from imagenes_proy_inversion
+            where proy_id='.$proy_id.' and tp=\'1\'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-------- GALERIA DE IMAGENES (Ficha Tecnica) --------*/
+    public function lista_galeria_pinversion($proy_id){ /// get imagen ficha tecnica
+        $sql = '
+            select *
+            from imagenes_proy_inversion
+            where proy_id='.$proy_id.'
+            order by img_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

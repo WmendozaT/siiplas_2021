@@ -3182,10 +3182,12 @@ $$ LANGUAGE sql;
 
 ////// CREACION DE LA TABLA IMG PARA PROYECTOS DE INVERSION
 create table imagenes_proy_inversion(
-          img_id serial NOT NULL,
-          proy_id numeric(18,2) NOT NULL DEFAULT 0,
-          detalle character varying(5000),
-          fun_id integer,
-          fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
-          primary key(img_id)
-     );
+  img_id serial NOT NULL,
+  proy_id numeric(18,0) NOT NULL DEFAULT 0,
+  detalle character varying(5000),
+  imagen character varying(500),
+  fun_id integer,
+  tp integer DEFAULT 0,
+  fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
+  primary key(img_id)
+ );

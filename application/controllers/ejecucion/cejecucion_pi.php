@@ -114,7 +114,7 @@ class Cejecucion_pi extends CI_Controller {
           </thead>
           <tbody>
             <tr id="tr_color_partida'.$partida['sp_id'].'">
-              <td style="text-align:center">'.$nro.'</td>
+              <td style="text-align:center" title='.$partida['sp_id'].'>'.$nro.'</td>
               <td style="text-align:center"><b>'.$partida['partida'].'</b></td>
               <td style="text-align:right">'.number_format($monto_partida[1], 2, ',', '.').'</td>
               <td style="text-align:right">'.number_format($monto_partida[2], 2, ',', '.').'</td>
@@ -155,7 +155,7 @@ class Cejecucion_pi extends CI_Controller {
   }
 
 
- /*----- VALIDAR DATOS DE EJECUCION FINANCIERA ----*/
+ /*----- VALIDAR DATOS DEL PROYECTO Y EJECUCION FINANCIERA ----*/
   public function valida_update_pi(){
     if($this->input->post()) {
       $post = $this->input->post();
@@ -167,19 +167,6 @@ class Cejecucion_pi extends CI_Controller {
       $avance_fisico = $this->security->xss_clean($post['ejec_fis']); /// Avance Fisico
       $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
 
-
-     // echo $_FILES["archivo"];
-
-     // $filename = $_FILES["file1"]["name"]; ////// datos del archivo 
-     // $file_basename = substr($filename, 0, strripos($filename, '.')); ///// nombre del archivo
-     // $file_ext = substr($filename, strripos($filename, '.')); ///// Extension del archivo
-     // $filesize = $_FILES["file1"]["size"]; //// Tamaño del archivo
-
-     /* if($filename!='' & $filesize!=0){
-        $newfilename = ''.$this->input->post('id').'-'.substr(md5(uniqid(rand())),0,5).$file_ext;
-
-        move_uploaded_file($_FILES["file1"]["tmp_name"],"fotos_proyectos/" . $newfilename); // Guardando la foto
-      }*/
 
       /// ------ Update proyecto
         $update_proyect = array(
@@ -194,6 +181,8 @@ class Cejecucion_pi extends CI_Controller {
       foreach($ppto_asignado as $partida){
         $ejec=$this->security->xss_clean($post['ejec_fin'.$partida['sp_id']]); /// ejecutado 
         $obs=$this->security->xss_clean($post['observacion'.$partida['sp_id']]); /// observacion
+
+       
 
       /// ----- Eliminando Registro de ejecucion --------
         $this->db->where('sp_id', $partida['sp_id']);
@@ -213,16 +202,23 @@ class Cejecucion_pi extends CI_Controller {
           /// -----------------------------------
         }
 
-        /// ----- Registro de Ejecucion --------
-        $data_to_store = array(
-          'sp_id' => $partida['sp_id'], /// Id sigep partida
-          'observacion' => strtoupper($obs), /// Observacion
-          'm_id' => $this->verif_mes[1], /// Mes 
-          'fun_id' => $this->fun_id, /// fun id
-        );
-        $this->db->insert('obs_ejecucion_financiera_sigep', $data_to_store);
-        /// -----------------------------------
+        $obs_ejec_mensual=$this->model_ptto_sigep->get_obs_ejecucion_financiera_sigep($partida['sp_id'],$this->verif_mes[1]); /// Observacion
+        $observacion_ejecutado='';
+        if(count($obs_ejec_mensual)!=0){
+          $observacion_ejecutado=$obs_ejec_mensual[0]['observacion'];
+        }
 
+        if(strtoupper($obs) != $observacion_ejecutado){
+            /// ----- Registro de Observacion --------
+            $data_to_store = array(
+              'sp_id' => $partida['sp_id'], /// Id sigep partida
+              'observacion' => strtoupper($obs), /// Observacion
+              'm_id' => $this->verif_mes[1], /// Mes 
+              'fun_id' => $this->fun_id, /// fun id
+            );
+            $this->db->insert('obs_ejecucion_financiera_sigep', $data_to_store);
+            /// -----------------------------------
+        }
       }
 
       
@@ -235,7 +231,109 @@ class Cejecucion_pi extends CI_Controller {
     }
   }
 
+  ///// Adicionar Imgen del Proyecto
+  function add_img(){
+    if ($this->input->post()) {
+        $post = $this->input->post();
+        $proy_id = $this->security->xss_clean($post['p_id']);
+        $descripcion = $this->security->xss_clean($post['detalle_imagen']);
+        $tp = $this->security->xss_clean($post['tp_img']);
 
+        $tipo = $_FILES['archivo']['type'];
+        $tamanio = $_FILES['archivo']['size'];
+        $archivotmp = $_FILES['archivo']['tmp_name'];
+
+        $filename = $_FILES["archivo"]["name"];
+        $file_basename = substr($filename, 0, strripos($filename, '.'));
+        $file_ext = substr($filename, strripos($filename, '.'));
+        $allowed_file_types = array('.jpg');
+        
+        if ($tamanio < 90000000) {
+            $newfilename = ''.$proy_id.'-'.$this->gestion.'-'.substr(md5(uniqid(rand())),0,5).$file_ext;
+            
+            if($tp==1){
+                $update_img = array(
+                  'tp' => 0
+                );
+                $this->db->where('proy_id', $proy_id);
+                $this->db->update('imagenes_proy_inversion', $update_img);
+            }
+
+            /*--------------------------------------------------*/
+              $data_to_store = array( 
+                'imagen' => $newfilename,
+                'proy_id' => $proy_id,
+                'detalle' => $descripcion,
+                'tp' => $tp,
+                'fun_id' => $this->fun_id,
+                );
+              $this->db->insert('imagenes_proy_inversion', $data_to_store);
+            /*--------------------------------------------------*/
+
+          move_uploaded_file($_FILES["archivo"]["tmp_name"],"fotos_proyectos/" . $newfilename); // Guardando la foto
+
+          $this->session->set_flashdata('success','REGISTRO EXITOSO ....');
+        } 
+        else{
+          $this->session->set_flashdata('danger','ERROR AL SUBIR ARCHIVO ....');
+        }
+
+        redirect(site_url("").'/ejec_fin_pi');
+
+    } else {
+        show_404();
+    }
+  }
+
+/*---- Galeria de Imagenes Proyectos de Inversion ----*/
+public function galeria_imagenes_proyecto(){
+  if($this->input->is_ajax_request() && $this->input->post()){
+    $post = $this->input->post();
+    $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
+    $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
+    $galeria=$this->model_proyecto->lista_galeria_pinversion($proy_id); /// Galeria
+
+    $lista='';
+
+    if(count($galeria)!=0){
+      foreach($galeria as $row){
+        $background='';
+        if($row['tp']==1){
+          $background='background:#ccf5f0';
+        }
+
+        $lista.='
+        <div class="col-md-2">
+          <table class="table table-bordered">
+            <tr style="'.$background.'">
+              <td >
+                <center><img src="'.base_url().'fotos_proyectos/'.$row['imagen'].'" class="img-responsive" style="width:300px; height:250px;"/></center>
+              </td>
+            </tr>
+            <tr style="'.$background.'">
+              <td>'.strtoupper($row['detalle']).'</td>
+            </tr>
+          </table>
+        </div>';
+      }
+    }
+    else{
+      $lista='<b>SIN REGISTRO ...</b>';
+    }
+    
+      
+
+    $result = array(
+      'respuesta' => 'correcto',
+      'proyecto'=>$proyecto,
+      'galeria'=>$lista,
+    );
+
+    echo json_encode($result);
+  }else{
+      show_404();
+  }
+}
 
 ///===============================================
 /*---- VERIFICA MONTO A EJECUTAR POR PARTIDA ----*/
@@ -292,67 +390,6 @@ public function verif_valor_ejecutado_x_partida(){
 ///===============================================
 
 
-
-
-
-
-
-
-
-
-  /*----  GET DETALLE EJECUCION PRESUPUESTARIA POR PARTIDA----*/
-  public function get_detalle_ejecucion_partida(){
-    if($this->input->is_ajax_request() && $this->input->post()){
-      $post = $this->input->post();
-      $sp_id = $this->security->xss_clean($post['sp_id']); /// partida id
-      $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($sp_id);
-
-      $tabla='';
-      $tabla.='<div class="table-responsive" align=center>
-                <table class="table table-bordered" style="width:100%;">
-                <thead>
-                  <tr>
-                    <th style="width:7%;">ENE.</th>
-                    <th style="width:7%;">FEB.</th>
-                    <th style="width:7%;">MAR.</th>
-                    <th style="width:7%;">ABR.</th>
-                    <th style="width:7%;">MAY.</th>
-                    <th style="width:7%;">JUN.</th>
-                    <th style="width:7%;">JUL.</th>
-                    <th style="width:7%;">AGO.</th>
-                    <th style="width:7%;">SEPT.</th>
-                    <th style="width:7%;">OCT.</th>
-                    <th style="width:7%;">NOV.</th>
-                    <th style="width:7%;">DIC.</th>
-                    <th style="width:10%;">TOTAL</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>';
-                for ($i=1; $i <=12 ; $i++) { 
-                  $tabla.='
-                  <td align=right><b>Bs. '.number_format($temporalidad_ejec[0]['m'.$i], 2, ',', '.').'</b></td>';
-                }
-
-      $tabla.=' <td align=right style="color:blue;"><b>Bs. '.number_format($temporalidad_ejec[0]['ejecutado_total'], 2, ',', '.').'</b></td>
-                </tr>
-                </tbody>
-                </table>
-              </div>';
-
-      $result = array(
-        'respuesta' => 'correcto',
-        'tabla'=>$tabla,
-      );
-
-      echo json_encode($result);
-    }else{
-        show_404();
-    }
-  }
-
-
-
 ///// =============== REPORTES
 /// Menu Reportes 
 public function menu_rep_ejecucion_ppto(){
@@ -377,17 +414,6 @@ public function menu_rep_ejecucion_ppto(){
 
   $data['titulo_modulo']=$tabla;
   $this->load->view('admin/ejecucion_pi/rep_menu', $data);
-
-  //echo $this->ejecucion_finpi->reporte_consolidado_partidas($this->dep_id);
-/*  $matriz=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional(2);
-
-  for ($i=0; $i <=12 ; $i++) { 
-    for ($j=1; $j <=18 ; $j++) { 
-      echo "[".$matriz[$i][$j]."]";
-    }
-    echo "<br>";
-  }*/
-
 }
 
 
@@ -404,27 +430,33 @@ public function get_tp_reporte(){
     if($rep_id==1){
       $titulo='MIS PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->proyectos_inversion($dep_id,1); /// vista Lista de Proyectos
-      $nro='';
-      $matriz_partidas='';
-      $consolidado='trabajando ...';
-      $grafico_consolidado_partidas='';
+
+
+      
+      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
+      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id); /// Matriz consolidado de partidas
+      $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
+      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
     }
     elseif ($rep_id==2) {
       $titulo='EJECUCIÓN FÍSICA Y FINANCIERA - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->avance_fisico_financiero_pi($dep_id,1); /// vista Ejecucion Fisico y Financiero
-      $nro='';
-      $matriz_partidas='';
-      $consolidado='trabajando ...';
-      $grafico_consolidado_partidas='';
+      
+
+
+      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
+      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id); /// Matriz consolidado de partidas
+      $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
+      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
     }
     elseif ($rep_id==3) {
       $titulo='DETALLE EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->detalle_avance_fisico_financiero_pi($dep_id); /// vista Ejecucion Fisico y Financiero
-      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
       
+
+      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
       $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id); /// Matriz consolidado de partidas
       $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
-    
       $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
     }
 

@@ -162,7 +162,109 @@ function abreVentana(PDF){
   });
 
 
+  //// SUBIR IMAGEN DEL PROYECTO
+  $(function () {
+    $(".fotos_pi").on("click", function (e) {
+      proy_id = $(this).attr('name');
+      proyecto = $(this).attr('id');
+      
+      document.getElementById("p_id").value=proy_id;
+      document.getElementById("proyecto").innerHTML = proyecto; /// estado
+      document.getElementById("detalle_imagen").value = ''; /// Descripcion imagen
 
+      $("#subir_archivo").on("click", function () {
+
+        var $validator = $("#form_subir_img").validate({
+            rules: {
+            p_id: { //// proy id
+              required: true,
+            },
+            archivo: { //// archivo
+              required: true,
+            },
+            detalle_imagen: { //// detalle
+              required: true,
+              minlength : 10,
+            }
+          },
+          messages: {
+            p_id: "<font color=red>PROYECTO/font>",
+            archivo: "<font color=red>SELECCIONE ARCHIVO (IMAGEN)</font>", 
+            detalle_imagen: "<font color=red>REGISTRE LA DESCRIPCION DE LA FOTO</font>",                
+          },
+          highlight: function (element) {
+              $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+          },
+          unhighlight: function (element) {
+              $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+          },
+          errorElement: 'span',
+          errorClass: 'help-block',
+          errorPlacement: function (error, element) {
+            if (element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+          }
+        });
+
+
+        var $valid = $("#form_subir_img").valid();
+        if (!$valid) {
+            $validator.focusInvalid();
+        } else {
+
+          alertify.confirm("SUBIR ARCHIVO ?", function (a) {
+            if (a) {
+              //  document.getElementById("loads").style.display = 'block';
+                document.getElementById('subir_archivo').disabled = true;
+                document.getElementById("subir_archivo").value = "Subiendo Archivo...";
+                document.forms['form_subir_img'].submit();
+            } else {
+                alertify.error("OPCI\u00D3N CANCELADA");
+            }
+          });
+        }
+      });
+
+    });
+  });
+
+  //// VER DETALLE DE EJECUCION PRESUPUESTARIA
+  $(function () {
+    $(".lista_img_pi").on("click", function (e) {
+      proy_id = $(this).attr('name');
+      proyecto = $(this).attr('id');
+      
+      document.getElementById("id_proy").value=proy_id;
+
+      var url = base+"index.php/ejecucion/cejecucion_pi/galeria_imagenes_proyecto";
+        var request;
+        if (request) {
+          request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "proy_id="+proy_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+
+            document.getElementById("dat_proyecto").innerHTML = '<b>PROYECTO : </b>'+response.proyecto[0]['proy_nombre']; /// partidas
+            document.getElementById("lista_galeria").innerHTML = response.galeria;
+        }
+        else{
+            alertify.error("ERROR !!!");
+        }
+
+      });
+
+    });
+  });
 
 
 //// Verificando valor ejecutado por partida
@@ -203,181 +305,6 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
   }
 }
 
-
-  //// Verificando valor ejecutado por partida
-/*  function verif_observacion(registro,sp_id){ 
-    ejec=parseFloat($('[id="ejec'+sp_id+'"]').val());
-
-    if(registro.length>30){
-      $('#but'+sp_id).slideDown();
-    }
-    else{
-      if(ejec!=0){
-        $('#but'+sp_id).slideUp();
-      }
-      else{
-        $('#but'+sp_id).slideDown();  
-      }
-      
-    }
-  }*/
-
-
-  /// Funcion para guardar datos de la ejecucion presupuestaria por partida
-  function guardar(sp_id,aper_id){
-    ejec=parseFloat($('[id="ejec'+sp_id+'"]').val());
-    observacion=($('[id="obs'+sp_id+'"]').val());
-
-    if(observacion.length==0 & observacion.length<30){
-        document.getElementById("obs"+sp_id).style.backgroundColor = "#fdeaeb";
-        alertify.error("REGISTRE OBSERVACION > 30 CARACTERES");
-        return 0; 
-    }
-    else{
-        document.getElementById("obs"+sp_id).style.backgroundColor = "#ffffff";
-        alertify.confirm("GUARDAR EJECUCION PRESUPUESTARIA ?", function (a) {
-        if (a) {
-            var url = base+"index.php/ejecucion/cejecucion_pi/guardar_ppto_ejecutado";
-            var request;
-            if (request) {
-                request.abort();
-            }
-            request = $.ajax({
-                url: url,
-                type: "POST",
-                dataType: 'json',
-                data: "sp_id="+sp_id+"&ejec="+ejec+"&obs="+observacion+"&aper_id="+aper_id
-            });
-
-            request.done(function (response, textStatus, jqXHR) {
-
-            if (response.respuesta == 'correcto') {
-                alertify.alert("LA EJECUCION SE REGISTRO CORRECTAMENTE ", function (e) {
-                  if (e) {
-                    document.getElementById('ejec'+sp_id).innerHTML = response.ppto_mes; /// ejecucion mes
-                    document.getElementById('obs'+sp_id).innerHTML = response.obs_mes; /// Observacion
-                    document.getElementById('ppto_fin_partida'+sp_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ppto_total_ejec_partida); /// ppto partida 
-                    document.getElementById('ppto_ejec_mes'+aper_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ppto_ejec_mes); /// ppto mes ejecutado proyetco inversion
-                    document.getElementById('ppto_ejec_total'+aper_id).innerHTML = 'Bs. '+ new Intl.NumberFormat().format(response.ppto_ejec_total_pi); /// ppto Total ejecutado proyetco inversion
-                    document.getElementById('avance_fin'+sp_id).innerHTML = response.porcentaje_ejec_partida+' %'; /// % avance financiero 
-                    document.getElementById("tr_color_partida"+sp_id).style.backgroundColor = "#edf7ec"; /// color de fila
-                    document.getElementById('success_partida'+sp_id).innerHTML = '<img src="'+base+'/assets/ifinal/ok1.png"/><br><font color=green><b>ACTUALIZADO !!</b></font>';
-                    alertify.success("REGISTRO EXITOSO ...");
-                  }
-                });
-            }
-            else{
-                alertify.error("ERROR AL GUARDAR EJECUCIÓN POA");
-            }
-
-            });
-        } else {
-            alertify.error("OPCI\u00D3N CANCELADA");
-        }
-      });
-    }
-  }
-
-
-  //// VER DETALLE DE EJECUCION PRESUPUESTARIA
-  $(function () {
-    $(".detalle_ejec_ppto_partidas").on("click", function (e) {
-      sp_id = $(this).attr('name');
-      partida = $(this).attr('id');
-      
-      $('#titulo').html('<div style="font-size: 15px;font-family: Arial;"><b>PARTIDA '+partida+'</b></div>');
-      $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando detalle</div>');
-      
-      var url = base+"index.php/ejecucion/cejecucion_pi/get_detalle_ejecucion_partida";
-      var request;
-      if (request) {
-          request.abort();
-      }
-      request = $.ajax({
-          url: url,
-          type: "POST",
-          dataType: 'json',
-          data: "sp_id="+sp_id
-      });
-
-      request.done(function (response, textStatus, jqXHR) {
-      if (response.respuesta == 'correcto') {
-          $('#content1').fadeIn(1000).html(response.tabla);
-        //  $('#caratula').fadeIn(1000).html(response.caratula);
-      }
-      else{
-          alertify.error("ERROR AL RECUPERAR INFORMACION");
-      }
-
-      });
-      request.fail(function (jqXHR, textStatus, thrown) {
-          console.log("ERROR: " + textStatus);
-      });
-      request.always(function () {
-          //console.log("termino la ejecuicion de ajax");
-      });
-      e.preventDefault();
-        
-    });
-  });
-
-
-
-
-
-
-  ////// FORMULARIO DE PROYECTOS DE INVERSION
-  /// Funcion para guardar datos del Proyecto de Inversion
-  function guardar_pi(proy_id){
-    estado=parseFloat($('[id="est_proy'+proy_id+'"]').val());
-    avance_fisico=($('[id="efis_pi'+proy_id+'"]').val());
-
-    alertify.confirm("GUARDAR DATOS DEL PROYECTO ?", function (a) {
-      if (a) {
-        var url = base+"index.php/ejecucion/cejecucion_pi/guardar_datos_proyecto";
-        var request;
-        if (request) {
-            request.abort();
-        }
-        request = $.ajax({
-          url: url,
-          type: "POST",
-          dataType: 'json',
-          data: "proy_id="+proy_id+"&estado="+estado+"&fis="+avance_fisico
-        });
-
-        request.done(function (response, textStatus, jqXHR) {
-
-        if (response.respuesta == 'correcto') {
-            alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
-              if (e) {
-                document.getElementById('efis_pi'+proy_id).innerHTML = response.proyecto[0]['avance_fisico'];
-                //document.getElementById('est_proy'+proy_id).innerHTML = response.proyecto[0]['proy_estado'];
-                document.getElementById("tr_color"+proy_id).style.backgroundColor = "#edf7ec";
-                document.getElementById('success'+proy_id).innerHTML = '<img src="'+base+'/assets/ifinal/ok1.png"/><br><font color=green><b>ACTUALIZADO !!</b></font>';
-                alertify.success("REGISTRO EXITOSO ...");
-              }
-            });
-        }
-        else{
-            alertify.error("ERROR AL GUARDAR INFORMACION POA");
-        }
-
-        });
-      } else {
-          alertify.error("OPCI\u00D3N CANCELADA");
-      }
-    });
-  }
-
-
-  //// verificando ejecucion fisica
-  function verif_pi_ejecfis(proy_id,valor_antiguo, valor_nuevo){
-    if(valor_antiguo!=valor_nuevo){
-      document.getElementById("tr_color"+proy_id).style.backgroundColor = "#ffffff";
-      document.getElementById('success'+proy_id).innerHTML = '<img src="'+base+'/assets/ifinal/interogacion.png" width:50px; height=50px;/><br><font color=green><b>ACTUALIZAR DATOS !!</b></font>';
-    }
-  }
 
 ///// ======REPORTE FINANCIEROS
 
