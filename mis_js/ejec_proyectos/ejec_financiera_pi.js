@@ -231,15 +231,14 @@ function abreVentana(PDF){
     });
   });
 
-  //// VER DETALLE DE EJECUCION PRESUPUESTARIA
+  //// VER GALERIA DE IMEGENES DEL PROYECTO
   $(function () {
     $(".lista_img_pi").on("click", function (e) {
       proy_id = $(this).attr('name');
-      proyecto = $(this).attr('id');
       
       document.getElementById("id_proy").value=proy_id;
 
-      var url = base+"index.php/ejecucion/cejecucion_pi/galeria_imagenes_proyecto";
+      var url = base+"index.php/ejecucion/cejecucion_pi/get_galeria_imagenes_proyecto";
         var request;
         if (request) {
           request.abort();
@@ -253,9 +252,8 @@ function abreVentana(PDF){
 
         request.done(function (response, textStatus, jqXHR) {
         if (response.respuesta == 'correcto') {
-
             document.getElementById("dat_proyecto").innerHTML = '<b>PROYECTO : </b>'+response.proyecto[0]['proy_nombre']; /// partidas
-            document.getElementById("lista_galeria").innerHTML = response.galeria;
+            document.getElementById("lista_galeria").innerHTML = response.lista_galeria;
         }
         else{
             alertify.error("ERROR !!!");
@@ -265,6 +263,161 @@ function abreVentana(PDF){
 
     });
   });
+
+  //// VER EJECUCION PRESUPUESTARIA A NIVEL DEL PROYECTO
+  $(function () {
+    $(".lista_ppto_pi").on("click", function (e) {
+      proy_id = $(this).attr('name');
+      
+      document.getElementById("id").value=proy_id;
+
+      var url = base+"index.php/ejecucion/cejecucion_pi/get_ejecucion_presupuestaria_pi";
+        var request;
+        if (request) {
+          request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "proy_id="+proy_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+            document.getElementById("datos_proyecto").innerHTML = '<b>PROYECTO : </b>'+response.proyecto[0]['proy_nombre']; /// partidas
+            document.getElementById("detalle_ejecucion").innerHTML = response.detalle_ejecucion;
+            cuadro_grafico_ppto_ejec_meses(response.ppto)
+        }
+        else{
+            alertify.error("ERROR !!!");
+        }
+
+      });
+
+    });
+  });
+
+
+//// grafico REGRESION ppto ejecjutado por meses PROYECTO DE INVERSION
+function cuadro_grafico_ppto_ejec_meses(matriz){
+  let ejecucion=[];
+  for (var i = 0; i <=11; i++) {
+      ejecucion[i]= matriz[i];
+  }
+
+  chart = new Highcharts.Chart({
+  chart: {
+    renderTo: 'ejec_mensual',  // Le doy el nombre a la gráfica
+    defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+  },
+  title: {
+    text: 'EJECUCIÓN PRESUPUESTARIA - GESTION : '+gestion  // Titulo (Opcional)
+  },
+  subtitle: {
+    text: 'Detalle de Ejecución Mensual a nivel Regional'   // Subtitulo (Opcional)
+  },
+  // Pongo los datos en el eje de las 'X'
+  xAxis: {
+    categories: ['ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
+    // Pongo el título para el eje de las 'X'
+    title: {
+      text: 'Presupuesto Ejecutado Mensualmente'
+    }
+  },
+  yAxis: {
+    // Pongo el título para el eje de las 'Y'
+    title: {
+      text: 'Monto ejecutado'
+    }
+  },
+  // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+  tooltip: {
+    enabled: true,
+    formatter: function() {
+      return '<b>'+ this.series.name +'</b><br/>'+
+        this.x +': '+ this.y +' '+this.series.name;
+    }
+  },
+  // Doy opciones a la gráfica
+  plotOptions: {
+    line: {
+      dataLabels: {
+        enabled: true
+      },
+      enableMouseTracking: true
+    }
+  },
+  // Doy los datos de la gráfica para dibujarlas
+  series: [
+      {
+        name: '(Bs.) Ppto. Ejecutado',
+        data: ejecucion
+      }
+    ],
+    
+  });
+}
+
+//// grafico REGRESION ppto ejecjutado por meses ACUMULADO PROYECTO DE INVERSION
+function cuadro_grafico_ppto_ejec_meses_acumulado(matriz){
+  let ejecucion=[];
+  for (var i = 0; i <=11; i++) {
+      ejecucion[i]= matriz[i];
+  }
+
+  chart = new Highcharts.Chart({
+  chart: {
+    renderTo: 'ejec_acumulado_mensual',  // Le doy el nombre a la gráfica
+    defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+  },
+  title: {
+    text: 'EJECUCIÓN PRESUPUESTARIA - GESTION : '+gestion  // Titulo (Opcional)
+  },
+  subtitle: {
+    text: 'Detalle de Ejecución Mensual Acumulado a nivel Regional'   // Subtitulo (Opcional)
+  },
+  // Pongo los datos en el eje de las 'X'
+  xAxis: {
+    categories: ['ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
+    // Pongo el título para el eje de las 'X'
+    title: {
+      text: 'Presupuesto Ejecutado Mensualmente Acumulado'
+    }
+  },
+  yAxis: {
+    // Pongo el título para el eje de las 'Y'
+    title: {
+      text: 'Monto ejecutado'
+    }
+  },
+  // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+  tooltip: {
+    enabled: true,
+    formatter: function() {
+      return '<b>'+ this.series.name +'</b><br/>'+
+        this.x +': '+ this.y +' '+this.series.name;
+    }
+  },
+  // Doy opciones a la gráfica
+  plotOptions: {
+    line: {
+      dataLabels: {
+        enabled: true
+      },
+      enableMouseTracking: true
+    }
+  },
+  // Doy los datos de la gráfica para dibujarlas
+  series: [
+      {
+        name: '(Bs.) Ppto. Ejecutado',
+        data: ejecucion
+      }
+    ],
+    
+  });
+}
 
 
 //// Verificando valor ejecutado por partida
@@ -331,7 +484,10 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
         request.done(function (response, textStatus, jqXHR) {
           if (response.respuesta == 'correcto') {
               $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-              cuadro_grafico_partidas(response.matriz,response.nro)
+              cuadro_grafico_partidas(response.matriz,response.nro);/// detalle partidas
+              cuadro_grafico_ppto_ejec_meses(response.vector_meses);  //// mensual
+              cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado) /// meses Acumulado
+
           }
           else{
             alertify.error("ERROR AL LISTAR");
@@ -376,7 +532,7 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
       yAxis: {
           min: 0,
           title: {
-              text: 'CUMPLIMIENTO DE METAS',
+              text: '(%) EJECUCIÓN',
               align: 'high'
           },
           labels: {

@@ -31,7 +31,11 @@ class ejecucion_finpi extends CI_Controller{
     $regional=$this->model_proyecto->get_departamento($this->dep_id);
     $tabla='';
     $tabla.='
+    
     <input name="base" type="hidden" value="'.base_url().'">
+    <input name="mes" type="hidden" value="'.$this->verif_mes[1].'">
+    <input name="descripcion_mes" type="hidden" value="'.$this->verif_mes[2].'">
+    <input name="gestion" type="hidden" value="'.$this->gestion.'">
     <article class="col-sm-12">
       <div class="well">
         <form class="smart-form">
@@ -84,6 +88,7 @@ class ejecucion_finpi extends CI_Controller{
             <th style="width:5%;" bgcolor="#fafafa" title="FASE">AVANCE FÍSICO</th>
             <th style="width:5%;" bgcolor="#fafafa" title="FASE">AVANCE FINANCIERO</th>
             <th style="width:5%;" bgcolor="#fafafa" title="">VER AVANCES DEL PROYECTO</th>
+            <th style="width:5%;" bgcolor="#fafafa" title=""></th>
           </tr>
         </thead>
         <tbody>';
@@ -117,7 +122,10 @@ class ejecucion_finpi extends CI_Controller{
             <td style="text-align:right"><b>'.round($row['avance_fisico'],2).' %</b></td>
             <td style="text-align:right"><b>'.round($row['avance_financiero'],2).' %</b></td>
             <td style="text-align:center">
-              <a href="#" data-toggle="modal" data-target="#modal_mod_imagenes" class="btn btn-default lista_img_pi" name="'.$row['proy_id'].'" id="'.$row['proyecto'].'"title="AVANCES DEL PROYECTOS (IMAGENES)"><img src="'.base_url().'assets/img/folder3.png" WIDTH="40" HEIGHT="40"/></a>
+              <a href="#" data-toggle="modal" data-target="#modal_mod_imagenes" class="btn btn-default lista_img_pi" name="'.$row['proy_id'].'" "title="AVANCES DEL PROYECTOS (IMAGENES)"><img src="'.base_url().'assets/img/folder3.png" WIDTH="40" HEIGHT="40"/></a>
+            </td>
+            <td style="text-align:center">
+              <a href="#" data-toggle="modal" data-target="#modal_mod_ejec_ppto" class="btn btn-default lista_ppto_pi" name="'.$row['proy_id'].'" "title="EJECUCION PRESUPUESTARIA"><img src="'.base_url().'assets/ifinal/grafico2.png" WIDTH="40" HEIGHT="40"/></a>
             </td>
           </tr>';
           }
@@ -720,9 +728,29 @@ class ejecucion_finpi extends CI_Controller{
   }
 
 
+  /// detalle modificacion de presupuesto por Regional
+  public function detalle_modificacion_ppto_x_regional($dep_id){
+    $proyectos=$this->model_proyecto->list_proy_inversion_regional($dep_id);
+
+    $suma_inicial=0;
+    $suma_modificado=0;
+    $suma_vigente=0;
+    foreach($proyectos as $proy){
+      $monto_partida=$this->detalle_modificacion_ppto_x_proyecto($proy['aper_id']);
+      $suma_inicial=$suma_inicial+$monto_partida[1];
+      $suma_modificado=$suma_modificado+$monto_partida[2];
+      $suma_vigente=$suma_vigente+$monto_partida[3];
+    }
+
+    $datos[1]=$suma_inicial;
+    $datos[2]=$suma_modificado;
+    $datos[3]=$suma_vigente;
+
+    return $datos;
+  }
 
 
-  /// detalle modificacion de partidas por proyecto
+  /// detalle modificacion de presupuesto por proyecto
   public function detalle_modificacion_ppto_x_proyecto($aper_id){
     $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($aper_id); /// lista de partidas asignados por proyectos
     for ($i=1; $i <=3 ; $i++) { 
@@ -807,8 +835,125 @@ class ejecucion_finpi extends CI_Controller{
     return $tabla;
   }
 
+//////================= PARA EL TERCER GRAFICO
+
+  /// Vector Consolidado de presupuesto Mensual por REGIONAL
+  public function vector_consolidado_ppto_mensual_regional($dep_id){
+    $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_regional($dep_id);// lista ppto temporalidad ejecutado por regional
+    if(count($ppto)!=0){
+      $j=0;
+      for ($i=0; $i <=11 ; $i++) { 
+        $j++;
+        $ppto_pi[$i]=round($ppto[0]['m'.$j],2);
+      }
+      $ppto_pi[12]=round($ppto[0]['ejecutado_total'],2);
+    }
+    else{
+      $j=0;
+      for ($i=0; $i <=12 ; $i++) {
+        $j++;
+        $ppto_pi[$i]=0;
+      }
+    }
+
+    return $ppto_pi;
+  }
+
+  /// Vector Consolidado de presupuesto Acummulado Mensual por REGIONAL
+  public function vector_consolidado_ppto_acumulado_mensual_regional($dep_id){
+    $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_regional($dep_id);// lista ppto temporalidad ejecutado por regional
+    if(count($ppto)!=0){
+      $j=0;$suma=0;
+      for ($i=0; $i <=11 ; $i++) { 
+        $j++;
+        $suma=$suma+round($ppto[0]['m'.$j],2);
+        $ppto_pi[$i]=$suma;
+      }
+      $ppto_pi[12]=round($ppto[0]['ejecutado_total'],2);
+    }
+    else{
+      $j=0;
+      for ($i=0; $i <=12 ; $i++) {
+        $j++;
+        $ppto_pi[$i]=0;
+      }
+    }
+
+    return $ppto_pi;
+  }
 
 
+  /// detalle de la Ejecucion de la temporalidad de presupuesto por partida
+  public function detalle_temporalidad_mensual_regional($ppto_pi,$dep_id){
+    $detalle_modificacion_pi=$this->detalle_modificacion_ppto_x_regional($dep_id);
+    $tabla='';
+
+    $tabla.='
+    '.$this->style().'
+     <table class="table table-bordered" style="width:100%;">
+        <thead>
+          <tr>
+            <th style="width:5%;">PPTO. INICIAL</th>
+            <th style="width:5%;">PPTO. MODIFICADO</th>
+            <th style="width:5%;">PPTO. VIGENTE</th>
+            <th style="width:5%;">ENE.</th>
+            <th style="width:5%;">FEB.</th>
+            <th style="width:5%;">MAR.</th>
+            <th style="width:5%;">ABR.</th>
+            <th style="width:5%;">MAY.</th>
+            <th style="width:5%;">JUN.</th>
+            <th style="width:5%;">JUL.</th>
+            <th style="width:5%;">AGO.</th>
+            <th style="width:5%;">SEPT.</th>
+            <th style="width:5%;">OCT.</th>
+            <th style="width:5%;">NOV.</th>
+            <th style="width:5%;">DIC.</th>
+            <th style="width:5%;">PPTO. EJEC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td align=right>'.number_format($detalle_modificacion_pi[1], 2, ',', '.').'</td>
+            <td align=right>'.number_format($detalle_modificacion_pi[2], 2, ',', '.').'</td>
+            <td align=right>'.number_format($detalle_modificacion_pi[3], 2, ',', '.').'</td>';
+            for ($i=0; $i <=12 ; $i++) { 
+              $tabla.='<td align=right>'.number_format($ppto_pi[$i], 2, ',', '.').'</td>';
+            }
+          $tabla.='
+          </tr>
+        </tbody>
+      </table>';
+
+
+    return $tabla;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///// ================ END TERCER GRAFICO
+
+
+
+
+
+
+
+
+
+
+  ///// ============== FICHA TECNICA
   /// Datos Generales - Proyectos de Inversion
   public function datos_proyecto_inversion($proy_id){
     $proyecto=$this->model_proyecto->get_id_proyecto($proy_id);
@@ -974,8 +1119,6 @@ class ejecucion_finpi extends CI_Controller{
     return $tabla;
   }
 
-
-
   /// Cabecera Reporte Ficha Tecnica
   public function cabecera_ficha_tecnica(){
     $tabla='';
@@ -1051,6 +1194,9 @@ class ejecucion_finpi extends CI_Controller{
 
     return $tabla;
   }
+
+//// =========== END FICHA TECNICA =========================
+
 
   /// ---- STYLE -----
   public function style(){

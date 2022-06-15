@@ -84,9 +84,20 @@ class Cejecucion_pi extends CI_Controller {
       $nro=0;
       foreach($ppto_asignado as $partida){
         $monto_partida=$this->ejecucion_finpi->detalle_modificacion_partida($partida); /// detalle modificacion de ppto partidas
-        $ppto_ejecutado_mensual=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($partida['sp_id'],$this->verif_mes[1]); ///  monto ejecutado por partidas
+        $ppto_ejecutado_mensual=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($partida['sp_id'],$this->verif_mes[1]); ///  monto ejecutado por partidas en el mes
         $obs_ejec_mensual=$this->model_ptto_sigep->get_obs_ejecucion_financiera_sigep($partida['sp_id'],$this->verif_mes[1]); /// Observacion
         
+        //// --- suma ppto de meses anteriores
+        $suma_monto_ejecutado=0;
+        for ($i=1; $i <$this->verif_mes[1] ; $i++) { 
+            $ppto_mes=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($partida['sp_id'],$i); ///  monto ejecutado por partidas en el mes
+            if(count($ppto_mes)!=0){
+              $suma_monto_ejecutado=$suma_monto_ejecutado+$ppto_mes[0]['ppto_ejec'];
+            }
+        }
+        //// -------------------------------
+
+
         $ppto_ejecutado=0;
         if(count($ppto_ejecutado_mensual)!=0){
           $ppto_ejecutado=$ppto_ejecutado_mensual[0]['ppto_ejec'];
@@ -108,6 +119,7 @@ class Cejecucion_pi extends CI_Controller {
               <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. INICIAL</b></th>
               <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO.MODIFICADO</b></th>
               <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. VIGENTE</b></th>
+              <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. EJECUTADO</b></th>
               <th style="width:7%; font-size: 10px; text-align:center"><b>REGISTRO EJECUCION</b></th>
               <th style="width:20%; font-size: 10px; text-align:center"><b>OBSERVACIÓN</b></th>
             </tr>
@@ -119,6 +131,7 @@ class Cejecucion_pi extends CI_Controller {
               <td style="text-align:right">'.number_format($monto_partida[1], 2, ',', '.').'</td>
               <td style="text-align:right">'.number_format($monto_partida[2], 2, ',', '.').'</td>
               <td style="text-align:right">'.number_format($monto_partida[3], 2, ',', '.').'</td>
+              <td style="text-align:right">'.number_format($suma_monto_ejecutado, 2, ',', '.').'</td>
               <td>
                 <input class="form-control" name="ejec_fin'.$partida['sp_id'].'" id="ejec_fin'.$partida['sp_id'].'" type="text"  value='.round($ppto_ejecutado,2).' onkeyup="verif_valor(this.value,'.$partida['sp_id'].','.$this->verif_mes[1].','.$proy_id.');" onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
               </td>
@@ -286,7 +299,7 @@ class Cejecucion_pi extends CI_Controller {
   }
 
 /*---- Galeria de Imagenes Proyectos de Inversion ----*/
-public function galeria_imagenes_proyecto(){
+public function get_galeria_imagenes_proyecto(){
   if($this->input->is_ajax_request() && $this->input->post()){
     $post = $this->input->post();
     $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
@@ -320,13 +333,11 @@ public function galeria_imagenes_proyecto(){
     else{
       $lista='<b>SIN REGISTRO ...</b>';
     }
-    
-      
 
     $result = array(
       'respuesta' => 'correcto',
       'proyecto'=>$proyecto,
-      'galeria'=>$lista,
+      'lista_galeria'=>$lista,
     );
 
     echo json_encode($result);
@@ -334,6 +345,84 @@ public function galeria_imagenes_proyecto(){
       show_404();
   }
 }
+
+
+/*---- Detalle de Ejecucion Presupuestaria ----*/
+public function get_ejecucion_presupuestaria_pi(){
+  if($this->input->is_ajax_request() && $this->input->post()){
+    $post = $this->input->post();
+    $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
+    $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
+    $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_proyecto($proy_id);// lista ppto temporalidad ejecutado
+    $detalle_modificacion_pi=$this->ejecucion_finpi->detalle_modificacion_ppto_x_proyecto($proyecto[0]['aper_id']); // detalle de modificacion
+    
+    if(count($ppto)!=0){
+      $j=0;
+      for ($i=0; $i <=11 ; $i++) { 
+        $j++;
+        $ppto_pi[$i]=round($ppto[0]['m'.$j],2);
+      }
+      $ppto_pi[12]=round($ppto[0]['ejecutado_total'],2);
+    }
+    else{
+      $j=0;
+      for ($i=0; $i <=12 ; $i++) {
+        $j++;
+        $ppto_pi[$i]=0;
+      }
+    }
+    
+      $lista='';
+      $lista.='
+      <table class="table table-bordered" style="width:100%;">
+        <thead>
+          <tr>
+            <th style="width:5%;">PPTO. INICIAL</th>
+            <th style="width:5%;">PPTO. MODIFICADO</th>
+            <th style="width:5%;">PPTO. VIGENTE</th>
+            <th style="width:5%;">ENE.</th>
+            <th style="width:5%;">FEB.</th>
+            <th style="width:5%;">MAR.</th>
+            <th style="width:5%;">ABR.</th>
+            <th style="width:5%;">MAY.</th>
+            <th style="width:5%;">JUN.</th>
+            <th style="width:5%;">JUL.</th>
+            <th style="width:5%;">AGO.</th>
+            <th style="width:5%;">SEPT.</th>
+            <th style="width:5%;">OCT.</th>
+            <th style="width:5%;">NOV.</th>
+            <th style="width:5%;">DIC.</th>
+            <th style="width:5%;">PPTO. EJECUTADO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td align=right>'.number_format($detalle_modificacion_pi[1], 2, ',', '.').'</td>
+            <td align=right>'.number_format($detalle_modificacion_pi[2], 2, ',', '.').'</td>
+            <td align=right>'.number_format($detalle_modificacion_pi[3], 2, ',', '.').'</td>';
+            for ($i=0; $i <=12 ; $i++) { 
+              $lista.='<td align=right>'.number_format($ppto_pi[$i], 2, ',', '.').'</td>';
+            }
+          $lista.='
+          </tr>
+        </tbody>
+      </table>';
+    
+
+
+    $result = array(
+      'respuesta' => 'correcto',
+      'proyecto'=>$proyecto,
+      'detalle_ejecucion'=>$lista,
+      'ppto'=>$ppto_pi,
+    );
+
+    echo json_encode($result);
+  }else{
+      show_404();
+  }
+}
+
 
 ///===============================================
 /*---- VERIFICA MONTO A EJECUTAR POR PARTIDA ----*/
@@ -404,13 +493,13 @@ public function menu_rep_ejecucion_ppto(){
       <input name="gestion" type="hidden" value="'.$this->gestion.'">
       
       <div class="well">
-            <div class="jumbotron">
-              <h1>Regional '.strtoupper($regional[0]['dep_departamento']).' - '.$this->verif_mes[2].' / '.$this->gestion.'</h1>
-                <p>
-                  Reporte consolidado de ejecución Presupuestaria de Proyectos de Inversion, gestión '.$this->gestion.' a nivel Regional.
-                </p>
-            </div>
-          </div>';
+        <div class="jumbotron">
+          <h1>Regional '.strtoupper($regional[0]['dep_departamento']).' - '.$this->verif_mes[2].' / '.$this->gestion.'</h1>
+            <p>
+              Reporte consolidado de ejecución Presupuestaria de Proyectos de Inversion, gestión '.$this->gestion.' a nivel Regional.
+            </p>
+        </div>
+      </div>';
 
   $data['titulo_modulo']=$tabla;
   $this->load->view('admin/ejecucion_pi/rep_menu', $data);
@@ -431,33 +520,56 @@ public function get_tp_reporte(){
       $titulo='MIS PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->proyectos_inversion($dep_id,1); /// vista Lista de Proyectos
 
-
-      
+      //// s2
       $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
       $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id); /// Matriz consolidado de partidas
       $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
-      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
+      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div>';
+
+      //// s3
+      $vector_meses=$this->ejecucion_finpi->vector_consolidado_ppto_mensual_regional($dep_id); /// ejecutado mensual
+      $vector_meses_acumulado=$this->ejecucion_finpi->vector_consolidado_ppto_acumulado_mensual_regional($dep_id); /// ejecutado mensual Acumulado
+      $tabla1=$this->ejecucion_finpi->detalle_temporalidad_mensual_regional($vector_meses,$dep_id);
+      $grafico_mes='<div id="ejec_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
+      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
+      $tabla2='Hola mundo';
     }
     elseif ($rep_id==2) {
       $titulo='EJECUCIÓN FÍSICA Y FINANCIERA - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->avance_fisico_financiero_pi($dep_id,1); /// vista Ejecucion Fisico y Financiero
       
-
-
-      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
-      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id); /// Matriz consolidado de partidas
+      //// s2
+      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id));
+      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($dep_id); /// Matriz consolidado de partidas
       $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
-      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
+      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div>';
+
+      //// s3
+      $vector_meses=$this->ejecucion_finpi->vector_consolidado_ppto_mensual_regional($dep_id); /// ejecutado mensual
+      $vector_meses_acumulado=$this->ejecucion_finpi->vector_consolidado_ppto_acumulado_mensual_regional($dep_id); /// ejecutado mensual Acumulado
+      $tabla1=$this->ejecucion_finpi->detalle_temporalidad_mensual_regional($vector_meses,$dep_id);
+      $grafico_mes='<div id="ejec_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
+      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
+      $tabla2='Hola mundo';
     }
     elseif ($rep_id==3) {
       $titulo='DETALLE EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->detalle_avance_fisico_financiero_pi($dep_id); /// vista Ejecucion Fisico y Financiero
       
-
-      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
-      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id); /// Matriz consolidado de partidas
+      //// s2
+      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id));
+      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($dep_id); /// Matriz consolidado de partidas
       $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
-      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
+      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div>';
+
+
+      //// s3
+      $vector_meses=$this->ejecucion_finpi->vector_consolidado_ppto_mensual_regional($dep_id); /// ejecutado mensual
+      $vector_meses_acumulado=$this->ejecucion_finpi->vector_consolidado_ppto_acumulado_mensual_regional($dep_id); /// ejecutado mensual Acumulado
+      $tabla1=$this->ejecucion_finpi->detalle_temporalidad_mensual_regional($vector_meses,$dep_id);
+      $grafico_mes='<div id="ejec_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
+      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
+      $tabla2='Hola mundo';
     }
 
      $tabla='
@@ -478,10 +590,13 @@ public function get_tp_reporte(){
                         <hr class="simple">
                         <ul id="myTab1" class="nav nav-tabs bordered">
                           <li class="active">
-                              <a href="#s1" data-toggle="tab"> Detalle Ejecución</a>
+                              <a href="#s1" data-toggle="tab"> Detalle Proyectos</a>
                           </li>
                           <li>
-                              <a href="#s2" data-toggle="tab"> Detalle consolidado</a>
+                              <a href="#s2" data-toggle="tab"> Consolidado por Partidas</a>
+                          </li>
+                          <li>
+                              <a href="#s3" data-toggle="tab"> Consolidado por Meses</a>
                           </li>
                         </ul>
 
@@ -522,6 +637,24 @@ public function get_tp_reporte(){
                               </article>
                             </div>
                           </div>
+
+                          <div class="tab-pane fade" id="s3">
+                            <div class="row">
+                            <article class="col-sm-12 col-md-12 col-lg-6">
+                              <div class="rows" align=center>
+                              '.$grafico_mes.'
+                              </div>
+                            </article>
+                            <article class="col-sm-12 col-md-12 col-lg-6">
+                              <div class="rows" align=center>
+                              '.$grafico_mes_acumulado.'
+                              </div>
+                            </article>
+                             <hr>
+                             '.$tabla1.'
+                            </div>
+                          </div>
+
                         </div>
                     </div>
                   </div>
@@ -534,6 +667,8 @@ public function get_tp_reporte(){
       'tabla'=>$tabla,
       'nro'=>$nro,
       'matriz'=>$matriz_partidas,
+      'vector_meses'=>$vector_meses,
+      'vector_meses_acumulado'=>$vector_meses_acumulado,
     );
 
     echo json_encode($result);

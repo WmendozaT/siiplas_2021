@@ -149,7 +149,7 @@
             </div>
         </div>
 
-    <!-- ============ Modal Avances del Proyecto ========= -->
+        <!-- ============ Modal Avances del Proyecto (IMAGENES)========= -->
         <div class="modal fade" id="modal_mod_imagenes" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog" id="imagenes_pi">
                 <div class="modal-content">
@@ -157,13 +157,43 @@
                         <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                     </div>
                     <div class="modal-body">
-                        <h2 class="alert alert-info"><center>GALERIA DE IMAGENES</center></h2>
+                        <h2 class="alert alert-info"><center>GALERIA - AVANCE DEL PROYECTO</center></h2>
                         
                         <form class="form-horizontal" method="post" enctype="multipart/form-data" id="form_subir_img" name="form_subir_img">
                             <input type="hidden" name="id_proy" id="id_proy">
                             <fieldset>
                                 <legend><div id="dat_proyecto"></div></legend>
                                 <div id="lista_galeria"></div>
+                            </fieldset>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ Modal EJECUCION PRESUPUESTARIA A NIVEL DEL PROYECTO========= -->
+        <div class="modal fade" id="modal_mod_ejec_ppto" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="imagenes_pi">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="alert alert-info"><center>EJECUCIÓN PRESUPUESTARIA</center></h2>
+                        
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data" id="form_subir_img" name="form_subir_img">
+                            <input type="hidden" name="id" id="id">
+                            <fieldset>
+                                <legend><div id="datos_proyecto"></div></legend>
+                                <div id="ejec_mensual" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <hr>
+                                        <div id="detalle_ejecucion"></div>
+                                        <br>
+                                    </div>
+                                </div>
                             </fieldset>
                         </form>
 

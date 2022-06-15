@@ -1010,11 +1010,35 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------- Get Ptto Ejecutado x proyecto --------*/
+    /*-------- Get Ptto Ejecutado x proyecto 2022 --------*/
     public function get_ppto_ejecutado_proyecto($proy_id){
         $sql = 'select *
                 from lista_detalle_ejecucion_ppto_proyectos('.$this->gestion.')
                 where proy_id='.$proy_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-------- Get Ptto Ejecutado x Regional 2022 --------*/
+    public function get_ppto_ejecutado_regional($dep_id){
+        $sql = 'select 
+                SUM(ppto_asignado_gestion) ppto_asignado_gestion,
+                SUM(m1) m1,
+                SUM(m2) m2,
+                SUM(m3) m3,
+                SUM(m4) m4,
+                SUM(m5) m5,
+                SUM(m6) m6,
+                SUM(m7) m7,
+                SUM(m8) m8,
+                SUM(m9) m9,
+                SUM(m10) m10,
+                SUM(m11) m11,
+                SUM(m12) m12,
+                SUM(ejecutado_total) ejecutado_total
+                from lista_detalle_ejecucion_ppto_proyectos('.$this->gestion.')
+                where dep_id='.$dep_id.'
+                group by dep_id';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
