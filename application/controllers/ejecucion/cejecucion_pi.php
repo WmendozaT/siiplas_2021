@@ -57,6 +57,7 @@ class Cejecucion_pi extends CI_Controller {
     $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
     $fase = $this->model_faseetapa->get_id_fase($proy_id); /// Fase
     $estado_proyecto=$this->model_proyecto->proy_estado();
+    $ejec_fin=$this->ejecucion_finpi->avance_financiero_pi($proyecto[0]['aper_id'],$proyecto[0]['proy_ppto_total']);
 
     if(count($proyecto)!=0){
       $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
@@ -152,6 +153,7 @@ class Cejecucion_pi extends CI_Controller {
           'fase' => $fase,
           'estado' => $estado_proy,
           'partidas' => $lista_partidas,
+          'avance_financiero'=>$ejec_fin[2],
           //'button' => $button,
         );
       }
@@ -178,13 +180,17 @@ class Cejecucion_pi extends CI_Controller {
 
       $estado = $this->security->xss_clean($post['est_proy']); /// estado
       $avance_fisico = $this->security->xss_clean($post['ejec_fis']); /// Avance Fisico
+      $problema = $this->security->xss_clean($post['problema']); /// Problema
+      $solucion = $this->security->xss_clean($post['solucion']); /// solucion
       $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
 
 
       /// ------ Update proyecto
         $update_proyect = array(
           'avance_fisico' => $avance_fisico,
-          'proy_estado' => $estado
+          'proy_estado' => $estado,
+          'proy_desc_problema' => $strtoupper($problema),
+          'proy_desc_solucion' => $strtoupper($solucion)
         );
         $this->db->where('proy_id', $proy_id);
         $this->db->update('_proyectos', $update_proyect);
@@ -355,7 +361,8 @@ public function get_ejecucion_presupuestaria_pi(){
     $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
     $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_proyecto($proy_id);// lista ppto temporalidad ejecutado
     $detalle_modificacion_pi=$this->ejecucion_finpi->detalle_modificacion_ppto_x_proyecto($proyecto[0]['aper_id']); // detalle de modificacion
-    
+    $ejec_fin=$this->ejecucion_finpi->avance_financiero_pi($proyecto[0]['aper_id'],$proyecto[0]['proy_ppto_total']);
+
     if(count($ppto)!=0){
       $j=0;
       for ($i=0; $i <=11 ; $i++) { 
@@ -409,11 +416,11 @@ public function get_ejecucion_presupuestaria_pi(){
       </table>';
     
 
-
     $result = array(
       'respuesta' => 'correcto',
       'proyecto'=>$proyecto,
       'detalle_ejecucion'=>$lista,
+      'avance_financiero'=>$ejec_fin[2],
       'ppto'=>$ppto_pi,
     );
 
@@ -536,7 +543,7 @@ public function get_tp_reporte(){
     }
     elseif ($rep_id==2) {
       $titulo='EJECUCIÓN FÍSICA Y FINANCIERA - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
-      $lista_detalle=$this->ejecucion_finpi->avance_fisico_financiero_pi($dep_id,1); /// vista Ejecucion Fisico y Financiero
+      $lista_detalle=$this->ejecucion_finpi->avance_fisico_financiero_pi($dep_id); /// vista Ejecucion Fisico y Financiero
       
       //// s2
       $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id));
@@ -604,9 +611,12 @@ public function get_tp_reporte(){
                           <div class="tab-pane fade in active" id="s1">
                               <div class="row">
                                 <div class="table-responsive" align=center>
-                                  <table style="width:90%;">
+                                  <table style="width:90%;" border=0>
                                     <tr>
                                       <td align=right>
+                                        <a href="javascript:abreVentana(\''.site_url("").'/reporte_detalle_ppto_pi/'.$dep_id.'/'.$rep_id.'\');" title="GENERAR REPORTE" class="btn btn-default">
+                                          <img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="23" HEIGHT="24"/>&nbsp;GENERAR REPORTE (PDF)
+                                        </a>
                                         <a href="'.site_url("").'/xls_rep_ejec_fin_pi/'.$dep_id.'/'.$rep_id.'" target=black title="EXPORTAR DETALLE" class="btn btn-default">
                                           <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="25" HEIGHT="25"/>&nbsp;EXPORTAR DETALLE (EXCEL)
                                         </a>
@@ -682,9 +692,33 @@ public function get_tp_reporte(){
   public function ficha_tecnica_pi($proy_id){
     $regional=$this->model_proyecto->get_departamento($this->dep_id);
     $data['titulo_pie_rep']='Ficha_Tecnica_PI'.strtoupper($regional[0]['dep_departamento']).' '.$this->gestion;
-    $data['cabecera']=$this->ejecucion_finpi->cabecera_ficha_tecnica();
+    $titulo_reporte='FICHA TÉCNICA';
+    $data['cabecera']=$this->ejecucion_finpi->cabecera_ficha_tecnica($titulo_reporte);
     $data['pie']=$this->ejecucion_finpi->pie_ficha_tecnica();
     $data['datos_proyecto']=$this->ejecucion_finpi->datos_proyecto_inversion($proy_id);
+
+
+    $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
+  }
+
+
+    /*--- REPORTE DETALLE EJECUCION PRESUPUESTARIA PROY INVERSION ---*/
+  public function reporte_detalle_ejec_ppto_pi($dep_id,$tipo_reporte){
+    $regional=$this->model_proyecto->get_departamento($dep_id);
+    $data['titulo_pie_rep']='Ficha_Tecnica_PI'.strtoupper($regional[0]['dep_departamento']).' '.$this->gestion;
+    $titulo_reporte='DETALLE EJECUCIÓN PRESUPUESTARIA - '.strtoupper($regional[0]['dep_departamento']).'';
+    $data['cabecera']=$this->ejecucion_finpi->cabecera_ficha_tecnica($titulo_reporte);
+    $data['pie']=$this->ejecucion_finpi->pie_ficha_tecnica();
+
+    if($tipo_reporte==1){
+      $data['datos_proyecto']=$this->ejecucion_finpi->reporte1_pdf_excel($dep_id,1);
+    }
+    elseif($tipo_reporte==2){
+      $data['datos_proyecto']=$this->ejecucion_finpi->reporte2_pdf_excel($dep_id,1);
+    }
+    elseif($tipo_reporte==3){
+      $data['datos_proyecto']=$this->ejecucion_finpi->reporte3_pdf_excel($dep_id,1);
+    }
 
     $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
   }
@@ -698,13 +732,13 @@ public function get_tp_reporte(){
     $tabla='';
 
     if($tip==1){
-      $tabla=$this->ejecucion_finpi->reporte1_excel($dep_id);
+      $tabla=$this->ejecucion_finpi->reporte1_pdf_excel($dep_id,0);
     }
     elseif ($tip==2) {
-      $tabla=$this->ejecucion_finpi->reporte2_excel($dep_id);
+      $tabla=$this->ejecucion_finpi->reporte2_pdf_excel($dep_id,0);
     }
     else{
-      $tabla=$this->ejecucion_finpi->reporte3_excel($dep_id);
+      $tabla=$this->ejecucion_finpi->reporte3_pdf_excel($dep_id,0);
     }
 
     header('Content-type: application/vnd.ms-excel');

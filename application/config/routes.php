@@ -624,4 +624,5 @@ $route['rep/exportar_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/c
 $route['ejec_fin_pi'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_ppto'; ///// formulario de Ejecucion Resupuestaria
 $route['rep_ejec_fin_pi'] = 'ejecucion/cejecucion_pi/menu_rep_ejecucion_ppto'; ///// Menu para reportes
 $route['xls_rep_ejec_fin_pi/(:any)'] = 'ejecucion/cejecucion_pi/exportar_ejecucion_pi/$1/$2'; ///// exportar reporte a excel segun el tipo de reporte
-$route['reporte_ficha_tecnica_pi/(:any)'] = 'ejecucion/cejecucion_pi/ficha_tecnica_pi/$1'; ///// exportar reporte a excel segun el tipo de reporte
+$route['reporte_ficha_tecnica_pi/(:any)'] = 'ejecucion/cejecucion_pi/ficha_tecnica_pi/$1'; ///// Generar Reporte PDF Ficha Tecnica de
+$route['reporte_detalle_ppto_pi/(:any)'] = 'ejecucion/cejecucion_pi/reporte_detalle_ejec_ppto_pi/$1/$2'; ///// Generar Reporte PDF  

@@ -75,17 +75,16 @@ function abreVentana(PDF){
 
       request.done(function (response, textStatus, jqXHR) {
       if (response.respuesta == 'correcto') {
+
         document.getElementById("cod_sisin").value = response.proyecto[0]['proy_sisin']; /// codigo sisin
         document.getElementById("proy_nombre").value = response.proyecto[0]['proy_nombre']; /// nombre proyecto
         document.getElementById("ppto_total").value = response.proyecto[0]['proy_ppto_total']; /// ppto total
         document.getElementById("fase").value = response.fase[0]['fase']+' - '+response.fase[0]['descripcion']; /// fase
         document.getElementById("estado").innerHTML = response.estado; /// estado
-        if(response.proyecto[0]['avance_fisico']!=0){
-          document.getElementById("ejec_fis").value = response.proyecto[0]['avance_fisico']; /// Ejecucion Fisica
-        }
-        else{
-          document.getElementById("ejec_fis").value = ''; /// Ejecucion Fisica
-        }
+        document.getElementById("ejec_fis").value = response.proyecto[0]['avance_fisico']; /// Ejecucion Fisica
+        document.getElementById("ejec_fin").value = response.avance_financiero; /// Ejecucion Financiero
+        document.getElementById("problema").value = response.proyecto[0]['desc_prob']; /// problema
+        document.getElementById("solucion").value = response.proyecto[0]['desc_sol']; /// solucion
         
         document.getElementById("lista_partidas").innerHTML = response.partidas; /// partidas
 
@@ -117,12 +116,22 @@ function abreVentana(PDF){
                   required: true,
                   min: 0,
                   max: 100,
+              },
+              problema: { //// problema
+                  required: true,
+                  minlength : 10,
+              },
+              solucion: { //// solucion
+                  required: true,
+                  minlength : 10,
               }
             },
             messages: {
               proy_id: "<font color=red>PROYECTO/font>",
               est_proy: "<font color=red>ESTADO DEL PROYECTO</font>", 
-              ejec_fis: "<font color=red>AVANCE FISICO DEL PROYECTO</font>",                
+              ejec_fis: "<font color=red>AVANCE FISICO DEL PROYECTO</font>",
+              problema: "<font color=red>DESCRIPCION DEL PROBLEMA</font>",  
+              solucion: "<font color=red>DESCRIPCION DE LA SOLUCION</font>",                
             },
             highlight: function (element) {
                 $(element).closest('.form-group').removeClass('has-success').addClass('has-error');

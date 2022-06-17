@@ -247,10 +247,32 @@
                                 <div id="estado"></div>
                             </div>
                         </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>OBSERVACIONES</legend>
                         <div class="form-group">
                             <label class="col-md-2 control-label">Avance Físico (%)</label>
                             <div class="col-md-10">
                                 <input class="form-control" name="ejec_fis" id="ejec_fis" type="text" onkeypress="if (this.value.length < 4) { return soloNumeros(event);}else{return false; }" onpaste="return false">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Avance Financiero (%)</label>
+                            <div class="col-md-10">
+                                <input class="form-control" name="ejec_fin" id="ejec_fin" type="text" disabled=true>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Descripción del Problema</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" name="problema" id="problema" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Descripción de la Solución</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" name="solucion" id="solucion" rows="3"></textarea>
                             </div>
                         </div>
                     </fieldset>
