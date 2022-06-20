@@ -468,7 +468,7 @@ class ejecucion_finpi extends CI_Controller{
 
  /*--- REPORTE 3 DETALLE POR PARTIDA EJECUCION FISICA Y FINANCIERA ---*/
   public function detalle_avance_fisico_financiero_pi($dep_id){
-    $proyectos=$this->model_proyecto->list_pinversion(1,4);
+    $proyectos=$this->model_proyecto->list_proy_inversion_regional($dep_id);
     $regional=$this->model_proyecto->get_departamento($dep_id);
     $tabla='';
 
@@ -511,9 +511,9 @@ class ejecucion_finpi extends CI_Controller{
                 </td>
                 <td>'.strtoupper($row['dep_departamento']).'</td>
                 <td>'.strtoupper($row['dist_distrital']).'</td>
-                <td>'.$row['proy_sisin'].'</td>
-                <td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' 000</td>
-                <td>'.$row['proy_nombre'].'</td>
+                <td>'.$row['proy'].'</td>
+                <td>'.$row['prog'].' '.$row['proy'].' 000</td>
+                <td>'.$row['proyecto'].'</td>
                 <td align=right><b>Bs. '.number_format($row['proy_ppto_total'], 2, ',', '.').'</b></td>
                 <td>'.strtoupper($row['ep_descripcion']).'</td>
                 <td></td>

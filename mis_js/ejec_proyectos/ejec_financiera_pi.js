@@ -52,8 +52,68 @@ function abreVentana(PDF){
     return /\d/.test(String.fromCharCode(keynum));
   }
 
+///// ===================================================
+/// ------- MENU REPORTE EJECUCION PRESUPUESTARIA pi
+$(document).ready(function() {
+  pageSetUp();
+  $("#dep_id").change(function () {
+    $("#dep_id option:selected").each(function () {
+      dep_id=$(this).val();
 
- /// ------ Ejecutar Presupuesto
+      $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información ...</div>');
+      var url = base+"index.php/reporte_ejecucion_proyectos/creportejecucion_pi/get_detalle_ejecucion_ppto_pi_regional_institucional";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "dep_id="+dep_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+              if(dep_id==0){
+                $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+              }
+              else{
+                $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                cuadro_grafico_partidas(response.matriz,response.nro);/// detalle partidas
+                cuadro_grafico_ppto_ejec_meses(response.vector_meses);  //// mensual
+                cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado) /// meses Acumulado
+              }
+          }
+          else{
+              alertify.error("ERROR AL LISTAR");
+          }
+        }); 
+
+    });
+  });
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////====================================================
+ /// ------ Ejecutar Presupuesto (FORMULARIO DE EJECUCION)
   $(".ejec_ppto_pi").on("click", function (e) {
       proy_id = $(this).attr('name');
       document.getElementById("proy_id").value=proy_id;
