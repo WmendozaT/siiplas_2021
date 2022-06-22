@@ -757,7 +757,7 @@ class ejecucion_finpi extends CI_Controller{
 
 
   /// Tabla reporte Consolidado de Partidas Vista o Excel
-  public function tabla_consolidado_partidas_regional($matriz,$dep_id,$tp_reporte){
+  public function tabla_consolidado_de_partidas($matriz,$nro,$tp_reporte){
     //// tp_reporte : 0 (Vista normal)
     //// tp_reporte : 1 (Excel)
     $class_table='class="table table-bordered" style="width:100%;"';
@@ -766,7 +766,7 @@ class ejecucion_finpi extends CI_Controller{
     }
 
     $tabla='';
-    $partidas=$this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id);
+   // $partidas=$this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id);
       $tabla.='
       <center>
       <table '.$class_table.'>
@@ -794,7 +794,7 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
         </thead>
         <tbody>';
-        for ($i=0; $i<count($partidas); $i++) { 
+        for ($i=0; $i<$nro; $i++) { 
             $tabla.='
             <tr>
             <td style="text-align:center">'.$i.'</td>
@@ -825,6 +825,43 @@ class ejecucion_finpi extends CI_Controller{
     return $tabla;
   }
 
+
+  /// Matriz Consolidado de partidas a nivel INSTITUCIONAL
+  public function matriz_consolidado_partidas_prog_ejec_institucional(){
+    $partidas=$this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_institucional();
+
+    /// matriz vacia---
+    for ($i=0; $i <=count($partidas); $i++) { 
+      for ($j=1; $j <=18 ; $j++) { 
+        $matriz[$i][$j]=0;
+      } 
+     }
+    ///----------------
+
+    $nro=0;
+    foreach($partidas as $partida){
+      $ejec=$this->model_ptto_sigep->get_partida_ejecutado_gestion_institucional($partida['par_id']);
+      
+      $matriz[$nro][1]=$partida['par_id']; /// par_id
+      $matriz[$nro][2]=$partida['partida']; /// codigo Partida
+      $matriz[$nro][3]=$partida['par_nombre']; /// descripcion partida
+      $matriz[$nro][4]=round($partida['ppto_partida_asignado_gestion'],2); /// monto asignado Gestion
+      
+      if(count($ejec)!=0){
+        $fila=5;
+        for ($i=1; $i <=12 ; $i++) { 
+          $matriz[$nro][$fila]=round($ejec[0]['m'.$i],2); /// temporalidad Ejecucion
+          $fila++;
+        } 
+
+        $matriz[$nro][17]=round($ejec[0]['ejecutado_total'],2); /// Ejecucion de partida
+        $matriz[$nro][18]=round((($ejec[0]['ejecutado_total']/$matriz[$nro][4])*100),2); // (% de cumplimiento)
+      }
+      $nro++;
+    }
+
+    return $matriz;
+  }
 
 
   /// Matriz Consolidado de partidas por REGIONAL
@@ -863,6 +900,30 @@ class ejecucion_finpi extends CI_Controller{
 
     return $matriz;
   }
+
+
+
+  /// detalle modificacion de presupuesto por Regional
+  public function detalle_modificacion_ppto_institucional(){
+    $regionales=$this->model_proyecto->list_departamentos();
+
+    $suma_inicial=0;
+    $suma_modificado=0;
+    $suma_vigente=0;
+    foreach($regionales as $reg){
+      $monto_partida=$this->detalle_modificacion_ppto_x_regional($reg['dep_id']);
+      $suma_inicial=$suma_inicial+$monto_partida[1];
+      $suma_modificado=$suma_modificado+$monto_partida[2];
+      $suma_vigente=$suma_vigente+$monto_partida[3];
+    }
+
+    $datos[1]=$suma_inicial;
+    $datos[2]=$suma_modificado;
+    $datos[3]=$suma_vigente;
+
+    return $datos;
+  }
+
 
 
   /// detalle modificacion de presupuesto por Regional
@@ -974,7 +1035,52 @@ class ejecucion_finpi extends CI_Controller{
 
 //////================= PARA EL TERCER GRAFICO
 
-  /// Vector Consolidado de presupuesto Mensual por REGIONAL
+  /// Vector Consolidado de presupuesto Mensual a nivel Institucional
+  public function vector_consolidado_ppto_mensual_institucional(){
+    $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_institucional();// lista ppto temporalidad ejecutado Institucional
+    if(count($ppto)!=0){
+      $j=0;
+      for ($i=0; $i <=11 ; $i++) { 
+        $j++;
+        $ppto_pi[$i]=round($ppto[0]['m'.$j],2);
+      }
+      $ppto_pi[12]=round($ppto[0]['ejecutado_total'],2);
+    }
+    else{
+      $j=0;
+      for ($i=0; $i <=12 ; $i++) {
+        $j++;
+        $ppto_pi[$i]=0;
+      }
+    }
+
+    return $ppto_pi;
+  }
+
+  /// Vector Consolidado de presupuesto Acummulado Mensual nivel Inatitucional
+  public function vector_consolidado_ppto_acumulado_mensual_institucional(){
+    $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_institucional();// lista ppto temporalidad ejecutado Institucional
+    if(count($ppto)!=0){
+      $j=0;$suma=0;
+      for ($i=0; $i <=11 ; $i++) { 
+        $j++;
+        $suma=$suma+round($ppto[0]['m'.$j],2);
+        $ppto_pi[$i]=$suma;
+      }
+      $ppto_pi[12]=round($ppto[0]['ejecutado_total'],2);
+    }
+    else{
+      $j=0;
+      for ($i=0; $i <=12 ; $i++) {
+        $j++;
+        $ppto_pi[$i]=0;
+      }
+    }
+
+    return $ppto_pi;
+  }
+
+    /// Vector Consolidado de presupuesto Mensual por REGIONAL
   public function vector_consolidado_ppto_mensual_regional($dep_id){
     $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_regional($dep_id);// lista ppto temporalidad ejecutado por regional
     if(count($ppto)!=0){
@@ -1020,9 +1126,15 @@ class ejecucion_finpi extends CI_Controller{
   }
 
 
-  /// detalle de la Ejecucion de la temporalidad de presupuesto por partida
+  /// detalle de la Ejecucion de la temporalidad de presupuesto por partida nivel Regional
   public function detalle_temporalidad_mensual_regional($ppto_pi,$dep_id){
-    $detalle_modificacion_pi=$this->detalle_modificacion_ppto_x_regional($dep_id);
+    if($dep_id==0){ /// Institucional
+      $detalle_modificacion_pi=$this->detalle_modificacion_ppto_institucional();
+    }
+    else{ /// regional
+      $detalle_modificacion_pi=$this->detalle_modificacion_ppto_x_regional($dep_id);
+    }
+
     $tabla='';
 
     $tabla.='

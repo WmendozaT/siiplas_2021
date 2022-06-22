@@ -10,11 +10,23 @@ class Model_ptto_sigep extends CI_Model{
         $this->dist_tp = $this->session->userData('dist_tp');
     }
     
+    /// lista de Regionales incluyendo Oficina Nacional
     public function list_regionales(){
         $sql = '
             select *
             from _departamentos 
             where dep_id!=\'0\'
+            ORDER BY dep_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /// lista de Departamentos menos Oficina Nacional
+    public function list_departamentos(){
+        $sql = '
+            select *
+            from _departamentos 
+            where dep_id!=\'0\' and dep_id!=\'10\'
             ORDER BY dep_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -328,8 +340,50 @@ class Model_ptto_sigep extends CI_Model{
     }
 
 ////// REPORTES DE EJECUCION PRESUPUESTARIA POR PARTIDAS 2022
+    /*----- LISTA CONSOLIDADO REGIONAL DE PARTIDAS ASIGNADOS EN LA GESTION INSTITUCIONAL  -----*/
+    public function lista_consolidado_partidas_ppto_asignado_gestion_institucional(){
+        $sql = '
+            select par_id,partida,par_nombre,SUM(ppto_partida_asignado_gestion) ppto_partida_asignado_gestion
+            from lista_partidas_ppto_asignadas_gestion('.$this->gestion.')
+            group by par_id,partida,par_nombre
+            order by par_id asc';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
-    /*----- LISTA CONSOLIDADO REGIONAL DE PARTIDAS ASIGNADOS EN LA GESTION  -----*/
+    /// detalle de ejecucion de partidas a nivel Institucional
+    public function get_partida_ejecutado_gestion_institucional($par_id){
+        $sql = '
+            select 
+                par_id,
+                partida,
+                SUM(m1) m1,
+                SUM(m2) m2,
+                SUM(m3) m3,
+                SUM(m4) m4,
+                SUM(m5) m5,
+                SUM(m6) m6,
+                SUM(m7) m7,
+                SUM(m8) m8,
+                SUM(m9) m9,
+                SUM(m10) m10,
+                SUM(m11) m11,
+                SUM(m12) m12,
+                SUM(ejecutado_total) ejecutado_total
+
+                from lista_partidas_ppto_ejecutado_gestion('.$this->gestion.')
+                where par_id='.$par_id.'
+                group by
+                par_id,
+                partida';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*----- LISTA CONSOLIDADO REGIONAL DE PARTIDAS ASIGNADOS EN LA GESTION POR REGIONAL  -----*/
     public function lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id){
         $sql = '
             select dep_id,par_id,partida,par_nombre,SUM(ppto_partida_asignado_gestion) ppto_partida_asignado_gestion
@@ -342,6 +396,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+    /// detalle de ejecucion de partidas a nivel regional
     public function get_partida_ejecutado_gestion_regional($dep_id,$par_id){
         $sql = '
             select 
@@ -374,6 +429,16 @@ class Model_ptto_sigep extends CI_Model{
     }
 
 
+    //// SUMA TOTAL DE PRESUPUESTO ASIGNADO PROYECTOS DE INVERSION (NACIONAL) 2022
+    public function get_ppto_asignado_proyectos_inversion_aprobados(){
+        $sql = '
+            select SUM(ppto_asignado_gestion) ppto_asignado_gestion
+            from lista_poa_pinversion_nacional('.$this->gestion.') p
+            Inner Join vista_ppto_asignado_gestion_proyecto as asig On asig.aper_id=p.aper_id';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
 
 
@@ -1015,6 +1080,28 @@ class Model_ptto_sigep extends CI_Model{
         $sql = 'select *
                 from lista_detalle_ejecucion_ppto_proyectos('.$this->gestion.')
                 where proy_id='.$proy_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-------- Get Ptto Ejecutado a nivel Institucional 2022 --------*/
+    public function get_ppto_ejecutado_institucional(){
+        $sql = 'select 
+                SUM(ppto_asignado_gestion) ppto_asignado_gestion,
+                SUM(m1) m1,
+                SUM(m2) m2,
+                SUM(m3) m3,
+                SUM(m4) m4,
+                SUM(m5) m5,
+                SUM(m6) m6,
+                SUM(m7) m7,
+                SUM(m8) m8,
+                SUM(m9) m9,
+                SUM(m10) m10,
+                SUM(m11) m11,
+                SUM(m12) m12,
+                SUM(ejecutado_total) ejecutado_total
+                from lista_detalle_ejecucion_ppto_proyectos('.$this->gestion.')';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

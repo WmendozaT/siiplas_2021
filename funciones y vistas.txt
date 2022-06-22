@@ -2976,14 +2976,14 @@ ALTER TABLE public.v_ejec_ppto_partidas
   OWNER TO postgres;
 
 
-  /////// ======= VISTA PRESUPUESTO ASIGNADO POR PROYECTO, UNIDAD
-     CREATE OR REPLACE VIEW public.vista_ppto_asignado_gestion_proyecto AS 
-    select aper_id, g_id, SUM(importe) ppto_asignado_gestion
-    from ptto_partidas_sigep
-    group by aper_id, g_id;
+/////// ======= VISTA PRESUPUESTO ASIGNADO POR PROYECTO, UNIDAD
+CREATE OR REPLACE VIEW public.vista_ppto_asignado_gestion_proyecto AS 
+select aper_id, g_id, SUM(importe) ppto_asignado_gestion
+from ptto_partidas_sigep
+group by aper_id, g_id;
 
-     ALTER TABLE public.vista_ppto_asignado_gestion_proyecto
-     OWNER TO postgres;
+ALTER TABLE public.vista_ppto_asignado_gestion_proyecto
+OWNER TO postgres;
 
 
 

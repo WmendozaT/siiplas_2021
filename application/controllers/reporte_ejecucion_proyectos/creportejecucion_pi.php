@@ -23,6 +23,7 @@ class Creportejecucion_pi extends CI_Controller {
           $this->dist_tp = $this->session->userData('dist_tp');
           $this->dep_id = $this->session->userData('dep_id');
           $this->tmes = $this->session->userData('trimestre');
+          $this->mes = $this->mes_nombre();
           $this->fun_id = $this->session->userData('fun_id');
           $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
           $this->ppto= $this->session->userData('verif_ppto'); 
@@ -60,62 +61,10 @@ public function menu_pi(){
    
     $data['titulo_modulo']=$tabla;
 
- //   $this->load->view('admin/reportes_cns/repejecucion_pi/menu_pi', $data);
-
-    $regionales=$this->model_proyecto->list_departamentos();
-      $tabla.='
-      <table border=1>
-        <tr>
-          <td></td>
-          <td>REGIONAL</td>
-          <td>DISTRITAL</td>
-          <td>N DE PROYECTOS</td>
-          <td>PPTO. INICIAL</td>
-          <td>PPTO. MODIFICADO</td>
-          <td>PPTO. VIGENTE</td>
-          <td>PPTO. EJECUTADO</td>
-          <td>% EJECUTADO</td>
-        </tr>';
-      foreach($regionales as $row){
-
-        $nro_proy=0;
-        if(count($this->model_proyecto->list_proy_inversion_regional($row['dep_id']))!=0){
-          $nro_proy=count($this->model_proyecto->list_proy_inversion_regional($row['dep_id']));
-        }
-
-        $modificacion_partida=$this->ejecucion_finpi->detalle_modificacion_ppto_x_regional($row['dep_id']); //// Modificacion de partidas
-
-        $ejecucion=$this->model_ptto_sigep->get_ppto_ejecutado_regional($row['dep_id']); //// ejecucion de Presupuesto
-        $ejec_ppto=0;
-        if(count($ejecucion)!=0){
-          $ejec_ppto=$ejecucion[0]['ejecutado_total'];
-        }
-
-        $avance_financiero=0;
-        if($modificacion_partida[3]!=0){
-          $avance_financiero=round((($ejec_ppto/$modificacion_partida[3])*100),2);
-        }
-        
-        $tabla.='
-        <tr>
-          <td>'.$row['dep_id'].'</td>
-          <td>'.$row['dep_departamento'].'</td>
-          <td></td>
-          <td>'.$nro_proy.'</td>
-          <td>'.$modificacion_partida[1].'</td>
-          <td>'.$modificacion_partida[2].'</td>
-          <td>'.$modificacion_partida[3].'</td>
-          <td>'.$ejec_ppto.'</td>
-          <td>'.$avance_financiero.'</td>
-        </tr>';
-      }
-
-      $tabla.='</table>';
-
-  echo $tabla;
+    $this->load->view('admin/reportes_cns/repejecucion_pi/menu_pi', $data); 
 }
 
-  //// MENU UNIDADES ORGANIZACIONAL 2020 - 2021
+  //// MENU UNIDADES ORGANIZACIONAL 2022
   public function menu_nacional(){
   $tabla='';
   $regionales=$this->model_proyecto->list_departamentos();
@@ -156,32 +105,115 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
     $regional=$this->model_proyecto->get_departamento($dep_id);
 
     if($dep_id==0){
+      ///// s1
+      $nro_reg=count($this->model_ptto_sigep->list_regionales());
+      $matriz_reg=$this->matriz_detalle_proyectos_clasificado_regional();
 
-      $regionales=$this->model_proyecto->list_departamentos();
-      foreach($regionales as $row){
-        $modificacion_partida=$this->detalle_modificacion_ppto_x_proyecto($row['aper_id']);
+       //// s2
+      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_institucional());
+      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_institucional(); /// Matriz consolidado de partidas Nacional
+      $consolidado=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,0); /// Tabla Clasificacion de partidas asignados por regional
+      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div>';
 
-      }
+      //// s3
+      $vector_meses=$this->ejecucion_finpi->vector_consolidado_ppto_mensual_institucional(); /// ejecutado mensual
+      $vector_meses_acumulado=$this->ejecucion_finpi->vector_consolidado_ppto_acumulado_mensual_institucional(); /// ejecutado mensual Acumulado
+      $tabla1=$this->ejecucion_finpi->detalle_temporalidad_mensual_regional($vector_meses,0);
+      $grafico_mes='<div id="ejec_mensual" style="width: 700px; height: 500px; margin: 2 auto"></div>';
+      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 700px; height: 500px; margin: 2 auto"></div>';
 
+      $tabla='
+      <h2>Ejecucion Presupuestaria Institucional al mes de '.$this->mes[2].' / '.$this->gestion.'</h2>
+      <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+            <h2>Ejecucion Presupuestaria</h2>
+        </header>
+        <div>
+            <div class="jarviswidget-editbox">
+            </div>
+            <div class="widget-body">
+                <p>
+                <div style="font-size: 25px;font-family: Arial¨;"><b></b></div>
+                </p>
+                <hr class="simple">
+                <ul id="myTab1" class="nav nav-tabs bordered">
+                  <li class="active">
+                      <a href="#s1" data-toggle="tab"> Detalle Proyectos</a>
+                  </li>
+                  <li>
+                      <a href="#s2" data-toggle="tab"> Consolidado por Partidas</a>
+                  </li>
+                  <li>
+                      <a href="#s3" data-toggle="tab"> Consolidado por Meses</a>
+                  </li>
+                </ul>
 
+                <div id="myTabContent1" class="tab-content padding-10">
+                  <div class="tab-pane fade in active" id="s1">
+                    <article class="col-sm-12 col-md-12 col-lg-6">
+                      <div class="rows" align=center>
+                        <div id="detalle_proyectos1" style="width: 630px; height: 630px; margin: 2 auto"></div>
+                      </div>
+                    </article>
+                    <article class="col-sm-12 col-md-12 col-lg-6">
+                      <div class="rows" align=center>
+                        <div id="detalle_proyectos2" style="width: 630px; height: 630px; margin: 2 auto"></div>
+                      </div>
+                    </article>
+                    <hr>
+                    <div class="row">
+                      <div class="table-responsive" align=center>
+                      '.$this->tabla_detalle_proyectos_clasificado_institucional($matriz_reg,$nro_reg).'
+                      </div>
+                    </div>
+                  
+                  </div>
+                  
+                  <div class="tab-pane fade" id="s2">
+                    <div class="row">
+                      <article class="col-sm-12">
+                        '.$grafico_consolidado_partidas.'<hr>'.$consolidado.'
+                      </article>
+                    </div>
+                  </div>
 
+                  <div class="tab-pane fade" id="s3">
+                    <div class="row">
+                    <article class="col-sm-12 col-md-12 col-lg-6">
+                      <div class="rows" align=center>
+                      '.$grafico_mes.'
+                      </div>
+                    </article>
+                    <article class="col-sm-12 col-md-12 col-lg-6">
+                      <div class="rows" align=center>
+                      '.$grafico_mes_acumulado.'
+                      </div>
+                    </article>
+                     <hr>
+                     '.$tabla1.'
+                    </div>
+                  </div>
 
+                </div>
+            </div>
+          </div>
+      </div>';
 
-
-
-
-
-
-
-
-
-
-
-      $tabla='trabajando';
 
       $result = array(
         'respuesta' => 'correcto',
+        'nro_reg'=>$nro_reg,
+        'matriz_reg'=>$matriz_reg,
+
+        'nro_part'=>$nro,
+        'matriz_part'=>$matriz_partidas,
+
+        'vector_meses'=>$vector_meses,
+        'vector_meses_acumulado'=>$vector_meses_acumulado,
+
         'lista_reporte' => $tabla,
+
       );
 
     }
@@ -192,15 +224,15 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
       //// s2
       $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id));
       $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($dep_id); /// Matriz consolidado de partidas
-      $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
-      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div>';
+      $consolidado=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,0); /// Tabla Clasificacion de partidas asignados por regional
+      $grafico_consolidado_partidas='<div id="container" style="width: 900px; height: 650px; margin: 0 auto"></div>';
 
       //// s3
       $vector_meses=$this->ejecucion_finpi->vector_consolidado_ppto_mensual_regional($dep_id); /// ejecutado mensual
       $vector_meses_acumulado=$this->ejecucion_finpi->vector_consolidado_ppto_acumulado_mensual_regional($dep_id); /// ejecutado mensual Acumulado
       $tabla1=$this->ejecucion_finpi->detalle_temporalidad_mensual_regional($vector_meses,$dep_id);
-      $grafico_mes='<div id="ejec_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
-      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
+      $grafico_mes='<div id="ejec_mensual" style="width: 700px; height: 500px; margin: 2 auto"></div>';
+      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 700px; height: 500px; margin: 2 auto"></div>';
 
       $tabla='
       <h2>Ejecucion Presupuestaria - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'</h2>
@@ -311,11 +343,123 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
 
 
 
-  /*---- GET DETALLE DE LOS REPORTES GENERADOS  ----*/
- 
+
+ /*--- GET MATRIZ DATOS CONSOLIDADOS DE PROYETCOS DE INVERSION INSCRITOS CALSIFICADOS POR REGIONAL ---*/
+public function matriz_detalle_proyectos_clasificado_regional(){
+  $regionales=$this->model_ptto_sigep->list_regionales();
+  $nro_proyectos_nacional=count($this->model_proyecto->list_proy_inversion()); /// Nro de proyectos aprobados NACIONAL
+  $ppto_asignado_proyectos_nacional=$this->model_ptto_sigep->get_ppto_asignado_proyectos_inversion_aprobados(); /// Ppto Asignado de proyectos aprobados NACIONAL
+  
+  //// Armando Matriz Vacio
+  for ($i=0; $i <=10 ; $i++) { 
+    for ($j=0; $j <count($this->model_ptto_sigep->list_regionales()) ; $j++) { 
+      $matriz[$i][$j]=0;
+    }
+  }
+  //// -------------------
 
 
+  $nro=0;
+  foreach($regionales as $row){
+    $nro_proy=0;
+    if(count($this->model_proyecto->list_proy_inversion_regional($row['dep_id']))!=0){
+      $nro_proy=count($this->model_proyecto->list_proy_inversion_regional($row['dep_id']));
+    }
 
+    $modificacion_partida=$this->ejecucion_finpi->detalle_modificacion_ppto_x_regional($row['dep_id']); //// Modificacion de partidas
+
+    $ejecucion=$this->model_ptto_sigep->get_ppto_ejecutado_regional($row['dep_id']); //// ejecucion de Presupuesto
+    $ejec_ppto=0;
+    if(count($ejecucion)!=0){
+      $ejec_ppto=$ejecucion[0]['ejecutado_total'];
+    }
+
+    $avance_financiero=0; /// Avance Financiero
+    if($modificacion_partida[3]!=0){
+      $avance_financiero=round((($ejec_ppto/$modificacion_partida[3])*100),2);
+    }
+    
+    $porcentaje_distribucion_proyectos=0; //// numero de proyectos
+    if($nro_proyectos_nacional!=0){
+      $porcentaje_distribucion_proyectos=round(($nro_proy/$nro_proyectos_nacional)*100,2);
+    }
+
+
+    $porcentaje_distribucion_ppto=0; /// porcentaje de ppto asignado por regional
+    if(count($ppto_asignado_proyectos_nacional)!=0){
+      $porcentaje_distribucion_ppto=round(($modificacion_partida[3]/$ppto_asignado_proyectos_nacional[0]['ppto_asignado_gestion'])*100,2);
+    }
+
+    $matriz[$nro][0]=$row['dep_id']; //// dep id
+    $matriz[$nro][1]=strtoupper($row['dep_departamento']); /// regional
+    $matriz[$nro][2]=$row['dep_sigla']; /// regional
+    $matriz[$nro][3]=$nro_proy; /// nro de proyectos aprobados
+    $matriz[$nro][4]=$porcentaje_distribucion_proyectos; /// porcentaje de distribucion de proyectos con respecto al total
+    $matriz[$nro][5]=$modificacion_partida[1]; /// ppto inicial
+    $matriz[$nro][6]=$modificacion_partida[2]; /// ppto modificado
+    $matriz[$nro][7]=$modificacion_partida[3]; /// ppto vigente
+    $matriz[$nro][8]=$ejec_ppto; /// ppto ejecutado
+    $matriz[$nro][9]=$avance_financiero; /// avance financiero
+    $matriz[$nro][10]=$porcentaje_distribucion_ppto; /// porcentaje de distribucion del presupuesto con respecto al total
+
+    $nro++;
+  }
+
+  return $matriz;
+}
+
+
+/*--- GET TABLA DATOS CONSOLIDADOS DE PROYETCOS DE INVERSION INSCRITOS CALSIFICADOS POR REGIONAL ---*/
+public function tabla_detalle_proyectos_clasificado_institucional($matriz,$nro){
+  $tabla='';
+  $tabla.='
+  <style>
+    table{font-size: 10px;
+    width: 100%;
+    max-width:1550px;;
+    overflow-x: scroll;
+    }
+    th{
+      padding: 1.4px;
+      text-align: center;
+      font-size: 10px;
+    }
+  </style>
+  <table class="table table-bordered" style="width:100%;">
+        <thead>
+          <tr>
+            <th style="width:10%;">DEPARTAMENTO</th>
+            <th style="width:7%;">N° DE PROYECTOS</th>
+            <th style="width:7%;">PORCENTAJE DISTRIBUCIÓN</th>
+            <th style="width:10%;">PPTO. INICIAL '.$this->gestion.'</th>
+            <th style="width:10%;">PPTO. MODIFICADO '.$this->gestion.'</th>
+            <th style="width:10%;">PPTO. VIGENTE '.$this->gestion.'</th>
+            <th style="width:10%;">PPTO. EJECUTADO</th>
+            <th style="width:5%;">AVANCE FINANCIERO</th>
+            <th style="width:5%;">PORCENTAJE DISTRIBUCIÓN PPTO.</th>
+          </tr>
+        </thead>
+        <tbody>';
+          for ($i=0; $i <$nro ; $i++) { 
+            $tabla.='
+              <tr>
+                <td>'.$matriz[$i][1].'</td>
+                <td align=right>'.$matriz[$i][3].'</td>
+                <td align=right>'.$matriz[$i][4].' %</td>
+                <td align=right>Bs. '.number_format($matriz[$i][5], 2, ',', '.').'</td>
+                <td align=right>Bs. '.number_format($matriz[$i][6], 2, ',', '.').'</td>
+                <td align=right>Bs. '.number_format($matriz[$i][7], 2, ',', '.').'</td>
+                <td align=right>Bs. '.number_format($matriz[$i][8], 2, ',', '.').'</td>
+                <td align=right>'.$matriz[$i][9].' %</td>
+                <td align=right>'.$matriz[$i][10].' %</td>
+              </tr>';    
+          }
+          $tabla.='
+        </tbody>
+      </table>';
+
+  return $tabla;
+}
 
 
 
@@ -366,7 +510,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
   }
   /*-----------------------------------*/
 
-  /*----------------------------------------*/
+  /*-----------------*/
   function rolfun($rol){
     $valor=false;
     for ($i=1; $i <=count($rol) ; $i++) { 
@@ -377,6 +521,23 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
       }
     }
     return $valor;
+  }
+
+  /*------ NOMBRE MES -------*/
+  function mes_nombre(){
+    $mes[1] = 'ENE.';
+    $mes[2] = 'FEB.';
+    $mes[3] = 'MAR.';
+    $mes[4] = 'ABR.';
+    $mes[5] = 'MAY.';
+    $mes[6] = 'JUN.';
+    $mes[7] = 'JUL.';
+    $mes[8] = 'AGOS.';
+    $mes[9] = 'SEPT.';
+    $mes[10] = 'OCT.';
+    $mes[11] = 'NOV.';
+    $mes[12] = 'DIC.';
+    return $mes;
   }
 
 }

@@ -1829,7 +1829,7 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------- LISTA PROYECTOS DE INVERSION POR REGIONAL funcion --------*/
+    /*-------- LISTA PROYECTOS DE INVERSION POR REGIONAL --------*/
     public function list_proy_inversion_regional($dep_id){ /// aprobados
         $sql = 'select *
                 from lista_poa_pinversion_regional('.$dep_id.','.$this->gestion.')';

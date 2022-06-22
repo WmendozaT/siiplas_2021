@@ -75,14 +75,22 @@ $(document).ready(function() {
 
         request.done(function (response, textStatus, jqXHR) {
           if (response.respuesta == 'correcto') {
-              if(dep_id==0){
+              if(dep_id==0){ /// Institucional
                 $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                cuadro_grafico_distribucion_proyectos(response.matriz_reg,response.nro_reg); /// grafico 1 detalle por proyecto
+                cuadro_grafico_distribucion_presupuesto_asignado(response.matriz_reg,response.nro_reg)  /// grafico 1 detalle por presupuesto
+
+                cuadro_grafico_partidas(response.matriz_part,response.nro_part,'INSTITUCIONAL');/// detalle partidas
+
+                cuadro_grafico_ppto_ejec_meses(response.vector_meses,'INSTITUCIONAL');  //// mensual
+                cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'INSTITUCIONAL') /// meses Acumulado
+
               }
-              else{
+              else{ /// Regional
                 $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
-                cuadro_grafico_partidas(response.matriz,response.nro);/// detalle partidas
-                cuadro_grafico_ppto_ejec_meses(response.vector_meses);  //// mensual
-                cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado) /// meses Acumulado
+                cuadro_grafico_partidas(response.matriz,response.nro,'REGIONAL');/// detalle partidas
+                cuadro_grafico_ppto_ejec_meses(response.vector_meses,'REGIONAL');  //// mensual
+                cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
               }
           }
           else{
@@ -94,6 +102,111 @@ $(document).ready(function() {
   });
 
 })
+
+
+//// grafico Pastel Porcenjate distribucion por proyectos
+function cuadro_grafico_distribucion_proyectos(matriz,nro){
+  let detalle=[];
+  for (var i = 0; i < nro; i++) {
+      detalle[i]= { name: matriz[i][1],y: matriz[i][4],drilldown: matriz[i][1]};
+  }
+  // Build the chart
+  Highcharts.chart('detalle_proyectos1', {
+    chart: {
+      type: 'pie'
+    },
+    title: {
+      text: 'PORCENTAJE DE DISTRIBUCIÓN DE PROYECTOS, GESTIÓN '+gestion
+    },
+    subtitle: {
+      text: 'Consolidado Nivel Institucional'
+    },
+
+    accessibility: {
+      announceNewData: {
+        enabled: true
+      },
+      point: {
+        valueSuffix: '%'
+      }
+    },
+
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true,
+          format: '{point.name}: {point.y:.1f}%'
+        }
+      }
+    },
+
+    tooltip: {
+      headerFormat: '<span style="font-size:16px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b><br/>'
+    },
+
+    series: [
+      {
+        name: "DEPARTAMENTO",
+        colorByPoint: true,
+        data: detalle
+      }
+    ]
+    
+  });
+}
+
+//// grafico Pastel Porcenjate distribucion por Presupuesto
+function cuadro_grafico_distribucion_presupuesto_asignado(matriz,nro){
+  let detalle=[];
+  for (var i = 0; i < nro; i++) {
+      detalle[i]= { name: matriz[i][1],y: matriz[i][10],drilldown: matriz[i][1]};
+  }
+  // Build the chart
+  Highcharts.chart('detalle_proyectos2', {
+    chart: {
+      type: 'pie'
+    },
+    title: {
+      text: 'PORCENTAJE DE DISTRIBUCIÓN DE PRESUPUESTO, GESTIÓN '+gestion
+    },
+    subtitle: {
+      text: 'Consolidado Nivel Institucional'
+    },
+
+    accessibility: {
+      announceNewData: {
+        enabled: true
+      },
+      point: {
+        valueSuffix: '%'
+      }
+    },
+
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true,
+          format: '{point.name}: {point.y:.1f}%'
+        }
+      }
+    },
+
+    tooltip: {
+      headerFormat: '<span style="font-size:16px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> asignado<br/>'
+    },
+
+    series: [
+      {
+        name: "DEPARTAMENTO",
+        colorByPoint: true,
+        data: detalle
+      }
+    ]
+    
+  });
+}
 
 
 
@@ -113,7 +226,7 @@ $(document).ready(function() {
 
 
 /////====================================================
- /// ------ Ejecutar Presupuesto (FORMULARIO DE EJECUCION)
+ /// ------ Ejecutar Presupuesto (FORMULARIO DE EJECUCION) POR REGIONAL
   $(".ejec_ppto_pi").on("click", function (e) {
       proy_id = $(this).attr('name');
       document.getElementById("proy_id").value=proy_id;
@@ -356,7 +469,7 @@ $(document).ready(function() {
         if (response.respuesta == 'correcto') {
             document.getElementById("datos_proyecto").innerHTML = '<b>PROYECTO : </b>'+response.proyecto[0]['proy_nombre']; /// partidas
             document.getElementById("detalle_ejecucion").innerHTML = response.detalle_ejecucion;
-            cuadro_grafico_ppto_ejec_meses(response.ppto)
+            cuadro_grafico_ppto_ejec_meses(response.ppto,'REGIONAL')
         }
         else{
             alertify.error("ERROR !!!");
@@ -369,7 +482,7 @@ $(document).ready(function() {
 
 
 //// grafico REGRESION ppto ejecjutado por meses PROYECTO DE INVERSION
-function cuadro_grafico_ppto_ejec_meses(matriz){
+function cuadro_grafico_ppto_ejec_meses(matriz,titulo){
   let ejecucion=[];
   for (var i = 0; i <=11; i++) {
       ejecucion[i]= matriz[i];
@@ -384,7 +497,7 @@ function cuadro_grafico_ppto_ejec_meses(matriz){
     text: 'EJECUCIÓN PRESUPUESTARIA - GESTION : '+gestion  // Titulo (Opcional)
   },
   subtitle: {
-    text: 'Detalle de Ejecución Mensual a nivel Regional'   // Subtitulo (Opcional)
+    text: 'Detalle de Ejecución Mensual a nivel '+titulo   // Subtitulo (Opcional)
   },
   // Pongo los datos en el eje de las 'X'
   xAxis: {
@@ -429,7 +542,7 @@ function cuadro_grafico_ppto_ejec_meses(matriz){
 }
 
 //// grafico REGRESION ppto ejecjutado por meses ACUMULADO PROYECTO DE INVERSION
-function cuadro_grafico_ppto_ejec_meses_acumulado(matriz){
+function cuadro_grafico_ppto_ejec_meses_acumulado(matriz,titulo){
   let ejecucion=[];
   for (var i = 0; i <=11; i++) {
       ejecucion[i]= matriz[i];
@@ -444,7 +557,7 @@ function cuadro_grafico_ppto_ejec_meses_acumulado(matriz){
     text: 'EJECUCIÓN PRESUPUESTARIA - GESTION : '+gestion  // Titulo (Opcional)
   },
   subtitle: {
-    text: 'Detalle de Ejecución Mensual Acumulado a nivel Regional'   // Subtitulo (Opcional)
+    text: 'Detalle de Ejecución Mensual Acumulado a nivel '+titulo   // Subtitulo (Opcional)
   },
   // Pongo los datos en el eje de las 'X'
   xAxis: {
@@ -553,9 +666,9 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
         request.done(function (response, textStatus, jqXHR) {
           if (response.respuesta == 'correcto') {
               $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-              cuadro_grafico_partidas(response.matriz,response.nro);/// detalle partidas
-              cuadro_grafico_ppto_ejec_meses(response.vector_meses);  //// mensual
-              cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado) /// meses Acumulado
+              cuadro_grafico_partidas(response.matriz,response.nro,'REGIONAL');/// detalle partidas
+              cuadro_grafico_ppto_ejec_meses(response.vector_meses,'REGIONAL');  //// mensual
+              cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
 
           }
           else{
@@ -570,7 +683,7 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
   });
 
   //// grafico barras consolidado por partidas
-  function cuadro_grafico_partidas(matriz,nro){
+  function cuadro_grafico_partidas(matriz,nro,titulo){
     let texto=[];
     for (var i = 0; i < nro; i++) {
         texto[i]= 'PARTIDA '+matriz[i][2];
@@ -590,7 +703,7 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
           text: 'CUADRO DE EJECUCIÓN PRESUPUESTARIA AL MES DE '+descripcion_mes+' / '+gestion
       },
       subtitle: {
-          text: 'CONSOLIDADO POR PARTIDAS A NIVEL REGIONAL'
+          text: 'CONSOLIDADO POR PARTIDAS A NIVEL '+titulo
       },
       xAxis: {
           categories: texto,
@@ -629,3 +742,6 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
       }]
     });
   }
+
+
+

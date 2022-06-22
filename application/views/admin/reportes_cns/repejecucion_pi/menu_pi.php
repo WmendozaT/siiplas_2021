@@ -86,6 +86,7 @@
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
+            
             <div id="content">
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
@@ -112,6 +113,7 @@
                                 <div id="titulo"></div><hr>
                                 <div id="content1"></div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -175,5 +177,6 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+
     </body>
 </html>
