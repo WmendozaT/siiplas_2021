@@ -130,6 +130,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
             <h2>Ejecucion Presupuestaria</h2>
         </header>
         <div>
+            
             <div class="jarviswidget-editbox">
             </div>
             <div class="widget-body">

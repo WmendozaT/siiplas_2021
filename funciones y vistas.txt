@@ -785,11 +785,13 @@ proy_estado integer,
 ep_descripcion varchar,
 proy_ppto_total numeric,
 avance_fisico numeric,
-aper_proy_estado integer,
 avance_financiero numeric,
+aper_proy_estado integer,
 pfec_id numeric,
-pfec_descripcion varchar,
-pfec_estado integer) AS
+pfec_estado integer,
+aper_gestion integer,
+avance_financiero_gestion numeric,
+pfec_descripcion varchar) AS
 
 $$
           select 
@@ -810,11 +812,13 @@ $$
           ep.ep_descripcion,
           p.proy_ppto_total,
           p.avance_fisico,
-          apg.aper_proy_estado,
-          apg.avance_financiero,
-          pfe.pfec_id,
-          pfe.pfec_descripcion,
-          pfe.pfec_estado
+p.avance_financiero,
+apg.aper_proy_estado,
+pfe.pfec_id,
+pfe.pfec_estado,
+apg.aper_gestion,
+apg.avance_financiero as AVANCE_FINANCIERO_GESTION,
+pfe.pfec_descripcion
 
                 from _proyectofaseetapacomponente pfe
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
@@ -828,6 +832,9 @@ $$
 $$ LANGUAGE sql;
 
 FUNCION POA DISTRITAL (PROYECTO DE INVERSION)
+
+
+
 
 CREATE OR REPLACE FUNCTION lista_poa_pinversion_distrital(id numeric, gestion integer) RETURNS TABLE(
 proy_id numeric,
@@ -847,11 +854,13 @@ proy_estado integer,
 ep_descripcion varchar,
 proy_ppto_total numeric,
 avance_fisico numeric,
-aper_proy_estado integer,
 avance_financiero numeric,
+aper_proy_estado integer,
 pfec_id numeric,
-pfec_descripcion varchar,
-pfec_estado integer) AS
+pfec_estado integer,
+aper_gestion integer,
+avance_financiero_gestion numeric,
+pfec_descripcion varchar) AS
 
 $$
           select 
@@ -871,12 +880,14 @@ $$
           p.proy_estado,
           ep.ep_descripcion,
           p.proy_ppto_total,
-          p.avance_fisico,
-          apg.aper_proy_estado,
-          apg.avance_financiero,
-          pfe.pfec_id,
-          pfe.pfec_descripcion,
-          pfe.pfec_estado
+                    p.avance_fisico,
+p.avance_financiero,
+apg.aper_proy_estado,
+pfe.pfec_id,
+pfe.pfec_estado,
+apg.aper_gestion,
+apg.avance_financiero as AVANCE_FINANCIERO_GESTION,
+pfe.pfec_descripcion
 
                 from _proyectofaseetapacomponente pfe
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
@@ -911,11 +922,12 @@ proy_estado integer,
 ep_descripcion varchar,
 proy_ppto_total numeric,
 avance_fisico numeric,
+avance_financiero numeric,
 aper_proy_estado integer,
 pfec_id numeric,
 pfec_estado integer,
 aper_gestion integer,
-avance_financiero numeric,
+avance_financiero_gestion numeric,
 pfec_descripcion varchar) AS
 
 $$
@@ -938,11 +950,12 @@ p.proy_estado,
 ep.ep_descripcion,
 p.proy_ppto_total,
 p.avance_fisico,
+p.avance_financiero,
 apg.aper_proy_estado,
 pfe.pfec_id,
 pfe.pfec_estado,
 apg.aper_gestion,
-apg.avance_financiero,
+apg.avance_financiero as AVANCE_FINANCIERO_GESTION,
 pfe.pfec_descripcion
 
                         from _proyectofaseetapacomponente pfe

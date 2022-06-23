@@ -248,6 +248,18 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+    /*----- MONTO ASIGNADO POR PROYECTO 2022 -----*/
+    public function get_ppto_asignado_proyecto_gestion($proy_id){
+        $sql = '
+                select aper_id,proy_id,SUM(ppto_partida_asignado_gestion) ppto_asignado
+                from lista_partidas_ppto_asignadas_gestion('.$this->gestion.')
+                where proy_id='.$proy_id.'
+                group by aper_id,proy_id';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
     /*----- EJECUCION DE PRESUPUESTO POR PARTIDA  -----*/
     public function get_monto_ejecutado_ppto_sigep($sp_id,$mes_id){

@@ -218,12 +218,6 @@
                     <fieldset>
                         <legend>DATOS GENERALES DEL PROYECTO</legend>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Código SISIN</label>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" name="cod_sisin" id="cod_sisin"  disabled=true>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-md-2 control-label">Proyecto de Inversión</label>
                             <div class="col-md-10">
                                 <textarea class="form-control" name="proy_nombre" id="proy_nombre" rows="3" disabled=true></textarea>
@@ -241,16 +235,16 @@
                                 <textarea class="form-control" name="fase" id="fase" rows="2" disabled=true></textarea>
                             </div>
                         </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>DETALLE DEL PROYECTO</legend>
                         <div class="form-group">
                             <label class="col-md-2 control-label">Estado del Proyecto</label>
                             <div class="col-md-10">
                                 <div id="estado"></div>
                             </div>
                         </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>OBSERVACIONES</legend>
                         <div class="form-group">
                             <label class="col-md-2 control-label">Avance Físico (%)</label>
                             <div class="col-md-10">
@@ -260,17 +254,23 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">Avance Financiero (%)</label>
                             <div class="col-md-10">
-                                <input class="form-control" name="ejec_fin" id="ejec_fin" type="text" disabled=true>
+                                <input class="form-control" name="ejec_fin" id="ejec_fin" type="text" onkeypress="if (this.value.length < 4) { return soloNumeros(event);}else{return false; }" onpaste="return false">>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Descripción del Problema</label>
+                            <label class="col-md-2 control-label">Observación</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" name="observacion" id="observacion" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Problema Identificado</label>
                             <div class="col-md-10">
                                 <textarea class="form-control" name="problema" id="problema" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Descripción de la Solución</label>
+                            <label class="col-md-2 control-label">Propuesta de Solución</label>
                             <div class="col-md-10">
                                 <textarea class="form-control" name="solucion" id="solucion" rows="3"></textarea>
                             </div>

@@ -214,17 +214,6 @@ function cuadro_grafico_distribucion_presupuesto_asignado(matriz,nro){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 /////====================================================
  /// ------ Ejecutar Presupuesto (FORMULARIO DE EJECUCION) POR REGIONAL
   $(".ejec_ppto_pi").on("click", function (e) {
@@ -249,13 +238,14 @@ function cuadro_grafico_distribucion_presupuesto_asignado(matriz,nro){
       request.done(function (response, textStatus, jqXHR) {
       if (response.respuesta == 'correcto') {
 
-        document.getElementById("cod_sisin").value = response.proyecto[0]['proy_sisin']; /// codigo sisin
-        document.getElementById("proy_nombre").value = response.proyecto[0]['proy_nombre']; /// nombre proyecto
+        document.getElementById("proy_nombre").value = response.proyecto[0]['proy_sisin']+' - '+response.proyecto[0]['proy_nombre']; /// nombre proyecto
         document.getElementById("ppto_total").value = response.proyecto[0]['proy_ppto_total']; /// ppto total
         document.getElementById("fase").value = response.fase[0]['fase']+' - '+response.fase[0]['descripcion']; /// fase
         document.getElementById("estado").innerHTML = response.estado; /// estado
-        document.getElementById("ejec_fis").value = response.proyecto[0]['avance_fisico']; /// Ejecucion Fisica
-        document.getElementById("ejec_fin").value = response.avance_financiero; /// Ejecucion Financiero
+        document.getElementById("ejec_fis").value = response.proyecto[0]['avance_fisico']; /// Ejecucion Fisica Total
+        document.getElementById("ejec_fin").value = response.proyecto[0]['avance_financiero']; /// Ejecucion Financiero Total
+        //document.getElementById("ejec_fin_gestion").value = response.avance_financiero; /// Ejecucion Financiero Gestion
+        document.getElementById("observacion").value = response.proyecto[0]['proy_observacion']; /// Observacion
         document.getElementById("problema").value = response.proyecto[0]['desc_prob']; /// problema
         document.getElementById("solucion").value = response.proyecto[0]['desc_sol']; /// solucion
         
@@ -670,6 +660,8 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
               cuadro_grafico_ppto_ejec_meses(response.vector_meses,'REGIONAL');  //// mensual
               cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
 
+              document.getElementById('btn_partidas').innerHTML = response.btn_partidas;
+
           }
           else{
             alertify.error("ERROR AL LISTAR");
@@ -744,4 +736,34 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
   }
 
 
+//////// IMPRIMIR GRAFICOS
+  //// Partidas
+/*  function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
 
+    var ventana = window.open('Evaluacion FORMULARIO N° 2 ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EVALUACION OPERACIONES - FORM. N° 2</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }*/
+
+
+/*$("#btn_partida").on("click", function (e) {
+  alert('hola mundo')
+});*/
+
+$("#btn_partida").change(function () {
+  alert('hola mundo')
+});

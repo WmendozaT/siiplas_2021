@@ -57,7 +57,7 @@ class Cejecucion_pi extends CI_Controller {
     $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
     $fase = $this->model_faseetapa->get_id_fase($proy_id); /// Fase
     $estado_proyecto=$this->model_proyecto->proy_estado();
-    $ejec_fin=$this->ejecucion_finpi->avance_financiero_pi($proyecto[0]['aper_id'],$proyecto[0]['proy_ppto_total']);
+   // $ejec_fin=$this->ejecucion_finpi->avance_financiero_pi($proyecto[0]['aper_id'],$proyecto[0]['proy_ppto_total']);
 
     if(count($proyecto)!=0){
       $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
@@ -153,7 +153,7 @@ class Cejecucion_pi extends CI_Controller {
           'fase' => $fase,
           'estado' => $estado_proy,
           'partidas' => $lista_partidas,
-          'avance_financiero'=>$ejec_fin[2],
+        //  'avance_financiero'=>$ejec_fin[2],
           //'button' => $button,
         );
       }
@@ -180,6 +180,8 @@ class Cejecucion_pi extends CI_Controller {
 
       $estado = $this->security->xss_clean($post['est_proy']); /// estado
       $avance_fisico = $this->security->xss_clean($post['ejec_fis']); /// Avance Fisico
+      $avance_financiero = $this->security->xss_clean($post['ejec_fin']); /// Avance Financiero
+      $observacion = $this->security->xss_clean($post['observacion']); /// Observacion
       $problema = $this->security->xss_clean($post['problema']); /// Problema
       $solucion = $this->security->xss_clean($post['solucion']); /// solucion
       $ppto_asignado=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
@@ -188,9 +190,13 @@ class Cejecucion_pi extends CI_Controller {
       /// ------ Update proyecto
         $update_proyect = array(
           'avance_fisico' => $avance_fisico,
+          'fecha_avance_fis' => date("d/m/Y H:i:s"),
+          'avance_financiero' => $avance_financiero,
+          'fecha_avance_fin' => date("d/m/Y H:i:s"),
           'proy_estado' => $estado,
-          'proy_desc_problema' => $strtoupper($problema),
-          'proy_desc_solucion' => $strtoupper($solucion)
+          'proy_observacion' => strtoupper($observacion),
+          'proy_desc_problema' => strtoupper($problema),
+          'proy_desc_solucion' => strtoupper($solucion)
         );
         $this->db->where('proy_id', $proy_id);
         $this->db->update('_proyectos', $update_proyect);
@@ -486,7 +492,7 @@ public function verif_valor_ejecutado_x_partida(){
 ///===============================================
 
 
-///// =============== REPORTES
+///// =============== REPORTES EJECUCION PI REGIONAL
 /// Menu Reportes 
 public function menu_rep_ejecucion_ppto(){
   $data['menu']=$this->ejecucion_finpi->menu_pi();
@@ -522,24 +528,29 @@ public function get_tp_reporte(){
     $tabla='';
 
     $regional=$this->model_proyecto->get_departamento($dep_id);
+    $cabecera_grafico=$this->ejecucion_finpi->cabecera_reporte_grafico();
+    $boton_partida='
+<div align="right">
+                      <button id="btn_partida" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>';
 
     if($rep_id==1){
       $titulo='MIS PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
       $lista_detalle=$this->ejecucion_finpi->proyectos_inversion($dep_id,1); /// vista Lista de Proyectos
 
       //// s2
-      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($this->dep_id));
-      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($this->dep_id); /// Matriz consolidado de partidas
-      $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
-      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div>';
+      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id));
+      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($dep_id); /// Matriz consolidado de partidas
+      $consolidado=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,0); /// Tabla Clasificacion de partidas asignados por regional
+      $grafico_consolidado_partidas='<div id="graf_partida"><div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
 
       //// s3
       $vector_meses=$this->ejecucion_finpi->vector_consolidado_ppto_mensual_regional($dep_id); /// ejecutado mensual
       $vector_meses_acumulado=$this->ejecucion_finpi->vector_consolidado_ppto_acumulado_mensual_regional($dep_id); /// ejecutado mensual Acumulado
       $tabla1=$this->ejecucion_finpi->detalle_temporalidad_mensual_regional($vector_meses,$dep_id);
-      $grafico_mes='<div id="ejec_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
-      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
-      $tabla2='Hola mundo';
+      $grafico_mes='<div id="ejec_mensual" style="width: 700px; height: 550px; margin: 2 auto"></div>';
+      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 700px; height: 550px; margin: 2 auto"></div>';
+
     }
     elseif ($rep_id==2) {
       $titulo='EJECUCIÓN FÍSICA Y FINANCIERA - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
@@ -548,16 +559,15 @@ public function get_tp_reporte(){
       //// s2
       $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id));
       $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($dep_id); /// Matriz consolidado de partidas
-      $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
-      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div>';
+      $consolidado=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,0); /// Tabla Clasificacion de partidas asignados por regional
+      $grafico_consolidado_partidas='<div id="graf_partida"><div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
 
       //// s3
       $vector_meses=$this->ejecucion_finpi->vector_consolidado_ppto_mensual_regional($dep_id); /// ejecutado mensual
       $vector_meses_acumulado=$this->ejecucion_finpi->vector_consolidado_ppto_acumulado_mensual_regional($dep_id); /// ejecutado mensual Acumulado
       $tabla1=$this->ejecucion_finpi->detalle_temporalidad_mensual_regional($vector_meses,$dep_id);
-      $grafico_mes='<div id="ejec_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
-      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
-      $tabla2='Hola mundo';
+      $grafico_mes='<div id="ejec_mensual" style="width: 700px; height: 550px; margin: 2 auto"></div>';
+      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 700px; height: 550px; margin: 2 auto"></div>';
     }
     elseif ($rep_id==3) {
       $titulo='DETALLE EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
@@ -566,17 +576,16 @@ public function get_tp_reporte(){
       //// s2
       $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id));
       $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($dep_id); /// Matriz consolidado de partidas
-      $consolidado=$this->ejecucion_finpi->tabla_consolidado_partidas_regional($matriz_partidas,$dep_id,0); /// Tabla Clasificacion de partidas asignados por regional
-      $grafico_consolidado_partidas='<div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div>';
+      $consolidado=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,0); /// Tabla Clasificacion de partidas asignados por regional
+      $grafico_consolidado_partidas='<div id="graf_partida"><div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>';
 
 
       //// s3
       $vector_meses=$this->ejecucion_finpi->vector_consolidado_ppto_mensual_regional($dep_id); /// ejecutado mensual
       $vector_meses_acumulado=$this->ejecucion_finpi->vector_consolidado_ppto_acumulado_mensual_regional($dep_id); /// ejecutado mensual Acumulado
       $tabla1=$this->ejecucion_finpi->detalle_temporalidad_mensual_regional($vector_meses,$dep_id);
-      $grafico_mes='<div id="ejec_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
-      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 900px; height: 680px; margin: 2 auto"></div>';
-      $tabla2='Hola mundo';
+      $grafico_mes='<div id="ejec_mensual" style="width: 700px; height: 550px; margin: 2 auto"></div>';
+      $grafico_mes_acumulado='<div id="ejec_acumulado_mensual" style="width: 700px; height: 550px; margin: 2 auto"></div>';
     }
 
      $tabla='
@@ -593,6 +602,7 @@ public function get_tp_reporte(){
                     <div class="widget-body">
                         <p>
                         <div style="font-size: 25px;font-family: Arial¨;"><b>'.$titulo.'</b></div>
+                        <div id="cabecera" style="display: none">'.$cabecera_grafico.'</div>
                         </p>
                         <hr class="simple">
                         <ul id="myTab1" class="nav nav-tabs bordered">
@@ -643,8 +653,15 @@ public function get_tp_reporte(){
                           <div class="tab-pane fade" id="s2">
                             <div class="row">
                               <article class="col-sm-12">
-                                '.$grafico_consolidado_partidas.'<hr>'.$consolidado.'
+                                '.$grafico_consolidado_partidas.'
+                                  <div id="btn_partidas"></div>
+                                <hr>
+                                '.$consolidado.'
+                                <div id="tabla_impresion" style="display: none">
+                                  '.$consolidado.'
+                                </div>
                               </article>
+
                             </div>
                           </div>
 
@@ -679,6 +696,8 @@ public function get_tp_reporte(){
       'matriz'=>$matriz_partidas,
       'vector_meses'=>$vector_meses,
       'vector_meses_acumulado'=>$vector_meses_acumulado,
+
+      'btn_partidas'=>$boton_partida,
     );
 
     echo json_encode($result);

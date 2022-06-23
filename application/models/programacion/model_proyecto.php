@@ -751,6 +751,7 @@ class Model_proyecto extends CI_Model{
                                         p."proy_desc_solucion" as desc_sol,
                                         p."proy_obj_general" as obj_gral,
                                         p."proy_obj_especifico" as obj_esp,
+                                        p."proy_observacion",
 
                                         p."proy_gestion_fin" as fin,
                                         p."proy_gestion_inicio" as inicio,
@@ -760,6 +761,9 @@ class Model_proyecto extends CI_Model{
                                         p."proy_pcion_reg",
                                         p."proy_ppto_total",
                                         p."avance_fisico",
+                                        p."fecha_avance_fis",
+                                        p."avance_financiero",
+                                        p."fecha_avance_fin",
                                       
                                         p."proy_pr",
                                         p."dep_id",
@@ -1298,13 +1302,13 @@ class Model_proyecto extends CI_Model{
     }
     /*================================================================================================*/
 
-    /*================================= APERTURA DE PROGRAMAS  ======================================*/
-/*    public function mis_programas($proy_id){
+    /*========== APERTURA DE PROGRAMAS (VIGENTE) ============*/
+    public function mis_programas($proy_id){
         $this->db->from('aperturaproyectos');
         $this->db->where('proy_id', $proy_id);
         $query = $this->db->get();
         return $query->result_array();
-    }*/
+    }
     /*================================================================================================*/
     /*============== MI UBICACION - REGION-PROVINCIA-MUNICIPIO===================*/
 /*    public function ubicacion_proy($proy_id){
@@ -1477,8 +1481,8 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }*/
 
-    /*------ LISTA DE RESPONSABLES - UNIDAD EJECUTORA ------------*/
-/*    public function list_responsables_regionales($rol_id,$dep_id){
+    /*------ LISTA DE RESPONSABLES - UNIDAD EJECUTORA (VIGENTE)------------*/
+    public function list_responsables_regionales($rol_id,$dep_id){
         $sql = '
             select f.*,fr.*,r.*,dist.*
             from funcionario f
@@ -1488,7 +1492,7 @@ class Model_proyecto extends CI_Model{
             where (r.r_id='.$rol_id.' or r.r_id=\'1\') and f.fun_estado!=\'3\' and dist.dep_id='.$dep_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
     /*------------- GET PROGRAMA PADRE ----------------*/
     public function get_programa_padre($aper_programa){
