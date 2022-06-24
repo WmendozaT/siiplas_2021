@@ -1471,15 +1471,15 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }*/
 
-    /*---------- VERIF COMPONENTE - SERVICIO -----------*/
-/*    public function verif_componente_servicio($pfec_id,$serv_id){
+    /*---------- VERIF COMPONENTE - SERVICIO VIGENTE-----------*/
+    public function verif_componente_servicio($pfec_id,$serv_id){
         $sql = '
             select *
             from _componentes
             where estado!=\'3\' and pfec_id='.$pfec_id.' and serv_id='.$serv_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
     /*------ LISTA DE RESPONSABLES - UNIDAD EJECUTORA (VIGENTE)------------*/
     public function list_responsables_regionales($rol_id,$dep_id){

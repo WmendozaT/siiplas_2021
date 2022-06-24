@@ -760,22 +760,41 @@ class ejecucion_finpi extends CI_Controller{
   public function tabla_consolidado_de_partidas($matriz,$nro,$tp_reporte){
     //// tp_reporte : 0 (Vista normal)
     //// tp_reporte : 1 (Excel)
-    $class_table='class="table table-bordered" style="width:100%;"';
-    if($tp_reporte==1){
+    //// tp_reporte : 2 (Grafico)
+    if($tp_reporte==0){
+      $class_table='class="table table-bordered" style="width:100%;"';
+    }
+    elseif($tp_reporte==1){
       $class_table='border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla"';
+    }
+    else{
+      $class_table='class="change_order_items" border=1 style="width:100%;"';
     }
 
     $tabla='';
    // $partidas=$this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id);
       $tabla.='
       <center>
+      <style>
+      table{font-size: 10px;
+          width: 100%;
+          max-width:1550px;;
+          overflow-x: scroll;
+      }
+      th{
+          padding: 1.4px;
+          text-align: center;
+          font-size: 10px;
+          
+      }
+      </style>
       <table '.$class_table.'>
         <thead>
           <tr>
-            <th style="text-align:center">#</th>
+            <th style="text-align:center;height:20px;">#</th>
             <th style="text-align:center">PARTIDA</th>
             <th style="text-align:center">DETALLE</th>
-            <th style="text-align:center">PPTO. ASIGNADO '.$this->gestion.'</th>
+            <th style="text-align:center">PPTO. ASIGNADO</th>
 
             <th style="text-align:center">ENE.</th>
             <th style="text-align:center">FEB.</th>
@@ -794,12 +813,14 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
         </thead>
         <tbody>';
+        $nro_tr=0;
         for ($i=0; $i<$nro; $i++) { 
+          $nro_tr++;
             $tabla.='
             <tr>
-            <td style="text-align:center">'.$i.'</td>
+            <td style="text-align:center;height:20px;">'.$nro_tr.'</td>
             <td style="text-align:center">'.$matriz[$i][2].'</td>';
-            if($tp_reporte==0){
+            if($tp_reporte==0 || $tp_reporte==2){
               $tabla.='
               <td style="text-align:left">'.$matriz[$i][3].'</td>
               <td style="text-align:right">'.number_format($matriz[$i][4], 2, ',', '.').'</td>';
@@ -825,6 +846,7 @@ class ejecucion_finpi extends CI_Controller{
     return $tabla;
   }
 
+ 
 
   /// Matriz Consolidado de partidas a nivel INSTITUCIONAL
   public function matriz_consolidado_partidas_prog_ejec_institucional(){
@@ -1275,11 +1297,11 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FÍSICO PROYECTO</b></td>
-            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_fisico'],2).' %</td>
+            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_fisico'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date('d',strtotime($proyecto[0]['fecha_avance_fis'])).' de '.$this->mes[ltrim(date('m',strtotime($proyecto[0]['fecha_avance_fis'])), "0")]  .' de '.date('Y',strtotime($proyecto[0]['fecha_avance_fis'])).'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FINANCIERO TOTAL</b></td>
-            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_financiero'],2).' %</td>
+            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_financiero'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date('d',strtotime($proyecto[0]['fecha_avance_fin'])).' de '.$this->mes[ltrim(date('m',strtotime($proyecto[0]['fecha_avance_fin'])), "0")]  .' de '.date('Y',strtotime($proyecto[0]['fecha_avance_fin'])).'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FINANCIERO GESTIÓN '.$this->gestion.'</b></td>
@@ -1450,7 +1472,7 @@ class ejecucion_finpi extends CI_Controller{
 
 
    /*---- CABECERA REPORTE OPERACIONES POR REGIONALES (GRAFICO)----*/
-  function cabecera_reporte_grafico(){
+  function cabecera_reporte_grafico($titulo){
     $tabla='';
 
     $tabla.='
@@ -1482,7 +1504,7 @@ class ejecucion_finpi extends CI_Controller{
                     <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
                   </tr>
                   <tr style="font-size: 20px;font-family: Arial;">
-                    <td style="height: 5%; text-align:center">EVALUACIÓN DE OPERACIONES</td>
+                    <td style="height: 5%; text-align:center">'.$titulo.'</td>
                   </tr>
                 </table>
               </td>
@@ -1575,18 +1597,18 @@ class ejecucion_finpi extends CI_Controller{
 
    /*------ NOMBRE MES -------*/
   function mes_nombre(){
-      $mes[1] = 'ENE.';
-      $mes[2] = 'FEB.';
-      $mes[3] = 'MAR.';
-      $mes[4] = 'ABR.';
-      $mes[5] = 'MAY.';
-      $mes[6] = 'JUN.';
-      $mes[7] = 'JUL.';
-      $mes[8] = 'AGOS.';
-      $mes[9] = 'SEPT.';
-      $mes[10] = 'OCT.';
-      $mes[11] = 'NOV.';
-      $mes[12] = 'DIC.';
+      $mes[1] = 'Enero';
+      $mes[2] = 'Febrero';
+      $mes[3] = 'Marzo';
+      $mes[4] = 'Abril';
+      $mes[5] = 'Mayo';
+      $mes[6] = 'Junio';
+      $mes[7] = 'Julio';
+      $mes[8] = 'Agosto';
+      $mes[9] = 'Septiembre';
+      $mes[10] = 'Octubre';
+      $mes[11] = 'Noviembre';
+      $mes[12] = 'Diciembre';
       return $mes;
   }
 

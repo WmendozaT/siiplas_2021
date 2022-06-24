@@ -71,12 +71,10 @@
                     <section id="widget-grid" class="">
                         <div class="row">
                             <?php echo $opciones;?>
+                          <!--   <?php echo $boton;?> -->
                         </div>
                         <div id="lista_consolidado"><?php echo $titulo_modulo;?></div>
                     </section>
-                    <!-- <div align="right">
-                                    <button id="btnImprimir_partidassss" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                  </div> -->
 
                 </div>
             <!-- END MAIN CONTENT -->

@@ -116,10 +116,10 @@ function cuadro_grafico_distribucion_proyectos(matriz,nro){
       type: 'pie'
     },
     title: {
-      text: 'PORCENTAJE DE DISTRIBUCIÓN DE PROYECTOS, GESTIÓN '+gestion
+      text: ''
     },
     subtitle: {
-      text: 'Consolidado Nivel Institucional'
+      text: 'PORCENTAJE DE DISTRIBUCIÓN DE PROYECTOS, GESTIÓN '+gestion
     },
 
     accessibility: {
@@ -168,10 +168,10 @@ function cuadro_grafico_distribucion_presupuesto_asignado(matriz,nro){
       type: 'pie'
     },
     title: {
-      text: 'PORCENTAJE DE DISTRIBUCIÓN DE PRESUPUESTO, GESTIÓN '+gestion
+      text: ''
     },
     subtitle: {
-      text: 'Consolidado Nivel Institucional'
+      text: 'PORCENTAJE DE DISTRIBUCIÓN DE PRESUPUESTO, GESTIÓN '+gestion
     },
 
     accessibility: {
@@ -484,10 +484,10 @@ function cuadro_grafico_ppto_ejec_meses(matriz,titulo){
     defaultSeriesType: 'line' // Pongo que tipo de gráfica es
   },
   title: {
-    text: 'EJECUCIÓN PRESUPUESTARIA - GESTION : '+gestion  // Titulo (Opcional)
+    text: 'Detalle de Ejecución Mensual a nivel '+titulo  // Titulo (Opcional)
   },
   subtitle: {
-    text: 'Detalle de Ejecución Mensual a nivel '+titulo   // Subtitulo (Opcional)
+    text: ''   // Subtitulo (Opcional)
   },
   // Pongo los datos en el eje de las 'X'
   xAxis: {
@@ -544,10 +544,10 @@ function cuadro_grafico_ppto_ejec_meses_acumulado(matriz,titulo){
     defaultSeriesType: 'line' // Pongo que tipo de gráfica es
   },
   title: {
-    text: 'EJECUCIÓN PRESUPUESTARIA - GESTION : '+gestion  // Titulo (Opcional)
+    text: 'Detalle de Ejecución Mensual Acumulado a nivel '+titulo  // Titulo (Opcional)
   },
   subtitle: {
-    text: 'Detalle de Ejecución Mensual Acumulado a nivel '+titulo   // Subtitulo (Opcional)
+    text: ''   // Subtitulo (Opcional)
   },
   // Pongo los datos en el eje de las 'X'
   xAxis: {
@@ -659,9 +659,6 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
               cuadro_grafico_partidas(response.matriz,response.nro,'REGIONAL');/// detalle partidas
               cuadro_grafico_ppto_ejec_meses(response.vector_meses,'REGIONAL');  //// mensual
               cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
-
-              document.getElementById('btn_partidas').innerHTML = response.btn_partidas;
-
           }
           else{
             alertify.error("ERROR AL LISTAR");
@@ -738,10 +735,21 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
 
 //////// IMPRIMIR GRAFICOS
   //// Partidas
-/*  function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
+  function imprimir_partida() {
+    var cabecera = document.querySelector("#cabecera");
+    var grafico = document.querySelector("#graf_partida");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    document.getElementById("tabla_impresion_partida").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_partida");
+    imprimirPartida(grafico,cabecera,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("tabla_impresion_partida").style.display = 'none';
+  }
 
-    var ventana = window.open('Evaluacion FORMULARIO N° 2 ', 'PRINT', 'height=800,width=1000');
-    ventana.document.write('<html><head><title>EVALUACION OPERACIONES - FORM. N° 2</title>');
+  function imprimirPartida(grafico,cabecera,tabla) {
+    var ventana = window.open('Ejecucion Presupuestaria ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN</title>');
     ventana.document.write('</head><body>');
     ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
     ventana.document.write(cabecera.innerHTML);
@@ -757,13 +765,87 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
       ventana.close();
     };
     return true;
-  }*/
+  }
+
+  //// Ejecucion Mensual
+  function imprimir_ejecucion_mensual() {
+    var cabecera = document.querySelector("#cabecera");
+    var grafico1 = document.querySelector("#graf_ppto_mensual");
+    var grafico2 = document.querySelector("#graf_ppto_mensual_acumulado");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    document.getElementById("tabla_impresion_ejecucion_mensual").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_ejecucion_mensual");
+    imprimirEjecucionMensual(grafico1,grafico2,cabecera,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("tabla_impresion_ejecucion_mensual").style.display = 'none';
+  }
+
+  function imprimirEjecucionMensual(grafico1,grafico2,cabecera,tabla) {
+    var ventana = window.open('Ejecucion Presupuestaria ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico1.innerHTML);
+  //  ventana.document.write('<hr>');
+    ventana.document.write(grafico2.innerHTML);
+   // ventana.document.write('<hr>');
+   // ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
 
 
-/*$("#btn_partida").on("click", function (e) {
-  alert('hola mundo')
-});*/
+  //// Distribucion Nro de Proyectos y presupuesto
+  function imprimir_distribucion_proyectos() {
+    var cabecera = document.querySelector("#cabecera");
+    var grafico = document.querySelector("#graf_detalle_nro_proyectos");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    document.getElementById("tabla_impresion_detalle1").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_detalle1");
+    imprimirPorcentajeDistribucion(grafico,cabecera,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("tabla_impresion_detalle1").style.display = 'none';
+  }
 
-$("#btn_partida").change(function () {
-  alert('hola mundo')
-});
+    //// Distribucion Nro de Proyectos y presupuesto
+  function imprimir_distribucion_ppto() {
+    var cabecera = document.querySelector("#cabecera");
+    var grafico = document.querySelector("#graf_detalle_nro_ppto");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    document.getElementById("tabla_impresion_detalle2").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_detalle2");
+    imprimirPorcentajeDistribucion(grafico,cabecera,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("tabla_impresion_detalle2").style.display = 'none';
+  }
+
+  function imprimirPorcentajeDistribucion(grafico,cabecera,tabla) {
+    var ventana = window.open('Ejecucion Presupuestaria ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
