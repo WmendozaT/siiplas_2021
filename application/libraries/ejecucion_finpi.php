@@ -814,8 +814,14 @@ class ejecucion_finpi extends CI_Controller{
         </thead>
         <tbody>';
         $nro_tr=0;
+        $ppto_total_asignado=0;
+        for ($i=5; $i <=18 ; $i++) { 
+          $mes[$i]=0;
+        }
+
         for ($i=0; $i<$nro; $i++) { 
           $nro_tr++;
+          $ppto_total_asignado=$ppto_total_asignado+$matriz[$i][4];
             $tabla.='
             <tr>
             <td style="text-align:center;height:20px;">'.$nro_tr.'</td>
@@ -824,7 +830,8 @@ class ejecucion_finpi extends CI_Controller{
               $tabla.='
               <td style="text-align:left">'.$matriz[$i][3].'</td>
               <td style="text-align:right">'.number_format($matriz[$i][4], 2, ',', '.').'</td>';
-              for ($j=5; $j <=18 ; $j++) { 
+              for ($j=5; $j <=18 ; $j++) {
+                $mes[$j]=$mes[$j]+$matriz[$i][$j];
                 $tabla.='<td style="text-align:right">'.number_format($matriz[$i][$j], 2, ',', '.').'</td>';
               }
             }
@@ -832,7 +839,8 @@ class ejecucion_finpi extends CI_Controller{
               $tabla.='
               <td style="text-align:left">'.mb_convert_encoding($matriz[$i][3], 'cp1252', 'UTF-8').'</td>
               <td style="text-align:right">'.$matriz[$i][4].'</td>';
-              for ($j=5; $j <=18 ; $j++) { 
+              for ($j=5; $j <=18 ; $j++) {
+                $mes[$j]=$mes[$j]+$matriz[$i][$j];
                 $tabla.='<td style="text-align:right">'.$matriz[$i][$j].' %</td>';
               }
             }
@@ -840,6 +848,22 @@ class ejecucion_finpi extends CI_Controller{
           $tabla.='</tr>';
         }
       $tabla.='
+          <tr>
+            <td colspan=3>TOTAL</td>
+            <td align=right>'.$ppto_total_asignado.'</td>';
+            if($tp_reporte==0 || $tp_reporte==2){
+              for ($i=5; $i <=17 ; $i++) { 
+                $tabla.='<td align=right>'.number_format($mes[$i], 2, ',', '.').'</td>';
+              }
+            }
+            else{
+              for ($i=5; $i <=17 ; $i++) { 
+                $tabla.='<td align=right>'.$mes[$i].'</td>';
+              }
+            }
+            $tabla.='
+            <td></td>
+          </tr>
         </tbody>
       </table>
     </center>';
@@ -1308,7 +1332,11 @@ class ejecucion_finpi extends CI_Controller{
             <td style="width:75%; font-size: 9px;">'.$avance_financiero_gestion.' %</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
-            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>OBSERVACIÓN</b></td>
+            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>FISCAL DE OBRA</b></td>
+            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['fiscal_obra']).'</td>
+          </tr>
+          <tr style="font-family: Arial; font-size: 10px;">
+            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>OBSERVACIÓN / COMPROMISO</b></td>
             <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['proy_observacion']).'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">

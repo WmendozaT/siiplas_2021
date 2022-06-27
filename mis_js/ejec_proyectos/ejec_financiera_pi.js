@@ -244,6 +244,7 @@ function cuadro_grafico_distribucion_presupuesto_asignado(matriz,nro){
         document.getElementById("estado").innerHTML = response.estado; /// estado
         document.getElementById("ejec_fis").value = response.proyecto[0]['avance_fisico']; /// Ejecucion Fisica Total
         document.getElementById("ejec_fin").value = response.proyecto[0]['avance_financiero']; /// Ejecucion Financiero Total
+        document.getElementById("f_obra").value = response.proyecto[0]['fiscal_obra']; /// Fiscal de Obras
         //document.getElementById("ejec_fin_gestion").value = response.avance_financiero; /// Ejecucion Financiero Gestion
         document.getElementById("observacion").value = response.proyecto[0]['proy_observacion']; /// Observacion
         document.getElementById("problema").value = response.proyecto[0]['desc_prob']; /// problema

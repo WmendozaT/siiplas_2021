@@ -226,7 +226,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">Costo Total Proyecto</label>
                             <div class="col-md-10">
-                                <input class="form-control" name="ppto_total" id="ppto_total" type="text" disabled=true>
+                                <input class="form-control" name="ppto_total" id="ppto_total" type="text" onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </div>
                         </div>
                         <div class="form-group">
@@ -255,6 +255,12 @@
                             <label class="col-md-2 control-label">Avance Financiero (%)</label>
                             <div class="col-md-10">
                                 <input class="form-control" name="ejec_fin" id="ejec_fin" type="text" onkeypress="if (this.value.length < 4) { return soloNumeros(event);}else{return false; }" onpaste="return false">>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Fiscal de Obras</label>
+                            <div class="col-md-10">
+                                <input class="form-control" name="f_obras" id="f_obras" type="text">
                             </div>
                         </div>
                         <div class="form-group">

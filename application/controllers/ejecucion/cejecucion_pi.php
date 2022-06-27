@@ -177,8 +177,10 @@ class Cejecucion_pi extends CI_Controller {
       $proy_id = $this->security->xss_clean($post['proy_id']); /// proy id
       $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
       $fase = $this->model_faseetapa->get_id_fase($proy_id); /// Fase
-
       $estado = $this->security->xss_clean($post['est_proy']); /// estado
+
+      $ppto_total = $this->security->xss_clean($post['ppto_total']); /// ppto total
+      $fiscal_obras = $this->security->xss_clean($post['f_obras']); /// fiscal de obras
       $avance_fisico = $this->security->xss_clean($post['ejec_fis']); /// Avance Fisico
       $avance_financiero = $this->security->xss_clean($post['ejec_fin']); /// Avance Financiero
       $observacion = $this->security->xss_clean($post['observacion']); /// Observacion
@@ -218,6 +220,8 @@ class Cejecucion_pi extends CI_Controller {
 
       /// ------ Update proyecto
         $update_proyect = array(
+          'fiscal_obra' => $fiscal_obras,
+          'proy_ppto_total' => $ppto_total,
           'proy_estado' => $estado,
           'proy_observacion' => strtoupper($observacion),
           'proy_desc_problema' => strtoupper($problema),

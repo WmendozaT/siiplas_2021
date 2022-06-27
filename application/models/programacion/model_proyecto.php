@@ -764,6 +764,8 @@ class Model_proyecto extends CI_Model{
                                         p."fecha_avance_fis",
                                         p."avance_financiero",
                                         p."fecha_avance_fin",
+                                        p."fiscal_obra",
+                                        p."fecha_observacion",
                                       
                                         p."proy_pr",
                                         p."dep_id",
