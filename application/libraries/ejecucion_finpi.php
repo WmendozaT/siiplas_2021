@@ -1250,6 +1250,14 @@ class ejecucion_finpi extends CI_Controller{
     $fase = $this->model_faseetapa->get_id_fase($proy_id);
     $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
     $avance_financiero_gestion=$this->get_ejec_ppto_proyecto_gestion($proyecto);
+
+    if($proyecto[0]['fecha_observacion']!=''){
+      $fecha_plazo=date('d/m/Y',strtotime($proyecto[0]['fecha_observacion']));
+    }
+    else{
+      $fecha_plazo=date('d/m/Y');
+    }
+
     $tabla='';
      $tabla.='
       <div style="height:20px;"><b>DATOS GENERALES</b></div>
@@ -1337,7 +1345,7 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>OBSERVACIÓN / COMPROMISO</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['proy_observacion']).'</td>
+            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['proy_observacion']).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a fecha : '.date('d',strtotime($fecha_plazo)).' de '.$this->mes[ltrim(date('m',strtotime($fecha_plazo)), "0")]  .' de '.date('Y',strtotime($fecha_plazo)).'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>PROBLEMA IDENTIFICADO</b></td>

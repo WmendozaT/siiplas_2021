@@ -534,21 +534,30 @@ public function tabla_detalle_proyectos_clasificado_institucional($matriz,$nro){
         <thead>
           <tr>
             <th style="width:40%;">DEPARTAMENTO</th>
-            <th style="width:10%;">PPTO. ASIGNADO</th>
+            <th style="width:10%;">N° DE PROYECTOS</th>
             <th style="width:10%;">PORCENTAJE DISTRIBUCIÓN</th>
           </tr>
         </thead>
         <tbody>';
+        $nro_proy=0;
+        $disribucion=0;
           for ($i=0; $i <$nro ; $i++) { 
             $tabla.='
               <tr>
                 <td style="width:40%;">'.$matriz[$i][1].'</td>
                 <td style="width:10%;" align=right>'.$matriz[$i][3].'</td>
                 <td style="width:10%;" align=right>'.$matriz[$i][4].' %</td>
-              </tr>';    
+              </tr>';
+              $nro_proy=$nro_proy+$matriz[$i][3];
+              $disribucion=$disribucion+$matriz[$i][4];
           }
           $tabla.='
         </tbody>
+          <tr>
+            <td align:right><b>TOTAL</b></td>
+            <td align=right>'.$nro_proy.'</td>
+            <td align=right>'.$disribucion.' %</td>
+          </tr>
       </table>
       </center>';
     }
@@ -559,21 +568,30 @@ public function tabla_detalle_proyectos_clasificado_institucional($matriz,$nro){
         <thead>
           <tr>
             <th style="width:40%;">DEPARTAMENTO</th>
-            <th style="width:10%;">N° DE PROYECTOS</th>
+            <th style="width:10%;">PPTO. ASIGNADO</th>
             <th style="width:10%;">PORCENTAJE DISTRIBUCIÓN</th>
           </tr>
         </thead>
         <tbody>';
+        $ppto_total=0;
+        $disribucion=0;
           for ($i=0; $i <$nro ; $i++) { 
             $tabla.='
               <tr>
                 <td style="width:40%;">'.$matriz[$i][1].'</td>
                 <td style="width:10%;" align=right>Bs. '.number_format($matriz[$i][7], 2, ',', '.').'</td>
                 <td style="width:10%;" align=right>'.$matriz[$i][10].' %</td>
-              </tr>';    
+              </tr>';
+              $ppto_total=$ppto_total+$matriz[$i][7];
+              $disribucion=$disribucion+$matriz[$i][10];
           }
           $tabla.='
         </tbody>
+          <tr>
+            <td align:right><b>TOTAL</b></td>
+            <td align=right>'.$ppto_total.'</td>
+            <td align=right>'.$disribucion.' %</td>
+          </tr>
       </table>
       </center>';
     }

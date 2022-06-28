@@ -147,6 +147,13 @@ class Cejecucion_pi extends CI_Controller {
         }
         /// --------------------
 
+        if($proyecto[0]['fecha_observacion']!=''){
+          $fecha_plazo=date('d/m/Y',strtotime($proyecto[0]['fecha_observacion']));
+        }
+        else{
+          $fecha_plazo=date('d/m/Y');
+        }
+
         $result = array(
           'respuesta' => 'correcto',
           'proyecto' => $proyecto,
@@ -154,7 +161,7 @@ class Cejecucion_pi extends CI_Controller {
           'estado' => $estado_proy,
           'partidas' => $lista_partidas,
         //  'avance_financiero'=>$ejec_fin[2],
-          //'button' => $button,
+          'fecha_plazo' => $fecha_plazo,
         );
       }
       else{
@@ -181,6 +188,7 @@ class Cejecucion_pi extends CI_Controller {
 
       $ppto_total = $this->security->xss_clean($post['ppto_total']); /// ppto total
       $fiscal_obras = $this->security->xss_clean($post['f_obras']); /// fiscal de obras
+      $fecha_plazo = $this->security->xss_clean($post['mydate']); /// fecha plazo
       $avance_fisico = $this->security->xss_clean($post['ejec_fis']); /// Avance Fisico
       $avance_financiero = $this->security->xss_clean($post['ejec_fin']); /// Avance Financiero
       $observacion = $this->security->xss_clean($post['observacion']); /// Observacion
@@ -220,6 +228,7 @@ class Cejecucion_pi extends CI_Controller {
 
       /// ------ Update proyecto
         $update_proyect = array(
+          'fecha_observacion' => $fecha_plazo,
           'fiscal_obra' => $fiscal_obras,
           'proy_ppto_total' => $ppto_total,
           'proy_estado' => $estado,

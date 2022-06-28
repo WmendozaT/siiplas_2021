@@ -111,6 +111,7 @@ class User extends CI_Controller{
     }
 
 
+
     /*-------- Valida Cambio trimestre Session -----------*/
     public function cambiar_trimestre(){
         $conf=$this->model_proyecto->get_configuracion($this->gestion);
@@ -544,6 +545,7 @@ class User extends CI_Controller{
 
     /// DASHBOARD SEGUIMIENTO POA (UNIDAD ADMINISTRATIVA)
     public function dashboard_seguimientopoa(){
+
         if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
             if($this->session->userdata('tp_usuario')==0){ /// Unidad Administrativa
                 $data['resp']=$this->session->userdata('funcionario');

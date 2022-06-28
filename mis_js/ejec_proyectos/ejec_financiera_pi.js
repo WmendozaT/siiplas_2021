@@ -237,14 +237,15 @@ function cuadro_grafico_distribucion_presupuesto_asignado(matriz,nro){
 
       request.done(function (response, textStatus, jqXHR) {
       if (response.respuesta == 'correcto') {
-
+        //alert(response.fecha_plazo)
         document.getElementById("proy_nombre").value = response.proyecto[0]['proy_sisin']+' - '+response.proyecto[0]['proy_nombre']; /// nombre proyecto
         document.getElementById("ppto_total").value = response.proyecto[0]['proy_ppto_total']; /// ppto total
         document.getElementById("fase").value = response.fase[0]['fase']+' - '+response.fase[0]['descripcion']; /// fase
         document.getElementById("estado").innerHTML = response.estado; /// estado
         document.getElementById("ejec_fis").value = response.proyecto[0]['avance_fisico']; /// Ejecucion Fisica Total
         document.getElementById("ejec_fin").value = response.proyecto[0]['avance_financiero']; /// Ejecucion Financiero Total
-        document.getElementById("f_obra").value = response.proyecto[0]['fiscal_obra']; /// Fiscal de Obras
+        document.getElementById("f_obras").value = response.proyecto[0]['fiscal_obra']; /// Fiscal de Obras
+        document.getElementById("mydate").value = response.fecha_plazo; /// Fecha Plazo
         //document.getElementById("ejec_fin_gestion").value = response.avance_financiero; /// Ejecucion Financiero Gestion
         document.getElementById("observacion").value = response.proyecto[0]['proy_observacion']; /// Observacion
         document.getElementById("problema").value = response.proyecto[0]['desc_prob']; /// problema

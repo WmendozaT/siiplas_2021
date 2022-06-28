@@ -264,9 +264,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Observación</label>
+                            <label class="col-md-2 control-label">Observación / Compromiso</label>
                             <div class="col-md-10">
                                 <textarea class="form-control" name="observacion" id="observacion" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Plazo</label>
+                            <div class="col-md-10">
+                                <input type="text" name="mydate" id="mydate"  placeholder="Seleccione Fecha" class="form-control datepicker" data-dateformat="dd/mm/yy" onKeyUp="this.value=formateafecha(this.value);">
                             </div>
                         </div>
                         <div class="form-group">
@@ -357,5 +363,5 @@
     <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
     <script src="<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
-    <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
+    <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script>
 </html>
