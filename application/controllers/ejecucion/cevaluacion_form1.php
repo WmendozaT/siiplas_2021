@@ -68,8 +68,8 @@ class Cevaluacion_form1 extends CI_Controller {
       }
     }
 
-//    $this->load->view('admin/evaluacion/evaluacion_form1/menu_regionales', $data);
-    echo $this->eval_acp->formulario_n1_regional(10);
+    $this->load->view('admin/evaluacion/evaluacion_form1/menu_regionales', $data);
+//    echo $this->eval_acp->formulario_n1_regional(10);
   }
 
 

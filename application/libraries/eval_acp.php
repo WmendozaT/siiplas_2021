@@ -259,7 +259,7 @@ class Eval_acp extends CI_Controller{
 
 
 
-  /*--- PARAMETRO DE CALIFICACION ACP REGIONAL ---*/ /// REVISAR PARA OFICINA NACIONAL EXISTE ERRORES
+  /*--- PARAMETRO DE CALIFICACION ACP REGIONAL ---*/
   public function calificacion_acp_regional($pog_id){
     /// $tp_indicador_og : 0 (parametro normal)
     /// $tp_indicador_og : 1  x<=meta (optimo) , x>meta (insatisfactorio)
@@ -277,7 +277,6 @@ class Eval_acp extends CI_Controller{
     }
 
 
-    //$calificacion='';$resp='<b>INSATISFACTORIO</b>' .$pog_id.' '.$meta_regional[0]['or_id'].'---> '.count($acp_eval_regional).' ---> '.($ejec>=$meta_regional[0]['prog_fis']).'----> '.($ejec<=100).'';
     $calificacion='';$resp='<b>INSATISFACTORIO</b>';
     $valor=0;$color='#f95b4f';
 
