@@ -45,6 +45,19 @@ class Cobjetivos_estrategico extends CI_Controller {
     public function objetivos_estrategicos(){
       $data['menu']=$this->menu(1);
       $data['configuracion']=$this->model_proyecto->configuracion_session();
+      $prog='';
+      $programas=$this->model_proyecto->list_prog();
+      $prog.='  <section>
+                  <select class="form-control" id="aper_id" name="aper_id" title="SELECCIONE PROGRAMA">
+                    <option value="0">SELECCIONE PROGRAMA</option>';
+                      foreach($programas as $row){
+                        $prog.='<option value='.$row['aper_id'].'>'.$row['aper_programa'].' '.$row['aper_descripcion'].'</option>';
+                      }
+                    $prog.='       
+                  </select>
+                </section>';
+
+      $data['programa']=$prog;
       $data['resp']=$this->session->userdata('funcionario');
       $data['res_dep']=$this->tp_resp();
       $data['indi']= $this->model_proyecto->indicador(); /// indicador
@@ -166,12 +179,14 @@ class Cobjetivos_estrategico extends CI_Controller {
       if ($this->input->post()) {
           $post = $this->input->post();
 
+          $aper_id = $this->security->xss_clean($post['aper_id']);
           $codigo = $this->security->xss_clean($post['codigo']);
           $descripcion = $this->security->xss_clean($post['descripcion']);
           $configuracion=$this->model_proyecto->configuracion_session();
 
           /*--------------- GUARDANDO OBJETIVO ESTRATEGICO ----------------*/
           $data_to_store = array(
+              'aper_id' => $aper_id,
               'obj_codigo' => strtoupper($codigo),
               'obj_descripcion' => strtoupper($descripcion),
               'obj_gestion_inicio' => $configuracion[0]['conf_gestion_desde'],
@@ -200,11 +215,13 @@ class Cobjetivos_estrategico extends CI_Controller {
     public function update_objetivos_estrategicos(){
       if ($this->input->post()) {
           $post = $this->input->post();
-          $obj_id = $this->security->xss_clean($post['obj_id']);
-          $codigo = $this->security->xss_clean($post['codigo']);
-          $descripcion = $this->security->xss_clean($post['descripcion']);
+          $obj_id = $this->security->xss_clean($post['mobj_id']);
+          $codigo = $this->security->xss_clean($post['mcodigo']);
+          $descripcion = $this->security->xss_clean($post['mdescripcion']);
+          $aper_id = $this->security->xss_clean($post['aper']);
 
          $update_form= array(
+            'aper_id' => $aper_id,
             'obj_codigo' => $codigo,
             'obj_descripcion' => $descripcion,
             'fun_id' => $this->fun_id,
@@ -304,13 +321,33 @@ class Cobjetivos_estrategico extends CI_Controller {
           $obj_id = $this->security->xss_clean($obj_id);
 
           $dato_obj = $this->model_mestrategico->get_objetivos_estrategicos($obj_id);
+
+          $programas=$this->model_proyecto->list_prog();
+          $prog='';
+          $prog.='
+                <section>
+                  <select class="form-control" id="aper" name="aper" title="SELECCIONE PROGRAMA">
+                    <option value="0">SELECCIONE PROGRAMA</option>';
+                      foreach($programas as $row){
+                        if($row['aper_id']==$dato_obj[0]['aper_id']){
+                          $prog.='<option value='.$row['aper_id'].' selected>'.$row['aper_programa'].' '.$row['aper_descripcion'].'</option>';
+                        }
+                        else{
+                          $prog.='<option value='.$row['aper_id'].'>'.$row['aper_programa'].' '.$row['aper_descripcion'].'</option>';
+                        }
+                      }
+                    $prog.='       
+                  </select>
+                </section>';
+
+
           //caso para modificar el codigo de proyecto y actividades
-          foreach($dato_obj as $row){
-              $result = array(
-                'codigo' => $row['obj_codigo'],
-                "descripcion" =>$row['obj_descripcion']
-              );
-          }
+          $result = array(
+            'codigo' => $dato_obj[0]['obj_codigo'],
+            'programa' => $prog,
+            "descripcion" =>$dato_obj[0]['obj_descripcion']
+          );
+
           echo json_encode($result);
         }else{
             show_404();

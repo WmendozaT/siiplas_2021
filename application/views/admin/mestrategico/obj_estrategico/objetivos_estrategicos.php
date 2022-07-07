@@ -234,14 +234,14 @@
 									<label class="label">TIPO DE INDICADOR</label>
 									<label class="input">
 										<select class="form-control" id="tipo_i" name="tipo_i">
-                                            <option value="">Seleccione Indicador</option>
-                                            <?php 
-							                    foreach($indi as $row){ ?>
-									                <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
-									                <?php 	
-							                    }
-							                ?>
-                                      	</select>
+                      <option value="">Seleccione Indicador</option>
+                      <?php 
+							          foreach($indi as $row){ ?>
+									        <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
+									      <?php 	
+							        }
+							        ?>
+                    </select>
 									</label>
 								</section>
 							</div>
@@ -299,57 +299,57 @@
                		<input type="hidden" name="rf_id" id="rf">
                     <h2 class="alert alert-info"><center>MODIFICAR RESULTADO FINAL </center></h2>
                     <header><div id="moe"></div></header>
-						<fieldset>					
-							<div class="row">
-								<section class="col col-4">
-									<label class="label">C&Oacute;DIGO</label>
-									<label class="input">
-										<i class="icon-append fa fa-tag"></i>
-										<input type="text" name="mcod" id="mcod">
-									</label>
-								</section>
-							</div>
-							
-							<section>
-								<label class="label">RESULTADO FINAL</label>
-								<label class="textarea">
-									<i class="icon-append fa fa-tag"></i>
-									<textarea rows="3" name="mresultado" id="mresultado"></textarea>
-								</label>
-							</section>
-							
-							<section>
-								<label class="label">INDICADOR DE IMPACTO</label>
-								<label class="textarea">
-									<i class="icon-append fa fa-tag"></i>
-									<textarea rows="3" name="mindicador" id="mindicador"></textarea>
-								</label>
-							</section>
+											<fieldset>					
+												<div class="row">
+													<section class="col col-4">
+														<label class="label">C&Oacute;DIGO</label>
+														<label class="input">
+															<i class="icon-append fa fa-tag"></i>
+															<input type="text" name="mcod" id="mcod">
+														</label>
+													</section>
+												</div>
+												
+												<section>
+													<label class="label">RESULTADO FINAL</label>
+													<label class="textarea">
+														<i class="icon-append fa fa-tag"></i>
+														<textarea rows="3" name="mresultado" id="mresultado"></textarea>
+													</label>
+												</section>
+												
+												<section>
+													<label class="label">INDICADOR DE IMPACTO</label>
+													<label class="textarea">
+														<i class="icon-append fa fa-tag"></i>
+														<textarea rows="3" name="mindicador" id="mindicador"></textarea>
+													</label>
+												</section>
 
-							<div class="row">
-								<section class="col col-6">
-									<label class="label">META</label>
-									<label class="input">
-										<i class="icon-append fa fa-tag"></i>
-										<input type="text" name="mmeta" id="mmeta" value="0">
-									</label>
-								</section>
-								<section class="col col-6">
-									<label class="label">TIPO DE INDICADOR</label>
-									<label class="input">
-										<select class="form-control" id="mtipo_i" name="mtipo_i">
-                                            <option value="">Seleccione Indicador</option>
-                                            <?php 
-							                    foreach($indi as $row){ ?>
-									                <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
-									                <?php 	
-							                    }
-							                ?>
-                                      	</select>
-									</label>
-								</section>
-							</div>
-						</fieldset>
+												<div class="row">
+													<section class="col col-6">
+														<label class="label">META</label>
+														<label class="input">
+															<i class="icon-append fa fa-tag"></i>
+															<input type="text" name="mmeta" id="mmeta" value="0">
+														</label>
+													</section>
+													<section class="col col-6">
+														<label class="label">TIPO DE INDICADOR</label>
+														<label class="input">
+															<select class="form-control" id="mtipo_i" name="mtipo_i">
+					                      <option value="">Seleccione Indicador</option>
+					                      <?php 
+												        foreach($indi as $row){ ?>
+														      <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
+														    <?php 	
+												        }
+												        ?>
+					                    </select>
+														</label>
+													</section>
+												</div>
+											</fieldset>
 
 	                    <fieldset>
 	                    	<section>
@@ -376,7 +376,7 @@
 										?>
 										</tbody>
 										</tr>
-	                                </table>
+	                </table>
 								</label>
 								<input type="hidden" name="mtotal" id="mtotal" value="0">
 							</section>
@@ -400,42 +400,43 @@
                     <div class="row">
                     	<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                        	<div class="row">
-							<h2 class="row-seperator-header">MODIFICAR REGISTRO - OBJETIVO ESTRATEGICO</h2>
-								<div class="row">
-									<!-- col -->
-									<div class="col-sm-12">
-										<!-- row -->
-										<div class="row">
-											<form action="<?php echo site_url() . '/me/update_objetivo_estrategico'?>" id="form_mod" name="form_mod" class="smart-form" method="post">
-												<input type="hidden" name="obj_id" id="obj_id">
-												<fieldset>
-													<section>
-														<label class="input"> <i class="icon-append fa fa-user"></i>
-															<input type="text" name="codigo" id="codigo" placeholder="C&Oacute;DIGO">
-															<b class="tooltip tooltip-bottom-right">C&Oacute;DIGO</b> </label>
-													</section>
+													<h2 class="row-seperator-header">MODIFICAR REGISTRO - OBJETIVO ESTRATEGICO</h2>
+														<div class="row">
+															<!-- col -->
+															<div class="col-sm-12">
+																<!-- row -->
+																<div class="row">
+																	<form action="<?php echo site_url() . '/me/update_objetivo_estrategico'?>" id="form_mod" name="form_mod" class="smart-form" method="post">
+																		<input type="hidden" name="mobj_id" id="mobj_id">
+																		<fieldset>
+																			<div id="programa"></div>
+																			<section>
+																				<label class="input"> <i class="icon-append fa fa-user"></i>
+																					<input type="text" name="mcodigo" id="mcodigo" placeholder="C&Oacute;DIGO">
+																					<b class="tooltip tooltip-bottom-right">C&Oacute;DIGO</b> </label>
+																			</section>
 
-													<section>
-														<label class="textarea"> <i class="icon-append fa fa-comment"></i>
-															<textarea rows="4" name="descripcion" id="descripcion" placeholder="DESCRIPCION - OBJETIVO ESTRATEGICO"></textarea> 
-															<b class="tooltip tooltip-bottom-right">DESCRIPCI&Oacute;N</b></label>
-													</section>
-												</fieldset>
-												<footer>
-													<div class="col-md-3 pull-left">
-							                            <button class="btn btn-ms btn-danger" data-dismiss="modal">CANCELAR</button>
-							                        </div>
-							                        <div class="col-md-3 pull-right ">
-							                            <button type="button" name="mod_ffenviar" id="mod_ffenviar" class="btn btn-success" style="width:100%;">MODIFICAR</button>
-				                        				<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-							                        </div>
-												</footer>
-											</form>
-										</div>
-									</div>
-								</div>
-							</div>
-						</article>
+																			<section>
+																				<label class="textarea"> <i class="icon-append fa fa-comment"></i>
+																					<textarea rows="4" name="mdescripcion" id="mdescripcion" placeholder="DESCRIPCION - OBJETIVO ESTRATEGICO"></textarea> 
+																					<b class="tooltip tooltip-bottom-right">DESCRIPCI&Oacute;N</b></label>
+																			</section>
+																		</fieldset>
+																		<footer>
+																			<div class="col-md-3 pull-left">
+													                <button class="btn btn-ms btn-danger" data-dismiss="modal">CANCELAR</button>
+													            </div>
+													            <div class="col-md-3 pull-right ">
+													              <button type="button" name="mod_ffenviar" id="mod_ffenviar" class="btn btn-success" style="width:100%;">MODIFICAR</button>
+										                  	<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+													            </div>
+																		</footer>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</div>
+												</article>
                     </div>
                 </div>
 
@@ -460,6 +461,9 @@
 											   	<input type="hidden" name="gi" id="gi" value="<?php echo $configuracion[0]['conf_gestion_desde'];?>">
 											   	<input type="hidden" name="gf" id="gf" value="<?php echo $configuracion[0]['conf_gestion_hasta'];?>">
 											   	<fieldset>
+
+											   		<?php echo $programa ?>
+
 													<section>
 														<label class="input"> <i class="icon-append fa fa-user"></i>
 															<input type="text" name="codigo" id="codigo" placeholder="C&Oacute;DIGO">
@@ -471,15 +475,17 @@
 															<textarea rows="4" name="descripcion" id="descripcion" placeholder="DESCRIPCION - OBJETIVO ESTRATEGICO"></textarea> 
 															<b class="tooltip tooltip-bottom-right">DESCRIPCI&Oacute;N</b></label>
 													</section>
+
+
 												</fieldset>
 												<footer>
 													<div class="col-md-3 pull-left">
-							                            <button class="btn btn-ms btn-danger" data-dismiss="modal">CANCELAR</button>
-							                        </div>
-							                        <div class="col-md-3 pull-right ">
-							                            <button type="button" name="subir_form" id="subir_form" class="btn btn-success" style="width:100%;">GUARDAR</button>
-				                        				<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-							                        </div>
+							                <button class="btn btn-ms btn-danger" data-dismiss="modal">CANCELAR</button>
+							            </div>
+							            <div class="col-md-3 pull-right ">
+							              <button type="button" name="subir_form" id="subir_form" class="btn btn-success" style="width:100%;">GUARDAR</button>
+				                  	<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+							            </div>
 												</footer>
 											</form>	
 										</div>
@@ -794,7 +800,7 @@
 		    $(function () {
 		        $(".mod_ff").on("click", function (e) {
 		            obj_id = $(this).attr('name'); 
-		            document.getElementById("obj_id").value=obj_id;
+		            document.getElementById("mobj_id").value=obj_id;
 		            var url = "<?php echo site_url("")?>/me/get_objetivo_estrategico";
 		            var request;
 		            if (request) {
@@ -808,8 +814,9 @@
 		            });
 
 		            request.done(function (response, textStatus, jqXHR) {
-		                document.getElementById("codigo").value = response.codigo;
-		                document.getElementById("descripcion").value = response.descripcion;
+		                document.getElementById("mcodigo").value = response.codigo;
+		                document.getElementById("mdescripcion").value = response.descripcion;
+		                document.getElementById('programa').innerHTML = response.programa;
 		            });
 		            request.fail(function (jqXHR, textStatus, thrown) {
 		                console.log("ERROR: " + textStatus);
@@ -822,16 +829,20 @@
 		            $("#mod_ffenviar").on("click", function (e) {
 		                var $validator = $("#form_mod").validate({
 			                   rules: {
-			                	codigo: { //// Codigo
-			                        required: true,
-			                    },
-			                    descripcion: { //// Descripcion
+				                	mcodigo: { //// Codigo
+				                        required: true,
+				                  },
+				                  aper: { //// aper
+				                        required: true,
+				                  },
+			                    mdescripcion: { //// Descripcion
 			                        required: true,
 			                    }
 			                },
 			                messages: {
-			                    desc1: "<font color=red>POR FAVOR REGISTRE C&Oacute;DIGO</font>",
-			                    desc2: "<font color=red>POR FAVOR REGISTRE DESCRIPCI&Oacute;N</font>",	                    
+			                    mcodigo: "<font color=red>POR FAVOR REGISTRE C&Oacute;DIGO</font>",
+			                    aper: "<font color=red>SELECCIONE PROGRAMA</font>",
+			                    mdescripcion: "<font color=red>POR FAVOR REGISTRE DESCRIPCI&Oacute;N</font>",	                    
 			                },
 		                    highlight: function (element) {
 		                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -853,9 +864,10 @@
 		                if (!$valid) {
 		                    $validator.focusInvalid();
 		                } else {
-		                	var obj_id = document.getElementById("obj_id").value;
-		                    var codigo = document.getElementById("codigo").value;
-		                    var descripcion = document.getElementById("descripcion").value;
+		                	var obj_id = document.getElementById("mobj_id").value;
+		                    var aper = document.getElementById("aper").value;
+		                    var codigo = document.getElementById("mcodigo").value;
+		                    var descripcion = document.getElementById("mdescripcion").value;
 		         
 		                    alertify.confirm("MODIFICAR OBJETIVO ESTRATEGICO ?", function (a) {
 			                    if (a) {
@@ -878,14 +890,18 @@
 		    $("#subir_form").on("click", function () {
 		    	var $validator = $("#form_nuevo").validate({
 		                rules: {
-		                	codigo: { //// codigo
+		                	aper_id: { //// aper id
 		                        required: true,
 		                    },
-		                    descripcion: { //// descripcion
+		                  codigo: { //// codigo
+		                        required: true,
+		                    },
+		                  descripcion: { //// descripcion
 		                        required: true,
 		                    }
 		                },
 		                messages: {
+		                    aper_id: "<font color=red>SELECCIONE PROGRAMA</font>",
 		                    codigo: "<font color=red>REGISTRE C&Oacute;DIGO</font>",
 		                    descripcion: "<font color=red>REGISTRE DESCRIPCI&Oacute;N</font>",		                    
 		                },
