@@ -477,9 +477,15 @@ class Modificacionpoa extends CI_Controller{
                   if($rowp['prod_priori']==0){
                     $tabla.='
                     <a href="#" data-toggle="modal" data-target="#modal_mod_form4" class="btn btn-default mod_form4" name="'.$rowp['prod_id'].'" title="MODIFICAR ACTIVIDAD"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
-                    if(count($monto)==0){
-                      $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mdel_ff" class="btn btn-default mdel_ff" title="ELIMINAR FORM 4"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
+                    if($this->tmes==1){
+                      if(count($monto)==0){
+                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mdel_ff" class="btn btn-default mdel_ff" title="ELIMINAR FORM 4"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
+                      }
                     }
+                    elseif($this->fun_id==399){
+                      $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mdel_ff" class="btn btn-default mdel_ff" title="ELIMINAR FORM 4"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/><br>Adm.</a>';
+                    }
+                    
                   }
                   else{
                     if($this->fun_id==399){
