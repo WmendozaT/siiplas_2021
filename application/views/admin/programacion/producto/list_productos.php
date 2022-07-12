@@ -532,7 +532,7 @@
                           <option value="">SELECCIONE ALINEACIÓN OPERACIÓN</option>
                           <?php 
                             foreach($objetivos as $row){ ?>
-                            <option value="<?php echo $row['or_id'];?>"><?php echo $row['og_codigo'].'.'.$row['or_codigo'].'. .- '.$row['or_objetivo'];?></option>
+                            <option value="<?php echo $row['or_id'];?>"><?php echo '('.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].') / '.$row['og_codigo'].'.'.$row['or_codigo'].'. .- '.$row['or_objetivo'];?></option>
                           <?php } ?>        
                       </select>
                     </section>

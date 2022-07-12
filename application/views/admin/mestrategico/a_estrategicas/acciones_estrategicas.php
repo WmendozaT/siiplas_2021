@@ -340,7 +340,7 @@
 
 													<section>
 														<font color="blue">PILAR</font>
-														<select class="select2" id="pedes1" name="pedes1">
+														<select class="form-control" id="pedes1" name="pedes1">
 		                                                    <option value="">Seleccione PILAR</option> 
 		                                                    <?php
 																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'1\' and pdes_depende=\'0\'  ORDER BY pdes_id';
@@ -350,7 +350,7 @@
 																  { ?>
 																  <option value="<?php echo $pedes['pdes_codigo']?>" <?php if(@$_POST['pais']==$pedes['pdes_id']){ echo "selected";} ?> >
 																  <?php echo $pedes['pdes_codigo'].' - '.$pedes['pdes_nivel'].' - '.$pedes['pdes_descripcion']?></option> 
-																<?php } ?>     
+															<?php } ?>     
 		                                              	</select>
 													</section>
 													<section>

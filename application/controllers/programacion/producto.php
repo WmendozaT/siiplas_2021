@@ -69,11 +69,11 @@ class Producto extends CI_Controller {
           $data['cod_ope']=0;
         }
 
-        /*--------- Proyecto de Inversion -----------*/
+        /*------ Proyecto de Inversion -------*/
         if($data['proyecto'][0]['tp_id']==1){
           $data['datos_proyecto']='<h1> PROYECTO : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small></h1>';
           $data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['fase'][0]['proy_id']);
-          $data['list_oregional']=$this->programacionpoa->lista_oregional_pi($proy_id);
+          $data['list_oregional']=$this->programacionpoa->lista_oregional_pi($proy_id); //// Combo Lista de Operaciones Alineados
         }
         /*--------- Gasto Corriente ----------*/
         else{
@@ -81,7 +81,7 @@ class Producto extends CI_Controller {
           $data['objetivos']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);
           //$data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['proyecto'][0]['act_id']);
           $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
-          $data['list_oregional']=$this->programacionpoa->lista_oregional($proy_id);
+          $data['list_oregional']=$this->programacionpoa->lista_oregional($proy_id); //// Combo Lista de Operaciones Alineados
         }
 
         
@@ -166,7 +166,8 @@ class Producto extends CI_Controller {
         $componente = $this->model_componente->get_componente($this->input->post('com_id'),$this->gestion);
         $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
         $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
-        
+        $relacion_operacion_obj_estrategico=$this->model_objetivoregion->get_objetivosregional($this->input->post('or_id'));
+
         $ae=0;
         $get_acc=$this->model_objetivoregion->get_objetivosregional($this->input->post('or_id'));
         
@@ -198,6 +199,7 @@ class Producto extends CI_Controller {
             'prod_unidades' => $this->input->post('unidad'),
             'acc_id' => $ae,
             'or_id' => $this->input->post('or_id'),
+            'obj_id' => $relacion_operacion_obj_estrategico[0]['obj_id'],
             'mt_id' => $tp_met,
             'fecha' => date("d/m/Y H:i:s"),
             'prod_cod'=>$this->input->post('cod'),
@@ -269,6 +271,8 @@ class Producto extends CI_Controller {
         $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
         $prioridad = $this->security->xss_clean($post['priori']); /// prioridad
 
+        $relacion_operacion_obj_estrategico=$this->model_objetivoregion->get_objetivosregional($or_id);
+
         $ae=0;
         $get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
         if(count($get_acc)!=0){
@@ -294,6 +298,7 @@ class Producto extends CI_Controller {
             'prod_fuente_verificacion' => strtoupper($mverificacion),
             'estado' => 2,
             'or_id' => $or_id,
+            'obj_id' => $relacion_operacion_obj_estrategico[0]['obj_id'],
             'acc_id' => $ae,
             'fecha' => date("d/m/Y H:i:s"),
             'mt_id' => $tp_meta,

@@ -51,7 +51,7 @@ class Cacciones_estrategicas extends CI_Controller {
     }
 
 
-    /*------------------------- LISTA DE ACCIONES ESTRATEGICAS --------------------*/
+    /*------ LISTA DE ACCIONES ESTRATEGICAS -------*/
     public function mis_acciones_estrategicas($obj_id){
       $acciones = $this->model_mestrategico->list_acciones_estrategicas($obj_id); /// ACCIONES ESTRATEGICAS
       $tabla ='';
@@ -130,6 +130,7 @@ class Cacciones_estrategicas extends CI_Controller {
             $pdes_id = $this->model_proyecto->get_id_pdes($pedes4);  // devuelve id pedes  
           }
 
+          $objetivo=$this->model_mestrategico->get_objetivos_estrategicos($obj_id);
           $cod_ae = str_replace('.', '', $codigo);
           /*------- GUARDANDO ACCIONES ESTRATEGICAS --------*/
           $data_to_store = array(
@@ -139,7 +140,8 @@ class Cacciones_estrategicas extends CI_Controller {
             'acc_descripcion' => strtoupper($descripcion),
             'pdes_id' => $pdes_id[0]['pdes_id'],
             'fun_id' => $this->fun_id,
-            'g_id' => $this->gestion,
+            'g_id_inicio' => $objetivo[0]['obj_gestion_inicio'],
+            'g_id_fin' => $objetivo[0]['obj_gestion_fin'],
             'ae' => $cod_ae,
           );
           $this->db->insert('_acciones_estrategicas',$data_to_store);

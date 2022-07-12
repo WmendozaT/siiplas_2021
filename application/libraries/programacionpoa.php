@@ -624,7 +624,7 @@ class Programacionpoa extends CI_Controller{
                     <select class="form-control" id="or_id" name="or_id" title="SELECCIONE">
                       <option value="0">SELECCIONE ALINEACIÓN OPERACIÓN</option>';
                       foreach($list_oregional as $row){ 
-                        $tabla.='<option value="'.$row['or_id'].'">'.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
+                        $tabla.='<option value="'.$row['or_id'].'">('.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].') / '.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
                       }
                     $tabla.='
                   </select>
@@ -681,7 +681,7 @@ class Programacionpoa extends CI_Controller{
       if(count($list_oregional)!=0){
         foreach($list_oregional as $row){
           $nro++;
-          $tabla.='<h1 title='.$row['or_id'].'> '.$nro.'.- OPERACIÓN REGIONAL : <small> <b>'.$row['og_codigo'].'.|'.$row['or_codigo'].'.</b>.- '.$row['or_objetivo'].'</small></h1>';
+          $tabla.='<h1 title='.$row['or_id'].'>'.$nro.' .- ('.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].') / OPERACIÓN REGIONAL : <small> <b>'.$row['og_codigo'].'.|'.$row['or_codigo'].'.</b>.- '.$row['or_objetivo'].'</small></h1>';
         }
       }
       else{
