@@ -219,12 +219,13 @@ class Creporte extends CI_Controller {
 
     
 
-    /*----- REPORTE - CONSOLIDADO PARTIDAS SERVICIO (2020) -----*/
+    /*----- REPORTE - CONSOLIDADO PARTIDAS X UNIDAD RESPONSABLE (2020 - 2022) -----*/
     public function consolidado_partida_reporte($com_id,$tp_id){
-        $partidas=$this->model_insumo->list_consolidado_partidas_componentes($com_id);
-
         $tabla='';
-        $tabla.='
+
+        if($this->gestion<2023){ /// Gestion 2020-2021-2022
+            $partidas=$this->model_insumo->list_consolidado_partidas_componentes($com_id);
+            $tabla.='
             <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:70%;" align=center>
                 <thead>
                     <tr style="font-size: 7px;height:12px;" bgcolor="#eceaea" align=center>
@@ -253,6 +254,63 @@ class Creporte extends CI_Controller {
                         <td style="width: 12%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
                     </tr>
             </table>';
+        }
+        else{ /// Gestion > 2023
+            //$partidas=$this->model_insumo->list_consolidado_partidas_uresponsable($com_id);
+            $partidas=$this->model_insumo->list_consolidado_partidas_componentes($com_id);
+            $programas=$this->model_insumo->get_lista_clasificacion_x_programas_partidas_uresponsable($com_id);
+            $tabla.='
+            <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:70%;" align=center>
+                <thead>
+                    <tr style="font-size: 7px;height:12px;" bgcolor="#eceaea" align=center>
+                        <th style="width:3%;"style="height:11px;">N°</th>
+                        <th style="width:10%;">C&Oacute;DIGO</th>
+                        <th style="width:30%;">DETALLE PARTIDA</th>';
+                        foreach ($programas as $prog){ 
+                            $tabla.='
+                        <th style="width:15%;">PROG.<br>'.$prog['aper_programa'].'</th>';
+                        }
+                        $tabla.='
+                        <th style="width:12%;">MONTO PROGRAMADO</th>
+                    </tr>
+                </thead>
+                <tbody>';
+                $nro=0; $total=0;
+                    foreach ($partidas as $row){ 
+                        $nro++; $total=$total+$row['monto'];
+                        $tabla.=
+                        '<tr style="font-size: 7px;">
+                            <td style="width: 3%; height:11px; text-align: center">'.$nro.'</td>
+                            <td style="width: 10%; text-align: center;font-size: 8px;"><b>'.$row['par_codigo'].'</b></td>
+                            <td style="width: 30%; text-align: left;">'.$row['par_nombre'].'</td>';
+                            foreach ($programas as $prog){
+                            $datos_prog=$this->model_insumo->get_monto_programado_x_partida_programa_uresponsable($row['com_id'],$row['par_id'],$prog['aper_id_oe']);
+                            $ptto_prog=0;
+                            if(count($datos_prog)!=0){
+                                $ptto_prog=$datos_prog[0]['monto'];
+                            }
+
+                            $tabla.='
+                            <td style="width:15%;text-align: right;">'.number_format($ptto_prog, 2, ',', '.').'</td>';
+                            }
+                            $tabla.='
+                            <td style="width: 12%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
+                        </tr>';
+                    }
+            $tabla.=
+                '</tbody>
+                    <tr style="font-size: 7px;" bgcolor="#eceaea">
+                        <td style="width: 30%; height:10px; text-align: left;" colspan=3><b>TOTAL PROGRAMADO </b></td>';
+                        foreach ($programas as $prog){ 
+                        $tabla.='
+                        <td style="width:15%;text-align: right;"><b>'.number_format($prog['monto'], 2, ',', '.').'</b></td>';
+                        }
+                        $tabla.='
+                        <td style="width: 12%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
+                    </tr>
+            </table>';
+        }
+        
         return $tabla;
     }
 
@@ -409,6 +467,7 @@ class Creporte extends CI_Controller {
 
             $data['pie']=$this->programacionpoa->pie_form($proyecto);
             $this->load->view('admin/programacion/reportes/reporte_form5', $data);
+            //echo $data['partidas'];
         }
         else{
             echo "Error !!!";

@@ -349,6 +349,9 @@ $(document).ready(function() {
                 lbase: {
                     required: true,
                 },
+                or_id: {
+                    required: true,
+                },
                 meta: {
                     required: true,
                 }
@@ -359,7 +362,8 @@ $(document).ready(function() {
                 tipo_i: {required: "<font color=red size=1>SELECCIONE UNIDAD EJECUTORA</font>"},
                 indicador: {required: "<font color=red size=1>REGISTRE INDICADOR</font>"},
                 lbase: {required: "<font color=red size=1>REGISTRE LINEA BASE</font>"},
-                meta: {required: "<font color=red size=1>REGISTRE META DE LA ACTIVIDAD</font>"}                    
+                meta: {required: "<font color=red size=1>REGISTRE META DE LA ACTIVIDAD</font>"},
+                or_id: {required: "<font color=red size=1>SELECCIONE ALINEACION OPERACION</font>"}                    
               },
               highlight: function (element) {
                   $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -382,6 +386,7 @@ $(document).ready(function() {
           if (!$valid) {
               $validator.focusInvalid();
           } else {
+            //alert(document.form_nuevo.or_id.value)
             if(document.form_nuevo.tipo_i.value==1){
               meta = parseFloat($('[name="meta"]').val());
               total = parseFloat($('[name="total"]').val());

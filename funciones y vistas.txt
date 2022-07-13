@@ -3204,3 +3204,48 @@ create table imagenes_proy_inversion(
   fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
   primary key(img_id)
  );
+
+
+  ========================= REPORTE CONSOLIDADO DE PARTIDAS 2023 VISTA PARA EL LISTADO DE PROGRAMAS ALINEADOS AL FORM 5
+
+     /// creamos vista para generar el listado de programas alineados al formulario 5
+
+  CREATE OR REPLACE VIEW public.vista_detalle_x_cat_programatica_partida_form5 AS 
+    select p.dep_id,p.dist_id,ap.aper_id,p.proy_id,c.com_id, c.pfec_id,apg.aper_id as aper_id_oe,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,i.ins_costo_total as costo_total,i.ins_gestion as g_id
+    from _componentes c
+    Inner Join insumos as i On i.com_id=c.com_id
+    Inner Join partidas as par On par.par_id=i.par_id
+    Inner Join _insumoproducto as iprod On iprod.ins_id=i.ins_id
+    Inner Join _productos as prod On prod.prod_id=iprod.prod_id
+    Inner Join _objetivos_estrategicos as oe On oe.obj_id=prod.obj_id
+    Inner Join aperturaprogramatica as apg On apg.aper_id=oe.aper_id
+
+    Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
+    Inner Join _proyectos as p On p.proy_id=ap.proy_id
+                
+    where i.ins_estado!=3 and i.aper_id!=0;
+
+     ALTER TABLE public.vista_detalle_x_cat_programatica_partida_form5
+     OWNER TO postgres;
+
+
+
+    /// creamos vista para obtener el del detalle del programa alineado al formulario 5
+
+    CREATE OR REPLACE VIEW public.vista_get_detalle_x_cat_programatica_partida_form5 AS 
+        select p.dep_id,p.dist_id,ap.aper_id,p.proy_id, c.com_id, c.pfec_id,par.par_id, par.par_codigo,par.par_nombre,oe.obj_id,apg.aper_id as aper_id_oe,i.ins_costo_total,i.ins_gestion as g_id
+        from _componentes c
+        Inner Join insumos as i On i.com_id=c.com_id
+        Inner Join partidas as par On par.par_id=i.par_id
+        Inner Join _insumoproducto as iprod On iprod.ins_id=i.ins_id
+        Inner Join _productos as prod On prod.prod_id=iprod.prod_id
+        Inner Join _objetivos_estrategicos as oe On oe.obj_id=prod.obj_id
+        Inner Join aperturaprogramatica as apg On apg.aper_id=oe.aper_id
+
+        Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
+        Inner Join _proyectos as p On p.proy_id=ap.proy_id
+
+        where i.ins_estado!=3 and i.aper_id!=0;
+
+     ALTER TABLE public.vista_get_detalle_x_cat_programatica_partida_form5
+     OWNER TO postgres;

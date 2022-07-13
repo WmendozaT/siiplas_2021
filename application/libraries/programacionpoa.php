@@ -622,7 +622,7 @@ class Programacionpoa extends CI_Controller{
           $tabla.='<section class="col col-6">
                   <label class="label"><b>ALINEACIÓN OPERACIÓN REGIONAL '.$this->gestion.'</b></label>
                     <select class="form-control" id="or_id" name="or_id" title="SELECCIONE">
-                      <option value="0">SELECCIONE ALINEACIÓN OPERACIÓN</option>';
+                      <option value="">SELECCIONE ALINEACIÓN OPERACIÓN</option>';
                       foreach($list_oregional as $row){ 
                         $tabla.='<option value="'.$row['or_id'].'">('.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].') / '.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
                       }
@@ -1536,8 +1536,14 @@ class Programacionpoa extends CI_Controller{
 
        $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
               <thead>
-               <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
-                  <th style="width:1%;height:15px;">#</th>
+               <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>';
+                  if($this->gestion<2023){ /// 2020-2021-2022
+                    $tabla.='<th style="width:2%;height:15px;">#</th>';
+                  }
+                  else{ /// 2023
+                    $tabla.='<th style="width:2%;height:15px;">PROG.</th>';
+                  }
+                $tabla.='
                   <th style="width:2%;">COD.<br>ACE.</th>
                   <th style="width:2%;">COD.<br>ACP.</th>
                   <th style="width:2%;">COD.<br>OPE.</th>
@@ -1599,8 +1605,14 @@ class Programacionpoa extends CI_Controller{
 
                 $nro++;
                 $tabla.=
-                '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">
-                  <td style="height:12px;" bgcolor='.$color_or.'>'.$nro.'</td>
+                '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">';
+                  if($this->gestion<2023){
+                    $tabla.='<td style="width: 2%; height:12px;text-align: center;font-size: 8px;" bgcolor='.$color_or.'><b>'.$nro.'</b></td>';
+                  }
+                  else{
+                    $tabla.='<td style="width: 2%; height:12px;text-align: center;font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['aper_programa'].'</b></td>';
+                  }
+                $tabla.='
                   <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['acc_codigo'].'</td>
                   <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['og_codigo'].'</td>
                   <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
@@ -1610,7 +1622,7 @@ class Programacionpoa extends CI_Controller{
                   <td style="width: 8%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
                   <td style="width: 12%; text-align: left;">'.$rowp['prod_indicador'].'</td>
                   <td style="width: 2.5%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
-                  <td style="width: 2.5%; text-align: center;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>';
+                  <td style="width: 2.5%; text-align: center;font-size: 10px;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>';
 
                   if(count($programado)!=0){
                     $tabla.='<td style="width:2.5%;" align=center>'.round($programado[0]['enero'],2).''.$tp.'</td>';
