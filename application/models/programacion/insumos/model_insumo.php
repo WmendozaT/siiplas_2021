@@ -191,26 +191,7 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    /*---- LISTA CONSOLIDADO DE PARTIDAS POR UNIDAD RESPONSABLE 2023 -----*/
-/*    function list_consolidado_partidas_uresponsable($com_id){
-        $sql = 'select c.com_id, c.pfec_id,par.par_id, par.par_codigo,par.par_nombre,oe.obj_id,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,SUM(i.ins_costo_total) as monto
-                from _componentes c
-                Inner Join insumos as i On i.com_id=c.com_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                Inner Join _insumoproducto as iprod On iprod.ins_id=i.ins_id
-                Inner Join _productos as prod On prod.prod_id=iprod.prod_id
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=prod.obj_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=oe.aper_id
-                where c.com_id='.$com_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
-                group by c.com_id, c.pfec_id,par.par_id,par.par_codigo,par.par_nombre,oe.obj_id,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_proyecto,apg.aper_actividad
-                order by par.par_codigo asc';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-
-
+    /////===== CONSOLIDADO DE PARTIDAS 2023 - POR UNIDAD RESPONSABLE
     /*---- LISTA GET PROGRAMA CONSOLIDADO DE PARTIDAS POR UNIDAD RESPONSABLE 2023 -----*/
     function get_lista_clasificacion_x_programas_partidas_uresponsable($com_id){
         $sql = '     select com_id,aper_id_oe,aper_programa,aper_proyecto,aper_actividad,aper_descripcion,SUM(costo_total) monto
@@ -222,7 +203,7 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    /*---- LISTA GET MONTO PROGRAMADO POR PARTIDA Y PROGRAMA UREPONSABLE 2023 -----*/
+    /*---- LISTA GET MONTO PROGRAMADO POR PARTIDA Y PROGRAMA UNIDAD REPONSABLE 2023 -----*/
     function get_monto_programado_x_partida_programa_uresponsable($com_id,$par_id,$aper_id_oe){
                 $sql = 'select com_id,par_id,par_codigo,par_nombre,obj_id,aper_id_oe,SUM(ins_costo_total) monto
                         from vista_get_detalle_x_cat_programatica_partida_form5
@@ -232,10 +213,32 @@ class Model_insumo extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    /////===== END CONSOLIDADO DE PARTIDAS POR UNIDAD RESPONSABLE
 
 
+    /////===== CONSOLIDADO DE PARTIDAS 2023 - POR PROYECTO / UNIDAD RESPONSABLE
+    /*---- LISTA GET PROGRAMA CONSOLIDADO DE PARTIDAS POR UNIDAD / PROYECTO 2023 -----*/
+    function get_lista_clasificacion_x_programas_partidas_unidad($proy_id){
+        $sql = '     select proy_id,aper_id_oe,aper_programa,aper_proyecto,aper_actividad,aper_descripcion,SUM(costo_total) monto
+                     from vista_detalle_x_cat_programatica_partida_form5
+                     where proy_id='.$proy_id.' and g_id='.$this->gestion.'
+                     group by proy_id,aper_id_oe,aper_programa,aper_proyecto,aper_actividad,aper_descripcion';
 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
+    /*---- LISTA GET MONTO PROGRAMADO POR PARTIDA Y PROGRAMA UNIDAD REPONSABLE 2023 -----*/
+    function get_monto_programado_x_partida_programa_unidad($proy_id,$par_id,$aper_id_oe){
+                $sql = 'select proy_id,par_id,par_codigo,par_nombre,obj_id,aper_id_oe,SUM(ins_costo_total) monto
+                        from vista_get_detalle_x_cat_programatica_partida_form5
+                        where proy_id='.$proy_id.' and g_id='.$this->gestion.' and par_id='.$par_id.' and aper_id_oe='.$aper_id_oe.'
+                        group by proy_id,par_id,par_codigo,par_nombre,obj_id,aper_id_oe';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+    /////===== END CONSOLIDADO DE PARTIDAS POR UNIDAD RESPONSABLE
 
 
 

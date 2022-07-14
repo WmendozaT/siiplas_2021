@@ -781,10 +781,17 @@ class Evaluacionpoa extends CI_Controller{
 
       }
 
-      for ($i=1; $i <=4 ; $i++) { 
-        $par[$i][3]=round((($par[$i][2]/count($regionales))*100),2);
+      if(count($regionales)!=0){
+        for ($i=1; $i <=4 ; $i++) { 
+          $par[$i][3]=round((($par[$i][2]/count($regionales))*100),2);
+        }
       }
-
+      else{
+        for ($i=1; $i <=4 ; $i++) { 
+          $par[$i][3]=0;
+        }
+      }
+      
       return $par;
     }
 
@@ -820,8 +827,15 @@ class Evaluacionpoa extends CI_Controller{
         }
       }
 
-      for ($i=1; $i <=4 ; $i++) { 
-        $par[$i][3]=round((($par[$i][2]/$nro_unidades)*100),2);
+      if($nro_unidades!=0){
+        for ($i=1; $i <=4 ; $i++) { 
+          $par[$i][3]=round((($par[$i][2]/$nro_unidades)*100),2);
+        }
+      }
+      else{
+        for ($i=1; $i <=4 ; $i++) { 
+          $par[$i][3]=0;
+        }
       }
 
       return $par;
@@ -862,8 +876,15 @@ class Evaluacionpoa extends CI_Controller{
         }
       }
 
-      for ($i=1; $i <=4 ; $i++) { 
-        $par[$i][3]=round((($par[$i][2]/$nro_dist)*100),2);
+      if($nro_dist!=0){
+        for ($i=1; $i <=4 ; $i++) { 
+          $par[$i][3]=round((($par[$i][2]/$nro_dist)*100),2);
+        }
+      }
+      else{
+        for ($i=1; $i <=4 ; $i++) { 
+          $par[$i][3]=0;
+        }
       }
 
       return $par;
@@ -1285,21 +1306,20 @@ class Evaluacionpoa extends CI_Controller{
         $tr[8][$i]=0; /// en proceso %
       }
 
-      for ($i=1; $i <=$this->tmes; $i++) {
-        $valor=$this->obtiene_datos_evaluacíon_regional($dep_id,$i,1);
-        $tr[2][$i]=$valor[1]; /// Prog
-        $tr[3][$i]=$valor[2]; /// cumplidas
-        $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
-        if($tr[2][$i]!=0){
-          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+      if($tr[2][$i]!=0){
+        for ($i=1; $i <=$this->tmes; $i++) {
+          $valor=$this->obtiene_datos_evaluacíon_regional($dep_id,$i,1);
+          $tr[2][$i]=$valor[1]; /// Prog
+          $tr[3][$i]=$valor[2]; /// cumplidas
+          $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
+          if($tr[2][$i]!=0){
+            $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+          }
+          $tr[6][$i]=(100-$tr[5][$i]);
+          $proceso=$this->obtiene_datos_evaluacíon_regional($dep_id,$i,2);
+          $tr[7][$i]=$proceso[2]; /// En Proceso
+          $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
         }
-        $tr[6][$i]=(100-$tr[5][$i]);
-        $proceso=$this->obtiene_datos_evaluacíon_regional($dep_id,$i,2);
-        $tr[7][$i]=$proceso[2]; /// En Proceso
-      
-        $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
-        
-
       }
 
     return $tr;
@@ -1384,19 +1404,21 @@ class Evaluacionpoa extends CI_Controller{
         $tr[8][$i]=0; /// en proceso %
       }
 
-      for ($i=1; $i <=$this->tmes; $i++) {
-        $valor=$this->obtiene_datos_evaluacíon_distrital($dist_id,$i,1);
-        $tr[2][$i]=$valor[1]; /// Prog
-        $tr[3][$i]=$valor[2]; /// cumplidas
-        $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
-        if($tr[2][$i]!=0){
-          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
-        }
-        $tr[6][$i]=(100-$tr[5][$i]);
-        $proceso=$this->obtiene_datos_evaluacíon_distrital($dist_id,$i,2);
-        $tr[7][$i]=$proceso[2]; /// En Proceso
+      if($tr[2][$i]!=0){
+        for ($i=1; $i <=$this->tmes; $i++) {
+          $valor=$this->obtiene_datos_evaluacíon_distrital($dist_id,$i,1);
+          $tr[2][$i]=$valor[1]; /// Prog
+          $tr[3][$i]=$valor[2]; /// cumplidas
+          $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
+          if($tr[2][$i]!=0){
+            $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+          }
+          $tr[6][$i]=(100-$tr[5][$i]);
+          $proceso=$this->obtiene_datos_evaluacíon_distrital($dist_id,$i,2);
+          $tr[7][$i]=$proceso[2]; /// En Proceso
 
-        $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
+          $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
+        }
       }
 
     return $tr;

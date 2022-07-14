@@ -78,9 +78,17 @@ class Crep_evalform2 extends CI_Controller {
 
     $total=$matriz[1][4];
 
-    for ($i=1; $i <=4 ; $i++) { 
-      $matriz[5][$i]=round((($matriz[1][$i]/$total)*100),2);  /// % Programado con respecto al total acumulado
-      $matriz[6][$i]=round((($matriz[2][$i]/$total)*100),2);  /// % Ejecutado con respecto al total acumulado
+    if($total!=0){
+      for ($i=1; $i <=4 ; $i++) { 
+        $matriz[5][$i]=round((($matriz[1][$i]/$total)*100),2);  /// % Programado con respecto al total acumulado
+        $matriz[6][$i]=round((($matriz[2][$i]/$total)*100),2);  /// % Ejecutado con respecto al total acumulado
+      }
+    }
+    else{
+      for ($i=1; $i <=4 ; $i++) { 
+        $matriz[5][$i]=0;  /// % Programado con respecto al total acumulado
+        $matriz[6][$i]=0;  /// % Ejecutado con respecto al total acumulado
+      }
     }
 
     return $matriz;

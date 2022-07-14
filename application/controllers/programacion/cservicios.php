@@ -269,7 +269,7 @@ class Cservicios extends CI_Controller {
                         <th style="width:5%;">FORM. POA N 4</th>
                         <th style="width:5%;">FORM. POA N 5</th>
                         <th style="width:5%;">EXCEL ACTIVIDADES</th>
-                        <th style="width:5%;">ELIMINAR ACTIVIDADES</th>
+                        <th style="width:5%;">ELIMINAR ACTIVIDADES </th>
                     </tr>
                 </thead>
                 <tbody>';
