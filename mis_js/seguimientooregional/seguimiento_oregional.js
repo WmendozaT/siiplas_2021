@@ -36,6 +36,190 @@
     }
   }
 
+///// =================== MODULO DE REPORTES POA - EVALUACION DE FORMULARIO 2
+////------- menu select regionales
+  $("#d_id").change(function () {
+    $("#d_id option:selected").each(function () {
+      dep_id=$(this).val();
+      if(dep_id!=''){
+        var url = base+"index.php/reporte_evalform2/crep_evalform2/get_cuadro_evaluacion_formulario2";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "dep_id="+dep_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+            $('#lista_consolidado').fadeIn(1000).html(response.tabla);
+            cuadro_grafico_cumplimiento_operaciones(response.matriz,response.nro,dep_id);
+            cuadro_grafico_cumplimiento_operaciones_regresion(response.matriz_regresion); 
+          }
+          else{
+            alertify.error("ERROR AL LISTAR");
+          }
+        }); 
+      }
+      else{
+        $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Evaluaci&oacute;n OPERACIONES '+gestion+'</h1></div></div>');
+      }
+    });
+  });
+
+
+
+
+
+
+
+
+//// grafico nivel de cumplimiento de operaciones Nacional / Regional
+function cuadro_grafico_cumplimiento_operaciones(matriz,nro,dep_id){
+  if(dep_id==0){
+      let detalle=[];
+      for (var i = 0; i < nro; i++) {
+          detalle[i]= { name: matriz[i][2],y: matriz[i][6]};
+      }
+
+       Highcharts.chart('grafico1', {
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: ''
+        },
+        subtitle: {
+          text: '(%) de cumplimiento de Operaciones (Formulario N° 2)<br><b></b>'
+        },
+        accessibility: {
+          announceNewData: {
+            enabled: true
+          }
+        },
+        xAxis: {
+          type: 'category'
+        },
+        yAxis: {
+          title: {
+            text: '(%) de Cumplimiento de Operaciones a Nivel de Regionales'
+          }
+
+        },
+        legend: {
+          enabled: false
+        },
+        plotOptions: {
+          series: {
+            borderWidth: 0,
+            dataLabels: {
+              enabled: true,
+              format: '{point.y:.1f}%'
+            }
+          }
+        },
+
+        tooltip: {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> Cumplimiento<br/>'
+        },
+
+        series: [
+          {
+            name: "Operaciones",
+            colorByPoint: true,
+            data: detalle
+          }
+        ]
+      });
+  }
+  else{
+     
+  }
+
+}
+
+//// grafico nivel de cumplimiento de operaciones Nacional / Regional
+function cuadro_grafico_cumplimiento_operaciones_regresion(matriz){
+      let detalle1=[];
+      for (var i = 0; i < 4; i++) {
+          detalle1[i]= matriz[5][i];
+      }
+
+      let detalle2=[];
+      for (var i = 0; i < 4; i++) {
+          detalle2[i]=  matriz[6][i];
+      }
+    /// REGRESION LINEAL ACUMULADO
+  chart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'regresion',  // Le doy el nombre a la gráfica
+        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+      },
+      title: {
+        text: '% CUMPLIMIENTO DE OPERACIONES PRIORIZADOS</b>'  // Titulo (Opcional)
+      },
+      subtitle: {
+        text: ''   // Subtitulo (Opcional)
+      },
+      // Pongo los datos en el eje de las 'X'
+      xAxis: {
+        categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
+        // Pongo el título para el eje de las 'X'
+        title: {
+          text: '% Operaciones Acumulados por Trimestre'
+        }
+      },
+      yAxis: {
+        // Pongo el título para el eje de las 'Y'
+        title: {
+          text: '% Cumplimiento'
+        }
+      },
+      // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+      tooltip: {
+        enabled: true,
+        formatter: function() {
+          return '<b>'+ this.series.name +'</b><br/>'+
+            this.x +': '+ this.y +' '+this.series.name;
+        }
+      },
+      // Doy opciones a la gráfica
+      plotOptions: {
+        line: {
+          dataLabels: {
+            enabled: true
+          },
+          enableMouseTracking: true
+        }
+      },
+      // Doy los datos de la gráfica para dibujarlas
+      series: [{
+          name: '(%) Programado',
+          data: detalle1
+          //data: [0,<?php echo $matriz_form2_regresion[5][1];?>,<?php echo $matriz_form2_regresion[5][2];?>,<?php echo $matriz_form2_regresion[5][3];?>,<?php echo $matriz_form2_regresion[5][4];?>]
+        },
+        {
+          name: '(%) Cumplimiento',
+          data: detalle2
+          //data: [0,<?php echo $matriz_form2_regresion[6][1];?>,<?php echo $matriz_form2_regresion[6][2];?>,<?php echo $matriz_form2_regresion[6][3];?>,<?php echo $matriz_form2_regresion[6][4];?>]
+        }],
+      });
+
+}
+///// ========================================================================
+
+
+
+
+
+
+
+
 
 /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL (EJECUCION)------*/
 $(function() {

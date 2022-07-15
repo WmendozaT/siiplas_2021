@@ -32,14 +32,193 @@ class Crep_evalform2 extends CI_Controller {
         $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
         $this->tp_adm = $this->session->userData('tp_adm');
         $this->mes = $this->mes_nombre();
+        $this->load->library('eval_oregional');
       }
       else{
           redirect('/','refresh');
       }
     }
 
-  /// MENU EVALUACIÓN POA 
+  /// MENU EVALUACIÓN POA FORM2
   public function menu_eval_form2(){
+    $data['menu']=$this->menu(7); //// genera menu
+    $regionales=$this->model_proyecto->list_departamentos();
+    $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+    $tabla='';
+    $tabla.='
+      <input name="base" type="hidden" value="'.base_url().'">
+      <input name="gestion" type="hidden" value="'.$this->gestion.'">
+      <article class="col-sm-12">
+        <div class="well">
+          <form class="smart-form">
+              <header><b>CONSOLIDADO EVALUACI&Oacute;N OPERACIONES - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
+              <fieldset>          
+                <div class="row">
+                  <section class="col col-3">
+                    <label class="label"><b>DIRECCIÓN ADMINISTRATIVA</b></label>
+                    <select class="form-control" id="d_id" name="d_id" title="SELECCIONE REGIONAL">
+                    <option value="">Seleccione Regional ....</option>
+                    <option value="0">0.- INSTITUCIONAL C.N.S.</option>';
+                    foreach($regionales as $row){
+                      if($row['dep_id']!=0){
+                        $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                      }
+                    }
+                    $tabla.='
+                    </select>
+                  </section>
+                </div>
+              </fieldset>
+          </form>
+        </div>
+      </article>';
+
+    $data['regional']=$tabla;
+    $data['da']=$this->model_proyecto->list_departamentos();
+    $tabla='';
+    $tabla.='<div class="well">
+              <div class="jumbotron">
+                <h1>Evaluaci&oacute;n Operaciones '.$this->gestion.'</h1>
+                  <p>
+                    Reporte consolidado de evaluaci&oacute;n de Operaciones (formulario N° 2) al '.$this->trimestre[0]['trm_descripcion'].' de '.$this->gestion.' a nivel Institucional, Regional.
+                  </p>
+              </div>
+            </div>';
+
+    $data['titulo_modulo']=$tabla;
+
+    $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_menu', $data);
+  }
+
+
+
+  /*-------- GET CUADRO EVALUACION FORM 2 --------*/
+  public function get_cuadro_evaluacion_formulario2(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $dep_id = $this->security->xss_clean($post['dep_id']); // dep id, 0: Nacional
+      $regional=$this->model_proyecto->get_departamento($dep_id);
+      $nro=count($this->model_proyecto->list_departamentos()); /// nro de regionales
+
+
+      $matriz=$this->matriz_eval_form2(); /// Matriz
+      $cabecera=$this->cabecera_reporte_grafico(); /// Cabecera Grafico
+      $tabla_vista=$this->tabla_eval_form2($matriz,$nro,0); /// Tabla Vista
+      $tabla_impresion=$this->tabla_eval_form2($matriz,$nro,1); /// Tabla Impresion
+
+      //-------
+      $matriz_form2_regresion=$this->tabla_trimestral_acumulado_institucional();
+      $tabla_vista_acumulado=$this->get_tabla_cumplimiento_form2_priorizados_institucional(0);
+      $tabla_vista_acumulado_impresion=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
+
+      $tabla='';
+      $tabla='
+      <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+        <header>
+          <div id="cabecera" style="display: none"></div>
+        </header>
+        <div>
+          <h2>Evaluación del Formulario N° 2 (Operaciones) - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'</h2>
+            <div class="jarviswidget-editbox">
+            </div>
+            <div class="widget-body">
+                <p>
+                <div style="font-size: 25px;font-family: Arial¨;"><b></b></div>
+                </p>
+                <hr class="simple">
+                <ul id="myTab1" class="nav nav-tabs bordered">
+                  <li class="active">
+                      <a href="#s1" data-toggle="tab"> (%) Cumplimiento de Operaciones</a>
+                  </li>
+                  <li>
+                      <a href="#s2" data-toggle="tab"> Detalle de Cumplimiento</a>
+                  </li>
+                </ul>
+
+                <div id="myTabContent1" class="tab-content padding-10">
+                  <div class="tab-pane fade in active" id="s1">
+                    <article class="col-sm-12 col-md-12 col-lg-12">
+                    '.$tabla_vista.'
+                    
+                      <div class="rows" align=center>
+                        <div id="graf_detalle_nro_proyectos">
+                          <div id="grafico1" style="width: 950px; height: 550px; margin: 2 auto"></div>
+                        </div>
+                      </div>
+                      <div id="tabla_impresion_detalle1" style="display: none">
+                       '.$tabla_impresion.'
+                      </div>
+                      <div align="right">
+                        <button  onClick="imprimir_distribucion_proyectos()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </div>
+                      <hr>
+                    </article>
+                    
+                    <hr>
+                    <div class="row">
+                      <div class="table-responsive" align=center>
+                      
+                      </div>
+                    </div>
+                  
+                  </div>
+                  
+                  <div class="tab-pane fade" id="s2">
+                    <div class="row">
+                      <article class="col-sm-12 col-md-12 col-lg-12">
+                      <div class="rows" align=center>
+                        '.$tabla_vista_acumulado.'
+                        <div id="graf_detalle_nro_ppto">
+                          <div id="regresion" style="width: 900px; height: 550px; margin: 2 auto"></div>
+                        </div>
+                      </div>
+                      <div id="tabla_impresion_detalle2" style="display: none">
+                       
+                      </div>
+                      <div align="right">
+                        <button  onClick="imprimir_distribucion_ppto()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </div>
+                      <hr>
+                    </article>
+
+                    </div>
+                  </div>
+
+                </div>
+            </div>
+          </div>
+      </div>';
+
+      $result = array(
+        'respuesta' => 'correcto',
+        'tabla'=>$tabla,
+        'nro'=>$nro,
+        'matriz'=>$matriz,
+        'matriz_regresion'=>$matriz_form2_regresion,
+      );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public function menu_eval_form22(){
     $data['menu']=$this->menu(7); //// genera menu
     $data['titulo']=' <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <section id="widget-grid" class="well">
@@ -67,6 +246,15 @@ class Crep_evalform2 extends CI_Controller {
 
   /*-- GENERA TABLA PARA EVALUACION TRIMESTRAL INSTITUCIONAL --*/
   public function tabla_trimestral_acumulado_institucional(){
+
+    for ($i=0; $i <=4 ; $i++) { 
+      $matriz[1][$i]=0;
+      $matriz[2][$i]=0;
+      $matriz[3][$i]=0;
+      $matriz[4][$i]=0;
+      $matriz[5][$i]=0;
+      $matriz[6][$i]=0;
+    }
 
     for ($i=1; $i <=4 ; $i++) { 
       $valor=$this->calificacion_trimestral_acumulado_institucional($i);
@@ -227,17 +415,18 @@ class Crep_evalform2 extends CI_Controller {
     $tabla='';
     // tp_rep : 0 normal
     // tp_rep : 1 impresion
-    $tyle='class="table table-bordered" border=0.2 style="width:100%;"';
+    $tyle='class="table table-bordered" border=0.2 style="width:80%;"';
     if($tp_rep==1){
       $tyle='class="change_order_items" border=1 style="width:100%;"';
     }
 
     $tabla.='
+      <center>
         <table '.$tyle.'>
           <thead>
             <tr align=center>
               <th style="width:9.09%;"></th>';
-              for ($i=1; $i<=$nro; $i++) { 
+              for ($i=0; $i<$nro; $i++) { 
                 $tabla.='<th style="width:9.09%;"><center>'.$matriz[$i][2].'</center></th>';
               }
               $tabla.='
@@ -246,13 +435,14 @@ class Crep_evalform2 extends CI_Controller {
           <tbody>
             <tr>
               <td style="height:20px;"><b>(%) CUMPLIMIENTO</b></td>';
-              for ($i=1; $i<=$nro; $i++) { 
+              for ($i=0; $i<$nro; $i++) { 
                 $tabla.='<td style="width:9.09%;" align=right><b>'.$matriz[$i][6].' %</b></td>';
               }
               $tabla.='
             </tr>
           </tbody>
-        </table>';
+        </table>
+      </center>';
 
     return $tabla;
   }
@@ -264,13 +454,14 @@ class Crep_evalform2 extends CI_Controller {
     $nro=0;
     foreach($regionales as $row){
       $calificacion=$this->calificacion_total_form2_regional($row['dep_id']);
-      $nro++;
+      
       $mat[$nro][1]=$row['dep_id'];
       $mat[$nro][2]=strtoupper($row['dep_sigla']);
       $mat[$nro][3]=$calificacion[1]; /// programado trimestral
       $mat[$nro][4]=$calificacion[2]; /// ejecutado trimestral
       $mat[$nro][5]=$calificacion[3]; /// total programado Gestion
       $mat[$nro][6]=$calificacion[4]; /// % cumplimiento
+      $nro++;
     }
 
     return $mat;
