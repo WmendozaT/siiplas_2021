@@ -1087,8 +1087,8 @@ class Eval_oregional extends CI_Controller{
   //// Matriz lista de cumplimiento de Operaciones por Regional 
   public function matriz_cumplimiento_operaciones_regional($dep_id){
     $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
-     for ($i=1; $i <=count($lista_ogestion); $i++) { 
-      for ($j=1; $j <=5 ; $j++) { 
+     for ($i=0; $i <count($lista_ogestion); $i++) { 
+      for ($j=0; $j <5 ; $j++) { 
         $matriz[$i][$j]=0;
       } 
      }
@@ -1096,12 +1096,14 @@ class Eval_oregional extends CI_Controller{
      $nro=0;
      foreach($lista_ogestion as $row){
       $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+        
+        $matriz[$nro][0]=$row['og_codigo']; /// cod OG
+        $matriz[$nro][1]=$row['or_codigo']; /// cod OR
+        $matriz[$nro][2]=$row['or_objetivo']; /// Descripcion
+        $matriz[$nro][3]=$calificacion[3]; /// Cumplimiento al Trimestre
+        $matriz[$nro][4]=$calificacion[4]; /// Cumplimiento a la Gestion
+
         $nro++;
-        $matriz[$nro][1]=$row['og_codigo']; /// cod OG
-        $matriz[$nro][2]=$row['or_codigo']; /// cod OR
-        $matriz[$nro][3]=$row['or_objetivo']; /// Descripcion
-        $matriz[$nro][4]=$calificacion[3]; /// Cumplimiento al Trimestre
-        $matriz[$nro][5]=$calificacion[4]; /// Cumplimiento a la Gestion
      }
 
      return $matriz;

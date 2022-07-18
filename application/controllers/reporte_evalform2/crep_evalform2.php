@@ -86,8 +86,15 @@ class Crep_evalform2 extends CI_Controller {
             </div>';
 
     $data['titulo_modulo']=$tabla;
-
     $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_menu', $data);
+    //echo count($this->model_objetivogestion->get_list_ogestion_por_regional(2));
+    /*$matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional(2);
+    for ($i=0; $i < count($this->model_objetivogestion->get_list_ogestion_por_regional(2)); $i++) { 
+      for ($j=0; $j < 5; $j++) { 
+        echo "[".$matriz[$i][$j]."]";
+      }
+      echo "<br>";
+    }*/
   }
 
 
@@ -98,27 +105,55 @@ class Crep_evalform2 extends CI_Controller {
       $post = $this->input->post();
       $dep_id = $this->security->xss_clean($post['dep_id']); // dep id, 0: Nacional
       $regional=$this->model_proyecto->get_departamento($dep_id);
-      $nro=count($this->model_proyecto->list_departamentos()); /// nro de regionales
+
+      if($dep_id==0){
+        $titulo='INSTITUCIONAL  / '.$this->gestion;
+        $nro=count($this->model_proyecto->list_departamentos()); /// nro de regionales
+        $matriz=$this->matriz_eval_form2(); /// Matriz
+        $cabecera=$this->cabecera_reporte_grafico(); /// Cabecera Grafico
+        $tabla_vista=$this->tabla_eval_form2($matriz,$nro,0); /// Tabla Vista
+        $tabla_impresion=$this->tabla_eval_form2($matriz,$nro,1); /// Tabla Impresion
+
+        //-------
+        $matriz_form2_regresion=$this->tabla_trimestral_acumulado_institucional();
+        $tabla_vista_acumulado=$this->get_tabla_cumplimiento_form2_priorizados_institucional(0);
+        $tabla_vista_acumulado_impresion=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
+      }
+      else{
+        $titulo=strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion;
+        $nro=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
+        $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);      
+        $cabecera=$this->eval_oregional->cabecera_reporte_grafico($regional);
+        $tabla_vista=$this->eval_oregional->calificacion_total_form2_regional($dep_id);
+
+        $lista='';
+        $lista.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>
+                <ul>';
+                  for ($i=0; $i <$nro; $i++) { 
+                    $lista.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$matriz[$i][0].'.'.$matriz[$i][1].'.- '.$matriz[$i][2].' - <b>'.$matriz[$i][4].' %</b></li>';
+                  }
+                  $lista.='
+                </ul>
+                <hr>';
+        $tabla_impresion=$lista;
 
 
-      $matriz=$this->matriz_eval_form2(); /// Matriz
-      $cabecera=$this->cabecera_reporte_grafico(); /// Cabecera Grafico
-      $tabla_vista=$this->tabla_eval_form2($matriz,$nro,0); /// Tabla Vista
-      $tabla_impresion=$this->tabla_eval_form2($matriz,$nro,1); /// Tabla Impresion
+           //-------
+        $matriz_form2_regresion=$this->tabla_trimestral_acumulado_institucional();
+        $tabla_vista_acumulado=$this->get_tabla_cumplimiento_form2_priorizados_institucional(0);
+        $tabla_vista_acumulado_impresion=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
+      }
 
-      //-------
-      $matriz_form2_regresion=$this->tabla_trimestral_acumulado_institucional();
-      $tabla_vista_acumulado=$this->get_tabla_cumplimiento_form2_priorizados_institucional(0);
-      $tabla_vista_acumulado_impresion=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
+
 
       $tabla='';
       $tabla='
       <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
         <header>
-          <div id="cabecera" style="display: none"></div>
+          <div id="cabecera" style="display: none">'.$cabecera.'</div>
         </header>
         <div>
-          <h2>Evaluación del Formulario N° 2 (Operaciones) - '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'</h2>
+          <h2>Evaluación del Formulario N° 2 (Operaciones) - '.$titulo.'</h2>
             <div class="jarviswidget-editbox">
             </div>
             <div class="widget-body">
@@ -138,45 +173,36 @@ class Crep_evalform2 extends CI_Controller {
                 <div id="myTabContent1" class="tab-content padding-10">
                   <div class="tab-pane fade in active" id="s1">
                     <article class="col-sm-12 col-md-12 col-lg-12">
-                    '.$tabla_vista.'
-                    
                       <div class="rows" align=center>
-                        <div id="graf_detalle_nro_proyectos">
+                        <div id="graf_detalle1">
                           <div id="grafico1" style="width: 950px; height: 550px; margin: 2 auto"></div>
                         </div>
+                        '.$tabla_vista.' 
                       </div>
                       <div id="tabla_impresion_detalle1" style="display: none">
                        '.$tabla_impresion.'
                       </div>
                       <div align="right">
-                        <button  onClick="imprimir_distribucion_proyectos()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button  onClick="imprimir_grafico1()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       </div>
                       <hr>
                     </article>
-                    
-                    <hr>
-                    <div class="row">
-                      <div class="table-responsive" align=center>
-                      
-                      </div>
-                    </div>
-                  
                   </div>
                   
                   <div class="tab-pane fade" id="s2">
                     <div class="row">
                       <article class="col-sm-12 col-md-12 col-lg-12">
                       <div class="rows" align=center>
-                        '.$tabla_vista_acumulado.'
-                        <div id="graf_detalle_nro_ppto">
-                          <div id="regresion" style="width: 900px; height: 550px; margin: 2 auto"></div>
+                        <div id="graf_detalle2">
+                          <div id="grafico2" style="width: 900px; height: 550px; margin: 2 auto"></div>
                         </div>
+                        '.$tabla_vista_acumulado.'
                       </div>
                       <div id="tabla_impresion_detalle2" style="display: none">
-                       
+                       '.$tabla_vista_acumulado_impresion.'
                       </div>
                       <div align="right">
-                        <button  onClick="imprimir_distribucion_ppto()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button  onClick="imprimir_grafico2()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       </div>
                       <hr>
                     </article>
@@ -191,6 +217,7 @@ class Crep_evalform2 extends CI_Controller {
 
       $result = array(
         'respuesta' => 'correcto',
+        'titulo'=>$titulo,
         'tabla'=>$tabla,
         'nro'=>$nro,
         'matriz'=>$matriz,
@@ -341,36 +368,38 @@ class Crep_evalform2 extends CI_Controller {
     if($tp_rep==0){ /// VISTA NORMAL
 
       $tabla.='
-      <table class="table table-bordered" border=0.2 style="width:100%;">
-        <thead>
-          <tr align=center>
-            <th style="width:20%; height:30px; text-align:center">I TRIMESTRE</th>
-            <th style="width:20%;text-align:center">II TRIMESTRE</th>
-            <th style="width:20%;text-align:center">III TRIMESTRE</th>
-            <th style="width:20%;text-align:center">IV TRIMESTRE</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>';
-          for ($i=1; $i <=4 ; $i++) {
+      <center>
+        <table class="table table-bordered" border=0.2 style="width:60%;">
+          <thead>
+            <tr align=center>
+              <th style="width:20%; height:30px; text-align:center">I TRIMESTRE</th>
+              <th style="width:20%;text-align:center">II TRIMESTRE</th>
+              <th style="width:20%;text-align:center">III TRIMESTRE</th>
+              <th style="width:20%;text-align:center">IV TRIMESTRE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>';
+            for ($i=1; $i <=4 ; $i++) {
+              $tabla.='
+              <td style="width:6%;" align=center>
+                <table class="table table-bordered" border=0.2 style="width:80%;">
+                  <tr>
+                    <td style="width:50%;"><b>(%) PROG.</b></td>
+                    <td style="width:50%;font-size: 12px; color:blue" align=right><b>'.$valor[5][$i].'%</b></td>
+                  </tr>
+                  <tr>
+                    <td><b>(%) CUMP.</b></td>
+                    <td style="font-size: 12px; color:blue" align=right><b>'.$valor[6][$i].'%</b></td>
+                  </tr>
+                </table>
+              </td>';
+            }
             $tabla.='
-            <td style="width:6%;" align=center>
-              <table class="table table-bordered" border=0.2 style="width:80%;">
-                <tr>
-                  <td style="width:50%;"><b>(%) PROG.</b></td>
-                  <td style="width:50%;font-size: 12px; color:blue" align=right><b>'.$valor[5][$i].'%</b></td>
-                </tr>
-                <tr>
-                  <td><b>(%) CUMP.</b></td>
-                  <td style="font-size: 12px; color:blue" align=right><b>'.$valor[6][$i].'%</b></td>
-                </tr>
-              </table>
-            </td>';
-          }
-          $tabla.='
-          </tr>  
-        </tbody>
-      </table>';
+            </tr>  
+          </tbody>
+        </table>
+      </center>';
     }
     else{ /// VISTA PARA REPORTES
       $tabla.='

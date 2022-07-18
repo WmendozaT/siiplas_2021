@@ -57,8 +57,9 @@
         request.done(function (response, textStatus, jqXHR) {
           if (response.respuesta == 'correcto') {
             $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-            cuadro_grafico_cumplimiento_operaciones(response.matriz,response.nro,dep_id);
-            cuadro_grafico_cumplimiento_operaciones_regresion(response.matriz_regresion); 
+            cuadro_grafico_cumplimiento_operaciones(response.matriz,response.nro,dep_id,response.titulo);
+            cuadro_grafico_cumplimiento_operaciones_regresion(response.matriz_regresion,response.titulo); 
+
           }
           else{
             alertify.error("ERROR AL LISTAR");
@@ -79,7 +80,7 @@
 
 
 //// grafico nivel de cumplimiento de operaciones Nacional / Regional
-function cuadro_grafico_cumplimiento_operaciones(matriz,nro,dep_id){
+function cuadro_grafico_cumplimiento_operaciones(matriz,nro,dep_id,titulo){
   if(dep_id==0){
       let detalle=[];
       for (var i = 0; i < nro; i++) {
@@ -94,7 +95,7 @@ function cuadro_grafico_cumplimiento_operaciones(matriz,nro,dep_id){
           text: ''
         },
         subtitle: {
-          text: '(%) de cumplimiento de Operaciones (Formulario N° 2)<br><b></b>'
+          text: '(%) de Cumplimiento de Operaciones (Formulario N° 2)<br><b>'+titulo+'</b>'
         },
         accessibility: {
           announceNewData: {
@@ -138,79 +139,205 @@ function cuadro_grafico_cumplimiento_operaciones(matriz,nro,dep_id){
       });
   }
   else{
-     
+      let categoria=[];
+      for (var i = 0; i < nro; i++) {
+          categoria[i]= matriz[i][0]+'.'+matriz[i][1];
+      }
+
+      let detalle=[];
+      for (var i = 0; i < nro; i++) {
+          detalle[i]= matriz[i][4];
+      }
+
+     Highcharts.chart('grafico1', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: ''
+        },
+        subtitle: {
+            text: 'CUMPLIMIENTO DE OPERACIONES AL'
+        },
+        xAxis: {
+            categories: categoria,
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'CUMPLIMIENTO DE METAS',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'Operaciones'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' %'
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        series: [{
+            name: 'CUMPLIMIENTO %',
+            data: detalle
+        }]
+    });
   }
 
 }
 
 //// grafico nivel de cumplimiento de operaciones Nacional / Regional
-function cuadro_grafico_cumplimiento_operaciones_regresion(matriz){
-      let detalle1=[];
-      for (var i = 0; i < 4; i++) {
-          detalle1[i]= matriz[5][i];
-      }
+function cuadro_grafico_cumplimiento_operaciones_regresion(matriz,titulo){
+    let detalle1=[];
+    for (var i = 0; i < 4; i++) {
+        detalle1[i]= matriz[5][i];
+    }
 
-      let detalle2=[];
-      for (var i = 0; i < 4; i++) {
-          detalle2[i]=  matriz[6][i];
-      }
-    /// REGRESION LINEAL ACUMULADO
-  chart = new Highcharts.Chart({
-      chart: {
-        renderTo: 'regresion',  // Le doy el nombre a la gráfica
-        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
-      },
+    let detalle2=[];
+    for (var i = 0; i < 4; i++) {
+        detalle2[i]=  matriz[6][i];
+    }
+  /// REGRESION LINEAL ACUMULADO
+chart = new Highcharts.Chart({
+    chart: {
+      renderTo: 'grafico2',  // Le doy el nombre a la gráfica
+      defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+    },
+    title: {
+      text: '' // Titulo (Opcional)
+    },
+    subtitle: {
+      text: '% CUMPLIMIENTO DE OPERACIONES PRIORIZADOS<br><b>'+titulo+'</b>'    // Subtitulo (Opcional)
+    },
+    // Pongo los datos en el eje de las 'X'
+    xAxis: {
+      categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
+      // Pongo el título para el eje de las 'X'
       title: {
-        text: '% CUMPLIMIENTO DE OPERACIONES PRIORIZADOS</b>'  // Titulo (Opcional)
-      },
-      subtitle: {
-        text: ''   // Subtitulo (Opcional)
-      },
-      // Pongo los datos en el eje de las 'X'
-      xAxis: {
-        categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
-        // Pongo el título para el eje de las 'X'
-        title: {
-          text: '% Operaciones Acumulados por Trimestre'
-        }
-      },
-      yAxis: {
-        // Pongo el título para el eje de las 'Y'
-        title: {
-          text: '% Cumplimiento'
-        }
-      },
-      // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
-      tooltip: {
-        enabled: true,
-        formatter: function() {
-          return '<b>'+ this.series.name +'</b><br/>'+
-            this.x +': '+ this.y +' '+this.series.name;
-        }
-      },
-      // Doy opciones a la gráfica
-      plotOptions: {
-        line: {
-          dataLabels: {
-            enabled: true
-          },
-          enableMouseTracking: true
-        }
-      },
-      // Doy los datos de la gráfica para dibujarlas
-      series: [{
-          name: '(%) Programado',
-          data: detalle1
-          //data: [0,<?php echo $matriz_form2_regresion[5][1];?>,<?php echo $matriz_form2_regresion[5][2];?>,<?php echo $matriz_form2_regresion[5][3];?>,<?php echo $matriz_form2_regresion[5][4];?>]
+        text: '% Operaciones Acumulados por Trimestre'
+      }
+    },
+    yAxis: {
+      // Pongo el título para el eje de las 'Y'
+      title: {
+        text: '% Cumplimiento'
+      }
+    },
+    // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+    tooltip: {
+      enabled: true,
+      formatter: function() {
+        return '<b>'+ this.series.name +'</b><br/>'+
+          this.x +': '+ this.y +' '+this.series.name;
+      }
+    },
+    // Doy opciones a la gráfica
+    plotOptions: {
+      line: {
+        dataLabels: {
+          enabled: true
         },
-        {
-          name: '(%) Cumplimiento',
-          data: detalle2
-          //data: [0,<?php echo $matriz_form2_regresion[6][1];?>,<?php echo $matriz_form2_regresion[6][2];?>,<?php echo $matriz_form2_regresion[6][3];?>,<?php echo $matriz_form2_regresion[6][4];?>]
-        }],
-      });
+        enableMouseTracking: true
+      }
+    },
+    // Doy los datos de la gráfica para dibujarlas
+    series: [{
+        name: '(%) Programado',
+        data: detalle1
+        //data: [0,<?php echo $matriz_form2_regresion[5][1];?>,<?php echo $matriz_form2_regresion[5][2];?>,<?php echo $matriz_form2_regresion[5][3];?>,<?php echo $matriz_form2_regresion[5][4];?>]
+      },
+      {
+        name: '(%) Cumplimiento',
+        data: detalle2
+        //data: [0,<?php echo $matriz_form2_regresion[6][1];?>,<?php echo $matriz_form2_regresion[6][2];?>,<?php echo $matriz_form2_regresion[6][3];?>,<?php echo $matriz_form2_regresion[6][4];?>]
+      }],
+    });
+  }
 
-}
+
+  /// ========== FUNCION PARA IMPRIMIR
+/*  function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
+
+    var ventana = window.open('Evaluacion FORMULARIO N° 2 ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EVALUACION OPERACIONES - FORM. N° 2</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }*/
+
+  //// imprimir grafico1
+  function imprimir_grafico1() {
+    var grafico = document.querySelector("#grafico1");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    var eficacia = '';
+    document.getElementById("tabla_impresion_detalle1").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_detalle1");
+    imprimirevaluacionform2(grafico,cabecera,eficacia,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("tabla_impresion_detalle1").style.display = 'none';
+  }
+
+  //// imprimir grafico2
+  function imprimir_grafico2() {
+    var grafico = document.querySelector("#grafico2");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    var eficacia = '';
+    document.getElementById("tabla_impresion_detalle2").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_detalle2");
+    imprimirevaluacionform2(grafico,cabecera,eficacia,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("tabla_impresion_detalle2").style.display = 'none';
+  }
+
+  function imprimirevaluacionform2(grafico,cabecera,eficacia,tabla) {
+
+    var ventana = window.open('Evaluacion FORMULARIO N° 2 ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EVALUACION OPERACIONES - FORM. N° 2</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
+
+
 ///// ========================================================================
 
 

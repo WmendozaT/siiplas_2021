@@ -87,7 +87,7 @@ Highcharts.chart('container', {
     xAxis: {
         categories: [
             <?php 
-              for ($i=1; $i <=$nro ; $i++){ 
+              for ($i=0; $i <$nro ; $i++){ 
                 if($i==$nro){
                   ?>
                   '<?php echo 'OPE. '.$eval[$i][1].'.'.$eval[$i][2];?>'
@@ -134,7 +134,7 @@ Highcharts.chart('container', {
         name: 'CUMPLIMIENTO %',
         data: [
             <?php 
-              for ($i=1; $i <=$nro ; $i++){ 
+              for ($i=0; $i <$nro ; $i++){ 
                 if($i==$nro){
                   ?>
                   <?php echo $eval[$i][5];?>

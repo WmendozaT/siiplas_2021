@@ -315,8 +315,8 @@ class Cevaluacion_form2 extends CI_Controller {
       $tabla='';
       $tabla.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>
               <ul>';
-                for ($i=1; $i <=$data['nro'] ; $i++) { 
-                  $tabla.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$data['eval'][$i][1].'.'.$data['eval'][$i][2].'.- '.$data['eval'][$i][3].' - <b>'.$data['eval'][$i][5].' %</b></li>';
+                for ($i=0; $i <$data['nro'] ; $i++) { 
+                  $tabla.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$data['eval'][$i][0].'.'.$data['eval'][$i][1].'.- '.$data['eval'][$i][2].' - <b>'.$data['eval'][$i][4].' %</b></li>';
                 }
                 $tabla.='
               </ul>
