@@ -18,6 +18,11 @@
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <!--estiloh-->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
+        <style>
+            #mdialTamanio3{
+              width: 90% !important;
+            }
+        </style>
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -105,6 +110,32 @@
         <!-- END MAIN PANEL -->
     </div>
     <!-- ========================================================================================================= -->
+        
+     <!-- MODAL LISTA DE ACTIVIDADES PRIORIZADOS -->
+        <div class="modal fade" id="modal_cumplimiento" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="mdialTamanio3">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                    </div>
+                    <div class="modal-body">
+                    <h2 class="alert alert-info"><center>% CUMPLIMIENTO - <?php echo $this->session->userData('gestion');?></center></h2>
+                        <div class="row">
+                            <div> 
+                                <h3 class="text-primary" id="titulo_grafico"></h3><hr>
+                                <div class="row">
+                                    <div id="tabla"></div>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">

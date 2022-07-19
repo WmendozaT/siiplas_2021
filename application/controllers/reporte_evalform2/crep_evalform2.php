@@ -95,55 +95,28 @@ class Crep_evalform2 extends CI_Controller {
       }
       echo "<br>";
     }*/
+   // echo $this->matriz_cumplimiento_operaciones_acp_regional(36,1);
   }
 
 
 
-  /*-------- GET CUADRO EVALUACION FORM 2 --------*/
-  public function get_cuadro_evaluacion_formulario2(){
+  /*-------- GET CUADRO EVALUACION FORM 2 INSTITUCIONAL --------*/
+  public function get_cuadro_evaluacion_formulario2_institucional(){
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
       $dep_id = $this->security->xss_clean($post['dep_id']); // dep id, 0: Nacional
-      $regional=$this->model_proyecto->get_departamento($dep_id);
+        
+      $titulo='INSTITUCIONAL  / '.$this->gestion;
+      $nro=count($this->model_proyecto->list_departamentos()); /// nro de regionales
+      $matriz=$this->matriz_eval_form2(); /// Matriz
+      $cabecera=$this->cabecera_reporte_grafico(); /// Cabecera Grafico
+      $tabla_vista=$this->tabla_eval_form2($matriz,$nro,0); /// Tabla Vista
+      $tabla_impresion=$this->tabla_eval_form2($matriz,$nro,1); /// Tabla Impresion
 
-      if($dep_id==0){
-        $titulo='INSTITUCIONAL  / '.$this->gestion;
-        $nro=count($this->model_proyecto->list_departamentos()); /// nro de regionales
-        $matriz=$this->matriz_eval_form2(); /// Matriz
-        $cabecera=$this->cabecera_reporte_grafico(); /// Cabecera Grafico
-        $tabla_vista=$this->tabla_eval_form2($matriz,$nro,0); /// Tabla Vista
-        $tabla_impresion=$this->tabla_eval_form2($matriz,$nro,1); /// Tabla Impresion
-
-        //-------
-        $matriz_form2_regresion=$this->tabla_trimestral_acumulado_institucional();
-        $tabla_vista_acumulado=$this->get_tabla_cumplimiento_form2_priorizados_institucional(0);
-        $tabla_vista_acumulado_impresion=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
-      }
-      else{
-        $titulo=strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion;
-        $nro=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
-        $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);      
-        $cabecera=$this->eval_oregional->cabecera_reporte_grafico($regional);
-        $tabla_vista=$this->eval_oregional->calificacion_total_form2_regional($dep_id);
-
-        $lista='';
-        $lista.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>
-                <ul>';
-                  for ($i=0; $i <$nro; $i++) { 
-                    $lista.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$matriz[$i][0].'.'.$matriz[$i][1].'.- '.$matriz[$i][2].' - <b>'.$matriz[$i][4].' %</b></li>';
-                  }
-                  $lista.='
-                </ul>
-                <hr>';
-        $tabla_impresion=$lista;
-
-
-           //-------
-        $matriz_form2_regresion=$this->tabla_trimestral_acumulado_institucional();
-        $tabla_vista_acumulado=$this->get_tabla_cumplimiento_form2_priorizados_institucional(0);
-        $tabla_vista_acumulado_impresion=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
-      }
-
+      //-------
+      $matriz_form2_regresion=$this->tabla_trimestral_acumulado_institucional();
+      $tabla_vista_acumulado=$this->get_tabla_cumplimiento_form2_priorizados_institucional(0);
+      $tabla_vista_acumulado_impresion=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
 
 
       $tabla='';
@@ -151,16 +124,13 @@ class Crep_evalform2 extends CI_Controller {
       <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
         <header>
           <div id="cabecera" style="display: none">'.$cabecera.'</div>
+          <div id="calificacion"></div>
         </header>
         <div>
           <h2>Evaluación del Formulario N° 2 (Operaciones) - '.$titulo.'</h2>
             <div class="jarviswidget-editbox">
             </div>
             <div class="widget-body">
-                <p>
-                <div style="font-size: 25px;font-family: Arial¨;"><b></b></div>
-                </p>
-                <hr class="simple">
                 <ul id="myTab1" class="nav nav-tabs bordered">
                   <li class="active">
                       <a href="#s1" data-toggle="tab"> (%) Cumplimiento de Operaciones</a>
@@ -172,45 +142,37 @@ class Crep_evalform2 extends CI_Controller {
 
                 <div id="myTabContent1" class="tab-content padding-10">
                   <div class="tab-pane fade in active" id="s1">
-                    <article class="col-sm-12 col-md-12 col-lg-12">
-                      <div class="rows" align=center>
-                        <div id="graf_detalle1">
-                          <div id="grafico1" style="width: 950px; height: 550px; margin: 2 auto"></div>
-                        </div>
-                        '.$tabla_vista.' 
+                    <div align=center>
+                      <div id="graf_detalle1">
+                        <div id="grafico1" style="width: 950px; height: 550px; margin: 2 auto"></div>
                       </div>
-                      <div id="tabla_impresion_detalle1" style="display: none">
-                       '.$tabla_impresion.'
-                      </div>
-                      <div align="right">
-                        <button  onClick="imprimir_grafico1()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      </div>
-                      <hr>
-                    </article>
+                      '.$tabla_vista.' 
+                    </div>
+                    <div id="tabla_impresion_detalle1" style="display: none">
+                     '.$tabla_impresion.'
+                    </div>
+                    <div align="right">
+                      <button  onClick="imprimir_grafico1()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
                   </div>
                   
                   <div class="tab-pane fade" id="s2">
-                    <div class="row">
-                      <article class="col-sm-12 col-md-12 col-lg-12">
-                      <div class="rows" align=center>
-                        <div id="graf_detalle2">
-                          <div id="grafico2" style="width: 900px; height: 550px; margin: 2 auto"></div>
-                        </div>
-                        '.$tabla_vista_acumulado.'
+                    <div class="rows" align=center>
+                      <div id="graf_detalle2">
+                        <div id="grafico2" style="width: 900px; height: 550px; margin: 2 auto"></div>
                       </div>
-                      <div id="tabla_impresion_detalle2" style="display: none">
-                       '.$tabla_vista_acumulado_impresion.'
-                      </div>
-                      <div align="right">
-                        <button  onClick="imprimir_grafico2()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      </div>
-                      <hr>
-                    </article>
-
+                      '.$tabla_vista_acumulado.'
+                    </div>
+                    <div id="tabla_impresion_detalle2" style="display: none">
+                     '.$tabla_vista_acumulado_impresion.'
+                    </div>
+                    <div align="right">
+                      <button  onClick="imprimir_grafico2()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
                   </div>
 
                 </div>
+
             </div>
           </div>
       </div>';
@@ -229,6 +191,226 @@ class Crep_evalform2 extends CI_Controller {
         show_404();
     }
   }
+
+
+  /*-------- GET CUADRO EVALUACION FORM 2 REGIONAL --------*/
+  public function get_cuadro_evaluacion_formulario2_regional(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $dep_id = $this->security->xss_clean($post['dep_id']); // dep id, 0: Nacional
+      $regional=$this->model_proyecto->get_departamento($dep_id);
+
+      $titulo=strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion;
+      $nro=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
+      $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);      
+      $cabecera=$this->eval_oregional->cabecera_reporte_grafico($regional);
+      $calificacion=$this->eval_oregional->calificacion_total_form2_regional($dep_id);
+
+
+      
+
+      $lista='';
+      $lista.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>
+                <ul>';
+                  for ($i=0; $i <$nro; $i++) { 
+                    $lista.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$matriz[$i][0].'.'.$matriz[$i][1].'.- '.$matriz[$i][2].' - <b>'.$matriz[$i][4].' %</b></li>';
+                  }
+                  $lista.='
+                </ul>
+                <hr>';
+      $lista_operaciones=$lista;
+
+
+      $tabla='';
+      $tabla.='
+      <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+        <header>
+          <div id="cabecera" style="display: none">'.$cabecera.'</div>
+        </header>
+        <div>
+            <h2>Evaluación del Formulario N° 2 (Operaciones) - '.$titulo.'</h2>
+              <ul id="myTab1" class="nav nav-tabs bordered">
+                <li class="active">
+                    <a href="#s1" data-toggle="tab"> (%) Cumplimiento de Operaciones</a>
+                </li>
+                <li>
+                    <a href="#s2" data-toggle="tab"> Detalle de Cumplimiento</a>
+                </li>
+              </ul>
+
+              <div id="myTabContent1" class="tab-content padding-10">
+                <div class="tab-pane fade in active" id="s1">
+                    <div id="calificacion">'.$calificacion.'</div>
+                    <div class="rows" align=center>
+                      <div id="graf_detalle1">
+                        <div id="grafico1" style="width: 1000px; height: 900px; margin: 2 auto"></div>
+                      </div> 
+                    </div>
+                    <div id="tabla_impresion_detalle1" style="display: none">
+                     '.$lista_operaciones.'
+                    </div>
+                    <div align="right">
+                      <button  onClick="imprimir_grafico1()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="s2">
+                  <div class="row">
+                    <article class="col-sm-12 col-md-12 col-lg-12">
+                      '.$this->lista_acp_regional($dep_id).'
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>';
+
+      $result = array(
+        'respuesta' => 'correcto',
+        'titulo'=>$titulo,
+        'tabla'=>$tabla,
+        'nro'=>$nro,
+        'matriz'=>$matriz,
+        'trimestre'=>$this->model_evaluacion->trimestre(),
+        'gestion'=>$this->gestion,
+        'regional'=>strtoupper($regional[0]['dep_departamento']),
+      );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+  public function lista_acp_regional($dep_id){
+    $tabla='';
+
+    $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
+
+    $tabla.='
+    <table border=1>
+      <tr>
+        <td>COGIGO</td>
+        <td>ACCIÓN DE CORTO PLAZO REGIONAL</td>
+        <td>NRO. OPERACIONES</td>
+        <td>VER EVALUACION</td>
+      </tr>';
+    foreach($acp_regional as $row){
+      $lista_form2=$this->model_objetivoregion->list_oregional_regional($row['og_id'],$dep_id);
+      $tabla.='
+      <tr>
+        <td>'.$row['og_id'].' / A.C.P. '.$row['og_codigo'].'</td>
+        <td>'.$row['og_objetivo'].'</td>
+        <td>'.count($lista_form2).'</td>
+        <td>
+          <a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['og_id'].'"  onclick="nivel_cumplimiento_acp_regional('.$row['og_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTOACCION DE CORTO PLAZO - REGIONAL"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="30" HEIGHT="30"/></a>
+        </td>
+      </tr>';
+    }
+    $tabla.='
+    </table>';
+
+    return $tabla;
+  }
+
+
+
+  /*---- FUNCION GET NIVEL DE CUMPLIMIENTO DE OPERACIONES POR ACP REGIONAL ---*/
+  public function ver_datos_avance_oregional_acp(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $og_id = $this->security->xss_clean($post['og_id']); /// og id
+      $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+      
+
+
+
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla' => $this->matriz_cumplimiento_operaciones_acp_regional($og_id,$dep_id),
+         /* 'titulo'=>$titulo,
+          'tab'=>$tab, /// temporalidad trimestral
+          'tab_acu'=>$tab_acumulado,
+          'matriz_acumulado'=>$matriz,
+          'trimestre'=>$this->tmes, /// Trimestre*/
+        );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+  /*---- MATRIZ DETALLE DE CUMPLIMIENTO DE OPERACIONES POR ACP REGIONAL ---*/
+  public function matriz_cumplimiento_operaciones_acp_regional($og_id,$dep_id){
+    $tabla='';
+    $lista_form2=$this->model_objetivoregion->list_oregional_regional($og_id,$dep_id);
+
+    $tabla.='<table border=1>';
+    foreach($lista_form2 as $row){
+      $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+      $tabla.='
+        <tr>
+          <td>'.$row['og_codigo'].'</td>
+          <td>'.$row['or_codigo'].'</td>
+          <td>'.$row['or_objetivo'].'</td>
+          <td>'.$calificacion[3].'</td>
+          <td>'.$calificacion[4].'</td>
+        </tr>';
+    }
+    $tabla.='</table>';
+
+    return $tabla;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

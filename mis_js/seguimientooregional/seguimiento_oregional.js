@@ -42,29 +42,57 @@
     $("#d_id option:selected").each(function () {
       dep_id=$(this).val();
       if(dep_id!=''){
-        var url = base+"index.php/reporte_evalform2/crep_evalform2/get_cuadro_evaluacion_formulario2";
-        var request;
-        if (request) {
-            request.abort();
+        if(dep_id==0){ /// Institucional
+            var url = base+"index.php/reporte_evalform2/crep_evalform2/get_cuadro_evaluacion_formulario2_institucional";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "dep_id="+dep_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                $('#lista_consolidado').fadeIn(1000).html(response.tabla);
+                cuadro_grafico_cumplimiento_operaciones_institucional(response.matriz,response.nro,response.titulo);
+                cuadro_grafico_cumplimiento_operaciones_regresion_intitucional(response.matriz_regresion,response.titulo); 
+              }
+              else{
+                alertify.error("ERROR AL LISTAR");
+              }
+            }); 
         }
-        request = $.ajax({
-          url: url,
-          type: "POST",
-          dataType: 'json',
-          data: "dep_id="+dep_id
-        });
+        else{ /// Regional
 
-        request.done(function (response, textStatus, jqXHR) {
-          if (response.respuesta == 'correcto') {
-            $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-            cuadro_grafico_cumplimiento_operaciones(response.matriz,response.nro,dep_id,response.titulo);
-            cuadro_grafico_cumplimiento_operaciones_regresion(response.matriz_regresion,response.titulo); 
+          var url = base+"index.php/reporte_evalform2/crep_evalform2/get_cuadro_evaluacion_formulario2_regional";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "dep_id="+dep_id
+            });
 
-          }
-          else{
-            alertify.error("ERROR AL LISTAR");
-          }
-        }); 
+            request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                $('#lista_consolidado').fadeIn(1000).html(response.tabla);
+                cuadro_grafico_cumplimiento_operaciones_regional(response.matriz,response.nro,response.dep_id,response.regional,response.trimestre,response.gestion,response.titulo);
+              }
+              else{
+                alertify.error("ERROR AL LISTAR");
+              }
+            }); 
+
+        }
+
+        
       }
       else{
         $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Evaluaci&oacute;n OPERACIONES '+gestion+'</h1></div></div>');
@@ -79,128 +107,68 @@
 
 
 
-//// grafico nivel de cumplimiento de operaciones Nacional / Regional
-function cuadro_grafico_cumplimiento_operaciones(matriz,nro,dep_id,titulo){
-  if(dep_id==0){
-      let detalle=[];
-      for (var i = 0; i < nro; i++) {
-          detalle[i]= { name: matriz[i][2],y: matriz[i][6]};
-      }
-
-       Highcharts.chart('grafico1', {
-        chart: {
-          type: 'column'
-        },
-        title: {
-          text: ''
-        },
-        subtitle: {
-          text: '(%) de Cumplimiento de Operaciones (Formulario N° 2)<br><b>'+titulo+'</b>'
-        },
-        accessibility: {
-          announceNewData: {
-            enabled: true
-          }
-        },
-        xAxis: {
-          type: 'category'
-        },
-        yAxis: {
-          title: {
-            text: '(%) de Cumplimiento de Operaciones a Nivel de Regionales'
-          }
-
-        },
-        legend: {
-          enabled: false
-        },
-        plotOptions: {
-          series: {
-            borderWidth: 0,
-            dataLabels: {
-              enabled: true,
-              format: '{point.y:.1f}%'
-            }
-          }
-        },
-
-        tooltip: {
-          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> Cumplimiento<br/>'
-        },
-
-        series: [
-          {
-            name: "Operaciones",
-            colorByPoint: true,
-            data: detalle
-          }
-        ]
-      });
+//// grafico nivel de cumplimiento de operaciones Institucional
+function cuadro_grafico_cumplimiento_operaciones_institucional(matriz,nro,titulo){
+  let detalle=[];
+  for (var i = 0; i < nro; i++) {
+      detalle[i]= { name: matriz[i][2],y: matriz[i][6]};
   }
-  else{
-      let categoria=[];
-      for (var i = 0; i < nro; i++) {
-          categoria[i]= matriz[i][0]+'.'+matriz[i][1];
+
+   Highcharts.chart('grafico1', {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: ''
+    },
+    subtitle: {
+      text: '(%) de Cumplimiento de Operaciones (Formulario N° 2)<br><b>'+titulo+'</b>'
+    },
+    accessibility: {
+      announceNewData: {
+        enabled: true
+      }
+    },
+    xAxis: {
+      type: 'category'
+    },
+    yAxis: {
+      title: {
+        text: '(%) de Cumplimiento de Operaciones a Nivel de Regionales'
       }
 
-      let detalle=[];
-      for (var i = 0; i < nro; i++) {
-          detalle[i]= matriz[i][4];
+    },
+    legend: {
+      enabled: false
+    },
+    plotOptions: {
+      series: {
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true,
+          format: '{point.y:.1f}%'
+        }
       }
+    },
 
-     Highcharts.chart('grafico1', {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: ''
-        },
-        subtitle: {
-            text: 'CUMPLIMIENTO DE OPERACIONES AL'
-        },
-        xAxis: {
-            categories: categoria,
-            title: {
-                text: null
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'CUMPLIMIENTO DE METAS',
-                align: 'high'
-            },
-            labels: {
-                overflow: 'Operaciones'
-            }
-        },
-        tooltip: {
-            valueSuffix: ' %'
-        },
-        plotOptions: {
-            bar: {
-                dataLabels: {
-                    enabled: true
-                }
-            }
-        },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> Cumplimiento<br/>'
+    },
 
-        credits: {
-            enabled: false
-        },
-
-        series: [{
-            name: 'CUMPLIMIENTO %',
-            data: detalle
-        }]
-    });
-  }
+    series: [
+      {
+        name: "Operaciones",
+        colorByPoint: true,
+        data: detalle
+      }
+    ]
+  });
 
 }
 
-//// grafico nivel de cumplimiento de operaciones Nacional / Regional
-function cuadro_grafico_cumplimiento_operaciones_regresion(matriz,titulo){
+//// grafico nivel de cumplimiento de operaciones Institucional
+function cuadro_grafico_cumplimiento_operaciones_regresion_intitucional(matriz,titulo){
     let detalle1=[];
     for (var i = 0; i < 4; i++) {
         detalle1[i]= matriz[5][i];
@@ -211,7 +179,7 @@ function cuadro_grafico_cumplimiento_operaciones_regresion(matriz,titulo){
         detalle2[i]=  matriz[6][i];
     }
   /// REGRESION LINEAL ACUMULADO
-chart = new Highcharts.Chart({
+  chart = new Highcharts.Chart({
     chart: {
       renderTo: 'grafico2',  // Le doy el nombre a la gráfica
       defaultSeriesType: 'line' // Pongo que tipo de gráfica es
@@ -257,45 +225,83 @@ chart = new Highcharts.Chart({
     series: [{
         name: '(%) Programado',
         data: detalle1
-        //data: [0,<?php echo $matriz_form2_regresion[5][1];?>,<?php echo $matriz_form2_regresion[5][2];?>,<?php echo $matriz_form2_regresion[5][3];?>,<?php echo $matriz_form2_regresion[5][4];?>]
       },
       {
         name: '(%) Cumplimiento',
         data: detalle2
-        //data: [0,<?php echo $matriz_form2_regresion[6][1];?>,<?php echo $matriz_form2_regresion[6][2];?>,<?php echo $matriz_form2_regresion[6][3];?>,<?php echo $matriz_form2_regresion[6][4];?>]
       }],
     });
   }
 
 
+//// grafico nivel de cumplimiento de operaciones Regional
+function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regional,trimestre,gestion,titulo){
+  let categoria=[];
+  for (var i = 0; i < nro; i++) {
+      categoria[i]= 'OPE. '+matriz[i][0]+'.'+matriz[i][1];
+  }
+
+  let detalle=[];
+  for (var i = 0; i < nro; i++) {
+      detalle[i]= matriz[i][4];
+  }
+
+ Highcharts.chart('grafico1', {
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: ''
+    },
+    subtitle: {
+        text: 'CUMPLIMIENTO DE OPERACIONES AL '+trimestre[0]['trm_descripcion']+' / '+gestion+'<br><b>'+regional+'</b>'
+    },
+    xAxis: {
+        categories: categoria,
+        title: {
+            text: null
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'CUMPLIMIENTO DE METAS',
+            align: 'high'
+        },
+        labels: {
+            overflow: 'Operaciones'
+        }
+    },
+    tooltip: {
+        valueSuffix: ' %'
+    },
+    plotOptions: {
+        bar: {
+            dataLabels: {
+                enabled: true
+            }
+        }
+    },
+
+    credits: {
+        enabled: false
+    },
+
+    series: [{
+        name: 'CUMPLIMIENTO %',
+        data: detalle
+    }]
+  });
+}
+
+
   /// ========== FUNCION PARA IMPRIMIR
-/*  function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
-
-    var ventana = window.open('Evaluacion FORMULARIO N° 2 ', 'PRINT', 'height=800,width=1000');
-    ventana.document.write('<html><head><title>EVALUACION OPERACIONES - FORM. N° 2</title>');
-    ventana.document.write('</head><body>');
-    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
-    ventana.document.write(cabecera.innerHTML);
-    ventana.document.write('<hr>');
-    ventana.document.write(grafico.innerHTML);
-    ventana.document.write('<hr>');
-    ventana.document.write(tabla.innerHTML);
-    ventana.document.write('</body></html>');
-    ventana.document.close();
-    ventana.focus();
-    ventana.onload = function() {
-      ventana.print();
-      ventana.close();
-    };
-    return true;
-  }*/
-
-  //// imprimir grafico1
+  //// imprimir grafico1 (Institucional)
   function imprimir_grafico1() {
     var grafico = document.querySelector("#grafico1");
     document.getElementById("cabecera").style.display = 'block';
     var cabecera = document.querySelector("#cabecera");
-    var eficacia = '';
+    var eficacia = document.querySelector("#calificacion");
     document.getElementById("tabla_impresion_detalle1").style.display = 'block';
     var tabla = document.querySelector("#tabla_impresion_detalle1");
     imprimirevaluacionform2(grafico,cabecera,eficacia,tabla);
@@ -303,12 +309,12 @@ chart = new Highcharts.Chart({
     document.getElementById("tabla_impresion_detalle1").style.display = 'none';
   }
 
-  //// imprimir grafico2
+  //// imprimir grafico2 (Institucional)
   function imprimir_grafico2() {
     var grafico = document.querySelector("#grafico2");
     document.getElementById("cabecera").style.display = 'block';
     var cabecera = document.querySelector("#cabecera");
-    var eficacia = '';
+    var eficacia = document.querySelector("#calificacion");
     document.getElementById("tabla_impresion_detalle2").style.display = 'block';
     var tabla = document.querySelector("#tabla_impresion_detalle2");
     imprimirevaluacionform2(grafico,cabecera,eficacia,tabla);
@@ -324,6 +330,7 @@ chart = new Highcharts.Chart({
     ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
     ventana.document.write(cabecera.innerHTML);
     ventana.document.write('<hr>');
+    ventana.document.write(eficacia.innerHTML);
     ventana.document.write(grafico.innerHTML);
     ventana.document.write('<hr>');
     ventana.document.write(tabla.innerHTML);
@@ -338,6 +345,39 @@ chart = new Highcharts.Chart({
   }
 
 
+  /// grado de cumplimiento por Objetivo Regional x ACP REGIONAL
+  function nivel_cumplimiento_acp_regional(og_id,dep_id) {
+  //  $('#titulo_grafico').html('<font size=3><b>Cargando ..</b></font>');
+   // $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
+//alert(og_id+'--'+dep_id)
+    var url = base+"index.php/reporte_evalform2/crep_evalform2/ver_datos_avance_oregional_acp";
+    var request;
+    if (request) {
+        request.abort();
+    }
+    request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "og_id="+og_id+"&dep_id="+dep_id
+    });
+
+    request.done(function (response, textStatus, jqXHR) {
+      if (response.respuesta == 'correcto') {
+
+        $('#tabla').html(response.tabla);
+        /*
+        $('#tab').html(response.tab);
+        $('#tab_acumulado').html(response.tab_acu);*/
+
+
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+    });
+  }
 ///// ========================================================================
 
 
