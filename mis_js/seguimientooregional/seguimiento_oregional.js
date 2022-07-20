@@ -254,7 +254,7 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
         text: ''
     },
     subtitle: {
-        text: 'CUMPLIMIENTO DE OPERACIONES AL '+trimestre[0]['trm_descripcion']+' / '+gestion+'<br><b>'+regional+'</b>'
+        text: 'CUMPLIMIENTO DE OPERACIONES A LA GESTIÓN '+gestion+'<br><h1><b>'+regional+'</b></h1>'
     },
     xAxis: {
         categories: categoria,
@@ -349,7 +349,7 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
   function nivel_cumplimiento_acp_regional(og_id,dep_id) {
   //  $('#titulo_grafico').html('<font size=3><b>Cargando ..</b></font>');
    // $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
-//alert(og_id+'--'+dep_id)
+  //alert(og_id+'--'+dep_id)
     var url = base+"index.php/reporte_evalform2/crep_evalform2/ver_datos_avance_oregional_acp";
     var request;
     if (request) {
@@ -366,15 +366,111 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
       if (response.respuesta == 'correcto') {
 
         $('#tabla').html(response.tabla);
-        /*
-        $('#tab').html(response.tab);
-        $('#tab_acumulado').html(response.tab_acu);*/
 
+        cuadro_grafico_cumplimiento_operaciones_x_acp_regional(response.matriz,response.nro,response.regional,response.trimestre,response.gestion,response.acp_regional)
 
       }
       else{
           alertify.error("ERROR AL RECUPERAR INFORMACION");
       }
+
+    });
+  }
+
+
+//// grafico nivel de cumplimiento de operaciones por ACP
+function cuadro_grafico_cumplimiento_operaciones_x_acp_regional(matriz,nro,regional,trimestre,gestion,acp_regional){
+      let detalle=[];
+      for (var i = 0; i < nro; i++) {
+          detalle[i]= { name: matriz[i][0]+'.'+matriz[i][1]+' '+matriz[i][2],y: matriz[i][4]};
+      }
+
+    Highcharts.chart('container', {
+      chart: {
+        type: 'column'
+      },
+      title: {
+        align: 'center',
+        text: '(%) CUMPLIMIENTO DE OPERACIONES <b>'+regional+ '</b> - '+trimestre[0]['trm_descripcion']+' /'+gestion
+      },
+      subtitle: {
+        align: 'center',
+        text: '<b>ACP. '+acp_regional[0]['og_codigo']+'.'+acp_regional[0]['og_objetivo']+'</b>'
+      },
+      accessibility: {
+        announceNewData: {
+          enabled: true
+        }
+      },
+      xAxis: {
+        type: 'category'
+      },
+      yAxis: {
+        title: {
+          text: '(%) Cumplimiento de Operaciones al Trimestre'
+        }
+
+      },
+      legend: {
+        enabled: false
+      },
+      plotOptions: {
+        series: {
+          borderWidth: 0,
+          dataLabels: {
+            enabled: true,
+            format: '{point.y:.1f}%'
+          }
+        }
+      },
+
+      tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+      },
+
+      series: [
+        {
+          name: "OPERACIÓN",
+          colorByPoint: true,
+          data: detalle
+        }
+      ]
+
+    });
+}
+
+  /// Lista de Operaciones
+  function ver_lista_operaciones_acp(og_id,dep_id) {
+    $('#titulo_ope').html('<font size=3><b>Cargando ..</b></font>');
+    $('#content_ope').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
+
+    var url = base+"index.php/reporte_evalform2/crep_evalform2/get_lista_operaciones_acp";
+    var request;
+    if (request) {
+        request.abort();
+    }
+    request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "og_id="+og_id+"&dep_id="+dep_id
+    });
+
+    request.done(function (response, textStatus, jqXHR) {
+
+    if (response.respuesta == 'correcto') {
+
+      $('#content_ope').fadeIn(1000).html(response.tabla);
+
+
+        /*$('#titulo').html(response.titulo);
+        
+        $('#imprimir_act_priori').fadeIn(1000).html(response.imprimir_act_priori);*/
+    }
+    else{
+        alertify.error("ERROR AL RECUPERAR INFORMACION");
+    }
 
     });
   }
