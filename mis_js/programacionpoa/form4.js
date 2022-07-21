@@ -634,12 +634,12 @@ $(document).ready(function() {
             
            }
            
-           document.getElementById("mtipo_i").value = response.producto[0]['indi_id'];
+           /*document.getElementById("mtipo_i").value = response.producto[0]['indi_id'];
            document.getElementById("mlbase").value = parseInt(response.producto[0]['prod_linea_base']);
            document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
-           document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
+           document.getElementById("mtp_met").value = response.producto[0]['mt_id'];*/
 
-           /*if(response.mes_actual==1){ /// el tipo de indicador solo se podra modificar el primer mes del año
+           if(response.mes_actual==1){ /// el tipo de indicador solo se podra modificar el primer mes del año
               document.getElementById("mtipo_i").disabled = false;
               document.getElementById("mlbase").disabled = false;
               document.getElementById("mtp_met").disabled = false;
@@ -648,7 +648,7 @@ $(document).ready(function() {
               document.getElementById("mtipo_i").disabled = true;
               document.getElementById("mlbase").disabled = true;
               document.getElementById("mtp_met").disabled = true;
-           }*/
+           }
 
 
            document.getElementById("mindicador").value = response.producto[0]['prod_indicador'];

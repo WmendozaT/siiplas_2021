@@ -90,12 +90,12 @@ Highcharts.chart('container', {
               for ($i=0; $i <$nro ; $i++){ 
                 if($i==$nro){
                   ?>
-                  '<?php echo 'OPE. '.$eval[$i][1].'.'.$eval[$i][2];?>'
+                  '<?php echo 'OPE. '.$eval[$i][0].'.'.$eval[$i][1];?>'
                   <?php
                 }
                 else{
                   ?>
-                  '<?php echo 'OPE. '.$eval[$i][1].'.'.$eval[$i][2];?>',
+                  '<?php echo 'OPE. '.$eval[$i][0].'.'.$eval[$i][1];?>',
                   <?php
                 }
               } 
@@ -137,12 +137,12 @@ Highcharts.chart('container', {
               for ($i=0; $i <$nro ; $i++){ 
                 if($i==$nro){
                   ?>
-                  <?php echo $eval[$i][5];?>
+                  <?php echo $eval[$i][4];?>
                   <?php
                 }
                 else{
                   ?>
-                  <?php echo $eval[$i][5];?>,
+                  <?php echo $eval[$i][4];?>,
                   <?php
                 }
               } 

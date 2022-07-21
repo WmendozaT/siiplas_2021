@@ -634,89 +634,94 @@ class Eval_oregional extends CI_Controller{
       }
 
         $form4=$this->model_objetivoregion->get_lista_form_priorizados_x_oregional($or_id);
-        $tabla.='
-        
-        '.$titulo.'
-        <div class="table-responsive">
-        <table '.$tab.'>
-          <thead>
-            <tr style="'.$size_th.'" bgcolor="#eceaea" >
-              <th style="width:1%;height:10px; text-align: center">#</th>
-              <th style="width:5%; text-align: center"><b>PROGRAMA</b></th>
-              <th style="width:11%; text-align: center"><b>GASTO CORRIENTE / PROY. INVERSIÓN</b></th>
-              <th style="width:9%; text-align: center"><b>UNIDAD RESPONSABLE</b></th>
-              <th style="width:2%; text-align: center">COD. ACT.</th>
-              <th style="width:11%; text-align: center">ACTIVIDAD</th>
-              <th style="width:10%; text-align: center">RESULTADO</th>
-              <th style="width:7%; text-align: center">RESPONSABLE</th>
-              <th style="width:9%; text-align: center">INDICADOR</th>
-              <th style="width:3%; text-align: center">META</th>
-              <th style="width:2%; text-align: center">ENE.</th>
-              <th style="width:2%; text-align: center">FEB.</th>
-              <th style="width:2%; text-align: center">MAR.</th>
-              <th style="width:2%; text-align: center">ABR.</th>
-              <th style="width:2%; text-align: center">MAY.</th>
-              <th style="width:2%; text-align: center">JUN.</th>
-              <th style="width:2%; text-align: center">JUL.</th>
-              <th style="width:2%; text-align: center">AGO.</th>
-              <th style="width:2%; text-align: center">SEPT.</th>
-              <th style="width:2%; text-align: center">OCT.</th>
-              <th style="width:2%; text-align: center">NOV.</th>
-              <th style="width:2%; text-align: center">DIC.</th>
-              <th style="width:8%; text-align: center">MEDIO DE VERIFICACIÓN</th>
-            </tr>
-          </thead>
-          <tbody>';
-        
-        $nro=0;$suma_meta=0;
-        foreach($form4 as $row){
-          $nro++;
-          $suma_meta=$suma_meta+$row['prod_meta'];
-          $tp_indi='';
-          if($row['indi_id']==2){
-            $tp_indi='%';
-          }
-
-          $tabla.='
-          <tr style="'.$size_td.'">
-            <td style="width:1%; height:5px;" align=center title='.$row['prod_id'].' bgcolor="#f9fdfc">'.$nro.'</td>';
-              if($row['tp_id']==1){
-                $tabla.='
-                <td style="width:5%;" bgcolor="#f9fdfc"><b>'.$row['aper_programa'].' '.$row['proy_sisin'].' '.$row['aper_actividad'].'</b></td>
-                <td style="width:11%;" bgcolor="#f9fdfc"><b>'.$row['proy_nombre'].'</b></td>';
-              }
-              else{
-                $tabla.='
-                <td style="width:5%;" bgcolor="#f9fdfc"><b>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</b></td>
-                <td style="width:11%;" bgcolor="#f9fdfc"><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>';
-              }
+        if(count($form4)!=0){
             $tabla.='
+            '.$titulo.'
+            <div class="table-responsive">
+            <table '.$tab.'>
+              <thead>
+                <tr style="'.$size_th.'" bgcolor="#eceaea" >
+                  <th style="width:1%;height:10px; text-align: center">#</th>
+                  <th style="width:5%; text-align: center"><b>PROGRAMA</b></th>
+                  <th style="width:11%; text-align: center"><b>GASTO CORRIENTE / PROY. INVERSIÓN</b></th>
+                  <th style="width:9%; text-align: center"><b>UNIDAD RESPONSABLE</b></th>
+                  <th style="width:2%; text-align: center">COD. ACT.</th>
+                  <th style="width:11%; text-align: center">ACTIVIDAD</th>
+                  <th style="width:10%; text-align: center">RESULTADO</th>
+                  <th style="width:7%; text-align: center">RESPONSABLE</th>
+                  <th style="width:9%; text-align: center">INDICADOR</th>
+                  <th style="width:3%; text-align: center">META</th>
+                  <th style="width:2%; text-align: center">ENE.</th>
+                  <th style="width:2%; text-align: center">FEB.</th>
+                  <th style="width:2%; text-align: center">MAR.</th>
+                  <th style="width:2%; text-align: center">ABR.</th>
+                  <th style="width:2%; text-align: center">MAY.</th>
+                  <th style="width:2%; text-align: center">JUN.</th>
+                  <th style="width:2%; text-align: center">JUL.</th>
+                  <th style="width:2%; text-align: center">AGO.</th>
+                  <th style="width:2%; text-align: center">SEPT.</th>
+                  <th style="width:2%; text-align: center">OCT.</th>
+                  <th style="width:2%; text-align: center">NOV.</th>
+                  <th style="width:2%; text-align: center">DIC.</th>
+                  <th style="width:8%; text-align: center">MEDIO DE VERIFICACIÓN</th>
+                </tr>
+              </thead>
+              <tbody>';
             
-            <td style="width:9%;" bgcolor="#f9fdfc"><b>'.$row['serv_cod'].' .- '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</b></td>
-            <td style="width:2%; '.$size_meta.'" align=center><b>'.$row['prod_cod'].'</b></td>
-            <td style="width:11%;">'.$row['prod_producto'].'</td>
-            <td style="width:10%;">'.$row['prod_resultado'].'</td>
-            <td style="width:7%;">'.$row['prod_unidades'].'</td>
-            <td style="width:9%;">'.$row['prod_indicador'].'</td>
-            <td style="width:3%; '.$size_meta.'" align=right><b>'.round($row['prod_meta'],2).''.$tp_indi.'</b></td>
-            '.$this->genera_temporalidad_form4($row['prod_id'],$tp_indi).'
-            <td style="width:8%;">'.$row['prod_fuente_verificacion'].'</td>
-          </tr>';
-        }
+            $nro=0;$suma_meta=0;
+            foreach($form4 as $row){
+              $nro++;
+              $suma_meta=$suma_meta+$row['prod_meta'];
+              $tp_indi='';
+              if($row['indi_id']==2){
+                $tp_indi='%';
+              }
 
-        if($row['indi_id']==2){
-            $suma_meta=($suma_meta/count($form4));
+              $tabla.='
+              <tr style="'.$size_td.'">
+                <td style="width:1%; height:5px;" align=center title='.$row['prod_id'].' bgcolor="#f9fdfc">'.$nro.'</td>';
+                  if($row['tp_id']==1){
+                    $tabla.='
+                    <td style="width:5%;" bgcolor="#f9fdfc"><b>'.$row['aper_programa'].' '.$row['proy_sisin'].' '.$row['aper_actividad'].'</b></td>
+                    <td style="width:11%;" bgcolor="#f9fdfc"><b>'.$row['proy_nombre'].'</b></td>';
+                  }
+                  else{
+                    $tabla.='
+                    <td style="width:5%;" bgcolor="#f9fdfc"><b>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</b></td>
+                    <td style="width:11%;" bgcolor="#f9fdfc"><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>';
+                  }
+                $tabla.='
+                
+                <td style="width:9%;" bgcolor="#f9fdfc"><b>'.$row['serv_cod'].' .- '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</b></td>
+                <td style="width:2%; '.$size_meta.'" align=center><b>'.$row['prod_cod'].'</b></td>
+                <td style="width:11%;">'.$row['prod_producto'].'</td>
+                <td style="width:10%;">'.$row['prod_resultado'].'</td>
+                <td style="width:7%;">'.$row['prod_unidades'].'</td>
+                <td style="width:9%;">'.$row['prod_indicador'].'</td>
+                <td style="width:3%; '.$size_meta.'" align=right><b>'.round($row['prod_meta'],2).''.$tp_indi.'</b></td>
+                '.$this->genera_temporalidad_form4($row['prod_id'],$tp_indi).'
+                <td style="width:8%;">'.$row['prod_fuente_verificacion'].'</td>
+              </tr>';
+            }
+
+            if($row['indi_id']==2){
+                $suma_meta=($suma_meta/count($form4));
+            }
+            
+            $tabla.='
+              </tbody>
+              <tr>
+                <td style="height:10px;"colspan=9 align=right><b>META PRIORIZADO : </b></td>
+                <td style="width:2%; height:5px;'.$size_meta.'" align=right><b>'.round($suma_meta,2).''.$tp_indi.'</b></td>
+                <td colspan=13></td>
+              </tr>
+            </table>
+            </div>';
         }
-        
-        $tabla.='
-          </tbody>
-          <tr>
-            <td style="height:10px;"colspan=9 align=right><b>META PRIORIZADO : </b></td>
-            <td style="width:2%; height:5px;'.$size_meta.'" align=right><b>'.round($suma_meta,2).''.$tp_indi.'</b></td>
-            <td colspan=13></td>
-          </tr>
-        </table>
-        </div>';
+        else{
+          $tabla.='<br><br><b><font color=red>SIN ACTIVIDADES ALINEADOS A LA OPERACION</font></b>';
+        }
+       
 
       return $tabla;
     }

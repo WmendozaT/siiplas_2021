@@ -87,8 +87,12 @@ class Crep_evalform2 extends CI_Controller {
 
     $data['titulo_modulo']=$tabla;
     $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_menu', $data);
+
+
+
+
     //echo count($this->model_objetivogestion->get_list_ogestion_por_regional(2));
-    /*$matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional(2);
+   /* $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional(2);
     for ($i=0; $i < count($this->model_objetivogestion->get_list_ogestion_por_regional(2)); $i++) { 
       for ($j=0; $j < 5; $j++) { 
         echo "[".$matriz[$i][$j]."]";
@@ -208,7 +212,7 @@ class Crep_evalform2 extends CI_Controller {
 
 
       
-      /// --------------------------------------------------------------------------------------------
+      /// ---------------------------------------------------------------------------------------------
       $lista='';
       $lista.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>
                 <ul>';
@@ -222,7 +226,7 @@ class Crep_evalform2 extends CI_Controller {
       /// ----------------------------------------------------------------------------------------------
 
       /// --------------------------------------------------------------------------------------------
-      $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
+      
       $tabla='';
       $tabla.='
       <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
@@ -258,39 +262,7 @@ class Crep_evalform2 extends CI_Controller {
                 
                 <div class="tab-pane fade" id="sB">
                   <div class="row">
-                    <article class="col-sm-12 col-md-12 col-lg-12">
-                      <center>
-                        <table class="table table-bordered" style="width:50%">
-                          <thead>
-                            <tr>
-                              <th style="width:5%;text-align:center">COGIGO</th>
-                              <th style="width:15%;text-align:center">ACCIÓN DE CORTO PLAZO REGIONAL '.$this->gestion.'</th>
-                              <th style="width:3%;text-align:center">NRO. OPERACIONES</th>
-                              <th style="width:3%;text-align:center">VER OPERACIONES</th>
-                              <th style="width:3%;text-align:center">VER CUMPLIMIENTO</th>
-                            </tr>
-                          </thead>
-                          <tbody>';
-                        foreach($acp_regional as $row){
-                          $lista_form2=$this->model_objetivoregion->list_oregional_regional($row['og_id'],$dep_id);
-                          $tabla.='
-                          <tr>
-                            <td style="font-size: 13px;width:5%;text-align:center" title='.$row['og_id'].'><b>A.C.P. '.$row['og_codigo'].'</b></td>
-                            <td>'.$row['og_objetivo'].'</td>
-                            <td style="font-size: 11px;width:3%;text-align:right"><b>'.count($lista_form2).'</b></td>
-                            <td align=center>
-                              <a href="#" data-toggle="modal" data-target="#modal_operaciones" style="font-size: 10px;" class="btn btn-lg btn-default" name="'.$row['og_id'].'"  onclick="ver_lista_operaciones_acp('.$row['og_id'].','.$dep_id.');" title="VER OPERACIONES">VER OPERACIONES</a>
-                            </td>
-                            <td style="width:3%;text-align:center">
-                              <a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['og_id'].'"  onclick="nivel_cumplimiento_acp_regional('.$row['og_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTOACCION DE CORTO PLAZO - REGIONAL"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="30" HEIGHT="30"/></a>
-                            </td>
-                          </tr>';
-                        }
-                        $tabla.='
-                        </tbody>
-                        </table>
-                      </center>
-                    </article>
+                    '.$this->get_lista_acp_regional_con_operaciones($dep_id).'
                   </div>
                 </div>
               </div>
@@ -317,7 +289,7 @@ class Crep_evalform2 extends CI_Controller {
 
 
 
-  /*---- FUNCION GET NIVEL DE CUMPLIMIENTO DE OPERACIONES POR ACP REGIONAL ---*/
+  /*---- FUNCION GET NIVEL DE CUMPLIMIENTO DE OPERACIONES X ACP REGIONAL (GRAFICO)---*/
   public function ver_datos_avance_oregional_acp(){
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
@@ -343,7 +315,7 @@ class Crep_evalform2 extends CI_Controller {
                 <thead>
                   <tr>
                     <th style="width:1%;text-align:center">#</th>
-                    <th style="width:20%;text-align:center">OPERACIÓN</th>
+                    <th style="width:20%;text-align:center">OPERACIÓN '.$this->gestion.'</th>
                     <th style="width:5%;text-align:center">META</th>
                     <th style="width:10%;text-align:center">(%) CUMPLIMIENTO TRIMESTRAL</th>
                     <th style="width:10%;text-align:center">(%) CUMPLIMIENTO GESTIÓN</th>
@@ -403,6 +375,7 @@ class Crep_evalform2 extends CI_Controller {
       $matriz[$nro][3]=round($row['or_meta'],2);
       $matriz[$nro][4]=round($calificacion[3],2); /// cumplimiento al trimestre
       $matriz[$nro][5]=round($calificacion[4],2); /// cumplimiento a la gestion
+      $matriz[$nro][6]=$row['or_id']; /// or_id
       $nro++;
     }
     
@@ -410,116 +383,104 @@ class Crep_evalform2 extends CI_Controller {
   }
 
 
-  /*---- FUNCION GET LISTA DE OPERACIONES POR ACP --------*/
-  public function get_lista_operaciones_acp(){
-    if($this->input->is_ajax_request() && $this->input->post()){
-      $post = $this->input->post();
-      $og_id = $this->security->xss_clean($post['og_id']); /// or id
-      $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+  /*---- LISTA DE ACP REGIONALES CON OPERACIONES POR REGIONAL---*/
+  public function get_lista_acp_regional_con_operaciones($dep_id){
+    $tabla='';
 
-      $acp_regional=$this->model_objetivogestion->get_objetivosgestion($og_id);
-      $lista_form2=$this->model_objetivoregion->list_oregional_regional($og_id,$dep_id);
-
-      $tabla='';
-      $tabla.='
-      <article class="col-sm-12 col-md-12 col-lg-12">
-              <div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-10" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
-                <header>
-                  <span class="widget-icon"> <i class="fa fa-list-alt"></i> </span>
-                  <h2>ACP. '.$acp_regional[0]['og_codigo'].'.- '.$acp_regional[0]['og_objetivo'].'</h2>
-        
-                  <div class="widget-toolbar hidden-phone">
-                    <div class="smart-form">
-                      <label class="checkbox">
-                        <input type="checkbox" name="checkbox">
-                        <i></i>Add Padding</label>
-                    </div>
-                  </div>
-        
-                </header>
-                <div>
-                  <div class="jarviswidget-editbox">
-                  </div>
-                  <div class="widget-body no-padding">
-        
-                    <div class="panel-group smart-accordion-default" id="accordion-2">';
-                      $nro=0;
-                      foreach($lista_form2 as $row){
-                        $nro++;
-                        $in='';
-                        $colapsed='class="collapsed"';
-                        if($nro==1){
-                          $in='in';
-                          $colapsed='';
-                        }
-                        $tabla.='
-                        <div class="panel panel-default">
-                          <div class="panel-heading">
-                            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-2" href="#'.$nro.'" '.$colapsed.'> <i class="fa fa-fw fa-plus-circle txt-color-green"></i> <i class="fa fa-fw fa-minus-circle txt-color-red"></i> '.$row['og_codigo'].'.'.$row['or_codigo'].'.- '.$row['or_objetivo'].'</a></h4>
-                          </div>
-                          <div id="'.$nro.'" class="panel-collapse collapse '.$in.'">
-                            <div class="panel-body">
-                              
-                            </div>
-                          </div>
-                        </div>';
-                      }
-
-                    $tabla.='
-
-                    </div>
-        
-                  </div>
-        
-                </div>
-        
+    $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id); 
+    $tabla.='
+    <article class="col-sm-12 col-md-12 col-lg-2">
+    </article>
+    <article class="col-sm-12 col-md-12 col-lg-8">
+        <div class="jarviswidget well transparent" id="wid-id-9" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+          <header>
+            <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+            <h2>Accordions </h2>
+          </header>
+          <div>
+            <div class="jarviswidget-editbox">
+            </div>
+            <div class="widget-body">
+              <div align=right>
+                <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>IMPRIMIR DETALLE OPERACIONES POR REGIONAL (Form N° 2)</b></a>
               </div>
-        
-            </article>
-            ';
-      /*foreach($lista_form2 as $row){
-        $tabla.=$row['or_objetivo'].'<br>';
-      }*/
+              <hr>
+              <div class="panel-group smart-accordion-default" id="accordion">';
+                $nro_acp=0;
+                foreach($acp_regional as $row){
+                  $matriz=$this->matriz_cumplimiento_operaciones_acp_regional($row['og_id'],$dep_id);
+                  $nro_acp++;
+                  $collapse='class="collapsed"';
+                  $in='';
+                  if($nro_acp==1){
+                    $collapse='';
+                    $in='in';
+                  }
 
-
-    /*  $detalle_oregional=$this->model_objetivoregion->get_objetivosregional($or_id); /// Objetivo Regional
-      $regional=$this->model_proyecto->get_departamento($dep_id);
-      $meta='';
-      if($detalle_oregional[0]['indi_id']==2){
-        $meta='%';
-      }
-
-      $titulo='
-      <b style="font-family:Verdana;font-size: 16px;">
-        OBJ. REGIONAL ('.strtoupper($regional[0]['dep_departamento']).'): '.$detalle_oregional[0]['or_codigo'].' '.$detalle_oregional[0]['or_objetivo'].'<br>
-        META '.$this->gestion.' : '.round($detalle_oregional[0]['or_meta'],2).' '.$meta.'
-      </b>';
-
-      $boton_imprimir='
-        <hr>
-          <div align=right>
-            <a href="javascript:abreVentana(\''.site_url("").'/rep_list_form4_priori_oregional/'.$or_id.'\');" title="IMPRIMIR ACP DISTRIBUCION REGIONAL" class="btn btn-default">
-              <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR ACTIVIDADES PRIORITARIOS
-            </a>
+                  $tabla.='
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#'.$nro_acp.'" '.$collapse.'> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> <b>A.C.P. '.$row['og_codigo'].'</b> .- '.$row['og_objetivo'].'</a></h4>
+                    </div>
+                    <div id="'.$nro_acp.'" class="panel-collapse collapse '.$in.'">
+                      <div class="panel-body no-padding">
+                        <br>
+                          <table style="width:100%">
+                            <tr>
+                              <td>
+                                <div style="font-size: 15px;font-family: Arial" align=left><b>DETALLE (%) CUMPLIMIENTO DE OPERACIONES DE LA ACP. '.$row['og_codigo'].' .- </b>'.$row['og_objetivo'].'</div>
+                              </td>
+                              <td>
+                                <a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['og_id'].'"  onclick="nivel_cumplimiento_acp_regional('.$row['og_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTOACCION DE CORTO PLAZO - REGIONAL"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="35" HEIGHT="35"/><br><font size=1>GRAF. CUMPLIMIENTO OPERACIONES</font></a>
+                              </td>
+                            </tr>
+                          </table>
+                          <br>
+                          <table class="table table-bordered" style="width:100%">
+                            <thead>
+                              <tr>
+                                <th style="width:1%;text-align:center">#</th>
+                                <th style="width:30%;text-align:center">OPERACIÓN '.$this->gestion.'</th>
+                                <th style="width:5%;text-align:center">META</th>
+                                <th style="width:10%;text-align:center">(%) CUMPLIMIENTO TRIMESTRAL</th>
+                                <th style="width:10%;text-align:center">(%) CUMPLIMIENTO GESTIÓN</th>
+                                <th style="width:5%;text-align:center">VER ALINEACION</th>
+                              </tr>
+                            </thead>
+                              <tbody>';
+                              $nro_form2=0;
+                            for ($i=0; $i < count($this->model_objetivoregion->list_oregional_regional($row['og_id'],$dep_id)); $i++) { 
+                              $nro_form2++;
+                              $tabla.='
+                              <tr>
+                                <td style="font-size: 10px;font-family: Arial;text-align:center">'.$nro_form2.'</td>
+                                <td style="font-size: 11px;font-family: Arial;"><b>'.$matriz[$i][0].'.'.$matriz[$i][1].'.- </b>'.$matriz[$i][2].'</td>
+                                <td style="font-size: 10px;font-family: Arial;text-align:right">'.$matriz[$i][3].'</td>
+                                <td style="font-size: 12px;font-family: Arial;text-align:right;" bgcolor="#e6fdfb"><b>'.$matriz[$i][4].' %</b></td>
+                                <td style="font-size: 10px;font-family: Arial;text-align:right">'.$matriz[$i][5].' %</td>
+                                <td align=center>
+                                  <a href="#" data-toggle="modal" data-target="#modal_act_priorizados" style="font-size: 10px;" class="btn btn-lg btn-default" name="'.$matriz[$i][6].'"  onclick="ver_actividades_priorizados('.$matriz[$i][6].','.$dep_id.');" title="VER MIS ACTIVIDADES PRIORIZADOS">ACT. PRIORIZADOS</a>
+                                </td>
+                              </tr>';
+                            }
+                            $tabla.='
+                            </tbody>
+                          </table>
+                        <hr>
+                      </div>
+                    </div>
+                  </div>';
+                }
+              
+              $tabla.='
+              </div>
+            </div>
           </div>
-        </hr>';*/
+        </div>
+      </article>';
 
-        $result = array(
-          'respuesta' => 'correcto',
-          'tabla'=>$tabla,
-         /* 'tabla'=>$this->eval_oregional->get_mis_form4_priorizados_x_oregional($or_id,0),
-          'titulo'=>$titulo,
-          'imprimir_act_priori'=>$boton_imprimir,*/
-        );
-
-      echo json_encode($result);
-    }else{
-        show_404();
-    }
+    return $tabla;
   }
-
-
-
 
 
 

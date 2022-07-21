@@ -83,6 +83,7 @@
             request.done(function (response, textStatus, jqXHR) {
               if (response.respuesta == 'correcto') {
                 $('#lista_consolidado').fadeIn(1000).html(response.tabla);
+                //alert(response.matriz[0][0]+'.'+response.matriz[0][1]+'--'+response.matriz[1][0]+'.'+response.matriz[1][1])
                 cuadro_grafico_cumplimiento_operaciones_regional(response.matriz,response.nro,response.dep_id,response.regional,response.trimestre,response.gestion,response.titulo);
               }
               else{
@@ -440,40 +441,7 @@ function cuadro_grafico_cumplimiento_operaciones_x_acp_regional(matriz,nro,regio
     });
 }
 
-  /// Lista de Operaciones
-  function ver_lista_operaciones_acp(og_id,dep_id) {
-    $('#titulo_ope').html('<font size=3><b>Cargando ..</b></font>');
-    $('#content_ope').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
 
-    var url = base+"index.php/reporte_evalform2/crep_evalform2/get_lista_operaciones_acp";
-    var request;
-    if (request) {
-        request.abort();
-    }
-    request = $.ajax({
-        url: url,
-        type: "POST",
-        dataType: 'json',
-        data: "og_id="+og_id+"&dep_id="+dep_id
-    });
-
-    request.done(function (response, textStatus, jqXHR) {
-
-    if (response.respuesta == 'correcto') {
-
-      $('#content_ope').fadeIn(1000).html(response.tabla);
-
-
-        /*$('#titulo').html(response.titulo);
-        
-        $('#imprimir_act_priori').fadeIn(1000).html(response.imprimir_act_priori);*/
-    }
-    else{
-        alertify.error("ERROR AL RECUPERAR INFORMACION");
-    }
-
-    });
-  }
 ///// ========================================================================
 
 

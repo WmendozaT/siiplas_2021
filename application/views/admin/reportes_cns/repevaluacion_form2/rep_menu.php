@@ -20,7 +20,7 @@
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
         <style>
             #mdialTamanio_acp_operacion{
-              width: 60% !important;
+              width: 90% !important;
             }
             #mdialTamanio_lista_operaciones{
               width: 80% !important;
@@ -114,7 +114,7 @@
     </div>
     <!-- ========================================================================================================= -->
         
-     <!-- MODAL LISTA DE ACTIVIDADES PRIORIZADOS -->
+    <!-- MODAL LISTA DE OPERACIONES -->
         <div class="modal fade" id="modal_cumplimiento" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog" id="mdialTamanio_acp_operacion">
                 <div class="modal-content">
@@ -130,19 +130,21 @@
             </div>
         </div>
 
-     <!-- MODAL LISTA DE OPERACIONES -->
-        <div class="modal fade" id="modal_operaciones" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+     
+     <!-- MODAL LISTA DE ACTIVIDADES PRIORIZADOS -->
+        <div class="modal fade" id="modal_act_priorizados" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog" id="mdialTamanio_lista_operaciones">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                     </div>
                     <div class="modal-body">
-                        <!-- <h2 class="alert alert-info"><center>MIS ACTIVIDADES PRIORIZADOS - <?php echo $this->session->userData('gestion');?></center></h2> -->
+                        <h2 class="alert alert-info"><center>MIS ACTIVIDADES PRIORIZADOS - <?php echo $this->session->userData('gestion');?></center></h2>
                         <div class="row">
-                            <div id="titulo_ope"></div>
-                            <div id="content_ope"></div>
+                            <div id="titulo"></div>
+                            <div id="content1"></div>
                         </div>
+                        <div id="imprimir_act_priori"></div>
                     </div>
                 </div>
             </div>
@@ -192,5 +194,11 @@
         <script src="<?php echo base_url(); ?>mis_js/seguimientooregional/seguimiento_oregional.js"></script> 
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+        <script src="<?php echo base_url(); ?>mis_js/seguimientooregional/seguimiento_oregional.js"></script> 
     </body>
 </html>
