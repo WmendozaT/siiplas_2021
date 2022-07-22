@@ -368,7 +368,24 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
 
         $('#tabla').html(response.tabla);
 
-        cuadro_grafico_cumplimiento_operaciones_x_acp_regional(response.matriz,response.nro,response.regional,response.trimestre,response.gestion,response.acp_regional)
+        //// Trimestre
+        let detalle_trimestre=[];
+        for (var i = 0; i < response.nro; i++) {
+            detalle_trimestre[i]= { name: response.matriz[i][0]+'.'+response.matriz[i][1]+' '+response.matriz[i][2],y: response.matriz[i][4]};
+        }
+        grafico='container1';
+        titulo='(%) CUMPLIMIENTO DE OPERACIONES <b>'+response.regional+ '</b> - '+response.trimestre[0]['trm_descripcion']+' /'+response.gestion;
+        cuadro_grafico_cumplimiento_operaciones_x_acp_regional(grafico,detalle_trimestre,titulo,response.acp_regional)
+
+
+        //// Gestion
+        let detalle_gestion=[];
+        for (var i = 0; i < response.nro; i++) {
+            detalle_gestion[i]= { name: response.matriz[i][0]+'.'+response.matriz[i][1]+' '+response.matriz[i][2],y: response.matriz[i][5]};
+        }
+        grafico='container2';
+        titulo='(%) CUMPLIMIENTO DE OPERACIONES <b>'+response.regional+ '</b> GESTIÓN - '+response.gestion;
+        cuadro_grafico_cumplimiento_operaciones_x_acp_regional(grafico,detalle_gestion,titulo,response.acp_regional)
 
       }
       else{
@@ -380,19 +397,19 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
 
 
 //// grafico nivel de cumplimiento de operaciones por ACP
-function cuadro_grafico_cumplimiento_operaciones_x_acp_regional(matriz,nro,regional,trimestre,gestion,acp_regional){
-      let detalle=[];
+function cuadro_grafico_cumplimiento_operaciones_x_acp_regional(grafico,detalle_trimestre,titulo,acp_regional){
+      /*let detalle=[];
       for (var i = 0; i < nro; i++) {
           detalle[i]= { name: matriz[i][0]+'.'+matriz[i][1]+' '+matriz[i][2],y: matriz[i][4]};
-      }
+      }*/
 
-    Highcharts.chart('container', {
+    Highcharts.chart(grafico, {
       chart: {
         type: 'column'
       },
       title: {
         align: 'center',
-        text: '(%) CUMPLIMIENTO DE OPERACIONES <b>'+regional+ '</b> - '+trimestre[0]['trm_descripcion']+' /'+gestion
+        text: titulo
       },
       subtitle: {
         align: 'center',
@@ -434,7 +451,7 @@ function cuadro_grafico_cumplimiento_operaciones_x_acp_regional(matriz,nro,regio
         {
           name: "OPERACIÓN",
           colorByPoint: true,
-          data: detalle
+          data: detalle_trimestre
         }
       ]
 

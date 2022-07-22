@@ -302,9 +302,16 @@ class Crep_evalform2 extends CI_Controller {
       $tabla='';
       $tabla.='
       <div class="row" align=center>
+        <article class="col-sm-12 col-md-12 col-lg-6">
+          <div id="container1" style="width: 770px; height: 550px; margin: 2 auto"></div>
+        </article>
+        <article class="col-sm-12 col-md-12 col-lg-6">
+          <div id="container2" style="width: 770px; height: 550px; margin: 2 auto"></div>
+        </article>
+      </div>
+      <hr>
+      <div class="row" align=center>
         <article class="col-sm-12 col-md-12 col-lg-12">
-          <div id="container" style="width: 1100px; height: 650px; margin: 2 auto"></div><hr>
-
               <table style="width:90%">
                 <tr>
                   <td><div style="font-size: 15px;font-family: Arial" align=left><b>DETALLE (%) CUMPLIMIENTO DE OPERACIONES DE LA ACP. '.$acp_regional[0]['og_codigo'].' .- </b>'.$acp_regional[0]['og_objetivo'].'</div></td>

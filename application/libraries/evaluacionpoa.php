@@ -1306,7 +1306,7 @@ class Evaluacionpoa extends CI_Controller{
         $tr[8][$i]=0; /// en proceso %
       }
 
-      if($tr[2][$i]!=0){
+    //  if($tr[2][$i]!=0){
         for ($i=1; $i <=$this->tmes; $i++) {
           $valor=$this->obtiene_datos_evaluacíon_regional($dep_id,$i,1);
           $tr[2][$i]=$valor[1]; /// Prog
@@ -1320,7 +1320,7 @@ class Evaluacionpoa extends CI_Controller{
           $tr[7][$i]=$proceso[2]; /// En Proceso
           $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
         }
-      }
+    //  }
 
     return $tr;
     }
@@ -1404,7 +1404,7 @@ class Evaluacionpoa extends CI_Controller{
         $tr[8][$i]=0; /// en proceso %
       }
 
-      if($tr[2][$i]!=0){
+    //  if($tr[2][$i]!=0){
         for ($i=1; $i <=$this->tmes; $i++) {
           $valor=$this->obtiene_datos_evaluacíon_distrital($dist_id,$i,1);
           $tr[2][$i]=$valor[1]; /// Prog
@@ -1419,7 +1419,7 @@ class Evaluacionpoa extends CI_Controller{
 
           $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
         }
-      }
+    //  }
 
     return $tr;
     }
