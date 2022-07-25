@@ -336,6 +336,40 @@ function cuadro_grafico_distribucion_presupuesto_asignado(matriz,nro){
   });
 
 
+$(document).ready(function() {
+  pageSetUp();
+  $("#mes_id").change(function () {
+    $("#mes_id option:selected").each(function () {
+      mes_id=$(this).val();
+      $('#load').html('<div class="loading" align="center"><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" /></div>');
+      var url = base+"index.php/ejecucion/cejecucion_pi/get_cambiar_mes";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "mes_id="+mes_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+              $('#load').html('');
+              Location.reload()
+              
+          }
+          else{
+              alertify.error("ERROR AL LISTAR");
+          }
+        }); 
+
+    });
+  });
+
+})
+
   //// SUBIR IMAGEN DEL PROYECTO
   $(function () {
     $(".fotos_pi").on("click", function (e) {

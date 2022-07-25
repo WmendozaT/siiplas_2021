@@ -45,6 +45,7 @@ class Cejecucion_pi extends CI_Controller {
     $data['style']=$this->ejecucion_finpi->style();
     $data['formulario']=$this->ejecucion_finpi->formulario();
 
+
     $this->load->view('admin/ejecucion_pi/form_ejec_fin_pi', $data);
   }
 
@@ -397,6 +398,65 @@ public function get_galeria_imagenes_proyecto(){
 }
 
 
+/*---- Get Cambiar mes ----*/
+public function get_cambiar_mes(){
+  if($this->input->is_ajax_request() && $this->input->post()){
+    $post = $this->input->post();
+    $mes_id = $this->security->xss_clean($post['mes_id']); /// mes id
+
+  /* $data = array(
+    'mes_actual'=>$this->verif_mes_gestion($mes_id),     
+    );*/
+    
+    $data = array(
+                'mes_actual'=>$this->verif_mes_gestion($mes_id)
+               
+            );
+    $this->session->set_userdata($data);
+
+    //        $this->session->set_userdata($data);
+
+    /// -----------------------
+    $result = array(
+      'respuesta' => 'correcto',
+    );
+
+    echo json_encode($result);
+  }else{
+      show_404();
+  }
+}
+
+    /*--- verifica datos del mes y año ---*/
+    public function verif_mes_gestion($mes_sistema){
+      $valor=$mes_sistema; // numero mes segun el sistema
+      //$valor=ltrim(date("m"), "0"); // numero mes por defecto
+      $mes=$this->mes_nombre_completo($valor);
+
+      $datos[1]=$valor; // numero del mes
+      $datos[2]=$mes[$valor]; // mes
+      $datos[3]=$this->gestion; // Gestion
+
+      return $datos;
+    }
+
+        /*------ NOMBRE MES -------*/
+    function mes_nombre_completo(){
+        $mes[1] = 'ENERO';
+        $mes[2] = 'FEBRERO';
+        $mes[3] = 'MARZO';
+        $mes[4] = 'ABRIL';
+        $mes[5] = 'MAYO';
+        $mes[6] = 'JUNIO';
+        $mes[7] = 'JULIO';
+        $mes[8] = 'AGOSTO';
+        $mes[9] = 'SEPTIEMBRE';
+        $mes[10] = 'OCTUBRE';
+        $mes[11] = 'NOVIEMBRE';
+        $mes[12] = 'DICIEMBRE';
+
+      return $mes;
+    }
 /*---- Detalle de Ejecucion Presupuestaria ----*/
 public function get_ejecucion_presupuestaria_pi(){
   if($this->input->is_ajax_request() && $this->input->post()){

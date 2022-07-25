@@ -9,6 +9,7 @@ class ejecucion_finpi extends CI_Controller{
     $this->load->model('mantenimiento/model_partidas');
     $this->load->model('mantenimiento/model_ptto_sigep');
     $this->load->model('programacion/model_componente');
+    $this->load->model('mantenimiento/model_configuracion');
     $this->load->model('menu_modelo');
     $this->load->library('security');
     $this->gestion = $this->session->userData('gestion');
@@ -29,6 +30,7 @@ class ejecucion_finpi extends CI_Controller{
   /*------- TITULO --------*/
   public function formulario(){
     $regional=$this->model_proyecto->get_departamento($this->dep_id);
+    $meses = $this->model_configuracion->get_mes();
     $tabla='';
     $tabla.='
     
@@ -40,9 +42,28 @@ class ejecucion_finpi extends CI_Controller{
       <div class="well">
         <form class="smart-form">
           <header><h2><b>FORMULARIO DE EJECUCI&Oacute;N PRESUPUESTARIA - </b> '.strtoupper($regional[0]['dep_departamento']).' '.$this->verif_mes[2].' / '.$this->gestion.'</h2></header>
+          <fieldset>
+            <section>
+              <label class="label">Selecciones MES / '.$this->gestion.'</label>
+               <select class="form-control" style="width:10%;" name="mes_id" id="mes_id">';
+               foreach($meses as $row){
+                if($row['m_id']==$this->verif_mes[1]){
+                  $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
+                }
+                else{
+                  $tabla.='<option value="'.$row['m_id'].'">'.$row['m_descripcion'].'</option>';
+                }
+                
+               }
+               $tabla.='
+                </select> <i></i> </label>
+            </section>
+          </fieldset>
         </form>
+          <div align=center id=load></div>
         </div>
       </article>
+
       <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="jarviswidget jarviswidget-color-darken" >
           <header>
