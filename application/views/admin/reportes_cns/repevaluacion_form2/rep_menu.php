@@ -170,6 +170,7 @@
         </script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/modules/exporting.js"></script>
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>

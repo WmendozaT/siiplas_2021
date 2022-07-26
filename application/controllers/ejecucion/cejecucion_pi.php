@@ -122,8 +122,8 @@ class Cejecucion_pi extends CI_Controller {
               <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO.MODIFICADO</b></th>
               <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. VIGENTE</b></th>
               <th style="width:7%; font-size: 10px; text-align:center"><b>PPTO. EJECUTADO</b></th>
-              <th style="width:7%; font-size: 10px; text-align:center"><b>REGISTRO EJECUCION</b></th>
-              <th style="width:20%; font-size: 10px; text-align:center"><b>OBSERVACIÓN</b></th>
+              <th style="width:7%; font-size: 10px; text-align:center"><b>REGISTRO EJECUCION '.$this->verif_mes[2].'</b></th>
+              <th style="width:20%; font-size: 10px; text-align:center"><b>OBSERVACIÓN '.$this->verif_mes[2].'</b></th>
             </tr>
           </thead>
           <tbody>
@@ -613,6 +613,7 @@ public function menu_rep_ejecucion_ppto(){
       </div>';
 
   $data['titulo_modulo']=$tabla;
+
   $this->load->view('admin/ejecucion_pi/rep_menu', $data);
 }
 
@@ -645,13 +646,21 @@ public function get_tp_reporte(){
     }
 
       //// s2
+      $nro_proy=count($this->model_proyecto->list_proy_inversion_regional($dep_id)); /// nro de proyectos
+      $matriz_proyectos=$this->ejecucion_finpi->matriz_proyectos_inversion_regional($dep_id); /// proyectos
+      $grafico_avance_proyectos='<div id="graf_proyectos"><div id="proyectos" style="width: 1000px; height: 800px; margin: 0 auto"></div></div>';
+
+
+
+
+      //// s3
       $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id));
       $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($dep_id); /// Matriz consolidado de partidas
       $consolidado=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,0); /// Tabla Clasificacion de partidas asignados por regional
       $tabla_consolidado_grafico=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,2); /// Tabla Clasificacion de partidas asignados por regional Grafico
-      $grafico_consolidado_partidas='<div id="graf_partida"><div id="container" style="width: 900px; height: 660px; margin: 0 auto"></div></div>';
+      $grafico_consolidado_partidas='<div id="graf_partida"><div id="partidas" style="width: 900px; height: 660px; margin: 0 auto"></div></div>';
 
-      //// s3
+      //// s4
       $vector_meses=$this->ejecucion_finpi->vector_consolidado_ppto_mensual_regional($dep_id); /// ejecutado mensual
       $vector_meses_acumulado=$this->ejecucion_finpi->vector_consolidado_ppto_acumulado_mensual_regional($dep_id); /// ejecutado mensual Acumulado
       $tabla1=$this->ejecucion_finpi->detalle_temporalidad_mensual_regional($vector_meses,$dep_id);
@@ -680,10 +689,13 @@ public function get_tp_reporte(){
                               <a href="#s1" data-toggle="tab"> Detalle Proyectos</a>
                           </li>
                           <li>
-                              <a href="#s2" data-toggle="tab"> Consolidado por Partidas</a>
+                              <a href="#s2" data-toggle="tab"> Avance Proyectos</a>
                           </li>
                           <li>
-                              <a href="#s3" data-toggle="tab"> Consolidado por Meses</a>
+                              <a href="#s3" data-toggle="tab"> Consolidado por Partidas</a>
+                          </li>
+                          <li>
+                              <a href="#s4" data-toggle="tab"> Consolidado por Meses</a>
                           </li>
                         </ul>
 
@@ -723,6 +735,17 @@ public function get_tp_reporte(){
                           <div class="tab-pane fade" id="s2">
                             <div class="row">
                               <article class="col-sm-12">
+                                '.$grafico_avance_proyectos.'
+                                <div align="right">
+                                    <button  onClick="imprimir_proyectos()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  </div>
+                              </article>
+                            </div>
+                          </div>
+
+                          <div class="tab-pane fade" id="s3">
+                            <div class="row">
+                              <article class="col-sm-12">
                                 '.$grafico_consolidado_partidas.'
                                   <div align="right">
                                     <button  onClick="imprimir_partida()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -737,7 +760,7 @@ public function get_tp_reporte(){
                             </div>
                           </div>
 
-                          <div class="tab-pane fade" id="s3">
+                          <div class="tab-pane fade" id="s4">
                             <div class="row">
                             <article class="col-sm-12 col-md-12 col-lg-6">
                               <div class="rows" align=center>
@@ -769,11 +792,15 @@ public function get_tp_reporte(){
 
     $result = array(
       'respuesta' => 'correcto',
+      'regional' => strtoupper($regional[0]['dep_departamento']),
       'tabla'=>$tabla,
       'nro'=>$nro,
       'matriz'=>$matriz_partidas,
       'vector_meses'=>$vector_meses,
       'vector_meses_acumulado'=>$vector_meses_acumulado,
+
+      'nro_proy'=>$nro_proy,
+      'matriz_proy'=>$matriz_proyectos,
 
      // 'btn_partidas'=>$boton_partida,
     );

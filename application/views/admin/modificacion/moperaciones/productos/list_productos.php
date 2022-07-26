@@ -131,6 +131,7 @@
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
 					<section id="widget-grid" class="well">
 						<div class="" title="<?php echo $proyecto[0]['proy_id']?>">
+							<input type="hidden" name="com_id" id="com_id" value="<?php echo $cite[0]['com_id'];?>"> 
 							<?php echo $datos_cite;?>
 							<?php echo $titulo;?>
 						</div>

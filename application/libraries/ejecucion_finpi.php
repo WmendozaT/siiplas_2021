@@ -45,15 +45,16 @@ class ejecucion_finpi extends CI_Controller{
           <fieldset>
             <section>
               <label class="label">Selecciones MES / '.$this->gestion.'</label>
-               <select class="form-control" style="width:10%;" name="mes_id" id="mes_id">';
+               <select class="form-control" style="width:20%;" name="mes_id" id="mes_id">';
                foreach($meses as $row){
-                if($row['m_id']==$this->verif_mes[1]){
-                  $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
+                if($row['m_id']<=ltrim(date("m"), "0")){
+                  if($row['m_id']==$this->verif_mes[1]){
+                    $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
+                  }
+                  else{
+                    $tabla.='<option value="'.$row['m_id'].'">'.$row['m_descripcion'].'</option>';
+                  }
                 }
-                else{
-                  $tabla.='<option value="'.$row['m_id'].'">'.$row['m_descripcion'].'</option>';
-                }
-                
                }
                $tabla.='
                 </select> <i></i> </label>
@@ -210,6 +211,41 @@ class ejecucion_finpi extends CI_Controller{
         </div>
       </article>';
     return $tabla;
+  }
+
+
+ /*--- MATRIZ PROYECTOS DE INVERSION PARA GRAFICO DE AVANCE ---*/
+  public function matriz_proyectos_inversion_regional($dep_id){
+    $proyectos=$this->model_proyecto->list_proy_inversion_regional($dep_id);
+    $nro=0;
+    foreach($proyectos as $row){
+      $modificacion_partida=$this->detalle_modificacion_ppto_x_proyecto($row['aper_id']);
+      $ejec_fin=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']); /// Ejecucion Presupuestaria PI
+      
+      $datos[$nro][0]=$row['dep_id'];
+      $datos[$nro][1]=$row['dist_id'];
+      $datos[$nro][2]=$row['proy_id'];
+      $datos[$nro][3]=$row['aper_id'];
+      $datos[$nro][4]=$row['dep_departamento'];
+      $datos[$nro][5]=$row['dist_distrital'];
+      $datos[$nro][6]=$row['abrev'];
+      $datos[$nro][7]=$row['prog'];
+      $datos[$nro][8]=$row['proy'];
+      $datos[$nro][9]=$row['act'];
+      $datos[$nro][10]=$row['proyecto'];
+      $datos[$nro][11]=$modificacion_partida[1];
+      $datos[$nro][12]=$modificacion_partida[2];
+      $datos[$nro][13]=$modificacion_partida[3];
+      $datos[$nro][14]=$ejec_fin[1];
+      $datos[$nro][15]=0;
+      if($datos[$nro][13]!=0){
+        $datos[$nro][15]=round((($datos[$nro][14]/$datos[$nro][13])*100),2);
+      }
+      
+      $nro++;
+    }
+
+    return $datos;
   }
 
 
@@ -762,7 +798,7 @@ class ejecucion_finpi extends CI_Controller{
               <td style="width:7%;" align=right>'.number_format($modificacion_partida[1], 2, ',', '.').'</td>
               <td style="width:7%;" align=right>'.number_format($modificacion_partida[2], 2, ',', '.').'</td>
               <td style="width:7%;" align=right>'.number_format($modificacion_partida[3], 2, ',', '.').'</td>
-              <td style="width:5%;" align=right>'.number_format($ejec_fin[1], 2, ',', '.').' %</td>
+              <td style="width:5%;" align=right>'.number_format($ejec_fin[1], 2, ',', '.').'</td>
 
 
               <td style="width:5%;" align=right><b>'.round($row['avance_fisico'],2).' %</b></td>

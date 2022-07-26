@@ -80,7 +80,18 @@ $(document).ready(function() {
                 cuadro_grafico_distribucion_proyectos(response.matriz_reg,response.nro_reg); /// grafico 1 detalle por proyecto
                 cuadro_grafico_distribucion_presupuesto_asignado(response.matriz_reg,response.nro_reg)  /// grafico 1 detalle por presupuesto
 
-                cuadro_grafico_partidas(response.matriz_part,response.nro_part,'INSTITUCIONAL');/// detalle partidas
+                let partida=[];
+                for (var i = 0; i < response.nro_part; i++) {
+                    partida[i]= 'PARTIDA '+response.matriz_part[i][2];
+                }
+
+                let partida_ejecucion=[];
+                for (var i = 0; i < response.nro_part; i++) {
+                    partida_ejecucion[i]= response.matriz_part[i][18];
+                }
+
+                cuadro_grafico_en_barras_horizontales('partidas',partida,partida_ejecucion,'CONSOLIDADO POR PARTIDAS - INSTITUCIONAL');/// detalle partidas
+              //  cuadro_grafico_en_barras_horizontales(response.matriz_part,response.nro_part,'INSTITUCIONAL');/// detalle partidas
 
                 cuadro_grafico_ppto_ejec_meses(response.vector_meses,'INSTITUCIONAL');  //// mensual
                 cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'INSTITUCIONAL') /// meses Acumulado
@@ -88,7 +99,21 @@ $(document).ready(function() {
               }
               else{ /// Regional
                 $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
-                cuadro_grafico_partidas(response.matriz,response.nro,'REGIONAL');/// detalle partidas
+
+              /*  let partida=[];
+                for (var i = 0; i < response.nro_reg; i++) {
+                    partida[i]= 'PARTIDA '+response.matriz_reg[i][2];
+                }
+
+                let partida_ejecucion=[];
+                for (var i = 0; i < response.nro_reg; i++) {
+                    partida_ejecucion[i]= response.matriz_reg[i][18];
+                }
+
+                cuadro_grafico_en_barras_horizontales('partidas',partida,partida_ejecucion,'CONSOLIDADO POR PARTIDAS A NIVEL REGIONAL');/// detalle partidas*/
+
+
+               // cuadro_grafico_en_barras_horizontales(response.matriz,response.nro,'REGIONAL');/// detalle partidas
                 cuadro_grafico_ppto_ejec_meses(response.vector_meses,'REGIONAL');  //// mensual
                 cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
               }
@@ -357,7 +382,7 @@ $(document).ready(function() {
         request.done(function (response, textStatus, jqXHR) {
           if (response.respuesta == 'correcto') {
               $('#load').html('');
-              Location.reload()
+              window.location.reload(true);
               
           }
           else{
@@ -692,7 +717,31 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
         request.done(function (response, textStatus, jqXHR) {
           if (response.respuesta == 'correcto') {
               $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-              cuadro_grafico_partidas(response.matriz,response.nro,'REGIONAL');/// detalle partidas
+              //// Avance de Proyectos
+                let texto=[];
+                for (var i = 0; i < response.nro_proy; i++) {
+                    texto[i]= response.matriz_proy[i][10];
+                }
+
+                let ejecucion=[];
+                for (var i = 0; i < response.nro_proy; i++) {
+                    ejecucion[i]= response.matriz_proy[i][15];
+                }
+
+                cuadro_grafico_en_barras_horizontales('proyectos',texto,ejecucion,'EJECUCIÓN DE PROYECTOS - REGIONAL : '+response.regional);/// detalle proyectos
+              ////
+              //// Consolidado por partidas
+                let partida=[];
+                for (var i = 0; i < response.nro; i++) {
+                    partida[i]= 'PARTIDA '+response.matriz[i][2];
+                }
+
+                let partida_ejecucion=[];
+                for (var i = 0; i < response.nro; i++) {
+                    partida_ejecucion[i]= response.matriz[i][18];
+                }
+                cuadro_grafico_en_barras_horizontales('partidas',partida,partida_ejecucion,'CONSOLIDADO POR PARTIDAS - REGIONAL : '+response.regional);/// detalle partidas
+              ////
               cuadro_grafico_ppto_ejec_meses(response.vector_meses,'REGIONAL');  //// mensual
               cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
           }
@@ -708,19 +757,9 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
   });
 
   //// grafico barras consolidado por partidas
-  function cuadro_grafico_partidas(matriz,nro,titulo){
-    let texto=[];
-    for (var i = 0; i < nro; i++) {
-        texto[i]= 'PARTIDA '+matriz[i][2];
-    }
+  function cuadro_grafico_en_barras_horizontales(grafico,categoria,ejecucion,titulo){
 
-    let ejecucion=[];
-    for (var i = 0; i < nro; i++) {
-        ejecucion[i]= matriz[i][18];
-    }
-
-
-    Highcharts.chart('container', {
+    Highcharts.chart(grafico, {
       chart: {
           type: 'bar'
       },
@@ -728,10 +767,10 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
           text: 'CUADRO DE EJECUCIÓN PRESUPUESTARIA AL MES DE '+descripcion_mes+' / '+gestion
       },
       subtitle: {
-          text: 'CONSOLIDADO POR PARTIDAS A NIVEL '+titulo
+          text: titulo
       },
       xAxis: {
-          categories: texto,
+          categories: categoria,
           title: {
               text: null
           }
@@ -781,6 +820,19 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
     imprimirPartida(grafico,cabecera,tabla);
     document.getElementById("cabecera").style.display = 'none';
     document.getElementById("tabla_impresion_partida").style.display = 'none';
+  }
+
+  //// Barras Proyectos
+  function imprimir_proyectos() {
+    var cabecera = document.querySelector("#cabecera");
+    var grafico = document.querySelector("#graf_proyectos");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+/*    document.getElementById("tabla_impresion_partida").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_partida");*/
+    imprimirPartida(grafico,cabecera,'');
+    document.getElementById("cabecera").style.display = 'none';
+   // document.getElementById("tabla_impresion_partida").style.display = 'none';
   }
 
   function imprimirPartida(grafico,cabecera,tabla) {
