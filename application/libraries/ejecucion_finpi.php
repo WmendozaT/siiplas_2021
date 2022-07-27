@@ -213,6 +213,69 @@ class ejecucion_finpi extends CI_Controller{
     return $tabla;
   }
 
+  /*--- GET MATRIZ DATOS CONSOLIDADOS DE PROYETCOS DE INVERSION INSCRITOS CALSIFICADOS POR REGIONAL ---*/
+  public function matriz_detalle_proyectos_clasificado_regional(){
+    $regionales=$this->model_ptto_sigep->list_regionales();
+    $nro_proyectos_nacional=count($this->model_proyecto->list_proy_inversion()); /// Nro de proyectos aprobados NACIONAL
+    $ppto_asignado_proyectos_nacional=$this->model_ptto_sigep->get_ppto_asignado_proyectos_inversion_aprobados(); /// Ppto Asignado de proyectos aprobados NACIONAL
+    
+    //// Armando Matriz Vacio
+    for ($i=0; $i <=10 ; $i++) { 
+      for ($j=0; $j <count($this->model_ptto_sigep->list_regionales()) ; $j++) { 
+        $matriz[$i][$j]=0;
+      }
+    }
+    //// -------------------
+
+
+    $nro=0;
+    foreach($regionales as $row){
+      $nro_proy=0;
+      if(count($this->model_proyecto->list_proy_inversion_regional($row['dep_id']))!=0){
+        $nro_proy=count($this->model_proyecto->list_proy_inversion_regional($row['dep_id']));
+      }
+
+      $modificacion_partida=$this->ejecucion_finpi->detalle_modificacion_ppto_x_regional($row['dep_id']); //// Modificacion de partidas
+
+      $ejecucion=$this->model_ptto_sigep->get_ppto_ejecutado_regional($row['dep_id']); //// ejecucion de Presupuesto
+      $ejec_ppto=0;
+      if(count($ejecucion)!=0){
+        $ejec_ppto=$ejecucion[0]['ejecutado_total'];
+      }
+
+      $avance_financiero=0; /// Avance Financiero
+      if($modificacion_partida[3]!=0){
+        $avance_financiero=round((($ejec_ppto/$modificacion_partida[3])*100),2);
+      }
+      
+      $porcentaje_distribucion_proyectos=0; //// numero de proyectos
+      if($nro_proyectos_nacional!=0){
+        $porcentaje_distribucion_proyectos=round(($nro_proy/$nro_proyectos_nacional)*100,2);
+      }
+
+
+      $porcentaje_distribucion_ppto=0; /// porcentaje de ppto asignado por regional
+      if(count($ppto_asignado_proyectos_nacional)!=0){
+        $porcentaje_distribucion_ppto=round(($modificacion_partida[3]/$ppto_asignado_proyectos_nacional[0]['ppto_asignado_gestion'])*100,2);
+      }
+
+      $matriz[$nro][0]=$row['dep_id']; //// dep id
+      $matriz[$nro][1]=strtoupper($row['dep_departamento']); /// regional
+      $matriz[$nro][2]=$row['dep_sigla']; /// regional
+      $matriz[$nro][3]=$nro_proy; /// nro de proyectos aprobados
+      $matriz[$nro][4]=$porcentaje_distribucion_proyectos; /// porcentaje de distribucion de proyectos con respecto al total
+      $matriz[$nro][5]=$modificacion_partida[1]; /// ppto inicial
+      $matriz[$nro][6]=$modificacion_partida[2]; /// ppto modificado
+      $matriz[$nro][7]=$modificacion_partida[3]; /// ppto vigente
+      $matriz[$nro][8]=$ejec_ppto; /// ppto ejecutado
+      $matriz[$nro][9]=$avance_financiero; /// avance financiero Gestion
+      $matriz[$nro][10]=$porcentaje_distribucion_ppto; /// porcentaje de distribucion del presupuesto con respecto al total
+
+      $nro++;
+    }
+
+    return $matriz;
+  }
 
  /*--- MATRIZ PROYECTOS DE INVERSION PARA GRAFICO DE AVANCE ---*/
   public function matriz_proyectos_inversion_regional($dep_id){
@@ -248,6 +311,67 @@ class ejecucion_finpi extends CI_Controller{
     return $datos;
   }
 
+
+  /*--- GET TABLA DATOS CONSOLIDADOS DE PROYETCOS DE INVERSION INSCRITOS CALSIFICADOS POR REGIONAL IMPRESION ---*/
+  public function tabla_detalle_proyectos_impresion($matriz,$nro,$tipo){
+    /// tipo : 0 vista normal
+    /// tipo : 1 vista para impresion
+
+    $tabla='';
+    if($tipo==0){
+      $tabla.='';
+    }
+    else{
+      $tabla.='
+      <center>
+      <table class="change_order_items" border=1 style="width:60%;">
+        <thead>
+          <tr>
+            <th style="width:2%;">#</th>
+            <th style="width:10%;">CODIGO SISIN</th>
+            <th style="width:40%;">PROYECTO DE INVERSIÓN</th>
+            <th style="width:10%;">PRESUPUESTO<br>ASIGNADO '.$this->gestion.'</th>
+            <th style="width:10%;">PRESUPUESTO<br>EJECUTADO '.$this->gestion.'</th>
+            <th style="width:10%;">(%) EJECUCIÓN</th>
+          </tr>
+        </thead>
+        <tbody>';
+        $ppto_asignado=0;
+        $ppto_ejec=0;
+        $nro_proy=0;
+          for ($i=0; $i <$nro ; $i++) { 
+            $nro_proy++;
+            $tabla.='
+              <tr>
+                <td style="width:2%;" align=center>'.$nro_proy.'</td>
+                <td style="width:10%;" align=center>'.$matriz[$i][8].'</td>
+                <td style="width:40%;">'.$matriz[$i][10].'</td>
+                <td style="width:10%;" align=right>Bs. '.number_format($matriz[$i][13], 2, ',', '.').'</td>
+                <td style="width:10%;" align=right>Bs. '.number_format($matriz[$i][14], 2, ',', '.').'</td>
+                <td style="width:10%;" align=right><b>'.$matriz[$i][15].'%</b></td>
+              </tr>';
+              $ppto_asignado=$ppto_asignado+$matriz[$i][13];
+              $ppto_ejec=$ppto_ejec+$matriz[$i][14];
+          }
+          $cum=0;
+          if($ppto_asignado!=0){
+            $cum=round((($ppto_ejec/$ppto_asignado)*100),2);
+          }
+
+          $tabla.='
+        </tbody>
+          <tr>
+            <td colspan=3></td>
+            <td align=right>Bs. '.number_format($ppto_asignado, 2, ',', '.').'</td>
+            <td align=right>Bs. '.number_format($ppto_ejec, 2, ',', '.').'</td>
+            <td align=right><b>'.$cum.' %</b></td>
+          </tr>
+      </table>
+      </center>';
+    }
+
+    return $tabla;
+  } 
 
 
 

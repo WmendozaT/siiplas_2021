@@ -648,9 +648,8 @@ public function get_tp_reporte(){
       //// s2
       $nro_proy=count($this->model_proyecto->list_proy_inversion_regional($dep_id)); /// nro de proyectos
       $matriz_proyectos=$this->ejecucion_finpi->matriz_proyectos_inversion_regional($dep_id); /// proyectos
-      $grafico_avance_proyectos='<div id="graf_proyectos"><div id="proyectos" style="width: 1000px; height: 800px; margin: 0 auto"></div></div>';
-
-
+      $tabla_detalle_ejec_impresion=$this->ejecucion_finpi->tabla_detalle_proyectos_impresion($matriz_proyectos,$nro_proy,1); /// Tabla Impresion tabla
+      $grafico_avance_proyectos='<div id="graf_proyectos"><div id="proyectos" style="width: 1100px; height: 700px; margin: 0 auto"></div></div>';
 
 
       //// s3
@@ -686,10 +685,10 @@ public function get_tp_reporte(){
                         <hr class="simple">
                         <ul id="myTab1" class="nav nav-tabs bordered">
                           <li class="active">
-                              <a href="#s1" data-toggle="tab"> Detalle Proyectos</a>
+                              <a href="#s1" data-toggle="tab"> Ejecución Proyectos</a>
                           </li>
                           <li>
-                              <a href="#s2" data-toggle="tab"> Avance Proyectos</a>
+                              <a href="#s2" data-toggle="tab"> Detalle Proyectos</a>
                           </li>
                           <li>
                               <a href="#s3" data-toggle="tab"> Consolidado por Partidas</a>
@@ -701,6 +700,20 @@ public function get_tp_reporte(){
 
                         <div id="myTabContent1" class="tab-content padding-10">
                           <div class="tab-pane fade in active" id="s1">
+                            <div class="row">
+                              <article class="col-sm-12">
+                                '.$grafico_avance_proyectos.'
+                                <div id="tabla_impresion_ejecucion" style="display: none">
+                                  '.$tabla_detalle_ejec_impresion.'
+                                </div>
+                                <div align="right">
+                                    <button  onClick="imprimir_proyectos()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  </div>
+                              </article>
+                            </div>
+                          </div>
+
+                          <div class="tab-pane fade" id="s2">
                               <div class="row">
                                 <div class="table-responsive" align=center>
                                   <table style="width:90%;" border=0>
@@ -730,17 +743,6 @@ public function get_tp_reporte(){
                                 </div>
                                 '.$lista_detalle.'
                               </div>
-                          </div>
-                          
-                          <div class="tab-pane fade" id="s2">
-                            <div class="row">
-                              <article class="col-sm-12">
-                                '.$grafico_avance_proyectos.'
-                                <div align="right">
-                                    <button  onClick="imprimir_proyectos()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                  </div>
-                              </article>
-                            </div>
                           </div>
 
                           <div class="tab-pane fade" id="s3">

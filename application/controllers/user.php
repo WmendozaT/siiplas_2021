@@ -195,7 +195,7 @@ class User extends CI_Controller{
     /*-------------- DASHBOARD ---------------*/
     public function dashboard_index(){
         if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
-            $data['vector_menus'] = $this->menu_principal_roles();
+            $data['vector_menus'] = $this->menu_principal_roles(); //// MENU SEGUN EL ROL DEL USUARIO
             $data['resp']=$this->session->userdata('funcionario');
             $data['dist_id']=$this->dist_id;
             $data['res_dep']=$this->tp_resp();
@@ -218,7 +218,7 @@ class User extends CI_Controller{
             }
             else{
                 if($this->fun_id==592 || $this->fun_id==709){ //// Exclusivo para la Regional LA paz
-                $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));
+                    $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));
                 }
                 else{ /// Listado normal
                     $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_distrital($this->dist_id,$this->verif_mes[1],$this->gestion));
@@ -334,6 +334,15 @@ class User extends CI_Controller{
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/impresora.png"  style="margin-left:0px; width: 95px"/>
                             <h1 style="font-size: 11px;">RESUMEN POA '.$this->gestion.'</h1>
+                        </div>
+                        </a>
+                    </div>';
+                    $vector[1]=
+                    '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+                        <a href="'.base_url().'index.php/ejecucion_proyectos_inversion"  onclick="reporte_internos()" class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <div class="well1" align="center">
+                            <img class="img-circle" src="'.base_url().'assets/img/ejecucion.png"  style="margin-left:0px; width: 95px"/>
+                            <h1 style="font-size: 11px;">PROYECTOS DE INVERSIÓN '.$this->gestion.'</h1>
                         </div>
                         </a>
                     </div>';
