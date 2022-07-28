@@ -9,11 +9,7 @@ class C_consultaspi extends CI_Controller {
             $this->load->library('pdf2');
             $this->load->model('menu_modelo');
             $this->load->model('programacion/model_proyecto');
-            $this->load->model('ejecucion/model_certificacion');
-            $this->load->model('ejecucion/model_evaluacion');
-            $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
-            $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020
-            $this->load->model('modificacion/model_modfisica'); /// Gestion 2020
+            $this->load->model('mantenimiento/model_ptto_sigep');
             $this->pcion = $this->session->userData('pcion');
             $this->gestion = $this->session->userData('gestion');
             $this->adm = $this->session->userData('adm');
@@ -40,6 +36,28 @@ class C_consultaspi extends CI_Controller {
     public function ejecucion_proyectos(){
       $data['menu']=$this->menu(10);
       $data['style']=$this->style();
+
+      $data['nro_reg']=count($this->model_ptto_sigep->list_regionales());
+      $data['matriz_reg']=$this->ejecucion_finpi->matriz_detalle_proyectos_clasificado_regional();
+
+
+
+      $detalle_ejecucion=[];
+                for ($i = 0; $i < $data['nro_reg']; $i++) {
+                    if($i+1==$data['nro_reg']){
+                        $detalle_ejecucion[$i]= '{ name: '.$data['matriz_reg'][$i][1].', y: '.$data['matriz_reg'][$i][9].' }';
+                    }
+                    else{
+                        $detalle_ejecucion[$i]= '{ name: '.$data['matriz_reg'][$i][1].', y: '.$data['matriz_reg'][$i][9].' },';
+                    }
+                    
+                }
+
+        $data['detalle_ejecucion']=$detalle_ejecucion;
+              /*  for ($i=0; $i < $nro_reg; $i++) { 
+                    echo $detalle_ejecucion[$i]."<br>";
+                }*/
+
 
       $this->load->view('admin/reportes_cns/repejecucion_pi/menu_consultas_pi', $data);
     }
@@ -78,6 +96,7 @@ class C_consultaspi extends CI_Controller {
             width: 100%;
             max-width:1550px;;
             overflow-x: scroll;
+            .
         }
         th{
             padding: 1.4px;

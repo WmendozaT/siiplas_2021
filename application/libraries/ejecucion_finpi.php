@@ -235,7 +235,7 @@ class ejecucion_finpi extends CI_Controller{
         $nro_proy=count($this->model_proyecto->list_proy_inversion_regional($row['dep_id']));
       }
 
-      $modificacion_partida=$this->ejecucion_finpi->detalle_modificacion_ppto_x_regional($row['dep_id']); //// Modificacion de partidas
+      $modificacion_partida=$this->detalle_modificacion_ppto_x_regional($row['dep_id']); //// Modificacion de partidas
 
       $ejecucion=$this->model_ptto_sigep->get_ppto_ejecutado_regional($row['dep_id']); //// ejecucion de Presupuesto
       $ejec_ppto=0;

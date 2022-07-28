@@ -796,7 +796,7 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo){
       },
       yAxis: {
         title: {
-          text: '(%) Cumplimiento de Operaciones al Trimestre'
+          text: '(%) Cumplimiento al Trimestre'
         }
 
       },

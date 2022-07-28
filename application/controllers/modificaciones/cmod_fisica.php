@@ -1,6 +1,6 @@
 <?php
 class Cmod_fisica extends CI_Controller {  
-    public $rol = array('1' => '3','2' => '6','3' => '4');
+    public $rol = array('1' => '3','2' => '6','3' => '4','4' => '10');
     public $temp = array( '1' => 'enero','2' => 'febrero','3' => 'marzo','4' => 'abril','5' => 'mayo','6' => 'junio',
                         '7' => 'julio','8' => 'agosto','9' => 'septiembre','10' => 'octubre','11' => 'noviembre','12' => 'diciembre'); 
 
@@ -581,7 +581,7 @@ class Cmod_fisica extends CI_Controller {
             }
 
             $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
-            $data['pie_rep']='MOD_POA_FORM4_'.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
+            $data['pie_rep']='MOD_POA_FORM4_'.$data['cite'][0]['cite_nota'].' de '.date('d-m-Y',strtotime($data['cite'][0]['cite_fecha'])).' - '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].' | '.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
             $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
           }
           else{

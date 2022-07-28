@@ -95,7 +95,7 @@
                               </header>
                                 <div>
                                     <div class="widget-body no-padding">
-                                       
+                                       <div id="graf_proyectos"><div id="proy_institucional" style="width: 1100px; height: 700px; margin: 0 auto"></div></div>
                                     </div>
                                     <!-- end widget content -->
                                 </div>
@@ -237,5 +237,78 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+
+        <script type="text/javascript">
+            Highcharts.chart('proy_institucional', {
+              chart: {
+                type: 'column'
+              },
+              title: {
+                align: 'center',
+                text: ''
+              },
+              subtitle: {
+                align: 'center',
+                text: '<b>EJECUCION PRESUPUESTARIA DE PROYECTOS DE INVERSION A NIVEL INSTITUCIONAL</b>'
+              },
+              accessibility: {
+                announceNewData: {
+                  enabled: true
+                }
+              },
+              xAxis: {
+                type: 'category'
+              },
+              yAxis: {
+                title: {
+                  text: '(%) Cumplimiento al Trimestre'
+                }
+
+              },
+              legend: {
+                enabled: false
+              },
+              plotOptions: {
+                series: {
+                  borderWidth: 0,
+                  dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}%'
+                  }
+                }
+              },
+
+              tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+              },
+
+              series: [
+                {
+                  name: "PROYECTO DE INVERSION",
+                  colorByPoint: true,
+                  data: [
+                        <?php 
+                          for ($i=0; $i <$nro_reg ; $i++){
+                            if($i+1==$nro_reg){
+                                ?>
+                                  <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][9]."}"?>
+                                <?php
+                            }
+                            else{
+                                ?>
+                                  <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][9]."},"?>
+                                <?php 
+                            }
+                            
+                          } 
+                        ?>
+                    ]
+                }
+              ]
+
+            });
+        </script>
+
         <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
 </html>
