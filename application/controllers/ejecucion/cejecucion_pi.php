@@ -1,6 +1,6 @@
 <?php
 class Cejecucion_pi extends CI_Controller {  
-  public $rol = array('1' => '1','2' => '11'); 
+  public $rol = array('1' => '1','2' => '11','3' => '10'); 
   public function __construct (){
     parent::__construct();
     if($this->session->userdata('fun_id')!=null){

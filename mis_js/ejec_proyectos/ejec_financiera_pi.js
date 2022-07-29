@@ -52,6 +52,60 @@ function abreVentana(PDF){
     return /\d/.test(String.fromCharCode(keynum));
   }
 
+//// =================================================
+/// ----- REPORTE CONSULTA POA EJECUCION DE PROYECTOS DE INVERSION
+  /// grado de cumplimiento PI x REGIONAL
+  function nivel_cumplimiento_pi_regional(dep_id) {
+  //  $('#titulo_grafico').html('<font size=3><b>Cargando ..</b></font>');
+   // $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
+
+
+    var url = base+"index.php/consultas_cns/c_consultaspi/get_detalle_ejecucion_ppto_pi_regional";
+    var request;
+    if (request) {
+        request.abort();
+    }
+    request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "dep_id="+dep_id
+    });
+
+    request.done(function (response, textStatus, jqXHR) {
+      if (response.respuesta == 'correcto') {
+
+        $('#tabla').html(response.tabla);
+
+        //// Avance de Proyectos
+            let detalle_ejecucion=[];
+            for (var i = 0; i < response.nro_proy; i++) {
+              detalle_ejecucion[i]= { name: response.matriz_proy[i][10],y: response.matriz_proy[i][15]};
+            }
+
+            cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - REGIONAL : '+response.regional);
+
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ///// ===================================================
 /// ------- MENU REPORTE EJECUCION PRESUPUESTARIA pi
 $(document).ready(function() {
@@ -780,11 +834,11 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo){
       },
       title: {
         align: 'center',
-        text: ''
+        text: '<b>'+titulo+'</b>'
       },
       subtitle: {
         align: 'center',
-        text: '<b>'+titulo+'</b>'
+        text: ''
       },
       accessibility: {
         announceNewData: {
@@ -906,6 +960,19 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo){
     imprimirPartida(grafico,cabecera,tabla);
     document.getElementById("cabecera").style.display = 'none';
     document.getElementById("tabla_impresion_ejecucion").style.display = 'none';
+  }
+
+  //// Barras Proyectos consultas PI
+  function imprimir_proyectos_consultas() {
+    var cabecera = document.querySelector("#cabecera_consulta");
+    var grafico = document.querySelector("#graf_proyectos_consulta");
+    document.getElementById("cabecera_consulta").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera_consulta");
+    document.getElementById("tabla_impresion_ejecucion_consulta").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_ejecucion_consulta");
+    imprimirPartida(grafico,cabecera,tabla);
+    document.getElementById("cabecera_consulta").style.display = 'none';
+    document.getElementById("tabla_impresion_ejecucion_consulta").style.display = 'none';
   }
 
   function imprimirPartida(grafico,cabecera,tabla) {
