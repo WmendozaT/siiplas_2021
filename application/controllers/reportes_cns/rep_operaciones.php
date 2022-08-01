@@ -55,8 +55,44 @@ class Rep_operaciones extends CI_Controller {
       $data['list']=$this->menu_nacional();
       $data['mensaje']='<div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';
       $this->load->view('admin/reportes_cns/programacion_poa/menu_consolidado_poa', $data);
+      //echo $this->requerimientos_distrital(10,0,4);
     }
 
+    /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR DISTRITAL, REGIONAL (2020 - 2021) ---*/
+/*    public function requerimientos_distrital($dep_id,$dist_id,$tp_id){
+      
+      date_default_timezone_set('America/Lima');
+      $fecha = date("d-m-Y H:i:s");
+
+      if($this->gestion==2019){
+        //$requerimientos=$this->mis_requerimientos_regionales_distritales($dist_id,2,$tp_id); /// Gestion 2019
+        $tabla='No disponible';
+      }
+      else{
+
+        if($dist_id==0){
+          $regional=$this->model_proyecto->get_departamento($dep_id);
+          $titulo='CONSOLIDADO REGIONAL FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($regional[0]['dep_departamento']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
+          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021
+          $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
+        }
+        else{
+          $dist=$this->model_proyecto->dep_dist($dist_id);
+          $titulo='CONSOLIDADO FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($dist[0]['dist_distrital']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
+          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
+          $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
+        }
+      }
+
+      header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=Consolidado_Requerimiento_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      echo "";
+      ini_set('max_execution_time', 0); 
+      ini_set('memory_limit','3072M');
+      echo $tabla;
+    }*/
 
     //// MENU UNIDADES ORGANIZACIONAL 2020 - 2021
     public function menu_nacional(){

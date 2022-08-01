@@ -796,7 +796,7 @@ class Genera_informacion extends CI_Controller{
         <div class="alert alert-warning">
           <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO FORMULARIO N° 5 '.$this->gestion.' - '.$titulo_reporte.' ('.$titulo.')</b></center></a>
         </div>
-        <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
+        <table id="dt_basic" class="table table-bordered" style="width:100%;" >
           <thead>
             <tr style="background-color: #66b2e8">
               <th style="width:3%;">COD. DA.</th>
@@ -911,9 +911,7 @@ class Genera_informacion extends CI_Controller{
         $tabla.='
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
-                <tr class="modo1">
-                  <td colspan=33 align=center style="height:50px;"><b>'.strtoupper($titulo).'<br></b></td>
-                </tr>
+
                 <tr style="background-color: #66b2e8">
                   <th style="width:3%;height:50px;background-color: #eceaea;">COD. DA.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. UE.</th>
@@ -981,7 +979,7 @@ class Genera_informacion extends CI_Controller{
                 
                 $tabla.='<td style="font-size: 15px;" bgcolor="#d9f5c9" align=center><b>'.$row['og_codigo'].'</b></td>';
                 $tabla.='<td style="font-size: 15px;" bgcolor="#d9f5c9" align=center><b>'.$row['or_codigo'].'</b></td>';
-                $tabla.='<td bgcolor="#d9f5c9">'.$row['or_objetivo'].'</td>';
+                $tabla.='<td bgcolor="#d9f5c9">'.mb_convert_encoding(strtoupper($row['or_objetivo']), 'cp1252', 'UTF-8').'</td>';
 
                 $tabla.='<td bgcolor="#e4f3dc" align=center><b>'.$row['prod_cod'].'</b></td>';
                 $tabla.='<td style="font-family: Arial;" bgcolor="#e4f3dc">'.mb_convert_encoding(strtoupper($row['prod_producto']), 'cp1252', 'UTF-8').'</td>';

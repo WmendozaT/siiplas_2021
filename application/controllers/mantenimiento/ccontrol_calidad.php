@@ -20,6 +20,7 @@ class Ccontrol_calidad extends CI_Controller {
                 $this->load->model('mantenimiento/model_partidas');
                 $this->load->model('programacion/model_producto');
                 $this->load->model('ejecucion/model_ejecucion');
+                $this->load->model('programacion/insumos/model_insumo');
                 $this->load->library("security");
                 $this->gestion = $this->session->userData('gestion');
                 $this->rol = $this->session->userData('rol');
@@ -259,7 +260,7 @@ class Ccontrol_calidad extends CI_Controller {
             $tabla.=''.$unidad.'-'.$par_id.'-'.$dep_id.'<br>';
           }
 
-          $tabla.=''.$this->requerimientos_umedida($lista,$titulo,1,$unidad).'';
+          $tabla.=''.$this->requerimientos_umedida($lista,$titulo,1,$unidad,'').'';
         }
         else{
           if($par_id==""){
@@ -271,18 +272,18 @@ class Ccontrol_calidad extends CI_Controller {
           elseif($par_id!="" & $dep_id==0){
             $partida=$this->model_partidas->dato_par($par_id);
             $lista=$this->model_control_calidad->list_req_sin_unidad_con_partida_regionales_todos($partida[0]['par_id']);
-            $titulo='<b>UNIDAD DE MEDIDA : </b>No registrado | <b>PARTIDA : '.$partida[0]['par_codigo'].'</b> | <b>REGIONAL : </b>Todas las regionales';
-            
-            $tabla.=''.$this->requerimientos_umedida($lista,$titulo,2,$partida[0]['par_codigo']).'';
+            $titulo='<b title='.$partida[0]['par_id'].'>UNIDAD DE MEDIDA : </b>No registrado | <b>PARTIDA : '.$partida[0]['par_codigo'].'</b> | <b>REGIONAL : </b>Todas las regionales';
+            $esportar='<a href="'.site_url("").'/exportar_requerimientos/'.$partida[0]['par_id'].'" target=_blank class="btn btn-default" title="EXPORTAR"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR EJECUCI&Oacute;N.XLS</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+            $tabla.=''.$this->requerimientos_umedida($lista,$titulo,2,$partida[0]['par_codigo'],$esportar).'';
           }
           /*--- partida seleccionada | regional:seleccionado ---*/
           else{
             $partida=$this->model_partidas->dato_par($par_id);
             $regional=$this->model_proyecto->get_departamento($dep_id);
             $lista=$this->model_control_calidad->list_req_sin_unidad_con_partida_regionales_select($partida[0]['par_id'],$dep_id);
-            $titulo='<b>UNIDAD DE MEDIDA : </b>No registrado | <b>PARTIDA : '.$partida[0]['par_codigo'].'</b> | <b>REGIONAL : </b>'.$regional[0]['dep_departamento'].'';
+            $titulo='<b title='.$partida[0]['par_id'].'>UNIDAD DE MEDIDA : </b>No registrado | <b>PARTIDA : '.$partida[0]['par_codigo'].'</b> | <b>REGIONAL : </b>'.$regional[0]['dep_departamento'].'';
           
-            $tabla.=''.$this->requerimientos_umedida($lista,$titulo,2,$partida[0]['par_codigo']).'';
+            $tabla.=''.$this->requerimientos_umedida($lista,$titulo,2,$partida[0]['par_codigo'],'').'';
           }
           
         }
@@ -367,7 +368,7 @@ class Ccontrol_calidad extends CI_Controller {
     }
     
     /*------------------ Lista de Requerimientos unidad de medida  ------------*/
-    public function requerimientos_umedida($lista,$titulo,$tp,$unidad){
+    public function requerimientos_umedida($lista,$titulo,$tp,$unidad,$exportar){
       if($tp==1){
         $color1='#d5f4f5';
         $color2='';
@@ -389,7 +390,7 @@ class Ccontrol_calidad extends CI_Controller {
                   <div class="jarviswidget-editbox">
                   </div>
                   <div class="widget-body no-padding">
-
+                    '.$exportar.'
                     <form id="formulario" name="formulario" method="post" action="'.site_url("").'/mantenimiento/ccontrol_calidad/valida_update_unidad" class="smart-form">
                       <br><div class="alert alert-success alert-block">'.$titulo.'</div><hr>
                       <input type="text" class="form-control" id="kwd_search" style="width:50%;" placeholder="BUSQUEDA ...." /><br>
@@ -864,24 +865,28 @@ phpinfo ();
     }
 
     /*--- EXPORTAR REQUERIMIENTOS (2019) ---*/
-    public function exportar_requerimientos(){
+    public function exportar_requerimientos($par_id){
       date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");
-      $requerimientos=$this->requerimientos(2); //// Lista de Requerimientos Total
       
-      header('Content-type: application/vnd.ms-excel');
+      $requerimientos=$this->requerimientos(2,$par_id); //// Lista de Requerimientos Total
+      
+/*      header('Content-type: application/vnd.ms-excel');
       header("Content-Disposition: attachment; filename=REQUERIMIENTOS_$fecha.xls"); //Indica el nombre del archivo resultante
       header("Pragma: no-cache");
       header("Expires: 0");
-      echo "";
+      echo "";*/
+      ini_set('max_execution_time', 0); 
+      ini_set('memory_limit','71680M');
       echo "".$requerimientos."";
     }
 
 
 
     /*--------- Reuquerimientos ------------*/
-    function requerimientos($tp){
-      $requerimientos=$this->model_control_calidad->lista_requerimiento_todos();
+    function requerimientos($tp,$par_id){
+      $requerimientos=$this->model_control_calidad->list_req_sin_unidad_con_partida_regionales_todos($par_id);
+      //$requerimientos=$this->model_control_calidad->lista_requerimiento_todos();
       $tabl='';
       if($tp==1){
         $tab='id="dt_basic" class="table table-bordered" style="width:100%;" font-size: "7px";';
@@ -908,12 +913,13 @@ phpinfo ();
                     <tr class="modo1">
                       <th style="width:1%; height:35px;" style="background-color: #1c7368; color: #FFFFFF">#</th>
                       <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="REGIONAL">REGIONAL</th>
+                      <th style="width:5%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="PARTIDA">PARTIDA</th>
                       <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="UNIDAD DE MEDIDA">UNIDAD DE MEDIDA</th>
                       <th style="width:20%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="DETALLE REQUERIMIENTO">DETALLE REQUERIMIENTO</th>
                       <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="CANTIDAD">CANTIDAD</th>
                       <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="COSTO UNITARIO">COSTO UNITARIO</th>
-                      <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="COSTO TOTAL">COSTO TOTAL</th>
-                      <th style="width:5%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="PARTIDA">PARTIDA</th>
+                      <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="PPTO. TOTAL">COSTO TOTAL</th>
+                      <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="PPTO. CERTIFICADO">PRESUPUESTO CERTIFICADO</th>
                       <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="UNIDAD ORGANIZACIONAL">UNIDAD_ORGANIZACIONAL</th>
                       <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="UNIDAD ORGANIZACIONAL">TIPO DE OPERACI&Oacute;N</th>
                       <th style="width:10%; height:35px;" style="background-color: #1c7368; color: #FFFFFF" title="OBSERVACI&Oacute;N">OBSERVACI&Oacute;N</th>
@@ -927,15 +933,16 @@ phpinfo ();
                   <tr style="height:11px;">
                     <td style="width: 1%; text-align: center; height:30px;">'.$nro.'--'.$row['ins_id'].'</td>
                     <td style="width: 10%; text-align: left; height:30px;">'.strtoupper($row['dep_departamento']).'</td>
+                    <td style="width: 5%; text-align: center; height:30px; font-size:13px;"><b>'.$row['par_codigo'].'</b></td>
                     <td style="width: 10%; text-align: left; height:30px;">'.strtoupper($row['ins_unidad_medida']).'</td>
-                    <td style="width: 20%; text-align: left; height:30px;">'.mb_convert_encoding(''.strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>
-                    <td style="width: 10%; text-align: right; height:30px;;">'.$row['ins_cant_requerida'].'</td>
-                    <td style="width: 10%; text-align: right; height:30px;;">'.$row['ins_costo_unitario'].'</td>
-                    <td style="width: 10%; text-align: right; height:30px;;">'.$row['ins_costo_total'].'</td>
-                    <td style="width: 5%; text-align: center; height:30px;">'.$row['par_codigo'].'</td>
-                    <td style="width: 10%; text-align: left; height:30px;">'.mb_convert_encoding(''.strtoupper($row['proy_nombre']), 'cp1252', 'UTF-8').'</td>
-                    <td style="width: 10%; text-align: left; height:30px;">'.mb_convert_encoding(''.strtoupper($row['tp_tipo']), 'cp1252', 'UTF-8').'</td>
-                    <td style="width: 10%; text-align: left; height:30px;">'.mb_convert_encoding(''.strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+                    <td style="width: 20%; text-align: left; height:30px;">'.strtoupper($row['ins_detalle']).'</td>
+                    <td style="width: 10%; text-align: right; height:30px;">'.round($row['ins_cant_requerida'],2).'</td>
+                    <td style="width: 10%; text-align: right; height:30px;">'.round($row['ins_costo_unitario'],2).'</td>
+                    <td style="width: 10%; text-align: right; height:30px;font-size:13px;"><b>'.round($row['ins_costo_total'],2).'</b></td>
+                    <td style="width: 10%; text-align: right; height:30px;font-size:13px;" bgcolor=#ebf5eb><b>'.round($row['ins_monto_certificado'],2).'</b></td>
+                    <td style="width: 10%; text-align: left; height:30px;">'.strtoupper($row['proy_nombre']).'</td>
+                    <td style="width: 10%; text-align: left; height:30px;">'.strtoupper($row['tp_tipo']).'</td>
+                    <td style="width: 10%; text-align: left; height:30px;"></td>
                   </tr>';
                 }
         $tabl.'</tbody>

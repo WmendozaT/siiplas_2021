@@ -248,11 +248,11 @@ $route['mnt/ver_ptto_asig_final/(:any)'] = 'mantenimiento/cptto_poa/ver_comparat
 $route['mnt/rep_mod_req/(:any)'] = 'mantenimiento/cptto_poa/reporte_comparativo_unidad/$1';///// Reporte Cuadro Comparativo de Partidas Asig-Prog-Final
 $route['mnt/xles_partidas/(:any)'] = 'mantenimiento/cptto_poa/exportar_cuadro_comparativo/$1/$2';///// Exportar cuadro Comparativo de Partidas Asig-Prog-Final en Excel
 
-/*-- Control Operativo (MANTENIMIENTO) --*/
+/*-- Control de Calidad (MANTENIMIENTO) --*/
 $route['control_calidad'] = 'mantenimiento/ccontrol_calidad/control_calidad'; /// Control de Calidad
 $route['select_control_calidad/(:any)'] = 'mantenimiento/ccontrol_calidad/select_control_calidad/$1'; /// tipo de Control de Calidad
 $route['list_requerimientos'] = 'mantenimiento/ccontrol_calidad/list_requerimientos'; /// Liat de requerimientos
-$route['exportar_requerimientos'] = 'mantenimiento/ccontrol_calidad/exportar_requerimientos'; /// Exportar requerimientos - Control de Calidad
+$route['exportar_requerimientos/(:any)'] = 'mantenimiento/ccontrol_calidad/exportar_requerimientos/$1'; /// Exportar requerimientos por partidas
 
 /// REQUERIMIENTOS A NIVEL DE ACTIVIDADES (2020 - GASTO CORRIENTE)
 $route['prog/ins_prod/(:any)'] = 'insumos/cprog_insumo/prog_isumos_prod/$1';//PROGRAMACION DE INSUMOS A NIVEL PRODUCTOS
@@ -611,8 +611,9 @@ $route['consulta/mis_operaciones'] = 'consultas_cns/c_consultas/mis_operaciones'
 $route['consulta/cambiar'] = 'consultas_cns/c_consultas/cambiar_gestion';//cambiar contralador
 $route['rep/get_consultas_da'] = 'consultas_cns/c_consultas/get_opciones'; ////// Combo Unidades Administrativas Seguimiento POA
 
+/// consultas POA Proyectos de Inversion
 $route['ejecucion_proyectos_inversion'] = 'consultas_cns/c_consultaspi/ejecucion_proyectos'; ///// Consolidado de Proyectos de Inversion
-
+$route['reporte_ejecucion_pi_institucional/(:any)'] = 'consultas_cns/c_consultaspi/reporte_detalle_ejec_ppto_pi_institucional/$1'; ///// Generar Reporte PDF, Excel
 
 ///////// REPORTE RESUMEN DE ALINEACION ACTIVIDAD A CATEGORIA PROGRAMATICA 2021
 $route['rep/resumen_act_programa'] = 'reporte_resumen_alineacion_poa/crep_actprog/regional';  //// Menu Regional act-prog (2020-2021)

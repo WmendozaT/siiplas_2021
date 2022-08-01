@@ -984,6 +984,101 @@ Tp : Tipo de Proyecto (1 : proyecto de inversión, 4 : gasto corriente)
 Gestión : Gestion Actual POA
 
 
+------------------------Institucuional
+ CREATE OR REPLACE FUNCTION lista_requerimientos_institucional(tp numeric, gestion integer) RETURNS TABLE(
+dep_id numeric,
+dep_cod varchar,
+dep_departamento varchar,
+dist_id integer,
+dist_cod varchar,
+dist_distrital varchar,
+aper_id numeric,
+aper_programa varchar,
+aper_proyecto varchar,
+proy_sisin varchar,
+aper_actividad varchar,
+proy_id numeric,
+proy_nombre varchar,
+tp_id numeric,
+abrev varchar,
+act_descripcion varchar,
+tipo varchar,
+serv_id integer,
+serv_cod varchar,
+tipo_subactividad varchar,
+serv_descripcion varchar,
+prod_cod integer,
+prod_producto varchar,
+or_id integer,
+or_codigo integer,
+or_objetivo varchar,
+
+og_id integer,
+og_codigo integer,
+og_objetivo varchar,
+            
+ins_id numeric,
+ins_cant_requerida numeric,        
+ins_costo_unitario numeric,
+ins_costo_total numeric,
+ins_monto_certificado numeric,
+ins_detalle varchar,
+ins_unidad_medida varchar,
+ins_gestion integer,
+ins_observacion varchar,
+par_id integer,
+par_codigo integer,
+par_nombre varchar,
+programado_total numeric,
+mes1 numeric,
+mes2 numeric,
+mes3 numeric,
+mes4 numeric,
+mes5 numeric,
+mes6 numeric,
+mes7 numeric,
+mes8 numeric,
+mes9 numeric,
+mes10 numeric,
+mes11 numeric,
+mes12 numeric,
+fun_nombre varchar,
+fun_paterno varchar,
+fun_materno varchar) AS
+
+$$
+
+select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,apg.aper_id,apg.aper_programa,apg.aper_proyecto,p.proy_sisin,apg.aper_actividad,p.proy_id,p.proy_nombre,p.tp_id,ds.abrev,ua.act_descripcion, te.tipo,
+     ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_cod,prod.prod_producto,prod.or_id,ore.or_codigo,ore.or_objetivo,og.og_id,og.og_codigo,og.og_objetivo,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_detalle,i.ins_unidad_medida,
+     i.ins_gestion,i.ins_observacion,i.par_id,par.par_codigo,par.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
+     itemp.mes11,itemp.mes12,fun.fun_nombre,fun.fun_paterno,fun.fun_materno
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join _departamentos as d On d.dep_id=p.dep_id
+                Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+                Inner Join _componentes as c On pfe.pfec_id=c.pfec_id
+                Inner Join servicios_actividad as ser On ser.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join _productos as prod On prod.com_id=c.com_id
+
+                Inner Join objetivos_regionales as ore On ore.or_id=prod.or_id
+                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+                
+                Inner Join _insumoproducto as iprod On iprod.prod_id=prod.prod_id
+                Inner Join insumos as i On i.ins_id=iprod.ins_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                Inner Join funcionario as fun On fun.fun_id=i.fun_id
+                Inner Join vista_temporalidad_insumo as itemp On itemp.ins_id=i.ins_id
+                where p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and p.tp_id=tp and pfe.pfec_estado=1 and pfe.estado!=3 and c.estado!=3 and i.ins_gestion=gestion  and i.ins_estado!=3 and i.aper_id!=0
+                order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,ser.serv_cod, prod.prod_cod, par.par_codigo, i.ins_id asc;
+ $$ LANGUAGE sql
+
+ ------------------------------
  CREATE OR REPLACE FUNCTION lista_requerimientos_regional(id_dep numeric, tp numeric, gestion integer) RETURNS TABLE(
 dep_id numeric,
 dep_cod varchar,

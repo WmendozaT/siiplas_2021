@@ -121,7 +121,7 @@ class Model_control_calidad extends CI_Model{
 
     /*--------- Lista de requerimientos sin unidad , con partidas, regionales todos-----------*/
     public function list_req_sin_unidad_con_partida_regionales_todos($par_id){
-        $sql = 'select dep.dep_departamento, i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,par.par_codigo,par.par_nombre,p.proy_nombre,p.tp_id,tp.tp_tipo, i.ins_estado, apg.aper_gestion,i.aper_id,apg.aper_id
+        $sql = 'select dep.dep_departamento, i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,par.par_codigo,par.par_nombre,p.proy_nombre,p.tp_id,tp.tp_tipo, i.ins_estado, apg.aper_gestion,i.aper_id,apg.aper_id,i.ins_monto_certificado
                 from _proyectos p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                 Inner Join _departamentos as dep On dep.dep_id=p.dep_id
@@ -138,7 +138,7 @@ class Model_control_calidad extends CI_Model{
 
     /*--------- Lista de requerimientos sin unidad, con partidas, regionales seleccionado -----------*/
     public function list_req_sin_unidad_con_partida_regionales_select($par_id,$dep_id){
-        $sql = 'select dep.dep_departamento, i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,par.par_codigo,par.par_nombre,p.proy_nombre,p.tp_id,tp.tp_tipo, i.ins_estado, apg.aper_gestion,i.aper_id,apg.aper_id
+        $sql = 'select dep.dep_departamento, i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,par.par_codigo,par.par_nombre,p.proy_nombre,p.tp_id,tp.tp_tipo, i.ins_estado, apg.aper_gestion,i.aper_id,apg.aper_id,,i.ins_monto_certificado
                 from _proyectos p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                 Inner Join _departamentos as dep On dep.dep_id=p.dep_id
