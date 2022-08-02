@@ -59,7 +59,7 @@ class C_consultaspi extends CI_Controller {
                 <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                     <header>
                         <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                        <h2>Ejecucion Presupuestaria </h2>
+                        <h2>Ejecucion Presupuestaria INSTITUCIONAL '.$this->gestion.'</h2>
                         <div id="cabecera" style="display: none">'.$this->ejecucion_finpi->cabecera_reporte_grafico('CONSOLIDADO INSTITUCIONAL').'</div>
                         <div id="tabla_impresion_ejecucion" style="display: none">
                           '.$this->tabla_detalle_institucional_impresion($regional,$nro,0).'
@@ -75,7 +75,7 @@ class C_consultaspi extends CI_Controller {
                             </li>
 
                             <li>
-                                <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">EJECUCION MENSAUL</span></a>
+                                <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">EJECUCION MENSUAL</span></a>
                             </li>
                         </ul>
 
@@ -118,11 +118,20 @@ class C_consultaspi extends CI_Controller {
 
                                         </div>
                                     </div>
+                                    <hr>
+                                    '.$this->tabla_detalle_proyectos_clasificado_institucional($regional,$nro,0,0).'
                                 </div>
                                 <!-- end s1 tab pane -->
 
                                 <div class="tab-pane fade" id="s2">
-                                    hola undo 2
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <div id="graf_proyectos1"><div id="distribucion_proyectos" style="width: 900px; height: 600px; margin: 0 auto"></div></div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <div id="graf_proyectos2"><div id="distribucion_ppto" style="width: 900px; height: 600px; margin: 0 auto"></div></div>
+                                    </div>
+                                    <hr>
+                                    '.$this->tabla_detalle_proyectos_clasificado_institucional($regional,$nro,0,1).'
                                 </div>
                                 <!-- end s2 tab pane -->
 
@@ -131,8 +140,7 @@ class C_consultaspi extends CI_Controller {
                                 </div>
                                 <!-- end s3 tab pane -->
 
-                                <hr>
-                                '.$this->tabla_detalle_proyectos_clasificado_institucional($regional,$nro,0).'
+                                
                             </div>
                                 
                             <!-- end content -->
@@ -153,9 +161,22 @@ class C_consultaspi extends CI_Controller {
 
 
 /*--- GET TABLA DATOS CONSOLIDADOS DE PROYETCOS DE INVERSION INSCRITOS CALSIFICADOS POR REGIONAL VISTA---*/
-public function tabla_detalle_proyectos_clasificado_institucional($matriz,$nro,$tp_rep){
+public function tabla_detalle_proyectos_clasificado_institucional($matriz,$nro,$tp_rep,$graf){
     /// tp_rep : 0 normal
     /// tp_rep : 1 impresion
+
+    /// graf : 0 ejecucion
+    /// graf : 1 Distribucion (proyectos y presupuesto)
+
+    if($graf==0){
+        $columna_ejec='bgcolor=#e4e8fd';
+        $columna_distribucion='';
+    }
+    else{
+        $columna_ejec='';
+        $columna_distribucion='bgcolor=#e4e8fd';
+    }
+
   $tabla='';
   $tabla.='
       <style>
@@ -204,13 +225,13 @@ public function tabla_detalle_proyectos_clasificado_institucional($matriz,$nro,$
                           <tr>
                             <td style="font-size: 12px;font-family: Arial;"><b>'.$matriz[$i][1].'</b></td>
                             <td align=right>'.$matriz[$i][3].'</td>
-                            <td align=right>'.$matriz[$i][4].' %</td>
+                            <td style="font-size: 12px;font-family: Arial;" align=right '.$columna_distribucion.'><b>'.$matriz[$i][4].' %</b></td>
                             <td align=right>Bs. '.number_format($matriz[$i][5], 2, ',', '.').'</td>
                             <td align=right>Bs. '.number_format($matriz[$i][6], 2, ',', '.').'</td>
                             <td align=right>Bs. '.number_format($matriz[$i][7], 2, ',', '.').'</td>
                             <td align=right>Bs. '.number_format($matriz[$i][8], 2, ',', '.').'</td>
-                            <td style="font-size: 12px;font-family: Arial;" align=right><b>'.round($matriz[$i][9],1).' %</b></td>
-                            <td align=right>'.$matriz[$i][10].' %</td>
+                            <td style="font-size: 12px;font-family: Arial;" align=right '.$columna_ejec.'><b>'.round($matriz[$i][9],1).' %</b></td>
+                            <td style="font-size: 12px;font-family: Arial;" align=right '.$columna_distribucion.'><b>'.$matriz[$i][10].' %</b></td>
                           </tr>';   
                           $sum_asignado=$sum_asignado+$matriz[$i][7];
                           $sum_ejecutado=$sum_ejecutado+$matriz[$i][8];

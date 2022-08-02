@@ -170,76 +170,198 @@
         <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 
         <script type="text/javascript">
-            Highcharts.chart('proy_institucional', {
-              chart: {
-                type: 'column'
-              },
-              title: {
-                align: 'center',
-                text: '<b>EJECUCION PRESUPUESTARIA DE PROYECTOS DE INVERSION A NIVEL INSTITUCIONAL</b>'
-              },
-              subtitle: {
-                align: 'center',
-                text: '',
-              },
-              accessibility: {
-                announceNewData: {
-                  enabled: true
-                }
-              },
-              xAxis: {
-                type: 'category'
-              },
-              yAxis: {
-                title: {
-                  text: '(%) Cumplimiento al Trimestre'
-                }
+        Highcharts.chart('proy_institucional', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            align: 'center',
+            text: '<b>EJECUCION PRESUPUESTARIA DE PROYECTOS DE INVERSION A NIVEL INSTITUCIONAL</b>'
+          },
+          subtitle: {
+            align: 'center',
+            text: '',
+          },
+          accessibility: {
+            announceNewData: {
+              enabled: true
+            }
+          },
+          xAxis: {
+            type: 'category'
+          },
+          yAxis: {
+            title: {
+              text: '(%) Cumplimiento al Trimestre'
+            }
 
-              },
-              legend: {
-                enabled: false
-              },
-              plotOptions: {
-                series: {
-                  borderWidth: 0,
-                  dataLabels: {
-                    enabled: true,
-                    format: '{point.y:.1f}%'
-                  }
-                }
-              },
+          },
+          legend: {
+            enabled: false
+          },
+          plotOptions: {
+            series: {
+              borderWidth: 0,
+              dataLabels: {
+                enabled: true,
+                format: '{point.y:.1f}%'
+              }
+            }
+          },
 
-              tooltip: {
-                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-              },
+          tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+          },
 
-              series: [
-                {
-                  name: "PROYECTO DE INVERSION",
-                  colorByPoint: true,
-                  data: [
-                        <?php 
-                          for ($i=0; $i <$nro_reg ; $i++){
-                            if($i+1==$nro_reg){
-                                ?>
-                                  <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][9]."}"?>
-                                <?php
-                            }
-                            else{
-                                ?>
-                                  <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][9]."},"?>
-                                <?php 
-                            }
-                            
-                          } 
+          series: [
+            {
+              name: "PROYECTO DE INVERSION",
+              colorByPoint: true,
+              data: [
+                    <?php 
+                      for ($i=0; $i <$nro_reg ; $i++){
+                        if($i+1==$nro_reg){
+                            ?>
+                              <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][9]."}"?>
+                            <?php
+                        }
+                        else{
+                            ?>
+                              <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][9]."},"?>
+                            <?php 
+                        }
+                        
+                      } 
+                    ?>
+                ]
+            }
+          ]
+
+        });
+
+
+      // Build the chart
+      Highcharts.chart('distribucion_proyectos', {
+        chart: {
+          type: 'pie'
+        },
+        title: {
+          text: '<b>PORCENTAJE DE DISTRIBUCIÓN DE PROYECTOS, GESTIÓN '+<?php echo $this->session->userData('gestion');?>+'</b>'
+        },
+        subtitle: {
+          text: '<b>INSTITUCIONAL</b>'
+        },
+
+        accessibility: {
+          announceNewData: {
+            enabled: true
+          },
+          point: {
+            valueSuffix: '%'
+          }
+        },
+
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              format: '{point.name}: {point.y:.1f}%'
+            }
+          }
+        },
+
+        tooltip: {
+          headerFormat: '<span style="font-size:16px">{series.name}</span><br>',
+          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b><br/>'
+        },
+
+        series: [
+          {
+            name: "DEPARTAMENTO",
+            colorByPoint: true,
+            data: [
+                <?php 
+                  for ($i=0; $i <$nro_reg ; $i++){
+                    if($i+1==$nro_reg){
                         ?>
-                    ]
-                }
-              ]
+                          <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][4]."}"?>
+                        <?php
+                    }
+                    else{
+                        ?>
+                          <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][4]."},"?>
+                        <?php 
+                    }
+                    
+                  } 
+                ?>
+            ]
+          }
+        ]
+        
+      });
 
-            });
-        </script>
+        Highcharts.chart('distribucion_ppto', {
+        chart: {
+          type: 'pie'
+        },
+        title: {
+          text: '<b>PORCENTAJE DE DISTRIBUCIÓN DE PRESUPUESTO, GESTIÓN '+<?php echo $this->session->userData('gestion');?>+'</b>'
+        },
+        subtitle: {
+          text: '<b>INSTITUCIONAL</b>'
+        },
+
+        accessibility: {
+          announceNewData: {
+            enabled: true
+          },
+          point: {
+            valueSuffix: '%'
+          }
+        },
+
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              format: '{point.name}: {point.y:.1f}%'
+            }
+          }
+        },
+
+        tooltip: {
+          headerFormat: '<span style="font-size:16px">{series.name}</span><br>',
+          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> asignado<br/>'
+        },
+
+        series: [
+          {
+            name: "DEPARTAMENTO",
+            colorByPoint: true,
+            data:  [
+                <?php 
+                  for ($i=0; $i <$nro_reg ; $i++){
+                    if($i+1==$nro_reg){
+                        ?>
+                          <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][10]."}"?>
+                        <?php
+                    }
+                    else{
+                        ?>
+                          <?php echo  "{ name:'".$matriz_reg[$i][1]."', y:".$matriz_reg[$i][10]."},"?>
+                        <?php 
+                    }
+                    
+                  } 
+                ?>
+            ]
+          }
+        ]
+        
+      });
+    </script>
 
         <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
 </html>
