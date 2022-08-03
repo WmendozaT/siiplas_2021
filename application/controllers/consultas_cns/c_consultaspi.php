@@ -37,16 +37,24 @@ class C_consultaspi extends CI_Controller {
       $data['menu']=$this->menu(10);
       $data['style']=$this->style();
 
+      //// matriz de proyectos
       $data['nro_reg']=count($this->model_ptto_sigep->list_regionales());
       $data['matriz_reg']=$this->ejecucion_finpi->matriz_detalle_proyectos_clasificado_regional();
 
-      $data['principal']=$this->menu_principal($data['nro_reg'],$data['matriz_reg']); /// Menu principal
+      //// matriz consolidado de partidas
+      $data['nro_part']=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_institucional());
+      $data['matriz_partidas']=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_institucional(); /// Matriz consolidado de partidas Nacional
+      //$data['tabla_partidas']=$this->ejecucion_finpi->tabla_consolidado_de_partidas($data['matriz_partidas'],$data['nro_part'],0); /// Tabla Clasificacion de partidas asignados por regional
+      //$tabla_consolidado_grafico=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,2); /// Tabla Clasificacion de partidas asignados por regional Grafico
+
+
+      $data['principal']=$this->menu_principal($data['nro_reg'],$data['matriz_reg'],$data['nro_part'],$data['matriz_partidas']); /// Menu principal
 
       $this->load->view('admin/reportes_cns/repejecucion_pi/menu_consultas_pi', $data);
     }
 
     //// menu principal de ejecucion Institucional
-    public function menu_principal($nro,$regional){
+    public function menu_principal($nro,$regional,$nro_part,$partidas){
         $tabla='';
 
         $tabla.='<article class="col-sm-12">
@@ -136,7 +144,23 @@ class C_consultaspi extends CI_Controller {
                                 <!-- end s2 tab pane -->
 
                                 <div class="tab-pane fade" id="s3">
-                                    hola mundo
+                                    <div id="partidas" style="width: 1000px; height: 750px; margin: 0 auto"></div>
+                                     <div class="row">
+                                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="jarviswidget jarviswidget-color-darken" >
+                                          <header>
+                                              <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                                              <h2 class="font-md"><strong>DETALLE DE EJECUCION PRESUPUESTARIA '.$this->gestion.' </strong></h2>  
+                                          </header>
+                                            <div>
+
+                                            <div class="widget-body no-padding">
+                                            '.$this->ejecucion_finpi->tabla_consolidado_de_partidas($partidas,$nro_part,0).'
+                                            </div>
+                                        </div>
+                                        </article>
+                                      </div>
+                                    </div>
                                 </div>
                                 <!-- end s3 tab pane -->
 
@@ -208,13 +232,13 @@ public function tabla_detalle_proyectos_clasificado_institucional($matriz,$nro,$
                       <tr>
                         <th style="width:10%;">DEPARTAMENTO</th>
                         <th style="width:7%;">N° DE PROYECTOS</th>
-                        <th style="width:7%;">PORCENTAJE DISTRIBUCIÓN</th>
+                        <th style="width:7%;">PORCENTAJE DISTRIBUCIÓN DE PROYECTOS</th>
                         <th style="width:10%;">PPTO. INICIAL '.$this->gestion.'</th>
                         <th style="width:10%;">PPTO. MODIFICADO '.$this->gestion.'</th>
                         <th style="width:10%;">PPTO. VIGENTE '.$this->gestion.'</th>
                         <th style="width:10%;">PPTO. EJECUTADO '.$this->gestion.'</th>
                         <th style="width:5%;">PORCENTAJE EJECUCION '.$this->gestion.'</th>
-                        <th style="width:5%;">PORCENTAJE DISTRIBUCIÓN PPTO.</th>
+                        <th style="width:5%;">PORCENTAJE DISTRIBUCIÓN DE PRESUPUESTO</th>
                       </tr>
                     </thead>
                     <tbody>';
@@ -329,7 +353,7 @@ public function get_detalle_ejecucion_ppto_pi_regional(){
                                         $tabla.='
                                             <span class="show-stat-buttons"> 
                                                 <span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a onClick="imprimir_proyectos_consultas()" class="btn btn-default btn-block hidden-xs">IMPRIMIR EJECUCIÓN</a></span> 
-                                                <span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="javascript:void(0);" class="btn btn-default btn-block hidden-xs">EXPORTAR EN EXCEL</a> </span> 
+                                                <span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="javascript:abreVentana(\''.site_url("").'/reporte_detalle_ppto_pi/'.$dep_id.'/3\');" class="btn btn-default btn-block hidden-xs">IMPRIMIR DETALLE</a></span> 
                                             </span>
 
                                         </div>

@@ -361,7 +361,88 @@
         ]
         
       });
+
+
+
+    Highcharts.chart('partidas', {
+      chart: {
+          type: 'bar'
+      },
+      title: {
+          text: '<b>CUADRO DE EJECUCIÓN PRESUPUESTARIA POR PARTIDA '+<?php echo $this->session->userData('gestion');?>+'</b>'
+      },
+      subtitle: {
+          text: 'INSTITUCIONAL'
+      },
+      xAxis: {
+          categories: [
+                <?php 
+                  for ($i=0; $i <$nro_part ; $i++){
+                    if($i+1==$nro_part){
+                        ?>
+                          <?php echo $matriz_partidas[$i][2];?>
+                        <?php
+                    }
+                    else{
+                        ?>
+                          <?php echo  $matriz_partidas[$i][2].',';?>
+                        <?php 
+                    }
+                    
+                  } 
+                ?>
+            ],
+          title: {
+              text: null
+          }
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: '(%) EJECUCIÓN',
+              align: 'high'
+          },
+          labels: {
+              overflow: 'Partidas'
+          }
+      },
+      tooltip: {
+          valueSuffix: ' %'
+      },
+      plotOptions: {
+          bar: {
+              dataLabels: {
+                  enabled: true
+              }
+          }
+      },
+
+      credits: {
+          enabled: false
+      },
+
+      series: [{
+          name: '% EJEC. PRESUPUESTARIA A ',
+          data: [
+                <?php 
+                  for ($i=0; $i <$nro_part ; $i++){
+                    if($i+1==$nro_part){
+                        ?>
+                          <?php echo $matriz_partidas[$i][18];?>
+                        <?php
+                    }
+                    else{
+                        ?>
+                          <?php echo  $matriz_partidas[$i][18].',';?>
+                        <?php 
+                    }
+                    
+                  } 
+                ?>
+            ]
+      }]
+    });
     </script>
 
-        <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
+    <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
 </html>
