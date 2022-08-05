@@ -56,8 +56,9 @@ class Model_modrequerimiento extends CI_Model{
                 from insumos i
                 Inner Join partidas as par On par.par_id=i.par_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
-                where i.com_id='.$com_id.' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
+                where i.com_id='.$com_id.' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and i.ins_activo=\'0\'
                 order by i.form4_cod, par.par_codigo, i.ins_id asc';
+            
         }
         else{
             $sql = 'select p.com_id, p.prod_id,p.prod_cod,par.*,i.*

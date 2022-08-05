@@ -50,6 +50,19 @@ class Cmodificaciones extends CI_Controller {
       $data['proyectos']=$this->modificacionpoa->list_pinversion(4); // Aprobados
       $data['gasto_corriente']=$this->modificacionpoa->list_unidades_es(4); // Aprobados
 
+      /*$requerimientos=$this->model_modrequerimiento->lista_requerimientos(5367);
+
+      foreach($requerimientos as $row){
+        if(round($row['ins_costo_total'],2)==round($row['ins_monto_certificado'],2)){
+          $update_com = array(
+                'ins_activo' => 1
+              );
+              $this->db->where('ins_id', $row['ins_id']);
+              $this->db->update('insumos', $update_com);
+          }
+        }*/
+        
+
       $this->load->view('admin/modificacion/list_poa_aprobados',$data);
     }
 
