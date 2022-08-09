@@ -22,6 +22,9 @@
             #mdialTamanio{
               width: 45% !important;
             }
+            #mdalTamanio_distribucion{
+              width: 80% !important;
+            }
         </style>
         <style>
             .table1{
@@ -182,7 +185,9 @@
         <!-- END MAIN PANEL -->
     </div>
     <!-- ========================================================================================================= -->
-    <!-- MODAL REPORTE POA -->
+
+
+    <!-- MODAL REPORTE - MIS UNIDADES RESPONSABLES -->
     <div class="modal fade" id="modal_nuevo_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog" id="mdialTamanio">
             
@@ -191,7 +196,7 @@
                     <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                 </div>
                 <div class="modal-body">
-                <h2 class="alert alert-info"><center>MIS SUBACTIVIDADES - <?php echo $this->session->userData('gestion');?></center></h2>
+                <h2 class="alert alert-info"><center>MIS UNIDADES RESPONSABLES - <?php echo $this->session->userData('gestion');?></center></h2>
                     <div class="row">
                         <table style="width:100%; height:50px;">
                             <tr>
@@ -240,6 +245,24 @@
      <!--  =============== -->
 
 
+    <!-- MODAL REPORTE - DISTRIBUCION MENSUAL Y EJECUCION DE CERTIFICACION POA -->
+    <div class="modal fade" id="modal_distribucion_mensual" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" id="mdalTamanio_distribucion">
+            
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                </div>
+                <div class="modal-body">
+                <h2 class="alert alert-info"><center>MIS UNIDADES RESPONSABLES - <?php echo $this->session->userData('gestion');?></center></h2>
+                    <div class="row">
+                        <div id="load"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
@@ -262,6 +285,8 @@
             }
         </script>
         <!-- IMPORTANT: APP CONFIG -->
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->

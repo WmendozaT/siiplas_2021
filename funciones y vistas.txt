@@ -3344,3 +3344,143 @@ create table imagenes_proy_inversion(
 
      ALTER TABLE public.vista_get_detalle_x_cat_programatica_partida_form5
      OWNER TO postgres;
+
+
+/////////////// CREACION DE VISTAS PARA LA DISTRIBUCION MENSUAL DE CERTIFICACION POA POR UNIDAD, DISTRITAL, REGIONAL ////
+
+//---- Get temporalidad de items con los meses certificados
+CREATE OR REPLACE VIEW public.vista_temporalidad_insumo_certificado AS 
+ SELECT ip.ins_id,
+    sum(ip.ipm_fis) AS programado_total,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 1 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes1,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 2 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes2,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 3 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes3,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 4 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes4,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 5 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes5,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 6 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes6,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 7 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes7,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 8 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes8,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 9 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes9,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 10 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes10,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 11 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes11,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 12 THEN to_char(ip.ipm_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes12
+   FROM temporalidad_prog_insumo ip
+   where ip.estado_cert=1
+  GROUP BY ip.ins_id
+  ORDER BY ip.ins_id;
+
+ALTER TABLE public.vista_temporalidad_insumo_certificado
+  OWNER TO postgres;
+
+
+  ///----------- vista CONSOLIDADO MENSUAL Y TOTAL PROGRAMADO INSUMO POR UNIDAD O PROYECTO
+
+CREATE OR REPLACE VIEW public.vista_consolidado_mensualidad_programado_insumo_unidad AS 
+
+select 
+i.aper_id,i.ins_gestion,
+SUM(i.ins_costo_total) costo_total, 
+SUM(i.ins_monto_certificado) monto_certificado, 
+SUM(iprog.programado_total) total_programado, 
+SUM(mes1) prog_mes1,
+SUM(mes2) prog_mes2,
+SUM(mes3) prog_mes3,
+SUM(mes4) prog_mes4,
+SUM(mes5) prog_mes5,
+SUM(mes6) prog_mes6,
+SUM(mes7) prog_mes7,
+SUM(mes8) prog_mes8,
+SUM(mes9) prog_mes9,
+SUM(mes10) prog_mes10,
+SUM(mes11) prog_mes11,
+SUM(mes12) prog_mes12
+from insumos i
+Inner Join vista_temporalidad_insumo as iprog on iprog.ins_id = i.ins_id
+where i.ins_estado!=3
+group by i.aper_id,i.ins_gestion;
+
+ALTER TABLE public.vista_consolidado_mensualidad_programado_insumo_unidad
+  OWNER TO postgres;
+
+
+
+ ///// ------------ vista CONSOLIDADO MENSUAL Y TOTAL CERTIFICADO INSUMO POR UNIDAD O PROYECTO
+
+ CREATE OR REPLACE VIEW public.vista_consolidado_mensualidad_certificado_insumo_unidad AS 
+
+select 
+i.aper_id,
+i.ins_gestion, 
+SUM(i.ins_monto_certificado) 
+monto_certificado, 
+SUM(iprog.programado_total) total_certificado, 
+SUM(mes1) ejec_mes1,
+SUM(mes2) ejec_mes2,
+SUM(mes3) ejec_mes3,
+SUM(mes4) ejec_mes4,
+SUM(mes5) ejec_mes5, 
+SUM(mes6) ejec_mes6, 
+SUM(mes7) ejec_mes7, 
+SUM(mes8) ejec_mes8, 
+SUM(mes9) ejec_mes9, 
+SUM(mes10) ejec_mes10, 
+SUM(mes11) ejec_mes11, 
+SUM(mes12) ejec_mes12
+from insumos i
+Inner Join vista_temporalidad_insumo_certificado as iprog on iprog.ins_id = i.ins_id
+where i.ins_estado!=3
+group by i.aper_id,i.ins_gestion;
+
+ALTER TABLE public.vista_consolidado_mensualidad_certificado_insumo_unidad
+  OWNER TO postgres;
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -294,15 +294,25 @@ class Model_insumo extends CI_Model{
     }
 
 
-/*    public function lista_productos($proy_id, $gestion){
-        $this->db->SELECT('*');
-        $this->db->FROM('vista_producto');
-        $this->db->WHERE('proy_id', $proy_id);
-        $this->db->WHERE('estado IN (1,2)');
-        $this->db->ORDER_BY('com_id', 'ASC');
-        //$this->db->WHERE("(cast(to_char(fecha,'yyyy')as integer))=" . $gestion);
-        $query = $this->db->get();
+    ////// -------------------
+
+    //// ---- lista consolidado de meses programado insumo por unidad
+    function get_mes_programado_insumo_unidad($aper_id){
+        $sql = 'select *
+                from vista_consolidado_mensualidad_programado_insumo_unidad
+                where aper_id='.$aper_id.'';
+        $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
+
+    //// ---- lista consolidado de meses certificado insumo por unidad
+    function get_mes_certificado_insumo_unidad($aper_id){
+        $sql = 'select *
+                from vista_consolidado_mensualidad_certificado_insumo_unidad
+                where aper_id='.$aper_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 }
 ?>

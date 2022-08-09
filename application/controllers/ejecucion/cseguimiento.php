@@ -15,6 +15,7 @@ class Cseguimiento extends CI_Controller {
         $this->load->model('reporte_eval/model_evalregional');
         $this->load->model('mantenimiento/model_configuracion');
         $this->load->model('ejecucion/model_notificacion');
+        $this->load->model('programacion/insumos/model_insumo');
         $this->load->model('menu_modelo');
         $this->load->model('Users_model','',true);
         $this->load->library('security');
@@ -77,8 +78,10 @@ class Cseguimiento extends CI_Controller {
           <tr style="height:35px;">
             <th style="width:1%;" bgcolor="#474544">#</th>
             <th style="width:5%;" bgcolor="#474544">EVALUACI&Oacute;N POA<br>'.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</th>
-            <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR">'.$this->verif_mes[1].'</th>
-            <th style="width:10%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO </th>
+            <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR">MIS UNIDADES</th>
+            <th style="width:7%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO MENSUAL</th>
+            <th style="width:5%;" bgcolor="#474544" title="EVALUACION POA">EVALUACION POA</th>
+            <th style="width:5%;" bgcolor="#474544" title="EJECUCION CERT. POA"></th>
             <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
             <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">UNIDAD / ESTABLECIMIENTO DE SALUD</th>
             <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
@@ -102,13 +105,13 @@ class Cseguimiento extends CI_Controller {
                   }
                 $tabla.='
                 </td>
-                <td align=center>
-                  <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">
-                  <i class="glyphicon glyphicon-list"></i> MIS UNIDADES RESPONSABLES</a>
+                <td align=center bgcolor="#e4f3e4">
+                  <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">
+                  <img src="'.base_url().'assets/ifinal/eval.jpg" WIDTH="40" HEIGHT="40"/></a>
                 </td>
-                <td align=center>
+                <td align=center bgcolor="#e4f3e4">
                   <div class="btn-group">
-                    <a class="btn btn-default">FORMULARIO</a>
+                    <a class="btn btn-default"><img src="'.base_url().'assets/ifinal/doc.jpg" WIDTH="40" HEIGHT="40"/></a>
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
                     <ul class="dropdown-menu">';
                       foreach($meses as $rowm){
@@ -123,6 +126,13 @@ class Cseguimiento extends CI_Controller {
                     $tabla.='
                     </ul>
                   </div>
+                </td>
+                <td align=center bgcolor="#e4f3e4">
+                  <a href="'.site_url("").'/eval/eval_unidad/'.$row['proy_id'].'" title="REPORTE DE EVALUACION POA" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico.png" WIDTH="40" HEIGHT="40"/></a>
+                </td>
+                <td align=center bgcolor="#e4f3e4">
+                  <a href="#" data-toggle="modal" data-target="#modal_distribucion_mensual" class="btn btn-default distribucion" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">
+                  <img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="40" HEIGHT="40"/></a>
                 </td>
                 <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
                 <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
@@ -217,7 +227,10 @@ class Cseguimiento extends CI_Controller {
       }
     }
 
-    /*------ GET SUBACTIVIDADES 2021 -----*/
+
+
+
+    /*------ GET UNIDADES REPONSABLES -----*/
     public function mis_subactividades($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); ////// DATOS DEL PROYECTO
       $titulo='UNIDAD RESPONSABLE';
@@ -267,6 +280,186 @@ class Cseguimiento extends CI_Controller {
 
       return $tabla;
     }
+
+
+  /*----- GET DISTRIBUCION EJECUCION MENSUAL CERT POA -----*/
+  public function get_distribucion_mensual_certpoa(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $proy_id = $this->security->xss_clean($post['proy_id']);
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// DATOS DEL PROYECTO
+      $ins_programado = $this->model_insumo->get_mes_programado_insumo_unidad($proyecto[0]['aper_id']); /// INSUMO PROGRAMADO
+
+      $tabla='';
+      if(count($ins_programado)!=0){
+          $ins_certificado = $this->model_insumo->get_mes_certificado_insumo_unidad($proyecto[0]['aper_id']); /// INSUMO CERTIFICADO        
+
+
+            for ($i=0; $i <=12 ; $i++) { 
+              if($i==0){
+                $prog_vector[$i]=$ins_programado[0]['total_programado'];
+              }
+              else{
+                $prog_vector[$i]=$ins_programado[0]['prog_mes'.$i]; 
+              }
+            }
+
+            if(count($ins_certificado)!=0){
+              for ($i=0; $i <=12 ; $i++) { 
+                if($i==0){
+                  $ejec_vector[$i]=$ins_certificado[0]['total_certificado'];
+                }
+                else{
+                  $ejec_vector[$i]=$ins_certificado[0]['ejec_mes'.$i]; 
+                }
+              }
+            }
+            else{
+              for ($i=0; $i <=12 ; $i++) { 
+                $ejec_vector[$i]=0;
+              }
+            }
+
+            $matriz=$this->matriz_consolidado_mensual($prog_vector,$ejec_vector);
+
+
+            $tabla.='
+            <div id="regresion" style="width: 1000px; height: 500px; margin: 0 auto"></div>
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th style="width:1%;" bgcolor="#474544">'.$proyecto[0]['aper_id'].'</th>
+                <th style="width:8%;" bgcolor="#474544">TOTAL PROGRAMADO</th>
+                <th style="width:7%;" bgcolor="#474544">ENE..</th>
+                <th style="width:7%;" bgcolor="#474544">FEB.</th>
+                <th style="width:7%;" bgcolor="#474544">MAR.</th>
+                <th style="width:7%;" bgcolor="#474544">ABR.</th>
+                <th style="width:7%;" bgcolor="#474544">MAY.</th>
+                <th style="width:7%;" bgcolor="#474544">JUN.</th>
+                <th style="width:7%;" bgcolor="#474544">JUL.</th>
+                <th style="width:7%;" bgcolor="#474544">AGO.</th>
+                <th style="width:7%;" bgcolor="#474544">SEPT.</th>
+                <th style="width:7%;" bgcolor="#474544">OCT.</th>
+                <th style="width:7%;" bgcolor="#474544">NOV.</th>
+                <th style="width:7%;" bgcolor="#474544">DIC.</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr>
+                <td>PROGRAMADO</td>';
+                for ($i=0; $i <=12 ; $i++) { 
+                  $tabla.='<td align=right>'.$matriz[0][$i].'</td>';
+                }
+                $tabla.='
+                </tr>
+                <tr>
+                <td>CERTIFICADO</td>';
+               for ($i=0; $i <=12 ; $i++) { 
+                  $tabla.='<td align=right>'.$matriz[1][$i].'</td>';
+                }
+                $tabla.='
+                </tr>
+                <tr>
+                <td>%ejec</td>';
+               for ($i=0; $i <=12 ; $i++) { 
+                  $tabla.='<td align=right>'.$matriz[2][$i].'%</td>';
+                }
+                $tabla.='
+                </tr>
+                <tr>
+                <td>PROG. ACUMULADO</td>';
+               for ($i=0; $i <=12 ; $i++) { 
+                  $tabla.='<td align=right>'.$matriz[3][$i].'</td>';
+                }
+                $tabla.='
+                </tr>
+                <tr>
+                <td>EJEC. ACUMULADO</td>';
+               for ($i=0; $i <=12 ; $i++) { 
+                  $tabla.='<td align=right>'.$matriz[4][$i].'</td>';
+                }
+                $tabla.='
+                </tr>
+                <tr bgcolor=#dfe9f1>
+                <td>% ACUM. PROG</td>';
+               for ($i=0; $i <=12 ; $i++) { 
+                  $tabla.='<td align=right>'.$matriz[5][$i].'%</td>';
+                }
+                $tabla.='
+                </tr>
+                <tr bgcolor=#dfe9f1>
+                <td>% ACUM. EJEC</td>';
+               for ($i=0; $i <=12 ; $i++) { 
+                  $tabla.='<td align=right>'.$matriz[6][$i].'%</td>';
+                }
+          $tabla.='
+                </tr>
+              <tbody>
+            </table>';
+
+
+          $result = array(
+            'respuesta' => 'correcto',
+            'tabla'=>$tabla,
+            'matriz'=>$matriz,
+          );
+      }
+      else{
+        $result = array(
+          'respuesta' => 'error',
+          'tabla'=>'Sin Temporalidad',
+        );
+      }
+
+
+        
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+  /*---- Matriz consolidado mensual ----*/
+  public function matriz_consolidado_mensual($vector_prog,$vector_ejec){
+
+    /// Matriz Vacia
+    for ($i=0; $i <=12 ; $i++) { 
+      for ($j=0; $j <=6 ; $j++) { 
+        $matriz[$i][$j]=0;
+      }
+    }
+    /// ----------
+
+      $suma_acumulado_prog=0; /// acumulado prog
+      $suma_acumulado_ejec=0; /// acumulado ejec
+      for ($i=0; $i <=12 ; $i++) { 
+        $matriz[0][$i]=$vector_prog[$i]; /// Programado
+        $matriz[1][$i]=$vector_ejec[$i]; /// Ejecutado
+        $matriz[2][$i]=0; /// % Ejecucion mes
+        if($matriz[0][$i]!=0){
+          $matriz[2][$i]=round((($matriz[1][$i]/$matriz[0][$i])*100),2); /// % Ejecucion Mes
+        }
+        
+        if($i!=0){
+          $suma_acumulado_prog=$suma_acumulado_prog+$matriz[0][$i];
+          $suma_acumulado_ejec=$suma_acumulado_ejec+$matriz[1][$i];
+
+          $matriz[3][$i]=$suma_acumulado_prog; /// Acumulado Mensual Programado
+          $matriz[4][$i]=$suma_acumulado_ejec; /// Acumulado Mensual Ejecutado
+
+          $matriz[5][$i]=round((($matriz[3][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Programado
+          $matriz[6][$i]=round((($matriz[4][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Ejecutado
+
+        }
+        
+
+      }
+
+      return $matriz;
+  }
+
+
 
 
   /*----  Boton de Seguimiento / Evaluacion POA ----*/

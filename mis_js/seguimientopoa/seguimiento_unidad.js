@@ -49,6 +49,127 @@ function abreVentana(PDF){
     return /\d/.test(String.fromCharCode(keynum));
   }
 
+//////======================= DISTRIBUCION MENSUAL DE CERTIFICACION POA
+  //// Get distribucion Certificacion POA
+  $(function () {
+    $(".distribucion").on("click", function (e) {
+      proy_id = $(this).attr('name');
+      establecimiento = $(this).attr('id');
+     
+      $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
+      $('#load').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando distribucion - <br>'+establecimiento+'</div>');
+      
+      var url = base+"index.php/ejecucion/cseguimiento/get_distribucion_mensual_certpoa";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+          $('#load').fadeIn(1000).html(response.tabla);
+          graf_regresion_trimestral(response.matriz)
+          //$('#evaluacion').fadeIn(1000).html(response.evaluacion);
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
+      }
+
+      });
+      request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+      });
+      request.always(function () {
+          //console.log("termino la ejecuicion de ajax");
+      });
+      e.preventDefault();
+      
+    });
+  });
+
+
+
+    /// Grafico regresion por trimestre
+    function graf_regresion_trimestral(matriz) {
+      let programado=[];
+      for (var i = 0; i <=12; i++) {
+        programado[i]= matriz[5][i];
+      }
+
+      let ejecutado=[];
+      for (var i = 0; i <=12; i++) {
+        ejecutado[i]= matriz[6][i];
+      }
+
+      ///----
+      chart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'regresion',  // Le doy el nombre a la gráfica
+        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+      },
+      title: {
+        text: ''  // Titulo (Opcional)
+      },
+      subtitle: {
+        text: ''   // Subtitulo (Opcional)
+      },
+      // Pongo los datos en el eje de las 'X'
+      xAxis: {
+        categories: ['','ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
+        // Pongo el título para el eje de las 'X'
+        title: {
+          text: '% EJECUCION DE CERTIFICACION POA'
+        }
+      },
+      yAxis: {
+        // Pongo el título para el eje de las 'Y'
+        title: {
+          text: '% EJEC. CERT. POA.'
+        }
+      },
+      // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+      tooltip: {
+        enabled: true,
+        formatter: function() {
+          return '<b>'+ this.series.name +'</b><br/>'+
+            this.x +': '+ this.y +' '+this.series.name;
+        }
+      },
+      // Doy opciones a la gráfica
+      plotOptions: {
+        line: {
+          dataLabels: {
+            enabled: true
+          },
+          enableMouseTracking: true
+        }
+      },
+      // Doy los datos de la gráfica para dibujarlas
+      series: [
+          {
+            name: '% PROG. ACUMULADO',
+            data: programado
+          },
+          {
+            name: '% EJEC. ACUMULADO',
+            data: ejecutado
+          }
+        ],
+        
+      });
+    }
+
+
+
+///// =================================================================
+
   //// Lista de Unidades -- enlace para listar las subactividades
   $(function () {
     $(".enlace").on("click", function (e) {

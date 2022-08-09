@@ -272,7 +272,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">Plazo</label>
                             <div class="col-md-10">
-                                <input type="text" name="mydate" id="mydate"  placeholder="Seleccione Fecha" class="form-control datepicker" data-dateformat="dd/mm/yy" onKeyUp="this.value=formateafecha(this.value);">
+                                <input type="text" name="mydate" id="mydate"  placeholder="Seleccione Fecha" class="form-control datepicker" data-dateformat="dd/mm/yy" >
                             </div>
                         </div>
                         <div class="form-group">
