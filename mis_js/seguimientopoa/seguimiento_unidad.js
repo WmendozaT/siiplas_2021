@@ -56,7 +56,7 @@ function abreVentana(PDF){
       proy_id = $(this).attr('name');
       establecimiento = $(this).attr('id');
      
-      $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
+      $('#titulo_dist').html('');
       $('#load').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando distribucion - <br>'+establecimiento+'</div>');
       
       var url = base+"index.php/ejecucion/cseguimiento/get_distribucion_mensual_certpoa";
@@ -74,9 +74,11 @@ function abreVentana(PDF){
       request.done(function (response, textStatus, jqXHR) {
 
       if (response.respuesta == 'correcto') {
+
           $('#load').fadeIn(1000).html(response.tabla);
-          graf_regresion_trimestral(response.matriz)
-          //$('#evaluacion').fadeIn(1000).html(response.evaluacion);
+          $('#titulo_dist').html('<h2 class="alert alert-info"><center>'+establecimiento+'</center></h2>');
+          graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION CERT. POA',establecimiento,'% EJECUCION CERT. POA') /// formulario 5
+          graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE METAS - ACTIVIDADES',establecimiento,'% EJECUCION METAS - ACTIVIDADES') /// formulario 4
       }
       else{
           alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
@@ -97,7 +99,7 @@ function abreVentana(PDF){
 
 
     /// Grafico regresion por trimestre
-    function graf_regresion_trimestral(matriz) {
+    function graf_regresion_trimestral_temporalidad_prog_ejec(grafico,matriz,titulo,subtitulo,tit_laterales) {
       let programado=[];
       for (var i = 0; i <=12; i++) {
         programado[i]= matriz[5][i];
@@ -111,27 +113,27 @@ function abreVentana(PDF){
       ///----
       chart = new Highcharts.Chart({
       chart: {
-        renderTo: 'regresion',  // Le doy el nombre a la gráfica
+        renderTo: grafico,  // Le doy el nombre a la gráfica
         defaultSeriesType: 'line' // Pongo que tipo de gráfica es
       },
       title: {
-        text: ''  // Titulo (Opcional)
+        text: titulo  // Titulo (Opcional)
       },
       subtitle: {
-        text: ''   // Subtitulo (Opcional)
+        text: subtitulo   // Subtitulo (Opcional)
       },
       // Pongo los datos en el eje de las 'X'
       xAxis: {
         categories: ['','ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
         // Pongo el título para el eje de las 'X'
         title: {
-          text: '% EJECUCION DE CERTIFICACION POA'
+          text: tit_laterales
         }
       },
       yAxis: {
         // Pongo el título para el eje de las 'Y'
         title: {
-          text: '% EJEC. CERT. POA.'
+          text: tit_laterales
         }
       },
       // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica

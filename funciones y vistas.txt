@@ -3421,12 +3421,13 @@ ALTER TABLE public.vista_temporalidad_insumo_certificado
   OWNER TO postgres;
 
 
-  ///----------- vista CONSOLIDADO MENSUAL Y TOTAL PROGRAMADO INSUMO POR UNIDAD O PROYECTO
+  ///----------- vista CONSOLIDADO MENSUAL Y TOTAL PROGRAMADO INSUMO POR UNIDAD O PROYECTO TOTAL
 
-CREATE OR REPLACE VIEW public.vista_consolidado_mensualidad_programado_insumo_unidad AS 
+CREATE OR REPLACE VIEW public.v_temporalidad_meses_prog_insumo_unidad AS 
 
 select 
-i.aper_id,i.ins_gestion,
+i.aper_id,
+i.ins_gestion,
 SUM(i.ins_costo_total) costo_total, 
 SUM(i.ins_monto_certificado) monto_certificado, 
 SUM(iprog.programado_total) total_programado, 
@@ -3447,15 +3448,48 @@ Inner Join vista_temporalidad_insumo as iprog on iprog.ins_id = i.ins_id
 where i.ins_estado!=3
 group by i.aper_id,i.ins_gestion;
 
-ALTER TABLE public.vista_consolidado_mensualidad_programado_insumo_unidad
+ALTER TABLE public.v_temporalidad_meses_prog_insumo_unidad
   OWNER TO postgres;
+
+
+
+///----------- vista CONSOLIDADO MENSUAL Y TOTAL PROGRAMADO INSUMO POR UNIDAD O PROYECTO menos la partida 10000
+CREATE OR REPLACE VIEW public.v_temporalidad_meses_prog_insumo_unidad_menos10000 AS 
+
+select 
+i.aper_id,
+i.ins_gestion,
+SUM(i.ins_costo_total) costo_total, 
+SUM(i.ins_monto_certificado) monto_certificado, 
+SUM(iprog.programado_total) total_programado, 
+SUM(mes1) prog_mes1,
+SUM(mes2) prog_mes2,
+SUM(mes3) prog_mes3,
+SUM(mes4) prog_mes4,
+SUM(mes5) prog_mes5,
+SUM(mes6) prog_mes6,
+SUM(mes7) prog_mes7,
+SUM(mes8) prog_mes8,
+SUM(mes9) prog_mes9,
+SUM(mes10) prog_mes10,
+SUM(mes11) prog_mes11,
+SUM(mes12) prog_mes12
+from insumos i
+Inner Join partidas as par on par.par_id = i.par_id
+Inner Join vista_temporalidad_insumo as iprog on iprog.ins_id = i.ins_id
+where i.ins_estado!=3 and par.par_depende!=10000
+group by i.aper_id,i.ins_gestion;
+
+ALTER TABLE public.v_temporalidad_meses_prog_insumo_unidad_menos10000
+  OWNER TO postgres;
+
+
 
 
 
  ///// ------------ vista CONSOLIDADO MENSUAL Y TOTAL CERTIFICADO INSUMO POR UNIDAD O PROYECTO
 
- CREATE OR REPLACE VIEW public.vista_consolidado_mensualidad_certificado_insumo_unidad AS 
-
+ CREATE OR REPLACE VIEW public.v_temporalidad_meses_cert_insumo_unidad AS 
 select 
 i.aper_id,
 i.ins_gestion, 
@@ -3479,7 +3513,95 @@ Inner Join vista_temporalidad_insumo_certificado as iprog on iprog.ins_id = i.in
 where i.ins_estado!=3
 group by i.aper_id,i.ins_gestion;
 
-ALTER TABLE public.vista_consolidado_mensualidad_certificado_insumo_unidad
+ALTER TABLE public.v_temporalidad_meses_cert_insumo_unidad
+  OWNER TO postgres;
+
+
+
+ ///// ------------ vista CONSOLIDADO MENSUAL Y TOTAL CERTIFICADO INSUMO POR UNIDAD O PROYECTO MENOS LA 10000
+CREATE OR REPLACE VIEW public.v_temporalidad_meses_cert_insumo_unidad_menos10000 AS 
+select 
+i.aper_id,
+i.ins_gestion, 
+SUM(i.ins_monto_certificado) 
+monto_certificado, 
+SUM(iprog.programado_total) total_certificado, 
+SUM(mes1) ejec_mes1,
+SUM(mes2) ejec_mes2,
+SUM(mes3) ejec_mes3,
+SUM(mes4) ejec_mes4,
+SUM(mes5) ejec_mes5, 
+SUM(mes6) ejec_mes6, 
+SUM(mes7) ejec_mes7, 
+SUM(mes8) ejec_mes8, 
+SUM(mes9) ejec_mes9, 
+SUM(mes10) ejec_mes10, 
+SUM(mes11) ejec_mes11, 
+SUM(mes12) ejec_mes12
+from insumos i
+Inner Join partidas as par on par.par_id = i.par_id
+Inner Join vista_temporalidad_insumo_certificado as iprog on iprog.ins_id = i.ins_id
+where i.ins_estado!=3 and par.par_depende!=10000
+group by i.aper_id,i.ins_gestion;
+
+ALTER TABLE public.v_temporalidad_meses_cert_insumo_unidad_menos10000
+  OWNER TO postgres;
+
+
+
+////---------- consolidado temporalidad programado formulario4 por UNIDAD
+CREATE OR REPLACE VIEW public.v_consolidado_temp_prog_form4_unidad AS 
+select 
+pfec.proy_id,
+apg.aper_id,
+SUM(m1) prog_mes1,
+SUM(m2) prog_mes2,
+SUM(m3) prog_mes3,
+SUM(m4) prog_mes4,
+SUM(m5) prog_mes5,
+SUM(m6) prog_mes6,
+SUM(m7) prog_mes7,
+SUM(m8) prog_mes8,
+SUM(m9) prog_mes9,
+SUM(m10) prog_mes10,
+SUM(m11) prog_mes11,
+SUM(m12) prog_mes12
+from _proyectofaseetapacomponente pfec
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfec.aper_id
+Inner Join _componentes as c On c.pfec_id=pfec.pfec_id
+Inner Join vista_temporalidad_programado_componente as ctemp On ctemp.com_id=c.com_id
+where c.estado!=3 and pfec.estado!=3
+GROUP BY pfec.proy_id,apg.aper_id;
+
+ALTER TABLE public.v_consolidado_temp_prog_form4_unidad
+  OWNER TO postgres;
+
+
+////---------- consolidado temporalidad EJECUTADO formulario4 por UNIDAD
+CREATE OR REPLACE VIEW public.v_consolidado_temp_ejec_form4_unidad AS 
+select 
+pfec.proy_id,
+apg.aper_id,
+SUM(m1) ejec_mes1,
+SUM(m2) ejec_mes2,
+SUM(m3) ejec_mes3,
+SUM(m4) ejec_mes4,
+SUM(m5) ejec_mes5,
+SUM(m6) ejec_mes6,
+SUM(m7) ejec_mes7,
+SUM(m8) ejec_mes8,
+SUM(m9) ejec_mes9,
+SUM(m10) ejec_mes10,
+SUM(m11) ejec_mes11,
+SUM(m12) ejec_mes12
+from _proyectofaseetapacomponente pfec
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfec.aper_id
+Inner Join _componentes as c On c.pfec_id=pfec.pfec_id
+Inner Join vista_temporalidad_ejecutado_componente as ctemp On ctemp.com_id=c.com_id
+where c.estado!=3 and pfec.estado!=3
+GROUP BY pfec.proy_id,apg.aper_id;
+
+ALTER TABLE public.v_consolidado_temp_ejec_form4_unidad
   OWNER TO postgres;
 
 

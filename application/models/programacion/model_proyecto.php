@@ -1864,4 +1864,25 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }
 
+/// CONSOLIDADO DE TEMPORALIDAD PROG Y EJEC DE FORMULARIO 4 POR UNIDAD / PROYECTO
+    /*-- temporalidad prog form4 Unidad --*/
+    public function temporalidad_prog_form4_unidad($aper_id){ /// 
+        $sql = '
+            select *
+            from v_consolidado_temp_prog_form4_unidad
+            where aper_id='.$aper_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-- temporalidad ejec form4 Unidad --*/
+    public function temporalidad_ejec_form4_unidad($aper_id){ /// 
+        $sql = '
+            select *
+            from v_consolidado_temp_ejec_form4_unidad
+            where aper_id='.$aper_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 }

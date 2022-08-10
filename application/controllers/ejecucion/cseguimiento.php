@@ -288,12 +288,13 @@ class Cseguimiento extends CI_Controller {
       $post = $this->input->post();
       $proy_id = $this->security->xss_clean($post['proy_id']);
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// DATOS DEL PROYECTO
-      $ins_programado = $this->model_insumo->get_mes_programado_insumo_unidad($proyecto[0]['aper_id']); /// INSUMO PROGRAMADO
+      $ins_programado = $this->model_insumo->get_mes_programado_insumo_unidad_menos10000($proyecto[0]['aper_id']); /// INSUMO PROGRAMADO CONSOLIDADO
+      $form4_programado = $this->model_proyecto->temporalidad_prog_form4_unidad($proyecto[0]['aper_id']); /// FORM4 PROGRAMADO CONSOLIDADO
 
       $tabla='';
       if(count($ins_programado)!=0){
-          $ins_certificado = $this->model_insumo->get_mes_certificado_insumo_unidad($proyecto[0]['aper_id']); /// INSUMO CERTIFICADO        
-
+          $ins_certificado = $this->model_insumo->get_mes_certificado_insumo_unidad_menos10000($proyecto[0]['aper_id']); /// INSUMO CERTIFICADO        
+          $form4_ejec = $this->model_proyecto->temporalidad_ejec_form4_unidad($proyecto[0]['aper_id']); /// FORM 4 EJECUTADO
 
             for ($i=0; $i <=12 ; $i++) { 
               if($i==0){
@@ -320,88 +321,74 @@ class Cseguimiento extends CI_Controller {
               }
             }
 
-            $matriz=$this->matriz_consolidado_mensual($prog_vector,$ejec_vector);
+            //// ----- Ejecucion de Certificacion POA
+            $matriz_ppto=$this->matriz_consolidado_mensual($prog_vector,$ejec_vector); /// genera matriz
+            $tabla_normal=$this->genera_tabla_temporalidad_prog_ejec_unidad($matriz_ppto,0,$proyecto[0]['aper_id'],5); /// normal
+            $tabla_impresion=$this->genera_tabla_temporalidad_prog_ejec_unidad($matriz_ppto,1,$proyecto[0]['aper_id'],5); /// impresion
+            //// ------------------------------------
+
+            $suma_total_meta=0;
+            for ($i=1; $i <=12 ; $i++) { 
+              $suma_total_meta=$suma_total_meta+$form4_programado[0]['prog_mes'.$i];
+            }
+            //--
+            for ($i=0; $i <=12 ; $i++) { 
+              if($i==0){
+                $prog_vector_form4[$i]=round($suma_total_meta,2);
+              }
+              else{
+                $prog_vector_form4[$i]=round($form4_programado[0]['prog_mes'.$i],2); 
+              }
+            }
+
+            if(count($form4_ejec)!=0){
+              for ($i=0; $i <=12 ; $i++) { 
+                if($i==0){
+                  $ejec_vector_form4[$i]=0;
+                }
+                else{
+                  $ejec_vector_form4[$i]=round($form4_ejec[0]['ejec_mes'.$i],2); 
+                }
+              }
+            }
+            else{
+              for ($i=0; $i <=12 ; $i++) { 
+                $ejec_vector_form4[$i]=0;
+              }
+            }
+
+            //// ----- Ejecucion de Certificacion POA
+            $matriz_form4=$this->matriz_consolidado_mensual($prog_vector_form4,$ejec_vector_form4); /// genera matriz form 4
+            $tabla_normal_form4=$this->genera_tabla_temporalidad_prog_ejec_unidad($matriz_form4,0,$proyecto[0]['aper_id'],4); /// normal
+            $tabla_impresion_form4=$this->genera_tabla_temporalidad_prog_ejec_unidad($matriz_form4,1,$proyecto[0]['aper_id'],4); /// impresion
+            //// ------------------------------------
 
 
-            $tabla.='
-            <div id="regresion" style="width: 1000px; height: 500px; margin: 0 auto"></div>
-            <table class="table table-bordered">
-              <thead>
-              <tr>
-                <th style="width:1%;" bgcolor="#474544">'.$proyecto[0]['aper_id'].'</th>
-                <th style="width:8%;" bgcolor="#474544">TOTAL PROGRAMADO</th>
-                <th style="width:7%;" bgcolor="#474544">ENE..</th>
-                <th style="width:7%;" bgcolor="#474544">FEB.</th>
-                <th style="width:7%;" bgcolor="#474544">MAR.</th>
-                <th style="width:7%;" bgcolor="#474544">ABR.</th>
-                <th style="width:7%;" bgcolor="#474544">MAY.</th>
-                <th style="width:7%;" bgcolor="#474544">JUN.</th>
-                <th style="width:7%;" bgcolor="#474544">JUL.</th>
-                <th style="width:7%;" bgcolor="#474544">AGO.</th>
-                <th style="width:7%;" bgcolor="#474544">SEPT.</th>
-                <th style="width:7%;" bgcolor="#474544">OCT.</th>
-                <th style="width:7%;" bgcolor="#474544">NOV.</th>
-                <th style="width:7%;" bgcolor="#474544">DIC.</th>
-              </tr>
-              </thead>
-              <tbody>
-                <tr>
-                <td>PROGRAMADO</td>';
-                for ($i=0; $i <=12 ; $i++) { 
-                  $tabla.='<td align=right>'.$matriz[0][$i].'</td>';
-                }
-                $tabla.='
-                </tr>
-                <tr>
-                <td>CERTIFICADO</td>';
-               for ($i=0; $i <=12 ; $i++) { 
-                  $tabla.='<td align=right>'.$matriz[1][$i].'</td>';
-                }
-                $tabla.='
-                </tr>
-                <tr>
-                <td>%ejec</td>';
-               for ($i=0; $i <=12 ; $i++) { 
-                  $tabla.='<td align=right>'.$matriz[2][$i].'%</td>';
-                }
-                $tabla.='
-                </tr>
-                <tr>
-                <td>PROG. ACUMULADO</td>';
-               for ($i=0; $i <=12 ; $i++) { 
-                  $tabla.='<td align=right>'.$matriz[3][$i].'</td>';
-                }
-                $tabla.='
-                </tr>
-                <tr>
-                <td>EJEC. ACUMULADO</td>';
-               for ($i=0; $i <=12 ; $i++) { 
-                  $tabla.='<td align=right>'.$matriz[4][$i].'</td>';
-                }
-                $tabla.='
-                </tr>
-                <tr bgcolor=#dfe9f1>
-                <td>% ACUM. PROG</td>';
-               for ($i=0; $i <=12 ; $i++) { 
-                  $tabla.='<td align=right>'.$matriz[5][$i].'%</td>';
-                }
-                $tabla.='
-                </tr>
-                <tr bgcolor=#dfe9f1>
-                <td>% ACUM. EJEC</td>';
-               for ($i=0; $i <=12 ; $i++) { 
-                  $tabla.='<td align=right>'.$matriz[6][$i].'%</td>';
-                }
-          $tabla.='
-                </tr>
-              <tbody>
-            </table>';
 
+            $tabla='
+                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                  <div id="cabecera"></div>
+                  <div class="well">
+                    <div id="graf_form5" style="width: 900px; height: 500px; margin: 0 auto"></div>
+                    <hr>
+                    '.$tabla_normal.'
+                  </div>
+                </article>
+                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                  <div class="well">
+                    <div id="graf_form4" style="width: 900px; height: 500px; margin: 0 auto"></div>
+                    <hr>
+                    '.$tabla_normal_form4.'
+                  </div>
+                </article>';
 
           $result = array(
             'respuesta' => 'correcto',
+            'proyecto'=>$proyecto,
+            'matriz_form5'=>$matriz_ppto,
+            'matriz_form4'=>$matriz_form4,
             'tabla'=>$tabla,
-            'matriz'=>$matriz,
+            
           );
       }
       else{
@@ -448,16 +435,154 @@ class Cseguimiento extends CI_Controller {
           $matriz[3][$i]=$suma_acumulado_prog; /// Acumulado Mensual Programado
           $matriz[4][$i]=$suma_acumulado_ejec; /// Acumulado Mensual Ejecutado
 
-          $matriz[5][$i]=round((($matriz[3][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Programado
-          $matriz[6][$i]=round((($matriz[4][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Ejecutado
+          $matriz[5][$i]=0;
+          $matriz[6][$i]=0;
 
+          if($matriz[0][0]!=0){
+            $matriz[5][$i]=round((($matriz[3][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Programado
+            $matriz[6][$i]=round((($matriz[4][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Ejecutado
+          }
+          
         }
-        
-
       }
 
       return $matriz;
   }
+
+
+  /*---- Genera Tabla (Vista e impresion), distribucion de meses prog. y cert. ----*/
+  public function genera_tabla_temporalidad_prog_ejec_unidad($matriz,$tipo_reporte,$aper_id,$formulario){
+    //// tipo_reporte : 0 normal
+    //// tipo_reporte : 1 impresion
+
+    $tit1='PROGRAMADO';
+    $tit2='EJECUTADO';
+    $tit3='PROG. ACUMULADO';
+    $tit4='EJEC. ACUMULADO';
+    $tit5='% PROG. ACUMULADO';
+    $tit6='% EJEC. ACUMMULADO';
+    if($formulario==5){
+      $tit1='PPTO. PROGRAMADO';
+      $tit2='PPTO. CERTIFICADO';
+      $tit3='PPTO. PROG. ACUMULADO';
+      $tit4='PPTO. CERT. ACUMULADO';
+      $tit5='% PROG. ACUMULADO';
+      $tit6='% EJEC. ACUMMULADO';
+    }
+
+
+    $tabla='';
+    $tabla.='  
+      <table class="table table-bordered" style="width:100%;">
+        <thead>
+        <tr>
+          <th style="width:1%;" bgcolor="#474544">'.$aper_id.'</th>
+          <th style="width:6%;" bgcolor="#474544">ENE..</th>
+          <th style="width:6%;" bgcolor="#474544">FEB.</th>
+          <th style="width:6%;" bgcolor="#474544">MAR.</th>
+          <th style="width:6%;" bgcolor="#474544">ABR.</th>
+          <th style="width:6%;" bgcolor="#474544">MAY.</th>
+          <th style="width:6%;" bgcolor="#474544">JUN.</th>
+          <th style="width:6%;" bgcolor="#474544">JUL.</th>
+          <th style="width:6%;" bgcolor="#474544">AGO.</th>
+          <th style="width:6%;" bgcolor="#474544">SEPT.</th>
+          <th style="width:6%;" bgcolor="#474544">OCT.</th>
+          <th style="width:6%;" bgcolor="#474544">NOV.</th>
+          <th style="width:6%;" bgcolor="#474544">DIC.</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr>
+          <td>'.$tit1.'</td>';
+          for ($i=1; $i <=12 ; $i++) {
+            $color='';
+            if($i==$this->mes_sistema){
+              $color='#a7e9e1';
+            }
+            $tabla.='<td align=right bgcolor='.$color.'>'.number_format($matriz[0][$i], 2, ',', '.').'</td>';
+          }
+          $tabla.='
+          </tr>
+          <tr>
+          <td>'.$tit2.'</td>';
+         for ($i=1; $i <=12 ; $i++) { 
+            $color='';
+            if($i==$this->mes_sistema){
+              $color='#a7e9e1';
+            }
+            $tabla.='<td align=right bgcolor='.$color.'>'.number_format($matriz[1][$i], 2, ',', '.').'</td>';
+          }
+          $tabla.='
+          </tr>
+          <tr>
+          <td>'.$tit3.'</td>';
+         for ($i=1; $i <=12 ; $i++) {
+            $color='';
+            if($i==$this->mes_sistema){
+              $color='#a7e9e1';
+            }
+            $tabla.='<td align=right bgcolor='.$color.'>'.number_format($matriz[3][$i], 2, ',', '.').'</td>';
+          }
+          $tabla.='
+          </tr>
+          <tr>
+          <td>'.$tit4.'</td>';
+         for ($i=1; $i <=12 ; $i++) {
+            $color='';
+            if($i==$this->mes_sistema){
+              $color='#a7e9e1';
+            }
+            $tabla.='<td align=right bgcolor='.$color.'>'.number_format($matriz[4][$i], 2, ',', '.').'</td>';
+          }
+          $tabla.='
+          </tr>
+          <tr bgcolor=#e7f7f6>
+          <td><b>'.$tit5.'</b></td>';
+         for ($i=1; $i <=12 ; $i++) {
+            $color='';
+            if($i==$this->mes_sistema){
+              $color='#a7e9e1';
+            }
+            $tabla.='<td style="font-size: 12px;" align=right bgcolor='.$color.'><b>'.$matriz[5][$i].'%</b></td>';
+          }
+          $tabla.='
+          </tr>
+          <tr bgcolor=#e7f7f6>
+          <td><b>'.$tit6.'</b></td>';
+         for ($i=1; $i <=12 ; $i++) {
+            $color='';
+            if($i==$this->mes_sistema){
+              $color='#a7e9e1';
+            } 
+            $tabla.='<td style="font-size: 12px;" align=right bgcolor='.$color.'><b>'.$matriz[6][$i].'%</b></td>';
+          }
+          $tabla.='
+            </tr>
+          <tbody>
+        </table>';
+
+      return $tabla;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

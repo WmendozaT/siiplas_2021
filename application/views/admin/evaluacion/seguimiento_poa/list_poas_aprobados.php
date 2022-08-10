@@ -23,7 +23,7 @@
               width: 45% !important;
             }
             #mdalTamanio_distribucion{
-              width: 80% !important;
+              width: 95% !important;
             }
         </style>
         <style>
@@ -254,7 +254,7 @@
                     <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                 </div>
                 <div class="modal-body">
-                <h2 class="alert alert-info"><center>MIS UNIDADES RESPONSABLES - <?php echo $this->session->userData('gestion');?></center></h2>
+                    <div id="titulo_dist"></div>
                     <div class="row">
                         <div id="load"></div>
                     </div>

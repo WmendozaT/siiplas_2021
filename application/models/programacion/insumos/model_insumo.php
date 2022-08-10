@@ -296,19 +296,19 @@ class Model_insumo extends CI_Model{
 
     ////// -------------------
 
-    //// ---- lista consolidado de meses programado insumo por unidad
-    function get_mes_programado_insumo_unidad($aper_id){
+    //// ---- lista consolidado de meses programado insumo por unidad menos la partida 10000
+    function get_mes_programado_insumo_unidad_menos10000($aper_id){
         $sql = 'select *
-                from vista_consolidado_mensualidad_programado_insumo_unidad
+                from v_temporalidad_meses_prog_insumo_unidad_menos10000
                 where aper_id='.$aper_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
-    //// ---- lista consolidado de meses certificado insumo por unidad
-    function get_mes_certificado_insumo_unidad($aper_id){
+    //// ---- lista consolidado de meses certificado insumo por unidad menos la partida 10000
+    function get_mes_certificado_insumo_unidad_menos10000($aper_id){
         $sql = 'select *
-                from vista_consolidado_mensualidad_certificado_insumo_unidad
+                from v_temporalidad_meses_cert_insumo_unidad_menos10000
                 where aper_id='.$aper_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
