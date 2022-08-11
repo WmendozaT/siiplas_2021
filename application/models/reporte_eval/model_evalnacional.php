@@ -16,16 +16,16 @@ class Model_evalnacional extends CI_Model{
     }
 
     /*---------------- Get Componente 2019 --------------------*/
-    public function vcomponente($com_id){
+/*    public function vcomponente($com_id){
         $sql = 'select *
                 from vista_componentes_dictamen
                 where com_id='.$com_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
     
     /*-------------------- programa - tipo de evaluacion por Regional trimestral (Operaciones)----------------------*/
-    public function evaluacion_institucional_regional($dep_id,$teval,$trimestre){
+/*    public function evaluacion_institucional_regional($dep_id,$teval,$trimestre){
         $sql = 'select p.dep_id,ev.tp_eval,SUM(ev.nro) as total
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -51,10 +51,10 @@ class Model_evalnacional extends CI_Model{
                 GROUP BY p.dep_id,ev.tp_eval';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-------------------- total programado por programas por regional (Producto) ----------------------*/
-    public function total_institucional_regional($dep_id,$trimestre){
+/*    public function total_institucional_regional($dep_id,$trimestre){
         if($trimestre==1){
             $vi=1;$vf=3;
         }
@@ -85,5 +85,5 @@ class Model_evalnacional extends CI_Model{
                GROUP BY p.dep_id';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 }

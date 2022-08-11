@@ -11,10 +11,10 @@ class Model_evalprograma extends CI_Model{
         $this->tmes = $this->session->userData('trimestre');
     }
 
-    //// ======= LISTA DE APERTURAS PROGRAMATICAS 2020 - INSTITUCIONAL
+    //// ======= LISTA DE APERTURAS PROGRAMATICAS 2020 2022 - INSTITUCIONAL
     public function lista_apertura_programas_institucional($tp_id){
         
-        if($tp_id==1){
+        if($tp_id==1){ /// proy inversion
             $sql = '
             select aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,count(*) total_actividad
                 from _proyectos p
@@ -35,7 +35,7 @@ class Model_evalprograma extends CI_Model{
                 group by aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion
                 order by aper.aper_programa asc';
         }
-        else{
+        else{ /// gasto corriente
             $sql = '
                 select aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,count(*) total_actividad
                 from _proyectos p
@@ -153,7 +153,7 @@ class Model_evalprograma extends CI_Model{
         return $query->result_array();
     }
 
-    //// ======= LISTA DE APERTURAS PROGRAMATICAS 2020 - REGIONAL
+    //// ======= LISTA DE APERTURAS PROGRAMATICAS 2020 2022 - REGIONAL
     public function lista_apertura_programas_regional($dep_id,$tp_id){
         
         if($tp_id==1){
@@ -298,7 +298,7 @@ class Model_evalprograma extends CI_Model{
 
 ///// DISTRITAL
 
-    //// ======= LISTA DE APERTURAS PROGRAMATICAS 2020 - DISTRITAL
+    //// ======= LISTA DE APERTURAS PROGRAMATICAS 2020 -2022 - DISTRITAL
     public function lista_apertura_programas_distrital($dist_id,$tp_id){
         
         if($tp_id==1){

@@ -335,9 +335,123 @@ function abreVentana_eficiencia(PDF){
     });
 
 
+    /// 2022
+    /*---- CUADRO DE EJECUCION DE CERTIFICACION POA ----*/
+    $(function () {
+        //// 2022
+        $(".ejecucion_certpoa").on("click", function (e) {
+            dep_id=$('[name="dep_id"]').val();
+            dist_id=$('[name="dist_id"]').val();
+            tp_id=$('[name="tp_id"]').val();
+            //alert(dep_id+'-'+dist_id+'-'+tp_id)
+            $('#lista_certpoa').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:50%;"/></div>');
+            //$('#ejecucion_certpoa').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:100%;"/></div>');
+           
+            document.getElementById("boton_ejec_certpoa").style.display = 'none';
+            var url = base+"index.php/reporte_evalform4/creportes_evaluacionpoa/get_ejecucion_certpoa";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+            if (response.respuesta == 'correcto') {
+              $('#lista_certpoa').fadeIn(1000).html(response.tabla);
+              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION CERT. POA',response.titulo_rep,'% EJECUCION CERT. POA') /// formulario 5
+              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE METAS - ACTIVIDADES',response.titulo_rep,'% EJECUCION CERT. POA') /// formulario 5
+            }
+            else{
+                alertify.error("ERROR AL RECUPERAR DATOS DE EJECUCION CERT. POA ");
+            }
+
+            });
+            request.fail(function (jqXHR, textStatus, thrown) {
+                console.log("ERROR: " + textStatus);
+            });
+            request.always(function () {
+                //console.log("termino la ejecuicion de ajax");
+            });
+            e.preventDefault();
+          
+        });
+    });
 
 
+    /// Grafico regresion por trimestre
+    function graf_regresion_trimestral_temporalidad_prog_ejec(grafico,matriz,titulo,subtitulo,tit_laterales) {
+      let programado=[];
+      for (var i = 0; i <=12; i++) {
+        programado[i]= matriz[5][i];
+      }
 
+      let ejecutado=[];
+      for (var i = 0; i <=12; i++) {
+        ejecutado[i]= matriz[6][i];
+      }
+
+      ///----
+      chart = new Highcharts.Chart({
+      chart: {
+        renderTo: grafico,  // Le doy el nombre a la gráfica
+        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+      },
+      title: {
+        text: titulo  // Titulo (Opcional)
+      },
+      subtitle: {
+        text: subtitulo   // Subtitulo (Opcional)
+      },
+      // Pongo los datos en el eje de las 'X'
+      xAxis: {
+        categories: ['','ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
+        // Pongo el título para el eje de las 'X'
+        title: {
+          text: tit_laterales
+        }
+      },
+      yAxis: {
+        // Pongo el título para el eje de las 'Y'
+        title: {
+          text: tit_laterales
+        }
+      },
+      // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+      tooltip: {
+        enabled: true,
+        formatter: function() {
+          return '<b>'+ this.series.name +'</b><br/>'+
+            this.x +': '+ this.y +' '+this.series.name;
+        }
+      },
+      // Doy opciones a la gráfica
+      plotOptions: {
+        line: {
+          dataLabels: {
+            enabled: true
+          },
+          enableMouseTracking: true
+        }
+      },
+      // Doy los datos de la gráfica para dibujarlas
+      series: [
+          {
+            name: '% PROG. ACUMULADO',
+            data: programado
+          },
+          {
+            name: '% EJEC. ACUMULADO',
+            data: ejecutado
+          }
+        ],
+        
+      });
+    }
 
     ////// AREA DE IMPRESION 
       //// Evaluacion POA

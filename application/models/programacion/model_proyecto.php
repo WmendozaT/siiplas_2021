@@ -1885,4 +1885,148 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }
 
+
+    ////------ por distrital
+    /*-- temporalidad prog form4 DISTRITAL --*/
+    public function temporalidad_prog_form4_distrital($dist_id){ /// 
+        $sql = '
+            select 
+            poa.dist_id,
+            SUM(form4.prog_mes1) prog_mes1,
+            SUM(form4.prog_mes2) prog_mes2,
+            SUM(form4.prog_mes3) prog_mes3,
+            SUM(form4.prog_mes4) prog_mes4,
+            SUM(form4.prog_mes5) prog_mes5,
+            SUM(form4.prog_mes6) prog_mes6,
+            SUM(form4.prog_mes7) prog_mes7,
+            SUM(form4.prog_mes8) prog_mes8,
+            SUM(form4.prog_mes9) prog_mes9,
+            SUM(form4.prog_mes10) prog_mes10,
+            SUM(form4.prog_mes11) prog_mes11,
+            SUM(form4.prog_mes12) prog_mes12
+            from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
+            Inner Join v_consolidado_temp_prog_form4_unidad as form4 On form4.aper_id=poa.aper_id
+            group by poa.dist_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-- temporalidad ejec form4 DISTRITAL --*/
+    public function temporalidad_ejec_form4_distrital($dist_id){ /// 
+        $sql = '
+            select 
+            poa.dist_id,
+            SUM(form4.ejec_mes1) ejec_mes1,
+            SUM(form4.ejec_mes2) ejec_mes2,
+            SUM(form4.ejec_mes3) ejec_mes3,
+            SUM(form4.ejec_mes4) ejec_mes4,
+            SUM(form4.ejec_mes5) ejec_mes5,
+            SUM(form4.ejec_mes6) ejec_mes6,
+            SUM(form4.ejec_mes7) ejec_mes7,
+            SUM(form4.ejec_mes8) ejec_mes8,
+            SUM(form4.ejec_mes9) ejec_mes9,
+            SUM(form4.ejec_mes10) ejec_mes10,
+            SUM(form4.ejec_mes11) ejec_mes11,
+            SUM(form4.ejec_mes12) ejec_mes12
+            from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
+            Inner Join v_consolidado_temp_ejec_form4_unidad as form4 On form4.aper_id=poa.aper_id
+            group by poa.dist_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    ////------ por Regional
+    /*-- temporalidad prog form4 REGIONAL --*/
+    public function temporalidad_prog_form4_regional($dep_id){ /// 
+        $sql = '
+            select 
+            poa.dep_id,
+            SUM(form4.prog_mes1) prog_mes1,
+            SUM(form4.prog_mes2) prog_mes2,
+            SUM(form4.prog_mes3) prog_mes3,
+            SUM(form4.prog_mes4) prog_mes4,
+            SUM(form4.prog_mes5) prog_mes5,
+            SUM(form4.prog_mes6) prog_mes6,
+            SUM(form4.prog_mes7) prog_mes7,
+            SUM(form4.prog_mes8) prog_mes8,
+            SUM(form4.prog_mes9) prog_mes9,
+            SUM(form4.prog_mes10) prog_mes10,
+            SUM(form4.prog_mes11) prog_mes11,
+            SUM(form4.prog_mes12) prog_mes12
+            from lista_poa_gastocorriente_regional('.$dep_id.','.$this->gestion.') poa
+            Inner Join v_consolidado_temp_prog_form4_unidad as form4 On form4.aper_id=poa.aper_id
+            group by poa.dep_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-- temporalidad ejec form4 REGIONAL --*/
+    public function temporalidad_ejec_form4_regional($dep_id){ /// 
+        $sql = '
+            select 
+            poa.dep_id,
+            SUM(form4.ejec_mes1) ejec_mes1,
+            SUM(form4.ejec_mes2) ejec_mes2,
+            SUM(form4.ejec_mes3) ejec_mes3,
+            SUM(form4.ejec_mes4) ejec_mes4,
+            SUM(form4.ejec_mes5) ejec_mes5,
+            SUM(form4.ejec_mes6) ejec_mes6,
+            SUM(form4.ejec_mes7) ejec_mes7,
+            SUM(form4.ejec_mes8) ejec_mes8,
+            SUM(form4.ejec_mes9) ejec_mes9,
+            SUM(form4.ejec_mes10) ejec_mes10,
+            SUM(form4.ejec_mes11) ejec_mes11,
+            SUM(form4.ejec_mes12) ejec_mes12
+            from lista_poa_gastocorriente_regional('.$dep_id.','.$this->gestion.') poa
+            Inner Join v_consolidado_temp_ejec_form4_unidad as form4 On form4.aper_id=poa.aper_id
+            group by poa.dep_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    ////------ Institucional
+    /*-- temporalidad prog form4 INSTITUCIONAL --*/
+    public function temporalidad_prog_form4_institucional(){ /// 
+        $sql = '
+            select 
+            SUM(form4.prog_mes1) prog_mes1,
+            SUM(form4.prog_mes2) prog_mes2,
+            SUM(form4.prog_mes3) prog_mes3,
+            SUM(form4.prog_mes4) prog_mes4,
+            SUM(form4.prog_mes5) prog_mes5,
+            SUM(form4.prog_mes6) prog_mes6,
+            SUM(form4.prog_mes7) prog_mes7,
+            SUM(form4.prog_mes8) prog_mes8,
+            SUM(form4.prog_mes9) prog_mes9,
+            SUM(form4.prog_mes10) prog_mes10,
+            SUM(form4.prog_mes11) prog_mes11,
+            SUM(form4.prog_mes12) prog_mes12
+            from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+            Inner Join v_consolidado_temp_prog_form4_unidad as form4 On form4.aper_id=poa.aper_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-- temporalidad ejec form4 INSTITUCIONAL --*/
+    public function temporalidad_ejec_form4_institucional(){ /// 
+        $sql = '
+            select 
+            SUM(form4.ejec_mes1) ejec_mes1,
+            SUM(form4.ejec_mes2) ejec_mes2,
+            SUM(form4.ejec_mes3) ejec_mes3,
+            SUM(form4.ejec_mes4) ejec_mes4,
+            SUM(form4.ejec_mes5) ejec_mes5,
+            SUM(form4.ejec_mes6) ejec_mes6,
+            SUM(form4.ejec_mes7) ejec_mes7,
+            SUM(form4.ejec_mes8) ejec_mes8,
+            SUM(form4.ejec_mes9) ejec_mes9,
+            SUM(form4.ejec_mes10) ejec_mes10,
+            SUM(form4.ejec_mes11) ejec_mes11,
+            SUM(form4.ejec_mes12) ejec_mes12
+            from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+            Inner Join v_consolidado_temp_ejec_form4_unidad as form4 On form4.aper_id=poa.aper_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }

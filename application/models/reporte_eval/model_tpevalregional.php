@@ -17,35 +17,35 @@ class Model_tpevalregional extends CI_Model{
     }
 
     /*--------------------------------- Get Departamento 2019 ------------------------------------*/
-    public function get_dpto($dep_id){
+/*    public function get_dpto($dep_id){
         $sql = 'select *
                 from _departamentos
                 where dep_id='.$dep_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------------------------------- List Distrital ------------------------------------*/
-    public function get_distrital($dep_id){
+/*    public function get_distrital($dep_id){
         $sql = 'select *
                 from _distritales
                 where dep_id='.$dep_id.' and dist_estado!=\'0\'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------------------------------- Get Distrital ------------------------------------*/
-    public function get_dist($dist_id){
+/*    public function get_dist($dist_id){
         $sql = 'select *
                 from _distritales dist
                 Inner Join _departamentos as dep On dep.dep_id=dist.dep_id
                 where dist.dist_id='.$dist_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-------------------- list Regional total solo operacion de funcionamiento ----------------------*/
-    public function list_consolidado_regional($dep_id,$tp_id){
+/*    public function list_consolidado_regional($dep_id,$tp_id){
         $sql = 'select *
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -57,10 +57,10 @@ class Model_tpevalregional extends CI_Model{
                 ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-------------------- Numero de Evaluaciones de productos por Regional Trimestral ----------------------*/
-    public function evaluacion_productos_regional($dep_id,$teval,$tp_id){
+/*    public function evaluacion_productos_regional($dep_id,$teval,$tp_id){
         $sql = 'select p.dep_id,ev.tp_eval,SUM(ev.nro) as total
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -85,13 +85,13 @@ class Model_tpevalregional extends CI_Model{
                 GROUP BY p.dep_id,ev.tp_eval';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*----- NACIONAL -----*/
 
     /*-------------------- (Eficacia) list Acciones - institucional ----------------------*/
-    public function list_consolidado_institucional(){
+/*    public function list_consolidado_institucional(){
         $sql = 'select apg.aper_programa,prog.aper_descripcion, p.proy_id,p.proy_nombre
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -111,11 +111,11 @@ class Model_tpevalregional extends CI_Model{
                 ORDER BY apg.aper_programa asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*-------------------- nro de acciones por programas por Nacional ----------------------*/
-    public function categorias_programaticas_nacional(){
+/*    public function categorias_programaticas_nacional(){
         $sql = 'select apg.aper_programa,prog.aper_descripcion,count(*) as acciones
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -135,11 +135,11 @@ class Model_tpevalregional extends CI_Model{
                 ORDER BY apg.aper_programa asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*-------------------- programa - tipo de evaluacion Nacional trimestral (Productos)----------------------*/
-    public function evaluacion_programas_nacional($aper_programa,$teval,$trimestre){
+/*    public function evaluacion_programas_nacional($aper_programa,$teval,$trimestre){
         $sql = 'select apg.aper_programa,ev.tp_eval,SUM(ev.nro) as total
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -165,10 +165,10 @@ class Model_tpevalregional extends CI_Model{
                 GROUP BY apg.aper_programa,ev.tp_eval';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-------------------- total programado por programas Nacional (Producto) ----------------------*/
-    public function total_programado_programas_nacional($aper_programa,$trimestre){
+/*    public function total_programado_programas_nacional($aper_programa,$trimestre){
         if($trimestre==1){
             $vi=1;$vf=3;
         }
@@ -199,11 +199,11 @@ class Model_tpevalregional extends CI_Model{
                GROUP BY apg.aper_programa';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*----- REGIONAL -----*/
     /*-------------------- nro de acciones por programas por Regional ----------------------*/
-    public function categorias_programaticas_regional($dep_id,$tp_id){
+/*    public function categorias_programaticas_regional($dep_id,$tp_id){
         $sql = 'select apg.aper_programa,prog.aper_descripcion,count(*) as acciones
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -223,10 +223,10 @@ class Model_tpevalregional extends CI_Model{
                 ORDER BY apg.aper_programa asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-------------------- programa - tipo de evaluacion por Regional trimestral (Productos)----------------------*/
-    public function evaluacion_programas_regional($dep_id,$aper_programa,$teval,$trimestre){
+/*    public function evaluacion_programas_regional($dep_id,$aper_programa,$teval,$trimestre){
         $sql = 'select p.dep_id,apg.aper_programa,ev.tp_eval,SUM(ev.nro) as total
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -252,10 +252,10 @@ class Model_tpevalregional extends CI_Model{
                 GROUP BY p.dep_id,apg.aper_programa,ev.tp_eval';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-------------------- total programado por programas por regional (Producto) ----------------------*/
-    public function total_programado_programas_regional($dep_id,$aper_programa,$trimestre){
+/*    public function total_programado_programas_regional($dep_id,$aper_programa,$trimestre){
         if($trimestre==1){
             $vi=1;$vf=3;
         }
@@ -286,6 +286,6 @@ class Model_tpevalregional extends CI_Model{
                GROUP BY p.dep_id,apg.aper_programa';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 }

@@ -22,6 +22,9 @@
       th{
         padding: 1.4px;
         text-align: center;
+        font-size: 11px;
+      }
+      td{
         font-size: 10px;
       }
     </style>
@@ -30,8 +33,8 @@
 <div id="content">
 <!-- widget grid -->
     <section id="widget-grid" class="">
-        <div class="row">
-            <article class="col-sm-12 col-md-12 col-lg-12">
+        <div class="">
+            
                 <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
                     <header>
                         <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
@@ -62,6 +65,9 @@
                                 </li>
                                 <li>
                                     <a href="#s4" data-toggle="tab"> Detalle por Programas</a>
+                                </li>
+                                <li>
+                                    <a href="#s5" data-toggle="tab"> Detalle Ejecucion Cert. POA.</a>
                                 </li>
                             </ul>
     
@@ -189,6 +195,15 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="tab-pane fade" id="s5">
+                                    
+                                    <div align="left" id="boton_ejec_certpoa">
+                                        <a href="#" class="btn btn-default ejecucion_certpoa" title="CUADRO DE EJECUCION DE CERTIFICACION POA" style="width:25%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;EJECUCIÓN DE CERTIFICACIÓN POA</a>
+                                    </div>
+                                    <div id="lista_certpoa"></div>
+                                   
+                                </div>
                             </div>
     
                         </div>
@@ -197,7 +212,7 @@
                     <!-- end widget div -->
                 </div>
                 <!-- end widget -->
-            </article>
+           
 
         </div>
     </section>

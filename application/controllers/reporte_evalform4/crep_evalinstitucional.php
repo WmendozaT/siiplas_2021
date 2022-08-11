@@ -46,17 +46,17 @@ class Crep_evalinstitucional extends CI_Controller {
         $tabla='';
         $tabla.='<div class="well" id="update_eval">
                     <div class="jumbotron">
-                        <h1>Evaluaci&oacute;n POA '.$this->gestion.'</h1>
-                        <p>
-                            Reporte consolidado de evaluaci&oacute;n POA acumulado al '.$trimestre[0]['trm_descripcion'].' de '.$this->gestion.' a nivel Institucional, Regional y distrital.
-                        </p>';
-                        if($this->tp_adm==1){
-                          $tabla.='
-                          <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
-                            Actualizar Datos de Evaluación POA (Actividades)
-                          </button>';
-                        }
-                        $tabla.=' 
+                      <h1>Evaluaci&oacute;n POA '.$this->gestion.'</h1>
+                      <p>
+                          Reporte consolidado de evaluaci&oacute;n POA acumulado al '.$trimestre[0]['trm_descripcion'].' de '.$this->gestion.' a nivel Institucional, Regional y distrital.
+                      </p>';
+                      if($this->tp_adm==1){
+                        $tabla.='
+                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
+                          Actualizar Datos de Evaluación POA (Actividades)
+                        </button>';
+                      }
+                      $tabla.=' 
                     </div>
                 </div>';
 

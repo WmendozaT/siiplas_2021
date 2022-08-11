@@ -573,20 +573,6 @@ class Cseguimiento extends CI_Controller {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   /*----  Boton de Seguimiento / Evaluacion POA ----*/
   public function btn_seguimiento_evaluacion_poa(){
     $tabla='';

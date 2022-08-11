@@ -16,16 +16,16 @@ class Model_evalnacional_tp extends CI_Model{
     }
 
     /*---------------------- Tipo de Proyecto 2019 --------------------------*/
-    public function get_tp_proyecto($tp_id){
+/*    public function get_tp_proyecto($tp_id){
         $sql = 'select *
                 from _tipoproyecto
                 where tp_id='.$tp_id.' and tp_estado=\'1\'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-
+*/
     /*---------------------- Lista de Acciones Operativas --------------------------*/
-    public function list_acciones_tp($prog,$tp_id){
+/*    public function list_acciones_tp($prog,$tp_id){
         $sql = 'select tap.*,p.*,tp.*,fu.*,pf.*
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -41,19 +41,19 @@ class Model_evalnacional_tp extends CI_Model{
                 ORDER BY tap.aper_proyecto,tap.aper_actividad  asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------------------------------- Get Programa Padre ------------------------------------*/
-    public function programa($prog){
+/*    public function programa($prog){
         $sql = 'select *
                 from aperturaprogramatica
                 where aper_programa=\''.$prog.'\' and aper_proyecto=\'0000\' and aper_actividad=\'000\' and aper_gestion='.$this->gestion.' and aper_estado!=\'3\'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------------------------------- Proyectos ------------------------------------*/
-    public function proyecto($prog,$tp_id){
+/*    public function proyecto($prog,$tp_id){
         $sql = 'select tap.*,p.*,tp.*,fu.*,pf.*
                 from _proyectos as p
                     Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -69,10 +69,10 @@ class Model_evalnacional_tp extends CI_Model{
                             ORDER BY tap.aper_proyecto,tap.aper_actividad  asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------------- LISTA DE OPERACIONES PARA LA EVALUACION a borrar-------------------------------*/
-    public function proyecto2($prog,$tp_id){
+/*    public function proyecto2($prog,$tp_id){
         $dep=$this->model_proyecto->dep_dist($this->dist);
         if($this->adm==1){
             if($this->rol==1){
@@ -174,32 +174,32 @@ class Model_evalnacional_tp extends CI_Model{
         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------------------------------- Get Componente ------------------------------------*/
-    public function vcomponente($com_id){
+/*    public function vcomponente($com_id){
         $sql = 'select *
                 from vista_componentes_dictamen
                 where com_id='.$com_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------------------------------- Get Producto ------------------------------------*/
-    public function vproducto($prod_id){
+/*    public function vproducto($prod_id){
         $sql = 'select *
                 from vista_producto
                 where prod_id='.$prod_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------------------------------- Get Actividad ------------------------------------*/
-    public function vactividad($act_id){
+/*    public function vactividad($act_id){
         $sql = 'select *
                 from vista_actividad
                 where act_id='.$act_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 }

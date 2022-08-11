@@ -294,9 +294,9 @@ class Model_insumo extends CI_Model{
     }
 
 
-    ////// -------------------
+    ////// ------------------- EJECUCION DE CERTIFICACION POA FORM5
 
-    //// ---- lista consolidado de meses programado insumo por unidad menos la partida 10000
+    //// ---- lista consolidado de meses programado insumo por UNIDAD menos la partida 10000 - 2022
     function get_mes_programado_insumo_unidad_menos10000($aper_id){
         $sql = 'select *
                 from v_temporalidad_meses_prog_insumo_unidad_menos10000
@@ -305,7 +305,7 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    //// ---- lista consolidado de meses certificado insumo por unidad menos la partida 10000
+    //// ---- lista consolidado de meses certificado insumo por UNIDAD menos la partida 10000 - 2022
     function get_mes_certificado_insumo_unidad_menos10000($aper_id){
         $sql = 'select *
                 from v_temporalidad_meses_cert_insumo_unidad_menos10000
@@ -314,5 +314,164 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+
+    //// ---- lista consolidado de meses programado insumo por DISTRITAL menos la partida 10000 -2022
+    function get_mes_programado_insumo_distrital_menos10000($dist_id){
+        $sql = 'select 
+                poa.dist_id,
+                SUM(prog.costo_total) costo_total, 
+                SUM(prog.monto_certificado) monto_certificado, 
+                SUM(prog.total_programado) total_programado, 
+                SUM(prog.prog_mes1) prog_mes1,
+                SUM(prog.prog_mes2) prog_mes2,
+                SUM(prog.prog_mes3) prog_mes3,
+                SUM(prog.prog_mes4) prog_mes4,
+                SUM(prog.prog_mes5) prog_mes5,
+                SUM(prog.prog_mes6) prog_mes6,
+                SUM(prog.prog_mes7) prog_mes7,
+                SUM(prog.prog_mes8) prog_mes8,
+                SUM(prog.prog_mes9) prog_mes9,
+                SUM(prog.prog_mes10) prog_mes10,
+                SUM(prog.prog_mes11) prog_mes11,
+                SUM(prog.prog_mes12) prog_mes12
+
+                from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
+                Inner Join v_temporalidad_meses_prog_insumo_unidad_menos10000 as prog On prog.aper_id=poa.aper_id
+                group by dist_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    //// ---- lista consolidado de meses certificado insumo por DISTRITAL menos la partida 10000 - 2022
+    function get_mes_certificado_insumo_distrital_menos10000($aper_id){
+        $sql = 'select 
+                poa.dist_id,
+                SUM(ejec.monto_certificado) monto_certificado, 
+                SUM(ejec.total_certificado) total_certificado,  
+                SUM(ejec.ejec_mes1) ejec_mes1,
+                SUM(ejec.ejec_mes2) ejec_mes2,
+                SUM(ejec.ejec_mes3) ejec_mes3,
+                SUM(ejec.ejec_mes4) ejec_mes4,
+                SUM(ejec.ejec_mes5) ejec_mes5,
+                SUM(ejec.ejec_mes6) ejec_mes6,
+                SUM(ejec.ejec_mes7) ejec_mes7,
+                SUM(ejec.ejec_mes8) ejec_mes8,
+                SUM(ejec.ejec_mes9) ejec_mes9,
+                SUM(ejec.ejec_mes10) ejec_mes10,
+                SUM(ejec.ejec_mes11) ejec_mes11,
+                SUM(ejec.ejec_mes12) ejec_mes12
+
+                from lista_poa_gastocorriente_distrital('.$aper_id.','.$this->gestion.') poa
+                Inner Join v_temporalidad_meses_cert_insumo_unidad_menos10000 as ejec On ejec.aper_id=poa.aper_id
+                group by dist_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    //// ---- lista consolidado de meses programado insumo por REGIONAL menos la partida 10000 -2022
+    function get_mes_programado_insumo_regional_menos10000($dep_id){
+        $sql = 'select 
+                poa.dep_id,
+                SUM(prog.costo_total) costo_total, 
+                SUM(prog.monto_certificado) monto_certificado, 
+                SUM(prog.total_programado) total_programado, 
+                SUM(prog.prog_mes1) prog_mes1,
+                SUM(prog.prog_mes2) prog_mes2,
+                SUM(prog.prog_mes3) prog_mes3,
+                SUM(prog.prog_mes4) prog_mes4,
+                SUM(prog.prog_mes5) prog_mes5,
+                SUM(prog.prog_mes6) prog_mes6,
+                SUM(prog.prog_mes7) prog_mes7,
+                SUM(prog.prog_mes8) prog_mes8,
+                SUM(prog.prog_mes9) prog_mes9,
+                SUM(prog.prog_mes10) prog_mes10,
+                SUM(prog.prog_mes11) prog_mes11,
+                SUM(prog.prog_mes12) prog_mes12
+
+                from lista_poa_gastocorriente_regional('.$dep_id.','.$this->gestion.') poa
+                Inner Join v_temporalidad_meses_prog_insumo_unidad_menos10000 as prog On prog.aper_id=poa.aper_id
+                group by dep_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    //// ---- lista consolidado de meses certificado insumo por REGIONAL menos la partida 10000 - 2022
+    function get_mes_certificado_insumo_regional_menos10000($dep_id){
+        $sql = 'select 
+                poa.dep_id,
+                SUM(ejec.monto_certificado) monto_certificado, 
+                SUM(ejec.total_certificado) total_certificado,  
+                SUM(ejec.ejec_mes1) ejec_mes1,
+                SUM(ejec.ejec_mes2) ejec_mes2,
+                SUM(ejec.ejec_mes3) ejec_mes3,
+                SUM(ejec.ejec_mes4) ejec_mes4,
+                SUM(ejec.ejec_mes5) ejec_mes5,
+                SUM(ejec.ejec_mes6) ejec_mes6,
+                SUM(ejec.ejec_mes7) ejec_mes7,
+                SUM(ejec.ejec_mes8) ejec_mes8,
+                SUM(ejec.ejec_mes9) ejec_mes9,
+                SUM(ejec.ejec_mes10) ejec_mes10,
+                SUM(ejec.ejec_mes11) ejec_mes11,
+                SUM(ejec.ejec_mes12) ejec_mes12
+
+                from lista_poa_gastocorriente_regional('.$dep_id.','.$this->gestion.') poa
+                Inner Join v_temporalidad_meses_cert_insumo_unidad_menos10000 as ejec On ejec.aper_id=poa.aper_id
+                group by dep_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /// Institucional
+     //// ---- lista consolidado de meses programado insumo por INSTITUCIONAL menos la partida 10000 -2022
+    function get_mes_programado_insumo_institucional_menos10000(){
+        $sql = 'select 
+                SUM(prog.costo_total) costo_total, 
+                SUM(prog.monto_certificado) monto_certificado, 
+                SUM(prog.total_programado) total_programado, 
+                SUM(prog.prog_mes1) prog_mes1,
+                SUM(prog.prog_mes2) prog_mes2,
+                SUM(prog.prog_mes3) prog_mes3,
+                SUM(prog.prog_mes4) prog_mes4,
+                SUM(prog.prog_mes5) prog_mes5,
+                SUM(prog.prog_mes6) prog_mes6,
+                SUM(prog.prog_mes7) prog_mes7,
+                SUM(prog.prog_mes8) prog_mes8,
+                SUM(prog.prog_mes9) prog_mes9,
+                SUM(prog.prog_mes10) prog_mes10,
+                SUM(prog.prog_mes11) prog_mes11,
+                SUM(prog.prog_mes12) prog_mes12
+
+                from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+                Inner Join v_temporalidad_meses_prog_insumo_unidad_menos10000 as prog On prog.aper_id=poa.aper_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    //// ---- lista consolidado de meses certificado insumo por REGIONAL menos la partida 10000 - 2022
+    function get_mes_certificado_insumo_institucional_menos10000(){
+        $sql = 'select 
+                SUM(ejec.monto_certificado) monto_certificado, 
+                SUM(ejec.total_certificado) total_certificado,  
+                SUM(ejec.ejec_mes1) ejec_mes1,
+                SUM(ejec.ejec_mes2) ejec_mes2,
+                SUM(ejec.ejec_mes3) ejec_mes3,
+                SUM(ejec.ejec_mes4) ejec_mes4,
+                SUM(ejec.ejec_mes5) ejec_mes5,
+                SUM(ejec.ejec_mes6) ejec_mes6,
+                SUM(ejec.ejec_mes7) ejec_mes7,
+                SUM(ejec.ejec_mes8) ejec_mes8,
+                SUM(ejec.ejec_mes9) ejec_mes9,
+                SUM(ejec.ejec_mes10) ejec_mes10,
+                SUM(ejec.ejec_mes11) ejec_mes11,
+                SUM(ejec.ejec_mes12) ejec_mes12
+
+                from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+                Inner Join v_temporalidad_meses_cert_insumo_unidad_menos10000 as ejec On ejec.aper_id=poa.aper_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }
 ?>
