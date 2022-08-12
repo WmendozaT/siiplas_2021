@@ -29,6 +29,7 @@ class Creportes_evaluacionpoa extends CI_Controller {
             $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
             $this->tp_adm = $this->session->userData('tp_adm');
             $this->mes_sistema=$this->session->userData('mes'); /// mes sistema
+            $this->mes = $this->mes_nombre();
             $this->load->library('reportes_evaluacionpoa');
         }
         else{
@@ -246,7 +247,7 @@ class Creportes_evaluacionpoa extends CI_Controller {
             $tabla='
             <div class="row">
             <div class="col-sm-12">
-        
+              <div id="cabecera_ejec" style="display: none">'.$this->cabecera_reporte_grafico($titulo_regional).'</div>
               <!-- well -->
               <div class="well">
                 <!-- row -->
@@ -257,14 +258,23 @@ class Creportes_evaluacionpoa extends CI_Controller {
                     <div class="row">
         
                       <div class="col-md-12">
-                        <center><div id="graf_form5" style="width: 900px; height: 500px; margin: 0 auto"></div></center>
+                        <div id="grafico_form5">
+                          <center><div id="graf_form5" style="width: 880px; height: 500px; margin: 0 auto; text-align:center"></div></center>
+                        </div>
                       </div>
         
                       <div class="col-md-12">
                         '.$tabla_normal.'
                       </div>
-        
+                      
+                      <div id="tabla_impresion_form5" style="display: none">
+                        '.$tabla_impresion.'
+                      </div>
+
                     </div>
+                      <div align="right">
+                        <button  onClick="imprimir_form5()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </div>
                     <!-- end row -->
                   </div>
                   <!-- end col -->
@@ -283,14 +293,25 @@ class Creportes_evaluacionpoa extends CI_Controller {
                     <div class="row">
         
                       <div class="col-md-12">
-                        <div id="graf_form4" style="width: 900px; height: 500px; margin: 0 auto"></div>
+                        <div id="grafico_form4">
+                          <center><div id="graf_form4" style="width: 900px; height: 500px; margin: 0 auto; text-align:center"></div></center>
+                        </div>
                       </div>
         
                       <div class="col-md-12">
                         '.$tabla_normal_form4.'
                       </div>
-        
+                      
+                      <div id="tabla_impresion_form4" style="display: none">
+                        '.$tabla_impresion_form4.'
+                      </div>  
+
                     </div>
+
+                      <div align="right">
+                        <button  onClick="imprimir_form4()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </div>
+
                     <!-- end row -->
                   </div>
                   <!-- end col -->
@@ -316,6 +337,47 @@ class Creportes_evaluacionpoa extends CI_Controller {
     }
 
 
+   /*---- CABECERA REPORTE OPERACIONES POR REGIONALES (GRAFICO)----*/
+  function cabecera_reporte_grafico($titulo){
+    $tabla='';
+
+    $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+        <tr style="border: solid 0px;">              
+            <td style="width:70%;height: 2%">
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="font-size: 15px;font-family: Arial;">
+                        <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+      </table>
+      <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px black; text-align: center;">
+              <td style="width:10%; text-align:center;">
+              </td>
+              <td style="width:80%; height: 5%">
+                <table align="center" border="0" style="width:100%;">
+                  <tr style="font-size: 23px;font-family: Arial;">
+                    <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
+                  </tr>
+                </table>
+              </td>
+              <td style="width:10%; text-align:center;">
+              </td>
+          </tr>
+      </table>';
+
+    return $tabla;
+  }
 
   /*---- Matriz consolidado mensual ----*/
   public function matriz_consolidado_mensual($vector_prog,$vector_ejec){
@@ -382,9 +444,16 @@ class Creportes_evaluacionpoa extends CI_Controller {
 
 
     $tabla='';
+
+    $class='class="table table-bordered" style="width:80%;"';
+    if($tipo_reporte==1){
+      $class='class="change_order_items" border=1 style="width:100%;"';
+      
+    }
+
     $tabla.='
       <center>
-      <table class="table table-bordered" style="width:100%;">
+      <table '.$class.'>
         <thead>
         <tr>
           <th style="width:1%;"></th>
@@ -403,9 +472,7 @@ class Creportes_evaluacionpoa extends CI_Controller {
         </tr>
         </thead>
         <tbody>
-        ';
-/*        $tabla.='
-          <tr>
+        <tr>
           <td>'.$tit1.'</td>';
           for ($i=1; $i <=12 ; $i++) {
             $color='';
@@ -448,8 +515,7 @@ class Creportes_evaluacionpoa extends CI_Controller {
             $tabla.='<td align=right bgcolor='.$color.'>'.number_format($matriz[4][$i], 2, ',', '.').'</td>';
           }
           $tabla.='
-          </tr>';*/
-          $tabla.='
+          </tr>
           <tr bgcolor=#e7f7f6>
           <td><b>'.$tit5.'</b></td>';
          for ($i=1; $i <=12 ; $i++) {
@@ -479,6 +545,22 @@ class Creportes_evaluacionpoa extends CI_Controller {
       return $tabla;
   }
 
+    /*------ NOMBRE MES -------*/
+    public function mes_nombre(){
+      $mes[1] = 'ENE.';
+      $mes[2] = 'FEB.';
+      $mes[3] = 'MAR.';
+      $mes[4] = 'ABR.';
+      $mes[5] = 'MAY.';
+      $mes[6] = 'JUN.';
+      $mes[7] = 'JUL.';
+      $mes[8] = 'AGOS.';
+      $mes[9] = 'SEPT.';
+      $mes[10] = 'OCT.';
+      $mes[11] = 'NOV.';
+      $mes[12] = 'DIC.';
 
+      return $mes;
+    }
 
 }

@@ -26,6 +26,7 @@ class Cseguimiento extends CI_Controller {
         $this->dep_id = $this->session->userData('dep_id');
         $this->dist_tp = $this->session->userData('dist_tp');
         $this->tmes = $this->session->userData('trimestre');
+        $this->mes = $this->mes_nombre();
         //$this->tmes = 3;
         $this->fun_id = $this->session->userData('fun_id');
         $this->tp_adm = $this->session->userData('tp_adm');
@@ -282,7 +283,7 @@ class Cseguimiento extends CI_Controller {
     }
 
 
-  /*----- GET DISTRIBUCION EJECUCION MENSUAL CERT POA -----*/
+  /*----- GET EJECUCION FORMULARIO 4 5 -----*/
   public function get_distribucion_mensual_certpoa(){
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
@@ -367,18 +368,34 @@ class Cseguimiento extends CI_Controller {
 
             $tabla='
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                  <div id="cabecera"></div>
+                  <div id="cabecera_ejec" style="display: none">'.$this->cabecera_reporte_grafico($proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev']).'</div>
                   <div class="well">
-                    <div id="graf_form5" style="width: 900px; height: 500px; margin: 0 auto"></div>
+                    <div id="grafico_form5">
+                      <center><div id="graf_form5" style="width: 880px; height: 500px; margin: 0 auto; text-align:center"></div></center>
+                    </div>
                     <hr>
                     '.$tabla_normal.'
+                    <div id="tabla_impresion_form5" style="display: none">
+                      '.$tabla_impresion.'
+                    </div>
+                    <div align="right">
+                      <button  onClick="imprimir_form5()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </div>
                   </div>
                 </article>
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                   <div class="well">
-                    <div id="graf_form4" style="width: 900px; height: 500px; margin: 0 auto"></div>
+                    <div id="grafico_form4">
+                      <center><div id="graf_form4" style="width: 900px; height: 500px; margin: 0 auto; text-align:center"></div></center>
+                    </div>
                     <hr>
                     '.$tabla_normal_form4.'
+                    <div id="tabla_impresion_form4" style="display: none">
+                      '.$tabla_impresion_form4.'
+                    </div> 
+                    <div align="right">
+                      <button  onClick="imprimir_form4()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
                   </div>
                 </article>';
 
@@ -398,13 +415,59 @@ class Cseguimiento extends CI_Controller {
         );
       }
 
-
-        
       echo json_encode($result);
     }else{
         show_404();
     }
   }
+
+
+
+  /*---- CABECERA REPORTE OPERACIONES POR REGIONALES (GRAFICO)----*/
+  function cabecera_reporte_grafico($titulo){
+    $tabla='';
+
+    $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+        <tr style="border: solid 0px;">              
+            <td style="width:70%;height: 2%">
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="font-size: 15px;font-family: Arial;">
+                        <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+      </table>
+      <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px black; text-align: center;">
+              <td style="width:10%; text-align:center;">
+              </td>
+              <td style="width:80%; height: 5%">
+                <table align="center" border="0" style="width:100%;">
+                  <tr style="font-size: 23px;font-family: Arial;">
+                    <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
+                  </tr>
+                </table>
+              </td>
+              <td style="width:10%; text-align:center;">
+              </td>
+          </tr>
+      </table>';
+
+    return $tabla;
+  }
+
+
+
+
 
 
   /*---- Matriz consolidado mensual ----*/
@@ -472,8 +535,15 @@ class Cseguimiento extends CI_Controller {
 
 
     $tabla='';
-    $tabla.='  
-      <table class="table table-bordered" style="width:100%;">
+    $class='class="table table-bordered" style="width:100%;"';
+    if($tipo_reporte==1){
+      $class='class="change_order_items" border=1 style="width:100%;"';
+      
+    }
+
+    $tabla.='
+      <center>
+      <table '.$class.'>
         <thead>
         <tr>
           <th style="width:1%;" bgcolor="#474544">'.$aper_id.'</th>
@@ -1475,4 +1545,21 @@ class Cseguimiento extends CI_Controller {
       }
     }
     
+
+        /*------ NOMBRE MES -------*/
+    function mes_nombre(){
+        $mes[1] = 'ENE.';
+        $mes[2] = 'FEB.';
+        $mes[3] = 'MAR.';
+        $mes[4] = 'ABR.';
+        $mes[5] = 'MAY.';
+        $mes[6] = 'JUN.';
+        $mes[7] = 'JUL.';
+        $mes[8] = 'AGOS.';
+        $mes[9] = 'SEPT.';
+        $mes[10] = 'OCT.';
+        $mes[11] = 'NOV.';
+        $mes[12] = 'DIC.';
+        return $mes;
+    }
 }

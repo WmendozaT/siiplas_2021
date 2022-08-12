@@ -77,8 +77,8 @@ function abreVentana(PDF){
 
           $('#load').fadeIn(1000).html(response.tabla);
           $('#titulo_dist').html('<h2 class="alert alert-info"><center>'+establecimiento+'</center></h2>');
-          graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION CERT. POA',establecimiento,'% EJECUCION CERT. POA') /// formulario 5
-          graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE METAS - ACTIVIDADES',establecimiento,'% EJECUCION METAS - ACTIVIDADES') /// formulario 4
+          graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION FORMULARIO N° (REQUERIMIENTOS)',establecimiento,'% EJECUCION CERT. POA') /// formulario 5
+          graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE METAS FORMULARIO N° 4 (ACTIVIDADES)',establecimiento,'% EJECUCION METAS - ACTIVIDADES') /// formulario 4
       }
       else{
           alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
@@ -98,7 +98,7 @@ function abreVentana(PDF){
 
 
 
-    /// Grafico regresion por trimestre
+    /// Grafico EJECUCION DE FORMULARIO 4 Y 5
     function graf_regresion_trimestral_temporalidad_prog_ejec(grafico,matriz,titulo,subtitulo,tit_laterales) {
       let programado=[];
       for (var i = 0; i <=12; i++) {
@@ -120,14 +120,14 @@ function abreVentana(PDF){
         text: titulo  // Titulo (Opcional)
       },
       subtitle: {
-        text: subtitulo   // Subtitulo (Opcional)
+        text: '<b>'+subtitulo+'</b>'   // Subtitulo (Opcional)
       },
       // Pongo los datos en el eje de las 'X'
       xAxis: {
         categories: ['','ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
         // Pongo el título para el eje de las 'X'
         title: {
-          text: tit_laterales
+          text: ''
         }
       },
       yAxis: {
@@ -168,7 +168,50 @@ function abreVentana(PDF){
       });
     }
 
+  /// IMPRESION DE GRAFICOS CONSOLIDADO DE FORM 4 Y 5
+  function imprimir_form5() {
+    var cabecera = document.querySelector("#cabecera_ejec");
+    var grafico = document.querySelector("#grafico_form5");
+    document.getElementById("cabecera_ejec").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera_ejec");
+    document.getElementById("tabla_impresion_form5").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_form5");
+    imprimirGrafico(grafico,cabecera,tabla);
+    document.getElementById("cabecera_ejec").style.display = 'none';
+    document.getElementById("tabla_impresion_form5").style.display = 'none';
+  }
 
+  function imprimir_form4() {
+    var cabecera = document.querySelector("#cabecera_ejec");
+    var grafico = document.querySelector("#grafico_form4");
+    document.getElementById("cabecera_ejec").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera_ejec");
+    document.getElementById("tabla_impresion_form4").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_form4");
+    imprimirGrafico(grafico,cabecera,tabla);
+    document.getElementById("cabecera_ejec").style.display = 'none';
+    document.getElementById("tabla_impresion_form4").style.display = 'none';
+  }
+
+  function imprimirGrafico(grafico,cabecera,tabla) {
+    var ventana = window.open('Ejecucion Presupuestaria ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EJECUCIÓN POA FORM. N° 4 y FORM. N° 5</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
 
 ///// =================================================================
 

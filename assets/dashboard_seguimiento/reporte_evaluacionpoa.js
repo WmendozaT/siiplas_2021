@@ -363,8 +363,8 @@ function abreVentana_eficiencia(PDF){
             request.done(function (response, textStatus, jqXHR) {
             if (response.respuesta == 'correcto') {
               $('#lista_certpoa').fadeIn(1000).html(response.tabla);
-              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION CERT. POA',response.titulo_rep,'% EJECUCION CERT. POA') /// formulario 5
-              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE METAS - ACTIVIDADES',response.titulo_rep,'% EJECUCION CERT. POA') /// formulario 5
+              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION FORMULARIO N° 5 (REQUERIMIENTOS)',response.titulo_rep,'% EJECUCION CERT. POA') /// formulario 5
+              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE METAS FORMULARIO N° 4 (ACTIVIDADES)',response.titulo_rep,'% EJECUCION CERT. POA') /// formulario 5
             }
             else{
                 alertify.error("ERROR AL RECUPERAR DATOS DE EJECUCION CERT. POA ");
@@ -405,7 +405,7 @@ function abreVentana_eficiencia(PDF){
         text: titulo  // Titulo (Opcional)
       },
       subtitle: {
-        text: subtitulo   // Subtitulo (Opcional)
+        text: '<b>'+subtitulo+'</b>'   // Subtitulo (Opcional)
       },
       // Pongo los datos en el eje de las 'X'
       xAxis: {
@@ -418,7 +418,7 @@ function abreVentana_eficiencia(PDF){
       yAxis: {
         // Pongo el título para el eje de las 'Y'
         title: {
-          text: tit_laterales
+          text: ''
         }
       },
       // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
@@ -452,6 +452,67 @@ function abreVentana_eficiencia(PDF){
         
       });
     }
+
+
+  /// IMPRESION DE GRAFICOS CONSOLIDADO DE FORM 4 Y 5
+  function imprimir_form5() {
+    var cabecera = document.querySelector("#cabecera_ejec");
+    var grafico = document.querySelector("#grafico_form5");
+    document.getElementById("cabecera_ejec").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera_ejec");
+    document.getElementById("tabla_impresion_form5").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_form5");
+    imprimirGrafico(grafico,cabecera,tabla);
+    document.getElementById("cabecera_ejec").style.display = 'none';
+    document.getElementById("tabla_impresion_form5").style.display = 'none';
+  }
+
+  function imprimir_form4() {
+    var cabecera = document.querySelector("#cabecera_ejec");
+    var grafico = document.querySelector("#grafico_form4");
+    document.getElementById("cabecera_ejec").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera_ejec");
+    document.getElementById("tabla_impresion_form4").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_form4");
+    imprimirGrafico(grafico,cabecera,tabla);
+    document.getElementById("cabecera_ejec").style.display = 'none';
+    document.getElementById("tabla_impresion_form4").style.display = 'none';
+  }
+
+  function imprimirGrafico(grafico,cabecera,tabla) {
+    var ventana = window.open('Ejecucion Presupuestaria ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EJECUCIÓN POA FORM. N° 4 y FORM. N° 5</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ////// AREA DE IMPRESION 
       //// Evaluacion POA
