@@ -777,22 +777,22 @@ chart_gestion.render();
             },
             series: [{
                 type: 'pie',
-                name: 'Actividades',
+                name: 'N° Actividades',
                 data: [
                     {
-                      name: 'NO CUMPLIDO : <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?> %',
+                      name: 'N° ACT. NO CUMPLIDAS : <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?> %',
                       y: <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?>,
                       color: '#f98178',
                     },
 
                     {
-                      name: 'EN PROCESO : <?php echo $tabla[8][$this->session->userData('trimestre')];?> %',
+                      name: 'N° ACT. EN PROCESO : <?php echo $tabla[8][$this->session->userData('trimestre')];?> %',
                       y: <?php echo $tabla[8][$this->session->userData('trimestre')];?>,
                       color: '#f5eea3',
                     },
 
                     {
-                      name: 'CUMPLIDO : <?php echo $tabla[5][$this->session->userData('trimestre')];?> %',
+                      name: 'N° ACT.  CUMPLIDAS : <?php echo $tabla[5][$this->session->userData('trimestre')];?> %',
                       y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>,
                       color: '#2CC8DC',
                       sliced: true,

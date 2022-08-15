@@ -396,23 +396,30 @@ class Creportes_evaluacionpoa extends CI_Controller {
         $matriz[0][$i]=$vector_prog[$i]; /// Programado
         $matriz[1][$i]=$vector_ejec[$i]; /// Ejecutado
         $matriz[2][$i]=0; /// % Ejecucion mes
-        if($matriz[0][$i]!=0){
+        /*if($matriz[0][$i]!=0){
           $matriz[2][$i]=round((($matriz[1][$i]/$matriz[0][$i])*100),2); /// % Ejecucion Mes
-        }
+        }*/
         
         if($i!=0){
           $suma_acumulado_prog=$suma_acumulado_prog+$matriz[0][$i];
           $suma_acumulado_ejec=$suma_acumulado_ejec+$matriz[1][$i];
 
-          $matriz[3][$i]=$suma_acumulado_prog; /// Acumulado Mensual Programado
-          $matriz[4][$i]=$suma_acumulado_ejec; /// Acumulado Mensual Ejecutado
+          $matriz[2][$i]=$suma_acumulado_prog; /// Acumulado Mensual Programado
+          $matriz[3][$i]=$suma_acumulado_ejec; /// Acumulado Mensual Ejecutado
+
+          $matriz[4][$i]=0;
+
+          if($matriz[2][$i]!=0){
+            $matriz[4][$i]=round((($matriz[3][$i]/$matriz[2][$i])*100),2); /// % Cumplimiento Mes
+          }
+
 
           $matriz[5][$i]=0;
           $matriz[6][$i]=0;
 
           if($matriz[0][0]!=0){
-            $matriz[5][$i]=round((($matriz[3][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Programado
-            $matriz[6][$i]=round((($matriz[4][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Ejecutado
+            $matriz[5][$i]=round((($matriz[2][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Programado
+            $matriz[6][$i]=round((($matriz[3][$i]/$matriz[0][0])*100),2); /// % Acumulado Mensual Ejecutado
           }
           
         }
@@ -420,7 +427,6 @@ class Creportes_evaluacionpoa extends CI_Controller {
 
       return $matriz;
   }
-
 
   /*---- Genera Tabla (Vista e impresion), distribucion de meses prog. y cert. ----*/
   public function genera_tabla_temporalidad_prog_ejec($matriz,$tipo_reporte,$aper_id,$formulario){
@@ -430,22 +436,23 @@ class Creportes_evaluacionpoa extends CI_Controller {
     $tit1='PROGRAMADO';
     $tit2='EJECUTADO';
     $tit3='PROG. ACUMULADO';
-    $tit4='EJEC. ACUMMULADO';
-    $tit5='% PROG. ACUMULADO';
-    $tit6='% EJEC. ACUMMULADO';
+    $tit4='EJEC. ACUMULADO';
+    $tit5='% CUMP. MENSUAL';
+    $tit6='% PROG. ACUMULADO';
+    $tit7='% EJEC. ACUMULADO';
     if($formulario==5){
       $tit1='PPTO. PROGRAMADO';
       $tit2='PPTO. CERTIFICADO';
       $tit3='PPTO. PROG. ACUMULADO';
       $tit4='PPTO. CERT. ACUMULADO';
-      $tit5='% PROG. ACUMULADO';
-      $tit6='% EJEC. ACUMMULADO';
+      $tit5='% CUMP. MENSUAL';
+      $tit6='% PROG. ACUMULADO';
+      $tit7='% EJEC. ACUMULADO';
     }
 
 
     $tabla='';
-
-    $class='class="table table-bordered" style="width:80%;"';
+    $class='class="table table-bordered" style="width:100%;"';
     if($tipo_reporte==1){
       $class='class="change_order_items" border=1 style="width:100%;"';
       
@@ -456,24 +463,24 @@ class Creportes_evaluacionpoa extends CI_Controller {
       <table '.$class.'>
         <thead>
         <tr>
-          <th style="width:1%;"></th>
-          <th style="width:5%;">ENE..</th>
-          <th style="width:5%;">FEB.</th>
-          <th style="width:5%;">MAR.</th>
-          <th style="width:5%;">ABR.</th>
-          <th style="width:5%;">MAY.</th>
-          <th style="width:5%;">JUN.</th>
-          <th style="width:5%;">JUL.</th>
-          <th style="width:5%;">AGO.</th>
-          <th style="width:5%;">SEPT.</th>
-          <th style="width:5%;">OCT.</th>
-          <th style="width:5%;">NOV.</th>
-          <th style="width:5%;">DIC.</th>
+          <th style="width:1%;">'.$aper_id.'</th>
+          <th style="width:6%;">ENE..</th>
+          <th style="width:6%;">FEB.</th>
+          <th style="width:6%;">MAR.</th>
+          <th style="width:6%;">ABR.</th>
+          <th style="width:6%;">MAY.</th>
+          <th style="width:6%;">JUN.</th>
+          <th style="width:6%;">JUL.</th>
+          <th style="width:6%;">AGO.</th>
+          <th style="width:6%;">SEPT.</th>
+          <th style="width:6%;">OCT.</th>
+          <th style="width:6%;">NOV.</th>
+          <th style="width:6%;">DIC.</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>'.$tit1.'</td>';
+          <tr>
+          <td title="PROGRAMADO MENSUAL">'.$tit1.'</td>';
           for ($i=1; $i <=12 ; $i++) {
             $color='';
             if($i==$this->mes_sistema){
@@ -484,7 +491,7 @@ class Creportes_evaluacionpoa extends CI_Controller {
           $tabla.='
           </tr>
           <tr>
-          <td>'.$tit2.'</td>';
+          <td title="EJECUTADO MENSUAL">'.$tit2.'</td>';
          for ($i=1; $i <=12 ; $i++) { 
             $color='';
             if($i==$this->mes_sistema){
@@ -494,8 +501,20 @@ class Creportes_evaluacionpoa extends CI_Controller {
           }
           $tabla.='
           </tr>
+          
           <tr>
-          <td>'.$tit3.'</td>';
+          <td title="PROGRAMADO ACUMULADO MENSUAL">'.$tit3.'</td>';
+         for ($i=1; $i <=12 ; $i++) {
+            $color='';
+            if($i==$this->mes_sistema){
+              $color='#a7e9e1';
+            }
+            $tabla.='<td align=right bgcolor='.$color.'>'.number_format($matriz[2][$i], 2, ',', '.').'</td>';
+          }
+          $tabla.='
+          </tr>
+          <tr>
+          <td title="EJECUTADO ACUMULADO MENSUAL">'.$tit4.'</td>';
          for ($i=1; $i <=12 ; $i++) {
             $color='';
             if($i==$this->mes_sistema){
@@ -505,19 +524,19 @@ class Creportes_evaluacionpoa extends CI_Controller {
           }
           $tabla.='
           </tr>
-          <tr>
-          <td>'.$tit4.'</td>';
-         for ($i=1; $i <=12 ; $i++) {
+          <tr bgcolor="#fcfde9">
+          <td title="(%) CUMPLIMIENTO MENSUAL"><b>'.$tit5.'</b></td>';
+          for ($i=1; $i <=12 ; $i++) { 
             $color='';
             if($i==$this->mes_sistema){
               $color='#a7e9e1';
             }
-            $tabla.='<td align=right bgcolor='.$color.'>'.number_format($matriz[4][$i], 2, ',', '.').'</td>';
+            $tabla.='<td style="font-size: 12px;" align=right bgcolor='.$color.'><b>'.$matriz[4][$i].'%</b></td>';
           }
           $tabla.='
           </tr>
           <tr bgcolor=#e7f7f6>
-          <td><b>'.$tit5.'</b></td>';
+          <td title="(%) PROGRAMADO ACUMULADO"><b>'.$tit6.'</b></td>';
          for ($i=1; $i <=12 ; $i++) {
             $color='';
             if($i==$this->mes_sistema){
@@ -528,7 +547,7 @@ class Creportes_evaluacionpoa extends CI_Controller {
           $tabla.='
           </tr>
           <tr bgcolor=#e7f7f6>
-          <td><b>'.$tit6.'</b></td>';
+          <td title="(%) EJECUTADO ACUMULADO"><b>'.$tit7.'</b></td>';
          for ($i=1; $i <=12 ; $i++) {
             $color='';
             if($i==$this->mes_sistema){
@@ -539,8 +558,7 @@ class Creportes_evaluacionpoa extends CI_Controller {
           $tabla.='
             </tr>
           <tbody>
-        </table>
-        </center>';
+        </table>';
 
       return $tabla;
   }

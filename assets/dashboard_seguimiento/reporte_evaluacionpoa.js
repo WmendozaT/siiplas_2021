@@ -363,8 +363,8 @@ function abreVentana_eficiencia(PDF){
             request.done(function (response, textStatus, jqXHR) {
             if (response.respuesta == 'correcto') {
               $('#lista_certpoa').fadeIn(1000).html(response.tabla);
-              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION FORMULARIO N° 5 (REQUERIMIENTOS)',response.titulo_rep,'% EJECUCION CERT. POA') /// formulario 5
-              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE METAS FORMULARIO N° 4 (ACTIVIDADES)',response.titulo_rep,'% EJECUCION CERT. POA') /// formulario 5
+              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION CERT. POA - FORMULARIO N° 5 (REQUERIMIENTOS)',response.titulo_rep,'% EJECUCION CERT. POA') /// formulario 5
+              graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE <b>METAS</b> FORMULARIO N° 4 (ACTIVIDADES)',response.titulo_rep,'% CUMPLIMIENTO DE METAS') /// formulario 4
             }
             else{
                 alertify.error("ERROR AL RECUPERAR DATOS DE EJECUCION CERT. POA ");
@@ -693,19 +693,19 @@ function abreVentana_eficiencia(PDF){
           name: 'Actividades',
           data: [
             {
-              name: 'ACT. NO CUMPLIDO : '+(tab6-tab8)+'%',
+              name: 'N°. ACT. NO CUMPLIDO : '+(tab6-tab8)+'%',
               y: +(tab6-tab8),
               color: '#f98178',
             },
 
             {
-              name: 'ACT. EN PROCESO : '+tab8+'%',
+              name: 'N°. ACT. EN PROCESO : '+tab8+'%',
               y: +tab8,
               color: '#f5eea3',
             },
 
             {
-              name: 'ACT. CUMPLIDO : '+tab5+'%',
+              name: 'N°. ACT. CUMPLIDO : '+tab5+'%',
               y: +tab5,
               color: '#2CC8DC',
               sliced: true,

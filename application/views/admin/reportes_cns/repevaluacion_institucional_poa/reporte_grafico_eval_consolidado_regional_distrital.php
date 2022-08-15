@@ -363,7 +363,7 @@ var chart = new CanvasJS.Chart("regresion_canvasjs", {
     },
     data: [{        
         type: "area",  
-        name: "ACT. PROGRAMADAS",        
+        name: "N° ACT. PROGRAMADAS",        
         showInLegend: true,
         dataPoints: [
         <?php 
@@ -399,7 +399,7 @@ var chart = new CanvasJS.Chart("regresion_canvasjs", {
     {        
         type: "area",
         color: "green",
-        name: "ACT. CUMPLIDAS",        
+        name: "N° ACT. CUMPLIDAS",        
         showInLegend: true,
         dataPoints: [
         <?php 
@@ -581,11 +581,11 @@ chart_gestion.render();
               if($this->session->userdata('trimestre')==1){ ?>
                   series: [
                       {
-                        name: 'ACT. PROGRAMADAS',
+                        name: 'N° ACT. PROGRAMADAS',
                         data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>]
                       },
                       {
-                        name: 'ACT. CUMPLIDAS',
+                        name: 'N° ACT. CUMPLIDAS',
                         data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>]
                       }
                   ]
@@ -594,11 +594,11 @@ chart_gestion.render();
               elseif ($this->session->userdata('trimestre')==2) { ?>
                       series: [
                           {
-                            name: 'ACT. PROGRAMADAS',
+                            name: 'N° ACT. PROGRAMADAS',
                             data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>]
                           },
                           {
-                            name: 'ACT. CUMPLIDAS',
+                            name: 'N° ACT. CUMPLIDAS',
                             data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>]
                           }
                       ]
@@ -607,11 +607,11 @@ chart_gestion.render();
               elseif ($this->session->userdata('trimestre')==3) { ?>
                       series: [
                           {
-                            name: 'ACT. PROGRAMADAS',
+                            name: 'N° ACT. PROGRAMADAS',
                             data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>]
                           },
                           {
-                            name: 'ACT. CUMPLIDAS',
+                            name: 'N° ACT. CUMPLIDAS',
                             data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>]
                           }
                       ]
@@ -620,11 +620,11 @@ chart_gestion.render();
               elseif ($this->session->userdata('trimestre')==4) { ?>
                       series: [
                           {
-                            name: 'ACT. PROGRAMADAS',
+                            name: 'N° ACT. PROGRAMADAS',
                             data: [ <?php echo $tabla[2][0];?>, <?php echo $tabla[2][1];?>, <?php echo $tabla[2][2];?>, <?php echo $tabla[2][3];?>, <?php echo $tabla[2][4];?>]
                           },
                           {
-                            name: 'ACT. CUMPLIDAS',
+                            name: 'N° ACT. CUMPLIDAS',
                             data: [ <?php echo $tabla[3][0];?>, <?php echo $tabla[3][1];?>, <?php echo $tabla[3][2];?>, <?php echo $tabla[3][3];?>, <?php echo $tabla[3][4];?>]
                           }
                       ]
