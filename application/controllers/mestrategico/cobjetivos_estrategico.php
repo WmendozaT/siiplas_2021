@@ -63,6 +63,7 @@ class Cobjetivos_estrategico extends CI_Controller {
       $data['indi']= $this->model_proyecto->indicador(); /// indicador
       $data['obj_estrategicos']=$this->mis_objetivos_estrategicos();
 
+     // echo $data['configuracion'][0]['conf_gestion_desde'].'---'.$data['configuracion'][0]['conf_gestion_hasta'];
       $this->load->view('admin/mestrategico/obj_estrategico/objetivos_estrategicos', $data);
     }
 
@@ -101,7 +102,7 @@ class Cobjetivos_estrategico extends CI_Controller {
                         foreach($objetivos  as $row){
                           $nro++;
                           $tabla .='<tr>';
-                            $tabla .='<td>'.$nro.'</td>';
+                            $tabla .='<td title='.$row['obj_id'].'>'.$nro.'</td>';
                             $tabla .='<td align="center"><a href="'.site_url("").'/me/acciones_estrategicas/'.$row['obj_id'].'" title="ACCIONES ESTRATEGICAS"><img src="' . base_url() . 'assets/img/folder.png"" WIDTH="35" HEIGHT="35"/></a></td>';
                             $tabla .='<td>'.$row['obj_codigo'].'.- '.$row['obj_descripcion'].'</td>';
                             $tabla .='<td>'.$row['obj_gestion_inicio'].'</td>';
@@ -132,7 +133,7 @@ class Cobjetivos_estrategico extends CI_Controller {
                                           $nro_rf++;
                                           $tabla.='<tr>';
                                             $tabla.='
-                                            <td>'.$nro_rf.'</td>
+                                            <td title='.$rowr['rf_id'].'>'.$nro_rf.'</td>
                                             <td align=center><a href="#" data-toggle="modal" data-target="#modal_mod_rf" class="btn btn-xs mod_rf"  title="MODIFICAR RESULTADO FINAL" name="'.$row['obj_id'].'" id="'.$rowr['rf_id'].'"><img src="'.base_url().'assets/img/mod_icon.png" WIDTH="35" HEIGHT="35"/></a></td>
                                             <td>'.$rowr['rf_cod'].'</td>
                                             <td>'.$rowr['rf_resultado'].'</td>

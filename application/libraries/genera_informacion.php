@@ -63,8 +63,9 @@ class Genera_informacion extends CI_Controller{
      
         <br>
         <div align=right>
-          <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR UNIDADES / PROYECTOS DE INVERSI&Oacute;N</a>&nbsp;&nbsp;&nbsp;&nbsp;
-          <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/book_previous.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;VOLVER ATRAS</a>&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR UNIDADES / PROYECTOS DE INVERSI&Oacute;N</a>&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;&nbsp;
         </div>
         <br>
       <div class="alert alert-warning">
@@ -77,8 +78,8 @@ class Genera_informacion extends CI_Controller{
         <thead>
           <tr style="background-color: #66b2e8">
             <th style="width:1%;"></th>
-            <th style="width:3%;">REP. POA <br>'.$this->gestion.'</th>
-            <th style="width:5%;">NOTIFICACIÓN POA '.$this->verif_mes[2].' / '.$this->gestion.'</th>
+            <th style="width:3%;">NOTIFICACIÓN POA '.$this->verif_mes[2].' / '.$this->gestion.'</th>
+            <th style="width:5%;">REPORTE POA <br>'.$this->gestion.'</th>
             <th style="width:5%;">PROGRAMACIÓN POA '.$this->gestion.'</th>
             <th style="width:5%;">MODIFICACIÓN POA '.$this->gestion.'</th>
             <th style="width:5%;">CERTIFICACIÓN POA '.$this->gestion.'</th>
@@ -419,6 +420,7 @@ class Genera_informacion extends CI_Controller{
         $tabla.='
         <br>
         <div align=right>
+          <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/book_previous.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;VOLVER ATRAS</a>&nbsp;&nbsp;&nbsp;
           <a href="'.site_url("").'/rep/exportar_operaciones_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO FORMULARIO n° 4"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR CONSOLIDADO FORMULARIO N° 4</a>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <br>
@@ -790,6 +792,7 @@ class Genera_informacion extends CI_Controller{
         $tabla.='
         <br>
         <div align=right>
+          <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/book_previous.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;VOLVER ATRAS</a>&nbsp;&nbsp;&nbsp;
           <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR CONSOLIDADO FORMULARION N° 5</a>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <br>
@@ -1012,6 +1015,11 @@ class Genera_informacion extends CI_Controller{
       $tabla='';
           $certificados = $this->model_certificacion->lista_certificaciones_regional($dep_id,$tp_id,$this->gestion);
           $tabla.='
+            <br>
+            <div align=right>
+              <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/book_previous.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;VOLVER ATRAS</a>&nbsp;&nbsp;&nbsp;
+            </div>
+            <br>
             <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
             <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
             <thead>

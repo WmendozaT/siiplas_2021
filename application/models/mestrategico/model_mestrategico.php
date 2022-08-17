@@ -315,18 +315,34 @@ class Model_mestrategico extends CI_Model{
    /*-- RESULTADOS FINALES --*/
     /* get resultado final*/        
     public function get_resultado_final($rf_id){
-        $sql = 'select *
+        if($this->gestion<=2022){
+            $sql = 'select *
                 from vtemp_rfinal
                 where rf_id='.$rf_id.' and rf_estado!=\'3\'';
+        }
+        else{
+            $sql = 'select *
+                from vtemp_rfinal2025
+                where rf_id='.$rf_id.' and rf_estado!=\'3\'';
+        }
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
     /* Lista Resultados finales*/        
     public function list_resultados_final($obj_id){
-        $sql = 'select *
+        if($this->gestion<=2022){
+            $sql = 'select *
                 from vtemp_rfinal
                 where obj_id='.$obj_id.'';
+        }
+        else{
+            $sql = 'select *
+                from vtemp_rfinal2025
+                where obj_id='.$obj_id.'';
+        }
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }
