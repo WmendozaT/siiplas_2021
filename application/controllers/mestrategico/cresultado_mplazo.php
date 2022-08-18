@@ -243,7 +243,7 @@ class Cresultado_mplazo extends CI_Controller {
                       <h2 class="font-md"><strong>RESULTADOS INTERMEDIOS</strong></h2>  
                     </header>
                 <div>
-                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - RESULTADO INTERMEDIO">NUEVO RESULTADO INTERMEDIO</a><br><br>
+                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - RESULTADO INTERMEDIO">REGISTRO - RESULTADO INTERMEDIO</a><br><br>
                   <div class="widget-body no-padding">
                     <table id="dt_basic" class="table table table-bordered" width="100%">
                       <thead>
@@ -278,12 +278,24 @@ class Cresultado_mplazo extends CI_Controller {
                                             <th style="width:2%;">C&Oacute;DIGO</th>
                                             <th style="width:15%;">INDICADOR DE PROCESO</th>
                                             <th style="width:3%;">LINEA BASE</th>
-                                            <th style="width:3%;">META</th>
-                                            <th style="width:3%;">2016</th>
-                                            <th style="width:3%;">2017</th>
-                                            <th style="width:3%;">2018</th>
-                                            <th style="width:3%;">2019</th>
-                                            <th style="width:3%;">2020</th>
+                                            <th style="width:3%;">META</th>';
+                                            if($this->gestion<=2022){
+                                              $tabla.='
+                                              <th style="width:3%;">2016</th>
+                                              <th style="width:3%;">2017</th>
+                                              <th style="width:3%;">2018</th>
+                                              <th style="width:3%;">2019</th>
+                                              <th style="width:3%;">2020</th>';
+                                            }
+                                            else{
+                                              $tabla.='
+                                              <th style="width:3%;">2021</th>
+                                              <th style="width:3%;">2022</th>
+                                              <th style="width:3%;">2023</th>
+                                              <th style="width:3%;">2024</th>
+                                              <th style="width:3%;">2025</th>';
+                                            }
+                                            $tabla.='
                                           </tr>
                                         </thead>
                                         <tbody>';
@@ -298,11 +310,11 @@ class Cresultado_mplazo extends CI_Controller {
                                             <td>'.$rowi['ptm_indicador'].'</td>
                                             <td>'.$rowi['ptm_linea_base'].'</td>
                                             <td>'.$rowi['ptm_meta'].'</td>
-                                            <td>'.$rowi['mes1'].'</td>
-                                            <td>'.$rowi['mes2'].'</td>
-                                            <td>'.$rowi['mes3'].'</td>
-                                            <td bgcolor=#e2f7e2>'.$rowi['mes4'].'</td>
-                                            <td>'.$rowi['mes5'].'</td>';
+                                            <td>'.round($rowi['mes1'],2).'</td>
+                                            <td>'.round($rowi['mes2'],2).'</td>
+                                            <td>'.round($rowi['mes3'],2).'</td>
+                                            <td>'.round($rowi['mes4'],2).'</td>
+                                            <td>'.round($rowi['mes5'],2).'</td>';
                                           $tabla.='</tr>';
                                         }
                                         $tabla.='
@@ -386,7 +398,7 @@ class Cresultado_mplazo extends CI_Controller {
           $post = $this->input->post();
           $acc_id = $this->security->xss_clean($post['acc_id']);
           $rm_id = $this->security->xss_clean($post['rm_id']);
-          $codigo = $this->security->xss_clean($post['cod']);
+          //$codigo = $this->security->xss_clean($post['cod']);
           $indicador = $this->security->xss_clean($post['indicador']);
           $lbase = $this->security->xss_clean($post['lbase']);
           $meta = $this->security->xss_clean($post['meta']);
@@ -395,7 +407,7 @@ class Cresultado_mplazo extends CI_Controller {
 
           $data_to_store = array( 
             'rm_id' => $rm_id,
-            'ptm_codigo' => $codigo,
+            'ptm_codigo' => 0,
             'indi_id' => $tp_indi,
             'ptm_indicador' => strtoupper($indicador),
             'ptm_linea_base' => $lbase,
@@ -456,7 +468,7 @@ class Cresultado_mplazo extends CI_Controller {
           $post = $this->input->post();
           $ptm_id = $this->security->xss_clean($post['ptm_id']);
         //  $rf_id = $this->security->xss_clean($post['rf_id']);
-          $codigo = $this->security->xss_clean($post['mcod']);
+         // $codigo = $this->security->xss_clean($post['mcod']);
           $indicador = $this->security->xss_clean($post['mindicador']);
           $lbase = $this->security->xss_clean($post['lbase']);
           $meta = $this->security->xss_clean($post['mmeta']);
@@ -464,7 +476,7 @@ class Cresultado_mplazo extends CI_Controller {
           $conf=$this->model_proyecto->configuracion_session();
 
           $update_rf = array( 
-            'ptm_codigo' => $codigo,
+            //'ptm_codigo' => $codigo,
             'ptm_indicador' => strtoupper($indicador),
             'ptm_meta' => $meta,
             'ptm_linea_base' => $lbase,

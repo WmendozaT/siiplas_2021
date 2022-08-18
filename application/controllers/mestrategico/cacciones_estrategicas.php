@@ -69,9 +69,8 @@ class Cacciones_estrategicas extends CI_Controller {
                         <tr>
                           <th>NRO</th>
                           <th>RESULTADOS DE MEDIANO PLAZO</th>
-                          <th>OBJETIVOS DE GESTI&Oacute;N</th>
-                          <th>C&Oacute;DIGO</th>
-                          <th>DESCRIPCION</th>
+                          <th>C&Oacute;DIGO ACP.</th>
+                          <th>ACCION ESTRATEGICA</th>
                           <th>VINCULACI&Oacute;N AL PDES </th>
                           <th>MODIFICAR</th>
                           <th>ELIMINAR</th>
@@ -85,7 +84,6 @@ class Cacciones_estrategicas extends CI_Controller {
                           $tabla .='<tr>';
                             $tabla .='<td title='.$row['acc_id'].'>'.$nro.'</td>';
                             $tabla .='<td align="center"><a href="'.site_url("").'/me/resultados_mplazo/'.$row['acc_id'].'" class="btn btn-default" title="RESULTADOS DE MEDIANO PLAZO"><img src="'.base_url().'assets/img/folder.png" WIDTH="35" HEIGHT="35"/></a></td>';
-                            $tabla .='<td align="center" bgcolor="#cef3ee"><a href="'.site_url("").'/me/objetivos_gestion/'.$row['acc_id'].'" class="btn btn-default" title="OBJETIVOS DE GESTI&Oacute;N"><img src="'.base_url().'assets/img/folder.png" WIDTH="35" HEIGHT="35"/></a></td>';
                             $tabla .='<td>'.$row['acc_codigo'].'</td>';
                             $tabla .='<td>'.$row['acc_descripcion'].'</td>';
                             $tabla .='<td>';

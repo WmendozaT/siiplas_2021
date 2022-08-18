@@ -181,7 +181,7 @@
 	</div>
 	<!-- END MAIN PANEL -->
 
-	<!-- =========================== ADICIONA INDICADOR ================================ -->
+	<!-- =========================== NUEVO INDICADOR ================================ -->
         <div class="modal fade" id="modal_add_rf" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -189,87 +189,87 @@
                 <form action="<?php echo site_url().'/mestrategico/cresultado_mplazo/valida_add_indicador'?>" id="form_res" name="form_res" class="smart-form" method="post">
                		<input type="hidden" name="acc_id" id="acc_id" value="<?php echo $accion_estrategica[0]['acc_id'];?>">
                		<input type="hidden" name="rm_id" id="rm_id">
-                    <h2 class="alert alert-info"><center>AGREGAR NUEVO INDICADOR </center></h2>
+                    <h2 class="alert alert-info"><center>AGREGAR NUEVO INDICADOR</center></h2>
                     <header><div id="rmp"></div></header>
-						<fieldset>					
-							<div class="row">
-								<section class="col col-4">
-									<label class="label">C&Oacute;DIGO</label>
-									<label class="input">
-										<i class="icon-append fa fa-tag"></i>
-										<input type="text" name="cod" id="cod" onkeypress="return justNumbers(event);" onpaste="return false">
-									</label>
-								</section>
-							</div>
-							
-							<section>
-								<label class="label">INDICADOR DE PROCESO</label>
-								<label class="textarea">
-									<i class="icon-append fa fa-tag"></i>
-									<textarea rows="3" name="indicador" id="indicador"></textarea>
-								</label>
-							</section>
+										<fieldset>					
+											<!-- <div class="row">
+												<section class="col col-4">
+													<label class="label">C&Oacute;DIGO</label>
+													<label class="input">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="cod" id="cod" onkeypress="return justNumbers(event);" onpaste="return false">
+													</label>
+												</section>
+											</div> -->
+											
+											<section>
+												<label class="label">INDICADOR DE PROCESO</label>
+												<label class="textarea">
+													<i class="icon-append fa fa-tag"></i>
+													<textarea rows="3" name="indicador" id="indicador"></textarea>
+												</label>
+											</section>
 
-							<div class="row">
-								<section class="col col-4">
-									<label class="label">LINEA BASE</label>
-									<label class="input">
-										<i class="icon-append fa fa-tag"></i>
-										<input type="text" name="lbase" id="lbase" value="0">
-									</label>
-								</section>
+											<div class="row">
+												<section class="col col-4">
+													<label class="label">LINEA BASE</label>
+													<label class="input">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="lbase" id="lbase" value="0">
+													</label>
+												</section>
 
-								<section class="col col-4">
-									<label class="label">META</label>
-									<label class="input">
-										<i class="icon-append fa fa-tag"></i>
-										<input type="text" name="meta" id="meta" value="0">
-									</label>
-								</section>
+												<section class="col col-4">
+													<label class="label">META</label>
+													<label class="input">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="meta" id="meta" value="0">
+													</label>
+												</section>
 
-								<section class="col col-4">
-									<label class="label">TIPO INDICADOR</label>
-									<label class="input">
-										<select class="form-control" id="tipo_i" name="tipo_i">
-                                            <option value="">Seleccione Indicador</option>
-                                            <?php 
-						                    foreach($indi as $row){ ?>
-								                <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
-								                <?php 	
-						                    }
-							                ?>
-                                      	</select>
-									</label>
-								</section>
-							</div>
-						</fieldset>
+												<section class="col col-4">
+													<label class="label">TIPO INDICADOR</label>
+													<label class="input">
+														<select class="form-control" id="tipo_i" name="tipo_i">
+			                        <option value="">Seleccione Indicador</option>
+			                        <?php 
+							                    foreach($indi as $row){ ?>
+									                <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
+									                <?php 	
+							                    }
+								                ?>
+				                    </select>
+													</label>
+												</section>
+											</div>
+										</fieldset>
 
 	                    <fieldset>
 	                    	<section>
-								<label class="label">TEMPORALIDAD</label>
-								<label class="textarea">
-									<table class="table table-bordered">
-										<thead>
-										<tr align="center">
-										<?php
-										for ($i=$configuracion[0]['conf_gestion_desde']; $i <=$configuracion[0]['conf_gestion_hasta'] ; $i++) { ?>
-											<td style="width:10%;"><?php echo $i; ?></td>
-											<?php
-										}
-										?>
-										</tr>
-										</thead>
-										<tbody>
-										<tr align="center">
-										<?php 
-										for ($i=$configuracion[0]['conf_gestion_desde']; $i <=$configuracion[0]['conf_gestion_hasta'] ; $i++) {?>
-											<td style="width:10%;"><input type="text" name="<?php echo $i;?>" id="<?php echo $i;?>" class="form-control" value="0" onkeypress="return justNumbers(event);" onpaste="return false" onkeyup="sum_temp();"></td>
-											<?php
-										}
-										?>
-										</tbody>
-										</tr>
-	                                </table>
+												<label class="label">TEMPORALIDAD</label>
+												<label class="textarea">
+													<table class="table table-bordered">
+														<thead>
+														<tr align="center">
+														<?php
+														for ($i=$configuracion[0]['conf_gestion_desde']; $i <=$configuracion[0]['conf_gestion_hasta'] ; $i++) { ?>
+															<td style="width:10%;"><?php echo $i; ?></td>
+															<?php
+														}
+														?>
+														</tr>
+														</thead>
+														<tbody>
+														<tr align="center">
+														<?php 
+														for ($i=$configuracion[0]['conf_gestion_desde']; $i <=$configuracion[0]['conf_gestion_hasta'] ; $i++) {?>
+															<td style="width:10%;"><input type="text" name="<?php echo $i;?>" id="<?php echo $i;?>" class="form-control" value="0" onkeypress="return justNumbers(event);" onpaste="return false" onkeyup="sum_temp();"></td>
+															<?php
+														}
+														?>
+														</tbody>
+														</tr>
+	                        </table>
 								</label>
 								<input type="hidden" name="tot" id="tot" value="0">
 							</section>
@@ -295,83 +295,83 @@
                		<input type="hidden" name="ptm_id" id="ptm_id">
                     <h2 class="alert alert-info"><center>MODIFICAR INDICADOR </center></h2>
                     <header><div id="moe"></div></header>
-						<fieldset>					
-							<div class="row">
-								<section class="col col-4">
-									<label class="label">C&Oacute;DIGO</label>
-									<label class="input">
-										<i class="icon-append fa fa-tag"></i>
-										<input type="text" name="mcod" id="mcod">
-									</label>
-								</section>
-							</div>
-							
-							<section>
-								<label class="label">INDICADOR DE PROCESO</label>
-								<label class="textarea">
-									<i class="icon-append fa fa-tag"></i>
-									<textarea rows="3" name="mindicador" id="mindicador"></textarea>
-								</label>
-							</section>
+										<fieldset>					
+											<!-- <div class="row">
+												<section class="col col-4">
+													<label class="label">C&Oacute;DIGO</label>
+													<label class="input">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="mcod" id="mcod">
+													</label>
+												</section>
+											</div> -->
+											
+											<section>
+												<label class="label">INDICADOR DE PROCESO</label>
+												<label class="textarea">
+													<i class="icon-append fa fa-tag"></i>
+													<textarea rows="3" name="mindicador" id="mindicador"></textarea>
+												</label>
+											</section>
 
-							<div class="row">
-								<section class="col col-4">
-									<label class="label">LINEA BASE</label>
-									<label class="input">
-										<i class="icon-append fa fa-tag"></i>
-										<input type="text" name="lbase" id="mlbase" value="0">
-									</label>
-								</section>
-								<section class="col col-4">
-									<label class="label">META</label>
-									<label class="input">
-										<i class="icon-append fa fa-tag"></i>
-										<input type="text" name="mmeta" id="mmeta" value="0">
-									</label>
-								</section>
-								<section class="col col-4">
-									<label class="label">TIPO DE INDICADOR</label>
-									<label class="input">
-										<select class="form-control" id="mtipo_i" name="mtipo_i">
-                                            <option value="">Seleccione Indicador</option>
-                                            <?php 
-							                    foreach($indi as $row){ ?>
-									                <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
-									                <?php 	
-							                    }
-							                ?>
-                                      	</select>
-									</label>
-								</section>
-							</div>
-						</fieldset>
+											<div class="row">
+												<section class="col col-4">
+													<label class="label">LINEA BASE</label>
+													<label class="input">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="lbase" id="mlbase" value="0">
+													</label>
+												</section>
+												<section class="col col-4">
+													<label class="label">META</label>
+													<label class="input">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="mmeta" id="mmeta" value="0">
+													</label>
+												</section>
+												<section class="col col-4">
+													<label class="label">TIPO DE INDICADOR</label>
+													<label class="input">
+														<select class="form-control" id="mtipo_i" name="mtipo_i">
+				                      <option value="">Seleccione Indicador</option>
+				                        <?php 
+								                    foreach($indi as $row){ ?>
+										                <option value="<?php echo $row['indi_id']; ?>"><?php echo $row['indi_descripcion']; ?></option>
+										                <?php 	
+								                    }
+								                ?>
+				                    </select>
+													</label>
+												</section>
+											</div>
+										</fieldset>
 
-	                    <fieldset>
+	                   <fieldset>
 	                    	<section>
-								<label class="label">TEMPORALIDAD</label>
-								<label class="textarea">
-									<table class="table table-bordered">
-										<thead>
-										<tr align="center">
-										<?php
-											for ($i=$configuracion[0]['conf_gestion_desde']; $i <=$configuracion[0]['conf_gestion_hasta'] ; $i++) { ?>
-												<td style="width:10%;"><?php echo $i; ?></td>
-												<?php
-											}
-										?>
-										</tr>
-										</thead>
-										<tbody>
-										<tr align="center">
-										<?php $p=0;
-											for ($i=$configuracion[0]['conf_gestion_desde']; $i <=$configuracion[0]['conf_gestion_hasta'] ; $i++) { $p++;?>
-												<td style="width:10%;"><input type="text" name="<?php echo $i;?>" id="m<?php echo $p;?>" class="form-control" value="0" onkeyup="sum_mtemp();" onkeypress="return justNumbers(event);" onpaste="return false" ></td>
-												<?php
-											}
-										?>
-										</tbody>
-										</tr>
-	                                </table>
+											<label class="label">TEMPORALIDAD</label>
+											<label class="textarea">
+												<table class="table table-bordered">
+													<thead>
+													<tr align="center">
+													<?php
+														for ($i=$configuracion[0]['conf_gestion_desde']; $i <=$configuracion[0]['conf_gestion_hasta'] ; $i++) { ?>
+															<td style="width:10%;"><?php echo $i; ?></td>
+															<?php
+														}
+													?>
+													</tr>
+													</thead>
+													<tbody>
+													<tr align="center">
+													<?php $p=0;
+														for ($i=$configuracion[0]['conf_gestion_desde']; $i <=$configuracion[0]['conf_gestion_hasta'] ; $i++) { $p++;?>
+															<td style="width:10%;"><input type="text" name="<?php echo $i;?>" id="m<?php echo $p;?>" class="form-control" value="0" onkeyup="sum_mtemp();" onkeypress="return justNumbers(event);" onpaste="return false" ></td>
+															<?php
+														}
+													?>
+													</tbody>
+													</tr>
+	                     	</table>
 								</label>
 								<input type="hidden" name="mtotal" id="mtotal" value="0">
 							</section>
@@ -395,42 +395,47 @@
                 <div class="modal-body no-padding">
                     <div class="row">
                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<h2 class="row-seperator-header">FORMULARIO DE REGISTRO - RESULTADO INTERMEDIO</h2>
-								<div class="row">
-									<!-- col -->
-									<div class="col-sm-12">
-										<!-- row -->
-										<div class="row">
-											<form action="<?php echo site_url().'/me/valida_resultado_mplazo'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
-											   	<input type="hidden" name="acc_id" id="acc_id" value="<?php echo $accion_estrategica[0]['acc_id'];?>">
-											   	<fieldset>
-													<section>
-														<label class="input"> <i class="icon-append fa fa-user"></i>
-															<input type="text" name="codigo" id="codigo" value="<?php echo $accion_estrategica[0]['acc_codigo'].'.'.(count($list)+1).'.';?>" placeholder="C&Oacute;DIGO">
-															<b class="tooltip tooltip-bottom-right">C&Oacute;DIGO</b> </label>
-													</section>
+													<h2 class="row-seperator-header">FORMULARIO DE REGISTRO - RESULTADO INTERMEDIO</h2>
+														<div class="row">
+															<!-- col -->
+															<div class="col-sm-12">
+																<!-- row -->
+																<div class="row">
+																	<form action="<?php echo site_url().'/me/valida_resultado_mplazo'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
+																	   	<input type="hidden" name="acc_id" id="acc_id" value="<?php echo $accion_estrategica[0]['acc_id'];?>">
+																	   	<fieldset>
+																			<section>
+																				<label class="input"> <i class="icon-append fa fa-user"></i>
+																					<input type="text" value="<?php echo $obj_estrategico[0]['obj_codigo'].'.'.$accion_estrategica[0]['acc_codigo'].'.';?>" placeholder="C&Oacute;DIGO" disabled="true">
+																			</section>
 
-													<section>
-														<label class="textarea"> <i class="icon-append fa fa-comment"></i>
-															<textarea rows="4" name="descripcion" id="descripcion" placeholder="RESULTADO INTERMEDIO"></textarea> 
-															<b class="tooltip tooltip-bottom-right">DESCRIPCI&Oacute;N</b></label>
-													</section>
-												</fieldset>
-												<footer>
-													<div class="col-md-3 pull-left">
+																			<section>
+																				<label class="input"> <i class="icon-append fa fa-user"></i>
+																					<input type="text" name="codigo" id="codigo" value="" placeholder="C&Oacute;DIGO" onkeypress="if (this.value.length < 1) { return soloNumeros(event);}else{return false; }" onpaste="return false" required="true">
+																					<b class="tooltip tooltip-bottom-right">C&Oacute;DIGO</b> </label>
+																			</section>
+
+																			<section>
+																				<label class="textarea"> <i class="icon-append fa fa-comment"></i>
+																					<textarea rows="4" name="descripcion" id="descripcion" placeholder="RESULTADO INTERMEDIO"></textarea> 
+																					<b class="tooltip tooltip-bottom-right">DESCRIPCI&Oacute;N</b></label>
+																			</section>
+																		</fieldset>
+																		<footer>
+																			<div class="col-md-3 pull-left">
 							                            <button class="btn btn-ms btn-danger" data-dismiss="modal">CANCELAR</button>
 							                        </div>
 							                        <div class="col-md-3 pull-right ">
 							                            <button type="button" name="subir_form" id="subir_form" class="btn btn-success" style="width:100%;">GUARDAR</button>
-				                        				<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+						                    				<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
 							                        </div>
-												</footer>
-											</form>	
-										</div>
-										<!-- end row -->
-									</div>
-									<!-- end col -->
-								</div>
+																		</footer>
+																	</form>	
+																</div>
+																<!-- end row -->
+															</div>
+															<!-- end col -->
+														</div>
                         </article>
                     </div>   
                 </div>
@@ -446,43 +451,48 @@
                     <div class="row">
                     	<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                        	<div class="row">
-							<h2 class="row-seperator-header">MODIFICAR REGISTRO - RESULTADO INTERMEDIO</h2>
-								<div class="row">
-									<!-- col -->
-									<div class="col-sm-12">
-										<!-- row -->
-										<div class="row">
-											<form action="<?php echo site_url() . '/me/valida_update_resultado_mplazo'?>" id="form_mod" name="form_mod" class="smart-form" method="post">
-												<input type="hidden" name="acc_id" id="acc_id" value="<?php echo $accion_estrategica[0]['acc_id'];?>">
-												<input type="hidden" name="rm_id" id="rm_id">
-												<fieldset>
-													<section>
-														<label class="input"> <i class="icon-append fa fa-user"></i>
-															<input type="text" name="codigo" id="mcodigo" placeholder="C&Oacute;DIGO">
-															<b class="tooltip tooltip-bottom-right">C&Oacute;DIGO</b> </label>
-													</section>
+													<h2 class="row-seperator-header">MODIFICAR REGISTRO - RESULTADO INTERMEDIO</h2>
+														<div class="row">
+															<!-- col -->
+															<div class="col-sm-12">
+																<!-- row -->
+																<div class="row">
+																	<form action="<?php echo site_url() . '/me/valida_update_resultado_mplazo'?>" id="form_mod" name="form_mod" class="smart-form" method="post">
+																		<input type="hidden" name="acc_id" id="acc_id" value="<?php echo $accion_estrategica[0]['acc_id'];?>">
+																		<input type="hidden" name="rm_id" id="rmm_id">
+																		<fieldset>
+																			<section>
+																				<label class="input"> <i class="icon-append fa fa-user"></i>
+																					<input type="text" value="<?php echo $obj_estrategico[0]['obj_codigo'].'.'.$accion_estrategica[0]['acc_codigo'].'.';?>" placeholder="C&Oacute;DIGO" disabled="true">
+																			</section>
 
-													<section>
-														<label class="textarea"> <i class="icon-append fa fa-comment"></i>
-															<textarea rows="4" name="descripcion" id="mdescripcion" placeholder="DESCRIPCION - OBJETIVO ESTRATEGICO"></textarea> 
-															<b class="tooltip tooltip-bottom-right">DESCRIPCI&Oacute;N</b></label>
-													</section>
-												</fieldset>
-												<footer>
-													<div class="col-md-3 pull-left">
-							                            <button class="btn btn-ms btn-danger" data-dismiss="modal">CANCELAR</button>
-							                        </div>
-							                        <div class="col-md-3 pull-right ">
-							                            <button type="button" name="mod_ffenviar" id="mod_ffenviar" class="btn btn-success" style="width:100%;">MODIFICAR</button>
-				                        				<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
-							                        </div>
-												</footer>
-											</form>
-										</div>
-									</div>
-								</div>
-							</div>
-						</article>
+																			<section>
+																				<label class="input"> <i class="icon-append fa fa-user"></i>
+																					<input type="text" name="codigo" id="mcodigo" placeholder="C&Oacute;DIGO" onkeypress="if (this.value.length < 1) { return soloNumeros(event);}else{return false; }" onpaste="return false" required="true">>
+																					<b class="tooltip tooltip-bottom-right">C&Oacute;DIGO</b> </label>
+																			</section>
+
+																			<section>
+																				<label class="textarea"> <i class="icon-append fa fa-comment"></i>
+																					<textarea rows="4" name="descripcion" id="mdescripcion" placeholder="DESCRIPCION - OBJETIVO ESTRATEGICO"></textarea> 
+																					<b class="tooltip tooltip-bottom-right">DESCRIPCI&Oacute;N</b></label>
+																			</section>
+																		</fieldset>
+																		<footer>
+																			<div class="col-md-3 pull-left">
+								                            <button class="btn btn-ms btn-danger" data-dismiss="modal">CANCELAR</button>
+								                        </div>
+								                        <div class="col-md-3 pull-right ">
+								                            <button type="button" name="mod_ffenviar" id="mod_ffenviar" class="btn btn-success" style="width:100%;">MODIFICAR</button>
+						                      				<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+								                        </div>
+																		</footer>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</div>
+												</article>
                     </div>
                 </div>
 
@@ -515,6 +525,7 @@
 		<!-- IMPORTANT: APP CONFIG -->
 		<script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
+		<script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
 		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
@@ -616,7 +627,7 @@
 
 		            request.done(function (response, textStatus, jqXHR) {
 		            	$('#moe').html('<font size=2><b>RCP : </b>'+response.indicador[0]['rm_codigo']+'.- '+response.indicador[0]['rm_resultado']+'</font>');
-		            	document.getElementById("mcod").value = response.indicador[0]['ptm_codigo'];
+		            	//document.getElementById("mcod").value = response.indicador[0]['ptm_codigo'];
 		            	document.getElementById("mindicador").value = response.indicador[0]['ptm_indicador'];
 		            	document.getElementById("mlbase").value = response.indicador[0]['ptm_linea_base'];
 		            	document.getElementById("mmeta").value = response.indicador[0]['ptm_meta'];
@@ -637,9 +648,9 @@
 		            $("#mod_res").on("click", function (e) {
 		                var $validator = $("#mform_res").validate({
 			                   rules: {
-			                	mcod: { //// Codigo
+			                	/*mcod: { //// Codigo
 			                        required: true,
-			                    },
+			                    },*/
 			                    mindicador: { //// Indicador
 			                        required: true,
 			                    },
@@ -726,9 +737,9 @@
 		            $("#add_res").on("click", function (e) {
 		                var $validator = $("#form_res").validate({
 			                   rules: {
-			                	cod: { //// Codigo
+			                /*	cod: { //// Codigo
 			                        required: true,
-			                    },
+			                    },*/
 			                    indicador: { //// Indicador
 			                        required: true,
 			                    },
@@ -743,7 +754,7 @@
 			                    }
 			                },
 			                messages: {
-			                    cod: "<font color=red>REGISTRE C&Oacute;DIGO</font>",
+			                    //cod: "<font color=red>REGISTRE C&Oacute;DIGO</font>",
 			                    indicador: "<font color=red>REGISTRE INDICADOR</font>",
 			                    meta: "<font color=red>REGISTRE LINEA BASE </font>",	 
 			                    meta: "<font color=red>POR FAVOR REGISTRE META</font>",	                    
@@ -840,7 +851,8 @@
 		    $(function () {
 		        $(".mod_ff").on("click", function (e) {
 		            rm_id = $(this).attr('name'); 
-		            document.getElementById("rm_id").value=rm_id;
+		            //alert(rm_id)
+		            document.getElementById("rmm_id").value=rm_id;
 		            var url = "<?php echo site_url("")?>/me/get_resultado_intermedio";
 		            var request;
 		            if (request) {

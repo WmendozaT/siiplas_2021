@@ -844,6 +844,39 @@ class Producto extends CI_Controller {
     }
 
 
+
+        /*------- GET ACCIONES ESTRATEGICAS -------*/
+    public function get_acciones_estrategicas(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $obj_id = $this->security->xss_clean($post['obj_id']); /// Obj id
+
+        $salida='';
+        $combog = pg_query('select *
+                          from _acciones_estrategicas
+                          where obj_id='.$obj_id.' and acc_estado!=3
+                          order by acc_id asc');
+      $salida .= "<option value=''>" . mb_convert_encoding('SELECCIONE ACCI&Oacute;N ESTRATEGICA', 'cp1252', 'UTF-8') . "</option>";
+      while ($sql_p = pg_fetch_row($combog)) {
+          $salida .= "<option value='" . $sql_p[0] . "'>" .$sql_p[2].".- ".$sql_p[3] . "</option>";
+      }
+
+
+        $result = array(
+            'respuesta' => 'correcto',
+            'salida' => $salida,
+          );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+
+
   /*--- ACTUALIZA CODIGO DE ACTIVIDAD (FORM 4) ----*/
   public function update_codigo($com_id){  
     $this->programacionpoa->update_codigo_actividad($com_id);

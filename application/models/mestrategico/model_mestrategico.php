@@ -350,18 +350,34 @@ class Model_mestrategico extends CI_Model{
     /*-- INDICADORES --*/
     /* get Indicadores por resultado intermedio*/        
     public function get_list_indicadores($rm_id){
-        $sql = 'select *
+        if($this->gestion<=2022){
+            $sql = 'select *
                 from vindicadores
                 where rm_id='.$rm_id.'';
+        }
+        else{
+            $sql = 'select *
+                from vindicadores2025
+                where rm_id='.$rm_id.'';
+        }
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
     /* get Indicador*/        
     public function get_indicador($ptm_id){
-        $sql = 'select *
+        if($this->gestion<=2022){
+            $sql = 'select *
                 from vindicadores
                 where ptm_id='.$ptm_id.'';
+        }
+        else{
+            $sql = 'select *
+                from vindicadores2025
+                where ptm_id='.$ptm_id.'';
+        }
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }

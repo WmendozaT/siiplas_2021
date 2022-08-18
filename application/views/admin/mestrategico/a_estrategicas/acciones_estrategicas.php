@@ -201,7 +201,7 @@
 
 													<section>
 														<label class="input"> <i class="icon-append fa fa-user"></i>
-															<input type="text" name="codigo" id="codigo" placeholder="C&Oacute;DIGO">
+															<input type="text" name="codigo" id="codigo" placeholder="C&Oacute;DIGO" onkeypress="if (this.value.length < 2) { return soloNumeros(event);}else{return false; }" onpaste="return false" required="true">
 															<b class="tooltip tooltip-bottom-right">C&Oacute;DIGO</b> </label>
 													</section>
 
@@ -323,7 +323,7 @@
 													<section>
 														C&Oacute;DIGO
 														<label class="input"> <i class="icon-append fa fa-user"></i>
-															<input type="text" name="codigo" id="mcodigo" placeholder="C&Oacute;DIGO" value="">
+															<input type="text" name="codigo" id="mcodigo" placeholder="C&Oacute;DIGO" onkeypress="if (this.value.length < 2) { return soloNumeros(event);}else{return false; }" onpaste="return false" required="true">
 															<b class="tooltip tooltip-bottom-right">C&Oacute;DIGO</b> </label>
 													</section>
 
@@ -416,6 +416,7 @@
 		<!-- IMPORTANT: APP CONFIG -->
 		<script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
+		<script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
 		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
@@ -476,13 +477,13 @@
 			            });
 
 			            request.done(function (response, textStatus, jqXHR) {
-			            	document.getElementById("mcodigo").value = response.resultado[0]['rf_cod'];
+			            	//document.getElementById("mcodigo").value = response.resultado[0]['rf_cod'];
 			            	$('#but').slideDown();
 			            });
 			        	
 			        }
 			        else{
-			        	document.getElementById("mcodigo").value = '';
+			        	//document.getElementById("mcodigo").value = '';
 			        	$('#but').slideUp();
 			        }
 
@@ -505,13 +506,13 @@
 			            });
 
 			            request.done(function (response, textStatus, jqXHR) {
-			            	document.getElementById("codigo").value = response.resultado[0]['rf_cod'];
+			            	//document.getElementById("codigo").value = response.resultado[0]['rf_cod'];
 			            	$('#mbut').slideDown();
 			            });
 			        	
 			        }
 			        else{
-			        	document.getElementById("codigo").value = '';
+			        	//document.getElementById("codigo").value = '';
 			        	$('#mbut').slideUp();
 			        }
 

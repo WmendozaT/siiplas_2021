@@ -10,7 +10,7 @@ function abreVentana(PDF){
 
 
 
-  $(document).ready(function() {
+/*  $(document).ready(function() {
       pageSetUp();
       $("#obj_id").change(function () {
           $("#obj_id option:selected").each(function () {
@@ -20,8 +20,36 @@ function abreVentana(PDF){
             });     
         });
       });  
-    })
+    })*/
 
+  $("#obj_id").change(function () {
+    $("#obj_id option:selected").each(function () {
+      obj_id=$(this).val();
+     
+      var url = base+"index.php/programacion/producto/get_acciones_estrategicas";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "obj_id="+obj_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+             $('#acc_id').html(response.salida);
+              
+          }
+          else{
+              alertify.error("ERROR AL LISTAR");
+          }
+        }); 
+
+    });
+  });
 
   /// VERIFICANDO CODIGO DE ACCION
   function verif_codigo(){ 
