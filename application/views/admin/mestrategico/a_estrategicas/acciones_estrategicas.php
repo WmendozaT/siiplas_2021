@@ -219,7 +219,7 @@
 														<select class="form-control" id="pdes1" name="pdes1">
 		                                                    <option value="">Seleccione PILAR</option> 
 		                                                     <?php
-																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'1\' AND pdes_depende=\'0\' ORDER BY pdes_id ';
+																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'1\' AND pdes_depende=\'0\' AND pdes_estado!=\'0\' ORDER BY pdes_id ';
 																  $consulta1=$this->db->query($consulta1);
 																  $lista_pedes=$consulta1->result_array();
 																  foreach ($lista_pedes as $pedes){ ?>
@@ -232,7 +232,7 @@
 														<font color="blue">META</font>
 														<select class="form-control" id="pdes2" name="pdes2">
 															<?php
-																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'2\'  ORDER BY pdes_id ';
+																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'2\' AND pdes_estado!=\'0\' ORDER BY pdes_id ';
 																  $consulta1=$this->db->query($consulta1);
 																  $lista_pedes=$consulta1->result_array();
 																  foreach ($lista_pedes as $pedes){ ?>
@@ -245,7 +245,7 @@
 														<font color="blue">RESULTADO</font>
 														<select class="form-control" id="pdes3" name="pdes3">
 															<?php
-																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'3\' ORDER BY pdes_id ';
+																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'3\' AND pdes_estado!=\'0\' ORDER BY pdes_id ';
 																  $consulta1=$this->db->query($consulta1);
 																  $lista_pedes=$consulta1->result_array();
 																  foreach ($lista_pedes as $pedes){ ?>
@@ -258,7 +258,7 @@
 														<font color="blue">ACCI&Oacute;N</font>
 														<select class="form-control" id="pdes4" name="pdes4">
 															<?php
-																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'4\' ORDER BY pdes_id ';
+																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'4\' AND pdes_estado!=\'0\' ORDER BY pdes_id ';
 																  $consulta1=$this->db->query($consulta1);
 																  $lista_pedes=$consulta1->result_array();
 																  foreach ($lista_pedes as $pedes){ ?>
@@ -362,8 +362,39 @@
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
-
 	</div>
+		<!-- ================== MODAL SUBIR ARCHIVO PDES ========================== -->
+	  	<div class="modal fade" id="modal_importar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered" role="document" class="modal-dialog modal-sm">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+	                </div>
+	                <div class="modal-body">
+	                	<h2><center>SUBIR ARCHIVO PDES.CSV</center></h2>
+	                
+	                    <div class="row">
+	                    	<script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
+	                    		<form action="<?php echo site_url().'/mestrategico/cacciones_estrategicas/valida_add_pdes';?>" method="post" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep">
+								<div class="input-group">
+								  <span class="input-group-btn">
+								    <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+								    <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+								  	<input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+								  </span>
+								  <span class="form-control"></span>
+								</div>
+								<hr>
+								<div >
+	                                <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR REQUERIMIENTOS .CSV</button><br>
+			                        <center><img id="loads" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+	                            </div>
+                              </form> 
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
 		<!-- END MAIN PANEL -->
 		<!-- ========================================================================================================= -->
 		<!-- PAGE FOOTER -->
@@ -434,6 +465,31 @@
 		 
 		<!-- get resultado final -->
 		<script type="text/javascript">
+			$(function () {
+			    //SUBIR ARCHIVO
+			    $("#subir_archivo").on("click", function () {
+			      var $valid = $("#form_subir_sigep").valid();
+			      if (!$valid) {
+			          $validator.focusInvalid();
+			      } else {
+			        if(document.getElementById('archivo').value==''){
+			          alertify.alert('POR FAVOR SELECCIONE ARCHIVO .CSV');
+			          return false;
+			        }
+			          alertify.confirm("SUBIR ARCHIVO REQUERIMIENTOS.CSV?", function (a) {
+			              if (a) {
+			                  document.getElementById("subir_archivo").value = "AGREGANDO REQUERIMIENTOS...";
+			                  document.getElementById("loads").style.display = 'block';
+			                  document.getElementById('subir_archivo').disabled = true;
+			                  document.forms['form_subir_sigep'].submit();
+			              } else {
+			                  alertify.error("OPCI\u00D3N CANCELADA");
+			              }
+			          });
+			      }
+			    });
+			  });
+
 			$("#resf").change(function () {
 			    $("#resf option:selected").each(function () {
 			        elegido = $(this).val();

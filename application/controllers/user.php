@@ -1120,7 +1120,7 @@ class User extends CI_Controller{
                 $salida = "";
                 $id_pais = $_POST["elegido"];
 
-                $combog = pg_query('SELECT * FROM pdes WHERE pdes_depende=\'' . $id_pais . '\'');
+                $combog = pg_query('SELECT * FROM pdes WHERE pdes_estado=\'1\' AND ('.$this->gestion.'>=pdes_gestion and '.$this->gestion.'<=pdes_gestion_final) AND pdes_depende=\'' . $id_pais . '\' ');
                 $salida .= "<option value=''>" . mb_convert_encoding('Seleccione Meta', 'cp1252', 'UTF-8') . "</option>";
                 while ($sql_p = pg_fetch_row($combog)) {
                     $salida .= "<option value='" . $sql_p[7] . "'>" . $sql_p[7] . " - " . $sql_p[2] . " - " . $sql_p[3] . "</option>";
@@ -1133,7 +1133,7 @@ class User extends CI_Controller{
                 $salida = "";
                 $id_pais = $_POST["elegido"];
 
-                $combog = pg_query('SELECT * FROM pdes WHERE pdes_depende=\'' . $id_pais . '\'');
+                $combog = pg_query('SELECT * FROM pdes WHERE pdes_estado=\'1\' AND ('.$this->gestion.'>=pdes_gestion and '.$this->gestion.'<=pdes_gestion_final) AND pdes_depende=\'' . $id_pais . '\' ');
                 $salida .= "<option value=''>" . mb_convert_encoding('Seleccione Resultado', 'cp1252', 'UTF-8') . "</option>";
                 while ($sql_p = pg_fetch_row($combog)) {
                     $salida .= "<option value='" . $sql_p[7] . "'>" . $sql_p[7] . " - " . $sql_p[2] . " - " . $sql_p[3] . "</option>";
@@ -1146,7 +1146,7 @@ class User extends CI_Controller{
                 $salida = "";
                 $id_pais = $_POST["elegido"];
 
-                $combog = pg_query('SELECT pdes_id FROM pdes WHERE pdes_depende=\'' . $id_pais . '\'');
+                $combog = pg_query('SELECT pdes_id FROM pdes WHERE pdes_estado=\'1\' AND ('.$this->gestion.'>=pdes_gestion and '.$this->gestion.'<=pdes_gestion_final) AND pdes_depende=\'' . $id_pais . '\' ');
                 $salida .= "<option value=''>" . mb_convert_encoding('Seleccione Accion', 'cp1252', 'UTF-8') . "</option>";
                 while ($sql_p = pg_fetch_row($combog)) {
                     $salida .= "<option value='" . $sql_p[7] . "'>" . $sql_p[7] . " - " . $sql_p[2] . " - " . $sql_p[3] . "</option>";

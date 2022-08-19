@@ -50,6 +50,9 @@ class Cacciones_estrategicas extends CI_Controller {
       $data['resultado_final']=$this->model_mestrategico->list_resultados_final($obj_id);
       $data['acciones_estrategicas']=$this->mis_acciones_estrategicas($obj_id);
 
+     // $data['subir_archivo']='<a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default" title="SUBIR ARCHIVO - PDES" style="width:14%;">SUBIR ARCHIVO (PDES)</a><br><br>';
+
+
       $pilares=$this->model_mestrategico->lista_pdes_pilares();
       $tabla='
           <section>
@@ -92,7 +95,11 @@ class Cacciones_estrategicas extends CI_Controller {
                       <h2 class="font-md"><strong>'.count($acciones).'. ACCIONES ESTRAT&Eacute;GICAS</strong></h2>  
                     </header>
                 <div>
-                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - ACCIONES ESTRATEGICAS">NUEVO REGISTRO</a><br><br>
+                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - ACCIONES ESTRATEGICAS">NUEVO REGISTRO</a>';
+                  if($this->fun_id==399){
+                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default" title="SUBIR ARCHIVO - PDES" style="width:14%;">SUBIR ARCHIVO (PDES)</a><br><br>';
+                  }
+                  $tabla.='
                   <div class="widget-body no-padding">
                     <table id="dt_basic" class="table table table-bordered" width="100%">
                       <thead>
@@ -135,6 +142,71 @@ class Cacciones_estrategicas extends CI_Controller {
             </article>';
       return $tabla;
     }
+
+
+
+     /*----- MIGRACION DE PDES -----*/
+    function valida_add_pdes(){
+      if ($this->input->post()) {
+          $post = $this->input->post();
+
+          $tipo = $_FILES['archivo']['type'];
+          $tamanio = $_FILES['archivo']['size'];
+          $archivotmp = $_FILES['archivo']['tmp_name'];
+
+          $filename = $_FILES["archivo"]["name"];
+          $file_basename = substr($filename, 0, strripos($filename, '.'));
+          $file_ext = substr($filename, strripos($filename, '.'));
+          $allowed_file_types = array('.csv');
+
+          if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
+              $lineas = file($archivotmp);
+              echo count($lineas);
+              $i=0;
+              $nro=2278;
+              foreach ($lineas as $linea_num => $linea){ /// A
+                if($i != 0){ /// B
+                  $nro++;
+                  $datos = explode(";",$linea);
+                    $data_to_store = array(
+                    'pdes_id' => $nro,
+                    'pdes_depende' => intval(trim($datos[0])),
+                    'pdes_nivel' => trim($datos[1]),
+                    'pdes_descripcion' => mb_convert_encoding(trim($datos[2]), 'cp1252', 'UTF-8'),
+                    'pdes_jerarquia' => intval(trim($datos[3])),
+                    'pdes_estado' => intval(trim($datos[4])),
+                    'pdes_gestion' => 2023,
+                    'pdes_gestion_final' => 2025,
+                    'pdes_codigo' => intval(trim($datos[7])),
+                  );
+                  $this->db->insert('pdes',$data_to_store);
+                 // $pdes_id=$this->db->insert_id();
+
+
+                    //echo $datos[0].'-'.$datos[1].'-'.$datos[2].'-'.$datos[3].'-'.$datos[4].'-'.$datos[5].'-'.$datos[6].'-'.$datos[7].'<br>';
+                    /*$cod_ope = intval(trim($datos[0])); //// Codigo Actividad
+                    $cod_partida = intval(trim($datos[1])); //// Codigo partida
+                    $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA*/
+
+
+                } /// B
+                $i++;
+              } /// A
+
+              //$this->session->set_flashdata('success','SE REGISTRARON '.$nro.' REQUERIMIENTOS');
+              //redirect(site_url("").'/me/acciones_estrategicas/11');
+          }
+          else{
+            echo "Error !!!";
+          }
+      }
+      else{
+        echo "Error !!!!";
+      }
+    }
+
+
+
 
     /*-------------- Valida Acciones Estrategicas ---------------------*/
     public function valida_acciones_estrategicas(){
