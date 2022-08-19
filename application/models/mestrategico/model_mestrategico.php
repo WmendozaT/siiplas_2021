@@ -11,6 +11,19 @@ class Model_mestrategico extends CI_Model{
     }
    
    /*============================ OBJETIVOS ESTRATEGICOS ================================*/
+
+    /*--- pdes -----*/
+    public function lista_pdes_pilares(){
+        $sql = 'select *
+                from pdes
+                where pdes_jerarquia=\'1\' and pdes_estado=\'1\' and pdes_depende=\'0\' and ('.$this->gestion.'>=pdes_gestion and '.$this->gestion.'<=pdes_gestion_final)
+                order by pdes_codigo asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
    /*--------------------- OBJETIVOS ESTRATEGICOS ----------------------*/
     public function list_objetivos_estrategicos(){
         $sql = 'select *

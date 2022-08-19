@@ -243,11 +243,11 @@ class Cptto_poa extends CI_Controller {
                   }
                 }
               $tabla.='</td>';
-              $tabla.='<td><center>'.$row['aper_programa'].''.$row['proy_sisin'].''.$row['aper_actividad'].'</center></td>';
-              $tabla.='<td>'.$row['proy_nombre'].'</td>';
-              $tabla.='<td>'.$row['proy_sisin'].'</td>';
-              $tabla.='<td>'.$row['dep_cod'].' '.strtoupper($row['dep_departamento']).'</td>';
-              $tabla.='<td>'.$row['dist_cod'].' '.strtoupper($row['dist_distrital']).'</td>';
+              $tabla.='<td><center>'.$row['prog'].''.$row['proy'].''.$row['act'].'</center></td>';
+              $tabla.='<td>'.$row['proyecto'].'</td>';
+              $tabla.='<td>'.$row['proy'].'</td>';
+              $tabla.='<td>'.strtoupper($row['dep_departamento']).'</td>';
+              $tabla.='<td>'.strtoupper($row['dist_distrital']).'</td>';
               $tabla.='</tr>';
             }
             $tabla.='

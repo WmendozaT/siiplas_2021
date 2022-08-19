@@ -44,8 +44,38 @@ class Cacciones_estrategicas extends CI_Controller {
       $data['res_dep']=$this->tp_resp();
       $data['configuracion']=$this->model_proyecto->configuracion_session();
       $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($obj_id);
+
+
+
       $data['resultado_final']=$this->model_mestrategico->list_resultados_final($obj_id);
       $data['acciones_estrategicas']=$this->mis_acciones_estrategicas($obj_id);
+
+      $pilares=$this->model_mestrategico->lista_pdes_pilares();
+      $tabla='
+          <section>
+            <font color="blue">PILAR</font>
+            <select class="form-control" id="pedes1" name="pedes1">
+              <option value="">Seleccione PILAR</option>';
+              foreach($pilares as $row){
+                $tabla.='<option value="'.$row['pdes_codigo'].'">'.$row['pdes_codigo'].' - '.$row['pdes_nivel'].' - '.$row['pdes_descripcion'].'</option> ';
+              }
+            $tabla.='
+            </select>
+          </section>
+          <section>
+            <font color="blue">META</font>
+            <select class="form-control" id="pedes2" name="pedes2"></select>
+          </section>
+          <section>
+            <font color="blue">RESULTADO</font>
+            <select class="form-control" id="pedes3" name="pedes3"></select>
+          </section>
+          <section>
+            <font color="blue">ACCI&Oacute;N</font>
+            <select class="form-control" id="pedes4" name="pedes4"></select>
+          </section>';
+
+          $data['listado']=$tabla;
 
       $this->load->view('admin/mestrategico/a_estrategicas/acciones_estrategicas', $data);
     }

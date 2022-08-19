@@ -338,33 +338,7 @@
 													  	VINCULACI&Oacute;N AL PEDES
 													</div>
 
-													<section>
-														<font color="blue">PILAR</font>
-														<select class="form-control" id="pedes1" name="pedes1">
-		                                                    <option value="">Seleccione PILAR</option> 
-		                                                    <?php
-																$consulta1 = 'SELECT * FROM "public"."pdes" WHERE pdes_jerarquia=\'1\' and pdes_depende=\'0\'  ORDER BY pdes_id';
-																  $consulta1=$this->db->query($consulta1);
-																  $lista_pedes=$consulta1->result_array();
-																  foreach ($lista_pedes as $pedes)
-																  { ?>
-																  <option value="<?php echo $pedes['pdes_codigo']?>" <?php if(@$_POST['pais']==$pedes['pdes_id']){ echo "selected";} ?> >
-																  <?php echo $pedes['pdes_codigo'].' - '.$pedes['pdes_nivel'].' - '.$pedes['pdes_descripcion']?></option> 
-															<?php } ?>     
-		                                              	</select>
-													</section>
-													<section>
-														<font color="blue">META</font>
-														<select class="form-control" id="pedes2" name="pedes2"></select>
-													</section>
-													<section>
-														<font color="blue">RESULTADO</font>
-														<select class="form-control" id="pedes3" name="pedes3"></select>
-													</section>
-													<section>
-														<font color="blue">ACCI&Oacute;N</font>
-														<select class="form-control" id="pedes4" name="pedes4"></select>
-													</section>
+													<?php echo $listado; ?>
 												</fieldset>
 												<footer>
 													<div id="but" style="display: none;">
