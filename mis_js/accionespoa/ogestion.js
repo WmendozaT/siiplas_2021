@@ -9,18 +9,33 @@ function abreVentana(PDF){
 }
 
 
+  ///// ----------------------------------------------
+  $(function () {
+    //SUBIR ARCHIVO OPERACIONES
+    $("#subir_archivo").on("click", function () {
+      var $valid = $("#form_subir_sigep").valid();
+      if (!$valid) {
+          $validator.focusInvalid();
+      } else {
+        if(document.getElementById('archivo').value==''){
+          alertify.alert('POR FAVOR SELECCIONE ARCHIVO .CSV');
+          return false;
+        }
+          alertify.confirm("SUBIR ARCHIVO OPERACIONES.CSV?", function (a) {
+              if (a) {
+                  document.getElementById("subir_archivo").value = "SUBIENDO OPERACIONES...";
+                  document.getElementById("loads").style.display = 'block';
+                  document.getElementById('subir_archivo').disabled = true;
+                  document.forms['form_subir_sigep'].submit();
+              } else {
+                  alertify.error("OPCI\u00D3N CANCELADA");
+              }
+          });
+      }
+    });
+  });
+  ////-----------------------------------------------
 
-/*  $(document).ready(function() {
-      pageSetUp();
-      $("#obj_id").change(function () {
-          $("#obj_id option:selected").each(function () {
-          elegido=$(this).val();
-          $.post(base+"/index.php/prog/combo_acciones", { elegido: elegido }, function(data){ 
-            $("#acc_id").html(data);
-            });     
-        });
-      });  
-    })*/
 
   $("#obj_id").change(function () {
     $("#obj_id option:selected").each(function () {

@@ -335,7 +335,7 @@ class Cmod_presupuestario extends CI_Controller {
                     $activo=trim($datos[5]); /// tp : 1 (activo), 0 (No activo)
 
                     if(strlen($prog)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
-                      $aper=$this->model_ptto_sigep->get_apertura($prog,'0000',$act);
+                      $aper=$this->model_ptto_sigep->get_apertura($prog,'0098',$act);
                       //$aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                       if(count($aper)!=0){
                           $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA

@@ -45,6 +45,9 @@
 	        #mdialTamanio2{
 	          width: 45% !important;
 	        }
+	        #mdialTamanio_subir_archivo{
+              width: 80% !important;
+            }
 		</style>
 	</head>
 	<body class="">
@@ -142,36 +145,69 @@
 			<div id="content">
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
-	                <div class="row">
-	                    <?php echo $titulo;?>
-		            </div>
-		            <div class="row">
-		            	<?php
-		            	if($this->session->flashdata('success')){ ?>
-		                    <div class="alert alert-success">
-		                      	<?php echo $this->session->flashdata('success'); ?>
-		                    </div>
-		                    <script type="text/javascript">alertify.success("<?php echo '<font size=2>'.$this->session->flashdata('success').'</font>'; ?>")</script>
-		                <?php 
-		                    }
-		                  elseif($this->session->flashdata('danger')){ ?>
-		                      <div class="alert alert-danger">
-		                        <?php echo $this->session->flashdata('danger'); ?>
-		                      </div>
-		                      <script type="text/javascript">alertify.error("<?php echo '<font size=2>'.$this->session->flashdata('danger').'</font>'; ?>")</script>
-		                    <?php
-		                  }
-		            	?>
-		            </div>
-		            <div class="row">  
-	                    <?php echo $ogestion;?>
-					</div>
+            <div class="row">
+              <?php echo $titulo;?>
+            </div>
+            <div class="row">
+            	<?php
+            	if($this->session->flashdata('success')){ ?>
+                    <div class="alert alert-success">
+                      	<?php echo $this->session->flashdata('success'); ?>
+                    </div>
+                    <script type="text/javascript">alertify.success("<?php echo '<font size=2>'.$this->session->flashdata('success').'</font>'; ?>")</script>
+                <?php 
+                    }
+                  elseif($this->session->flashdata('danger')){ ?>
+                      <div class="alert alert-danger">
+                        <?php echo $this->session->flashdata('danger'); ?>
+                      </div>
+                      <script type="text/javascript">alertify.error("<?php echo '<font size=2>'.$this->session->flashdata('danger').'</font>'; ?>")</script>
+                    <?php
+                  }
+            	?>
+            </div>
+            <div class="row">  
+	            <?php echo $ogestion;?>
+						</div>
 				</section>
 			</div>
 			<!-- END MAIN CONTENT -->
 		</div>
 	</div>
 	<!-- END MAIN PANEL -->
+
+		<!-- ================== MODAL SUBIR ARCHIVO PDES ========================== -->
+  	<div class="modal fade" id="modal_importar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document" class="modal-dialog modal-sm" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+            </div>
+            <div class="modal-body">
+            	<h2><center>SUBIR ARCHIVO </center></h2>
+            
+                <div class="row">
+                	<script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
+                		<form action="<?php echo site_url().'/mestrategico/cobjetivo_regional/valida_add_operaciones_regionales';?>" method="post" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep">
+											<div class="input-group">
+											  <span class="input-group-btn">
+											    <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+											    <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+											  	<input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+											  </span>
+											  <span class="form-control"></span>
+											</div>
+											<hr>
+											<div>
+                        <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR ARCHIVO .CSV</button><br>
+                        <center><img id="loads" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                      </div>
+                    </form> 
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
 
 <!-- MODAL NUEVO REGISTRO DE OBJETIVOS DE GESTION   -->
   <div class="modal fade" id="modal_nuevo_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

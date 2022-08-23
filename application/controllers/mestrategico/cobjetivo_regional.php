@@ -447,4 +447,84 @@ class Cobjetivo_regional extends CI_Controller {
     $this->load->view('admin/mestrategico/objetivos_region/reporte_form2', $data);
   }
 
+  //////// MIGRAR OPERACIONES REGIONALES
+    function valida_add_operaciones_regionales(){
+      if ($this->input->post()) {
+          $post = $this->input->post();
+
+          $tipo = $_FILES['archivo']['type'];
+          $tamanio = $_FILES['archivo']['size'];
+          $archivotmp = $_FILES['archivo']['tmp_name'];
+
+          $filename = $_FILES["archivo"]["name"];
+          $file_basename = substr($filename, 0, strripos($filename, '.'));
+          $file_ext = substr($filename, strripos($filename, '.'));
+          $allowed_file_types = array('.csv');
+
+          if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
+              $lineas = file($archivotmp);
+             
+              $i=0;
+
+              foreach ($lineas as $linea_num => $linea){ /// A
+                if($i != 0){ /// B
+                  $datos = explode(";",$linea);
+                  //$nro++;
+                  $acp_id=intval(trim($datos[0])); /// Acp id
+                  $dep_id=intval(trim($datos[1])); /// dep id
+                  $codigo=intval(trim($datos[2])); /// codigo
+                  $operacion=trim($datos[3]); /// operacion
+                  $producto=trim($datos[4]); /// producto
+                  $resultado=trim($datos[5]); /// resultado
+                  $indicador=trim($datos[6]); /// indicador
+                  $linea_base=0;
+                  $meta=0;
+                  $mverificacion=trim($datos[9]); /// indicador
+                  $observacion=trim($datos[10]); /// observacion
+
+                  $acp=$this->model_objetivogestion->get_objetivosgestion($acp_id);
+                  if(count($acp)!=0){
+                    $get_meta_prog=$this->model_objetivogestion->get_temporalidad_regional($acp_id,$dep_id);
+                    $pog_id = $this->security->xss_clean($get_meta_prog[0]['pog_id']); /// pog id
+                    //$ogestion=$this->model_objetivogestion->get_objetivo_temporalidad($pog_id);
+                    $data_to_store = array(
+                      'pog_id' => $pog_id,
+                      'or_objetivo' => mb_convert_encoding($operacion, 'cp1252', 'UTF-8'),
+                      'or_producto' => mb_convert_encoding($producto, 'cp1252', 'UTF-8'),
+                      'or_codigo' => $codigo,
+                      'or_resultado' => mb_convert_encoding($resultado, 'cp1252', 'UTF-8'),
+                      'indi_id' => 1,
+                      'or_indicador' => mb_convert_encoding($indicador, 'cp1252', 'UTF-8'),
+                      'or_linea_base' => $linea_base,
+                      'or_meta' => $meta,
+                      'or_verificacion' => mb_convert_encoding($mverificacion, 'cp1252', 'UTF-8'),
+                      'or_observacion' => mb_convert_encoding($observacion, 'cp1252', 'UTF-8'),
+                      'g_id' => $this->gestion,
+                      'fun_id' => $this->fun_id,
+                      'num_ip' => $this->input->ip_address(), 
+                      'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                    );
+                    $this->db->insert('objetivos_regionales', $data_to_store);
+                    $or_id=$this->db->insert_id();
+                  }
+
+                } /// B
+                $i++;
+              } /// A
+
+              //$this->session->set_flashdata('success','SE REGISTRARON '.$nro.' REQUERIMIENTOS');
+              //redirect(site_url("").'/me/acciones_estrategicas/11');
+          }
+          else{
+            echo "Error !!!";
+          }
+      }
+      else{
+        echo "Error !!!!";
+      }
+    }
+
+
+
+
 }
