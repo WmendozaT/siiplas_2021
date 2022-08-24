@@ -237,8 +237,8 @@
 		          document.getElementById("tp").value=tipo;
 		          if(tipo==1){
 		            $('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE ACTIVIDADES.CSV</b></center>');
-		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 21</b></li> <li type="circle"><b>Columna (A) COD. OR. : Codigo de Objetivo Regional</b></li> <li type="circle"><b>Columna (B) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (G-T), Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
-		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/img_migracion/migracion_form4.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
+		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 22</b></li> <li type="circle"><b>Columna (A) COD. ACP. : Codigo Acción Corto Plazo</b></li> <li type="circle"><b>Columna (B) COD. OPE. : Codigo Operación</b></li> <li type="circle"><b>Columna (C) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (H-U), Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
+		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/img_migracion/migracion_f4.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
 		            $('#buton').html('VER ARCHIVO DE ACTIVIDADES.CSV');
 		          }
 		          else{

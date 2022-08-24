@@ -108,9 +108,10 @@ h1 {
 <a href="#" class="boton-cerrar" onclick="ocultar()">&times;</a>
 <center><h1>ARCHIVOS DE MIGRACI&Oacute;N POA 2022</h1></center>
 <ul class="menu">
-  <li><a href="<?php echo base_url(); ?>assets/video/plantilla_actividades.xlsx" download  title="ARCHIVO DE MIGRACION - OPERACIONES">1.- ARCHIVO DE MIGRACI&Oacute;N - FORMULARIO 4</a></li>
-  <li><a href="<?php echo base_url(); ?>assets/video/Requerimientos_x_actividad.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS POR CADA OPERACIÓN">2.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS POR ACTIVIDAD</a></li>
-  <li><a href="<?php echo base_url(); ?>assets/video/Requerimientos_global_actividad.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS DE MANERA GLOBAL">3.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS (GLOBAL)</a></li>
+  <li><a href="<?php echo base_url(); ?>assets/video/plantilla1_migracion_form4_unidad.xlsx" download  title="ARCHIVO DE MIGRACION - FORMULARIO N° 4 (POR UNIDAD RESPONSABLE)">1.- ARCHIVO DE MIGRACI&Oacute;N - FORMULARIO 4 <b>(POR UNIDAD RESPONSABLE)</b></a></li>
+  <li><a href="<?php echo base_url(); ?>assets/video/plantilla2_migracion_form4_general.xlsx" download  title="ARCHIVO DE MIGRACION - FORMULARIO N° 4 (GENERAL)">2.- ARCHIVO DE MIGRACI&Oacute;N - FORMULARIO 4 <b>(GLOBAL)</b></a></li>
+  <li><a href="<?php echo base_url(); ?>assets/video/plantilla3_migracion_form5_actividad.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS POR CADA ACTIVIDAD">3.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS <b>(POR ACTIVIDAD)</b></a></li>
+  <li><a href="<?php echo base_url(); ?>assets/video/plantilla4_migracion_form5_global.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS DE MANERA GLOBAL">4.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS <b>(GLOBAL)</b></a></li>
 </ul>
 <center><h1>FORMULARIOS EDICI&Oacute;N POA 2022</h1></center>
 <ul class="menu">
@@ -122,7 +123,7 @@ h1 {
 
 
 <div id="contenido">
-<a id="abrir" class="abrir-cerrar" href="javascript:void(0)" onclick="mostrar()"><b>ABRIR LISTA ARCHIVOS POA 2021</b></a><a id="cerrar" class="abrir-cerrar" onclick="ocultar()">CERRAR LISTA</a>
+<a id="abrir" class="abrir-cerrar" href="javascript:void(0)" onclick="mostrar()"><b>ABRIR LISTA ARCHIVOS POA 2023</b></a><a id="cerrar" class="abrir-cerrar" onclick="ocultar()">CERRAR LISTA</a>
   <div class="container">
 <div id="login" class="signin-card">
   <div class="logo-image">

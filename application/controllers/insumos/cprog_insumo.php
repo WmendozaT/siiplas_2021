@@ -81,30 +81,31 @@ class Cprog_insumo extends CI_Controller{
             $no_guardado=0;
             $nro_prod=1;
 
-            if($tp==1){  /// Actividades
+            if($tp==1){  /// formulario N 4
 
               foreach ($lineas as $linea_num => $linea){ 
                 if($i != 0){
                   $datos = explode(";",$linea);
+                  if(count($datos)==22){
+                    $cod_acp = intval(trim($datos[0])); // Codigo Accion de corto Plazo
+                    $cod_ope = intval(trim($datos[1])); // Codigo Objetivo Regional
+                    $cod_act = intval(trim($datos[2])); // Codigo Form 4
+                    $descripcion = utf8_encode(trim($datos[3])); //// descripcion form 4
+                    $resultado = utf8_encode(trim($datos[4])); //// descripcion Resultado
 
-                    $cod_or = intval(trim($datos[0])); // Codigo Objetivo Regional
-                    $cod_ope = intval($nro_prod); // Codigo Form 4
-                    $descripcion = utf8_encode(trim($datos[2])); //// descripcion form 4
-                    $resultado = utf8_encode(trim($datos[3])); //// descripcion Resultado
-
-                    $unidad = utf8_encode(trim($datos[4])); //// Unidad
-                    $indicador = utf8_encode(trim($datos[5])); //// descripcion Indicador
-                    $lbase = intval(trim($datos[6])); //// Linea Base
-                    if(intval(trim($datos[6]))==''){
+                    $unidad = utf8_encode(trim($datos[5])); //// Unidad
+                    $indicador = utf8_encode(trim($datos[6])); //// descripcion Indicador
+                    $lbase = intval(trim($datos[7])); //// Linea Base
+                    if(intval(trim($datos[7]))==''){
                       $lbase = 0; //// Linea Base
                     }
 
-                    $meta = intval(trim($datos[7])); //// Meta
-                    if(intval(trim($datos[7]))==''){
+                    $meta = intval(trim($datos[8])); //// Meta
+                    if(intval(trim($datos[8]))==''){
                       $meta = 0; //// Meta
                     }
 
-                    $var=8; $sum_temp=0;
+                    $var=9; $sum_temp=0;
                     for ($i=1; $i <=12 ; $i++) {
                       $m[$i]=(float)$datos[$var]; //// Mes i
                       if($m[$i]==''){
@@ -114,22 +115,23 @@ class Cprog_insumo extends CI_Controller{
                       $var++;
                     }
 
-                    $mverificacion = utf8_encode(trim($datos[20])); //// Medio de verificacion
+                    $mverificacion = utf8_encode(trim($datos[21])); //// Medio de verificacion
 
-                  if(count($datos)==23){
                     if($sum_temp==$meta){
                       $nro_ok++;
-                      $aprob[1][$nro_ok]=$cod_ope; // cod. operacion
-                      $aprob[2][$nro_ok]=strtoupper($descripcion); // Operacion
-                      $aprob[3][$nro_ok]=strtoupper($resultado); // resultado
-                      $aprob[4][$nro_ok]=strtoupper($indicador); // Indicador
-                      $aprob[5][$nro_ok]=$lbase; // Linea Base
-                      $aprob[6][$nro_ok]=$meta; // meta
-                      $aprob[7][$nro_ok]=$unidad; // unidad responsable
-                      $aprob[8][$nro_ok]=$sum_temp; // Suma total temporalidad
-                      $aprob[9][$nro_ok]=$mverificacion; // Medio de verificacion
+                      $aprob[1][$nro_ok]=$cod_acp; // cod. acp
+                      $aprob[2][$nro_ok]=$cod_ope; // cod. ope
+                      $aprob[3][$nro_ok]=$cod_act; // cod. act
+                      $aprob[4][$nro_ok]=strtoupper($descripcion); // Actividad
+                      $aprob[5][$nro_ok]=strtoupper($resultado); // resultado
+                      $aprob[6][$nro_ok]=strtoupper($indicador); // Indicador
+                      $aprob[7][$nro_ok]=$lbase; // Linea Base
+                      $aprob[8][$nro_ok]=$meta; // meta
+                      $aprob[9][$nro_ok]=$unidad; // unidad responsable
+                      $aprob[10][$nro_ok]=$sum_temp; // Suma total temporalidad
+                      $aprob[11][$nro_ok]=$mverificacion; // Medio de verificacion
 
-                      $vari=10;
+                      $vari=12;
                       for ($i=1; $i <=12 ; $i++) { 
                         $aprob[$vari][$nro_ok]=$m[$i];
                         $vari++;
@@ -137,17 +139,19 @@ class Cprog_insumo extends CI_Controller{
                     }
                     else{
                       $nro_npartida++;
-                      $naprob[1][$nro_npartida]=$cod_ope; // cod. operacion
-                      $naprob[2][$nro_npartida]=strtoupper($descripcion); // Operacion
-                      $naprob[3][$nro_npartida]=strtoupper($resultado); // resultado
-                      $naprob[4][$nro_npartida]=strtoupper($indicador); // Indicador
-                      $naprob[5][$nro_npartida]=$lbase; // Linea Base
-                      $naprob[6][$nro_npartida]=$meta; // meta
-                      $naprob[7][$nro_npartida]=$unidad; // unidad responsable
-                      $naprob[8][$nro_npartida]=$sum_temp; // total
-                      $naprob[9][$nro_npartida]=$mverificacion; // Medio de verificacion
+                      $naprob[1][$nro_npartida]=$cod_acp; // cod. acp
+                      $naprob[2][$nro_npartida]=$cod_ope; // cod. ope
+                      $naprob[3][$nro_npartida]=$cod_act; // cod. act
+                      $naprob[4][$nro_npartida]=strtoupper($descripcion); // Actividad
+                      $naprob[5][$nro_npartida]=strtoupper($resultado); // resultado
+                      $naprob[6][$nro_npartida]=strtoupper($indicador); // Indicador
+                      $naprob[7][$nro_npartida]=$lbase; // Linea Base
+                      $naprob[8][$nro_npartida]=$meta; // meta
+                      $naprob[9][$nro_npartida]=$unidad; // unidad responsable
+                      $naprob[10][$nro_npartida]=$sum_temp; // Suma total temporalidad
+                      $naprob[11][$nro_npartida]=$mverificacion; // Medio de verificacion
 
-                      $vari=10;
+                      $vari=12;
                       for ($i=1; $i <=12 ; $i++) { 
                         $naprob[$vari][$nro_npartida]=$m[$i];
                         $vari++;
@@ -156,10 +160,19 @@ class Cprog_insumo extends CI_Controller{
                   }
                   else{
                     $nro_ncumple++;
-                    $ncump[1][$nro_ncumple]=$cod_ope;
-                    $ncump[2][$nro_ncumple]=strtoupper($descripcion);
-                    $ncump[3][$nro_ncumple]=strtoupper($resultado);
-                    $ncump[4][$nro_ncumple]=count($datos);
+
+                    $cod_acp = intval(trim($datos[0])); // Codigo Accion de corto Plazo
+                    $cod_ope = intval(trim($datos[1])); // Codigo Objetivo Regional
+                    $cod_act = intval(trim($datos[2])); // Codigo Form 4
+                    $descripcion = utf8_encode(trim($datos[3])); //// descripcion form 4
+                    $resultado = utf8_encode(trim($datos[4])); //// descripcion Resultado
+
+                    $ncump[1][$nro_ncumple]=$cod_acp;
+                    $ncump[2][$nro_ncumple]=$cod_ope;
+                    $ncump[3][$nro_ncumple]=$cod_act;
+                    $ncump[4][$nro_ncumple]=strtoupper($descripcion);
+                    $ncump[5][$nro_ncumple]=strtoupper($resultado);
+                    $ncump[6][$nro_ncumple]=count($datos);
                   }
                 }
                 $i++;
@@ -489,26 +502,28 @@ class Cprog_insumo extends CI_Controller{
                 <table id="datos" class="table table-bordered">
                   <thead>
                     <tr>
-                      <th style="width:2%;" style="height:35px;" title="NUMERO CORRELATIVO">#</th>
-                      <th style="width:2%;" title="CÓDIGO ACTIVIDAD">C&Oacute;DIGO ACT.</th>
-                      <th style="width:2%;" title="ACTIVIDAD">DESCRIPCI&Oacute;N ACTIVIDAD</th>
-                      <th style="width:15%;" title="RESULTADO">RESULTADO</th>
-                      <th style="width:7%;" title="INDICADOR">INDICADOR</th>
+                      <th style="width:2%;" title="CÓDIGO ACCION DE CORTO PLAZO">COD. ACP.</th>
+                      <th style="width:2%;" title="CÓDIGO OPERACION">COD. OPE.</th>
+                      <th style="width:2%;" title="CÓDIGO ACTIVIDAD">COD. ACT.</th>
+                      <th style="width:10%;" title="ACTIVIDAD">DESCRIPCI&Oacute;N ACTIVIDAD</th>
+                      <th style="width:10%;" title="RESULTADO">RESULTADO</th>
+                      <th style="width:10%;" title="INDICADOR">INDICADOR</th>
                       <th style="width:4.6%;" title="LINEA BASE">LINEA BASE</th>
                       <th style="width:4.6%;" title="META">META</th>
-                      <th style="width:4.6%;" title="UNIDAD RESPONSABLE">UNIDAD RESPONSABLE</th>
-                      <th style="width:4.6%;">ENE.</th>
-                      <th style="width:4.6%;">FEB.</th>
-                      <th style="width:4.6%;">MAR.</th>
-                      <th style="width:4.6%;">ABR.</th>
-                      <th style="width:4.6%;">MAY.</th>
-                      <th style="width:4.6%;">JUN.</th>
-                      <th style="width:4.6%;">JUL.</th>
-                      <th style="width:4.6%;">AGO.</th>
-                      <th style="width:4.6%;">SEPT.</th>
-                      <th style="width:4.6%;">OCT.</th>
-                      <th style="width:4.6%;">NOV.</th>
-                      <th style="width:4.6%;">DIC.</th>
+                      <th style="width:6%;" title="UNIDAD RESPONSABLE">UNIDAD RESPONSABLE</th>
+                      <th style="width:4.5%;">ENE.</th>
+                      <th style="width:4.5%;">FEB.</th>
+                      <th style="width:4.5%;">MAR.</th>
+                      <th style="width:4.5%;">ABR.</th>
+                      <th style="width:4.5%;">MAY.</th>
+                      <th style="width:4.5%;">JUN.</th>
+                      <th style="width:4.5%;">JUL.</th>
+                      <th style="width:4.5%;">AGO.</th>
+                      <th style="width:4.5%;">SEPT.</th>
+                      <th style="width:4.5%;">OCT.</th>
+                      <th style="width:4.5%;">NOV.</th>
+                      <th style="width:4.5%;">DIC.</th>
+                      <th style="width:7%;" title="UNIDAD RESPONSABLE">MEDIO DE VERIFICACION</th>
                     </tr>
                   </thead>
                   <tbody>';
@@ -516,20 +531,22 @@ class Cprog_insumo extends CI_Controller{
                     $color='';  
                     $tabla.='
                         <tr bgcolor="'.$bgcolor.'" class="modo1">
-                          <td style="height:60px;">'.$i.'</td> 
-                          <td align=center><b>'.$matriz[1][$i].'</b></td>
-                          <td>'.$matriz[2][$i].'</td>
-                          <td>'.$matriz[3][$i].'</td>
+                          <td style="font-size: 15px;font-family: Arial;" align=center><b>'.$matriz[1][$i].'</b></td>
+                          <td style="font-size: 15px;font-family: Arial;" align=center><b>'.$matriz[2][$i].'</b></td>
+                          <td style="font-size: 15px;font-family: Arial;" align=center><b>'.$matriz[3][$i].'</b></td>
                           <td>'.$matriz[4][$i].'</td>
                           <td>'.$matriz[5][$i].'</td>
                           <td>'.$matriz[6][$i].'</td>
-                          <td bgcolor='.$color.'>'.$matriz[7][$i].'</td>';
+                          <td style="font-size: 13px;font-family: Arial; text-align:right">'.$matriz[7][$i].'</td>
+                          <td style="font-size: 13px;font-family: Arial; text-align:right"><b>'.$matriz[8][$i].'</b></td>
+                          <td>'.$matriz[9][$i].'</td>';
                           $valor=0;
-                          for ($j=10; $j <=21 ; $j++) { 
+                          for ($j=12; $j <=23 ; $j++) { 
                             $valor++;
-                            $tabla.='<td>'.$matriz[$j][$i].'</td>';
+                            $tabla.='<td style="font-size: 13px;font-family: Arial; text-align: right;"><b>'.$matriz[$j][$i].'</b></td>';
                           }
                   $tabla.='
+                        <td>'.$matriz[11][$i].'</td>
                         </tr>';
                   }
 
@@ -563,8 +580,9 @@ class Cprog_insumo extends CI_Controller{
                 <table id="datos" class="table table-bordered">
                   <thead>      
                     <tr class="modo1">
-                      <th style="width:1%;">#</th>
-                      <th style="width:5%;">C&Oacute;DIGO</th>
+                      <th style="width:5%;">COD. ACP.</th>
+                      <th style="width:5%;">COD. OPE.</th>
+                      <th style="width:5%;">COD. ACT.</th>
                       <th style="width:7%;">ACTIVIDAD</th>
                       <th style="width:10%;">RESULTADO</th>
                       <th style="width:5%;">TAMAÑO COLUMNAS</th>
@@ -574,11 +592,12 @@ class Cprog_insumo extends CI_Controller{
                     for ($i=1; $i <=$nro ; $i++) { 
                       $tabla.='
                       <tr bgcolor="#ea9797" class="modo1">
-                        <td>'.$i.'</td>
-                        <td>'.$matriz[1][$i].'</td>
-                        <td>'.$matriz[2][$i].'</td>
-                        <td>'.$matriz[3][$i].'</td>
+                        <td style="font-size: 15px;font-family: Arial;" align=center>'.$matriz[1][$i].'</td>
+                        <td style="font-size: 15px;font-family: Arial;" align=center>'.$matriz[2][$i].'</td>
+                        <td style="font-size: 15px;font-family: Arial;" align=center>'.$matriz[3][$i].'</td>
                         <td>'.$matriz[4][$i].'</td>
+                        <td>'.$matriz[5][$i].'</td>
+                        <td>'.$matriz[6][$i].'</td>
                       </tr>';
                     }
                   $tabla.='  
