@@ -109,14 +109,32 @@ $(document).ready(function() {
               $('[name="total"]').val((meta).toFixed(0));
             }
             else{
-              for (var i = 1; i <= 12; i++) {
-                $('[name="m'+i+'"]').val((0).toFixed(0));
-                $("#m"+i).html('');
-                $('[name="m'+i+'"]').prop('disabled', false);
+              if(tp_met==5){
+                  meta = parseFloat($('[name="meta"]').val());
+                  for (var i = 1; i <= 12; i++) {
+                    if(i==3 || i==6 || i==9 || i==12){
+                      $('[name="m'+i+'"]').val((meta).toFixed(0));
+                    }
+                    else{
+                      $('[name="m'+i+'"]').val(0);
+                    }
+                    
+                    $("#m"+i).html('%');
+                    
+                    $('[name="m'+i+'"]').prop('disabled', true);
+                  }
+                  $('[name="total"]').val((meta).toFixed(0));
               }
-              $('[name="total"]').val((0).toFixed(0));
+              else{
+                for (var i = 1; i <= 12; i++) {
+                  $('[name="m'+i+'"]').val((0).toFixed(0));
+                  $("#m"+i).html('');
+                  $('[name="m'+i+'"]').prop('disabled', false);
+                }
+                $('[name="total"]').val((0).toFixed(0));
+              }
             }
-
+            
             total = parseFloat($('[name="total"]').val());
 
             if(meta==total){
@@ -474,7 +492,7 @@ $(document).ready(function() {
 
                for (var i = 1; i <=12; i++) {
                 document.getElementById("mm"+i).value = parseInt(response.temp[i]);
-                if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
+                if((response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1) || (response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==5)){
                   document.getElementById("mm"+i).disabled = true;
                 }
                 else{
@@ -485,7 +503,7 @@ $(document).ready(function() {
               // alert(response.prioridad)
                $('#priori').html(response.prioridad);
                
-               if(response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1){
+               if((response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1) || (response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==5)){
                 $('[name="mtotal"]').val((parseInt(response.producto[0]['prod_meta'])).toFixed(0));
                 document.getElementById("mtrep").style.display = 'block';
                }
@@ -849,24 +867,47 @@ $(document).ready(function() {
               $('#mbut').slideDown();
             }
             else{
-              for (var i = 1; i <= 12; i++) {
-                $('[name="mm'+i+'"]').val((0).toFixed(0));
-                $("#mm"+i).html('');
-                $('[name="mm'+i+'"]').prop('disabled', false);
-              }
-              $('[name="mtotal"]').val((0).toFixed(0));
-              
-              programado = parseFloat($('[id="mtotal"]').val()); //// programado total
-              meta = parseFloat($('[id="mmeta"]').val()); //// Meta
-              if(meta==programado){
+              if(tp_met==5){
+
+                meta = parseFloat($('[name="mmeta"]').val());
+                for (var i = 1; i <= 12; i++) {
+                  if(i==3 || i==6 || i==9 || i==12){
+                    $('[name="mm'+i+'"]').val((meta).toFixed(0));
+                  }
+                  else{
+                    $('[name="mm'+i+'"]').val(0);
+                  }
+                  
+                  $("#m"+i).html('%');
+                  $('[name="mm'+i+'"]').prop('disabled', true);
+                }
+                $('[name="mtotal"]').val((meta).toFixed(0));
+
                 $('#matit').html('');
                 $('#mbut').slideDown();
+
               }
               else{
-                $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-                $('#mbut').slideUp();
+                for (var i = 1; i <= 12; i++) {
+                  $('[name="mm'+i+'"]').val((0).toFixed(0));
+                  $("#mm"+i).html('');
+                  $('[name="mm'+i+'"]').prop('disabled', false);
+                }
+                $('[name="mtotal"]').val((0).toFixed(0));
+                
+                programado = parseFloat($('[id="mtotal"]').val()); //// programado total
+                meta = parseFloat($('[id="mmeta"]').val()); //// Meta
+                if(meta==programado){
+                  $('#matit').html('');
+                  $('#mbut').slideDown();
+                }
+                else{
+                  $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+                  $('#mbut').slideUp();
+                }
               }
             }
+            
           }
         });
     });
@@ -915,22 +956,40 @@ $(document).ready(function() {
           indicador = parseFloat($('[name="mtipo_i"]').val()); //// Indicador
           tipo_meta = parseFloat($('[name="mtp_met"]').val()); //// tipo Meta
 
-          if(indicador==2 & tipo_meta==1){
-            for (var i = 1; i <=12; i++) {
+            if(indicador==2 & tipo_meta==1){
+              for (var i = 1; i <=12; i++) {
                 document.getElementById("mm"+i).value = parseInt(meta);
               }
+              document.getElementById("mtotal").value = parseInt(meta);
               document.getElementById("mmeta").value = parseInt(meta);
               $('#mbut').slideDown();
             }
             else{
-              if(meta==total){
-                $('#matit').html('');
-                $('#mbut').slideDown();
+              if(indicador==2 & tipo_meta==5){
+                  for (var i = 1; i <=12; i++) {
+                    if(i==3 || i==6 || i==9 || i==12){
+                      document.getElementById("mm"+i).value = parseInt(meta);
+                    }
+                    else{
+                      document.getElementById("mm"+i).value = parseInt(0);
+                    }
+                    
+                  }
+                  document.getElementById("mtotal").value = parseInt(meta);
+                  document.getElementById("mmeta").value = parseInt(meta);
+                  $('#mbut').slideDown();
               }
               else{
-                $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
-                $('#mbut').slideUp();
+                if(meta==total){
+                  $('#matit').html('');
+                  $('#mbut').slideDown();
+                }
+                else{
+                  $('#matit').html('<center><div class="alert alert-danger alert-block">LA SUMA PROGRAMADA NO COINCIDE CON LA META DE LA ACTIVIDAD</div></center>');
+                  $('#mbut').slideUp();
+                }
               }
+
             }
       }
       else{
