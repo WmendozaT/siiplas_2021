@@ -10,7 +10,14 @@ class model_producto extends CI_Model {
         $this->dist_tp = $this->session->userData('dist_tp'); /// dist_tp->1 Regional, dist_tp->0 Distritales
     }
 
-    
+    function temporalidad_form4(){
+        $sql = 'select *
+                from vista_productos_temporalizacion_programado_dictamen
+                where g_id='.$this->gestion.''; 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*----- LISTA DE FORMULARIO 4 (2022) para el SEguimiento POA -----*/
     function list_operaciones_subactividad($com_id){
         /*$sql = 'select *

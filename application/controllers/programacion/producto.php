@@ -89,6 +89,10 @@ class Producto extends CI_Controller {
         $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
 
+
+        //$temporalidad=$this->model_producto->temporalidad_form4();
+
+
       }
       else{
         redirect('prog/list_serv/'.$com_id);
@@ -1406,7 +1410,9 @@ class Producto extends CI_Controller {
                         for ($i=1; $i <=12 ; $i++) {
                           $m[$i]=floatval(trim($datos[$var])); //// Mes i
                           if($m[$i]!=0){
-                            $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$m[$i]);
+                            if(strlen($m[$i])<=4){
+                              $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$m[$i]);
+                            }
                           }
                           
                           $var++;

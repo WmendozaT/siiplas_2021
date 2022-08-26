@@ -565,6 +565,9 @@ $(document).ready(function() {
                         },
                         mmeta: { //// meta
                             required: true,
+                        },
+                        mor_id: { //// meta
+                            required: true,
                         }
                     },
                     messages: {
@@ -575,7 +578,8 @@ $(document).ready(function() {
                         mindicador: "<font color=red>RESGISTRE INDICADOR</font>",
                         munidad: "<font color=red>REGISTRE UNIDAD RESPONSABLE</font>",
                         mlbase: "<font color=red>REGISTRE LINEA BASE</font>",
-                        mmeta: "<font color=red>REGISTRE META</font>",                     
+                        mmeta: "<font color=red>REGISTRE META</font>", 
+                        mor_id: "<font color=red>SELECCIONE OPERACION</font>",                     
                     },
                     highlight: function (element) {
                         $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
