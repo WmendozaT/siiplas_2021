@@ -404,14 +404,14 @@ class Programacionpoa extends CI_Controller{
                       
                     }
                   $tabla.='</tbody>';
-                    /*if($this->gestion>2021){
+                    if($this->gestion>2021){
                       $tabla.='
                       <tr bgcolor="#d3e2f3">
                         <td colspan=3><b>CONSOLIDADO POA UNIDADES RESPONSABLES FORM 4 - GESTIÓN '.$this->gestion.'</b></td>
                         <td align=center ><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proy_id.'\');" title="REPORTE FORM. 4 CONSOLIDADO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
                         <td></td>
                       </tr>';
-                    }*/
+                    }
                     if($nro_ppto>0){
                       $tabla.='
                       <tr>

@@ -33,11 +33,17 @@ class Cobjetivo_regional extends CI_Controller {
     public function objetivos_regional($og_id){
       $data['menu']=$this->oregional->menu(1);
       $data['ogestion']=$this->model_objetivogestion->get_objetivosgestion($og_id);
-      $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
-      $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
-      $data['regionales']=$this->oregional->regionales_seleccionados($og_id);
+      if(count($data['ogestion'])!=0){
+        $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
+        $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
+        $data['regionales']=$this->oregional->regionales_seleccionados($og_id);
 
-      $this->load->view('admin/mestrategico/objetivos_region/list_oregion', $data);
+        $this->load->view('admin/mestrategico/objetivos_region/list_oregion', $data);
+      }
+      else{
+        redirect(site_url("").'/me/mis_ogestion');
+      }
+      
     }
 
 

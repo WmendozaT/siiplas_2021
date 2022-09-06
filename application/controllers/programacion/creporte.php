@@ -468,7 +468,7 @@ class Creporte extends CI_Controller {
                         </page_footer>
                         '.$operaciones.'
                     </page>';
-                    if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
+                   /* if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
                         $tabla.='
                         <page backtop="75mm" backbottom="29mm" backleft="5mm" backright="5mm" pagegroup="new">
                             <page_header>
@@ -490,7 +490,7 @@ class Creporte extends CI_Controller {
                             </page_footer>
                             '.$partidas.'
                         </page>';
-                    }
+                    }*/
                     
                 }
             }
