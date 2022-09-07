@@ -106,7 +106,6 @@
                     <?php
                       if($this->session->userdata('tp_adm')==1 ){ ?>
                         <li ><a onclick="eliminar_requerimientos_servicio()" class="btn btn-danger" style="width:100%;" title="Eliminar Requerimientos de la unidad (todos)"><font color="#ffffff">ELIMINAR REQUERIMIENTOS UNIDAD (TODOS)</font></a></li>
-                        <!-- <li ><a onclick="eliminar_requerimientos()" class="btn btn-danger" style="width:100%;" title="Eliminar Requerimientos (todos)"><font color="#ffffff">ELIMINAR REQUERIMIENTOS (TODOS)</font></a></li> -->
                       <?php
                       }
                     ?>
