@@ -363,7 +363,26 @@ class Cservicios extends CI_Controller {
       }
     }
 
+    /*---- GET VER REQUERIMIENTOS CARGADOS POR UNIDAD RESPONSABLE ----*/
+    public function get_ver_requerimientos(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $com_id = $this->security->xss_clean($post['com_id']);
+        $componente = $this->model_componente->get_componente($com_id,$this->gestion);
+        
 
+        $tabla=$this->programacionpoa->list_requerimientos_componente($componente);
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
 
     /*------- PROYECTO DE INVERSION -----------*/
     /*--------- LISTA DE COMPONENTES------*/

@@ -162,8 +162,7 @@
                     <h2 class="font-md"><strong><?php echo count($productos);?> ACTIVIDADES REGISTRADOS</strong></h2>  
                   </header>
                 <div>
-                  <?php echo $button;
-                  ?>
+                  <?php echo $button; ?>
                     <div class="widget-body no-padding">
                       <form id="del_req" name="del_req" novalidate="novalidate" method="post">
                         <?php echo $prod; ?>
@@ -726,6 +725,20 @@
       </div>
     </div>
 
+
+    <!---- MODAL VER REQUERIMIENTOS ---->
+    <div class="modal fade" id="modal_ver_form5" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" id="mdialTamanio3">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+              <div id="contenido"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!--================================================== -->
 <!-- END PAGE FOOTER -->
 <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->

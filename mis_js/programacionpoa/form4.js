@@ -8,6 +8,35 @@ function abreVentana(PDF){
   window.open(direccion, "REPORTE FORMULARIO N° 4" , "width=800,height=700,scrollbars=NO") ; 
 }
 
+  function doSearch(){
+    var tableReg = document.getElementById('datos');
+    var searchText = document.getElementById('searchTerm').value.toLowerCase();
+    var cellsOfRow="";
+    var found=false;
+    var compareWith="";
+
+    // Recorremos todas las filas con contenido de la tabla
+    for (var i = 1; i < tableReg.rows.length; i++){
+      cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+      found = false;
+      // Recorremos todas las celdas
+      for (var j = 0; j < cellsOfRow.length && !found; j++){
+        compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+        // Buscamos el texto en el contenido de la celda
+        if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+          found = true;
+        }
+      }
+      if(found) {
+        tableReg.rows[i].style.display = '';
+      } else {
+        // si no ha encontrado ninguna coincidencia, esconde la
+        // fila de la tabla
+        tableReg.rows[i].style.display = 'none';
+      }
+    }
+  }
+    
 $(document).ready(function() {
   pageSetUp();
   /* BASIC ;*/
@@ -618,6 +647,62 @@ $(document).ready(function() {
             });
         });
     });
+
+
+
+    /*---- VER REQUERIMIENTOS CARGADOS POR COMPONENTE ---*/
+  $(function () {
+    $(".ver_requerimientos").on("click", function (e) {
+        com_id = $(this).attr('name');
+        
+        $('#contenido').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Requerimientos !</div>');
+        
+        var url = base+"index.php/programacion/cservicios/get_ver_requerimientos";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "com_id="+com_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+            $('#contenido').fadeIn(1000).html(response.tabla);
+           // $('#caratula').fadeIn(1000).html(response.caratula);
+        }
+        else{
+            alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
+        }
+
+        });
+        request.fail(function (jqXHR, textStatus, thrown) {
+            console.log("ERROR: " + textStatus);
+        });
+        request.always(function () {
+            //console.log("termino la ejecuicion de ajax");
+        });
+        e.preventDefault();
+        
+      });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /// ------ Editar Datos de Modificacion POA (Formulario N° 4)

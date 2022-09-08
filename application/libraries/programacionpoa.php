@@ -576,7 +576,7 @@ class Programacionpoa extends CI_Controller{
   }
 
     /*--- BOTON REPORTE SEGUIMIENTO POA (MES VIGENTE)---*/
-    function button_form4($nro){
+    function button_form4($nro,$com_id){
       $tabla='';
       if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399 || $this->fun_id==583 || $this->fun_id==600){
       //if($this->tp_adm==1 || $this->conf_form4==1){
@@ -595,6 +595,9 @@ class Programacionpoa extends CI_Controller{
         if($nro!=0){
           $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="2" title="SUBIR ARCHIVO REQUERIMIENTO (GLOBAL)" >
                       <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR REQUERIMIENTOS (GLOBAL)
+                    </a>
+                    <a href="#" data-toggle="modal" data-target="#modal_ver_form5" class="btn btn-default ver_requerimientos" name="'.$com_id.'" title="SUBIR ARCHIVO REQUERIMIENTO (GLOBAL)" >
+                      <img src="'.base_url().'assets/Iconos/text_list_bullets.png" WIDTH="30" HEIGHT="20"/>&nbsp;VER MIS REQUERIMIENTOS
                     </a>';
         }
       }
@@ -705,6 +708,9 @@ class Programacionpoa extends CI_Controller{
         }
         #mdialTamanio2{
             width: 50% !important;
+        }
+        #mdialTamanio3{
+            width: 95% !important;
         }
         table{font-size: 10px;
               width: 100%;
@@ -1965,10 +1971,115 @@ class Programacionpoa extends CI_Controller{
     }
 
 
+  /*----- REPORTE - FORMULARIO 5 VER REQ POR COMPONENTE-----*/
+    public function list_requerimientos_componente($componente){
+      $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
 
+      $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($componente[0]['com_id']); /// Lista requerimientos
+      $tabla='';
+      $tabla.=' 
+      <h2>'.strtoupper($proyecto[0]['tipo']).' '.strtoupper($proyecto[0]['proy_nombre']).' - '.strtoupper($proyecto[0]['abrev']).' / '.$componente[0]['serv_cod'].' .- '.$componente[0]['serv_descripcion'].'</h2>
+      <hr>
+        <section class="col col-6">
+          <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
+        </section>
+            <table class="table table-bordered" id="datos">
+              <thead>
+              <tr style="font-size: 12px;" bgcolor="#eceaea" align=center>
+                <th style="width:1%;height:15px;">#</th>
+                <th style="width:2%;">COD.<br>ACT.</th> 
+                <th style="width:4%;">PARTIDA</th>
+                <th style="width:18%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:5%;">UNIDAD</th>
+                <th style="width:4%;">CANTIDAD</th>
+                <th style="width:5%;">UNITARIO</th>
+                <th style="width:5%;">TOTAL</th>
+                <th style="width:4%;">ENE.</th>
+                <th style="width:4%;">FEB.</th>
+                <th style="width:4%;">MAR.</th>
+                <th style="width:4%;">ABR.</th>
+                <th style="width:4%;">MAY.</th>
+                <th style="width:4%;">JUN.</th>
+                <th style="width:4%;">JUL.</th>
+                <th style="width:4%;">AGO.</th>
+                <th style="width:4%;">SEPT.</th>
+                <th style="width:4%;">OCT.</th>
+                <th style="width:4%;">NOV.</th>
+                <th style="width:4%;">DIC.</th>
+                <th style="width:8%;">OBSERVACI&Oacute;N</th>
+              </tr>
+              </thead>
+              <tbody>';
+              $cont = 0; $total=0; 
+              foreach ($lista_insumos as $row) {
+              $cont++;
+              $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+              $total=$total+$row['ins_costo_total'];
+              $color='';
+              if(count($prog)!=0){
+                if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
+                  $color='#f5bfb6';
+                }
+              }
 
+              $tabla.=
+              '<tr style="font-size: 10px;" >
+                  <td style="width: 1%; font-size: 6px; text-align: center;height:13px;">'.$cont.'</td>
+                  <td style="width: 2%; text-align: center;font-size: 15px;"><b>'.$row['prod_cod'].'</b></td>
+                  <td style="width: 4%; text-align: center; font-size: 15px;"><b>'.$row['par_codigo'].'</b></td>
+                  <td style="width: 18%; text-align: left;">'.strtoupper($row['ins_detalle']).'</td>
+                  <td style="width: 5%; text-align: left">'.strtoupper($row['ins_unidad_medida']).'</td>
+                  <td style="width: 4%; text-align: right">'.round($row['ins_cant_requerida'],2).'</td>
+                  <td style="width: 5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                  <td style="width: 5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>'; 
+                  if(count($prog)!=0){ 
+                  $tabla.=
+                  '<td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes2'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes3'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes4'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes5'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes6'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes7'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes8'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes9'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes10'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes11'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes12'], 2, ',', '.').'</td>';
+                  }
+                  else{
+                  $tabla.=
+                  '<td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>';
+                  }
 
+              $tabla.='
+                  <td style="width: 8%; text-align: left;">'.$row['ins_observacion'].'</td>
+                  
+              </tr>';
+              }
 
+          $tabla.='
+              </tbody>
+              <tr class="modo1" bgcolor="#eceaea">
+                  <td colspan="6" style="height:10px;" ><b>TOTAL PROGRAMADO </b></td>
+                  <td style="width: 4%; text-align: right; font-size: 15px;"><b>'.number_format($total, 2, ',', '.').'</b></td>
+                  <td colspan="14"></td>
+              </tr>
+          </table><br>';
+      return $tabla;
+    }
 
 
 

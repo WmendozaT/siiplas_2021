@@ -85,7 +85,7 @@ class Producto extends CI_Controller {
         }
 
         
-        $data['button']=$this->programacionpoa->button_form4(count($data['productos']));
+        $data['button']=$this->programacionpoa->button_form4(count($data['productos']),$com_id);
         $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
 
@@ -98,6 +98,7 @@ class Producto extends CI_Controller {
         redirect('prog/list_serv/'.$com_id);
       }
   }
+
 
 
     /*---- GET DATOS PRODUCTO FORM 4 ----*/
