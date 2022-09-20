@@ -131,10 +131,8 @@ $route['rep/get_uadministrativas'] = 'reportes_cns/rep_operaciones/get_unidades_
 $route['rep/exportar_operaciones_distrital/(:any)'] = 'reportes_cns/exporting_datos/operaciones_distrital/$1/$2/$3'; ///// Exportar Operaciones por distrital 2020-2021
 //$route['rep/exportar_operaciones_unidad/(:any)'] = 'reportes_cns/exporting_datos/operaciones_unidad/$1'; ///// Exportar Operaciones por Unidad
 
-//$route['rep/ver_consolidado_operaciones/(:any)'] = 'reportes_cns/exporting_datos/operaciones_nacional/$1'; ///// Exportar Actividades,Operaciones Nacional (Consolidado)
-
-//$route['rep/exportar_plantilla_migracion/(:any)'] = 'reportes_cns/exporting_datosmigracion/exportar_planilla_migracion_poa/$1/$2'; ///// Exportar Actividades,Requerimientos hacia plantilla de Migracion 2021
-
+///=== Reporte Consulta POA Presupuesto por Partidas
+$route['consulta_ppto_poa'] = 'reportes_cns/crep_consultafinanciera/index'; ///// Menu consulta Financiera 2022
 
 
 //$route['rep/exportar_requerimientos_regional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_regional/$1/$2'; ///// Exportar Requerimientos por regional
