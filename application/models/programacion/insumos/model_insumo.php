@@ -473,5 +473,24 @@ class Model_insumo extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+
+    //// ---- LISTA DE REQUERIMIENTOS POR UNIDAD ORGANIZACIONAL
+    function get_lista_requerimientos_unidad_partida($aper_id,$tp_id,$par_id){
+        if($par_id==0){ /// Consolidado
+            $sql = 'select *
+                    from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                    where aper_id='.$aper_id.'';
+        }
+        else{ /// por partida
+            $sql = 'select *
+                    from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                    where aper_id='.$aper_id.' and par_id='.$par_id.'';
+        }
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }
 ?>

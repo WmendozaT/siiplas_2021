@@ -211,70 +211,18 @@
         <!-- Voice command : plugin -->
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-<!--         <script type="text/javascript">
-            function ver_poa(proy_id) {
-                $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
-                $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
-                
-                var url = "<?php echo site_url("")?>/programacion/proyecto/get_poa";
-                var request;
-                if (request) {
-                    request.abort();
-                }
-                request = $.ajax({
-                    url: url,
-                    type: "POST",
-                    dataType: 'json',
-                    data: "proy_id="+proy_id
-                });
-
-                request.done(function (response, textStatus, jqXHR) {
-
-                if (response.respuesta == 'correcto') {
-                    if(response.proyecto[0]['tp_id']==1){
-                        $('#titulo').html('<font size=3><b>'+response.proyecto[0]['aper_programa']+' '+response.proyecto[0]['proy_sisin']+' 000 - '+response.proyecto[0]['proy_nombre']+'</b></font>');
-                    }
-                    else{
-                        $('#titulo').html('<font size=3><b>'+response.proyecto[0]['act_descripcion']+' '+response.proyecto[0]['abrev']+'</b></font>');
-                    }
-                    
-                    $('#content1').fadeIn(1000).html(response.tabla);
-                }
-                else{
-                    alertify.error("ERROR AL RECUPERAR INFORMACION");
-                }
-
-                });
-            }
-        </script> -->
-           
         <script type="text/javascript">
         $(document).ready(function() {
             pageSetUp();
-/*            $("#dep_id").change(function () {
-                $("#dep_id option:selected").each(function () {
-                    //dist_id=$('[name="dist_id"]').val();
-                    elegido=$(this).val();
-                    if(elegido==0){
-                       window.location.reload(true);
-                    }
-                    else{
-                        $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'distrital' }, function(data){
-                            $("#lista_consolidado").html('<?php echo $mensaje;?>');
-
-                        });
-                    }
-                });
-            });*/
-
-            
-
             $("#dep_id").change(function () {
                 $("#dep_id option:selected").each(function () {
                     elegido=$(this).val();
 
                     $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'tipo' }, function(data){
                         $("#tp_id").html(data);
+                        $("#aper_id").html('');
+                        $("#par_id").html('');
+                        $("#lista_consolidado").html('SELECCIONE TIPO DE GASTO !');
                     });
                 });
             });
@@ -299,7 +247,8 @@
                     request.done(function (response, textStatus, jqXHR) {
                         if (response.respuesta == 'correcto') {
                             $('#aper_id').fadeIn(1000).html(response.lista_unidades);
-                            
+                            $("#par_id").html('');
+                            $("#lista_consolidado").html('SELECCIONE UNIDAD / ESTABLECIMIENTO / PROYECTOS DE INVERSION');
                         }
                         else{
                             alertify.error("ERROR AL LISTAR");
@@ -309,82 +258,13 @@
                 });
             });
 
-            $("#tps_id").change(function () {
-                $("#tp_id option:selected").each(function () {
+            $("#aper_id").change(function () {
+                $("#aper_id option:selected").each(function () {
+                    aper_id=$(this).val();
                     dep_id=$('[name="dep_id"]').val();
-                    dist_id=$('[name="dist_id"]').val();
-                    rep_id=$('[name="rep_id"]').val();
-                    tp_id=$(this).val();
-
-                  //  alert(dep_id+'--'+dist_id)
-                    if(rep_id!=4){
-                      //  alert("dep_id="+dep_id+"dist_id="+dist_id+" &tp_id="+tp_id+" &tp_rep="+rep_id)
-                        $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
-                        var url = "<?php echo site_url("")?>/reportes_cns/rep_operaciones/get_lista_reportepoa";
-                        var request;
-                        if (request) {
-                            request.abort();
-                        }
-                        request = $.ajax({
-                            url: url,
-                            type: "POST",
-                            dataType: 'json',
-                            data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id+"&tp_rep="+rep_id
-                        });
-
-                        request.done(function (response, textStatus, jqXHR) {
-                            if (response.respuesta == 'correcto') {
-                                $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
-                            }
-                            else{
-                                alertify.error("ERROR AL LISTAR");
-                            }
-                        }); 
-                    }
-                    else{
-                        $('#unidad').slideDown();
-                        $("#lista_consolidado").html('');
-                        var url = "<?php echo site_url("")?>/reportes_cns/rep_operaciones/get_unidades";
-                        var request;
-                        if (request) {
-                            request.abort();
-                        }
-                        request = $.ajax({
-                            url: url,
-                            type: "POST",
-                            dataType: 'json',
-                            data: "dep_id="+dep_id+"dist_id="+dist_id+"&tp_id="+tp_id
-                        });
-
-                        request.done(function (response, textStatus, jqXHR) {
-                            if (response.respuesta == 'correcto') {
-                                $('#proy_id').fadeIn(1000).html(response.lista_actividad);
-                            }
-                            else{
-                                alertify.error("ERROR AL LISTAR");
-                            }
-                        }); 
-                    }
-                     
-                });
-            });
-        })
-
-            $("#proy_id").change(function () {
-                $("#proy_id option:selected").each(function () {
-                    elegido=$(this).val();
-                    $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'subactividades' }, function(data){
-                        $("#sub_act").html(data);
-                        $("#lista_consolidado").html('');
-                    });
-                });
-            });
-
-            $("#sub_act").change(function () {
-                $("#sub_act option:selected").each(function () {
-                    com_id=$(this).val();
-                    $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Lista de Requerimientos Programados / Certificados ...</div>');
-                    var url = "<?php echo site_url("")?>/reportes_cns/rep_operaciones/get_subactividad";
+                    tp_id=$('[name="tp_id"]').val();
+                  
+                    var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/get_partidas";
                     var request;
                     if (request) {
                         request.abort();
@@ -393,20 +273,56 @@
                         url: url,
                         type: "POST",
                         dataType: 'json',
-                        data: "com_id="+com_id
+                        data: "dep_id="+dep_id+"&tp_id="+tp_id+"&aper_id="+aper_id
                     });
 
                     request.done(function (response, textStatus, jqXHR) {
                         if (response.respuesta == 'correcto') {
-                            $('#lista_consolidado').fadeIn(1000).html(response.lista_requerimientos_certificados);
+                            $('#par_id').fadeIn(1000).html(response.lista_partidas);
+                            $("#lista_consolidado").html('');
                         }
                         else{
                             alertify.error("ERROR AL LISTAR");
                         }
                     }); 
-
+                     
                 });
             });
+
+
+            $("#par_id").change(function () {
+                $("#par_id option:selected").each(function () {
+                    par_id=$(this).val();
+                    dep_id=$('[name="dep_id"]').val();
+                    tp_id=$('[name="tp_id"]').val();
+                    aper_id=$('[name="aper_id"]').val();
+                  
+                    $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
+                    var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/get_reporte_ppto";
+                    var request;
+                    if (request) {
+                        request.abort();
+                    }
+                    request = $.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: 'json',
+                        data: "dep_id="+dep_id+"&tp_id="+tp_id+"&aper_id="+aper_id+"&par_id="+par_id
+                    });
+
+                    request.done(function (response, textStatus, jqXHR) {
+                        if (response.respuesta == 'correcto') {
+                            $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+                        }
+                        else{
+                            alertify.error("ERROR AL LISTAR");
+                        }
+                    }); 
+                     
+                });
+            });
+
+        })
 
         </script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>

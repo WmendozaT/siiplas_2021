@@ -133,6 +133,7 @@ $route['rep/exportar_operaciones_distrital/(:any)'] = 'reportes_cns/exporting_da
 
 ///=== Reporte Consulta POA Presupuesto por Partidas
 $route['consulta_ppto_poa'] = 'reportes_cns/crep_consultafinanciera/index'; ///// Menu consulta Financiera 2022
+$route['exportar_consulta_ppto_poa/(:any)'] = 'reportes_cns/crep_consultafinanciera/exportar_consulta_financiera/$1/$2/$3'; ///// Menu consulta Financiera 2022
 
 
 //$route['rep/exportar_requerimientos_regional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_regional/$1/$2'; ///// Exportar Requerimientos por regional
