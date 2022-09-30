@@ -302,7 +302,7 @@ class Cservicios extends CI_Controller {
                             }
                         }
                         $tabla.='
-                        <td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO UNIDAD : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
+                        <td bgcolor="#d4f1fb" align="center" title="'.$row["com_id"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
                         <td>'.$row['serv_descripcion'].'</td>
                         <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
                         <td>'.$row['com_ponderacion'].' %</td>
