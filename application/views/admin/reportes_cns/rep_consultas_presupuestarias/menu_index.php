@@ -117,7 +117,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Reportes POA</li><li>Consultas Presupuestarias</li>
+                    <li>Reportes POA</li><li>Consultas Presupuestaria POA (Formulario N° 5)</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -217,21 +217,109 @@
             $("#dep_id").change(function () {
                 $("#dep_id option:selected").each(function () {
                     elegido=$(this).val();
+                    if(elegido!=0){
+                            $('#tp_id').slideDown();
+                            $("#aper_id").slideDown();
+                            $("#par_id").slideDown();
 
-                    $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'tipo' }, function(data){
-                        $("#tp_id").html(data);
-                        $("#aper_id").html('');
-                        $("#par_id").html('');
-                        $("#lista_consolidado").html('SELECCIONE TIPO DE GASTO !');
-                    });
+                            $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'tipo' }, function(data){
+                            $("#tp_id").html(data);
+                            $("#aper_id").html('');
+                            $("#par_id").html('');
+                            $("#lista_consolidado").html('SELECCIONE TIPO DE GASTO !');
+                        });
+                    }
+                    else{
+                            $('#tp_id').slideUp();
+                            $("#aper_id").slideUp();
+                            $("#par_id").slideUp();
+
+                            $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
+                            var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/tp_gasto";
+                            var request;
+                            if (request) {
+                                request.abort();
+                            }
+                            request = $.ajax({
+                                url: url,
+                                type: "POST",
+                                dataType: 'json',
+                                data: "dep_id="+dep_id
+                            });
+
+                            request.done(function (response, textStatus, jqXHR) {
+                                if (response.respuesta == 'correcto') {
+                                    $('#tp_id').slideUp();
+                                    $("#aper_id").slideUp();
+                                    $("#par_id").slideUp();
+
+                                    $("#tp_id").html('');
+                                    $("#aper_id").html('');
+                                    $("#par_id").html('');
+
+                                    $("#lista_consolidado").html(response.detalle);
+                                }
+                                else{
+                                    alertify.error("ERROR AL LISTAR");
+                                }
+                            }); 
+                    }
+                    
                 });
             });
 
+            /// Tipo de Gasto
+            $("#dep_idD").change(function () {
+                $("#dep_idD option:selected").each(function () {
+                    dep_id=$(this).val();
+                    $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
+                    var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/tp_gasto";
+                    var request;
+                    if (request) {
+                        request.abort();
+                    }
+                    request = $.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: 'json',
+                        data: "dep_id="+dep_id
+                    });
+
+                    request.done(function (response, textStatus, jqXHR) {
+                        if (response.respuesta == 'correcto') {
+                            if(response.dep_id==0){
+
+                                $('#tp_id').slideUp();
+                                $("#aper_id").slideUp();
+                                $("#par_id").slideUp();
+
+                                $("#tp_id").html('');
+                                $("#aper_id").html('');
+                                $("#par_id").html('');
+
+                                $("#lista_consolidado").html(response.detalle);
+                            }
+                            else{
+                                $('#tp_id').fadeIn(1000).html(response.detalle);
+                                $("#aper_id").slideDown();
+                                $("#par_id").slideDown();
+                                $("#lista_consolidado").html('SELECCIONE TIPO DE GASTO !');
+                            }
+                            
+                        }
+                        else{
+                            alertify.error("ERROR AL LISTAR");
+                        }
+                    }); 
+                });
+            });
+
+            /// Tipo de Gasto
             $("#tp_id").change(function () {
                 $("#tp_id option:selected").each(function () {
                     tp_id=$(this).val();
                     dep_id=$('[name="dep_id"]').val();
-                  
+                 
                     var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/get_unidades";
                     var request;
                     if (request) {
@@ -258,6 +346,7 @@
                 });
             });
 
+            /// proyecto, unidad
             $("#aper_id").change(function () {
                 $("#aper_id option:selected").each(function () {
                     aper_id=$(this).val();
@@ -289,7 +378,7 @@
                 });
             });
 
-
+            /// partida
             $("#par_id").change(function () {
                 $("#par_id option:selected").each(function () {
                     par_id=$(this).val();

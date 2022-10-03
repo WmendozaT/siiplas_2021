@@ -40,7 +40,7 @@ class Crep_consultafinanciera extends CI_Controller {
     public function index(){
       $data['menu']=$this->menu(7);
       $data['list']=$this->menu_nacional();
-      $data['mensaje']='<div class="jumbotron"><h1>Consulta Presupuestaria POA '.$this->gestion.'</h1><p>Reporte Presupuestaria POA Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Informacion Presupuestaria por Partidas</li></ol></div>';
+      $data['mensaje']='<div class="jumbotron"><h1>Consulta Presupuestaria POA '.$this->gestion.'</h1><p>Reporte Presupuestaria POA (Requerimientos) Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Informacion Presupuestaria por Partidas</li></ol></div>';
       $this->load->view('admin/reportes_cns/rep_consultas_presupuestarias/menu_index', $data);
 
       //echo $this->consolidado_requerimientos_unidad_partida(15255,4,64);
@@ -56,13 +56,14 @@ class Crep_consultafinanciera extends CI_Controller {
       <article class="col-sm-12">
         <div class="well">
           <form class="smart-form">
-              <header><b>CONSULTA FINANCIERA POA '.$this->gestion.'</b></header>
+              <header><b>CONSULTA PRESUPUESTO POA '.$this->gestion.'</b></header>
               <fieldset>          
                 <div class="row">
                   <section class="col col-2">
                     <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
                     <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
-                    <option value="0">SELECCIONE REGIONAL</option>';
+                    <option value="">SELECCIONE REGIONAL</option>
+                    <option value="0">INSTITUCIONAL CNS</option>';
                     foreach($regionales as $row){
                       if($row['dep_id']!=0){
                         $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
@@ -97,6 +98,78 @@ class Crep_consultafinanciera extends CI_Controller {
         </article>';
     return $tabla;
   }
+
+
+    /*--- GET LISTA DE UNIDADES, ESTABLECIMIENTOS Y PROYECTOS DE INVERSION (2022)---*/
+    public function tp_gasto(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+     
+        $salida='';
+
+          $ppto_pi=$this->model_insumo->consolidado_ppto_x_programas_institucional(1); /// Proyecto de Inversion
+          $ppto_gcorriente=$this->model_insumo->consolidado_ppto_x_programas_institucional(4); /// Gasto Corriente
+
+          
+          /// ---- Gasto Corriente
+          $tabla='';
+          $tabla.='
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">PROGRAMA '.$this->gestion.'</th>
+                <th scope="col">PPTO POA '.$this->gestion.'</th>
+                <th scope="col">VER DETALLE</th>
+              </tr>
+            </thead>
+            <tbody>';
+            foreach ($ppto_gcorriente as $row){
+              $tabla.='
+              <tr>
+                <td>'.$row['aper_programa'].'</td>
+                <td>'.$row['ppto'].'</td>
+                <td></td>
+              </tr>';
+            }
+          $tabla.='
+            </tbody>
+          </table>';
+
+          $tabla.='
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">PROGRAMA '.$this->gestion.'</th>
+                <th scope="col">PPTO POA '.$this->gestion.'</th>
+                <th scope="col">VER DETALLE</th>
+              </tr>
+            </thead>
+            <tbody>';
+            foreach ($ppto_pi as $row){
+              $tabla.='
+              <tr>
+                <td>'.$row['aper_programa'].'</td>
+                <td>'.$row['ppto'].'</td>
+                <td></td>
+              </tr>';
+            }
+          $tabla.='
+            </tbody>
+          </table>';
+          $salida=$tabla;
+        
+        $result = array(
+          'respuesta' => 'correcto',
+          'dep_id' => $dep_id,
+          'detalle' => $salida,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
 
 
     /*--- GET LISTA DE UNIDADES, ESTABLECIMIENTOS Y PROYECTOS DE INVERSION (2022)---*/

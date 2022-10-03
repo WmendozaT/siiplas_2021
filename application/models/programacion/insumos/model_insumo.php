@@ -492,5 +492,18 @@ class Model_insumo extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+
+    //// ---- CONSOLIDADO DE PRESUPUESTO POA (FORM 5) INSTITUCIONAL POR CATEGORIA PROGRAMATICA
+    function consolidado_ppto_x_programas_institucional($tp_id){
+        $sql = 'select aper_programa, SUM(ins_costo_total) ppto
+                from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                group by aper_programa
+                order by aper_programa asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }
 ?>
