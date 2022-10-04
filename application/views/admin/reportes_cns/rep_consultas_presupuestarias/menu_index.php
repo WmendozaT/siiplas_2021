@@ -135,7 +135,7 @@
             <!-- END MAIN CONTENT -->
 
             <!-- MODAL REPORTE POA -->
-            <div class="modal fade" id="modal_poa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <!-- <div class="modal fade" id="modal_poa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog" id="mdialTamanio">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -150,7 +150,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
         <!-- ========================================================================================================= -->
@@ -211,213 +211,13 @@
         <!-- Voice command : plugin -->
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <script type="text/javascript">
-        $(document).ready(function() {
-            pageSetUp();
-            $("#dep_id").change(function () {
-                $("#dep_id option:selected").each(function () {
-                    elegido=$(this).val();
-                    if(elegido!=0){
-                            $('#tp_id').slideDown();
-                            $("#aper_id").slideDown();
-                            $("#par_id").slideDown();
-
-                            $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'tipo' }, function(data){
-                            $("#tp_id").html(data);
-                            $("#aper_id").html('');
-                            $("#par_id").html('');
-                            $("#lista_consolidado").html('SELECCIONE TIPO DE GASTO !');
-                        });
-                    }
-                    else{
-                            $('#tp_id').slideUp();
-                            $("#aper_id").slideUp();
-                            $("#par_id").slideUp();
-
-                            $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
-                            var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/tp_gasto";
-                            var request;
-                            if (request) {
-                                request.abort();
-                            }
-                            request = $.ajax({
-                                url: url,
-                                type: "POST",
-                                dataType: 'json',
-                                data: "dep_id="+dep_id
-                            });
-
-                            request.done(function (response, textStatus, jqXHR) {
-                                if (response.respuesta == 'correcto') {
-                                    $('#tp_id').slideUp();
-                                    $("#aper_id").slideUp();
-                                    $("#par_id").slideUp();
-
-                                    $("#tp_id").html('');
-                                    $("#aper_id").html('');
-                                    $("#par_id").html('');
-
-                                    $("#lista_consolidado").html(response.detalle);
-                                }
-                                else{
-                                    alertify.error("ERROR AL LISTAR");
-                                }
-                            }); 
-                    }
-                    
-                });
-            });
-
-            /// Tipo de Gasto
-            $("#dep_idD").change(function () {
-                $("#dep_idD option:selected").each(function () {
-                    dep_id=$(this).val();
-                    $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
-                    var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/tp_gasto";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "dep_id="+dep_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-                        if (response.respuesta == 'correcto') {
-                            if(response.dep_id==0){
-
-                                $('#tp_id').slideUp();
-                                $("#aper_id").slideUp();
-                                $("#par_id").slideUp();
-
-                                $("#tp_id").html('');
-                                $("#aper_id").html('');
-                                $("#par_id").html('');
-
-                                $("#lista_consolidado").html(response.detalle);
-                            }
-                            else{
-                                $('#tp_id').fadeIn(1000).html(response.detalle);
-                                $("#aper_id").slideDown();
-                                $("#par_id").slideDown();
-                                $("#lista_consolidado").html('SELECCIONE TIPO DE GASTO !');
-                            }
-                            
-                        }
-                        else{
-                            alertify.error("ERROR AL LISTAR");
-                        }
-                    }); 
-                });
-            });
-
-            /// Tipo de Gasto
-            $("#tp_id").change(function () {
-                $("#tp_id option:selected").each(function () {
-                    tp_id=$(this).val();
-                    dep_id=$('[name="dep_id"]').val();
-                 
-                    var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/get_unidades";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "dep_id="+dep_id+"&tp_id="+tp_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-                        if (response.respuesta == 'correcto') {
-                            $('#aper_id').fadeIn(1000).html(response.lista_unidades);
-                            $("#par_id").html('');
-                            $("#lista_consolidado").html('SELECCIONE UNIDAD / ESTABLECIMIENTO / PROYECTOS DE INVERSION');
-                        }
-                        else{
-                            alertify.error("ERROR AL LISTAR");
-                        }
-                    }); 
-                     
-                });
-            });
-
-            /// proyecto, unidad
-            $("#aper_id").change(function () {
-                $("#aper_id option:selected").each(function () {
-                    aper_id=$(this).val();
-                    dep_id=$('[name="dep_id"]').val();
-                    tp_id=$('[name="tp_id"]').val();
-                  
-                    var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/get_partidas";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "dep_id="+dep_id+"&tp_id="+tp_id+"&aper_id="+aper_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-                        if (response.respuesta == 'correcto') {
-                            $('#par_id').fadeIn(1000).html(response.lista_partidas);
-                            $("#lista_consolidado").html('');
-                        }
-                        else{
-                            alertify.error("ERROR AL LISTAR");
-                        }
-                    }); 
-                     
-                });
-            });
-
-            /// partida
-            $("#par_id").change(function () {
-                $("#par_id option:selected").each(function () {
-                    par_id=$(this).val();
-                    dep_id=$('[name="dep_id"]').val();
-                    tp_id=$('[name="tp_id"]').val();
-                    aper_id=$('[name="aper_id"]').val();
-                  
-                    $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
-                    var url = "<?php echo site_url("")?>/reportes_cns/crep_consultafinanciera/get_reporte_ppto";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "dep_id="+dep_id+"&tp_id="+tp_id+"&aper_id="+aper_id+"&par_id="+par_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-                        if (response.respuesta == 'correcto') {
-                            $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
-                        }
-                        else{
-                            alertify.error("ERROR AL LISTAR");
-                        }
-                    }); 
-                     
-                });
-            });
-
-        })
-
-        </script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+        <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+        <script src = "<?php echo base_url(); ?>mis_js/reportes/rep_consulta_ppto_poa.js"></script>
+
     </body>
 </html>

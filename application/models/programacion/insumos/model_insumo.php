@@ -497,7 +497,7 @@ class Model_insumo extends CI_Model{
 
     //// ---- CONSOLIDADO DE PRESUPUESTO POA (FORM 5) INSTITUCIONAL POR CATEGORIA PROGRAMATICA
     function consolidado_ppto_x_programas_institucional($tp_id){
-        $sql = 'select aper_programa, SUM(ins_costo_total) ppto
+        $sql = 'select aper_programa, SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
                 from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
                 group by aper_programa
                 order by aper_programa asc';
@@ -505,5 +505,34 @@ class Model_insumo extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+    //// ---- CONSOLIDADO DE PRESUPUESTO POA (FORM 5) REGIONAL POR CATEGORIA PROGRAMATICA (TODOS)
+    function consolidado_ppto_x_programas_regional($tp_id,$dep_id){
+        $sql = 'select dep_id,aper_programa, SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
+                from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                where dep_id='.$dep_id.'
+                group by dep_id, aper_programa
+                order by aper_programa asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    //// ---- GET DETALLE DE PRESUPUESTO POA (FORM 5) REGIONAL POR CATEGORIA PROGRAMATICA
+    function get_ppto_x_programa_regional($tp_id,$dep_id,$aper_programa){
+        $sql = 'select dep_id,aper_programa, SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
+                from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                where dep_id='.$dep_id.' and aper_programa=\''.$aper_programa.'\'
+                group by dep_id, aper_programa
+                order by aper_programa asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
 }
 ?>
