@@ -194,31 +194,29 @@
 
 
   //// Ver detalle del presupuesto programado (categoria programatica)por regional 
-  function ver_detalle_ppto_poa(programa,tp_id,dep_id) {
-    $('#detalle_ppto'+tp_id).html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
-      var url = base+"index.php/reportes_cns/crep_consultafinanciera/get_ppto_poa_programa";
-      var request;
-      if (request) {
-          request.abort();
-      }
-      request = $.ajax({
-          url: url,
-          type: "POST",
-          dataType: 'json',
-          data: "programa="+programa+"&tp_id="+tp_id+"&dep_id="+dep_id
-      });
+  function ver_detalle_ppto_poa(dep_id,tp_id) {
+    $('#detalle_ppto'+tp_id).html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/load.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
+    var url = base+"index.php/reportes_cns/crep_consultafinanciera/get_ppto_poa_categoria_programatica_regional";
+    var request;
+    if (request) {
+        request.abort();
+    }
+    request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "dep_id="+dep_id+"&tp_id="+tp_id
+    });
 
-      request.done(function (response, textStatus, jqXHR) {
-          if (response.respuesta == 'correcto') {
-              $('#detalle_ppto'+tp_id).fadeIn(1000).html(response.detalle);
-          }
-          else{
-              alertify.error("ERROR AL LISTAR");
-          }
-      }); 
+    request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+            $('#detalle_ppto'+tp_id).fadeIn(1000).html(response.detalle);
+        }
+        else{
+            alertify.error("ERROR AL LISTAR");
+        }
+    }); 
   }
-
-
 
 
 
