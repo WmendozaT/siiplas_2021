@@ -42,7 +42,6 @@ class Crep_consultafinanciera extends CI_Controller {
       $data['list']=$this->menu_nacional();
       $data['mensaje']='<div class="jumbotron"><h1>Consulta Presupuestaria POA '.$this->gestion.'</h1><p>Reporte Presupuestaria POA (Requerimientos) Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Informacion Presupuestaria por Partidas</li></ol></div>';
       $this->load->view('admin/reportes_cns/rep_consultas_presupuestarias/menu_index', $data);
-
       //echo $this->consolidado_requerimientos_unidad_partida(15255,4,64);
     }
 
@@ -105,87 +104,92 @@ class Crep_consultafinanciera extends CI_Controller {
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
-     
+        $tp_id = $this->security->xss_clean($post['tp_id']); /// tp
         $salida='';
 
-          $ppto_pi=$this->model_insumo->consolidado_ppto_x_programas_institucional(1); /// Proyecto de Inversion
-          $ppto_gcorriente=$this->model_insumo->consolidado_ppto_x_programas_institucional(4); /// Gasto Corriente
+          $ppto_gcorriente=$this->model_insumo->consolidado_ppto_x_programas_institucional($tp_id); /// Gasto Corriente
           $regionales=$this->model_proyecto->list_departamentos();
+
+          $titulo='GASTO CORRIENTE';
+          if($tp_id==1){
+            $titulo='PROY. INV.';
+          }
 
           /// ---- Gasto Corriente
           $tabla='';
-          $tabla.='<div class="widget-body">
+         $tabla.='<div class="widget-body">
                     <hr class="simple">
                     <ul id="myTab1" class="nav nav-tabs bordered">
                       <li class="active">
-                        <a href="#s1" data-toggle="tab"><b>PPTO. POA GASTO CORRIENTE</b></a>
+                        <a href="#s1" data-toggle="tab"><b>PPTO. POA - PROGRAMAS</b></a>
                       </li>
                       <li>
-                        <a href="#s2" data-toggle="tab"><b>PPTO. POA PROYECTO DE INVERSIÓN</b></a>
+                        <a href="#s2" data-toggle="tab"><b>PPTO. POA - OBJETIVOS ESTRAGETICOS</b></a>
                       </li>
                     </ul>
         
                     <div id="myTabContent1" class="tab-content padding-10">
                       <div class="tab-pane fade in active" id="s1">
-                        <div class="row">
-                          <h1><b>INSTITUCIONAL - GASTO CORRIENTE '.$this->gestion.' (APERTURAS PROGRAMATICAS)</b></h1>
+                        
+                        <div class="alert alert-success" role="alert">
+                          <h4 class="alert-heading">PPTO. POA '.$this->gestion.' CONSOLIDADO A NIVEL INSTITUCIONAL / '.$titulo.'</h4>
                           <hr>
+                          <b>CATEGORIA PROGRAMATICA '.$this->gestion.'</b>
+                        </div>
+
+                        <div class="row">
                           <div class="col-sm-6">
                             <center>
-                            <table class="table table-bordered" style="width:80%;">
+                            <table class="table table-bordered" style="width:90%;">
                               <thead>
                                 <tr>
                                   <th scope="col" style="width:30%;">PROGRAMA '.$this->gestion.'</th>
-                                  <th scope="col" style="width:20%;">PARTIDA</th>
                                   <th scope="col" style="width:20%;">PPTO POA '.$this->gestion.'</th>
                                   <th scope="col" style="width:20%;">PPTO CERT. '.$this->gestion.'</th>
+                                  <th scope="col" style="width:5%;">VER DETALLE</th>
                                 </tr>
                               </thead>
                               <tbody>';
                               $total_ppto_gc=0;
                               $total_ppto_gc_cert=0;
                               foreach ($ppto_gcorriente as $row){
-                                $programa=$this->model_proyecto->get_programa_padre($row['aper_programa']); /// Get Programa 
-                                $get_ppto_partida=$this->model_insumo->get_consolidado_partidas_ppto_x_programas_institucional(4,$row['aper_programa']);
+                                $programa=$this->model_proyecto->get_programa_padre($row['aper_programa']);
                                 $total_ppto_gc=$total_ppto_gc+$row['ppto_poa'];
                                 $total_ppto_gc_cert=$total_ppto_gc_cert+$row['ppto_certificado'];
                                 $tabla.='
                                 <tr>
-                                  <td><b>'.$row['aper_programa'].' '.$programa[0]['aper_proyecto'].' '.$programa[0]['aper_actividad'].' - '.$programa[0]['aper_descripcion'].'</b></td>
-                                  <td bgcolor="#e5f5f1" align=right></td>
+                                  <td>'.$row['aper_programa'].' '.$programa[0]['aper_proyecto'].' '.$programa[0]['aper_actividad'].' - '.$programa[0]['aper_descripcion'].'</td>
                                   <td bgcolor="#e5f5f1" align=right>'.number_format($row['ppto_poa'], 2, ',', '.').'</td>
                                   <td bgcolor="#e5f5f1" align=right>'.number_format($row['ppto_certificado'], 2, ',', '.').'</td>
+                                  <td bgcolor="#e5f5f1" align=center>
+                                    <a href="#" class="btn btn-primary" onclick="ver_detalle_ppto_poa_partida_prog_institucional(\''.$row['aper_programa'].'\','.$tp_id.',0);" title="VER DETALLE POR PARTIDAS">VER DETALLE</a>
+                                  </td>
                                 </tr>';
-                                foreach($get_ppto_partida as $part){
-                                  $tabla.='
-                                  <tr>
-                                    <td></td>
-                                    <td>'.$part['par_codigo'].'</td>
-                                    <td align=right>'.number_format($part['ppto_poa'], 2, ',', '.').'</td>
-                                    <td align=right>'.number_format($part['ppto_certificado'], 2, ',', '.').'</td>
-                                  </tr>';
-                                }
                               }
                             $tabla.='
                               </tbody>
                               <tr>
                                 <td align=right><b>TOTAL (Bs.)</b></td>
-                                <td></td>
-                                <td align=right><b>'.number_format($total_ppto_gc, 2, ',', '.').'</b></td>
-                                <td align=right><b>'.number_format($total_ppto_gc_cert, 2, ',', '.').'</b></td>
+                                <td bgcolor="#e5f5f1" align=right><b>'.number_format($total_ppto_gc, 2, ',', '.').'</b></td>
+                                <td bgcolor="#e5f5f1" align=right><b>'.number_format($total_ppto_gc_cert, 2, ',', '.').'</b></td>
+                                <td bgcolor="#e5f5f1"></td>
                               </tr>
                             </table>
+
+
+                            <div id="detalle_ppto_partida_institucional"></div>
+
+
                             </center>
                           </div>
 
                           <div class="col-sm-6">
-                           
                             <form class="form-horizontal">
                               <fieldset>
                                 <div class="form-group">
-                                  <label class="col-md-4 control-label">SELECCIONE DETALLE PPTO. POA POR REGIONAL</label>
+                                  <label class="col-md-4 control-label">SELECCIONE DETALLE PPTO. POA POR REGIONAL / '.$titulo.'</label>
                                   <div class="col-md-6">
-                                    <select class="form-control" id="dp_id" name="dp_id" onchange="ver_detalle_ppto_poa(this.value,4)" title="SELECCIONE REGIONAL">
+                                    <select class="form-control" id="dp_id" name="dp_id" onchange="ver_detalle_ppto_poa_regional(this.value,'.$tp_id.')" title="SELECCIONE REGIONAL">
                                       <option value="">Seleccione Regional ...</option>';
                                       foreach($regionales as $row){
                                         if($row['dep_id']!=0){
@@ -199,72 +203,26 @@ class Crep_consultafinanciera extends CI_Controller {
                               </fieldset>
                             </form>
 
-                            <div id="detalle_ppto4"></div>
+                            <div id="detalle_ppto"></div>
                           </div>
                         </div>
                       </div>
 
                       <div class="tab-pane fade" id="s2">
                         <div class="row">
+
+                        <div class="alert alert-success" role="alert">
+                          <h4 class="alert-heading">PPTO. POA '.$this->gestion.' CONSOLIDADO A NIVEL INSTITUCIONAL</h4>
+                          <hr>
+                          <b>OBJETIVO ESTRATEGICO '.$this->gestion.'</b>
+                        </div>
+                        
                           <div class="col-sm-4">
-                            <h1><b>INSTITUCIONAL - PROYECTO DE INVERSIÓN '.$this->gestion.' (APERTURAS PROGRAMATICAS)</b></h1>
-                            <hr>
-                            <center>
-                            <table class="table table-bordered">
-                              <thead>
-                                <tr>
-                                  <th scope="col" style="width:40%;">PROGRAMA '.$this->gestion.'</th>
-                                  <th scope="col" style="width:30%;">PPTO POA '.$this->gestion.'</th>
-                                  <th scope="col" style="width:30%;">PPTO CERT. '.$this->gestion.'</th>
-                                </tr>
-                              </thead>
-                              <tbody>';
-                              $total_ppto_pi=0;
-                              $total_ppto_pi_cert=0;
-                              foreach ($ppto_pi as $row){
-                                $programa=$this->model_proyecto->get_programa_padre($row['aper_programa']);
-                                $total_ppto_pi=$total_ppto_pi+$row['ppto_poa'];
-                                $total_ppto_pi_cert=$total_ppto_pi_cert+$row['ppto_certificado'];
-                                $tabla.='
-                                <tr>
-                                  <td>'.$row['aper_programa'].' '.$programa[0]['aper_proyecto'].' '.$programa[0]['aper_actividad'].' - '.$programa[0]['aper_descripcion'].'</td>
-                                  <td bgcolor="#e5f5f1" align=right>'.number_format($row['ppto_poa'], 2, ',', '.').'</td>
-                                  <td bgcolor="#e5f5f1" align=right>'.number_format($row['ppto_certificado'], 2, ',', '.').'</td>
-                                </tr>';
-                              }
-                            $tabla.='
-                              </tbody>
-                              <tr>
-                                <td align=right><b>TOTAL (Bs.)</b></td>
-                                <td bgcolor="#e5f5f1" align=right><b>'.number_format($total_ppto_pi, 2, ',', '.').'</b></td>
-                                <td bgcolor="#e5f5f1" align=right><b>'.number_format($total_ppto_pi_cert, 2, ',', '.').'</b></td>
-                              </tr>
-                            </table>
-                            </center>
+                           
                           </div>
 
                           <div class="col-sm-8">
-                           
-                            <form class="form-horizontal">
-                              <fieldset>
-                                <div class="form-group">
-                                  <label class="col-md-4 control-label">SELECCIONE DETALLE PPTO. POA POR REGIONAL</label>
-                                  <div class="col-md-6">
-                                    <select class="form-control" id="dp_id" name="dp_id" onchange="ver_detalle_ppto_poa(this.value,1)" title="SELECCIONE REGIONAL">
-                                      <option value="">Seleccione Regional ...</option>';
-                                      foreach($regionales as $row){
-                                        if($row['dep_id']!=0){
-                                          $tabla.='<option value="'.$row['dep_id'].'" >'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
-                                        }
-                                      }
-                                      $tabla.='
-                                    </select>
-                                  </div>
-                                </div>
-                              </fieldset>
-                            </form>
-
-                            <div id="detalle_ppto4"></div>
+                            <div id="detalle_ppto1"></div>
                           </div>
 
                         </div>
@@ -286,31 +244,29 @@ class Crep_consultafinanciera extends CI_Controller {
     }
 
 
-    /*--- GET DETALLE PPTO X PROGRAMA ---*/
+    /*--- GET LISTA DE PROGRAMAS PPTO X REGIONAL ---*/
     public function get_ppto_poa_categoria_programatica_regional(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
         $tp_id = $this->security->xss_clean($post['tp_id']); /// tp id
-        
+        $regional=$this->model_proyecto->get_departamento($dep_id);
         $ppto_prog_regional=$this->model_insumo->consolidado_ppto_x_programas_regional($tp_id,$dep_id);
      
-        //$programa=$this->model_proyecto->get_programa_padre($prog);
-
         $salida='';
         $tabla='';
         $tabla.='<div class="row">
-                  <h1><b>REGIONAL - GASTO CORRIENTE '.$this->gestion.' (APERTURAS PROGRAMATICAS)</b></h1>
+                  <h1><b>PPTO. POA REGIONAL '.strtoupper($regional[0]['dep_departamento']).' por  APERTURAS PROGRAMATICAS</b></h1>
                   <hr>
                   <div class="col-sm-12">
                     <center>
-                    <table class="table table-bordered" style="width:100%;" style="width:80%;">
+                    <table class="table table-bordered" style="width:80%;">
                       <thead>
                         <tr>
                           <th scope="col" style="width:30%;">PROGRAMA '.$this->gestion.'</th>
-                          <th scope="col" style="width:20%;">PARTIDA '.$this->gestion.'</th>
                           <th scope="col" style="width:15%;">PPTO POA '.$this->gestion.'</th>
                           <th scope="col" style="width:15%;">PPTO CERT. '.$this->gestion.'</th>
+                          <th scope="col" style="width:5%;"></th>
                         </tr>
                       </thead>
                       <tbody>';
@@ -324,22 +280,26 @@ class Crep_consultafinanciera extends CI_Controller {
                         $tabla.='
                         <tr>
                           <td>'.$row['aper_programa'].' '.$programa[0]['aper_proyecto'].' '.$programa[0]['aper_actividad'].' - '.$programa[0]['aper_descripcion'].'</td>
-                          <td bgcolor="#e5f5f1" align=right></td>
-                          <td bgcolor="#e5f5f1" align=right>'.number_format($row['ppto_poa'], 2, ',', '.').'</td>
-                          <td bgcolor="#e5f5f1" align=right>'.number_format($row['ppto_certificado'], 2, ',', '.').'</td>
+                          <td bgcolor="#f1e8cb" align=right>'.number_format($row['ppto_poa'], 2, ',', '.').'</td>
+                          <td bgcolor="#f1e8cb" align=right>'.number_format($row['ppto_certificado'], 2, ',', '.').'</td>
+                          <td bgcolor="#f1e8cb" align=center>
+                            <a href="#" class="btn btn-primary" onclick="ver_detalle_ppto_poa_partida_unidad_regional(\''.$row['aper_programa'].'\','.$tp_id.','.$row['dep_id'].');" title="VER DETALLE POR PARTIDAS POR UNIDADES">VER DETALLE</a>
+                          </td>
                         </tr>';
                       }
                     $tabla.='
                       </tbody>
                       <tr>
                         <td align=right><b>TOTAL (Bs.)</b></td>
-                        <td></td>
                         <td align=right><b>'.number_format($total_ppto_gc, 2, ',', '.').'</b></td>
                         <td align=right><b>'.number_format($total_ppto_gc_cert, 2, ',', '.').'</b></td>
                       </tr>
                     </table>
                     </center>
                   </div>
+
+                  <div id="detalle_ppto_partida_regional"></div>
+
                 </div>';
         
         $result = array(
@@ -353,6 +313,185 @@ class Crep_consultafinanciera extends CI_Controller {
           show_404();
       }
     }
+
+
+
+
+
+    /*--- GET LISTA DE PARTIDAS X PROGRAMAS PPTO X INSTITUCIONAL ---*/
+    public function ver_detalle_ppto_poa_partida_prog_institucional(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+        $tp_id = $this->security->xss_clean($post['tp_id']); /// tp id
+        $aper_programa = $this->security->xss_clean($post['programa']); /// Programa
+        $programa=$this->model_proyecto->get_programa_padre($aper_programa); /// Datos del Programa
+
+        $detalle_partida_programa=$this->model_insumo->get_consolidado_partidas_ppto_x_programas_institucional($tp_id,$aper_programa);
+        $salida='';
+        $tabla='';
+        $tabla.='<div class="row">
+                  <h1>PROGRAMA : <b>'.$programa[0]['aper_programa'].' '.$programa[0]['aper_proyecto'].' '.$programa[0]['aper_actividad'].'</b> : '.$programa[0]['aper_descripcion'].'</h1>
+                  <hr>
+                  <div class="col-sm-12">
+                    <center>
+                    <img src="'.base_url().'/assets/ifinal/abajo.png" alt="loading" height=50 width=50/>
+                    <table class="table table-bordered" style="width:80%;">
+                      <thead>
+                        <tr>
+                          <th scope="col" style="width:5%;">PROGRAMA '.$this->gestion.'</th>
+                          <th scope="col" style="width:10%;">PARTIDA '.$this->gestion.'</th>
+                          <th scope="col" style="width:15%;">PPTO POA '.$this->gestion.'</th>
+                          <th scope="col" style="width:15%;">PPTO CERT. '.$this->gestion.'</th>
+                        </tr>
+                      </thead>
+                      <tbody>';
+                      $total_ppto_gc=0;
+                      $total_ppto_gc_cert=0;
+                      foreach ($detalle_partida_programa as $row){
+
+                        $total_ppto_gc=$total_ppto_gc+$row['ppto_poa'];
+                        $total_ppto_gc_cert=$total_ppto_gc_cert+$row['ppto_certificado'];
+                        $tabla.='
+                        <tr>
+                          <td align=center><b>'.$row['aper_programa'].'</b></td>
+                          <td bgcolor="#e5f5f1" align=center><b>'.$row['par_codigo'].'</b></td>
+                          <td bgcolor="#e5f5f1" align=right>'.number_format($row['ppto_poa'], 2, ',', '.').'</td>
+                          <td bgcolor="#e5f5f1" align=right>'.number_format($row['ppto_certificado'], 2, ',', '.').'</td>
+                        </tr>';
+                      }
+                    $tabla.='
+                      </tbody>
+                      <tr>
+                        <td align=right colspan=2><b>TOTAL (Bs.)</b></td>
+                        <td align=right><b>'.number_format($total_ppto_gc, 2, ',', '.').'</b></td>
+                        <td align=right><b>'.number_format($total_ppto_gc_cert, 2, ',', '.').'</b></td>
+                      </tr>
+                    </table>
+                    </center>
+                  </div>
+                </div>';
+        
+        $result = array(
+          'respuesta' => 'correcto',
+          'detalle_partidas' => $tabla,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+
+    /*--- GET LISTA DE PARTIDAS X PROGRAMAS PPTO X REGIONAL ---*/
+    public function ver_detalle_ppto_poa_partida_prog_regional(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
+        $tp_id = $this->security->xss_clean($post['tp_id']); /// tp id
+        $aper_programa = $this->security->xss_clean($post['programa']); /// Programa
+        $programa=$this->model_proyecto->get_programa_padre($aper_programa); /// Datos del Programa
+
+        $nombre='PROYECTO DE INVERSIÓN';
+        if($tp_id==4){
+          $nombre='UNIDAD / ESTABLECIMIENTOS';
+        }
+
+        $lista_unidad_programa=$this->model_insumo->get_lista_unidad_ppto_programa($tp_id,$dep_id,$aper_programa);
+        $salida='';
+        $tabla='';
+        $tabla.='<div class="row">
+                  
+                  <div class="col-sm-12">
+                    <center>
+                    <h1>PROGRAMA : <b>'.$programa[0]['aper_programa'].' '.$programa[0]['aper_proyecto'].' '.$programa[0]['aper_actividad'].'</b> : '.$programa[0]['aper_descripcion'].'</h1>
+                    <hr>
+                    <img src="'.base_url().'/assets/ifinal/abajo.png" alt="loading" height=50 width=50/>
+                    <table class="table table-bordered" style="width:80%;">
+                      <thead>
+                        <tr>
+                          <th scope="col" style="width:20%;">'.$nombre.'</th>
+                          <th scope="col" style="width:10%;">PARTIDA '.$this->gestion.'</th>
+                          <th scope="col" style="width:10%;">PPTO POA '.$this->gestion.'</th>
+                          <th scope="col" style="width:10%;">PPTO CERT. '.$this->gestion.'</th>
+                        </tr>
+                      </thead>
+                      <tbody>';
+                      $total_ppto_gc=0;
+                      $total_ppto_gc_cert=0;
+                      foreach ($lista_unidad_programa as $row){
+                        $get_partidas=$this->model_insumo->get_lista_partidas_unidad_organizacional($tp_id,$row['dep_id'],$row['aper_programa'],$row['aper_id']);
+                        $total_ppto_gc=$total_ppto_gc+$row['ppto_poa'];
+                        $total_ppto_gc_cert=$total_ppto_gc_cert+$row['ppto_certificado'];
+                        $tabla.='
+                        <tr>';  
+                          if($tp_id==1){
+                            $tabla.='<td><b>'.$row['proy_nombre'].'</b></td>';
+                          }
+                          else{
+                            $tabla.='<td><b>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</b></td>';
+                          }
+                        $tabla.='
+                          
+                          <td bgcolor="#f1e8cb" align=center></td>
+                          <td bgcolor="#f1e8cb" align=right>'.number_format($row['ppto_poa'], 2, ',', '.').'</td>
+                          <td bgcolor="#f1e8cb" align=right>'.number_format($row['ppto_certificado'], 2, ',', '.').'</td>
+                        </tr>';
+
+                        //------------------
+                        foreach ($get_partidas as $part){
+                          $tabla.='
+                          <tr>
+                            <td></td>
+                            <td align=center><b>'.$part['par_codigo'].'</b></td>
+                            <td align=right>'.number_format($part['ppto_poa'], 2, ',', '.').'</td>
+                            <td align=right>'.number_format($part['ppto_certificado'], 2, ',', '.').'</td>
+                          </tr>';
+                        }
+                        //------------------
+
+                      }
+                    $tabla.='
+                      </tbody>
+                      <tr>
+                        <td align=right colspan=2><b>TOTAL (Bs.)</b></td>
+                        <td align=right><b>'.number_format($total_ppto_gc, 2, ',', '.').'</b></td>
+                        <td align=right><b>'.number_format($total_ppto_gc_cert, 2, ',', '.').'</b></td>
+                      </tr>
+                    </table>
+                    </center>
+                  </div>
+                </div>';
+        
+        $result = array(
+          'respuesta' => 'correcto',
+          'detalle_partidas_uo' => $tabla,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

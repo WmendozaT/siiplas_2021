@@ -41,54 +41,16 @@
     $("#dep_id").change(function () {
       $("#dep_id option:selected").each(function () {
           elegido=$(this).val();
-          if(elegido!=0){
-                  $('#tp_id').slideDown();
-                  $("#aper_id").slideDown();
-                  $("#par_id").slideDown();
+          $("#tp_id").slideDown();
+          $("#aper_id").slideDown();
+          $("#par_id").slideDown();
 
-                  $.post(base+"index.php/rep/get_uadministrativas", { elegido: elegido,accion:'tipo' }, function(data){
-                  $("#tp_id").html(data);
-                  $("#aper_id").html('');
-                  $("#par_id").html('');
-                  $("#lista_consolidado").html('SELECCIONE TIPO DE GASTO !');
-              });
-          }
-          else{
-                  $('#tp_id').slideUp();
-                  $("#aper_id").slideUp();
-                  $("#par_id").slideUp();
-
-                  $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
-
-                  var url = base+"index.php/reportes_cns/crep_consultafinanciera/get_ppto_institucional";
-                  var request;
-                  if (request) {
-                      request.abort();
-                  }
-                  request = $.ajax({
-                      url: url,
-                      type: "POST",
-                      dataType: 'json',
-                      data: "dep_id="+dep_id
-                  });
-
-                  request.done(function (response, textStatus, jqXHR) {
-                      if (response.respuesta == 'correcto') {
-                          $('#tp_id').slideUp();
-                          $("#aper_id").slideUp();
-                          $("#par_id").slideUp();
-
-                          $("#tp_id").html('');
-                          $("#aper_id").html('');
-                          $("#par_id").html('');
-
-                          $("#lista_consolidado").html(response.detalle);
-                      }
-                      else{
-                          alertify.error("ERROR AL LISTAR");
-                      }
-                  }); 
-          }
+          $.post(base+"index.php/rep/get_uadministrativas", { elegido: elegido,accion:'tipo' }, function(data){
+          $("#tp_id").html(data);
+          $("#aper_id").html('');
+          $("#par_id").html('');
+          $("#lista_consolidado").html('SELECCIONE TIPO DE GASTO !');
+          });
           
       });
   });
@@ -98,30 +60,65 @@
       $("#tp_id option:selected").each(function () {
           tp_id=$(this).val();
           dep_id=$('[name="dep_id"]').val();
-       
-          var url = base+"index.php/reportes_cns/crep_consultafinanciera/get_unidades";
-          var request;
-          if (request) {
-              request.abort();
-          }
-          request = $.ajax({
-              url: url,
-              type: "POST",
-              dataType: 'json',
-              data: "dep_id="+dep_id+"&tp_id="+tp_id
-          });
+          
+          if(dep_id==0){ /// Institucional
+            $("#aper_id").slideUp();
+            $("#par_id").slideUp();
 
-          request.done(function (response, textStatus, jqXHR) {
-              if (response.respuesta == 'correcto') {
-                  $('#aper_id').fadeIn(1000).html(response.lista_unidades);
-                  $("#par_id").html('');
-                  $("#lista_consolidado").html('SELECCIONE UNIDAD / ESTABLECIMIENTO / PROYECTOS DE INVERSION');
+              $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
+              var url = base+"index.php/reportes_cns/crep_consultafinanciera/get_ppto_institucional";
+              var request;
+              if (request) {
+                  request.abort();
               }
-              else{
-                  alertify.error("ERROR AL LISTAR");
-              }
-          }); 
-           
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "dep_id="+dep_id+"&tp_id="+tp_id
+              });
+
+              request.done(function (response, textStatus, jqXHR) {
+                  if (response.respuesta == 'correcto') {
+                      $('#tp_id').slideUp();
+                      $("#aper_id").slideUp();
+                      $("#par_id").slideUp();
+
+                      $("#tp_id").html('');
+                      $("#aper_id").html('');
+                      $("#par_id").html('');
+
+                      $("#lista_consolidado").html(response.detalle);
+                  }
+                  else{
+                      alertify.error("ERROR AL LISTAR");
+                  }
+              }); 
+          }
+          else{ // Regional
+            var url = base+"index.php/reportes_cns/crep_consultafinanciera/get_unidades";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "dep_id="+dep_id+"&tp_id="+tp_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+                if (response.respuesta == 'correcto') {
+                    $('#aper_id').fadeIn(1000).html(response.lista_unidades);
+                    $("#par_id").html('');
+                    $("#lista_consolidado").html('SELECCIONE UNIDAD / ESTABLECIMIENTO / PROYECTOS DE INVERSION');
+                }
+                else{
+                    alertify.error("ERROR AL LISTAR");
+                }
+            }); 
+          }
       });
     });
 
@@ -194,8 +191,9 @@
 
 
   //// Ver detalle del presupuesto programado (categoria programatica)por regional 
-  function ver_detalle_ppto_poa(dep_id,tp_id) {
-    $('#detalle_ppto'+tp_id).html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/load.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
+  function ver_detalle_ppto_poa_regional(dep_id,tp_id) {
+
+    $('#detalle_ppto').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/load.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
     var url = base+"index.php/reportes_cns/crep_consultafinanciera/get_ppto_poa_categoria_programatica_regional";
     var request;
     if (request) {
@@ -210,7 +208,7 @@
 
     request.done(function (response, textStatus, jqXHR) {
         if (response.respuesta == 'correcto') {
-            $('#detalle_ppto'+tp_id).fadeIn(1000).html(response.detalle);
+            $('#detalle_ppto').fadeIn(1000).html(response.detalle);
         }
         else{
             alertify.error("ERROR AL LISTAR");
@@ -218,7 +216,57 @@
     }); 
   }
 
+  /// ver detalle de partidas por PROGRAMA INSTITUCIONAL/regional
+  function ver_detalle_ppto_poa_partida_prog_institucional(programa,tp_id,dep_id) {
+    $('#detalle_ppto_partida_institucional').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
+      var url = base+"index.php/reportes_cns/crep_consultafinanciera/ver_detalle_ppto_poa_partida_prog_institucional";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "programa="+programa+"&tp_id="+tp_id+"&dep_id="+dep_id
+      });
 
+      request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+              $('#detalle_ppto_partida_institucional').fadeIn(1000).html(response.detalle_partidas);
+          }
+          else{
+              alertify.error("ERROR AL LISTAR DETALLE");
+          }
+      }); 
+  }
+
+
+
+  /// ver detalle de partidas por Unidades por PROGRAMA Y REGIONAL
+  function ver_detalle_ppto_poa_partida_unidad_regional(programa,tp_id,dep_id) {
+    $('#detalle_ppto_partida_regional').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
+      var url = base+"index.php/reportes_cns/crep_consultafinanciera/ver_detalle_ppto_poa_partida_prog_regional";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "programa="+programa+"&tp_id="+tp_id+"&dep_id="+dep_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+              $('#detalle_ppto_partida_regional').fadeIn(1000).html(response.detalle_partidas_uo);
+          }
+          else{
+              alertify.error("ERROR AL LISTAR DETALLE");
+          }
+      }); 
+  }
 
 
 

@@ -520,6 +520,7 @@ class Model_insumo extends CI_Model{
     //// =================================================================================================
 
 
+        /// =================================== REGIONAL ============================================
     //// ---- CONSOLIDADO DE PRESUPUESTO POA (FORM 5) REGIONAL POR CATEGORIA PROGRAMATICA (TODOS) Regional
     function consolidado_ppto_x_programas_regional($tp_id,$dep_id){
         $sql = 'select dep_id,aper_programa, SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
@@ -532,20 +533,46 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-
-    //// ---- GET DETALLE DE PRESUPUESTO POA (FORM 5) REGIONAL POR CATEGORIA PROGRAMATICA
-    function get_ppto_x_programa_regional($tp_id,$dep_id,$aper_programa){
-        $sql = 'select dep_id,aper_programa, SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
+    //// ---- GET LISTA DE UNIDADES PRESUPUESTO POA (FORM 5) REGIONAL POR CATEGORIA PROGRAMATICA
+    function get_lista_unidad_ppto_programa($tp_id,$dep_id,$aper_programa){
+        $sql = 'select dep_id, aper_programa, aper_id,proy_id,proy_nombre,tipo,act_descripcion,abrev,SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
                 from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
                 where dep_id='.$dep_id.' and aper_programa=\''.$aper_programa.'\'
-                group by dep_id, aper_programa
+                group by dep_id, aper_programa, aper_id,proy_id,proy_nombre,tipo,act_descripcion,abrev
                 order by aper_programa asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
+    //// ---- GET LISTA DE PARTIDAS POR UNIDAD ORGANIZACIONAL
+    function get_lista_partidas_unidad_organizacional($tp_id,$dep_id,$aper_programa,$aper_id){
+        $sql = 'select dep_id, aper_programa, aper_id,par_id, par_codigo,SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
+                from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                where dep_id='.$dep_id.' and aper_programa=\''.$aper_programa.'\' and aper_id='.$aper_id.'
+                group by dep_id, aper_programa, aper_id,par_id, par_codigo
+                order by aper_programa,aper_id,par_id, par_codigo asc';
 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
+    //// ---- GET DETALLE DE PRESUPUESTO POA (FORM 5) REGIONAL POR CATEGORIA PROGRAMATICA
+/*function get_ppto_x_programa_regional($tp_id,$dep_id,$aper_programa){
+    $sql = 'select dep_id,aper_programa, SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
+            from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+            where dep_id='.$dep_id.' and aper_programa=\''.$aper_programa.'\'
+            group by dep_id, aper_programa
+            order by aper_programa asc';
+
+    $query = $this->db->query($sql);
+    return $query->result_array();
+}*/
+
+    //// =================================================================================================
 
 }
 ?>
