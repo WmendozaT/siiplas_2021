@@ -1073,8 +1073,20 @@ class Seguimientopoa extends CI_Controller{
       $datos[2]=$ejec_trimestre; /// EJECUTADO
       $datos[3]=($acu_prog-$acu_ejec); /// DIFERENCIA PROG-EJEC
 
+      if(($datos[1]==$datos[2]) & $datos[3]==0){
+        $datos[4]='TRIMESTRE CUMPLIDO';
+      }
+      else{
+        if((($datos[1]==0 & $datos[2]==0) & $datos[3]!=0) || ($datos[1]!=0 & $datos[2]==0)){
+          $datos[4]='TRIMESTRE NO CUMPLIDO'; 
+        }
+        else{
+          $datos[4]='TRIMESTRE EN PROCESO';
+        }
+      }
+
       
-      if(($datos[1]==$datos[2]) || $datos[3]==0){
+      /*if(($datos[1]==$datos[2]) || $datos[3]==0){
         $datos[4]='TRIMESTRE CUMPLIDO';
       }
       elseif ($datos[1]!=0 & $datos[2]==0) {
@@ -1082,7 +1094,7 @@ class Seguimientopoa extends CI_Controller{
       }
       else{
        $datos[4]='TRIMESTRE EN PROCESO'; 
-      }
+      }*/
 
       return $datos;
     }

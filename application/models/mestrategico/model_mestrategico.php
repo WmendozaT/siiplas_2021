@@ -27,9 +27,10 @@ class Model_mestrategico extends CI_Model{
    /*--------------------- OBJETIVOS ESTRATEGICOS ----------------------*/
     public function list_objetivos_estrategicos(){
         $sql = 'select *
-                from _objetivos_estrategicos
-                where (obj_gestion_inicio<='.$this->gestion.' and obj_gestion_fin>='.$this->gestion.') and obj_estado!=\'3\'
-                order by obj_id asc';
+                from _objetivos_estrategicos oe
+                Inner Join aperturaprogramatica as apg On apg.aper_id=oe.aper_id
+                where (oe.obj_gestion_inicio<='.$this->gestion.' and oe.obj_gestion_fin>='.$this->gestion.') and oe.obj_estado!=\'3\'
+                order by oe.obj_id asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();
