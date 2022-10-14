@@ -15,6 +15,7 @@ class Rep_operaciones extends CI_Controller {
         $this->load->model('mantenimiento/model_ptto_sigep');
         $this->load->model('mestrategico/model_objetivoregion');
         $this->load->model('programacion/insumos/model_insumo');
+        $this->load->model('ejecucion/model_evaluacion');
         $this->load->model('ejecucion/model_certificacion');
         $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020
         $this->load->model('modificacion/model_modfisica'); /// Gestion 2020
@@ -52,47 +53,19 @@ class Rep_operaciones extends CI_Controller {
     //// CONSOLIDADO POA POR REGIONALES (2020-2021)
     public function list_regiones(){
       $data['menu']=$this->menu(7);
+      $data['style']=$this->genera_informacion->style();
+      $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
       $data['list']=$this->menu_nacional();
-      $data['mensaje']='<div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';
+      $data['form5_consolidado']='';
+      if($this->fun_id==399){
+        $data['form5_consolidado']='<a href="'.site_url("").'/rep/exportar_requerimientos_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR FORMULARIO 5 (INSTITUCIONAL)</a><br>';
+      }
+      $data['mensaje']='
+      <div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';
       $this->load->view('admin/reportes_cns/programacion_poa/menu_consolidado_poa', $data);
-       //$this->requerimientos_distrital(10,0,4);
     }
 
-    /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR DISTRITAL, REGIONAL (2020 - 2021) ---*/
-    public function requerimientos_distrital($dep_id,$dist_id,$tp_id){
-      
-      date_default_timezone_set('America/Lima');
-      $fecha = date("d-m-Y H:i:s");
 
-      if($this->gestion==2019){
-        //$requerimientos=$this->mis_requerimientos_regionales_distritales($dist_id,2,$tp_id); /// Gestion 2019
-        $tabla='No disponible';
-      }
-      else{
-
-        if($dist_id==0){
-          $regional=$this->model_proyecto->get_departamento($dep_id);
-          $titulo='CONSOLIDADO REGIONAL FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($regional[0]['dep_departamento']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
-          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-          $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
-        }
-        else{
-          $dist=$this->model_proyecto->dep_dist($dist_id);
-          $titulo='CONSOLIDADO FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($dist[0]['dist_distrital']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
-          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-          $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
-        }
-      }
-
-      header('Content-type: application/vnd.ms-excel');
-      header("Content-Disposition: attachment; filename=Consolidado_Requerimiento_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
-      header("Pragma: no-cache");
-      header("Expires: 0");
-      echo "";
-      ini_set('max_execution_time', 0); 
-      ini_set('memory_limit','3072M');
-      echo $tabla;
-    }
 
     //// MENU UNIDADES ORGANIZACIONAL 2020 - 2021
     public function menu_nacional(){
@@ -101,6 +74,7 @@ class Rep_operaciones extends CI_Controller {
     $unidades=$this->model_estructura_org->list_unidades_apertura();
       $tabla.='
       <input name="base" type="hidden" value="'.base_url().'">
+      <input name="gestion" type="hidden" value="'.$this->gestion.'">
       <article class="col-sm-12">
         <div class="well">
           <form class="smart-form">
@@ -257,7 +231,36 @@ class Rep_operaciones extends CI_Controller {
           $salida=$this->genera_informacion->consolidado_operaciones_distrital($dep_id,$dist_id,$tp_id); /// Consolidado Formulario N° 4 
         }
         elseif ($tp_rep==3) {
-          $salida=$this->genera_informacion->consolidado_requerimientos_distrital($dep_id,$dist_id,$tp_id); /// Consolidado formulario N° 5
+
+          ////----------------------------
+          if($dist_id==0){
+            $regional=$this->model_proyecto->get_departamento($dep_id);
+            $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital_directo(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021 (Relacion Directa)
+            $titulo_reporte='CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']);
+          }
+          else{
+            $distrital=$this->model_proyecto->dep_dist($dist_id);
+            $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital_directo(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021 (Relacion Directa)
+            $titulo_reporte=strtoupper($distrital[0]['dist_distrital']);
+          }
+
+          if(count($requerimientos)>7000){
+            $salida='
+              <hr>
+              <div class="alert alert-warning " role="alert">
+                <h4 class="alert-heading">Alerta !</h4>
+                <hr>
+                <p class="mb-0">'.$titulo_reporte.' (NO PUEDE SER GENERADO POR LA DIMESION DEL ARCHIVO, PARA OBTENER LA INFORMACION SOLICITADA LE SUGERIMOS DESCARGARLO EN FORMATO EXCEL.)</p>
+              </div>
+              
+              <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;DESCARGAR CONSOLIDADO FORM. N° 5</a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <hr>';
+          }
+          else{
+            $salida=$this->genera_informacion->genera_consolidado_form5_regional_distrital($titulo_reporte,$requerimientos,$dep_id,$dist_id,$tp_id); /// Consolidado formulario N° 5  
+          }
+          ////----------------------------
+        
         }
         elseif ($tp_rep==4) {
           $salida='';
@@ -315,11 +318,19 @@ class Rep_operaciones extends CI_Controller {
     public function get_unidades(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
+       
         $dep_id = $this->security->xss_clean($post['dep_id']);
         $dist_id = $this->security->xss_clean($post['dist_id']);
+        $rep_id = $this->security->xss_clean($post['rep_id']);
         $tp_id = $this->security->xss_clean($post['tp_id']);
+       
+        if($dist_id==0){
+          $unidades=$this->mrep_operaciones->lista_unidad_pinversion_regional_distrital(0,$dep_id,$tp_id);
+        }
+        else{
+          $unidades=$this->mrep_operaciones->lista_unidad_pinversion_regional_distrital(1,$dist_id,$tp_id);
+        }
         
-        $unidades=$this->mrep_operaciones->lista_unidad_pinversion_regional_distrital(1,$dist_id,$tp_id);
         $salida='';
         if($tp_id==1){
           foreach ($unidades as $row){
@@ -331,8 +342,7 @@ class Rep_operaciones extends CI_Controller {
             $salida.= "<option value='".$row['proy_id']."'>".$row['tipo']." ".strtoupper ($row['actividad'])." ".$row['abrev']."</option>";
           }
         }
-        
-        //$lista=$this->lista_certificaciones_poa($dist_id,$tp_id);
+
         $result = array(
           'respuesta' => 'correcto',
           'lista_actividad' => $salida,
@@ -344,7 +354,8 @@ class Rep_operaciones extends CI_Controller {
       }
     }
 
-    /*--- get lista de Subactividades (2020 - 2021)---*/
+
+    /*--- get lista de Requerimientos por Unidad Responsable (Componente) (2020 - 2021)---*/
     public function get_subactividad(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -364,11 +375,13 @@ class Rep_operaciones extends CI_Controller {
       }
     }
 
-    //7 ---- Lista de requerimientos por servicio 2020-2021
+
+    /// ---- Lista de requerimientos por Unidad Responsable 2020-2021
     public function requerimientos_certificados_subactividad($componente){
       $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
       $proyecto=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
-      $requerimientos=$this->mrep_operaciones->lista_insumo_subactividad($componente[0]['com_id']);
+      $requerimientos=$this->mrep_operaciones->consolidado_poa_formulario5_componente($componente[0]['com_id'],$proyecto[0]['tp_id']);
+      
       $titulo='PROYECTO DE INVERIS&Oacute;N';
       $tit_proy=''.$proyecto[0]['aper_prog'].' '.$proyecto[0]['proy_sisin'].' '.$proyecto[0]['aper_act'].' '.$proyecto[0]['proy_nombre'];
       if($proyecto[0]['tp_id']==4){
@@ -395,7 +408,7 @@ class Rep_operaciones extends CI_Controller {
             <td>'.$tit_proy.'</td>
           </tr>
           <tr>
-            <td style="width:30%;"><b>SUBACTIVIDAD</b></td>
+            <td style="width:30%;"><b>UNIDAD RESPONSABLE</b></td>
             <td>'.$componente[0]['serv_cod'].' '.$componente[0]['serv_descripcion'].'</td>
           </tr>
         </table>
@@ -403,7 +416,7 @@ class Rep_operaciones extends CI_Controller {
         <table id="dt_basic" class="table table-bordered" style="width:100%;" border=1>
           <thead>
             <tr style="background-color: #66b2e8">
-              <th style="width:2%;">COD. OPE.</th>
+              <th style="width:2%;">COD. ACT.</th>
               <th style="width:2%;">PARTIDA</th>
               <th style="width:20%;">REQUERIMIENTO</th>
               <th style="width:5%;">UNIDAD DE MEDIDA</th>
@@ -429,59 +442,25 @@ class Rep_operaciones extends CI_Controller {
           <tbody id="bdi">';
           $nro=0;$sum_programado=0;$sum_certificado=0;
           foreach ($requerimientos as $row){
-            $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-/*            $monto_certificado=0;$color='';
-            $m_cert=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']); /// Monto Certificado
-              if(count($m_cert)!=0){
-                $monto_certificado=$m_cert[0]['certificado'];
-              }*/
-         
             $nro++;
             $tabla.='<tr>';
-                $tabla.='<td style="height:50px;" align=center><b>'.$row['prod_cod'].'</b></td>';
-                $tabla.='<td>'.$row['par_codigo'].'</td>';
-                $tabla.='<td>'.strtoupper($row['ins_detalle']).'</td>';
-                $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
-                $tabla.='<td>'.round($row['ins_cant_requerida'],2).'</td>';
-                $tabla.='<td>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                $tabla.='<td>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                $tabla.='<td style="width:5%;" bgcolor="#c1f5ee" align=right><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
-                if(count($prog)!=0){
-                  if($prog[0]['programado_total']==$row['ins_monto_certificado']){
-                    for ($i=1; $i<=12 ; $i++) {
-                      $tabla.='<td style="width:4%;" align=right bgcolor="#ddf7dd">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                    }
-                  }
-                  elseif($prog[0]['programado_total']>$row['ins_monto_certificado']){
-                      for ($i=1; $i<=12 ; $i++) {
-                        $mes=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
-                        $color='';
-                        if(count($mes)==1){
-                          if($mes[0]['estado_cert']==1){
-                            $color='#ddf7dd';
-                          }
-                        }
-                        
-                        $tabla.='<td style="width:4%;" align=right bgcolor="'.$color.'">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                      }
-                  }
-                  elseif($row['ins_monto_certificado']==0){
-                    $tabla.='<td style="width:4%;" align=right>'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                  }
-                }
-                else{
-                  for ($i=1; $i<=12 ; $i++) {
-                    $tabla.='<td style="width:4%;" align=right bgcolor="red">'.number_format(0, 2, ',', '.').'</td>';
-                  }
-                }
-                $tabla.='
-                  <td style="width:5%;">'.$row['ins_observacion'].'</td>
-                </tr>';
-                if(count($prog)!=0){
-                  $sum_programado=$sum_programado+$prog[0]['programado_total'];
-                }
-                
-                $sum_certificado=$sum_certificado+$row['ins_monto_certificado']; 
+              $tabla.='<td style="height:50px;" align=center><b>'.$row['prod_cod'].'</b></td>';
+              $tabla.='<td>'.$row['par_codigo'].'</td>';
+              $tabla.='<td>'.strtoupper($row['ins_detalle']).'</td>';
+              $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
+              $tabla.='<td>'.round($row['ins_cant_requerida'],2).'</td>';
+              $tabla.='<td>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+              $tabla.='<td>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+              $tabla.='<td style="width:5%;" bgcolor="#c1f5ee" align=right><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td>'.number_format($row['mes'.$i], 2, ',', '.').'</td>';
+              }
+              $tabla.='
+                <td style="width:5%;">'.$row['ins_observacion'].'</td>
+              </tr>';
+             
+              $sum_programado=$sum_programado+$row['ins_costo_total'];
+              $sum_certificado=$sum_certificado+$row['ins_monto_certificado']; 
           }
           $tabla.='
           </tbody>
@@ -497,8 +476,8 @@ class Rep_operaciones extends CI_Controller {
     }
     /// --------------------------------------------------------
 
-/*-- REPORTE 5 (CONSOLIDADO OPERACIONES POR OBJETIVO REGIONAL) 2020-2021--*/
- public function consolidado_operaciones_oregional_distrital($dist_id,$tp_id){
+  /*-- REPORTE 5 (CONSOLIDADO OPERACIONES POR OBJETIVO REGIONAL) 2020-2021--*/
+  public function consolidado_operaciones_oregional_distrital($dist_id,$tp_id){
     $distrital=$this->model_proyecto->dep_dist($dist_id);
     $unidades=$this->model_proyecto->lista_operaciones_oregional_distrital($dist_id,$tp_id);
     $tabla='';

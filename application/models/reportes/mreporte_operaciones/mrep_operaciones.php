@@ -1479,7 +1479,7 @@ class Mrep_operaciones extends CI_Model {
     }
 
     /*---- LISTA DE REQUERIMIENTOS SEGUN EL TIPO DE PROYECTO -----*/
-    public function list_requerimientos($proy_id,$tp_id){
+/*    public function list_requerimientos($proy_id,$tp_id){
         if($this->gestion==2019){ //// Gestion 2019
             if($tp_id==1){
                 $sql = '
@@ -1539,7 +1539,7 @@ class Mrep_operaciones extends CI_Model {
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
 
@@ -1574,19 +1574,19 @@ class Mrep_operaciones extends CI_Model {
     }
 
 
-    ///// -- CONSOLIDADO PROGRAMADO DE REQUERIMIENTOS (2020-2021)
-    public function consolidado_requerimientos_regional_distrital($tp_regional, $id_regional, $tp_id){
+    ///// -- CONSOLIDADO FORMULARIO 5 (2023) LISTADO DIRECTO APER_ID = INS_ID (REPORTES POA VISTA)
+    public function consolidado_requerimientos_regional_distrital_directo($tp_regional, $id, $tp_id){
         /// tp_regional -> 0 : Regional, 1 : Distrital
         /// id_regional -> dep_id, dist_id
         /// tp_id -> 1 : Proyecto de Inversion, 4 : Gasto Corriente
 
-        if($tp_regional==0){
-            $dep_id=$id_regional;
-            $sql = 'select * from lista_requerimientos_regional('.$dep_id.','.$tp_id.','.$this->gestion.')';
+        if($tp_regional==0){ /// Regional
+            $sql = 'select * from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
+                    where dep_id='.$id.'';
         }
-        else{
-            $dist_id=$id_regional;
-            $sql = 'select * from lista_requerimientos_distrital('.$dist_id.','.$tp_id.','.$this->gestion.')';
+        else{ /// Distrital
+            $sql = 'select * from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
+                    where dist_id='.$id.'';
         }
 
         $query = $this->db->query($sql);
@@ -1595,16 +1595,47 @@ class Mrep_operaciones extends CI_Model {
 
 
 
-    ///// -- CONSOLIDADO PROGRAMADO DE REQUERIMIENTOS (Relacion Directa INSUMO-UNIDAD) 2021
-    public function consolidado_directo_requerimientos_regional($dep_id, $tp_id){
-        $sql = 'select * from consolidado_requerimiento_regional_tp('.$dep_id.','.$tp_id.','.$this->gestion.')';
+    ///// -- CONSOLIDADO COMPLETO FORMULARIO 5 (INSTITUCIONAL) 2023
+    public function consolidado_poa_formulario5_institucional($tp_id){
+        $sql = '
+        select * from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+        order by dep_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    ///// -- CONSOLIDADO COMPLETO FORMULARIO 5 (REGIONAL) 2023
+    public function consolidado_poa_formulario5_regional($dep_id,$tp_id){
+        $sql = '
+        select * from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+        where dep_id='.$dep_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    ///// -- CONSOLIDADO COMPLETO FORMULARIO 5 (DISTRITAL) 2023
+    public function consolidado_poa_formulario5_distrital($dist_id,$tp_id){
+        $sql = '
+        select * from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+        where dist_id='.$dist_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    ///// -- LISTA INSUMO POR SUBACTIVIDAD (2020-2021)
+    public function consolidado_poa_formulario5_componente($com_id,$tp_id){
+        $sql = '
+            select * from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+            where com_id='.$com_id.'';
+
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
 
     ///// -- CONSOLIDADO PROGRAMADO DE REQUERIMIENTOS PARA LA EJECUCION PRESUPUESTARIA (Relacion directa)
-    public function consolidado_directo_requerimientos_distrital_simple($dist_id, $tp_id){
+/*    public function consolidado_directo_requerimientos_distrital_simple($dist_id, $tp_id){
         $sql = 'select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
                 p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.ins_id,par.par_codigo,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,
                 i.ins_estado,i.ins_gestion,i.ins_observacion,temp.programado_total,temp.mes1,temp.mes2,temp.mes3,temp.mes4,temp.mes5,temp.mes6,temp.mes7,temp.mes8,temp.mes9,temp.mes10,temp.mes11,temp.mes12
@@ -1624,7 +1655,7 @@ class Mrep_operaciones extends CI_Model {
                 order by ds.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, ds.dist_id, i.ins_id,par.par_codigo asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
 
@@ -1641,26 +1672,8 @@ class Mrep_operaciones extends CI_Model {
     }
 
 
-    ///// -- LISTA INSUMO POR SUBACTIVIDAD (2020-2021)
-    public function lista_insumo_subactividad($com_id){
-         $sql = 'select *
-                from _componentes c
-                Inner Join _productos as prod On prod.com_id=c.com_id
-                Inner Join _insumoproducto as iprod On iprod.prod_id=prod.prod_id
-                Inner Join insumos as i On iprod.ins_id=i.ins_id
-                Inner Join partidas as par On i.par_id=par.par_id
-                where c.com_id='.$com_id.' and prod.estado!=\'3\' and i.ins_gestion='.$this->gestion.' and i.ins_estado!=\'3\'
-                order by  prod.prod_cod, par.par_codigo, i.ins_id asc';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
-
-
-
-
     /*---- Lista de Unidades - Proyectos de Inversion por Regional (2019) -----*/
-    public function unidades_proyectos($id,$tipo,$tp_id){
+/*    public function unidades_proyectos($id,$tipo,$tp_id){
         // 1 : Regional
         // 2 : Distrital
         if($tipo==1){
@@ -1726,10 +1739,10 @@ class Mrep_operaciones extends CI_Model {
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*---- LISTA DE PARTIDAS DE UNIDADES POR REGIONAL (2020) -----*/
-    public function partidas_unidad_regional($dep_id,$tp_id){
+/*    public function partidas_unidad_regional($dep_id,$tp_id){
         if($tp_id==1){ /// Proyecto de Inversion
             $sql = '
             select p.dep_id,ds.dist_id,d.dep_departamento,ds.dist_distrital,apg.aper_id,p.proy_id,p.tp_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,tp.tp_tipo,te.tipo,ua.act_descripcion,ds.abrev,p.proy_nombre,par.par_codigo,par.par_nombre,SUM(ip.programado_total) monto
@@ -1774,10 +1787,10 @@ class Mrep_operaciones extends CI_Model {
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*---- LISTA CONSOLIDADO NACIONAL DE PARTIDAS DE UNIDADES (2020) -----*/
-    public function partidas_consolidado_unidad_nacional(){
+/*    public function partidas_consolidado_unidad_nacional(){
         $sql = '
             select p.dep_id,ds.dist_id,d.dep_departamento,ds.dist_distrital,apg.aper_id,p.proy_id,p.tp_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,tp.tp_tipo,te.tipo,ua.act_descripcion,ds.abrev,p.proy_nombre,par.par_codigo,par.par_nombre,SUM(ip.programado_total) monto
             from _proyectos p
@@ -1800,10 +1813,10 @@ class Mrep_operaciones extends CI_Model {
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*---- LISTA CONSOLIDADO NACIONAL POR PARTIDAS (2020) -----*/
-    public function partidas_consolidado_nacional($tp_id){
+/*    public function partidas_consolidado_nacional($tp_id){
         $sql = '
             select par.par_codigo,par.par_nombre,SUM(ip.programado_total) monto
             from _proyectos p
@@ -1818,11 +1831,11 @@ class Mrep_operaciones extends CI_Model {
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 /////// PARA ARMAR LA PLANTILLA DE MIGRACION 
     /*---- LISTA DE REQUERIMIENTOS PARA MIGRACION 2020 -----*/
-    public function list_requerimientos_migracion($proy_id,$tp_id){
+/*    public function list_requerimientos_migracion($proy_id,$tp_id){
         $sql = 'select *
                 from _proyectofaseetapacomponente pfe
                 Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
@@ -1837,10 +1850,10 @@ class Mrep_operaciones extends CI_Model {
                 order by c.com_id, par.par_codigo,i.ins_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*---------------- OPERACIONES (Productos) POR REGIONALES ----------------*/
-    public function operaciones_por_regionales_migracion($dep_id){
+/*    public function operaciones_por_regionales_migracion($dep_id){
         $sql = '
             select *
             from _proyectos as p
@@ -1867,5 +1880,5 @@ class Mrep_operaciones extends CI_Model {
             order by p.tp_id, apg.aper_programa,apg.aper_proyecto, apg.aper_actividad, p.tp_id, c.com_id, pr.prod_cod asc';         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 }

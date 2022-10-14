@@ -190,31 +190,41 @@
 
 
 
+    /*--- EXPORTAR CONSOLIDADO FORMULARIO N 5 INSTITUCIONAL ---*/
+    public function requerimientos_institucional(){
+      date_default_timezone_set('America/Lima');
+      $fecha = date("d-m-Y H:i:s");
+      $titulo='INSTITUCIONAL';
+      $requerimientos=$this->mrep_operaciones->consolidado_poa_formulario5_institucional(4); /// Consolidado formulario N5 completo INSTITUCIONAL
+      $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital_excel($requerimientos,$titulo); // Requerimientos Regional 2023
+
+      header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=Consolidado_Requerimiento_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      echo "";
+      ini_set('max_execution_time', 0); 
+      ini_set('memory_limit','3072M');
+      echo $tabla;
+    }
+
 
     /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR DISTRITAL, REGIONAL (2020 - 2021) ---*/
     public function requerimientos_distrital($dep_id,$dist_id,$tp_id){
-      
       date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");
 
-      if($this->gestion==2019){
-        //$requerimientos=$this->mis_requerimientos_regionales_distritales($dist_id,2,$tp_id); /// Gestion 2019
-        $tabla='No disponible';
+     if($dist_id==0){
+        $regional=$this->model_proyecto->get_departamento($dep_id);
+        $titulo='CONSOLIDADO REGIONAL FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($regional[0]['dep_departamento']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
+        $requerimientos=$this->mrep_operaciones->consolidado_poa_formulario5_regional($dep_id,$tp_id); /// Consolidado formulario N5 completo
+        $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital_excel($requerimientos,$titulo); // Requerimientos Regional 2023
       }
       else{
-
-        if($dist_id==0){
-          $regional=$this->model_proyecto->get_departamento($dep_id);
-          $titulo='CONSOLIDADO REGIONAL FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($regional[0]['dep_departamento']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
-          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-          $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
-        }
-        else{
-          $dist=$this->model_proyecto->dep_dist($dist_id);
-          $titulo='CONSOLIDADO FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($dist[0]['dist_distrital']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
-          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-          $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital($requerimientos,$titulo); // Requerimientos Distrital 2020-2021
-        }
+        $dist=$this->model_proyecto->dep_dist($dist_id);
+        $titulo='CONSOLIDADO FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($dist[0]['dist_distrital']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
+        $requerimientos=$this->mrep_operaciones->consolidado_poa_formulario5_distrital($dist_id,$tp_id); /// Consolidado formulario N5  completo
+        $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital_excel($requerimientos,$titulo); // Requerimientos Distrital 2023
       }
 
       header('Content-type: application/vnd.ms-excel');
@@ -905,74 +915,6 @@
       }
     }
 
-  
-
-    /*--- LISTA DE UNIDADES, PROYECTOS DE INVERSION ---*/
-/*    public function list_unidades($dist_id,$tp_id){
-      $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id);
-      $tabla='';
-
-      if($this->gestion!=2020){
-        $titulo='MIS OPERACIONES.xls';
-      }
-      else{
-        $titulo='MIS ACTIVIDADES.xls';
-      }
-
-      $nro=0;
-      if($tp_id==4){ /// Gasto Corriente
-        foreach ($unidades as $row){
-          $nro++;
-          $tabla.='
-          <tr style="height:35px;">
-            <td>'.$nro.'</td>
-            <td align=center>
-              <a href="'.site_url("").'/rep/exportar_operaciones_unidad/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="EXPORTAR TODAS LAS OPERACIONES DE LA UNIDAD">'.$titulo.'</a>
-            </td>
-
-            <td>
-              <a href="'.site_url("").'/rep/exportar_requerimientos_unidad/'.$row['proy_id'].'" class="btn btn-default" target="_blank" title="EXPORTAR TODAS REQUERIMIENTOS DE LA UNIDAD">MIS REQUERIMIENTOS.xls</a>
-            </td>
-            <td><center><a href="#" data-toggle="modal" data-target="#modal_servicios" class="btn btn-success enlace" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'">MIS SERVICIOS</a></center></td>
-            <td align=center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</td>
-            <td>';
-              if($this->gestion==2020){
-              $tabla.='<b>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</b>';
-            }
-            else{
-              $tabla.='<b>'.$row['proy_nombre'].'</b>';
-            }
-            $tabla.='</td>
-            <td>'.$row['nivel'].'</td>
-            <td>'.$row['tipo_adm'].'</td>
-            <td>'.strtoupper($row['dep_departamento']).'</td>
-            <td>'.strtoupper($row['dist_distrital']).'</td>
-          </tr>';
-        } 
-      }
-      else{ /// Proyecto de Inversion
-        foreach ($unidades as $row){
-          $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
-          $nro++;
-          $tabla.='
-          <tr style="height:35px;">
-            <td>'.$nro.'</td>
-            <td></td>
-            <td></td>
-            <td align=center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</td>
-            <td><b>'.$row['proy_nombre'].'</b></td>
-            <td>'.$row['proy_sisin'].'</td>
-            <td>'.strtoupper($row['dep_departamento']).'</td>
-            <td>'.strtoupper($row['dist_distrital']).'</td>
-            <td>* '.$fase[0]['fase'].'<br>* '.$fase[0]['etapa'].'</td>
-            <td>'.$this->model_faseetapa->calcula_nc($fase[0]['pfec_fecha_inicio']).'</td>
-            <td>'.$this->model_faseetapa->calcula_ap($fase[0]['pfec_fecha_inicio'],$fase[0]['pfec_fecha_fin']).'</td>
-          </tr>';
-        }
-      }
-      return $tabla;
-    }
-*/
 
     /*----------------------------------- PRODUCTOS ----------------------------*/
     public function temporalizacion_prod($prod_id,$gestion){

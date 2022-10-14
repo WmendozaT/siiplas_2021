@@ -51,7 +51,7 @@ class Cptto_poa extends CI_Controller {
       $data['operacion']=$this->list_unidades_es($sw);  /// Gasto corriente
 
       //// Asignacion Poa Presupuesto Inicial
-      if($this->verif_ppto==0){
+      if($this->verif_ppto==1){
         $this->load->view('admin/mantenimiento/ptto_sigep/vlist_ope', $data);
       }
       //// Re-Asignacion Poa Presupuesto Final (Aprobado)
@@ -495,7 +495,7 @@ class Cptto_poa extends CI_Controller {
 
 
     /*---- SUBIR ARCHIVO SIGEP APROBADO -----*/
-    function importar_archivo_sigepp(){
+    function importar_archivo_sigep2(){
         if ($this->input->post()) {
             $post = $this->input->post();
           
@@ -1440,7 +1440,7 @@ class Cptto_poa extends CI_Controller {
     public function exportar_cuadro_comparativo($dep_id,$tp){
       if($tp==1 || $tp==4){
        // echo $this->cuadro_excel($dep_id,$tp);
-        $dep=$this->model_evalregional->get_dpto($dep_id);
+        $dep=$this->model_proyecto->get_departamento($dep_id);
         $departamento=$dep[0]['dep_departamento'];
         $cuadro=$this->cuadro_excel($dep_id,$tp);
         date_default_timezone_set('America/Lima');

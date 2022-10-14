@@ -761,30 +761,12 @@ class Genera_informacion extends CI_Controller{
     ////========================================= END CONSOLIDADO FORMULARIO N 4
 
     /////========================================== CONSOLIDADO FORMULARIO N5 
-    /*-- REPORTE 3 (CONSOLIDADO REQUERIMIENTOS DIST) 2020-2021--*/
-    public function consolidado_requerimientos_distrital($dep_id,$dist_id,$tp_id){
-      
+    /*-- REPORTE 3 (CONSOLIDADO FORMULARIO N° 5) 2023 relacion directa --*/
+    public function genera_consolidado_form5_regional_distrital($titulo_reporte,$requerimientos,$dep_id,$dist_id,$tp_id){
       $tabla='';
       $tabla.='
       <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
-
-      if($this->gestion==2019){
-        $tabla='No disponible';
-      }
-      else{
-        if($dist_id==0){
-          $regional=$this->model_proyecto->get_departamento($dep_id);
-          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-          $titulo_reporte='CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']);
-        }
-        else{
-          $dist=$this->model_proyecto->dep_dist($dist_id);
-          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital(1, $dist_id, $tp_id); /// Consolidado Requerimientos 2020-2021
-          $titulo_reporte=strtoupper($dist[0]['dist_distrital']);
-        }
-
-       
-        $titulo='GASTO CORRIENTE';
+        $titulo='UNIDAD ADMINISTRATIVA / ESTABLECIMIENTO';
         if($tp_id==1){
           $titulo='PROYECTO DE INVERSI&Oacute;N';
         }
@@ -792,8 +774,8 @@ class Genera_informacion extends CI_Controller{
         $tabla.='
         <br>
         <div align=right>
-          <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/book_previous.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;VOLVER ATRAS</a>&nbsp;&nbsp;&nbsp;
-          <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;EXPORTAR CONSOLIDADO FORMULARION N° 5</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/admin/dashboard" class="btn btn-default" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/book_previous.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;SALIR</a>&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;DESCARGAR CONSOLIDADO FORM. N° 5</a>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <br>
         <div class="alert alert-warning">
@@ -802,39 +784,21 @@ class Genera_informacion extends CI_Controller{
         <table id="dt_basic" class="table table-bordered" style="width:100%;" >
           <thead>
             <tr style="background-color: #66b2e8">
-              <th style="width:3%;">COD. DA.</th>
-              <th style="width:3%;">COD. UE.</th>
-              <th style="width:3%;">COD. PROG.</th>
-              <th style="width:10%;">COD. PROY.</th>
-              <th style="width:3%;">COD. ACT.</th>
-              <th style="width:35%;">'.$titulo.'</th>
-              <th style="width:3%;">COD. UNI.RESP.</th>
-              <th style="width:15%;">UNIDAD RESPONSABLE</th>
-              <th style="width:3%;">COD. ACP.</th>
-              <th style="width:3%;">COD. OPE.</th>
-              <th style="width:25%;">DESCRIPCIÓN OPERACIÓN '.$this->gestion.'</th>
-              <th style="width:3%;">COD. ACT.</th>
-              <th style="width:25%;">DESCRIPCIÓN ACTIVIDAD</th>
-              <th style="width:15%;">PARTIDA</th>
-              <th style="width:25%;">REQUERIMIENTO</th>
+              <th style="width:5%;">COD. DA.</th>
+              <th style="width:5%;">COD. UE.</th>
+              <th style="width:5%;">COD. PROG.</th>
+              <th style="width:5%;">COD. PROY.</th>
+              <th style="width:5%;">COD. ACT.</th>
+              <th style="width:15%;">'.$titulo.'</th>
+              <th style="width:5%;">COD. ACT.</th>
+              <th style="width:10%;">PARTIDA</th>
+              <th style="width:15%;">REQUERIMIENTO</th>
               <th style="width:10%;">UNIDAD DE MEDIDA</th>
               <th style="width:5%;">CANTIDAD</th>
               <th style="width:5%;">PRECIO</th>
-              <th style="width:10%;">COSTO TOTAL</th>
-              <th style="width:10%;">MONTO CERTIFICADO</th>
-              <th style="width:4%;">P. ENE.</th>
-              <th style="width:4%;">P. FEB.</th>
-              <th style="width:4%;">P. MAR.</th>
-              <th style="width:4%;">P. ABR.</th>
-              <th style="width:4%;">P. MAY.</th>
-              <th style="width:4%;">P. JUN.</th>
-              <th style="width:4%;">P. JUL.</th>
-              <th style="width:4%;">P. AGOS.</th>
-              <th style="width:4%;">P. SEPT.</th>
-              <th style="width:4%;">P. OCT.</th>
-              <th style="width:4%;">P. NOV.</th>
-              <th style="width:4%;">P. DIC.</th>
-              <th style="width:10%;">OBSERVACI&Oacute;N</th>
+              <th style="width:5%;">COSTO TOTAL</th>
+              <th style="width:5%;">MONTO CERTIFICADO</th>
+              <th style="width:5%;">OBSERVACI&Oacute;N</th>
             </tr>
           </thead>
           <tbody id="bdi">';
@@ -862,15 +826,7 @@ class Genera_informacion extends CI_Controller{
                     $tabla.=''.$row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'].'';
                   }
                 $tabla.='</td>';
-                $tabla.='<td>'.$row['serv_cod'].'</td>';
-                $tabla.='<td>'.$row['tipo_subactividad'].' '.strtoupper($row['serv_descripcion']).'</td>';
-                
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#d9f5c9"><b>'.$row['og_codigo'].'</b></td>';
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#d9f5c9"><b>'.$row['or_codigo'].'</b></td>';
-                $tabla.='<td bgcolor="#d9f5c9">'.$row['or_objetivo'].'</td>';
-
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#e4f3dc"><b>'.$row['prod_cod'].'</b></td>';
-                $tabla.='<td bgcolor="#e4f3dc">'.$row['prod_producto'].'</td>';
+                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#e4f3dc"><b>'.$row['form4_cod'].'</b></td>';
                 $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3"><b>'.$row['par_codigo'].'</b></td>';
                 $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_detalle']).'</td>';
                 $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_unidad_medida']).'</td>';
@@ -878,24 +834,18 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
                 $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
                 $tabla.='<td style="font-size: 13px;" align="right" bgcolor="#c1f5ee"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
-
-                for ($i=1; $i <=12 ; $i++) { 
-                  $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.number_format($row['mes'.$i], 2, ',', '.').'</td>';
-                }
-
                 $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_observacion']).'</td>';
             $tabla.='</tr>';
           }
           $tabla.='
           </tbody>
         </table>';
-      }
 
       return $tabla;
     }
 
- /*----- LISTA DE REQUERIMIENTOS DISTRITAL (2020-2021) ----*/
-    public function lista_requerimientos_regional_distrital($requerimientos,$titulo){
+ /*----- GENERA EXCEL LISTA DE REQUERIMIENTOS DISTRITAL (2023) ----*/
+    public function lista_requerimientos_regional_distrital_excel($requerimientos,$titulo){
         $tabla='';
         $tabla .='
           <style>
@@ -914,7 +864,6 @@ class Genera_informacion extends CI_Controller{
         $tabla.='
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
-
                 <tr style="background-color: #66b2e8">
                   <th style="width:3%;height:50px;background-color: #eceaea;">COD. DA.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. UE.</th>

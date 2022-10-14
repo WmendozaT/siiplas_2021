@@ -27,7 +27,7 @@ ob_start();
         </page_footer>
         <?php echo $items_certificados_final;?>
         <br>
-        <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>CERTIFICACIÓN POA ELIMINADO SEGUN CITE N° INFRA - 06/2022 DE FECHA 14/09/2022 , REGIONAL PANDO</b></div>
+        <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>CERTIFICACIÓN POA ELIMINADO SEGUN CITE N° DI-1664/2022 DE FECHA 05/10/2022 , REGIONAL SANTA CRUZ</b></div>
     </page>
     <?php
     }

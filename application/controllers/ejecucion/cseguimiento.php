@@ -1479,7 +1479,7 @@ class Cseguimiento extends CI_Controller {
 
         $data['operaciones']=$tabla; /// Reporte Gasto Corriente, Proyecto de Inversion 2020
         
-      //  echo $data['operaciones'];
+        //echo $data['operaciones'];
 
         $this->load->view('admin/evaluacion/seguimiento_poa/reporte_seguimiento_poa', $data);
       }

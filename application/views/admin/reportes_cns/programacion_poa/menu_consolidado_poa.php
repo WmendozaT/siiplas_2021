@@ -20,22 +20,7 @@
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script> 
         <meta name="viewport" content="width=device-width">
-        <style>
-            table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-            overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-            #mdialTamanio{
-              width: 45% !important;
-            }
-        </style>
- 
+        <?php echo $style;?>
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -44,24 +29,6 @@
         <header id="header">
             <div id="logo-group">
               <!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-            </div>
-            <div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-              <span>
-                &nbsp;&nbsp;&nbsp; 
-                <div class="badge bg-color-blue">
-                  <span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-                </div>
-              </span>
-              <div class="project-context hidden-xs">
-                <span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-                  <i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-                </span>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-                  </li>
-                </ul>
-              </div>
             </div>
             <div class="pull-right">
                 <div id="hide-menu" class="btn-header pull-right">
@@ -117,7 +84,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Reportes POA</li><li>Consolidado POA</li>
+                    <li>Reportes POA</li><li>Consolidado Resumen POA</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -127,7 +94,7 @@
                     <div class="row">
                     <?php echo $list;?>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                           <div id="lista_consolidado" class="well"><?php echo $mensaje;?></div>
+                           <div id="lista_consolidado" class="well"><?php echo $form5_consolidado.''.$mensaje;?></div>
                         </article>
                     </div>
                 </section>
@@ -136,16 +103,70 @@
 
             <!-- MODAL REPORTE POA -->
             <div class="modal fade" id="modal_poa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog" id="mdialTamanio">
+                <div class="modal-dialog" id="programacion">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                         </div>
                         <div class="modal-body">
-                        <h2 class="alert alert-info"><center>MIS FORMULARIOS POA - <?php echo $this->session->userData('gestion');?></center></h2>
+                        <h2 class="alert alert-secondary "><center>MIS FORMULARIOS POA - <?php echo $this->session->userData('gestion');?></center></h2>
                             <div class="row">
                                 <div id="titulo"></div>
                                 <div id="content1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL REPORTE MODIFICACION POA -->
+            <div class="modal fade" id="modal_mpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog" id="modificacion">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                        </div>
+                        <div class="modal-body">
+                        <h2 class="alert alert-success"><center>MIS MODIFICACIONES POA - <?php echo $this->session->userData('gestion');?></center></h2>
+                            <div class="row">
+                                <div id="titulo_mod"></div>
+                                <div id="content_mod"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL REPORTE CERTIFICACION POA -->
+            <div class="modal fade" id="modal_certpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog" id="certificacion">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                        </div>
+                        <div class="modal-body">
+                        <h2 class="alert alert-info"><center>MIS CERTIFICACIONES POA - <?php echo $this->session->userData('gestion');?></center></h2>
+                            <div class="row">
+                                <div id="titulo_certpoa"></div>
+                                <div id="content_certpoa"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL EVALUACION POA -->
+            <div class="modal fade" id="modal_eval" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog" id="evaluacion">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                        </div>
+                        <div class="modal-body">
+                        <h2 class="alert alert-warning"><center>CUADRO DE EVALUACI&Oacute;N POA - <?php echo $tmes[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></center></h2>
+                            <div class="row">
+                                <div id="titulo_evalpoa"></div>
+                                <div id="content_evalpoa"></div>
                             </div>
                         </div>
                     </div>
@@ -178,6 +199,7 @@
 
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
@@ -211,194 +233,13 @@
         <!-- Voice command : plugin -->
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <script type="text/javascript">
-            function ver_poa(proy_id) {
-                $('#titulo').html('<font size=3><b>Cargando ..</b></font>');
-                $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
-                
-                var url = "<?php echo site_url("")?>/programacion/proyecto/get_poa";
-                var request;
-                if (request) {
-                    request.abort();
-                }
-                request = $.ajax({
-                    url: url,
-                    type: "POST",
-                    dataType: 'json',
-                    data: "proy_id="+proy_id
-                });
-
-                request.done(function (response, textStatus, jqXHR) {
-
-                if (response.respuesta == 'correcto') {
-                    if(response.proyecto[0]['tp_id']==1){
-                        $('#titulo').html('<font size=3><b>'+response.proyecto[0]['aper_programa']+' '+response.proyecto[0]['proy_sisin']+' 000 - '+response.proyecto[0]['proy_nombre']+'</b></font>');
-                    }
-                    else{
-                        $('#titulo').html('<font size=3><b>'+response.proyecto[0]['act_descripcion']+' '+response.proyecto[0]['abrev']+'</b></font>');
-                    }
-                    
-                    $('#content1').fadeIn(1000).html(response.tabla);
-                }
-                else{
-                    alertify.error("ERROR AL RECUPERAR INFORMACION");
-                }
-
-                });
-            }
-        </script>
-           
-        <script type="text/javascript">
-        $(document).ready(function() {
-            pageSetUp();
-            $("#dep_id").change(function () {
-                $("#dep_id option:selected").each(function () {
-                    //dist_id=$('[name="dist_id"]').val();
-                    elegido=$(this).val();
-                    if(elegido==0){
-                       window.location.reload(true);
-                    }
-                    else{
-                        $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'distrital' }, function(data){
-                            $("#dist_id").html(data);
-                            $("#tp_id").html('');
-                            $("#rep_id").html('');
-                            $('#unidad').slideUp();
-                            $("#lista_consolidado").html('<?php echo $mensaje;?>');
-                        });
-                    }
-                });
-            });
-
-            $("#dist_id").change(function () {
-                $("#dist_id option:selected").each(function () {
-                    elegido=$(this).val();
-                    $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'rep' }, function(data){
-                        $("#rep_id").html(data);
-                        $("#tp_id").html('');
-                        $('#unidad').slideUp();
-                      //  $("#lista_consolidado").html('');
-                    });
-                });
-            });
-
-            $("#rep_id").change(function () {
-                $("#rep_id option:selected").each(function () {
-                    elegido=$(this).val();
-
-                    $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'tipo' }, function(data){
-                        $("#tp_id").html(data);
-                        $('#unidad').slideUp();
-                     //   $("#lista_consolidado").html('');
-                    });
-                });
-            });
-
-
-            $("#tp_id").change(function () {
-                $("#tp_id option:selected").each(function () {
-                    dep_id=$('[name="dep_id"]').val();
-                    dist_id=$('[name="dist_id"]').val();
-                    rep_id=$('[name="rep_id"]').val();
-                    tp_id=$(this).val();
-
-                  //  alert(dep_id+'--'+dist_id)
-                    if(rep_id!=4){
-                      //  alert("dep_id="+dep_id+"dist_id="+dist_id+" &tp_id="+tp_id+" &tp_rep="+rep_id)
-                        $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');
-                        var url = "<?php echo site_url("")?>/reportes_cns/rep_operaciones/get_lista_reportepoa";
-                        var request;
-                        if (request) {
-                            request.abort();
-                        }
-                        request = $.ajax({
-                            url: url,
-                            type: "POST",
-                            dataType: 'json',
-                            data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id+"&tp_rep="+rep_id
-                        });
-
-                        request.done(function (response, textStatus, jqXHR) {
-                            if (response.respuesta == 'correcto') {
-                                $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
-                            }
-                            else{
-                                alertify.error("ERROR AL LISTAR");
-                            }
-                        }); 
-                    }
-                    else{
-                        $('#unidad').slideDown();
-                        $("#lista_consolidado").html('');
-                        var url = "<?php echo site_url("")?>/reportes_cns/rep_operaciones/get_unidades";
-                        var request;
-                        if (request) {
-                            request.abort();
-                        }
-                        request = $.ajax({
-                            url: url,
-                            type: "POST",
-                            dataType: 'json',
-                            data: "dep_id="+dep_id+"dist_id="+dist_id+"&tp_id="+tp_id
-                        });
-
-                        request.done(function (response, textStatus, jqXHR) {
-                            if (response.respuesta == 'correcto') {
-                                $('#proy_id').fadeIn(1000).html(response.lista_actividad);
-                            }
-                            else{
-                                alertify.error("ERROR AL LISTAR");
-                            }
-                        }); 
-                    }
-                     
-                });
-            });
-        })
-
-            $("#proy_id").change(function () {
-                $("#proy_id option:selected").each(function () {
-                    elegido=$(this).val();
-                    $.post("<?php echo base_url(); ?>index.php/rep/get_uadministrativas", { elegido: elegido,accion:'subactividades' }, function(data){
-                        $("#sub_act").html(data);
-                        $("#lista_consolidado").html('');
-                    });
-                });
-            });
-
-            $("#sub_act").change(function () {
-                $("#sub_act option:selected").each(function () {
-                    com_id=$(this).val();
-                    $('#lista_consolidado').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Lista de Requerimientos Programados / Certificados ...</div>');
-                    var url = "<?php echo site_url("")?>/reportes_cns/rep_operaciones/get_subactividad";
-                    var request;
-                    if (request) {
-                        request.abort();
-                    }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "com_id="+com_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-                        if (response.respuesta == 'correcto') {
-                            $('#lista_consolidado').fadeIn(1000).html(response.lista_requerimientos_certificados);
-                        }
-                        else{
-                            alertify.error("ERROR AL LISTAR");
-                        }
-                    }); 
-
-                });
-            });
-
-        </script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+        <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+        <script src = "<?php echo base_url(); ?>mis_js/reportes/rep_resumen_poa.js"></script>
+
     </body>
 </html>

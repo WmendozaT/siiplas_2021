@@ -230,10 +230,10 @@ class Model_insumo extends CI_Model{
 
     /*---- LISTA GET MONTO PROGRAMADO POR PARTIDA Y PROGRAMA UNIDAD REPONSABLE 2023 -----*/
     function get_monto_programado_x_partida_programa_unidad($proy_id,$par_id,$aper_id_oe){
-                $sql = 'select proy_id,par_id,par_codigo,par_nombre,obj_id,aper_id_oe,SUM(ins_costo_total) monto
-                        from vista_get_detalle_x_cat_programatica_partida_form5
-                        where proy_id='.$proy_id.' and g_id='.$this->gestion.' and par_id='.$par_id.' and aper_id_oe='.$aper_id_oe.'
-                        group by proy_id,par_id,par_codigo,par_nombre,obj_id,aper_id_oe';
+        $sql = 'select proy_id,par_id,par_codigo,par_nombre,obj_id,aper_id_oe,SUM(ins_costo_total) monto
+                from vista_get_detalle_x_cat_programatica_partida_form5
+                where proy_id='.$proy_id.' and g_id='.$this->gestion.' and par_id='.$par_id.' and aper_id_oe='.$aper_id_oe.'
+                group by proy_id,par_id,par_codigo,par_nombre,obj_id,aper_id_oe';
 
         $query = $this->db->query($sql);
         return $query->result_array();

@@ -36,16 +36,22 @@ class Cconfiguracion extends CI_Controller {
     /*------- CONFIGURACIÓN SISTEMA ----------*/
     public function main_configuracion(){ 
       $data['menu']=$this->menu(9);
-      $data['conf'] = $this->model_configuracion->get_configuracion_session();
-      $data['mes'] = $this->model_configuracion->get_mes();
-      $data['trimestre'] = $this->model_configuracion->get_mes_trimestre();
-      $data['gestion'] = $this->model_configuracion->get_gestion();
-      $data['modulos'] = $this->conf_modulos();
+      if($this->fun_id==399){
+        $data['conf'] = $this->model_configuracion->get_configuracion_session();
+        $data['mes'] = $this->model_configuracion->get_mes();
+        $data['trimestre'] = $this->model_configuracion->get_mes_trimestre();
+        $data['gestion'] = $this->model_configuracion->get_gestion();
+        $data['modulos'] = $this->conf_modulos();
 
-      $data['responsables_evaluadores'] = $this->responsables_evaluadores(); /// Lista de Responsables para evaluar
+        $data['responsables_evaluadores'] = $this->responsables_evaluadores(); /// Lista de Responsables para evaluar
 
-      //phpinfo();
-      $this->load->view('admin/mantenimiento/configuracion/vmain_configuracion', $data);
+        //phpinfo();
+        $this->load->view('admin/mantenimiento/configuracion/vmain_configuracion', $data);
+      }
+      else{
+        redirect('admin/dashboard');
+      }
+      
     }
 
     /*----- LISTA DE PERSONAL A EVALUAR ----*/

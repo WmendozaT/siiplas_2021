@@ -483,7 +483,7 @@ class Seguimientopoa extends CI_Controller{
                         <td style="height:15px;  width: 1%; text-align: center;" >'.$nro.'</td>
                         <td style="width: 3%; text-align: center; font-size: 9px;"><b>'.$row['or_codigo'].'</b></td>
                         <td style="width: 3%; text-align: center; font-size: 9px;"><b>'.$row['prod_cod'].'</b></td>
-                        <td style="width: 20%;">'.$row['prod_producto'].'</td>
+                        <td style="width: 20%;">'.$row['prod_producto'].'<br>'.$diferencia[3].'--'.$diferencia[1].'--'.$diferencia[2].'</td>
                         <td style="width: 16%;">'.$row['prod_fuente_verificacion'].'</td>
                         <td align=right>'.round($row['prod_meta'],2).''.$indi_id.'</td>
                         <td style="width: 4%; text-align: right;">'.$diferencia[2].''.$indi_id.'</td>';
