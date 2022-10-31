@@ -72,7 +72,7 @@ class Proyecto extends CI_Controller {
           $nro++;
           $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
           $tabla.='<tr style="height:35px;">';
-            $tabla.= '<td align=center><b>'.$nro.'</b></td>';
+            $tabla.= '<td align=center title="'.$row['aper_id'].'"><b>'.$nro.'</b></td>';
             $tabla.= '<td>';
               if(count($fase)!=0){
                 $tabla .= '<center><a href="'.site_url("").'/prog/list_serv/'.$row['proy_id'].'" title="PROGRAMACION F&Iacute;SICA - FINANCIERA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/bien.png" WIDTH="30" HEIGHT="30"/></a></center>';
@@ -95,7 +95,7 @@ class Proyecto extends CI_Controller {
                 $tabla .= '<center><a href="'.site_url("admin").'/proy/delete/1/'.$row['proy_id'].'" title="ELIMINAR" onclick="return confirmar()" class="btn btn-default"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="34" HEIGHT="30"/></a></center>';
               }                              
             $tabla .= '</td>';
-            $tabla .= '<td style="font-size: 9pt;"><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>';
+            $tabla .= '<td style="font-size: 9pt;"><center>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</center></td>';
             $tabla.='<td style="font-size: 9pt;"><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>';
             $tabla.='<td>'.$row['nivel'].'</td>';
             $tabla.='<td>'.$row['tipo_adm'].'</td>';

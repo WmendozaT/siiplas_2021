@@ -53,9 +53,9 @@ class reportes_evaluacionpoa extends CI_Controller{
               <th style="width:2%;height:15px;">#</th>
               <th style="width:15%;">DISTRITAL</th>
               <th style="width:20%;">GASTO CORRIENTE / PROY. INV.</th>
-              <th style="width:8%;">METAS. PROGR.</th>
-              <th style="width:8%;">METAS CUMP.</th>
-              <th style="width:10%;">METAS NO CUMP.</th>
+              <th style="width:8%;">ACT. PROGR.</th>
+              <th style="width:8%;">ACT. CUMP.</th>
+              <th style="width:10%;">ACT. NO CUMP.</th>
               <th style="width:10%;">% CUMPLIMIENTO</th>
               <th style="width:10%;">% NO CUMPLIDAS</th>
               <th style="width:10%;">% EJEC. PPTO.</th>
@@ -100,9 +100,9 @@ class reportes_evaluacionpoa extends CI_Controller{
             <tr style="font-size: 10px;" align=center bgcolor="#f8f2f2">
               <th style="width:2%;height:15px;">#</th>
               <th style="width:20%;">DIRECCIÓN ADMINISTRATIVA</th>
-              <th style="width:12%;">METAS PROGRAMADAS</th>
-              <th style="width:12%;">METAS CUMPLIDAS</th>
-              <th style="width:12%;">METAS NO CUMPLIDAS</th>
+              <th style="width:12%;">ACT. PROGRAMADAS</th>
+              <th style="width:12%;">ACT. CUMPLIDAS</th>
+              <th style="width:12%;">ACT. NO CUMPLIDAS</th>
               <th style="width:12%;">% CUMPLIMIENTO</th>
               <th style="width:12%;">% NO CUMPLIDO</th>
               <th style="width:12%;">% EJEC. PPTO.</th>
@@ -400,10 +400,10 @@ class reportes_evaluacionpoa extends CI_Controller{
                 <th>#</th>
                 <th>APERTURA PROGRAM&Aacute;TICA</th>
                 <th>DESCRIPCI&Oacute;N</th>
-                <th>NRO. PROGRAMADAS</th>
-                <th>NRO. EVALUADAS</th>
-                <th>NRO. CUMP.</th>
-                <th>NRO. NO CUMP.</th>
+                <th>ACT. PROGRAMADAS</th>
+                <th>ACT. EVALUADAS</th>
+                <th>ACT. CUMP.</th>
+                <th>ACT. NO CUMP.</th>
                 <th>% CUMPLIMIENTO</th>
                 <th>% NO CUMPLIDAS</th>
                 </tr>

@@ -1511,11 +1511,11 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FÍSICO PROYECTO</b></td>
-            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_fisico'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date('d',strtotime($proyecto[0]['fecha_avance_fis'])).' de '.$this->mes[ltrim(date('m',strtotime($proyecto[0]['fecha_avance_fis'])), "0")]  .' de '.date('Y',strtotime($proyecto[0]['fecha_avance_fis'])).'</td>
+            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_fisico'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date("d").'/'.date("m"). "/" . date("Y").'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FINANCIERO TOTAL</b></td>
-            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_financiero'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date('d',strtotime($proyecto[0]['fecha_avance_fin'])).' de '.$this->mes[ltrim(date('m',strtotime($proyecto[0]['fecha_avance_fin'])), "0")]  .' de '.date('Y',strtotime($proyecto[0]['fecha_avance_fin'])).'</td>
+            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_financiero'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date("d").'/'.date("m"). "/" . date("Y").'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FINANCIERO GESTIÓN '.$this->gestion.'</b></td>
