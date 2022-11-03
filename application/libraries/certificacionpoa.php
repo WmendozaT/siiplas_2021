@@ -1087,7 +1087,7 @@ class Certificacionpoa extends CI_Controller{
             }
           </style>';
     $tabla.='
-      <b>REQUERIMIENTOS CON TEMPORALIDAD UNICA</b>
+      <b>REQUERIMIENTOS CON TEMPORALIDAD UNICA '.$prod_id.'</b>
       <table class="table table-bordered" style="width:97%;" align="center" id="datos">
         <thead >
           <tr>

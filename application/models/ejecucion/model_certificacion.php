@@ -1269,4 +1269,42 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+    //// ======= PPTO EJECUTADO CERT POA POR PARTIDAS 
+
+    /*---- Get ppto certificado por partidas Institucional----*/
+    public function get_ppto_certpoa_partidas_institucional($tp_id){
+        $sql = 'select req.dep_id, par.par_depende,SUM(req.programado_total) PROG, SUM(req.ins_monto_certificado) CERT
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.') req
+                Inner Join partidas as par On par.par_id=req.par_id
+                group by req.dep_id,par.par_depende
+                order by par.par_depende asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*---- Get ppto certificado por partidas Regional----*/
+    public function get_ppto_certpoa_partidas_regional($dep_id,$tp_id){
+        $sql = 'select req.dep_id, par.par_depende,SUM(req.programado_total) PROG, SUM(req.ins_monto_certificado) CERT
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.') req
+                Inner Join partidas as par On par.par_id=req.par_id
+                where req.dep_id='.$dep_id.'
+                group by req.dep_id,par.par_depende
+                order by par.par_depende asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*---- Get ppto certificado por partidas Distrital----*/
+    public function get_ppto_certpoa_partidas_distrital($dist_id,$tp_id){
+        $sql = 'select req.dep_id, par.par_depende,SUM(req.programado_total) PROG, SUM(req.ins_monto_certificado) CERT
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.') req
+                Inner Join partidas as par On par.par_id=req.par_id
+                where req.dist_id='.$dist_id.'
+                group by req.dep_id,par.par_depende
+                order by par.par_depende asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }

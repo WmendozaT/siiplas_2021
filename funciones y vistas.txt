@@ -1106,6 +1106,7 @@ serv_id integer,
 serv_cod varchar,
 tipo_subactividad varchar,
 serv_descripcion varchar,
+prod_id numeric,
 prod_cod integer,
 prod_producto varchar,
 or_id integer,
@@ -1148,7 +1149,7 @@ fun_materno varchar) AS
 $$
 
 select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,apg.aper_id,apg.aper_programa,apg.aper_proyecto,p.proy_sisin,apg.aper_actividad,p.proy_id,p.proy_nombre,p.tp_id,ds.abrev,ua.act_descripcion, te.tipo,
-     ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_cod,prod.prod_producto,prod.or_id,ore.or_codigo,ore.or_objetivo,og.og_id,og.og_codigo,og.og_objetivo,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_detalle,i.ins_unidad_medida,
+     ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_id,prod.prod_cod,prod.prod_producto,prod.or_id,ore.or_codigo,ore.or_objetivo,og.og_id,og.og_codigo,og.og_objetivo,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_detalle,i.ins_unidad_medida,
      i.ins_gestion,i.ins_observacion,i.par_id,par.par_codigo,par.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
      itemp.mes11,itemp.mes12,fun.fun_nombre,fun.fun_paterno,fun.fun_materno
                 from _proyectos p
@@ -1175,7 +1176,7 @@ select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_dist
                 Inner Join vista_temporalidad_insumo as itemp On itemp.ins_id=i.ins_id
                 where d.dep_id=id_dep and p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and p.tp_id=tp and pfe.pfec_estado=1 and pfe.estado!=3 and c.estado!=3 and i.ins_gestion=gestion  and i.ins_estado!=3 and i.aper_id!=0
                 order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,ser.serv_cod, prod.prod_cod, par.par_codigo, i.ins_id asc;
- $$ LANGUAGE sql;
+ $$ LANGUAGE sql
 
 
 
@@ -1283,7 +1284,9 @@ select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_dist
 
 
 CONSOLIDADO REQUERIMIENTOS (relación directa) INSUMO-UNIDAD A NIVEL REGIONAL 
-CREATE OR REPLACE FUNCTION lista_requerimientos_institucional_directo(tp numeric,gestion integer) RETURNS TABLE(
+
+
+ CREATE OR REPLACE FUNCTION lista_requerimientos_institucional_directo(tp numeric,gestion integer) RETURNS TABLE(
 dep_id numeric,
 dep_cod varchar,
 dep_departamento varchar,
@@ -1306,6 +1309,7 @@ tipo varchar,
 pfec_id numeric,
 form4_cod integer,
 ins_id numeric,
+par_id integer,
 par_codigo integer,
 ins_detalle varchar,
 ins_cant_requerida numeric,
@@ -1333,7 +1337,7 @@ mes12 numeric) AS
 $$
 
 select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
-p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.form4_cod,i.ins_id,par.par_codigo,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_unidad_medida,
+p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.form4_cod,i.ins_id,i.par_id,par.par_codigo,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_unidad_medida,
 i.ins_estado,i.ins_gestion,i.ins_observacion,temp.programado_total,temp.mes1,temp.mes2,temp.mes3,temp.mes4,temp.mes5,temp.mes6,temp.mes7,temp.mes8,temp.mes9,temp.mes10,temp.mes11,temp.mes12
 from _proyectofaseetapacomponente pfe
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id

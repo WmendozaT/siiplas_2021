@@ -766,7 +766,7 @@ class Cestructura_organizacional extends CI_Controller {
       $data['menu']=$this->menu(9);
       $data['resp']=$this->session->userdata('funcionario');
       $data['res_dep']=$this->tp_resp();
-      $data['programas'] = $this->model_proyecto->list_prog($this->gestion); ///// lista aperturas padres
+      $data['programas'] = $this->model_proyecto->list_prog($this->gestion); ///// lista aperturas padres list_aperturas_programaticas()
       
       $tabla='';
       $establecimientos=$this->model_estructura_org->list_tp_establecimiento();
@@ -819,6 +819,22 @@ class Cestructura_organizacional extends CI_Controller {
 
       $data['establecimiento']=$tabla;
       $this->load->view('admin/mantenimiento/unidad_organizacional/establecimiento', $data);
+
+
+      /*$te_id = 13; /// Tipo de Establecimiento
+        $relacion=$this->model_estructura_org->relacion_establecimiento_apertura($te_id);
+        $aper_id=0;
+        $ae_id=0;
+        if(count($relacion)!=0){
+          $aper_id=$relacion[0]['aper_id'];
+          $ae_id=$relacion[0]['ae_id'];
+        }
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'aper_id' => $aper_id,
+          'ae_id' => $ae_id,
+        );*/
     }
 
     /*-------- GET LISTA DE SERVICIOS ------------*/

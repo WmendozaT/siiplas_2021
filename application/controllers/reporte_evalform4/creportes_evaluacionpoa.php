@@ -152,6 +152,8 @@ class Creportes_evaluacionpoa extends CI_Controller {
 
           $form4_programado = $this->model_proyecto->temporalidad_prog_form4_institucional(); /// FORM4 PROGRAMADO CONSOLIDADO
           $form4_ejec = $this->model_proyecto->temporalidad_ejec_form4_institucional(); /// FORM 4 EJECUTADO
+
+          $consolidado_partidas=$this->model_certificacion->get_ppto_certpoa_partidas_institucional($tp_id);
         }
         elseif($dep_id!=0 & $dist_id==0){ /// Regional
           $regional=$this->model_proyecto->get_departamento($dep_id);
@@ -162,6 +164,8 @@ class Creportes_evaluacionpoa extends CI_Controller {
 
           $form4_programado = $this->model_proyecto->temporalidad_prog_form4_regional($dep_id); /// FORM4 PROGRAMADO CONSOLIDADO
           $form4_ejec = $this->model_proyecto->temporalidad_ejec_form4_regional($dep_id); /// FORM 4 EJECUTADO
+
+          $consolidado_partidas=$this->model_certificacion->get_ppto_certpoa_partidas_regional($dep_id,$tp_id);
         }
         elseif ($dep_id!=0 & $dist_id!=0) { /// Distrital
           $distrital=$this->model_proyecto->dep_dist($dist_id);
@@ -172,6 +176,8 @@ class Creportes_evaluacionpoa extends CI_Controller {
 
           $form4_programado = $this->model_proyecto->temporalidad_prog_form4_distrital($dist_id); /// FORM4 PROGRAMADO CONSOLIDADO
           $form4_ejec = $this->model_proyecto->temporalidad_ejec_form4_distrital($dist_id); /// FORM 4 EJECUTADO
+
+          $consolidado_partidas=$this->model_certificacion->get_ppto_certpoa_partidas_distrital($dist_id,$tp_id);
         }
 
 
@@ -257,10 +263,13 @@ class Creportes_evaluacionpoa extends CI_Controller {
                     <!-- row -->
                     <div class="row">
         
-                      <div class="col-md-12">
+                      <div class="col-md-6">
                         <div id="grafico_form5">
                           <center><div id="graf_form5" style="width: 880px; height: 500px; margin: 0 auto; text-align:center"></div></center>
                         </div>
+                      </div>
+                      <div class="col-md-6">
+
                       </div>
         
                       <div class="col-md-12">
