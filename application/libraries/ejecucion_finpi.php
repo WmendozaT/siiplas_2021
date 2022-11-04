@@ -758,12 +758,18 @@ class ejecucion_finpi extends CI_Controller{
   }
 
 
- /*------- REPORTE 3 DETALLE POR PARTIDA EJECUCION FISICA Y FINANCIERA--------*/
+ /*------- REPORTE 3 DETALLE POR PARTIDA EJECUCION FISICA Y FINANCIERA A DETALLE --------*/
   public function reporte3_pdf_excel($dep_id,$tipo_reporte){
     /// tipo_reporte : 1 pdf
     /// tipo_reporte : 0 excel
-    //$proyectos=$this->model_proyecto->list_pinversion(1,4);
-    $proyectos=$this->model_proyecto->list_proy_inversion_regional($dep_id);
+
+    if($dep_id==0){ /// institucional
+      $proyectos=$this->model_proyecto->list_proy_inversion();
+    }
+    else{ /// Regional
+      $proyectos=$this->model_proyecto->list_proy_inversion_regional($dep_id);
+    }
+    
     $regional=$this->model_proyecto->get_departamento($dep_id);
     $tabla='';
 
@@ -821,8 +827,8 @@ class ejecucion_finpi extends CI_Controller{
               $tabla.='
               <tr bgcolor="#e7e741">
                 <td style="width:1%;font-size: 12px;font-family: Arial; height:50px; text-align:center" title='.$row['aper_id'].'>'.$nro.'</td>
-                <td style="width:3%;font-size: 12px;font-family: Arial;">'.strtoupper($row['dep_departamento']).'</td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;">'.strtoupper($row['dist_distrital']).'</td>
+                <td style="width:3%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
                 <td style="width:5%;font-size: 12px;font-family: Arial;">'.$row['proy'].'</td>
                 <td style="width:5%;font-size: 12px;font-family: Arial;">\''.$row['prog'].' '.$row['proy'].' 000\'</td>
                 <td style="width:15%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
@@ -865,8 +871,8 @@ class ejecucion_finpi extends CI_Controller{
                 $tabla.='
                 <tr>
                   <td style="font-size: 12px;font-family: Arial; height:50px"></td>
-                  <td style="font-size: 12px;font-family: Arial;">'.strtoupper($row['dep_departamento']).'</td>
-                  <td style="font-size: 12px;font-family: Arial;">'.strtoupper($row['dist_distrital']).'</td>
+                  <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
+                  <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
                   <td style="font-size: 12px;font-family: Arial;">'.$row['proy'].'</td>
                   <td style="font-size: 12px;font-family: Arial;">\''.$row['prog'].' '.$row['proy'].' 000\'</td>
                   <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
@@ -880,8 +886,7 @@ class ejecucion_finpi extends CI_Controller{
             }
           $tabla.='
           </tbody>
-        </table>
-       ';
+        </table>';
 
     }
     else{
@@ -933,6 +938,146 @@ class ejecucion_finpi extends CI_Controller{
           </tbody>
         </table>';
     }
+
+    return $tabla;
+  }
+
+
+  /*------- REPORTE 3 DETALLE POR PARTIDA EJECUCION FISICA Y FINANCIERA A RESUMEN --------*/
+  public function reporte_consolidado_institucional_resumen(){
+    $tabla='';
+    $proyectos=$this->model_proyecto->list_proy_inversion();
+        $tabla.='
+        <table border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla">
+          <thead>
+            <tr bgcolor="#f4f4f4">
+              <td style="width:40%; font-size: 15px; text-align:center;height:50px" colspan=12><b>DETALLE PROYECTO - RESUMEN INSTITUCIONAL</b></td>
+              <td style="width:60%; font-size: 15px; text-align:center;" colspan=13><b>EJECUCION FINANCIERA</b></td>
+              <td colspan=2></td>
+            </tr>
+            <tr bgcolor="#f4f4f4" border=1>
+              <th style="width:1%; font-size: 12px; text-align:center;height:60px"><b>#</b></th>
+              <th style="width:3%; font-size: 12px; text-align:center"><b>REGIONAL</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>DISTRITAL</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>CODIGO SISIN</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>CATEGORIA PROGRAMATICA</b></th>
+              <th style="width:15%; font-size: 12px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>COSTO TOTAL PROYECTO (Bs.)</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>ESTADO DEL PROYECTO</b></th>
+              <th style="width:10%; font-size: 12px; text-align:center"><b>FASE</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. INICIAL '.$this->gestion.'</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. MOD. '.$this->gestion.'</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. VIGENTE '.$this->gestion.'</b></th>
+
+              <th style="width:5%; font-size: 12px; text-align:center"><b>ENERO</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>FEBRERO</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>MARZO</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>ABRIL</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>MAYO</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>JUNIO</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>JULIO</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>AGOSTO</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>SEPTIEMBRE</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>OCTUBRE</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>NOVIEMBRE</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>DICIEMBRE</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>TOTAL EJECUTADO '.$this->gestion.'</b></th>
+              <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIS. TOTAL</b></th>
+              <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIN. TOTAL</b></th>
+            </tr>
+          </thead>
+          <tbody>';
+           $nro=0;
+            $suma_ptto_ini=0;
+            $suma_ptto_mod=0;
+            $suma_ptto_vig=0;
+            $suma_ptto_ejec=0;
+            foreach($proyectos as $row){
+            //  $ejec_fin=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']); /// Ejecucion Presupuestaria PI
+              $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
+              $modificaciones_ppto_proyecto=$this->detalle_modificacion_ppto_x_proyecto($row['aper_id']);
+              $ppto_ejecutado_proyecto=$this->model_ptto_sigep->get_ppto_ejecutado_proyecto($row['proy_id']); /// ejecucion de presupuesto por proyecto
+              $nro++;
+              $tabla.='
+              <tr >
+                <td style="width:1%;font-size: 12px;font-family: Arial; height:50px; text-align:center" bgcolor="#d8f1dc" title='.$row['aper_id'].'>'.$nro.'</td>
+                <td style="width:3%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.$row['proy'].'</td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">\''.$row['prog'].' '.$row['proy'].' 000\'</td>
+                <td style="width:15%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:10%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($fase[0]['fase'].' - '.$fase[0]['descripcion']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($modificaciones_ppto_proyecto[1],2).'</b></td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($modificaciones_ppto_proyecto[2],2).'</b></td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($modificaciones_ppto_proyecto[3],2).'</b></td>';
+                $ppto_ejecutado=0;
+                if(count($ppto_ejecutado_proyecto)!=0){
+                  $ppto_ejecutado=round($ppto_ejecutado_proyecto[0]['ejecutado_total'],2);
+                  for ($i=1; $i <=12 ; $i++) { 
+                    $tabla.='<td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($ppto_ejecutado_proyecto[0]['m'.$i],2).'</b></td>';
+                  }
+                }
+                else{
+                  for ($i=1; $i <=12 ; $i++) { 
+                    $tabla.='<td style="width:5%;font-size: 12px;font-family: Arial;" align=right>0</td>';
+                  }
+                }
+                
+                //// Avance Financiero (%)
+                /*$avance_fin_total=0;
+                if($row['proy_ppto_total']!=0){
+                  $avance_fin_total=round(($ppto_ejecutado/$row['proy_ppto_total'])*100,2);
+                }*/
+                ///------
+
+                $tabla.='
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.$ppto_ejecutado.'</b></td>
+                <td style="width:8%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
+                <td style="width:8%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($row['avance_financiero'],2).' %</b></td>
+              </tr>';
+
+              $suma_ptto_ini=$suma_ptto_ini+$modificaciones_ppto_proyecto[1];
+              $suma_ptto_mod=$suma_ptto_mod+$modificaciones_ppto_proyecto[2];
+              $suma_ptto_vig=$suma_ptto_vig+$modificaciones_ppto_proyecto[3];
+              $suma_ptto_ejec=$suma_ptto_ejec+$ppto_ejecutado;
+            }
+          $tabla.='
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td style="width:5%;font-size: 12px;font-family: Arial;" align=right>'.round($suma_ptto_ini,2).'</td>
+              <td style="width:5%;font-size: 12px;font-family: Arial;" align=right>'.round($suma_ptto_mod,2).'</td>
+              <td>'.round($suma_ptto_vig,2).'</td>
+              <td style="width:5%;font-size: 12px;font-family: Arial;" align=right></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+
+              <td style="width:5%;font-size: 12px;font-family: Arial;" align=right>'.round($suma_ptto_ejec,2).'</td>
+              <td></td>
+              <td></td>
+
+            </tr>
+          </tbody>
+        </table>';
+
 
     return $tabla;
   }

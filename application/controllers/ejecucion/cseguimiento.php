@@ -61,6 +61,66 @@ class Cseguimiento extends CI_Controller {
       
       $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
       $this->load->view('admin/evaluacion/seguimiento_poa/list_poas_aprobados', $data);
+    
+/*      $insumos=$this->model_insumo->lista_insumos();
+
+      $tabla='';
+      $tabla.='
+      <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+              <thead>
+                 <tr style="background-color: #66b2e8">
+                    <th style="width:2%;height:40px;background-color: #eceaea;">PROGRAMA</th>
+                    <th style="width:2%;height:40px;background-color: #eceaea;">DESCRIPCION</th>
+                    <th style="width:2%;height:40px;background-color: #eceaea;">GESTION</th>
+                    <th style="width:2%;height:40px;background-color: #eceaea;">GASTO CORRIENTE / PROYECTO DE INVERSION</th>
+                    
+                    <th style="width:2%;background-color: #eceaea;">PARTIDA</th>
+                    <th style="width:20%;background-color: #eceaea;">REQUERIMIENTO</th>
+                    <th style="width:5%;background-color: #eceaea;">UNIDAD DE MEDIDA</th>
+                    <th style="width:3%;background-color: #eceaea;">CANTIDAD</th>
+                    <th style="width:5%;background-color: #eceaea;">PRECIO</th>
+                    <th style="width:5%;background-color: #eceaea;">COSTO TOTAL</th>
+                    <th style="width:5%;background-color: #eceaea;">OBSERVACI&Oacute;N</th>
+                    <th style="width:5%;background-color: #eceaea;">GESTION</th>
+                    <th style="width:5%;background-color: #eceaea;">FECHA</th>
+                    <th style="width:5%;background-color: #eceaea;">INS. CODIGO</th>
+                  </tr>
+              </thead>
+            <tbody>';
+            foreach ($insumos as $row){
+              $tabla.='
+              <tr>
+                <td>\''.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'\'</td>
+                <td>'.mb_convert_encoding(strtoupper($row['aper_descripcion']), 'cp1252', 'UTF-8').'</td>
+                <td>'.$row['aper_gestion'].'</td>
+                <td>'.mb_convert_encoding(strtoupper($row['proy_nombre']), 'cp1252', 'UTF-8').'</td>
+
+                <td>'.$row['par_codigo'].'</td>
+                <td>'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>
+                <td>'.$row['ins_unidad_medida'].'</td>
+                <td>'.round($row['ins_cant_requerida'],2).'</td>
+                <td>'.round($row['ins_costo_unitario'],2).'</td>
+                <td>'.round($row['ins_costo_total'],2).'</td>
+                <td>'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+                <td>'.$row['ins_gestion'].'</td>
+                <td>'.$row['ins_fecha_requerimiento'].'</td>
+                <td>'.$row['ins_codigo'].'</td>
+              </tr>';
+            }
+            $tabla.='
+            </tbody>
+          </table>';
+
+
+header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=CONSOLIDADO_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      echo "";
+
+      echo $tabla;*/
+
+
     }
 
 

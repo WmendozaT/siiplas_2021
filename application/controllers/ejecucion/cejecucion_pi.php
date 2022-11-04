@@ -850,7 +850,7 @@ public function get_tp_reporte(){
   }
 
 
-  /*---- EXPORTAR A EXCEL REPORTE SEGUN EL TIPO ----*/
+  /*---- EXPORTAR A EXCEL REPORTE SEGUN EL TIPO (A DETALLE)----*/
   public function exportar_ejecucion_pi($dep_id,$tip){
     date_default_timezone_set('America/Lima');
     $fecha = date("d-m-Y H:i:s");
@@ -869,6 +869,25 @@ public function get_tp_reporte(){
 
     header('Content-type: application/vnd.ms-excel');
     header("Content-Disposition: attachment; filename=Detalle_ejec_pi_".strtoupper($regional[0]['dep_departamento'])."/".$this->gestion."_$fecha.xls"); //Indica el nombre del archivo resultante
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo "";
+    ini_set('max_execution_time', 0); 
+    ini_set('memory_limit','3072M');
+    echo $tabla;
+  }
+
+
+    /*---- EXPORTAR A EXCEL REPORTE SEGUN EL TIPO (RESUMEN)----*/
+  public function exportar_ejecucion_pi_resumen(){
+    date_default_timezone_set('America/Lima');
+    $fecha = date("d-m-Y H:i:s");
+    
+    $tabla='';
+    $tabla=$this->ejecucion_finpi->reporte_consolidado_institucional_resumen();
+
+    header('Content-type: application/vnd.ms-excel');
+    header("Content-Disposition: attachment; filename=Detalle_ejec_pi_RESUMEN_INSTITUCIONAL/".$this->gestion."_$fecha.xls"); //Indica el nombre del archivo resultante
     header("Pragma: no-cache");
     header("Expires: 0");
     echo "";

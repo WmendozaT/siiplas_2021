@@ -69,6 +69,9 @@
                                 <li>
                                     <a href="#s5" data-toggle="tab"> Detalle Ejecucion Cert. POA.</a>
                                 </li>
+                                <li>
+                                    <a href="#s6" data-toggle="tab"> Detalle Ejecucion Partidas.</a>
+                                </li>
                             </ul>
     
                             <div id="myTabContent1" class="tab-content padding-10">
@@ -202,6 +205,15 @@
                                         <a href="#" class="btn btn-default ejecucion_certpoa" title="CUADRO DE EJECUCION DE CERTIFICACION POA" style="width:25%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;EJECUCIÓN DE CERTIFICACIÓN POA</a>
                                     </div>
                                     <div id="lista_certpoa"></div>
+                                   
+                                </div>
+
+                                <div class="tab-pane fade" id="s6">
+                                    
+                                    <div align="left" id="boton_ejec_partidas">
+                                        <a href="#" class="btn btn-default ejecucion_partidas" title="CUADRO DE EJECUCION POR PARTIDAS" style="width:25%;"> <img src="<?php echo base_url(); ?>assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;EJECUCIÓN POR PARTIDAS</a>
+                                    </div>
+                                    <div id="lista_partidas"></div>
                                    
                                 </div>
                             </div>

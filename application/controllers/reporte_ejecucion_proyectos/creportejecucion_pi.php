@@ -166,6 +166,15 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
                 <div id="myTabContent1" class="tab-content padding-10">
                   <div class="tab-pane fade in active" id="s1">
                     <div class="row">
+
+                       <a href="'.site_url("").'/xls_rep_ejec_fin_pi/0/3" target=black title="EXPORTAR DETALLE" class="btn btn-default">
+                          <img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR CONSOLIDADO A DETALLE (EXCEL)
+                        </a>
+
+                        <a href="'.site_url("").'/xls_rep_ejec_fin_pi_resumen" target=black title="EXPORTAR DETALLE" class="btn btn-default">
+                          <img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR CONSOLIDADO RESUMEN (EXCEL)
+                        </a>
+                        <hr>
                       <article class="col-sm-12">
                         '.$grafico_avance_proyectos.'
                         <div id="tabla_impresion_ejecucion" style="display: none">

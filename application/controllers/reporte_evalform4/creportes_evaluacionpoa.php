@@ -263,13 +263,10 @@ class Creportes_evaluacionpoa extends CI_Controller {
                     <!-- row -->
                     <div class="row">
         
-                      <div class="col-md-6">
+                      <div class="col-md-12">
                         <div id="grafico_form5">
                           <center><div id="graf_form5" style="width: 880px; height: 500px; margin: 0 auto; text-align:center"></div></center>
                         </div>
-                      </div>
-                      <div class="col-md-6">
-
                       </div>
         
                       <div class="col-md-12">
@@ -346,6 +343,148 @@ class Creportes_evaluacionpoa extends CI_Controller {
     }
 
 
+
+/*-- GET EJECUCION X PARTIDA A NIVEL NACIONAL, REGIONAL DISTRITAL --*/
+    public function get_ejecucion_x_partida(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $dep_id = $this->security->xss_clean($post['dep_id']); // dep id
+        $dist_id = $this->security->xss_clean($post['dist_id']); // dist id
+        $tp_id = $this->security->xss_clean($post['tp_id']); /// tipo id
+        
+       // $matriz='No encontrado !!';
+        $tabla='No encontrado !!';
+
+        if($dep_id==0){ /// Institucional
+          $titulo_regional='EJECUCIÓN PARTIDAS A NIVEL INSTITUCIONAL - CNS /'.$this->gestion.'';
+          $partidas=$this->model_certificacion->get_ppto_certpoa_partidas_institucional($tp_id);
+
+        }
+        elseif($dep_id!=0 & $dist_id==0){ /// Regional
+          $regional=$this->model_proyecto->get_departamento($dep_id);
+          $titulo_regional='EJECUCIÓN PARTIDAS A NIVEL '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion.'';
+          $partidas=$this->model_certificacion->get_ppto_certpoa_partidas_regional($dep_id,$tp_id);
+
+        }
+        elseif ($dep_id!=0 & $dist_id!=0) { /// Distrital
+          $distrital=$this->model_proyecto->dep_dist($dist_id);
+          $titulo_regional='EJECUCIÓN PARTIDAS A NIVEL '.strtoupper($distrital[0]['dist_distrital']).' / '.$this->gestion.'';
+          $partidas=$this->model_certificacion->get_ppto_certpoa_partidas_distrital($dist_id,$tp_id);
+        }
+
+
+          $tabla='
+          <div class="row">
+            <div class="col-sm-12">
+              <div id="cabecera_partidas" style="display: none">'.$this->cabecera_reporte_grafico($titulo_regional).'</div>
+              <!-- well -->
+              <div class="well">
+                <!-- row -->
+                <div class="row">
+                  <!-- col -->
+                  <div class="col-sm-12">
+                    <!-- row -->
+                    <div class="row">
+                
+                      <div class="col-md-12">
+                        DETALLE DE EJECUCIÓN POR PARTIDAS<br>
+                        '.$this->genera_tabla_ejecucion_partidas($partidas,0).'
+                      </div>
+                      
+                      <div id="tabla_impresion_partidas" style="display: none">
+                        '.$this->genera_tabla_ejecucion_partidas($partidas,1).'
+                      </div>
+
+                    </div>
+                      <div align="right">
+                        <button  onClick="imprimir_partidas()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </div>
+                    <!-- end row -->
+                  </div>
+                  <!-- end col -->
+                </div>
+                <!-- end row -->
+              </div>
+              <!-- end well -->
+        
+            </div>
+          </div>';
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'titulo_rep'=>$titulo_regional,
+          'tabla'=>$tabla,
+         // 'matriz_form5'=>$matriz_ppto,
+         // 'matriz_form4'=>$matriz_form4,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+  /*---- Genera Tabla (Vista e impresion), Ejecucion por Partidas. ----*/
+  public function genera_tabla_ejecucion_partidas($partidas,$tipo_reporte){
+    $tabla='';
+    //// tipo_reporte : 0 normal
+    //// tipo_reporte : 1 impresion
+
+    $tabla='';
+    $class='class="table table-bordered" style="width:70%;"';
+    if($tipo_reporte==1){
+      $class='class="change_order_items" border=1 style="width:100%;"';
+      
+    }
+
+    $tabla.='
+      <center>
+      <table '.$class.'>
+        <thead>
+        <tr>
+          <th style="width:1%;">#</th>
+          <th style="width:6%;">PARTIDA</th>
+          <th style="width:25%;">DETALLE</th>
+          <th style="width:10%;">PPTO. POA '.$this->gestion.'</th>
+          <th style="width:10%;">PPTO. CERT. POA '.$this->gestion.'</th>
+          <th style="width:10%;">% EJEC. POA</th>
+        </tr>
+        </thead>
+          <tbody>';
+          $cont = 0; $sum_poa=0; $sum_certpoa=0;
+          foreach($partidas as $row){
+            $cont++;
+            $sum_poa=$sum_poa+$row['prog']; $sum_certpoa=$sum_certpoa+$row['cert'];
+            $tabla.='
+            <tr>
+              <td>'.$cont.'</td>
+              <td style="font-size: 11px;font-family: Arial;" align=center><b>'.$row['par_depende'].'</b></td>
+              <td>'.$row['par_nombre'].'</td>
+              <td align=right>'.number_format($row['prog'], 2, ',', '.').'</td>
+              <td align=right>'.number_format($row['cert'], 2, ',', '.').'</td>
+              <td align=right><b>'.round(($row['cert']/$row['prog'])*100).' %</b></td>
+            </tr>';
+          }
+          $tabla.='
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td align=right>'.number_format($sum_poa, 2, ',', '.').'</td>
+            <td align=right>'.number_format($sum_certpoa, 2, ',', '.').'</td>
+            <td align=right><b>'.round(($sum_certpoa/$sum_poa)*100).' %</b></td>
+          </tr>
+          </tbody>
+
+      </table>
+    </center>';
+
+    return $tabla;
+  }
+
+
+
    /*---- CABECERA REPORTE OPERACIONES POR REGIONALES (GRAFICO)----*/
   function cabecera_reporte_grafico($titulo){
     $tabla='';
@@ -383,7 +522,8 @@ class Creportes_evaluacionpoa extends CI_Controller {
               <td style="width:10%; text-align:center;">
               </td>
           </tr>
-      </table>';
+      </table>
+      '.$titulo.'';
 
     return $tabla;
   }

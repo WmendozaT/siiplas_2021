@@ -383,6 +383,50 @@ function abreVentana_eficiencia(PDF){
     });
 
 
+    /*---- CUADRO DE EJECUCION POR PARTIDAS ----*/
+    $(function () {
+      //// 2022
+      $(".ejecucion_partidas").on("click", function (e) {
+          dep_id=$('[name="dep_id"]').val();
+          dist_id=$('[name="dist_id"]').val();
+          tp_id=$('[name="tp_id"]').val();
+         // alert(dep_id+'-'+dist_id+'-'+tp_id)
+          $('#lista_partidas').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:50%;"/></div>');
+          
+          document.getElementById("boton_ejec_partidas").style.display = 'none';
+          var url = base+"index.php/reporte_evalform4/creportes_evaluacionpoa/get_ejecucion_x_partida";
+          var request;
+          if (request) {
+              request.abort();
+          }
+          request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "dep_id="+dep_id+"&dist_id="+dist_id+"&tp_id="+tp_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+            $('#lista_partidas').fadeIn(1000).html(response.tabla);
+          }
+          else{
+              alertify.error("ERROR AL RECUPERAR DATOS DE EJECUCION POR PARTIDAS ");
+          }
+
+          });
+          request.fail(function (jqXHR, textStatus, thrown) {
+              console.log("ERROR: " + textStatus);
+          });
+          request.always(function () {
+              //console.log("termino la ejecuicion de ajax");
+          });
+          e.preventDefault();
+          
+        });
+    });
+
+
     /// Grafico regresion por trimestre
     function graf_regresion_trimestral_temporalidad_prog_ejec(grafico,matriz,titulo,subtitulo,tit_laterales) {
       let programado=[];
@@ -465,6 +509,18 @@ function abreVentana_eficiencia(PDF){
     imprimirGrafico(grafico,cabecera,tabla);
     document.getElementById("cabecera_ejec").style.display = 'none';
     document.getElementById("tabla_impresion_form5").style.display = 'none';
+  }
+
+  function imprimir_partidas() {
+    var cabecera = document.querySelector("#cabecera_partidas");
+   // var grafico = document.querySelector("#grafico_form5");
+    document.getElementById("cabecera_partidas").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera_partidas");
+    document.getElementById("tabla_impresion_partidas").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_partidas");
+    imprimirGrafico('detalle',cabecera,tabla);
+    document.getElementById("cabecera_partidas").style.display = 'none';
+    document.getElementById("tabla_impresion_partidas").style.display = 'none';
   }
 
   function imprimir_form4() {

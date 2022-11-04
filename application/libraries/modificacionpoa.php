@@ -1761,8 +1761,68 @@ class Modificacionpoa extends CI_Controller{
           <td style="width:1%;"></td>
           <td style="width:98%;">
             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-              <tr>
-                <td style="width:45%;">
+            <tr>';
+            if(($this->fun_id==740 || $this->fun_id==401 || $this->fun_id==399)){ /// Ritha
+              $tabla.='
+              <td style="width:30%;">
+                     <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                      <tr style="font-size: 10px;font-family: Arial;">
+                          <td style="width:100%;height:13px;"><b>ELABORADO POR<br></b></td>
+                      </tr>
+                     
+                      <tr style="font-size: 8.5px;font-family: Arial; height:65px;">
+                          <td><br><br><br>
+                              <table>
+                                  <tr style="font-size: 8px;font-family: Arial; height:65px;">
+                                      <td><b>RESPONSABLE : </b></td>
+                                      <td>'.$cite[0]['fun_nombre'].' '.$cite[0]['fun_paterno'].' '.$cite[0]['fun_materno'].'</td>
+                                  </tr>
+                                  <tr style="font-size: 8px;font-family: Arial; height:65px;">
+                                      <td><b>CARGO : </b></td>
+                                      <td>'.$cite[0]['fun_cargo'].'</td>
+                                  </tr>
+                              </table>
+                          </td>
+                      </tr>
+                  </table>
+                </td>
+                 <td style="width:30%;">
+                     <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                      <tr style="font-size: 10px;font-family: Arial;">
+                          <td style="width:100%;height:13px;"><b>APROBADO POR<br></b></td>
+                      </tr>
+                     
+                      <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                          <td><br><br><br>
+                              <table style="width:100%;">
+                                  <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
+                                      <td style="width:100%;">LIC. WALTER E. CASTRO AYLLON</td>
+                                  </tr>
+                                  <tr style="font-size: 10px;font-family: Arial; height:65px;">
+                                      <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>
+                                  </tr>
+                              </table>
+                          </td>
+                      </tr>
+                  </table>
+                </td>
+                <td style="width:30%;">
+
+                  <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                      <tr style="font-size: 10px;font-family: Arial;">
+                          <td style="width:100%;height:13px;"><b>FIRMA / SELLO DE RECEPCION DE LA UNIDAD SOLICITANTE<br></b></td>
+                      </tr>
+                     
+                      <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
+                          <td><b><br><br><br><br><br>FIRMA</b></td>
+                      </tr>
+                  </table>
+
+                </td>';
+            }
+            else{
+              $tabla.='
+              <td style="width:45%;">
                      <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                       <tr style="font-size: 10px;font-family: Arial;">
                           <td style="width:100%;height:13px;"><b>ELABORADO POR<br></b></td>
@@ -1796,7 +1856,10 @@ class Modificacionpoa extends CI_Controller{
                       </tr>
                   </table>
 
-                </td>
+                </td>';
+            }
+            $tabla.='
+              
                 <td style="width:10%;" align=center>';
                   $cod='<div style="color: red;width:30%;"><b>Sin Codigo</b></div>';
                   if($codigo!=''){

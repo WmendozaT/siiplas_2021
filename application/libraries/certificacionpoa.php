@@ -1959,7 +1959,20 @@ class Certificacionpoa extends CI_Controller{
 
             $tabla.='  
             </td>
-            <td style="width: 40%;"></td>
+            <td style="width: 40%;">';
+            if($this->fun_id==740 || $this->fun_id==401 || $this->fun_id==399){
+              $tabla.='
+                              <table style="width:100%;" border=0>
+                                  <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
+                                      <td style="width:100%;">LIC. WALTER E. CASTRO AYLLON</td>
+                                  </tr>
+                                  <tr style="font-size: 10px;font-family: Arial; height:65px;" align="center">
+                                      <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>
+                                  </tr>
+                              </table>';
+            }
+            $tabla.='
+            </td>
             <td style="width: 20%;" align="center">
                 <qrcode value="'.$certpoa[0]['cpoa_codigo'].' '.$certpoa[0]['cpoa_cite'].'" style="border: none; width: 18mm; '.$color.'"></qrcode>
             </td>
@@ -2004,22 +2017,23 @@ class Certificacionpoa extends CI_Controller{
       }
       else{
         $tabla.='
-        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-          <tr style="font-size: 10px;font-family: Arial; height:65px;">
-              <td style="width:100%;" colspan="2"><b>EMITIDO POR<br></b></td>
-          </tr>
-          <tr style="font-size: 9px;font-family: Arial; height:65px;">
-              <td><b>RESPONSABLE</b></td>
-              <td>'.$certpoa[0]['fun_nombre'].' '.$certpoa[0]['fun_paterno'].' '.$certpoa[0]['fun_materno'].'</td>
-          </tr>
-          <tr style="font-size: 9px;font-family: Arial; height:65px;">
-              <td><b>CARGO</b></td>
-              <td>'.$certpoa[0]['fun_cargo'].'</td>
-          </tr>
-          <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
-              <td colspan="2"><b><br><br>FIRMA</b></td>
-          </tr>
-        </table>';
+          <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+            <tr style="font-size: 10px;font-family: Arial; height:65px;">
+                <td style="width:100%;" colspan="2"><b>EMITIDO POR<br></b></td>
+            </tr>
+            <tr style="font-size: 9px;font-family: Arial; height:65px;">
+                <td><b>RESPONSABLE</b></td>
+                <td>'.$certpoa[0]['fun_nombre'].' '.$certpoa[0]['fun_paterno'].' '.$certpoa[0]['fun_materno'].'</td>
+            </tr>
+            <tr style="font-size: 9px;font-family: Arial; height:65px;">
+                <td><b>CARGO</b></td>
+                <td>'.$certpoa[0]['fun_cargo'].'</td>
+            </tr>
+            <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
+                <td colspan="2"><b><br><br>FIRMA</b></td>
+            </tr>
+          </table>';
+        
       }
     return $tabla;
   }
