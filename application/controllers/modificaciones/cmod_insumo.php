@@ -1674,7 +1674,7 @@ class Cmod_insumo extends CI_Controller {
                       }
                       $observacion = utf8_encode(trim($datos[19])); //// Observacion
                       $verif_operacion=$this->model_producto->verif_componente_operacion($cite[0]['com_id'],$cod_ope);
-                      echo count($par_id).'--'.$cod_partida.'-- '.($total==$sum_prog)." --".count($verif_operacion)."<br>";
+                     // echo count($par_id).'--'.$cod_partida.'-- '.($total==$sum_prog)." --".count($verif_operacion)."<br>";
                       if(count($par_id)!=0 & $cod_partida!=0 & ($total==$sum_prog) & count($verif_operacion)!=0){ /// D
 
                         $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$par_id[0]['par_id']); /// Ppto. Asignado
@@ -1685,10 +1685,11 @@ class Cmod_insumo extends CI_Controller {
                             $monto_prog=$prog[0]['monto'];
                           }
 
-                          $saldo_partida=$asig[0]['monto']-$monto_prog;
+                          $saldo_partida=$asig[0]['monto']-$monto_prog+$asig[0]['ppto_saldo_ncert'];
 
                           if($total<=$saldo_partida){ /// E
                             $nro++;
+                            echo $detalle."<br>";
                             /*-------- Insert Insumos Nuevos -------*/
                             /*$query=$this->db->query('set datestyle to DMY');
                             $data_to_store = array( 
@@ -1825,7 +1826,7 @@ class Cmod_insumo extends CI_Controller {
                             $monto_prog=$prog[0]['monto'];
                           }
 
-                          $saldo_partida=$asig[0]['monto']-$monto_prog;
+                          $saldo_partida=$asig[0]['monto']-$monto_prog+$asig[0]['ppto_saldo_ncert'];
 
                           if($total<=$saldo_partida){ /// E
                             $nro++;

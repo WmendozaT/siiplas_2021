@@ -62,13 +62,15 @@ class Cseguimiento extends CI_Controller {
       $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
       $this->load->view('admin/evaluacion/seguimiento_poa/list_poas_aprobados', $data);
     
-/*      $insumos=$this->model_insumo->lista_insumos();
+      /*$insumos=$this->model_insumo->lista_insumos(2021);
 
       $tabla='';
       $tabla.='
       <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                  <tr style="background-color: #66b2e8">
+                    <th style="width:2%;height:40px;background-color: #eceaea;">REGIONAL</th>
+                    <th style="width:2%;height:40px;background-color: #eceaea;">DISTRITAL</th>
                     <th style="width:2%;height:40px;background-color: #eceaea;">PROGRAMA</th>
                     <th style="width:2%;height:40px;background-color: #eceaea;">DESCRIPCION</th>
                     <th style="width:2%;height:40px;background-color: #eceaea;">GESTION</th>
@@ -90,18 +92,20 @@ class Cseguimiento extends CI_Controller {
             foreach ($insumos as $row){
               $tabla.='
               <tr>
-                <td>\''.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'\'</td>
-                <td>'.mb_convert_encoding(strtoupper($row['aper_descripcion']), 'cp1252', 'UTF-8').'</td>
+                <td>'.strtoupper($row['dep_departamento']).'</td>
+                <td>'.strtoupper($row['dist_distrital']).'</td>
+                <td>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</td>
+                <td>'.strtoupper($row['aper_descripcion']).'</td>
                 <td>'.$row['aper_gestion'].'</td>
-                <td>'.mb_convert_encoding(strtoupper($row['proy_nombre']), 'cp1252', 'UTF-8').'</td>
+                <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
 
                 <td>'.$row['par_codigo'].'</td>
-                <td>'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>
+                <td>'.strtoupper($row['ins_detalle']).'</td>
                 <td>'.$row['ins_unidad_medida'].'</td>
                 <td>'.round($row['ins_cant_requerida'],2).'</td>
                 <td>'.round($row['ins_costo_unitario'],2).'</td>
                 <td>'.round($row['ins_costo_total'],2).'</td>
-                <td>'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+                <td>'.strtoupper($row['ins_observacion']).'</td>
                 <td>'.$row['ins_gestion'].'</td>
                 <td>'.$row['ins_fecha_requerimiento'].'</td>
                 <td>'.$row['ins_codigo'].'</td>
@@ -109,16 +113,16 @@ class Cseguimiento extends CI_Controller {
             }
             $tabla.='
             </tbody>
-          </table>';
+          </table>';*/
 
 
-header('Content-type: application/vnd.ms-excel');
+/*header('Content-type: application/vnd.ms-excel');
       header("Content-Disposition: attachment; filename=CONSOLIDADO_$fecha.xls"); //Indica el nombre del archivo resultante
       header("Pragma: no-cache");
       header("Expires: 0");
-      echo "";
+      echo "";*/
 
-      echo $tabla;*/
+     // echo $tabla;
 
 
     }

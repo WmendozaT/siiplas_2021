@@ -76,6 +76,33 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
+    /*----- LISTA DE UNIDADES RESPONSABLES REGIONAL PARA FILTRAR AL PROG 770 (2023) -----*/
+    function list_uresponsables_regional($dist_id){
+        $sql = '
+        select poa.aper_id,poa.proy_id,poa.tipo, poa.actividad,poa.abrev,c.com_id,tpsa.tipo_subactividad,sa.serv_descripcion
+        from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+        Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+        Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+        Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+        where dist_id='.$dist_id.' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'721\' and poa.prog!=\'770\' and poa.prog!=\'960\'
+        order by poa.prog,poa.proy,poa.act asc'; 
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*----- GET UNIDAD RESP POR ACTIVIDAD (PROG 770) -----*/
+    function get_uni_resp_prog770($com_id,$uni_resp){
+        $sql = '
+        select *
+                from _productos
+                where com_id='.$com_id.' and uni_resp='.$uni_resp.' and estado!=\'3\''; 
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
 
     /// Migracion de temporalidad form 4 
     function list_temporalidad_total_form4(){

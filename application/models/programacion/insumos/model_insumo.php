@@ -11,15 +11,19 @@ class Model_insumo extends CI_Model{
     }
 
     // ------ Lista Insumos Todos 
-    public function lista_insumos(){
-        $sql = 'select apg.*,p.*,i.*
+    public function lista_insumos($gestion){
+        $sql = 'select apg.*,p.*,dep.*,dist.*,i.*,ua.*,te.*
                 from vlista_insumos i
 
                 Inner Join aperturaprogramatica as apg on apg.aper_id = i.aper_id
                 Inner Join aperturaproyectos as ap on ap.aper_id = apg.aper_id
                 Inner Join _proyectos as p on p.proy_id = ap.proy_id
-                where apg.aper_gestion=2020 and i.par_id=137
-                order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, i.ins_id, i.ins_fecha_requerimiento asc';
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                Inner Join _departamentos as dep on dep.dep_id = p.dep_id
+                Inner Join _distritales as dist on dist.dist_id = p.dist_id
+                where apg.aper_gestion='.$gestion.' and i.par_id=137
+                order by p.dep_id, p.dist_id, apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, i.ins_id asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();

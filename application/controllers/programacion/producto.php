@@ -80,11 +80,41 @@ class Producto extends CI_Controller {
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
           $data['objetivos']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);
           //$data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['proyecto'][0]['act_id']);
-          $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
+          $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
           $data['list_oregional']=$this->programacionpoa->lista_oregional($proy_id); //// Combo Lista de Operaciones Alineados
         }
 
-        
+        $uresponsable='';
+        if($data['proyecto'][0]['por_id']==1){
+          $unidades=$this->model_producto->list_uresponsables_regional($data['proyecto'][0]['dist_id']);
+
+          $uresponsable.='
+                      <section class="col col-4">
+                        <label class="label"><b>UNIDAD RESPONSABLE</b></label>
+                        <select class="form-control" id="u_resp" name="u_resp" title="SELECCIONE UNIDAD RESPONSABLE">
+                          <option value="">Seleccione Unidad Responsable</option>';
+                          foreach($unidades as $row){
+                            if(count($this->model_producto->get_uni_resp_prog770($com_id,$row['com_id']))==0){
+                              $uresponsable.='<option value="'.$row['com_id'].'">'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
+                            }
+                          }       
+                        $uresponsable.='
+                        </select>
+                      </section>';
+        }
+        else{
+          $uresponsable.='
+                      <input type="text" name="u_resp" value="0">
+                      <section class="col col-4">
+                        <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
+                        <label class="textarea">
+                          <i class="icon-append fa fa-tag"></i>
+                          <textarea rows="2" name="unidad" id="unidad" title="REGISTRE UNIDAD RESPONSABLE"></textarea>
+                        </label>
+                      </section>';
+        }
+
+        $data['uni_responsables']=$uresponsable;
         $data['button']=$this->programacionpoa->button_form4(count($data['productos']),$com_id);
         $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
@@ -204,6 +234,7 @@ class Producto extends CI_Controller {
             'prod_unidades' => $this->input->post('unidad'),
             'acc_id' => $ae,
             'or_id' => $this->input->post('or_id'),
+            'uni_resp' => $this->input->post('u_resp'),
             'obj_id' => $relacion_operacion_obj_estrategico[0]['obj_id'],
             'mt_id' => $tp_met,
             'fecha' => date("d/m/Y H:i:s"),

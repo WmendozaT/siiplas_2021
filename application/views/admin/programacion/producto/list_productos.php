@@ -204,7 +204,7 @@
               <form action="<?php echo site_url().'/programacion/producto/valida_producto'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
                   <input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>"> 
                   <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-                  <header><b>DATOS GENERALES DE LA ACTIVIDAD</b></header>
+                  <header><b>DATOS GENERALES DE LA ACTIVIDAD <?php echo $proyecto[0]['por_id'];?></b></header>
                   <fieldset>          
                     <div class="row">
                       <section class="col col-1">
@@ -256,13 +256,7 @@
                           <textarea rows="2" name="verificacion" id="verificacion" title="REGISTRE MEDIO DE VERIFICACIÓN"></textarea>
                         </label>
                       </section>
-                      <section class="col col-4">
-                        <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
-                        <label class="textarea">
-                          <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="2" name="unidad" id="unidad" title="REGISTRE UNIDAD RESPONSABLE"></textarea>
-                        </label>
-                      </section>
+                      <?php echo $uni_responsables;?>
                     </div>
 
                     <div class="row">

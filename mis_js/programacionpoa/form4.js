@@ -401,6 +401,9 @@ $(document).ready(function() {
                 },
                 meta: {
                     required: true,
+                },
+                u_resp: {
+                    required: true,
                 }
               },
               messages: {
@@ -410,6 +413,7 @@ $(document).ready(function() {
                 indicador: {required: "<font color=red size=1>REGISTRE INDICADOR</font>"},
                 lbase: {required: "<font color=red size=1>REGISTRE LINEA BASE</font>"},
                 meta: {required: "<font color=red size=1>REGISTRE META DE LA ACTIVIDAD</font>"},
+                u_resp: {required: "<font color=red size=1>REGISTRE UNIDAD RESPONSABLE</font>"},
                 or_id: {required: "<font color=red size=1>SELECCIONE ALINEACION OPERACION</font>"}                    
               },
               highlight: function (element) {
@@ -467,6 +471,10 @@ $(document).ready(function() {
                 document.form_nuevo.cod.focus() 
                 return 0;
             }
+
+           // alert(document.form_nuevo.u_resp.value)
+
+
 
             alertify.confirm("GUARDAR DATOS DE LA ACTIVIDAD ?", function (a) {
               if (a) {
