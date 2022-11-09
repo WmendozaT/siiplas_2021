@@ -486,13 +486,14 @@
                       <textarea rows="2" name="mverificacion" id="mverificacion" title="REGISTRE MEDIO DE VERIFICACIÓN"></textarea>
                     </label>
                   </section>
-                  <section class="col col-4">
+                  <!-- <section class="col col-4">
                     <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
                     <label class="textarea">
                       <i class="icon-append fa fa-tag"></i>
                       <textarea rows="2" name="munidad" id="munidad" title="REGISTRE UNIDAD RESPONSABLE"></textarea>
                     </label>
-                  </section>
+                  </section> -->
+                  <div id="resp"></div>
                 </div>
 
                 <div class="row">

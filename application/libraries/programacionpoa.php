@@ -362,75 +362,159 @@ class Programacionpoa extends CI_Controller{
     /*------ GET POA -----*/
     public function mi_poa($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
+      $programas_bolsas=$this->model_proyecto->lista_programas_bosas_distrital($proyecto[0]['dist_id']);
       $tabla='';
+
+      if($this->gestion>2022){
+        $tabla.='
+         <form >
+        <section class="col col-12">
+          <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
+        </section>
+        <table class="table table-bordered" id="datos">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>UNIDAD RESPONSABLE </th>
+                <th colspan=2>POA PROG. '.$proyecto[0]['aper_programa'].'</th>';
+                
+                if(count($programas_bolsas)!=0){
+                  foreach($programas_bolsas  as $row){
+                    $tabla.='<th>POA PROG. '.$row['prog'].'</th>';
+                  }
+                }
+
+                $tabla.='
+              </tr>
+              </thead>
+              <tbody>';
+              $nroc=0; $nro_ppto=0;
+                $unidades=$this->model_componente->lista_subactividad($proy_id);
+                foreach($unidades  as $pr){
+                  if(count($this->model_producto->list_prod($pr['com_id']))!=0){
+                    $nroc++;
+                    $tabla.=
+                      '<tr>
+                        <td>'.$nroc.'</td>
+                        <td>'.$pr['serv_cod'].' '.$pr['tipo_subactividad'].' '.$pr['serv_descripcion'].'</td>
+                        <td align=center>
+                          <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$pr['com_id'].'\');" class="btn btn-default" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°4</b></font></a>
+                        </td>
+                        <td align=center>';
+                          if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
+                            $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$pr['com_id'].'\');" class="btn btn-default" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°5</b></font></a>';
+                            $nro_ppto++;
+                          } 
+                        $tabla.='
+                        </td>';
+
+                        if(count($programas_bolsas)!=0){
+                          foreach($programas_bolsas  as $row){
+                            $get_prog_bolsa=$this->model_producto->get_relacion_prog_770_producto($proyecto[0]['dist_id'],$row['prog'],$pr['com_id']); /// busca el registro
+                            $tabla.='<td align=center>';
+                            if(count($get_prog_bolsa)==1){
+                              $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/rep_form5_programa_bolsa/'.$get_prog_bolsa[0]['prod_id'].'\');" class="btn btn-default" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°5</b></font></a>';
+                            }
+                            $tabla.='</td>';
+                          }
+                        }
+
+                        $tabla.='
+                      </tr>';
+                  }
+                  
+                }
+              $tabla.='</tbody>';
+                if($nro_ppto>0){
+                  $tabla.='
+                  <tr>
+                    <td colspan='.(count($programas_bolsas)+3).'><b>CONSOLIDADO PROGRAMADO PRESUPUESTO TOTAL POR PARTIDAS </b></td>
+                    <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO PRESUPUESTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
+                  </tr>';
+                  $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],1);
+                  if(count($partidas_asig)!=0){ //// POA APROBADO
+                    $tabla.='
+                  <tr bgcolor="#d6ecb3">
+                    <td colspan=3><b>CONSOLIDADO PRESUPUESTO COMPARATIVO APROBADO TOTAL POR PARTIDAS </b></td> 
+                    <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO COMPARATIVO PTTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
+                  </tr>';
+                  }
+                }
+              $tabla.='
+              
+            </table>
+          </form>';
+      }
+      else{
       $tabla.=' 
         <form >
         <section class="col col-6">
           <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
         </section>
         <table class="table table-bordered" id="datos">
-                  <thead>
-                  <tr>
-                    <th >NRO.</th>
-                    <th >UNIDAD RESPONSABLE </th>
-                    <th >PONDERACI&Oacute;N</th>
-                    <th >ACTIVIDADES<br>FORM. N 4</th>
-                    <th >REQUERIMIENTOS<br>FORM. N 5</th>
-                  </tr>
-                  </thead>
-                  <tbody>';
-                  $nroc=0; $nro_ppto=0;
-                    $procesos=$this->model_componente->lista_subactividad($proy_id);
-                    foreach($procesos  as $pr){
-                      if(count($this->model_producto->list_prod($pr['com_id']))!=0){
-                        $nroc++;
-                        $tabla.=
-                          '<tr>
-                            <td>'.$nroc.'</td>
-                            <td>'.$pr['serv_cod'].' '.$pr['tipo_subactividad'].' '.$pr['serv_descripcion'].'</td>
-                            <td align=center>'.round($pr['com_ponderacion'],2).'%</td>
-                            <td align=center>
-                              <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$pr['com_id'].'\');" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>
-                            </td>
-                            <td align=center>';
-                              if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
-                                $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$pr['com_id'].'\');" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>';
-                                $nro_ppto++;
-                              } 
-                            $tabla.='
-                            </td>
-                          </tr>';
-                      }
-                      
-                    }
-                  $tabla.='</tbody>';
-                    if($this->gestion>2021){
-                      $tabla.='
-                      <tr bgcolor="#d3e2f3">
-                        <td colspan=3><b>CONSOLIDADO POA UNIDADES RESPONSABLES FORM 4 - GESTIÓN '.$this->gestion.'</b></td>
-                        <td align=center ><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proy_id.'\');" title="REPORTE FORM. 4 CONSOLIDADO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
-                        <td></td>
-                      </tr>';
-                    }
-                    if($nro_ppto>0){
-                      $tabla.='
-                      <tr>
-                        <td colspan=4><b>CONSOLIDADO PROGRAMADO PRESUPUESTO TOTAL POR PARTIDAS </b></td>
-                        <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO PRESUPUESTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
-                      </tr>';
-                      $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],1);
-                      if(count($partidas_asig)!=0){ //// POA APROBADO
+              <thead>
+              <tr>
+                <th >NRO.</th>
+                <th >UNIDAD RESPONSABLE </th>
+                <th >PONDERACI&Oacute;N</th>
+                <th >ACTIVIDADES<br>FORM. N 4</th>
+                <th >REQUERIMIENTOS<br>FORM. N 5</th>
+              </tr>
+              </thead>
+              <tbody>';
+              $nroc=0; $nro_ppto=0;
+                $procesos=$this->model_componente->lista_subactividad($proy_id);
+                foreach($procesos  as $pr){
+                  if(count($this->model_producto->list_prod($pr['com_id']))!=0){
+                    $nroc++;
+                    $tabla.=
+                      '<tr>
+                        <td>'.$nroc.'</td>
+                        <td>'.$pr['serv_cod'].' '.$pr['tipo_subactividad'].' '.$pr['serv_descripcion'].'</td>
+                        <td align=center>'.round($pr['com_ponderacion'],2).'%</td>
+                        <td align=center>
+                          <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$pr['com_id'].'\');" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>
+                        </td>
+                        <td align=center>';
+                          if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
+                            $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$pr['com_id'].'\');" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>';
+                            $nro_ppto++;
+                          } 
                         $tabla.='
-                      <tr bgcolor="#d6ecb3">
-                        <td colspan=4><b>CONSOLIDADO PRESUPUESTO COMPARATIVO APROBADO TOTAL POR PARTIDAS </b></td> 
-                        <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO COMPARATIVO PTTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
+                        </td>
                       </tr>';
-                      }
-                    }
-                  $tabla.='
+                  }
                   
-                </table>
-              </form>';
+                }
+              $tabla.='</tbody>';
+                if($this->gestion>2021){
+                  $tabla.='
+                  <tr bgcolor="#d3e2f3">
+                    <td colspan=3><b>CONSOLIDADO POA UNIDADES RESPONSABLES FORM 4 - GESTIÓN '.$this->gestion.'</b></td>
+                    <td align=center ><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proy_id.'\');" title="REPORTE FORM. 4 CONSOLIDADO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
+                    <td></td>
+                  </tr>';
+                }
+                if($nro_ppto>0){
+                  $tabla.='
+                  <tr>
+                    <td colspan=4><b>CONSOLIDADO PROGRAMADO PRESUPUESTO TOTAL POR PARTIDAS </b></td>
+                    <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO PRESUPUESTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
+                  </tr>';
+                  $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],1);
+                  if(count($partidas_asig)!=0){ //// POA APROBADO
+                    $tabla.='
+                  <tr bgcolor="#d6ecb3">
+                    <td colspan=4><b>CONSOLIDADO PRESUPUESTO COMPARATIVO APROBADO TOTAL POR PARTIDAS </b></td> 
+                    <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO COMPARATIVO PTTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
+                  </tr>';
+                  }
+                }
+              $tabla.='
+              
+            </table>
+          </form>';
+        }
 
       return $tabla;
     }
@@ -1871,6 +1955,110 @@ class Programacionpoa extends CI_Controller{
   /*----- REPORTE - FORMULARIO 5 -----*/
     public function list_requerimientos_reporte($com_id,$tp_id){
       $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id); /// Lista requerimientos
+      $tabla='';
+      $tabla.=' 
+          <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
+              <thead>
+              <tr style="font-size: 7px;" bgcolor="#eceaea" align=center>
+                <th style="width:1%;height:15px;">#</th>
+                <th style="width:2%;">COD.<br>ACT.</th> 
+                <th style="width:4%;">PARTIDA</th>
+                <th style="width:18%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:5%;">UNIDAD</th>
+                <th style="width:4%;">CANTIDAD</th>
+                <th style="width:5%;">UNITARIO</th>
+                <th style="width:5%;">TOTAL</th>
+                <th style="width:4%;">ENE.</th>
+                <th style="width:4%;">FEB.</th>
+                <th style="width:4%;">MAR.</th>
+                <th style="width:4%;">ABR.</th>
+                <th style="width:4%;">MAY.</th>
+                <th style="width:4%;">JUN.</th>
+                <th style="width:4%;">JUL.</th>
+                <th style="width:4%;">AGO.</th>
+                <th style="width:4%;">SEPT.</th>
+                <th style="width:4%;">OCT.</th>
+                <th style="width:4%;">NOV.</th>
+                <th style="width:4%;">DIC.</th>
+                <th style="width:8%;">OBSERVACI&Oacute;N</th>
+              </tr>
+              </thead>
+              <tbody>';
+              $cont = 0; $total=0; 
+              foreach ($lista_insumos as $row) {
+              $cont++;
+              $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+              $total=$total+$row['ins_costo_total'];
+              $color='';
+              if(count($prog)!=0){
+                if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
+                  $color='#f5bfb6';
+                }
+              }
+
+              $tabla.=
+              '<tr style="font-size: 6.5px;" >
+                  <td style="width: 1%; font-size: 4.5px; text-align: center;height:13px;">'.$cont.'</td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$row['prod_cod'].'</b></td>
+                  <td style="width: 4%; text-align: center;font-size: 8px;"><b>'.$row['par_codigo'].'</b></td>
+                  <td style="width: 18%; text-align: left;font-size: 7.5px;">'.strtoupper($row['ins_detalle']).'</td>
+                  <td style="width: 5%; text-align: left">'.strtoupper($row['ins_unidad_medida']).'</td>
+                  <td style="width: 4%; text-align: right">'.round($row['ins_cant_requerida'],2).'</td>
+                  <td style="width: 5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                  <td style="width: 5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>'; 
+                  if(count($prog)!=0){ 
+                  $tabla.=
+                  '<td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes2'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes3'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes4'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes5'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes6'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes7'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes8'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes9'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes10'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes11'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes12'], 2, ',', '.').'</td>';
+                  }
+                  else{
+                  $tabla.=
+                  '<td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>
+                  <td style="width: 4%; text-align: right; color: red">0.00</td>';
+                  }
+
+              $tabla.='
+                  <td style="width: 8%; text-align: left;">'.$row['ins_observacion'].'</td>
+                  
+              </tr>';
+              }
+
+          $tabla.='
+              </tbody>
+              <tr class="modo1" bgcolor="#eceaea">
+                  <td colspan="6" style="height:10px;" ><b>TOTAL PROGRAMADO </b></td>
+                  <td style="width: 4%; text-align: right; font-size: 7px;"><b>'.number_format($total, 2, ',', '.').'</b></td>
+                  <td colspan="14"></td>
+              </tr>
+          </table><br>';
+      return $tabla;
+    }
+
+
+
+    /*----- REPORTE - FORMULARIO 5 PARA PROGRAMAS BOSAS (LISTA LOS REQUERIMIENTOS QUE SE ENCUENTRAN EN PROGRAMAS BOLSAS POR UNIDAD RESPONSABLE)-----*/
+    public function list_requerimientos_programas_bolsas_unidadresponsable($prod_id,$com_id){
+      $lista_insumos=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($prod_id,$com_id); /// Lista requerimientos
       $tabla='';
       $tabla.=' 
           <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">

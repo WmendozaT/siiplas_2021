@@ -84,7 +84,7 @@ class model_producto extends CI_Model {
         Inner Join _componentes as c On c.pfec_id=poa.pfec_id
         Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
         Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-        where dist_id='.$dist_id.' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'721\' and poa.prog!=\'770\' and poa.prog!=\'960\'
+        where dist_id='.$dist_id.' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'721\' and poa.prog!=\'770\' and poa.prog!=\'960\' and poa.prog!=\'730\'
         order by poa.prog,poa.proy,poa.act asc'; 
 
         $query = $this->db->query($sql);
@@ -102,6 +102,19 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
+
+    /*-----GET RELACION PROG 770 - PROD PARA BUSCAR LA UNIDAD RESPONSABLE (2023) -----*/
+    function get_relacion_prog_770_producto($dist_id,$prog,$com_id){
+        $sql = '
+        select *
+                from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
+                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                 Inner Join _productos as prod On prod.com_id=c.com_id
+                where poa.prog=\''.$prog.'\' and prod.uni_resp='.$com_id.' and prod.estado!=\'3\''; 
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
 
     /// Migracion de temporalidad form 4 
@@ -214,6 +227,7 @@ class model_producto extends CI_Model {
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                 Inner Join _proyectos as proy On proy.proy_id=pfe.proy_id
+                
                 Inner Join _distritales as dist On dist.dist_id=proy.dist_id
                 where p.prod_id='.$id_prod.' and p.estado!=\'3\' and pfe.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.''; 
         $query = $this->db->query($sql);
@@ -226,7 +240,7 @@ class model_producto extends CI_Model {
     /*=== LISTA DE OPERACIONES (2020 - 2022) REPORTE - GASTO CORRIENTE ===*/
     function lista_operaciones($com_id){
         $sql = 'select p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
-                p.prod_resultado,p.acc_id,p.prod_cod, p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
+                p.prod_resultado,p.acc_id,p.prod_cod,p.uni_resp,p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
                 ore.or_id,ore.or_codigo,og.og_id,og.og_codigo, ae.acc_id,ae.acc_codigo,oe.obj_id,oe.obj_codigo, apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad
                 from _productos p
                 Inner Join indicador as i On i.indi_id=p.indi_id

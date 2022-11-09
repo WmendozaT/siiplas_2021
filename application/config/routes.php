@@ -177,10 +177,11 @@ $route['prog/presentacion_poa/(:any)'] = 'programacion/creporte/presentacion_poa
 $route['prog/reporte_datos/(:any)'] = 'programacion/creporte/datos_generales/$1';  //// Identificacion del POA
 $route['prog/rep_operaciones/(:any)'] = 'programacion/creporte/programacion_fisica/$1';  //// Programacion Fisica
 $route['prog/rep_requerimientos/(:any)'] = 'programacion/creporte/programacion_financiera/$1';  //// Programacion Financiera
-$route['proy/orequerimiento_proceso/(:any)'] = 'programacion/creporte/reporte_formulario5/$1';  //// Reporte requerimiento por Servicios 2020
+$route['proy/orequerimiento_proceso/(:any)'] = 'programacion/creporte/reporte_formulario5/$1';  //// Reporte requerimiento por Unidad 2022
 $route['proy/ptto_consolidado/(:any)'] = 'programacion/creporte/reporte_presupuesto_consolidado/$1';  //// Reporte requerimiento total Unidad/Establecimiento/Proyecto de Inversion
 $route['proy/ptto_consolidado_comparativo/(:any)'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_comparativo/$1';  //// Reporte Comparativo Total de Ppto Unidad/Establecimiento/Proyecto de Inversion
 
+$route['proy/rep_form5_programa_bolsa/(:any)'] = 'programacion/creporte/reporte_prog_bolsa_formulario5/$1';  //// Reporte requerimiento por ID PRODUCTO
 
 
 /*-----------------------------  PROGRAMACION DEL PROYECTO - PRODUCTOS  -------------------------------*/

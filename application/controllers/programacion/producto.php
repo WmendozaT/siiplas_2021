@@ -137,6 +137,10 @@ class Producto extends CI_Controller {
         $post = $this->input->post();
         $prod_id = $this->security->xss_clean($post['prod_id']);
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
+        $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion);
+        $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+        $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
+
         $temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
         
         $prioridad='';
@@ -170,10 +174,47 @@ class Producto extends CI_Controller {
           }
         }
 
+        $uresponsable='';
+        if($proyecto[0]['por_id']==1){
+          $unidades=$this->model_producto->list_uresponsables_regional($proyecto[0]['dist_id']);
+          $uresponsable.='
+              <section class="col col-4">
+                <label class="label"><b>UNIDAD RESPONSABLE</b></label>
+                <select class="form-control" id="um_resp" name="um_resp" title="SELECCIONE UNIDAD RESPONSABLE">
+                  <option value="">Seleccione Unidad Responsable</option>';
+                  foreach($unidades as $row){
+                    if($row['com_id']==$producto[0]['uni_resp']){
+                      $uresponsable.='<option value="'.$row['com_id'].'" selected>'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
+                    }
+                    else{
+                      if(count($this->model_producto->get_uni_resp_prog770($producto[0]['com_id'],$row['com_id']))==0){
+                        $uresponsable.='<option value="'.$row['com_id'].'" >'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
+                      }
+                    }
+                  }       
+                $uresponsable.='
+                </select>
+              </section>';
+        }
+        else{
+          $uresponsable.='
+                <input type="text" name="um_resp" id="um_resp" value="0">
+                <section class="col col-4">
+                  <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
+                  <label class="textarea">
+                    <i class="icon-append fa fa-tag"></i>
+                    <textarea rows="2" name="munidad" id="munidad" title="REGISTRE UNIDAD RESPONSABLE">'.$producto[0]['prod_unidades'].'</textarea>
+                  </label>
+                </section>';
+        }
+
+
+
         if(count($producto)!=0){
           $result = array(
             'respuesta' => 'correcto',
             'producto'=>$producto,
+            'uresponsable'=>$uresponsable,
             'temp'=>$this->prog_mes,
             'sum_temp'=>$sum_temp,
             'prioridad'=>$prioridad,
@@ -306,6 +347,7 @@ class Producto extends CI_Controller {
         $or_id = $this->security->xss_clean($post['mor_id']); /// Objetivo Regional
         $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
         $prioridad = $this->security->xss_clean($post['priori']); /// prioridad
+        $uni_resp = $this->security->xss_clean($post['um_resp']); /// unidad responsable
 
         $relacion_operacion_obj_estrategico=$this->model_objetivoregion->get_objetivosregional($or_id);
 
@@ -334,6 +376,7 @@ class Producto extends CI_Controller {
             'prod_fuente_verificacion' => strtoupper($mverificacion),
             'estado' => 2,
             'or_id' => $or_id,
+            'uni_resp' => $uni_resp,
             'obj_id' => $relacion_operacion_obj_estrategico[0]['obj_id'],
             'acc_id' => $ae,
             'fecha' => date("d/m/Y H:i:s"),
@@ -480,9 +523,11 @@ class Producto extends CI_Controller {
 
 
 
-    /*------ LISTA OPERACIONES (2020-2021-2022) ------*/
+    /*------ LISTA FORMULARIO N° 4 (2020-2021-2022) ------*/
     public function operaciones($proy_id,$com_id){
-      $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
+      //$proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+
       $fase = $this->model_faseetapa->get_id_fase($proy_id); //// recupera datos de la tabla fase activa
       $productos = $this->model_producto->lista_operaciones($com_id,$this->gestion); // Lista de productos
       
@@ -501,9 +546,10 @@ class Producto extends CI_Controller {
                     <th style="width:2%; text-align=center"><b>COD. ACT.</b></th>
                     <th style="width:15%; text-align=center"><b>ACTIVIDAD</b></th>
                     <th style="width:15%; text-align=center"><b>RESULTADO</b></th>
-                    <th style="width:10%; text-align=center"><b>TIP. IND.</b></th>
+                    <th style="width:10%; text-align=center"><b>UNIDAD RESPONSABLE</b></th>
+                    <th style="width:5%; text-align=center"><b>TIP. IND.</b></th>
                     <th style="width:10%; text-align=center"><b>INDICADOR</b></th>
-                    <th style="width:1%; text-align=center"><b>LINEA BASE '.($this->gestion-1).'</b></th>
+                    <th style="width:1%; text-align=center"><b>L.B. '.($this->gestion-1).'</b></th>
                     <th style="width:1%; text-align=center"><b>META</b></th>
                     <th style="width:4%; text-align=center"><b>ENE.</b></th>
                     <th style="width:4%; text-align=center"><b>FEB.</b></th>
@@ -530,6 +576,20 @@ class Producto extends CI_Controller {
                   $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
                   $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                   $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
+
+                  if($proyecto[0]['por_id']==0){
+                    $uresp='';
+                  }
+                  else{
+                    $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
+                    $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                    $uresp='';
+                    if(count($unidad)!=0){
+                      $uresp='<font color=blue><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
+                    }
+                  }
+
+                  
                   $ptto=0;
                   if(count($monto)!=0){
                     $ptto=$monto[0]['total'];
@@ -580,6 +640,7 @@ class Producto extends CI_Controller {
                     $tabla.='<td style="width:2%;text-align=center" bgcolor="#f1fdf1"><b><font size=5>'.$rowp['prod_cod'].'</font></b></td>';
                     $tabla.='<td style="width:15%;" bgcolor="'.$color.'">'.strtoupper($rowp['prod_producto']).'</td>';
                     $tabla.='<td style="width:15%;" bgcolor="'.$color.'">'.strtoupper($rowp['prod_resultado']).'</td>';
+                    $tabla.='<td style="width:15%;" bgcolor="'.$color.'">'.$uresp.'</td>';
                     $tabla.='<td style="width:5%;" bgcolor="'.$color.'"><b>'.strtoupper($rowp['indi_abreviacion']).'</b></td>';
                     $tabla.='<td style="width:10%;" bgcolor="'.$color.'">'.$rowp['prod_indicador'].'</td>';
                     $tabla.='<td style="width:5%;" bgcolor="'.$color.'">'.round($rowp['prod_linea_base'],2).'</td>';

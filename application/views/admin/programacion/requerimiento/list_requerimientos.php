@@ -92,7 +92,7 @@
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
 				            <section id="widget-grid" class="well" title="aper <?php echo $proyecto[0]['aper_id'];?>">
 				                <div class="">
-				                  <?php echo $datos; ?>
+				                  <?php echo $datos.''.$prog_especial; ?>
 				                  <h1> PRESUPUESTO ASIGNADO : <small><?php echo number_format($monto_a, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;PRESUPUESTO PROGRAMADO : <small><?php echo number_format($monto_p, 2, ',', '.'); ?></small>&nbsp;&nbsp;-&nbsp;&nbsp;SALDO : <small><?php echo number_format(($monto_a-$monto_p), 2, ',', '.'); ?></small></h1>
 				                </div>
 				            </section>

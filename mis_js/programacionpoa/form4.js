@@ -518,11 +518,11 @@ $(document).ready(function() {
 
                document.getElementById("mindicador").value = response.producto[0]['prod_indicador'];
                document.getElementById("mverificacion").value = response.producto[0]['prod_fuente_verificacion'];
-               document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
+               //document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
 
                document.getElementById("mlbase").value = parseInt(response.producto[0]['prod_linea_base']);
                document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
-               document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
+               //document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
 
                document.getElementById("mor_id").value = response.producto[0]['or_id'];
                document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
@@ -539,7 +539,8 @@ $(document).ready(function() {
                 
               // alert(response.prioridad)
                $('#priori').html(response.prioridad);
-               
+               $('#resp').html(response.uresponsable);
+
                if((response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==1) || (response.producto[0]['indi_id']==2 && response.producto[0]['mt_id']==5)){
                 $('[name="mtotal"]').val((parseInt(response.producto[0]['prod_meta'])).toFixed(0));
                 document.getElementById("mtrep").style.display = 'block';

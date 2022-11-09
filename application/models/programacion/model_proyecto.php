@@ -2040,4 +2040,19 @@ class Model_proyecto extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+
+    /////// ===== 2023
+    /*-- Lista de Programas Bolsa por Distrital --*/
+    public function lista_programas_bosas_distrital($dist_id){ /// 
+        $sql = '
+           select poa.*, p.por_id
+                from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
+                Inner Join _proyectos as p On p.proy_id=poa.proy_id
+                where p.por_id=\'1\'
+                order by poa.prog asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }

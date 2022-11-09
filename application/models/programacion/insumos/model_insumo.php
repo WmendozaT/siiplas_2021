@@ -185,6 +185,22 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+
+
+        // lista de requerimientos alineados a la operacion y a la subactividad 2023
+    function lista_requerimientos_inscritos_en_programas_bosas($prod_id,$com_id){
+         $sql = 'select *
+                from _productos p
+                Inner Join _insumoproducto as ip On p.prod_id=ip.prod_id
+                 Inner Join insumos as i On i.ins_id=ip.ins_id
+                 Inner Join partidas as par On par.par_id=i.par_id
+                 where p.prod_id='.$prod_id.' and p.uni_resp='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
+                order by par.par_codigo,i.ins_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*---- LISTA CONSOLIDADO DE PRODUCTOS PARTIDAS POR SUB ACTIVIDADES (COMPONENTES) 2022 -----*/
     function list_consolidado_partidas_componentes($com_id){
         if($this->gestion>2021){ /// 2022

@@ -69,6 +69,13 @@ class crequerimiento extends CI_Controller{
         $data['datos']=
                 '<h1>'.$tit.'</h1>
                 <h1><small>ACTIVIDAD : </small>COD - '.$data['producto'][0]['prod_cod'].'. '.$data['producto'][0]['prod_producto'].'</h1>';
+
+        $data['prog_especial']='';
+        
+        if($data['proyecto'][0]['por_id']==1){
+          $unidad=$this->model_componente->get_componente($data['producto'][0]['uni_resp'],$this->gestion);
+          $data['prog_especial']='<h1><font color=blue>UNIDAD RESP. : <b>'.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font></h1>';
+        }
         
         $data['part_padres'] = $this->model_partidas->lista_padres();//partidas padres
         $data['part_hijos'] = $this->model_partidas->lista_partidas();//partidas hijos
