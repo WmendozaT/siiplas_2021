@@ -42,7 +42,16 @@ class Cservicios extends CI_Controller {
                 $this->lista_componentes($proy_id);
             }
             else{ /// Gasto Corriente
-                $this->lista_servicios($proy_id);
+
+                if($data['proyecto'][0]['por_id']==0){
+                    $this->lista_servicios($proy_id); /// lista de unidades responsables
+                }
+                else{
+                    $componente=$this->model_componente->proyecto_componente($proy_id);
+                    redirect(site_url("").'/admin/prog/list_prod/'.$componente[0]['com_id'].''); /// Lista de Productos
+                    //$this->lista_servicios($proy_id);
+                }
+                
             }
         }
         else{

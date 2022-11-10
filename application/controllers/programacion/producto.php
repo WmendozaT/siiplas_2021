@@ -578,14 +578,14 @@ class Producto extends CI_Controller {
                   $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
 
                   if($proyecto[0]['por_id']==0){
-                    $uresp='';
+                    $uresp=strtoupper($rowp['prod_unidades']);
                   }
                   else{
                     $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
                     $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
                     $uresp='';
                     if(count($unidad)!=0){
-                      $uresp='<font color=blue><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
+                      $uresp='<font color=blue size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
                     }
                   }
 
@@ -1458,7 +1458,8 @@ class Producto extends CI_Controller {
                     $cod_form4 = intval(trim($datos[2])); // Codigo Form 4
                     $descripcion = strval(utf8_encode(trim($datos[3]))); //// descripcion form4
                     $resultado = strval(utf8_encode(trim($datos[4]))); //// descripcion Resultado
-                    $unidad = strval(utf8_encode(trim($datos[5]))); //// Unidad responsable
+                    //$unidad = strval(utf8_encode(trim($datos[5]))); //// Unidad responsable
+                    $unidad = intval(trim($datos[5])); //// id Unidad responsable PRG Bolsas
                     $indicador = strval(utf8_encode(trim($datos[6]))); //// descripcion Indicador
                     $lbase = intval(trim($datos[7])); //// Linea Base
                     $meta = intval(trim($datos[8])); //// Meta
@@ -1485,7 +1486,8 @@ class Producto extends CI_Controller {
                           'prod_fuente_verificacion' => strtoupper($mverificacion), 
                           'prod_linea_base' => $lbase,
                           'prod_meta' => $meta,
-                          'prod_unidades' => $unidad,
+                          'uni_resp' => $unidad, //// para prog bolsas
+                          //'prod_unidades' => $unidad,
                           'acc_id' => $ae,
                           'prod_ppto' => 1,
                           'fecha' => date("d/m/Y H:i:s"),

@@ -411,14 +411,17 @@ class Programacionpoa extends CI_Controller{
                         if(count($programas_bolsas)!=0){
                           foreach($programas_bolsas  as $row){
                             $get_prog_bolsa=$this->model_producto->get_relacion_prog_770_producto($proyecto[0]['dist_id'],$row['prog'],$pr['com_id']); /// busca el registro
+                            
                             $tabla.='<td align=center>';
                             if(count($get_prog_bolsa)==1){
-                              $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/rep_form5_programa_bolsa/'.$get_prog_bolsa[0]['prod_id'].'\');" class="btn btn-default" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°5</b></font></a>';
+                              if(count($this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($get_prog_bolsa[0]['prod_id'],$get_prog_bolsa[0]['uni_resp']))!=0){
+                                $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/rep_form5_programa_bolsa/'.$get_prog_bolsa[0]['prod_id'].'\');" class="btn btn-default" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°5</b></font></a>';
+                              }
                             }
                             $tabla.='</td>';
+                          
                           }
                         }
-
                         $tabla.='
                       </tr>';
                   }
@@ -428,8 +431,9 @@ class Programacionpoa extends CI_Controller{
                 if($nro_ppto>0){
                   $tabla.='
                   <tr>
-                    <td colspan='.(count($programas_bolsas)+3).'><b>CONSOLIDADO PROGRAMADO PRESUPUESTO TOTAL POR PARTIDAS </b></td>
+                    <td colspan=3><b>CONSOLIDADO PROGRAMADO PRESUPUESTO TOTAL POR PARTIDAS </b></td>
                     <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO PRESUPUESTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
+                    <td colspan='.count($programas_bolsas).'></td>
                   </tr>';
                   $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],1);
                   if(count($partidas_asig)!=0){ //// POA APROBADO
@@ -437,6 +441,7 @@ class Programacionpoa extends CI_Controller{
                   <tr bgcolor="#d6ecb3">
                     <td colspan=3><b>CONSOLIDADO PRESUPUESTO COMPARATIVO APROBADO TOTAL POR PARTIDAS </b></td> 
                     <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO COMPARATIVO PTTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
+                    <td colspan='.count($programas_bolsas).'></td>
                   </tr>';
                   }
                 }
@@ -1589,6 +1594,7 @@ class Programacionpoa extends CI_Controller{
                   $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
                 }
 
+                
                 $tabla.='
                 <tr>
                   <td style="font-size: 6.5px; height:12px;">'.$nro.'</td>
@@ -1626,21 +1632,15 @@ class Programacionpoa extends CI_Controller{
 
        $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
               <thead>
-               <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>';
-                  if($this->gestion<2023){ /// 2020-2021-2022
-                    $tabla.='<th style="width:2%;height:15px;">#</th>';
-                  }
-                  else{ /// 2023
-                    $tabla.='<th style="width:2%;height:15px;">PROG.</th>';
-                  }
-                $tabla.='
+               <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
+                  <th style="width:1%;height:15px;">#</th>
                   <th style="width:2%;">COD.<br>ACE.</th>
                   <th style="width:2%;">COD.<br>ACP.</th>
                   <th style="width:2%;">COD.<br>OPE.</th>
                   <th style="width:2%;">COD.<br>ACT.</th> 
                   <th style="width:13%;">ACTIVIDAD</th>
                   <th style="width:13%;">RESULTADO</th>
-                  <th style="width:8%;">UNIDAD RESPONSABLE</th>
+                  <th style="width:9%;">UNIDAD RESPONSABLE</th>
                   <th style="width:12%;">INDICADOR</th>
                   <th style="width:2.5%;">LB.</th>
                   <th style="width:2.5%;">META</th>
@@ -1693,23 +1693,30 @@ class Programacionpoa extends CI_Controller{
                   $color_or='#fbd5d5';
                 }
 
+
+                if($proyecto[0]['por_id']==0){
+                  $uresp=strtoupper($rowp['prod_unidades']);
+                }
+                else{
+                  $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
+                  $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                  $uresp='';
+                  if(count($unidad)!=0){
+                    $uresp='<font size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
+                  }
+                }
+
                 $nro++;
                 $tabla.=
-                '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">';
-                  if($this->gestion<2023){
-                    $tabla.='<td style="width: 2%; height:12px;text-align: center;font-size: 8px;" bgcolor='.$color_or.'><b>'.$nro.'</b></td>';
-                  }
-                  else{
-                    $tabla.='<td style="width: 2%; height:12px;text-align: center;font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['aper_programa'].'</b></td>';
-                  }
-                $tabla.='
+                '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">
+                  <td style="width: 1%; height:12px;text-align: center;font-size: 8px;" bgcolor='.$color_or.'><b>'.$nro.'</b></td>
                   <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['acc_codigo'].'</td>
                   <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['og_codigo'].'</td>
                   <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
                   <td style="width: 13%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
                   <td style="width: 13%; text-align: left;">'.$rowp['prod_resultado'].'</td>
-                  <td style="width: 8%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
+                  <td style="width: 9%; text-align: left;">'.$uresp.'</td>
                   <td style="width: 12%; text-align: left;">'.$rowp['prod_indicador'].'</td>
                   <td style="width: 2.5%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
                   <td style="width: 2.5%; text-align: center;font-size: 10px;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>';

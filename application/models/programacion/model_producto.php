@@ -84,7 +84,7 @@ class model_producto extends CI_Model {
         Inner Join _componentes as c On c.pfec_id=poa.pfec_id
         Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
         Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-        where dist_id='.$dist_id.' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'721\' and poa.prog!=\'770\' and poa.prog!=\'960\' and poa.prog!=\'730\'
+        where dist_id='.$dist_id.' and c.estado!=\'3\' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'721\' and poa.prog!=\'770\' and poa.prog!=\'960\' and poa.prog!=\'730\'
         order by poa.prog,poa.proy,poa.act asc'; 
 
         $query = $this->db->query($sql);
@@ -110,7 +110,7 @@ class model_producto extends CI_Model {
                 from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
                  Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                  Inner Join _productos as prod On prod.com_id=c.com_id
-                where poa.prog=\''.$prog.'\' and prod.uni_resp='.$com_id.' and prod.estado!=\'3\''; 
+                where poa.prog=\''.$prog.'\' and prod.uni_resp='.$com_id.' and prod.estado!=\'3\' and c.estado!=\'3\''; 
 
         $query = $this->db->query($sql);
         return $query->result_array();

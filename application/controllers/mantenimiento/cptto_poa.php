@@ -51,15 +51,18 @@ class Cptto_poa extends CI_Controller {
       $data['operacion']=$this->list_unidades_es($sw);  /// Gasto corriente
 
       //// Asignacion Poa Presupuesto Inicial
-      if($this->verif_ppto==1){
+      /*if($this->verif_ppto==1){
         $this->load->view('admin/mantenimiento/ptto_sigep/vlist_ope', $data);
-      }
+      }*/
       //// Re-Asignacion Poa Presupuesto Final (Aprobado)
-      else{
+      /*else{
         $data['regionales']=$this->model_ptto_sigep->list_regionales();
         $this->load->view('admin/mantenimiento/ptto_sigep/reajustado_ptto', $data);
-      }
+      }*/
       
+
+      /// CARGAR PPTO INICIAL
+      $this->load->view('admin/mantenimiento/ptto_sigep/vlist_ope', $data);
     }
 
 
@@ -525,9 +528,9 @@ class Cptto_poa extends CI_Controller {
                             $ue=$datos[1]; /// Ue
                             $prog=$datos[2]; /// Aper Programa
                             $proy=trim($datos[3]);
-                            if(strlen($proy)==2){
+                            /*if(strlen($proy)==2){
                               $proy='00'.$proy; /// Aper Proyecto
-                            }
+                            }*/
                             $act=trim($datos[4]);  /// Aper Actividad
                             if(strlen($act)==2){
                               $act='0'.$act;
@@ -541,7 +544,7 @@ class Cptto_poa extends CI_Controller {
 
                           //  echo $this->gestion."<br>";
                             echo $prog.'- ('.strlen($prog).') -> '.$proy.' ('.strlen($proy).') -> '.$act.' ('.strlen(trim($act)).') ----'.$importe.'-- CODIGO PARTIDA '.is_numeric($cod_part).'<br>';
-                            if(strlen($prog)==2 & strlen($proy)==4 & strlen(trim($act))==3 & $importe!=0 & is_numeric($cod_part)){
+                            if(strlen($prog)==3 & strlen($proy)==2 & strlen(trim($act))==3 & $importe!=0 & is_numeric($cod_part)){
                               //  echo "INGRESA : ".$prog.'-'.$proy.'-'.$act.'..'.$importe."<br>";
                                 $nroo++;
                              //   echo "string<br>";
@@ -781,9 +784,9 @@ class Cptto_poa extends CI_Controller {
                     $ue=$datos[1]; /// Ue
                     $prog=$datos[2]; /// Aper Programa
                     $proy=trim($datos[3]);
-                    if(strlen($proy)==2){
+                    /*if(strlen($proy)==2){
                       $proy='00'.$proy; /// Aper Proyecto
-                    }
+                    }*/
                     $act=trim($datos[4]);  /// Aper Actividad
                     if(strlen($act)==2){
                       $act='0'.$act;
@@ -796,7 +799,8 @@ class Cptto_poa extends CI_Controller {
                     }
 
                     $importe=floatval($datos[6]); /// Monto
-                    if(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
+                    //if(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){ //// gestion 2021/2022
+                    if(strlen($prog)==3 & strlen($proy)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){ /// gestion 2023
                         $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                         //$aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                         if(count($aper)!=0){

@@ -133,13 +133,13 @@ class cajuste_crequerimiento extends CI_Controller{
                 <tbody>';
                 $cont = 0;
                 foreach ($lista_insumos as $row) {
-                  $update_poa = array(
+                  /*$update_poa = array(
                     'g_id' => $row['ins_gestion'],
                   );
                   $this->db->where('ins_id', $row['ins_id']);
-                  $this->db->update('temporalidad_prog_insumo', $update_poa);
+                  $this->db->update('temporalidad_prog_insumo', $update_poa);*/
 
-                  $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                  //$prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
                   $cont++;
                     $tabla .='<tr>';
                     $tabla .='<td title='.$row['ins_id'].'>'.$cont.'</td>';
@@ -150,14 +150,14 @@ class cajuste_crequerimiento extends CI_Controller{
                                   <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
                                 </a>
                               </td>';
-                    $tabla .='<td style="width:5%;">'.$row['par_codigo'].'</td>'; /// partida
+                    $tabla .='<td style="width:5%; font-size:15px; text-align:center"><b>'.$row['par_codigo'].'</b></td>'; /// partida
                     $tabla .= '<td style="width:15%;">'.$row['ins_detalle'].'</td>'; /// detalle requerimiento
                     $tabla .= '<td style="width:10%;">'.$row['ins_unidad_medida'].'</td>'; /// Unidad
                     $tabla .= '<td style="width:5%;">'.$row['ins_cant_requerida'].'</td>'; /// cantidad
                     $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
                     $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
 
-                    if(count($prog)!=0){
+                    /*if(count($prog)!=0){
                       $tabla.='
                       <td style="width:5%;">'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td> 
                       <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
@@ -188,8 +188,21 @@ class cajuste_crequerimiento extends CI_Controller{
                       <td style="width:5%;" bgcolor="#ffeeeb">0</td>
                       <td style="width:5%;" bgcolor="#ffeeeb">0</td>
                       <td style="width:5%;" bgcolor="#ffeeeb">0</td>';
-                    }
-                    
+                    }*/
+                    $tabla.='
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>
+                      <td style="width:5%;">0</td>';
                     $tabla .= ' 
                       <td style="width:8%;">'.$row['ins_observacion'].'</td>
                       <td style="width:2%;" bgcolor="#f3cbcb">

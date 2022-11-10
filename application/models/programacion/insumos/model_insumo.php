@@ -187,7 +187,7 @@ class Model_insumo extends CI_Model{
 
 
 
-        // lista de requerimientos alineados a la operacion y a la subactividad 2023
+    // lista de requerimientos alineados a PROGRAMAS BOLSAS 
     function lista_requerimientos_inscritos_en_programas_bosas($prod_id,$com_id){
          $sql = 'select *
                 from _productos p
@@ -200,6 +200,22 @@ class Model_insumo extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+    // LISTA CONSOLIDADO POR PARTIDAS PROGRAMAS BOLSAS 
+    function list_consolidado_partidas_programas_boLsas_uresponsable($prod_id,$com_id){
+         $sql = 'select p.prod_id,p.uni_resp,par.par_id,par.par_codigo,par.par_nombre,SUM(i.ins_costo_total) as monto
+                from _productos p
+                Inner Join _insumoproducto as ip On p.prod_id=ip.prod_id
+                Inner Join insumos as i On i.ins_id=ip.ins_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                where p.prod_id='.$prod_id.' and p.uni_resp='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
+                group by p.prod_id,p.uni_resp,par.par_id,par.par_codigo,par.par_nombre
+                order by par.par_codigo asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
     /*---- LISTA CONSOLIDADO DE PRODUCTOS PARTIDAS POR SUB ACTIVIDADES (COMPONENTES) 2022 -----*/
     function list_consolidado_partidas_componentes($com_id){

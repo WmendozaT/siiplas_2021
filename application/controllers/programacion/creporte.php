@@ -220,9 +220,9 @@ class Creporte extends CI_Controller {
     
 
     /*----- REPORTE - CONSOLIDADO PARTIDAS X UNIDAD RESPONSABLE (2020 - 2022) -----*/
-    public function consolidado_partida_reporte($com_id,$tp_id){
+    public function consolidado_partida_reporte($partidas,$tp_id){
         $tabla='';
-        $partidas=$this->model_insumo->list_consolidado_partidas_componentes($com_id);
+        //$partidas=$this->model_insumo->list_consolidado_partidas_componentes($com_id);
 
         $tabla.='
             <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:70%;" align=center>
@@ -347,7 +347,37 @@ class Creporte extends CI_Controller {
         $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],2); // Prog
         $tabla='';
 
-        if($this->gestion<2023){
+        $tabla.='
+            <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:80%;" align=center>
+                <thead>
+                    <tr style="font-size: 8px;" bgcolor="#eceaea" align=center>
+                        <th style="width:5%;height:15px;">Nro</th>
+                        <th style="width:15%;">C&Oacute;DIGO</th>
+                        <th style="width:50%;">DETALLE PARTIDA</th>
+                        <th style="width:15%;">MONTO PROGRAMADO</th>
+                    </tr>
+                </thead>
+                <tbody>';
+                $nro=0; $total=0;
+                    foreach ($partidas_prog as $row){ 
+                        $nro++; $total=$total+$row['monto'];
+                        $tabla.=
+                        '<tr style="font-size: 7px;">
+                            <td style="width: 3%;height:10px; text-align: center">'.$nro.'</td>
+                            <td style="width: 10%; text-align: center;font-size: 8px;"><b>'.$row['codigo'].'</b></td>
+                            <td style="width: 50%; text-align: left;">'.$row['nombre'].'</td>
+                            <td style="width: 9%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
+                        </tr>';
+                    }
+            $tabla.=
+                '</tbody>
+                    <tr style="font-size: 7px;" bgcolor="#eceaea">
+                        <td style="width: 50%;height:11px; text-align: left;" colspan=3><b>TOTAL PROGRAMADO</b></td>
+                        <td style="width: 9%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
+                    </tr>
+            </table>';
+
+       /* if($this->gestion<2023){
             $tabla.='
             <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:80%;" align=center>
                 <thead>
@@ -430,7 +460,7 @@ class Creporte extends CI_Controller {
                         <td style="width: 12%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
                     </tr>
             </table>';
-        }
+        }*/
 
         return $tabla;
     }
@@ -485,7 +515,9 @@ class Creporte extends CI_Controller {
                     $operaciones=$this->programacionpoa->operaciones_form4($componente,$proyecto); /// Reporte Form 4 Gasto Corriente, Proyecto de Inversion 2022
                     $cabecera_f5=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$pr['com_id']);
                     $requerimientos=$this->programacionpoa->list_requerimientos_reporte($pr['com_id'],$proyecto[0]['tp_id']);
-                    $partidas=$this->consolidado_partida_reporte($pr['com_id'],$proyecto[0]['tp_id']);
+                    
+                    $lista_partidas=$this->model_insumo->list_consolidado_partidas_componentes($pr['com_id']);
+                    $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
 
                     $tabla.='
                     <page orientation="paysage" backtop="75mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
@@ -548,7 +580,8 @@ class Creporte extends CI_Controller {
 
             $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$com_id);
             $data['requerimientos']=$this->programacionpoa->list_requerimientos_reporte($com_id,$proyecto[0]['tp_id']);
-            $data['partidas']=$this->consolidado_partida_reporte($com_id,$proyecto[0]['tp_id']);
+            $lista_partidas=$this->model_insumo->list_consolidado_partidas_componentes($com_id);
+            $data['partidas']=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
 
             $data['pie']=$this->programacionpoa->pie_form($proyecto);
             $this->load->view('admin/programacion/reportes/reporte_form5', $data);
@@ -565,31 +598,36 @@ class Creporte extends CI_Controller {
     public function reporte_prog_bolsa_formulario5($prod_id){
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
 
-        $requerimientos_en_bolsa=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($prod_id,$producto[0]['uni_resp']);
-        if(count($requerimientos_en_bolsa)!=0){
-
+        if(count($producto)!=0){
             $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion);
             $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); //// DATOS PROYECTO
             $data['pie_rep']=$producto[0]['proy_nombre'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
-           
+
             if($proyecto[0]['tp_id']==4){
                 $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); /// PROYECTO
                 $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
             }
 
-            $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$producto[0]['uni_resp']);
-            $data['requerimientos']=$this->programacionpoa->list_requerimientos_programas_bolsas_unidadresponsable($prod_id,$producto[0]['uni_resp']);
-           // $data['partidas']=$this->consolidado_partida_reporte($com_id,$proyecto[0]['tp_id']);
-            $data['partidas']='';
+                $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$producto[0]['uni_resp']);
+                $data['pie']=$this->programacionpoa->pie_form($proyecto);
 
-            $data['pie']=$this->programacionpoa->pie_form($proyecto);
-            $this->load->view('admin/programacion/reportes/reporte_form5', $data);
-           // echo $componente[0]['proy_id'];
-           // echo $data['cabecera'];
+                $requerimientos_en_bolsa=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($prod_id,$producto[0]['uni_resp']);
+                if(count($requerimientos_en_bolsa)!=0){
+                    $data['requerimientos']=$this->programacionpoa->list_requerimientos_programas_bolsas_unidadresponsable($prod_id,$producto[0]['uni_resp']);
+                    $lista_partidas=$this->model_insumo->list_consolidado_partidas_programas_boLsas_uresponsable($prod_id,$producto[0]['uni_resp']);
+                    $data['partidas']=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
+                }
+                else{
+                    $data['requerimientos']='No se Tiene Informacion Registrado !!!';   
+                    $data['partidas']='Sin Informacion';
+                }
+ 
+                $this->load->view('admin/programacion/reportes/reporte_form5', $data);
         }
         else{
-            echo "Error !!!";
+            echo "Errowr en la Informacion del Fornulario N° 4";
         }
+
     }
 
 

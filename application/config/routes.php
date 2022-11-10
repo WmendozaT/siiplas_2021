@@ -223,7 +223,7 @@ $route['prog/combo_umedida'] = 'programacion/crequerimiento/combo_unidad_medida'
 
 $route['prog/combo_partidas_asig'] = 'programacion/crequerimiento/combo_partidas_hijos_asignados';// COMBO PARTIDAS ASIGNADOS
 
-$route['prog/list_requerimiento/(:any)'] = 'programacion/cajuste_crequerimiento/list_requerimientos_total/$1';  //// Listado de Requerimientos
+$route['prog/list_requerimiento/(:any)'] = 'programacion/cajuste_crequerimiento/list_requerimientos_total/$1';  //// Listado de Requerimientos para ajuste
 
 
 /* ==================================== MANTENIMIENTO ====================================*/
