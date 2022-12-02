@@ -811,7 +811,7 @@ class Evaluacionpoa extends CI_Controller{
           $nro_unidades++;
           $eval=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
           $eficacia=$eval[5][$this->tmes];
-          if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
+          //if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
             if($this->gestion>2021){
               if($eficacia<=50){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
               if($eficacia > 50 & $eficacia <= 75){$par[2][2]++;} /// Regular - Amarillo (2)

@@ -1508,10 +1508,19 @@ class Model_proyecto extends CI_Model{
 
     /*------------- GET PROGRAMA PADRE ----------------*/
     public function get_programa_padre($aper_programa){
-        $sql = '
+        if($this->gestion>2022){ /// Gestion 2023
+            $sql = '
+            select *
+            from aperturaprogramatica
+            where aper_programa=\''.$aper_programa.'\' and aper_estado!=\'3\' and aper_gestion='.$this->gestion.' and aper_proyecto=\'00\' and aper_actividad=\'000\'';
+        }
+        else{
+            $sql = '
             select *
             from aperturaprogramatica
             where aper_programa=\''.$aper_programa.'\' and aper_estado!=\'3\' and aper_gestion='.$this->gestion.' and aper_proyecto=\'0000\' and aper_actividad=\'000\'';
+        }
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }

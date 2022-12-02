@@ -646,7 +646,7 @@ $(function () {
     $("#partida_id").change(function () {            
       var par_id = $(this).val(); /// Par id
       //proy=<?php echo $proyecto[0]['proy_id']; ?>; /// Proy id
-      //alert(par_id)
+      alert(par_id+'--'+proy_id)
       //  var url = "<?php echo site_url().'/modificaciones/cmod_insumo/get_monto_partida'?>";
         var url = base+"index.php/modificaciones/cmod_insumo/get_monto_partida";
         var request;

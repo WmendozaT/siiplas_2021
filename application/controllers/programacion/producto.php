@@ -104,7 +104,7 @@ class Producto extends CI_Controller {
         }
         else{
           $uresponsable.='
-                      <input type="text" name="u_resp" value="0">
+                      <input type="text" name="u_resp" value="0" hidden>
                       <section class="col col-4">
                         <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
                         <label class="textarea">
@@ -116,7 +116,13 @@ class Producto extends CI_Controller {
 
         $data['uni_responsables']=$uresponsable;
         $data['button']=$this->programacionpoa->button_form4(count($data['productos']),$com_id);
-        $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
+        if($data['proyecto'][0]['por_id']==1){ /// actividades de programas Globales
+          $data['prod'] = $this->form4_prog_globales($proy_id,$com_id); /// Lista de productos
+        }
+        else{
+          $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
+        }
+        
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
 
 
@@ -707,6 +713,165 @@ class Producto extends CI_Controller {
     }
 
 
+    /*------ LISTA FORMULARIO N° 4 para Programas GLOBALES ------*/
+    public function form4_prog_globales($proy_id,$com_id){
+      //$proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+
+      $fase = $this->model_faseetapa->get_id_fase($proy_id); //// recupera datos de la tabla fase activa
+      $productos = $this->model_producto->lista_operaciones($com_id,$this->gestion); // Lista de productos
+      
+      $tabla ='';
+      $tabla .='
+        <input type="hidden" name="com_id" id="com_id" value="'.$com_id.'">
+        <input type="hidden" name="base" value="'.base_url().'">
+        <div class="table-responsive">
+          <table id="dt_basic" class="table table-bordered">
+            <thead>
+                  <tr class="modo1">
+                    <th style="width:2%; text-align=center">#</th>
+                    <th style="width:1%; text-align=center"><b>E/B</b></th>
+                    <th style="width:2%; text-align=center"><b>COD. ACP.</b></th>
+                    <th style="width:2%; text-align=center"><b>COD. OPE.</b></th>
+                    <th style="width:2%; text-align=center"><b>COD. ACT.</b></th>
+                    <th style="width:15%; text-align=center"><b>ACTIVIDAD</b></th>
+                    <th style="width:15%; text-align=center"><b>RESULTADO</b></th>
+                    <th style="width:10%; text-align=center"><b>UNIDAD RESPONSABLE</b></th>
+                    <th style="width:5%; text-align=center"><b>TIP. IND.</b></th>
+                    <th style="width:10%; text-align=center"><b>INDICADOR</b></th>
+                    <th style="width:1%; text-align=center"><b>L.B. '.($this->gestion-1).'</b></th>
+                    <th style="width:1%; text-align=center"><b>META</b></th>
+                    <th style="width:4%; text-align=center"><b>ENE.</b></th>
+                    <th style="width:4%; text-align=center"><b>FEB.</b></th>
+                    <th style="width:4%; text-align=center"><b>MAR.</b></th>
+                    <th style="width:4%; text-align=center"><b>ABR.</b></th>
+                    <th style="width:4%; text-align=center"><b>MAY.</b></th>
+                    <th style="width:4%; text-align=center"><b>JUN.</b></th>
+                    <th style="width:4%; text-align=center"><b>JUL.</b></th>
+                    <th style="width:4%; text-align=center"><b>AGO.</b></th>
+                    <th style="width:4%; text-align=center"><b>SEP.</b></th>
+                    <th style="width:4%; text-align=center"><b>OCT.</b></th>
+                    <th style="width:4%; text-align=center"><b>NOV.</b></th>
+                    <th style="width:4%; text-align=center"><b>DIC.</b></th>
+                    <th style="width:10%; text-align=center"><b>MEDIO DE VERIFICACI&Oacute;N</b></th>
+                    <th style="width:7%; text-align=center"><b>ELIMINAR ACTIVIDAD</b></th>
+                    <th style="width:7%; text-align=center"><b>PTTO.</b></th>
+                    <th style="width:7%; text-align=center"><b>NRO. REQ.</b></th>
+                  </tr>
+                </thead>
+                <tbody>';
+                $cont = 0;
+                foreach($productos as $rowp){
+                  $cont++;
+                  $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
+                  $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+                  //$programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
+
+                  if($proyecto[0]['por_id']==0){
+                    $uresp=strtoupper($rowp['prod_unidades']);
+                  }
+                  else{
+                    $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
+                    
+                    $uresp='';
+                    if(count($unidad)!=0){
+                      $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                      $uresp='<font color=blue size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
+                    }
+                  }
+
+                  
+                  $ptto=0;
+                  if(count($monto)!=0){
+                    $ptto=$monto[0]['total'];
+                  }
+
+                  $color='#f1fdf1'; $titulo=''; $por=''; 
+                  if($proyecto[0]['tp_id']==1){
+                    if($rowp['prod_meta']!=($sum[0]['meta_gest']+$rowp['prod_linea_base'])){
+                      $color='#fbd5d5';
+                    }
+                  }
+                  else{
+                    if($rowp['indi_id']==2){ // Relativo
+                      $por='%';
+                      if($rowp['mt_id']==3){
+                        if($sum[0]['meta_gest']!=$rowp['prod_meta'] || $rowp['or_id']==0){
+                          $color='#fbd5d5';
+                          $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
+                        }
+                      }
+                    }
+                    else{ // Absoluto
+                      if($sum[0]['meta_gest']!=$rowp['prod_meta'] || $rowp['or_id']==0){
+                        $color='#fbd5d5';
+                        $titulo='ERROR EN LA DISTRIBUCION O FALTA DE ALINEACION';
+                      }
+                    }
+                  }
+                  
+                  
+                  $tabla .='<tr bgcolor="'.$color.'" class="modo1" title='.$titulo.'>';
+                    $tabla.='<td align="center">';
+                      if($rowp['prod_priori']==1){
+                        $tabla.='<br><img src="'.base_url().'assets/ifinal/ok.png" WIDTH="40" HEIGHT="33"/><br><font size=1 color=green><b>PRIORITARIO</b></font>';
+                      }
+                    $tabla.='</td>';
+                    $tabla.='<td align="center" title='.$rowp['prod_id'].'>';
+                    if($this->tp_adm==1 || $this->conf_form4==1){
+                      $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff" name="'.$rowp['prod_id'].'" title="MODIFICAR ACTIVIDAD"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
+                    }
+
+                    if($rowp['prod_ppto']==1){
+                      $tabla.='<a href="'.site_url("").'/prog/requerimiento/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="33" HEIGHT="33"/></a>';
+                    }
+                    $tabla.='</td>';
+                    $tabla.='<td style="width:2%;text-align=center" bgcolor="#d6eef7"><b><font size=5 color=blue>'.$rowp['og_codigo'].'</font></b></td>';
+                    $tabla.='<td style="width:2%;text-align=center" bgcolor="#d6eef7"><b><font size=5 color=blue>'.$rowp['or_codigo'].'</font></b></td>';
+                    $tabla.='<td style="width:2%;text-align=center" bgcolor="#f1fdf1"><b><font size=5>'.$rowp['prod_cod'].'</font></b></td>';
+                    $tabla.='<td style="width:15%;" bgcolor="'.$color.'">'.strtoupper($rowp['prod_producto']).'</td>';
+                    $tabla.='<td style="width:15%;" bgcolor="'.$color.'">'.strtoupper($rowp['prod_resultado']).'</td>';
+                    $tabla.='<td style="width:15%;" bgcolor="'.$color.'">'.$uresp.'</td>';
+                    $tabla.='<td style="width:5%;" bgcolor="'.$color.'"><b>'.strtoupper($rowp['indi_abreviacion']).'</b></td>';
+                    $tabla.='<td style="width:10%;" bgcolor="'.$color.'">'.$rowp['prod_indicador'].'</td>';
+                    $tabla.='<td style="width:5%;" bgcolor="'.$color.'">'.round($rowp['prod_linea_base'],2).'</td>';
+                    $tabla.='<td style="width:5%;" bgcolor="'.$color.'" align=center><b><font size=3>'.round($rowp['prod_meta'],2).'</font></b></td>';
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla.='<td style="width:4%;">0</td>';
+                    }
+
+                    $tabla.='<td style="width:10%;" bgcolor="#e5fde5">'.$rowp['prod_fuente_verificacion'].'</td>';
+                    $tabla.='<td style="width:7%;">';
+                      if($this->tp_adm==1 || $this->conf_form4==1){
+                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a><br><br>';
+                        $tabla.=' <center>
+                                    <input type="checkbox" name="req[]" value="'.$rowp['prod_id'].'" onclick="scheck'.$cont.'(this.checked);"/>
+                                  </center>';
+                      }
+                    $tabla.='</td>';
+                    $tabla.='<td>'.number_format($ptto, 2, ',', '.').'</td>';
+                    $tabla.='<td style="width:7%;" align="center"><font color="blue" size="2"><b>'.count($this->model_producto->insumo_producto($rowp['prod_id'])).'</b></font></td>';
+                  $tabla .='</tr>';
+                  ?>
+                  <script>
+                    function scheck<?php echo $cont;?>(estaChequeado) {
+                      val = parseInt($('[name="tot"]').val());
+                      if (estaChequeado == true) {
+                        val = val + 1;
+                      } else {
+                        val = val - 1;
+                      }
+                      $('[name="tot"]').val((val).toFixed(0));
+                    }
+                  </script>
+                  <?php
+                }
+                $tabla.='</tbody>
+              </table>
+            </div>';
+
+      return $tabla;
+    }
     /*------ CAMBIA PRIORIDAD DE LA ACTIVIDAD---------*/
     function asignar_prioridad(){
       if($this->input->is_ajax_request() && $this->input->post()){
@@ -1538,7 +1703,7 @@ class Producto extends CI_Controller {
                 $datos = explode(";",$linea);
              
                 if(count($datos)==20){
-                 
+                    echo count($datos).'<br>';
                     $prod_cod = intval(trim($datos[0])); //// Codigo Actividad
                     $cod_partida = intval(trim($datos[1])); //// Codigo partida
                     $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
@@ -1568,8 +1733,9 @@ class Producto extends CI_Controller {
                     if(count($verif_cod)!=0 & count($par_id)!=0 & $cod_partida!=0 & round($sum_temp,2)==round($total,2)){ /// Verificando si existe Codigo de Actividad, par id, Codigo producto
                         $producto=$this->model_producto->get_producto_id($verif_cod[0]['prod_id']); /// Get producto
                         $guardado++;
+                        echo $guardado.'---'.$detalle.'<br>';
                         /*-------- INSERTAR DATOS REQUERIMIENTO ---------*/
-                        $query=$this->db->query('set datestyle to DMY');
+                       /* $query=$this->db->query('set datestyle to DMY');
                         $data_to_store = array( 
                         'ins_codigo' => $this->session->userdata("name").'/REQ/'.$this->gestion, /// Codigo Insumo
                         'ins_fecha_requerimiento' => date('d/m/Y'), /// Fecha de Requerimiento
@@ -1590,17 +1756,17 @@ class Producto extends CI_Controller {
                         'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
                         );
                         $this->db->insert('insumos', $data_to_store); ///// Guardar en Tabla Insumos 
-                        $ins_id=$this->db->insert_id();
+                        $ins_id=$this->db->insert_id();*/
 
                         /*--------------------------------------------------------*/
-                          $data_to_store2 = array( ///// Tabla InsumoProducto
+                         /* $data_to_store2 = array( ///// Tabla InsumoProducto
                             'prod_id' => $verif_cod[0]['prod_id'], /// prod id
                             'ins_id' => $ins_id, /// ins_id
                           );
-                          $this->db->insert('_insumoproducto', $data_to_store2);
+                          $this->db->insert('_insumoproducto', $data_to_store2);*/
                         /*----------------------------------------------------------*/
 
-                        for ($p=1; $p <=12 ; $p++) { 
+                       /* for ($p=1; $p <=12 ; $p++) { 
                           if($m[$p]!=0 & is_numeric($unitario)){
                             $data_to_store4 = array(
                               'ins_id' => $ins_id, /// Id Insumo
@@ -1610,7 +1776,7 @@ class Producto extends CI_Controller {
                             );
                             $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
                           }
-                        }
+                        }*/
                     }
                
                 } /// end dimension (20)
@@ -1623,7 +1789,7 @@ class Producto extends CI_Controller {
               $this->session->set_flashdata('success','SE REGISTRARON '.$guardado.' REQUERIMIENTOS');
             } /// end else
 
-            redirect('admin/prog/list_prod/'.$com_id.'');
+           // redirect('admin/prog/list_prod/'.$com_id.'');
           }
           else{
             $this->session->set_flashdata('danger','SELECCIONE ARCHIVO ');

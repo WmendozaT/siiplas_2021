@@ -823,7 +823,8 @@ public function get_tp_reporte(){
     $data['pie']=$this->ejecucion_finpi->pie_ficha_tecnica();
     $data['datos_proyecto']=$this->ejecucion_finpi->datos_proyecto_inversion($proy_id);
 
-
+   // echo $data['datos_proyecto'];
+   // $data['datos_proyecto']='';
     $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
   }
 

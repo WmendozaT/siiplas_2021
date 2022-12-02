@@ -780,7 +780,7 @@ class ejecucion_finpi extends CI_Controller{
           <thead>
             <tr bgcolor="#f4f4f4">
               <td style="width:40%; font-size: 15px; text-align:center;height:50px" colspan=13><b>DETALLE PROYECTO</b></td>
-              <td style="width:60%; font-size: 15px; text-align:center;" colspan=14><b>EJECUCION FINANCIERA</b></td>
+              <td style="width:60%; font-size: 15px; text-align:center;" colspan=15><b>EJECUCION FINANCIERA</b></td>
               <td colspan=2></td>
             </tr>
             <tr bgcolor="#f4f4f4" border=1>
@@ -811,6 +811,7 @@ class ejecucion_finpi extends CI_Controller{
               <th style="width:5%; font-size: 12px; text-align:center"><b>NOVIEMBRE</b></th>
               <th style="width:5%; font-size: 12px; text-align:center"><b>DICIEMBRE</b></th>
               <th style="width:5%; font-size: 12px; text-align:center"><b>TOTAL EJECUTADO '.$this->gestion.'</b></th>
+              <th style="width:10%; font-size: 12px; text-align:center"><b>% EJEC. TOTAL '.$this->gestion.'</b></th>
               <th style="width:8%; font-size: 12px; text-align:center"><b>ULTIMA OBSERVACION</b></th>
               <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIS. TOTAL</b></th>
               <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIN. TOTAL</b></th>
@@ -852,6 +853,11 @@ class ejecucion_finpi extends CI_Controller{
                   }
                 }
                 
+                $ppto_vigente=0;
+                if($modificaciones_ppto_proyecto[3]!=0){
+                  $ppto_vigente=$modificaciones_ppto_proyecto[3];
+                }
+
                 //// Avance Financiero (%)
                 /*$avance_fin_total=0;
                 if($row['proy_ppto_total']!=0){
@@ -860,7 +866,8 @@ class ejecucion_finpi extends CI_Controller{
                 ///------
 
                 $tabla.='
-                <td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.$ppto_ejecutado.'</b></td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($ppto_ejecutado,2).'</b></td>
+                <td style="font-size: 12px;font-family: Arial;" align=right>'.round((($ppto_ejecutado/$ppto_vigente)*100),2).'%</td>
                 <td></td>
                 <td style="width:8%;font-size: 12px;font-family: Arial;" align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
                 <td style="width:8%;font-size: 12px;font-family: Arial;" align=right><b>'.round($row['avance_financiero'],2).' %</b></td>
@@ -982,6 +989,7 @@ class ejecucion_finpi extends CI_Controller{
               <th style="width:5%; font-size: 12px; text-align:center"><b>NOVIEMBRE</b></th>
               <th style="width:5%; font-size: 12px; text-align:center"><b>DICIEMBRE</b></th>
               <th style="width:5%; font-size: 12px; text-align:center"><b>TOTAL EJECUTADO '.$this->gestion.'</b></th>
+              <th style="width:5%; font-size: 12px; text-align:center"><b>% EJEC. PPTO. '.$this->gestion.'</b></th>
               <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIS. TOTAL</b></th>
               <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIN. TOTAL</b></th>
             </tr>
@@ -1007,8 +1015,14 @@ class ejecucion_finpi extends CI_Controller{
                 <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">\''.$row['prog'].' '.$row['proy'].' 000\'</td>
                 <td style="width:15%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
                 <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:10%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($fase[0]['fase'].' - '.$fase[0]['descripcion']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>';
+                if(count($fase)!=0){
+                  $tabla.='<td style="width:10%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($fase[0]['fase'].' - '.$fase[0]['descripcion']), 'cp1252', 'UTF-8').'</td>';
+                }
+                else{
+                  $tabla.='<td style="width:10%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">--------</td>';
+                }
+                $tabla.='
                 <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($modificaciones_ppto_proyecto[1],2).'</b></td>
                 <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($modificaciones_ppto_proyecto[2],2).'</b></td>
                 <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($modificaciones_ppto_proyecto[3],2).'</b></td>';
@@ -1025,6 +1039,11 @@ class ejecucion_finpi extends CI_Controller{
                   }
                 }
                 
+                $ppto_vigente=0;
+                if($modificaciones_ppto_proyecto[3]!=0){
+                  $ppto_vigente=$modificaciones_ppto_proyecto[3];
+                }
+
                 //// Avance Financiero (%)
                 /*$avance_fin_total=0;
                 if($row['proy_ppto_total']!=0){
@@ -1034,6 +1053,7 @@ class ejecucion_finpi extends CI_Controller{
 
                 $tabla.='
                 <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.$ppto_ejecutado.'</b></td>
+                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round((($ppto_ejecutado/$ppto_vigente)*100),2).'%</b></td>
                 <td style="width:8%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
                 <td style="width:8%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($row['avance_financiero'],2).' %</b></td>
               </tr>';
@@ -1071,6 +1091,7 @@ class ejecucion_finpi extends CI_Controller{
               <td></td>
 
               <td style="width:5%;font-size: 12px;font-family: Arial;" align=right>'.round($suma_ptto_ejec,2).'</td>
+              <td></td>
               <td></td>
               <td></td>
 
@@ -1387,6 +1408,10 @@ class ejecucion_finpi extends CI_Controller{
         <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=right>'.round($monto_partida[2],2).'</td>
         <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=right>'.round($monto_partida[3],2).'</td>';
 
+        $monto_vigente=0;
+        if($monto_partida[3]!=0){
+          $monto_vigente=$monto_partida[3];
+        }
 
       if(count($temporalidad_ejec)!=0){
         $monto_ejecutado=round($temporalidad_ejec[0]['ejecutado_total'],2);
@@ -1400,6 +1425,7 @@ class ejecucion_finpi extends CI_Controller{
           }
       }
       $tabla.=' <td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right><b>'.round($monto_ejecutado,2).'</b></td>
+                <td style="font-size: 12px;font-family: Arial;"  align=right>'.round((($monto_ejecutado/$monto_vigente)*100),2).'%</td>
                 <td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right>'.mb_convert_encoding(strtoupper($observacion_ejecutado), 'cp1252', 'UTF-8').'</td>
                 <td></td>
                 <td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right><b>'.round((($monto_ejecutado/$monto_partida[3])*100),2).' %</b></td>';

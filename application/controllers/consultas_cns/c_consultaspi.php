@@ -101,6 +101,16 @@ class C_consultaspi extends CI_Controller {
                             <!-- content -->
                             <div id="myTabContent" class="tab-content">
                                 <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1">
+
+                                    <a href="'.site_url("").'/xls_rep_ejec_fin_pi/0/3" target=black title="EXPORTAR DETALLE" class="btn btn-default">
+                                      <img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR CONSOLIDADO A DETALLE (EXCEL)
+                                    </a>
+
+                                    <a href="'.site_url("").'/xls_rep_ejec_fin_pi_resumen" target=black title="EXPORTAR DETALLE" class="btn btn-default">
+                                      <img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR CONSOLIDADO RESUMEN (EXCEL)
+                                    </a>
+                                    <hr>
+                        
                                     <div class="row no-space">
                                         <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                                            <div id="graf_proyectos"><div id="proy_institucional" style="width: 1100px; height: 700px; margin: 0 auto"></div></div>

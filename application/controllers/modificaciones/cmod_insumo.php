@@ -181,6 +181,7 @@ class Cmod_insumo extends CI_Controller {
             $data['tit']=$tit;
             $data['style']=$this->style();
 
+          
             $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
       }
       else{

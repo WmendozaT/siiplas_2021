@@ -962,7 +962,8 @@ class User extends CI_Controller{
     }
 
     function mision(){
-        $this->load->model('menu_modelo');
+        echo "Trabanajo";
+/*        $this->load->model('menu_modelo');
         $enlaces = $this->menu_modelo->get_Modulos(1);
         $data['enlaces'] = $enlaces;
         for ($i = 0; $i < count($enlaces); $i++) {
@@ -974,7 +975,7 @@ class User extends CI_Controller{
 
         //load the view
         $data['main_content'] = 'admin/marco_institucional/mision/mision';
-        $this->load->view('includes/template', $data);
+        $this->load->view('includes/template', $data);*/
     }
 
     function vision(){

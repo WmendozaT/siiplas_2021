@@ -23,6 +23,10 @@ $route['admin/pei/mision/accion/(:any)'] = 'user/pei_accion/$1';	//// Pei Accion
 $route['admin/pei/vision'] = 'user/vision';		///// Vision Institucional
 $route['admin/pei/ayuda/acerca'] = 'user/acerca';	//// Ayuda
 
+$route['mision'] = 'user/mision';
+//$route['vision'] = 'programacion/vision/vista_vision';
+
+
 /* MARCO ESTRATEGICO */
 /*--------------------------------------- Objetivos Estrategicos ----------------------------------------------*/
 $route['me/objetivos_estrategicos'] = 'mestrategico/cobjetivos_estrategico/objetivos_estrategicos';	//// Lista Objetivos Estrategicos
@@ -593,8 +597,8 @@ $route['rep_ediciones/(:any)']='mantenimiento/cediciones/rep_ediciones/$1';// Ex
 
 ///////////////////////////programacion//////////////////////
 //========================mision y vision=========================//
-$route['mision'] = 'programacion/mision/vista_mision';
-$route['vision'] = 'programacion/vision/vista_vision';
+//$route['mision'] = 'programacion/mision/vista_mision';
+//$route['vision'] = 'programacion/vision/vista_vision';
 //======================cambiar gestion=================//
 $route['cambiar_gestion'] = 'mantenimiento/cambiar_gestion/listar_c_gestion';//vista de cambiar gestion
 $route['cambiar'] = 'nueva_session/cambiar_gestion';//cambiar contralador
