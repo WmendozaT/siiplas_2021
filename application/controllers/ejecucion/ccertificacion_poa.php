@@ -129,7 +129,7 @@ class Ccertificacion_poa extends CI_Controller {
         $data['titulo']=$this->certificacionpoa->titulo_cabecera($data['datos']);
         //$requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
       //  $this->update_gestion_temporalidad($requerimientos);
-        if($this->gestion==2022){
+        if($this->gestion>2022){
           if(count($this->model_certificacion->requerimientos_operacion($prod_id))>500){
             $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_temporalidad_unica($prod_id); /// para listas mayores a 500 (2022)
           }
