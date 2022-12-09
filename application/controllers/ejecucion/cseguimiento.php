@@ -756,10 +756,121 @@ class Cseguimiento extends CI_Controller {
   }
 
 
+  ////// Probando Funcion Verificado Datos
+  public function formulario_segpoa($com_id){
+        $post = $this->input->post();
+        $prod_id = 57940; /// prod id
+        $tp = 1; /// tp
+        $ejec= 4;/// prod id
+        $mes_id= 11;/// mes id
+        $producto=$this->model_producto->get_producto_id($prod_id); /// datos del formulario N° 4
+
+        if($producto[0]['indi_id']==2 & $producto[0]['mt_id']==1){ //// INDICADOR RECURRENTE
+          $programado=$this->model_producto->get_mes_programado_form4($prod_id,$mes_id); /// Programado del mes
+
+            if($ejec<=$programado[0]['pg_fis']){
+              echo "true";
+            }
+            else{
+              echo "false";
+            }
+        }
+        else{ /// INDICADOR ABSOLUTO, RELATIVO
+            $valor_ejecutado=0;
+            $programado=$this->model_seguimientopoa->rango_programado_trimestral_productos($prod_id,$this->tmes); /// Programado
+            $ejecutado=$this->model_seguimientopoa->rango_ejecutado_trimestral_productos($prod_id,$this->tmes); /// Ejecutado
+
+            if(count($programado)!=0){
+              if(count($ejecutado)!=0){
+                $valor_ejecutado=$ejecutado[0]['trimestre'];
+              }
+
+                if($tp==0){ /// registro
+                  if($valor_ejecutado<$programado[0]['trimestre']){
+                    if(($ejec+$valor_ejecutado)<=$programado[0]['trimestre'] ){
+                      echo 'true';
+                    }
+                    else{
+                      echo 'false';
+                    }
+                    
+                  }
+                  else{
+                    echo 'false';
+                  }
+                }
+                else{ /// modificacion
+                  $valor_ejec=$this->model_producto->verif_ope_evaluado_mes($prod_id,$mes_id);
+                  if(count($valor_ejec)==0){ /// no existe valor registrado
+                    echo "true";
+                  }
+                  else{
+                    $valor_registrado=$valor_ejec[0]['pejec_fis'];
+                    $valor_ejecutado=$valor_ejecutado-$valor_registrado;
+
+                    echo 'valor registrado : '.$valor_registrado.' - Evalor ejecutado : '.$valor_ejecutado.' - mes : '.$this->tmes.'<br><br>';
+
+
+                    if(($ejec+$valor_ejecutado)<=$programado[0]['trimestre'] ){
+                      echo 'true true <br>'.$ejec.'---'.$valor_ejecutado.'<br>';
+                      echo ($ejec+$valor_ejecutado).'--'.$programado[0]['trimestre'];
+                    }
+                    else{
+                      echo 'false';
+                    }
+                  }
+                }
+
+            }
+            else{
+              echo 'false';
+            }
+        }
+
+        echo "----------------------- <br>";
+        $prod_id=57941;
+        $mes=11;
+        $producto=$this->model_producto->get_producto_id($prod_id);
+      $diferencia[1]=0;$diferencia[2]=0;$diferencia[3]=0;
+      $sum_prog=0;
+      $sum_ejec=0;
+      for ($i=1; $i <=$mes-1; $i++) { 
+        $prog=$this->model_seguimientopoa->get_programado_poa_mes($prod_id,$i); /// Programado meses anteriores
+        if(count($prog)!=0){
+          $sum_prog=$sum_prog+$prog[0]['pg_fis'];
+        }
+
+        $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$i); /// Ejecutado meses anteriores
+        if(count($ejec)!=0){
+          $sum_ejec=$sum_ejec+$ejec[0]['pejec_fis'];
+        }
+      }
+
+
+
+      $prog=$this->model_seguimientopoa->get_programado_poa_mes($prod_id,$mes); /// Programado mes actual
+      $diferencia[2]=0;
+      if(count($prog)!=0){
+        $diferencia[2]=round($prog[0]['pg_fis'],2);
+      }
+
+      $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$mes); /// Ejecutado mes actual
+      $diferencia[3]=0;
+      if(count($ejec)!=0){
+        $diferencia[3]=round($ejec[0]['pejec_fis'],2);
+      }
+
+      $diferencia[1]=($sum_prog-$sum_ejec); /// no ejecutado en el mes anterior
+      if($producto[0]['indi_id']==2 & $producto[0]['mt_id']==1){
+        $diferencia[1]=0;
+      }
+      
+      echo $sum_prog.' - '.$sum_ejec.' = '.$diferencia[1];
+  }
 
 
   //// FORMULARIO DE SEGUIMIENTO POA 2022
-  public function formulario_segpoa($com_id){
+  public function formulario_segpoa2($com_id){
     $data['menu'] = $this->seguimientopoa->menu(4);
     $data['base'] = $this->seguimientopoa->menu(4);
     $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
