@@ -1074,8 +1074,8 @@ class Programacionpoa extends CI_Controller{
       <hr>
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px black; text-align: center;">
-              <td style="width:12%; text-align:center;">';
-              if($proyecto[0]['aper_proy_estado']==4 && $this->gestion>2021){
+              <td style="width:12%; text-align:center;">'.$this->session->userdata('rd_poa').'';
+              if($proyecto[0]['proy_estado']==4 && $this->gestion>2021){
                 $tabla.='<qrcode value="'.$this->session->userdata('rd_poa').'" style="border: none; width: 14mm; color: #1c7368"></qrcode><br><b>POA APROBADO</b>';
               }
               $tabla.='
@@ -1255,7 +1255,7 @@ class Programacionpoa extends CI_Controller{
                         <td style="width:100%;height:12px;"><b>JEFATURA DE UNIDAD O AREA / REP. DE AREA REGIONALES</b></td>
                     </tr>
                     <tr>
-                        <td align=center><br><br><br><br><br><br><b>FIRMA</b></td>
+                        <td align=center><br><br><br><br><br><b>FIRMA</b></td>
                     </tr>
                 </table>
             </td>
@@ -1265,7 +1265,7 @@ class Programacionpoa extends CI_Controller{
                       <td style="width:100%;height:12px;"><b>JEFATURA DE DEPARTAMENTOS / SERV. GENERALES REGIONAL / JEFATURA MEDICA </b></td>
                     </tr>
                     <tr>
-                      <td align=center><br><br><br><br><br><br><b>FIRMA</b></td>
+                      <td align=center><br><br><br><br><br><b>FIRMA</b></td>
                     </tr>
                 </table>
             </td>
@@ -1275,7 +1275,7 @@ class Programacionpoa extends CI_Controller{
                       <td style="width:100%;height:12px;"><b>GERENCIA GENERAL / GERENCIAS DE AREA / ADMINISTRADOR REGIONAL </b></td>
                     </tr>
                     <tr>
-                      <td align=center><br><br><br><br><br><br><b>FIRMA</b></td>
+                      <td align=center><br><br><br><br><br><b>FIRMA</b></td>
                     </tr>
                 </table>
             </td>
@@ -1699,7 +1699,7 @@ class Programacionpoa extends CI_Controller{
                 }
                 else{
                   $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
-                  $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                  $proy = $this->model_proyecto->get_datos_proyecto_unidad($proyecto[0]['proy_id']);
                   $uresp='';
                   if(count($unidad)!=0){
                     $uresp='<font size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';

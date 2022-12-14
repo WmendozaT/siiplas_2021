@@ -184,6 +184,7 @@ $route['prog/rep_requerimientos/(:any)'] = 'programacion/creporte/programacion_f
 $route['proy/orequerimiento_proceso/(:any)'] = 'programacion/creporte/reporte_formulario5/$1';  //// Reporte requerimiento por Unidad 2022
 $route['proy/ptto_consolidado/(:any)'] = 'programacion/creporte/reporte_presupuesto_consolidado/$1';  //// Reporte requerimiento total Unidad/Establecimiento/Proyecto de Inversion
 $route['proy/ptto_consolidado_comparativo/(:any)'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_comparativo/$1';  //// Reporte Comparativo Total de Ppto Unidad/Establecimiento/Proyecto de Inversion
+$route['proy/ptto_consolidado_comparativo_regional/(:any)'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_comparativo_regional/$1';  //// Reporte Comparativo Total de Ppto Unidad/Establecimiento/Proyecto de Inversion REGIONAL
 
 $route['proy/rep_form5_programa_bolsa/(:any)'] = 'programacion/creporte/reporte_prog_bolsa_formulario5/$1';  //// Reporte requerimiento por ID PRODUCTO
 

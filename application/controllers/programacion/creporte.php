@@ -552,13 +552,17 @@ class Creporte extends CI_Controller {
                             </page_footer>
                             '.$partidas.'
                         </page>';
+                    
+                        
+
+
                     }
                     
                 }
             }
 
             $data['lista']=$tabla;
-            
+      //echo $tabla;
             $this->load->view('admin/programacion/reportes/reporte_form4_consolidado', $data);
         }
         else{

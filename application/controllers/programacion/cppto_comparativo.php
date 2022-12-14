@@ -33,9 +33,122 @@ class Cppto_comparativo extends CI_Controller {
       }
     }
 
+    //// ====== COMPARATIVO POR REGIONAL
+    /*----- REPORTE COMPARATIVO DE PARTIDAS (ASIG - PROG) ----*/
+    public function reporte_presupuesto_consolidado_comparativo_regional($dep_id){
+      $data['mes'] = $this->mes_nombre();
+      $data['regional']=$this->model_proyecto->get_departamento($dep_id);
+
+      //$data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+      $data['cabecera']='CABECERA';
+      //$data['cabecera']=$this->programacionpoa->cabecera($data['proyecto'][0]['tp_id'],0,$data['proyecto'],0);
+      //$data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
+      
+      $tabla='';
+      if(count($data['regional'])!=0){
+        $partidas_asignadas=$this->model_ptto_sigep->partidas_regional($dep_id,1); //// Ptto Asignado por Regional
+
+         $tabla .='
+          <table class="table table-bordered" style="width:60%; align=center>
+            <thead>
+              <tr style="height:13px;" bgcolor="#eceaea" align=center>
+                <th style="width:3%;" align=center>#</th>
+                <th style="width:10%;">PARTIDA</th>
+                <th style="width:35%;">DETALLE</th>
+                <th style="width:12%;">PPTO. ASIGNADO '.$this->gestion.'</th>
+                <th style="width:12%;">PPTO. POA (SIIPLAS) '.$this->gestion.'</th>
+                <th style="width:12%;">SALDO POA</th>
+              </tr>
+            </thead>
+            <tbody>';
+            $nro=0;
+          $monto_asig=0;
+          $monto_prog=0;
+          foreach($partidas_asig  as $row){
+            
+
+            
+          }
+          $tabla.='
+            </tbody>
+          </table>';
+
+      }
 
 
 
+
+
+
+
+      if(count($data['proyecto'])!=0){
+          $monto_asignado=0;$monto_programado=0;
+          $cod_part_asig=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],1);  //// ppto asignado Anteproyecto
+          
+          if(count($cod_part_asig)!=0){
+            $monto_asignado=$cod_part_asig[0]['sum_cod_partida'];
+          }
+
+          if($data['proyecto'][0]['tp_id']==1){
+            $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog_pi($data['proyecto'][0]['proy_id']); //// ppto Programado POA - PI
+          }
+          else{
+            $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],2); //// ppto Programado POA - G. corriente
+          }
+
+
+          ///----- Genera lista de Partidas Asignadas y Programadas
+          $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],1); // Asig
+          if($data['proyecto'][0]['tp_id']==1){
+            $partidas_prog=$this->model_ptto_sigep->partidas_pi_prog_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['proy_id']);
+          }
+          else{
+            $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],2); // Prog
+          }
+          
+
+
+          if($monto_asignado==$cod_part_prog[0]['sum_cod_partida']){ //// if (monto asignado = monto programado)
+            $data['tabla'] = $this->comparativo_partidas_normal($partidas_asig,$partidas_prog,$data['proyecto'],1);
+          }
+          else{ /// Cuando existen diferencias en las partidas asignadas con las programas
+            $data['tabla'] = $this->comparativo_update_partidas_normal($partidas_asig,$partidas_prog,$data['proyecto'],1);
+          }
+
+            $data['titulo']='<div align="center">PLAN OPERATIVO ANUAL '.$this->gestion.' - PROGRAMACI&Oacute;N F&Iacute;SICO FINANCIERO <br><b>CONSOLIDADO CUADRO COMPARATIVO DE PRESUPUESTO (ANTEPROYECTO - POA)</b></div>';
+            if($data['proyecto'][0]['proy_estado']==4){
+              $data['titulo']='<div align="center">PLAN OPERATIVO ANUAL '.$this->gestion.' - PROGRAMACI&Oacute;N F&Iacute;SICO FINANCIERO <br><b>CONSOLIDADO CUADRO COMPARATIVO DE PRESUPUESTO FINAL (APROBADO - ANTEPROYECTO)</b></div>';
+            }
+
+/*            echo "proy_id : ".$proy_id." ------ ".$data['proyecto'][0]['proy_id']."<br>";
+            echo "aper_id : ".$data['proyecto'][0]['aper_id'];
+            echo "<br>";
+            echo count($cod_part_asig);
+            echo "<br>";
+            echo $monto_asignado.'---'.$cod_part_prog[0]['sum_cod_partida'];
+            echo "<br>";
+            echo count($partidas_asig).'---'.count($partidas_prog);*/
+
+          $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo', $data);
+      }
+      else{
+          echo "<b>ERROR !!!!!</b>";
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //// ====== COMPARATIVO POR UNIDAD ORGANIZACIONAL
     /*-------- GET CUADRO COMPARATIVO ASIGNADO-POA --------*/
     public function get_cuadro_comparativo_ptto(){
       if($this->input->is_ajax_request() && $this->input->post()){

@@ -67,7 +67,7 @@ class Proyecto extends CI_Controller {
       $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);
       $tabla='';
       $nro=0;
-      if($proy_estado==1){
+      if($proy_estado==1){ /// Inicial
         foreach($unidades as $row){
           $nro++;
           $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
@@ -109,7 +109,7 @@ class Proyecto extends CI_Controller {
           $tabla.='</tr>';
         }
       }
-      else{
+      else{ /// Aprobado
         $nro=0;
         foreach($unidades as $row){
           $color='#f5e9ce';
@@ -143,7 +143,7 @@ class Proyecto extends CI_Controller {
             
             $tabla .= '<td>';
               if($row['aper_proy_estado']==4){
-                 $tabla.='<center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" title="REPORTE POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></center>';
+                 $tabla.='<center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" title="REPORTE CONSOLIDADO POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></center>';
               }
             $tabla.='</td>';
             $tabla.='<td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>';
@@ -405,6 +405,10 @@ class Proyecto extends CI_Controller {
 
       $this->load->view('admin/programacion/proy_anual/aprobados/list_proy', $data);
     }
+
+
+
+
 
 
   /*----- FORMULARIO DE REGISTRO DE UNIDADES/ESTABLECIMIENTOS (2020) -----*/

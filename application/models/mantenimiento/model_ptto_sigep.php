@@ -596,7 +596,7 @@ class Model_ptto_sigep extends CI_Model{
 
 
     /*==== CONSOLIDADO PARTIDAS REGIONAL ====*/
-    /*-------------------- Partidas a Nivel Regional ------------------------*/
+    /*-------------------- Partidas Asignados a Nivel Regional ------------------------*/
     public function partidas_regional($dep_id,$tp){
         if($tp==1){
             $sql = 'select p.dep_id,pg.par_id,pg.partida as codigo ,par.par_nombre as nombre ,SUM(pg.importe) as monto
