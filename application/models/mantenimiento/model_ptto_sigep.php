@@ -117,7 +117,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*------ Lista partida Ppto Programado SIIPLAS  Regional 2023-----*/
+    /*------ Lista partida Ppto Programado SIIPLAS  Regional 2023 (vigente)-----*/
     public function lista_partidas_programado_regional($dep_id,$tp_id){
         if($dep_id==0){ //// Institucional
             $sql = 'select p.par_id,p.par_codigo,p.par_nombre,SUM(p.programado_total) programado
@@ -161,7 +161,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*------ Get partida Ppto Programado SIIPLAS  Regional 2023-----*/
+    /*------ Get partida Ppto Programado SIIPLAS  Regional 2023 (vigente)-----*/
     public function get_partidas_programado_regional($dep_id,$tp_id,$par_id){
         if($dep_id==0){ //// Institucional
             $sql = 'select p.par_id,p.par_codigo,p.par_nombre,SUM(p.programado_total) programado

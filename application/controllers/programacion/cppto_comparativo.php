@@ -105,8 +105,8 @@ class Cppto_comparativo extends CI_Controller {
           $data['tabla'] = $this->comparativo_partidas_normal_regional($partidas_prog,$dep_id);
         }
         else{
-          //$data['tabla'] = $this->comparativo_update_partidas_normal($partidas_asig,$partidas_prog,$data['proyecto'],1);
-          $data['tabla'] =$this->comparativo_update_partidas_normal_regional($partidas_asig,$partidas_prog,$dep_id);
+          $data['tabla'] = 'REGIONAL NO AJUSTADO';
+          //$data['tabla'] =$this->comparativo_update_partidas_normal_regional($partidas_asig,$partidas_prog,$dep_id);
         }
 
         //$data['tabla']=$tabla;
