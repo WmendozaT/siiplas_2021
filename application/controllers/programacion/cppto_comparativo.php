@@ -627,7 +627,7 @@ class Cppto_comparativo extends CI_Controller {
 
             $nro++;
             $tabla .='
-              <tr class="modo1" bgcolor='.$color.'>
+              <tr class="modo1" bgcolor='.$color.'> 
                 <td style="width: 3%;height:11px; text-align: center">'.$nro.'</td>
                 <td style="width: 10%; text-align: center;">'.$row['par_codigo'].'</td>
                 <td style="width: 35%; text-align: left;">'.$row['par_nombre'].'</td>
