@@ -36,7 +36,6 @@ class Genera_informacion extends CI_Controller{
  /*-- REPORTE 1 (LISTA DE UNIDADES/PROYECTOS DE INVERSIÓN)--*/
     public function lista_gastocorriente_pinversion($dep_id,$dist_id,$tp_id){
       
-
         if($dist_id!=0){
           $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id); /// unidades de la distrital
           $distrital=$this->model_proyecto->dep_dist($dist_id);
@@ -63,10 +62,10 @@ class Genera_informacion extends CI_Controller{
      
         <br>
         <div align=right>
-          <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/book_previous.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;VOLVER ATRAS</a>&nbsp;&nbsp;&nbsp;
-          <a href="'.site_url("").'/ptto_consolidado_comparativo_regional/'.$dep_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO ppto"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;PPTO. COMPARATIVO</a>&nbsp;&nbsp;&nbsp;
-          <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR UNIDADES / PROYECTOS DE INVERSI&Oacute;N</a>&nbsp;&nbsp;&nbsp;
-          <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/arrow_rotate_clockwise.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;SALIR</a>&nbsp;&nbsp;
+          <a href="'.site_url("").'/ptto_consolidado_comparativo_regional/'.$dep_id.'/4" target=_blank class="btn btn-default" title="CONSOLIDADO ppto"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;PPTO. COMPARATIVO</a>&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR DETALLE</a>&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;
         </div>
         <br>
       <div class="alert alert-warning">
@@ -200,12 +199,12 @@ class Genera_informacion extends CI_Controller{
       public function ppto_actividad($proyecto,$tp_id){
         $salida[1]=0;$salida[2]=0;$salida[3]=0;
 
-        $ppto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto['aper_id'],1); /// Asignado
+        $ppto_asig=$this->model_ptto_sigep->suma_ptto_uresponsable($proyecto['aper_id'],1); /// Asignado
         if($tp_id==1){
           $ppto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto['proy_id']); /// Programado Proyecto Inversion
         }
         else{
-          $ppto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto['aper_id'],2); /// Programado Gasto Corriente
+          $ppto_prog=$this->model_ptto_sigep->suma_ptto_uresponsable($proyecto['aper_id'],2); /// Programado Gasto Corriente
         }
 
         $monto_asignado=0;$monto_programado=0;$saldo=0;
@@ -278,6 +277,7 @@ class Genera_informacion extends CI_Controller{
                 </thead>
                 <tbody>';
                  $nro=0;
+                 $suma_ppto_asig=0;$suma_ppto_prog=0;
                   foreach ($unidades as $row){
                     $ppto=$this->ppto_actividad($row,$tp_id);
                     $color='';
@@ -317,8 +317,17 @@ class Genera_informacion extends CI_Controller{
                       <td style="width:8%;" align=right>'.number_format($ppto[2], 2, ',', '.').'</td>
                       <td style="width:8%;" align=right>'.number_format($ppto[3], 2, ',', '.').'</td>
                     </tr>';
+
+                    $suma_ppto_asig=$suma_ppto_asig+$ppto[1];
+                    $suma_ppto_prog=$suma_ppto_prog+$ppto[2];
                   }
                   $tabla.='
+                  <tr>
+                    <td colspan=7 align=right style="height:2px; font-size:8px;">TOTAL</td>
+                    <td style="width:8%;font-size:8px;" align=right><b>'.number_format($suma_ppto_asig, 2, ',', '.').'</b></td>
+                    <td style="width:8%;font-size:8px;" align=right><b>'.number_format($suma_ppto_prog, 2, ',', '.').'</b></td>
+                    <td style="width:8%;font-size:8px;" align=right></td>
+                  </tr>
                 </tbody>
               </table>';
 

@@ -56,9 +56,12 @@ class Rep_operaciones extends CI_Controller {
       $data['style']=$this->genera_informacion->style();
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
       $data['list']=$this->menu_nacional();
-      $data['form5_consolidado']='';
+      $data['informacion_consolidado']='';
       if($this->fun_id==399){
-        $data['form5_consolidado']='<a href="'.site_url("").'/rep/exportar_requerimientos_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR FORMULARIO 5 (INSTITUCIONAL)</a><br>';
+        $data['informacion_consolidado']='
+        <a href="'.site_url("").'/rep/exportar_requerimientos_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR FORMULARIO 5 (INSTITUCIONAL)</a>
+        <a href="'.site_url("").'/ptto_consolidado_comparativo_regional/0/4" target=_blank class="btn btn-default" title="CUADRO COMPARATIVO INSTITUCIONAL"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;PPTO. COMPARATIVO (INSTITUCIONAL)</a>
+        <hr>';
       }
       $data['mensaje']='
       <div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';

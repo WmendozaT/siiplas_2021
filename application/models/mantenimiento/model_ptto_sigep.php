@@ -122,7 +122,7 @@ class Model_ptto_sigep extends CI_Model{
         if($dep_id==0){ //// Institucional
             $sql = 'select p.par_id,p.par_codigo,p.par_nombre,SUM(p.programado_total) programado
                     from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.') p
-                    group by p.dep_id,p.par_id,p.par_codigo,p.par_nombre
+                    group by p.par_id,p.par_codigo,p.par_nombre
                     order by p.par_codigo asc';
         }
         else{ /// Regional
@@ -167,7 +167,7 @@ class Model_ptto_sigep extends CI_Model{
             $sql = 'select p.par_id,p.par_codigo,p.par_nombre,SUM(p.programado_total) programado
                     from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.') p
                     where p.par_id='.$par_id.'
-                    group by p.dep_id,p.par_id,p.par_codigo,p.par_nombre
+                    group by p.par_id,p.par_codigo,p.par_nombre
                     order by p.par_codigo asc';
         }
         else{ /// Regional
@@ -348,8 +348,8 @@ class Model_ptto_sigep extends CI_Model{
     }*/
 
 
-    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO (2019 - 2020 - 2021) -----*/
-/*    public function suma_ptto_accion($aper_id,$tp){
+    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO (2019 - 2020 - 2021) vigente -----*/
+    public function suma_ptto_uresponsable($aper_id,$tp){
         // 1 : PTO ASIGNADO
         // 2 : PTO PROGRAMADO
         if($tp==1){
@@ -368,10 +368,10 @@ class Model_ptto_sigep extends CI_Model{
     
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
-    /*----- MONTO PROGRAMADO - PROYECTOS DE INVERSION -----*/
-/*    public function suma_ptto_pinversion($proy_id){
+    /*----- MONTO PROGRAMADO - PROYECTOS DE INVERSION (vigente)-----*/
+    public function suma_ptto_pinversion($proy_id){
         $sql = '
                 select pfe.proy_id,SUM(i.ins_costo_total) as monto
                 from _proyectofaseetapacomponente pfe
@@ -382,7 +382,7 @@ class Model_ptto_sigep extends CI_Model{
     
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
     /*----- MONTO ASIGNADO POR PROYECTO 2022 -----*/
     public function get_ppto_asignado_proyecto_gestion($proy_id){

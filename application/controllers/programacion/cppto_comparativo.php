@@ -40,7 +40,11 @@ class Cppto_comparativo extends CI_Controller {
       $data['mes'] = $this->mes_nombre();
       $data['regional']=$this->model_proyecto->get_departamento($dep_id);
 
-      //$data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+      $titulo='CONSOLIDADO INSTITUCIONAL';
+      if($dep_id!=0){
+        $titulo=strtoupper($data['regional'][0]['dep_departamento']);
+      }
+
       $data['cabecera']='
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
         <tr style="border: solid 0px;">              
@@ -71,7 +75,7 @@ class Cppto_comparativo extends CI_Controller {
                     <td style="height: 5%;">CUADRO COMPARATIVO PPTO. ASIGNADO VS PPTO. POA</td>
                   </tr>
                   <tr style="font-size: 25px;font-family: Arial;">
-                    <td style="height: 5%;"><b>'.strtoupper($data['regional'][0]['dep_departamento']).'</b></td>
+                    <td style="height: 5%;"><b>'.$titulo.'</b></td>
                   </tr>
               </table>
             </td>
@@ -105,13 +109,13 @@ class Cppto_comparativo extends CI_Controller {
           $data['tabla'] = $this->comparativo_partidas_normal_regional($partidas_prog,$dep_id);
         }
         else{
-          $data['tabla'] = 'REGIONAL NO AJUSTADO';
-          //$data['tabla'] =$this->comparativo_update_partidas_normal_regional($partidas_asig,$partidas_prog,$dep_id);
+          //$data['tabla'] = 'REGIONAL NO AJUSTADO';
+          $data['tabla'] =$this->comparativo_update_partidas_normal_regional($partidas_asig,$partidas_prog,$dep_id);
         }
-
+        echo $data['tabla'];
         //$data['tabla']=$tabla;
 
-        $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo_regional', $data);
+       // $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo_regional', $data);
       }
       else{
           echo "<b>ERROR !!!!!</b>";
@@ -603,6 +607,78 @@ class Cppto_comparativo extends CI_Controller {
         $nro=0;
         $monto_asig=0;
         $monto_prog=0;
+
+/*        if(count($partidas_asig)>count($partidas_prog)){
+          foreach($partidas_asig as $row){
+            $part=$this->model_ptto_sigep->get_partidas_programado_regional($dep_id,4,$row['par_id']);
+            
+              $prog=0;
+              if(count($part)!=0){
+                $prog=$part[0]['programado'];
+              }
+              $dif=(($row['asignado']+$row['saldo'])-$prog);
+             
+             $color='';
+              $sig='';
+              if($dif!=0){
+                if($dif<0){
+                  $color='#f9cdcd';
+                }
+                else{
+                  $color='#e5efd7';
+                  $sig='+';
+                }
+              }
+
+              $nro++;
+              $tabla .='
+                <tr class="modo1" bgcolor='.$color.'> 
+                  <td style="width: 3%;height:11px; text-align: center">'.$nro.'</td>
+                  <td style="width: 10%; text-align: center;">'.$row['par_codigo'].'</td>
+                  <td style="width: 35%; text-align: left;">'.$row['par_nombre'].'</td>
+                  <td style="width: 12%; text-align: right;">'.number_format($row['asignado'], 2, ',', '.').'</td>
+                  <td style="width: 12%; text-align: right;">'.number_format($prog, 2, ',', '.').'</td>
+                  <td style="width: 12%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>
+                </tr>';
+              $monto_asig=$monto_asig+($row['asignado']+$row['saldo']);
+              $monto_prog=$monto_prog+$prog; 
+          }
+        }
+        else{
+            foreach($partidas_prog as $row){
+            $part=$this->model_ptto_sigep->get_partida_asig_regional($dep_id,$row['par_id']); /// get partida asignado
+              $asig=0;
+              if(count($part)!=0){
+                $asig=$part[0]['asignado'];
+              }
+              $dif=($asig-$row['programado']);
+
+              $color='';
+                $sig='';
+                if($dif!=0){
+                  if($dif<0){
+                    $color='#f9cdcd';
+                  }
+                  else{
+                    $color='#e5efd7';
+                    $sig='+';
+                  }
+                }
+
+            $nro++;
+            $tabla .='<tr  bgcolor='.$color.'>
+                        <td style="width: 3%;height:11px; text-align: center">'.$nro.'</td>
+                        <td style="width: 10%; text-align: center;">'.$row['par_codigo'].'</td>
+                        <td style="width: 25%; text-align: left;">'.$row['par_nombre'].'</td>
+                        <td style="width: 15%; text-align: right;">'.number_format($asig, 2, ',', '.').'</td>
+                        <td style="width: 15%; text-align: right;">'.number_format($row['programado'], 2, ',', '.').'</td>
+                        <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
+                    $tabla.='</tr>';
+            $monto_asig=$monto_asig+$asig;
+            $monto_prog=$monto_prog+$row['programado'];
+          }
+        }*/
+
 
         foreach($partidas_asig  as $row){
           $part=$this->model_ptto_sigep->get_partidas_programado_regional($dep_id,4,$row['par_id']);

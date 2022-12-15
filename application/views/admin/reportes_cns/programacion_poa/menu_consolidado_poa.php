@@ -94,7 +94,7 @@
                     <div class="row">
                     <?php echo $list;?>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                           <div id="lista_consolidado" class="well"><?php echo $form5_consolidado.''.$mensaje;?></div>
+                           <div id="lista_consolidado" class="well"><?php echo $informacion_consolidado.''.$mensaje;?></div>
                         </article>
                     </div>
                 </section>
