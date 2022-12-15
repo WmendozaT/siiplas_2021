@@ -1311,6 +1311,7 @@ form4_cod integer,
 ins_id numeric,
 par_id integer,
 par_codigo integer,
+par_nombre varchar,
 ins_detalle varchar,
 ins_cant_requerida numeric,
 ins_costo_unitario numeric,
@@ -1337,7 +1338,7 @@ mes12 numeric) AS
 $$
 
 select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
-p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.form4_cod,i.ins_id,i.par_id,par.par_codigo,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_unidad_medida,
+p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.form4_cod,i.ins_id,i.par_id,par.par_codigo,par.par_nombre,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_unidad_medida,
 i.ins_estado,i.ins_gestion,i.ins_observacion,temp.programado_total,temp.mes1,temp.mes2,temp.mes3,temp.mes4,temp.mes5,temp.mes6,temp.mes7,temp.mes8,temp.mes9,temp.mes10,temp.mes11,temp.mes12
 from _proyectofaseetapacomponente pfe
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
