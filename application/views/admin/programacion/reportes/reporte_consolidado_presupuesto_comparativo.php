@@ -82,7 +82,7 @@ try{
     $html2pdf = new HTML2PDF('P', 'Letter', 'fr', true, 'UTF-8', 0);
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-    $html2pdf->Output('REP -'.$proyecto[0]['dep_sigla'].'-'.$proyecto[0]['tipo'].' '.$proyecto[0]['proy_nombre'].'_CONSOLIDADO_PARTIDA_CONSOLIDADO.pdf');
+    $html2pdf->Output('REP -'.$proyecto[0]['abrev'].'-'.$proyecto[0]['tipo'].' '.$proyecto[0]['proy_nombre'].'_CONSOLIDADO_PARTIDA_CONSOLIDADO.pdf');
 }
 catch(HTML2PDF_exception $e) {
     echo $e;

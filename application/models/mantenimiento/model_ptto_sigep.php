@@ -318,7 +318,7 @@ class Model_ptto_sigep extends CI_Model{
     }*/
 
     /*---- Get Partida Asignado -----*/
-   /* public function get_partida_asignado_unidad($aper_id,$par_id){
+    public function get_partida_asignado_unidad($aper_id,$par_id){
         $sql = ' select pg.sp_id, pg.par_id,pg.partida,p.par_nombre,pg.importe,pg.ppto_saldo_ncert,pg.ppto_saldo_observacion
                  from ptto_partidas_sigep pg
                  Inner Join partidas as p On p.par_id=pg.par_id
@@ -326,7 +326,7 @@ class Model_ptto_sigep extends CI_Model{
                  order by pg.partida';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
     /*-------------------- Get Apertura ------------------------*/
     /*public function apertura_id($aper_id){
@@ -811,6 +811,38 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }*/
 
+    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO (2019 - 2020 - 2021) VIGENTE-----*/
+    public function suma_ptto_accion($aper_id,$tp){
+        // 1 : PTO ASIGNADO
+        // 2 : PTO PROGRAMADO
+        if($tp==1){
+            $sql = 'select pg.aper_id,SUM(pg.importe) as monto,SUM(pg.ppto_saldo_ncert) saldo
+                    from ptto_partidas_sigep pg
+                    Inner Join partidas as p On p.par_id=pg.par_id
+                    where pg.aper_id='.$aper_id.' and pg.estado!=\'3\' and pg.g_id='.$this->gestion.'
+                    group by pg.aper_id';
+        }
+        else{
+            if($this->gestion==2019){
+                $sql = 'select i.aper_id, SUM(ip.programado_total) as monto
+                    from vlista_insumos i
+                    Inner Join insumo_gestion as ig on ig.ins_id = i.ins_id
+                    Inner Join vifin_prog_mes as ip on ip.insg_id = ig.insg_id
+                    where i.aper_id='.$aper_id.' and ig.g_id='.$this->gestion.'
+                    group by i.aper_id';
+            }
+            else{
+                $sql = 'select i.aper_id, SUM(ip.programado_total) as monto
+                    from vlista_insumos i
+                    Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
+                    where i.aper_id='.$aper_id.'
+                    group by i.aper_id';
+            }
+        }
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
     /*-------------------- Get Partida Asignado Regional ------------------------*/
 /*    public function get_partida_asig_regional($dep_id,$par_id){
         $sql = 'select p.dep_id,pg.par_id,pg.partida as codigo ,par.par_nombre as nombre ,SUM(pg.importe) as monto
