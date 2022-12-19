@@ -181,6 +181,29 @@ class Model_ptto_sigep extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+    /*------ Lista de Ppto Asignado por Regional (total)-----*/
+    public function lista_ppto_total_asignado_nacional(){
+        $sql = 'select p.dep_id,dep.dep_departamento,dep.dep_sigla,SUM(partidas_asig.importe) as asignado,SUM(partidas_asig.ppto_saldo_ncert) saldo
+                    FROM lista_poa_gastocorriente_nacional('.$this->gestion.') p
+                    Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=p.aper_id
+                    Inner Join _departamentos as dep On dep.dep_id=p.dep_id
+                    group by p.dep_id,dep.dep_departamento,dep.dep_sigla';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    public function get_ppto_total_programado_regional($dep_id){
+        $sql = 'select p.dep_id,SUM(p.programado_total) programado
+                from lista_requerimientos_institucional_directo(4,'.$this->gestion.') p
+                where p.dep_id='.$dep_id.' 
+                group by p.dep_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 //// =====================================
 
 

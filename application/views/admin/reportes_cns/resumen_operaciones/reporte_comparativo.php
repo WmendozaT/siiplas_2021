@@ -13,7 +13,7 @@ ob_start();
     }
 }
 </style>
-<page backtop="45mm" backbottom="20mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="45mm" backbottom="15mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <table class="page_header" border="0">
@@ -21,7 +21,7 @@ ob_start();
                 <td style="width: 100%; text-align: left">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                         <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td width=20%; text-align:center;"">
+                          <td width=20%; text-align:center;>
                             <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:40%;">
                           </td>
                           <td width=80%; align=left>

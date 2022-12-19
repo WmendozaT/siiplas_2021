@@ -39,6 +39,10 @@ class Cppto_comparativo extends CI_Controller {
     public function reporte_presupuesto_consolidado_comparativo_regional($dep_id,$tp_id){
       $data['mes'] = $this->mes_nombre();
       $data['regional']=$this->model_proyecto->get_departamento($dep_id);
+      $data['titulo_reporte']='CONSOLIDADO_PARTIDAS_NACIONAL';
+      if($dep_id!=0){
+        $data['titulo_reporte']=strtoupper($data['regional'][0]['dep_departamento']);
+      }
 
       $titulo='CONSOLIDADO INSTITUCIONAL';
       if($dep_id!=0){
@@ -124,7 +128,102 @@ class Cppto_comparativo extends CI_Controller {
 
 
 
+    //// ====== DISTRIBUCION PRESUPUESTO NACIONAL
+    /*----- REPORTE COMPARATIVO distribucion nacional Presupuesto ----*/
+    public function reporte_presupuesto_consolidado_distribucion_nacional(){
+      $data['mes'] = $this->mes_nombre();
 
+      $data['cabecera']='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+        <tr style="border: solid 0px;">              
+            <td style="width:70%;height: 2%">
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                <tr style="font-size: 13px;font-family: Arial;">
+                    <td style="width:40%;height: 20%;">&nbsp;&nbsp;<b> '.$this->session->userData('entidad').'</b></td>
+                </tr>
+                <tr>
+                    <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                </tr>
+              </table>
+            </td>
+            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+      </table>
+      <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px black; text-align: center;">
+            <td style="width:100%; height: 5%">
+              <table align="center" border="0" style="width:100%;">
+                <tr style="font-size: 27px;font-family: Arial;">
+                    <td style="height: 30%;"><b>PLAN OPERATIVO ANUAL GESTIÓN - '.$this->gestion.'</b></td>
+                </tr>
+                <tr style="font-size: 17px;font-family: Arial;">
+                  <td style="height: 5%;">CUADRO COMPARATIVO PPTO. ASIGNADO VS PPTO. POA</td>
+                </tr>
+                <tr style="font-size: 25px;font-family: Arial;">
+                  <td style="height: 5%;"><b>PPTO. CONSOLIDADO INSTITUCIONAL</b></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+      </table>
+      <hr>';
+
+      $tabla='';
+      $ppto_asignado_regional=$this->model_ptto_sigep->lista_ppto_total_asignado_nacional();
+
+      $tabla .='
+      <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+        <thead>
+          <tr style="height:15px;" bgcolor="#eceaea" align=center>
+            <th style="width:3%;height:13px;" align=center>#</th>
+            <th style="width:10%;">REGIONAL</th>
+            <th style="width:15%;">PPTO. ASIGNADO '.$this->gestion.'</th>
+            <th style="width:15%;">PRESUPUESTO POA (SIIPLAS)</th>
+            <th style="width:15%;">SALDO POA</th></tr>
+        </thead>
+        <tbody>';
+
+        $nro=0;$ppto_asig=0;$ppto_prog=0;
+        foreach($ppto_asignado_regional as $row){
+          $get_ppto_prog=$this->model_ptto_sigep->get_ppto_total_programado_regional($row['dep_id']); /// ppto programado
+          $monto_programado=0;
+
+          if(count($get_ppto_prog)!=0){
+            $monto_programado=$get_ppto_prog[0]['programado'];
+          }
+
+          $nro++;
+          $tabla.='
+          <tr>
+            <td style="width:3%;height:15px;" align=center>'.$nro.'</td>
+            <td style="width: 20%;">'.strtoupper($row['dep_departamento']).'</td>
+            <td style="width: 12%; text-align: right;">'.number_format($row['asignado'], 2, ',', '.').'</td>
+            <td style="width: 12%; text-align: right;">'.number_format($monto_programado, 2, ',', '.').'</td>
+            <td style="width: 12%; text-align: right;">'.number_format(($row['asignado']-$monto_programado), 2, ',', '.').'</td>
+          </tr>';
+          $ppto_asig=$ppto_asig+$row['asignado'];
+          $ppto_prog=$ppto_prog+$monto_programado;
+        }
+        $tabla.='
+          <tr>
+            <td></td>
+            <td style="height:13px;" align=right><b>TOTAL</b></td>
+            <td style="width: 12%; text-align: right;"><b>'.number_format($ppto_asig, 2, ',', '.').'</b></td>
+            <td style="width: 12%; text-align: right;"><b>'.number_format($ppto_prog, 2, ',', '.').'</b></td>
+            <td style="width: 12%; text-align: right;"><b>'.number_format(($ppto_asig-$ppto_prog), 2, ',', '.').'</b></td>
+          </tr>
+        </tbody>
+      </table>';
+
+      $data['titulo_reporte']='CONSOLIDADO_PPTO_ASIGNADO_PROGRAMADO_INSTITUCIONAL';
+      $data['tabla']=$tabla;
+
+        $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo_regional', $data);
+
+    }
 
 
 

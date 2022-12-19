@@ -42,6 +42,35 @@ class partidas extends CI_Controller {
         $data['partidas']=$this->list_partidas();
         $data['umedidas']=$this->list_umedidas();
         $this->load->view('admin/mantenimiento/partidas/vlist_partidas', $data);
+
+        /*$partidas=$this->model_partidas->lista_partidas();
+        $tabla='';
+        $tabla.='<table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;font-size: 8pt;" align="center">
+                    <thead>
+                        <tr style="height:45px;">
+                            <th style="width:5%;">#</th>
+                            <th style="width:10%;">C&Oacute;DIGO</th>
+                            <th style="width:15%;">DESCRIPCI&Oacute;N</th>
+                            <th style="width:10%;">DEPENDE</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+                    $nro = 0;
+                    foreach ($partidas as $row){
+                        $nro++;
+                        $tabla.='
+                        <tr>
+                            <td align=center>'.$nro.'</td>
+                            <td align=center><b>'.$row['par_codigo'].'</b></td>
+                            <td><b>'.strtoupper($row['par_nombre']).'</b></td>
+                            <td align=center>'.$row['par_depende'].'</td>
+                        </tr>';
+                    }
+                    $tabla.='
+                    </tbody>
+                </table>';
+
+                echo $tabla;*/
     }
     
 
