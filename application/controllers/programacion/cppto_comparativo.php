@@ -116,10 +116,10 @@ class Cppto_comparativo extends CI_Controller {
           //$data['tabla'] = 'REGIONAL NO AJUSTADO';
           $data['tabla'] =$this->comparativo_update_partidas_normal_regional($partidas_asig,$partidas_prog,$dep_id);
         }
-        echo $data['tabla'];
+        //echo $data['tabla'];
         //$data['tabla']=$tabla;
 
-       // $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo_regional', $data);
+        $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo_regional', $data);
       }
       else{
           echo "<b>ERROR !!!!!</b>";
