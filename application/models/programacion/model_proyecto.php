@@ -2064,4 +2064,16 @@ class Model_proyecto extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+        /////// ===== 2023
+    /*-- Lista de Programas Bolsa por Distrital --*/
+/*    public function todos(){ /// 
+        $sql = '
+            select *
+                from lista_poa_gastocorriente_nacional('.$this->gestion.')
+                order by dep_id, prog, act asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }*/
 }

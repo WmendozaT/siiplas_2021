@@ -67,6 +67,8 @@ class Rep_operaciones extends CI_Controller {
       $data['mensaje']='
       <div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';
       $this->load->view('admin/reportes_cns/programacion_poa/menu_consolidado_poa', $data);
+
+      //echo $this->cuadro_modificaciones_poa_operaciones(1,0,4);
     }
 
 
@@ -276,7 +278,7 @@ class Rep_operaciones extends CI_Controller {
           $salida=$this->consolidado_operaciones_programa_distrital($dist_id,$tp_id);
         }
         elseif ($tp_rep==7) {
-          $salida=$this->cuadro_modificaciones_poa_operaciones($dist_id,$tp_id);
+          $salida=$this->cuadro_modificaciones_poa_operaciones($dep_id,$dist_id,$tp_id);
         }
         elseif ($tp_rep==8) {
           $salida=$this->cuadro_certificaciones_poa($dist_id,$tp_id);
@@ -634,10 +636,18 @@ class Rep_operaciones extends CI_Controller {
   /// ------------------------
 
   /*-- REPORTE 7 (CUADRO MODIFICACIONES POA) 2020-2021--*/
-    public function cuadro_modificaciones_poa_operaciones($dist_id,$tp_id){
+    public function cuadro_modificaciones_poa_operaciones($dep_id,$dist_id,$tp_id){
       $trimestre = array('1' => '3','2' => '6','3' => '9','4' => '12'); 
 
-      $distrital=$this->model_proyecto->dep_dist($dist_id);
+      if($dist_id!=0){ /// distrital
+        $distrital=$this->model_proyecto->dep_dist($dist_id);
+        $titulo1=strtoupper($distrital[0]['dist_distrital']);
+      }
+      else{ // consolidado regional
+        $regional=$this->model_proyecto->get_departamento($dep_id);
+        $titulo1=strtoupper($regional[0]['dep_departamento']);
+      }
+      
       $titulo='PROYECTO DE INVERSI&Oacute;N';
       if($tp_id==4){
         $titulo='GASTO CORRIENTE';
@@ -647,11 +657,11 @@ class Rep_operaciones extends CI_Controller {
       $tabla.='
         <br>
         <div align=right>
-          <a href="'.site_url("").'/rep/print_modificaciones_poa/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO MODIFICACIONES POA"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR CUADRO MODIFICACI&Oacute;N POA</a>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/print_modificaciones_poa/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO MODIFICACIONES POA"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR CUADRO MODIFICACI&Oacute;N POA</a>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <br>
           <div class="alert alert-warning">
-            <a href="#" class="alert-link" align=center><center><b>CUADRO DE MODIFICACI&Oacute;N POA '.$this->gestion.' - '.strtoupper($distrital[0]['dist_distrital']).' ('.$titulo.')</b></center></a>
+            <a href="#" class="alert-link" align=center><center><b>CUADRO DE MODIFICACI&Oacute;N POA '.$this->gestion.' - '.$titulo1.' ('.$titulo.')</b></center></a>
           </div>
       <table class="table table-bordered" style="width:90%;" border=1 align=center>
         <thead>
@@ -671,7 +681,14 @@ class Rep_operaciones extends CI_Controller {
           <tr>
             <td>FORMULARIO N° 4</td>';
             for ($i=1; $i <=$trimestre[$this->tmes] ; $i++) {
-              $num_ope=$this->nro_mod_operaciones($dist_id,$i,$tp_id);
+              if($dist_id!=0){
+                $num_ope=count($this->model_modfisica->list_cites_generados_operaciones_distrital($dist_id,$i,$tp_id));
+              }
+              else{
+                $num_ope=count($this->model_modfisica->list_cites_generados_operaciones_regional($dep_id,$i,$tp_id));
+              }
+
+              
               $tabla.='<td align=right>'.$num_ope.'</td>'; /// Operaciones
               $sum_ope=$sum_ope+$num_ope;
             }
@@ -681,7 +698,13 @@ class Rep_operaciones extends CI_Controller {
           <tr>
             <td>FORMULARIO N° 5</td>';
             for ($i=1; $i <=$trimestre[$this->tmes] ; $i++) {
-              $num_req=$this->nro_mod_requerimientos($dist_id,$i,$tp_id);
+              if($dist_id!=0){
+                $num_req=count($this->model_modrequerimiento->list_cites_generados_requerimientos_distrital($dist_id,$i,4));
+              }
+              else{
+                $num_req=count($this->model_modrequerimiento->list_cites_generados_requerimientos_regional($dep_id,$i,4));
+              }
+              
               $tabla.='<td align=right>'.$num_req.'</td>'; /// Requerimientos
               $sum_req=$sum_req+$num_req;
             }
@@ -777,7 +800,7 @@ class Rep_operaciones extends CI_Controller {
 
 
     /*---------- Nro de Requerimientos modificados por distrital -----------*/
-    public function nro_mod_requerimientos($dist_id,$mes_id,$tp_id){
+/*    public function nro_mod_requerimientos($dist_id,$mes_id,$tp_id){
       $mes=$this->model_modrequerimiento->list_cites_generados_requerimientos_distrital($dist_id,$mes_id,$tp_id);
       $nro=0;
       foreach($mes as $row){
@@ -789,10 +812,10 @@ class Rep_operaciones extends CI_Controller {
           }
         }
       return $nro;
-    }
+    }*/
 
     /*---------- Nro de Actividades modificados por distrital -----------*/
-    public function nro_mod_operaciones($dist_id,$mes_id,$tp_id){
+/*    public function nro_mod_operaciones($dist_id,$mes_id,$tp_id){
       $mes=$this->model_modfisica->list_cites_generados_operaciones_distrital($dist_id,$mes_id,$tp_id);
       $nro=0;
       foreach($mes as $row){
@@ -804,7 +827,7 @@ class Rep_operaciones extends CI_Controller {
           }
         }
       return $nro;
-    }
+    }*/
   ///------------------------------------------------------
 
   /*-- REPORTE 8 (CUADRO CERTIFICACIONES POA) 2020-2021--*/

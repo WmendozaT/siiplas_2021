@@ -1074,7 +1074,7 @@ class Programacionpoa extends CI_Controller{
       <hr>
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px black; text-align: center;">
-              <td style="width:12%; text-align:center;">'.$this->session->userdata('rd_poa').'';
+              <td style="width:12%; text-align:center;">';
               if($proyecto[0]['proy_estado']==4 && $this->gestion>2021){
                 $tabla.='<qrcode value="'.$this->session->userdata('rd_poa').'" style="border: none; width: 14mm; color: #1c7368"></qrcode><br><b>POA APROBADO</b>';
               }

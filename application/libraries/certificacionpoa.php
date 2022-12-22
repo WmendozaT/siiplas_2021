@@ -1960,7 +1960,7 @@ class Certificacionpoa extends CI_Controller{
             $tabla.='  
             </td>
             <td style="width: 40%;">';
-            if($this->fun_id==740 || $this->fun_id==401 || $this->fun_id==399){
+            /*if($this->fun_id==740 || $this->fun_id==401 || $this->fun_id==399){
               $tabla.='
                               <table style="width:100%;" border=0>
                                   <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
@@ -1970,7 +1970,7 @@ class Certificacionpoa extends CI_Controller{
                                       <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>
                                   </tr>
                               </table>';
-            }
+            }*/
             $tabla.='
             </td>
             <td style="width: 20%;" align="center">

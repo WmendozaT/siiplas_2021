@@ -180,6 +180,21 @@ class Model_modfisica extends CI_Model{
         return $query->result_array();
     }
 
+    /*--- Lista de Items Generados por regional y mes (Productos) ---*/
+    public function list_cites_generados_operaciones_regional($dep_id,$mes_id,$tp_id){
+        $sql = 'select ci.cite_id,c.com_id,extract(day from (ci.fecha_creacion))as dia, extract(month from (ci.fecha_creacion))as mes, extract(years from (ci.fecha_creacion))as gestion, ci.g_id,p.proy_id,p.dep_id,p.dist_id
+                from cite_mod_fisica ci
+                Inner Join funcionario as f On ci.fun_id=f.fun_id
+                Inner Join _componentes as c On ci.com_id=c.com_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                where p.dep_id='.$dep_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and ci.cite_estado!=\'3\' and extract(month from (ci.fecha_creacion))='.$mes_id.' and ci.g_id='.$this->gestion.' and p.tp_id='.$tp_id.'
+                order by ci.cite_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
     /*--- tipos de acciones - requerimientos ---*/
     public function numero_de_modificaciones_productos($cite_id,$tp_accion){

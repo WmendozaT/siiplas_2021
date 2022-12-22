@@ -1106,8 +1106,42 @@ class Cestructura_organizacional extends CI_Controller {
           $tit='Lista_Unidades_medida'; 
         }
       
-      $html = $this->estructura($tipo);
-      echo $html;
+      //$html = $this->estructura($tipo);
+      //echo $html;
+
+/*        $uni=$this->model_proyecto->todos();
+        $tabla='';
+        $tabla.='<table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;font-size: 8pt;" align="center" >
+                  <thead>
+                    <tr class="modo1">
+                      <th style="width:5%;">COD. REG.</th>
+                      <th style="width:10%;">REGIONAL</th>
+                      <th style="width:5%;">COD. DIST.</th>
+                      <th style="width:10%;">DISTRITAL</th>
+                      <th style="width:5%;">COD. UO.</th>
+                      <th style="width:15%;">UNIDAD ORGANIZACIONAL</th>
+                      <th style="width:5%;">COD. UNIDAD.</th>
+                      <th style="width:15%;">UNIDAD RESPONSABLE</th>
+                    </tr>
+                  </thead>
+                  <tbody>';
+                  foreach ($uni as $row){
+                    $tabla.='
+                    <tr>
+                      <td>'.$row['dep_id'].'</td>
+                      <td>'.strtoupper($row['dep_departamento']).'</td>
+                      <td>'.$row['dist_id'].'</td>
+                      <td>'.strtoupper($row['dist_distrital']).'</td>
+                      <td>'.$row['prog'].' '.$row['proy'].' '.$row['act'].'</td>
+                      <td>'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</td>
+                  
+                    </tr>';
+                  }
+                  $tabla.='
+                  </tbody>
+                </table>';
+                echo $tabla;*/
+
      /* $dompdf = new DOMPDF();
       $dompdf->load_html($html);
       $dompdf->set_paper('letter', 'portrait');

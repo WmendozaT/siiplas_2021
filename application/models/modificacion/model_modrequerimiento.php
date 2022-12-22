@@ -316,13 +316,32 @@ class Model_modrequerimiento extends CI_Model{
 
     /*--- Lista de Items Generados por Distrital y mes (Requerimientos) ---*/
     public function list_cites_generados_requerimientos_distrital($dist_id,$mes_id,$tp_id){
-        $sql = 'select ci.cite_id,c.com_id, extract(day from (ci.fecha_creacion))as dia, extract(month from (ci.fecha_creacion))as mes, extract(years from (ci.fecha_creacion))as gestion,ci.g_id,p.proy_id,p.dep_id,p.dist_id
+        $sql = 'select ci.cite_id,ci.com_id
                 from cite_mod_requerimientos ci
                 Inner Join funcionario as f On ci.fun_id=f.fun_id
                 Inner Join _componentes as c On ci.com_id=c.com_id
-                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-                Inner Join _proyectos as p On p.proy_id=pfe.proy_id
-                where p.dist_id='.$dist_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and ci.cite_estado!=\'3\' and extract(month from (ci.fecha_creacion))='.$mes_id.' and ci.g_id='.$this->gestion.' and p.tp_id='.$tp_id.'
+                 Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join lista_poa_gastocorriente_nacional(2022) as poa On poa.pfec_id=c.pfec_id
+
+                where poa.dist_id='.$dist_id.' and ci.cite_estado!=\'3\' and c.estado!=\'3\' and ci.cite_activo=\'1\' and extract(month from (ci.fecha_creacion))='.$mes_id.'
+                order by ci.cite_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+        /*--- Lista de Items Generados por Regional y mes (Requerimientos) ---*/
+    public function list_cites_generados_requerimientos_regional($dep_id,$mes_id,$tp_id){
+        $sql = 'select ci.cite_id,ci.com_id
+                from cite_mod_requerimientos ci
+                Inner Join funcionario as f On ci.fun_id=f.fun_id
+                Inner Join _componentes as c On ci.com_id=c.com_id
+                 Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join lista_poa_gastocorriente_nacional(2022) as poa On poa.pfec_id=c.pfec_id
+
+                where poa.dist_id='.$dep_id.' and ci.cite_estado!=\'3\' and c.estado!=\'3\' and ci.cite_activo=\'1\' and extract(month from (ci.fecha_creacion))='.$mes_id.'
                 order by ci.cite_id asc';
 
         $query = $this->db->query($sql);

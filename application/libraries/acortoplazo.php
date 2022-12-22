@@ -281,7 +281,7 @@ class Acortoplazo extends CI_Controller{
 
 
     /// Distribucion Regional
-    public function distribucion_regional2(){
+    public function distribucion_regional(){
       $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
       $tabla='';
       $tabla.='  
@@ -290,7 +290,7 @@ class Acortoplazo extends CI_Controller{
           <tr style="font-size: 6.5px;" bgcolor="#eceaea" align=center>
             <th style="width:1%;height:20px;">#</th>
             <th style="width:2%;">COD. O.E.</th>
-            <th style="width:2%;">COD. ACE.</th>
+            <th style="width:2%;">COD. A.E.</th>
             <th style="width:2%;">COD. ACP.</th>
             <th style="width:15%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
             <th style="width:10%;">PRODUCTO</th>
@@ -352,7 +352,7 @@ class Acortoplazo extends CI_Controller{
     }
 
     /// distribucion con presupuesto
-    public function distribucion_regional(){
+    public function distribucion_regional2(){
       $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
       $tabla='';
       $tabla.='  
@@ -446,7 +446,7 @@ class Acortoplazo extends CI_Controller{
           <tr style="font-size: 6.5px;" bgcolor="#eceaea" align=center>
             <th style="width:1%;height:20px;">#</th>
             <th style="width:2%;">COD. O.E.</th>
-            <th style="width:2%;">COD. ACE.</th>
+            <th style="width:2%;">COD. A.E.</th>
             <th style="width:2%;">COD. ACP.</th>
             <th style="width:15%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
             <th style="width:10%;">PRODUCTO</th>

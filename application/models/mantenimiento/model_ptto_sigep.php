@@ -329,8 +329,8 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------------------- Partidas por Apertura ------------------------*/
-/*    public function partidas_proyecto($aper_id){
+    /*-------- Partidas por Apertura (VIGENTE mod techo) --------*/
+    public function partidas_proyecto($aper_id){
         $sql = ' select pg.sp_id, pg.par_id,pg.partida,p.par_nombre,pg.importe,pg.ppto_saldo_ncert,pg.ppto_saldo_observacion
                  from ptto_partidas_sigep pg
                  Inner Join partidas as p On p.par_id=pg.par_id
@@ -338,7 +338,7 @@ class Model_ptto_sigep extends CI_Model{
                  order by pg.partida';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
     /*---- Get Partida Asignado -----*/
     public function get_partida_asignado_unidad($aper_id,$par_id){
@@ -687,8 +687,8 @@ class Model_ptto_sigep extends CI_Model{
     }*/
 
 
-    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO (2020) -----*/
-/*    public function suma_ptto_poa($aper_id,$tp){
+    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO (2020) vigente -----*/
+    public function suma_ptto_poa($aper_id,$tp){
         if($tp==1){
             $sql = 'select pg.aper_id,SUM(pg.importe) as monto 
                     from ptto_partidas_sigep pg
@@ -706,7 +706,7 @@ class Model_ptto_sigep extends CI_Model{
     
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
 
     /*---- Get Partida Programado - gasto corriente ---*/
