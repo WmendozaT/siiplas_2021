@@ -3617,4 +3617,43 @@ ALTER TABLE public.v_consolidado_temp_ejec_form4_unidad
   OWNER TO postgres;
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// hola mundo hola mundo
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+/// ----- LISTA DE POA NACIONAL -----
+CREATE OR REPLACE FUNCTION lista_poa_nacional(gestion integer) RETURNS TABLE(
+dep_id numeric,
+dep_departamento varchar,
+da varchar,
+dist_id integer,
+dist_distrital varchar,
+ue varchar,
+abrev varchar,
+prog varchar,
+proy varchar,
+act varchar,
+proy_id numeric,
+proy_estado integer,
+actividad varchar,
+tipo varchar,
+proy_sisin varchar,
+proy_nombre varchar,
+aper_id numeric,
+aper_proy_estado integer,
+pfec_id numeric,
+pfec_estado integer,
+aper_gestion integer,
+tp_id numeric) AS
+
+$$
+select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,p.proy_sisin,p.proy_nombre,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion,p.tp_id
+from _proyectofaseetapacomponente pfe
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+Inner Join _departamentos as d On d.dep_id=p.dep_id
+Inner Join _distritales as ds On ds.dist_id=p.dist_id
+Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+where p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and pfe.pfec_estado=1
+order by p.dep_id,p.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.tp_id asc;
+
+$$ LANGUAGE sql;

@@ -905,8 +905,8 @@ class Oregional extends CI_Controller{
   }
 
 
-    //// Lista de OPeraciones Regional form 2
-  public function rep_lista_form2($dep_id){ 
+    //// Lista de OPeraciones Regional form 2 SIN PRESUPUESTO
+  public function rep_lista_form2_sp($dep_id){ 
     $tabla='';
     $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
 
@@ -960,7 +960,7 @@ class Oregional extends CI_Controller{
 
 
   //// Lista de OPeraciones Regional form 2 - original
-  public function rep_lista_form2_original($dep_id){ 
+  public function rep_lista_form2($dep_id){ 
     $tabla='';
     $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
 
@@ -984,16 +984,12 @@ class Oregional extends CI_Controller{
       <tbody>';
     $nro=0;$monto_total=0;
     foreach($lista_ogestion as $row){
-      $presupuesto_gc=$this->model_objetivogestion->get_ppto_ogestion_gc_regional($row['or_id'],$dep_id); // ppto Gasto Corriente
-      $presupuesto_pi=$this->model_objetivogestion->get_ppto_ogestion_pi_regional($row['or_id'],$dep_id); // ppto Proyecto de Inversion
+      $presupuesto=$this->model_objetivogestion->get_ppto_form2_regional($row['or_id'],$dep_id); // ppto GC Y PI
+      
         $ppto_gc=0;$ppto_pi=0;
-        if(count($presupuesto_gc)!=0){
-          $ppto_gc=$presupuesto_gc[0]['presupuesto'];
+        if(count($presupuesto)!=0){
+          $ppto_gc=$presupuesto[0]['presupuesto'];
         }
-        if(count($presupuesto_pi)!=0){
-          $ppto_pi=$presupuesto_pi[0]['presupuesto'];
-        }
-
         $meta='';
         if($row['indi_id']==2){
           $meta='%';
@@ -1012,9 +1008,9 @@ class Oregional extends CI_Controller{
         <td style="width:15%;">'.$row['or_indicador'].'</td>
         <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).''.$meta.'</b></td>
         <td style="width:18%;">'.$row['or_verificacion'].'</td>
-        <td style="width:7%;text-align: right;">'.number_format(($ppto_gc+$ppto_pi), 2, ',', '.').'</td>
+        <td style="width:7%;text-align: right;">'.number_format($ppto_gc, 2, ',', '.').'</td>
       </tr>';
-      $monto_total=$monto_total+($ppto_gc+$ppto_pi);
+      $monto_total=$monto_total+$ppto_gc;
     }
     $tabla.='
       </tbody>

@@ -101,9 +101,9 @@ class Acortoplazo extends CI_Controller{
                       $nro=0;
                         foreach($ogestion  as $row){
                           $presupuesto_gc=$this->model_objetivogestion->get_ppto_ogestion_gc($row['og_id']); // ppto Gasto Corriente
-                          $ppto_gc=0;$ppto_pi=0;
+                          $ppto=0;$ppto_pi=0;
                           if(count($presupuesto_gc)!=0){
-                            $ppto_gc=$presupuesto_gc[0]['presupuesto'];
+                            $ppto=$presupuesto_gc[0]['presupuesto'];
                           }
                           $nro++;
                           $tabla .='<tr title='.$row['og_id'].'>';
@@ -139,7 +139,7 @@ class Acortoplazo extends CI_Controller{
                               }
                             }
                             $tabla.='<td>'.$row['og_verificacion'].'</td>';
-                            $tabla.='<td align="right">'.number_format(($ppto_gc), 2, ',', '.').'</td>';
+                            $tabla.='<td align="right">'.number_format(($ppto), 2, ',', '.').'</td>';
                           $tabla.='</tr>';
                         }
                       $tabla .='
@@ -280,8 +280,8 @@ class Acortoplazo extends CI_Controller{
   }
 
 
-    /// Distribucion Regional
-    public function distribucion_regional(){
+    /// FORM 1 Distribucion Regional
+    public function distribucion_regional2(){
       $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
       $tabla='';
       $tabla.='  
@@ -351,8 +351,8 @@ class Acortoplazo extends CI_Controller{
       return $tabla;
     }
 
-    /// distribucion con presupuesto
-    public function distribucion_regional2(){
+    /// FORM 1 distribucion con presupuesto
+    public function distribucion_regional(){
       $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
       $tabla='';
       $tabla.='  
@@ -361,7 +361,7 @@ class Acortoplazo extends CI_Controller{
           <tr style="font-size: 6.5px;" bgcolor="#eceaea" align=center>
             <th style="width:1%;height:20px;">#</th>
             <th style="width:2%;">COD. O.E.</th>
-            <th style="width:2%;">COD. ACE.</th>
+            <th style="width:2%;">COD. A.E.</th>
             <th style="width:2%;">COD. ACP.</th>
             <th style="width:11%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
             <th style="width:10%;">PRODUCTO</th>
@@ -386,11 +386,11 @@ class Acortoplazo extends CI_Controller{
         <tbody>';
         $nro=0; $monto_total=0;
         foreach($ogestion  as $row){
-          $presupuesto_gc=$this->model_objetivogestion->get_ppto_ogestion_gc($row['og_id']); // ppto Gasto Corriente
+          $presupuesto=$this->model_objetivogestion->get_ppto_ogestion_gc($row['og_id']); // ppto Gasto Corriente + pI
           
-            $ppto_gc=0;$ppto_pi=0;
-            if(count($presupuesto_gc)!=0){
-              $ppto_gc=$presupuesto_gc[0]['presupuesto'];
+            $ppto=0;
+            if(count($presupuesto)!=0){
+              $ppto=$presupuesto[0]['presupuesto'];
             }
 
             $prc='';
@@ -420,10 +420,10 @@ class Acortoplazo extends CI_Controller{
               }
             }
             $tabla.='<td style="width:10%;">'.$row['og_verificacion'].'</td>';
-            $tabla.='<td style="width:6%; text-align: right;">'.number_format($ppto_gc, 2, ',', '.').'</td>';
+            $tabla.='<td style="width:6%; text-align: right;">'.number_format($ppto, 2, ',', '.').'</td>';
           $tabla.='</tr>';
 
-          $monto_total=$monto_total+$ppto_gc;
+          $monto_total=$monto_total+$ppto;
         }
         $tabla.='
         </tbody>
