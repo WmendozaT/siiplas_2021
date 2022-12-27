@@ -138,6 +138,68 @@ class C_consultas extends CI_Controller {
                 </div>
               </fieldset>
           </form>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion\');" title="IMPRIMIR ACP DISTRIBUCION REGIONAL" class="btn btn-default">
+              <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;REP. A.C.P. (FORM N° 1)
+            </a>
+            &nbsp;
+            <div class="btn-group">
+              <a class="btn btn-default" href="javascript:void(0);"><img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;REP. OPERACIONES (FORM N° 2)</a>
+              <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/1\');" title="REPORTE FORM 2">
+                    CHUQUISACA
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/2\');" title="REPORTE FORM 2">
+                    LA PAZ
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/3\');" title="REPORTE FORM 2">
+                    COCHABAMBA
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/4\');" title="REPORTE FORM 2">
+                    ORURO
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/5\');" title="REPORTE FORM 2">
+                    POTOSI
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/6\');" title="REPORTE FORM 2">
+                    TARIJA
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/7\');" title="REPORTE FORM 2">
+                    SANTA CRUZ
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/8\');" title="REPORTE FORM 2">
+                    BENI
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/9\');" title="REPORTE FORM 2">
+                    PANDO
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/10\');" title="REPORTE FORM 2">
+                    OFICINA CENTRAL
+                  </a>
+                </li>
+
+              </ul>
+            </div>
           </div>
         </article>';
       return $tabla;
@@ -160,7 +222,27 @@ class C_consultas extends CI_Controller {
           $salida=$this->genera_informacion->consolidado_operaciones_distrital($dep_id,0,$tp_id); /// Consolidado Formulario N° 4 
         }
         elseif ($tp_rep==3) {
-          $salida=$this->genera_informacion->consolidado_requerimientos_distrital($dep_id,0,$tp_id); /// Consolidado formulario N° 5
+          $regional=$this->model_proyecto->get_departamento($dep_id);
+          $requerimientos=$this->mrep_operaciones->consolidado_requerimientos_regional_distrital_directo(0, $dep_id, $tp_id); /// Consolidado Requerimientos 2020-2021 (Relacion Directa)
+          $titulo_reporte='CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']);
+
+          if(count($requerimientos)>7000){
+            $salida='
+              <hr>
+              <div class="alert alert-warning " role="alert">
+                <h4 class="alert-heading">Alerta !</h4>
+                <hr>
+                <p class="mb-0">'.$titulo_reporte.' (NO PUEDE SER GENERADO POR LA DIMESION DEL ARCHIVO, PARA OBTENER LA INFORMACION SOLICITADA LE SUGERIMOS DESCARGARLO EN FORMATO EXCEL.)</p>
+              </div>
+              
+              <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/0/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;DESCARGAR CONSOLIDADO FORM. N° 5</a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <hr>';
+          }
+          else{
+            $salida=$this->genera_informacion->genera_consolidado_form5_regional_distrital($titulo_reporte,$requerimientos,$dep_id,0,$tp_id); /// Consolidado formulario N° 5  
+          }
+
+          //$salida=$this->genera_informacion->consolidado_requerimientos_distrital($dep_id,0,$tp_id); /// Consolidado formulario N° 5
         }
         elseif ($tp_rep==4) {
           $salida=$this->genera_informacion->lista_certificaciones_poa($dep_id,$tp_id);

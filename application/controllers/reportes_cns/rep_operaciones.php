@@ -718,65 +718,83 @@ class Rep_operaciones extends CI_Controller {
     }
 
 
-    /*-----REPORTE CUADRO MODIFICACION POA (DISTRITAL) 2020-2021-----*/
-    public function rep_cuadro_modificacion_poa($dist_id,$tp_id){
+    /*---REPORTE CUADRO MODIFICACION POA (DISTRITAL) 2020-2021-2022-2023---*/
+    public function rep_cuadro_modificacion_poa($dep_id,$dist_id,$tp_id){
       $trimestre = array('1' => '3','2' => '6','3' => '9','4' => '12'); 
-      $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
       $data['mes'] = $this->mes_nombre();
-      $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id);
-      if(count($data['distrital'])!=0){
-          $titulo='GASTO CORRIENTE';
-          if($tp_id==1){
-            $titulo='PROYECTO DE INVERSI&Oacute;N';
-          }
+      //$unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id);
 
-        $tabla='';
-        $sum_ope=0;$sum_req=0;$sum_total=0;
-          $tabla.='
-              <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
-                <thead>
-                  <tr>
-                    <th style="width:7%; height:16px;" align=center></th>';
-                      for ($i=1; $i <=$trimestre[$this->tmes]; $i++) { 
-                          $mes=$this->get_mes($i);
-                          $tabla.='<th style="width:7%;" align=center>'.$mes[1].'</th>';
-                      }
-                    $tabla.='
-                    <th style="width:7%;" align=center>TOTAL</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="height:15px;">OPERACIONES</td>';
-                    for ($i=1; $i <=$trimestre[$this->tmes]; $i++) {
-                      $num_ope=$this->nro_mod_operaciones($dist_id,$i,$tp_id);
-                      $tabla.='<td align=right>'.$num_ope.'</td>'; /// Operaciones
-                      $sum_ope=$sum_ope+$num_ope;
-                    }
-                    $tabla.='
-                    <td align=right bgcolor="#c8eff5"><b>'.$sum_ope.'</b></td>
-                  </tr>
-                  <tr>
-                    <td style="height:15px;">REQUERIMIENTOS</td>';
-                    for ($i=1; $i <=$trimestre[$this->tmes]; $i++) {
-                      $num_req=$this->nro_mod_requerimientos($dist_id,$i,$tp_id);
-                      $tabla.='<td align=right>'.$num_req.'</td>'; /// Requerimientos
-                      $sum_req=$sum_req+$num_req;
-                    }
-                    $tabla.='
-                    <td align=right bgcolor="#c8eff5"><b>'.$sum_req.'</b></td>
-                  </tr>
-                </tbody>
-              </table>';
+      if($dist_id!=0){ /// distrital
+        $data['distrital']=$this->model_proyecto->dep_dist($dist_id);
+        $data['titulo_rep']=strtoupper($distrital[0]['dist_distrital']);
+      }
+      else{ // consolidado regional
+        $data['regional']=$this->model_proyecto->get_departamento($dep_id);
+        $data['titulo_rep']=strtoupper($data['regional'][0]['dep_departamento']);
+      }
 
-          $data['lista']=$tabla;
-          $data['titulo_reporte']='CUADRO MODIFICACIONES POA '.$this->gestion.' (de 01/'.$this->gestion.' al '.$trimestre[$this->tmes].'/'.$this->gestion.')';
-          $data['titulo_pie']='Modificaciones_POA_'.$data['distrital'][0]['dist_distrital'].'_'.$this->gestion.'';
-          $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_modificacion_poa', $data);
-      }
-      else{
-        echo "Error !!!";
-      }
+
+      $titulo='GASTO CORRIENTE';
+        if($tp_id==1){
+          $titulo='PROYECTO DE INVERSI&Oacute;N';
+        }
+
+      $tabla='';
+      $sum_ope=0;$sum_req=0;$sum_total=0;
+        $tabla.='
+            <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
+              <thead>
+                <tr>
+                  <th style="width:7%; height:16px;" align=center></th>';
+                    for ($i=1; $i <=$trimestre[$this->tmes]; $i++) { 
+                        $mes=$this->get_mes($i);
+                        $tabla.='<th style="width:7%;" align=center>'.$mes[1].'</th>';
+                    }
+                  $tabla.='
+                  <th style="width:7%;" align=center>TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="height:15px;">FORMULARIO N° 4</td>';
+                  for ($i=1; $i <=$trimestre[$this->tmes] ; $i++) {
+                    if($dist_id!=0){
+                      $num_ope=count($this->model_modfisica->list_cites_generados_operaciones_distrital($dist_id,$i,$tp_id));
+                    }
+                    else{
+                      $num_ope=count($this->model_modfisica->list_cites_generados_operaciones_regional($dep_id,$i,$tp_id));
+                    }
+
+                    $tabla.='<td align=right>'.$num_ope.'</td>'; /// Operaciones
+                    $sum_ope=$sum_ope+$num_ope;
+                  }
+                  $tabla.='
+                  <td align=right bgcolor="#c8eff5"><b>'.$sum_ope.'</b></td>
+                </tr>
+                <tr>
+                  <td style="height:15px;">FORMULARIO N° 5</td>';
+                  for ($i=1; $i <=$trimestre[$this->tmes] ; $i++) {
+                    if($dist_id!=0){
+                      $num_req=count($this->model_modrequerimiento->list_cites_generados_requerimientos_distrital($dist_id,$i,4));
+                    }
+                    else{
+                      $num_req=count($this->model_modrequerimiento->list_cites_generados_requerimientos_regional($dep_id,$i,4));
+                    }
+                    
+                    $tabla.='<td align=right>'.$num_req.'</td>'; /// Requerimientos
+                    $sum_req=$sum_req+$num_req;
+                  }
+                  $tabla.='
+                  <td align=right bgcolor="#c8eff5"><b>'.$sum_req.'</b></td>
+                </tr>
+              </tbody>
+            </table>';
+
+        $data['lista']=$tabla;
+        $data['titulo_reporte']='CUADRO MODIFICACIONES POA '.$this->gestion.' (de 01/'.$this->gestion.' al '.$trimestre[$this->tmes].'/'.$this->gestion.')';
+        $data['titulo_pie']='Modificaciones_POA_'.$data['titulo_rep'].'_'.$this->gestion.'';
+
+        $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_modificacion_poa', $data);
     }
 
     /*---------- Matriz cuadro Modificacion poa  -----------*/
