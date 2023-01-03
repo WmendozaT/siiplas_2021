@@ -282,7 +282,7 @@
                         <div class="row">
                             <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
                               <form action="<?php echo site_url().'/mantenimiento/cptto_poa/importar_archivo_sigep' ?>" method="post" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep">
-                                <input name="tp" type="hidden" value="1">
+                                <input name="tp_id" type="hidden" value="1">
                                 
                                 <div class="input-group">
                                   <span class="input-group-btn">

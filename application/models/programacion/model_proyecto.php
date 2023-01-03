@@ -1810,7 +1810,9 @@ class Model_proyecto extends CI_Model{
 
     /*-------- LISTA OPERACION DE FUNCIONAMIENTO - GASTO CORRIENTE  --------*/
     public function list_gasto_corriente(){
-        $sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
+        $sql = 'select * from lista_poa_gastocorriente_nacional('.$this->gestion.')';
+
+        /*$sql = 'select p.proy_id,p.proy_codigo,p.proy_nombre,p.proy_estado,p.tp_id,p.proy_sisin,tp.tp_tipo,apg.aper_id,apg.archivo_pdf,
                     apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,apg.tp_obs,aper_observacion,p.proy_pr,p.proy_act,d.dep_departamento,ds.dist_distrital,ds.abrev,ua.*,te.*
                         from _proyectos as p
                         Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
@@ -1822,7 +1824,7 @@ class Model_proyecto extends CI_Model{
                         Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
                         Inner Join uni_gestion as ug On ua.act_id=ug.act_id
                         where p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and p.tp_id=\'4\' and ug.g_id='.$this->gestion.' and apg.aper_estado!=\'3\'
-                        ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,te.tn_id, te.te_id asc';
+                        ORDER BY apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,te.tn_id, te.te_id asc';*/
         $query = $this->db->query($sql);
         return $query->result_array();
     }

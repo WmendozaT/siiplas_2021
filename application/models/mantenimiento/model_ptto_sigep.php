@@ -262,10 +262,14 @@ class Model_ptto_sigep extends CI_Model{
     }*/
 
     /*-------------------- Apertura Programatica hijo ------------------------*/
-    public function get_apertura($programa,$proyecto,$actividad){
+    public function get_apertura($da,$ue,$programa,$proyecto,$actividad){
         $sql = 'select *
+                from lista_poa_gastocorriente_nacional('.$this->gestion.')
+                where prog=\''.$programa.'\' and proy=\''.$proyecto.'\' and act=\''.$actividad.'\' and da=\''.$da.'\' and ue=\''.$ue.'\' ';
+
+       /* $sql = 'select *
                 from aperturaprogramatica
-                where aper_programa=\''.$programa.'\' and aper_proyecto=\''.$proyecto.'\' and aper_actividad=\''.$actividad.'\' and aper_gestion='.$this->gestion.' and aper_estado!=\'3\'';
+                where aper_programa=\''.$programa.'\' and aper_proyecto=\''.$proyecto.'\' and aper_actividad=\''.$actividad.'\' and aper_gestion='.$this->gestion.' and aper_estado!=\'3\'';*/
 
         $query = $this->db->query($sql);
         return $query->result_array();

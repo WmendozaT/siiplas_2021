@@ -47,11 +47,11 @@ class Cptto_poa extends CI_Controller {
       //$data['mod2']=count($this->model_configuracion->verif_modulo(2));
 
       $sw=$this->ppto_poa;
-      $data['proyectos']=$this->list_pinversion($sw); /// Proyecto de Inversion
-      $data['operacion']=$this->list_unidades_es($sw);  /// Gasto corriente
+      $data['proyectos']=$this->list_pinversion(1); /// Proyecto de Inversion
+      $data['operacion']=$this->list_unidades_es(1);  /// Gasto corriente
 
       //// Asignacion Poa Presupuesto Inicial
-      /*if($this->verif_ppto==1){
+     /* if($this->verif_ppto==0){
         $this->load->view('admin/mantenimiento/ptto_sigep/vlist_ope', $data);
       }*/
       //// Re-Asignacion Poa Presupuesto Final (Aprobado)
@@ -61,8 +61,11 @@ class Cptto_poa extends CI_Controller {
       }*/
       
 
+      $data['regionales']=$this->model_ptto_sigep->list_regionales();
+      $this->load->view('admin/mantenimiento/ptto_sigep/reajustado_ptto', $data);
+
       /// CARGAR PPTO INICIAL
-      $this->load->view('admin/mantenimiento/ptto_sigep/vlist_ope', $data);
+      //$this->load->view('admin/mantenimiento/ptto_sigep/vlist_ope', $data);
     }
 
 
@@ -84,10 +87,10 @@ class Cptto_poa extends CI_Controller {
                 <th style="width:1%;" bgcolor="#474544" title="">#</th>
                 <th style="width:5%;" bgcolor="#474544" title=""></th>
                 <th style="width:5%;" bgcolor="#474544" title="VER PPTO">VER PARTIDAS</th>
-                <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
+                <th style="width:5%;" bgcolor="#474544" title="DIRECCION ADMINISTRATIVA">D.A.</th>
+                <th style="width:5%;" bgcolor="#474544" title="UNIDAD EJECUTORA">U.E.</th>
+                <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">PROGRAMA '.$this->gestion.'</th>
                 <th style="width:25%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">DESCRIPCI&Oacute;N</th>
-                <th style="width:10%;" bgcolor="#474544" title="NIVEL">NIVEL</th>
-                <th style="width:15%;" bgcolor="#474544" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
                 <th style="width:10%;" bgcolor="#474544" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
                 <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
               </tr>
@@ -111,15 +114,7 @@ class Cptto_poa extends CI_Controller {
                                     <button type="button" class="close text-danger" data-dismiss="modal" aria-hidden="true">
                                       &times;
                                     </button>
-                                    <h4 class="modal-title">';
-                                        if($this->gestion>2019){
-                                          $tabla.=$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'];
-                                        }
-                                        else{
-                                          $tabla.=$row['proy_nombre'];
-                                        }
-                                      $tabla.='
-                                    </h4>
+                                    <h4 class="modal-title">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</h4>
                                   </div>
                                   <div class="modal-body no-padding">
                                     <div class="well">
@@ -147,15 +142,10 @@ class Cptto_poa extends CI_Controller {
                       }
                     }
                   $tabla.='</td>';
-                  $tabla.='<td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>';
-                  if($this->gestion>2019){
-                    $tabla.='<td style="font-size: 8pt;"><b>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</b></td>';
-                  }
-                  else{
-                    $tabla.='<td style="font-size: 8pt;"><b>'.$row['proy_nombre'].'</b></td>';
-                  }
-                  $tabla.='<td>'.$row['nivel'].'</td>';
-                  $tabla.='<td>'.$row['tipo_adm'].'</td>';
+                  $tabla.='<td align=center><b>'.$row['da'].'</b></td>';
+                  $tabla.='<td align=center><b>'.$row['ue'].'</b></td>';
+                  $tabla.='<td><center>'.$row['prog'].' '.$row['proy'].' '.$row['act'].'</center></td>';
+                  $tabla.='<td style="font-size: 8pt;"><b>'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</b></td>';
                   $tabla.='<td>'.strtoupper($row['dep_departamento']).'</td>';
                   $tabla.='<td>'.strtoupper($row['dist_distrital']).'</td>';
                 $tabla.='</tr>';
@@ -548,7 +538,7 @@ class Cptto_poa extends CI_Controller {
                               //  echo "INGRESA : ".$prog.'-'.$proy.'-'.$act.'..'.$importe."<br>";
                                 $nroo++;
                              //   echo "string<br>";
-                                $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
+                                $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act,$da,$ue);
                                 if(count($aper)!=0){
                                     $partida = $this->model_insumo ->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                                     $par_id=0;
@@ -667,7 +657,7 @@ class Cptto_poa extends CI_Controller {
     function importar_archivo_sigep(){
       if ($this->input->post()) {
           $post = $this->input->post();
-          $tp = $this->security->xss_clean($post['tp']);
+          $tp = $this->security->xss_clean($post['tp_id']);
           $tp_id = $this->security->xss_clean($post['tp_id']);
 
           $tipo = $_FILES['archivo']['type'];
@@ -687,8 +677,8 @@ class Cptto_poa extends CI_Controller {
             else{
               $lineas=$this->subir_archivo_aprobado($archivotmp,$tp_id); /// Techo Aprobado
             }
-            $this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO ('.$lineas.')');
-            redirect(site_url("").'/ptto_asig_poa');
+            //$this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO ('.$lineas.')');
+            //redirect(site_url("").'/ptto_asig_poa');
             /*--------------------------------------------------------------*/
           } 
           elseif (empty($file_basename)) {
@@ -801,7 +791,7 @@ class Cptto_poa extends CI_Controller {
                     $importe=floatval($datos[6]); /// Monto
                     //if(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){ //// gestion 2021/2022
                     if(strlen($prog)==3 & strlen($proy)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){ /// gestion 2023
-                        $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
+                        $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act,$da,$ue);
                         //$aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                         if(count($aper)!=0){
                             $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
@@ -911,13 +901,13 @@ class Cptto_poa extends CI_Controller {
             if($i != 0){ 
                 $datos = explode(";",$linea);
                 if(count($datos)==7){
-                    $da=$datos[0]; /// Da
-                    $ue=$datos[1]; /// Ue
-                    $prog=$datos[2]; /// Aper Programa
-                    $proy=trim($datos[3]);
-                    if(strlen($proy)==2){
+                    $da=trim($datos[0]); /// Da
+                    $ue=trim($datos[1]); /// Ue
+                    $prog=trim($datos[2]); /// Aper Programa
+                    $proy=trim($datos[3]); /// proyecto
+                    /*if(strlen($proy)==2){
                       $proy='00'.$proy; /// Aper Proyecto
-                    }
+                    }*/
                     $act=trim($datos[4]);  /// Aper Actividad
                     if(strlen($act)==2){
                       $act='0'.$act;
@@ -937,93 +927,16 @@ class Cptto_poa extends CI_Controller {
                     $act=$datos[2];  /// Aper Actividad
                     $cod_part=$datos[3]; /// Partida
                     $importe=(float)$datos[4]; /// Monto*/
-                    if(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
-                        $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
+                    if(strlen($da)==2 and strlen($ue)==3 and strlen($prog)==3 & strlen($proy)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
+                        $aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act,$da,$ue);
                         if(count($aper)!=0){
-                            $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
-                            $par_id=0;
-                            if(count($partida)!=0){
-                              $par_id=$partida[0]['par_id'];
-                            }
-
-                            $ptto=$this->model_ptto_sigep->get_ptto_sigep_aprobado($prog,$proy,$act,$cod_part);
-                            if(count($ptto)!=0){
-                               /*------------------- Update Datos ----------------------*/
-                                $query=$this->db->query('set datestyle to DMY');
-                                $update_ptto = array(
-                                  'aper_id' => $aper[0]['aper_id'],
-                                  'importe' => $importe,
-                                  'fun_id' => $this->fun_id
-                                );
-
-                                $this->db->where('sp_id', $ptto[0]['sp_id']);
-                                $this->db->update('ptto_partidas_sigep_aprobado', $update_ptto);
-                               /*-------------------------------------------------------*/
-                               $nro++;
-                            }
-                            else{
-                               /*-------------------- Guardando Datos ------------------*/
-                                $query=$this->db->query('set datestyle to DMY');
-                                $data_to_store = array( 
-                                    'aper_id' => $aper[0]['aper_id'],
-                                    'aper_programa' => $prog,
-                                    'aper_proyecto' => $proy,
-                                    'aper_actividad' => $act,
-                                    'par_id' => $par_id,
-                                    'partida' => $cod_part,
-                                    'importe' => $importe,
-                                    'g_id' => $this->gestion,
-                                    'fun_id' => $this->fun_id,
-                                );
-                                $this->db->insert('ptto_partidas_sigep_aprobado', $data_to_store);
-                                $sp_id=$this->db->insert_id();
-                                /*-------------------------------------------------------*/
-                            }
-                        $nro++;
+                            echo $prog.'-'.$proy.'-'.$act.'-'.$da.'-'.$ue.'--'.$cod_part.'-'.$importe.'<br>';
                         }
                         else{
-                              $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
-                              $par_id=0;
-                              if(count($partida)!=0){
-                                  $par_id=$partida[0]['par_id'];
-                              }
-                             /*-------------------- Guardando Datos ------------------*/
-                              $query=$this->db->query('set datestyle to DMY');
-                              $data_to_store = array( 
-                                  'aper_id' => 0,
-                                  'aper_programa' => $prog,
-                                  'aper_proyecto' => $proy,
-                                  'aper_actividad' => $act,
-                                  'par_id' => $par_id,
-                                  'partida' => $cod_part,
-                                  'importe' => $importe,
-                                  'g_id' => $this->gestion,
-                                  'fun_id' => $this->fun_id,
-                              );
-                              $this->db->insert('ptto_partidas_sigep_aprobado', $data_to_store);
-                              $sp_id=$this->db->insert_id();
-                              /*-------------------------------------------------------*/ 
-                              $nro++;
-                          }
+                             
+                        }
                     }
-                    elseif(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe==0){
-                      $ptto=$this->model_ptto_sigep->get_ptto_sigep($prog,$proy,$act,$cod_part);
-                      if(count($ptto)!=0){
-                        //echo "UPDATES 0->VALOR : ".$prog.'-'.$proy.'-'.$act.' cod '.$cod_part.'-- PAR ID : '.$par_id.' ->'.$importe."<br>";
-                        /*------------------- Update Datos ----------------------*/
-                          $query=$this->db->query('set datestyle to DMY');
-                          $update_ptto = array(
-                            'aper_id' => $aper[0]['aper_id'],
-                            'importe' => $importe,
-                            'fun_id' => $this->fun_id
-                          );
-
-                          $this->db->where('sp_id', $ptto[0]['sp_id']);
-                          $this->db->update('ptto_partidas_sigep_aprobado', $update_ptto);
-                         /*-------------------------------------------------------*/
-                         $nro++;
-                      }
-                    }
+                    
                 }
             }
             $i++;
