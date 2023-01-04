@@ -469,7 +469,7 @@ class Seguimientopoa extends CI_Controller{
                   if($diferencia[1]!=0 || $diferencia[2]!=0){
                     $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($row['prod_id'],$verif_mes[1]);
                     $efi=0;
-                    if($diferencia[1]!=0){
+                    if(($diferencia[1]+$diferencia[2])!=0){
                       $efi=round((($diferencia[3]/($diferencia[1]+$diferencia[2]))*100),2);
                     }
                     else{
