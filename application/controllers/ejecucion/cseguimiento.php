@@ -757,7 +757,7 @@ class Cseguimiento extends CI_Controller {
 
 
   ////// Probando Funcion Verificado Datos
-  public function formulario_segpoa($com_id){
+  public function formulario_segpoa2($com_id){
         $post = $this->input->post();
         $prod_id = 57940; /// prod id
         $tp = 1; /// tp
@@ -870,7 +870,7 @@ class Cseguimiento extends CI_Controller {
 
 
   //// FORMULARIO DE SEGUIMIENTO POA 2022
-  public function formulario_segpoa2($com_id){
+  public function formulario_segpoa($com_id){
     $data['menu'] = $this->seguimientopoa->menu(4);
     $data['base'] = $this->seguimientopoa->menu(4);
     $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
@@ -1250,7 +1250,7 @@ class Cseguimiento extends CI_Controller {
 
     /*----- REPORTE EVALUACION POA PDF 2021 MENSUAL POR SUBACTIVIDAD (TRIMESTRAL)-------*/
     public function ver_reporteevalpoa($com_id,$trm_id){
-      $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
+      /*$data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
       if(count($data['componente'])!=0){
        // $data['mes'] = $this->seguimientopoa->mes_nombre();
         $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']); /// DATOS FASE
@@ -1275,7 +1275,71 @@ class Cseguimiento extends CI_Controller {
       }
       else{
         echo "Error !!!";
+      }*/
+      $prod_id=65712;
+      $trimestre=4;
+            for ($i=1; $i <=4 ; $i++) { 
+        $datos[$i]=0;
       }
+
+      $mes_final=0;
+      if($trimestre==1){$mes_final=3;}
+      elseif ($trimestre==2) {$mes_final=6;}
+      elseif ($trimestre==3) {$mes_final=9;}
+      elseif ($trimestre==4) {$mes_final=12;}
+
+      $trimestre_prog = $this->model_evaluacion->programado_trimestral_productos($trimestre,$prod_id); /// Trimestre Programado
+      $trimestre_ejec = $this->model_evaluacion->ejecutado_trimestral_productos($trimestre,$prod_id); /// Trimestre Ejecutado
+
+      $prog_trimestre=0; 
+        if(count($trimestre_prog)!=0){
+          $prog_trimestre=$trimestre_prog[0]['trimestre'];
+        }
+                
+      $ejec_trimestre=0; 
+        if(count($trimestre_ejec)!=0){
+          $ejec_trimestre=$trimestre_ejec[0]['trimestre'];
+        }
+
+
+      $prog=$this->model_evaluacion->rango_programado_trimestral_productos($prod_id,$mes_final); /// meta programado al mes 
+      $eval=$this->model_evaluacion->rango_ejecutado_trimestral_productos($prod_id,$mes_final); /// meta ejecutado al mes
+
+      $acu_prog=0;
+      $acu_ejec=0;
+      if(count($prog)!=0){
+        $acu_prog=$prog[0]['trimestre'];
+      }
+      
+      if(count($eval)!=0){
+        $acu_ejec=$eval[0]['trimestre'];
+      }
+
+      ///------------------------------
+      $datos[1]=$prog_trimestre; /// PROGRAMADO
+      $datos[2]=$ejec_trimestre; /// EJECUTADO
+      $datos[3]=($acu_prog-$acu_ejec); /// DIFERENCIA PROG-EJEC
+
+
+      echo $datos[1].'--'.$datos[2].'--'.$datos[3];
+
+
+
+      if(($datos[1]==$datos[2]) || $datos[3]==0){
+        $datos[4]='TRIMESTRE CUMPLIDO';
+      }
+      else{
+        if((($datos[1]==0 & $datos[2]==0) & $datos[3]!=0) || ($datos[1]!=0 & $datos[2]==0)){
+          $datos[4]='TRIMESTRE NO CUMPLIDO'; 
+        }
+        else{
+          $datos[4]='TRIMESTRE EN PROCESO';
+        }
+      }
+
+      echo $datos[4];
+
+
     }
 
 
