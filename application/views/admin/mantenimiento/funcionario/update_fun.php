@@ -475,11 +475,10 @@
                     return 0; 
                 }
             }
-          //  alert($('input[name=rol_id]:checked', '#resp_form').val())
 
-            if ($('input[name=rol_id]:checked', '#resp_form').val()==9){
+            if (document.resp_form.rol_id.value==9){
                 if ($('[id="com_id"]').val()==0 || $('[id="com_id"]').val()==null){
-                    alert("SELECCIONE SUBACTIVIDAD") 
+                    alert("SELECCIONE UNIDAD RESPONSABLE") 
                     document.resp_form.com_id.focus() 
                     return 0;
                 }
@@ -491,12 +490,6 @@
                 $('[id="componente"]').val(0);
             }
 
-/*            if (document.resp_form.tot.value=="0"){
-                alert("SELECCIONE ROL") 
-                document.resp_form.tot.focus() 
-                return 0;
-            }*/
-            
             usuario1=document.resp_form.usuario1.value.trim();
             usuario=document.resp_form.usuario.value.trim();
         //    alert(usuario)

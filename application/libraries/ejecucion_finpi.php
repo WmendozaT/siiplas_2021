@@ -47,7 +47,7 @@ class ejecucion_finpi extends CI_Controller{
               <label class="label">Selecciones MES / '.$this->gestion.'</label>
                <select class="form-control" style="width:20%;" name="mes_id" id="mes_id">';
                foreach($meses as $row){
-                if($row['m_id']<=ltrim(date("m"), "0")){
+                if($row['m_id']<=$this->verif_mes[1]){
                   if($row['m_id']==$this->verif_mes[1]){
                     $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
                   }
@@ -1709,7 +1709,10 @@ class ejecucion_finpi extends CI_Controller{
             <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['desc_sol']).'</td>
           </tr>
         </tbody>
-       </table><br>
+       </table>
+       <span style="margin:-10px 10px 0px 10px;font-size:9px;">
+                            <p>'.strtoupper($proyecto[0]['proy_observacion']).'</p>
+                        </span><br>
        <div style="height:20px;"><b>EJECUCION PRESUPUESTARIA '.$this->gestion.'</b></div>';
        foreach($ppto_asig as $partida){
         $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($partida['sp_id']); /// temporalidad ejec partida

@@ -1278,7 +1278,7 @@ class Cseguimiento extends CI_Controller {
       }*/
       $prod_id=65712;
       $trimestre=4;
-            for ($i=1; $i <=4 ; $i++) { 
+        for ($i=1; $i <=4 ; $i++) { 
         $datos[$i]=0;
       }
 
@@ -1316,16 +1316,24 @@ class Cseguimiento extends CI_Controller {
       }
 
       ///------------------------------
-      $datos[1]=$prog_trimestre; /// PROGRAMADO
-      $datos[2]=$ejec_trimestre; /// EJECUTADO
-      $datos[3]=($acu_prog-$acu_ejec); /// DIFERENCIA PROG-EJEC
+      $datos[1]=$prog_trimestre; /// PROGRAMADO AL TRIMESTRE
+      $datos[2]=$ejec_trimestre; /// EJECUTADO AL TRIMESTRE
+      $datos[3]=($acu_prog-$acu_ejec); /// DIFERENCIA PROG-EJEC ACUMULADO
 
 
-      echo $datos[1].'--'.$datos[2].'--'.$datos[3];
+     // echo $datos[1].'--'.$datos[2].'--'.$datos[3];
 
+      if($datos[3]==0){
+        $datos[4]='TRIMESTRE CUMPLIDO';
+      }
+      elseif($acu_prog!=0 & $acu_ejec==0){
+        $datos[4]='TRIMESTRE NO CUMPLIDO'; 
+      }
+      else{
+        $datos[4]='TRIMESTRE EN PROCESO';
+      }
 
-
-      if(($datos[1]==$datos[2]) || $datos[3]==0){
+      /*if(($datos[1]==$datos[2]) & $datos[3]==0){
         $datos[4]='TRIMESTRE CUMPLIDO';
       }
       else{
@@ -1335,9 +1343,9 @@ class Cseguimiento extends CI_Controller {
         else{
           $datos[4]='TRIMESTRE EN PROCESO';
         }
-      }
+      }*/
 
-      echo $datos[4];
+      echo '<br>'.$datos[4];
 
 
     }
