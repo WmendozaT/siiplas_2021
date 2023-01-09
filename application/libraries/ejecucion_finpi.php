@@ -1710,9 +1710,9 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
         </tbody>
        </table>
-       <span style="margin:-10px 10px 0px 10px;font-size:9px;">
-                            <p>'.strtoupper($proyecto[0]['proy_observacion']).'</p>
-                        </span><br>
+        <span style="margin:-10px 10px 0px 10px;font-size:9px;">
+          <p>'.strtoupper($proyecto[0]['proy_observacion']).'</p>
+        </span><br>
        <div style="height:20px;"><b>EJECUCION PRESUPUESTARIA '.$this->gestion.'</b></div>';
        foreach($ppto_asig as $partida){
         $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($partida['sp_id']); /// temporalidad ejec partida
