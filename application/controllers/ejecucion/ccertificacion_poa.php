@@ -54,8 +54,8 @@ class Ccertificacion_poa extends CI_Controller {
 
         $data['titulo']='SELECCIONAR ALINEACIÓN ACTIVIDAD - '.$this->gestion.'';
 
-        $data['proyectos']=$this->certificacionpoa->list_pinversion(4);
-        $data['operacion']=$this->certificacionpoa->list_unidades_es(4);
+        $data['proyectos']=$this->certificacionpoa->list_pinversion(4); /// Proyectos de Inversion
+        $data['operacion']=$this->certificacionpoa->list_unidades_es(4); /// Gasto Corriente
 
         $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/list_poas_aprobados', $data);
       }
@@ -1700,6 +1700,55 @@ class Ccertificacion_poa extends CI_Controller {
 
     }
   }
+
+////================== CERTIFICACION POA POR PARTIDAS
+
+  /*--- lista de partidas globales ---*/
+  public function certificar_partidas($proy_id){
+  $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// Datos Proyecto
+
+/*    if(count($proyecto)!=0){
+        $insumos=$this->model_insumo->insumos_por_unidad($proyecto[0]['aper_id']);
+        foreach ($insumos as $ins){
+          echo $ins['ins_id'].' '.$ins['ins_detalle']."<br>";
+          $temp=$this->model_insumo->lista_prog_fin($ins['ins_id']);
+          foreach ($temp as $row){
+            $cert=''; $estado=0;
+            if(count($this->model_certificacion->get_mes_certificado($row['tins_id']))==1){
+              $estado=1;
+              $cert='CERTIFICADO';
+            }
+
+            /// Actualizando el estado de la temporalidad
+            $update_temp = array(
+              'estado_cert' => $estado
+            );
+            $this->db->where('tins_id', $row['tins_id']);
+            $this->db->update('temporalidad_prog_insumo', $update_temp);
+
+            echo "temp : ".$row['tins_id']." - ".$row['mes_id']." - ".$row['estado_cert']." - ".$cert."<br>";
+          }
+
+          echo "------------------------<br>";
+            
+            $m_cert=$this->model_insumo->lista_prog_fin_certificado($ins['ins_id']); /// Monto Certificado
+            if(count($m_cert)!=0){
+              /// Actualizando el estado de la temporalidad
+              $update_ins = array(
+                'ins_monto_certificado' => $m_cert[0]['monto_certificado']
+              );
+              $this->db->where('ins_id', $ins['ins_id']);
+              $this->db->update('insumos', $update_ins);
+            }
+          echo "------------------------<br>";
+        }
+    }
+    else{
+      redirect('cert/list_poas');
+    }*/
+  }
+
+
 
 
     /*------ NOMBRE MES -------*/

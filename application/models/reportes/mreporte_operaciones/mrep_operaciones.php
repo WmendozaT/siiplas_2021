@@ -1599,7 +1599,7 @@ class Mrep_operaciones extends CI_Model {
     public function consolidado_poa_formulario5_institucional($tp_id){
         $sql = '
         select * from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
-        order by dep_id asc';
+        order by dep_id, dist_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

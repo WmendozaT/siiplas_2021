@@ -318,6 +318,7 @@ class Cmod_fisica extends CI_Controller {
           $mverificacion = $producto[0]['prod_fuente_verificacion']; /// Medio de Verificacion
         }
 
+          //$mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
           $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador
           $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
           $meta = $this->security->xss_clean($post['mmeta']); /// Meta

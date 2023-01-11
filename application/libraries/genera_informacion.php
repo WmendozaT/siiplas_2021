@@ -916,8 +916,8 @@ class Genera_informacion extends CI_Controller{
               $prog="'".$row['aper_programa']."'";
             $nro++;
             $tabla.='<tr>';
-                $tabla.='<td style="height:70px;">'.$row['dep_cod'].'</td>';
-                $tabla.='<td>'.$row['dist_cod'].'</td>';
+                $tabla.='<td style="height:70px;">'."'".$row['dep_cod']."'".'</td>';
+                $tabla.='<td>'."'".$row['dist_cod']."'".'</td>';
                 $tabla.='<td>'.$prog.'</td>';
                 $tabla.='<td>';
                 if($row['tp_id']==1){

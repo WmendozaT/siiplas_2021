@@ -463,6 +463,9 @@ $route['cert/eliminar_certificacion/(:any)'] = 'ejecucion/cert_poa/eliminar_cert
 $route['cert/edit_certificacion/(:any)'] = 'ejecucion/ccertificacion_poa/modificar_cpoa/$1'; //// Generar Codigo Cert POA 2020
 $route['cert/update_certpoa_insumo/(:any)'] = 'ejecucion/ccertificacion_poa/actualizar_monto_certificado_por_insumo/$1'; //// Actualizando datos de certificacion poa 2021 (Nuevo)
 
+/*-- EDICION DE CERTIFICACIÓN POA 2023 ---*/
+$route['cert/certpoa_global_partida/(:any)'] = 'ejecucion/ccertificacion_poa/certificar_partidas/$1'; //// Certificar Partidas Globales
+
 
 /*----------------------------- EJECUCION - CERTIFICACION POA (POA) -------------------------------*/
 $route['ejec/menu_vpoa'] = 'ejecucion/cert_poa/menu_certificaciones'; //// Certificaciones poas VPOA
