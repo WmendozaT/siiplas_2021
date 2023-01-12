@@ -1849,7 +1849,7 @@ class Model_proyecto extends CI_Model{
     }
 
     /*-------- LISTA PROYECTOS DE INVERSION funcion--------*/
-    public function list_proy_inversion(){ /// aprobados
+    public function list_proy_inversion(){ /// aprobados Institucional
         $sql = 'select *
                 from lista_poa_pinversion_nacional('.$this->gestion.')
                 order by dep_id, dist_id asc';
@@ -1860,7 +1860,8 @@ class Model_proyecto extends CI_Model{
     /*-------- LISTA PROYECTOS DE INVERSION POR REGIONAL --------*/
     public function list_proy_inversion_regional($dep_id){ /// aprobados
         $sql = 'select *
-                from lista_poa_pinversion_regional('.$dep_id.','.$this->gestion.')';
+                from lista_poa_pinversion_regional('.$dep_id.','.$this->gestion.')
+                order by dep_id, dist_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

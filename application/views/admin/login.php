@@ -189,6 +189,7 @@ h1 {
       </div>
       </div>
     </form>
+    <a href="<?php echo base_url(); ?>index.php/admin/validate2" ><button>Proyectos de Inversión</button></a>
   </div>
 </div>
 </div>

@@ -927,6 +927,28 @@ class User extends CI_Controller{
     }
 
 
+/// Sesion Administrador
+    public function validate_credentials2(){
+        $this->session->sess_destroy();
+
+        $gestion = $this->Users_model->obtener_gestion();
+        $entidad = $this->Users_model->get_entidad($gestion[0]['ide']);
+        $conf = $this->model_configuracion->get_configuracion();
+        $data = array(
+            
+            'gestion' => $gestion[0]['ide'],
+            'name' => 'SIIPLAS V1.0',
+            'direccion' => 'DEPARTAMENTO NACIONAL DE PLANIFICACI&Oacute;N',
+            'sistema' => 'SISTEMA DE PLANIFICACI&Oacute;N DE SALUD - SIIPLAS V2.0',
+            'sistema_pie' => 'SIIPLAS - Sistema de Planificaci&oacute;n de Salud',
+            'logged' => true
+        );
+
+        $this->session->set_userdata($data);
+       // echo $this->session->set_userdata($data);
+        redirect('cns_inversion');
+    }
+
 
     function logout(){
         $this->session->sess_destroy();

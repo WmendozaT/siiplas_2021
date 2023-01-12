@@ -641,5 +641,8 @@ $route['reporte_detalle_ppto_pi/(:any)'] = 'ejecucion/cejecucion_pi/reporte_deta
 //// REPORTE EJECUCION FINANCIERA DE PROYECTOS DE INVERSION A NIVEL NACIONAL
 $route['seg_proyectos'] = 'reporte_ejecucion_proyectos/creportejecucion_pi/menu_pi'; ///// Menu Reportes de ejecucion de proyectos de Inversion
 
+$route['admin/validate2'] = 'user/validate_credentials2';
+$route['cns_inversion'] = 'reporte_ejecucion_proyectos/consulta_pi/menu_pi'; ///// Menu Consulta Proyectos de Inversion
+
 //// MODULO DE CONSULTAS PARA LAS GERENCIAS, ADMINISTRACIONES PARA SUPERVISAR LOS PROYECTOS DE INVERSION
 //$route['ejecucion_proyectos_inversion'] = 'reporte_ejecucion_proyectos/creportejecucion_pi/ejecucion_proyectos'; ///// Consolidado de Proyectos de Inversion
