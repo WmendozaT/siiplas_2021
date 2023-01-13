@@ -6,7 +6,7 @@
 <meta name="keywords" content="htmlcss bootstrap aside menu, vertical, sidebar nav menu CSS examples" />
 <meta name="description" content="Bootstrap 5 sidebar navigation menu example" />  
 
-<title>Demo - Bootstrap 5 sidebar vertical menu sample. html code example </title>
+<title>SIIPLAS </title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"crossorigin="anonymous"></script>
@@ -35,11 +35,11 @@
 
 
 </head>
-<body class="bg-light">
+<body class="bg-light" style="background-color: #FFFFFF; padding-top: 15px">
 
 <header class="section-header py-3">
 <div class="container">
-	<h2>CAJA NACIONAL DE SALUD </h2> 
+	<?php echo $img; ?>
 </div>
 </header> <!-- section-header.// -->
 
@@ -48,15 +48,15 @@
 <section class="section-content py-3">
 	<div class="row">
 		<aside class="col-lg-3"> 
-<!-- ============= COMPONENT ============== -->
-			<nav class="sidebar card py-2 mb-4">
-				<?php echo $menu; ?>
-			</nav>
-<!-- ============= COMPONENT END// ============== -->	
+	<!-- ============= COMPONENT ============== -->
+		<nav class="sidebar card py-2 mb-4">
+			<?php echo $menu; ?>
+		</nav>
+	<!-- ============= COMPONENT END// ============== -->	
 	</aside>
 	<main class="col-lg-9">
 
-	<h6>Proyecto de Inversi&oacute;n / <?php echo $this->session->userData('gestion') ?></h6>
+	<!-- <h6>Proyecto de Inversi&oacute;n / <?php echo $this->session->userData('gestion') ?></h6> -->
 		<div id="detalle_proyecto"></div>
 		<div id="reporte"></div>
 
@@ -65,6 +65,7 @@
 </section>
 
 </div><!-- container //  -->
+
 <script src="<?php echo base_url();?>/assets/js/libs/jquery-2.0.2.min.js"></script>
 <script>
     if (!window.jQuery.ui) {

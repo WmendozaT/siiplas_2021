@@ -928,7 +928,7 @@ class User extends CI_Controller{
 
 
 /// Sesion Administrador
-    public function validate_credentials2(){
+/*    public function validate_credentials2(){
         $this->session->sess_destroy();
 
         $gestion = $this->Users_model->obtener_gestion();
@@ -947,7 +947,7 @@ class User extends CI_Controller{
         $this->session->set_userdata($data);
        // echo $this->session->set_userdata($data);
         redirect('cns_inversion');
-    }
+    }*/
 
 
     function logout(){
