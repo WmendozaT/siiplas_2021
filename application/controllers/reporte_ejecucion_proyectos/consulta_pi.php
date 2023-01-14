@@ -66,9 +66,10 @@ class Consulta_pi extends CI_Controller {
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
       $proy_id = $this->security->xss_clean($post['proy_id']);
+      $proyecto=$this->model_pinversion->get_pinversion($proy_id,$this->gestion);
 
-      $tabla='<iframe id="ipdf" width="100%"  height="800px;" src="'.base_url().'index.php/reporte_ficha_tecnica_pinversion/'.$proy_id.'"></iframe>';
-
+      //$tabla='<iframe id="ipdf" width="100%"  height="800px;" src="'.base_url().'index.php/reporte_ficha_tecnica_pinversion/'.$proy_id.'"></iframe>';
+      $tabla=$this->formulario_pinversion($proyecto);
       $result = array(
         'respuesta' => 'correcto',
         'iframe' => $tabla,
@@ -79,6 +80,174 @@ class Consulta_pi extends CI_Controller {
         show_404();
     }
   }
+
+
+  /*--- REPORTE FICHA TECNICA PROY INVERSION ---*/
+  public function formulario_pinversion($proyecto){
+    $imagen=$this->model_proyecto->get_img_ficha_tecnica($proyecto[0]['proy_id']);
+    $tabla='';
+    $tabla.='
+    <div class="row">
+    <div class="well">
+      <article class="col-sm-12 col-md-12 col-lg-12">
+        <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false">
+                <div>
+                  <div class="jarviswidget-editbox">
+                    <div class="form-actions">
+                        <div class="row">
+                          <div class="col-md-12" align=right>
+                          <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pinversion/'.$proyecto[0]['proy_id'].'\');" >
+                            <button type="button" class="btn btn-labeled btn-success">
+                             <span class="btn-label">
+                              <i class="glyphicon glyphicon-file"></i>
+                             </>Generar Reporte PDF
+                            </button>
+                          </a>
+                            
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="widget-body">
+        
+                    <form class="form-horizontal" style="font-size:10px">
+                      
+                      <fieldset>
+                        <legend style="font-size:15px"><b>DATOS GENERALES</b></legend>
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">C&Oacute;DIGO SISIN</label>
+                          <div class="col-md-10">
+                            <input class="form-control" style="font-size:10px" type="text" value="'.$proyecto[0]['proy'].'" disabled=true>
+                          </div>
+                        </div>
+                        
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">PROYECTO DE INVERSI&Oacute;N</label>
+                          <div class="col-md-10">
+                            <textarea class="form-control" style="font-size:10px" placeholder="Textarea" rows="2" disabled=true>'.$proyecto[0]['proyecto'].'</textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">REGIONAL</label>
+                          <div class="col-md-10">
+                            <input class="form-control" style="font-size:10px" type="text" value="'.strtoupper($proyecto[0]['dep_departamento']).'" disabled=true>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">DISTRITAL</label>
+                          <div class="col-md-10">
+                            <input class="form-control" style="font-size:10px" type="text" value="'.strtoupper($proyecto[0]['dist_distrital']).'" disabled=true>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">COSTO TOTAL</label>
+                          <div class="col-md-10">
+                            <input class="form-control" style="font-size:10px" type="text" value="Bs. '.number_format($proyecto[0]['proy_ppto_total'], 2, ',', '.').'" disabled=true>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">FASE</label>
+                          <div class="col-md-10">
+                            <input class="form-control" style="font-size:10px" type="text" value="'.strtoupper($proyecto[0]['pfec_descripcion']).'" disabled=true>
+                          </div>
+                        </div>
+                      </fieldset>
+
+                      <fieldset>
+                        <legend></legend>
+                        <div class="form-group">
+                         
+                          <div class="col-md-6" align=center>
+                          <div style="font-family:Arial;text-align:center"><b>PROYECTO</b></div>
+                          <hr>';
+                            if(count($imagen)!=0){
+                              if($imagen[0]['tp']==1){
+                                $tabla.='<img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:450px; height:300px;"/>';
+                              }
+                              else{
+                                $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                              }
+                            }
+                            else{
+                              $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                            }
+                          $tabla.='
+                          <hr>
+                          
+                          </div>
+                          <div class="col-md-6" align=center>
+                          <div style="font-family:Arial;text-align:center"><b>UBICACIÓN GEOGRAFICA</b></div>
+                            <hr>';
+                            if(count($imagen)!=0){
+                              if($imagen[0]['tp']==1){
+                                $tabla.='<img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:450px; height:300px;"/>';
+                              }
+                              else{
+                                $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                              }
+                            }
+                            else{
+                              $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                            }
+                          $tabla.='
+                          <hr>
+                          
+                          </div>
+                        </div>
+                      </fieldset>
+
+                      <fieldset>
+                        <legend style="font-size:15px"><b>DETALLE DEL PROYECTO</b></legend>
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">ESTADO ACTUAL</label>
+                          <div class="col-md-10">
+                            <input class="form-control" style="font-size:10px" type="text" value="'.strtoupper($proyecto[0]['ep_descripcion']).'" disabled=true>
+                          </div>
+                        </div>
+                        
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">AVANCE F&Iacute;SICO</label>
+                          <div class="col-md-10">
+                            <input class="form-control" style="font-size:10px" type="text" value="'.round($proyecto[0]['avance_fisico'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date("d").'/'.date("m"). "/" . date("Y").'" disabled=true>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">AVANCE FINANCIERO</label>
+                          <div class="col-md-10">
+                            <input class="form-control" style="font-size:10px" type="text" value="'.round($proyecto[0]['avance_financiero'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date("d").'/'.date("m"). "/" . date("Y").'" disabled=true>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-md-2 control-label">FISCAL DE OBRA</label>
+                          <div class="col-md-10">
+                            <input class="form-control" style="font-size:10px" type="text" value="'.strtoupper($proyecto[0]['fiscal_obra']).'" disabled=true>
+                          </div>
+                        </div>
+                      </fieldset>
+
+                    </form>
+        
+                  </div>
+                </div>
+              </div>
+      </article>
+      </div>
+    </div>';
+
+
+    return $tabla;
+  }
+
+
+
+
+
 
 
   /*--- REPORTE FICHA TECNICA PROY INVERSION ---*/

@@ -51,7 +51,7 @@ function abreVentana(PDF){
     //// funcion para generar el cuadro de seguimiento POa Mensual (cuadro, grafico)
   function generar_reporte(proy_id){
 
-    $('#reporte').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando Información ...</div>');
+    $('#reporte').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando Información...</div>');
     var url = base+"index.php/reporte_ejecucion_proyectos/consulta_pi/get_reporte_proyecto";
     var request;
     if (request) {
