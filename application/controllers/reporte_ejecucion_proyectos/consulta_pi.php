@@ -22,7 +22,9 @@ class Consulta_pi extends CI_Controller {
 /*------- menu Proyectos de Inversion -------*/
   public function menu_pi(){
     $data['menu']=$this->menu_regional();
-    $data['img']='<h2><img src="'.base_url().'assets/ifinal/cnslogo.png" class="img-responsive" style="width:100px; height:100px;text-align:center"/> CAJA NACIONAL DE SALUD </h2>';
+    $data['img1']='<center><img src="'.base_url().'assets/ifinal/EscudoBolivia.png" class="img-responsive app-center" style="width:150px; height:100px;text-align:center"/><h6 class="app-row-center">Estado Plurinacional de Bolivia</h6></center>';
+    $data['img2']='<center><img src="'.base_url().'assets/ifinal/logo_CNS_header.png" class="img-responsive app-center" style="width:120px; height:120px;text-align:center"/></center>';
+
     $this->load->view('admin/consultas_internas/vista_cns_proyectos', $data);
   }
 
@@ -34,7 +36,7 @@ class Consulta_pi extends CI_Controller {
     <input name="base" type="hidden" value="'.base_url().'">
     <ul class="nav flex-column" id="nav_accordion">
       <li class="nav-item">
-        <a class="nav-link" href="#"> Proyecto de Inversi&oacute;n / '.$this->gestion.' </a>
+        <a class="nav-link" href="#"><b>PROYECTO DE INVERSI&Oacute;N / '.$this->gestion.'</b></a>
       </li>';
 
       foreach($regionales as $row){
@@ -67,12 +69,26 @@ class Consulta_pi extends CI_Controller {
       $post = $this->input->post();
       $proy_id = $this->security->xss_clean($post['proy_id']);
       $proyecto=$this->model_pinversion->get_pinversion($proy_id,$this->gestion);
+      $imagen=$this->model_proyecto->get_img_ficha_tecnica($proyecto[0]['proy_id']);
+      $foto='hola mundo';
+      if(count($imagen)!=0){
+        if($imagen[0]['tp']==1){
+          $foto='<center><img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" style="width:250px; height:200px;text-align:center"/></center>';
+        }
+        else{
+          $foto='<center><img src="'.base_url().'fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
+        }
+      }
+      else{
+        $foto='<center><img src="'.base_url().'fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
+      }
 
-      //$tabla='<iframe id="ipdf" width="100%"  height="800px;" src="'.base_url().'index.php/reporte_ficha_tecnica_pinversion/'.$proy_id.'"></iframe>';
       $tabla=$this->formulario_pinversion($proyecto);
       $result = array(
         'respuesta' => 'correcto',
+        'proyecto' => $proyecto,
         'iframe' => $tabla,
+        'foto' => $foto,
       );
         
       echo json_encode($result);
@@ -117,7 +133,7 @@ class Consulta_pi extends CI_Controller {
                         <div class="form-group">
                           <label class="col-md-2 control-label">C&Oacute;DIGO SISIN</label>
                           <div class="col-md-10">
-                            <input class="form-control" style="font-size:10px" type="text" value="'.$proyecto[0]['proy'].'" disabled=true>
+                            <input class="form-control" style="font-size:10px" type="text" title="'.$proyecto[0]['proy_id'].'" value="'.$proyecto[0]['proy'].'" disabled=true>
                           </div>
                         </div>
                         
@@ -158,49 +174,6 @@ class Consulta_pi extends CI_Controller {
                       </fieldset>
 
                       <fieldset>
-                        <legend></legend>
-                        <div class="form-group">
-                         
-                          <div class="col-md-6" align=center>
-                          <div style="font-family:Arial;text-align:center"><b>PROYECTO</b></div>
-                          <hr>';
-                            if(count($imagen)!=0){
-                              if($imagen[0]['tp']==1){
-                                $tabla.='<img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:450px; height:300px;"/>';
-                              }
-                              else{
-                                $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
-                              }
-                            }
-                            else{
-                              $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
-                            }
-                          $tabla.='
-                          <hr>
-                          
-                          </div>
-                          <div class="col-md-6" align=center>
-                          <div style="font-family:Arial;text-align:center"><b>UBICACIÓN GEOGRAFICA</b></div>
-                            <hr>';
-                            if(count($imagen)!=0){
-                              if($imagen[0]['tp']==1){
-                                $tabla.='<img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:450px; height:300px;"/>';
-                              }
-                              else{
-                                $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
-                              }
-                            }
-                            else{
-                              $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
-                            }
-                          $tabla.='
-                          <hr>
-                          
-                          </div>
-                        </div>
-                      </fieldset>
-
-                      <fieldset>
                         <legend style="font-size:15px"><b>DETALLE DEL PROYECTO</b></legend>
                         <div class="form-group">
                           <label class="col-md-2 control-label">ESTADO ACTUAL</label>
@@ -227,6 +200,16 @@ class Consulta_pi extends CI_Controller {
                           <label class="col-md-2 control-label">FISCAL DE OBRA</label>
                           <div class="col-md-10">
                             <input class="form-control" style="font-size:10px" type="text" value="'.strtoupper($proyecto[0]['fiscal_obra']).'" disabled=true>
+                          </div>
+                        </div>
+                      </fieldset>
+
+                      <fieldset>
+                        <legend style="font-size:15px"><b>UBICACI&Oacute;N GEOGRAFICA</b></legend>
+                        <div class="form-group">
+                         
+                          <div class="col-md-6" align=center>
+                            <center><div id="map" class="map map-home" style="margin:12px 1 12px 1;height:400px; width:750px"></div></center>
                           </div>
                         </div>
                       </fieldset>
