@@ -76,7 +76,6 @@ function abreVentana(PDF){
           L.marker([response.proyecto[0]['lat'], response.proyecto[0]['lng']])
           .addTo(map)
           .bindPopup(response.foto+'<br>'+response.proyecto[0]['proy']+' - '+response.proyecto[0]['proyecto'])
-          
           .openPopup();
 
       }
