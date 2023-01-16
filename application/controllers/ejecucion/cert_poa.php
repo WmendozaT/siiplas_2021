@@ -30,6 +30,7 @@ class Cert_poa extends CI_Controller {
         $this->adm = $this->session->userData('adm');
         $this->rol = $this->session->userData('rol_id');
         $this->dist = $this->session->userData('dist');
+        $this->dep_id = $this->session->userData('dep_id');
         $this->dist_tp = $this->session->userData('dist_tp');
         $this->tp_adm = $this->session->userData('tp_adm');
         $this->fun_id = $this->session->userData('fun_id');
@@ -67,7 +68,8 @@ class Cert_poa extends CI_Controller {
         $data['res_dep']=$this->tp_resp();
 
         $data['generar_certpoa']='';
-        if($this->conf_certificacion==1 || $this->tp_adm==1){
+        // $this->conf_certificacion==1 || $this->tp_adm==1
+        if($this->tp_adm==1 || $this->dep_id==2 || $this->dep_id==7  & $this->dep_id==9){
           $data['generar_certpoa']='
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
                 <div class="well">

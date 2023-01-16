@@ -8,10 +8,10 @@
 <body>
 <!-- <h1>UBICACIÓN</h1>  -->
 <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>	  
-<div id="map" class="map map-home" style="margin:12px 0 12px 0;height:650px; width:650px"></div>
+<div id="map" class="map map-home" style="margin:12px 0 12px 0;height:350px; width:350px"></div>
 <?php 
-    $lat = "-16.522502"; // recibir de un post o Get
-    $lng = "-68.153588";
+    $lat = "42.822410654302125"; // recibir de un post o Get
+    $lng = "-1.6459033203125273";
     //$pos = "42.822410654302125,-1.6459033203125273";
 	$titulo = "prueba" ; //nombre del proyecto , quizas podamos poner mas detalle
 	?>
