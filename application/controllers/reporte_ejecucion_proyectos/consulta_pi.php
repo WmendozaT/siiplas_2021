@@ -23,7 +23,7 @@ class Consulta_pi extends CI_Controller {
   public function menu_pi(){
     $data['menu']=$this->menu_regional();
     $data['img1']='<center><img src="'.base_url().'assets/ifinal/EscudoBolivia.png" class="img-responsive app-center" style="width:150px; height:100px;text-align:center"/><h6 class="app-row-center">Estado Plurinacional de Bolivia</h6></center>';
-    $data['img2']='<center><img src="'.base_url().'assets/ifinal/logo_CNS_header.png" class="img-responsive app-center" style="width:120px; height:120px;text-align:center"/></center>';
+    $data['img2']='<center><img src="'.base_url().'assets/ifinal/logo_CNS_header.png" class="img-responsive app-center" style="width:90px; height:120px;text-align:center"/></center>';
 
     $this->load->view('admin/consultas_internas/vista_cns_proyectos', $data);
   }
@@ -327,13 +327,13 @@ class Consulta_pi extends CI_Controller {
       <table cellpadding="0" cellspacing="0" class="tabla" border=0 style="width:100%;text-align:center">
         <tbody>
           <tr style="font-family: Arial; font-size: 9.5px; text-align:center">
-            <td style="width:75%; font-family: Arial; font-size: 15px;height:20px;"><b>'.$proyecto[0]['proyecto'].'</b></td>
+            <td colspan=2 style="width:100%; font-family: Arial; font-size: 15px;height:20px;"><b>'.$proyecto[0]['proyecto'].'</b></td>
           </tr>
           <tr style="font-family: Arial; font-size: 9.5px; text-align:center">
-            <td style="width:100%;text-align:center">';
+            <td style="width:50%;text-align:center">';
               if(count($imagen)!=0){
                 if($imagen[0]['tp']==1){
-                  $tabla.='<img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:450px; height:300px;"/>';
+                  $tabla.='<img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:350px; height:250px;"/>';
                 }
                 else{
                   $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
@@ -341,6 +341,20 @@ class Consulta_pi extends CI_Controller {
               }
               else{
                 $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+              }
+            $tabla.='
+            </td>
+            <td style="width:50%;text-align:center">';
+              if(count($proyecto)!=0){
+                if($proyecto[0]['img_georeferenciado']!=''){
+                  $tabla.='<img src="'.base_url().'img_ubicacion/'.$proyecto[0]['proy'].'.png" class="img-responsive" style="width:350px; height:250px;"/>';
+                }
+                else{
+                  $tabla.='<img src="'.base_url().'img_ubicacion/cns_ofn.png" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                }
+              }
+              else{
+                $tabla.='<img src="'.base_url().'img_ubicacion/cns_ofn.png" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
               }
             $tabla.='
             </td>
@@ -416,14 +430,6 @@ class Consulta_pi extends CI_Controller {
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>FISCAL DE OBRA</b></td>
             <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['fiscal_obra']).'</td>
-          </tr>
-          <tr style="font-family: Arial; font-size: 10px;">
-            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>PROBLEMA IDENTIFICADO</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['proy_desc_problema']).'</td>
-          </tr>
-          <tr style="font-family: Arial; font-size: 10px;">
-            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>PROPUESTA DE SOLUCIÓN</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['proy_desc_solucion']).'</td>
           </tr>
         </tbody>
        </table>';
