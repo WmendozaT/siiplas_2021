@@ -3685,3 +3685,43 @@ where p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and pfe.pf
 order by p.dep_id,p.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.tp_id asc;
 
 $$ LANGUAGE sql;
+
+
+////////////// MODIFICACION POA REQUERIMIENTOS creacion de tabla 
+create table insumo_original(
+  ins_id_inicial serial NOT NULL,
+  cite_id integer,
+  ins_id numeric (18,0),
+  ins_codigo character varying(50),
+  ins_detalle character varying(1000),
+  ins_cant_requerida numeric(18,2) NOT NULL DEFAULT 0,
+  ins_costo_unitario numeric(18,3) NOT NULL DEFAULT 0,
+  ins_costo_total numeric(18,2) NOT NULL DEFAULT 0,
+  ins_unidad_medida character varying(300),
+  ins_gestion integer,
+  par_id integer NOT NULL DEFAULT 0,
+  ins_estado integer NOT NULL DEFAULT 1,
+  fun_id integer NOT NULL DEFAULT 0,
+  ins_observacion character varying(1000),
+  ins_mod integer NOT NULL DEFAULT 1,
+  aper_id numeric(18,0) DEFAULT 0,
+  ins_monto_certificado numeric(18,2) DEFAULT 0,
+  com_id numeric(18,0) NOT NULL DEFAULT 0,
+  prod_id numeric(18,0) DEFAULT 0,
+  fecha_modficacion timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp(0) with time zone,
+  num_ip character varying(100),
+  nom_ip character varying(100),
+  m1 numeric(18,2) NOT NULL DEFAULT 0,
+  m2 numeric(18,2) NOT NULL DEFAULT 0,
+  m3 numeric(18,2) NOT NULL DEFAULT 0,
+  m4 numeric(18,2) NOT NULL DEFAULT 0,
+  m5 numeric(18,2) NOT NULL DEFAULT 0,
+  m6 numeric(18,2) NOT NULL DEFAULT 0,
+  m7 numeric(18,2) NOT NULL DEFAULT 0,
+  m8 numeric(18,2) NOT NULL DEFAULT 0,
+  m9 numeric(18,2) NOT NULL DEFAULT 0,
+  m10 numeric(18,2) NOT NULL DEFAULT 0,
+  m11 numeric(18,2) NOT NULL DEFAULT 0,
+  m12 numeric(18,2) NOT NULL DEFAULT 0,
+  primary key(ins_id_inicial)
+ );

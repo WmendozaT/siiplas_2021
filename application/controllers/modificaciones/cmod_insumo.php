@@ -621,7 +621,13 @@ class Cmod_insumo extends CI_Controller {
           /*------------------------------------------*/
 
           /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
-            $data_to_store2 = array(
+          if($this->copia_insumo($cite_id,$ins_id,1)){
+            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+              $this->update_activo_modificacion($cite_id);
+            /*--------------------------------------*/
+          }
+          ;
+            /*$data_to_store2 = array(
               'ins_id' => $ins_id, /// ins_id
               'cite_id' => $cite_id, /// cite_id
               'num_ip' => $this->input->ip_address(), 
@@ -629,11 +635,11 @@ class Cmod_insumo extends CI_Controller {
               'fun_id' => $this->session->userdata("fun_id"),
               );
             $this->db->insert('insumo_add', $data_to_store2);
-            $add_id=$this->db->insert_id();
+            $add_id=$this->db->insert_id();*/
           /*----------------------------------------------------*/
 
           /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
-            $this->update_activo_modificacion($cite_id);
+            //$this->update_activo_modificacion($cite_id);
           /*--------------------------------------*/
 
           /*-----------------------------------------------------------*/
@@ -664,7 +670,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-     /*--- VALIDA UPDATE REQUERIMIENTO (2020) ---*/
+     /*--- VALIDA UPDATE REQUERIMIENTO (2023) ---*/
      public function valida_update_insumo(){
       if($this->input->post()) {
         $post = $this->input->post();
@@ -704,7 +710,8 @@ class Cmod_insumo extends CI_Controller {
           $id_anterior=$operaciones[0]['prod_id'];
         }
 
-          if($this->copia_insumo($cite_id,$ins_id,2)){
+          if($this->registra_insumo_original($cite_id,$ins_id)){
+            
 
             $update_ins= array(
               'ins_cant_requerida' => $cantidad,
@@ -772,6 +779,8 @@ class Cmod_insumo extends CI_Controller {
               );
               $this->db->where('ins_id', $ins_id);
               $this->db->update('_insumoproducto', $update_proy);
+
+              $this->copia_insumo($cite_id,$ins_id,2); /// historial de modificaciones para el reporte
 
               /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
               $this->update_activo_modificacion($cite_id);
@@ -2072,7 +2081,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-    /*---- Funcion Copia Insumo a Historial ----*/
+    /*---- Funcion Copia Insumo a Historial para reportes----*/
     public function copia_insumo($cite_id,$ins_id,$tipo){
       $insumo = $this->model_insumo->get_requerimiento($ins_id); //// DATOS DEL REQUERIMIENTO
       //$insumo = $this->minsumos->get_dato_insumo($ins_id); //// DATOS DEL REQUERIMIENTO
@@ -2100,7 +2109,10 @@ class Cmod_insumo extends CI_Controller {
             'aper_id' => $proyecto[0]['aper_id'], /// aper id
             'num_ip' => $this->input->ip_address(), 
             'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
-            'id' => $id,
+            'id' => $id, ///prod id
+            'tipo_mod' => $tipo, ///tipo de modificacion 1:adicion, 2:modificacion, 3: eliminacion
+            'cite_id' => $cite_id, ///cite id
+            'ins_id' => $ins_id, ///ins id
           );
           $this->db->insert('insumos_historial', $data_to_store); ///// Guardar en Tabla Insumos 
           $insh_id=$this->db->insert_id();
@@ -2117,48 +2129,48 @@ class Cmod_insumo extends CI_Controller {
             $tinsh_id =$this->db->insert_id();
           }
 
-          if($tipo==2){
-              /*---- Insumo - Modificado ----*/
-              $data_to_store6 = array( 
-                'ins_id' => $ins_id, /// se mantiene el id, con los datos actualizados
-                'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo
-                'cite_id' => $cite_id, /// Id del cite
-                'num_ip' => $this->input->ip_address(), /// Numero de IP 
-                'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
-                'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
-                );
-                $this->db->insert('insumo_update', $data_to_store6);
-                $update_id =$this->db->insert_id();
-              /*--------------------------------------------------------------------*/
+          // if($tipo==2){
+          //     /*---- Insumo - Modificado ----*/
+          //     $data_to_store6 = array( 
+          //       'ins_id' => $ins_id, /// se mantiene el id, con los datos actualizados
+          //       'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo
+          //       'cite_id' => $cite_id, /// Id del cite
+          //       'num_ip' => $this->input->ip_address(), /// Numero de IP 
+          //       'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
+          //       'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
+          //       );
+          //       $this->db->insert('insumo_update', $data_to_store6);
+          //       $update_id =$this->db->insert_id();
+          //     /*--------------------------------------------------------------------*/
 
-              if(count($this->model_modrequerimiento->get_insumo_modificado($update_id))!=0){
-                return true;
-              }
-              else{
-                return false;
-              }
-          }
-          elseif($tipo==3){
-            /*---- Insumo - Eliminado ----*/
-              $data_to_store6 = array( 
-                'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo eliminado
-                'cite_id' => $cite_id, /// Id del cite
-                'num_ip' => $this->input->ip_address(), /// Numero de IP 
-                'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
-                'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
-                );
-                $this->db->insert('insumo_delete', $data_to_store6);
-                $delete_id =$this->db->insert_id();
-              /*--------------------------------------------------------------------*/
+          //     if(count($this->model_modrequerimiento->get_insumo_modificado($update_id))!=0){
+          //       return true;
+          //     }
+          //     else{
+          //       return false;
+          //     }
+          // }
+          // elseif($tipo==3){
+          //   /*---- Insumo - Eliminado ----*/
+          //     $data_to_store6 = array( 
+          //       'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo eliminado
+          //       'cite_id' => $cite_id, /// Id del cite
+          //       'num_ip' => $this->input->ip_address(), /// Numero de IP 
+          //       'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
+          //       'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
+          //       );
+          //       $this->db->insert('insumo_delete', $data_to_store6);
+          //       $delete_id =$this->db->insert_id();
+          //     /*--------------------------------------------------------------------*/
 
-              if(count($this->model_modrequerimiento->get_insumo_eliminado($delete_id))!=0){
-                return true;
-              }
-              else{
-                return false;
-              }
-          }
-          
+          //     if(count($this->model_modrequerimiento->get_insumo_eliminado($delete_id))!=0){
+          //       return true;
+          //     }
+          //     else{
+          //       return false;
+          //     }
+          // }
+          return true;
       }
       else{
         return false;
@@ -2166,6 +2178,99 @@ class Cmod_insumo extends CI_Controller {
       
     }
 
+
+     /*---- Funcion Copia Insumo a Historial para reportes----*/
+    public function registra_insumo_original($cite_id,$ins_id){
+      $insumo = $this->model_insumo->get_requerimiento($ins_id); //// DATOS DEL REQUERIMIENTO
+      
+      if(count($insumo)!=0){
+        $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id); /// Datos Cite
+        $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); //// DATOS DEL PROYECTO
+
+        $ins_rel=$this->minsumos->relacion_ins_ope($ins_id);
+        $prod_id=$ins_rel[0]['prod_id'];
+
+        $query=$this->db->query('set datestyle to DMY');
+          $data_to_store = array( 
+            'cite_id' => $cite_id, ///cite id
+            'ins_id' => $insumo[0]['ins_id'], ///ins id
+            'ins_codigo' => $insumo[0]['ins_codigo'], /// Codigo Insumo
+            'ins_detalle' => $insumo[0]['ins_detalle'], /// Insumo Detalle
+            'ins_cant_requerida' => $insumo[0]['ins_cant_requerida'], /// Cantidad Requerida
+            'ins_costo_unitario' => $insumo[0]['ins_costo_unitario'], /// Costo Unitario
+            'ins_costo_total' => $insumo[0]['ins_costo_total'], /// Costo Total
+            'ins_unidad_medida' => $insumo[0]['ins_unidad_medida'], /// Insumo Unidad de Medida
+            'par_id' => $insumo[0]['par_id'], /// Partidas
+            'ins_estado' => $insumo[0]['ins_estado'], /// Estado
+            'ins_gestion' => $insumo[0]['ins_gestion'], /// gestion
+            'ins_observacion' => $insumo[0]['ins_observacion'], /// Ins Observacion
+            'ins_mod' => $insumo[0]['ins_mod'], /// Ins mod
+            'fun_id' => $insumo[0]['fun_id'], /// Funcionario
+            'aper_id' => $proyecto[0]['aper_id'], /// aper id
+            'num_ip' => $this->input->ip_address(), 
+            'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+            'prod_id' => $prod_id, ///prod id
+          );
+          $this->db->insert('insumo_original', $data_to_store); ///// Guardar en Tabla Insumos 
+          $ins_id_inicial=$this->db->insert_id();
+
+          $prog=$this->model_insumo->lista_prog_fin($ins_id);
+          foreach ($prog as $rowp) {
+            $update_ins= array(
+              'm'.$rowp['mes_id'] => $rowp['ipm_fis']
+            );
+            $this->db->where('ins_id_inicial', $ins_id_inicial);
+            $this->db->update('insumo_original', $this->security->xss_clean($update_ins));
+          }
+
+          // if($tipo==2){
+          //     /*---- Insumo - Modificado ----*/
+          //     $data_to_store6 = array( 
+          //       'ins_id' => $ins_id, /// se mantiene el id, con los datos actualizados
+          //       'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo
+          //       'cite_id' => $cite_id, /// Id del cite
+          //       'num_ip' => $this->input->ip_address(), /// Numero de IP 
+          //       'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
+          //       'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
+          //       );
+          //       $this->db->insert('insumo_update', $data_to_store6);
+          //       $update_id =$this->db->insert_id();
+          //     /*--------------------------------------------------------------------*/
+
+          //     if(count($this->model_modrequerimiento->get_insumo_modificado($update_id))!=0){
+          //       return true;
+          //     }
+          //     else{
+          //       return false;
+          //     }
+          // }
+          // elseif($tipo==3){
+          //   /*---- Insumo - Eliminado ----*/
+          //     $data_to_store6 = array( 
+          //       'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo eliminado
+          //       'cite_id' => $cite_id, /// Id del cite
+          //       'num_ip' => $this->input->ip_address(), /// Numero de IP 
+          //       'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
+          //       'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
+          //       );
+          //       $this->db->insert('insumo_delete', $data_to_store6);
+          //       $delete_id =$this->db->insert_id();
+          //     /*--------------------------------------------------------------------*/
+
+          //     if(count($this->model_modrequerimiento->get_insumo_eliminado($delete_id))!=0){
+          //       return true;
+          //     }
+          //     else{
+          //       return false;
+          //     }
+          // }
+          return true;
+      }
+      else{
+        return false;
+      }
+      
+    }
 
 
     /*---- GET DATOS REQUERIMIENTO ----*/
