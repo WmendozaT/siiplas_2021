@@ -177,7 +177,28 @@ class Model_modrequerimiento extends CI_Model{
         return $query->result_array();
     }
 
-    /*--- LISTA DE REQUERIMIENTOS AGREGADOS SEGUN CITE ---*/
+
+
+    /*--- LISTA MODIFICADOS ITEMS 2023---*/
+    public function list_form5_historial_modificados($cite_id,$tipo_mod){
+        $sql = 'select *
+                from insumos_historial ih
+                Inner Join partidas as pa On pa.par_id=ih.par_id
+                Inner Join _productos as p On p.prod_id=ih.id
+                Inner Join vista_temporalidad_insumo_historial as temp On temp.insh_id=ih.insh_id
+                where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.'
+                order by pa.par_codigo asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
+
+
+    /*--- LISTA DE REQUERIMIENTOS AGREGADOS SEGUN CITE (anterior vigente 2023)---*/
     public function list_requerimientos_adicionados($cite_id){
         $sql = 'select ia.add_id,ia.ins_id,i.ins_codigo,i.ins_costo_unitario, i.ins_costo_total,i.ins_cant_requerida,i.ins_detalle,i.ins_unidad_medida,i.ins_observacion,pa.par_codigo,pa.par_nombre,p.prod_cod,p.or_id
                 from insumo_add ia
@@ -193,7 +214,7 @@ class Model_modrequerimiento extends CI_Model{
         return $query->result_array();
     }
 
-    /*--- LISTA DE REQUERIMIENTOS MODIFICADOS SEGUN CITE ---*/
+    /*--- LISTA DE REQUERIMIENTOS MODIFICADOS SEGUN CITE (anterior vigente 2023)---*/
     public function list_requerimientos_modificados($cite_id){
         $sql = 'select ia.ins_id,i.ins_codigo,i.ins_costo_unitario,i.ins_cant_requerida,i.ins_costo_unitario, i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_observacion,pa.par_codigo,pa.par_nombre,p.prod_cod,p.or_id
                 from insumo_update ia
@@ -209,7 +230,7 @@ class Model_modrequerimiento extends CI_Model{
         return $query->result_array();
     }
 
-    /*--- LISTA DE REQUERIMIENTOS ELIMINADOS SEGUN CITE ---*/
+    /*--- LISTA DE REQUERIMIENTOS ELIMINADOS SEGUN CITE (anterior vigente 2023)---*/
     public function list_requerimientos_eliminados($cite_id){
         $sql = 'select *
                 from insumo_delete id

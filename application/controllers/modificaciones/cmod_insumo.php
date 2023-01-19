@@ -177,7 +177,7 @@ class Cmod_insumo extends CI_Controller {
 
             $tit='ALINEACI&Oacute;N ACTIVIDAD';
 
-            $data['verif_mod']=$this->verif_mod_req($cite_id);
+            //$data['verif_mod']=$data['cite'][0];
             $data['tit']=$tit;
             $data['style']=$this->style();
 
@@ -555,7 +555,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-    /*--- VALIDA ADD REQUERIMIENTO (2020) ---*/
+    /*--- VALIDA ADD REQUERIMIENTO (2023) ---*/
     public function valida_add_insumo(){
       if($this->input->post()) {
         $post = $this->input->post();
@@ -621,10 +621,14 @@ class Cmod_insumo extends CI_Controller {
           /*------------------------------------------*/
 
           /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
-          if($this->copia_insumo($cite_id,$ins_id,1)){
+          if($this->copia_insumo($cite_id,$ins_id,1)){ /// inserta historial reporte
             /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
               $this->update_activo_modificacion($cite_id);
+              $this->session->set_flashdata('success','EL REQUERIMIENTO SE REGISTRO CORRECTAMENTE :)');
             /*--------------------------------------*/
+          }
+          else{
+            $this->session->set_flashdata('danger','EL REQUERIMIENTO NOSE REGISTRO CORRECTAMENTE, VERIFIQUE DATOS :(');
           }
           ;
             /*$data_to_store2 = array(
@@ -643,12 +647,12 @@ class Cmod_insumo extends CI_Controller {
           /*--------------------------------------*/
 
           /*-----------------------------------------------------------*/
-          if(count($this->model_modrequerimiento->get_insumo_adicionado($add_id))==1){
+         /* if(count($this->model_modrequerimiento->get_insumo_adicionado($add_id))==1){
             $this->session->set_flashdata('success','EL REQUERIMIENTO SE REGISTRO CORRECTAMENTE :)');
           }
           else{
             $this->session->set_flashdata('danger','EL REQUERIMIENTO NOSE REGISTRO CORRECTAMENTE, VERIFIQUE DATOS :(');
-          }
+          }*/
 
           redirect(site_url("").'/mod/list_requerimientos/'.$cite_id.'');
       }
@@ -663,6 +667,7 @@ class Cmod_insumo extends CI_Controller {
     function update_activo_modificacion($cite_id){
       $update_cite= array(
         'cite_activo' => 1,
+        'tp_reporte' => 1, /// nuevo reporte
         'fun_id'=>$this->fun_id
       );
       $this->db->where('cite_id', $cite_id);
@@ -924,30 +929,31 @@ class Cmod_insumo extends CI_Controller {
           $cite_id = $post['cite_id']; /// Cite Id
           $ins_id = $post['ins_id']; /// Insumo Id
           $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id);
+   
           if($this->copia_insumo($cite_id,$ins_id,3)){
 
-          /*--- Update estado del Insumo ---*/
-          $update_ins = array(
-            'ins_estado' => 3, /// 3 : Eliminado
-            'ins_mod' => 2, /// 2 : Modulo Modificaciones
-            'aper_id' => 0, /// 2 : aper
-            'com_id' => 0, /// 2 : com_id
-            'form4_cod' => 0, /// 2 : cod. formulario n4
-            'num_ip' => $this->input->ip_address(), 
-            'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
-            'fun_id' => $this->fun_id
-            );
-          $this->db->where('ins_id', $ins_id);
-          $this->db->update('insumos', $update_ins);
-          /*------------------------------- -*/
+            /*--- Update estado del Insumo ---*/
+            $update_ins = array(
+              'ins_estado' => 3, /// 3 : Eliminado
+              'ins_mod' => 2, /// 2 : Modulo Modificaciones
+              'aper_id' => 0, /// 2 : aper
+              'com_id' => 0, /// 2 : com_id
+              'form4_cod' => 0, /// 2 : cod. formulario n4
+              'num_ip' => $this->input->ip_address(), 
+              'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+              'fun_id' => $this->fun_id
+              );
+            $this->db->where('ins_id', $ins_id);
+            $this->db->update('insumos', $update_ins);
+            /*------------------------------- -*/
 
-            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
-              $this->update_activo_modificacion($cite_id);
-            /*--------------------------------------*/
+              /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+                $this->update_activo_modificacion($cite_id);
+              /*--------------------------------------*/
 
-            $result = array(
-              'respuesta' => 'correcto'
-            );
+              $result = array(
+                'respuesta' => 'correcto'
+              );
           }
           else{
             $result = array(
@@ -1011,23 +1017,23 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-    /*------------- REPORTE CITE MOD-FINANCIERA -------------*/
-    public function reporte_modificacion_financiera($cite_id){
+    /*------------- REPORTE MODIFICACION DE REQUERIMIENTOS -------------*/
+      public function reporte_modificacion_financiera($cite_id){
       $data['cite']=$this->model_modrequerimiento->get_cite_insumo($cite_id);
       if(count($data['cite'])!=0){ /// Nuevo formato de Reporte
         if($this->fecha_entrada<strtotime($data['cite'][0]['cite_fecha'])){
           $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],2);
-          $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id);
-          /*if(($data['cite'][0]['cite_codigo']!='' && $this->gestion==2022) || $this->tp_adm==1){
-            $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id);
+
+          if($data['cite'][0]['tp_reporte']==0){ /// rep anterior
+            $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id); /// anterior reporte
           }
           else{
-            $data['items_modificados']='<div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>PARA GENERAR EL DETALLE DE LA MODIFICACIÓN, DEBE CERRAR LA MODIFICACIÓN !!</b></div>';
-          }*/
+           $data['items_modificados']=$this->modificacionpoa->items_modificados_form5_historial($cite_id); 
+          }
           
           $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
           $data['pie_rep']='MOD_POA_FORM5_'.$data['cite'][0]['cite_nota'].' de '.date('d-m-Y',strtotime($data['cite'][0]['cite_fecha'])).' - '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].' - '.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
-    //     echo $data['items_modificados'];
+
           $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
         }
         else{ /// Formato Antiguo de Reporte 2020
@@ -1066,6 +1072,15 @@ class Cmod_insumo extends CI_Controller {
         echo "Error !!!";
       }
     }
+
+
+
+
+
+
+
+
+
 
 
     /*------- LISTA DE REQUERIMIENTOS MODIFICADOS (2020) -------*/
@@ -1839,7 +1854,7 @@ class Cmod_insumo extends CI_Controller {
                           $saldo_partida=$asig[0]['monto']-$monto_prog+$asig[0]['ppto_saldo_ncert'];
 
                           if($total<=$saldo_partida){ /// E
-                            $nro++;
+                            
                             /*-------- Insert Insumos Nuevos -------*/
                             $query=$this->db->query('set datestyle to DMY');
                             $data_to_store = array( 
@@ -1887,8 +1902,14 @@ class Cmod_insumo extends CI_Controller {
                             }
                             /*----------------------------------*/
 
+                            if($this->copia_insumo($cite_id,$ins_id,1)){ /// inserta historial reporte
+                              $nro++;
+                            }
+           
+
+
                             /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
-                              $data_to_store2 = array(
+                              /*$data_to_store2 = array(
                                 'ins_id' => $ins_id, /// ins_id
                                 'cite_id' => $cite_id, /// cite_id
                                 'num_ip' => $this->input->ip_address(), 
@@ -1896,7 +1917,7 @@ class Cmod_insumo extends CI_Controller {
                                 'fun_id' => $this->session->userdata("fun_id"),
                                 );
                               $this->db->insert('insumo_add', $data_to_store2);
-                              $add_id=$this->db->insert_id();
+                              $add_id=$this->db->insert_id();*/
                             /*---------------------------------------*/
 
                             /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
@@ -2429,17 +2450,27 @@ class Cmod_insumo extends CI_Controller {
 
 
     /*---- Verificando el numero de Modificaciones ---*/
-    public function verif_mod_req($cite_id){
-      $ca=$this->model_modrequerimiento->list_requerimientos_adicionados($cite_id);
-      $cm=$this->model_modrequerimiento->list_requerimientos_modificados($cite_id);
-      $cd=$this->model_modrequerimiento->list_requerimientos_eliminados($cite_id);
-      $valor=0;
-      if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
-        $valor=1;
+/*    public function verif_mod_req($cite){
+      if($cite[0]['tp_reporte']==0){ /// reporte Antiguo
+        $ca=$this->model_modrequerimiento->list_requerimientos_adicionados($cite[0]['cite_id']);
+        $cm=$this->model_modrequerimiento->list_requerimientos_modificados($cite[0]['cite_id']);
+        $cd=$this->model_modrequerimiento->list_requerimientos_eliminados($cite[0]['cite_id']);
+        $valor=0;
+        if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
+          $valor=1;
+        }
+      }
+      else{ //// reporte nuevo >20/01/2023
+
       }
 
+
+
+
+      
+
       return $valor;
-    }
+    }*/
 
 
 

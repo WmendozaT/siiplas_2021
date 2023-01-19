@@ -1287,11 +1287,97 @@ class Modificacionpoa extends CI_Controller{
     }
 
 
+  //// Lista de Items MODIFICADOS (listado nuevo 2023)
+  public function items_modificados_form5_v2($cite_id){
+    $tabla='';
+
+
+    return $tabla;
+  }
+
+
+  //// Lista de Items MODIFICADOS (Nuevo)
+  public function items_modificados_form5_historial($cite_id){
+    $tabla='';
+    $requerimientos_add = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,1); /// Add
+    if(count($requerimientos_add)!=0){
+      $tabla.='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>ITEMS AGREGADOS ('.count($requerimientos_add).')</b></div>';
+              $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
+              $tabla.='<thead>';
+              $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
+                $tabla.='<th style="width:1%;height:20px;">#</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
+                $tabla.='<th style="width:3.8%;">PARTIDA</th>';
+                $tabla.='<th style="width:16%;">DETALLE REQUERIMIENTO</th>';
+                $tabla.='<th style="width:4.6%;">UNIDAD MEDIDA</th>';
+                $tabla.='<th style="width:4%;">CANTIDAD</th>';
+                $tabla.='<th style="width:4%;">PRECIO UNITARIO</th>';
+                $tabla.='<th style="width:4%;">COSTO TOTAL</th>';
+                $tabla.='<th style="width:4.4%;">ENE.</th>';
+                $tabla.='<th style="width:4.4%;">FEB.</th>';
+                $tabla.='<th style="width:4.4%;">MAR.</th>';
+                $tabla.='<th style="width:4.4%;">ABR.</th>';
+                $tabla.='<th style="width:4.4%;">MAY.</th>';
+                $tabla.='<th style="width:4.4%;">JUN.</th>';
+                $tabla.='<th style="width:4.4%;">JUL.</th>
+                <th style="width:4.4%;">AGO.</th>
+                <th style="width:4.4%;">SEPT.</th>
+                <th style="width:4.4%;">OCT.</th>
+                <th style="width:4.4%;">NOV.</th>
+                <th style="width:4.4%;">DIC.</th>
+                <th style="width:6%;">OBSERVACIÓN</th>';
+              $tabla.='</tr>';
+              $tabla.='</thead>';
+              $tabla.='<tbody>';
+              $nro=0;
+              $monto=0;
+              foreach ($requerimientos_add as $row){
+                $nro++;
+                $tabla.='<tr class="modo1">';
+                  $tabla.='<td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>';
+                  $tabla.='<td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>';
+                  $tabla.='<td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>';
+                  $tabla.='<td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>';
+                  $tabla.='<td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>';
+                  $tabla.='<td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>';
+                  $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+                  $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                  
+                  $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
+                $tabla.='</tr>';
+                $monto=$monto+$row['ins_costo_total'];
+              }
+              $tabla.='</tbody>
+                <tr class="modo1">
+                  <td style="height:10px;" colspan=7></td>
+                  <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
+                  <td colspan=13></td>
+                </tr>
+              </table><br>';
+    }
+
+    /*$requerimientos_add = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,2); /// Mod
+    if(count($requerimientos_add)!=0){
+      
+    }
+
+    $requerimientos_add = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,3); /// Del
+    if(count($requerimientos_add)!=0){
+      
+    }*/
+
+    return $tabla;
+  }
 
 
 
 
-  //// Lista de Items MODIFICADOS en la Edicion
+
+
+
+
+
+  //// Lista de Items MODIFICADOS (listado anterior vigente)
   public function items_modificados_form5($cite_id){
     $tabla='';
             $requerimientos_add = $this->model_modrequerimiento->list_requerimientos_adicionados($cite_id);

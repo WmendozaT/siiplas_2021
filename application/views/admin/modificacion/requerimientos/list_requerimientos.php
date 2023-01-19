@@ -135,7 +135,7 @@
 					<div class="well">
 						<div class="btn-group btn-group-justified">
 							<?php
-								if($verif_mod==1){
+								if($cite[0]['cite_activo']==1){
 									if($cite[0]['cite_estado']==1){ ?>
 										<a href="#" data-toggle="modal" data-target="#modal_cerrar"  class="btn btn-success" title="MODIFICACION FINANCIERA CERRADA"><i class="fa fa-save"></i> <b>MODIFICACI&Oacute;N CONCLUIDA</b></a>
 									<?php
@@ -148,7 +148,7 @@
 							?>
 							<a href="#" data-toggle="modal" data-target="#modal_comparativo" name="<?php echo $cite[0]['proy_id']; ?>" id="<?php echo $tit_comp;?>" class="btn btn-default comparativo" title="MOSTRAR CUADRO COMPARATIVO PRESUPUESTARIA ASIGANDO-POA"><i class="fa fa-clipboard"></i> <b>COMPARATIVO PPTO.</b></a>
 							<?php
-								if($verif_mod==1){ ?>
+								if($cite[0]['cite_activo']==1){ ?>
 									<a href="javascript:abreVentana('<?php echo site_url("").'/mod/rep_mod_financiera/'.$cite[0]['cite_id'].'' ?>');" class="btn btn-default" title="IMPRIMIR REPORTE DE MODIFICACION FINANCIERA"><i class="fa fa-file-pdf-o"></i> <b>PRINT REPORTE</b></a>
 									<?php
 								}
