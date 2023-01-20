@@ -745,7 +745,7 @@ $(document).ready(function() {
             document.getElementById("mresultado").disabled = false;
             document.getElementById("mverificacion").disabled = false;
            }
-           else{
+           else{ 
             document.getElementById("mprod").disabled = true;
             document.getElementById("mresultado").disabled = true;
             document.getElementById("mverificacion").disabled = true;
