@@ -35,6 +35,7 @@ class Cmod_fisica extends CI_Controller {
             $this->fun_id = $this->session->userData('fun_id'); /// Fun id
             $this->rol_id = $this->session->userData('rol_id'); /// Rol Id
             $this->adm = $this->session->userData('adm');
+            //$this->mes_actual = $this->session->userData('mes');
             $this->dist = $this->session->userData('dist');
             $this->dist_tp = $this->session->userData('dist_tp');
             $this->tp_adm = $this->session->userData('tp_adm');
@@ -262,7 +263,7 @@ class Cmod_fisica extends CI_Controller {
             'producto'=>$producto,
             'temp'=>$this->prog_mes,
             'mes'=>$this->temp,
-            'mes_actual'=>$this->verif_mes,
+            'mes_actual'=>$this->verif_mes[1],
             'trimestre'=>$this->tmes,
             'temp_eval'=>$this->prog_mes_eval,
             'sum_temp'=>$sum_temp,

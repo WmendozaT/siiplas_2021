@@ -718,7 +718,7 @@ $(document).ready(function() {
     $(".mod_form4").on("click", function (e) {
         prod_id = $(this).attr('name');
         document.getElementById("prod_id").value=prod_id;
-        
+        //alert(prod_id)
         var url = base+"index.php/modificaciones/cmod_fisica/get_form4_mod";
         var request;
         if (request) {
@@ -733,11 +733,13 @@ $(document).ready(function() {
 
         request.done(function (response, textStatus, jqXHR) {
         if (response.respuesta == 'correcto') {
-         // alert(response.trimestre)
+          //alert(response.trimestre+'---'+response.mes_actual)
             document.getElementById("mcod").value = response.producto[0]['prod_cod']; 
             document.getElementById("mprod").value = response.producto[0]['prod_producto']; 
             document.getElementById("mresultado").value = response.producto[0]['prod_resultado'];
             document.getElementById("mverificacion").value = response.producto[0]['prod_fuente_verificacion'];
+            document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
+
            if(response.trimestre==1){
             document.getElementById("mprod").disabled = false;
             document.getElementById("mresultado").disabled = false;
