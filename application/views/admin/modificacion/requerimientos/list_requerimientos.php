@@ -116,7 +116,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>....</li><li>....</li><li>POAS Aprobados</li><li><?php if($proyecto[0]['tp_id']==1){echo "Mis Componentes";}else{echo "Mis Servicios";} ?></li><li>Mis Requerimientos - <?php echo $this->session->userData('gestion') ?></li>
+					<li>....</li><li>....</li><li>POAS Aprobados</li><li>Unidad Responsable</li><li>Mis Requerimientos - <?php echo $this->session->userData('gestion') ?></li>
 				</ol>
 			</div>
 			<!-- END RIBBON -->
@@ -124,85 +124,84 @@
 			<div id="content">
 			<div class="row">
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-					<section id="widget-grid" class="well">
-						<div title="<?php echo $proyecto[0]['aper_id'];?>">
-							<?php echo $datos_cite;?>
-							<?php echo $titulo;?>
-						</div>
-					</section>
+					<?php echo $cabecera; ?>
 				</article>
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-					<div class="well">
-						<div class="btn-group btn-group-justified">
-							<?php
-								if($cite[0]['cite_activo']==1){
-									if($cite[0]['cite_estado']==1){ ?>
-										<a href="#" data-toggle="modal" data-target="#modal_cerrar"  class="btn btn-success" title="MODIFICACION FINANCIERA CERRADA"><i class="fa fa-save"></i> <b>MODIFICACI&Oacute;N CONCLUIDA</b></a>
-									<?php
-									}
-									else{ ?>
-										<a href="#" data-toggle="modal" data-target="#modal_cerrar" class="btn btn-warning cerrar" title="CERRAR MODIFICACION FINANCIERA"><i class="fa fa-save"></i> <b>CERRAR MOD.</b></a>		
-										<?php
-									}
-								}
-							?>
-							<a href="#" data-toggle="modal" data-target="#modal_comparativo" name="<?php echo $cite[0]['proy_id']; ?>" id="<?php echo $tit_comp;?>" class="btn btn-default comparativo" title="MOSTRAR CUADRO COMPARATIVO PRESUPUESTARIA ASIGANDO-POA"><i class="fa fa-clipboard"></i> <b>COMPARATIVO PPTO.</b></a>
-							<?php
-								if($cite[0]['cite_activo']==1){ ?>
-									<a href="javascript:abreVentana('<?php echo site_url("").'/mod/rep_mod_financiera/'.$cite[0]['cite_id'].'' ?>');" class="btn btn-default" title="IMPRIMIR REPORTE DE MODIFICACION FINANCIERA"><i class="fa fa-file-pdf-o"></i> <b>PRINT REPORTE</b></a>
-									<?php
-								}
-							?>
-						</div><hr>
-						<div class="btn-group btn-group-justified">
-							<a class="btn btn-default" href="<?php echo base_url(); ?>assets/video/Plantilla_migracion_requerimiento_mod.xlsx" download  title="DESCARGAR ARCHIVO DE MIGRACIÓN EXCEL"><i class="glyphicon glyphicon-download"></i> DESCARGAR ARCHIVO</a>
-							<a class="btn btn-danger" id="btsubmit" onclick="valida_eliminar()" title="ELIMINAR REQUERIMIENTOS SELECCIONADOS"><i class="glyphicon glyphicon-trash"></i> DELETE INSUMOS (SELECCIONADOS)</a>
-						</div>
-					</div>
+					<?php echo $opciones; ?>
 		        </article>
 		        
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<div class="jarviswidget jarviswidget-color-darken">
-                      <header>
-                          <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                          <h2 class="font-md"><strong>MIS REQUERIMIENTOS - <?php echo $this->session->userData('gestion') ?></strong></h2>  
-                      </header>
-						<div>
-							<?php 
-			                  if($this->session->flashdata('success')){ ?>
-			                    <div class="alert alert-success" style="font-size: 5pt;">
-			                      	<?php echo $this->session->flashdata('success'); ?>
-			                    </div>
-			                    <script type="text/javascript">alertify.success("<?php echo '<font size=1>'.$this->session->flashdata('success').'</font>'; ?>")</script>
-			                <?php }
-			                  elseif($this->session->flashdata('danger')){ ?>
-			                      <div class="alert alert-danger">
-			                        <?php echo $this->session->flashdata('danger'); ?>
-			                      </div>
-			                      <script type="text/javascript">alertify.error("<?php echo '<font size=1>'.$this->session->flashdata('danger').'</font>'; ?>")</script>
-			                    <?php
-			                  }
+					<?php 
+	                  if($this->session->flashdata('success')){ ?>
+	                    <div class="alert alert-success">
+	                      	<?php echo $this->session->flashdata('success'); ?>
+	                    </div>
+	                    <script type="text/javascript">alertify.success("<?php echo '<font size=2>'.$this->session->flashdata('success').'</font>'; ?>")</script>
+	                <?php }
+	                  elseif($this->session->flashdata('danger')){ ?>
+	                      <div class="alert alert-danger">
+	                        <?php echo $this->session->flashdata('danger'); ?>
+	                      </div>
+	                      <script type="text/javascript">alertify.error("<?php echo '<font size=2>'.$this->session->flashdata('danger').'</font>'; ?>")</script>
+	                    <?php
+	                  }
+	                ?>
+	               <div class="well well-sm well-light">
+						<div id="tabs">
+							<ul>
+								<li>
+									<a href="#tabs-a"><b>MIS REQUERIMIENTOS</b></a>
+								</li>
+								<li>
+									<a href="#tabs-c"><b>VER CUADRO COMPARATIVO DE PRESUPUESTO</b></a>
+								</li>
+							</ul>
 
-								if($monto[3]>19){ ?>
-									<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success nuevo_ff" title="NUEVO REGISTRO - REQUERIMIENTOS" style="width:14%;">NUEVO REGISTRO</a>
-									<a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default" title="SUBIR ARCHIVO -  REQUERIMIENTO" style="width:14%;">SUBIR ARCHIVO</a><br><br>
-									<?php
-								}
-							?>
-							<div class="widget-body no-padding">
-								<form id="del_req" name="del_req" novalidate="novalidate" action="<?php echo site_url().'/modificaciones/cmod_insumo/delete_select_requerimientos'?>" method="post">
-									<input type="hidden" name="cite_id" id="cite_id" value="<?php echo $cite[0]['cite_id'];?>">
-									<?php echo $tabla;?>
-									<input type="hidden" name="tot" id="tot" value="0">
-			                        <!-- <div class="alert alert-danger" align=right><input type="button" class="btn btn-danger btn-xs" value="ELIMINAR REQUERIMIENTOS SELECCIONADOS .." id="btsubmit" onclick="valida_eliminar()" title="ELIMINAR REQUERIMIENTOS SELECCIONADOS"></div> -->
-			                    </form>
+							<div id="tabs-a">
+								<div class="row">
+									<div >
+            			
+										<div class="jarviswidget jarviswidget-color-darken">
+			                              <header>
+			                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+			                                  <h2 class="font-md"><strong></strong></h2>  
+			                              </header>
+											<div>
+												<div class="widget-body no-padding">
+													<form id="del_req" name="del_req" novalidate="novalidate" action="<?php echo site_url().'/modificaciones/cmod_insumo/delete_select_requerimientos'?>" method="post">
+														<input type="hidden" name="cite_id" id="cite_id" value="<?php echo $cite[0]['cite_id'];?>">
+														<?php echo $tabla;?>
+														<input type="hidden" name="tot" id="tot" value="0">
+								                    </form>
+												</div>
+												<!-- end widget content -->
+											</div>
+											<!-- end widget div -->
+										</div>
+										<!-- end widget -->
+								
+									</div>
+								</div>
 							</div>
-							<!-- end widget content -->
+
+							<div id="tabs-c">
+								<div class="row">
+									<hr>
+									<div align="left" id="boton_comparativo">
+                                        <a href="#" class="btn btn-default boton_cuadro_comparativo" title="CUADRO COMPARATIVO PPTO." style="width:40%;"> <img src="<?php echo base_url(); ?>assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;ACTUALIZAR CONSOLIDADO DE PRESUPUESTO POR PARTIDAS</a>
+                                    </div>
+                                    <div class="row">
+                                      <div id="partidas"></div>
+                                    </div>
+								</div>
+							</div>
+							
 						</div>
-						<!-- end widget div -->
 					</div>
-					<!-- end widget -->
+
 				</article>
+
+
 			</div>
 		</div>
 
@@ -242,12 +241,12 @@
                     <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; Salir Formulario</span></button>
                 </div>
                 <div class="modal-body">
-                	<h2 class="alert alert-info"><center>NUEVO REQUERIMIENTO</center></h2>
+                	<h2 class="alert alert-info"><center>NUEVO REGISTRO - REQUERIMIENTO</center></h2>
                     <form action="<?php echo site_url().'/modificaciones/cmod_insumo/valida_add_insumo'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
                         <input type="hidden" name="cite_id" id="cite_id" value="<?php echo $cite[0]['cite_id'];?>">
                         <header>
                         	<b>DATOS GENERALES DEL REQUERIMIENTO</b>
-                        	<label class="label"><?php echo $titulo;?></label>
+                        	<!-- <label class="label"><?php echo $titulo;?></label> -->
                         </header>
 							<fieldset>
 								<div class="row">
@@ -335,7 +334,7 @@
 								<br>
 								
 								<div id="atit"></div>
-								<header><b>DISTRIBUCI&Oacute;N FINANCIERA : <?php echo $this->session->userdata('gestion')?></b><br>
+								<header><b>DISTRIBUCI&Oacute;N PRESUPUESTARIA : <?php echo $this->session->userdata('gestion')?></b><br>
 								<label class="label"><div id="ff"></div></label>
 								</header>
 								<br>
@@ -466,7 +465,7 @@
 						<input type="hidden" name="ins_id" id="ins_id">
 						<input type="hidden" name="par_id" id="par_id">
 							<header><b>DATOS GENERALES DEL REQUERIMIENTO</b>
-								<label class="label"><?php echo $titulo;?></label>
+								<!-- <label class="label"><?php echo $titulo;?></label> -->
 							</header>
 							<fieldset>
 								<div class="row">
@@ -556,7 +555,7 @@
 										</label>
 									</section>
 									<section class="col col-3">
-										<label class="label"><b><?php echo $tit;?></b></label>
+										<label class="label"><b>ALINEACIÓN FORM 4 (ACTIVIDAD)</b></label>
 										<label class="input">
 											<select class="form-control" id="id" name="id" title="SELECCIONE VINCULACIÓN">       
 		                                    </select>
@@ -684,7 +683,7 @@
 	    <!-- ======================================================== -->
 
 	    <!-- MODAL COMPARATIVO   -->
-	    <div class="modal fade" id="modal_comparativo" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- 	    <div class="modal fade" id="modal_comparativo" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 	        <div  role="document" class="modal-dialog modal-lg">
 	            <div class="modal-content">
 	                <div class="modal-header">
@@ -701,7 +700,7 @@
 	                </div>
 	            </div>
 	        </div>
-	    </div>
+	    </div> -->
 	 	<!--  =============== -->
 	 <!-- MODAL CERRAR   -->
         <div class="modal fade" id="modal_cerrar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -713,10 +712,10 @@
 	              <div class="modal-body">
 	              		<?php
 	              			if($cite[0]['cite_estado']==0){
-	              				echo '<h2 class="alert alert-warning"><center>CERRAR MODIFICACI&Oacute;N FINANCIERA</center></h2>';
+	              				echo '<h2 class="alert alert-warning"><center>CERRAR MODIFICACI&Oacute;N PRESUPUESTARIA</center></h2>';
 	              			}
 	              			else{
-	              				echo '<h2 class="alert alert-success"><center>MODIFICACI&Oacute;N FINANCIERA CONCLUIDA</center></h2>';
+	              				echo '<h2 class="alert alert-success"><center>MODIFICACI&Oacute;N PRESUPUESTARIA CONCLUIDA</center></h2>';
 	              			}
 	              		?>
 	               		<form action="<?php echo site_url().'/modificaciones/cmod_insumo/cerrar_modificacion'?>" method="post" id="form_cerrar" name="form_cerrar" class="smart-form">
@@ -741,7 +740,7 @@
 									</footer>
 	                            </div>
 	                            <div id="mload" style="display: none" align="center">
-	                                <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>CERRANDO MODIFICACI&Oacute;N FINANCIERA</b>
+	                                <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>CERRANDO MODIFICACI&Oacute;N PRESUPUESTARIA</b>
 	                            </div>
 	                        </div>
 						</form>
@@ -842,5 +841,14 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 		<script src="<?php echo base_url(); ?>mis_js/modificacionpoa/modform5.js"></script> 
 		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				pageSetUp();
+				// menu
+				$("#menu").menu();
+				$('.ui-dialog :button').blur();
+				$('#tabs').tabs();
+			})
+		</script>
 	</body>
 </html>

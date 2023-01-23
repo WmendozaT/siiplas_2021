@@ -186,7 +186,7 @@ function valida_eliminar(){
 
 
 
-$(function () {
+/*$(function () {
   $(".comparativo").on("click", function (e) {
     proy_id = $(this).attr('name');
     establecimiento = $(this).attr('id');
@@ -224,7 +224,51 @@ $(function () {
     e.preventDefault();
     
   });
-});
+});*/
+
+
+    /*---- BOTON PARA CARGAR EL CUADRO COMPARATIVO POR PARTIDAS ----*/
+    $(function () {
+        $(".boton_cuadro_comparativo").on("click", function (e) {
+            proy_id=$('[name="proy_id"]').val();
+            com_id=$('[name="com_id"]').val();
+
+            $('#partidas').html('<div class="loadin" align="center"><br><br><br><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" style="width:70%;"/></div>');
+
+            document.getElementById("boton_comparativo").style.display = 'none';
+            var url = base+"index.php/programacion/cppto_comparativo/get_cuadro_comparativo_ptto";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "proy_id="+proy_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+            if (response.respuesta == 'correcto') {
+                $('#partidas').fadeIn(1000).html(response.tabla);
+            }
+            else{
+                alertify.error("ERROR AL RECUPERAR DATOS POA ");
+            }
+
+            });
+            request.fail(function (jqXHR, textStatus, thrown) {
+                console.log("ERROR: " + textStatus);
+            });
+            request.always(function () {
+                //console.log("termino la ejecuicion de ajax");
+            });
+            e.preventDefault();
+          
+        });
+    });
+
+
 
 
   //// VER LISTA DE CERTIFICACIONES POA POR ITEMS

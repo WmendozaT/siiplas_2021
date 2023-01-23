@@ -142,52 +142,97 @@ class Cmod_insumo extends CI_Controller {
       $data['cite'] = $this->model_modrequerimiento->get_cite_insumo($cite_id);
 
       if(count($data['cite'])!=0){
-        $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); /// Proyecto de Inversion
-        $data['tit_comp']=$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'];
-          
-          if($data['proyecto'][0]['tp_id']==4){ /// Gasto Corriente
-            $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
-            $data['tit_comp']=$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'];
+        $proyecto = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); /// Proyecto de Inversion
+        $data['cabecera']=$this->cabecera_formulario_mod5($data['cite'],$proyecto);
+        $data['opciones']=$this->opciones_formulario_mod5($data['cite'],$proyecto);
+        $data['style']=$this->style();
+      
+          if($this->gestion>2021){ /// Gestion 2022
+            if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
+              $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2022
+            }
+            else{
+              $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022
+            }
           }
-            $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']); /// CABECERA
-            $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
-
-            $data['cite_id']=$cite_id;
-            $data['monto']=$this->modificacionpoa->ppto($data['proyecto']);
-
-            if($this->gestion>2021){ /// Gestion 2022
-              if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>500){
-                $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2022
-              }
-              else{
-                $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022
-              }
+          else{ /// Gestion 2020-2021
+            if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>1000){
+              $data['tabla']=$this->lista_requerimientos_auxiliar($data['cite']); /// 2021  
             }
-            else{ /// Gestion 2020-2021
-              if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>1000){
-                $data['tabla']=$this->lista_requerimientos_auxiliar($data['cite']); /// 2021  
-              }
-              else{
-                $data['tabla']=$this->lista_requerimientos($data['cite']); /// LISTA DE REQUERIMIENTO 2021
-              }
+            else{
+              $data['tabla']=$this->lista_requerimientos($data['cite']); /// LISTA DE REQUERIMIENTO 2021
             }
+          }
 
-            $data['part_padres'] = $this->model_modificacion->list_part_padres_asig($data['proyecto'][0]['aper_id']);//partidas padres
-            $data['lista']=$this->tipo_lista_ope_act($data['cite']);
+          $data['part_padres'] = $this->model_modificacion->list_part_padres_asig($proyecto[0]['aper_id']);//partidas padres
+          $data['lista']=$this->tipo_lista_ope_act($data['cite']); /// LINEADO A ACTIVIDAD
 
-            $tit='ALINEACI&Oacute;N ACTIVIDAD';
-
-            //$data['verif_mod']=$data['cite'][0];
-            $data['tit']=$tit;
-            $data['style']=$this->style();
-
-          
-            $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
+          $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
       }
       else{
         redirect('mod/list_top');
       }
     }
+
+
+
+  /*----- CABECERA FORMULARIO ------*/
+  public function cabecera_formulario_mod5($cite,$proyecto){
+    $monto=$this->modificacionpoa->ppto($proyecto);
+    $tabla='';
+    $tabla.='
+      <section id="widget-grid" class="well">
+        <div>
+          '.$this->modificacionpoa->datos_cite($cite).'
+          '.$this->modificacionpoa->titulo_cabecera($cite).'';
+          if($monto[3]>19){
+            $tabla.='
+            <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default" title="NUEVO REGISTRO">
+              <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>NUEVO REGISTRO (FORM. N 5)</b>
+            </a>
+            <a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default importar_ff" title="SUBIR ARCHIVO EXCEL">
+              <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="25" HEIGHT="20"/>&nbsp;<b>SUBIR REQUERIMIENTOS.CSV </b>
+            </a>';
+          }
+          $tabla.='
+          <a href="'.site_url("").'/rep/exportar_requerimientos_servicio/'.$cite[0]['com_id'].'" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>DESCARGAR INFORMACION (EXCEL)</b></a>
+        </div>
+      </section>';
+    return $tabla;
+  }
+
+  /*----- OPCIONES FORMULARIO ------*/
+  public function opciones_formulario_mod5($cite,$proyecto){
+    $monto=$this->modificacionpoa->ppto($proyecto);
+    $tabla='';
+
+      $tabla.='
+        <div class="well">';
+          if($cite[0]['cite_activo']==1){
+            if($cite[0]['cite_estado']==1){
+              $tabla.='<button type="button" class="btn btn-success btn-sm btn-block" data-toggle="modal" data-target="#modal_cerrar" title="MODIFICACION CERRADA"><i class="fa fa-save"></i><b>&nbsp;MODIFICACI&Oacute;N CONCLUIDA</b></button><br>';
+            }
+            else{
+              $tabla.='<button type="button" class="btn btn-warning btn-sm btn-block" data-toggle="modal" data-target="#modal_cerrar" title="CONSLUIR MODIFICACION"><i class="fa fa-save"></i><b>&nbsp;CERRAR MODIFICACIÓN</b></button><br>';
+              /*$tabla.='<a data-toggle="modal" data-target="#modal_cerrar" class="btn btn-warning cerrar" title="CERRAR MODIFICACION FINANCIERA"><i class="fa fa-save"></i> <b>CERRAR MOD.</b></a>   ';*/
+            }
+
+            $tabla.='
+            <a href="javascript:abreVentana(\''.site_url("").'/mod/rep_mod_financiera/'.$cite[0]['cite_id'].'\');" title="IMPRIMIR REPORTE DE MODIFICACION POA">
+              <button class="btn btn-default btn-lg btn-block">
+                <i class="fa fa-file-pdf-o"></i><b>&nbsp;IMPRIMIR MODIFICACIÓN POA</b>
+              </button>
+            </a><br>';
+          }
+
+          $tabla.='
+          <button type="button" id="btsubmit" onclick="valida_eliminar()" class="btn btn-danger btn-sm btn-block">
+            <i class="glyphicon glyphicon-trash"></i> &nbsp;DELETE INSUMOS (SELECCIONADOS)
+          </button>
+        </div>';
+
+    return $tabla;
+  }
 
 
     /// ---- STYLE -----
@@ -239,7 +284,7 @@ class Cmod_insumo extends CI_Controller {
       $operaciones=$this->model_producto->lista_operaciones($cite[0]['com_id']);
         $tabla.='
           <section class="col col-3">
-            <label class="label"><b>ALINEACI&Oacute;N ACTIVIDAD '.$this->gestion.'</b></label>
+            <label class="label"><b>ALINEACI&Oacute;N FORM 4 (ACTIVIDAD) '.$this->gestion.'</b></label>
             <label class="input">
               <select class="form-control" id="dato_id" name="dato_id" title="SELECCIONE ACTIVIDAD">
                 <option value="">Seleccione Actividad</option>';
@@ -486,35 +531,17 @@ class Cmod_insumo extends CI_Controller {
 
                     if(count($prog)!=0){
                       $tabla.='
-                      <td style="width:5%;">'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td> 
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes2'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes3'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes4'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes5'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes6'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes7'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes8'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes9'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes10'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes11'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes12'], 2, ',', '.').'</td>';
+                      <td style="width:5%;">'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td>';
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla.='<td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
+                      }
                     }
                     else{
                       $tabla.='
-                      <td style="width:5%;">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>';
+                      <td style="width:5%;">0</td>';
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla.='<td style="width:5%;" bgcolor="#ffeeeb">0</td>';
+                      }
                     }
                     
                     $tabla .= ' 
@@ -630,29 +657,6 @@ class Cmod_insumo extends CI_Controller {
           else{
             $this->session->set_flashdata('danger','EL REQUERIMIENTO NOSE REGISTRO CORRECTAMENTE, VERIFIQUE DATOS :(');
           }
-          ;
-            /*$data_to_store2 = array(
-              'ins_id' => $ins_id, /// ins_id
-              'cite_id' => $cite_id, /// cite_id
-              'num_ip' => $this->input->ip_address(), 
-              'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
-              'fun_id' => $this->session->userdata("fun_id"),
-              );
-            $this->db->insert('insumo_add', $data_to_store2);
-            $add_id=$this->db->insert_id();*/
-          /*----------------------------------------------------*/
-
-          /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
-            //$this->update_activo_modificacion($cite_id);
-          /*--------------------------------------*/
-
-          /*-----------------------------------------------------------*/
-         /* if(count($this->model_modrequerimiento->get_insumo_adicionado($add_id))==1){
-            $this->session->set_flashdata('success','EL REQUERIMIENTO SE REGISTRO CORRECTAMENTE :)');
-          }
-          else{
-            $this->session->set_flashdata('danger','EL REQUERIMIENTO NOSE REGISTRO CORRECTAMENTE, VERIFIQUE DATOS :(');
-          }*/
 
           redirect(site_url("").'/mod/list_requerimientos/'.$cite_id.'');
       }
@@ -1028,7 +1032,7 @@ class Cmod_insumo extends CI_Controller {
             $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id); /// anterior reporte
           }
           else{
-           $data['items_modificados']=$this->modificacionpoa->items_modificados_form5_historial($cite_id); 
+           $data['items_modificados']=$this->modificacionpoa->items_modificados_form5_historial($cite_id,1); //// Nuevo Reporte
           }
           
           $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
@@ -1133,32 +1137,14 @@ class Cmod_insumo extends CI_Controller {
             $tabla.='<td style="width: 4.5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
             $tabla.='<td style="width: 6%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
             if(count($prog)!=0){
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes1'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes2'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes3'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes4'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes5'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes6'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes7'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes8'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes9'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes10'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes11'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes12'], 2, ',', '.') . '</td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+              }
             }
             else{
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td style="width: 4.5%; text-align: right;" bgcolor=red>-</td>';
+              }
             }
             $tabla.='<td style="width: 7.5%; text-align: left;">'.$row['ins_observacion'].'</td>';
           $tabla.='</tr>';
@@ -1219,32 +1205,14 @@ class Cmod_insumo extends CI_Controller {
             $tabla.='<td style="width: 4.5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
             $tabla.='<td style="width: 6%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
             if(count($prog)!=0){
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes1'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes2'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes3'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes4'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes5'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes6'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes7'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes8'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes9'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes10'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes11'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes12'], 2, ',', '.') . '</td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+              }
             }
             else{
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td style="width: 4.5%; text-align: right;" border=red>-</td>';
+              }
             }
             $tabla.='<td style="width: 7.5%; text-align: left;">'.$row['ins_observacion'].'</td>';
           $tabla.='</tr>';
@@ -1302,18 +1270,9 @@ class Cmod_insumo extends CI_Controller {
             $tabla.='<td style="width: 4.5%; text-align: right;">'.$row['ins_cant_requerida'].'</td>';
             $tabla.='<td style="width: 4.5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
             $tabla.='<td style="width: 6%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes1'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes2'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes3'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes4'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes5'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes6'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes7'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes8'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes9'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes10'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes11'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes12'], 2, ',', '.') . '</td>';
+            for ($i=1; $i <=12 ; $i++) { 
+              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes'.$i], 2, ',', '.') . '</td>';
+            }
           $tabla.='<td style="width: 7.5%; text-align: left;">'.$row['ins_observacion'].'</td>';
           $tabla.='</tr>';
           $monto=$monto+$row['ins_costo_total'];
@@ -1341,7 +1300,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-    /*------- LISTA DE REQUERIMIENTOS MODIFICADOS (UPDATE)(2020) -------*/
+    /*------- LISTA DE REQUERIMIENTOS MODIFICADOS (UPDATE)(2020-2021-2022) -------*/
     public function rep_requerimiento_update($cite_id){
       $tabla ='';
       $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id); // Datos Cite
@@ -1380,7 +1339,6 @@ class Cmod_insumo extends CI_Controller {
           $tabla.='<th style="width:4.5%;background-color: #1c7368; color: #FFFFFF">OCT.</th>';
           $tabla.='<th style="width:4.5%;background-color: #1c7368; color: #FFFFFF">NOV.</th>';
           $tabla.='<th style="width:4.5%;background-color: #1c7368; color: #FFFFFF">DIC.</th>';
-          $tabla.='<th style="width:2%;background-color: #1c7368; color: #FFFFFF"></th>';
         $tabla.='</tr>';
         $tabla.='</thead>';
         $tabla.='<tbody>';
@@ -1399,37 +1357,15 @@ class Cmod_insumo extends CI_Controller {
             $tabla.='<td style="width: 4.5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
             $tabla.='<td style="width: 6%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
             if(count($prog)!=0){
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes1'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes2'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes3'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes4'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes5'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes6'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes7'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes8'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes9'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes10'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes11'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes12'], 2, ',', '.') . '</td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+              }
             }
             else{
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td style="width: 4.5%; text-align: right;" bgcolor=red>-</td>';
+              }
             }
-            $tabla.='
-            <td style="width: 2%; text-align: left;">
-              <a href="#" data-toggle="modal" data-target="#modal_anular_mod" class="btn btn-default anular_mod" title="ANULAR MODIFICACIÓN"  name="'.$row['add_id'].'" id="1"><img src="'.base_url().'assets/img/neg.jpg" WIDTH="35" HEIGHT="35"/></a>
-            </td>';
           $tabla.='</tr>';
           $monto=$monto+$row['ins_costo_total'];
         }
@@ -1481,7 +1417,6 @@ class Cmod_insumo extends CI_Controller {
           $tabla.='<th style="width:4.5%;background-color: #1c7368; color: #FFFFFF">OCT.</th>';
           $tabla.='<th style="width:4.5%;background-color: #1c7368; color: #FFFFFF">NOV.</th>';
           $tabla.='<th style="width:4.5%;background-color: #1c7368; color: #FFFFFF">DIC.</th>';
-          $tabla.='<th style="width:2%;background-color: #1c7368; color: #FFFFFF"></th>';
         $tabla.='</tr>';
         $tabla.='</thead>';
         $tabla.='<tbody>';
@@ -1500,32 +1435,14 @@ class Cmod_insumo extends CI_Controller {
             $tabla.='<td style="width: 4.5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
             $tabla.='<td style="width: 6%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
             if(count($prog)!=0){
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes1'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes2'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes3'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes4'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes5'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes6'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes7'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes8'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes9'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes10'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes11'], 2, ',', '.') . '</td>';
-              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes12'], 2, ',', '.') . '</td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+              }
             }
             else{
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
-              $tabla.='<td style="width: 4.5%; text-align: right;"></td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td style="width: 4.5%; text-align: right;" bgcolor=red>-</td>';
+              }
             }
             $tabla.='
             <td style="width: 2%; text-align: left;">
@@ -1581,7 +1498,6 @@ class Cmod_insumo extends CI_Controller {
           $tabla.='<th style="width:4.5%;background-color: #1c7368; color: #FFFFFF">OCT.</th>';
           $tabla.='<th style="width:4.5%;background-color: #1c7368; color: #FFFFFF">NOV.</th>';
           $tabla.='<th style="width:4.5%;background-color: #1c7368; color: #FFFFFF">DIC.</th>';
-          $tabla.='<th style="width:3.5%;background-color: #1c7368; color: #FFFFFF"></th>';
         $tabla.='</tr>';
         $tabla.='</thead>';
         $tabla.='<tbody>';
@@ -1598,22 +1514,10 @@ class Cmod_insumo extends CI_Controller {
             $tabla.='<td style="width: 4.5%; text-align: right;">'.$row['ins_cant_requerida'].'</td>';
             $tabla.='<td style="width: 4.5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
             $tabla.='<td style="width: 6%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes1'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes2'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes3'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes4'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes5'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes6'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes7'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes8'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes9'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes10'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes11'], 2, ',', '.') . '</td>';
-            $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes12'], 2, ',', '.') . '</td>';
-          $tabla.='
-            <td style="width: 3.5%; text-align: center;">
-              <a href="#" data-toggle="modal" data-target="#modal_anular_mod" class="btn btn-default anular_mod" title="ANULAR MODIFICACIÓN"  name="'.$row['delete_id'].'" id="3"><img src="'.base_url().'assets/img/neg.jpg" WIDTH="35" HEIGHT="35"/></a>
-            </td>';
+            for ($i=1; $i <=12 ; $i++) { 
+              $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($row['mes'.$i], 2, ',', '.') . '</td>';            
+            }
+
           $tabla.='</tr>';
           $monto=$monto+$row['ins_costo_total'];
         }
@@ -1905,20 +1809,6 @@ class Cmod_insumo extends CI_Controller {
                             if($this->copia_insumo($cite_id,$ins_id,1)){ /// inserta historial reporte
                               $nro++;
                             }
-           
-
-
-                            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
-                              /*$data_to_store2 = array(
-                                'ins_id' => $ins_id, /// ins_id
-                                'cite_id' => $cite_id, /// cite_id
-                                'num_ip' => $this->input->ip_address(), 
-                                'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
-                                'fun_id' => $this->session->userdata("fun_id"),
-                                );
-                              $this->db->insert('insumo_add', $data_to_store2);
-                              $add_id=$this->db->insert_id();*/
-                            /*---------------------------------------*/
 
                             /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
                               $this->update_activo_modificacion($cite_id);
@@ -2026,8 +1916,13 @@ class Cmod_insumo extends CI_Controller {
         $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']); /// CABECERA
         $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
 
-        $data['requerimientos']=$this->rep_requerimiento_update($cite_id);
-
+        if($data['cite'][0]['tp_reporte']==1){
+          $data['items_modificados']=$this->modificacionpoa->items_modificados_form5_historial($cite_id,0); /// listado de items modificados 2023 (historial)
+        }
+        else{
+          $data['items_modificados']=$this->rep_requerimiento_update($cite_id); /// listado de items modificados
+        }
+        
         $this->load->view('admin/modificacion/requerimientos/update_cite', $data);
       }
       else{
@@ -2059,40 +1954,20 @@ class Cmod_insumo extends CI_Controller {
     function quitar_requerimiento_cite(){
       if ($this->input->is_ajax_request() && $this->input->post()) {
           $post = $this->input->post();
-          $id = $this->security->xss_clean($post['id']); /// proda_id, prom_id, dlte_id 
-          $tp = $this->security->xss_clean($post['tp']); /// Tp Id : add,mod,del
+          $id = $this->security->xss_clean($post['id']); /// insh_id 
+         // $tp = $this->security->xss_clean($post['tp']); /// Tp Id : add,mod,del
 
 
           $update_mod = array(
-            'estado' => 3, /// 3 : Eliminado
-            'fun_id' => $this->fun_id
+            'historial_activo' => 0 /// item ocultado
           );
+          $this->db->where('insh_id', $id);
+          $this->db->update('insumos_historial', $update_mod);
 
-          if($tp==1){
-            $this->db->where('add_id', $id);
-            $this->db->update('insumo_add', $update_mod);
-
-            $ins_mod=$this->model_modrequerimiento->get_insumo_adicionado($id);
-          }
-          elseif ($tp==3) {
-            $this->db->where('delete_id', $id);
-            $this->db->update('insumo_delete', $update_mod);
-
-            $ins_mod=$this->model_modrequerimiento->get_insumo_eliminado($id);
-          }
-
-          
           /*-------------------------------*/
-          if($ins_mod[0]['estado']==3){
-            $result = array(
+          $result = array(
               'respuesta' => 'correcto'
             );
-          }
-          else{
-            $result = array(
-              'respuesta' => 'error'
-            );
-          }
           /*-------------------------------*/
 
           echo json_encode($result);

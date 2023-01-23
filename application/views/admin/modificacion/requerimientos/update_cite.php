@@ -87,9 +87,9 @@
 			<div class="login-info">
 				<span> <!-- User image size is adjusted inside CSS, it should stay as is --> 
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                            <span>
-                                <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
-                            </span>
+            <span>
+              <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
+            </span>
 						<i class="fa fa-angle-down"></i>
 					</a> 
 				</span>
@@ -98,11 +98,11 @@
 			<nav>
 				<ul>
 					<li class="">
-	                <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-	            	</li>
-		            <li class="text-center">
-		                <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">MODIFICACIONES</span></a>
-		            </li>
+	          <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+	        </li>
+		      <li class="text-center">
+		        <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">MODIFICACIONES</span></a>
+		      </li>
 				<?php echo $menu;?>
 				</ul>
 			</nav>
@@ -121,7 +121,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Modificaciones</li><li>Mis Operaciones</li><li>T&eacute;cnico de Unidad Ejecutora</li><li>Cite</li>
+					<li>Modificaciones</li><li>Modificar Requerimientos</li><li>Cite</li>
 				</ol>
 			</div>
 			<!-- END RIBBON -->
@@ -131,8 +131,7 @@
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
 					<section id="widget-grid" class="well">
 						<div title="<?php echo $proyecto[0]['aper_id'];?>">
-							<?php echo $datos_cite;?>
-							<?php echo $titulo;?>
+							<?php echo $datos_cite.' '.$titulo;?>
 						</div>
 					</section>
 				</article>
@@ -171,7 +170,7 @@
 							<!-- widget content -->
 							<div class="widget-body">
 								<div class="row">
-								<?php echo $requerimientos; ?>
+								<?php echo $items_modificados; ?>
 								</div>
 							</div>
 							<!-- end widget body-->
@@ -264,7 +263,7 @@
 		        $(".anular_mod").on("click", function (e) {
 		            reset();
 		            var id = $(this).attr('name');
-		            var tp_mod = $(this).attr('id');
+		            //var tp_mod = $(this).attr('id');
 		            var request;
 		            // confirm dialog
 		            alertify.confirm("QUITAR REQUERIMIENTO DEL CITE ?", function (a) {
@@ -277,7 +276,7 @@
 		                        url: url,
 		                        type: "POST",
 		                        dataType: "json",
-                    			data: "id="+id+"&tp="+tp_mod
+                    			data: "id="+id
 		                    });
 
 		                    request.done(function (response, textStatus, jqXHR) { 

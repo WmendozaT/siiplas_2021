@@ -143,6 +143,7 @@ $route['exportar_consulta_ppto_poa/(:any)'] = 'reportes_cns/crep_consultafinanci
 //$route['rep/exportar_requerimientos_regional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_regional/$1/$2'; ///// Exportar Requerimientos por regional
 $route['rep/exportar_requerimientos_institucional'] = 'reportes_cns/exporting_datos/requerimientos_institucional'; ///// Exportar Requerimientos Institucional
 $route['rep/exportar_requerimientos_distrital/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_distrital/$1/$2/$3'; ///// Exportar Requerimientos por Regional / Distrital 2023
+//$route['rep/exportar_requerimientos_uresponsable/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_distrital/$1/$2/$3'; ///// Exportar Requerimientos por Unidad Responsable 2023
 //$route['rep/exportar_requerimientos_regional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_regional/$1/$2'; ///// Exportar Requerimientos por Regional 2020-2021
 //$route['rep/xls_unidades/(:any)'] = 'reportes_cns/exporting_datos/mis_unidades_pinversion/$1'; ///// Lista de Unidades, Establecimientos de la regional
 //$route['rep/ver_consolidado_requerimientos/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_consolidado/$1'; ///// Exportar Requerimientos Nacional (Consolidado)

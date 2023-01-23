@@ -246,14 +246,9 @@
       date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");
 
-      if($this->gestion==2019){
-        $tabla='No disponible';
-      }
-      else{
-        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
-        $requerimientos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id);
-        $tabla=$this->lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id); // Requerimientos Distrital 2020-2021
-      }
+      $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+      $requerimientos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id);
+      $tabla=$this->lista_ejecucion_requerimientos_uresponsable($requerimientos,$com_id); // Requerimientos Unidad responsable 2020-2021
 
       header('Content-type: application/vnd.ms-excel');
       header("Content-Disposition: attachment; filename=formulario_N5_".$componente[0]['tipo_subactividad']."_".$componente[0]['serv_descripcion']."_$fecha.xls"); //Indica el nombre del archivo resultante
@@ -265,15 +260,15 @@
       echo $tabla;
     }
 
-     /*----- LISTA DE REQUERIMIENTOS SUBACTIVIDAD (2020-2021) ----*/
-    public function lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id){
+     /*----- LISTA DE REQUERIMIENTOS SUBACTIVIDAD (2020-2021-2022-2023) ----*/
+    public function lista_ejecucion_requerimientos_uresponsable($requerimientos,$com_id){
         $componente=$this->model_componente->get_componente($com_id,$this->gestion);
         $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
         $proyecto=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
         $tit='PROYECTO DE INVERSI&Oacute;N';
-        $tit_proy=''.$proyecto[0]['aper_prog'].' '.$proyecto[0]['proy_sisin'].' '.$proyecto[0]['aper_act'].' '.$proyecto[0]['proy_nombre'];
+        $tit_proy=$proyecto[0]['proy_sisin'].'.-'.$proyecto[0]['proy_nombre'];
         if($proyecto[0]['tp_id']==4){
-          $tit_proy=''.$proyecto[0]['aper_prog'].' '.$proyecto[0]['aper_proy'].' '.$proyecto[0]['aper_act'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
+          $tit_proy=$proyecto[0]['aper_prog'].''.$proyecto[0]['aper_proy'].''.$proyecto[0]['aper_act'].'.-'.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
           $tit=$proyecto[0]['tipo_adm'];
         }
 
@@ -299,7 +294,7 @@
                 <b> DA : </b> '.$proyecto[0]['dep_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dep_departamento']), 'cp1252', 'UTF-8').'<br>
                 <b> UE : </b> '.$proyecto[0]['dist_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dist_distrital']), 'cp1252', 'UTF-8').'<br>
                 <b> '.mb_convert_encoding($tit, 'cp1252', 'UTF-8').' : </b> '.mb_convert_encoding($tit_proy, 'cp1252', 'UTF-8').'<br>
-                <b> UNIDAD RESPONSABLE : </b> '.$componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'<br>
+                <b> UNIDAD RESPONSABLE : </b> '.mb_convert_encoding($componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'], 'cp1252', 'UTF-8').'<br>
               </td>
             </tr>
           </table><br>
