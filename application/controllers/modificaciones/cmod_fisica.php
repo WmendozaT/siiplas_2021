@@ -186,7 +186,7 @@ class Cmod_fisica extends CI_Controller {
          }
         
         $data['nro'] = $this->model_producto->list_prod($data['cite'][0]['com_id']); // Lista de productos para el codigo
-        $data['verif_mod']=$this->modificacionpoa->verif_cite($cite_id); /// Verificando modficaciones para la impresion
+        //$data['verif_mod']=$this->modificacionpoa->verif_cite($cite_id); /// Verificando modficaciones para la impresion
         $data['formulario_N4']=$this->modificacionpoa->mis_formulario4($data['cite']); /// Lista Operaciones
         $this->load->view('admin/modificacion/moperaciones/productos/list_productos', $data);
 
@@ -327,12 +327,13 @@ class Cmod_fisica extends CI_Controller {
           $or_id = $this->security->xss_clean($post['mor_id']); /// Objetivo Regional
 
           $ae=0;
-          $get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
+          /*$get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
           if(count($get_acc)!=0){
             $ae=$get_acc[0]['ae'];
-          }
+          }*/
 
-        if($this->copia_operacion($cite,$prod_id,2)){
+
+        if($this->registra_form4_original($cite,$producto)){
           /*--------- Update Producto --------*/
           $update_prod = array(
           //  'com_id' => $com_id, // com id
@@ -412,8 +413,17 @@ class Cmod_fisica extends CI_Controller {
             }
           } 
 
+
+
+            $this->copia_operacion($cite,$prod_id,2); /// historial de modificaciones para el reporte
+
+            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+            $this->update_activo_modificacion($cite_id);
+            /*--------------------------------------*/
+
+
           /*-------------- Redireccionando a lista de Operaciones -------*/
-          $this->session->set_flashdata('success','LA OPERACIÓN SE MODIFICO CORRECTAMENTE :)');
+          $this->session->set_flashdata('success','LA ACTIVIDAD SE MODIFICO CORRECTAMENTE :)');
           redirect(site_url("").'/mod/lista_operaciones/'.$cite_id.'');
         }
 
@@ -423,9 +433,59 @@ class Cmod_fisica extends CI_Controller {
     }
 
 
+     /*---- Funcion Copia Form4 a Historial para reportes----*/
+    public function registra_form4_original($cite,$form4){
+     // $prod = $this->model_insumo->get_requerimiento($ins_id); //// DATOS DEL REQUERIMIENTO
+        $prog=$this->model_producto->programado_producto($form4[0]['prod_id']);
 
-    /*--- VALIDA NUEVA ACTIVIDAD (2020) ---*/
-    public function valida_operacion(){
+      if(count($form4)!=0 & count($prog)!=0){
+       // $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id); /// Datos Cite
+        $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); //// DATOS DEL PROYECTO
+
+        $query=$this->db->query('set datestyle to DMY');
+          $data_to_store = array( 
+            'cite_id' => $cite[0]['cite_id'],
+            'prod_id' => $form4[0]['prod_id'],
+            'com_id' => $form4[0]['com_id'],
+            'prod_producto' => $form4[0]['prod_producto'],
+            'indi_id' => $form4[0]['indi_id'],
+            'prod_indicador' => $form4[0]['prod_indicador'],
+            'prod_linea_base' => $form4[0]['prod_linea_base'],
+            'prod_meta' => $form4[0]['prod_meta'],
+            'prod_fuente_verificacion' => $form4[0]['prod_fuente_verificacion'],
+            'prod_unidades' => $form4[0]['prod_unidades'],
+            'prod_resultado' => $form4[0]['prod_resultado'],
+            'or_id' => $form4[0]['or_id'],
+            'prod_cod' => $form4[0]['prod_cod'],
+            'prod_observacion' => $form4[0]['prod_observacion'],
+            'mt_id' => $form4[0]['mt_id'],
+            'uni_resp' => $form4[0]['uni_resp'],
+          );
+          $this->db->insert('form4_original', $data_to_store); ///// Guardar en Tabla Insumos 
+          $prod_id_inicial=$this->db->insert_id();
+        
+          //$prog=$this->model_producto->programado_producto($form4[0]['prod_id']);
+
+          foreach ($prog as $row) {
+            $update_form4= array(
+              'm'.$row['m_id'] => $row['pg_fis']
+            );
+            $this->db->where('prod_id_inicial', $prod_id_inicial);
+            $this->db->update('form4_original', $this->security->xss_clean($update_form4));
+
+          }
+
+          return true;
+      }
+      else{
+        return false;
+      }
+      
+    }
+
+
+    /*--- VALIDA NUEVA ACTIVIDAD (2020-2021-2022-2023) ---*/
+    public function valida_form4(){
       if($this->input->post()) {
         $post = $this->input->post();
         $cite_id = $this->security->xss_clean($post['cite_id']); /// Ins id
@@ -502,25 +562,16 @@ class Cmod_fisica extends CI_Controller {
           }
           /*------------------------------------------------*/
 
-          /*--------- iNSERT AUDI ADICIONAR OPERACION -------*/
-          $data_to_store2 = array(
-            'prod_id' => $prod_id, /// prod_id
-            'cite_id' => $cite_id, /// cite_id
-            'num_ip' => $this->input->ip_address(), 
-            'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
-            'fun_id' => $this->fun_id,
-            );
-          $this->db->insert('_producto_add', $data_to_store2);
-          $proda_id=$this->db->insert_id();
-          /*-----------------------------------------------*/
-
-          if(count($this->model_modificacion->get_add_producto($proda_id))!=0 & $this->model_producto->get_producto_id($prod_id)!=0){
-            $this->session->set_flashdata('success','SE REGISTRO CORRECTAMENTE LA ACTIVIDAD :)');
-          }
-          else{
-            $this->session->set_flashdata('danger','ERROR AL REGISTRAR LA ACTIVIDAD ...');
-          }
-
+          /*---- iNSERT AUDI ADICIONAR ACTIVIDAD ---*/
+            if($this->copia_operacion($cite,$prod_id,1)){ /// inserta historial reporte
+              /*---- iNSERT AUDI ADICIONAR ACTIVIDAD ---*/
+                $this->update_activo_modificacion($cite_id);
+                $this->session->set_flashdata('success','LA ACTIVIDAD SE REGISTRO CORRECTAMENTE :)');
+              /*--------------------------------------*/
+            }
+            else{
+              $this->session->set_flashdata('danger','LA ACTIVIDAD NOSE REGISTRO CORRECTAMENTE, VERIFIQUE DATOS :(');
+            }
           redirect(site_url("").'/mod/lista_operaciones/'.$cite_id.'');
       }
       else{
@@ -528,6 +579,16 @@ class Cmod_fisica extends CI_Controller {
       }
     }
 
+    /*----- UPDATE ESTADO ACTIVO DE LA MODIFICACION ------*/
+    function update_activo_modificacion($cite_id){
+      $update_cite= array(
+        'cite_activo' => 1,
+        'tp_reporte' => 1, /// nuevo reporte
+        'fun_id'=>$this->fun_id
+      );
+      $this->db->where('cite_id', $cite_id);
+      $this->db->update('cite_mod_fisica', $this->security->xss_clean($update_cite));
+    }
 
     /*---- Eliminar Operacion-Producto ---*/
       function delete_operacion(){
@@ -549,6 +610,11 @@ class Cmod_fisica extends CI_Controller {
               );
             $this->db->where('prod_id', $prod_id);
             $this->db->update('_productos', $update_prod);
+
+
+            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+              $this->update_activo_modificacion($cite_id);
+            /*--------------------------------------*/
 
             $result = array(
               'respuesta' => 'correcto'
@@ -575,11 +641,11 @@ class Cmod_fisica extends CI_Controller {
           if($this->fecha_entrada<strtotime($data['cite'][0]['cite_fecha'])){
             $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],1);
             
-            if(($data['cite'][0]['cite_codigo']!='' && $this->gestion==2022) || $this->tp_adm==1){
-              $data['items_modificados']=$this->modificacionpoa->items_modificados_form4($cite_id);
+            if($data['cite'][0]['tp_reporte']==0){ /// rep anterior
+              $data['items_modificados']=$this->modificacionpoa->items_modificados_form4($cite_id); /// anterior reporte
             }
             else{
-              $data['items_modificados']='<div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>PARA GENERAR EL DETALLE DE LA MODIFICACIÓN, DEBE CERRAR LA MODIFICACIÓN !!</b></div>';
+             $data['items_modificados']=$this->modificacionpoa->items_modificados_form4_historial($cite_id,1); //// Nuevo Reporte
             }
 
             $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
@@ -1067,8 +1133,9 @@ class Cmod_fisica extends CI_Controller {
 
 
     /*======== FUNCIONES EXTRAS =========*/
-    /*------ Funcion Copia Operacion -------*/
-    public function copia_operacion($cite,$prod_id,$tip_mod){
+    /*------ Funcion Copia formulario 4 Historial  -------*/
+    public function copia_operacion($cite,$prod_id,$tipo){
+      // tip_mod=1 /// nuevo
       // tip_mod=2 /// modificado
       // tip_mod=3 /// eliminado
       $producto=$this->model_producto->get_producto_id($prod_id);
@@ -1088,6 +1155,9 @@ class Cmod_fisica extends CI_Controller {
         'prod_cod' => $producto[0]['prod_cod'],
         'prod_observacion' => $producto[0]['prod_observacion'],
         'mt_id' => $producto[0]['mt_id'],
+        'prod_id' => $prod_id, ///prod id
+        'tipo_mod' => $tipo, ///tipo de modificacion 1:adicion, 2:modificacion, 3: eliminacion
+        'cite_id' => $cite[0]['cite_id']
       );
       $this->db->insert('_producto_historial', $data_to_store);
       $prodh_id=$this->db->insert_id();
@@ -1104,48 +1174,7 @@ class Cmod_fisica extends CI_Controller {
         $this->db->insert('prod_programado_mensual_historial', $data_to_store2);
       }
 
-      if($tip_mod==2){
-        $data_to_store3 = array(
-          'prod_id' => $prod_id,
-        //  'prodh_id' => $prodh_id,
-          'cite_id' => $cite[0]['cite_id'],
-          'num_ip' => $this->input->ip_address(), 
-          'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
-          'fun_id' => $this->session->userdata("fun_id"),
-        );
-        $this->db->insert('_producto_modificado', $data_to_store3);
-        $prodm_id=$this->db->insert_id();
-
-        if (count($this->model_modificacion->get_mod_producto($prodm_id))==1) {
-          return true;
-        }
-        else{
-          return false;
-        }
-      }
-      else{
-        /*---- Insert Producto Delete -----*/
-          $data_to_store = array( 
-            'prod_id' => $prod_id,
-           // 'prodh_id' => $prodh_id,
-            'cite_id' => $cite[0]['cite_id'], /// Cite Id
-            'num_ip' => $this->input->ip_address(), 
-            'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
-            'fun_id' => $this->fun_id,
-            );
-          $this->db->insert('_producto_delete', $data_to_store);
-          $dlte_id=$this->db->insert_id();
-        /*----------------------------------*/
-
-        if (count($this->model_modificacion->get_delete_producto($dlte_id))==1) {
-          return true;
-        }
-        else{
-          return false;
-        }
-
-      }
-
+      return true;
     }
 
     /*--- ACTUALIZA CODIGO DE ACTIVIDAD ----*/

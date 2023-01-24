@@ -315,7 +315,7 @@ class Modificacionpoa extends CI_Controller{
 
 //////////////// FORMULARIO N° 4 
         /*--- VERIFICA SI SE TIENE ALGUN REGISTRO (ABM) ---*/
-    public function verif_cite($cite_id){
+/*    public function verif_cite($cite_id){
       $cite=$this->model_modfisica->get_cite_fis($cite_id); // CITE
       $proyecto=$this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// PROYECTO
 
@@ -329,7 +329,7 @@ class Modificacionpoa extends CI_Controller{
       }
 
       return $sw;
-    }
+    }*/
 
     /*------ VERIFICANDO CODIGO DE MODIFICACION POA (2020)-----*/
     public function datos_cite($cite){
@@ -533,9 +533,101 @@ class Modificacionpoa extends CI_Controller{
       return $tabla;
     }
 
+  //// Lista de Items MODIFICADOS (Nuevo) para el reporte 2023
+  public function items_modificados_form4_historial($cite_id,$tp_rep){
+    /// tp_rep : 0 update
+    /// tp_rep : 1 reporte
+    $tabla='';
+    $form4_add = $this->model_modfisica->list_form4_historial_modificados($cite_id,1); /// Add
+    $form4_mod = $this->model_modfisica->list_form4_historial_modificados($cite_id,2); /// Mod
+    $form4_del = $this->model_modfisica->list_form4_historial_modificados($cite_id,3); /// Del
+    
+      if(count($form4_add)!=0){
+        $tabla.=$this->tabla_form4($form4_add,'ITEMS NUEVOS ('.count($form4_add).')');
+      }
+      if(count($form4_mod)!=0){
+        $tabla.=$this->tabla_form4($form4_mod,'ITEMS MODIFICADOS ('.count($form4_mod).')');
+      }
+      if(count($form4_del)!=0){
+        $tabla.=$this->tabla_form4($form4_del,'ITEMS ELIMINADOS ('.count($form4_del).')');
+      }
+    
+    return $tabla;
+  }
 
 
-  //// Lista de Items Modificados en la Edicion
+  //// Lista de Items MODIFICADOS PARA EL REPORTE (listado nuevo 2023) FORM 4
+  public function tabla_form4($listado,$detalle){
+    $tabla='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$detalle.'</b></div>';
+    /*$tabla.='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$detalle.'</b></div>
+            <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+              <thead>
+              <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
+                <th style="width:1%;height:20px;">#</th>
+                <th style="width:2.1%;">COD.<br>ACT.</th>
+                <th style="width:3.8%;">PARTIDA</th>
+                <th style="width:16%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:4.6%;">UNIDAD MEDIDA</th>
+                <th style="width:4%;">CANT.</th>
+                <th style="width:4%;">PRECIO UNI.</th>
+                <th style="width:4%;">COSTO TOTAL</th>
+                <th style="width:4.4%;">ENE.</th>
+                <th style="width:4.4%;">FEB.</th>
+                <th style="width:4.4%;">MAR.</th>
+                <th style="width:4.4%;">ABR.</th>
+                <th style="width:4.4%;">MAY.</th>
+                <th style="width:4.4%;">JUN.</th>
+                <th style="width:4.4%;">JUL.</th>
+                <th style="width:4.4%;">AGO.</th>
+                <th style="width:4.4%;">SEPT.</th>
+                <th style="width:4.4%;">OCT.</th>
+                <th style="width:4.4%;">NOV.</th>
+                <th style="width:4.4%;">DIC.</th>
+                <th style="width:6%;">OBSERVACIÓN</th>
+              </tr>
+              </thead>
+              <tbody>';
+              $nro=0;
+              $monto=0;
+              foreach ($listado as $row){
+                $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                $nro++;
+                $tabla.='<tr class="modo1">
+                  <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
+                  <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>
+                  <td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>
+                  <td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>
+                  <td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>
+                  <td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                  if(count($prog)!=0){
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+                    }
+                  }
+                  else{
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
+                    }
+                  }
+                  $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
+                $tabla.='</tr>';
+                $monto=$monto+$row['ins_costo_total'];
+              }
+              $tabla.='</tbody>
+                <tr class="modo1">
+                  <td style="height:10px;" colspan=7></td>
+                  <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
+                  <td colspan=13></td>
+                </tr>
+              </table><br>';*/
+
+    return $tabla;
+  }
+
+
+  //// Lista de Items Modificados en la Edicion (Reporte PDF) 2022 (reporte antiguo)
   public function items_modificados_form4($cite_id){
     $tabla='';
             $ope_adicionados=$this->model_modfisica->operaciones_adicionados($cite_id);
@@ -1529,32 +1621,14 @@ class Modificacionpoa extends CI_Controller{
                   $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
                   if(count($prog)!=0){
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes1'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes2'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes3'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes4'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes5'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes6'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes7'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes8'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes9'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes10'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes11'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes12'], 2, ',', '.') . '</td>';
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+                    }
                   }
                   else{
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla.='<td style="width: 4.4%; text-align: right;">-</td>';
+                    }
                   }
                   $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
                 $tabla.='</tr>';
@@ -1614,32 +1688,14 @@ class Modificacionpoa extends CI_Controller{
                   $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
                   if(count($prog)!=0){
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes1'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes2'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes3'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes4'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes5'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes6'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes7'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes8'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes9'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes10'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes11'], 2, ',', '.') . '</td>';
-                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes12'], 2, ',', '.') . '</td>';
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+                    }
                   }
                   else{
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
-                    $tabla.='<td style="width: 4.4%; text-align: right;"></td>';
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla.='<td style="width: 4.4%; text-align: right;">-</td>';
+                    }
                   }
                   $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
                 $tabla.='</tr>';
@@ -1697,18 +1753,9 @@ class Modificacionpoa extends CI_Controller{
                   $tabla.='<td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
                   $tabla.='<td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes1'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes2'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes3'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes4'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes5'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes6'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes7'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes8'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes9'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes10'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes11'], 2, ',', '.') . '</td>';
-                  $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes12'], 2, ',', '.') . '</td>';
+                  for ($i=1; $i <=12 ; $i++) { 
+                    $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($row['mes'.$i], 2, ',', '.') . '</td>';
+                  }
                 $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
                 $tabla.='</tr>';
                 $monto=$monto+$row['ins_costo_total'];

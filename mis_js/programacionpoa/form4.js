@@ -734,44 +734,40 @@ $(document).ready(function() {
         request.done(function (response, textStatus, jqXHR) {
         if (response.respuesta == 'correcto') {
           //alert(response.trimestre+'---'+response.mes_actual)
+          //alert(response.producto[0]['indi_id'])
             document.getElementById("mcod").value = response.producto[0]['prod_cod']; 
             document.getElementById("mprod").value = response.producto[0]['prod_producto']; 
             document.getElementById("mresultado").value = response.producto[0]['prod_resultado'];
             document.getElementById("mverificacion").value = response.producto[0]['prod_fuente_verificacion'];
             document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
 
+            document.getElementById("mtipo_i").value = response.producto[0]['indi_id'];
+            document.getElementById("mlbase").value = parseInt(response.producto[0]['prod_linea_base']);
+            document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
+            document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
+
+            document.getElementById("mindicador").value = response.producto[0]['prod_indicador'];
+            document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
+            document.getElementById("mor_id").value = response.producto[0]['or_id'];
+
            if(response.trimestre==1){
             document.getElementById("mprod").disabled = false;
             document.getElementById("mresultado").disabled = false;
             document.getElementById("mverificacion").disabled = false;
+
+            document.getElementById("mtipo_i").disabled = false;
+            document.getElementById("mlbase").disabled = false;
+            document.getElementById("mtp_met").disabled = false;
            }
            else{ 
             document.getElementById("mprod").disabled = true;
             document.getElementById("mresultado").disabled = true;
             document.getElementById("mverificacion").disabled = true;
             
+            document.getElementById("mtipo_i").disabled = true;
+            document.getElementById("mlbase").disabled = true;
+            document.getElementById("mtp_met").disabled = true;
            }
-           
-           /*document.getElementById("mtipo_i").value = response.producto[0]['indi_id'];
-           document.getElementById("mlbase").value = parseInt(response.producto[0]['prod_linea_base']);
-           document.getElementById("mmeta").value = parseInt(response.producto[0]['prod_meta']);
-           document.getElementById("mtp_met").value = response.producto[0]['mt_id'];*/
-
-           if(response.mes_actual==1){ /// el tipo de indicador solo se podra modificar el primer mes del año
-              document.getElementById("mtipo_i").disabled = false;
-              document.getElementById("mlbase").disabled = false;
-              document.getElementById("mtp_met").disabled = false;
-           }
-           else{
-              document.getElementById("mtipo_i").disabled = true;
-              document.getElementById("mlbase").disabled = true;
-              document.getElementById("mtp_met").disabled = true;
-           }
-
-
-           document.getElementById("mindicador").value = response.producto[0]['prod_indicador'];
-           document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
-           document.getElementById("mor_id").value = response.producto[0]['or_id'];
            
            //// MOUESTRA LOS MESES YA EVALUADOS
            for (var i = 1; i <=12; i++) {

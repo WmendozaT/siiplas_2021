@@ -188,7 +188,7 @@ class Model_modrequerimiento extends CI_Model{
                 from insumos_historial ih
                 Inner Join partidas as pa On pa.par_id=ih.par_id
                 Inner Join _productos as p On p.prod_id=ih.id
-                Inner Join vista_temporalidad_insumo_historial as temp On temp.insh_id=ih.insh_id
+              
                 where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
                 order by pa.par_codigo asc';
 

@@ -38,6 +38,24 @@ class Model_modfisica extends CI_Model{
     }
 
 
+
+    /*--- LISTA MODIFICADOS ITEMS 2023---*/
+    public function list_form4_historial_modificados($cite_id,$tipo_mod){
+        ///ih.historial_activo : 0 (no se muestra)
+        ///ih.historial_activo : 1 (se muestra)
+
+        $sql = 'select *
+                from _producto_historial ph
+                where ph.cite_id='.$cite_id.' and ph.tipo_mod='.$tipo_mod.' and ph.historial_activo!=\'0\'
+                order by ph.prodh_id, ph.prod_cod asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
     /*----- Lista de Operaciones - Nuevos -------*/
     public function operaciones_adicionados($cite_id){
         $sql = '

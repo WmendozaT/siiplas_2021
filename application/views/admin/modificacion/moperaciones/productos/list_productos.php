@@ -88,9 +88,9 @@
 			<div class="login-info">
 				<span> <!-- User image size is adjusted inside CSS, it should stay as is --> 
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                            <span>
-                                <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
-                            </span>
+            <span>
+              <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
+            </span>
 						<i class="fa fa-angle-down"></i>
 					</a> 
 				</span>
@@ -99,11 +99,11 @@
 			<nav>
 				<ul>
 					<li class="">
-	                <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-	            	</li>
-		            <li class="text-center">
-		                <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">MODIFICACIONES</span></a>
-		            </li>
+	          <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+	        </li>
+		      <li class="text-center">
+		        <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">MODIFICACIONES</span></a>
+		      </li>
 				<?php echo $menu;?>
 				</ul>
 			</nav>
@@ -121,7 +121,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Modificaciones</li><li>...</li><li>Unidad Responsable</li><li>Modificar Formulario N°4</li>
+					<li>Modificaciones</li><li>...</li><li>Modificar Formulario N°4</li>
 				</ol>
 			</div>
 			<!-- END RIBBON -->
@@ -134,6 +134,7 @@
 							<input type="hidden" name="com_id" id="com_id" value="<?php echo $cite[0]['com_id'];?>"> 
 							<?php echo $datos_cite;?>
 							<?php echo $titulo;?>
+							<a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO" class="btn btn-success" style="width:12%;"><i class="fa fa-pencil-square-o"></i> NUEVO REGISTRO</a>
 						</div>
 					</section>
 				</article>
@@ -141,7 +142,7 @@
 					<div class="well">
 						<div class="btn-group btn-group-justified">
 							<?php
-								if($verif_mod==1){
+								if($cite[0]['cite_activo']==1){
 									if($cite[0]['cite_estado']==1){ ?>
 										<a href="#" data-toggle="modal" data-target="#modal_cerrar"  class="btn btn-success" title="MODIFICACION DE ACTIVIDADES CERRADA"><i class="fa fa-save"></i> <b>MODIFICACI&Oacute;N CONCLUIDA</b></a>
 									<?php
@@ -152,7 +153,7 @@
 									}
 									
 									?>
-										<a href="javascript:abreVentana('<?php echo site_url("").'/mod/reporte_modfis/'.$cite[0]['cite_id'];?>');" class="btn btn-default" title="IMPRIMIR REPORTE DE MODIFICACION FINANCIERA"><i class="fa fa-file-pdf-o"></i> <b>IMPRIMIR REPORTE</b></a>
+										<a href="javascript:abreVentana('<?php echo site_url("").'/mod/reporte_modfis/'.$cite[0]['cite_id'];?>');" class="btn btn-default" title="IMPRIMIR REPORTE DE MODIFICACION ACTIVIDADES"><i class="fa fa-file-pdf-o"></i> <b>IMPRIMIR MODIFICACIÓN</b></a>
 									<?php
 								}
 							?>
@@ -162,35 +163,35 @@
 							<a class="btn btn-default" href="<?php echo base_url();?>index.php/mod/list_cites/<?php echo $cite[0]['proy_id'];?>" title="SALIR"><i class="fa fa-caret-square-o-left"></i> SALIR</a>
 						</div>
 					</div>
-		        </article>
+		    </article>
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<?php 
-	                  if($this->session->flashdata('success')){ ?>
-	                    <div class="alert alert-success">
-	                      <?php echo $this->session->flashdata('success'); ?>
-	                    </div>
-	                <?php }
-	                    elseif($this->session->flashdata('danger')){ ?>
-                    	<div class="alert alert-danger">
-	                      <?php echo $this->session->flashdata('danger'); ?>
-	                    </div><?php }
-	                ?>
-	                <div class="jarviswidget jarviswidget-color-darken">
-	                  <header>
-	                      <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-	                      <h2 class="font-md"><strong>FORMULARIO N° 4 - <?php echo $this->session->userdata('gestion')?></strong></h2>  
-	                  </header>
-	                  <div>
-	                  	<a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-success nuevo_form" title="NUEVO REGISTRO" class="btn btn-success" style="width:12%;">NUEVO REGISTRO</a><br><br>
-	                    <div class="widget-body no-padding">
-	                        <?php echo $formulario_N4;?>
-	                    </div>
-	                    <!-- end widget content -->
-	                  </div>
-	                  <!-- end widget div -->
-	                </div>
-                <!-- end widget -->
-              </article>	
+						<?php 
+              if($this->session->flashdata('success')){ ?>
+                <div class="alert alert-success">
+                  <?php echo $this->session->flashdata('success'); ?>
+                </div>
+            <?php }
+                elseif($this->session->flashdata('danger')){ ?>
+              	<div class="alert alert-danger">
+                  <?php echo $this->session->flashdata('danger'); ?>
+                </div><?php }
+            ?>
+            <div class="jarviswidget jarviswidget-color-darken">
+              <header>
+                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                  <h2 class="font-md"><strong>FORMULARIO N° 4 - <?php echo $this->session->userdata('gestion')?></strong></h2>  
+              </header>
+              <div>
+              	
+                <div class="widget-body no-padding">
+                    <?php echo $formulario_N4;?>
+                </div>
+                <!-- end widget content -->
+              </div>
+              <!-- end widget div -->
+            </div>
+          <!-- end widget -->
+        </article>	
 			</div>
 			<!-- END MAIN CONTENT -->
 			</div>
@@ -207,7 +208,7 @@
 	          </div>
 	          <div class="modal-body">
 	            <h2 class="alert alert-info"><center>NUEVO REGISTRO - ACTIVIDAD <?php echo $this->session->userData('gestion');?></center></h2>
-	              <form action="<?php echo site_url().'/modificaciones/cmod_fisica/valida_operacion'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
+	              <form action="<?php echo site_url().'/modificaciones/cmod_fisica/valida_form4'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
 	                  <input type="hidden" name="cite_id" id="cite_id" value="<?php echo $cite[0]['cite_id'];?>"> 
 	                  <input type="hidden" name="tp_id" id="tp_id" value="<?php echo $cite[0]['tp_id'];?>"> 
 	                  <header><b>DATOS GENERALES DE LA ACTIVIDAD</b></header>
@@ -685,42 +686,42 @@
 	          <div class="modal-dialog" id="csv">
 	            <div class="modal-content">
 	            	<div class="modal-header">
-                    	<button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; Salir Formulario</span></button>
-                    </div>
+                  <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; Salir Formulario</span></button>
+                </div>
 	              <div class="modal-body">
-	              		<?php
-	              			if($cite[0]['cite_estado']==0){
-	              				echo '<h2 class="alert alert-warning"><center>CERRAR MODIFICACI&Oacute;N DE ACTIVIDADES</center></h2>';
-	              			}
-	              			else{
-	              				echo '<h2 class="alert alert-success"><center>MODIFICACI&Oacute;N DE ACTIVIDADES CONCLUIDA</center></h2>';
-	              			}
-	              		?>
+              		<?php
+              			if($cite[0]['cite_estado']==0){
+              				echo '<h2 class="alert alert-warning"><center>CERRAR MODIFICACI&Oacute;N DE ACTIVIDADES</center></h2>';
+              			}
+              			else{
+              				echo '<h2 class="alert alert-success"><center>MODIFICACI&Oacute;N DE ACTIVIDADES CONCLUIDA</center></h2>';
+              			}
+              		?>
 	               		<form action="<?php echo site_url().'/modificaciones/cmod_fisica/cerrar_modificacion'?>" method="post" id="form_cerrar" name="form_cerrar" class="smart-form">
-						<input type="hidden" name="cite_id" id="cite_id" value="<?php echo $cite[0]['cite_id'];?>">
-							<header><b>C&Oacute;DIGO : </b><?php if($cite[0]['cite_estado']==0){echo "<font color=red>SIN CÓDIGO</font>";}else{echo "<font color=green>".$cite[0]['cite_codigo']."</font>";} ?></header>
-							<fieldset>
+								<input type="hidden" name="cite_id" id="cite_id" value="<?php echo $cite[0]['cite_id'];?>">
+									<header><b>C&Oacute;DIGO : </b><?php if($cite[0]['cite_estado']==0){echo "<font color=red>SIN CÓDIGO</font>";}else{echo "<font color=green>".$cite[0]['cite_codigo']."</font>";} ?></header>
+									<fieldset>
+										<div class="row">
+											<section >
+												<label class="label"><b>OBSERVACI&Oacute;N</b></label>
+												<label class="textarea">
+													<i class="icon-append fa fa-tag"></i>
+													<textarea rows="4" name="observacion" id="observacion" title="OBSERVACI&Oacute;N"><?php echo $cite[0]['cite_observacion'];?></textarea>
+												</label>
+											</section>
+										</div>
+									</fieldset>
 								<div class="row">
-									<section >
-										<label class="label"><b>OBSERVACI&Oacute;N</b></label>
-										<label class="textarea">
-											<i class="icon-append fa fa-tag"></i>
-											<textarea rows="4" name="observacion" id="observacion" title="OBSERVACI&Oacute;N"><?php echo $cite[0]['cite_observacion'];?></textarea>
-										</label>
-									</section>
-								</div>
-							</fieldset>
-							<div class="row">
-	                            <div id="mbut">
-	                                <footer>
+	              <div id="mbut">
+	                <footer>
 										<button type="button" name="cerrar_mod" id="cerrar_mod" class="btn btn-info" >CERRAR MODIFICACI&Oacute;N</button>
 										<button class="btn btn-default" data-dismiss="modal" title="CANCELAR">CANCELAR</button>
 									</footer>
-	                            </div>
-	                            <div id="mload" style="display: none" align="center">
-	                                <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>CERRANDO MODIFICACI&Oacute;N DE ACTIVIDADES</b>
-	                            </div>
-	                        </div>
+                </div>
+                    <div id="mload" style="display: none" align="center">
+                      <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>CERRANDO MODIFICACI&Oacute;N DE ACTIVIDADES</b>
+                    </div>
+                  </div>
 						</form>
 	            </div>
 	          </div>

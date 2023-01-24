@@ -2118,48 +2118,6 @@ class Cmod_insumo extends CI_Controller {
             $this->db->where('ins_id_inicial', $ins_id_inicial);
             $this->db->update('insumo_original', $this->security->xss_clean($update_ins));
           }
-
-          // if($tipo==2){
-          //     /*---- Insumo - Modificado ----*/
-          //     $data_to_store6 = array( 
-          //       'ins_id' => $ins_id, /// se mantiene el id, con los datos actualizados
-          //       'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo
-          //       'cite_id' => $cite_id, /// Id del cite
-          //       'num_ip' => $this->input->ip_address(), /// Numero de IP 
-          //       'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
-          //       'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
-          //       );
-          //       $this->db->insert('insumo_update', $data_to_store6);
-          //       $update_id =$this->db->insert_id();
-          //     /*--------------------------------------------------------------------*/
-
-          //     if(count($this->model_modrequerimiento->get_insumo_modificado($update_id))!=0){
-          //       return true;
-          //     }
-          //     else{
-          //       return false;
-          //     }
-          // }
-          // elseif($tipo==3){
-          //   /*---- Insumo - Eliminado ----*/
-          //     $data_to_store6 = array( 
-          //       'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo eliminado
-          //       'cite_id' => $cite_id, /// Id del cite
-          //       'num_ip' => $this->input->ip_address(), /// Numero de IP 
-          //       'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
-          //       'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
-          //       );
-          //       $this->db->insert('insumo_delete', $data_to_store6);
-          //       $delete_id =$this->db->insert_id();
-          //     /*--------------------------------------------------------------------*/
-
-          //     if(count($this->model_modrequerimiento->get_insumo_eliminado($delete_id))!=0){
-          //       return true;
-          //     }
-          //     else{
-          //       return false;
-          //     }
-          // }
           return true;
       }
       else{
