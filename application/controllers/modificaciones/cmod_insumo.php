@@ -149,7 +149,7 @@ class Cmod_insumo extends CI_Controller {
       
           if($this->gestion>2021){ /// Gestion 2022
             if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
-              $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2022
+              $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023
             }
             else{
               $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022

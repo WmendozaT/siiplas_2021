@@ -1246,36 +1246,36 @@ class Programacionpoa extends CI_Controller{
   public function pie_form($proyecto){
     $tabla='';
     $tabla.='
-      <hr>
+     
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:98%;" align="center">
           <tr>
             <td style="width: 33%;">
-                <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <table border="0.3" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                     <tr>
                         <td style="width:100%;height:12px;"><b>JEFATURA DE UNIDAD O AREA / REP. DE AREA REGIONALES</b></td>
                     </tr>
                     <tr>
-                        <td align=center><br><br><br><br><br><b>FIRMA</b></td>
+                      <td align=center><br><br><br><br><b>FIRMA</b></td>
                     </tr>
                 </table>
             </td>
             <td style="width: 33%;">
-                <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <table border="0.3" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                     <tr>
                       <td style="width:100%;height:12px;"><b>JEFATURA DE DEPARTAMENTOS / SERV. GENERALES REGIONAL / JEFATURA MEDICA </b></td>
                     </tr>
                     <tr>
-                      <td align=center><br><br><br><br><br><b>FIRMA</b></td>
+                      <td align=center><br><br><br><br><b>FIRMA</b></td>
                     </tr>
                 </table>
             </td>
             <td style="width: 33%;">
-                <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <table border="0.3" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                     <tr>
                       <td style="width:100%;height:12px;"><b>GERENCIA GENERAL / GERENCIAS DE AREA / ADMINISTRADOR REGIONAL </b></td>
                     </tr>
                     <tr>
-                      <td align=center><br><br><br><br><br><b>FIRMA</b></td>
+                      <td align=center><br><br><br><br><b>FIRMA</b></td>
                     </tr>
                 </table>
             </td>
