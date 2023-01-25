@@ -210,12 +210,6 @@ class Model_certificacion extends CI_Model{
 
     /*--- LISTA DE REQUERIMIENTOS A MODIFICAR -CERT POA ---*/
     public function requerimientos_modificar_cpoa($cpoa_id){
-/*        $sql = 'select *
-                from vrequerimiento_certificado
-                where cpoa_id='.$cpoa_.'
-                order by par_codigo, ins_id asc';*/
-
-
         $sql = 'select *
                 from  certificacionpoadetalle cdet
                 Inner Join insumos as i On i.ins_id=cdet.ins_id

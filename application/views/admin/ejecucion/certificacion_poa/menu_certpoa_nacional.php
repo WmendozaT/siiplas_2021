@@ -150,7 +150,7 @@
                                 <textarea class="form-control" name="justificacion" id="justificacion_edit" placeholder="Justificaci&oacute;n" rows="4"></textarea>
                             </div>
                         </div>
-                        <font color=red><b>SOLO PODRA REALIZAR UNA EDICI&Oacute;N DE CERTIFICACI&Oacute;N POA ..</b></font>
+                        <font color=red><b>SOLO PODRA REALIZAR (1) UNA EDICI&Oacute;N DE CERTIFICACI&Oacute;N POA ..</b></font>
                     </fieldset>                    
                     <div class="form-actions">
                         <div class="row">

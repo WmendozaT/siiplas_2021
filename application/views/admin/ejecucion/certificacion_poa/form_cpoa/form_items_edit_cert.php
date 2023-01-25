@@ -23,26 +23,6 @@
     </head>
     <body class="">
         <header id="header">
-            <div id="logo-group">
-            </div>
-            <div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-              <span>
-                &nbsp;&nbsp;&nbsp; 
-                <div class="badge bg-color-blue">
-                  <span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-                </div>
-              </span>
-              <div class="project-context hidden-xs">
-                <span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-                  <i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-                </span>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
             <div class="pull-right">
                 <div id="hide-menu" class="btn-header pull-right">
                     <span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
@@ -97,7 +77,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Evaluaci&oacute;n POA</li><li>...</li><li>Mis Certificaciones POA</li><li>....</li><li>Editar Certificaci&oacute;n POA</li><li>Mis Requerimientos</li>
+                    <li>Evaluaci&oacute;n POA</li><li>Mis Certificaciones POA</li><li>Editar Certificaci&oacute;n POA</li><li>Mis Requerimientos</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -107,10 +87,7 @@
                     <div class="row">
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
                             <section id="widget-grid" class="well">
-                                <div class="">
-                                    <h1><b>RESPONSABLE : </b><?php echo $resp; ?> -> <small><?php echo $res_dep;?></small>
-                                    <?php echo $titulo;?>
-                                </div>
+                                <?php echo $titulo;?>
                             </section>
                         </article>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
@@ -184,7 +161,6 @@
                                     <div class="row" align="center">
                                       <div class="table-responsive" align="center">
                                         <center>
-                                          <?php echo $base;?>
                                           <?php echo $requerimientos;?>
                                         </center>
                                       </div>
@@ -206,7 +182,7 @@
                                     </article>
                                   <hr>
                                   <footer>
-                                    <input type="hidden" name="tot" id="tot" value="<?php echo $nro_cert;?>">
+                                    <input type="hidden" name="tot" id="tot" value="<?php echo count($lista);?>">
                                     <input type="hidden" name="tot_temp" id="tot_temp" value="<?php echo $nro_meses;?>">
                                     <div id="but" <?php echo $display;?>>
                                       <input type="button" value="GUARDAR CERTIFICACI&Oacute;N POA" id="btsubmit_edit" class="btn btn-success" title="GUARDAR CERTIFICACIÓN POA">

@@ -822,11 +822,12 @@ class Cmod_insumo extends CI_Controller {
 
           //$insumo= $this->minsumos->get_requerimiento($ins_id); /// Datos requerimientos 
           $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos 
-          if($this->copia_insumo($cert_editado[0]['cite_id'],$ins_id,2)){
-
+          if($this->registra_insumo_original($cert_editado[0]['cite_id'],$ins_id)){
+          //if($this->copia_insumo($cert_editado[0]['cite_id'],$ins_id,2)){
               ///------ cambiando de estado de certificacion poa la temporalidad
               $get_list_temp_prog=$this->model_certificacion->get_list_cert_temporalidad_prog_insumo($detalle_cert[0]['cpoad_id']);
             //  $suma_cert=0;
+
               foreach($get_list_temp_prog as $row){
                 $datos_temp=$this->model_certificacion->get_id_insumo_programado_mes($row['tins_id']);
               //  $suma_cert=$suma_cert+$datos_temp[0]['ipm_fis'];
@@ -910,6 +911,14 @@ class Cmod_insumo extends CI_Controller {
                   }
                 }
               }
+
+
+              $this->copia_insumo($cert_editado[0]['cite_id'],$ins_id,2); /// historial de modificaciones para el reporte
+
+              /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+              $this->update_activo_modificacion($cert_editado[0]['cite_id']);
+              /*--------------------------------------*/
+
 
               $this->session->set_flashdata('success','SE MODIFICO CORRECTAMENTE');
               redirect('cert/edit_certificacion/'.$cpoaa_id.'');

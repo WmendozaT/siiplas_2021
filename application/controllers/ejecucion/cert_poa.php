@@ -68,8 +68,8 @@ class Cert_poa extends CI_Controller {
         $data['res_dep']=$this->tp_resp();
 
         $data['generar_certpoa']='';
-        // $this->conf_certificacion==1 || $this->tp_adm==1
-        if($this->tp_adm==1 || $this->dep_id==2 || $this->dep_id==7  & $this->dep_id==9){
+         $this->conf_certificacion==1 || $this->tp_adm==1
+        //if($this->tp_adm==1 || $this->dep_id==2 || $this->dep_id==7  & $this->dep_id==9){
           $data['generar_certpoa']='
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
                 <div class="well">
@@ -432,7 +432,7 @@ class Cert_poa extends CI_Controller {
     }
 
 
-    /*----- VALIDA MODIFICACIÓN CPOA 2020 (En uso) -----*/
+    /*----- VALIDA MODIFICACIÓN CPOA 2020-2021-2022-2023 (En uso) -----*/
     public function valida_anulacion_certpoa(){
       if ($this->input->post()) {
           $post = $this->input->post();
@@ -516,7 +516,7 @@ class Cert_poa extends CI_Controller {
                   $data_to_store = array(
                     'com_id' => $cpoa[0]['com_id'],
                     'cite_nota' => $cite,
-                    'cite_fecha' => $cpoa[0]['cpoa_fecha'],
+                    'cite_fecha' => $cpoa[0]['cpoa_fecha'], /// cite fecha
                     'fun_id' => $this->fun_id,
                     'g_id' => $this->gestion,
                     'cpoaa_id' => $cpoaa_id,

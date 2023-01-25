@@ -1,38 +1,38 @@
 <?php if (!defined('BASEPATH')) exit('No se permite el acceso directo al script');
 
 class Certificacionpoa extends CI_Controller{
-        public function __construct (){
-            parent::__construct();
-            $this->load->model('programacion/model_proyecto');
-            $this->load->model('mantenimiento/model_entidad_tras');
-            $this->load->model('mantenimiento/model_partidas');
-            $this->load->model('mantenimiento/model_ptto_sigep');
-            $this->load->model('modificacion/model_modrequerimiento');
-            $this->load->model('programacion/insumos/minsumos');
-            $this->load->model('ejecucion/model_seguimientopoa');
-            $this->load->model('programacion/model_componente');
-            $this->load->model('ejecucion/model_notificacion');
-            $this->load->model('programacion/model_producto');
-            $this->load->model('ejecucion/model_evaluacion');
-            $this->load->model('mantenimiento/model_configuracion');
-            $this->load->model('ejecucion/model_certificacion');
-            $this->load->model('programacion/insumos/minsumos');
-            $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
-            $this->load->model('menu_modelo');
-            $this->load->library('security');
+    public function __construct (){
+        parent::__construct();
+        $this->load->model('programacion/model_proyecto');
+        $this->load->model('mantenimiento/model_entidad_tras');
+        $this->load->model('mantenimiento/model_partidas');
+        $this->load->model('mantenimiento/model_ptto_sigep');
+        $this->load->model('modificacion/model_modrequerimiento');
+        $this->load->model('programacion/insumos/minsumos');
+        $this->load->model('ejecucion/model_seguimientopoa');
+        $this->load->model('programacion/model_componente');
+        $this->load->model('ejecucion/model_notificacion');
+        $this->load->model('programacion/model_producto');
+        $this->load->model('ejecucion/model_evaluacion');
+        $this->load->model('mantenimiento/model_configuracion');
+        $this->load->model('ejecucion/model_certificacion');
+        $this->load->model('programacion/insumos/minsumos');
+        $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
+        $this->load->model('menu_modelo');
+        $this->load->library('security');
 
-            $this->gestion = $this->session->userData('gestion');
-            $this->adm = $this->session->userData('adm');
-            //$this->rol = $this->session->userData('rol_id');
-            $this->dist = $this->session->userData('dist');
-            //$this->dist_tp = $this->session->userData('dist_tp');
-            $this->tmes = $this->session->userData('trimestre');
-            $this->fun_id = $this->session->userData('fun_id');
-           // $this->tp_adm = $this->session->userData('tp_adm');
-            $this->verif_mes=$this->session->userData('mes_actual');
-            $this->resolucion=$this->session->userdata('rd_poa');
-            $this->tp_adm = $this->session->userData('tp_adm');
-            $this->mes = $this->mes_nombre();
+        $this->gestion = $this->session->userData('gestion');
+        $this->adm = $this->session->userData('adm');
+        //$this->rol = $this->session->userData('rol_id');
+        $this->dist = $this->session->userData('dist');
+        //$this->dist_tp = $this->session->userData('dist_tp');
+        $this->tmes = $this->session->userData('trimestre');
+        $this->fun_id = $this->session->userData('fun_id');
+       // $this->tp_adm = $this->session->userData('tp_adm');
+        $this->verif_mes=$this->session->userData('mes_actual');
+        $this->resolucion=$this->session->userdata('rd_poa');
+        $this->tp_adm = $this->session->userData('tp_adm');
+        $this->mes = $this->mes_nombre();
     }
 
 //// ADMINISTRADOR 
@@ -65,13 +65,11 @@ class Certificacionpoa extends CI_Controller{
   public function titulo_cabecera($datos){
     $tabla='';
     if($datos[0]['tp_id']==1){ /// Proyecto de Inversion
-      $tabla.=' <h1><b>PROYECTO INVERSIÓN: </b><small>'.$datos[0]['aper_programa'].' '.$datos[0]['proy_sisin'].' - '.$datos[0]['proy_nombre'].'</small>
-                <h1><b>UNIDAD RESPONSABLE : </b><small>'.$datos[0]['serv_cod'].' '.$datos[0]['tipo_subactividad'].' '.$datos[0]['serv_descripcion'].'</small></h1>
+      $tabla.=' <h1><b>PROYECTO INVERSIÓN: </b><small>'.$datos[0]['proy_sisin'].' - '.$datos[0]['proy_nombre'].' / '.$datos[0]['tipo_subactividad'].' '.$datos[0]['serv_descripcion'].'</small>
                 <h1><b>ACTIVIDAD : </b><small>'.$datos[0]['prod_cod'].'.- '.$datos[0]['prod_producto'].'</small></h1>';
     }
     else{ /// Gasto Corriente
-      $tabla.=' <h1><b>'.$datos[0]['tipo_adm'].' : <b><small>'.$datos[0]['aper_programa'].' '.$datos[0]['aper_proyecto'].' '.$datos[0]['aper_actividad'].' - '.$datos[0]['tipo'].' '.$datos[0]['act_descripcion'].' '.$datos[0]['abrev'].'</small></h1>
-                <h1><b>UNIDAD RESPONSABLE : <b><small>'.$datos[0]['serv_cod'].' '.$datos[0]['tipo_subactividad'].' '.$datos[0]['serv_descripcion'].'</small></h1>
+      $tabla.=' <h1><b>PROGRAMA : </b><small>'.$datos[0]['aper_programa'].' '.$datos[0]['aper_proyecto'].' '.$datos[0]['aper_actividad'].' '.$datos[0]['tipo'].' '.$datos[0]['act_descripcion'].' '.$datos[0]['abrev'].' / '.$datos[0]['tipo_subactividad'].' '.$datos[0]['serv_descripcion'].'</small></h1>
                 <h1><b>ACTIVIDAD : </b><small>'.$datos[0]['prod_cod'].'.- '.$datos[0]['prod_producto'].'</small></h1>';
     }
 
@@ -469,7 +467,7 @@ class Certificacionpoa extends CI_Controller{
 
   
   /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION) ------*/
-  public function list_requerimientos_certificadosss($cpoa_id){
+  public function list_requerimientos_certificadosss($lista){
     $tabla='<style>
             table{font-size: 9.5px;
             width: 100%;
@@ -582,7 +580,7 @@ class Certificacionpoa extends CI_Controller{
   }
 
  /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION anterior) ------*/
-  public function list_requerimientos_certificados($cpoa_id){
+  public function list_requerimientos_certificados($requerimientos,$cpoa_id){
     $tabla='<style>
             table{font-size: 9.5px;
             width: 100%;
@@ -607,9 +605,10 @@ class Certificacionpoa extends CI_Controller{
               width: 70% !important;
             }
           </style>';
-    $requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
+   // $requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
 
     $tabla.='
+      <input name="base" type="hidden" value="'.base_url().'">
       <table class="table table-bordered" style="width:97%;" align="center" id="datos">
         <thead >
           <tr>
@@ -2735,8 +2734,100 @@ class Certificacionpoa extends CI_Controller{
       return $tabla;
     }
 
+//// Lista de Items Modificados en la Edicion (2023)
+  public function items_form5_historial($cite_id){
+    $tabla='';
+      $tabla.='
+      <table border=0 style="width:100%;">
+        <tr>
+          <td style="width:1%;"></td>
+          <td style="width:98%;">';
 
-  //// Lista de Items Modificados en la Edicion
+            $requerimientos_mod = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,2);
+            if(count($requerimientos_mod)!=0){
+              $tabla.='<div style="font-size: 10px;height:16px;"><b>ITEMS MODIFICADOS ('.count($requerimientos_mod).')</b></div>';
+              $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
+              $tabla.='<thead>';
+              $tabla.='
+              <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
+                <th style="width:1%;height:20px;">#</th>
+                <th style="width:2.1%;">COD.<br>ACT.</th>
+                <th style="width:3.8%;">PARTIDA</th>
+                <th style="width:16%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:4.6%;">UNIDAD MEDIDA</th>
+                <th style="width:4%;">CANT.</th>
+                <th style="width:4%;">PRECIO UNI.</th>
+                <th style="width:4%;">COSTO TOTAL</th>
+                <th style="width:4.4%;">ENE.</th>
+                <th style="width:4.4%;">FEB.</th>
+                <th style="width:4.4%;">MAR.</th>
+                <th style="width:4.4%;">ABR.</th>
+                <th style="width:4.4%;">MAY.</th>
+                <th style="width:4.4%;">JUN.</th>
+                <th style="width:4.4%;">JUL.</th>
+                <th style="width:4.4%;">AGO.</th>
+                <th style="width:4.4%;">SEPT.</th>
+                <th style="width:4.4%;">OCT.</th>
+                <th style="width:4.4%;">NOV.</th>
+                <th style="width:4.4%;">DIC.</th>
+                <th style="width:8%;">OBSERVACIÓN</th>
+              </tr>';
+              $tabla.='</thead>';
+              $tabla.='<tbody>';
+              $nro=0;
+              $monto=0;
+              foreach ($requerimientos_mod as $row){
+                $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                $nro++;
+                $tabla.='<tr class="modo1">
+                  <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
+                  <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>
+                  <td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>
+                  <td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>
+                  <td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>
+                  <td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                  if(count($prog)!=0){
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+                    }
+                  }
+                  else{
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
+                    }
+                  }
+                  $tabla.='<td style="width: 8%; text-align: left;">'.$row['ins_observacion'].'</td>';
+                $tabla.='</tr>';
+                $monto=$monto+$row['ins_costo_total'];
+              }
+              $tabla.='</tbody>
+                <tr class="modo1">
+                  <td style="height:10px;" colspan=7></td>
+                  <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
+                  <td colspan=13></td>
+                </tr>
+              </table><br>';
+            }
+          $tabla.='
+            <div style="font-size: 8px;font-family: Arial;">
+              En atención a requerimiento de su unidad, comunicamos a usted que se ha procedido a efectivizar la modificación solicitada, toda vez que:<br>
+
+              &nbsp;&nbsp;&nbsp;a)&nbsp;&nbsp;No compromete u obstaculiza el cumplimiento de los objetivos previstos en la gestión fiscal.<br>
+              &nbsp;&nbsp;&nbsp;b)&nbsp;&nbsp;No vulnera o contraviene disposiciones legales.<br>
+              &nbsp;&nbsp;&nbsp;c)&nbsp;&nbsp;No genera obligaciones o deudas por las modificaciones efectuadas.<br>
+              &nbsp;&nbsp;&nbsp;d)&nbsp;&nbsp;No compromete el pago de obligaciones previstas en el presupuesto.
+            </div>
+          </td>
+          <td style="width:1%;"></td>
+        </tr>
+      </table>';
+    
+    return $tabla;
+  }
+
+  //// Lista de Items Modificados en la Edicion (Anterior 2022)
   public function items_modificados_edicionpoa($cite_id){
     $tabla='';
       $tabla.='
