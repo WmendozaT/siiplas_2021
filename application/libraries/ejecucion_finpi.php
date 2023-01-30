@@ -46,16 +46,31 @@ class ejecucion_finpi extends CI_Controller{
             <section>
               <label class="label">Selecciones MES / '.$this->gestion.'</label>
                <select class="form-control" style="width:20%;" name="mes_id" id="mes_id">';
-               foreach($meses as $row){
-                if($row['m_id']<=$this->verif_mes[1]){
-                  if($row['m_id']==$this->verif_mes[1]){
-                    $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
+               if($this->gestion==2022){
+                foreach($meses as $row){
+                  if($row['m_id']<=12){
+                    if($row['m_id']==$this->verif_mes[1]){
+                      $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
+                    }
+                    else{
+                      $tabla.='<option value="'.$row['m_id'].'">'.$row['m_descripcion'].'</option>';
+                    }
                   }
-                  else{
-                    $tabla.='<option value="'.$row['m_id'].'">'.$row['m_descripcion'].'</option>';
-                  }
-                }
+                 }
                }
+               else{
+                foreach($meses as $row){
+                  if($row['m_id']<=$this->verif_mes[1]){
+                    if($row['m_id']==$this->verif_mes[1]){
+                      $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
+                    }
+                    else{
+                      $tabla.='<option value="'.$row['m_id'].'">'.$row['m_descripcion'].'</option>';
+                    }
+                  }
+                 }
+               }
+               
                $tabla.='
                 </select> <i></i> </label>
             </section>
