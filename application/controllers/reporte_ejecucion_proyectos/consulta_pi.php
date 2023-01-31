@@ -73,14 +73,14 @@ class Consulta_pi extends CI_Controller {
       $foto='hola mundo';
       if(count($imagen)!=0){
         if($imagen[0]['tp']==1){
-          $foto='<center><img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" style="width:250px; height:200px;text-align:center"/></center>';
+          $foto='<center><img src="'.getcwd().'/fotos_proyectos/'.$imagen[0]['imagen'].'" style="width:250px; height:200px;text-align:center"/></center>';
         }
         else{
-          $foto='<center><img src="'.base_url().'fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
+          $foto='<center><img src="'.getcwd().'/fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
         }
       }
       else{
-        $foto='<center><img src="'.base_url().'fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
+        $foto='<center><img src="'.getcwd().'/fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
       }
 
       $tabla=$this->formulario_pinversion($proyecto);
@@ -333,28 +333,28 @@ class Consulta_pi extends CI_Controller {
             <td style="width:50%;text-align:center">';
               if(count($imagen)!=0){
                 if($imagen[0]['tp']==1){
-                  $tabla.='<img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:350px; height:250px;"/>';
+                  $tabla.='<img src="'.getcwd().'/fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:350px; height:250px;"/>';
                 }
                 else{
-                  $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                  $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
                 }
               }
               else{
-                $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
               }
             $tabla.='
             </td>
             <td style="width:50%;text-align:center">';
               if(count($proyecto)!=0){
                 if($proyecto[0]['img_georeferenciado']!=''){
-                  $tabla.='<img src="'.base_url().'img_ubicacion/'.$proyecto[0]['proy'].'.png" class="img-responsive" style="width:350px; height:250px;"/>';
+                  $tabla.='<img src="'.getcwd().'/img_ubicacion/'.$proyecto[0]['proy'].'.png" class="img-responsive" style="width:350px; height:250px;"/>';
                 }
                 else{
-                  $tabla.='<img src="'.base_url().'img_ubicacion/cns_ofn.png" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                  $tabla.='<img src="'.getcwd().'/img_ubicacion/cns_ofn.png" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
                 }
               }
               else{
-                $tabla.='<img src="'.base_url().'img_ubicacion/cns_ofn.png" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                $tabla.='<img src="'.getcwd().'/img_ubicacion/cns_ofn.png" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
               }
             $tabla.='
             </td>

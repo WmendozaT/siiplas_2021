@@ -68,10 +68,10 @@ ob_start();
                 <td style="width:100%; height: 50%; font-size: 18pt;" align="center">
                    <?php
                     if($proyecto[0]['img']!=''){
-                        echo '<img src="'.base_url().'fotos/'.$proyecto[0]['img'].'" class="img-responsive" style="width:80%; height:90%;" align=center />';
+                        echo '<img src="'.getcwd().'/fotos/'.$proyecto[0]['img'].'" class="img-responsive" style="width:80%; height:90%;" align=center />';
                     }
                     else{
-                        echo '<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:50%; height:60%;"/>';
+                        echo '<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:50%; height:60%;"/>';
                     }
                     ?>
                     <br>
@@ -99,7 +99,26 @@ ob_start();
               </tr>
             </table>
 
-            <?php
+            <br>
+            <table border=0 style='width:90%;' align=center>
+              <tr>
+                          <td style='width:50%;'>
+                            <ul>
+                              <li style='height: 12%;'><b>GERENCIA DE SERVICIOS DE SALUD</b></li>
+                              <li style='height: 12%;'><b>DPTO. NAL. DE ENSEÑANZA E INVESTIGACIÓN</b></li>
+                              <li style='height: 12%;'><b>DPTO. NAL. DE GESTIÓN DE CALIDAD</b></li>
+                              <li style='height: 12%;'><b>DPTO. NAL. DE GESTIÓN DE SERVICIOS</b></li>
+                              <li style='height: 12%;'><b>DPTO. NAL. DE GESTIÓN Y SUMINISTROS Y EQUIPAMIENTO MEDICO</b></li>
+                              <li style='height: 12%;'><b>DPTO. NAL. DE INFRAESTRUCTURA EN SALUD</b></li>
+                              <li style='height: 12%;'><b>DPTO. NAL. ATENCIÓN DE LA SALUD</b></li>
+                              <li style='height: 12%;'><b>GESTIÓN DE RIESGOS OFN</b></li>
+                              <li style='height: 12%;'><b>BIENES Y SERVICIOS OFN</b></li>
+                              <li style='height: 12%;'><b>MEDICINA DEL TRABAJO OFN</b></li>
+                            </ul>
+                          </td>
+                        </tr>
+                      </table>
+           <!--  <?php
               if($proyecto[0]['tn_id']==0){
                 $servicios=$this->model_componente->proyecto_componente($proyecto[0]['proy_id']);
                 $size='font-size: 12pt;';
@@ -184,7 +203,7 @@ ob_start();
                         </tr>";
                   echo "</table>";
               }
-            ?>
+            ?> -->
     </page>
 
 <?php
