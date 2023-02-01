@@ -644,7 +644,7 @@ class Cmod_fisica extends CI_Controller {
             if($data['cite'][0]['tp_reporte']==0){ /// rep anterior
               $data['items_modificados']=$this->modificacionpoa->items_modificados_form4($cite_id); /// anterior reporte
             }
-            else{
+            else{ /// reporte nuevo 2023
              $data['items_modificados']=$this->modificacionpoa->items_modificados_form4_historial($cite_id,1); //// Nuevo Reporte
             }
 
@@ -1154,6 +1154,7 @@ class Cmod_fisica extends CI_Controller {
         'or_id' => $producto[0]['or_id'],
         'prod_cod' => $producto[0]['prod_cod'],
         'prod_observacion' => $producto[0]['prod_observacion'],
+        'prodh_unidades' => $producto[0]['prod_unidades'],
         'mt_id' => $producto[0]['mt_id'],
         'prod_id' => $prod_id, ///prod id
         'tipo_mod' => $tipo, ///tipo de modificacion 1:adicion, 2:modificacion, 3: eliminacion

@@ -552,6 +552,15 @@ class Modificacionpoa extends CI_Controller{
         $tabla.=$this->tabla_form4($form4_del,'ITEMS ELIMINADOS ('.count($form4_del).')');
       }
     
+    $tabla.='
+            <div style="font-size: 7.5px;font-family: Arial;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; En atención a requerimiento de su unidad, comunicamos a usted que se ha procedido a efectivizar la modificación solicitada, toda vez que:<br>
+
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a)&nbsp;&nbsp;&nbsp;No compromete u obstaculiza el cumplimiento de los objetivos previstos en la gestión fiscal.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b)&nbsp;&nbsp;&nbsp;No vulnera o contraviene disposiciones legales.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c)&nbsp;&nbsp;&nbsp;No genera obligaciones o deudas por las modificaciones efectuadas.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d)&nbsp;&nbsp;&nbsp;No compromete el pago de obligaciones previstas en el presupuesto.
+            </div>';
     return $tabla;
   }
 
@@ -559,69 +568,105 @@ class Modificacionpoa extends CI_Controller{
   //// Lista de Items MODIFICADOS PARA EL REPORTE (listado nuevo 2023) FORM 4
   public function tabla_form4($listado,$detalle){
     $tabla='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$detalle.'</b></div>';
-    /*$tabla.='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$detalle.'</b></div>
-            <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-              <thead>
-              <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
-                <th style="width:1%;height:20px;">#</th>
-                <th style="width:2.1%;">COD.<br>ACT.</th>
-                <th style="width:3.8%;">PARTIDA</th>
-                <th style="width:16%;">DETALLE REQUERIMIENTO</th>
-                <th style="width:4.6%;">UNIDAD MEDIDA</th>
-                <th style="width:4%;">CANT.</th>
-                <th style="width:4%;">PRECIO UNI.</th>
-                <th style="width:4%;">COSTO TOTAL</th>
-                <th style="width:4.4%;">ENE.</th>
-                <th style="width:4.4%;">FEB.</th>
-                <th style="width:4.4%;">MAR.</th>
-                <th style="width:4.4%;">ABR.</th>
-                <th style="width:4.4%;">MAY.</th>
-                <th style="width:4.4%;">JUN.</th>
-                <th style="width:4.4%;">JUL.</th>
-                <th style="width:4.4%;">AGO.</th>
-                <th style="width:4.4%;">SEPT.</th>
-                <th style="width:4.4%;">OCT.</th>
-                <th style="width:4.4%;">NOV.</th>
-                <th style="width:4.4%;">DIC.</th>
-                <th style="width:6%;">OBSERVACIÓN</th>
-              </tr>
-              </thead>
-              <tbody>';
+              $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
+              $tabla.='<thead>';
+              $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
+                $tabla.='<th style="width:1%;height:20px;">#</th>';
+                $tabla.='<th style="width:2.2%;">COD.<br>ACE.</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>ACP.</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>OPE.</th>';
+                $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
+                $tabla.='<th style="width:14%;">ACTIVIDAD</th>';
+                $tabla.='<th style="width:14%;">RESULTADO</th>';
+                $tabla.='<th style="width:7%;">UNIDAD RESPONSABLE</th>';
+                $tabla.='<th style="width:8%;">INDICADOR</th>';
+                $tabla.='<th style="width:2%;">L.B.</th>';
+                $tabla.='<th style="width:2%;">META</th>';
+                $tabla.='<th style="width:2.5%;">ENE.</th>';
+                $tabla.='<th style="width:2.5%;">FEB.</th>';
+                $tabla.='<th style="width:2.5%;">MAR.</th>';
+                $tabla.='<th style="width:2.5%;">ABR.</th>';
+                $tabla.='<th style="width:2.5%;">MAY.</th>';
+                $tabla.='<th style="width:2.5%;">JUN.</th>';
+                $tabla.='<th style="width:2.5%;">JUL.</th>';
+                $tabla.='<th style="width:2.5%;">AGO.</th>';
+                $tabla.='<th style="width:2.5%;">SEPT.</th>';
+                $tabla.='<th style="width:2.5%;">OCT.</th>';
+                $tabla.='<th style="width:2.5%;">NOV.</th>';
+                $tabla.='<th style="width:2.5%;">DIC.</th>';
+                $tabla.='<th style="width:10%;">MEDIO DE VERIFICACIÓN</th>';
+             
+              $tabla.='</tr>';
+              $tabla.='</thead>';
+              $tabla.='<tbody>';
+
               $nro=0;
-              $monto=0;
-              foreach ($listado as $row){
-                $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-                $nro++;
-                $tabla.='<tr class="modo1">
-                  <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
-                  <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>
-                  <td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>
-                  <td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>
-                  <td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>
-                  <td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>
-                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
-                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                  if(count($prog)!=0){
-                    for ($i=1; $i <=12 ; $i++) { 
-                      $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+              foreach($listado as $rowp){
+                $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
+                $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
+                $color=''; $tp='';
+                if($rowp['indi_id']==1){
+                  if(($sum[0]['meta_gest'])!=$rowp['prodh_meta']){
+                    $color='#fbd5d5';
+                  }
+                }
+                elseif ($rowp['indi_id']==2) {
+                  $tp='%';
+                  if($rowp['mt_id']==3){
+                    if(($sum[0]['meta_gest'])!=$rowp['prodh_meta']){
+                      $color='#fbd5d5';
                     }
+                  }
+                }
+
+                $color_or='';
+                if($rowp['or_id']==0){
+                  $color_or='#fbd5d5';
+                }
+
+                $nro++;
+                $tabla.=
+                '<tr style="font-size: 6.5px;" bgcolor="'.$color.'">
+                  <td style="width: 1%; height:12px;text-align: center;" bgcolor='.$color_or.'>'.$nro.'</td>
+                  <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['acc_codigo'].'</td>
+                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
+                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
+                  <td style="width: 2.1%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 14%; text-align: left;font-size: 7px;">'.$rowp['prodh_producto'].'</td>
+                  <td style="width: 14%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prodh_unidades']).'</td>
+                  <td style="width: 8%; text-align: left;">'.$rowp['prodh_indicador'].'</td>
+                  <td style="width: 2%; text-align: right;">'.round($rowp['prodh_linea_base'],2).'</td>
+                  <td style="width: 3%; text-align: right;" bgcolor="#eceaea"><b>'.round($rowp['prodh_meta'],2).' '.$tp.'</b></td>';
+
+                  if(count($programado)!=0){
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['enero'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['febrero'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['marzo'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['abril'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['mayo'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['junio'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['julio'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['agosto'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['septiembre'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['octubre'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['noviembre'],2).''.$tp.'</td>';
+                    $tabla.='<td style="width:2.5%;" bgcolor="#e5fde5" align=right>'.round($programado[0]['diciembre'],2).''.$tp.'</td>';
                   }
                   else{
                     for ($i=1; $i <=12 ; $i++) { 
-                      $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
+                      $tabla.='<td style="width:2.5%;" bgcolor="#f5cace" align=right>0.00</td>';
                     }
                   }
-                  $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
-                $tabla.='</tr>';
-                $monto=$monto+$row['ins_costo_total'];
+
+                  $tabla.='
+                  <td style="width: 10%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                 
+                </tr>';
+
               }
               $tabla.='</tbody>
-                <tr class="modo1">
-                  <td style="height:10px;" colspan=7></td>
-                  <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
-                  <td colspan=13></td>
-                </tr>
-              </table><br>';*/
+              </table><br>';
 
     return $tabla;
   }
@@ -1411,7 +1456,7 @@ class Modificacionpoa extends CI_Controller{
               $nro=0;
               $monto=0;
               foreach ($listado as $row){
-                $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                $prog = $this->model_modrequerimiento->list_temporalidad_insumo_historial($row['insh_id']);
                 $nro++;
                 $tabla.='<tr class="modo1">
                   <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
@@ -1491,7 +1536,7 @@ class Modificacionpoa extends CI_Controller{
               $nro=0;
               $monto=0;
               foreach ($listado as $row){
-                $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                $prog = $this->model_modrequerimiento->list_temporalidad_insumo_historial($row['insh_id']);
                 $nro++;
                 $tabla.='<tr class="modo1">
                   <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
@@ -1565,6 +1610,15 @@ class Modificacionpoa extends CI_Controller{
       if(count($requerimientos_del)!=0){
         $tabla.=$this->tabla($requerimientos_del,'ITEMS ELIMINADOS ('.count($requerimientos_del).')');
       }
+      $tabla.='
+            <div style="font-size: 7.5px;font-family: Arial;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; En atención a requerimiento de su unidad, comunicamos a usted que se ha procedido a efectivizar la modificación solicitada, toda vez que:<br>
+
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a)&nbsp;&nbsp;&nbsp;No compromete u obstaculiza el cumplimiento de los objetivos previstos en la gestión fiscal.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b)&nbsp;&nbsp;&nbsp;No vulnera o contraviene disposiciones legales.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c)&nbsp;&nbsp;&nbsp;No genera obligaciones o deudas por las modificaciones efectuadas.<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d)&nbsp;&nbsp;&nbsp;No compromete el pago de obligaciones previstas en el presupuesto.
+            </div>';
     }
     
     return $tabla;

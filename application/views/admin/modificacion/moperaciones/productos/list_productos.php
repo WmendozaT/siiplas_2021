@@ -134,7 +134,7 @@
 							<input type="hidden" name="com_id" id="com_id" value="<?php echo $cite[0]['com_id'];?>"> 
 							<?php echo $datos_cite;?>
 							<?php echo $titulo;?>
-							<a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO" class="btn btn-success" style="width:12%;"><i class="fa fa-pencil-square-o"></i> NUEVO REGISTRO</a>
+							<a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO" class="btn btn-success" ><i class="fa fa-pencil-square-o"></i> NUEVO REGISTRO</a>
 						</div>
 					</section>
 				</article>

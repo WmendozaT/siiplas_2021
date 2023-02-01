@@ -184,19 +184,48 @@ class Model_modrequerimiento extends CI_Model{
         ///ih.historial_activo : 0 (no se muestra)
         ///ih.historial_activo : 1 (se muestra)
 
-        $sql = 'select *
+        /*if($tipo_mod==2){
+        $sql = 'select p.prod_cod,pa.par_codigo,pa.par_nombre,ih.ins_unidad_medida,ih.ins_cant_requerida,ih.ins_costo_unitario,ih.ins_costo_total,ih.ins_detalle,ih.ins_observacion
+                from insumos_historial ih
+                Inner Join partidas as pa On pa.par_id=ih.par_id
+                Inner Join _productos as p On p.prod_id=ih.id
+              
+                where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
+                group by p.prod_cod,pa.par_codigo,pa.par_nombre,ih.ins_unidad_medida,ih.ins_cant_requerida,ih.ins_costo_unitario,ih.ins_costo_total,ih.ins_detalle,ih.ins_observacion
+                order by pa.par_codigo asc';
+        }
+        else{
+            $sql = 'select *
                 from insumos_historial ih
                 Inner Join partidas as pa On pa.par_id=ih.par_id
                 Inner Join _productos as p On p.prod_id=ih.id
               
                 where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
                 order by pa.par_codigo asc';
+        }*/
 
+         $sql = 'select *
+                from insumos_historial ih
+                Inner Join partidas as pa On pa.par_id=ih.par_id
+                Inner Join _productos as p On p.prod_id=ih.id
+              
+                where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
+                order by pa.par_codigo asc';
+                
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
 
+// ------ lista Temporalidad Insumo
+    public function list_temporalidad_insumo_historial($insh_id){
+        $sql = 'select *
+            from vista_temporalidad_insumo_historial
+            where insh_id='.$insh_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
 
 

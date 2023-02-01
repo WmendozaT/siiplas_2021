@@ -44,10 +44,37 @@ class Model_modfisica extends CI_Model{
         ///ih.historial_activo : 0 (no se muestra)
         ///ih.historial_activo : 1 (se muestra)
 
-        $sql = 'select *
+        if($tipo_mod==2){
+            $sql = 'select ae.acc_codigo,og.og_codigo,ore.or_codigo,ph.prodh_producto,ph.indi_id,ph.prodh_indicador,ph.prodh_linea_base,ph.prodh_meta,ph.prod_fuente_verificacion,ph.prod_resultado,ph.acc_id,ph.prod_cod,ph.mt_id,ph.or_id,ph.prod_id,ph.prodh_unidades
                 from _producto_historial ph
+                Inner Join indicador as i On i.indi_id=ph.indi_id
+                Inner Join objetivos_regionales as ore On ore.or_id=ph.or_id
+
+                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+                Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
+                where ph.cite_id='.$cite_id.' and ph.tipo_mod='.$tipo_mod.' and ph.historial_activo!=\'0\'
+                group by ae.acc_codigo,og.og_codigo,ore.or_codigo,ph.prodh_producto,ph.indi_id,ph.prodh_indicador,ph.prodh_linea_base,ph.prodh_meta,ph.prod_fuente_verificacion,ph.prod_resultado,ph.acc_id,ph.prod_cod,ph.mt_id,ph.or_id,ph.prod_id,ph.prodh_unidades
+                order by ph.prod_cod asc';
+
+
+
+        }
+        else{
+            $sql = 'select *
+                from _producto_historial ph
+                Inner Join indicador as i On i.indi_id=ph.indi_id
+                Inner Join objetivos_regionales as ore On ore.or_id=ph.or_id
+
+                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+                Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
                 where ph.cite_id='.$cite_id.' and ph.tipo_mod='.$tipo_mod.' and ph.historial_activo!=\'0\'
                 order by ph.prodh_id, ph.prod_cod asc';
+        }
+
 
         $query = $this->db->query($sql);
         return $query->result_array();
