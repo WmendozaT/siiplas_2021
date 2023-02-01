@@ -2034,47 +2034,6 @@ class Cmod_insumo extends CI_Controller {
             $tinsh_id =$this->db->insert_id();
           }
 
-          // if($tipo==2){
-          //     /*---- Insumo - Modificado ----*/
-          //     $data_to_store6 = array( 
-          //       'ins_id' => $ins_id, /// se mantiene el id, con los datos actualizados
-          //       'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo
-          //       'cite_id' => $cite_id, /// Id del cite
-          //       'num_ip' => $this->input->ip_address(), /// Numero de IP 
-          //       'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
-          //       'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
-          //       );
-          //       $this->db->insert('insumo_update', $data_to_store6);
-          //       $update_id =$this->db->insert_id();
-          //     /*--------------------------------------------------------------------*/
-
-          //     if(count($this->model_modrequerimiento->get_insumo_modificado($update_id))!=0){
-          //       return true;
-          //     }
-          //     else{
-          //       return false;
-          //     }
-          // }
-          // elseif($tipo==3){
-          //   /*---- Insumo - Eliminado ----*/
-          //     $data_to_store6 = array( 
-          //       'insh_id' => $insh_id, /// se guarda el antiguo registro del insumo eliminado
-          //       'cite_id' => $cite_id, /// Id del cite
-          //       'num_ip' => $this->input->ip_address(), /// Numero de IP 
-          //       'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']), /// Nombre de IP
-          //       'fun_id' => $this->session->userdata("fun_id"), /// id del responsable
-          //       );
-          //       $this->db->insert('insumo_delete', $data_to_store6);
-          //       $delete_id =$this->db->insert_id();
-          //     /*--------------------------------------------------------------------*/
-
-          //     if(count($this->model_modrequerimiento->get_insumo_eliminado($delete_id))!=0){
-          //       return true;
-          //     }
-          //     else{
-          //       return false;
-          //     }
-          // }
           return true;
       }
       else{
@@ -2289,30 +2248,6 @@ class Cmod_insumo extends CI_Controller {
           show_404();
       }
     }
-
-
-    /*---- Verificando el numero de Modificaciones ---*/
-/*    public function verif_mod_req($cite){
-      if($cite[0]['tp_reporte']==0){ /// reporte Antiguo
-        $ca=$this->model_modrequerimiento->list_requerimientos_adicionados($cite[0]['cite_id']);
-        $cm=$this->model_modrequerimiento->list_requerimientos_modificados($cite[0]['cite_id']);
-        $cd=$this->model_modrequerimiento->list_requerimientos_eliminados($cite[0]['cite_id']);
-        $valor=0;
-        if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
-          $valor=1;
-        }
-      }
-      else{ //// reporte nuevo >20/01/2023
-
-      }
-
-
-
-
-      
-
-      return $valor;
-    }*/
 
 
 
