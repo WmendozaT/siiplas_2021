@@ -16,10 +16,10 @@ ob_start();
 <page backtop="50mm" backbottom="20mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
-        <table class="page_header" border="0" style="width:100%;">
+        <table class="page_header" border="0" style="width:100%;"> 
           <tr>
             <td style="width:15%; text-align:center;">
-              <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:58%;">
+              <img src="<?php echo getcwd().'/assets/ifinal/cns_logo.JPG'?>" alt="" style="width:58%;">
             </td>
               <td style="width: 70%; text-align: left">
                 <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">

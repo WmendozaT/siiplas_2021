@@ -1347,10 +1347,10 @@ class Programacionpoa extends CI_Controller{
                   <tr>
                     <td style="width:100%; height: 50%; font-size: 18pt;" align="center">';
                        if($proyecto[0]['img']!=''){
-                            $tabla.='<img src="'.base_url().'fotos/'.$proyecto[0]['img'].'" class="img-responsive" style="width:80%; height:90%;" align=center />';
+                            $tabla.='<img src="'.getcwd().'/fotos/'.$proyecto[0]['img'].'" class="img-responsive" style="width:80%; height:90%;" align=center />';
                         }
                         else{
-                            $tabla.='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:50%; height:60%;"/>';
+                            $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:50%; height:60%;"/>';
                         }
                         $tabla.='
                         <br>
@@ -1470,6 +1470,7 @@ class Programacionpoa extends CI_Controller{
 
   //// Caratula POA 2022 (GASTO CORRIENTE)
   public function caratula_poa_pinversion($proyecto){
+    $imagen=$this->model_proyecto->get_img_ficha_tecnica($proyecto[0]['proy_id']);
     $tabla='';
     $tabla.='
         <page orientation="portrait" backtop="50mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
@@ -1508,29 +1509,41 @@ class Programacionpoa extends CI_Controller{
             <hr>
             <div style="width:100%; height: 1.2%; font-size: 9px; font-family: Arial;">&nbsp;&nbsp;&nbsp;<b>SISTEMA DE PLANIFICACIÓN DE SALUD - SIIPLAS @Wmendoza7</b><br><br></div>
             </page_footer>
-                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                  <tr>
-                    <td style="width:100%; height: 50%; font-size: 18pt;" align="center">
-                      <img src="'.base_url().'fotos/209-6b01a.JPG" class="img-responsive" style="width:50%; height:100%;"/><br>
-                        <br>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">
-                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                          <tr>
-                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 55px;" align="center"><b>POA '.$this->gestion.'</b></td>
-                          </tr>
-                          <tr>
-                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 35px;" align="center">PROYECTO DE INVERSI&Oacute;N</td>
-                          </tr>
-                          <tr>
-                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 25px;" align="center"><b><br>'.$proyecto[0]['proy_sisin'].' - '.$proyecto[0]['proy_nombre'].'</b></td>
-                          </tr>
-                        </table>
-                    </td>
-                  </tr>
-                </table>';
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                <tr>
+                  <td style="width:100%; height: 50%; font-size: 18pt;" align="center">';
+                    if(count($imagen)!=0){
+                      if($imagen[0]['tp']==1){
+                        $tabla.='<img src="'.getcwd().'/fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:75%; height:90%;"/><br>';
+                      }
+                      else{
+                        $tabla.='<img src="'.getcwd().'/fotos/209-6b01a.JPG" class="img-responsive" style="width:50%; height:100%;"/><br>';
+                      }
+                    }
+                    else{
+                      $tabla.='<img src="'.getcwd().'/fotos/209-6b01a.JPG" class="img-responsive" style="width:50%; height:100%;"/><br>';
+                    }
+                  $tabla.='
+                    
+                    <br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">
+                      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                          <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 55px;" align="center"><b>POA '.$this->gestion.'</b></td>
+                        </tr>
+                        <tr>
+                          <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 35px;" align="center">PROYECTO DE INVERSI&Oacute;N</td>
+                        </tr>
+                        <tr>
+                          <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 25px;" align="center"><b><br>'.$proyecto[0]['proy_sisin'].' - '.$proyecto[0]['proy_nombre'].'</b></td>
+                        </tr>
+                      </table>
+                  </td>
+                </tr>
+              </table>';
                 
         $tabla.='
         </page>';
