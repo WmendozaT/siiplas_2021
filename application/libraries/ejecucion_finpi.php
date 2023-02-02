@@ -1637,8 +1637,8 @@ class ejecucion_finpi extends CI_Controller{
             <td rowspan=8 style="width:30%;text-align:center">';
             if(count($imagen)!=0){
               if($imagen[0]['tp']==1){
-                $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:150px; height:110px;"/>';
-                //$tabla.='<img src="'.getcwd().'/fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:230px; height:170px;"/>';
+                //$tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:150px; height:110px;"/>';
+                $tabla.='<img src="'.getcwd().'/fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:230px; height:170px;"/>';
               }
               else{
                 $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:150px; height:110px;"/>';

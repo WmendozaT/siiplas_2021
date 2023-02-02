@@ -22,7 +22,7 @@ class Consulta_pi extends CI_Controller {
 /*------- menu Proyectos de Inversion -------*/
   public function menu_pi(){
     $data['menu']=$this->menu_regional();
-    $data['img1']='<center><img src="'.base_url().'assets/ifinal/EscudoBolivia.png" class="img-responsive app-center" style="width:150px; height:100px;text-align:center"/><h6 class="app-row-center">Estado Plurinacional de Bolivia</h6></center>';
+    $data['img1']='<center><img src="'.base_url().'assets/ifinal/EscudoBolivia.png" class="img-responsive app-center" style="width:150px; height:100px;text-align:center"/><h6 class="app-row-center"><b>Estado Plurinacional de Bolivia</b></h6></center>';
     $data['img2']='<center><img src="'.base_url().'assets/ifinal/logo_CNS_header.png" class="img-responsive app-center" style="width:90px; height:120px;text-align:center"/></center>';
 
     $this->load->view('admin/consultas_internas/vista_cns_proyectos', $data);
@@ -36,7 +36,7 @@ class Consulta_pi extends CI_Controller {
     <input name="base" type="hidden" value="'.base_url().'">
     <ul class="nav flex-column" id="nav_accordion">
       <li class="nav-item">
-        <a class="nav-link" href="#"><b>PROYECTO DE INVERSI&Oacute;N / '.$this->gestion.'</b></a>
+        <a class="nav-link" href="#" align=center><b>REGIONALES</b></a>
       </li>';
 
       foreach($regionales as $row){
@@ -44,10 +44,10 @@ class Consulta_pi extends CI_Controller {
         $proyectos=$this->model_pinversion->list_proy_inversion_regional($row['dep_id'],$this->gestion); // Lista de Proyectos
         $tabla.='
         <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="collapse" id="reg'.$row['dep_id'].'" data-bs-target="#menu_item'.$row['dep_id'].'" href="#"> '.$row['dep_cod'].' - '.$row['dep_departamento'].' <i class="bi small bi-caret-down-fill"></i> </a>
+          <a class="nav-link" data-bs-toggle="collapse" id="reg'.$row['dep_id'].'" style="color:#004640;" data-bs-target="#menu_item'.$row['dep_id'].'" href="#"><b> '.$row['dep_cod'].' - '.$row['dep_departamento'].' <i class="bi small bi-caret-down-fill"></i> </b></a>
           <ul id="menu_item'.$row['dep_id'].'" class="submenu collapse" data-bs-parent="#nav_accordion">';
             foreach($proyectos as $rowp){
-              $tabla.='<li style="font-size:11px"><a class="nav-link" href="#" onclick="generar_reporte('.$rowp['proy_id'].');">'.$rowp['proyecto'].'</a></li>';
+              $tabla.='<li style="font-size:11px;"><a class="nav-link" href="#" onclick="generar_reporte('.$rowp['proy_id'].');">'.$rowp['proyecto'].'</a></li>';
             }
             $tabla.='
           </ul>
@@ -55,7 +55,7 @@ class Consulta_pi extends CI_Controller {
       }
       $tabla.='
       <li class="nav-item">
-        <a class="nav-link" href="#"> Other link </a>
+        <a class="nav-link" href="https://planificacion.cns.gob.bo" target=_blank style="color:#004640"><b>Ingreso SIIPLAS </b></a>
       </li>
     </ul>';
 
@@ -73,14 +73,32 @@ class Consulta_pi extends CI_Controller {
       $foto='hola mundo';
       if(count($imagen)!=0){
         if($imagen[0]['tp']==1){
-          $foto='<center><img src="'.getcwd().'/fotos_proyectos/'.$imagen[0]['imagen'].'" style="width:250px; height:200px;text-align:center"/></center>';
+          $foto='<center><img src="'.base_url().'fotos_proyectos/'.$imagen[0]['imagen'].'" style="width:250px; height:200px;text-align:center"/></center>';
         }
         else{
-          $foto='<center><img src="'.getcwd().'/fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
+          $foto='<center><img src="'.base_url().'fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
         }
       }
       else{
-        $foto='<center><img src="'.getcwd().'/fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
+          if($proyecto[0]['proy_estado']==2){
+            $foto='<img src="'.base_url().'fotos/ejecucion.JPG" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+          }
+          elseif($proyecto[0]['proy_estado']==3){
+            $foto='<img src="'.base_url().'fotos/licitacion.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+          }
+          elseif($proyecto[0]['proy_estado']==4){
+            $foto='<img src="'.base_url().'fotos/carpeta.JPG" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+          }
+          elseif($proyecto[0]['proy_estado']==5){
+            $foto='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:250px; height:200px;text-align:center"/>';
+          }
+          elseif($proyecto[0]['proy_estado']==6){
+            $foto='<img src="'.base_url().'fotos/cerrado.JPG" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+          }
+          else{
+            $foto='<img src="'.base_url().'fotos/simagen.jpg" class="img-responsive" style="width:250px; height:200px;text-align:center"/>';
+          }
+        //$foto='<center><img src="'.base_url().'fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
       }
 
       $tabla=$this->formulario_pinversion($proyecto);
@@ -99,6 +117,7 @@ class Consulta_pi extends CI_Controller {
 
 
   /*--- REPORTE FICHA TECNICA PROY INVERSION ---*/
+   /*--- REPORTE FICHA TECNICA PROY INVERSION ---*/
   public function formulario_pinversion($proyecto){
     $imagen=$this->model_proyecto->get_img_ficha_tecnica($proyecto[0]['proy_id']);
     $tabla='';
@@ -111,15 +130,10 @@ class Consulta_pi extends CI_Controller {
                   <div class="jarviswidget-editbox">
                     <div class="form-actions">
                         <div class="row">
-                          <div class="col-md-12" align=right>
-                          <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pinversion/'.$proyecto[0]['proy_id'].'\');" >
-                            <button type="button" class="btn btn-labeled btn-success">
-                             <span class="btn-label">
-                              <i class="glyphicon glyphicon-file"></i>
-                             </>Generar Reporte PDF
+                          <div align=right>
+                            <button style="width:30%;" onclick="window.modal1.showModal('.$proyecto[0]['proy_id'].');"><i class="glyphicon glyphicon-file"></i>
+                              </>Generar Ficha Técnica
                             </button>
-                          </a>
-                            
                           </div>
                         </div>
                     </div>
@@ -147,14 +161,7 @@ class Consulta_pi extends CI_Controller {
                         <div class="form-group">
                           <label class="col-md-2 control-label">REGIONAL</label>
                           <div class="col-md-10">
-                            <input class="form-control" style="font-size:10px" type="text" value="'.strtoupper($proyecto[0]['dep_departamento']).'" disabled=true>
-                          </div>
-                        </div>
-
-                        <div class="form-group">
-                          <label class="col-md-2 control-label">DISTRITAL</label>
-                          <div class="col-md-10">
-                            <input class="form-control" style="font-size:10px" type="text" value="'.strtoupper($proyecto[0]['dist_distrital']).'" disabled=true>
+                            <input class="form-control" style="font-size:10px" type="text" value="'.strtoupper($proyecto[0]['dep_departamento']).' / '.strtoupper($proyecto[0]['dist_distrital']).'" disabled=true>
                           </div>
                         </div>
 
@@ -174,7 +181,7 @@ class Consulta_pi extends CI_Controller {
                       </fieldset>
 
                       <fieldset>
-                        <legend style="font-size:15px"><b>DETALLE DEL PROYECTO</b></legend>
+                        <legend style="font-size:15px"><b>DATOS TÉCNICOS DEL PROYECTO</b></legend>
                         <div class="form-group">
                           <label class="col-md-2 control-label">ESTADO ACTUAL</label>
                           <div class="col-md-10">
@@ -209,7 +216,7 @@ class Consulta_pi extends CI_Controller {
                         <div class="form-group">
                          
                           <div class="col-md-6" align=center>
-                            <center><div id="map" class="map map-home" style="margin:12px 1 12px 1;height:400px; width:750px"></div></center>
+                            <center><div id="map" class="map map-home" style="margin:12px 1 12px 1;height:600px; width:800px"></div></center>
                           </div>
                         </div>
                       </fieldset>
@@ -221,7 +228,14 @@ class Consulta_pi extends CI_Controller {
               </div>
       </article>
       </div>
-    </div>';
+    </div>
+    <dialog id="modal1" style="width:80%;height:95%">
+      <div style="text-align:right">
+        <button onclick="window.modal1.close();" >Cerrar Ventana</button>
+      </div>
+      <hr>
+      <iframe src="'.site_url("").'/reporte_ficha_tecnica_pinversion/'.$proyecto[0]['proy_id'].'" style="width:100%;height:90%"></iframe><br>
+    </dialog>';
 
 
     return $tabla;
@@ -242,7 +256,7 @@ class Consulta_pi extends CI_Controller {
     $data['cabecera']=$this->cabecera_ficha_tecnica($titulo_reporte); /// Cabecera ficha tecnica
     $data['pie']=$this->pie_ficha_tecnica(); /// Pie ficha tecnica
     $data['datos_proyecto']=$this->datos_proyecto_inversion($proyecto); /// Datos detalle 
-
+//echo getcwd();
     $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
   }
 
@@ -340,28 +354,34 @@ class Consulta_pi extends CI_Controller {
                 }
               }
               else{
-                $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                if($proyecto[0]['proy_estado']==2){
+                  $tabla.='<img src="'.getcwd().'/fotos/ejecucion.JPG" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                }
+                elseif($proyecto[0]['proy_estado']==3){
+                  $tabla.='<img src="'.getcwd().'/fotos/licitacion.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                }
+                elseif($proyecto[0]['proy_estado']==4){
+                  $tabla.='<img src="'.getcwd().'/fotos/carpeta.JPG" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                }
+                elseif($proyecto[0]['proy_estado']==5){
+                  $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                }
+                elseif($proyecto[0]['proy_estado']==6){
+                  $tabla.='<img src="'.getcwd().'/fotos/cerrado.JPG" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                }
+                else{
+                  $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
+                }
+                //$tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
               }
             $tabla.='
             </td>
-            <td style="width:50%;text-align:center">';
-              if(count($proyecto)!=0){
-                if($proyecto[0]['img_georeferenciado']!=''){
-                  $tabla.='<img src="'.getcwd().'/img_ubicacion/'.$proyecto[0]['proy'].'.png" class="img-responsive" style="width:350px; height:250px;"/>';
-                }
-                else{
-                  $tabla.='<img src="'.getcwd().'/img_ubicacion/cns_ofn.png" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
-                }
-              }
-              else{
-                $tabla.='<img src="'.getcwd().'/img_ubicacion/cns_ofn.png" class="img-responsive" style="width:300px; height:200px;text-align:center"/>';
-              }
-            $tabla.='
+            <td style="width:50%;text-align:center"><img src="'.getcwd().'/fotos/ubicacion_geo.JPG" style="width:350px; height:250px;text-align:center"/>
             </td>
           </tr>
         </tbody>
       </table>
-
+      <br>
       <div style="height:20px;"><b>DATOS GENERALES</b></div>
        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <tbody>
@@ -400,11 +420,11 @@ class Consulta_pi extends CI_Controller {
         <tbody>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>OBJETIVO GENERAL</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['proy_obj_general']).'</td>
+            <td style="width:75%; font-size: 9px;text-align: justify;">'.strtoupper($proyecto[0]['proy_obj_general']).'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>OBJETIVO ESPECIFICO</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['proy_obj_especifico']).'</td>
+            <td style="width:75%; font-size: 9px;text-align: justify;">'.strtoupper($proyecto[0]['proy_obj_especifico']).'</td>
           </tr>
         </tbody>
        </table><br>

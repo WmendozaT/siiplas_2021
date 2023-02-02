@@ -3,7 +3,7 @@ base = $('[name="base"]').val();
 function abreVentana(PDF){             
   var direccion;
   direccion = '' + PDF;
-  window.open(direccion, "SEGUIMIENTO POA" , "width=800,height=700,scrollbars=NO") ; 
+  window.open(direccion, "FICHA TECNICA" , "width=900,height=900,scrollbars=NO") ; 
 }
 
 
@@ -69,14 +69,46 @@ function abreVentana(PDF){
       if (response.respuesta == 'correcto') {
           document.getElementById('reporte').innerHTML = response.iframe;
 
+/*var Icono = L.icon({
+        iconUrl: base+"assets/ifinal/cns3.JPG",
+        iconSize: [30, 40],
+        iconAnchor: [15, 40],
+        //shadowUrl: "https://vivaelsoftwarelibre.com/wp-content/uploads/2020/05/icono_sombra.png",
+        shadowSize: [35, 50],
+        shadowAnchor: [0, 55],
+        popupAnchor: [0, -40]});
+*/
+
+ var cloudmadeUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var satelitalUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+
+    var basemap = new L.TileLayer(cloudmadeUrl, { maxZoom: 19 });
+    var satmap = new L.TileLayer(satelitalUrl, { maxZoom: 19 });
+
+    
+
+    var baseLayers = {
+        "Ver mapa": basemap,
+        "Satelital": satmap
+    };
           var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           osmAttrib = '&copy; Caja Nacional de Salud / 2023',
-          osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
-          var map = L.map('map').setView([response.proyecto[0]['lat'], response.proyecto[0]['lng']], 17).addLayer(osm);
+          osm = L.tileLayer(osmUrl, {maxZoom: 19, attribution: osmAttrib});
+          L.control.layers(baseLayers).addTo(map);
+          var map = L.map('map').setView([response.proyecto[0]['lat'], response.proyecto[0]['lng']], 14).addLayer(osm);
           L.marker([response.proyecto[0]['lat'], response.proyecto[0]['lng']])
           .addTo(map)
           .bindPopup(response.foto+'<br>'+response.proyecto[0]['proy']+' - '+response.proyecto[0]['proyecto'])
           .openPopup();
+         /* L.marker([response.proyecto[0]['lat'], response.proyecto[0]['lng']], {
+          title: response.proyecto[0]['proy']+' - '+response.proyecto[0]['proyecto'], 
+          draggable:false, 
+          opacity: 1,
+          icon: Icono
+            })
+          .addTo(map)
+          .bindPopup(response.foto+'<br>'+response.proyecto[0]['proy']+' - '+response.proyecto[0]['proyecto'])
+            .openPopup();;*/
 
       }
       else{
