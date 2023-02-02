@@ -94,8 +94,9 @@ function abreVentana(PDF){
           var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           osmAttrib = '&copy; Caja Nacional de Salud / 2023',
           osm = L.tileLayer(osmUrl, {maxZoom: 19, attribution: osmAttrib});
-          L.control.layers(baseLayers).addTo(map);
+          
           var map = L.map('map').setView([response.proyecto[0]['lat'], response.proyecto[0]['lng']], 14).addLayer(osm);
+          L.control.layers(baseLayers).addTo(map);
           L.marker([response.proyecto[0]['lat'], response.proyecto[0]['lng']])
           .addTo(map)
           .bindPopup(response.foto+'<br>'+response.proyecto[0]['proy']+' - '+response.proyecto[0]['proyecto'])
