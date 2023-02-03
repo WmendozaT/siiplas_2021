@@ -157,7 +157,13 @@ class Model_modfisica extends CI_Model{
 
     /*---- Get cite Proyecto - Operaciones ----*/
     function list_cites_Operaciones_proy($proy_id){
-        $sql = 'select *
+        if($this->gestion>2021){
+            $sql = 'select *
+                from lista_modificacion_form4('.$proy_id.','.$this->gestion.')
+                where cite_activo=\'1\'';
+        }
+        else{
+            $sql = 'select *
                 from cite_mod_fisica ci
                 Inner Join funcionario as f On ci.fun_id=f.fun_id
                 Inner Join _componentes as c On ci.com_id=c.com_id
@@ -165,6 +171,8 @@ class Model_modfisica extends CI_Model{
                 Inner Join _proyectos as p On p.proy_id=pfe.proy_id
                 where p.proy_id='.$proy_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and ci.cite_estado!=\'3\'
                 order by ci.cite_id asc';
+        }
+        
 
         $query = $this->db->query($sql);
         return $query->result_array();

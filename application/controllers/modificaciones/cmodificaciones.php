@@ -168,45 +168,83 @@ class Cmodificaciones extends CI_Controller {
             }
         }
       }
-      // ----- LIST CITES OPERACIONES
+      // ----- LIST CITES FORM 4
       elseif($tp==2){
         $cites=$this->model_modfisica->list_cites_Operaciones_proy($proy_id);
+        
           if(count($cites)!=0){
             $nro=0;
               foreach($cites  as $cit){
-                $ca=$this->model_modfisica->operaciones_adicionados($cit['cite_id']);
-                $cm=$this->model_modfisica->operaciones_modificados($cit['cite_id']);
-                $cd=$this->model_modfisica->operaciones_eliminados($cit['cite_id']);
 
-                if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
-                  $nro++;
-                  $tabla .='<tr>';
-                    $tabla .='<td align="center">'.$nro.'</td>';
-                    $tabla .='<td><b>'.$cit['cite_nota'].'</b></td>';
-                    $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
-                    $tabla .='<td></td>';
-                    $tabla .='<td>'.$cit['com_componente'].'</td>';
-                    $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/reporte_modfis/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE OPERACIONES"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
-                    $tabla .='<td align=center>';
-                    if($this->conf_mod_ope==1 || $this->tp_adm==1){
-                        $tabla .='<a href="'.base_url().'index.php/mod/lista_operaciones/'.$cit['cite_id'].'" id="myBtn'.$cit['cite_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
-                                <img id="load'.$cit['cite_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
-                    }
-                      /*if($this->tp_adm==1){
-                      $tabla .='<a href="'.base_url().'index.php/mod/cites_mod_ope/'.$cit['ope_id'].'" id="myBtn'.$cit['ope_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
-                                <img id="load'.$cit['ope_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
-                      }*/ 
-                    $tabla .='</td>';
-                  $tabla .='</tr>';
-                  $tabla.=' <script>
-                                document.getElementById("myBtn'.$cit['cite_id'].'").addEventListener("click", function(){
-                                this.disabled = true;
-                                document.getElementById("load'.$cit['cite_id'].'").style.display = "block";
-                              });
-                            </script>';
+                if($cit['tp_reporte']==0){
+                  $ca=$this->model_modfisica->operaciones_adicionados($cit['cite_id']);
+                  $cm=$this->model_modfisica->operaciones_modificados($cit['cite_id']);
+                  $cd=$this->model_modfisica->operaciones_eliminados($cit['cite_id']);
+
+                  if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
+                    $nro++;
+                    $tabla .='<tr>';
+                      $tabla .='<td align="center">'.$nro.'</td>';
+                      $tabla .='<td><b>'.$cit['cite_nota'].'</b></td>';
+                      $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
+                      $tabla .='<td></td>';
+                      $tabla .='<td>'.$cit['com_componente'].'</td>';
+                      $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/reporte_modfis/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE OPERACIONES"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
+                      $tabla .='<td align=center>';
+                      if($this->conf_mod_ope==1 || $this->tp_adm==1){
+                          $tabla .='<a href="'.base_url().'index.php/mod/lista_operaciones/'.$cit['cite_id'].'" id="myBtn'.$cit['cite_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
+                                  <img id="load'.$cit['cite_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
+                      }
+                        /*if($this->tp_adm==1){
+                        $tabla .='<a href="'.base_url().'index.php/mod/cites_mod_ope/'.$cit['ope_id'].'" id="myBtn'.$cit['ope_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
+                                  <img id="load'.$cit['ope_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
+                        }*/ 
+                      $tabla .='</td>';
+                    $tabla .='</tr>';
+                    $tabla.=' <script>
+                                  document.getElementById("myBtn'.$cit['cite_id'].'").addEventListener("click", function(){
+                                  this.disabled = true;
+                                  document.getElementById("load'.$cit['cite_id'].'").style.display = "block";
+                                });
+                              </script>';
+                  }
                 }
+                else{
+                  $nro++;
+                    $tabla .='<tr>';
+                      $tabla .='<td align="center">'.$nro.'</td>';
+                      $tabla .='<td><b>'.$cit['cite_nota'].'</b></td>';
+                      $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
+                      $tabla .='<td></td>';
+                      $tabla .='<td>'.$cit['com_componente'].'</td>';
+                      $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/reporte_modfis/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE OPERACIONES"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
+                      $tabla .='<td align=center>';
+                      if($this->conf_mod_ope==1 || $this->tp_adm==1){
+                          $tabla .='<a href="'.base_url().'index.php/mod/lista_operaciones/'.$cit['cite_id'].'" id="myBtn'.$cit['cite_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
+                                  <img id="load'.$cit['cite_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
+                      }
+                        /*if($this->tp_adm==1){
+                        $tabla .='<a href="'.base_url().'index.php/mod/cites_mod_ope/'.$cit['ope_id'].'" id="myBtn'.$cit['ope_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
+                                  <img id="load'.$cit['ope_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="20" height="20" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO..">';
+                        }*/ 
+                      $tabla .='</td>';
+                    $tabla .='</tr>';
+                    $tabla.=' <script>
+                                  document.getElementById("myBtn'.$cit['cite_id'].'").addEventListener("click", function(){
+                                  this.disabled = true;
+                                  document.getElementById("load'.$cit['cite_id'].'").style.display = "block";
+                                });
+                              </script>';
+                }
+
+
+                
               }
           }
+      
+
+
+          
       }
       // ----- LIST DE CITES TECHO PRESUPUESTARIO
       else{

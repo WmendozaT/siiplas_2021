@@ -147,7 +147,7 @@ class Cmod_insumo extends CI_Controller {
         $data['opciones']=$this->opciones_formulario_mod5($data['cite'],$proyecto);
         $data['style']=$this->style();
       
-          if($this->gestion>2021){ /// Gestion 2022
+          if($this->gestion>2021){ /// Gestion 2022-2023
             if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
               $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023
             }

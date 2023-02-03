@@ -1599,7 +1599,7 @@ class Mrep_operaciones extends CI_Model {
     public function consolidado_poa_formulario5_institucional($tp_id){
         $sql = '
         select * from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
-        order by dep_id, dist_id asc';
+        order by dep_id, dist_id, aper_programa, aper_proyecto, aper_actividad, par_codigo asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -1608,7 +1608,8 @@ class Mrep_operaciones extends CI_Model {
     public function consolidado_poa_formulario5_regional($dep_id,$tp_id){
         $sql = '
         select * from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
-        where dep_id='.$dep_id.'';
+        where dep_id='.$dep_id.'
+        order by aper_programa, aper_proyecto, aper_actividad, par_codigo asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -1617,7 +1618,8 @@ class Mrep_operaciones extends CI_Model {
     public function consolidado_poa_formulario5_distrital($dist_id,$tp_id){
         $sql = '
         select * from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
-        where dist_id='.$dist_id.'';
+        where dist_id='.$dist_id.'
+        order by aper_programa, aper_proyecto, aper_actividad, par_codigo asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -1627,7 +1629,8 @@ class Mrep_operaciones extends CI_Model {
     public function consolidado_poa_formulario5_componente($com_id,$tp_id){
         $sql = '
             select * from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
-            where com_id='.$com_id.'';
+            where com_id='.$com_id.'
+            order by par_codigo asc';
 
         $query = $this->db->query($sql);
         return $query->result_array();

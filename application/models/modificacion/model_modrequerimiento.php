@@ -51,7 +51,13 @@ class Model_modrequerimiento extends CI_Model{
 
     /*---- LISTA DE REQUERIMIENTOS ----*/
     function lista_requerimientos($com_id){
-        if($this->gestion==2022){
+        $sql = 'select *,i.form4_cod as prod_cod
+                from insumos i
+                Inner Join partidas as par On par.par_id=i.par_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
+                where i.com_id='.$com_id.' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and i.ins_activo=\'0\'
+                order by i.form4_cod, par.par_codigo, i.ins_id asc';
+        /*if($this->gestion>2021){
             $sql = 'select *,i.form4_cod as prod_cod
                 from insumos i
                 Inner Join partidas as par On par.par_id=i.par_id
@@ -69,7 +75,7 @@ class Model_modrequerimiento extends CI_Model{
                 Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
                 where p.com_id='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
                 order by p.prod_cod asc';
-        }
+        }*/
         
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -295,16 +301,7 @@ class Model_modrequerimiento extends CI_Model{
                 from lista_modificacion_requerimiento('.$proy_id.','.$this->gestion.')
                 where cite_activo=\'1\'';
         }
-        
-
-/*        $sql = 'select *
-                from cite_mod_requerimientos ci
-                Inner Join funcionario as f On ci.fun_id=f.fun_id
-                Inner Join _componentes as c On ci.com_id=c.com_id
-                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-                Inner Join _proyectos as p On p.proy_id=pfe.proy_id
-                where p.proy_id='.$proy_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and ci.cite_estado!=\'3\'
-                order by ci.cite_id asc';*/
+    
 
         $query = $this->db->query($sql);
         return $query->result_array();

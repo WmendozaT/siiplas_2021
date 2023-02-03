@@ -1699,6 +1699,59 @@ c.pfec_id,c.com_componente,c.estado,sa.serv_id, sa.serv_cod,sa.serv_descripcion,
 $$ LANGUAGE sql;
 
 
+
+
+--------------CITES DE MODIFICACION DEL FORMULARIO 4
+
+CREATE OR REPLACE FUNCTION lista_modificacion_form4(id_proy numeric,gestion integer) RETURNS TABLE(
+cite_id integer,
+com_id numeric,
+cite_codigo text,
+cite_nota varchar,
+cite_fecha timestamp,
+fecha_creacion timestamp,
+cite_estado integer,
+cite_activo integer,
+fun_id integer,
+fun_nombre varchar,
+fun_paterno varchar,
+fun_materno varchar,
+fun_usuario varchar,
+pfec_id numeric,
+com_componente varchar,
+estado numeric,
+serv_id integer,
+serv_cod varchar,
+serv_descripcion varchar,
+tipo_subactividad varchar,
+proy_id numeric,
+aper_id numeric,
+pfec_estado integer,
+aper_gestion integer) AS
+
+$$
+
+select 
+ci.cite_id,ci.com_id,ci.cite_codigo, ci.cite_nota, ci.cite_fecha, ci.fecha_creacion, ci.cite_estado,ci.cite_activo,f.fun_id,f.fun_nombre, f.fun_paterno,f.fun_materno,f.fun_usuario,
+c.pfec_id,c.com_componente,c.estado,sa.serv_id, sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad, pfe.proy_id,pfe.aper_id,pfe.pfec_estado,apg.aper_gestion
+
+                from cite_mod_fisica ci
+                Inner Join funcionario as f On ci.fun_id=f.fun_id
+                Inner Join _componentes as c On ci.com_id=c.com_id
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On pfe.aper_id=apg.aper_id
+                Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                where p.proy_id=id_proy and pfe.pfec_estado=1 and pfe.estado!=3 and ci.cite_estado!=3 and apg.aper_gestion=gestion and c.estado!=3
+                order by ci.cite_id asc;
+$$ LANGUAGE sql;
+
+
+
+
+
+
 Lista las modificaciones realizadas a los techos presupuestarios
 CREATE OR REPLACE FUNCTION lista_modificacion_techos_unidad(id_proy numeric,gestion integer) RETURNS TABLE(
 cppto_id integer,

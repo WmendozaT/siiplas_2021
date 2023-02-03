@@ -332,8 +332,9 @@ class Cmod_fisica extends CI_Controller {
             $ae=$get_acc[0]['ae'];
           }*/
 
-
+//echo $cite_id.'-'.$indi_id.'-'.$linea_base.'-'.$tp_meta.'-'.$prod.'-'.$resultado.'-'.$mverificacion.'-'.$indicador.'-'.$unidad.'-'.$meta.'-'.$presupuesto.'-'.$or_id.'--'.count($producto);
         if($this->registra_form4_original($cite,$producto)){
+
           /*--------- Update Producto --------*/
           $update_prod = array(
           //  'com_id' => $com_id, // com id
@@ -438,7 +439,7 @@ class Cmod_fisica extends CI_Controller {
      // $prod = $this->model_insumo->get_requerimiento($ins_id); //// DATOS DEL REQUERIMIENTO
         $prog=$this->model_producto->programado_producto($form4[0]['prod_id']);
 
-      if(count($form4)!=0 & count($prog)!=0){
+      if(count($form4)!=0){
        // $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id); /// Datos Cite
         $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); //// DATOS DEL PROYECTO
 

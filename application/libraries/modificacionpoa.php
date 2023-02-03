@@ -356,7 +356,7 @@ class Modificacionpoa extends CI_Controller{
       }
       else{ /// Gasto Corriente
         $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cite[0]['proy_id']);
-        $tabla.='<h1><small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small> / <small>'.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
+        $tabla.='<h1 title='.$proyecto[0]['aper_id'].'><small>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'</small> / <small>'.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</small></h1>';
       }
 
       //// ------ Monto Presupuesto Programado-Asignado POA
@@ -371,10 +371,10 @@ class Modificacionpoa extends CI_Controller{
       $monto_a=0;$monto_p=0;$monto_saldo=0;
       $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
       
-      if($proyecto[0]['tp_id']==1){
+      if($proyecto[0]['tp_id']==1){ /// proy inversion
         $monto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto[0]['proy_id']);
       }
-      else{
+      else{ /// gasto corriente
         $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
       }
 
@@ -1127,7 +1127,7 @@ class Modificacionpoa extends CI_Controller{
                 <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                   <tr class="modo1">
-                    <th style="width:2%;">#</th>
+                    <th style="width:2%;">'.$cite[0]['com_id'].'</th>
                     <th style="width:2%;">COD. ACT.</th>
                     <th style="width:2%;"></th>
                     <th style="width:5%;">PARTIDA</th>

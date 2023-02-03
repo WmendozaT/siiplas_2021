@@ -875,6 +875,7 @@ class Genera_informacion extends CI_Controller{
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                 <tr style="background-color: #66b2e8">
+                  <th style="width:3%;height:50px;background-color: #eceaea;"></th>
                   <th style="width:3%;height:50px;background-color: #eceaea;">COD. DA.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. UE.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
@@ -916,6 +917,7 @@ class Genera_informacion extends CI_Controller{
               $prog="'".$row['aper_programa']."'";
             $nro++;
             $tabla.='<tr>';
+                $tabla.='<td>'.$row['ins_id'].'</td>';
                 $tabla.='<td style="height:70px;">'."'".$row['dep_cod']."'".'</td>';
                 $tabla.='<td>'."'".$row['dist_cod']."'".'</td>';
                 $tabla.='<td>'.$prog.'</td>';
