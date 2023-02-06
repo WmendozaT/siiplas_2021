@@ -132,6 +132,26 @@ class Model_funcionario extends CI_Model {
     }
 
 
+    /*--------- Lista de responsables Institucional (Seguimiento POA)----------*/
+    public function get_funcionarios_seguimiento_institucional($gestion){
+        $sql = 'select * 
+                from vlist_funcionario f
+                Inner Join _componentes as c On c.com_id=f.cm_id
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+
+                where f.cm_id!=\'0\' and apg.aper_estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
+                order by apg.aper_gestion,f.dep_id,apg.aper_programa,apg.aper_actividad asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
     public function get_rol($fun_id){
         $this->db->select("r.r_nombre, r.r_id");
         $this->db->from('rol r');

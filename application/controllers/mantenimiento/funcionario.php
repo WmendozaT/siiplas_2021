@@ -79,6 +79,50 @@ class Funcionario extends CI_Controller {
             $data['administradores_segpoa']=$this->list_funcionarios_seguimiento(1); /// Seguimiento POA
             $data['list_responsables']=$this->get_responsables_poa();
             $this->load->view('admin/mantenimiento/funcionario/vlist_fun', $data);
+        
+
+         /*$funcionarios=$this->model_funcionario->get_funcionarios_seguimiento_institucional(2021);
+         $tabla='';
+            if(count($funcionarios)!=0){
+                $tabla.='
+               
+                <table border=0.9 style="width:100%;" align=center>
+                    <thead>
+                        <tr style="font-size: 8px;" bgcolor="#d8d8d8">
+                            <th style="width:2%; text-align: center;height:20px;">#</th>
+                            <th style="width:20%; text-align: center;">ACTIVIDAD</th>
+                            <th style="width:26%; text-align: center;">SUBACTIVIDAD</th>
+                            <th style="width:13%; text-align: center;">RESPONSABLE</th>
+                            <th style="width:5%; text-align: center;">ID</th>
+                            <th style="width:5%; text-align: center;">COM ID 2021</th>
+                            <th style="width:5%; text-align: center;">COM ID 2023</th>
+                            <th style="width:13%; text-align: center;">USUARIO</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+                    $nro=0;
+                    foreach($funcionarios  as $row){
+                        $nro++;
+                     
+                        $rol=$this->model_funcionario->verif_rol($row['id'],1);
+                        $tabla .='<tr style="font-size: 7px;">';
+                            $tabla .='<td style="width:2%;height:15px;" align="center">'.$nro.'</td>';
+                            $tabla .='<td style="width:20%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
+                            $tabla .='<td style="width:26%;">'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>';
+                            $tabla .='<td style="width:13%;">'.$row['fun_nombre'].' '.$row['fun_paterno'].'</td>';
+                            $tabla .='<td style="width:13%;"><b>'.$row['id'].'</b></td>';
+                            $tabla .='<td style="width:13%;"><b>'.$row['cm_id'].'</b></td>';
+                            $tabla .='<td style="width:13%;"></td>';
+                            $tabla .='<td style="width:13%;"><b>'.$row['fun_usuario'].'</b></td>';
+                            
+                        $tabla .='</tr>';
+                    }
+
+                $tabla.='</tbody>
+                </table><br>';
+            }
+             echo $tabla;*/
+
         }
         else{
             redirect('admin/dashboard');

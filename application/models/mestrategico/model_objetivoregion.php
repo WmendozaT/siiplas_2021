@@ -445,6 +445,22 @@ class Model_objetivoregion extends CI_Model{
     }
 
 
+    /*-- Get valor por trimestre Ejecutado Objetivo Regional a nivel INSTITUCIONAL--*/
+    public function get_ejec_form2_institucional($og_codigo,$or_codigo){
+        $sql = 'select opge.g_id,og.og_codigo, oreg.or_codigo, SUM(temejec.ejec_fis) ejecutado
+                from temp_trm_ejec_objetivos_regionales temejec
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temejec.or_id
+                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+                Inner Join objetivo_gestion as og on og.og_id = opge.og_id
+                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and og.og_codigo='.$og_codigo.' and oreg.or_codigo='.$or_codigo.'
+                group by opge.g_id,og.og_codigo, oreg.or_codigo
+                order by opge.g_id,og.og_codigo, oreg.or_codigo asc';
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
 
     /*-- Obtiene suma total por trimestre para armar la tenporalidad por Objetivo Regional (Programacion) --*/
     public function get_suma_trimestre_para_oregional($or_id,$trimestre){

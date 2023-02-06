@@ -1116,6 +1116,95 @@ class Eval_oregional extends CI_Controller{
 
 
 
+
+
+
+  //// Matriz lista de cumplimiento de Operaciones Institucional 
+  public function matriz_cumplimiento_operaciones_institucional(){
+    $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional_institucional();
+     for ($i=0; $i <count($lista_ogestion); $i++) { 
+      for ($j=0; $j <4 ; $j++) { 
+        $matriz[$i][$j]=0;
+      } 
+     }
+
+     $nro=0;
+     foreach($lista_ogestion as $row){
+      $get_trm_ejec=$this->model_objetivoregion->get_ejec_form2_institucional($row['og_codigo'],$row['or_codigo']); /// Temporalidad Ejecutado
+      $ejec_form2_institucional=0;
+      if(count($get_trm_ejec)!=0){
+        $ejec_form2_institucional=$get_trm_ejec[0]['ejecutado'];
+      }  
+
+
+        $matriz[$nro][0]=$row['og_codigo']; /// cod OG
+        $matriz[$nro][1]=$row['or_codigo']; /// cod OR
+        $matriz[$nro][2]=$row['programado_total']; /// Programado Total
+        $matriz[$nro][3]=$ejec_form2_institucional; /// ejecutado Total
+        $ejecutado=0;
+        if($row['programado_total']!=0){
+          $ejecutado=round((($ejec_form2_institucional/$row['programado_total'])*100),2);
+        }
+        $matriz[$nro][4]=$ejecutado; /// ejecutado Total %
+
+        $nro++;
+     }
+
+     return $matriz;
+  }
+
+
+
+ /*-- CALIFICACION TRIMESTRAL POR OBJETIVO REGIONAL (INSTITUCIONAL)--*/
+    public function calificacion_trimestral_acumulado_x_oregional_institucional($og_codigo,$or_codigo,$programado_total){
+      $valor = array( '1' => '0','2' => '0','3' => '0','4' => '0');
+
+      if(count($this->model_objetivoregion->verif_temporalidad_oregional($or_id))!=0){
+        $suma_total_prog=0; $suma_prog=0; $suma_ejec=0;
+        
+        //// Suma total programado por operacion
+        $prog_total=$this->model_objetivoregion->get_trm_temporalidad_prog_total_oregional($or_id);
+        if(count($prog_total)!=0){
+          $suma_total_prog=$prog_total[0]['total_prog'];
+        }
+        ///-----
+
+
+
+        for ($i=1; $i <=$trimestre; $i++) {
+          $get_trm=$this->model_objetivoregion->get_trm_temporalidad_prog_oregional($or_id,$i); /// Temporalidad Programado
+          $get_trm_ejec=$this->model_objetivoregion->get_trm_temporalidad_ejec_oregional($or_id,$i); /// Temporalidad Ejecutado
+
+          if(count($get_trm)!=0){
+            $suma_prog=$suma_prog+$get_trm[0]['pg_fis']; 
+          }
+
+          if(count($get_trm_ejec)!=0){
+            $suma_ejec=$suma_ejec+$get_trm_ejec[0]['ejec_fis'];
+          }
+
+          $ejecucion=0;
+          if($suma_ejec!=0){
+            $ejecucion=round((($suma_ejec/$suma_prog)*100),2);
+          }
+
+          $cumplimiento_gestion=0;
+          if($suma_total_prog!=0){
+            $cumplimiento_gestion=round((($suma_ejec/$suma_total_prog)*100),2);
+          }
+        }
+
+        //  $text=strval( $suma_prog);
+          $valor[1]=$suma_prog; /// Programado Acumulado al trimestre
+          $valor[2]=$suma_ejec; /// Ejecutado Acumulado al trimestre
+          $valor[3]=$ejecucion; /// Cumplimiento al trimestre
+          $valor[4]=$cumplimiento_gestion; /// Cumplimiento a la Gestion
+      }
+
+      return $valor; 
+    }
+
+
   /*-------- MENU -----*/
     function menu($mod){
         $enlaces=$this->menu_modelo->get_Modulos($mod);

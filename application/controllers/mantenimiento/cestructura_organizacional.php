@@ -1109,7 +1109,7 @@ class Cestructura_organizacional extends CI_Controller {
       //$html = $this->estructura($tipo);
       //echo $html;
 
-/*        $uni=$this->model_proyecto->todos();
+        /*$uni=$this->model_proyecto->todos();
         $tabla='';
         $tabla.='<table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;font-size: 8pt;" align="center" >
                   <thead>
@@ -1120,7 +1120,7 @@ class Cestructura_organizacional extends CI_Controller {
                       <th style="width:10%;">DISTRITAL</th>
                       <th style="width:5%;">COD. UO.</th>
                       <th style="width:15%;">UNIDAD ORGANIZACIONAL</th>
-                      <th style="width:5%;">COD. UNIDAD.</th>
+                      <th style="width:5%;">COM ID</th>
                       <th style="width:15%;">UNIDAD RESPONSABLE</th>
                     </tr>
                   </thead>
@@ -1133,6 +1133,7 @@ class Cestructura_organizacional extends CI_Controller {
                       <td>'.$row['dist_id'].'</td>
                       <td>'.strtoupper($row['dist_distrital']).'</td>
                       <td>'.$row['prog'].' '.$row['proy'].' '.$row['act'].'</td>
+                      <td>'.$row['com_id'].'</td>
                       <td>'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</td>
                   
                     </tr>';

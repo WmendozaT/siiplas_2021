@@ -91,8 +91,18 @@ class Crep_evalform2 extends CI_Controller {
 
 
 
+
+    /*$matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_institucional();
+    for ($i=0; $i < count($this->model_objetivogestion->get_list_ogestion_por_regional_institucional()); $i++) { 
+      for ($j=0; $j < 5; $j++) { 
+        echo "[".$matriz[$i][$j]."]";
+      }
+      echo "<br>";
+    }*/
+
+
     //echo count($this->model_objetivogestion->get_list_ogestion_por_regional(2));
-   /* $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional(2);
+    /*$matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional(2);
     for ($i=0; $i < count($this->model_objetivogestion->get_list_ogestion_por_regional(2)); $i++) { 
       for ($j=0; $j < 5; $j++) { 
         echo "[".$matriz[$i][$j]."]";
@@ -122,6 +132,21 @@ class Crep_evalform2 extends CI_Controller {
       $tabla_vista_acumulado=$this->get_tabla_cumplimiento_form2_priorizados_institucional(0);
       $tabla_vista_acumulado_impresion=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
 
+      //------
+      $matriz3=$this->eval_oregional->matriz_cumplimiento_operaciones_institucional(); /// Matriz detalle operaciones institucional;
+      /// ---------------------------------------------------------------------------------------------
+      $lista='';
+      $lista.='<div style="font-family: Arial;">DETALLE DE CUMPLIMIENTO DE OPERACIONES - '.$this->gestion.'</div>
+                <ul>';
+                  for ($i=0; $i <count($this->eval_oregional->matriz_cumplimiento_operaciones_institucional()); $i++) { 
+                    $lista.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$matriz3[$i][0].'.'.$matriz3[$i][1].' - <b>'.$matriz3[$i][4].' %</b></li>';
+                  }
+                  $lista.='
+                </ul>
+                <hr>';
+      $lista_operaciones=$lista;
+      //style="display: none"
+      /// ----------------------------------------------------------------------------------------------
 
       $tabla='';
       $tabla='
@@ -137,10 +162,13 @@ class Crep_evalform2 extends CI_Controller {
             <div class="widget-body">
                 <ul id="myTab1" class="nav nav-tabs bordered">
                   <li class="active">
-                      <a href="#s1" data-toggle="tab"> (%) Cumplimiento de Operaciones</a>
+                      <a href="#s1" data-toggle="tab"> (%) Cumplimiento de Operaciones por Regional</a>
                   </li>
                   <li>
                       <a href="#s2" data-toggle="tab"> Detalle de Cumplimiento</a>
+                  </li>
+                  <li>
+                      <a href="#s3" data-toggle="tab"> Detalle por Operación</a>
                   </li>
                 </ul>
 
@@ -175,6 +203,21 @@ class Crep_evalform2 extends CI_Controller {
                     </div>
                   </div>
 
+                  <div class="tab-pane fade" id="s3">
+                    <div class="rows" align=center>
+                      <div id="graf_detalle3">
+                        <div id="grafico3" style="width: 900px; height: 800px; margin: 2 auto"></div>
+                      </div>
+                      
+                    </div>
+                    <div id="tabla_impresion_detalle3" style="display: none">
+                     '.$lista_operaciones.'
+                    </div>
+                    <div align="right">
+                      <button  onClick="imprimir_grafico3()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                  </div>
+
                 </div>
 
             </div>
@@ -183,11 +226,15 @@ class Crep_evalform2 extends CI_Controller {
 
       $result = array(
         'respuesta' => 'correcto',
+        'gestion'=>$this->gestion,
         'titulo'=>$titulo,
         'tabla'=>$tabla,
         'nro'=>$nro,
         'matriz'=>$matriz,
         'matriz_regresion'=>$matriz_form2_regresion,
+        'nro_form2'=>count($this->eval_oregional->matriz_cumplimiento_operaciones_institucional()),
+        'matriz_form2'=>$matriz3, /// detalle form2 institucional
+
       );
 
       echo json_encode($result);
@@ -779,6 +826,8 @@ class Crep_evalform2 extends CI_Controller {
 
     return $calif;
   }
+
+
 
 
  /*---- CABECERA REPORTE OPERACIONES POR REGIONALES (GRAFICO)----*/

@@ -60,6 +60,7 @@
                 $('#lista_consolidado').fadeIn(1000).html(response.tabla);
                 cuadro_grafico_cumplimiento_operaciones_institucional(response.matriz,response.nro,response.titulo);
                 cuadro_grafico_cumplimiento_operaciones_regresion_intitucional(response.matriz_regresion,response.titulo); 
+                cuadro_grafico_cumplimiento_form2_detalle_institucional(response.matriz_form2,response.nro_form2,response.gestion)
               }
               else{
                 alertify.error("ERROR AL LISTAR");
@@ -296,6 +297,66 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
 }
 
 
+//// grafico nivel de cumplimiento de operaciones form2 detalle (Institucional)
+function cuadro_grafico_cumplimiento_form2_detalle_institucional(matriz,nro,gestion){
+  let categoria=[];
+  for (var i = 0; i < nro; i++) {
+      categoria[i]= 'OPE. '+matriz[i][0]+'.'+matriz[i][1];
+  }
+
+  let detalle=[];
+  for (var i = 0; i < nro; i++) {
+      detalle[i]= matriz[i][4];
+  }
+
+ Highcharts.chart('grafico3', {
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: ''
+    },
+    subtitle: {
+        text: 'CUMPLIMIENTO DE OPERACIONES A LA GESTIÓN '+gestion+'<br><h1><b>INSTITUCIONAL</b></h1>'
+    },
+    xAxis: {
+        categories: categoria,
+        title: {
+            text: null
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'CUMPLIMIENTO DE METAS',
+            align: 'high'
+        },
+        labels: {
+            overflow: 'Operaciones'
+        }
+    },
+    tooltip: {
+        valueSuffix: ' %'
+    },
+    plotOptions: {
+        bar: {
+            dataLabels: {
+                enabled: true
+            }
+        }
+    },
+
+    credits: {
+        enabled: false
+    },
+
+    series: [{
+        name: 'CUMPLIMIENTO %',
+        data: detalle
+    }]
+  });
+}
+
   /// ========== FUNCION PARA IMPRIMIR
   //// imprimir grafico1 (Institucional)
   function imprimir_grafico1() {
@@ -323,6 +384,19 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
     document.getElementById("tabla_impresion_detalle2").style.display = 'none';
   }
 
+  //// imprimir grafico3 Detalle form 2 (Institucional)
+  function imprimir_grafico3() {
+    var grafico = document.querySelector("#grafico3");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+ 
+    document.getElementById("tabla_impresion_detalle3").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_detalle3");
+    imprimirevaluacionform3(grafico,cabecera,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("tabla_impresion_detalle3").style.display = 'none';
+  }
+
   function imprimirevaluacionform2(grafico,cabecera,eficacia,tabla) {
 
     var ventana = window.open('Evaluacion FORMULARIO N° 2 ', 'PRINT', 'height=800,width=1000');
@@ -332,6 +406,27 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
     ventana.document.write(cabecera.innerHTML);
     ventana.document.write('<hr>');
     ventana.document.write(eficacia.innerHTML);
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
+
+    function imprimirevaluacionform3(grafico,cabecera,tabla) {
+
+    var ventana = window.open('Evaluacion FORMULARIO N° 2 ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EVALUACION OPERACIONES - FORM. N° 2</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
     ventana.document.write(grafico.innerHTML);
     ventana.document.write('<hr>');
     ventana.document.write(tabla.innerHTML);
