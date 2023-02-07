@@ -597,9 +597,13 @@ $route['proy_ver_fases/(:any)']='mantenimiento/cconf_pinversion/ver_fases/$1';//
 //$route['ver_consolidado/(:any)']='mantenimiento/cconf_pinversion/consolidado_temporalidad/$1/$2';// Consolidado de Temporalidad - Programado,Ejecutado (EVALUACION)
 
 //--------------------------- MANTENIMIENTO EDICIONES ----------------------//
-$route['ediciones']='mantenimiento/cediciones/menu_ediciones';// Menu de Ediciones- Certificaciones-Modificaciones
-$route['rep_ediciones/(:any)']='mantenimiento/cediciones/rep_ediciones/$1';// Exportar PDF
+//$route['ediciones']='mantenimiento/cediciones/menu_ediciones';// Menu de Ediciones- Certificaciones-Modificaciones
+//$route['rep_ediciones/(:any)']='mantenimiento/cediciones/rep_ediciones/$1';// Exportar PDF
 
+
+//--------------------------- MANTENIMIENTO AJUSTES AL SISTEMA ----------------------//
+$route['ediciones']='mantenimiento/cajustes/menu_ajustes';// Para los ajustes que se necesite
+//$route['rep_ediciones/(:any)']='mantenimiento/cediciones/rep_ediciones/$1';// Exportar PDF
 
 ///////////////////////////programacion//////////////////////
 //========================mision y vision=========================//

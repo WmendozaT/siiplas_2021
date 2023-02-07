@@ -2087,13 +2087,14 @@ ins_observacion varchar,
 ins_gestion integer,
 par_codigo integer,
 mes_id integer,
-ipm_fis numeric) AS
+ipm_fis numeric,
+estado_cert integer) AS
 
 $$
 
 select 
 pfe.proy_id,apg.aper_id,apg.aper_gestion,pfe.pfec_descripcion, pfe.pfec_estado,c.com_id,tpsa.tipo_subactividad,ser.serv_cod,ser.serv_descripcion,pr.prod_id,pr.prod_cod,pr.prod_producto,
-i.ins_id,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,i.ins_observacion,i.ins_gestion,par.par_codigo,temp.mes_id,temp.ipm_fis
+i.ins_id,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,i.ins_observacion,i.ins_gestion,par.par_codigo,temp.mes_id,temp.ipm_fis, temp.estado_cert
 from _proyectofaseetapacomponente pfe
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
 Inner Join _componentes as c On c.pfec_id=pfe.pfec_id

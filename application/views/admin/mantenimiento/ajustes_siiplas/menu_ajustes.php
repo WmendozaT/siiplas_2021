@@ -17,40 +17,10 @@
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <!--estiloh-->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css"> 
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
         <meta name="viewport" content="width=device-width">
         <!--fin de stiloh-->
-        <script>
-            function abreVentana(PDF){
-                var direccion;
-                direccion = '' + PDF;
-                window.open(direccion, "Reporte de Proyectos" , "width=800,height=650,scrollbars=SI") ;
-            }                                                  
-        </script>
-        <style>
-            hr{ 
-            height:3px;  
-            background-color:#1C7366; 
-            }
-            .table1{
-              display: inline-block;
-              width:100%;
-              max-width:1550px;
-              overflow-x: scroll;
-              }
-            table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-            overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 9px;
-            }
-            td{
-              font-size: 9px;
-            }
-        </style>
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -92,7 +62,7 @@
                     <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
                     </li>
                     <li class="text-center">
-                        <a href="#" title="REPORTE GERENCIAL"> <span class="menu-item-parent">MANTENIMIENTO</span></a>
+                        <a href="#" title="MANTENIMIENTO"> <span class="menu-item-parent">MANTENIMIENTO</span></a>
                     </li>
                     <?php echo $menu;?>
                 </ul>
@@ -111,7 +81,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Mantenimiento</li><li>Ediciones POA</li>
+                    <li>Mantenimiento</li><li>Ajustes al Sistema</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -119,76 +89,55 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
+                        <article class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                             <section id="widget-grid" class="well">
                                 <div class="">
                                     <h1>CONSOLIDADO DE EDICIONES (CERTIFICACIONES, MODIFICACIONES) A NIVEL INSTITUCIONAL Y REGIONAL <small><?php echo $this->session->userData('gestion');?></small>
                                 </div>
                             </section>
                         </article>
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                        <article class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                             <section id="widget-grid" class="well">
-                                <a href="<?php echo site_url("").'/ejec/detalle_ediciones';?>" title="REPORTE" class="btn btn-default" style="width:100%;" target="_blank"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;DETALLE EDICIONES POAS</a>
+                                <button type="button" class="btn btn-primary" style="width:100%;" data-toggle="modal" data-target="#exampleModalCenter">
+                                    SUBIR ARCHIVO.CSV
+                                </button>
                             </section>
                         </article>
                     </div>
                     <div class="row">
-                        <article class="col-sm-12">
-                            <!-- new widget -->
-                            <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
-                                <header>
-                                    <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                                    <h2>CONSOLIDADO DE REQUERIMIENTOS CERTIFICADOS - REGIONAL <?php echo strtoupper($dep[0]['dep_departamento']); ?></h2>
-
-                                    <ul class="nav nav-tabs pull-right in" id="myTab">
-                                        <li class="active">
-                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">LISTA CUADRO CONSOLIDADO</span></a>
-                                        </li>
-                                    </ul>
-
-                                </header>
-
-                                <!-- widget div-->
-                                <div class="no-padding">
-                                    <!-- widget edit box -->
-                                    <div class="jarviswidget-editbox">
-                                        test
+                        <div class="modal fade" id="exampleModalCenter" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog" id="csv">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                                     </div>
-                                    <!-- end widget edit box -->
-                                    <div class="widget-body">
-                                        <!-- content -->
-                                        <div id="myTabContent" class="tab-content">
-                                            <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="EFICACIA INSTITUCIONAL A NIVEL REGIONAL">
-                                                <!-- <hr>
-                                                    <div align="right">
-                                                        <a href="<?php echo base_url();?>index.php/rep/exportar_rep_req/<?php echo $dep[0]['dep_id'];?>" target="_blank" title="EXPORTAR LISTA DE REQUERIMIENTOS" class="btn btn-default"><img src="<?php echo base_url(); ?>assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR REQUERIMIENTOS (.xls)</a>&nbsp;&nbsp;
-                                                    </div>
-                                                <hr> -->
-                                                <h2 class="alert alert-info" align="center">EDICIONES POA - <?php echo $this->session->userData('gestion');?></h2>
-                                                <div class="row">
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3" >
-                                                        <section id="widget-grid" class="well">
-                                                            <div class="table-responsive">
-                                                                <?php echo $regional;?>
-                                                            </div>
-                                                        </section>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-9">
-                                                        <section id="widget-grid" class="well">
-                                                            <div id="content1"></div>
-                                                        </section>
-                                                    </div>
+                                    <div class="modal-body">
+                                        <h2><center>SUBIR ARCHIVO .CSV</center></h2>
+                                    
+                                        <div class="row">
+                                            <!-- <script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script> -->
+                                              <form action="<?php echo site_url().'/mantenimiento/cajustes/importar_archivo' ?>" method="post" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep">
+                                                <!-- <input name="tp_id" type="hidden" value="1"> -->
+                                                
+                                                <div class="input-group">
+                                                  <span class="input-group-btn">
+                                                    <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+                                                    <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+                                                    <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+                                                  </span>
+                                                  <span class="form-control"></span>
                                                 </div>
-                                            <hr>
-                                            </div>
+                                                <hr>
+                                                <div >
+                                                    <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR ARCHIVO.CSV</button><br>
+                                                    <center><img id="loads" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                                                </div>
+                                              </form> 
                                         </div>
-                                        <!-- end content -->
                                     </div>
                                 </div>
-                                <!-- end widget div -->
                             </div>
-                            <!-- end widget -->
-                        </article>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -254,87 +203,32 @@
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
         <!-- Voice command : plugin -->
-        <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-
-        <script type="text/javascript">
-            /*------------ MODIFICAR REQUERIMIENTO ----------------*/
-            $(function () {
-                $(".enlace").on("click", function (e) {
-                    dep_id = $(this).attr('name');
-                    region = $(this).attr('id');
-                    
-                    $('#content1').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones - <br>'+region+'</div>');
-                    
-                    var url = "<?php echo site_url("")?>/mantenimiento/cediciones/get_edicion_unidad";
-                    var request;
-                    if (request) {
-                        request.abort();
+       <script type="text/javascript">
+        $(function () {
+            $("#subir_archivo").on("click", function () {
+                var $valid = $("#form_subir_sigep").valid();
+                if (!$valid) {
+                    $validator.focusInvalid();
+                } else {
+                    if(document.getElementById('archivo').value==''){
+                        alertify.alert('POR FAVOR SELECCIONE ARCHIVO .CSV');
+                        return false;
                     }
-                    request = $.ajax({
-                        url: url,
-                        type: "POST",
-                        dataType: 'json',
-                        data: "dep_id="+dep_id
-                    });
-
-                    request.done(function (response, textStatus, jqXHR) {
-
-                    if (response.respuesta == 'correcto') {
-                        //$('#content1').html(response.tabla);
-                        $('#content1').fadeIn(1000).html(response.tabla);
-                    }
-                    else{
-                        alertify.error("ERROR AL RECUPERAR DATOS DEL REQUERIMIENTO");
-                    }
-
-                    });
-                    request.fail(function (jqXHR, textStatus, thrown) {
-                        console.log("ERROR: " + textStatus);
-                    });
-                    request.always(function () {
-                        //console.log("termino la ejecuicion de ajax");
-                    });
-                    e.preventDefault();
-                  
-                });
-            });
-        </script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-        <script type="text/javascript">
-            // TABLA
-            $(document).ready(function() {
-                pageSetUp();
-                /* BASIC ;*/
-                var responsiveHelper_dt_basicc = undefined;
-
-                var breakpointDefinition = {
-                    tablet : 1024,
-                    phone : 480
-                };
-
-                $('#dt_basicc').dataTable({
-                    "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
-                    "t"+
-                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-                    "autoWidth" : true,
-                    "preDrawCallback" : function() {
-                        // Initialize the responsive datatables helper once.
-                        if (!responsiveHelper_dt_basicc) {
-                            responsiveHelper_dt_basicc = new ResponsiveDatatablesHelper($('#dt_basicc'), breakpointDefinition);
+                   
+                    archivo = document.getElementById('archivo').value;
+                    alertify.confirm("SUBIR ARCHIVO ?", function (a) {
+                        if (a) {
+                            document.getElementById("loads").style.display = 'block';
+                            document.getElementById('subir_archivo').disabled = true;
+                            document.getElementById("subir_archivo").value = "Subiendo Archivo...";
+                            document.forms['form_subir_sigep'].submit();
+                        } else {
+                            alertify.error("OPCI\u00D3N CANCELADA");
                         }
-                    },
-                    "rowCallback" : function(nRow) {
-                        responsiveHelper_dt_basicc.createExpandIcon(nRow);
-                    },
-                    "drawCallback" : function(oSettings) {
-                        responsiveHelper_dt_basicc.respond();
-                    }
-                });
-                /* END BASIC */
-            })
+                    });
+                }
+            });
+        });
         </script>
     </body>
 </html>

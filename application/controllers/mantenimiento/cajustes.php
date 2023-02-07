@@ -1,5 +1,5 @@
 <?php
-class Cediciones extends CI_Controller {
+class Cajustes extends CI_Controller {
     public $rol = array('1' => '1');
     public function __construct(){
         parent::__construct();
@@ -34,12 +34,90 @@ class Cediciones extends CI_Controller {
         }
     }
 
-    /*---------  EDICIONES (2019) ------------*/
-    public function menu_ediciones(){
+    /*--------- AJUSTES AL POA ------------*/
+    public function menu_ajustes(){
       $data['menu']=$this->menu(9);
+      
       $data['regional']=$this->regionales();
-      $this->load->view('admin/mantenimiento/ediciones/menu_ediciones', $data);
+      $this->load->view('admin/mantenimiento/ajustes_siiplas/menu_ajustes', $data);
     }
+
+
+
+  /*---- IMPORTAR ARCHIVO PARA EL AJUSTE ----*/
+  function importar_archivo(){
+    if ($this->input->post()) {
+        $post = $this->input->post();
+       // $tp = $this->security->xss_clean($post['tp_id']);
+       // $tp_id = $this->security->xss_clean($post['tp_id']);
+
+        $tipo = $_FILES['archivo']['type'];
+        $tamanio = $_FILES['archivo']['size'];
+        $archivotmp = $_FILES['archivo']['tmp_name'];
+
+        $filename = $_FILES["archivo"]["name"];
+        $file_basename = substr($filename, 0, strripos($filename, '.'));
+        $file_ext = substr($filename, strripos($filename, '.'));
+        $allowed_file_types = array('.csv');
+        if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
+          $i=0;
+          $lineas = file($archivotmp);
+
+          foreach ($lineas as $linea_num => $linea){ 
+            if($i != 0){ 
+              $datos = explode(";",$linea);
+                if(count($datos)==2){
+                  $id = intval(trim($datos[0])); //// aper_id
+                  $com_id = intval(trim($datos[1])); //// com_id
+                 
+                  ///------------------
+                  $update_ptto = array(
+                    'cm_id' => $com_id
+                  );
+
+                  $this->db->where('fun_id', $id);
+                  $this->db->update('funcionario', $update_ptto);
+                  /// ------------------
+                  
+                }
+              }
+
+              $i++;
+            }
+
+            $this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO');
+            redirect(site_url("").'/ediciones');
+
+        } 
+        elseif (empty($file_basename)) {
+          echo "<script>alert('SELECCIONE ARCHIVO .CSV')</script>";
+        } 
+        elseif ($filesize > 100000000) {
+          //redirect('');
+        } 
+        else {
+          $mensaje = "Sólo estos tipos de archivo se permiten para la carga: " . implode(', ', $allowed_file_types);
+          echo '<script>alert("' . $mensaje . '")</script>';
+        }
+
+    } else {
+        show_404();
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /*-------- GET LISTA DE EDICIONES POR UNIDAD ------------*/
     public function get_edicion_unidad(){
