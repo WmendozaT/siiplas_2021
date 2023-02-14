@@ -1848,10 +1848,20 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------- LISTA PROYECTOS DE INVERSION funcion--------*/
+    /*-------- LISTA PROYECTOS DE INVERSION funcion INSTITUCIONAL--------*/
     public function list_proy_inversion(){ /// aprobados Institucional
         $sql = 'select *
                 from lista_poa_pinversion_nacional('.$this->gestion.')
+                order by dep_id, dist_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-------- LISTA PROYECTOS DE INVERSION funcion DISTRITAL--------*/
+    public function list_proy_inversion_distrital($dist_id){ /// aprobados Institucional
+        $sql = 'select *
+                from lista_poa_pinversion_nacional('.$this->gestion.')
+                where dist_id='.$dist_id.'
                 order by dep_id, dist_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();

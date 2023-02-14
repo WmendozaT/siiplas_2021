@@ -1,43 +1,43 @@
 <?php if (!defined('BASEPATH')) exit('No se permite el acceso directo al script');
 
 class Programacionpoa extends CI_Controller{
-        public function __construct (){
-            parent::__construct();
-            $this->load->model('programacion/model_proyecto');
-            $this->load->model('mantenimiento/model_entidad_tras');
-            $this->load->model('mantenimiento/model_partidas');
-            $this->load->model('mantenimiento/model_ptto_sigep');
-            $this->load->model('modificacion/model_modrequerimiento');
-            $this->load->model('programacion/insumos/minsumos');
-            $this->load->model('ejecucion/model_seguimientopoa');
-            $this->load->model('programacion/model_faseetapa');
-            $this->load->model('programacion/model_componente');
-            $this->load->model('ejecucion/model_notificacion');
-            $this->load->model('programacion/model_producto');
-            $this->load->model('ejecucion/model_evaluacion');
-          //  $this->load->model('mantenimiento/model_configuracion');
-            $this->load->model('ejecucion/model_certificacion');
-            $this->load->model('programacion/insumos/minsumos');
-            $this->load->model('mestrategico/model_objetivoregion');
-            $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
-            $this->load->model('mantenimiento/model_estructura_org');
-            $this->load->model('menu_modelo');
-         
-            $this->gestion = $this->session->userData('gestion');
-            $this->adm = $this->session->userData('adm');
-            //$this->rol = $this->session->userData('rol_id');
-            $this->dist = $this->session->userData('dist');
-            //$this->dist_tp = $this->session->userData('dist_tp');
-            $this->tmes = $this->session->userData('trimestre');
-            $this->fun_id = $this->session->userData('fun_id');
-           // $this->tp_adm = $this->session->userData('tp_adm');
-            $this->verif_mes=$this->session->userData('mes_actual');
-            $this->resolucion=$this->session->userdata('rd_poa');
-            $this->tp_adm = $this->session->userData('tp_adm');
-            $this->mes = $this->mes_nombre();
-            $this->conf_form4 = $this->session->userData('conf_form4');
-            $this->conf_form5 = $this->session->userData('conf_form5');
-            $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
+  public function __construct (){
+      parent::__construct();
+      $this->load->model('programacion/model_proyecto');
+      $this->load->model('mantenimiento/model_entidad_tras');
+      $this->load->model('mantenimiento/model_partidas');
+      $this->load->model('mantenimiento/model_ptto_sigep');
+      $this->load->model('modificacion/model_modrequerimiento');
+      $this->load->model('programacion/insumos/minsumos');
+      $this->load->model('ejecucion/model_seguimientopoa');
+      $this->load->model('programacion/model_faseetapa');
+      $this->load->model('programacion/model_componente');
+      $this->load->model('ejecucion/model_notificacion');
+      $this->load->model('programacion/model_producto');
+      $this->load->model('ejecucion/model_evaluacion');
+    //  $this->load->model('mantenimiento/model_configuracion');
+      $this->load->model('ejecucion/model_certificacion');
+      $this->load->model('programacion/insumos/minsumos');
+      $this->load->model('mestrategico/model_objetivoregion');
+      $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
+      $this->load->model('mantenimiento/model_estructura_org');
+      $this->load->model('menu_modelo');
+   
+      $this->gestion = $this->session->userData('gestion');
+      $this->adm = $this->session->userData('adm');
+      //$this->rol = $this->session->userData('rol_id');
+      $this->dist = $this->session->userData('dist');
+      //$this->dist_tp = $this->session->userData('dist_tp');
+      $this->tmes = $this->session->userData('trimestre');
+      $this->fun_id = $this->session->userData('fun_id');
+     // $this->tp_adm = $this->session->userData('tp_adm');
+      $this->verif_mes=$this->session->userData('mes_actual');
+      $this->resolucion=$this->session->userdata('rd_poa');
+      $this->tp_adm = $this->session->userData('tp_adm');
+      $this->mes = $this->mes_nombre();
+      $this->conf_form4 = $this->session->userData('conf_form4');
+      $this->conf_form5 = $this->session->userData('conf_form5');
+      $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
     }
 
   /// ----- APERTURAR NUEVO POA (UNIDAD)
@@ -1712,7 +1712,7 @@ class Programacionpoa extends CI_Controller{
                 }
                 else{
                   $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
-                  $proy = $this->model_proyecto->get_datos_proyecto_unidad($proyecto[0]['proy_id']);
+                  $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
                   $uresp='';
                   if(count($unidad)!=0){
                     $uresp='<font size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';

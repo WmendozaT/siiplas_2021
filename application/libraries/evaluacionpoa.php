@@ -209,7 +209,7 @@ class Evaluacionpoa extends CI_Controller{
                 <th>NRO. ACT. PROGRAMADAS</th>
                 <th>NRO. ACT. EVALUADAS</th>
                 <th>NRO. ACT. CUMPLIDAS</th>
-                <th>NRO. ACT. EN PROCESO</th>
+                <th>NRO. ACT. CUMPLIDO PARCIAL</th>
                 <th>NRO. ACT. NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>

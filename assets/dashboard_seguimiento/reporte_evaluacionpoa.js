@@ -749,19 +749,19 @@ function abreVentana_eficiencia(PDF){
           name: 'Actividades',
           data: [
             {
-              name: 'N°. ACT. NO CUMPLIDO : '+(tab6-tab8)+'%',
-              y: +(tab6-tab8),
+              name: 'N°. ACT. NO CUMPLIDAS : '+Math.round((tab6-tab8),2)+'%',
+              y: +Math.round((tab6-tab8),2),
               color: '#f98178',
             },
 
             {
-              name: 'N°. ACT. EN PROCESO : '+tab8+'%',
+              name: 'N°. ACT. CUMPLIDAS PARCIALMENTE : '+tab8+'%',
               y: +tab8,
               color: '#f5eea3',
             },
 
             {
-              name: 'N°. ACT. CUMPLIDO : '+tab5+'%',
+              name: 'N°. ACT. CUMPLIDAS : '+tab5+'%',
               y: +tab5,
               color: '#2CC8DC',
               sliced: true,

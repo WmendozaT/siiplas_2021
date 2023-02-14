@@ -131,6 +131,24 @@ class model_producto extends CI_Model {
     }
 
 
+    /*----- GET LISTA DE ACTIVIDADES ALINEADO A LA UNIDAD RESPONSABLE DE LOS PROGRAMAS BOLSA 2023 -----*/
+    function get_lista_form4_uniresp_prog_bolsas($com_id){
+        $sql = 'select apg.aper_id,p.proy_id,apg.aper_gestion,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,prod.prod_id,prod.prod_cod,prod.prod_producto, prod.prod_indicador, prod.prod_meta,prod.prod_fuente_verificacion,prod.uni_resp
+                from _productos prod
+                Inner Join _componentes as c On prod.com_id=c.com_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+
+                where prod.uni_resp='.$com_id.' and apg.aper_gestion='.$this->gestion.' and c.estado!=\'3\' and prod.estado!=\'3\' and pfe.pfec_estado!=\'3\'
+                order by apg.aper_programa, apg.aper_proyecto, apg.aper_actividad asc'; 
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
     /// Migracion de temporalidad form 4 
     function list_temporalidad_total_form4(){
         $sql = 'select *
@@ -297,6 +315,7 @@ class model_producto extends CI_Model {
     }
 
 
+    //// Vigente
     function producto_programado($prod_id,$gestion){
         $sql = 'select *
                 from vista_productos_temporalizacion_programado_dictamen
@@ -306,7 +325,7 @@ class model_producto extends CI_Model {
     }
 
     /*------ lista de Objetivos Estrategicos por producto alineado 2016-2020 -----*/
-    function list_oestrategico($com_id){
+/*    function list_oestrategico($com_id){
         $sql = 'select oe.obj_id,obj_codigo,obj_descripcion, count(p.prod_id),oe.obj_gestion_inicio gi,oe.obj_gestion_fin gf
                 from _productos p
                 Inner Join _acciones_estrategicas as ae On ae.ae=p.acc_id
@@ -316,10 +335,10 @@ class model_producto extends CI_Model {
                 order by oe.obj_id asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------ lista de productos alineado a un objetivo estrategico 2016-2020 -----*/
-    function list_producto_programado_oestrategico($com_id,$gestion,$obj_id,$gi,$gf){
+/*    function list_producto_programado_oestrategico($com_id,$gestion,$obj_id,$gi,$gf){
         $sql = 'select *
                 from _productos p
                 Inner Join indicador as i On i.indi_id=p.indi_id
@@ -329,7 +348,7 @@ class model_producto extends CI_Model {
                 order by ae.acc_id asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     function producto_ejecutado($prod_id,$gestion){
@@ -385,21 +404,21 @@ class model_producto extends CI_Model {
 
     /*==============================================================================================================*/
     /*=================================== LISTA DE PRODUCTOS EJECUTADO RELATIVO GESTION  ====================================*/
-    public function prod_ejecr_mensual($id_pr,$gest){
+/*    public function prod_ejecr_mensual($id_pr,$gest){
         $this->db->from('prod_ejecutado_mensual_relativo');
         $this->db->where('prod_id', $id_pr);
         $this->db->where('g_id', $gest);
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
 
-    public function nro_prod_ejecr_mensual($id_pr,$gest){
+/*    public function nro_prod_ejecr_mensual($id_pr,$gest){
         $this->db->from('prod_ejecutado_mensual_relativo');
         $this->db->where('prod_id', $id_pr);
         $this->db->where('g_id', $gest);
         $query = $this->db->get();
         return $query->num_rows();
-    } 
+    } */
     /*==============================================================================================================*/
     /*=================================== LISTA DE PRODUCTOSGESTION ANUAL ====================================*/
     function list_prodgest_anual($id_prod){
@@ -567,21 +586,6 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-
-    /*---- LISTA DE REQUERIMIENTOS POR COMPONENTES ----*/
-/*    public function requerimientos_componentes($com_id){
-        $sql = 'select *
-                from _productos p
-                Inner Join _insumoproducto as ip On ip.prod_id=p.prod_id
-                Inner Join insumos as i On i.ins_id=ip.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                Inner Join insumo_gestion as ig On i.ins_id=ig.ins_id
-                Inner Join vifin_prog_mes as pr On ig.insg_id=pr.insg_id
-                where p.com_id='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and ig.g_id='.$this->gestion.'
-                order by p.prod_cod, i.ins_id asc'; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
     /*---- LISTA DE PRODUCTOS-OPERACIONES ----*/
     public function list_ope_proy($proy_id){

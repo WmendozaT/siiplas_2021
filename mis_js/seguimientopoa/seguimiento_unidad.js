@@ -243,7 +243,7 @@ function abreVentana(PDF){
           $('#evaluacion').fadeIn(1000).html(response.evaluacion);
       }
       else{
-          alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
       }
 
       });

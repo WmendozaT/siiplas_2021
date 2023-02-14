@@ -194,7 +194,8 @@
           </div>
         </div>
 
-        <div class="modal fade" id="modal_ope_mes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <!-- MODAL SEGUIMIENTO POA FORM 4 -->
+        <div class="modal fade" id="modal_form4_mes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document" id="mdialTamanio">
             <div class="modal-content">
               <div class="modal-header">
@@ -202,6 +203,20 @@
               </div>
               <div class="modal-body" align="center">
                 <div id="operaciones"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL SEGUIMIENTO POA FORM 5 (PROYECTOS DE INVERSION) -->
+        <div class="modal fade" id="modal_form5_pi_mes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document" id="mdialTamanio">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+              </div>
+              <div class="modal-body" align="center">
+                <div id="pinversion"></div>
               </div>
             </div>
           </div>
@@ -255,34 +270,61 @@
       }
     </script>
     <script type="text/javascript">
-        /*------ Evaluacion de Operaciones ------*/
+        /*------ Evaluacion de Formulario N 4 ------*/
         $(function () {
-            var prod_id = ''; var proy_id = '';
-            $(".ope_mes").on("click", function (e) {
-                dist_id = $(this).attr('id');
-                $('#operaciones').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando lista de Operaciones a ejecutar este mes ...</div>');
-                var url = "<?php echo site_url("")?>/ejecucion/cseguimiento/get_operaciones_mes";
-                var request;
-                if (request) {
-                    request.abort();
-                }
-                request = $.ajax({
-                    url: url,
-                    type: "POST",
-                    dataType: 'json',
-                    data: "dist_id="+dist_id
-                });
+          var prod_id = ''; var proy_id = '';
+          $(".form4_mes").on("click", function (e) {
+              dist_id = $(this).attr('id');
+              $('#operaciones').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando lista de Actividades a ejecutar este mes ...</div>');
+              var url = "<?php echo site_url("")?>/ejecucion/cseguimiento/get_form4_gc_mes";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "dist_id="+dist_id
+              });
 
-                request.done(function (response, textStatus, jqXHR) { 
-                    if (response.respuesta == 'correcto') {
-                        $('#operaciones').html(response.tabla);
-                    } else {
-                        alertify.error("ERROR AL RECUPERAR DATOS, PORFAVOR CONTACTESE CON EL ADMINISTRADOR"); 
-                    }
-                });
+              request.done(function (response, textStatus, jqXHR) { 
+                  if (response.respuesta == 'correcto') {
+                      $('#operaciones').html(response.tabla);
+                  } else {
+                      alertify.error("ERROR AL RECUPERAR DATOS, PORFAVOR CONTACTESE CON EL ADMINISTRADOR"); 
+                  }
+              });
+          });
 
 
+          //// Proyectos de Inversion
+          $(".pi_mes").on("click", function (e) {
+
+            dist_id = $(this).attr('id');
+
+            $('#pinversion').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando lista de Proyectos de Inversión a ejecutar este mes ...</div>');
+            var url = "<?php echo site_url("")?>/ejecucion/cseguimiento/get_form5_pi_mes";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "dist_id="+dist_id
             });
+
+            request.done(function (response, textStatus, jqXHR) { 
+                if (response.respuesta == 'correcto') {
+                    $('#pinversion').html(response.tabla);
+                } else {
+                    alertify.error("ERROR AL RECUPERAR DATOS, PORFAVOR CONTACTESE CON EL ADMINISTRADOR"); 
+                }
+            });
+
+          });
         });
       </script>
 

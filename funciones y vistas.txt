@@ -2112,6 +2112,61 @@ $$ LANGUAGE sql;
 
 
 
+
+
+/// ===== LISTA DE REQUERIMIENTOS PROGRAMADOS (MES >0 AND MES<=MES ACTUAL)
+CREATE OR REPLACE FUNCTION lista_seguimiento_requerimientos_programado(mes_final integer,gestion integer) RETURNS TABLE(
+proy_id numeric,
+aper_id numeric,
+aper_gestion integer,
+pfec_descripcion varchar,
+pfec_estado integer,
+com_id numeric,
+tipo_servicio varchar,
+serv_cod varchar,
+serv_descripcion varchar,
+prod_id numeric,
+prod_cod integer,
+prod_producto varchar,
+ins_id numeric,
+ins_detalle varchar,
+ins_cant_requerida numeric,
+ins_costo_unitario numeric,
+ins_costo_total numeric,
+ins_unidad_medida varchar,
+ins_observacion varchar,
+ins_gestion integer,
+par_codigo integer,
+mes_id integer,
+ipm_fis numeric,
+estado_cert integer) AS
+
+$$
+
+select 
+pfe.proy_id,apg.aper_id,apg.aper_gestion,pfe.pfec_descripcion, pfe.pfec_estado,c.com_id,tpsa.tipo_subactividad,ser.serv_cod,ser.serv_descripcion,pr.prod_id,pr.prod_cod,pr.prod_producto,
+i.ins_id,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,i.ins_observacion,i.ins_gestion,par.par_codigo,temp.mes_id,temp.ipm_fis, temp.estado_cert
+from _proyectofaseetapacomponente pfe
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+Inner Join servicios_actividad as ser On ser.serv_id=c.serv_id
+Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+Inner Join _productos as pr On pr.com_id=c.com_id
+Inner Join _insumoproducto as ip On ip.prod_id=pr.prod_id
+Inner Join insumos as i On i.ins_id=ip.ins_id
+Inner Join partidas as par On i.par_id=par.par_id
+Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
+where pfe.pfec_estado=1 and (temp.mes_id>0 and temp.mes_id<=mes_final) and pfe.estado!=3 and c.estado!=3 and pr.estado!=3 
+and i.ins_estado!=3 and i.aper_id!=0 and par.par_depende!='10000' and apg.aper_gestion=gestion
+order by ser.serv_cod,pr.prod_cod, par.par_codigo asc;
+$$ LANGUAGE sql;
+
+
+
+
+
+
+
 FUNCION NUMERO DE REQUERIMIENTOS Y PRESUPUESTO TOTAL A EJECUTAR EN EL MES ACTUAL POR CADA DISTRITAL  (NOTIFICACION)
 
 CREATE OR REPLACE FUNCTION seguimiento_numero_requerimientos_ppto_distrital_mensual(id_dist numeric, mes integer,gestion integer) RETURNS TABLE(

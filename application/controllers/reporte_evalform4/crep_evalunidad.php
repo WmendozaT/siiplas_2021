@@ -573,7 +573,7 @@ class Crep_evalunidad extends CI_Controller {
             <th style="width:8%;">TOTAL PROGRAMADO</th>
             <th style="width:8%;">TOTAL EVALUADO</th>
             <th style="width:8%;">TOTAL CUMPLIDOS</th>
-            <th style="width:8%;">EN PROCESO</th>
+            <th style="width:8%;">CUMPLIDO PARCIAL</th>
             <th style="width:8%;">NO CUMPLIDOS</th>
             <th style="width:8%;">% CUMPLIDO</th>
             <th style="width:8%;">% NO CUMPLIDO</th>
@@ -791,7 +791,7 @@ class Crep_evalunidad extends CI_Controller {
                 <th>NRO. ACT. PROGRAMADAS</th>
                 <th>NRO. ACT. EVALUADAS</th>
                 <th>NRO. ACT. CUMPLIDAS</th>
-                <th>NRO. ACT. EN PROCESO</th>
+                <th>NRO. ACT. EN CUMPLIMIENTO PARCIAL</th>
                 <th>NRO. ACT. NO CUMPLIDAS</th>
                 <th>% CUMPLIDAS</th>
                 <th>% NO CUMPLIDAS</th>

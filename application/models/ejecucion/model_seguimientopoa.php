@@ -157,7 +157,7 @@ class Model_seguimientopoa extends CI_Model{
 
 
     /*-- GET LISTA DE SUBACTIVIDADES QUE TIENEN PROGRAMADO OPERACIONES EN EL MES --*/
-    public function get_lista_subactividades_operaciones_programados($dist_id,$mes_id,$gestion,$proy_id){
+/*    public function get_lista_subactividades_operaciones_programados($dist_id,$mes_id,$gestion,$proy_id){
         $sql = '
                 select proy_id,dist_id,com_id,tipo_subactividad,serv_cod,serv_descripcion,m_id,aper_gestion
                 from lista_seguimiento_operaciones_mensual_ue('.$dist_id.','.$mes_id.','.$gestion.')
@@ -167,7 +167,7 @@ class Model_seguimientopoa extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /// ============== SEGUIMIENTO POA (REPORTE)

@@ -400,7 +400,7 @@
         indexLabel: "{name} - {y} %",
         dataPoints: [
           { y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>, name: "CUMPLIDAS", color: '#57889c', exploded: true },
-          { y: <?php echo $tabla[8][$this->session->userData('trimestre')];?>, name: "EN PROCESO",color: '#f5e218' },
+          { y: <?php echo $tabla[8][$this->session->userData('trimestre')];?>, name: "EN CUMPLIMIENTO PARCIAL",color: '#f5e218' },
           { y: <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?>, name: "NO CUMPLIDAS", color: '#a90329'}
         ]
       }]
@@ -786,7 +786,7 @@ chart_gestion.render();
                     },
 
                     {
-                      name: 'N° ACT. EN PROCESO : <?php echo $tabla[8][$this->session->userData('trimestre')];?> %',
+                      name: 'N° ACT. EN CUMPLIMIENTO PARCIAL : <?php echo $tabla[8][$this->session->userData('trimestre')];?> %',
                       y: <?php echo $tabla[8][$this->session->userData('trimestre')];?>,
                       color: '#f5eea3',
                     },

@@ -47,7 +47,7 @@ class Producto extends CI_Controller {
       }
     }
 
-  /*------- LISTA DE OPERACIONES ----------*/
+  /*------- LISTA DE FORM 4 ----------*/
     public function lista_productos($com_id){  
       $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion);
       $data['stylo']=$this->programacionpoa->estilo_tabla_form4();
@@ -120,7 +120,7 @@ class Producto extends CI_Controller {
           $data['prod'] = $this->form4_prog_globales($proy_id,$com_id); /// Lista de productos
         }
         else{
-          $data['prod'] = $this->operaciones($proy_id,$com_id); /// Lista de productos
+          $data['prod'] = $this->form4($proy_id,$com_id); /// Lista de form4
         }
         
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
@@ -530,7 +530,7 @@ class Producto extends CI_Controller {
 
 
     /*------ LISTA FORMULARIO N° 4 (2020-2021-2022) ------*/
-    public function operaciones($proy_id,$com_id){
+    public function form4($proy_id,$com_id){
       //$proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
 

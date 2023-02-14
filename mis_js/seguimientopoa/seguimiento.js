@@ -272,7 +272,7 @@ function abreVentana(PDF){
               },
 
               {
-                name: 'EN PROCESO : '+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)+' %',
+                name: 'CUMPLIMIENTO PARCIAL : '+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)+' %',
                 y: Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100),
                 color: '#f5eea3',
               },
