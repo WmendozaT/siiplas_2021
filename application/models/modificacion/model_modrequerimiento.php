@@ -210,14 +210,24 @@ class Model_modrequerimiento extends CI_Model{
                 order by pa.par_codigo asc';
         }*/
 
-         $sql = 'select *
+         /*$sql = 'select *
                 from insumos_historial ih
                 Inner Join partidas as pa On pa.par_id=ih.par_id
                 Inner Join _productos as p On p.prod_id=ih.id
               
                 where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
-                order by pa.par_codigo asc';
+                order by pa.par_codigo asc';*/
                 
+
+                $sql = 'select ih.insh_id,ih.ins_codigo, ih.ins_detalle, ih.ins_cant_requerida,ih.ins_costo_unitario,ih.ins_costo_total,ih.aper_id,pa.par_codigo, p.prod_cod,ih.ins_id,ih.tipo_mod,ih.ins_observacion,ih.ins_unidad_medida
+                from insumos_historial ih
+                Inner Join partidas as pa On pa.par_id=ih.par_id
+                Inner Join _productos as p On p.prod_id=ih.id
+              
+                where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
+                group by ih.insh_id,ih.ins_codigo, ih.ins_detalle,ih.ins_cant_requerida,ih.ins_costo_unitario,ih.ins_costo_total,ih.aper_id,pa.par_codigo, p.prod_cod,ih.ins_id,ih.tipo_mod,ih.ins_observacion,ih.ins_unidad_medida
+                order by ih.insh_id DESC LIMIT 1';
+
         $query = $this->db->query($sql);
         return $query->result_array();
     }

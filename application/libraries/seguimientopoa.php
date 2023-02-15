@@ -2460,8 +2460,8 @@ class Seguimientopoa extends CI_Controller{
                 <tr>
                     <td style="width:98%;text-align: justify;">
                       El Departamento Nacional de Planificaci&oacute;n en el marco de sus competencias viene fortaleciendo las tareas de monitoreo y supervisi&oacute;n 
-                      a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar las gestiones en el plazo programado para la ejecuci&oacute;n de la Solicitud de CERTIFICACIÓN POA
-                      <b>'.$this->verif_mes[2].' '.$this->gestion.' - '.$proyecto[0]['proy_nombre'].'</b>, recordar que para fines de control y gestión por resultados la 
+                      a traves del Sistema de Planificaci&oacute;n <b>SIIPLAS</b>, en este sentido recordamos a usted efectuar las gestiones para la ejecuci&oacute;n del proyecto: <b>'.$proyecto[0]['proy_nombre'].'</b>, para el mes de 
+                      <b>'.$this->verif_mes[2].' '.$this->gestion.'</b>, de acuerdo a la programación inicial, recordar que para fines de control y gestión por resultados la 
                       responsabilidad del cumplimiento corresponde a su autoridad.
                     </td>
                 </tr>
