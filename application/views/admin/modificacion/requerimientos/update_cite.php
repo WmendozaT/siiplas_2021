@@ -170,7 +170,7 @@
 							<!-- widget content -->
 							<div class="widget-body">
 								<div class="row">
-								<?php echo $items_modificados; ?>
+								<?php echo $datos_historial_cite_modificado.'<br>'.$items_modificados; ?>
 								</div>
 							</div>
 							<!-- end widget body-->

@@ -1423,9 +1423,77 @@ class Modificacionpoa extends CI_Controller{
 
 
   //// Lista de Items MODIFICADOS PARA EL REPORTE (listado nuevo 2023)
-  public function tabla($listado,$detalle){
+  public function tabla($tipo_mod,$listado,$detalle){
     $tabla='';
-    $tabla.='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$detalle.'</b></div>
+
+    if($tipo_mod==2){ /// MODIFICACION
+       $tabla.='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$detalle.'</b></div>
+            <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+              <thead>
+              <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
+                <th style="width:1%;height:20px;">#</th>
+                <th style="width:2.1%;">COD.<br>ACT.</th>
+                <th style="width:3.8%;">PARTIDA</th>
+                <th style="width:16%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:4.6%;">UNIDAD MEDIDA</th>
+                <th style="width:4%;">CANT.</th>
+                <th style="width:4%;">PRECIO UNI.</th>
+                <th style="width:4%;">COSTO TOTAL</th>
+                <th style="width:4.4%;">ENE.</th>
+                <th style="width:4.4%;">FEB.</th>
+                <th style="width:4.4%;">MAR.</th>
+                <th style="width:4.4%;">ABR.</th>
+                <th style="width:4.4%;">MAY.</th>
+                <th style="width:4.4%;">JUN.</th>
+                <th style="width:4.4%;">JUL.</th>
+                <th style="width:4.4%;">AGO.</th>
+                <th style="width:4.4%;">SEPT.</th>
+                <th style="width:4.4%;">OCT.</th>
+                <th style="width:4.4%;">NOV.</th>
+                <th style="width:4.4%;">DIC.</th>
+                <th style="width:6%;">OBSERVACIÓN</th>
+              </tr>
+              </thead>
+              <tbody>';
+              $nro=0;
+              $monto=0;
+              foreach ($listado as $row){
+                $item_mod=$this->model_modrequerimiento->get_item_insumo_modificado_ultimo($row['cite_id'],2,$row['ins_id']);
+                $prog = $this->model_modrequerimiento->list_temporalidad_insumo_historial($item_mod[0]['insh_id']);
+                $nro++;
+                $tabla.='<tr class="modo1">
+                  <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
+                  <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$item_mod[0]['prod_cod'].'</b></td>
+                  <td style="width: 3.8%; text-align: center;">'.$item_mod[0]['par_codigo'].'</td>
+                  <td style="width: 16%; text-align: left;">'.$item_mod[0]['ins_detalle'].'</td>
+                  <td style="width: 4.6%; text-align: left;">'.$item_mod[0]['ins_unidad_medida'].'</td>
+                  <td style="width: 4%; text-align: right;">'.$item_mod[0]['ins_cant_requerida'].'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($item_mod[0]['ins_costo_unitario'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($item_mod[0]['ins_costo_total'], 2, ',', '.').'</td>';
+                  if(count($prog)!=0){
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+                    }
+                  }
+                  else{
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
+                    }
+                  }
+                  $tabla.='<td style="width: 6%; text-align: left;">'.$item_mod[0]['ins_observacion'].'</td>';
+                $tabla.='</tr>';
+                $monto=$monto+$item_mod[0]['ins_costo_total'];
+              }
+              $tabla.='</tbody>
+                <tr class="modo1">
+                  <td style="height:10px;" colspan=7></td>
+                  <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
+                  <td colspan=13></td>
+                </tr>
+              </table><br>';
+    }
+    else{ /// ADICION Y ELIMINACION
+      $tabla.='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$detalle.'</b></div>
             <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
               <thead>
               <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
@@ -1488,92 +1556,19 @@ class Modificacionpoa extends CI_Controller{
                   <td colspan=13></td>
                 </tr>
               </table><br>';
+    }
+
+
+    
 
     return $tabla;
   }
-
-
-  //// Lista de Items MODIFICADOS PARA EL REPORTE (listado nuevo 2023)
-  public function tabla_modf5($listado,$detalle){
-    $tabla='';
-    $tabla.='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$detalle.'</b></div>
-            <table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-              <thead>
-              <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
-                <th style="width:1%;height:20px;">#</th>
-                <th style="width:2.1%;">COD.<br>ACT.</th>
-                <th style="width:3.8%;">PARTIDA</th>
-                <th style="width:16%;">DETALLE REQUERIMIENTO</th>
-                <th style="width:4.6%;">UNIDAD MEDIDA</th>
-                <th style="width:4%;">CANT.</th>
-                <th style="width:4%;">PRECIO UNI.</th>
-                <th style="width:4%;">COSTO TOTAL</th>
-                <th style="width:4.4%;">ENE.</th>
-                <th style="width:4.4%;">FEB.</th>
-                <th style="width:4.4%;">MAR.</th>
-                <th style="width:4.4%;">ABR.</th>
-                <th style="width:4.4%;">MAY.</th>
-                <th style="width:4.4%;">JUN.</th>
-                <th style="width:4.4%;">JUL.</th>
-                <th style="width:4.4%;">AGO.</th>
-                <th style="width:4.4%;">SEPT.</th>
-                <th style="width:4.4%;">OCT.</th>
-                <th style="width:4.4%;">NOV.</th>
-                <th style="width:4.4%;">DIC.</th>
-                <th style="width:6%;">OBSERVACIÓN</th>
-              </tr>
-              </thead>
-              <tbody>';
-              $nro=0;
-              $monto=0;
-              foreach ($listado as $row){
-                $prog = $this->model_modrequerimiento->list_temporalidad_insumo_historial($row['insh_id']);
-                $nro++;
-                $tabla.='<tr class="modo1">
-                  <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
-                  <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>
-                  <td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>
-                  <td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>
-                  <td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>
-                  <td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>
-                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
-                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                  if(count($prog)!=0){
-                    for ($i=1; $i <=12 ; $i++) { 
-                      $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
-                    }
-                  }
-                  else{
-                    for ($i=1; $i <=12 ; $i++) { 
-                      $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
-                    }
-                  }
-                  $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
-                $tabla.='</tr>';
-                $monto=$monto+$row['ins_costo_total'];
-              }
-              $tabla.='</tbody>
-                <tr class="modo1">
-                  <td style="height:10px;" colspan=7></td>
-                  <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
-                  <td colspan=13></td>
-                </tr>
-              </table><br>';
-
-    return $tabla;
-  }
-
-
-
-
-
-
 
 
 
 
   //// Lista de Items MODIFICADOS PARA EL EDITADO (listado nuevo 2023)
-  public function tabla_update($listado,$detalle,$table){
+  public function tabla_update($tipo_mod,$listado,$detalle,$table){
     $tabla='';
     $tabla.='
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -1583,78 +1578,157 @@ class Modificacionpoa extends CI_Controller{
             <h2 class="font-md"><strong>'.$detalle.'</strong></h2>  
         </header>
         <div>
-          <div class="widget-body no-padding">
-            '.$table.'
-              <thead>
-              <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
-                <th style="width:1%;height:20px;background-color: #1c7368; color: #FFFFFF"">#</th>
-                <th style="width:2.1%;background-color: #1c7368; color: #FFFFFF"">COD.<br>ACT.</th>
-                <th style="width:3.8%;background-color: #1c7368; color: #FFFFFF"">PARTIDA</th>
-                <th style="width:16%;background-color: #1c7368; color: #FFFFFF"">DETALLE REQUERIMIENTO</th>
-                <th style="width:4.6%;background-color: #1c7368; color: #FFFFFF"">UNIDAD MEDIDA</th>
-                <th style="width:4%;background-color: #1c7368; color: #FFFFFF"">CANT.</th>
-                <th style="width:4%;background-color: #1c7368; color: #FFFFFF"">PRECIO UNI.</th>
-                <th style="width:4%;background-color: #1c7368; color: #FFFFFF"">COSTO TOTAL</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">ENE.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">FEB.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">MAR.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">ABR.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">MAY.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">JUN.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">JUL.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">AGO.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">SEPT.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">OCT.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">NOV.</th>
-                <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">DIC.</th>
-                <th style="width:6%;background-color: #1c7368; color: #FFFFFF"">OBSERVACIÓN</th>
-                <th style="width:2%;background-color: #1c7368; color: #FFFFFF"></th>
-              </tr>
-              </thead>
-              <tbody>';
-              $nro=0;
-              $monto=0;
-              foreach ($listado as $row){
-                $prog = $this->model_modrequerimiento->list_temporalidad_insumo_historial($row['insh_id']);
-                $nro++;
-                $tabla.='<tr class="modo1">
-                  <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
-                  <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>
-                  <td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>
-                  <td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>
-                  <td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>
-                  <td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>
-                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
-                  <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                  if(count($prog)!=0){
-                    for ($i=1; $i <=12 ; $i++) { 
-                      $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
-                    }
+          <div class="widget-body no-padding">';
+                if($tipo_mod==1 || $tipo_mod==3){ /// Adicion y Eliminacion
+                    $tabla.='
+                    '.$table.'
+                      <thead>
+                      <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
+                        <th style="width:1%;height:20px;background-color: #1c7368; color: #FFFFFF"">#</th>
+                        <th style="width:2.1%;background-color: #1c7368; color: #FFFFFF"">COD.<br>ACT.</th>
+                        <th style="width:3.8%;background-color: #1c7368; color: #FFFFFF"">PARTIDA</th>
+                        <th style="width:16%;background-color: #1c7368; color: #FFFFFF"">DETALLE REQUERIMIENTO</th>
+                        <th style="width:4.6%;background-color: #1c7368; color: #FFFFFF"">UNIDAD MEDIDA</th>
+                        <th style="width:4%;background-color: #1c7368; color: #FFFFFF"">CANT.</th>
+                        <th style="width:4%;background-color: #1c7368; color: #FFFFFF"">PRECIO UNI.</th>
+                        <th style="width:4%;background-color: #1c7368; color: #FFFFFF"">COSTO TOTAL</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">ENE.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">FEB.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">MAR.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">ABR.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">MAY.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">JUN.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">JUL.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">AGO.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">SEPT.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">OCT.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">NOV.</th>
+                        <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">DIC.</th>
+                        <th style="width:6%;background-color: #1c7368; color: #FFFFFF"">OBSERVACIÓN</th>
+                        <th style="width:2%;background-color: #1c7368; color: #FFFFFF"></th>
+                      </tr>
+                      </thead>
+                      <tbody>';
+                      $nro=0;
+                      $monto=0;
+                      foreach ($listado as $row){
+                        $prog = $this->model_modrequerimiento->list_temporalidad_insumo_historial($row['insh_id']);
+                        $nro++;
+                        $tabla.='<tr class="modo1">
+                          <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
+                          <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>
+                          <td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>
+                          <td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>
+                          <td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>
+                          <td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>
+                          <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                          <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                          if(count($prog)!=0){
+                            for ($i=1; $i <=12 ; $i++) { 
+                              $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+                            }
+                          }
+                          else{
+                            for ($i=1; $i <=12 ; $i++) { 
+                              $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
+                            }
+                          }
+                          $tabla.='
+                          <td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>
+                          <td style="width: 2%; text-align: left;">
+                            <a href="#" data-toggle="modal" data-target="#modal_anular_mod" class="btn btn-default anular_mod" title="NO MOSTRAR MODIFICACIÓN"  name="'.$row['insh_id'].'"><img src="'.base_url().'assets/img/neg.jpg" WIDTH="35" HEIGHT="35"/></a>
+                          </td>';
+                        $tabla.='</tr>';
+                        $monto=$monto+$row['ins_costo_total'];
+                      }
+                      $tabla.='</tbody>
+                        <tr class="modo1">
+                          <td style="height:11px;" colspan=7></td>
+                          <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
+                          <td colspan=13></td>
+                        </tr>
+                      </table>
+                      </div>';
+                }
+                else{ /// Modificacion
+                $tabla.='
+                '.$table.'
+                  <thead>
+                  <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
+                    <th style="width:1%;height:20px;background-color: #1c7368; color: #FFFFFF"">#</th>
+                    <th style="width:2.1%;background-color: #1c7368; color: #FFFFFF"">COD.<br>ACT.</th>
+                    <th style="width:3.8%;background-color: #1c7368; color: #FFFFFF"">PARTIDA</th>
+                    <th style="width:16%;background-color: #1c7368; color: #FFFFFF"">DETALLE REQUERIMIENTO</th>
+                    <th style="width:4.6%;background-color: #1c7368; color: #FFFFFF"">UNIDAD MEDIDA</th>
+                    <th style="width:4%;background-color: #1c7368; color: #FFFFFF"">CANT.</th>
+                    <th style="width:4%;background-color: #1c7368; color: #FFFFFF"">PRECIO UNI.</th>
+                    <th style="width:4%;background-color: #1c7368; color: #FFFFFF"">COSTO TOTAL</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">ENE.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">FEB.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">MAR.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">ABR.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">MAY.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">JUN.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">JUL.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">AGO.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">SEPT.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">OCT.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">NOV.</th>
+                    <th style="width:4.4%;background-color: #1c7368; color: #FFFFFF"">DIC.</th>
+                    <th style="width:6%;background-color: #1c7368; color: #FFFFFF"">OBSERVACIÓN</th>
+                    <th style="width:2%;background-color: #1c7368; color: #FFFFFF"></th>
+                  </tr>
+                  </thead>
+                  <tbody>';
+                  $nro=0;
+                  $monto=0;
+                  foreach ($listado as $row){
+                    $item_mod=$this->model_modrequerimiento->get_item_insumo_modificado_ultimo($row['cite_id'],2,$row['ins_id']);
+                    $prog = $this->model_modrequerimiento->list_temporalidad_insumo_historial($item_mod[0]['insh_id']);
+
+                    $nro++;
+                    $tabla.='<tr class="modo1">
+                      <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
+                      <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$item_mod[0]['prod_cod'].'</b></td>
+                      <td style="width: 3.8%; text-align: center;">'.$item_mod[0]['par_codigo'].'</td>
+                      <td style="width: 16%; text-align: left;">'.$item_mod[0]['ins_detalle'].'</td>
+                      <td style="width: 4.6%; text-align: left;">'.$item_mod[0]['ins_unidad_medida'].'</td>
+                      <td style="width: 4%; text-align: right;">'.$item_mod[0]['ins_cant_requerida'].'</td>
+                      <td style="width: 4%; text-align: right;">'.number_format($item_mod[0]['ins_costo_unitario'], 2, ',', '.').'</td>
+                      <td style="width: 4%; text-align: right;">'.number_format($item_mod[0]['ins_costo_total'], 2, ',', '.').'</td>';
+                      if(count($prog)!=0){
+                        for ($i=1; $i <=12 ; $i++) { 
+                          $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+                        }
+                      }
+                      else{
+                        for ($i=1; $i <=12 ; $i++) { 
+                          $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
+                        }
+                      }
+                      $tabla.='
+                      <td style="width: 6%; text-align: left;">'.$item_mod[0]['ins_observacion'].'</td>
+                      <td style="width: 2%; text-align: left;">
+                        <a href="#" data-toggle="modal" data-target="#modal_anular_mod" class="btn btn-default anular_mod" title="NO MOSTRAR MODIFICACIÓN"  name="'.$item_mod[0]['insh_id'].'"><img src="'.base_url().'assets/img/neg.jpg" WIDTH="35" HEIGHT="35"/></a>
+                      </td>';
+                    $tabla.='</tr>';
+                    $monto=$monto+$item_mod[0]['ins_costo_total'];
                   }
-                  else{
-                    for ($i=1; $i <=12 ; $i++) { 
-                      $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
-                    }
-                  }
-                  $tabla.='
-                  <td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>
-                  <td style="width: 2%; text-align: left;">
-                    <a href="#" data-toggle="modal" data-target="#modal_anular_mod" class="btn btn-default anular_mod" title="NO MOSTRAR MODIFICACIÓN"  name="'.$row['insh_id'].'"><img src="'.base_url().'assets/img/neg.jpg" WIDTH="35" HEIGHT="35"/></a>
-                  </td>';
-                $tabla.='</tr>';
-                $monto=$monto+$row['ins_costo_total'];
-              }
-              $tabla.='</tbody>
-                <tr class="modo1">
-                  <td style="height:11px;" colspan=7></td>
-                  <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
-                  <td colspan=13></td>
-                </tr>
-              </table>
-              </div>
+                  $tabla.='</tbody>
+                    <tr class="modo1">
+                      <td style="height:11px;" colspan=7></td>
+                      <td style="text-align: right;">' . number_format($monto, 2, ',', '.') . '</td>
+                      <td colspan=13></td>
+                    </tr>
+                  </table>
+                  </div>';
+                }
+          
+              $tabla.='
             </div>
-            </div>
-          </article><br>';
+          </div>
+        </article>
+        <br>';
 
     return $tabla;
   }
@@ -1665,29 +1739,29 @@ class Modificacionpoa extends CI_Controller{
     /// tp_rep : 1 reporte
     $tabla='';
     $requerimientos_add = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,1); /// Add
-    $requerimientos_mod = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,2); /// Mod
+    $requerimientos_mod = $this->model_modrequerimiento->get_list_form5_historial_modificados($cite_id,2); /// Mod
     $requerimientos_del = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,3); /// Del
     
     if($tp_rep==0){
       if(count($requerimientos_add)!=0){
-        $tabla.=$this->tabla_update($requerimientos_add,'ITEMS AGREGADOS ('.count($requerimientos_add).')','<table id="dt_basic1" class="table1 table-bordered" style="width:100%;" border="0.2">');
+        $tabla.=$this->tabla_update(1,$requerimientos_add,'ITEMS AGREGADOS ('.count($requerimientos_add).')','<table id="dt_basic1" class="table1 table-bordered" style="width:100%;" border="0.2">');
       }
       if(count($requerimientos_mod)!=0){
-        $tabla.=$this->tabla_update($requerimientos_mod,'ITEMS MODIFICADOS ('.count($requerimientos_mod).')','<table id="dt_basic" class="table table-bordered" style="width:100%;" border="0.2">');
+        $tabla.=$this->tabla_update(2,$requerimientos_mod,'ITEMS MODIFICADOS ('.count($requerimientos_mod).')','<table id="dt_basic" class="table table-bordered" style="width:100%;" border="0.2">',0);
       }
       if(count($requerimientos_del)!=0){
-        $tabla.=$this->tabla_update($requerimientos_del,'ITEMS ELIMINADOS ('.count($requerimientos_del).')','<table id="dt_basic3" class="table1 table-bordered" style="width:100%;" border="0.2">');
+        $tabla.=$this->tabla_update(3,$requerimientos_del,'ITEMS ELIMINADOS ('.count($requerimientos_del).')','<table id="dt_basic3" class="table1 table-bordered" style="width:100%;" border="0.2">');
       }
     }
     else{
       if(count($requerimientos_add)!=0){
-        $tabla.=$this->tabla($requerimientos_add,'ITEMS AGREGADOS ('.count($requerimientos_add).')');
+        $tabla.=$this->tabla(1,$requerimientos_add,'ITEMS AGREGADOS ('.count($requerimientos_add).')');
       }
       if(count($requerimientos_mod)!=0){
-        $tabla.=$this->tabla($requerimientos_mod,'ITEMS MODIFICADOS ('.count($requerimientos_mod).')');
+        $tabla.=$this->tabla(2,$requerimientos_mod,'ITEMS MODIFICADOS ('.count($requerimientos_mod).')');
       }
       if(count($requerimientos_del)!=0){
-        $tabla.=$this->tabla($requerimientos_del,'ITEMS ELIMINADOS ('.count($requerimientos_del).')');
+        $tabla.=$this->tabla(3,$requerimientos_del,'ITEMS ELIMINADOS ('.count($requerimientos_del).')');
       }
       $tabla.='
             <div style="font-size: 7.5px;font-family: Arial;">

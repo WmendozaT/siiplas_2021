@@ -112,9 +112,10 @@ class ejecucion_finpi extends CI_Controller{
         <thead>
           <tr>
             <th style="width:1%; height:40px;" bgcolor="#fafafa">#</th>
-            <th style="width:2%;" bgcolor="#fafafa" title="ACTUALIZAR INFORMACION">FORMULARIO<br>EJECUCIÓN</th>
+            <th style="width:2%;" bgcolor="#fafafa" title="ACTUALIZAR INFORMACION">FORMULARIO<br>EJECUCIÓN '.strtoupper($this->verif_mes[2]).'</th>
             <th style="width:2%;" bgcolor="#fafafa" title="IMAGENES PROYECTO">SUBIR AVANCE (Imagen)</th>
             <th style="width:2%;" bgcolor="#fafafa" title="FICHA TECNICA">FICHA TÉCNICA</th>
+            <th style="width:2%;" bgcolor="#fafafa" title="POA">POA '.$this->gestion.'</th>
             <th style="width:7%;" bgcolor="#fafafa" title="">REGIONAL</th>
             <th style="width:7%;" bgcolor="#fafafa" title="">DISTRITAL</th>
             <th style="width:10%;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
@@ -148,6 +149,9 @@ class ejecucion_finpi extends CI_Controller{
             </td>
             <td style="width:5%; text-align:center">
               <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$row['proy_id'].'\');" class="btn btn-default" title="REPORTE FICHA TECNICA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="35" HEIGHT="35"/></a>
+            </td>
+            <td style="width:5%; text-align:center">
+              <a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" class="btn btn-default" title="REPORTE FICHA TECNICA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="35" HEIGHT="35"/></a>
             </td>
             <td>'.strtoupper($row['dep_departamento']).'</td>
             <td>'.strtoupper($row['dist_distrital']).'</td>

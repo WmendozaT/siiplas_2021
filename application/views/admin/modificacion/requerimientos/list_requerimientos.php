@@ -18,7 +18,6 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
-		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
 		<!--para las alertas-->
     	<meta name="viewport" content="width=device-width">
     	<?php echo $style;?>
@@ -682,26 +681,6 @@
 	    </div>
 	    <!-- ======================================================== -->
 
-	    <!-- MODAL COMPARATIVO   -->
-<!-- 	    <div class="modal fade" id="modal_comparativo" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-	        <div  role="document" class="modal-dialog modal-lg">
-	            <div class="modal-content">
-	                <div class="modal-header">
-	                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-	                </div>
-	                <div class="modal-body">
-	                	<h2><center>CUADRO COMPARATIVO DE PRESUPUESTO ASIGNADO VS POA - <?php echo $this->session->userData('gestion');?></center></h2>
-	                
-	                    <div class="row">
-	                    	<div id="titulo"></div>	
-	                    	<br>
-	                        <div id="cuadro_comparativo"></div>
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	    </div> -->
-	 	<!--  =============== -->
 	 <!-- MODAL CERRAR   -->
         <div class="modal fade" id="modal_cerrar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 	          <div class="modal-dialog modal-dialog-centered" role="document" class="modal-dialog modal-sm">
@@ -832,7 +811,7 @@
 		<!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
 		<!-- Voice command : plugin -->
 		<script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
-		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
+		
 		<!-- PAGE RELATED PLUGIN(S) -->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/jquery.dataTables.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.colVis.min.js"></script>
@@ -841,6 +820,7 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 		<script src="<?php echo base_url(); ?>mis_js/modificacionpoa/modform5.js"></script> 
 		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+		
 		<script type="text/javascript">
 			$(document).ready(function() {
 				pageSetUp();

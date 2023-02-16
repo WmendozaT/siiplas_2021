@@ -185,53 +185,65 @@ class Model_modrequerimiento extends CI_Model{
 
 
 
-    /*--- LISTA MODIFICADOS ITEMS 2023---*/
+    /*--- LISTA MODIFICADOS ITEMS 2023 (ADICION Y ELIMINADO)---*/
     public function list_form5_historial_modificados($cite_id,$tipo_mod){
         ///ih.historial_activo : 0 (no se muestra)
         ///ih.historial_activo : 1 (se muestra)
 
-        /*if($tipo_mod==2){
-        $sql = 'select p.prod_cod,pa.par_codigo,pa.par_nombre,ih.ins_unidad_medida,ih.ins_cant_requerida,ih.ins_costo_unitario,ih.ins_costo_total,ih.ins_detalle,ih.ins_observacion
-                from insumos_historial ih
-                Inner Join partidas as pa On pa.par_id=ih.par_id
-                Inner Join _productos as p On p.prod_id=ih.id
-              
-                where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
-                group by p.prod_cod,pa.par_codigo,pa.par_nombre,ih.ins_unidad_medida,ih.ins_cant_requerida,ih.ins_costo_unitario,ih.ins_costo_total,ih.ins_detalle,ih.ins_observacion
-                order by pa.par_codigo asc';
-        }
-        else{
-            $sql = 'select *
+         $sql = 'select *
                 from insumos_historial ih
                 Inner Join partidas as pa On pa.par_id=ih.par_id
                 Inner Join _productos as p On p.prod_id=ih.id
               
                 where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
                 order by pa.par_codigo asc';
-        }*/
+ 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
-         /*$sql = 'select *
+    /*--- LISTA MODIFICADOS ITEMS 2023 (MODIFICADOS)---*/
+    public function get_list_form5_historial_modificados($cite_id,$tipo_mod){
+        $sql = 'select ih.ins_id,ih.tipo_mod,ih.cite_id
                 from insumos_historial ih
                 Inner Join partidas as pa On pa.par_id=ih.par_id
                 Inner Join _productos as p On p.prod_id=ih.id
               
                 where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
-                order by pa.par_codigo asc';*/
-                
+                group by ih.ins_id,ih.tipo_mod,ih.cite_id
+                ';
 
-                $sql = 'select ih.insh_id,ih.ins_codigo, ih.ins_detalle, ih.ins_cant_requerida,ih.ins_costo_unitario,ih.ins_costo_total,ih.aper_id,pa.par_codigo, p.prod_cod,ih.ins_id,ih.tipo_mod,ih.ins_observacion,ih.ins_unidad_medida
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*--- LISTA MODIFICADOS ITEMS 2023 (MODIFICADOS)---*/
+    public function get_item_insumo_modificado_ultimo($cite_id,$tipo_mod,$ins_id){
+        $sql = 'select *
                 from insumos_historial ih
                 Inner Join partidas as pa On pa.par_id=ih.par_id
                 Inner Join _productos as p On p.prod_id=ih.id
               
-                where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
-                group by ih.insh_id,ih.ins_codigo, ih.ins_detalle,ih.ins_cant_requerida,ih.ins_costo_unitario,ih.ins_costo_total,ih.aper_id,pa.par_codigo, p.prod_cod,ih.ins_id,ih.tipo_mod,ih.ins_observacion,ih.ins_unidad_medida
+                where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\' and ih.ins_id='.$ins_id.'
                 order by ih.insh_id DESC LIMIT 1';
 
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
+    /*--- LISTA HISTORIAL MODIFICADOS ITEMS POR CITE 2023 (COMPLETO)---*/
+    public function get_historial_modificacion_cite($cite_id){
+        $sql = 'select ih.*,pa.*,p.prod_cod,f.fun_nombre,f.fun_paterno,f.fun_materno
+                from insumos_historial ih
+                Inner Join partidas as pa On pa.par_id=ih.par_id
+                Inner Join _productos as p On p.prod_id=ih.id
+                Inner Join funcionario as f On ih.fun_id=f.fun_id
+                where ih.cite_id='.$cite_id.'
+                order by ih.tipo_mod asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
 // ------ lista Temporalidad Insumo
     public function list_temporalidad_insumo_historial($insh_id){

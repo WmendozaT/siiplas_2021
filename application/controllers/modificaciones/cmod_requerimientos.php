@@ -751,36 +751,6 @@ class Cmod_requerimientos extends CI_Controller {
 
 
 
-    /*------------------------ Nuevo Insumo (2018) ----------------------*/
-
-
-    /*--- CREA-ACTUALIZA CODIGO DE MODIFICACION  ---*/
-   
-
-    /*--- GENERA CÓDIGO MODIFICACIÓN REQUERIMIENTOS ---*/
-  
-
-    /*--------- VERIFICA SI SE TIENE ALGUN REGISTRO (ABM) --------*/
-/*    public function verif_cite($cite_id){
-      $cite=$this->model_modificacion->get_cite_insumo($cite_id); /// CITE
-      $proyecto=$this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// PROYECTO
-
-      $ca=$this->model_modificacion->cite_add($cite_id);
-      $cm=$this->model_modificacion->cite_mod($cite_id);
-      $cd=$this->model_modificacion->ins_del($cite_id);
-
-      $sw=0;
-      if(count($ca)!=0 || count($cm) || count($cd)){
-        $sw=1;
-      }
-
-      return $sw;
-    }*/
-
-   
-
-
-
     /*----------------------- GENERAR MENU --------------------*/
     function menu($mod){
       $enlaces=$this->menu_modelo->get_Modulos($mod);

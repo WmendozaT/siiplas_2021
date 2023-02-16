@@ -510,6 +510,8 @@ $route['mod/update_cite/(:any)'] = 'modificaciones/cmod_insumo/modificar_cite/$1
 $route['mod/ver_mod_poa/(:any)'] = 'modificaciones/cmod_insumo/ver_modificacion_poa/$1';  ///// Ver Modificacion POA
 
 $route['mod/delete_insumos_eliminados/(:any)'] = 'modificaciones/cmod_insumo/limpiar_insumos_eliminados/$1';  ///// Limpiar de la Base de Datos sobre items eliminados
+$route['mod/cite_historial_modf5/(:any)'] = 'modificaciones/cmod_insumo/historial_modificaciones_cite/$1';  ///// Historial Cite modificaciones
+
 /*------------- MODIFICAR OPERACIONES (2020-2021)------------*/
 $route['mod/list_componentes/(:any)'] = 'modificaciones/cmod_fisica/mis_subactividades/$1'; //// Lista de Subactividades 2020-2021
 $route['mod/lista_operaciones/(:any)'] = 'modificaciones/cmod_fisica/list_operaciones/$1'; //// la lista de operaciones 2020
