@@ -879,17 +879,39 @@ class Cseguimiento extends CI_Controller {
 
   //// FORMULARIO DE SEGUIMIENTO POA 2022
   public function formulario_segpoa($com_id){
+    $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
+    $proyecto=$this->model_proyecto->get_id_proyecto($componente[0]['proy_id']);
+
+    if(count($componente)!=0){
+      if($proyecto[0]['tp_id']==1){
+        redirect('form_ejec_pinversion/'.$com_id);
+      }
+      else{
+        redirect('seg/formulario_seguimiento_poa_gc/'.$com_id);
+      }
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
+
+
+
+
+  //// FORMULARIO DE SEGUIMIENTO GASTO CORRIENTE
+  public function formulario_segpoa_gasto_corriente($com_id){
     $data['menu'] = $this->seguimientopoa->menu(4);
     $data['base'] = $this->seguimientopoa->menu(4);
     $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
-    $s1=' <input type="hidden" name="mes_activo" value='.$this->verif_mes[1].'>';
-    $s2='';
-    $s4='';
 
-    if(count($componente)!=0){
+     $s1=' <input type="hidden" name="mes_activo" value='.$this->verif_mes[1].'>';
+      $s2='';
+      $s4='';
+      
       $data['cabecera_formulario']=$this->seguimientopoa->cabecera_formulario($componente);
       $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id,$this->tmes); /// Tabla para el grafico al trimestre
-      $data['calificacion']='<hr>
+      $data['calificacion']='
+        <hr>
         <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div></fieldset>';
       
       $s1.='
@@ -1036,11 +1058,14 @@ class Cseguimiento extends CI_Controller {
       </div>';
      
       $this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
-    }
-    else{
-      echo "Error !!!";
-    }
+
   }
+
+
+
+
+
+
 
 
   /*------ GET CUADRO DE SEGUIMIENTO POA MENSUAL-----*/

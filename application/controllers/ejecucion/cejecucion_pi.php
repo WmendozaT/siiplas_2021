@@ -38,8 +38,46 @@ class Cejecucion_pi extends CI_Controller {
     }
   }
 
+  /*------- Formulario de Ejecucion Proyectos de Inversion -------*/
+  public function formulario_ejecucion_pinversion($com_id){
+    $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
+    $proyecto=$this->model_proyecto->get_id_proyecto($componente[0]['proy_id']);
 
-  /*------- formulario ejecucion financiera -------*/
+    echo "Hola mundo";
+/*    $data['menu']=$this->ejecucion_finpi->menu_pi();
+    $data['style']=$this->ejecucion_finpi->style();
+    $data['formulario']=$this->ejecucion_finpi->formulario();
+
+
+    $this->load->view('admin/ejecucion_pi/form_ejec_fin_pi', $data);*/
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*------- formulario ejecucion financiera MODULO PROYECTOS DE INVERSION-------*/
   public function formulario_ejecucion_ppto(){
     $data['menu']=$this->ejecucion_finpi->menu_pi();
     $data['style']=$this->ejecucion_finpi->style();

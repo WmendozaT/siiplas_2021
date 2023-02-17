@@ -348,6 +348,7 @@ $route['eval/valida_meval_act'] = 'ejecucion/cevaluacion/valida_mod_evaluar_acti
 $route['seg/seguimiento_poa'] = 'ejecucion/cseguimiento/lista_poa'; ///// lista de operaciones aprobadas
 $route['seg/tipo_seguimiento/(:any)'] = 'ejecucion/cseguimiento/tipo_seguimiento_poa/$1'; ///// Tipo de seguimiento POA
 $route['seg/formulario_seguimiento_poa/(:any)'] = 'ejecucion/cseguimiento/formulario_segpoa/$1'; ///// formulario de seguimiento
+$route['seg/formulario_seguimiento_poa_gc/(:any)'] = 'ejecucion/cseguimiento/formulario_segpoa_gasto_corriente/$1'; ///// formulario de seguimiento GASTO CORRIENTE
 $route['seg/ver_seguimientopoa/(:any)'] = 'ejecucion/cseguimiento/ver_evaluacion_poa/$1'; ///// Ver Evaluacion POA
 $route['seg/ver_reporte_seguimientopoa/(:any)'] = 'ejecucion/cseguimiento/ver_reportesegpoa/$1'; ///// Ver Reporte Seguimiento POA Mensual
 $route['seg/ver_reporte_evaluacionpoa/(:any)'] = 'ejecucion/cseguimiento/ver_reporteevalpoa/$1/$2'; ///// Ver Reporte Evaluacion POA Trimestral
@@ -637,13 +638,17 @@ $route['rep/resumen_act_programa'] = 'reporte_resumen_alineacion_poa/crep_actpro
 $route['rep/rep_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_actprog/reporte_alineacion_poa/$1';  //// Reporte Alineacion POA (2020-2021)
 $route['rep/exportar_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_actprog/exportar_alineacion_poa/$1';  //// Exportar Alineacion POA (2020-2021)
 
-//// EJECUCION FINANCIERA DE PROYECTOS DE INVERSION 2022 POR REGIONAL
+//// EJECUCION FINANCIERA DE PROYECTOS DE INVERSION 2022-2023 POR REGIONAL
 $route['ejec_fin_pi'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_ppto'; ///// formulario de Ejecucion Resupuestaria
 $route['rep_ejec_fin_pi'] = 'ejecucion/cejecucion_pi/menu_rep_ejecucion_ppto'; ///// Menu para reportes
 $route['xls_rep_ejec_fin_pi/(:any)'] = 'ejecucion/cejecucion_pi/exportar_ejecucion_pi/$1/$2'; ///// exportar reporte a excel segun el tipo de reporte (A detalle por partidas)
 $route['xls_rep_ejec_fin_pi_resumen'] = 'ejecucion/cejecucion_pi/exportar_ejecucion_pi_resumen'; ///// exportar reporte a excel segun el tipo de reporte (Resumen)
 $route['reporte_ficha_tecnica_pi/(:any)'] = 'ejecucion/cejecucion_pi/ficha_tecnica_pi/$1'; ///// Generar Reporte PDF Ficha Tecnica de
 $route['reporte_detalle_ppto_pi/(:any)'] = 'ejecucion/cejecucion_pi/reporte_detalle_ejec_ppto_pi/$1/$2'; ///// Generar Reporte PDF  
+
+// ---formulario de Ejecucion Proyectos de Inversion
+$route['form_ejec_pinversion/(:any)'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_pinversion/$1'; ///// formulario de Ejecucion Resupuestaria Proyectos de Inversion
+
 
 //// REPORTE EJECUCION FINANCIERA DE PROYECTOS DE INVERSION A NIVEL NACIONAL
 $route['seg_proyectos'] = 'reporte_ejecucion_proyectos/creportejecucion_pi/menu_pi'; ///// Menu Reportes de ejecucion de proyectos de Inversion
