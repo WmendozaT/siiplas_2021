@@ -2007,6 +2007,31 @@ class ejecucion_finpi extends CI_Controller{
     return $tabla;
   }
 
+    //// Menu Administrador Normal
+  public function menu($mod){
+    $enlaces=$this->menu_modelo->get_Modulos($mod);
+    for($i=0;$i<count($enlaces);$i++){
+      $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
+    }
+
+    $tabla ='';
+    for($i=0;$i<count($enlaces);$i++){
+        if(count($subenlaces[$enlaces[$i]['o_child']])>0){
+            $tabla .='<li>';
+                $tabla .='<a href="#">';
+                    $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
+                    $tabla .='<ul>';    
+                        foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
+                        $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
+                    }
+                    $tabla .='</ul>';
+            $tabla .='</li>';
+        }
+    }
+
+    return $tabla;
+  }
+
    /*------ NOMBRE MES -------*/
   function mes_nombre(){
       $mes[1] = 'Enero';

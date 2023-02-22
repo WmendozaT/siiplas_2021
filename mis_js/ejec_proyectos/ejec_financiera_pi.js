@@ -52,13 +52,134 @@ function abreVentana(PDF){
     return /\d/.test(String.fromCharCode(keynum));
   }
 
+//// ==== FORMULARIO DE EJECUCION DE PROYECTOS DE INVERSION (MODULO DE SEGUIMIENTO POA)
+    //// Verificando valor ejecutado por form 4
+  function verif_valor_pi(tipo,ejecutado,id,mes_id){
+   /// tp 0 : nuevo
+   /// tp 1 : modifcacion  
+   // alert(ejecutado+'-'+valor2+'-'+valor3)
+    if(ejecutado!= ''){
+    //  alert(ejecutado+'-'+prod_id+'-'+nro+'-'+tp+'-'+mes_id)
+     // $('#but'+id).slideDown();
+
+
+      var url = base+"index.php/ejecucion/cejecucion_pi/verif_valor_ejecutado_x_partida_form";
+        var request;
+        if (request) {
+          request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "tipo="+tipo+"&ejec="+ejecutado+"&sp_id="+id+"&mes_id="+mes_id
+        });
+    //alert(tipo+'-'+ejecutado+'-'+id+'-'+mes_id)
+       // alert(url)
+        request.done(function (response, textStatus, jqXHR) {
+          //alert(response.respuesta)
+        if (response.respuesta == 'correcto') {
+            $('#but'+id).slideDown();
+            document.getElementById("ppto"+id).innerHTML = response.ejecucion_total_partida;
+            //document.getElementById("ejec_fin"+sp_id).style.backgroundColor = "#ffffff";
+        }
+        else{
+            alertify.error("ERROR EN EL DATO REGISTRADO !");
+            document.getElementById("ppto"+id).innerHTML = '';
+            $('#but'+id).slideUp();
+        }
+
+      });
+
+
+    }
+    else{
+      $('#but'+id).slideUp();
+      document.getElementById("ppto"+id).innerHTML = '';
+    }
+  }
+
+
+
+
+    /// Funcion para guardar datos de seguimiento POA
+/*    function guardar(prod_id,nro){
+      ejec=parseFloat($('[id="ejec'+nro+'"]').val());
+      mverificacion=($('[id="mv'+nro+'"]').val());
+      problemas=($('[id="obs'+nro+'"]').val());
+      accion=($('[id="acc'+nro+'"]').val());
+
+      if(($('[id="mv'+nro+'"]').val())==0){
+          document.getElementById("mv"+nro).style.backgroundColor = "#fdeaeb";
+          alertify.error("REGISTRE MEDIO DE VERIFICACIÓN, Operación "+nro);
+          return 0; 
+      }
+      else{
+          document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
+        //  alert("prod_id="+prod_id+" &ejec="+ejec+" &mv="+mverificacion+" &obs="+problemas+" &acc="+accion)
+          alertify.confirm("GUARDAR SEGUIMIENTO POA?", function (a) {
+          if (a) {
+              var url = base+"index.php/ejecucion/cseguimiento/guardar_seguimiento";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "prod_id="+prod_id+"&ejec="+ejec+"&mv="+mverificacion+"&obs="+problemas+"&acc="+accion
+              });
+
+              request.done(function (response, textStatus, jqXHR) {
+
+              if (response.respuesta == 'correcto') {
+                  alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
+                      if (e) {
+                          window.location.reload(true);
+                          document.getElementById("loading").style.display = 'block';
+                          alertify.success("REGISTRO EXITOSO ...");
+                      }
+                  });
+              }
+              else{
+                  alertify.error("ERROR AL GUARDAR SEGUIMIENTO POA");
+              }
+
+              });
+          } else {
+              alertify.error("OPCI\u00D3N CANCELADA");
+          }
+        });
+      }
+    }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //// =================================================
 /// ----- REPORTE CONSULTA POA EJECUCION DE PROYECTOS DE INVERSION
   /// grado de cumplimiento PI x REGIONAL
   function nivel_cumplimiento_pi_regional(dep_id) {
   //  $('#titulo_grafico').html('<font size=3><b>Cargando ..</b></font>');
    // $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
-
 
     var url = base+"index.php/consultas_cns/c_consultaspi/get_detalle_ejecucion_ppto_pi_regional";
     var request;
@@ -84,7 +205,6 @@ function abreVentana(PDF){
             }
 
             cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - REGIONAL : '+response.regional);
-
       }
       else{
           alertify.error("ERROR AL RECUPERAR INFORMACION");
@@ -92,15 +212,6 @@ function abreVentana(PDF){
 
     });
   }
-
-
-
-
-
-
-
-
-
 
 
 

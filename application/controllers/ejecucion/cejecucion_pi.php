@@ -38,22 +38,283 @@ class Cejecucion_pi extends CI_Controller {
     }
   }
 
+  //// FORMULARIO DE EJECUCION PROYECTOS DE INVERSION
   /*------- Formulario de Ejecucion Proyectos de Inversion -------*/
   public function formulario_ejecucion_pinversion($com_id){
     $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
-    $proyecto=$this->model_proyecto->get_id_proyecto($componente[0]['proy_id']);
+    if(count($componente)!=0){
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']);
+      $data['menu'] = $this->ejecucion_finpi->menu(4);
+      
+      $data['cabecera_formulario']=
+      '<h2 title='.$proyecto[0]['aper_id'].'><small>PROYECTO : </small>'.$proyecto[0]['proy_sisin'].' - '.$proyecto[0]['proy_nombre'].'</h2>
+       <h2><small>MES VIGENTE : </small> '.$this->verif_mes[2].' / '.$this->gestion.'</h2>';
 
-    echo "Hola mundo";
-/*    $data['menu']=$this->ejecucion_finpi->menu_pi();
-    $data['style']=$this->ejecucion_finpi->style();
-    $data['formulario']=$this->ejecucion_finpi->formulario();
 
 
-    $this->load->view('admin/ejecucion_pi/form_ejec_fin_pi', $data);*/
+      $data['calificacion']='HOLA MUNDO';
+      $data['formulario']=$this->tabla_formulario_ejecucion_partidas($proyecto);
+
+
+
+      $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos 
+
+      $tabla='';
+      //$tabla.='';
+      foreach($ppto_asig as $partida){
+        $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($partida['sp_id']); /// temporalidad ejec partida
+        /// ------ Datos de Modifcacion de la partida
+        $monto_partida=$this->ejecucion_finpi->detalle_modificacion_partida($partida);
+        //// -----------------------------------------
+
+        /// montos ejecutados por partidas
+        $monto_total_ejecutado=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_partida($partida['sp_id']); /// monto total ejecutado
+        $monto_ejecutado=0;
+        if(count($monto_total_ejecutado)!=0){
+          $monto_ejecutado=$monto_total_ejecutado[0]['ejecutado'];
+        }
+
+        /// Porcentaje de Avance por partidas
+        $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($partida['sp_id']); /// Get partida sigep
+        $porcentaje_avance_fin=0;
+        if(count($get_partida_sigep)!=0){
+          $porcentaje_avance_fin=round((($monto_ejecutado/$get_partida_sigep[0]['importe'])*100),2);
+        }
+
+        $tabla.='
+        <div style="font-family: Arial; height:18px;font-size: 11px;"><b>PARTIDA : '.$partida['partida'].' - '.strtoupper($partida['par_nombre']).'</b></div>
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+          <thead>
+            <tr  bgcolor="#e8e7e7" align=center>
+              <th style="width:6%;height:15px;">PPTO. INICIAL</th>
+              <th style="width:6%;">PPTO. MOD.</th>
+              <th style="width:6%;">PPTO. VIGENTE</th>
+              <th style="width:5%;">ENE.</th>
+              <th style="width:6%;">FEB.</th>
+              <th style="width:6%;">MAR.</th>
+              <th style="width:6%;">ABR.</th>
+              <th style="width:6%;">MAY.</th>
+              <th style="width:6%;">JUN.</th>
+              <th style="width:6%;">JUL.</th>
+              <th style="width:6%;">AGO.</th>
+              <th style="width:6%;">SEPT.</th>
+              <th style="width:6%;">OCT.</th>
+              <th style="width:6%;">NOV.</th>
+              <th style="width:6%;">DIC.</th>
+              <th style="width:6%;">PPTO. EJECUTADO</th>
+              <th style="width:5%;">(%) EJEC. FIN.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="text-align:right;">
+              <td style="height:12px;">'.number_format($monto_partida[1], 0, ',', '.').'</td>
+              <td>'.number_format($monto_partida[2], 0, ',', '.').'</td>
+              <td>'.number_format($monto_partida[3], 0, ',', '.').'</td>';
+              if(count($temporalidad_ejec)!=0){
+                for ($i=1; $i <=12 ; $i++) { 
+                  $tabla.='<td>'.number_format($temporalidad_ejec[0]['m'.$i], 0, ',', '.').'</td>';
+                }
+                $tabla.='<td>'.number_format($temporalidad_ejec[0]['ejecutado_total'], 0, ',', '.').'</td>';
+              }
+              else{
+                for ($i=1; $i <=12 ; $i++) { 
+                  $tabla.='<td>0.00</td>';
+                }
+                $tabla.='<td>0.00</td>';
+              }
+              $tabla.='
+              <td>'.$porcentaje_avance_fin.'%</td>
+            </tr>
+          </tbody>
+        </table><br>';
+       }
+
+       $data['tabla']=$tabla;
+
+      $this->load->view('admin/ejecucion_pi/formulario_pinversion', $data);
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
+
+
+  /*-- FORMULARIO LISTA DE PARTIDAS --*/
+  public function tabla_formulario_ejecucion_partidas($proyecto){
+    $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
+    $tabla='';
+
+      $tabla.='
+        <article class="col-sm-12">
+          <input type="text" name="base" value="'.base_url().'">
+          <div class="jarviswidget well" id="wid-id-0a" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+              <header>
+                <span class="widget-icon"> <i class="fa fa-hand-o-up"></i> </span>
+                <h2>Buttons at a glance </h2>
+              </header>
+              <div>
+                  <div class="jarviswidget-editbox">
+                  </div>
+                  <div class="widget-body">';
+                      $nro=0;
+                      foreach($ppto_asig as $partida){
+                        $nro++;
+                        $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($partida['sp_id']); /// temporalidad ejec partida
+                        /// ------ Datos de Modifcacion de la partida
+                        $monto_partida=$this->ejecucion_finpi->detalle_modificacion_partida($partida);
+                        //// -----------------------------------------
+
+                        //// ----- Ejecutado por partida
+                        $total_ejecutado_partida=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_partida($partida['sp_id']);
+                        $ppto_ejecutado=0;
+                        if(count($total_ejecutado_partida)!=0){
+                          $ppto_ejecutado=$total_ejecutado_partida[0]['ejecutado'];
+                        }
+
+
+                        $tabla.='
+                        '.$partida['sp_id'].' - '.$partida['par_id'].'<br>
+                        <div style="font-size: 15px;font-family: Arial;"><b>PARTIDA : '.$partida['partida'].'</b> - '.strtoupper($partida['par_nombre']).'</div>
+                        
+                        <div class="table-responsive">
+                        <form class="smart-form">
+                        <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th style="width:6%;">PPTO. INICIAL</th>
+                            <th style="width:6%;">PPTO. MODIFICADO</th>
+                            <th style="width:6%;">PPTO. VIGENTE</th>
+                            <th style="width:5.5%;">ENE.</th>
+                            <th style="width:5.5%;">FEB.</th>
+                            <th style="width:5.5%;">MAR.</th>
+                            <th style="width:5.5%;">ABR.</th>
+                            <th style="width:5.5%;">MAY.</th>
+                            <th style="width:5.5%;">JUN.</th>
+                            <th style="width:5.5%;">JUL.</th>
+                            <th style="width:5.5%;">AGO.</th>
+                            <th style="width:5.5%;">SEPT.</th>
+                            <th style="width:5.5%;">OCT.</th>
+                            <th style="width:5.5%;">NOV.</th>
+                            <th style="width:5.5%;">DIC.</th>
+                            <th style="width:5.5%;"></th>
+                            <th style="width:5.5%;">TOTAL EJEC.</th>
+                            <th style="width:5.5%;">% CUMPLIMIENTO</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td style="height:12px;" align="right"><b>'.number_format($monto_partida[1], 0, ',', '.').'</b></td>
+                              <td align="right"><b>'.number_format($monto_partida[2], 0, ',', '.').'</b></td>
+                              <td align="right"><b>'.number_format($monto_partida[3], 0, ',', '.').'</b></td>';
+                              if(count($temporalidad_ejec)!=0){
+                                for ($i=1; $i <=12 ; $i++) { 
+                                  if($i==$this->verif_mes[1]){
+                                    $dato_mes_ejecutado=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($partida['sp_id'],$i);
+                                    $monto=0;
+                                    $tp=0;
+                                    if(count($dato_mes_ejecutado)!=0){
+                                      $monto=$dato_mes_ejecutado[0]['ppto_ejec'];
+                                      $tp=1;
+                                    }
+                                    $tabla.='
+                                    <td align="right" bgcolor="#69a86d">
+                                      <label class="input">
+                                        <input type="text" value='.$monto.' id="mes'.$i.'" onkeyup="verif_valor_pi('.$tp.',this.value,'.$partida['sp_id'].','.$i.');"  onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                                      </label>
+                                    </td>';
+                                  }
+                                  else{
+                                    $tabla.='<td align="right"><b>'.number_format($temporalidad_ejec[0]['m'.$i], 0, ',', '.').'</b></td>';
+                                  }
+                                }
+                              }
+                              else{
+                                for ($i=1; $i <=12 ; $i++) { 
+                                  if($i==$this->verif_mes[1]){
+                                    $tabla.='
+                                    <td align="right">
+                                      <label class="input">
+                                        <input type="text" placeholder="">
+                                      </label>
+                                    </td>';
+                                  }
+                                  else{
+                                    $tabla.='<td align="right">0.00</td>';
+                                  }
+                                  
+                                }
+                              }
+                              $tabla.='
+                              <td>
+                                <div id="but'.$partida['sp_id'].'" style="display:none;" align="center">
+                                  <button type="button" name="'.$partida['sp_id'].'" id="'.$nro.'" onclick="guardar_pi('.$partida['sp_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="37" HEIGHT="37"/><br>GUARDAR</button>
+                                </div>
+                              </td>
+                              <td align="right"><b><div id="ppto'.$partida['sp_id'].'">'.number_format($ppto_ejecutado, 0, ',', '.').'</div></b></td>
+                              <td></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        </form>
+                        </div><br>';
+                      }
+                      $tabla.='
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </article>';
+    return $tabla;
   }
 
 
 
+/*---- VERIFICA EL MONTO A EJECUTAR POR PARTIDA ----*/
+public function verif_valor_ejecutado_x_partida_form(){
+  if($this->input->is_ajax_request() && $this->input->post()){
+    $post = $this->input->post();
+    $tipo = $this->security->xss_clean($post['tipo']); /// tipo (0) nuevo, (1) modificado
+    $sp_id = $this->security->xss_clean($post['sp_id']); /// partida id
+    $ejec= $this->security->xss_clean($post['ejec']);/// valor a actualizar
+    $mes_id= $this->security->xss_clean($post['mes_id']);/// mes id
+    
+    /// Datos - Programado y Ejecutado por partidas
+    $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($sp_id); /// Get partida sigep
+
+
+    $total_ejecutado_partida=$this->model_ptto_sigep->suma_monto_ppto_ejecutado_partida($sp_id);
+    $ppto_ejecutado=0;
+    if(count($total_ejecutado_partida)!=0){
+      $ppto_ejecutado=$total_ejecutado_partida[0]['ejecutado'];
+    }
+
+    if($tipo==0){ /// Nuevo
+      $ppto=$ejec+$ppto_ejecutado;
+    }
+    else{ /// modificado
+      $dato_mes_ejecutado=$this->model_ptto_sigep->get_monto_ejecutado_ppto_sigep($sp_id,$mes_id); // valor registrado actualmente en el mes
+      $ppto=$ejec+($ppto_ejecutado-$dato_mes_ejecutado[0]['ppto_ejec']);
+    }
+
+    ///
+      if($ppto<=$get_partida_sigep[0]['importe']){
+        $result = array(
+          'respuesta' => 'correcto',
+          'ejecucion_total_partida'=>round($ppto,2),
+        );
+      }
+      else{
+        $result = array(
+          'respuesta' => 'error',
+        );
+      }
+    //
+
+    echo json_encode($result);
+  }else{
+      show_404();
+  }
+}
 
 
 
@@ -75,8 +336,7 @@ class Cejecucion_pi extends CI_Controller {
 
 
 
-
-
+  //// EJECUCION DE PROYECTOS DE INVERSION (MODULO PARA REGIONALES)
   /*------- formulario ejecucion financiera MODULO PROYECTOS DE INVERSION-------*/
   public function formulario_ejecucion_ppto(){
     $data['menu']=$this->ejecucion_finpi->menu_pi();

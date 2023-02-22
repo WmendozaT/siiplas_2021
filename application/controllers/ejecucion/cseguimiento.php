@@ -901,7 +901,7 @@ class Cseguimiento extends CI_Controller {
   //// FORMULARIO DE SEGUIMIENTO GASTO CORRIENTE
   public function formulario_segpoa_gasto_corriente($com_id){
     $data['menu'] = $this->seguimientopoa->menu(4);
-    $data['base'] = $this->seguimientopoa->menu(4);
+    //$data['base'] = $this->seguimientopoa->menu(4);
     $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
 
      $s1=' <input type="hidden" name="mes_activo" value='.$this->verif_mes[1].'>';
@@ -1058,7 +1058,6 @@ class Cseguimiento extends CI_Controller {
       </div>';
      
       $this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
-
   }
 
 
