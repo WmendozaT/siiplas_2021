@@ -124,37 +124,22 @@
                         </article>
                     </div>
 
-                   <?php echo $formulario;?>
+                   
 
                     <div class="row">
-
-
-                        
-
-
-
                         <article class="col-sm-12">
                             <!-- new widget -->
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                                 <header>
                                     <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                                    <h2>EJECUCIÓN POA </h2>
+                                    <h2>EJECUCIÓN PROYECTOS DE INVERSIÓN </h2>
 
                                     <ul class="nav nav-tabs pull-right in" id="myTab">
                                         <li class="active">
-                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">FORMULARIO EJECUCIÓN POA</span></a>
+                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">DATOS DEL PROYECTO</span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO 1</span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO 2</span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s5"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO 3</span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO 4</span></a>
+                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">EJECUCIÓN DE PARTIDAS</span></a>
                                         </li>
                                     </ul>
                                 </header>
@@ -171,27 +156,12 @@
                                         <div id="myTabContent" class="tab-content">
                                             <?php echo $calificacion;?>
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
-                                              1
+                                                <?php echo $formulario_datos_generales; ?>
                                             </div>
                                             <!-- end s1 tab pane -->
 
                                             <div class="tab-pane fade" id="s3" title="CUADRO DE SEGUIMIENTO POA">
-                                               2
-                                            </div>
-                                            <!-- end s3 tab pane -->
-
-                                            <div class="tab-pane fade" id="s4" title="CUADRO DE EVALUACIÓN POA">
-                                              3
-                                            </div>
-                                            <!-- end s4 tab pane -->
-
-                                            <div class="tab-pane fade" id="s5" title="CUADRO DE EVALUACIÓN POA GESTIÓN">
-                                            4
-                                            </div>
-                                            <!-- end s5 tab pane -->
-
-                                            <div class="tab-pane fade" id="s2" title="CUADRO DE SEGUIMIENTO POA">
-                                               5
+                                               <?php echo $formulario_ejec_partidas;?>
                                             </div>
                                             <!-- end s2 tab pane -->
                                         </div>

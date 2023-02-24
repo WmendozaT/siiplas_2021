@@ -1867,6 +1867,15 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }
 
+    /*-------- GET PROYECTOS DE INVERSION (Aprobado)--------*/
+    public function get_proyecto_inversion($proy_id){ /// aprobados Institucional
+        $sql = 'select *
+                from lista_poa_pinversion_nacional('.$this->gestion.')
+                where proy_id='.$proy_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*-------- LISTA PROYECTOS DE INVERSION POR REGIONAL --------*/
     public function list_proy_inversion_regional($dep_id){ /// aprobados
         $sql = 'select *

@@ -53,16 +53,12 @@ function abreVentana(PDF){
   }
 
 //// ==== FORMULARIO DE EJECUCION DE PROYECTOS DE INVERSION (MODULO DE SEGUIMIENTO POA)
-    //// Verificando valor ejecutado por form 4
-  function verif_valor_pi(tipo,ejecutado,id,mes_id){
+
+  function verif_datos(tipo,ejecutado,id,mes_id){
    /// tp 0 : nuevo
    /// tp 1 : modifcacion  
    // alert(ejecutado+'-'+valor2+'-'+valor3)
     if(ejecutado!= ''){
-    //  alert(ejecutado+'-'+prod_id+'-'+nro+'-'+tp+'-'+mes_id)
-     // $('#but'+id).slideDown();
-
-
       var url = base+"index.php/ejecucion/cejecucion_pi/verif_valor_ejecutado_x_partida_form";
         var request;
         if (request) {
@@ -74,85 +70,161 @@ function abreVentana(PDF){
           dataType: 'json',
           data: "tipo="+tipo+"&ejec="+ejecutado+"&sp_id="+id+"&mes_id="+mes_id
         });
-    //alert(tipo+'-'+ejecutado+'-'+id+'-'+mes_id)
-       // alert(url)
+
         request.done(function (response, textStatus, jqXHR) {
           //alert(response.respuesta)
         if (response.respuesta == 'correcto') {
-            $('#but'+id).slideDown();
+            
             document.getElementById("ppto"+id).innerHTML = response.ejecucion_total_partida;
-            //document.getElementById("ejec_fin"+sp_id).style.backgroundColor = "#ffffff";
+            document.getElementById("porcentaje"+id).innerHTML = response.porcentaje_ejecucion_total_partida+' %';
+            $('#but'+id).slideDown();
         }
         else{
             alertify.error("ERROR EN EL DATO REGISTRADO !");
             document.getElementById("ppto"+id).innerHTML = '';
+            document.getElementById("porcentaje"+id).innerHTML = '';
             $('#but'+id).slideUp();
         }
 
       });
 
-
     }
     else{
       $('#but'+id).slideUp();
       document.getElementById("ppto"+id).innerHTML = '';
+      document.getElementById("porcentaje"+id).innerHTML = '';
     }
   }
 
 
+  function verif_valor_pi(tipo,ejecutado,id,mes_id){
+    verif_datos(tipo,ejecutado,id,mes_id)
+  }
+
+  function verif_valor_pi_obs(observacion,id){
+    $('#but'+id).slideDown();
+  }
 
 
-    /// Funcion para guardar datos de seguimiento POA
-/*    function guardar(prod_id,nro){
-      ejec=parseFloat($('[id="ejec'+nro+'"]').val());
-      mverificacion=($('[id="mv'+nro+'"]').val());
-      problemas=($('[id="obs'+nro+'"]').val());
-      accion=($('[id="acc'+nro+'"]').val());
+/// Funcion para guardar datos de Ejecucion Proy Inversion
+function guardar_pi(tp,id_partida,mes_id,ejec_ppto_id,partida){
+  ejec=parseFloat($('[id="ejec'+id_partida+'"]').val());
+  obs=$('[id="obs_pi'+id_partida+'"]').val();
 
-      if(($('[id="mv'+nro+'"]').val())==0){
-          document.getElementById("mv"+nro).style.backgroundColor = "#fdeaeb";
-          alertify.error("REGISTRE MEDIO DE VERIFICACIÓN, Operación "+nro);
-          return 0; 
+  alertify.confirm("GUARDAR EJECUCION EN LA PARTIDA "+partida+" ?", function (a) {
+    if (a) {
+      var url = base+"index.php/ejecucion/cejecucion_pi/guardar_datos_ejecucion_pinversion";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "sp_id="+id_partida+"&ejec="+ejec+"&obs="+obs+"&tp="+tp+"&mes_id="+mes_id+"&ejec_ppto_id="+ejec_ppto_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+
+            alertify.success("REGISTRO EXITOSO ...");
+            document.getElementById("ppto"+id_partida).innerHTML = response.ejecucion_total_partida;
+            document.getElementById("porcentaje"+id_partida).innerHTML = response.porcentaje_ejecucion_total_partida+' %';
+            document.getElementById("ejec"+id_partida).value = response.dato_ejec; /// dato ejec
+            document.getElementById("obs_pi"+id_partida).value = response.dato_obs; /// dato obs
+            $('#but'+id_partida).slideUp();
+            //document.getElementById("but"+id_partida).innerHTML = 'exitod';
       }
       else{
-          document.getElementById("mv"+nro).style.backgroundColor = "#ffffff";
-        //  alert("prod_id="+prod_id+" &ejec="+ejec+" &mv="+mverificacion+" &obs="+problemas+" &acc="+accion)
-          alertify.confirm("GUARDAR SEGUIMIENTO POA?", function (a) {
-          if (a) {
-              var url = base+"index.php/ejecucion/cseguimiento/guardar_seguimiento";
-              var request;
-              if (request) {
-                  request.abort();
-              }
-              request = $.ajax({
-                  url: url,
-                  type: "POST",
-                  dataType: 'json',
-                  data: "prod_id="+prod_id+"&ejec="+ejec+"&mv="+mverificacion+"&obs="+problemas+"&acc="+accion
-              });
-
-              request.done(function (response, textStatus, jqXHR) {
-
-              if (response.respuesta == 'correcto') {
-                  alertify.alert("SE REGISTRO CORRECTAMENTE ", function (e) {
-                      if (e) {
-                          window.location.reload(true);
-                          document.getElementById("loading").style.display = 'block';
-                          alertify.success("REGISTRO EXITOSO ...");
-                      }
-                  });
-              }
-              else{
-                  alertify.error("ERROR AL GUARDAR SEGUIMIENTO POA");
-              }
-
-              });
-          } else {
-              alertify.error("OPCI\u00D3N CANCELADA");
-          }
-        });
+          alertify.error("ERROR AL GUARDAR SEGUIMIENTO POA");
       }
-    }*/
+
+      });
+    } else {
+        alertify.error("OPCI\u00D3N CANCELADA");
+    }
+  });
+
+}
+
+
+    $("#subir_form1").on("click", function () {
+        var $validator = $("#form1").validate({
+            rules: {
+                costo: { //// ppto total proyecto
+                  required: true,
+                },
+                est_proy: { //// estado del proyecto
+                  required: true,
+                },
+                municipio: { //// municipio
+                  required: true,
+                },
+                fase_id: { //// fase
+                  required: true,
+                },
+                fiscal: { //// fiscal de obra
+                  required: true,
+                },
+                a_fisico: { //// avance fisico
+                  required: true,
+                },
+                a_financiero: { //// avance financiero
+                  required: true,
+                },
+                observacion: { //// observacion
+                  required: true,
+                },
+                problema: { //// problema presentados
+                  required: true,
+                }
+            },
+            messages: {
+                costo: "<font color=red>REGISTRE COSTO TOTAL DEL PROYECTO</font>", 
+                est_proy: "<font color=red>SELECCIONE ESTADO DEL PROYECTO</font>", 
+                municipio: "<font color=red>REGISTRE MUNICIPIO</font>", 
+                fase_id: "<font color=red>SELECCIONE FASE</font>",
+                fiscal: "<font color=red>SELECCIONE FISCAL</font>",
+                a_fisico: "<font color=red>REGISTRE AVANCE FISICO</font>",  
+                a_financiero: "<font color=red>REGISTRE AVANCE FINANCIERO</font>",  
+                observacion: "<font color=red>REGISTRE OBSERVACION / COMPROMISOS</font>",
+                problema: "<font color=red>REGISTRE PROBLEMA IDENTIFICADO</font>",                    
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+          });
+
+        var $valid = $("#form1").valid();
+        if (!$valid) {
+            $validator.focusInvalid();
+        } else {
+          
+
+          alertify.confirm("GUARDAR DATOS ?", function (a) {
+              if (a) {
+                  document.getElementById('subir_form1').disabled = true;
+                  document.forms['form1'].submit();
+              } else {
+                  alertify.error("OPCI\u00D3N CANCELADA");
+              }
+          });
+        }
+    });
 
 
 
@@ -169,10 +241,7 @@ function abreVentana(PDF){
 
 
 
-
-
-
-
+///================================================================================================================
 
 //// =================================================
 /// ----- REPORTE CONSULTA POA EJECUCION DE PROYECTOS DE INVERSION

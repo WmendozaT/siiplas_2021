@@ -791,7 +791,7 @@ class User extends CI_Controller{
                     else{ //// Establecimiento de salud
                         $gestion = $this->Users_model->obtener_gestion();
                         $is_valid=$this->model_estructura_org->verif_establecimiento_ingreso($user_name,$password,$gestion[0]['ide']);
-          
+
                         if($is_valid['bool']){
                             $this->session->set_userdata($this->session_establecimiento($is_valid['act_id']));
                             redirect('dashboar_seguimiento_poa');

@@ -904,6 +904,8 @@ $$ LANGUAGE sql;
 
 
 FUNCION POA NACIONAL (PROYECTOS DE INVERSION)
+
+
 CREATE OR REPLACE FUNCTION lista_poa_pinversion_nacional(gestion integer) RETURNS TABLE(
 proy_id numeric,
 aper_id numeric,
@@ -918,7 +920,10 @@ prog varchar,
 proy varchar,
 act varchar,
 proyecto varchar,
+fecha_inicio timestamp,
+fecha_final timestamp,
 proy_estado integer,
+ep_id numeric,
 ep_descripcion varchar,
 proy_ppto_total numeric,
 avance_fisico numeric,
@@ -930,15 +935,19 @@ proy_obj_especifico varchar,
 proy_descripcion_proyecto varchar,
 proy_poblac_beneficiaria varchar,
 proy_observacion varchar,
+fecha_observacion timestamp,
 proy_conclusiones varchar,
 proy_recomendaciones varchar,
 proy_lecciones varchar,
 fiscal_obra varchar,
 lat varchar,
 lng varchar,
+municipio varchar,
 aper_proy_estado integer,
 img_georeferenciado varchar,
 pfec_id numeric,
+fas_id numeric,
+fas_fase varchar,
 pfec_estado integer,
 aper_gestion integer,
 avance_financiero_gestion numeric,
@@ -960,7 +969,10 @@ apg.aper_programa as PROG,
 p.proy_sisin as PROY,
 apg.aper_actividad as ACT,
 p.proy_nombre as PROYECTO,
+p.proy_gestion_inicio_ddmmaaaa as fecha_inicio,
+p.proy_gestion_fin_ddmmaaaa as fecha_final,
 p.proy_estado,
+ep.ep_id,
 ep.ep_descripcion,
 p.proy_ppto_total,
 p.avance_fisico,
@@ -972,15 +984,19 @@ p.proy_obj_especifico,
 p.proy_descripcion_proyecto,
 p.proy_poblac_beneficiaria,
 p.proy_observacion,
+p.fecha_observacion,
 p.proy_conclusiones,
 p.proy_recomendaciones,
 p.proy_lecciones,
 p.fiscal_obra,
 p.lat,
 p.lng,
+p.municipio,
 apg.aper_proy_estado,
 apg.img_georeferenciado,
 pfe.pfec_id,
+pfe.fas_id,
+fa.fas_fase,
 pfe.pfec_estado,
 apg.aper_gestion,
 apg.avance_financiero as AVANCE_FINANCIERO_GESTION,
@@ -989,13 +1005,13 @@ pfe.pfec_descripcion
                         from _proyectofaseetapacomponente pfe
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                         Inner Join _proyectos as p On p.proy_id=pfe.proy_id
-                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
+                        Inner Join _estadoproyecto as ep On ep.ep_id=p.ep_id
                         Inner Join _departamentos as d On d.dep_id=p.dep_id
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
+                        Inner Join _fases as fa On fa.fas_id=pfe.fas_id
                         where apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and p.tp_id=1 and apg.aper_estado!=3 and apg.aper_proy_estado=4
                         order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
 $$ LANGUAGE sql;
-
 
 
 
