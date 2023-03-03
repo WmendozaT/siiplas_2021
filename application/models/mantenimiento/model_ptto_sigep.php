@@ -206,61 +206,6 @@ class Model_ptto_sigep extends CI_Model{
     }
 //// =====================================
 
-
-
-
-
-
-
-    /*-------- Acciones Operativas Todas -------------*/
-   /* public function list_acciones_operativas(){
-        $sql = 'select *
-                from _proyectos as p
-                Inner Join _proyectofaseetapacomponente as pfe On p.proy_id=pfe.proy_id 
-                Inner Join (select apy.*,apg.* from aperturaprogramatica as apg, aperturaproyectos as apy where apy.aper_id=apg.aper_id) as tap On p.proy_id=tap.proy_id
-                where p.estado!=\'3\' and tap.aper_gestion='.$this->gestion.' and pfe.pfec_estado=\'1\'
-                ORDER BY tap.aper_programa,tap.aper_proyecto,tap.aper_actividad asc';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*-------- Lista de Ope. Funcionamiento/pinversion por regional -------------*/
-/*    public function list_operaciones_regional_tp($dep_id,$tp){
-        $sql = 'select apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,p.proy_nombre,p.dep_id,pg.par_id,pg.partida as codigo,par.par_nombre as nombre,SUM(pg.importe) as monto 
-                from _proyectos p
-                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
-                Inner Join _proyectofaseetapacomponente as pfe On p.proy_id=pfe.proy_id 
-                Inner Join ptto_partidas_sigep as pg On apg.aper_id=pg.aper_id
-                Inner Join partidas as par On par.par_id=pg.par_id 
-                where p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and pfe.pfec_estado=\'1\' and pg.estado!=\'3\' and pg.g_id='.$this->gestion.' and p.tp_id='.$tp.' and p.dep_id='.$dep_id.'
-                GROUP BY apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,p.proy_nombre,p.dep_id,pg.par_id,pg.partida,par.par_nombre
-                order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*-------------------- Lista de Acciones Operativas -----------------------*/
-/*    public function acciones_operativas($prog,$tp_id){
-        $sql = 'select tap.*,p.*,tp.*,fu.*
-                from _proyectos as p
-                Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
-                Inner Join _proyectofaseetapacomponente as pfe On p.proy_id=pfe.proy_id 
-                Inner Join (select apy.*,apg.* from aperturaprogramatica as apg, aperturaproyectos as apy where apy.aper_id=apg.aper_id) as tap On p.proy_id=tap.proy_id
-                Inner Join (select pf."proy_id",f."fun_id",f."fun_nombre",f."fun_paterno",f."fun_materno",u."uni_unidad" as ue,ur."uni_unidad" as ur
-                    from _proyectofuncionario pf
-                    Inner Join funcionario as f On pf.fun_id=f.fun_id
-                    Inner Join unidadorganizacional as u On pf."uni_ejec"=u."uni_id"
-                    Inner Join unidadorganizacional as ur On pf.uni_resp=ur.uni_id
-                where pf.pfun_tp=\'1\') as fu On fu.proy_id=p.proy_id
-                where tap.aper_programa=\''.$prog.'\' and p.estado!=\'3\' and tap.aper_gestion='.$this->gestion.' and pfe.pfec_estado=\'1\' and p.tp_id='.$tp_id.'
-                ORDER BY tap.aper_proyecto,tap.aper_actividad asc';
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
     /*-------------------- Apertura Programatica hijo ------------------------*/
     public function get_apertura($da,$ue,$programa,$proyecto,$actividad){
         $sql = 'select *
@@ -445,18 +390,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*----- EJECUCION DE PRESUPUESTO TOTAL POR PROYECTO (vigente)-----*/
-    public function suma_monto_ejecutado_total_ppto_sigep($aper_id){
-        $sql = '
-            select ppto.aper_id,SUM(ejec.ppto_ejec) ejecutado_total
-            from ptto_partidas_sigep ppto
-            Inner Join ejecucion_financiera_sigep as ejec On ppto.sp_id=ejec.sp_id
-            where ppto.aper_id='.$aper_id.'
-            group by ppto.aper_id';
-    
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
+
 
     /*----- OBSERVACION A LA EJECUCION DE PRESUPUESTO POR PARTIDA (vigente) -----*/
     public function get_obs_ejecucion_financiera_sigep($sp_id,$mes_id){
@@ -496,8 +430,21 @@ class Model_ptto_sigep extends CI_Model{
     }
 
 
+    /*----- EJECUCION DE PRESUPUESTO TOTAL POR PROYECTO/UNIDAD (vigente)-----*/
+    public function suma_monto_ejecutado_total_ppto_sigep($aper_id){
+        $sql = '
+            select ppto.aper_id,SUM(ejec.ppto_ejec) ejecutado_total
+            from ptto_partidas_sigep ppto
+            Inner Join ejecucion_financiera_sigep as ejec On ppto.sp_id=ejec.sp_id
+            where ppto.aper_id='.$aper_id.'
+            group by ppto.aper_id';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*----- SUMA MONTO EJECUTADO POR PROYECTO DE INVERSION (vigente) -----*/
-    public function suma_monto_ppto_ejecutado_pi($aper_id){
+/*    public function suma_monto_ppto_ejecutado_pi($aper_id){
         $sql = '
             select ppto.aper_id,SUM(ejec.ppto_ejec) ejecutado
             from ejecucion_financiera_sigep ejec
@@ -508,7 +455,7 @@ class Model_ptto_sigep extends CI_Model{
     
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 ////// REPORTES DE EJECUCION PRESUPUESTARIA POR PARTIDAS 2022
     /*----- LISTA CONSOLIDADO REGIONAL DE PARTIDAS ASIGNADOS EN LA GESTION INSTITUCIONAL  -----*/
@@ -688,7 +635,7 @@ class Model_ptto_sigep extends CI_Model{
 
 
     /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO (2020) vigente -----*/
-    public function suma_ptto_poa($aper_id,$tp){
+/*    public function suma_ptto_poa($aper_id,$tp){
         if($tp==1){
             $sql = 'select pg.aper_id,SUM(pg.importe) as monto 
                     from ptto_partidas_sigep pg
@@ -701,6 +648,30 @@ class Model_ptto_sigep extends CI_Model{
                     from vlista_insumos i
                     Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
                     where i.aper_id='.$aper_id.' 
+                    group by i.aper_id';
+        }
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }*/
+
+
+    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO POR UNIDAD/PROYECTO (2021 - 2022 - 2023) VIGENTE-----*/
+    public function suma_ptto_accion($aper_id,$tp){
+        // 1 : PTO ASIGNADO
+        // 2 : PTO PROGRAMADO
+        if($tp==1){
+            $sql = 'select pg.aper_id,SUM(pg.importe) as monto,SUM(pg.ppto_saldo_ncert) saldo
+                    from ptto_partidas_sigep pg
+                    Inner Join partidas as p On p.par_id=pg.par_id
+                    where pg.aper_id='.$aper_id.' and pg.estado!=\'3\' and pg.g_id='.$this->gestion.'
+                    group by pg.aper_id';
+        }
+        else{
+            $sql = 'select i.aper_id, SUM(ip.programado_total) as monto
+                    from vlista_insumos i
+                    Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
+                    where i.aper_id='.$aper_id.'
                     group by i.aper_id';
         }
     
@@ -754,28 +725,7 @@ class Model_ptto_sigep extends CI_Model{
 
 
 
-    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO (2019 - 2020 - 2021) VIGENTE-----*/
-    public function suma_ptto_accion($aper_id,$tp){
-        // 1 : PTO ASIGNADO
-        // 2 : PTO PROGRAMADO
-        if($tp==1){
-            $sql = 'select pg.aper_id,SUM(pg.importe) as monto,SUM(pg.ppto_saldo_ncert) saldo
-                    from ptto_partidas_sigep pg
-                    Inner Join partidas as p On p.par_id=pg.par_id
-                    where pg.aper_id='.$aper_id.' and pg.estado!=\'3\' and pg.g_id='.$this->gestion.'
-                    group by pg.aper_id';
-        }
-        else{
-            $sql = 'select i.aper_id, SUM(ip.programado_total) as monto
-                    from vlista_insumos i
-                    Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
-                    where i.aper_id='.$aper_id.'
-                    group by i.aper_id';
-        }
-    
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
+
  
     /*========= SUMA DE CODIGO DE PARTIDA (ASIG, PROG) uni org 2023 =========*/
     public function sum_codigos_partidas_asig_prog($aper_id,$tp){

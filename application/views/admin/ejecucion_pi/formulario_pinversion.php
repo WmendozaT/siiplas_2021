@@ -37,7 +37,6 @@
               width: 45% !important;
             }
         </style>
-
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -124,7 +123,14 @@
                         </article>
                     </div>
 
-                   
+                   <?php
+                    if($this->session->flashdata('danger')){ ?>
+                        <div class="alert alert-danger">
+                          <?php echo $this->session->flashdata('danger'); ?>
+                        </div>
+                    <?php 
+                      }
+                    ?>
 
                     <div class="row">
                         <article class="col-sm-12">
@@ -132,14 +138,17 @@
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                                 <header>
                                     <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                                    <h2>EJECUCIÓN PROYECTOS DE INVERSIÓN </h2>
+                                    <h2><b>EJECUCIÓN PROYECTOS DE INVERSIÓN </b></h2>
 
                                     <ul class="nav nav-tabs pull-right in" id="myTab">
                                         <li class="active">
                                             <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">DATOS DEL PROYECTO</span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">EJECUCIÓN DE PARTIDAS</span></a>
+                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">EJECUCIÓN DE PARTIDAS</span></a>
+                                        </li>
+                                        <li>
+                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CONSOLIDADO EJECUCIÓN</span></a>
                                         </li>
                                     </ul>
                                 </header>
@@ -154,14 +163,19 @@
                                     <div class="widget-body">
                                         <!-- content -->
                                         <div id="myTabContent" class="tab-content">
-                                            <?php echo $calificacion;?>
+                                            <div id="efi"><?php echo $calificacion;?></div>
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
                                                 <?php echo $formulario_datos_generales; ?>
                                             </div>
                                             <!-- end s1 tab pane -->
 
-                                            <div class="tab-pane fade" id="s3" title="CUADRO DE SEGUIMIENTO POA">
+                                            <div class="tab-pane fade" id="s2" title="CUADRO DE SEGUIMIENTO POA">
                                                <?php echo $formulario_ejec_partidas;?>
+                                            </div>
+                                            <!-- end s2 tab pane -->
+
+                                            <div class="tab-pane fade" id="s3" title="CUADRO CONSOLIDADO POA">
+                                               
                                             </div>
                                             <!-- end s2 tab pane -->
                                         </div>

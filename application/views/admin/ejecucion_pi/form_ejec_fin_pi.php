@@ -212,7 +212,7 @@
           </div>
           <div class="modal-body">
             <h2 class="alert alert-info"><center>REGISTRO DE EJECUCÍON PROYECTO DE INVERSIÓN - <?php echo $this->verif_mes[2].' / '.$this->session->userData('gestion') ?></center></h2>
-            
+                <div id="calificacion"></div>
                 <form class="form-horizontal" action="<?php echo site_url().'/ejecucion/cejecucion_pi/valida_update_pi'?>" method="post" id="form_ejec" name="form_ejec">
                     <input type="hidden" name="proy_id" id="proy_id">
                     <fieldset>
@@ -232,7 +232,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">Fase Proyecto</label>
                             <div class="col-md-10">
-                                <textarea class="form-control" name="fase" id="fase" rows="2" disabled=true></textarea>
+                                <div id="fase"></div>
                             </div>
                         </div>
                     </fieldset>

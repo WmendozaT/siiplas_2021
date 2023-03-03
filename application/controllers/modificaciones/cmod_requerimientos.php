@@ -750,6 +750,164 @@ class Cmod_requerimientos extends CI_Controller {
     }
 
 
+ /*--------- REPORTE MODIFICACION TECHO ---------*/
+    function mis_modificaciones_techo($cppto_id){
+      $tabla='';
+      $cite=$this->model_ptto_sigep->get_cite_techo($cppto_id);
+      $proyecto=$this->model_proyecto->get_id_proyecto($cite[0]['proy_id']);
+      $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
+
+      $add=$this->model_ptto_sigep->partida_add_techo($cppto_id); // add
+      $mod=$this->model_ptto_sigep->partida_mod_techo($cppto_id); // mod
+      $del=$this->model_ptto_sigep->partida_del_techo($cppto_id); // del
+
+      if(count($add)!=0){
+        $sum=0;
+        $tabla.='
+              <table border="0" style="width:81%;" align="center">
+                <tr>
+                  <td style="width:97%; font-size: 8pt;" text-align: left;">PARTIDAS AGREGADAS ('.count($add).')</td>
+                </tr>
+              </table>
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:70%;" align="center">
+                <thead>
+                  <tr class="modo1" align="center">
+                    <th style="width:2%;" style="background-color: #1c7368; color: #FFFFFF" style="height:12px;">#</th>
+                    <th style="width:10%;" style="background-color: #1c7368; color: #FFFFFF">C&Oacute;DIGO</th>
+                    <th style="width:55%;" style="background-color: #1c7368; color: #FFFFFF">PARTIDA</th>
+                    <th style="width:15%;" style="background-color: #1c7368; color: #FFFFFF">PPTO INICIAL</th> 
+                    <th style="width:15%;" style="background-color: #1c7368; color: #FFFFFF">PPTO MODIFICADO</th> 
+                    <th style="width:15%;" style="background-color: #1c7368; color: #FFFFFF">PPTO ACTUAL</th> 
+                  </tr>
+                </thead>
+                <tbody>';
+                $nro=0;
+                foreach($add  as $row){
+                  $sum=$sum+$row['ppto'];
+                  $nro++;
+                  $tabla.='
+                  <tr class="modo1">
+                    <td style="width: 2%; text-align: left;" style="height:11px;">'.$nro.'</td>
+                    <td style="width: 10%; text-align: left;">'.$row['par_codigo'].'</td>
+                    <td style="width: 55%; text-align: left;">'.$row['par_nombre'].'</td>
+                    <td style="width: 15%; text-align: right;">0.00</td>
+                    <td style="width: 15%; text-align: right;">'.number_format($row['ppto'], 2, ',', '.').'</td>
+                    <td style="width: 15%; text-align: right;">'.number_format($row['ppto'], 2, ',', '.').'</td>
+                  </tr>';
+                }
+                $tabla.='
+                  <tr>
+                    <td colspan=3>MONTO TOTAL : </td>
+                    <td style="text-align: right;"></td>
+                    <td style="text-align: right;"></td>
+                    <td style="text-align: right;">'.number_format($sum, 2, ',', '.').'</td>
+                  </tr>';
+        $tabla.='</tbody>
+              </table><br>';
+      }
+
+      if(count($mod)!=0){
+        $sum=0;
+        $tabla.='
+              <table border="0" style="width:81%;" align="center">
+                <tr>
+                  <td style="width:97%; font-size: 8pt;" text-align: left;">PARTIDAS MODIFICADAS ('.count($mod).')</td>
+                </tr>
+              </table>
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:70%;" align="center">
+                <thead>
+                  <tr class="modo1" align="center">
+                    <th style="width:2%;" style="background-color: #1c7368; color: #FFFFFF" style="height:12px;">#</th>
+                    <th style="width:10%;" style="background-color: #1c7368; color: #FFFFFF">C&Oacute;DIGO</th>
+                    <th style="width:55%;" style="background-color: #1c7368; color: #FFFFFF">PARTIDA</th>
+                    <th style="width:15%;" style="background-color: #1c7368; color: #FFFFFF">PPTO INICIAL</th> 
+                    <th style="width:15%;" style="background-color: #1c7368; color: #FFFFFF">PPTO MODIFICADO</th> 
+                    <th style="width:15%;" style="background-color: #1c7368; color: #FFFFFF">PPTO ACTUAL</th> 
+                  </tr>
+                </thead>
+                <tbody>';
+                $nro=0;
+                foreach($mod  as $row){
+                  $sum=$sum+$row['importe'];
+                  $nro++;
+                  $tabla.='
+                  <tr class="modo1">
+                    <td style="width: 2%; text-align: left;" style="height:11px;">'.$nro.'</td>
+                    <td style="width: 10%; text-align: left;">'.$row['par_codigo'].'</td>
+                    <td style="width: 55%; text-align: left;">'.$row['par_nombre'].'</td>
+                    <td style="width: 15%; text-align: right;">'.number_format($row['ppto_ini'], 2, ',', '.').'</td>
+                    <td style="width: 15%; text-align: right;">'.number_format($row['monto_dif'], 2, ',', '.').'</td>
+                    <td style="width: 15%; text-align: right;">'.number_format($row['ppto_final'], 2, ',', '.').'</td>
+                  </tr>';
+                }
+                $tabla.='
+                  <tr>
+                    <td colspan=3>MONTO TOTAL : </td>
+                    <td style="text-align: right;"></td>
+                    <td style="text-align: right;"></td>
+                    <td style="text-align: right;">'.number_format($sum, 2, ',', '.').'</td>
+                  </tr>';
+        $tabla.='</tbody>
+              </table><br>';
+      }
+
+      if(count($del)!=0){
+        $sum=0;
+        $tabla.='
+              <table border="0" style="width:81%;" align="center">
+                <tr>
+                  <td style="width:97%; font-size: 8pt;" text-align: left;">PARTIDAS ELIMINADAS ('.count($del).')</td>
+                </tr>
+              </table>
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:70%;" align="center">
+                <thead>
+                  <tr class="modo1" align="center">
+                    <th style="width:2%;" style="background-color: #1c7368; color: #FFFFFF" style="height:12px;">#</th>
+                    <th style="width:10%;" style="background-color: #1c7368; color: #FFFFFF">C&Oacute;DIGO</th>
+                    <th style="width:65%;" style="background-color: #1c7368; color: #FFFFFF">PARTIDA</th>
+                    <th style="width:15%;" style="background-color: #1c7368; color: #FFFFFF">PPTO INICIAL</th> 
+                    <th style="width:15%;" style="background-color: #1c7368; color: #FFFFFF">PPTO MODIFICADO</th> 
+                    <th style="width:15%;" style="background-color: #1c7368; color: #FFFFFF">PPTO ACTUAL</th> 
+                  </tr>
+                </thead>
+                <tbody>';
+                $nro=0;
+                foreach($del as $row){
+                  $sum=$sum+$row['importe'];
+                  $nro++;
+                  $tabla.='
+                  <tr class="modo1">
+                    <td style="width: 2%; text-align: left;" style="height:11px;">'.$nro.'</td>
+                    <td style="width: 10%; text-align: left;">'.$row['par_codigo'].'</td>
+                    <td style="width: 55%; text-align: left;">'.$row['par_nombre'].'</td>
+                    <td style="width: 15%; text-align: right;">0.00</td>
+                    <td style="width: 15%; text-align: right;">0.00</td>
+                    <td style="width: 15%; text-align: right;">'.number_format($row['importe'], 2, ',', '.').'</td>
+                  </tr>';
+                }
+                $tabla.='
+                  <tr>
+                    <td colspan=3>MONTO TOTAL : </td>
+                    <td style="text-align: right;"></td>
+                    <td style="text-align: right;"></td>
+                    <td style="text-align: right;">'.number_format($sum, 2, ',', '.').'</td>
+                  </tr>';
+        $tabla.='</tbody>
+              </table><br>';
+      }
+
+      $tabla .='<table border="0" style="width:80%;" align="center">
+                  <tr>
+                    <td colspan=2><hr></td>
+                  </tr>
+                  <tr>
+                    <td style="width:70%; font-size: 8pt;" text-align: left;">TOTAL TECHO PRESUPUESTARIO : </td>
+                    <td style="width:30%; font-size: 8pt;"><div align="right">'.number_format($monto_asig[0]['monto'], 2, ',', '.').'</div></td>
+                  </tr>
+                </table>';
+      return $tabla;
+    }
+
 
     /*----------------------- GENERAR MENU --------------------*/
     function menu($mod){

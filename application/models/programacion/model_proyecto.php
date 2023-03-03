@@ -1512,13 +1512,13 @@ class Model_proyecto extends CI_Model{
             $sql = '
             select *
             from aperturaprogramatica
-            where aper_programa=\''.$aper_programa.'\' and aper_estado!=\'3\' and aper_gestion='.$this->gestion.' and aper_proyecto=\'00\' and aper_actividad=\'000\'';
+            where aper_programa=\''.$aper_programa.'\' and aper_estado!=\'3\' and aper_gestion='.$this->gestion.' and aper_proyecto=\'00\' and aper_actividad=\'000\' and aper_asignado=\'1\'';
         }
         else{
             $sql = '
             select *
             from aperturaprogramatica
-            where aper_programa=\''.$aper_programa.'\' and aper_estado!=\'3\' and aper_gestion='.$this->gestion.' and aper_proyecto=\'0000\' and aper_actividad=\'000\'';
+            where aper_programa=\''.$aper_programa.'\' and aper_estado!=\'3\' and aper_gestion='.$this->gestion.' and aper_proyecto=\'0000\' and aper_actividad=\'000\' and aper_asignado=\'1\'';
         }
         
         $query = $this->db->query($sql);

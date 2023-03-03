@@ -287,7 +287,7 @@ class Cseguimiento extends CI_Controller {
         $evaluacion='
           <a href="'.site_url("").'/eval/eval_unidad/'.$proy_id.'" title="REPORTE DE EVALUACION POA" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/img/impresora.png" WIDTH="50" HEIGHT="50"/><br>VER EVALUACIÓN</a>';
 
-        $tabla=$this->mis_subactividades($proy_id);
+        $tabla=$this->mis_unidadesresponsables($proy_id);
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
@@ -304,9 +304,10 @@ class Cseguimiento extends CI_Controller {
 
 
     /*------ GET UNIDADES REPONSABLES -----*/
-    public function mis_subactividades($proy_id){
+    public function mis_unidadesresponsables($proy_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); ////// DATOS DEL PROYECTO
       $titulo='UNIDAD RESPONSABLE';
+      //$titulo_boton='';
       $tabla='';
 
       $tabla.=' 
@@ -332,10 +333,21 @@ class Cseguimiento extends CI_Controller {
                   <td><b>'.$rowc['serv_cod'].'</b></td>
                   <td><b>'.$rowc['tipo_subactividad'].' '.$rowc['serv_descripcion'].'</b></td>
                   <td>'.$rowc['com_ponderacion'].'%</td>
-                  <td>
-                    <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">
+                  <td>';
+                    if($proyecto[0]['tp_id']==1){
+                      $tabla.='
+                      <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">
+                       EJECUCION POA '.$this->verif_mes[2].' / '.$this->gestion.'
+                      </a>';
+                    }
+                    else{
+                      $tabla.='
+                      <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">
                       '.$this->btn_seguimiento_evaluacion_poa().'
-                    </a>
+                      </a>';
+                    }
+                    
+                  $tabla.='
                   </td>
                   <td align=center><img id="load'.$rowc['com_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="25" height="25" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO.."></td>
                 </tr>';

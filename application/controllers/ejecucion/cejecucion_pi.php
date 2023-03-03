@@ -50,7 +50,9 @@ class Cejecucion_pi extends CI_Controller {
         '<h2 title='.$proyecto[0]['aper_id'].'><small>PROYECTO : </small>'.$proyecto[0]['proy'].' - '.$proyecto[0]['proyecto'].'</h2>
          <h2><small>MES VIGENTE : </small> '.$this->verif_mes[2].' / '.$this->gestion.'</h2>';
 
-        $data['calificacion']='HOLA MUNDO';
+        
+        $data['calificacion']=$this->calificacion_proyecto($proyecto);
+        $data['reporte']='<a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°4</b></font></a>';
         $data['formulario_datos_generales']=$this->tabla_datos_generales($proyecto,$com_id); /// Datos Generales
         $data['formulario_ejec_partidas']=$this->tabla_formulario_ejecucion_partidas($proyecto); /// Ejecucion Partidas
 
@@ -66,12 +68,37 @@ class Cejecucion_pi extends CI_Controller {
     }
   }
 
+  /*-- CALIFICACION EJECUCION POR PROYECTO --*/
+  public function calificacion_proyecto($proyecto){
+    $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1); /// monto total asignado poa
+    $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($proyecto[0]['aper_id']); /// monto total ejecutado poa
+    $eficacia=0;
+    if(count($total_ppto_asignado)!=0 & count($total_ppto_ejecutado)!=0){
+      $eficacia=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['monto']))*100,2);
+    }
+
+    $titulo='';
+    if($eficacia<=50){$tp='danger';$titulo='NIVEL DE CUMPLIMIENTO : '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
+    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='NIVEL DE CUMPLIMIENTO : '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
+    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE CUMPLIMIENTO : '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
+    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='NIVEL DE CUMPLIMIENTO : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+
+    $tabla='
+      <hr>
+      <div class="alert alert-'.$tp.'" role="alert" align="center">
+        <h2><b>'.$titulo.'</b></h2>
+      </div>
+      <div align=right>
+        <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR FICHA TECNICA DE PROYECTO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="18" HEIGHT="18"/>&nbsp;<b>GENERAR FICHA TECNICA</b></a>&nbsp;&nbsp;&nbsp;
+      </div>';
+
+    return $tabla;
+  }
 
   /*-- FORMULARIO DATOS GENERALES DEL PROYECTO --*/
   public function tabla_datos_generales($proyecto,$com_id){
     $tabla='';
     $estado_proyecto=$this->model_proyecto->proy_estado();
-    //$fase=$this->model_faseetapa->get_id_fase($proyecto[0]['proy_id']);
     $fases=$this->model_faseetapa->fases();
 
     $tabla.='
@@ -155,8 +182,8 @@ class Cejecucion_pi extends CI_Controller {
                   </section>
                   <section class="col col-2">
                       <label class="label">PLAZO</label>
-                      <label class="input"> <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="fecha_plazo" value="'.$proyecto[0]['fecha_observacion'].'">
+                      <label class="input"> <i class="icon-append fa fa-calendar"></i>
+                      <input type="text" name="f_plazo" id="f_plazo"  placeholder="Seleccione Fecha Plazo" class="form-control datepicker" data-dateformat="dd/mm/yy" value="'.date('d/m/Y',strtotime($proyecto[0]['fecha_observacion'])).'">
                       </label>
                   </section>
               </div>
@@ -177,7 +204,7 @@ class Cejecucion_pi extends CI_Controller {
 
           <footer>
             <button type="button" name="subir_form1" id="subir_form1" class="btn btn-info">GUARDAR DATOS</button>
-            <a href="'.base_url().'index.php/prog/unidad" title="SALIR" class="btn btn-default">CANCELAR</a>
+            <a href="'.base_url().'index.php/seg/seguimiento_poa#tabs-a" title="SALIR" class="btn btn-default">SALIR</a>
           </footer>
       </form>';
     return $tabla;
@@ -185,53 +212,84 @@ class Cejecucion_pi extends CI_Controller {
 
 
     /*--- VALIDA UPDATE DATOS - PROYECTO DE INVERSION ---*/
-     public function update_datos(){
-      if($this->input->post()) {
-        $post = $this->input->post();
-        $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
-        $com_id = $this->security->xss_clean($post['com_id']); /// com id
-        $ppto_total = $this->security->xss_clean($post['costo']); /// costo total proyecto
-        $est_proy = $this->security->xss_clean($post['est_proy']); /// estado del proyecto
-        $municipio = $this->security->xss_clean($post['municipio']); /// municipio
-        $fase_id = $this->security->xss_clean($post['fase_id']); /// fase id
-        $fiscal_obras = $this->security->xss_clean($post['fiscal']); /// fiscal
-        $a_fisico = $this->security->xss_clean($post['a_fisico']); /// avance fisico
-        $a_financiero = $this->security->xss_clean($post['a_financiero']); /// avance financiero
-        $observacion = $this->security->xss_clean($post['observacion']); /// observacion
-        $problema = $this->security->xss_clean($post['problema']); /// problema
-        $solucion = $this->security->xss_clean($post['solucion']); /// solucion
-        $fecha_plazo = $this->security->xss_clean($post['fecha_plazo']); /// fecha fase
+   public function update_datos(){
+    if($this->input->post()) {
+      $post = $this->input->post();
+      $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
+      $com_id = $this->security->xss_clean($post['com_id']); /// com id
 
-         $update_proyect = array(
-          'fecha_observacion' => $fecha_plazo,
-          'fiscal_obra' => $fiscal_obras,
-          'avance_fisico' => $a_fisico,
-          'avance_financiero' => $a_financiero,
-          'proy_ppto_total' => $ppto_total,
-          'proy_estado' => $est_proy,
-          'proy_observacion' => strtoupper($observacion),
-          'municipio' => strtoupper($municipio),
-          'proy_desc_problema' => strtoupper($problema),
-          'proy_desc_solucion' => strtoupper($solucion)
-        );
-        $this->db->where('proy_id', $proy_id);
-        $this->db->update('_proyectos', $update_proyect);
+            $ppto_total = $this->security->xss_clean($post['costo']); /// costo total proyecto
+            $est_proy = $this->security->xss_clean($post['est_proy']); /// estado del proyecto
+            $municipio = $this->security->xss_clean($post['municipio']); /// municipio
+            $fase_id = $this->security->xss_clean($post['fase_id']); /// fase id
+            $fiscal_obras = $this->security->xss_clean($post['fiscal']); /// fiscal
+            $a_fisico = $this->security->xss_clean($post['a_fisico']); /// avance fisico
+            $a_financiero = $this->security->xss_clean($post['a_financiero']); /// avance financiero
+            $observacion = $this->security->xss_clean($post['observacion']); /// observacion
+            $problema = $this->security->xss_clean($post['problema']); /// problema
+            $solucion = $this->security->xss_clean($post['solucion']); /// solucion
+            $fecha_plazo = $this->security->xss_clean($post['f_plazo']); /// fecha fase
 
+            $update_proyect = array(
+            'fecha_observacion' => $fecha_plazo,
+            'fiscal_obra' => $fiscal_obras,
+            'avance_fisico' => $a_fisico,
+            'avance_financiero' => $a_financiero,
+            'proy_ppto_total' => $ppto_total,
+            'proy_estado' => $est_proy,
+            'proy_observacion' => strtoupper($observacion),
+            'municipio' => strtoupper($municipio),
+            'proy_desc_problema' => strtoupper($problema),
+            'proy_desc_solucion' => strtoupper($solucion)
+          );
+          $this->db->where('proy_id', $proy_id);
+          $this->db->update('_proyectos', $update_proyect);
 
-        $this->session->set_flashdata('success','LOS DATOS SE GUARDARON CORRECTAMENTE....');
-        redirect(site_url("").'/form_ejec_pinversion/'.$com_id.'');
-   
-      } else {
-          show_404();
-      }
+          $this->session->set_flashdata('success','LOS DATOS SE GUARDARON CORRECTAMENTE....');
+        /*if (empty($post['costo'])!=1 & empty($post['est_proy'])!=1 & empty($post['municipio'])!=1 
+            & empty($post['fase_id'])!=1  & empty($post['fiscal'])!=1  & empty($post['a_fisico'])!=1  & empty($post['a_financiero'])!=1  & empty($post['observacion'])!=1  & empty($post['problema'])!=1 
+            & empty($post['solucion'])!=1  & empty($post['f_plazo'])!=1 ) {
+            
+            
+            $ppto_total = $this->security->xss_clean($post['costo']); /// costo total proyecto
+            $est_proy = $this->security->xss_clean($post['est_proy']); /// estado del proyecto
+            $municipio = $this->security->xss_clean($post['municipio']); /// municipio
+            $fase_id = $this->security->xss_clean($post['fase_id']); /// fase id
+            $fiscal_obras = $this->security->xss_clean($post['fiscal']); /// fiscal
+            $a_fisico = $this->security->xss_clean($post['a_fisico']); /// avance fisico
+            $a_financiero = $this->security->xss_clean($post['a_financiero']); /// avance financiero
+            $observacion = $this->security->xss_clean($post['observacion']); /// observacion
+            $problema = $this->security->xss_clean($post['problema']); /// problema
+            $solucion = $this->security->xss_clean($post['solucion']); /// solucion
+            $fecha_plazo = $this->security->xss_clean($post['f_plazo']); /// fecha fase
+
+            $update_proyect = array(
+            'fecha_observacion' => $fecha_plazo,
+            'fiscal_obra' => $fiscal_obras,
+            'avance_fisico' => $a_fisico,
+            'avance_financiero' => $a_financiero,
+            'proy_ppto_total' => $ppto_total,
+            'proy_estado' => $est_proy,
+            'proy_observacion' => strtoupper($observacion),
+            'municipio' => strtoupper($municipio),
+            'proy_desc_problema' => strtoupper($problema),
+            'proy_desc_solucion' => strtoupper($solucion)
+          );
+          $this->db->where('proy_id', $proy_id);
+          $this->db->update('_proyectos', $update_proyect);
+
+          $this->session->set_flashdata('success','LOS DATOS SE GUARDARON CORRECTAMENTE....');
+        }
+        else{
+          $this->session->set_flashdata('danger','ERROR AL REGISTRAR DATOS !!!');
+        }*/
+       
+      redirect(site_url("").'/form_ejec_pinversion/'.$com_id.'');
+ 
+    } else {
+        show_404();
     }
-
-
-
-
-
-
-
+  }
 
 
 
@@ -360,7 +418,7 @@ class Cejecucion_pi extends CI_Controller {
                 </td>
                 <td>
                   <div id="but'.$partida['sp_id'].'" style="display:none;" align="center">
-                    <button type="button" name="'.$partida['sp_id'].'" id="'.$nro.'" onclick="guardar_pi('.$tp.','.$partida['sp_id'].','.$this->verif_mes[1].','.$id_ejec.','.$partida['partida'].');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="37" HEIGHT="37"/><br>GUARDAR</button>
+                    <button type="button" name="'.$partida['sp_id'].'" id="'.$nro.'" onclick="guardar_pi('.$proyecto[0]['proy_id'].','.$tp.','.$partida['sp_id'].','.$this->verif_mes[1].','.$id_ejec.','.$partida['partida'].');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="37" HEIGHT="37"/><br>GUARDAR</button>
                   </div>
                 </td>
                 <td align="right" style="font-size:20px"><b><div id="ppto'.$partida['sp_id'].'">'.number_format($ppto_ejecutado, 0, ',', '.').'</div></b></td>
@@ -435,6 +493,7 @@ public function guardar_datos_ejecucion_pinversion(){
     $post = $this->input->post();
     // data: "sp_id="+id_partida+"&ejec="+ejec+"&obs="+obs+"&tp="+tp+"&mes_id="+mes_id+"&ejec_ppto_id="+id_ejec_mes
 
+    $proy_id = $this->security->xss_clean($post['proy_id']); /// proy_id
     $tipo = $this->security->xss_clean($post['tp']); /// tipo (0) nuevo, (1) modificado
     $sp_id = $this->security->xss_clean($post['sp_id']); /// partida id
     $ejec= $this->security->xss_clean($post['ejec']);/// valor a actualizar
@@ -492,14 +551,19 @@ public function guardar_datos_ejecucion_pinversion(){
       if(count($observacion_mes)!=0){
         $detalle_observacion=$observacion_mes[0]['observacion'];
       }
-
       ////
+
+      $proyecto = $this->model_proyecto->get_proyecto_inversion($proy_id);
+      $calificacion=$this->calificacion_proyecto($proyecto);
+
+
       $result = array(
         'respuesta' => 'correcto',
         'ejecucion_total_partida'=>number_format($ppto_ejecutado, 0, ',', '.'),
         'porcentaje_ejecucion_total_partida'=>$porcentaje,
         'dato_ejec'=>$ejec,
         'dato_obs'=>$detalle_observacion,
+        'eficacia'=>$calificacion,
       );
 
     echo json_encode($result);
@@ -534,6 +598,7 @@ public function guardar_datos_ejecucion_pinversion(){
 
 
     $this->load->view('admin/ejecucion_pi/form_ejec_fin_pi', $data);
+
   }
 
 
@@ -542,9 +607,9 @@ public function guardar_datos_ejecucion_pinversion(){
     if($this->input->is_ajax_request() && $this->input->post()){
     $post = $this->input->post();
     $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
-    $proyecto=$this->model_proyecto->get_id_proyecto($proy_id); /// Datos de Proyecto
-    $fase = $this->model_faseetapa->get_id_fase($proy_id); /// Fase
+    $proyecto = $this->model_proyecto->get_proyecto_inversion($proy_id);
     $estado_proyecto=$this->model_proyecto->proy_estado();
+    $mis_fases=$this->model_faseetapa->fases();
    // $ejec_fin=$this->ejecucion_finpi->avance_financiero_pi($proyecto[0]['aper_id'],$proyecto[0]['proy_ppto_total']);
 
     if(count($proyecto)!=0){
@@ -553,7 +618,7 @@ public function guardar_datos_ejecucion_pinversion(){
       $lista_partidas='';
 
       ///----------------------
-      $estado_proy.='
+      $estado_proy='
       <select class="form-control" id="est_proy" name="est_proy" title="SELECCIONE ESTADO DE PROYECTO">
         <option value="0" selected>Seleccione Estado Proyecto</option>';
         foreach($estado_proyecto as $est){
@@ -568,6 +633,23 @@ public function guardar_datos_ejecucion_pinversion(){
       </select>';
       /// --------------------
 
+      ///----------------------
+      $lista_fases='
+      <select class="form-control" id="fas_id" name="fas_id" title="SELECCIONE FASE DEL PROYECTO">
+        <option value="0" selected>Seleccione Fase</option>';
+        foreach($mis_fases as $fas){
+          if($fas['fas_id']==$proyecto[0]['fas_id']){ 
+            $lista_fases.='<option value="'.$fas['fas_id'].'" selected>'.strtoupper($fas['fas_fase']).'</option>';
+          }
+          else{ 
+            $lista_fases.='<option value="'.$fas['fas_id'].'" >'.strtoupper($fas['fas_fase']).'</option>';
+          }  
+        }
+        $lista_fases.='
+      </select>';
+      /// --------------------
+
+      
       ///----------------------
       $lista_partidas.='';
       $nro=0;
@@ -600,6 +682,7 @@ public function guardar_datos_ejecucion_pinversion(){
         $nro++;
         $lista_partidas.='
         <center>
+
           <table class="table table-bordered" style="width:80%;">
            <thead>
             <tr>
@@ -642,13 +725,14 @@ public function guardar_datos_ejecucion_pinversion(){
           $fecha_plazo=date('d/m/Y');
         }
 
+        $calificacion=$this->calificacion_proyecto($proyecto); /// cumplimiento de ppto de la gestion
         $result = array(
           'respuesta' => 'correcto',
           'proyecto' => $proyecto,
-          'fase' => $fase,
+          'lista_fase' => $lista_fases,
           'estado' => $estado_proy,
           'partidas' => $lista_partidas,
-        //  'avance_financiero'=>$ejec_fin[2],
+          'calificacion' => $calificacion,
           'fecha_plazo' => $fecha_plazo,
         );
       }
@@ -674,6 +758,7 @@ public function guardar_datos_ejecucion_pinversion(){
       $fase = $this->model_faseetapa->get_id_fase($proy_id); /// Fase
       $estado = $this->security->xss_clean($post['est_proy']); /// estado
 
+      $fas_id = $this->security->xss_clean($post['fas_id']); /// fase
       $ppto_total = $this->security->xss_clean($post['ppto_total']); /// ppto total
       $fiscal_obras = $this->security->xss_clean($post['f_obras']); /// fiscal de obras
       $fecha_plazo = $this->security->xss_clean($post['mydate']); /// fecha plazo
@@ -728,6 +813,13 @@ public function guardar_datos_ejecucion_pinversion(){
         $this->db->update('_proyectos', $update_proyect);
       /// ------ End Update proyecto
 
+        /// ------ Update fase
+        $update_fase = array(
+          'fas_id' => $fas_id
+        );
+        $this->db->where('pfec_id', $fase[0]['id']);
+        $this->db->update('_proyectofaseetapacomponente', $update_fase);
+      /// ------ End Update proyecto
 
       foreach($ppto_asignado as $partida){
         $ejec=$this->security->xss_clean($post['ejec_fin'.$partida['sp_id']]); /// ejecutado 

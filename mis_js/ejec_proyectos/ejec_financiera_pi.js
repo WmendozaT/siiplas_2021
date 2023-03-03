@@ -107,7 +107,7 @@ function abreVentana(PDF){
 
 
 /// Funcion para guardar datos de Ejecucion Proy Inversion
-function guardar_pi(tp,id_partida,mes_id,ejec_ppto_id,partida){
+function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
   ejec=parseFloat($('[id="ejec'+id_partida+'"]').val());
   obs=$('[id="obs_pi'+id_partida+'"]').val();
 
@@ -122,7 +122,7 @@ function guardar_pi(tp,id_partida,mes_id,ejec_ppto_id,partida){
         url: url,
         type: "POST",
         dataType: 'json',
-        data: "sp_id="+id_partida+"&ejec="+ejec+"&obs="+obs+"&tp="+tp+"&mes_id="+mes_id+"&ejec_ppto_id="+ejec_ppto_id
+        data: "proy_id="+proy_id+"&sp_id="+id_partida+"&ejec="+ejec+"&obs="+obs+"&tp="+tp+"&mes_id="+mes_id+"&ejec_ppto_id="+ejec_ppto_id
       });
 
       request.done(function (response, textStatus, jqXHR) {
@@ -134,6 +134,7 @@ function guardar_pi(tp,id_partida,mes_id,ejec_ppto_id,partida){
             document.getElementById("porcentaje"+id_partida).innerHTML = response.porcentaje_ejecucion_total_partida+' %';
             document.getElementById("ejec"+id_partida).value = response.dato_ejec; /// dato ejec
             document.getElementById("obs_pi"+id_partida).value = response.dato_obs; /// dato obs
+            document.getElementById("efi").innerHTML = response.eficacia+' %';
             $('#but'+id_partida).slideUp();
             //document.getElementById("but"+id_partida).innerHTML = 'exitod';
       }
@@ -149,82 +150,84 @@ function guardar_pi(tp,id_partida,mes_id,ejec_ppto_id,partida){
 
 }
 
-
-    $("#subir_form1").on("click", function () {
-        var $validator = $("#form1").validate({
-            rules: {
-                costo: { //// ppto total proyecto
-                  required: true,
-                },
-                est_proy: { //// estado del proyecto
-                  required: true,
-                },
-                municipio: { //// municipio
-                  required: true,
-                },
-                fase_id: { //// fase
-                  required: true,
-                },
-                fiscal: { //// fiscal de obra
-                  required: true,
-                },
-                a_fisico: { //// avance fisico
-                  required: true,
-                },
-                a_financiero: { //// avance financiero
-                  required: true,
-                },
-                observacion: { //// observacion
-                  required: true,
-                },
-                problema: { //// problema presentados
-                  required: true,
-                }
-            },
-            messages: {
-                costo: "<font color=red>REGISTRE COSTO TOTAL DEL PROYECTO</font>", 
-                est_proy: "<font color=red>SELECCIONE ESTADO DEL PROYECTO</font>", 
-                municipio: "<font color=red>REGISTRE MUNICIPIO</font>", 
-                fase_id: "<font color=red>SELECCIONE FASE</font>",
-                fiscal: "<font color=red>SELECCIONE FISCAL</font>",
-                a_fisico: "<font color=red>REGISTRE AVANCE FISICO</font>",  
-                a_financiero: "<font color=red>REGISTRE AVANCE FINANCIERO</font>",  
-                observacion: "<font color=red>REGISTRE OBSERVACION / COMPROMISOS</font>",
-                problema: "<font color=red>REGISTRE PROBLEMA IDENTIFICADO</font>",                    
-            },
-            highlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-            },
-            unhighlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-            },
-            errorElement: 'span',
-            errorClass: 'help-block',
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-          });
-
-        var $valid = $("#form1").valid();
-        if (!$valid) {
-            $validator.focusInvalid();
-        } else {
-          
-
-          alertify.confirm("GUARDAR DATOS ?", function (a) {
-              if (a) {
-                  document.getElementById('subir_form1').disabled = true;
-                  document.forms['form1'].submit();
-              } else {
-                  alertify.error("OPCI\u00D3N CANCELADA");
+  //// GUARDA DATOS 
+  $("#subir_form1").on("click", function () {
+      var $validator = $("#form1").validate({
+          rules: {
+              
+              est_proy: { //// estado del proyecto
+                required: true,
+              },
+              municipio: { //// municipio
+                required: true,
+              },
+              fase_id: { //// fase
+                required: true,
+              },
+              fiscal: { //// fiscal de obra
+                required: true,
+              },
+              a_fisico: { //// avance fisico
+                required: true,
+              },
+              a_financiero: { //// avance financiero
+                required: true,
+              },
+              observacion: { //// observacion
+                required: true,
+              },
+              f_plazo: { //// fecha plazo
+                required: true,
+              },
+              problema: { //// problema presentados
+                required: true,
               }
-          });
-        }
-    });
+          },
+          messages: {
+              //costo: "<font color=red>REGISTRE COSTO TOTAL DEL PROYECTO</font>", 
+              est_proy: "<font color=red>SELECCIONE ESTADO DEL PROYECTO</font>", 
+              municipio: "<font color=red>REGISTRE MUNICIPIO</font>", 
+              fase_id: "<font color=red>SELECCIONE FASE</font>",
+              fiscal: "<font color=red>SELECCIONE FISCAL</font>",
+              a_fisico: "<font color=red>REGISTRE AVANCE FISICO</font>",  
+              a_financiero: "<font color=red>REGISTRE AVANCE FINANCIERO</font>",  
+              observacion: "<font color=red>REGISTRE OBSERVACION / COMPROMISOS</font>",
+              f_plazo: "<font color=red>SELECCIONE FECHA PLAZO</font>",
+              problema: "<font color=red>REGISTRE PROBLEMA IDENTIFICADO</font>",                    
+          },
+          highlight: function (element) {
+              $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+          },
+          unhighlight: function (element) {
+              $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+          },
+          errorElement: 'span',
+          errorClass: 'help-block',
+          errorPlacement: function (error, element) {
+              if (element.parent('.input-group').length) {
+                  error.insertAfter(element.parent());
+              } else {
+                  error.insertAfter(element);
+              }
+          }
+        });
+
+      var $valid = $("#form1").valid();
+      if (!$valid) {
+          $validator.focusInvalid();
+      } else {
+        
+
+        alertify.confirm("GUARDAR INFORMACION DE EJECUCIÓN ?", function (a) {
+            if (a) {
+                document.getElementById('subir_form1').disabled = true;
+                document.forms['form1'].submit();
+            } else {
+                alertify.error("OPCI\u00D3N CANCELADA");
+            }
+        });
+      }
+  });
 
 
 
@@ -516,19 +519,19 @@ function cuadro_grafico_distribucion_presupuesto_asignado(matriz,nro){
 
       request.done(function (response, textStatus, jqXHR) {
       if (response.respuesta == 'correcto') {
-        //alert(response.fecha_plazo)
-        document.getElementById("proy_nombre").value = response.proyecto[0]['proy_sisin']+' - '+response.proyecto[0]['proy_nombre']; /// nombre proyecto
+        //alert(response.respuesta)
+        document.getElementById("proy_nombre").value = response.proyecto[0]['proy']+' - '+response.proyecto[0]['proyecto']; /// nombre proyecto
         document.getElementById("ppto_total").value = response.proyecto[0]['proy_ppto_total']; /// ppto total
-        document.getElementById("fase").value = response.fase[0]['fase']+' - '+response.fase[0]['descripcion']; /// fase
         document.getElementById("estado").innerHTML = response.estado; /// estado
+        document.getElementById("fase").innerHTML = response.lista_fase; /// lista fase
         document.getElementById("ejec_fis").value = response.proyecto[0]['avance_fisico']; /// Ejecucion Fisica Total
         document.getElementById("ejec_fin").value = response.proyecto[0]['avance_financiero']; /// Ejecucion Financiero Total
         document.getElementById("f_obras").value = response.proyecto[0]['fiscal_obra']; /// Fiscal de Obras
         document.getElementById("mydate").value = response.fecha_plazo; /// Fecha Plazo
-        //document.getElementById("ejec_fin_gestion").value = response.avance_financiero; /// Ejecucion Financiero Gestion
+        document.getElementById("calificacion").innerHTML = response.calificacion; /// Calificacion
         document.getElementById("observacion").value = response.proyecto[0]['proy_observacion']; /// Observacion
-        document.getElementById("problema").value = response.proyecto[0]['desc_prob']; /// problema
-        document.getElementById("solucion").value = response.proyecto[0]['desc_sol']; /// solucion
+        document.getElementById("problema").value = response.proyecto[0]['proy_desc_problema']; /// problema
+        document.getElementById("solucion").value = response.proyecto[0]['proy_desc_solucion']; /// solucion
         
         document.getElementById("lista_partidas").innerHTML = response.partidas; /// partidas
 

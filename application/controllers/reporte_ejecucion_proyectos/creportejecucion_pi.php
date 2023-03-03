@@ -110,6 +110,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
 
       $cabecera_grafico=$this->ejecucion_finpi->cabecera_reporte_grafico('CONSOLIDADO INSTITUCIONAL');
       ///// s1
+      //$tabla_detalle_ejec=$this->tabla_detalle_institucional_impresion($matriz_reg,$nro_reg,0); /// Tabla Vista
       $tabla_detalle_ejec_impresion=$this->tabla_detalle_institucional_impresion($matriz_reg,$nro_reg,0); /// Tabla Impresion Grafico 0
       $grafico_avance_proyectos='<div id="graf_proyectos"><div id="proyectos" style="width: 1100px; height: 700px; margin: 0 auto"></div></div>';
 
@@ -176,7 +177,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
                         </a>
                         <hr>
                       <article class="col-sm-12">
-                        '.$grafico_avance_proyectos.'
+                        '.$grafico_avance_proyectos.'<br>'.$tabla_detalle_ejec_impresion.'
                         <div id="tabla_impresion_ejecucion" style="display: none">
                           '.$tabla_detalle_ejec_impresion.'
                         </div>
@@ -349,7 +350,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
                 <div class="tab-pane fade in active" id="s1">
                     <div class="row">
                       <article class="col-sm-12">
-                        '.$grafico_avance_proyectos.'
+                        '.$grafico_avance_proyectos.'<br>'.$tabla_detalle_ejec_impresion.'
                         <div id="tabla_impresion_ejecucion" style="display: none">
                           '.$tabla_detalle_ejec_impresion.'
                         </div>

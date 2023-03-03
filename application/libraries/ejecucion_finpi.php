@@ -1617,11 +1617,33 @@ class ejecucion_finpi extends CI_Controller{
   ///// ============== FICHA TECNICA
   /// Datos Generales - Proyectos de Inversion
   public function datos_proyecto_inversion($proy_id){
-    $proyecto=$this->model_proyecto->get_id_proyecto($proy_id);
+    //$proyecto=$this->model_proyecto->get_id_proyecto($proy_id);
+    $proyecto = $this->model_proyecto->get_proyecto_inversion($proy_id);
     $imagen=$this->model_proyecto->get_img_ficha_tecnica($proy_id);
-    $fase = $this->model_faseetapa->get_id_fase($proy_id);
-    $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
-    $avance_financiero_gestion=$this->get_ejec_ppto_proyecto_gestion($proyecto);
+
+    $lista_partidas_ppto_asig=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
+   // $avance_financiero_gestion=$this->get_ejec_ppto_proyecto_gestion($proyecto);
+
+    //// DATOS DE PPTO (ASIG-EJEC)
+    $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1); /// monto total asignado poa
+    $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($proyecto[0]['aper_id']); /// monto total ejecutado poa
+    
+    $ppto_asig=0;$ppto_ejec=0;
+    if(count($total_ppto_asignado)!=0){
+      $ppto_asig=$total_ppto_asignado[0]['monto'];
+    }
+
+    if(count($total_ppto_ejecutado)!=0){
+      $ppto_ejec=$total_ppto_ejecutado[0]['ejecutado_total'];
+    }
+
+
+
+    $cumplimiento=0;
+    if(count($total_ppto_asignado)!=0 & count($total_ppto_ejecutado)!=0){
+      $cumplimiento=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['monto']))*100,2);
+    }
+    ////
 
     if($proyecto[0]['fecha_observacion']!=''){
       $fecha_plazo=date('d/m/Y',strtotime($proyecto[0]['fecha_observacion']));
@@ -1637,12 +1659,12 @@ class ejecucion_finpi extends CI_Controller{
         <tbody>
           <tr>
             <td style="width:25%; height:15px; font-family: Arial; font-size: 10px;height:20px;" bgcolor="#e8e7e7"><b>PROYECTO DE INVERSIÓN</b></td>
-            <td style="width:45%; font-family: Arial; font-size: 9px;height:20px;">'.$proyecto[0]['proy_nombre'].'</td>
-            <td rowspan=8 style="width:30%;text-align:center">';
+            <td style="width:45%; font-family: Arial; font-size: 9px;height:20px;"><b>&nbsp;'.$proyecto[0]['proyecto'].'</b></td>
+            <td rowspan=11 style="width:30%;text-align:center">';
             if(count($imagen)!=0){
               if($imagen[0]['tp']==1){
                 //$tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:150px; height:110px;"/>';
-                $tabla.='<img src="'.getcwd().'/fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:230px; height:170px;"/>';
+                //$tabla.='<img src="'.getcwd().'/fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:230px; height:170px;"/>';
               }
               else{
                 $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:150px; height:110px;"/>';
@@ -1656,40 +1678,48 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
           <tr style="font-family: Arial; font-size: 9.5px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>C&Oacute;DIGO SISIN</b></td>
-            <td style="width:45%; font-size: 9px;">'.$proyecto[0]['proy_sisin'].'</td>
-          </tr>
-          <tr style="font-family: Arial; font-size: 9.5px;">
-            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>CATEGORIA PROGRAMATICA</b></td>
-            <td style="width:45%; font-size: 9px;">'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' 000</td>
+            <td style="width:45%; font-size: 9px;">&nbsp;'.$proyecto[0]['proy'].'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>REGIONAL</b></td>
-            <td style="width:45%; font-size: 9px;">'.strtoupper($proyecto[0]['dep_departamento']).'</td>
+            <td style="width:45%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['dep_departamento']).'</td>
           </tr>
           <tr style="font-family: Arial;font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>DISTRITAL</b></td>
-            <td style="width:45%; font-size: 9px;">'.strtoupper($proyecto[0]['dist_distrital']).'</td>
+            <td style="width:45%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['dist_distrital']).'</td>
+          </tr>
+          <tr style="font-family: Arial;font-size: 10px;">
+            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>MUNICIPIO</b></td>
+            <td style="width:45%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['municipio']).'</td>
+          </tr>
+          <tr style="font-family: Arial;font-size: 10px;">
+            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>FECHA DE INICIO</b></td>
+            <td style="width:45%; font-size: 9px;">&nbsp;'.date('d/m/Y',strtotime($proyecto[0]['fecha_inicio'])).'</td>
+          </tr>
+          <tr style="font-family: Arial;font-size: 10px;">
+            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>FECHA DE CONCLUCI&Oacute;N</b></td>
+            <td style="width:45%; font-size: 9px;">&nbsp;'.date('d/m/Y',strtotime($proyecto[0]['fecha_final'])).'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>COSTO TOTAL DEL PROYECTO</b></td>
-            <td style="width:45%; font-size: 9px;">Bs. '.number_format($proyecto[0]['proy_ppto_total'], 2, ',', '.').'</td>
+            <td style="width:45%; font-size: 9px;">&nbsp;Bs. '.number_format($proyecto[0]['proy_ppto_total'], 2, ',', '.').'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>FASE</b></td>
-            <td style="width:45%; font-size: 9px;">'.strtoupper($fase[0]['descripcion']).'</td>
+            <td style="width:45%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['fas_fase']).'</td>
           </tr>
         </tbody>
        </table><br>
         <div style="height:20px;"><b>OBJETIVOS DEL PROYECTO</b></div>
        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <tbody>
-          <tr style="font-family: Arial; font-size: 10px;">
+          <tr style="font-family: Arial; font-size: 10px;text-align: justify;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>OBJETIVO GENERAL</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['obj_gral']).'</td>
+            <td style="width:75%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['proy_obj_general']).'</td>
           </tr>
-          <tr style="font-family: Arial; font-size: 10px;">
+          <tr style="font-family: Arial; font-size: 10px;text-align: justify;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>OBJETIVO ESPECIFICO</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['obj_esp']).'</td>
+            <td style="width:75%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['proy_obj_especifico']).'</td>
           </tr>
         </tbody>
        </table><br>
@@ -1698,43 +1728,85 @@ class ejecucion_finpi extends CI_Controller{
         <tbody>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:20%; height:15px;" bgcolor="#e8e7e7"><b>ESTADO DEL PROYECTO</b></td>
-            <td style="width:55%; font-size: 9px;">'.strtoupper($proyecto[0]['ep_descripcion']).'</td>
+            <td style="width:55%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['ep_descripcion']).'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
-            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FÍSICO PROYECTO</b></td>
-            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_fisico'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date("d").'/'.date("m"). "/" . date("Y").'</td>
+            <td style="width:25%; height:15px;" bgcolor="#e8e7e7"><b>AVANCE FÍSICO PROYECTO</b></td>
+            <td style="width:75%; font-size: 9px;">&nbsp;
+              <table style="width:100%;">
+                <tr>
+                  <td style="width:15%;">'.round($proyecto[0]['avance_fisico'],2).' %</td>
+                  <td style="width:85%;">a fecha : '.date("d").'/'.date("m"). "/" . date("Y").'</td>
+                </tr>
+              </table>
+            </td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FINANCIERO TOTAL</b></td>
-            <td style="width:75%; font-size: 9px;">'.round($proyecto[0]['avance_financiero'],2).' % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; de fecha : '.date("d").'/'.date("m"). "/" . date("Y").'</td>
+            <td style="width:75%; font-size: 9px;">&nbsp;
+              <table style="width:100%;">
+                <tr>
+                  <td style="width:15%;">'.round($proyecto[0]['avance_financiero'],2).' %</td>
+                  <td style="width:85%;">a fecha : '.date("d").'/'.date("m"). "/" . date("Y").'</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr style="font-family: Arial; font-size: 10px;">
+            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>PPTO. ASIGNADO - GESTIÓN '.$this->gestion.'</b></td>
+            <td style="width:75%; font-size: 9px;">Bs. '.number_format($ppto_asig, 2, ',', '.').'</td>
+          </tr>
+          <tr style="font-family: Arial; font-size: 10px;">
+            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>PPTO. EJECUTADO - GESTIÓN '.$this->gestion.'</b></td>
+            <td style="width:75%; font-size: 9px;">Bs. '.number_format($ppto_ejec, 2, ',', '.').'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FINANCIERO GESTIÓN '.$this->gestion.'</b></td>
-            <td style="width:75%; font-size: 9px;">'.$avance_financiero_gestion.' %</td>
+            <td style="width:75%; font-size: 10px;">&nbsp;<b>'.$cumplimiento.' %</b></td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>FISCAL DE OBRA</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['fiscal_obra']).'</td>
+            <td style="width:75%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['fiscal_obra']).'</td>
           </tr>
-          <tr style="font-family: Arial; font-size: 10px;">
-            <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>OBSERVACIÓN / COMPROMISO</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['proy_observacion']).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a fecha : '.$fecha_plazo.'</td>
-          </tr>
+          </tbody>
+        </table>';
+        if(strlen($proyecto[0]['proy_observacion'])>700){
+          $tabla.='<br><b>OBSERVACIÓN / COMPROMISO</b>
+          <hr>
+            <span style="margin:-10px 10px 0px 10px;font-size:9px;text-align: justify;">
+              <p>'.strtoupper($proyecto[0]['proy_observacion']).' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a fecha : '.$fecha_plazo.'</p>
+            </span>
+          <hr>';
+        }
+        else{
+        $tabla.='
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
+          <tbody>
+            <tr style="font-family: Arial; font-size: 10px;text-align: justify;">
+              <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>OBSERVACIÓN / COMPROMISO</b></td>
+              <td style="width:75%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['proy_observacion']).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a fecha : '.$fecha_plazo.'</td>
+            </tr>
+          </tbody>
+         </table>';
+        }
+
+
+        $tabla.='
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
+          <tbody>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>PROBLEMA IDENTIFICADO</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['desc_prob']).'</td>
+            <td style="width:75%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['proy_desc_problema']).'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>PROPUESTA DE SOLUCIÓN</b></td>
-            <td style="width:75%; font-size: 9px;">'.strtoupper($proyecto[0]['desc_sol']).'</td>
+            <td style="width:75%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['proy_desc_solucion']).'</td>
           </tr>
         </tbody>
-       </table>
-        <span style="margin:-10px 10px 0px 10px;font-size:9px;">
-          <p>'.strtoupper($proyecto[0]['proy_observacion']).'</p>
-        </span><br>
+       </table><hr>
+        
        <div style="height:20px;"><b>EJECUCION PRESUPUESTARIA '.$this->gestion.'</b></div>';
-       foreach($ppto_asig as $partida){
+       foreach($lista_partidas_ppto_asig as $partida){
         $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($partida['sp_id']); /// temporalidad ejec partida
         /// ------ Datos de Modifcacion de la partida
         $monto_partida=$this->detalle_modificacion_partida($partida);
@@ -1775,7 +1847,7 @@ class ejecucion_finpi extends CI_Controller{
               <th style="width:6%;">NOV.</th>
               <th style="width:6%;">DIC.</th>
               <th style="width:6%;">PPTO. EJECUTADO</th>
-              <th style="width:5%;">(%) EJEC. FIN.</th>
+              <th style="width:5%;">(%) CUMP.</th>
             </tr>
           </thead>
           <tbody>
@@ -1810,38 +1882,24 @@ class ejecucion_finpi extends CI_Controller{
     $tabla='';
     $tabla.='
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-        <tr style="border: solid 0px;">              
-            <td style="width:70%;height: 2%">
-                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                    <tr style="font-size: 15px;font-family: Arial;">
-                        <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
-                    </tr>
-                    <tr>
-                        <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
-                    </tr>
-                </table>
-            </td>
-            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
-              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </td>
-        </tr>
-      </table>
-      <hr>
-      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px black; text-align: center;">
-              <td style="width:10%; text-align:center;">
+              <td style="width:23%; text-align:center;">
+                <img src="'.getcwd().'/assets/ifinal/cns2.PNG" class="img-responsive" style="width:60px; height:60px;"/><br>
+                <b style="font-size: 9px;font-family: Arial;">CAJA NACIONAL DE SALUD</b><br>
+                DPTO. NAL. DE PLANIFICACIÓN
               </td>
-              <td style="width:80%; height: 5%">
+              <td style="width:60%; height: 5%">
                   <table align="center" border="0" style="width:100%;">
-                      <tr style="font-size: 23px;font-family: Arial;">
+                      <tr style="font-size: 20px;font-family: Arial;">
                         <td style="height: 32%;"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
                       </tr>
-                      <tr style="font-size: 20px;font-family: Arial;">
+                      <tr style="font-size: 22px;font-family: Arial;">
                         <td style="height: 5%;">'.$titulo_reporte.'</td>
                       </tr>
                   </table>
               </td>
-              <td style="width:10%; text-align:center;">
+              <td style="width:20%; text-align:center;">
+              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               </td>
           </tr>
       </table>
