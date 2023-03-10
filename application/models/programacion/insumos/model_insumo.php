@@ -71,15 +71,6 @@ class Model_insumo extends CI_Model{
         $query = $this->db->get();
         return $query->result_array();
     }
-    // ------ Get temporalidad
-/*    public function get_temporalidad_prog($tins_id,$ins_id){
-        $sql = 'select *
-                from temporalidad_prog_insumo
-                where tins_id='.$tins_id.' and ins_id='.$ins_id.'';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
 
     // ------ lista Temporalidad Insumo
@@ -87,6 +78,19 @@ class Model_insumo extends CI_Model{
         $sql = 'select *
             from vista_temporalidad_insumo
             where ins_id='.$ins_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    // ------ lista Temporalidad Insumo por Unidad/ proyecto
+    public function list_temporalidad_programado_unidad($aper_id){
+        $sql = '
+            select i.aper_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12 
+            from insumos i
+            Inner Join vista_temporalidad_insumo as temp On temp.ins_id=i.ins_id 
+            where aper_id='.$aper_id.'
+            group by i.aper_id';
 
         $query = $this->db->query($sql);
         return $query->result_array();

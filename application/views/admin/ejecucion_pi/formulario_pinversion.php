@@ -175,9 +175,9 @@
                                             <!-- end s2 tab pane -->
 
                                             <div class="tab-pane fade" id="s3" title="CUADRO CONSOLIDADO POA">
-                                               
+                                               <?php echo $cuadro_consolidado ?>
                                             </div>
-                                            <!-- end s2 tab pane -->
+                                            <!-- end s3 tab pane -->
                                         </div>
                                         <!-- end content -->
                                     </div>
@@ -195,44 +195,6 @@
         <!-- END MAIN PANEL -->
     </div>
     <!-- ========================================================================================================= -->
-<!--         <div class="modal fade" id="modal_nuevo_ff2" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" style="width:85%;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="calificacion_form4"></div>
-                        <div class="row">
-                            <div id="temporalidad"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- MODAL UPDATE SEG POA   -->
-<!--         <div class="modal fade" id="modal_update_eval" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" id="mdialTamanio">
-                <div class="modal-content">
-                    <form id="form_update" novalidate="novalidate" method="post">
-                        <input type="hidden" name="com_id" id="com_id">
-                        <div id="content_valida">
-                            <center><div class="loading" align="center"><h2>Actualizando Evaluaci&oacute;n  POA <br><div id="tit"></div></h2><br><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /></div></center>
-                        </div>
-                        <div id="load" style="display: none;"><center><img src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"><hr><b>ACTUALIZANDO FORMULARIO SEGUIMIENTO POA ...</b></center></div>
-                            <p>
-                                <div id="but" align="right" style="display:none;">
-                                    <button type="button" name="but_update" id="but_update" class="btn btn-success">ACEPTAR EVALUACI&Oacute;N</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                </div>
-                            </p>
-                    </form>
-                </div>
-            </div>
-        </div> -->
-     <!--  =============== -->
-
-
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">

@@ -15,6 +15,7 @@ class Cejecucion_pi extends CI_Controller {
           $this->load->model('programacion/model_producto');
           $this->load->model('programacion/model_componente');
           $this->load->model('mantenimiento/model_ptto_sigep');
+          $this->load->model('programacion/insumos/model_insumo');
           $this->pcion = $this->session->userData('pcion');
           $this->gestion = $this->session->userData('gestion');
           $this->adm = $this->session->userData('adm');
@@ -44,17 +45,62 @@ class Cejecucion_pi extends CI_Controller {
     $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
     if(count($componente)!=0){
       $proyecto = $this->model_proyecto->get_proyecto_inversion($componente[0]['proy_id']);
+      $regional=$this->model_proyecto->get_departamento($proyecto[0]['dep_id']);
       if(count($proyecto)!=0){
         $data['menu'] = $this->ejecucion_finpi->menu(4);
         $data['cabecera_formulario']=
         '<h2 title='.$proyecto[0]['aper_id'].'><small>PROYECTO : </small>'.$proyecto[0]['proy'].' - '.$proyecto[0]['proyecto'].'</h2>
-         <h2><small>MES VIGENTE : </small> '.$this->verif_mes[2].' / '.$this->gestion.'</h2>';
+         <h2><small>MES VIGENTE : </small> '.$this->verif_mes[2].' / '.$this->gestion.'</h2>
+        
+          <a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR REPORTE POA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="18" HEIGHT="18"/>&nbsp;<b>GENERAR POA '.$this->gestion.'</b></a>&nbsp;
+          <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR FICHA TECNICA DE PROYECTO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="18" HEIGHT="18"/>&nbsp;<b>GENERAR FICHA TECNICA</b></a>&nbsp;&nbsp;&nbsp;';
 
         
         $data['calificacion']=$this->calificacion_proyecto($proyecto);
         $data['reporte']='<a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°4</b></font></a>';
         $data['formulario_datos_generales']=$this->tabla_datos_generales($proyecto,$com_id); /// Datos Generales
         $data['formulario_ejec_partidas']=$this->tabla_formulario_ejecucion_partidas($proyecto); /// Ejecucion Partidas
+        
+
+        //$matriz=$this->matriz_consolidado_ejecucion_pinversion($proyecto);
+        //$data['cuadro_consolidado']=$this->tabla_consolidado_ejecucion_pinversion($matriz);
+
+        $data['cuadro_consolidado']='
+        <div class="row" id="btn_generar">
+          <center><button type="button" onclick="generar_cuadro_consolidado_ejecucion_pi('.$proyecto[0]['proy_id'].');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE DE EJECUCIÓN POA</b></button></center>
+        </div>
+        <div id="loading_sepoa"></div>
+
+        <div align="right" id="botton" style="display: none">
+          <button onClick="imprimir_ejecucion_proyectos()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO</b></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+
+        <div id="cabecera" style="display: none">'.$this->ejecucion_finpi->cabecera_reporte_grafico('REGIONAL '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion,$proyecto[0]['proy'].' - '.$proyecto[0]['proyecto']).'</div>
+        <hr>
+
+        <div class="col-sm-6">
+          <div id="grafico_ejec_pi">
+            <div id="container" style="width: 950px; height: 500px; margin: 0 auto" align="center"></div>
+            <div style="display: none"><div id="container_impresion"  style="width: 700px; height: 350px; margin: 0 auto"></div></div>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div id="grafico_ejec_pi">
+            <div id="proyectos" style="width: 950px; height: 450px; margin: 0 auto" align="center"></div>
+            <div style="display: none"><div id="proyectos_impresion"  style="width: 700px; height: 350px; margin: 0 auto" align="center"></div></div>
+          </div>
+        </div>
+
+        
+        <div class="col-sm-12">
+          <hr>
+          <div class="table-responsive" id="cuadro_consolidado_vista"></div>
+          <b>proy : '.$proyecto[0]['proy_id'].' - aper: '.$proyecto[0]['aper_id'].'</b>
+          <div id="cuadro_consolidado_impresion" style="display: none"></div>
+        </div>';
+        
+       
 
         $this->load->view('admin/ejecucion_pi/formulario_pinversion', $data);
       }
@@ -67,6 +113,252 @@ class Cejecucion_pi extends CI_Controller {
       echo "Error !!!";
     }
   }
+
+
+  /*------ GET CUADRO CONSOLIDADO DE EJECUCION DE PI -----*/
+  public function get_cuadro_ejecucion_pi(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+      $post = $this->input->post();
+      $proy_id = $this->security->xss_clean($post['proy_id']);
+      $proyecto = $this->model_proyecto->get_proyecto_inversion($proy_id);
+
+      $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa
+      $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_pinversion($proyecto[0]['aper_id']); /// Ppto Ejecutado sigep
+
+      $matriz=$this->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa,$ppto_ejecutado_sigep);
+      $cuadro_consolidado=$this->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
+      $cuadro_consolidado_impresion=$this->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
+
+      $result = array(
+        'respuesta' => 'correcto',
+        'proyecto' => $proyecto,
+        'datos_proyecto' => $proyecto[0]['proy'].' - '.$proyecto[0]['proyecto'],
+        'mes' => $this->verif_mes[2].'/'.$this->gestion,
+        'matriz' => $matriz,
+        'cuadro_consolidado' => $cuadro_consolidado,
+        'cuadro_consolidado_impresion' => $cuadro_consolidado_impresion,
+      );
+        
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+
+  /*-- TABLA PARA CUADRO CONSOLIDADO VISTA --*/
+  public function tabla_consolidado_ejecucion_pinversion($matriz){
+    $tabla='';
+    $tabla.='
+    <center>
+    <table class="table table-bordered" style="width:98%;">
+      <thead>
+        <tr>
+          <th></th>
+          <th>ENE.</th>
+          <th>FEB.</th>
+          <th>MAR.</th>
+          <th>ABR.</th>
+          <th>MAY.</th>
+          <th>JUN.</th>
+          <th>JUL.</th>
+          <th>AGO.</th>
+          <th>SEPT.</th>
+          <th>OCT.</th>
+          <th>NOV.</th>
+          <th>DIC.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>PPTO. PROGRAMADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) {
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[0][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b>PPTO. EJECUTADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) {
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[1][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b>PPTO. PROG. ACUMULADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[2][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b>PPTO. EJEC. ACUMULADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[3][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b>(%) CUMPLIMIENTO MENSUAL</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" style="font-size:14px" '.$color.'><b>'.$matriz[4][$i].'%</b></td>';
+        }
+      $tabla.='
+        </tr>
+      </tbody>
+    </table>
+    </center>';
+
+    return $tabla;
+  }
+
+
+  /*-- TABLA PARA CUADRO CONSOLIDADO --*/
+  public function tabla_consolidado_ejecucion_pinversion_impresion($matriz){
+    $tabla='';
+    $tabla.='
+    <center>
+    <table class="change_order_items" border=1 style="width:100%;">
+      <thead>
+        <tr>
+          <th style="width:16%;"></th>
+          <th style="width:7%;">ENE.</th>
+          <th style="width:7%;">FEB.</th>
+          <th style="width:7%;">MAR.</th>
+          <th style="width:7%;">ABR.</th>
+          <th style="width:7%;">MAY.</th>
+          <th style="width:7%;">JUN.</th>
+          <th style="width:7%;">JUL.</th>
+          <th style="width:7%;">AGO.</th>
+          <th style="width:7%;">SEPT.</th>
+          <th style="width:7%;">OCT.</th>
+          <th style="width:7%;">NOV.</th>
+          <th style="width:7%;">DIC.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>(%) CUMPLIMIENTO MENSUAL</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" style="font-size:10px" '.$color.'>'.$matriz[4][$i].'%</td>';
+        }
+      $tabla.='
+        </tr>
+      </tbody>
+    </table>
+    </center>';
+
+    return $tabla;
+  }
+
+
+  /*-- MATRIZ PARA CUADRO CONSOLIDADO DE EJECUCION --*/
+  public function matriz_consolidado_ejecucion_pinversion($ppto_programado_poa,$ppto_ejecutado_sigep){
+
+    /*$ppto_asignado_sigep=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
+    $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa
+    $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_pinversion($proyecto[0]['aper_id']); /// Ppto Ejecutado sigep*/
+
+
+    if(count($ppto_ejecutado_sigep)!=0){
+      for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect[$i]=$ppto_ejecutado_sigep[0]['ejecutado_total'];;
+        }
+        else{
+          $vect[$i]=round($ppto_ejecutado_sigep[0]['m'.$i],2);
+        }
+      }
+    }
+    else{
+      for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect[$i]=0;
+        }
+        else{
+          $vect[$i]=0;
+        }
+      }
+    }
+
+
+    for ($i=0; $i <=5; $i++) { 
+      for ($j=0; $j <=12; $j++) { 
+        $matriz[$i][$j]=0;
+      }
+    }
+
+
+    $matriz[5][1]='ENE.';
+    $matriz[5][2]='FEB.';
+    $matriz[5][3]='MAR.';
+    $matriz[5][4]='ABR.';
+    $matriz[5][5]='MAY.';
+    $matriz[5][6]='JUN.';
+    $matriz[5][7]='JUL.';
+    $matriz[5][8]='AGO.';
+    $matriz[5][9]='SEPT.';
+    $matriz[5][10]='OCT.';
+    $matriz[5][11]='NOV.';
+    $matriz[5][12]='DIC.';
+
+
+    if(count($ppto_programado_poa)!=0){
+      $suma_prog=0;
+      $suma_ejec=0;
+      for ($j=0; $j <=12 ; $j++) { 
+
+        if($j==0){
+          $matriz[0][$j]=$ppto_programado_poa[0]['programado_total'];
+          $matriz[1][$j]=$vect[$j];
+          $matriz[2][$j]=0;
+          $matriz[3][$j]=0;
+        }
+        else{
+          $suma_prog=$suma_prog+$ppto_programado_poa[0]['mes'.$j];
+          $suma_ejec=$suma_ejec+$vect[$j];
+
+          $matriz[0][$j]=round($ppto_programado_poa[0]['mes'.$j],2);
+          $matriz[1][$j]=$vect[$j];
+          $matriz[2][$j]=$suma_prog;
+          $matriz[3][$j]=$suma_ejec;
+        }
+         
+        if($matriz[2][$j]!=0){
+          $matriz[4][$j]=round(($matriz[3][$j]/$matriz[2][$j])*100,2);
+        }
+      }
+    }
+
+    return $matriz;
+  }
+
 
   /*-- CALIFICACION EJECUCION POR PROYECTO --*/
   public function calificacion_proyecto($proyecto){
@@ -87,9 +379,6 @@ class Cejecucion_pi extends CI_Controller {
       <hr>
       <div class="alert alert-'.$tp.'" role="alert" align="center">
         <h2><b>'.$titulo.'</b></h2>
-      </div>
-      <div align=right>
-        <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR FICHA TECNICA DE PROYECTO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="18" HEIGHT="18"/>&nbsp;<b>GENERAR FICHA TECNICA</b></a>&nbsp;&nbsp;&nbsp;
       </div>';
 
     return $tabla;
@@ -105,6 +394,8 @@ class Cejecucion_pi extends CI_Controller {
       <form action="'.site_url("").'/ejecucion/cejecucion_pi/update_datos'.'" id="form1" name="form1" method="post" id="comment-form" class="smart-form">
           <input type="hidden" name="proy_id" value="'.$proyecto[0]['proy_id'].'">
           <input type="hidden" name="com_id" value="'.$com_id.'">
+          <input type="hidden" name="pfec_id" value="'.$proyecto[0]['pfec_id'].'">
+
           <header>
               <b> DATOS GENERALES DEL PROYECTO</b>
           </header>
@@ -216,75 +507,47 @@ class Cejecucion_pi extends CI_Controller {
     if($this->input->post()) {
       $post = $this->input->post();
       $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
+      $pfec_id = $this->security->xss_clean($post['pfec_id']); /// pfec id
       $com_id = $this->security->xss_clean($post['com_id']); /// com id
 
-            $ppto_total = $this->security->xss_clean($post['costo']); /// costo total proyecto
-            $est_proy = $this->security->xss_clean($post['est_proy']); /// estado del proyecto
-            $municipio = $this->security->xss_clean($post['municipio']); /// municipio
-            $fase_id = $this->security->xss_clean($post['fase_id']); /// fase id
-            $fiscal_obras = $this->security->xss_clean($post['fiscal']); /// fiscal
-            $a_fisico = $this->security->xss_clean($post['a_fisico']); /// avance fisico
-            $a_financiero = $this->security->xss_clean($post['a_financiero']); /// avance financiero
-            $observacion = $this->security->xss_clean($post['observacion']); /// observacion
-            $problema = $this->security->xss_clean($post['problema']); /// problema
-            $solucion = $this->security->xss_clean($post['solucion']); /// solucion
-            $fecha_plazo = $this->security->xss_clean($post['f_plazo']); /// fecha fase
+        $ppto_total = $this->security->xss_clean($post['costo']); /// costo total proyecto
+        $est_proy = $this->security->xss_clean($post['est_proy']); /// estado del proyecto
+        $municipio = $this->security->xss_clean($post['municipio']); /// municipio
+        $fase_id = $this->security->xss_clean($post['fase_id']); /// fase id
+        $fiscal_obras = $this->security->xss_clean($post['fiscal']); /// fiscal
+        $a_fisico = $this->security->xss_clean($post['a_fisico']); /// avance fisico
+        $a_financiero = $this->security->xss_clean($post['a_financiero']); /// avance financiero
+        $observacion = $this->security->xss_clean($post['observacion']); /// observacion
+        $problema = $this->security->xss_clean($post['problema']); /// problema
+        $solucion = $this->security->xss_clean($post['solucion']); /// solucion
+        $fecha_plazo = $this->security->xss_clean($post['f_plazo']); /// fecha fase
 
-            $update_proyect = array(
-            'fecha_observacion' => $fecha_plazo,
-            'fiscal_obra' => $fiscal_obras,
-            'avance_fisico' => $a_fisico,
-            'avance_financiero' => $a_financiero,
-            'proy_ppto_total' => $ppto_total,
-            'proy_estado' => $est_proy,
-            'proy_observacion' => strtoupper($observacion),
-            'municipio' => strtoupper($municipio),
-            'proy_desc_problema' => strtoupper($problema),
-            'proy_desc_solucion' => strtoupper($solucion)
-          );
-          $this->db->where('proy_id', $proy_id);
-          $this->db->update('_proyectos', $update_proyect);
+        /// ----------------------
+        $update_proyect = array(
+          'fecha_observacion' => $fecha_plazo,
+          'fiscal_obra' => $fiscal_obras,
+          'avance_fisico' => $a_fisico,
+          'avance_financiero' => $a_financiero,
+          'proy_ppto_total' => $ppto_total,
+          'ep_id' => $est_proy,
+          'proy_observacion' => strtoupper($observacion),
+          'municipio' => strtoupper($municipio),
+          'proy_desc_problema' => strtoupper($problema),
+          'proy_desc_solucion' => strtoupper($solucion)
+        );
+        $this->db->where('proy_id', $proy_id);
+        $this->db->update('_proyectos', $update_proyect);
 
-          $this->session->set_flashdata('success','LOS DATOS SE GUARDARON CORRECTAMENTE....');
-        /*if (empty($post['costo'])!=1 & empty($post['est_proy'])!=1 & empty($post['municipio'])!=1 
-            & empty($post['fase_id'])!=1  & empty($post['fiscal'])!=1  & empty($post['a_fisico'])!=1  & empty($post['a_financiero'])!=1  & empty($post['observacion'])!=1  & empty($post['problema'])!=1 
-            & empty($post['solucion'])!=1  & empty($post['f_plazo'])!=1 ) {
-            
-            
-            $ppto_total = $this->security->xss_clean($post['costo']); /// costo total proyecto
-            $est_proy = $this->security->xss_clean($post['est_proy']); /// estado del proyecto
-            $municipio = $this->security->xss_clean($post['municipio']); /// municipio
-            $fase_id = $this->security->xss_clean($post['fase_id']); /// fase id
-            $fiscal_obras = $this->security->xss_clean($post['fiscal']); /// fiscal
-            $a_fisico = $this->security->xss_clean($post['a_fisico']); /// avance fisico
-            $a_financiero = $this->security->xss_clean($post['a_financiero']); /// avance financiero
-            $observacion = $this->security->xss_clean($post['observacion']); /// observacion
-            $problema = $this->security->xss_clean($post['problema']); /// problema
-            $solucion = $this->security->xss_clean($post['solucion']); /// solucion
-            $fecha_plazo = $this->security->xss_clean($post['f_plazo']); /// fecha fase
+        /// ----------------------
+        $update_fase = array(
+          'fas_id' => $fase_id
+        );
+        $this->db->where('pfec_id', $pfec_id);
+        $this->db->update('_proyectofaseetapacomponente', $update_fase);
+        /// ---------------------
 
-            $update_proyect = array(
-            'fecha_observacion' => $fecha_plazo,
-            'fiscal_obra' => $fiscal_obras,
-            'avance_fisico' => $a_fisico,
-            'avance_financiero' => $a_financiero,
-            'proy_ppto_total' => $ppto_total,
-            'proy_estado' => $est_proy,
-            'proy_observacion' => strtoupper($observacion),
-            'municipio' => strtoupper($municipio),
-            'proy_desc_problema' => strtoupper($problema),
-            'proy_desc_solucion' => strtoupper($solucion)
-          );
-          $this->db->where('proy_id', $proy_id);
-          $this->db->update('_proyectos', $update_proyect);
-
-          $this->session->set_flashdata('success','LOS DATOS SE GUARDARON CORRECTAMENTE....');
-        }
-        else{
-          $this->session->set_flashdata('danger','ERROR AL REGISTRAR DATOS !!!');
-        }*/
-       
-      redirect(site_url("").'/form_ejec_pinversion/'.$com_id.'');
+        $this->session->set_flashdata('success','LOS DATOS SE GUARDARON CORRECTAMENTE....');
+        redirect(site_url("").'/form_ejec_pinversion/'.$com_id.'');
  
     } else {
         show_404();
@@ -557,6 +820,15 @@ public function guardar_datos_ejecucion_pinversion(){
       $calificacion=$this->calificacion_proyecto($proyecto);
 
 
+      //// CUADRO
+
+      $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa
+      $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_pinversion($proyecto[0]['aper_id']); /// Ppto Ejecutado sigep
+
+      $matriz=$this->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa,$ppto_ejecutado_sigep);
+      $cuadro_consolidado=$this->tabla_consolidado_ejecucion_pinversion($matriz);
+      $cuadro_consolidado_impresion=$this->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
+
       $result = array(
         'respuesta' => 'correcto',
         'ejecucion_total_partida'=>number_format($ppto_ejecutado, 0, ',', '.'),
@@ -564,6 +836,13 @@ public function guardar_datos_ejecucion_pinversion(){
         'dato_ejec'=>$ejec,
         'dato_obs'=>$detalle_observacion,
         'eficacia'=>$calificacion,
+
+        'proyecto' => $proyecto,
+        'datos_proyecto' => $proyecto[0]['proy'].' - '.$proyecto[0]['proyecto'],
+        'mes' => $this->verif_mes[2].'/'.$this->gestion,
+        'matriz' => $matriz,
+        'cuadro_consolidado' => $cuadro_consolidado,
+        'cuadro_consolidado_impresion' => $cuadro_consolidado_impresion,
       );
 
     echo json_encode($result);
@@ -1206,7 +1485,7 @@ public function get_tp_reporte(){
     $tabla='';
 
     $regional=$this->model_proyecto->get_departamento($dep_id);
-    $cabecera_grafico=$this->ejecucion_finpi->cabecera_reporte_grafico('REGIONAL '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion);
+    $cabecera_grafico=$this->ejecucion_finpi->cabecera_reporte_grafico('REGIONAL '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion,'');
 
     if($rep_id==1){
       /// s1

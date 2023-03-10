@@ -26,7 +26,7 @@ class Model_modificacion extends CI_Model{
 
     //lista de organismo financiador
     /*=================== LISTA DE POAS =====================*/
-    public function lista_poa(){
+/*    public function lista_poa(){
         //FILTRADO POR GESTION DESDE POSTGRES
         $this->db->SELECT('*');
         $this->db->FROM('vista_poa');
@@ -34,26 +34,26 @@ class Model_modificacion extends CI_Model{
         $this->db->ORDER_BY("aper_programa,aper_proyecto,aper_actividad", "ASC");
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
 
     /*=========== POA ID ===========*/
-    public function poa_id($id_poa){
+/*    public function poa_id($id_poa){
         $this->db->from('vista_poa');
         $this->db->where('poa_id', $id_poa);
         $this->db->where('poa_gestion', $this->gestion);
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
         //FUNCION QUE RETORNA DATOS DEL POA FILTRADO POR ID
-    function dato_poa_id($poa_id){
+/*    function dato_poa_id($poa_id){
         $this->db->SELECT('*');
         $this->db->FROM('vista_poa');
         $this->db->WHERE('poa_id', $poa_id);
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
     /*=========== LISTA DE OBJETIVOS DE GESTION ===============*/
-    public function lista_ogestion($obje_id, $aper_id){
+/*    public function lista_ogestion($obje_id, $aper_id){
         $this->db->SELECT('o.*,f.fun_nombre,f.fun_paterno,f.fun_materno,(SELECT get_unidad(f.uni_id)) AS unidad,i.indi_abreviacion');
         $this->db->FROM('objetivosgestion o');
         $this->db->JOIN('funcionario f', 'o.fun_id = f.fun_id');
@@ -65,9 +65,9 @@ class Model_modificacion extends CI_Model{
         $this->db->ORDER_BY('o.o_id', 'ASC');
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
     //OBETENER DATO DE OBJETIVO DE GESTION
-    function get_ogestion($o_id) {
+/*    function get_ogestion($o_id) {
         $this->db->SELECT('o.*,i.*,f.fun_nombre,f.fun_paterno,f.fun_materno,(SELECT get_unidad(f.uni_id)) AS unidad,i.indi_abreviacion');
         $this->db->FROM('objetivosgestion o');
         $this->db->JOIN('funcionario f', 'o.fun_id = f.fun_id','LEFT');
@@ -75,14 +75,14 @@ class Model_modificacion extends CI_Model{
         $this->db->WHERE('o.o_id', $o_id);
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
     /*========= LISTA DE PROGRAMADOS OBJETIVOS DE GESTION  ============*/
-    public function obj_prog_mensual($o_id) {
+/*    public function obj_prog_mensual($o_id) {
         $this->db->from('ogestion_prog_mes');
         $this->db->where('o_id', $o_id);
         $query = $this->db->get();
         return $query->result_array();
-    }
+    }*/
     /*=======================================================================*/
     /*========== BORRA DATOS DEL OBJETIVO PROGRAMADO GESTION ================*/
     public function delete_og_prog($o_id){ 
@@ -148,7 +148,7 @@ class Model_modificacion extends CI_Model{
     }
 
     /*------------ LISTA DE OPERACIONES PARA LA MODIFICACION (2019) ----------------*/
-    public function list_operaciones_proyectos($mod,$prog,$est_proy,$tpf,$tp_id){
+/*    public function list_operaciones_proyectos($mod,$prog,$est_proy,$tpf,$tp_id){
         $dep=$this->model_proyecto->dep_dist($this->dist);
         if($this->adm==1){
             if($this->rol==1){
@@ -251,11 +251,11 @@ class Model_modificacion extends CI_Model{
         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*------- mis requerimientos (2018-2019) --------*/
-    public function mis_requerimientos($proy_act, $pfec_ejec,$tp_ins){
+/*    public function mis_requerimientos($proy_act, $pfec_ejec,$tp_ins){
         if($this->gestion==2018){
             if($proy_act==1){
                 if ($pfec_ejec == 1) {
@@ -328,11 +328,11 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*--------------------- Monto Total segun el tipo de requerimientos com, prod, act --------------------------*/
-    public function suma_monto_requerimientos($proy_act, $pfec_ejec,$tp_ins){
+/*    public function suma_monto_requerimientos($proy_act, $pfec_ejec,$tp_ins){
         if($proy_act==1){
             if ($pfec_ejec == 1) {
             //PROGRAMACION DIRECTA, DIRECTO = 1
@@ -357,17 +357,17 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------------------- Suma Monto Programado insumo actividad --------------------------*/
-    public function suma_monto_requerimientos_directo($act_id){
+/*    public function suma_monto_requerimientos_directo($act_id){
         $sql = 'select sum(programado_total) as monto_programado
                 from vproy_insumo_directo_programado
                 where act_id='.$act_id.' and g_id='.$this->gestion.'';
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------------------- Suma Monto Programado insumo Producto --------------------------*/
     public function suma_monto_requerimientos_producto($prod_id){
@@ -390,7 +390,7 @@ class Model_modificacion extends CI_Model{
     }
 
     /*--------------------- operacion - requerimientos com,prod,act --------------------------*/
-    public function mis_op($proy_act, $pfec_ejec,$tp_ins){
+/*    public function mis_op($proy_act, $pfec_ejec,$tp_ins){
         if($proy_act==1){
             if ($pfec_ejec == 1) {
             //PROGRAMACION DIRECTA, DIRECTO = 1
@@ -418,10 +418,10 @@ class Model_modificacion extends CI_Model{
         }
 
         return $ope;
-    }
+    }*/
 
     /*------------------ Insumo Programado (Temporalidad) para modificaciones -------------*/
-    function insumo_programado_gestion($ins_id){
+/*    function insumo_programado_gestion($ins_id){
         $sql = 'select *
             from insumo_gestion ig
             Inner Join vifin_prog_mes as ip On ip.insg_id=ig.insg_id 
@@ -429,7 +429,7 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*------------------ Verif Get Insumo Modificado -------------*/
@@ -452,7 +452,7 @@ class Model_modificacion extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------- Get insumo programado certificado  --------*/
+    /*-------- Get insumo programado certificado 2023 (VIGENTE) --------*/
     function get_iprog_cert($ipm_id){
         $sql = 'select *
                 from cert_ifin_prog_mes cp
@@ -462,7 +462,7 @@ class Model_modificacion extends CI_Model{
         return $query->result_array();
     }
 
-    /*------------------ Get insumo programado  -------------*/
+    /*------------------ Get insumo programado 2023 (VIGENTE) -------------*/
     function get_iprog($ifin_id,$mes_id){
         $sql = 'select *
                 from ifin_prog_mes
@@ -480,7 +480,7 @@ class Model_modificacion extends CI_Model{
         return $query->result_array();
     }
 
-    /*------------------ Get insumo Cite -------------*/
+    /*------------------ Get insumo Cite (VIGENTE) 2023-------------*/
     function get_cite_insumo($insc_id){
         $sql = 'select *
                 from _insumo_mod_cite im
@@ -515,7 +515,7 @@ class Model_modificacion extends CI_Model{
 
 
     /*-------------- Get cite Proyecto - Operaciones-------------*/
-    function list_cites_operaciones_proy($proy_id){
+/*    function list_cites_operaciones_proy($proy_id){
         $sql = 'select *
                 from _ope_mod_cite om
                 Inner Join funcionario as f On f.fun_id=om.fun_id
@@ -524,50 +524,50 @@ class Model_modificacion extends CI_Model{
                 order by ope_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-------------- Get cite Proyecto - Operaciones-------------*/
-    function list_cites_servicios($com_id){
+/*    function list_cites_servicios($com_id){
         $sql = 'select *
                 from _ope_mod_cite
                 where com_id='.$com_id.' and ope_estado!=\'3\'
                 order by ope_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Get insumo Cite -------------*/
-    function get_cite_operacion($ope_id){
+/*    function get_cite_operacion($ope_id){
         $sql = 'select *
                 from _ope_mod_cite om
                 Inner Join funcionario as f On om.fun_id=f.fun_id
                 where om.ope_id='.$ope_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Get Producto Modificado -------------*/
-    function get_mod_producto($prodm_id){
+/*    function get_mod_producto($prodm_id){
         $sql = 'select *
                 from _producto_modificado
                 where prodm_id='.$prodm_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Get Actividad Modificado -------------*/
-    function get_mod_actividad($actm_id){
+/*    function get_mod_actividad($actm_id){
         $sql = 'select *
                 from _actividad_modificado
                 where actm_id='.$actm_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*===================================== REPORTES CITES GENERADOS ================================*/
     /*------------------ Requerimientos Adicionados -------------------*/
-    public function requerimientos_agregados($insc_id,$proy_id,$tipo,$act){
+/*    public function requerimientos_agregados($insc_id,$proy_id,$tipo,$act){
         $sql = ' select *
                     from _insumo_add ia
                     Inner Join insumos as i On i.ins_id=ia.ins_id
@@ -578,10 +578,10 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Requerimientos Adicionados mas programado -------------------*/
-    public function requerimientos_programado_agregados($insc_id,$proy_id,$tipo,$act){
+/*    public function requerimientos_programado_agregados($insc_id,$proy_id,$tipo,$act){
         $sql = ' select *
                     from _insumo_add ia
                     Inner Join insumos as i On i.ins_id=ia.ins_id
@@ -593,9 +593,9 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
     /*------------------ Requerimientos Modificados -------------------*/
-    public function requerimientos_modificados($insc_id,$proy_id,$tipo,$act){
+/*    public function requerimientos_modificados($insc_id,$proy_id,$tipo,$act){
          $sql = ' select *
                     from _insumo_modificado im
                     Inner Join insumos as i On i.ins_id=im.ins_id
@@ -606,10 +606,10 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Print Requerimientos Modificados -------------------*/
-    public function rep_requerimientos_modificados($insc_id,$proy_id,$tipo,$act){
+/*    public function rep_requerimientos_modificados($insc_id,$proy_id,$tipo,$act){
         $sql = 'select *
                 from (select im.ins_id,im.insc_id
                 from _insumo_modificado im
@@ -622,12 +622,12 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
 
     /*------------------ Print Requerimientos Programado Modificados -------------------*/
-    public function requerimientos_programado_modificados($insc_id,$proy_id,$tipo,$act){
+/*    public function requerimientos_programado_modificados($insc_id,$proy_id,$tipo,$act){
         $sql = 'select *
                 from (select im.ins_id,im.insc_id
                 from _insumo_modificado im
@@ -641,10 +641,10 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Requerimientos eliminados -------------------*/
-    public function requerimientos_eliminados($insc_id,$proy_id,$tipo,$act){
+/*    public function requerimientos_eliminados($insc_id,$proy_id,$tipo,$act){
         $sql = ' select *
                     from _insumo_delete id
                     Inner Join insumos as i On i.ins_id=id.ins_id
@@ -655,10 +655,10 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Requerimientos eliminados Programado -------------------*/
-    public function requerimientos_programado_eliminados($insc_id,$proy_id,$tipo,$act){
+/*    public function requerimientos_programado_eliminados($insc_id,$proy_id,$tipo,$act){
         $sql = ' select *
                     from _insumo_delete id
                     Inner Join insumos as i On i.ins_id=id.ins_id
@@ -670,7 +670,7 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------- Cites para modificarlos --------------------------*/
     public function cite_add($insc_id){
@@ -683,7 +683,7 @@ class Model_modificacion extends CI_Model{
         return $query->result_array();
     }
 
-    public function limit_cite_add($insc_id){
+/*    public function limit_cite_add($insc_id){
         $sql = 'select *
                 from _insumo_mod_cite i
                 Inner Join _insumo_add as ia On ia.insc_id=i.insc_id
@@ -692,9 +692,9 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
-    public function cite_mod($insc_id){
+/*    public function cite_mod($insc_id){
         $sql = 'select *
                 from _insumo_mod_cite i
                 Inner Join _insumo_modificado as im On im.insc_id=i.insc_id
@@ -702,9 +702,9 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
-    public function limit_cite_mod($insc_id){
+/*    public function limit_cite_mod($insc_id){
         $sql = 'select *
                 from _insumo_mod_cite i
                 Inner Join _insumo_modificado as im On im.insc_id=i.insc_id
@@ -713,7 +713,7 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     public function ins_del($insc_id){
         $sql = 'select *
@@ -725,7 +725,7 @@ class Model_modificacion extends CI_Model{
         return $query->result_array();
     }
 
-    public function limit_ins_del($insc_id){
+/*    public function limit_ins_del($insc_id){
         $sql = 'select *
                 from _insumo_mod_cite i
                 Inner Join _insumo_delete as id On id.insc_id=i.insc_id
@@ -734,12 +734,12 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
     /*----------------------------------------------------------------------------------*/
 
 
     /*------------------ Productos Modificados -------------------*/
-    public function productos_modificados($ope_id){
+/*    public function productos_modificados($ope_id){
         $sql = 'select p.prod_id,p.prod_producto,tp.indi_descripcion,p.prod_indicador,p.prod_ponderacion,p.prod_fuente_verificacion,p.prod_linea_base,p.prod_meta
                 from _producto_modificado pm
                 Inner Join _productos as p On pm.prod_id=p.prod_id
@@ -749,10 +749,10 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Productos Eliminados -------------------*/
-    public function productos_eliminados($ope_id){
+/*    public function productos_eliminados($ope_id){
         $sql = 'select *
                 from _producto_delete pd
                 Inner Join vista_producto as p On p.prod_id=pd.prod_id
@@ -761,10 +761,10 @@ class Model_modificacion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Get Producto adicionado -------------*/
-    function list_add_producto($ope_id){
+/*    function list_add_producto($ope_id){
         $sql = 'select *
                 from _producto_add ap
                 Inner Join vista_producto as p On p.prod_id=ap.prod_id
@@ -772,7 +772,7 @@ class Model_modificacion extends CI_Model{
                 order by proda_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ Get Producto adicionado -------------*/
     function get_add_producto($proda_id){
@@ -832,7 +832,7 @@ class Model_modificacion extends CI_Model{
     }
 
     /*------------------ relacion act ins - recupera componente -----------------*/
-    function proceso_rel_ins_act($ins_id){
+/*    function proceso_rel_ins_act($ins_id){
         $sql = 'select c.*
                 from insumos i
                 Inner Join _insumoactividad as ia On ia.ins_id=i.ins_id
@@ -842,7 +842,7 @@ class Model_modificacion extends CI_Model{
                 where ia.ins_id='.$ins_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*------------------ relacion ins prod -------------*/
     function rel_ins_prod($ins_id){
@@ -950,7 +950,7 @@ class Model_modificacion extends CI_Model{
         return $query->result_array();
     }
 
-    /*------------------ Lista de Meses -------------------*/
+    /*------------------ Lista de Meses 2023 (VIGENTE)-------------------*/
     public function list_meses(){
         $sql = 'select *
                 from mes
@@ -1067,7 +1067,7 @@ class Model_modificacion extends CI_Model{
     /* ========= LISTA DE MODIFICACION DE OPERACIONES Y ACTIVIDADES 2019 ============ */
     
     /*----- Lista de Operaciones - Nuevos -------*/
-    public function ope_add($ope_id){
+/*    public function ope_add($ope_id){
         $sql = '
             select *
             from _ope_mod_cite cit
@@ -1079,10 +1079,10 @@ class Model_modificacion extends CI_Model{
         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*----- Lista de Operaciones - Modificados -------*/
-    public function ope_mod($ope_id){
+/*    public function ope_mod($ope_id){
         $sql = '
             select *
             from _ope_mod_cite cit
@@ -1094,10 +1094,10 @@ class Model_modificacion extends CI_Model{
         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*----- Lista de Operaciones - Eliminados -------*/
-    public function ope_del($ope_id){
+/*    public function ope_del($ope_id){
         $sql = '
             select *
             from _ope_mod_cite cit
@@ -1109,10 +1109,10 @@ class Model_modificacion extends CI_Model{
         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*----- Lista de Operaciones alineados - Eliminados -------*/
-    public function ope_eliminados($cite_id,$obj_id){
+/*    public function ope_eliminados($cite_id,$obj_id){
         $sql = '
             select *
             from vproductos_eliminados pe
@@ -1122,11 +1122,11 @@ class Model_modificacion extends CI_Model{
         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*----- Lista de Actividades - Nuevos -------*/
-    public function act_nuevos($cite_id){
+/*    public function act_nuevos($cite_id){
         $sql = '
             select *
             from vactividades_nuevos an
@@ -1136,7 +1136,7 @@ class Model_modificacion extends CI_Model{
         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*----- Lista de Actividades - Modificados -------*/
     public function act_modificados($cite_id){
@@ -1165,7 +1165,7 @@ class Model_modificacion extends CI_Model{
     }
 
 
-    /*----- Lista de Partidas Padres Asignados (2019) -----*/
+    /*----- Lista de Partidas Padres Asignados (2023) vigente -----*/
     public function list_part_padres_asig($aper_id){
         $sql = '
             select par.par_id,par.par_codigo,par.par_nombre
@@ -1215,7 +1215,7 @@ class Model_modificacion extends CI_Model{
     }
 
     /*==== TECHOS PRESUPUESTARIOS*/
-    /*----- Lista de Cites Techo -------*/
+    /*----- Lista de Cites Techo 2023 (VIGENTE) -------*/
     public function list_cites_techo($proy_id){
         $sql = '
             select *

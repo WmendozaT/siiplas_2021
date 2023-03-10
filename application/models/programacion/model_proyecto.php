@@ -228,7 +228,7 @@ class Model_proyecto extends CI_Model{
 
 
     /*==================== LISTA NUEVA DE OPERACIONES =============================*/
-    public function list_proyectos($mod,$prog,$est_proy,$tpf){
+/*    public function list_proyectos($mod,$prog,$est_proy,$tpf){
         $dep=$this->dep_dist($this->dist);
         if($this->adm==1){
             if($this->rol==1){
@@ -335,7 +335,7 @@ class Model_proyecto extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-------- LISTA DE OPERACIONES POR DEPARTAMENTOS ------------*/
     public function list_proyectos_departamentos($prog,$est_proy,$tpf,$dep_id,$tp_id){

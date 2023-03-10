@@ -164,7 +164,6 @@ class Certificacionpoa extends CI_Controller{
               <tr style="height:35px;">
                 <th style="width:1%;" bgcolor="#474544">#</th>
                 <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR"></th>
-                <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR PARTIDA"></th>
                 <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">PROGRAMA '.$this->gestion.'</th>
                 <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N ACTIVIDAD">GASTO CORRIENTE</th>
                 <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
@@ -190,7 +189,6 @@ class Certificacionpoa extends CI_Controller{
                         <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" style="color: green; background-color: #eeeeee;border-bottom-width: 5px;" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" title="SELECCIONAR ACTIVIDAD"> 
                         <i class="glyphicon glyphicon-list"></i> SELECCIONAR ACTIVIDAD (FORM. N° 4)</a>
                       </td>
-                      <td><a href="'.site_url("").'/cert/update_certpoa_insumo/'.$row['proy_id'].'" title="CERTIFICACION CONSOLIDADO POR PARTIDAS" class="btn btn-primary">CERT. PARTIDA</a></td>
                       <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
                       <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
                       <td>'.$row['escalon'].'</td>

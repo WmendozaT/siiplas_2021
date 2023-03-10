@@ -470,7 +470,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /// detalle de ejecucion de partidas a nivel Institucional
+    /// detalle de ejecucion por partidas a nivel Institucional
     public function get_partida_ejecutado_gestion_institucional($par_id){
         $sql = '
             select 
@@ -514,7 +514,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /// detalle de ejecucion de partidas a nivel regional
+    /// detalle de ejecucion por partidas a nivel regional
     public function get_partida_ejecutado_gestion_regional($dep_id,$par_id){
         $sql = '
             select 
@@ -1027,6 +1027,15 @@ class Model_ptto_sigep extends CI_Model{
                 from lista_detalle_ejecucion_ppto_proyectos('.$this->gestion.')
                 where dep_id='.$dep_id.'
                 group by dep_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-------- Get Ptto Ejecutado x Proyecto de Inversion 2023 --------*/
+    public function get_ppto_ejecutado_pinversion($aper_id){
+        $sql = 'select *
+                from lista_detalle_ejecucion_ppto_proyectos('.$this->gestion.')
+                where aper_id='.$aper_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

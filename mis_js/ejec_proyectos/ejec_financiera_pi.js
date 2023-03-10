@@ -128,18 +128,34 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
       request.done(function (response, textStatus, jqXHR) {
 
       if (response.respuesta == 'correcto') {
+            document.getElementById('btn_generar').innerHTML = '';
+            document.getElementById("botton").style.display = 'block';
 
             alertify.success("REGISTRO EXITOSO ...");
             document.getElementById("ppto"+id_partida).innerHTML = response.ejecucion_total_partida;
             document.getElementById("porcentaje"+id_partida).innerHTML = response.porcentaje_ejecucion_total_partida+' %';
             document.getElementById("ejec"+id_partida).value = response.dato_ejec; /// dato ejec
             document.getElementById("obs_pi"+id_partida).value = response.dato_obs; /// dato obs
-            document.getElementById("efi").innerHTML = response.eficacia+' %';
+            document.getElementById("efi").innerHTML = response.eficacia+'';
             $('#but'+id_partida).slideUp();
-            //document.getElementById("but"+id_partida).innerHTML = 'exitod';
+
+            ///-------
+            
+            document.getElementById('cuadro_consolidado_vista').innerHTML = response.cuadro_consolidado;
+            document.getElementById('cuadro_consolidado_impresion').innerHTML = response.cuadro_consolidado_impresion;
+            graf_regresion_consolidado_pi('container',response.matriz,'EJECUCIÓN PRESUPUESTARIA - '+response.mes,response.datos_proyecto,'(Bs)'); /// vista
+            graf_regresion_consolidado_pi('container_impresion',response.matriz,'','EJECUCIÓN PRESUPUESTARIA - '+response.mes,'(Bs)'); /// impresion
+
+        let detalle_ejecucion=[];
+        for (var i = 0; i < 12; i++) {
+            detalle_ejecucion[i]= { name: response.matriz[5][i+1],y: response.matriz[4][i+1]};
+        }
+
+        cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'% EJECUCION PRESUPUESTARIA MENSUAL',response.datos_proyecto,'CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// vista
+        cuadro_grafico_en_barras_verticales('proyectos_impresion',detalle_ejecucion,'','% EJECUCION PRESUPUESTARIA MENSUAL','CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// impresion
       }
       else{
-          alertify.error("ERROR AL GUARDAR SEGUIMIENTO POA");
+          alertify.error("ERROR AL GUARDAR EJECUCION POA");
       }
 
       });
@@ -230,8 +246,159 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
   });
 
 
+  //// funcion para generar el Consolidado de Ejecucion Proy Inversion (cuadro, grafico)
+  function generar_cuadro_consolidado_ejecucion_pi(proy_id){
+    $('#loading_sepoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
+
+    var url = base+"index.php/ejecucion/cejecucion_pi/get_cuadro_ejecucion_pi";
+    var request;
+    if (request) {
+        request.abort();
+    }
+    request = $.ajax({
+      url: url,
+      type: "POST",
+      dataType: 'json',
+      data: "proy_id="+proy_id
+    });
+
+    request.done(function (response, textStatus, jqXHR) {
+        
+      if (response.respuesta == 'correcto') {
+
+        document.getElementById('btn_generar').innerHTML = '';
+        document.getElementById('loading_sepoa').innerHTML = '';
+        document.getElementById("botton").style.display = 'block';
+
+        document.getElementById('cuadro_consolidado_vista').innerHTML = response.cuadro_consolidado;
+        document.getElementById('cuadro_consolidado_impresion').innerHTML = response.cuadro_consolidado_impresion;
+        graf_regresion_consolidado_pi('container',response.matriz,'EJECUCIÓN PRESUPUESTARIA - '+response.mes,response.datos_proyecto,'(Bs)'); /// vista
+        graf_regresion_consolidado_pi('container_impresion',response.matriz,'','EJECUCIÓN PRESUPUESTARIA - '+response.mes,'(Bs)'); /// impresion
+
+        let detalle_ejecucion=[];
+        for (var i = 0; i < 12; i++) {
+            detalle_ejecucion[i]= { name: response.matriz[5][i+1],y: response.matriz[4][i+1]};
+        }
+
+        cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'% EJECUCION PRESUPUESTARIA MENSUAL',response.datos_proyecto,'CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// vista
+        cuadro_grafico_en_barras_verticales('proyectos_impresion',detalle_ejecucion,'','% EJECUCION PRESUPUESTARIA MENSUAL','CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// impresion
+
+      }
+      else{
+        alertify.error("ERROR !!!");
+      }
+    }); 
+  }
 
 
+
+
+  /// Grafico EJECUCION DE PROYECTOS DE INVERSION
+  function graf_regresion_consolidado_pi(grafico,matriz,titulo,subtitulo,tit_laterales) {
+    let programado=[];
+    for (var i = 0; i <=12; i++) {
+      programado[i]= matriz[2][i];
+    }
+
+    let ejecutado=[];
+    for (var i = 0; i <=12; i++) {
+      ejecutado[i]= matriz[3][i];
+    }
+
+    ///----
+    chart = new Highcharts.Chart({
+    chart: {
+      renderTo: grafico,  // Le doy el nombre a la gráfica
+      defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+    },
+    title: {
+      text: '<b>'+titulo+'</b>' // Titulo (Opcional)
+    },
+    subtitle: {
+      text: subtitulo   // Subtitulo (Opcional)
+    },
+    // Pongo los datos en el eje de las 'X'
+    xAxis: {
+      categories: ['','ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
+      // Pongo el título para el eje de las 'X'
+      title: {
+        text: ''
+      }
+    },
+    yAxis: {
+      // Pongo el título para el eje de las 'Y'
+      title: {
+        text: tit_laterales
+      }
+    },
+    // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+    tooltip: {
+      enabled: true,
+      formatter: function() {
+        return '<b>'+ this.series.name +'</b><br/>'+
+          this.x +': '+ this.y +' '+this.series.name;
+      }
+    },
+    // Doy opciones a la gráfica
+    plotOptions: {
+      line: {
+        dataLabels: {
+          enabled: true
+        },
+        enableMouseTracking: true
+      }
+    },
+    // Doy los datos de la gráfica para dibujarlas
+    series: [
+        {
+          name: 'PPTO. PROGRAMADO',
+          data: programado
+        },
+        {
+          name: 'PPTO. EJECUTADO',
+          data: ejecutado
+        }
+      ],
+      
+    });
+  }
+
+
+  //// Cuadro consolidado de Proyectos
+  function imprimir_ejecucion_proyectos() {
+    var cabecera = document.querySelector("#cabecera");
+    var grafico1 = document.querySelector("#container_impresion"); /// grafico regresion
+    var grafico2 = document.querySelector("#proyectos_impresion"); /// grafico barras
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    document.getElementById("cuadro_consolidado_impresion").style.display = 'block';
+    var tabla = document.querySelector("#cuadro_consolidado_impresion");
+    imprimir_cuadro_ejecucion_pi(grafico1,grafico2,cabecera,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("cuadro_consolidado_impresion").style.display = 'none';
+  }
+
+  function imprimir_cuadro_ejecucion_pi(grafico1,grafico2,cabecera,tabla) {
+    var ventana = window.open('Ejecucion Presupuestaria ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EJECUCIÓN PRESUPUESTARIA - PROYECTOS DE INVERSIÓN</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    //ventana.document.write('<hr>');
+    ventana.document.write(grafico1.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(grafico2.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
 
 
 
@@ -276,7 +443,7 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
               detalle_ejecucion[i]= { name: response.matriz_proy[i][10],y: response.matriz_proy[i][15]};
             }
 
-            cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - REGIONAL : '+response.regional);
+            cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - REGIONAL : '+response.regional,'','Cumplimiento Trimestral','PROYECTO DE INVERSION');
       }
       else{
           alertify.error("ERROR AL RECUPERAR INFORMACION");
@@ -323,7 +490,7 @@ $(document).ready(function() {
                   detalle_ejecucion[i]= { name: response.matriz_reg[i][1],y: response.matriz_reg[i][9]};
                 }
 
-                cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - INSTITUCIONAL');
+                cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - INSTITUCIONAL','','Cumplimiento','PROYECTO DE INVERSION');
                 ////
 
 
@@ -354,7 +521,7 @@ $(document).ready(function() {
                   detalle_ejecucion[i]= { name: response.matriz_proy[i][10],y: response.matriz_proy[i][15]};
                 }
 
-                cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - REGIONAL : '+response.regional);
+                cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - REGIONAL : '+response.regional,'','Cumplimiento','PROYECTO DE INVERSION');
               ////
 
               /// Partidas
@@ -980,7 +1147,7 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
                     detalle_ejecucion[i]= { name: response.matriz_proy[i][10],y: response.matriz_proy[i][15]};
                 }
 
-                cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - REGIONAL : '+response.regional);
+                cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'EJECUCIÓN DE PROYECTOS, mes de '+descripcion_mes+' / '+gestion+' - REGIONAL : '+response.regional,'','Cumplimiento','PROYECTO DE INVERSION');
               ////
               //// Consolidado por partidas
                 let partida=[];
@@ -1010,7 +1177,7 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
 
 
 //// grafico Barras Verticales 
-function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo){
+function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo,subtitulo,cumplimiento,detalle){
     Highcharts.chart(grafico, {
       chart: {
         type: 'column'
@@ -1021,7 +1188,7 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo){
       },
       subtitle: {
         align: 'center',
-        text: ''
+        text: subtitulo
       },
       accessibility: {
         announceNewData: {
@@ -1033,7 +1200,7 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo){
       },
       yAxis: {
         title: {
-          text: '(%) Cumplimiento al Trimestre'
+          text: '(%) '+cumplimiento
         }
 
       },
@@ -1057,7 +1224,7 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo){
 
       series: [
         {
-          name: "PROYECTO DE INVERSION",
+          name: detalle,
           colorByPoint: true,
           data: detalle_ejecucion
         }
@@ -1213,6 +1380,7 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo){
     };
     return true;
   }
+
 
 
   //// Distribucion Nro de Proyectos y presupuesto

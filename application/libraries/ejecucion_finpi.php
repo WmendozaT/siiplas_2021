@@ -1884,7 +1884,7 @@ class ejecucion_finpi extends CI_Controller{
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px black; text-align: center;">
               <td style="width:23%; text-align:center;">
-                <img src="'.getcwd().'/assets/ifinal/cns2.PNG" class="img-responsive" style="width:60px; height:60px;"/><br>
+                <img src="'.getcwd().'/assets/ifinal/logo_cns.JPG" class="img-responsive" style="width:60px; height:60px;"/><br>
                 <b style="font-size: 9px;font-family: Arial;">CAJA NACIONAL DE SALUD</b><br>
                 DPTO. NAL. DE PLANIFICACIÓN
               </td>
@@ -1942,46 +1942,37 @@ class ejecucion_finpi extends CI_Controller{
 
 
    /*---- CABECERA REPORTE OPERACIONES POR REGIONALES (GRAFICO)----*/
-  function cabecera_reporte_grafico($titulo){
+  function cabecera_reporte_grafico($titulo,$subtitulo){
     $tabla='';
 
     $tabla.='
-      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-        <tr style="border: solid 0px;">              
-            <td style="width:70%;height: 2%">
-                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                    <tr style="font-size: 15px;font-family: Arial;">
-                        <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
-                    </tr>
-                    <tr>
-                        <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
-                    </tr>
-                </table>
-            </td>
-            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
-              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </td>
-        </tr>
-      </table>
-      <hr>
-      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-          <tr style="border: solid 0px black; text-align: center;">
-              <td style="width:10%; text-align:center;">
-              </td>
-              <td style="width:80%; height: 5%">
-                <table align="center" border="0" style="width:100%;">
-                  <tr style="font-size: 23px;font-family: Arial;">
-                    <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
-                  </tr>
-                  <tr style="font-size: 20px;font-family: Arial;">
-                    <td style="height: 5%; text-align:center">'.$titulo.'</td>
-                  </tr>
-                </table>
-              </td>
-              <td style="width:10%; text-align:center;">
-              </td>
-          </tr>
-      </table>';
+    <hr>
+    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+      <tr style="border: solid 0px black; text-align: center;">
+        <td style="width:23%; text-align:center;">
+          <center>
+            <img src="'.base_url().'assets/ifinal/logo_cns.jpg" class="img-responsive" style="width:55px; height:55px;"/><br>
+            <b style="font-size: 8px;font-family: Arial;">CAJA NACIONAL DE SALUD</b><br>
+            <div style="font-size: 9px;font-family: Arial;">DPTO. NAL. DE PLANIFICACIÓN</div>
+          </center>
+        </td>
+        <td style="width:60%; height: 5%">
+            <table align="center" border="0" style="width:100%;">
+                <tr style="font-size: 18px;font-family: Arial;">
+                  <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
+                </tr>
+                <tr style="font-size: 18px;font-family: Arial;">
+                  <td style="height: 5%; text-align:center">'.$titulo.'</td>
+                </tr>
+            </table>
+        </td>
+        <td style="width:20%; text-align:center;font-size: 8px;">
+        '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <div style="font-size: 12px;font-family: Arial; text-align:center"><b>'.$subtitulo.'</b></div>';
 
     return $tabla;
   }
