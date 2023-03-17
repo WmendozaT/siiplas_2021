@@ -296,13 +296,13 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
   /// Grafico EJECUCION DE PROYECTOS DE INVERSION
   function graf_regresion_consolidado_pi(grafico,matriz,titulo,subtitulo,tit_laterales) {
     let programado=[];
-    for (var i = 0; i <=12; i++) {
-      programado[i]= matriz[2][i];
+    for (var i = 0; i <12; i++) {
+      programado[i]= matriz[2][i+1];
     }
 
     let ejecutado=[];
-    for (var i = 0; i <=12; i++) {
-      ejecutado[i]= matriz[3][i];
+    for (var i = 0; i <12; i++) {
+      ejecutado[i]= matriz[3][i+1];
     }
 
     ///----
@@ -319,7 +319,7 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
     },
     // Pongo los datos en el eje de las 'X'
     xAxis: {
-      categories: ['','ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
+      categories: ['ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
       // Pongo el título para el eje de las 'X'
       title: {
         text: ''
@@ -1331,7 +1331,7 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo,su
     ventana.document.write('</head><body>');
     ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
     ventana.document.write(cabecera.innerHTML);
-    ventana.document.write('<hr>');
+   // ventana.document.write('<hr>');
     ventana.document.write(grafico.innerHTML);
     ventana.document.write('<hr>');
     ventana.document.write(tabla.innerHTML);
@@ -1365,7 +1365,7 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo,su
     ventana.document.write('</head><body>');
     ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
     ventana.document.write(cabecera.innerHTML);
-    ventana.document.write('<hr>');
+    //ventana.document.write('<hr>');
     ventana.document.write(grafico1.innerHTML);
   //  ventana.document.write('<hr>');
     ventana.document.write(grafico2.innerHTML);
@@ -1415,7 +1415,7 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo,su
     ventana.document.write('</head><body>');
     ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
     ventana.document.write(cabecera.innerHTML);
-    ventana.document.write('<hr>');
+    //ventana.document.write('<hr>');
     ventana.document.write(grafico.innerHTML);
     ventana.document.write('<hr>');
     ventana.document.write(tabla.innerHTML);

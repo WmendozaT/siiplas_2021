@@ -228,7 +228,7 @@ class Genera_informacion extends CI_Controller{
 
 
 
-/*-----REPORTE COMPARATIVO PRESUPUESTO ASIG-POA (DISTRITAL) 2020-2021-----*/
+    /*-----REPORTE COMPARATIVO PRESUPUESTO ASIG-POA (DISTRITAL) 2020-2021-----*/
     public function comparativo_presupuesto_distrital($dep_id,$dist_id,$tp_id){
       $data['mes'] = $this->mes_nombre();
       if($dist_id==0){ // Nacional
@@ -338,6 +338,22 @@ class Genera_informacion extends CI_Controller{
         
           $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_comparativo', $data);
     }
+
+
+
+    /*----- CUADRO PARA AJUSTAR LOS SALDOS DISPONIBLES -----*/
+    public function cuadro_saldo_ppto($dep_id,$dist_id,$tp_id){
+
+    }
+
+
+
+
+
+
+
+
+
 
 
     /*-----REPORTE ESTABLECIMIENTOS DE SALUD (DISTRITAL) 2020-2021-----*/

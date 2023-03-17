@@ -118,7 +118,7 @@ class Ccertificacion_poa extends CI_Controller {
 
 
 
-  /*---- Lista de Proyectos de Inversion (2020) -----*/
+  /*---- Lista de items a Certificar -----*/
   public function list_items_cert($prod_id){
     $data['datos']=$this->model_certificacion->get_datos_unidad_prod($prod_id);
     if(count($data['datos'])!=0){
@@ -131,14 +131,15 @@ class Ccertificacion_poa extends CI_Controller {
       //  $this->update_gestion_temporalidad($requerimientos);
         if($this->gestion>2022){
           if(count($this->model_certificacion->requerimientos_operacion($prod_id))>500){
-            $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_temporalidad_unica($prod_id); /// para listas mayores a 500 (2022)
+            $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_temporalidad_unica($prod_id); /// para listas mayores a 500 (2023)
           }
           else{
-            $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_2022($prod_id,0,0); /// para listas menores a 500 (2022)
+            $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_2022($prod_id,0,0); /// para listas menores a 500 (2023)
           }
         }
         else{
-          $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
+          //$data['requerimientos'] = $this->certificacionpoa->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
+          $data['requerimientos'] = 'error'; /// para listas mayores a 500
         }
         
       //  echo $data['requerimientos'];
@@ -827,11 +828,11 @@ class Ccertificacion_poa extends CI_Controller {
     }
 
 
-    /*-------- FORMULARIO EDICION DE CERTIFICACIÓN POA 2020-2021-2022-2023 -------*/
+    /*-------- FORMULARIO EDICION DE CERTIFICACIÓN POA 2023 -------*/
     public function modificar_cpoa($cpoaa_id){
       $data['cert_editado']=$this->model_certificacion->get_cert_poa_editado($cpoaa_id);
       if(count($data['cert_editado'])!=0 & $data['cert_editado'][0]['cpoa_estado']!=3){
-        $cpoa=$this->model_certificacion->get_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
+        $data['cpoa']=$this->model_certificacion->get_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
           $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cert_editado'][0]['prod_id']); /// Datos completos de la Unidad/ Proyectos de Inversión
           $data['menu']=$this->certificacionpoa->menu(4);
           $data['titulo']=$this->certificacionpoa->titulo_cabecera($data['datos']);
@@ -845,6 +846,15 @@ class Ccertificacion_poa extends CI_Controller {
             $data['display']='style="display: none"';
           }
 
+          $data['opciones_update']='';
+
+          if(count($data['lista'])>100){
+            $data['opciones_update']='
+            <a href="'.site_url("").'/cert/exportar_items_certificados/'.$data['cert_editado'][0]['cpoa_id'].'" target=_blank class="btn btn-default" title="EXPORTAR ITEMS CERTIFICADOS"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="19" HEIGHT="19"/>&nbsp;<b style="font-size:9px">EXPORTAR INFORMACION (EXCEL)</b></a>
+            <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" title="SUBIR ARCHIVO EXCEL">
+              <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="25" HEIGHT="20"/>&nbsp;<b style="font-size:9px">SUBIR ARCHIVO.CSV</b>
+            </a>';
+          }
           $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/form_items_edit_cert', $data);
       }
       else{
@@ -853,6 +863,12 @@ class Ccertificacion_poa extends CI_Controller {
     }
 
    
+
+
+
+
+
+
  /*---COMBO DE UNIDADES / ESTABLECIMIENTOS SEGUN SU REGIONAL (2020)---*/
     public function get_programado_temporalidad(){
       if($this->input->is_ajax_request() && $this->input->post()){
@@ -933,6 +949,127 @@ class Ccertificacion_poa extends CI_Controller {
           show_404();
       }
     }
+
+
+    /*-------- EXPORTAR ITEMS CERTIFICADOS -------*/
+    public function exportar_certificacion($cpoa_id){
+      $cpoa=$this->model_certificacion->get_certificacion_poa($cpoa_id); /// Datos Certificacion
+      $lista_requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id); /// Lista Requerimientos
+      if(count($lista_requerimientos)!=0){
+        
+          $tabla='';
+          $tabla.='
+          <style>
+            table{font-size: 9px;
+              width: 100%;
+              max-width:1550px;
+              overflow-x: scroll;
+            }
+            th{
+              padding: 1.4px;
+              text-align: center;
+              font-size: 10px;
+            }
+          </style>
+          <table table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:80%;">
+            <thead>
+            <tr>
+              <th bgcolor=green style="color:white">#</th>
+              <th bgcolor=green style="color:white">PARTIDA</th>
+              <th bgcolor=green style="color:white">DETALLE REQUERIMIENTO</th>
+              <th bgcolor=green style="color:white">UNIDAD DE MEDIDA</th>
+              <th bgcolor=green style="color:white">CANTIDAD</th>
+              <th bgcolor=green style="color:white">COSTO UNITARIO</th>
+              <th bgcolor=green style="color:white">COSTO TOTAL</th>
+              <th bgcolor=green style="color:white">ENE.</th>
+              <th bgcolor=green style="color:white">FEB.</th>
+              <th bgcolor=green style="color:white">MAR.</th>
+              <th bgcolor=green style="color:white">ABR.</th>
+              <th bgcolor=green style="color:white">MAY.</th>
+              <th bgcolor=green style="color:white">JUN.</th>
+              <th bgcolor=green style="color:white">JUL.</th>
+              <th bgcolor=green style="color:white">AGO.</th>
+              <th bgcolor=green style="color:white">SEPT.</th>
+              <th bgcolor=green style="color:white">OCT.</th>
+              <th bgcolor=green style="color:white">NOV.</th>
+              <th bgcolor=green style="color:white">DIC.</th>
+            </tr>
+            </thead>
+            <tbody>';
+            foreach($lista_requerimientos as $row){
+              $temporalidad=$this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+              $tabla.='
+              <tr>
+                <td bgcolor="#fbe3e3">'.$row['ins_id'].'</td>
+                <td align=right bgcolor="#fbe3e3">'.$row['par_codigo'].'</td>
+                <td>'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>
+                <td>'.mb_convert_encoding(strtoupper($row['ins_unidad_medida']), 'cp1252', 'UTF-8').'</td>
+                <td align=right bgcolor="#fbe3e3">'.round($row['ins_cant_requerida'],2).'</td>
+                <td align=right bgcolor="#fbe3e3">'.round($row['ins_costo_unitario'],2).'</td>
+                <td align=right bgcolor="#fbe3e3">'.round($row['ins_costo_total'],2).'</td>';
+
+                if(count($temporalidad)!=0){
+                  for ($i=1; $i <=12 ; $i++) { 
+                    $tabla.='<td align=right bgcolor="#fbe3e3">'.round($temporalidad[0]['mes'.$i],2).'</td>';
+                  }
+                }
+                else{
+                  for ($i=1; $i <=12 ; $i++) { 
+                    $tabla.='<td bgcolor=red>-</td>';
+                  }
+                }
+                
+                $tabla.='
+              </tr>';
+            }
+
+          $tabla.='
+            </tbody>
+          </table>';
+
+          header('Content-type: application/vnd.ms-excel');
+          header("Content-Disposition: attachment; filename=CERT_POA ".$cpoa[0]['cpoa_codigo']." ".$cpoa[0]['cpoa_fecha'].".xls"); //Indica el nombre del archivo resultante
+          header("Pragma: no-cache");
+          header("Expires: 0");
+          echo "";
+          ini_set('max_execution_time', 0); 
+          ini_set('memory_limit','3072M');
+          echo $tabla;
+
+      }
+      else{
+        redirect('ejec/menu_cpoa');
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

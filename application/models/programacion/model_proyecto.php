@@ -1858,7 +1858,7 @@ class Model_proyecto extends CI_Model{
     }
 
     /*-------- LISTA PROYECTOS DE INVERSION funcion DISTRITAL--------*/
-    public function list_proy_inversion_distrital($dist_id){ /// aprobados Institucional
+    public function list_proy_inversion_distrital($dist_id){ /// aprobados distrital
         $sql = 'select *
                 from lista_poa_pinversion_nacional('.$this->gestion.')
                 where dist_id='.$dist_id.'
@@ -2090,11 +2090,10 @@ class Model_proyecto extends CI_Model{
 
         /////// ===== 2023
     /*-- Lista de Programas Bolsa por Distrital --*/
-/*    public function todos(){ /// 
+/*    public function list_aperproyectos(){ /// 
         $sql = '
             select *
-                from lista_poa_gastocorriente_nacional('.$this->gestion.')
-                order by dep_id, prog, act asc';
+            from aperturaproyectos';
         $query = $this->db->query($sql);
         return $query->result_array();
     }*/

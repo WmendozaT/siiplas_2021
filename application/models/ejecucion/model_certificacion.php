@@ -182,12 +182,15 @@ class Model_certificacion extends CI_Model{
 
     /*------- LISTA DE REQUERIMIENTOS POR FORM 4 --------*/
     public function requerimientos_operacion($prod_id){
-        $sql = 'select *
+        $sql = 'select ip.prod_id, ip.ins_id,i.ins_codigo,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,par.par_id,i.ins_estado,i.fun_id,i.ins_observacion,
+                i.ins_cpoa,i.ins_mod, i.ins_monto_certificado,i.com_id,i.form4_cod,i.serv_id,i.ins_activo,par.par_nombre,par.par_codigo
                 from _insumoproducto ip
                 Inner Join insumos as i On i.ins_id=ip.ins_id
                 Inner Join partidas as par On par.par_id=i.par_id
                 where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
-                order by par.par_codigo,i.ins_id asc';
+                group by ip.prod_id, ip.ins_id,i.ins_codigo,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,par.par_id,i.ins_estado,i.fun_id,i.ins_observacion,
+                i.ins_cpoa,i.ins_mod, i.ins_monto_certificado,i.com_id,i.form4_cod,i.serv_id,i.ins_activo,par.par_nombre,par.par_codigo
+                order by par.par_codigo,ip.ins_id asc';
             $query = $this->db->query($sql);
         
         return $query->result_array();
@@ -196,12 +199,15 @@ class Model_certificacion extends CI_Model{
 
     /*------- LISTA DE REQUERIMIENTOS POR FORM 4 EN EL PROG. BIENES Y SERVICIOS ------*/
     public function requerimientos_x_uresponsables_bienes_servicios($prod_id,$com_id){
-        $sql = 'select *
+        $sql = 'select ip.prod_id, ip.ins_id,i.ins_codigo,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,par.par_id,i.ins_estado,i.fun_id,i.ins_observacion,
+                i.ins_cpoa,i.ins_mod, i.ins_monto_certificado,i.com_id,i.form4_cod,i.serv_id,i.ins_activo,par.par_nombre,par.par_codigo
                 from _insumoproducto ip
                 Inner Join insumos as i On i.ins_id=ip.ins_id
                 Inner Join partidas as par On par.par_id=i.par_id
                 where ip.prod_id='.$prod_id.' and i.serv_id='.$com_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
-                order by par.par_codigo,i.ins_id asc';
+                group by ip.prod_id, ip.ins_id,i.ins_codigo,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,par.par_id,i.ins_estado,i.fun_id,i.ins_observacion,
+                i.ins_cpoa,i.ins_mod, i.ins_monto_certificado,i.com_id,i.form4_cod,i.serv_id,i.ins_activo,par.par_nombre,par.par_codigo
+                order by par.par_codigo,ip.ins_id asc';
             $query = $this->db->query($sql);
         
         return $query->result_array();

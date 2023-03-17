@@ -108,7 +108,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
       $nro_reg=count($this->model_ptto_sigep->list_regionales());
       $matriz_reg=$this->ejecucion_finpi->matriz_detalle_proyectos_clasificado_regional();
 
-      $cabecera_grafico=$this->ejecucion_finpi->cabecera_reporte_grafico('CONSOLIDADO INSTITUCIONAL');
+      $cabecera_grafico=$this->ejecucion_finpi->cabecera_reporte_grafico('CONSOLIDADO INSTITUCIONAL','');
       ///// s1
       //$tabla_detalle_ejec=$this->tabla_detalle_institucional_impresion($matriz_reg,$nro_reg,0); /// Tabla Vista
       $tabla_detalle_ejec_impresion=$this->tabla_detalle_institucional_impresion($matriz_reg,$nro_reg,0); /// Tabla Impresion Grafico 0
@@ -289,7 +289,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
 
     }
     else{  /// REGIONAL
-      $cabecera_grafico=$this->ejecucion_finpi->cabecera_reporte_grafico('REGIONAL '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion);
+      $cabecera_grafico=$this->ejecucion_finpi->cabecera_reporte_grafico('REGIONAL '.strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion,'');
       
       /// s1
       $nro_proy=count($this->model_proyecto->list_proy_inversion_regional($dep_id)); /// nro de proyectos

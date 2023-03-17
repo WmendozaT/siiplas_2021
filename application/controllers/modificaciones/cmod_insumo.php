@@ -137,6 +137,33 @@ class Cmod_insumo extends CI_Controller {
     }
 
     /*----- REQUERIMIENTOS 2020-2021-2022 ------*/
+/*    public function mis_requerimientos($cite_id){
+      $data['menu']=$this->menu(3); //// genera menu
+      $data['cite'] = $this->model_modrequerimiento->get_cite_insumo($cite_id);
+
+      if(count($data['cite'])!=0){
+        $proyecto = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); /// Proyecto de Inversion
+        $data['cabecera']=$this->cabecera_formulario_mod5($data['cite'],$proyecto);
+        $data['opciones']=$this->opciones_formulario_mod5($data['cite'],$proyecto);
+        $data['style']=$this->style();
+      
+          if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
+            $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023
+          }
+          else{
+            $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022
+          }
+
+          $data['part_padres'] = $this->model_modificacion->list_part_padres_asig($proyecto[0]['aper_id']);//partidas padres
+          $data['lista']=$this->tipo_lista_ope_act($data['cite']); /// LINEADO A ACTIVIDAD
+
+          $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
+      }
+      else{
+        redirect('mod/list_top');
+      }
+    }*/
+
     public function mis_requerimientos($cite_id){
       $data['menu']=$this->menu(3); //// genera menu
       $data['cite'] = $this->model_modrequerimiento->get_cite_insumo($cite_id);
@@ -147,21 +174,17 @@ class Cmod_insumo extends CI_Controller {
         $data['opciones']=$this->opciones_formulario_mod5($data['cite'],$proyecto);
         $data['style']=$this->style();
       
-          if($this->gestion>2021){ /// Gestion 2022-2023
-            if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
-              $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023
+          if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
+            if($this->fun_id==598){ /// exclusivo doctor muruchi
+              $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2023
             }
             else{
-              $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022
+              $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023 -> cargado rapido sin temporalidad
             }
+            
           }
-          else{ /// Gestion 2020-2021
-            if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>1000){
-              $data['tabla']=$this->lista_requerimientos_auxiliar($data['cite']); /// 2021  
-            }
-            else{
-              $data['tabla']=$this->lista_requerimientos($data['cite']); /// LISTA DE REQUERIMIENTO 2021
-            }
+          else{
+            $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022
           }
 
           $data['part_padres'] = $this->model_modificacion->list_part_padres_asig($proyecto[0]['aper_id']);//partidas padres
@@ -173,8 +196,6 @@ class Cmod_insumo extends CI_Controller {
         redirect('mod/list_top');
       }
     }
-
-
 
   /*----- CABECERA FORMULARIO ------*/
   public function cabecera_formulario_mod5($cite,$proyecto){
@@ -274,10 +295,6 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-
-
-
-
     /*---- tipo lista : Operacion-Actividad ----*/
     public function tipo_lista_ope_act($cite){
       $tabla='';
@@ -300,286 +317,6 @@ class Cmod_insumo extends CI_Controller {
     }
 
 
-    
-
-
-    /*----- LISTA REQUERIMIENTOS AUXILIAR (2021) en casos de que sean muchos requerimientos ------*/
-    public function lista_requerimientos_auxiliar($cite){
-      $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id']);
-   //   $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($cite[0]['com_id']); /// Lista requerimientos
-
-      $tabla='';
-      $total=0;
-      $tabla.=' <input type="hidden" name="proy_id" value="'.$cite[0]['proy_id'].'">
-                <input type="hidden" name="aper_id" value="'.$cite[0]['aper_id'].'">
-                <input type="hidden" name="cite_id" value="'.$cite[0]['cite_id'].'">
-                <input type="hidden" name="base" value="'.base_url().'">
-                <table id="dt_basic" class="table table table-bordered" width="100%">
-                <thead>
-                  <tr class="modo1">
-                    <th style="width:2%;">#</th>
-                    <th style="width:2%;">COD. ACT.</th>
-                    <th style="width:2%;"></th>
-                    <th style="width:5%;">PARTIDA</th>
-                    <th style="width:15%;">DETALLE REQUERIMIENTO</th>
-                    <th style="width:10%;">UNIDAD</th>
-                    <th style="width:5%;">CANTIDAD</th>
-                    <th style="width:5%;">UNITARIO</th>
-                    <th style="width:5%;">TOTAL</th>
-                    <th style="width:5%;">TOTAL CERT.</th>
-                    <th style="width:5%;">TOTAL PROG.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">ENE.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">FEB.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">MAR.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">ABR.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">MAY.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">JUN.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">JUL.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">AGO.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">SEPT.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">OCT.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">NOV.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">DIC.</th>
-                    <th style="width:8%;">OBSERVACIONES</th>
-                    <th style="width:2%;">DELETE</th>
-                  </tr>
-                </thead>
-                <tbody>';
-                $cont = 0;
-                foreach ($lista_insumos as $row) {
-                  $color_tr=''; $dis=''; $title='title="REQUERIMIENTO"';
-                  //$prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-                  $cert= $this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
-                  $monto_cert=0;$valor_mod=0; $valor_delete=0;
-                  if(count($cert)!=0){
-                    $monto_cert=$cert[0]['certificado'];
-                    
-                    if($monto_cert==$row['ins_costo_total']){
-                      $color_tr='#f9d8e0';
-                      $valor_mod=1;
-                      $valor_delete=1;
-                    }
-                    elseif ($monto_cert<$row['ins_costo_total']) {
-                      $valor_delete=1;
-                    }
-                  }
-                  $cont++;
-                    $tabla .='<tr bgcolor='.$color_tr.'>';
-                    $tabla .='<td title='.$row['ins_id'].'>'.$cont.'</td>';
-                    $tabla .='<td align=center bgcolor="#ecf9f7" title="CODIGO ACTIVIDAD"><font size=3 color=blue><br>'.$row['prod_cod'].'</font></td>';
-                    $tabla .='<td align=center>';
-                      if($valor_mod==0 & $valor_delete==0){
-                        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>
-                                  <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-xs del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'" >
-                                    <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
-                                  </a>';
-                      }
-                      elseif($valor_mod==0 & $valor_delete==1){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>';
-                      }
-
-                      $ins_certificado=$this->model_certificacion->verif_insumo_certificados($row['ins_id']);
-                      if(count($ins_certificado)!=0){
-                        $tabla.='<a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$ins_certificado[0]['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="40" HEIGHT="40"/><br>CERT. POA</a>';
-                      } 
-                    $tabla.='</td>';
-                    $tabla .='<td style="width:5%;">'.$row['par_codigo'].'</td>'; /// partida
-                    $tabla .= '<td style="width:15%;">'.$row['ins_detalle'].'</td>'; /// detalle requerimiento
-                    $tabla .= '<td style="width:10%;">'.$row['ins_unidad_medida'].'</td>'; /// Unidad
-                    $tabla .= '<td style="width:5%;">'.$row['ins_cant_requerida'].'</td>'; /// cantidad
-                    $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                    $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                    $tabla .= '<td style="width:5%;" bgcolor="#f1dfb9">'.number_format($monto_cert, 2, ',', '.').'</td>';
-                    
-                    $tabla.='
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>';
-                    $tabla .= ' 
-                      <td style="width:8%;">'.$row['ins_observacion'].'</td>
-                      <td style="width:2%;" bgcolor="#f3cbcb">';
-                        if($valor_mod==0 & $valor_delete==0){
-                          $tabla.='<center><input type="checkbox" name="ins[]" value="'.$row['ins_id'].'" onclick="scheck'.$cont.'(this.checked);"/></center>';
-                        }
-                      $tabla.='
-                      </td>';
-                        
-                  $tabla .= '</tr>';
-                  $total=$total+$row['ins_costo_total'];
-                  ?>
-                  <script>
-                    function scheck<?php echo $cont;?>(estaChequeado) {
-                      val = parseInt($('[name="tot"]').val());
-                      if (estaChequeado == true) {
-                        val = val + 1;
-                      } else {
-                        val = val - 1;
-                      }
-                      $('[name="tot"]').val((val).toFixed(0));
-                    }
-                  </script>
-                  <?php
-                }
-                $tabla.='
-                </tbody>
-                  <tr class="modo1">
-                    <td colspan="8"> TOTAL </td>
-                    <td><font color="blue" size=1>'.number_format($total, 2, ',', '.') .'</font></td>
-                    <td colspan="16"></td>
-                  </tr>
-              </table>';
-
-      return $tabla;
-    }
-
-    /*----- LISTA REQUERIMIENTOS COMPLETO (2020) ------*/
-    public function lista_requerimientos($cite){
-      $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id']);
-
-      $tabla='';
-      $total=0;
-      $tabla.=' <input type="hidden" name="proy_id" value="'.$cite[0]['proy_id'].'">
-                <input type="hidden" name="aper_id" value="'.$cite[0]['aper_id'].'">
-                <input type="hidden" name="cite_id" value="'.$cite[0]['cite_id'].'">
-                <input type="hidden" name="base" value="'.base_url().'">
-                <table id="dt_basic" class="table table table-bordered" width="100%">
-                <thead>
-                  <tr class="modo1">
-                    <th style="width:2%;">#</th>
-                    <th style="width:2%;">COD. ACT.</th>
-                    <th style="width:2%;"></th>
-                    <th style="width:5%;">PARTIDA</th>
-                    <th style="width:15%;">DETALLE REQUERIMIENTO</th>
-                    <th style="width:10%;">UNIDAD</th>
-                    <th style="width:5%;">CANTIDAD</th>
-                    <th style="width:5%;">UNITARIO</th>
-                    <th style="width:5%;">TOTAL</th>
-                    <th style="width:5%;">TOTAL CERT.</th>
-                    <th style="width:5%;">TOTAL PROG.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">ENE.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">FEB.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">MAR.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">ABR.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">MAY.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">JUN.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">JUL.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">AGO.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">SEPT.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">OCT.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">NOV.</th>
-                    <th style="width:5%;" style="background-color: #0AA699;color: #FFFFFF">DIC.</th>
-                    <th style="width:8%;">OBSERVACIONES</th>
-                    <th style="width:2%;">DELETE</th>
-                  </tr>
-                </thead>
-                <tbody>';
-                $cont = 0;
-                foreach ($lista_insumos as $row) {
-                  $color_tr=''; $dis=''; $title='title="REQUERIMIENTO"';
-                  $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-                  $cert= $this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
-                  $monto_cert=0;$valor_mod=0; $valor_delete=0;
-                  if(count($cert)!=0){
-                    $monto_cert=$cert[0]['certificado'];
-                    
-                      if($monto_cert==$prog[0]['programado_total']){
-                        $color_tr='#f9d8e0';
-                        $valor_mod=1;
-                        $valor_delete=1;
-                      }
-                      elseif ($monto_cert<$row['ins_costo_total']) {
-                        $valor_delete=1;
-                      }
-                  }
-                  $cont++;
-                    $tabla .='<tr bgcolor='.$color_tr.'>';
-                    $tabla .='<td title='.$row['ins_id'].'>'.$cont.' --'.count($cert).'</td>';
-                    $tabla .='<td align=center bgcolor="#ecf9f7" title="CODIGO ACTIVIDAD"><font size=3 color=blue><br>'.$row['prod_cod'].'</font></td>';
-                    $tabla .='<td align=center>';
-                      if($valor_mod==0 & $valor_delete==0){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>
-                                  <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-xs del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'" >
-                                    <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
-                                  </a>';
-                      }
-                      elseif($valor_mod==0 & $valor_delete==1){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>';
-                      }
-
-                      $ins_certificado=$this->model_certificacion->verif_insumo_certificados($row['ins_id']);
-                      if(count($ins_certificado)!=0){
-                        $tabla.='<a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$ins_certificado[0]['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="40" HEIGHT="40"/><br>CERT. POA</a>';
-                      }
-                    $tabla.='</td>';
-                    $tabla .='<td style="width:5%;">'.$row['par_codigo'].'</td>'; /// partida
-                    $tabla .= '<td style="width:15%;">'.$row['ins_detalle'].'</td>'; /// detalle requerimiento
-                    $tabla .= '<td style="width:10%;">'.$row['ins_unidad_medida'].'</td>'; /// Unidad
-                    $tabla .= '<td style="width:5%;">'.$row['ins_cant_requerida'].'</td>'; /// cantidad
-                    $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                    $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                    $tabla .= '<td style="width:5%;" bgcolor="#f1dfb9">'.number_format($monto_cert, 2, ',', '.').'</td>';
-
-                    if(count($prog)!=0){
-                      $tabla.='
-                      <td style="width:5%;">'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td>';
-                      for ($i=1; $i <=12 ; $i++) { 
-                        $tabla.='<td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes'.$i], 2, ',', '.').'</td>';
-                      }
-                    }
-                    else{
-                      $tabla.='
-                      <td style="width:5%;">0</td>';
-                      for ($i=1; $i <=12 ; $i++) { 
-                        $tabla.='<td style="width:5%;" bgcolor="#ffeeeb">0</td>';
-                      }
-                    }
-                    
-                    $tabla .= ' 
-                      <td style="width:8%;">'.$row['ins_observacion'].'</td>
-                      <td style="width:2%;" bgcolor="#f3cbcb">';
-                        if($valor_mod==0 & $valor_delete==0){
-                          $tabla.='<center><input type="checkbox" name="ins[]" value="'.$row['ins_id'].'" onclick="scheck'.$cont.'(this.checked);"/></center>';
-                        }
-                      $tabla.='
-                      </td>';
-                        
-                  $tabla .= '</tr>';
-                  $total=$total+$row['ins_costo_total'];
-                  ?>
-                  <script>
-                    function scheck<?php echo $cont;?>(estaChequeado) {
-                      val = parseInt($('[name="tot"]').val());
-                      if (estaChequeado == true) {
-                        val = val + 1;
-                      } else {
-                        val = val - 1;
-                      }
-                      $('[name="tot"]').val((val).toFixed(0));
-                    }
-                  </script>
-                  <?php
-                }
-                $tabla.='
-                </tbody>
-                  <tr class="modo1">
-                    <td colspan="8"> TOTAL </td>
-                    <td><font color="blue" size=1>'.number_format($total, 2, ',', '.') .'</font></td>
-                    <td colspan="16"></td>
-                  </tr>
-              </table>';
-
-      return $tabla;
-    }
 
 
     /*--- VALIDA ADD REQUERIMIENTO (2023) ---*/
@@ -820,13 +557,10 @@ class Cmod_insumo extends CI_Controller {
           $cpoa=$this->model_certificacion->get_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
           $detalle_cert=$this->model_certificacion->get_certificado_poa_detalle($cpoa[0]['cpoa_id'],$ins_id); /// item certificado
 
-          //$insumo= $this->minsumos->get_requerimiento($ins_id); /// Datos requerimientos 
           $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos 
           if($this->registra_insumo_original($cert_editado[0]['cite_id'],$ins_id)){
-          //if($this->copia_insumo($cert_editado[0]['cite_id'],$ins_id,2)){
               ///------ cambiando de estado de certificacion poa la temporalidad
               $get_list_temp_prog=$this->model_certificacion->get_list_cert_temporalidad_prog_insumo($detalle_cert[0]['cpoad_id']);
-            //  $suma_cert=0;
 
               foreach($get_list_temp_prog as $row){
                 $datos_temp=$this->model_certificacion->get_id_insumo_programado_mes($row['tins_id']);
@@ -932,6 +666,103 @@ class Cmod_insumo extends CI_Controller {
           show_404();
       }
     }
+
+
+
+    /*--- MIGRACION DE AJUSTE DE ITEMS CERTIFICACION POA  ---*/
+    function importar_ajuste_cpoa(){
+      if ($this->input->post()) {
+        $post = $this->input->post();
+          $cpoaa_id = $this->security->xss_clean($post['cpoaa_id']); /// cpoaa_id
+          $cert_editado=$this->model_certificacion->get_cert_poa_editado($cpoaa_id); /// Datos de la Certificacion Anulado
+          $cpoa=$this->model_certificacion->get_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
+
+          $tipo = $_FILES['archivo']['type'];
+          $tamanio = $_FILES['archivo']['size'];
+          $archivotmp = $_FILES['archivo']['tmp_name'];
+
+          $filename = $_FILES["archivo"]["name"];
+          $file_basename = substr($filename, 0, strripos($filename, '.'));
+          $file_ext = substr($filename, strripos($filename, '.'));
+          $allowed_file_types = array('.csv');
+
+          if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
+            /*------------------- Migrando ---------------*/
+            $lineas = file($archivotmp);
+            $i=0;
+            $nro=0;
+            $guardado=0;
+            $no_guardado=0;
+
+            foreach ($lineas as $linea_num => $linea){
+              if($i != 0){
+                $datos = explode(";",$linea);
+                if(count($datos)==19){
+                  $ins_id = intval(trim($datos[0])); //// ins_id
+                  $detalle = strval(utf8_encode(trim($datos[2]))); //// Detalle Requerimiento
+                  $unidad = strval(utf8_encode(trim($datos[3]))); //// Unidad de Medida
+                  
+                  $detalle_cert=$this->model_certificacion->get_certificado_poa_detalle($cpoa[0]['cpoa_id'],$ins_id); /// item certificado
+
+                    if(count($detalle_cert)!=0){
+                      if($this->registra_insumo_original($cert_editado[0]['cite_id'],$ins_id)){
+                          $guardado++;
+                          //if(count($this->model_certificacion->verif_insumo_certificado($ins_id))==1){
+
+                              $update_ins= array(
+                              'ins_detalle' => $detalle,
+                              'ins_unidad_medida' => $unidad,
+                              'fun_id' => $this->fun_id,
+                              'ins_mod' => 2, /// mod
+                              'ins_estado'=> 2, /// mod
+                              'num_ip' => $this->input->ip_address(), 
+                              'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR'])
+                              );
+                            $this->db->where('ins_id', $ins_id);
+                            $this->db->update('insumos', $this->security->xss_clean($update_ins));
+                        //  }
+
+                            $this->copia_insumo($cert_editado[0]['cite_id'],$ins_id,2); /// historial de modificaciones para el reporte
+
+                            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+                            $this->update_activo_modificacion($cert_editado[0]['cite_id']);
+                            /*--------------------------------------*/
+                      }
+                    }
+
+                } /// end dimension (22)
+              } /// i!=0
+
+              $i++;
+
+            }
+
+
+            $this->session->set_flashdata('success','SE REGISTRARON '.$guardado.' REQUERIMIENTOS');
+            redirect('cert/edit_certificacion/'.$cpoaa_id.'');
+          }
+          else{
+            $this->session->set_flashdata('danger','SELECCIONE ARCHIVO ');
+            redirect('prog/list_requerimiento/'.$cpoaa_id.'');
+          }
+      }
+      else{
+        echo "Error !!";
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

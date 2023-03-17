@@ -54,6 +54,32 @@
     return /\d/.test(String.fromCharCode(keynum));
   }
 
+  //// SUBIR ARCHIVO DE AJUSTE MEDIANTE EXCEL
+  $(function () {
+    $("#subir_archivo").on("click", function () {
+      var $valid = $("#form_subir_ajuste").valid();
+      if (!$valid) {
+          $validator.focusInvalid();
+      } else {
+        if(document.getElementById('archivo').value==''){
+          alertify.alert('PORFAVOR SELECCIONE ARCHIVO .CSV');
+          return false;
+        }
+
+          alertify.confirm("SUBIR ARCHIVO AL SISTEMA ?", function (a) {
+              if (a) {
+                  document.getElementById("load").style.display = 'block';
+                  document.getElementById('subir_archivo').disabled = true;
+                  document.forms['form_subir_ajuste'].submit();
+              } else {
+                  alertify.error("OPCI\u00D3N CANCELADA");
+              }
+          });
+      }
+    });
+  });
+
+
     //// =========================LISTA DE CERTIFICACION POA (EDICION Y ANULACION) 
     function editar_certpoa(cert_id) {
         document.getElementById("cert_id").value = cert_id;
@@ -851,7 +877,7 @@
             ins_id = $(this).attr('name');
             document.getElementById("ins_id").value=ins_id;
             cpoaa_id=document.getElementById("cpoaa_id").value;
-
+            //alert('hola mundo')
             var url = base+"index.php/ejecucion/cert_poa/get_requerimiento_cert";
             var request;
             if (request) {
@@ -889,8 +915,7 @@
                document.getElementById("mtot").value = response.prog[0]['programado_total'];
                document.getElementById("monto_cert").value = response.monto_certificado;
                $('#monto').html('<span class="label bg-color-blueDark pull-right" style="color: #fff;">MONTO YA CERTIFICADO : '+response.monto_certificado+' Bs. &nbsp;&nbsp;| &nbsp;&nbsp; MONTO SELECCIONADO : '+response.monto_certificado_item+' Bs.</span>');
-              // $('#mbut').slideDown();
-
+            
                if(response.prog[0]['programado_total']!=response.insumo[0]['ins_costo_total']){
                 $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO</div></center>');
                 $('#mbut').slideUp();
@@ -955,23 +980,23 @@
             // =======VALIDAR EL FORMULARIO DE MODIFICACION
             $("#subir_mins").on("click", function (e) {
                 var $validator = $("#form_mod").validate({
-                     rules: {
+                    rules: {
                       ins_id: { //// Insumo
-                      required: true,
+                        required: true,
                       },
                       detalle: { //// Detalle
-                          required: true,
+                        required: true,
                       },
                       umedida: { //// unidad medida
-                          required: true,
+                        required: true,
                       }
                     },
                     messages: {
-                        detalle: "<font color=red>REGISTRE DETALLE DEL REQUERIMIENTO</font>", 
-                        umedida: "<font color=red>REGISTRE UNIDAD DE MEDIDA</font>",                    
+                      detalle: "<font color=red>REGISTRE DETALLE DEL REQUERIMIENTO</font>", 
+                      umedida: "<font color=red>REGISTRE UNIDAD DE MEDIDA</font>",                    
                     },
                     highlight: function (element) {
-                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
                     },
                     unhighlight: function (element) {
                         $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
@@ -979,11 +1004,11 @@
                     errorElement: 'span',
                     errorClass: 'help-block',
                     errorPlacement: function (error, element) {
-                        if (element.parent('.input-group').length) {
-                            error.insertAfter(element.parent());
-                        } else {
-                            error.insertAfter(element);
-                        }
+                      if (element.parent('.input-group').length) {
+                          error.insertAfter(element.parent());
+                      } else {
+                          error.insertAfter(element);
+                      }
                     }
                   });
                   var $valid = $("#form_mod").valid();
@@ -993,18 +1018,21 @@
                     saldo=document.getElementById("sal").value;
                     programado=document.getElementById("mtot").value;
                     dif=saldo-programado;
-              
-                    if(dif>=0){
-                        alertify.confirm("MODIFICAR DATO DEL REQUERIMIENTO ?", function (a) {
-                            if (a) {
-                                document.getElementById("loadm").style.display = 'block';
-                                document.forms['form_mod'].submit();
-                                document.getElementById("mbut").style.display = 'none';
+                
 
-                            } else {
-                                alertify.error("OPCI\u00D3N CANCELADA");
-                            }
-                        });
+                    //alert('hola mundo')
+
+                    if(dif>=0){
+                      alertify.confirm("MODIFICAR DATO DEL REQUERIMIENTO ?", function (a) {
+                          if (a) {
+                              document.getElementById("loadm").style.display = 'block';
+                              document.forms['form_mod'].submit();
+                              document.getElementById("mbut").style.display = 'none';
+
+                          } else {
+                              alertify.error("OPCI\u00D3N CANCELADA");
+                          }
+                      });
                     }
                     else{
                       $('#amtit').html('<center><div class="alert alert-danger alert-block">EL MONTO PROGRAMADO NO COINCIDE CON EL COSTO TOTAL DEL REQUERIMIENTO, VERIFIQUE DATOS</div></center>');

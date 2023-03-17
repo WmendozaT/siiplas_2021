@@ -465,7 +465,7 @@ class Certificacionpoa extends CI_Controller{
 
   
   /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION) ------*/
-  public function list_requerimientos_certificadosss($lista){
+/*  public function list_requerimientos_certificados2($requerimientos,$cpoa_id){
     $tabla='<style>
             table{font-size: 9.5px;
             width: 100%;
@@ -490,8 +490,8 @@ class Certificacionpoa extends CI_Controller{
               width: 70% !important;
             }
           </style>';
-    $requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
-   //   $requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id);
+    //$requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
+      //$requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id);
     $tabla.='
       <table class="table table-bordered" style="width:97%;" align="center" id="datos">
         <thead >
@@ -524,20 +524,9 @@ class Certificacionpoa extends CI_Controller{
         $nro=0;
         foreach($requerimientos as $row){
           $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-        //  $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
-         // $get_item_cert=$this->model_certificacion->get_item_certificados($row['ins_id'],$cpoa_id);
           $display='style="display: none"';
           $check='';
-/*          if(count($get_item_cert)!=0){
-            $display='';
-            $check='checked="checked"';
-            $monto_certificado=$get_item_cert[0]['monto_certificado'];
-          }*/
-
           $bgcolor='#f2fded';
-        /*  if(count($this->model_certificacion->get_insumo_monto_cpoa_certificado($row['ins_id'],$cpoa_id))==0){
-            $bgcolor='#f59787';
-          }*/
           $nro_mes=count($this->model_certificacion->verif_temporalidad_certificado($row['ins_id']));
           $nro++;
           $tabla.='
@@ -551,8 +540,8 @@ class Certificacionpoa extends CI_Controller{
               <a href="#" data-toggle="modal" data-target="#modal_mod_ins" class="btn-default mod_ins" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>
             </td>
             <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
-            <td>'.$row['ins_detalle'].'</td>
-            <td>'.$row['ins_unidad_medida'].'</td>
+            <td id="det'.$row['ins_id'].'">'.$row['ins_detalle'].'</td>
+            <td id="umedida'.$row['ins_id'].'">'.$row['ins_unidad_medida'].'</td>
             <td align=right>'.$row['ins_cant_requerida'].'</td>
             <td align=right>'.$row['ins_costo_unitario'].'</td>
             <td align=right>'.$row['ins_costo_total'].'</td>
@@ -575,9 +564,9 @@ class Certificacionpoa extends CI_Controller{
       </table>';
 
     return $tabla;
-  }
+  }*/
 
- /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION anterior) ------*/
+ /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS A MODIFICAR------*/
   public function list_requerimientos_certificados($requerimientos,$cpoa_id){
     $tabla='<style>
             table{font-size: 9.5px;
@@ -603,7 +592,6 @@ class Certificacionpoa extends CI_Controller{
               width: 70% !important;
             }
           </style>';
-   // $requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
 
     $tabla.='
       <input name="base" type="hidden" value="'.base_url().'">
@@ -638,22 +626,25 @@ class Certificacionpoa extends CI_Controller{
         $nro=0;
         foreach($requerimientos as $row){
           $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-        //  $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
-          $get_item_cert=$this->model_certificacion->get_item_certificados($row['ins_id'],$cpoa_id);
+          //$get_item_cert=$this->model_certificacion->get_item_certificados($row['ins_id'],$cpoa_id);
           $display='style="display: none"';
           $check='';
-          if(count($get_item_cert)!=0){
+          /*if(count($get_item_cert)!=0){
             $display='';
             $check='checked="checked"';
             $monto_certificado=$get_item_cert[0]['monto_certificado'];
+          }*/
+
+          if($row['ins_monto_certificado']!=0){
+            $display='';
+            $check='checked="checked"';
+            //$monto_certificado=$get_item_cert[0]['monto_certificado'];
           }
 
           $bgcolor='#f2fded';
           if(count($this->model_certificacion->get_insumo_monto_cpoa_certificado($row['ins_id'],$cpoa_id))==0){
             $bgcolor='#f59787';
           }
-
-
 
           $mes=$this->model_insumo->lista_prog_fin($row['ins_id']);
           
@@ -679,18 +670,18 @@ class Certificacionpoa extends CI_Controller{
             <td>
               <a href="#" data-toggle="modal" data-target="#modal_mod_ins" class="btn-default mod_ins" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>
             </td>
-            <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
-            <td>'.$row['ins_detalle'].'</td>
-            <td>'.$row['ins_unidad_medida'].'</td>
-            <td align=right>'.$row['ins_cant_requerida'].'</td>
-            <td align=right>'.$row['ins_costo_unitario'].'</td>
-            <td align=right>'.$row['ins_costo_total'].'</td>
-            <td align=right bgcolor="#e7f5f3"><b>'.number_format($monto_certificado, 2, ',', '.').'</b></td>';
+            <td style="font-size: 17px;" align=center><b>'.$row['par_codigo'].'</b></td>
+            <td style="font-size: 11px;">'.$row['ins_detalle'].'</td>
+            <td style="font-size: 11px;">'.$row['ins_unidad_medida'].'</td>
+            <td style="font-size: 11px;" align=right>'.round($row['ins_cant_requerida'],2).'</td>
+            <td style="font-size: 11px;" align=right>'.$row['ins_costo_unitario'].'</td>
+            <td style="font-size: 11px;" align=right>'.$row['ins_costo_total'].'</td>
+            <td style="font-size: 11px;" align=right bgcolor="#e7f5f3"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
             
             if($verif_mes==0){
               $temp=$this->model_insumo->list_temporalidad_insumo($row['ins_id']);
               for ($i=1; $i <=12 ; $i++) { 
-                $tabla.='<td align=right>'.$temp[0]['mes'.$i].'</td>';
+                $tabla.='<td style="font-size: 11px;" align=right>'.$temp[0]['mes'.$i].'</td>';
               }
             }
             else{
@@ -702,7 +693,7 @@ class Certificacionpoa extends CI_Controller{
                 <td align=right>
                   <table align=right>
                     <tr>
-                      <td>
+                      <td style="font-size: 11px;">
                         <div id="m'.$i.''.$row['ins_id'].'" '.$display.'>';
                         if(count($m)!=0){
                           if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
@@ -743,7 +734,7 @@ class Certificacionpoa extends CI_Controller{
 
 
 
- ///// SUBACTIVIDAD
+ ///// UNIDAD RESPONSABLE
     //// SELECCION DE FORMULARIO N 4 PARA SELECCIONAR REQUERIMIENTOS 
   public function select_mis_productos($com_id,$titulo,$tp){
     /// tp : 0 (Normal)
@@ -784,7 +775,7 @@ class Certificacionpoa extends CI_Controller{
 
 
 /*------- LISTA DE REQUERIMIENTOS PRE LISTA 2021 ------*/
-  public function list_requerimientos_prelista($prod_id){
+/*  public function list_requerimientos_prelista($prod_id){
     $tabla='';
     $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
     $tabla='<style>
@@ -920,7 +911,7 @@ class Certificacionpoa extends CI_Controller{
       </table>';
 
     return $tabla;
-  }
+  }*/
 
 
 /*------- LISTA DE REQUERIMIENTOS PRE LISTA (2022) ------*/
@@ -999,12 +990,12 @@ class Certificacionpoa extends CI_Controller{
                 $tabla.='
                 <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
                 </td>
-                <td style="font-size: 15px;" align=center><b>'.$row['par_codigo'].'</b></td>
-                <td style="font-size: 10px;" >'.$row['ins_detalle'].'</td>
-                <td style="font-size: 10px;">'.$row['ins_unidad_medida'].'</td>
-                <td style="font-size: 10px;" align=right>'.$row['ins_cant_requerida'].'</td>
-                <td style="font-size: 10px;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
-                <td style="font-size: 10px;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                <td style="font-size: 17px;" align=center><b>'.$row['par_codigo'].'</b></td>
+                <td style="font-size: 11px;"><b>'.$row['ins_detalle'].'</b></td>
+                <td style="font-size: 11px;">'.$row['ins_unidad_medida'].'</td>
+                <td style="font-size: 11px;" align=right>'.round($row['ins_cant_requerida'],2).'</td>
+                <td style="font-size: 11px;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                <td style="font-size: 11px;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
                 if($temp>1){
                   for ($i=1; $i <=12; $i++) {
                     $color=''; 
@@ -1025,7 +1016,7 @@ class Certificacionpoa extends CI_Controller{
                             }
                     $tabla.='
                           </td>
-                          <td style="font-size: 10px;" align=right>';
+                          <td style="font-size: 11px;" align=right>';
                           if(count($m)!=0){
                             $tabla.='<font color="'.$color.'">'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</font>';
                           }
@@ -1048,13 +1039,13 @@ class Certificacionpoa extends CI_Controller{
                       $bgcolor='#d5f5f0';
                     }
                     $tabla.='
-                    <td style="font-size: 10px;" align="right" bgcolor='.$bgcolor.'>
+                    <td style="font-size: 11px;" align="right" bgcolor='.$bgcolor.'>
                       '.number_format($temp[0]['mes'.$j.''], 2, ',', '.').'
                     </td>';
                   }
                 }
                 $tabla.='
-                <td>'.$row['ins_observacion'].'</td>
+                <td style="font-size: 11px;">'.$row['ins_observacion'].'</td>
               </tr>';
           }
         }
@@ -1133,12 +1124,12 @@ class Certificacionpoa extends CI_Controller{
                 $tabla.='
                 <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
                 </td>
-                <td style="width:4%; font-size: 15px;" align=center><b>'.$row['par_codigo'].'</b></td>
-                <td style="width:16%; font-size: 10px;" >'.$row['ins_detalle'].'</td>
-                <td style="width:5%; font-size: 10px;">'.$row['ins_unidad_medida'].'</td>
-                <td style="width:3%; font-size: 10px;" align=right>'.$row['ins_cant_requerida'].'</td>
-                <td style="width:5%; font-size: 10px;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
-                <td style="width:5%; font-size: 10px;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                <td style="width:4%; font-size: 17px;" align=center><b>'.$row['par_codigo'].'</b></td>
+                <td style="width:16%; font-size: 12px;" >'.$row['ins_detalle'].'</td>
+                <td style="width:5%; font-size: 12px;">'.$row['ins_unidad_medida'].'</td>
+                <td style="width:3%; font-size: 12px;" align=right>'.$row['ins_cant_requerida'].'</td>
+                <td style="width:5%; font-size: 12px;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                <td style="width:5%; font-size: 12px;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
                 $temporalidad=$this->model_insumo->list_temporalidad_insumo($row['ins_id']);
                 for ($j=1; $j <=12 ; $j++) {
                   $bgcolor='';
@@ -1146,7 +1137,7 @@ class Certificacionpoa extends CI_Controller{
                     $bgcolor='#d5f5f0';
                   }
                   $tabla.='
-                  <td style="width:4.5%; font-size: 10px;" align="right" bgcolor='.$bgcolor.'>
+                  <td style="width:4.5%; font-size: 12px;" align="right" bgcolor='.$bgcolor.'>
                     '.number_format($temporalidad[0]['mes'.$j.''], 2, ',', '.').'
                   </td>';
                 }
@@ -1283,7 +1274,7 @@ class Certificacionpoa extends CI_Controller{
 
 
 /*------- LISTA DE REQUERIMIENTOS NORMAL ------*/
-  public function list_requerimientos($prod_id){
+  /*public function list_requerimientos($prod_id){
     $tabla='';
     $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
 
@@ -1396,7 +1387,7 @@ class Certificacionpoa extends CI_Controller{
       </table>';
 
     return $tabla;
-  }
+  }*/
 
  //// ======== SOLICITUD DE CERTIFICACION POA ========
 /*-- CABECERA (Solicitud Certificacion POa) --*/
@@ -1959,17 +1950,17 @@ class Certificacionpoa extends CI_Controller{
             $tabla.='  
             </td>
             <td style="width: 40%;">';
-            /*if($this->fun_id==740 || $this->fun_id==401 || $this->fun_id==399){
+            if($this->fun_id==738 || $this->fun_id==401 || $this->fun_id==399){
               $tabla.='
-                              <table style="width:100%;" border=0>
-                                  <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
-                                      <td style="width:100%;">LIC. WALTER E. CASTRO AYLLON</td>
-                                  </tr>
-                                  <tr style="font-size: 10px;font-family: Arial; height:65px;" align="center">
-                                      <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>
-                                  </tr>
-                              </table>';
-            }*/
+                  <table style="width:100%;" border=0>
+                      <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
+                          <td style="width:100%;">LIC. JUSTO ERLIN SOTTO SALVATIERRA</td>
+                      </tr>
+                      <tr style="font-size: 10px;font-family: Arial; height:65px;" align="center">
+                          <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>
+                      </tr>
+                  </table>';
+            }
             $tabla.='
             </td>
             <td style="width: 20%;" align="center">

@@ -87,7 +87,7 @@
                     <div class="row">
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
                             <section id="widget-grid" class="well">
-                                <?php echo $titulo;?>
+                                <?php echo $titulo.' '.$opciones_update;?>
                             </section>
                         </article>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
@@ -281,7 +281,7 @@
 
                         <br>
                         <div id="amtit"></div>
-                        <header><b>TEMPORALIDAD PRESUPUESTARIA : <?php echo $this->session->userdata('gestion')?></b><br>
+                        <header><b>DISTRIBUCI&Oacute;N PRESUPUESTARIA : <?php echo $this->session->userdata('gestion')?></b><br>
                         </header>
                         <br>
                         <div class="row">
@@ -400,6 +400,63 @@
         </div>
     </div>
 
+
+
+
+
+    <!---- MODAL SUBIR ARCHIVO ---->
+    <div class="modal fade" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" id="mdialTamanio2">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+              <h2><div id="titulo"></div></h2>
+              <section id="widget-grid" class="">
+                <h1><?php echo 'AJUSTE CERTIFICACIÓN POA <b> N° : '.$cpoa[0]['cpoa_codigo']; ?></b></h1>
+              </section>
+              <div class="row">
+                <form action="<?php echo site_url().'/modificaciones/cmod_insumo/importar_ajuste_cpoa'?>" enctype="multipart/form-data" id="form_subir_ajuste" name="form_subir_ajuste" method="post">  
+                  <input type="hidden" name="cpoaa_id" value="<?php echo $cert_editado[0]['cpoaa_id'];?>">
+                  <fieldset>
+                    <div class="form-group">
+                      <center><div id="img"></div></center>
+                      <hr>
+                        <p class="alert alert-info">
+                          <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
+                        </p>
+                    </div>
+                  </fieldset>  
+                
+                  <div class="form-group">
+                    <b>SELECCIONAR ARCHIVO CSV</b>
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+                        <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+                      </span>
+                      <span class="form-control"></span>
+                    </div>
+                </div>
+                  
+                  <div>
+                      <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR ARCHIVO DE AJUSTE.CSV</button><br>
+                      <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                  </div>
+                </form> 
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
         <!-- PAGE FOOTER -->
         <div class="page-footer">
             <div class="row">
@@ -454,10 +511,5 @@
         <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/certificacionpoa/certpoa.js"></script> 
-<!--         <script type="text/javascript">
-          $(document).ready(function() {
-            pageSetUp();
-          })
-        </script> -->
     </body>
 </html>

@@ -13,7 +13,7 @@ ob_start();
     }
 }
 </style>
-    <page orientation="paysage"  backtop="73mm" backbottom="45mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+    <page orientation="paysage"  backtop="73mm" backbottom="38mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
         <page_header>
         <br><div class="verde"></div>
             <?php echo $cabecera_modpoa;?> 
@@ -23,7 +23,6 @@ ob_start();
          <?php echo $pie_mod;?>
         </page_footer>
         <?php echo $items_modificados;?>
-        <!-- <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>CERTIFICACIÓN POA ELIMINADO SEGUN CITE N° 164/2022 !!</b></div> -->
     </page>
 <?php
 

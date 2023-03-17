@@ -462,7 +462,8 @@ $route['cert/generar_codigo/(:any)'] = 'ejecucion/ccertificacion_poa/generar_cod
 $route['cert/eliminar_certificacion/(:any)'] = 'ejecucion/cert_poa/eliminar_certificacion/$1'; //// Eliminar Certificacion POA
 
 /*-- EDICION DE CERTIFICACIÓN POA 2020 ---*/
-$route['cert/edit_certificacion/(:any)'] = 'ejecucion/ccertificacion_poa/modificar_cpoa/$1'; //// Generar Codigo Cert POA 2020
+$route['cert/edit_certificacion/(:any)'] = 'ejecucion/ccertificacion_poa/modificar_cpoa/$1'; //// Modificar Certificacion POA
+$route['cert/exportar_items_certificados/(:any)'] = 'ejecucion/ccertificacion_poa/exportar_certificacion/$1'; //// Exportar Certificacion POA (Excel)
 $route['cert/update_certpoa_insumo/(:any)'] = 'ejecucion/ccertificacion_poa/actualizar_monto_certificado_por_insumo/$1'; //// Actualizando datos de certificacion poa 2021 (Nuevo)
 
 /*-- EDICION DE CERTIFICACIÓN POA 2023 ---*/

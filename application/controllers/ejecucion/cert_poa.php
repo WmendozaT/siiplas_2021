@@ -448,7 +448,7 @@ class Cert_poa extends CI_Controller {
                 $mprog[$i]='mes'.$i;
               }
 
-              if($this->tp_adm==1){
+              //if($this->tp_adm==1){
                 $cert_anulado=$this->model_certificacion->certificado_anulado($cpoa_id);
                   if (count($cert_anulado)==0) {
                     /*-------- Certificacion Anulado ------*/
@@ -546,11 +546,11 @@ class Cert_poa extends CI_Controller {
                 redirect('ejec/menu_cpoa');
               }
 
-          }
+          /*}
           else{
             $this->session->set_flashdata('danger','DATOS INCOMPLETOS');
             redirect('ejec/menu_cpoa');
-          }
+          }*/
 
       } else {
           show_404();

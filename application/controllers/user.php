@@ -34,6 +34,7 @@ class User extends CI_Controller{
         $this->verif_mes=$this->session->userData('mes_actual');
         $this->notificaciones=$this->session->userData('estado_notificaciones');
         $this->verif_mes=$this->session->userdata('mes_actual');
+        $this->load->library('genera_informacion');
     }
 
     /*----------- Lista de Gestiones Disponibles ---------*/
@@ -208,6 +209,28 @@ class User extends CI_Controller{
             $data['list_trimestre']=$this->list_trimestre();
             $rol=$this->model_funcionario->get_rol($this->fun_id);
             
+
+            /*$data['popup_saldos']='
+                <div id="overlay" class="overlay"></div>
+                <div id="popup" class="popup">
+                  <div>
+                    <h2>DISTRIBUCION DE SALDOS</h2>
+                    <div style="float:left; width:270px;">
+                         hola mundo
+                    </div>
+                    
+                    <div style="float:left; width:285px;">
+                      
+                    </div>
+                  </div>
+                </div>';*/
+
+
+
+
+            //$data['popup_saldos']=$this->dep_id.'---'.$this->dist_id;
+            //$data['popup_saldos']=$this->genera_informacion->comparativo_presupuesto_distrital($this->dep_id,$this->dist_id,4);
+
             $data['mensaje']='';
             $data['seguimiento_poa']='';
 

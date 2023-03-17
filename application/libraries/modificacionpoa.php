@@ -55,8 +55,8 @@ class Modificacionpoa extends CI_Controller{
           <thead>
             <tr >
               <th style="width:1%;" bgcolor="#fafafa">#</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="SELECCIONAR"></th>
-              <th style="width:5%;" bgcolor="#fafafa" title="LISTA DE CITES GENERADOS"></th>
+              <th style="width:5%;" bgcolor="#fafafa" title="SELECCIONAR TIPO DE MODIFICACIÓN">SELECCIONAR TIPO DE MODIFICACIÓN</th>
+              <th style="width:5%;" bgcolor="#fafafa" title="HISTORIAL DE CITES"></th>
               <th style="width:10%;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
               <th style="width:20%;" bgcolor="#fafafa" title="DESCRIPCI&Oacute;N">GASTO CORRIENTE</th>
               <th style="width:10%;" bgcolor="#fafafa" title="NIVEL">ESCALON</th>
@@ -79,7 +79,7 @@ class Modificacionpoa extends CI_Controller{
                   <tr style="height:40px;">
                     <td align=center><b>'.$nro.'</b></td>
                     <td align=center>
-                      <a data-toggle="modal" data-target="#'.$row['proy_id'].'" title="SELECCIONAR OPCI&Oacute;N" class="btn btn-info"><font size=1>SELECCIONAR OPCI&Oacute;N</font></a>
+                      <a data-toggle="modal" data-target="#'.$row['proy_id'].'" title="SELECCIONAR OPCI&Oacute;N" class="btn btn-success"><font size=1>SELECCIONAR OPCION</font></a>
                         <div class="modal fade bs-example-modal-lg" tabindex="-1" id="'.$row['proy_id'].'"  role="dialog" aria-labelledby="myLargeModalLabel">
                           <div class="modal-dialog modal-lg" id="mdialTamanio">
                             <div class="modal-content">
@@ -197,7 +197,7 @@ class Modificacionpoa extends CI_Controller{
           <thead>
             <tr>
               <th style="width:1%; height:40px;" bgcolor="#fafafa">#</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="SELECCIONAR"></th>
+              <th style="width:5%;" bgcolor="#fafafa" title="SELECCIONAR">SELECCIONAR TIPO DE MODIFICACIÓN</th>
               <th style="width:5%;" bgcolor="#fafafa" title="LISTA DE CITES GENERADOS"></th>
               <th style="width:10%;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
               <th style="width:20%;" bgcolor="#fafafa" title="DESCRIPCI&Oacute;N">PROYECTO DE INVERSI&Oacute;N</th>
@@ -216,7 +216,7 @@ class Modificacionpoa extends CI_Controller{
                           <td align=center>';
                           if($row['pfec_estado']==1){
                               $tabla.='
-                          <a data-toggle="modal" data-target="#'.$row['proy_id'].'" title="SELECCIONAR OPCI&Oacute;N" class="btn btn-info"><font size=1>SELECCIONAR</font></a>
+                          <a data-toggle="modal" data-target="#'.$row['proy_id'].'" title="SELECCIONAR OPCI&Oacute;N" class="btn btn-success"><font size=1>SELECCIONAR OPCIÓN</font></a>
                             <div class="modal fade bs-example-modal-lg" tabindex="-1" id="'.$row['proy_id'].'"  role="dialog" aria-labelledby="myLargeModalLabel">
                               <div class="modal-dialog modal-lg" id="mdialTamanio">
                                 <div class="modal-content">
@@ -2206,7 +2206,7 @@ class Modificacionpoa extends CI_Controller{
           <td style="width:98%;">
             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
             <tr>';
-            $tabla.='
+            /*$tabla.='
               <td style="width:45%;">
                      <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                       <tr style="font-size: 10px;font-family: Arial;">
@@ -2241,8 +2241,8 @@ class Modificacionpoa extends CI_Controller{
                       </tr>
                   </table>
 
-                </td>';
-            /*if(($this->fun_id==740 || $this->fun_id==401 || $this->fun_id==399)){ /// Ritha
+                </td>';*/
+            if(($this->fun_id==738 || $this->fun_id==401 || $this->fun_id==399)){ /// Ritha
               $tabla.='
               <td style="width:30%;">
                      <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
@@ -2276,7 +2276,7 @@ class Modificacionpoa extends CI_Controller{
                           <td><br><br><br>
                               <table style="width:100%;">
                                   <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
-                                      <td style="width:100%;">LIC. WALTER E. CASTRO AYLLON</td>
+                                      <td style="width:100%;">LIC. JUSTO ERLIN SOTTO SALVATIERRA</td>
                                   </tr>
                                   <tr style="font-size: 10px;font-family: Arial; height:65px;">
                                       <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>
@@ -2337,7 +2337,7 @@ class Modificacionpoa extends CI_Controller{
                   </table>
 
                 </td>';
-            }*/
+            }
             $tabla.='
               
                 <td style="width:10%;" align=center>';

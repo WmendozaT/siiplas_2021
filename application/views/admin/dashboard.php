@@ -44,6 +44,45 @@
             }
           }
         </script>
+        <style type="text/css">
+          .popup {
+              background-color: #ffffff;
+              color: #888888;
+              height: 500px;
+              left: 100%;
+              padding: 20px;
+              position: fixed;
+              right: 30%;
+              top: 25%;
+              width: 600px;
+              z-index: 101;
+            /*border:5px solid #888888;*/
+            -moz-box-shadow: 0px 0px 10px 1px #888888;
+            -webkit-box-shadow: 0px 0px 10px 1px #888888;
+            box-shadow: 0px 0px 10px 1px #888888;
+            border-radius:10px;
+            -moz-border-radius:10px;
+          }
+
+          .overlay {
+              background: #000000;
+              bottom: 0;
+              left: 0;
+              position: fixed;
+              right: 0;
+              top: 0;
+              z-index: 100;
+            opacity:0.9;
+          }
+      </style>
+      <script type="text/javascript">
+      function openDialog() {
+        $('#overlay').fadeIn('fast', function() {
+          $('#popup').css('display','block');
+              $('#popup').animate({'left':'35%'},500);
+          });
+      }
+      </script>
       <style>
         #mdialTamanio{
           width: 80% !important;
@@ -64,7 +103,7 @@
       </style>
   </head>
 
-  <body>
+  <body onload="openDialog();">
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
@@ -171,11 +210,10 @@
                     <fieldset>
                       <div class="form-group">
                           <div class="form-group">
-                              <label class="col-md-2 control-label">GESTI&Oacute;N</label>
-                              <div class="col-md-10">
-                                  <?php echo $gestiones;?>
-                              </div>
-
+                            <label class="col-md-2 control-label">GESTI&Oacute;N</label>
+                            <div class="col-md-10">
+                                <?php echo $gestiones;?>
+                            </div>
                           </div>
                       </div>
                     </fieldset>                    
@@ -252,6 +290,10 @@
             </div>
           </div>
         </div>
+
+    <!--  MODAL DE ALERTA DE SALDOS     -->
+    <?php echo $popup_saldos; ?>
+    <!--  END MODAL  -->
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

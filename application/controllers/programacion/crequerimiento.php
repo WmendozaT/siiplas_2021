@@ -282,6 +282,11 @@ class crequerimiento extends CI_Controller{
           foreach ($lista_insumos as $row) {
             $color='';
             $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+            $ins_cert=0;
+            if($row['ins_monto_certificado']!=0){
+              $ins_cert=1;
+            }
+
             if(count($prog)!=0){
               if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
                 $color='#f5bfb6';
@@ -291,9 +296,15 @@ class crequerimiento extends CI_Controller{
             $tabla .= '<tr class="modo1" bgcolor="'.$color.'" title='.$row['ins_id'].'>';
               $tabla .= '<td align="center">';
               if($this->tp_adm==1 || $this->conf_form5==1){
-                $tabla.='
+                if($ins_cert==0){
+                  $tabla.='
                   <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO" ><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
                   <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn-default del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
+                }
+                else{
+                  $tabla.='<font color=red><b>CERTIFICADO</b></font>';
+                }
+                
               }
               else{
                 $tabla.=''.$cont.'';
@@ -340,10 +351,12 @@ class crequerimiento extends CI_Controller{
               $tabla .= '<td>'.$row['ins_observacion'].'</td>
               <td>';
               if($this->tp_adm==1 || $this->conf_form5==1){
-                $tabla.='
+                if($ins_cert==0){
+                  $tabla.='
                   <center>
                     <input type="checkbox" name="ins[]" value="'.$row['ins_id'].'" onclick="scheck'.$cont.'(this.checked);"/>
                   </center>';
+                }
               }
               $tabla.='
                 </td>
@@ -451,8 +464,8 @@ class crequerimiento extends CI_Controller{
         $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion); /// Get Componente
         $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); ////// DATOS DEL PROYECTO
 
-        $monto_asig=$this->model_ptto_sigep->suma_ptto_poa($proyecto[0]['aper_id'],1);
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_poa($proyecto[0]['aper_id'],2);
+        $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
+        $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
         
 
         $m_asig=0;$m_prog=0;

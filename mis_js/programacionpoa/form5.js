@@ -291,6 +291,7 @@ function doSelectAlert(event,prod_id,ins_id) {
         $(".mod_ff").on("click", function (e) {
             ins_id = $(this).attr('name');
             document.getElementById("ins_id").value=ins_id;
+
             var url = base+"index.php/programacion/crequerimiento/get_requerimiento";
             var request;
             if (request) {
