@@ -199,12 +199,12 @@ class Genera_informacion extends CI_Controller{
       public function ppto_actividad($proyecto,$tp_id){
         $salida[1]=0;$salida[2]=0;$salida[3]=0;
 
-        $ppto_asig=$this->model_ptto_sigep->suma_ptto_uresponsable($proyecto['aper_id'],1); /// Asignado
+        $ppto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto['aper_id'],1); /// Asignado
         if($tp_id==1){
           $ppto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto['proy_id']); /// Programado Proyecto Inversion
         }
         else{
-          $ppto_prog=$this->model_ptto_sigep->suma_ptto_uresponsable($proyecto['aper_id'],2); /// Programado Gasto Corriente
+          $ppto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto['aper_id'],2); /// Programado Gasto Corriente
         }
 
         $monto_asignado=0;$monto_programado=0;$saldo=0;
@@ -341,9 +341,19 @@ class Genera_informacion extends CI_Controller{
 
 
 
-    /*----- CUADRO PARA AJUSTAR LOS SALDOS DISPONIBLES -----*/
-    public function cuadro_saldo_ppto($dep_id,$dist_id,$tp_id){
+    /*----- CUADRO PARA AJUSTAR LOS SALDOS DISPONIBLES (DASHBOARD) -----*/
+    public function suma_saldo_ppto_distrital($dep_id,$dist_id,$tp_id){
+      $sum=0;
+      $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id);
+      foreach ($unidades as $row){
+        $ppto=$this->ppto_actividad($row,$tp_id);
+        
+      }
 
+
+
+
+      return $sum;
     }
 
 

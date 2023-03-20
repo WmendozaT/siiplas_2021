@@ -13,9 +13,10 @@ class Model_notificacion extends CI_Model{
     
     /*------- LISTA DE REQUERIMIENTOS POR MES (Unidad Responsable) --------*/
     public function list_requerimiento_mes($proy_id,$com_id,$mes_id){
-        $sql = 'select *
+        $sql = 'select proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert
                 from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
-                where com_id='.$com_id.' and estado_cert=\'0\'';
+                where com_id='.$com_id.' and estado_cert=\'0\'
+                group by proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -23,9 +24,10 @@ class Model_notificacion extends CI_Model{
 
     /*------- LISTA DE REQUERIMIENTOS POR MES (Unidad Responsable) --------*/
     public function list_requerimiento_mes_unidad($proy_id,$mes_id){
-        $sql = 'select *
+        $sql = 'select select proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert
                 from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
-                where estado_cert=\'0\'';
+                where estado_cert=\'0\'
+                group by proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -34,9 +36,10 @@ class Model_notificacion extends CI_Model{
 
     /*------- LISTA DE REQUERIMIENTOS POR (0 - MES FINAL) (Unidad Responsable) --------*/
     public function list_requerimiento_al_mes_unidad($proy_id,$mes_id){
-        $sql = 'select *
+        $sql = 'select proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert
                 from lista_seguimiento_requerimientos_programado('.$mes_id.','.$this->gestion.')
-                where proy_id='.$proy_id.' and estado_cert=\'0\'';
+                where proy_id='.$proy_id.' and estado_cert=\'0\'
+                group by proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -62,6 +65,7 @@ class Model_notificacion extends CI_Model{
                 Inner Join partidas as par On i.par_id=par.par_id
                 Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
                 where ip.prod_id='.$prod_id.' and temp.mes_id='.$mes_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and par.par_depende!=\'10000\' and temp.estado_cert=\'0\'
+                group by ip.prod_id,i.ins_id,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,i.ins_observacion,i.par_id, par.par_codigo,temp.mes_id,temp.ipm_fis,temp.estado_cert
                 order by par.par_codigo asc';
 
         $query = $this->db->query($sql);

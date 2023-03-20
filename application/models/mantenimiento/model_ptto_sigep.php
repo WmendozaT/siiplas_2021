@@ -317,7 +317,7 @@ class Model_ptto_sigep extends CI_Model{
 
 
     /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO (2019 - 2020 - 2021) vigente -----*/
-    public function suma_ptto_uresponsable($aper_id,$tp){
+/*    public function suma_ptto_uresponsable($aper_id,$tp){
         // 1 : PTO ASIGNADO
         // 2 : PTO PROGRAMADO
         if($tp==1){
@@ -336,7 +336,11 @@ class Model_ptto_sigep extends CI_Model{
     
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
+
+
+
+
 
     /*----- MONTO PROGRAMADO - PROYECTOS DE INVERSION (vigente)-----*/
     public function suma_ptto_pinversion($proy_id){
@@ -673,6 +677,29 @@ class Model_ptto_sigep extends CI_Model{
                     Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
                     where i.aper_id='.$aper_id.'
                     group by i.aper_id';
+        }
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO POR DISTRITAL (2023) VIGENTE-----*/
+    public function suma_ptto_distrital($dist_id,$tp){
+        // 1 : PTO ASIGNADO
+        // 2 : PTO PROGRAMADO
+        if($tp==1){
+            $sql = 'select p.dist_id,SUM(partidas_asig.importe) as asignado
+                    FROM lista_poa_gastocorriente_nacional('.$this->gestion.') p
+                    Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=p.aper_id
+                    where p.dist_id='.$dist_id.'
+                    group by p.dist_id';
+        }
+        else{
+            $sql = 'select p.dist_id, SUM(i.ins_costo_total) as monto
+                    FROM lista_poa_gastocorriente_nacional('.$this->gestion.') p
+                    Inner Join insumos as i On i.aper_id=p.aper_id
+                    where p.dist_id='.$dist_id.'
+                    group by p.dist_id';
         }
     
         $query = $this->db->query($sql);

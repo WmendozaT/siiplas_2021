@@ -228,7 +228,7 @@ class User extends CI_Controller{
 
 
 
-            //$data['popup_saldos']=$this->dep_id.'---'.$this->dist_id;
+            $data['popup_saldos']=$this->dep_id.'---'.$this->dist_id;
             //$data['popup_saldos']=$this->genera_informacion->comparativo_presupuesto_distrital($this->dep_id,$this->dist_id,4);
 
             $data['mensaje']='';
