@@ -2144,6 +2144,12 @@ Inner Join partidas as par On i.par_id=par.par_id
 Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
 where pfe.proy_id=id_proy and pfe.pfec_estado=1 and temp.mes_id=mes and pfe.estado!=3 and c.estado!=3 and pr.estado!=3 
 and i.ins_estado!=3 and i.aper_id!=0 and par.par_depende!='10000' and apg.aper_gestion=gestion
+
+group by 
+pfe.proy_id,apg.aper_id,apg.aper_gestion,pfe.pfec_descripcion, pfe.pfec_estado,c.com_id,tpsa.tipo_subactividad,ser.serv_cod,ser.serv_descripcion,pr.prod_id,pr.prod_cod,pr.prod_producto,
+i.ins_id,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,i.ins_observacion,i.ins_gestion,par.par_codigo,temp.mes_id,temp.ipm_fis, temp.estado_cert
+
+
 order by ser.serv_cod,pr.prod_cod, par.par_codigo asc;
 $$ LANGUAGE sql;
 
@@ -2195,6 +2201,11 @@ Inner Join partidas as par On i.par_id=par.par_id
 Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
 where pfe.pfec_estado=1 and (temp.mes_id>0 and temp.mes_id<=mes_final) and pfe.estado!=3 and c.estado!=3 and pr.estado!=3 
 and i.ins_estado!=3 and i.aper_id!=0 and par.par_depende!='10000' and apg.aper_gestion=gestion
+
+group by 
+pfe.proy_id,apg.aper_id,apg.aper_gestion,pfe.pfec_descripcion, pfe.pfec_estado,c.com_id,tpsa.tipo_subactividad,ser.serv_cod,ser.serv_descripcion,pr.prod_id,pr.prod_cod,pr.prod_producto,
+i.ins_id,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,i.ins_observacion,i.ins_gestion,par.par_codigo,temp.mes_id,temp.ipm_fis, temp.estado_cert
+
 order by ser.serv_cod,pr.prod_cod, par.par_codigo asc;
 $$ LANGUAGE sql;
 
@@ -3912,3 +3923,51 @@ create table insumo_original(
   m12 numeric(18,2) NOT NULL DEFAULT 0,
   primary key(prod_id_inicial)
  );
+
+
+
+ ///============== FUNCION LISTA DE POAS CON PRESUPUESTO ASIGNADO Y PROGRAMADO
+ CREATE OR REPLACE FUNCTION lista_ppto_poa_nacional(gestion integer) RETURNS TABLE(
+dep_id numeric,
+da varchar,
+dep_departamento varchar,
+dist_id integer,
+ue varchar,
+dist_distrital varchar,
+abrev varchar,
+prog varchar,
+proy varchar,
+act varchar,
+tipo varchar,
+proy_sisin varchar,
+proy_nombre varchar,
+aper_id numeric,
+proy_id numeric,
+pfec_id numeric,
+asignado numeric,
+programado numeric,
+saldo numeric) AS
+
+$$
+select poa.dep_id,poa.da,poa.dep_departamento,poa.dist_id,poa.ue,poa.dist_distrital,poa.abrev,poa.prog,poa.proy,poa.act,poa.tipo,poa.proy_sisin,proy_nombre,poa.aper_id,proy_id,poa.pfec_id,partidas_asig.asignado,prog.programado,(partidas_asig.asignado-prog.programado) AS saldo
+from lista_poa_nacional(gestion) poa
+Inner Join (
+        select pg.aper_id,SUM(pg.importe) as asignado
+                from ptto_partidas_sigep pg
+                where pg.estado!=3 
+                group by pg.aper_id
+
+) as partidas_asig On partidas_asig.aper_id=poa.aper_id
+
+Inner Join (
+        select i.aper_id, SUM(i.ins_costo_total) as programado
+                from insumos i
+                where i.ins_estado!=3
+                group by i.aper_id
+                    
+) as prog On prog.aper_id=poa.aper_id
+
+group by poa.dep_id,poa.da,poa.dep_departamento,poa.dist_id,poa.ue,poa.dist_distrital,poa.abrev,poa.prog,poa.proy,poa.act,poa.tipo,poa.proy_sisin,proy_nombre,poa.aper_id,proy_id,poa.pfec_id,partidas_asig.asignado,prog.programado
+order by poa.dep_id,poa.dist_id,poa.prog,poa.proy,poa.act asc;
+
+$$ LANGUAGE sql;

@@ -14,7 +14,8 @@ class User extends CI_Controller{
         $this->load->model('mantenimiento/model_estructura_org');
         $this->load->model('programacion/model_componente');
         $this->load->model('ejecucion/model_certificacion');
-        
+        $this->load->model('mantenimiento/model_ptto_sigep');
+        $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
         $this->load->model('model_control_menus');
         $this->load->library('session');
         $this->load->library('encrypt');
@@ -34,7 +35,7 @@ class User extends CI_Controller{
         $this->verif_mes=$this->session->userData('mes_actual');
         $this->notificaciones=$this->session->userData('estado_notificaciones');
         $this->verif_mes=$this->session->userdata('mes_actual');
-        $this->load->library('genera_informacion');
+        //$this->load->library('genera_informacion');
     }
 
     /*----------- Lista de Gestiones Disponibles ---------*/
@@ -209,30 +210,25 @@ class User extends CI_Controller{
             $data['list_trimestre']=$this->list_trimestre();
             $rol=$this->model_funcionario->get_rol($this->fun_id);
             
+            $data['mensaje']='';
+            $data['seguimiento_poa']='';
+            $data['popup_saldos']='';
 
-            /*$data['popup_saldos']='
+            ///------- Verificando Saldos
+
+            /*if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1){
+                $data['popup_saldos']='
                 <div id="overlay" class="overlay"></div>
                 <div id="popup" class="popup">
                   <div>
                     <h2>DISTRIBUCION DE SALDOS</h2>
-                    <div style="float:left; width:270px;">
-                         hola mundo
-                    </div>
-                    
-                    <div style="float:left; width:285px;">
-                      
-                    </div>
+                        <div style="float:center; width:100%;">
+                         
+                        </div>
                   </div>
-                </div>';*/
+                </div>';
+            }*/
 
-
-
-
-            $data['popup_saldos']=$this->dep_id.'---'.$this->dist_id;
-            //$data['popup_saldos']=$this->genera_informacion->comparativo_presupuesto_distrital($this->dep_id,$this->dist_id,4);
-
-            $data['mensaje']='';
-            $data['seguimiento_poa']='';
 
             if($rol[0]['r_id']==11){ /// Usuraio para proyectos de inversion
                 $data['mensaje']='<div class="alert alert-success" align="center">
@@ -261,6 +257,29 @@ class User extends CI_Controller{
         }
     }
 
+    /*----- VERIFICA SI EXISTE SALDO A DISTRBUIR (DASHBOARD) -----*/
+    public function verif_saldos_disponibles_distrital($dep_id,$dist_id){
+      $valor=0;
+      $ppto_asignado=0;
+      $ppto_programado=0;
+
+      $asignado=$this->model_ptto_sigep->suma_ptto_distrital($dist_id,1);
+      $programado=$this->model_ptto_sigep->suma_ptto_distrital($dist_id,2);
+
+      if(count($asignado)!=0){
+        $ppto_asignado=$asignado[0]['asignado'];
+      }
+
+      if(count($programado)!=0){
+        $ppto_programado=$programado[0]['programado'];
+      }
+
+      if(($ppto_asignado-$ppto_programado)!=0){
+        $valor=1;
+      }
+
+      return $valor;
+    }
 
     /*---- LISTA DE OPERACIONES A SER EJECUTADAS EN EL MES ----*/
     public function mensaje_ejecucion_operaciones_mes($nro){
@@ -814,7 +833,7 @@ class User extends CI_Controller{
                     else{ //// Establecimiento de salud
                         $gestion = $this->Users_model->obtener_gestion();
                         $is_valid=$this->model_estructura_org->verif_establecimiento_ingreso($user_name,$password,$gestion[0]['ide']);
-
+          
                         if($is_valid['bool']){
                             $this->session->set_userdata($this->session_establecimiento($is_valid['act_id']));
                             redirect('dashboar_seguimiento_poa');

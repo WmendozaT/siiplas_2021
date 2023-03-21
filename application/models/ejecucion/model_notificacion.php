@@ -13,10 +13,9 @@ class Model_notificacion extends CI_Model{
     
     /*------- LISTA DE REQUERIMIENTOS POR MES (Unidad Responsable) --------*/
     public function list_requerimiento_mes($proy_id,$com_id,$mes_id){
-        $sql = 'select proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert
+        $sql = 'select *
                 from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
-                where com_id='.$com_id.' and estado_cert=\'0\'
-                group by proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert';
+                where com_id='.$com_id.' and estado_cert=\'0\'';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -24,10 +23,9 @@ class Model_notificacion extends CI_Model{
 
     /*------- LISTA DE REQUERIMIENTOS POR MES (Unidad Responsable) --------*/
     public function list_requerimiento_mes_unidad($proy_id,$mes_id){
-        $sql = 'select select proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert
+        $sql = 'select *
                 from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
-                where estado_cert=\'0\'
-                group by proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert';
+                where estado_cert=\'0\'';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -36,10 +34,9 @@ class Model_notificacion extends CI_Model{
 
     /*------- LISTA DE REQUERIMIENTOS POR (0 - MES FINAL) (Unidad Responsable) --------*/
     public function list_requerimiento_al_mes_unidad($proy_id,$mes_id){
-        $sql = 'select proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert
+        $sql = 'select *
                 from lista_seguimiento_requerimientos_programado('.$mes_id.','.$this->gestion.')
-                where proy_id='.$proy_id.' and estado_cert=\'0\'
-                group by proy_id,aper_id,aper_gestion,prod_cod,ins_id,ins_detalle,ins_cant_requerida,ins_costo_unitario,ins_costo_total, ins_unidad_medida,ins_observacion,ins_gestion,par_codigo,mes_id,ipm_fis,estado_cert';
+                where proy_id='.$proy_id.' and estado_cert=\'0\'';
 
         $query = $this->db->query($sql);
         return $query->result_array();

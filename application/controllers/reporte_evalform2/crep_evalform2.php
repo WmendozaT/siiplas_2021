@@ -89,10 +89,7 @@ class Crep_evalform2 extends CI_Controller {
     $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_menu', $data);
 
 
-
-
-
-    /*$matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_institucional();
+/*    $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_institucional();
     for ($i=0; $i < count($this->model_objetivogestion->get_list_ogestion_por_regional_institucional()); $i++) { 
       for ($j=0; $j < 5; $j++) { 
         echo "[".$matriz[$i][$j]."]";

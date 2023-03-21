@@ -52,9 +52,9 @@
               left: 100%;
               padding: 20px;
               position: fixed;
-              right: 30%;
+              right: 10%;
               top: 25%;
-              width: 600px;
+              width: 800px;
               z-index: 101;
             /*border:5px solid #888888;*/
             -moz-box-shadow: 0px 0px 10px 1px #888888;
@@ -71,7 +71,7 @@
               position: fixed;
               right: 0;
               top: 0;
-              z-index: 100;
+              z-index: 10;
             opacity:0.9;
           }
       </style>
@@ -79,8 +79,8 @@
       function openDialog() {
         $('#overlay').fadeIn('fast', function() {
           $('#popup').css('display','block');
-              $('#popup').animate({'left':'35%'},500);
-          });
+            $('#popup').animate({'left':'28.5%'},200);
+        });
       }
       </script>
       <style>

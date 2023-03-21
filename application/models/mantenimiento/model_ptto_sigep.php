@@ -672,11 +672,16 @@ class Model_ptto_sigep extends CI_Model{
                     group by pg.aper_id';
         }
         else{
-            $sql = 'select i.aper_id, SUM(ip.programado_total) as monto
+            $sql = 'select i.aper_id, SUM(i.ins_costo_total) as monto
+                    from insumos i
+                    where i.aper_id='.$aper_id.'
+                    group by i.aper_id';
+
+            /*$sql = 'select i.aper_id, SUM(ip.programado_total) as monto
                     from vlista_insumos i
                     Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
                     where i.aper_id='.$aper_id.'
-                    group by i.aper_id';
+                    group by i.aper_id';*/
         }
     
         $query = $this->db->query($sql);
@@ -695,7 +700,7 @@ class Model_ptto_sigep extends CI_Model{
                     group by p.dist_id';
         }
         else{
-            $sql = 'select p.dist_id, SUM(i.ins_costo_total) as monto
+            $sql = 'select p.dist_id, SUM(i.ins_costo_total) as programado
                     FROM lista_poa_gastocorriente_nacional('.$this->gestion.') p
                     Inner Join insumos as i On i.aper_id=p.aper_id
                     where p.dist_id='.$dist_id.'

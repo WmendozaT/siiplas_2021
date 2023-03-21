@@ -1712,9 +1712,10 @@ class Programacionpoa extends CI_Controller{
                 }
                 else{
                   $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
-                  $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                  
                   $uresp='';
                   if(count($unidad)!=0){
+                    $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
                     $uresp='<font size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
                   }
                 }

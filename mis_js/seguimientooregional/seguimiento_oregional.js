@@ -43,6 +43,7 @@
       dep_id=$(this).val();
       if(dep_id!=''){
         if(dep_id==0){ /// Institucional
+            $('#lista_consolidado').fadeIn(1000).html('Cargando Informacion ....');
             var url = base+"index.php/reporte_evalform2/crep_evalform2/get_cuadro_evaluacion_formulario2_institucional";
             var request;
             if (request) {
@@ -172,12 +173,12 @@ function cuadro_grafico_cumplimiento_operaciones_institucional(matriz,nro,titulo
 //// grafico nivel de cumplimiento de operaciones Institucional
 function cuadro_grafico_cumplimiento_operaciones_regresion_intitucional(matriz,titulo){
     let detalle1=[];
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i <= 4; i++) {
         detalle1[i]= matriz[5][i];
     }
 
     let detalle2=[];
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i <= 4; i++) {
         detalle2[i]=  matriz[6][i];
     }
   /// REGRESION LINEAL ACUMULADO
