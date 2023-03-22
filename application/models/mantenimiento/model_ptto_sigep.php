@@ -711,6 +711,29 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO POR REGIONAL (2023) VIGENTE-----*/
+    public function suma_ptto_regional($dep_id,$tp){
+        // 1 : PTO ASIGNADO
+        // 2 : PTO PROGRAMADO
+        if($tp==1){
+            $sql = 'select p.dep_id,SUM(partidas_asig.importe) as asignado
+                    FROM lista_poa_gastocorriente_nacional('.$this->gestion.') p
+                    Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=p.aper_id
+                    where p.dep_id='.$dep_id.'
+                    group by p.dep_id';
+        }
+        else{
+            $sql = 'select p.dep_id, SUM(i.ins_costo_total) as programado
+                    FROM lista_poa_gastocorriente_nacional('.$this->gestion.') p
+                    Inner Join insumos as i On i.aper_id=p.aper_id
+                    where p.dep_id='.$dep_id.'
+                    group by p.dep_id';
+        }
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
     /*---- Get Partida Programado - gasto corriente ---*/
     public function get_partida_accion($aper_id,$par_id){
@@ -1103,6 +1126,24 @@ class Model_ptto_sigep extends CI_Model{
                 Inner Join ppto_cite as mod On mod.cppto_id=saldo.cppto_id
                 where saldo.sp_id='.$sp_id.' and saldo.saldo_estado!=\'3\'
                 order by saldo.saldo_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+///// ====== DISTRIBUCION DE PPTO APROBADO POR DISTRITAL
+    /*-------- LISTA DE UNIDADES QUE TIENEN PPTO DISPONIBLE A PROGRAMAR (DASHBOARD) A NIVEL DISTRITAL --------*/
+    public function lista_unidades_con_saldo_a_distribuir($dep_id,$dist_id){
+        if($dep_id==2){ /// Regional La paz
+            $sql = 'select *
+                from lista_ppto_poa_nacional('.$this->gestion.')
+                where dep_id='.$dep_id.' and saldo>\'1\'';
+        }
+        else{
+            $sql = 'select *
+                from lista_ppto_poa_nacional('.$this->gestion.')
+                where dist_id='.$dist_id.' and saldo>\'1\'';
+        }
+
         $query = $this->db->query($sql);
         return $query->result_array();
     }

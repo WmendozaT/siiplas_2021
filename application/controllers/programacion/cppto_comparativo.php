@@ -299,7 +299,7 @@ class Cppto_comparativo extends CI_Controller {
       //$data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
       if(count($data['proyecto'])!=0){
           $monto_asignado=0;$monto_programado=0;
-          $cod_part_asig=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],1);  //// ppto asignado Anteproyecto
+          $cod_part_asig=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],1);  //// suma codigo de partidas asignadas
           
           if(count($cod_part_asig)!=0){
             $monto_asignado=$cod_part_asig[0]['sum_cod_partida'];
@@ -309,7 +309,7 @@ class Cppto_comparativo extends CI_Controller {
             $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog_pi($data['proyecto'][0]['proy_id']); //// ppto Programado POA - PI
           }
           else{
-            $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],2); //// ppto Programado POA - G. corriente
+            $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],2); //// suma codigo de partidas programadas
           }
 
 
@@ -706,78 +706,6 @@ class Cppto_comparativo extends CI_Controller {
         $nro=0;
         $monto_asig=0;
         $monto_prog=0;
-
-/*        if(count($partidas_asig)>count($partidas_prog)){
-          foreach($partidas_asig as $row){
-            $part=$this->model_ptto_sigep->get_partidas_programado_regional($dep_id,4,$row['par_id']);
-            
-              $prog=0;
-              if(count($part)!=0){
-                $prog=$part[0]['programado'];
-              }
-              $dif=(($row['asignado']+$row['saldo'])-$prog);
-             
-             $color='';
-              $sig='';
-              if($dif!=0){
-                if($dif<0){
-                  $color='#f9cdcd';
-                }
-                else{
-                  $color='#e5efd7';
-                  $sig='+';
-                }
-              }
-
-              $nro++;
-              $tabla .='
-                <tr class="modo1" bgcolor='.$color.'> 
-                  <td style="width: 3%;height:11px; text-align: center">'.$nro.'</td>
-                  <td style="width: 10%; text-align: center;">'.$row['par_codigo'].'</td>
-                  <td style="width: 35%; text-align: left;">'.$row['par_nombre'].'</td>
-                  <td style="width: 12%; text-align: right;">'.number_format($row['asignado'], 2, ',', '.').'</td>
-                  <td style="width: 12%; text-align: right;">'.number_format($prog, 2, ',', '.').'</td>
-                  <td style="width: 12%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>
-                </tr>';
-              $monto_asig=$monto_asig+($row['asignado']+$row['saldo']);
-              $monto_prog=$monto_prog+$prog; 
-          }
-        }
-        else{
-            foreach($partidas_prog as $row){
-            $part=$this->model_ptto_sigep->get_partida_asig_regional($dep_id,$row['par_id']); /// get partida asignado
-              $asig=0;
-              if(count($part)!=0){
-                $asig=$part[0]['asignado'];
-              }
-              $dif=($asig-$row['programado']);
-
-              $color='';
-                $sig='';
-                if($dif!=0){
-                  if($dif<0){
-                    $color='#f9cdcd';
-                  }
-                  else{
-                    $color='#e5efd7';
-                    $sig='+';
-                  }
-                }
-
-            $nro++;
-            $tabla .='<tr  bgcolor='.$color.'>
-                        <td style="width: 3%;height:11px; text-align: center">'.$nro.'</td>
-                        <td style="width: 10%; text-align: center;">'.$row['par_codigo'].'</td>
-                        <td style="width: 25%; text-align: left;">'.$row['par_nombre'].'</td>
-                        <td style="width: 15%; text-align: right;">'.number_format($asig, 2, ',', '.').'</td>
-                        <td style="width: 15%; text-align: right;">'.number_format($row['programado'], 2, ',', '.').'</td>
-                        <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
-                    $tabla.='</tr>';
-            $monto_asig=$monto_asig+$asig;
-            $monto_prog=$monto_prog+$row['programado'];
-          }
-        }*/
-
 
         foreach($partidas_asig  as $row){
           $part=$this->model_ptto_sigep->get_partidas_programado_regional($dep_id,4,$row['par_id']);

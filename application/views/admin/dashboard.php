@@ -14,78 +14,47 @@
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
     <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
-        <script language="javascript">
-          function doSearch(nro){
-            var tableReg = document.getElementById('datos'+nro);
-            var searchText = document.getElementById('searchTerm'+nro).value.toLowerCase();
-            var cellsOfRow="";
-            var found=false;
-            var compareWith="";
-       
-            // Recorremos todas las filas con contenido de la tabla
-            for (var i = 1; i < tableReg.rows.length; i++){
-              cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
-              found = false;
-              // Recorremos todas las celdas
-              for (var j = 0; j < cellsOfRow.length && !found; j++){
-                compareWith = cellsOfRow[j].innerHTML.toLowerCase();
-                // Buscamos el texto en el contenido de la celda
-                if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
-                  found = true;
-                }
-              }
-              if(found) {
-                tableReg.rows[i].style.display = '';
-              } else {
-                // si no ha encontrado ninguna coincidencia, esconde la
-                // fila de la tabla
-                tableReg.rows[i].style.display = 'none';
+      <script language="javascript">
+        function doSearch(nro){
+          var tableReg = document.getElementById('datos'+nro);
+          var searchText = document.getElementById('searchTerm'+nro).value.toLowerCase();
+          var cellsOfRow="";
+          var found=false;
+          var compareWith="";
+     
+          // Recorremos todas las filas con contenido de la tabla
+          for (var i = 1; i < tableReg.rows.length; i++){
+            cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+            found = false;
+            // Recorremos todas las celdas
+            for (var j = 0; j < cellsOfRow.length && !found; j++){
+              compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+              // Buscamos el texto en el contenido de la celda
+              if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+                found = true;
               }
             }
+            if(found) {
+              tableReg.rows[i].style.display = '';
+            } else {
+              // si no ha encontrado ninguna coincidencia, esconde la
+              // fila de la tabla
+              tableReg.rows[i].style.display = 'none';
+            }
           }
-        </script>
-        <style type="text/css">
-          .popup {
-              background-color: #ffffff;
-              color: #888888;
-              height: 500px;
-              left: 100%;
-              padding: 20px;
-              position: fixed;
-              right: 10%;
-              top: 25%;
-              width: 800px;
-              z-index: 101;
-            /*border:5px solid #888888;*/
-            -moz-box-shadow: 0px 0px 10px 1px #888888;
-            -webkit-box-shadow: 0px 0px 10px 1px #888888;
-            box-shadow: 0px 0px 10px 1px #888888;
-            border-radius:10px;
-            -moz-border-radius:10px;
-          }
-
-          .overlay {
-              background: #000000;
-              bottom: 0;
-              left: 0;
-              position: fixed;
-              right: 0;
-              top: 0;
-              z-index: 10;
-            opacity:0.9;
-          }
-      </style>
-      <script type="text/javascript">
-      function openDialog() {
-        $('#overlay').fadeIn('fast', function() {
-          $('#popup').css('display','block');
-            $('#popup').animate({'left':'28.5%'},200);
-        });
-      }
+        }
+        function abreVentana(PDF){             
+          var direccion;
+          direccion = '' + PDF;
+          window.open(direccion, "CUADRO COMPARATIVO POA" , "width=800,height=700,scrollbars=NO") ; 
+        }
       </script>
       <style>
         #mdialTamanio{
           width: 80% !important;
+        }
+        #mdialTamanio_saldos{
+          width: 60% !important;
         }
         table{
           font-size: 10px;
@@ -100,10 +69,14 @@
         td{
           font-size: 10px;
         }
+        #myModal {
+          background: #000000;
+          opacity:0.9
+        }
       </style>
   </head>
 
-  <body onload="openDialog();">
+  <body >
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
@@ -246,6 +219,7 @@
           </div>
         </div>
 
+
         <!-- MODAL SEGUIMIENTO POA FORM 5 (PROYECTOS DE INVERSION) -->
         <div class="modal fade" id="modal_form5_pi_mes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document" id="mdialTamanio">
@@ -312,6 +286,13 @@
       }
     </script>
     <script type="text/javascript">
+        function imprimir_grafico1() {
+          $('#loading_saldo').html('<center><img src="<?php echo base_url() ?>/assets/img/loading.gif" alt="loading" style="width:10%;"/><br/>Un momento por favor, Cargando Información </center>');
+        }
+        $( document ).ready(function() {
+            $('#myModal').modal('toggle')
+        });
+
         /*------ Evaluacion de Formulario N 4 ------*/
         $(function () {
           var prod_id = ''; var proy_id = '';

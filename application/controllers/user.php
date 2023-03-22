@@ -216,16 +216,26 @@ class User extends CI_Controller{
 
             ///------- Verificando Saldos
 
-            /*if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1){
+/*            if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1 & $this->gestion>2022){
+                
                 $data['popup_saldos']='
-                <div id="overlay" class="overlay"></div>
-                <div id="popup" class="popup">
-                  <div>
-                    <h2>DISTRIBUCION DE SALDOS</h2>
-                        <div style="float:center; width:100%;">
-                         
+                <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false" style="">
+                    <div class="modal-dialog modal-login" id="mdialTamanio_saldos">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 style="color:red"><b>AJUSTAR DISTRIBUCION DE SALDOS !!!</b></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" role="alert">
+                                  <p>Hola '.$this->session->userdata('funcionario').', la '.strtoupper($ddep[0]['dist_distrital']).' tiene saldo disponible por distribuir en su POA '.$this->gestion.', debe realizar el ajuste POA para realizar CERTIFICACIONES POA. </p>
+                                </div>
+                                '.$this->lista_unidades_con_saldo($this->dep_id,$this->dist_id).'
+                            </div>
+                            <div class="modal-footer">
+                            <a href="'.base_url().'index.php/admin/logout" class="btn btn-danger">salir de la sesion</a>
+                            </div>
                         </div>
-                  </div>
+                    </div>
                 </div>';
             }*/
 
@@ -236,7 +246,7 @@ class User extends CI_Controller{
                 </div>';
             }
             else{
-                if($this->fun_id==592 || $this->fun_id==709){ //// Exclusivo para la Regional LA paz
+                if($this->dep_id==2){ //// Exclusivo para la Regional LA paz
                     $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));
                 }
                 else{ /// Listado normal
@@ -263,8 +273,15 @@ class User extends CI_Controller{
       $ppto_asignado=0;
       $ppto_programado=0;
 
-      $asignado=$this->model_ptto_sigep->suma_ptto_distrital($dist_id,1);
-      $programado=$this->model_ptto_sigep->suma_ptto_distrital($dist_id,2);
+      if($dep_id==2){ /// Regional La paz
+        $asignado=$this->model_ptto_sigep->suma_ptto_regional($dep_id,1);
+        $programado=$this->model_ptto_sigep->suma_ptto_regional($dep_id,2);
+      }
+      else{
+        $asignado=$this->model_ptto_sigep->suma_ptto_distrital($dist_id,1);
+        $programado=$this->model_ptto_sigep->suma_ptto_distrital($dist_id,2);
+      }
+
 
       if(count($asignado)!=0){
         $ppto_asignado=$asignado[0]['asignado'];
@@ -280,6 +297,67 @@ class User extends CI_Controller{
 
       return $valor;
     }
+
+    /*----- UNIDADES CON SALDOS A DISTRBUIR (DASHBOARD) -----*/
+    public function lista_unidades_con_saldo($dep_id,$dist_id){
+        $unidades=$this->model_ptto_sigep->lista_unidades_con_saldo_a_distribuir($dep_id,$dist_id); /// Lista de unidades con saldo disponible
+        $tabla='';
+        $tabla.='
+        <form action="/examples/actions/confirmation.php" method="post">
+            <table class="table table-bordered">
+              <thead>
+                <tr bgcolor="1c7368">
+                  <th style="width:1%;text-align:center;color:white;font-size:9px">#</th>
+                  <th style="width:20%;text-align:center;color:white;font-size:9px">UNIDAD / ESTABLECIMIENTO / PROY. INVERSIÓN</th>
+                  <th style="width:7%;text-align:center;color:white;font-size:9px">PPTO. ASIGNADO '.$this->gestion.'</th>
+                  <th style="width:7%;text-align:center;color:white;font-size:9px">PPTO. PROGRAMADO '.$this->gestion.'</th>
+                  <th style="width:7%;text-align:center;color:white;font-size:9px">SALDO '.$this->gestion.'</th>
+                  <th style="width:4%;text-align:center;color:white;font-size:9px">AJUSTAR POA</th>
+                  <th style="width:1%;text-align:center;color:white;font-size:9px"></th>
+                </tr>
+              </thead>
+              <tbody>';
+              $nro=0;
+              foreach ($unidades as $row){
+                  $nro++;
+                  $bg_color='#eef9f3';
+                  if($row['saldo']<0){
+                    $bg_color='#f9f1ee';
+                  }
+                  $tabla.='
+                  <tr title='.$row['proy_id'].' bgcolor='.$bg_color.'>
+                    <td style="text-align:center;font-size:8.5px">'.$nro.'</td>
+                    <td style="font-size:8.5px"><b>'.$row['prog'].' - '.$row['tipo'].' '.$row['proy_nombre'].' '.$row['abrev'].'</b></td>
+                    <td style="text-align:right;font-size:8.5px"><b>'.number_format($row['asignado'], 2, ',', '.').'</b></td>
+                    <td style="text-align:right;font-size:8.5px"><b>'.number_format($row['programado'], 2, ',', '.').'</b></td>
+                    <td style="text-align:right;font-size:8.5px"><b>'.number_format($row['saldo'], 2, ',', '.').'</b></td>
+                    <td style="text-align:center">
+                        <a href="'.site_url("").'/mod/procesos/'.$row['proy_id'].'" title="AJUSTE POA" class="btn btn-default" onClick="imprimir_grafico1()">
+                            <img src="'.base_url().'assets/Iconos/page_edit.png" WIDTH="20" HEIGHT="20"/>
+                        </a>
+                    </td>
+                    <td style="text-align:center">
+                        <a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$row['proy_id'].'\');" class="btn btn-default" title="CUADRO COMPARATIVO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="20" HEIGHT="20" /></a>
+                    </td>
+                  </tr>';
+                
+              }
+              $tabla.='
+              </tbody>
+            </table>
+            <div id="loading_saldo"></div>
+        </form>';
+
+        return $tabla;
+    }
+
+
+
+
+
+
+
+
 
     /*---- LISTA DE OPERACIONES A SER EJECUTADAS EN EL MES ----*/
     public function mensaje_ejecucion_operaciones_mes($nro){
