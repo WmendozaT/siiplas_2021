@@ -344,13 +344,19 @@ class Model_ptto_sigep extends CI_Model{
 
     /*----- MONTO PROGRAMADO - PROYECTOS DE INVERSION (vigente)-----*/
     public function suma_ptto_pinversion($proy_id){
-        $sql = '
+        $sql = 'select poa.proy_id,poa.aper_id,SUM(i.ins_costo_total) as monto
+                from lista_poa_pinversion_nacional('.$this->gestion.') poa
+                Inner Join insumos as i On i.aper_id=poa.aper_id
+                where poa.proy_id='.$proy_id.' and i.ins_estado!=\'3\'
+                group by poa.proy_id,poa.aper_id';
+
+        /*$sql = '
                 select pfe.proy_id,SUM(i.ins_costo_total) as monto
                 from _proyectofaseetapacomponente pfe
                 Inner Join insumos as i On i.aper_id=pfe.aper_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                 where pfe.proy_id='.$proy_id.' and pfe.estado!=\'3\' and i.ins_estado!=\'3\' and pfe.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.'
-                group by pfe.proy_id';
+                group by pfe.proy_id';*/
     
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -748,7 +754,7 @@ class Model_ptto_sigep extends CI_Model{
     }
 
     /*---- Get Partida Programado - Proyecto de Inversion---*/
-    public function get_partida_programado_pi($proy_id,$par_id){
+/*    public function get_partida_programado_pi($proy_id,$par_id){
         $sql = 'select pfe.proy_id,i.par_id, par.par_codigo as codigo, par.par_nombre as nombre, SUM(ip.programado_total) as monto
                 from _proyectofaseetapacomponente pfe
                 
@@ -764,7 +770,7 @@ class Model_ptto_sigep extends CI_Model{
         
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------- Get Partida Asignado ------------*/
     public function get_partida_asignado_sigep($aper_id,$par_id){
@@ -819,7 +825,7 @@ class Model_ptto_sigep extends CI_Model{
 
 
     /*========= SUMA DE CODIGO DE PARTIDA (PROG) pi (vigente)=========*/
-    public function sum_codigos_partidas_asig_prog_pi($proy_id){
+/*    public function sum_codigos_partidas_asig_prog_pi($proy_id){
         $sql = 'select cp.proy_id, SUM(cp.codigo)as sum_cod_partida 
                     from (
 
@@ -842,7 +848,7 @@ class Model_ptto_sigep extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*============ PARTIDAS UNIDAD EJECUTORA POR REGIONAL (vigente)============*/
     public function partidas_accion_region($dep_id,$aper_id,$tp){
@@ -886,7 +892,7 @@ class Model_ptto_sigep extends CI_Model{
 
 
     /*============ PARTIDAS PROYECTO DE INVERSION POR REGIONAL (vigente)============*/
-    public function partidas_pi_prog_region($dep_id,$proy_id){
+/*    public function partidas_pi_prog_region($dep_id,$proy_id){
         $sql = 'select p.dep_id,p.proy_id,par.par_id,par.par_codigo as codigo, par.par_nombre as nombre, SUM(ip.programado_total) as monto
                 from _proyectos p
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
@@ -903,7 +909,7 @@ class Model_ptto_sigep extends CI_Model{
     
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*-------------------- Get Partida Accion Regional programado (vigente)------------------------*/

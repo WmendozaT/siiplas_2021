@@ -138,19 +138,14 @@ class Cseguimiento extends CI_Controller {
       
       $tabla.='
       <input name="base" type="hidden" value="'.base_url().'">
-      <table id="dt_basic1" class="table1 table-bordered" style="width:100%;">
+      <table id="dt_basic" class="table table-bordered" style="width:100%;">
         <thead>
           <tr style="height:35px;">
-            <th style="width:1%;" bgcolor="#474544">#</th>';
-            if($this->tp_adm==1){
-              $tabla.='<th style="width:5%;" bgcolor="#474544">EVALUACI&Oacute;N POA<br>'.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</th>';
-            }
-            
-            $tabla.='
+            <th style="width:1%;" bgcolor="#474544">#</th>
             <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR">MIS UNIDADES</th>
-            <th style="width:7%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO MENSUAL</th>
-            <th style="width:5%;" bgcolor="#474544" title="EVALUACION POA">EVALUACION POA</th>
-            <th style="width:5%;" bgcolor="#474544" title="EJECUCION CERT. POA"></th>
+            <th style="width:10%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO MENSUAL</th>
+            <th style="width:3%;" bgcolor="#474544" title="EVALUACION POA">EVALUACION POA</th>
+            <th style="width:3%;" bgcolor="#474544" title="EJECUCION CERT. POA"></th>
             <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
             <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">UNIDAD / ESTABLECIMIENTO DE SALUD</th>
             <th style="width:10%;" bgcolor="#474544" title="NIVEL">ESCALON</th>
@@ -167,22 +162,15 @@ class Cseguimiento extends CI_Controller {
               $nro++;
               $tabla.='
               <tr style="height:45px;">
-                <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>';
-                  if($this->tp_adm==1){
-                    $tabla.='
-                    <td align=center>
-                      <a href="#" data-toggle="modal" data-target="#modal_update_eval_unidad" class="btn btn-info update_eval_unidad" style="width:95%;" name="'.$row['proy_id'].'" id="'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'" title="ACTUALIZAR EVALUACION POA"><i class="glyphicon glyphicon-retweet"></i> ACTUALIZAR</a>
-                    </td>';
-                  }
-                $tabla.='
-                <td align=center bgcolor="#e4f3e4">
-                  <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">
-                    <i class="glyphicon glyphicon-list"></i> UNIDADES OPERATIVAS
+                <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>
+                <td align=center bgcolor="#deebfb">
+                  <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" style="font-size:10px;">
+                    <i class="glyphicon glyphicon-list"></i> <b>UNIDADES OPERATIVAS</b>
                   </a>
                 </td>
-                <td align=center bgcolor="#e4f3e4">
+                <td align=center bgcolor="#deebfb">
                   <div class="btn-group">
-                    <a class="btn btn-default"><img src="'.base_url().'assets/ifinal/doc.jpg" WIDTH="40" HEIGHT="40"/></a>
+                    <a class="btn btn-default" style="font-size:10px"><b>REP. MENSUAL</b></a>
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);"><span class="caret"></span></a>
                     <ul class="dropdown-menu">';
                       foreach($meses as $rowm){
@@ -198,14 +186,14 @@ class Cseguimiento extends CI_Controller {
                     </ul>
                   </div>
                 </td>
-                <td align=center bgcolor="#e4f3e4">
-                  <a href="'.site_url("").'/eval/eval_unidad/'.$row['proy_id'].'" title="REPORTE DE EVALUACION POA" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico.png" WIDTH="40" HEIGHT="40"/></a>
+                <td align=center bgcolor="#deebfb">
+                  <a href="'.site_url("").'/eval/eval_unidad/'.$row['proy_id'].'" title="REPORTE DE EVALUACION POA POR UNIDAD" target="_blank" ><img src="'.base_url().'assets/img/ejecucion.png" WIDTH="35" HEIGHT="35"/></a>
                 </td>
-                <td align=center bgcolor="#e4f3e4">
-                  <a href="#" data-toggle="modal" data-target="#modal_distribucion_mensual" class="btn btn-default distribucion" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">
-                  <img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="40" HEIGHT="40"/></a>
+                <td align=center bgcolor="#deebfb">
+                  <a href="#" data-toggle="modal" data-target="#modal_distribucion_mensual" class=" distribucion" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'">
+                  <img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="35" HEIGHT="35"/></a>
                 </td>
-                <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
+                <td align="center" style="font-size:13px"><center><b>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</b></center></td>
                 <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
                 <td>'.$row['escalon'].'</td>
                 <td>'.$row['nivel'].'</td>
@@ -230,14 +218,14 @@ class Cseguimiento extends CI_Controller {
       $tabla='';
       $tabla.='
       <input name="base" type="hidden" value="'.base_url().'">
-        <table id="dt_basic" class="table table-bordered" style="width:100%;">
+        <table id="dt_basic2" class="table2 table-bordered" style="width:100%;">
           <thead>
-            <tr>
-              <th style="width:1%;" bgcolor="#474544">#</th>
+            <tr style="height:50px;">
+              <th style="width:1%;height:20%" bgcolor="#474544">#</th>
               <th style="width:5%;" bgcolor="#474544" title="MIS UNIDADES RESPONSABLES"></th>
-              <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
-              <th style="width:25%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">PROYECTO DE INVERSI&Oacute;N</th>
+              <th style="width:5%;" bgcolor="#474544" title="PROGRAMACION INICIAL">PROG. INICIAL '.$this->gestion.'</th>
               <th style="width:10%;" bgcolor="#474544" title="SISIN">C&Oacute;DIGO_SISIN</th>
+              <th style="width:25%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">PROYECTO DE INVERSI&Oacute;N</th>
               <th style="width:10%;" bgcolor="#474544" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
               <th style="width:10%;" bgcolor="#474544" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
               <th style="width:15%;" bgcolor="#474544" title="FASE - ETAPA DE LA OPERACI&Oacute;N">DESCRIPCI&Oacute;N FASE</th>
@@ -246,15 +234,16 @@ class Cseguimiento extends CI_Controller {
           <tbody>';
             $nro=0;
             foreach($proyectos as $row){
+              $temp_inicial=$this->model_insumo->temporalidad_inicial_total_unidad($row['proy_id']); /// temporalidad inicial
               $nro++;
               $tabla.='
-                <tr style="height:35px;">
+                <tr style="height:50px;">
                   <td title='.$row['proy_id'].'><center>'.$nro.'</center></td>
-                  <td align=center>';
+                  <td align=center bgcolor="#deebfb">';
                   if($row['pfec_estado']==1){
                     $tabla.='
-                    <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).'">
-                      <i class="glyphicon glyphicon-list"></i> MIS UNIDADES RESPONABLES
+                    <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).'" style="font-size:10px">
+                      <i class="glyphicon glyphicon-list"></i> <b>MIS UNIDADES RESPONSABLES</b>
                     </a>';
                   }
                   else{
@@ -262,13 +251,24 @@ class Cseguimiento extends CI_Controller {
                   }
                   $tabla.='
                   </td>
-                <td><center>'.$row['aper_programa'].' '.$row['proy_sisin'].' '.$row['aper_actividad'].'</center></td>
-                <td>'.$row['proy_nombre'].'</td>';
-                $tabla.='<td>'.$row['proy_sisin'].'</td>';
-                $tabla.='<td>'.$row['dep_cod'].' '.strtoupper($row['dep_departamento']).'</td>';
-                $tabla.='<td>'.$row['dist_cod'].' '.strtoupper($row['dist_distrital']).'</td>';
-                $tabla.='<td>'.strtoupper($row['pfec_descripcion']).'</td>';
-              $tabla.='</tr>';
+                  <td bgcolor="#deebfb" align="center">';
+                    if(count($temp_inicial)!=0){
+                      $tabla.='
+                      <a href="#" data-toggle="modal" data-target="#modal_distribucion_inicial" class=" distribucion_inicial" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).'">
+                        <img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="35" HEIGHT="35"/>
+                      </a>';
+                    }
+                    else{
+                      $tabla.='-';
+                    }
+                  $tabla.='
+                  </td>
+                  <td align="center" style="font-size:13px"><b>'.$row['proy_sisin'].'</b></td>
+                  <td>'.$row['proy_nombre'].'</td>
+                  <td>'.$row['dep_cod'].' '.strtoupper($row['dep_departamento']).'</td>
+                  <td>'.$row['dist_cod'].' '.strtoupper($row['dist_distrital']).'</td>
+                  <td>'.strtoupper($row['pfec_descripcion']).'</td>
+                </tr>';
             }
           $tabla.='
           </tbody>

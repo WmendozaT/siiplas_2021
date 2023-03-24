@@ -616,8 +616,8 @@ function valida_eliminar(){
 
 //// ELIMINAR REQUERIMIENTOS POA
 $(function () {
-    function reset() {
-        $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
+    function reset() { 
+        $("#toggleCSS").attr("href", base+"assets/themes_alerta/alertify.default.css");
         alertify.set({
             labels: {
                 ok: "ACEPTAR",

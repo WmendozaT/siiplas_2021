@@ -613,9 +613,10 @@ class Genera_informacion extends CI_Controller{
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                 <tr class="modo1">
-                  <td colspan=45 align=center style="height:50px;"><b> FORMULARIO N° 4 - '.strtoupper($titulo).'</b></td>
+                  <td colspan=46 align=center style="height:50px;"><b> FORMULARIO N° 4 - '.strtoupper($titulo).'</b></td>
                 </tr>
                 <tr style="background-color: #66b2e8">
+                  <th style="width:3%; height:50px;background-color: #eceaea;"></th>
                   <th style="width:3%; height:50px;background-color: #eceaea;">COD. DA.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. UE.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
@@ -683,6 +684,7 @@ class Genera_informacion extends CI_Controller{
               $nro++;
 
                $tabla.='<tr>';
+                $tabla.='<td style="height:50px;">'.$row['prod_id'].'</td>';
                 $tabla.='<td style="height:50px;">\''.strtoupper($row['dep_cod']).'\'</td>';
                 $tabla.='<td>\''.strtoupper($row['dist_cod']).'\'</td>';
                 $tabla.='<td>\''.strtoupper($row['aper_programa']).'\'</td>';

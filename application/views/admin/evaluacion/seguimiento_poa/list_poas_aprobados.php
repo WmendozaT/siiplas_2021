@@ -220,7 +220,7 @@
     </div>
 
     <!-- MODAL UPDATE EVALUACION POA   -->
-    <div class="modal fade" id="modal_update_eval_unidad" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--     <div class="modal fade" id="modal_update_eval_unidad" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog" id="mdialTamanio">
             <div class="modal-content">
                 <form id="form_update" novalidate="novalidate" method="post">
@@ -241,7 +241,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
      <!--  =============== -->
 
 
@@ -257,6 +257,26 @@
                     <div id="titulo_dist"></div>
                     <div class="row">
                         <div id="load"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL REPORTE - DISTRIBUCION FINANCIERA INICIAL PROYECTOS DE INVERSION -->
+    <div class="modal fade" id="modal_distribucion_inicial" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" id="mdalTamanio_distribucion">
+            
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                </div>
+                <div class="modal-body">
+                    <center><h3><b>DISTRIBUCION FINANCIERA INICIAL - <?php echo $this->session->userData('gestion') ?></b></h3></center>
+                    <div id="titulo_dist_inicial"></div>
+                    <div class="row">
+                        <div id="load_inicial"></div>
                     </div>
                 </div>
             </div>

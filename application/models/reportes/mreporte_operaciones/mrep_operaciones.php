@@ -265,7 +265,7 @@ class Mrep_operaciones extends CI_Model {
                 Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
 
                 where p.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and p.estado!=\'3\' and p.tp_id='.$tp_id.' and apg.aper_estado!=\'3\' and pf.pfec_estado=\'1\' and c.estado!=\'3\' and pr.estado!=\'3\'
-                order by apg.aper_programa,apg.aper_proyecto, apg.aper_actividad, ser.serv_cod, pr.prod_cod asc';
+                order by p.dep_id,p.dist_id,apg.aper_programa,apg.aper_proyecto, apg.aper_actividad, ser.serv_cod, pr.prod_cod asc';
          
         $query = $this->db->query($sql);
         return $query->result_array();

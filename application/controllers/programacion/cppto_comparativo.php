@@ -250,22 +250,24 @@ class Cppto_comparativo extends CI_Controller {
             $monto_asignado=$cod_part_asig[0]['sum_cod_partida'];
           }
 
-          if($proyecto[0]['tp_id']==1){
+          $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($proyecto[0]['aper_id'],2); //// ppto Programado POA - G. corriente
+          /*if($proyecto[0]['tp_id']==1){
             $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog_pi($proyecto[0]['proy_id']); //// ppto Programado POA - PI
           }
           else{
             $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($proyecto[0]['aper_id'],2); //// ppto Programado POA - G. corriente
-          }
+          }*/
 
 
           ///----- Genera lista de Partidas Asignadas y Programadas
           $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],1); // Asig
-          if($proyecto[0]['tp_id']==1){
+          $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],2); // Prog
+          /*if($proyecto[0]['tp_id']==1){
             $partidas_prog=$this->model_ptto_sigep->partidas_pi_prog_region($proyecto[0]['dep_id'],$proyecto[0]['proy_id']);
           }
           else{
             $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],2); // Prog
-          }
+          }*/
           
 
 
@@ -305,22 +307,23 @@ class Cppto_comparativo extends CI_Controller {
             $monto_asignado=$cod_part_asig[0]['sum_cod_partida'];
           }
 
-          if($data['proyecto'][0]['tp_id']==1){
+          /*if($data['proyecto'][0]['tp_id']==1){
             $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog_pi($data['proyecto'][0]['proy_id']); //// ppto Programado POA - PI
           }
           else{
             $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],2); //// suma codigo de partidas programadas
-          }
-
+          }*/
+          $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],2); //// suma codigo de partidas programadas
 
           ///----- Genera lista de Partidas Asignadas y Programadas
           $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],1); // Asig
-          if($data['proyecto'][0]['tp_id']==1){
+          $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],2); // Prog
+          /*if($data['proyecto'][0]['tp_id']==1){
             $partidas_prog=$this->model_ptto_sigep->partidas_pi_prog_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['proy_id']);
           }
           else{
             $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],2); // Prog
-          }
+          }*/
           
 
 
@@ -393,13 +396,13 @@ class Cppto_comparativo extends CI_Controller {
         $monto_prog=0;
 
         foreach($partidas_asig  as $row){
-          if($proyecto[0]['tp_id']==1){
+          /*if($proyecto[0]['tp_id']==1){
             $part=$this->model_ptto_sigep->get_partida_programado_pi($proyecto[0]['proy_id'],$row['par_id']);
           }
           else{
             $part=$this->model_ptto_sigep->get_partida_accion_regional($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
-          }
-          
+          }*/
+          $part=$this->model_ptto_sigep->get_partida_accion_regional($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
             $prog=0;
             if(count($part)!=0){
               $prog=$part[0]['monto'];

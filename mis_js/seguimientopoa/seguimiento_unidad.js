@@ -75,13 +75,13 @@ function abreVentana(PDF){
 
       if (response.respuesta == 'correcto') {
 
-          $('#load').fadeIn(1000).html(response.tabla);
-          $('#titulo_dist').html('<h2 class="alert alert-info"><center>'+establecimiento+'</center></h2>');
-          graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION FORMULARIO N° (REQUERIMIENTOS)',establecimiento,'% EJECUCION CERT. POA') /// formulario 5
-          graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE METAS FORMULARIO N° 4 (ACTIVIDADES)',establecimiento,'% EJECUCION METAS - ACTIVIDADES') /// formulario 4
+        $('#load').fadeIn(1000).html(response.tabla);
+        $('#titulo_dist').html('<h2 class="alert alert-info"><center>'+establecimiento+'</center></h2>');
+        graf_regresion_trimestral_temporalidad_prog_ejec('graf_form5',response.matriz_form5,'CUADRO DE EJECUCION FORMULARIO N° (REQUERIMIENTOS)',establecimiento,'% EJECUCION CERT. POA') /// formulario 5
+        graf_regresion_trimestral_temporalidad_prog_ejec('graf_form4',response.matriz_form4,'CUADRO CUMPLIMIENTO DE METAS FORMULARIO N° 4 (ACTIVIDADES)',establecimiento,'% EJECUCION METAS - ACTIVIDADES') /// formulario 4
       }
       else{
-          alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
+        alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
       }
 
       });
@@ -95,6 +95,69 @@ function abreVentana(PDF){
       
     });
   });
+
+
+
+//////======================= DISTRIBUCION MENSUAL PROGRAMACION INICIAL PROYECTOS DE INVERSION 2023
+  //// Distribucion Financiera Inicial Proyectos de Inversion
+  $(function () {
+    $(".distribucion_inicial").on("click", function (e) {
+      proy_id = $(this).attr('name');
+      proyecto = $(this).attr('id');
+     
+      $('#titulo_dist_inicial').html('');
+      $('#load_inicial').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando distribucion - <br>'+proyecto+'</div>');
+      
+      var url = base+"index.php/ejecucion/cejecucion_pi/get_cuadro_ejecucion_pi";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+      if (response.respuesta == 'correcto') {
+        document.getElementById('titulo_dist_inicial').innerHTML = '<h1>'+response.datos_proyecto+'</h1><hr>';
+        document.getElementById('load_inicial').innerHTML = response.cuadro_consolidado;
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
+      request.fail(function (jqXHR, textStatus, thrown) {
+          console.log("ERROR: " + textStatus);
+      });
+      request.always(function () {
+          //console.log("termino la ejecuicion de ajax");
+      });
+      e.preventDefault();
+      
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -261,7 +324,7 @@ function abreVentana(PDF){
 
 
  /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL POR UNIDAD------*/
-  $(function () {
+/*  $(function () {
     $(".update_eval_unidad").on("click", function (e) {
         proy_id = $(this).attr('name');
         document.getElementById("proy_id").value=proy_id;
@@ -311,7 +374,7 @@ function abreVentana(PDF){
           }
         });
     });
-  });
+  });*/
 
 
 ///////============ REPORTE GERENCIAL DE SEGUIMIENTO POA

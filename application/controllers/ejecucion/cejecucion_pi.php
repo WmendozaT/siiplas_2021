@@ -100,9 +100,8 @@ class Cejecucion_pi extends CI_Controller {
           <div id="cuadro_consolidado_impresion" style="display: none"></div>
         </div>';
         
-       
-
         $this->load->view('admin/ejecucion_pi/formulario_pinversion', $data);
+
       }
       else{
         redirect('seg/seguimiento_poa');
@@ -122,10 +121,13 @@ class Cejecucion_pi extends CI_Controller {
       $proy_id = $this->security->xss_clean($post['proy_id']);
       $proyecto = $this->model_proyecto->get_proyecto_inversion($proy_id);
 
-      $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa
+      $ppto_programado_poa_inicial=$this->model_insumo->temporalidad_inicial_pinversion($proyecto[0]['aper_id']); /// ppto poa Inicial
+
+      $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa (Actual)
       $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_pinversion($proyecto[0]['aper_id']); /// Ppto Ejecutado sigep
 
-      $matriz=$this->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa,$ppto_ejecutado_sigep);
+      $matriz=$this->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
+
       $cuadro_consolidado=$this->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
       $cuadro_consolidado_impresion=$this->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
 
@@ -144,7 +146,6 @@ class Cejecucion_pi extends CI_Controller {
         show_404();
     }
   }
-
 
 
 
@@ -173,40 +174,21 @@ class Cejecucion_pi extends CI_Controller {
       </thead>
       <tbody>
         <tr>
-          <td><b>PPTO. PROGRAMADO</b></td>';
+          <td><b>PPTO. PROGRAMADO INICIAL</b></td>';
         for ($i=1; $i <=12 ; $i++) {
-          $color='';
-          if($this->verif_mes[1]==$i){
-            $color='bgcolor="#cff2db"';
-          }
-          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[0][$i], 2, ',', '.').'</td>';
+          $tabla.='<td align="right" bgcolor="#cbedeb">'.number_format($matriz[1][$i], 2, ',', '.').'</td>';
         }
       $tabla.='
         </tr>
         <tr>
-          <td><b>PPTO. EJECUTADO</b></td>';
+          <td><b>PPTO. PROGRAMADO INICIAL ACUMULADO</b></td>';
         for ($i=1; $i <=12 ; $i++) {
-          $color='';
-          if($this->verif_mes[1]==$i){
-            $color='bgcolor="#cff2db"';
-          }
-          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[1][$i], 2, ',', '.').'</td>';
+          $tabla.='<td align="right" bgcolor="#cbedeb">'.number_format($matriz[2][$i], 2, ',', '.').'</td>';
         }
       $tabla.='
         </tr>
         <tr>
-          <td><b>PPTO. PROG. ACUMULADO</b></td>';
-        for ($i=1; $i <=12 ; $i++) { 
-          $color='';
-          if($this->verif_mes[1]==$i){
-            $color='bgcolor="#cff2db"';
-          }
-          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[2][$i], 2, ',', '.').'</td>';
-        }
-      $tabla.='
-        </tr>
-        <tr>
-          <td><b>PPTO. EJEC. ACUMULADO</b></td>';
+          <td><b>PPTO. RE-FORMULADO</b></td>';
         for ($i=1; $i <=12 ; $i++) { 
           $color='';
           if($this->verif_mes[1]==$i){
@@ -217,13 +199,46 @@ class Cejecucion_pi extends CI_Controller {
       $tabla.='
         </tr>
         <tr>
+          <td><b>PPTO. RE-FORMULADO ACUMULADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[4][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b>PPTO. EJECUTADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[5][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b>PPTO. EJECUTADO ACUMULADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[6][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
           <td><b>(%) CUMPLIMIENTO MENSUAL</b></td>';
         for ($i=1; $i <=12 ; $i++) { 
           $color='';
           if($this->verif_mes[1]==$i){
             $color='bgcolor="#cff2db"';
           }
-          $tabla.='<td align="right" style="font-size:14px" '.$color.'><b>'.$matriz[4][$i].'%</b></td>';
+          $tabla.='<td align="right" style="font-size:14px" '.$color.'><b>'.$matriz[7][$i].'%</b></td>';
         }
       $tabla.='
         </tr>
@@ -266,7 +281,7 @@ class Cejecucion_pi extends CI_Controller {
           if($this->verif_mes[1]==$i){
             $color='bgcolor="#cff2db"';
           }
-          $tabla.='<td align="right" style="font-size:10px" '.$color.'>'.$matriz[4][$i].'%</td>';
+          $tabla.='<td align="right" style="font-size:10px" '.$color.'>'.$matriz[7][$i].'%</td>';
         }
       $tabla.='
         </tr>
@@ -279,13 +294,53 @@ class Cejecucion_pi extends CI_Controller {
 
 
   /*-- MATRIZ PARA CUADRO CONSOLIDADO DE EJECUCION --*/
-  public function matriz_consolidado_ejecucion_pinversion($ppto_programado_poa,$ppto_ejecutado_sigep){
+  public function matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep){
 
-    /*$ppto_asignado_sigep=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
-    $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa
-    $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_pinversion($proyecto[0]['aper_id']); /// Ppto Ejecutado sigep*/
+    /// Temporalidad Inicial Programado
+    if(count($ppto_programado_poa_inicial)!=0){
+     for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect_ini[$i]=$ppto_programado_poa_inicial[0]['programado_total'];;
+        }
+        else{
+          $vect_ini[$i]=round($ppto_programado_poa_inicial[0]['mes'.$i],2);
+        }
+      }
+    }
+    else{
+      for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect_ini[$i]=0;
+        }
+        else{
+          $vect_ini[$i]=0;
+        }
+      }
+    }
 
+    /// Temporalidad Programado Ajustado (actual)
+    if(count($ppto_programado_poa)!=0){
+     for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect_p[$i]=$ppto_programado_poa[0]['programado_total'];;
+        }
+        else{
+          $vect_p[$i]=round($ppto_programado_poa[0]['mes'.$i],2);
+        }
+      }
+    }
+    else{
+      for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect_p[$i]=0;
+        }
+        else{
+          $vect_p[$i]=0;
+        }
+      }
+    }
 
+    /// Temporalidad Ejecutado
     if(count($ppto_ejecutado_sigep)!=0){
       for ($i=0; $i <=12 ; $i++) { 
         if($i==0){
@@ -308,51 +363,58 @@ class Cejecucion_pi extends CI_Controller {
     }
 
 
-    for ($i=0; $i <=5; $i++) { 
+    for ($i=0; $i <=7; $i++) { 
       for ($j=0; $j <=12; $j++) { 
         $matriz[$i][$j]=0;
       }
     }
 
 
-    $matriz[5][1]='ENE.';
-    $matriz[5][2]='FEB.';
-    $matriz[5][3]='MAR.';
-    $matriz[5][4]='ABR.';
-    $matriz[5][5]='MAY.';
-    $matriz[5][6]='JUN.';
-    $matriz[5][7]='JUL.';
-    $matriz[5][8]='AGO.';
-    $matriz[5][9]='SEPT.';
-    $matriz[5][10]='OCT.';
-    $matriz[5][11]='NOV.';
-    $matriz[5][12]='DIC.';
+    $matriz[0][1]='ENE.';
+    $matriz[0][2]='FEB.';
+    $matriz[0][3]='MAR.';
+    $matriz[0][4]='ABR.';
+    $matriz[0][5]='MAY.';
+    $matriz[0][6]='JUN.';
+    $matriz[0][7]='JUL.';
+    $matriz[0][8]='AGO.';
+    $matriz[0][9]='SEPT.';
+    $matriz[0][10]='OCT.';
+    $matriz[0][11]='NOV.';
+    $matriz[0][12]='DIC.';
 
 
-    if(count($ppto_programado_poa)!=0){
-      $suma_prog=0;
-      $suma_ejec=0;
-      for ($j=0; $j <=12 ; $j++) { 
+    $suma_prog_inicial=0;
+    $suma_prog=0;
+    $suma_ejec=0;
+    for ($j=0; $j <=12 ; $j++) { 
 
-        if($j==0){
-          $matriz[0][$j]=$ppto_programado_poa[0]['programado_total'];
-          $matriz[1][$j]=$vect[$j];
-          $matriz[2][$j]=0;
-          $matriz[3][$j]=0;
-        }
-        else{
-          $suma_prog=$suma_prog+$ppto_programado_poa[0]['mes'.$j];
-          $suma_ejec=$suma_ejec+$vect[$j];
+      if($j==0){
+        $matriz[1][$j]=$vect_ini[$j]; // total prog inicial
+        $matriz[2][$j]=0;
+        $matriz[3][$j]=$vect_p[$j]; // total prog actual
+        $matriz[4][$j]=0;
+        $matriz[5][$j]=$vect[$j]; // total ejecutado
+        $matriz[6][$j]=0;
+        $matriz[7][$j]=0;
+      }
+      else{
+        $suma_prog_inicial=$suma_prog_inicial+$vect_ini[$j];
+        $suma_prog=$suma_prog+$vect_p[$j];
+        $suma_ejec=$suma_ejec+$vect[$j]; 
 
-          $matriz[0][$j]=round($ppto_programado_poa[0]['mes'.$j],2);
-          $matriz[1][$j]=$vect[$j];
-          $matriz[2][$j]=$suma_prog;
-          $matriz[3][$j]=$suma_ejec;
-        }
-         
-        if($matriz[2][$j]!=0){
-          $matriz[4][$j]=round(($matriz[3][$j]/$matriz[2][$j])*100,2);
-        }
+        $matriz[1][$j]=$vect_ini[$j];
+        $matriz[2][$j]=$suma_prog_inicial; /// acumulado ini
+
+        $matriz[3][$j]=$vect_p[$j];
+        $matriz[4][$j]=$suma_prog; /// acumulado prog
+
+        $matriz[5][$j]=$vect[$j];
+        $matriz[6][$j]=$suma_ejec; /// acumulado ejec
+      }
+       
+      if($matriz[2][$j]!=0){
+        $matriz[7][$j]=round(($matriz[6][$j]/$matriz[2][$j])*100,2);
       }
     }
 
@@ -822,10 +884,12 @@ public function guardar_datos_ejecucion_pinversion(){
 
       //// CUADRO
 
-      $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa
+      $ppto_programado_poa_inicial=$this->model_insumo->temporalidad_inicial_pinversion($proyecto[0]['aper_id']); /// ppto poa Inicial
+
+      $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa (Actual)
       $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_pinversion($proyecto[0]['aper_id']); /// Ppto Ejecutado sigep
 
-      $matriz=$this->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa,$ppto_ejecutado_sigep);
+      $matriz=$this->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
       $cuadro_consolidado=$this->tabla_consolidado_ejecucion_pinversion($matriz);
       $cuadro_consolidado_impresion=$this->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
 

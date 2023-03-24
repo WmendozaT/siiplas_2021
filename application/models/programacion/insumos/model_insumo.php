@@ -42,6 +42,17 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+    // ------ lista Programacion Financiera INICIAL TOTAL 2023
+    public function temporalidad_inicial_total_unidad($proy_id){
+        $sql = 'select *
+                from temporalidad_inicial_total_insumo
+                where proy_id='.$proy_id.'
+                order by mes_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     // ------ lista Programacion Insumos Certificados (Nuevo)
     public function lista_prog_fin_certificado($ins_id){
         $sql = 'select ins_id, SUM(ipm_fis) monto_certificado
@@ -86,15 +97,26 @@ class Model_insumo extends CI_Model{
     // ------ lista Temporalidad Insumo por Unidad/ proyecto
     public function list_temporalidad_programado_unidad($aper_id){
         $sql = '
-            select i.aper_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12 
-            from insumos i
-            Inner Join vista_temporalidad_insumo as temp On temp.ins_id=i.ins_id 
-            where aper_id='.$aper_id.'
-            group by i.aper_id';
+            select *
+            from vista_temporalidad_form5_unidad
+            where aper_id='.$aper_id.'';
 
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+    // ------ Temporalidad Inicial Proyectos de Inversion
+    public function temporalidad_inicial_pinversion($aper_id){
+        $sql = '
+            select *
+            from vista_temporalidad_inicial_form5_x_proyecto
+            where aper_id='.$aper_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
     // ------ lista Unidad de Medida
     public function list_unidadmedida(){

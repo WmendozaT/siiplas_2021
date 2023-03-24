@@ -3971,3 +3971,99 @@ group by poa.dep_id,poa.da,poa.dep_departamento,poa.dist_id,poa.ue,poa.dist_dist
 order by poa.dep_id,poa.dist_id,poa.prog,poa.proy,poa.act asc;
 
 $$ LANGUAGE sql;
+
+
+////================
+/// --- CREACION DE TABLA TEMPORALIDAD INICIAL (TOTAL POR MESES) PROYECTOS DE INVERSION
+create table temporalidad_inicial_total_insumo(
+  temp_id serial not null,
+  proy_id numeric(18,0) NOT NULL,
+  aper_id numeric(18,0) NOT NULL,
+  mes_id integer NOT NULL,
+  temp_fis numeric(18,0),
+  fun_id integer DEFAULT 0,
+  primary key(temp_id)
+ );
+
+ //// --- VISTA TEMPORALIDAD FORM 5 POR UNIDAD / PROYECTO
+
+ CREATE OR REPLACE VIEW public.vista_temporalidad_form5_unidad AS 
+select i.aper_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12 
+            from insumos i
+            Inner Join vista_temporalidad_insumo as temp On temp.ins_id=i.ins_id 
+            group by i.aper_id;
+
+ALTER TABLE public.vista_temporalidad_form5_unidad
+  OWNER TO postgres 
+
+
+//// ---- VISTA TEMPORALIDAD FORM 5 INICIAL PARA PROYECTOS DE INVERSION
+CREATE OR REPLACE VIEW public.vista_temporalidad_inicial_form5_x_proyecto AS 
+ SELECT ip.aper_id,ip.proy_id,
+    sum(ip.temp_fis) AS programado_total,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 1 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes1,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 2 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes2,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 3 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes3,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 4 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes4,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 5 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes5,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 6 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes6,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 7 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes7,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 8 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes8,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 9 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes9,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 10 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes10,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 11 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes11,
+    to_number(COALESCE(string_agg(
+        CASE
+            WHEN ip.mes_id = 12 THEN to_char(ip.temp_fis, '999999999999.99'::text)
+            ELSE NULL::text
+        END, ''::text), '0'::text), '999999999999.99'::text) AS mes12
+   FROM temporalidad_inicial_total_insumo ip
+  GROUP BY ip.aper_id,ip.proy_id
+  ORDER BY ip.aper_id,ip.proy_id;
+
+ALTER TABLE public.vista_temporalidad_inicial_form5_x_proyecto
+  OWNER TO postgres;

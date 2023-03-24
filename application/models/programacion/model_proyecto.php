@@ -2090,11 +2090,13 @@ class Model_proyecto extends CI_Model{
 
         /////// ===== 2023
     /*-- Lista de Programas Bolsa por Distrital --*/
-/*    public function list_aperproyectos(){ /// 
+    public function list_pi(){ /// 
         $sql = '
             select *
-            from aperturaproyectos';
+            from lista_poa_pinversion_nacional('.$this->gestion.') pi
+            Inner Join vista_temporalidad_form5_unidad as temp On temp.aper_id=pi.aper_id 
+            order by pi.dep_id,pi.dist_id asc';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 }

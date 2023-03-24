@@ -1935,7 +1935,7 @@ class Seguimientopoa extends CI_Controller{
           $date_final = strtotime($configuracion[0]['eval_fin']); /// Fecha Final
 
           if (($date_actual >= $date_inicio) && ($date_actual <= $date_final) || $this->tp_adm==1){
-            $tabla.='<h2 class="alert alert-success"><center>PROCESO DE EVALUACIÓN POA - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></h2>';
+            $tabla.='<h2 class="alert alert-info"><center>PROCESO DE EVALUACIÓN POA - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</center></h2>';
           }
           else{
             $tabla.='<h2 class="alert alert-info"><center>SEGUIMIENTO POA - MES '.$this->verif_mes[2].' / '.$this->gestion.'</center></h2>';

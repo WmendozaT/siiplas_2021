@@ -277,7 +277,7 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
 
         let detalle_ejecucion=[];
         for (var i = 0; i < 12; i++) {
-            detalle_ejecucion[i]= { name: response.matriz[5][i+1],y: response.matriz[4][i+1]};
+            detalle_ejecucion[i]= { name: response.matriz[0][i+1],y: response.matriz[7][i+1]};
         }
 
         cuadro_grafico_en_barras_verticales('proyectos',detalle_ejecucion,'% EJECUCION PRESUPUESTARIA MENSUAL',response.datos_proyecto,'CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// vista
@@ -295,14 +295,19 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
 
   /// Grafico EJECUCION DE PROYECTOS DE INVERSION
   function graf_regresion_consolidado_pi(grafico,matriz,titulo,subtitulo,tit_laterales) {
+    let programado_inicial=[];
+    for (var i = 0; i <12; i++) {
+      programado_inicial[i]= matriz[2][i+1];
+    }
+
     let programado=[];
     for (var i = 0; i <12; i++) {
-      programado[i]= matriz[2][i+1];
+      programado[i]= matriz[4][i+1];
     }
 
     let ejecutado=[];
     for (var i = 0; i <12; i++) {
-      ejecutado[i]= matriz[3][i+1];
+      ejecutado[i]= matriz[6][i+1];
     }
 
     ///----
@@ -351,7 +356,11 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
     // Doy los datos de la gráfica para dibujarlas
     series: [
         {
-          name: 'PPTO. PROGRAMADO',
+          name: 'PPTO. PROGRAMADO INICIAL',
+          data: programado_inicial
+        },
+        {
+          name: 'PPTO. PROGRAMADO AJUSTADO',
           data: programado
         },
         {

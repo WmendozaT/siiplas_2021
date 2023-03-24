@@ -202,11 +202,11 @@ class Cmod_insumo extends CI_Controller {
     $monto=$this->modificacionpoa->ppto($proyecto);
     $tabla='';
     $tabla.='
-      <section id="widget-grid" class="well">
+      <section id="widget-grid" class="well" title="'.$proyecto[0]['proy_id'].'">
         <div>
           '.$this->modificacionpoa->datos_cite($cite).'
           '.$this->modificacionpoa->titulo_cabecera($cite).'';
-          if($monto[3]>19){
+          if($monto[3]>1){
             $tabla.='
             <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default" title="NUEVO REGISTRO">
               <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>NUEVO REGISTRO (FORM. N 5)</b>
@@ -447,6 +447,7 @@ class Cmod_insumo extends CI_Controller {
         $producto=$this->model_producto->get_producto_id($id); /// Get producto
 
         $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id);
+        $proyecto=$this->model_proyecto->get_proyecto_inversion($cite[0]['proy_id']); /// Get Proyecto
         if($cite[0]['tp_id']==1){
           $actividades=$this->model_modrequerimiento->list_actividades_componente($cite[0]['com_id']);
           $id_anterior=$actividades[0]['act_id'];
@@ -458,7 +459,6 @@ class Cmod_insumo extends CI_Controller {
 
           if($this->registra_insumo_original($cite_id,$ins_id)){
             
-
             $update_ins= array(
               'ins_cant_requerida' => $cantidad,
               'ins_costo_unitario' => $costo_unitario,
@@ -543,6 +543,34 @@ class Cmod_insumo extends CI_Controller {
           show_404();
       }
     }
+
+    /// Verifica Programacion de Temporalidad Inicial Total 2023
+    public function valida_update_temporalidad_inicial_total_unidad($cite,$proyecto){
+
+      if($proyecto[0]['tp_id']==1){ /// Solo Para Proyectos de Inversion
+            $temporalidad_inicial=$this->model_insumo->temporalidad_inicial_total_unidad($proyecto[0]['proy_id']);
+
+            if(count($temporalidad_inicial)==0){
+              ///--- registrando temporalidad inicial
+              $temporalidad_insumo=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']);
+
+              for ($i=1; $i <=12 ; $i++) { 
+                $data_to_store = array( 
+                  'proy_id' => $proyecto[0]['proy_id'],
+                  'aper_id' => $proyecto[0]['aper_id'],
+                  'mes_id' => $i,
+                  'temp_fis' => $temporalidad_insumo[0]['mes'.$i],
+                  'fun_id' => $this->fun_id,
+                  //'cite_id' => $cite[0]['cite_id'],
+                  );
+                $this->db->insert('temporalidad_inicial_total_insumo', $data_to_store);  
+              }
+            }
+      }
+
+    }
+
+
 
 
     /*--- VALIDA DATOS DEL REQUERIMIENTO CERTIFICADO (2020) ---*/
@@ -1877,6 +1905,10 @@ class Cmod_insumo extends CI_Controller {
 
      /*---- Funcion Copia Insumo a Historial para reportes----*/
     public function registra_insumo_original($cite_id,$ins_id){
+      $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id); /// Datos Cite
+      $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// DATOS DEL PROYECTO
+     // $this->valida_update_temporalidad_inicial_total_unidad($cite,$proyecto); /// guardando el Programado Inicial
+
       $insumo = $this->model_insumo->get_requerimiento($ins_id); //// DATOS DEL REQUERIMIENTO
       
       if(count($insumo)!=0){
@@ -1940,12 +1972,7 @@ class Cmod_insumo extends CI_Controller {
         $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
 
         $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$insumo[0]['par_id']);
-        if($proyecto[0]['tp_id']==1){
-          $prog=$this->model_ptto_sigep->get_partida_programado_pi($proyecto[0]['proy_id'],$insumo[0]['par_id']);
-        }
-        else{
-          $prog=$this->model_ptto_sigep->get_partida_accion($proyecto[0]['aper_id'],$insumo[0]['par_id']);
-        }
+        $prog=$this->model_ptto_sigep->get_partida_accion($proyecto[0]['aper_id'],$insumo[0]['par_id']);
 
         $lista_partidas=$this->partidas_dependientes($insumo); /// Lista de Insumos dependientes
         $lista_prod_act=$this->list_operaciones($cite,$insumo); /// Lista de Productos, Actividades

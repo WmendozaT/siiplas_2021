@@ -37,19 +37,30 @@ class Cajustes extends CI_Controller {
     /*--------- AJUSTES AL POA ------------*/
     public function menu_ajustes(){
       $data['menu']=$this->menu(9);
-      
       $data['regional']=$this->regionales();
 
- /*     $aper=$this->model_proyecto->list_aperproyectos();
+
+/*      $pi=$this->model_proyecto->list_pi();
 
       $tabla='';
       $tabla.='
       <table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:20%;" align="center">';
-      foreach ($aper as $row){
+      foreach ($pi as $row){
         $tabla.='
         <tr>
           <td>'.$row['aper_id'].'</td>
           <td>'.$row['proy_id'].'</td>
+          <td>'.$row['dep_id'].'</td>
+          <td>'.$row['dep_departamento'].'</td>
+          <td>'.$row['dist_id'].'</td>
+          <td>'.$row['dist_distrital'].'</td>
+          <td>'.$row['proy'].'</td>
+          <td>'.$row['proyecto'].'</td>
+          <td>'.$row['programado_total'].'</td>';
+          for ($i=1; $i <=12 ; $i++) { 
+            $tabla.='<td>'.$row['mes'.$i].'</td>';
+          }
+        $tabla.='
         </tr>';
       }
       $tabla.='</table>';
@@ -63,8 +74,6 @@ class Cajustes extends CI_Controller {
   function importar_archivo(){
     if ($this->input->post()) {
         $post = $this->input->post();
-       // $tp = $this->security->xss_clean($post['tp_id']);
-       // $tp_id = $this->security->xss_clean($post['tp_id']);
 
         $tipo = $_FILES['archivo']['type'];
         $tamanio = $_FILES['archivo']['size'];
@@ -81,21 +90,25 @@ class Cajustes extends CI_Controller {
           foreach ($lineas as $linea_num => $linea){ 
             if($i != 0){ 
               $datos = explode(";",$linea);
-                if(count($datos)==2){
+
+                if(count($datos)==21){
                   $aper_id = intval(trim($datos[0])); //// aper_id
                   $proy_id = intval(trim($datos[1])); //// proy id
-                 
-                  //echo $aper_id.'--'.$proy_id.'<br>';
-                  ///------------------
-                 /* $query=$this->db->query('set datestyle to DMY');
-                  $data_to_store = array( 
-                    'aper_id' => $aper_id,
-                    'proy_id' => $proy_id,
-                  );
-                  $this->db->insert('aperturaproyectos', $data_to_store);*/
-              
-                  /// ------------------
-                  
+
+                  $nro=0;
+                  for ($i=9; $i <=20 ; $i++) { 
+                    $nro++;
+                    if(trim($datos[$i])!=0){
+                      $data_to_store = array( 
+                        'proy_id' => $proy_id,
+                        'aper_id' => $aper_id,
+                        'mes_id' => $nro,
+                        'temp_fis' => trim($datos[$i]), //// aper_id,
+                        );
+                      $this->db->insert('temporalidad_inicial_total_insumo', $data_to_store); 
+                    }
+                     
+                  }
                 }
               }
 
