@@ -39,7 +39,7 @@ class Genera_informacion extends CI_Controller{
         if($dist_id!=0){
           $unidades=$this->mrep_operaciones->list_unidades($dist_id,$tp_id); /// unidades de la distrital
           $distrital=$this->model_proyecto->dep_dist($dist_id);
-          $tit_reg=$dist[0]['dist_distrital'];
+          $tit_reg=$distrital[0]['dist_distrital'];
         }
         else{
           $unidades=$this->mrep_operaciones->list_poa_gacorriente_pinversion_regional($dep_id,$tp_id); /// unidades de la Regional

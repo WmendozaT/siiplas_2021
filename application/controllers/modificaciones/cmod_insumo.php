@@ -137,33 +137,6 @@ class Cmod_insumo extends CI_Controller {
     }
 
     /*----- REQUERIMIENTOS 2020-2021-2022 ------*/
-/*    public function mis_requerimientos($cite_id){
-      $data['menu']=$this->menu(3); //// genera menu
-      $data['cite'] = $this->model_modrequerimiento->get_cite_insumo($cite_id);
-
-      if(count($data['cite'])!=0){
-        $proyecto = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); /// Proyecto de Inversion
-        $data['cabecera']=$this->cabecera_formulario_mod5($data['cite'],$proyecto);
-        $data['opciones']=$this->opciones_formulario_mod5($data['cite'],$proyecto);
-        $data['style']=$this->style();
-      
-          if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
-            $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023
-          }
-          else{
-            $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022
-          }
-
-          $data['part_padres'] = $this->model_modificacion->list_part_padres_asig($proyecto[0]['aper_id']);//partidas padres
-          $data['lista']=$this->tipo_lista_ope_act($data['cite']); /// LINEADO A ACTIVIDAD
-
-          $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
-      }
-      else{
-        redirect('mod/list_top');
-      }
-    }*/
-
     public function mis_requerimientos($cite_id){
       $data['menu']=$this->menu(3); //// genera menu
       $data['cite'] = $this->model_modrequerimiento->get_cite_insumo($cite_id);
@@ -235,7 +208,6 @@ class Cmod_insumo extends CI_Controller {
             }
             else{
               $tabla.='<button type="button" class="btn btn-warning btn-sm btn-block" data-toggle="modal" data-target="#modal_cerrar" title="CONSLUIR MODIFICACION"><i class="fa fa-save"></i><b>&nbsp;CERRAR MODIFICACIÓN</b></button><br>';
-              /*$tabla.='<a data-toggle="modal" data-target="#modal_cerrar" class="btn btn-warning cerrar" title="CERRAR MODIFICACION FINANCIERA"><i class="fa fa-save"></i> <b>CERRAR MOD.</b></a>   ';*/
             }
 
             $tabla.='
@@ -373,13 +345,15 @@ class Cmod_insumo extends CI_Controller {
           for ($i=1; $i <=12 ; $i++) {
             $pfin=$this->security->xss_clean($post['m'.$i]);
             if($pfin!=0){
-                $data_to_store4 = array( 
-                  'ins_id' => $ins_id, /// Id Insumo
-                  'mes_id' => $i, /// Mes 
-                  'ipm_fis' => $pfin, /// Valor mes
-                  'g_id' => $this->gestion, /// Gestion 
-                );
-                $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
+                if(count($this->model_certificacion->get_insumo_programado_mes($ins_id,$i))==0){
+                  $data_to_store4 = array( 
+                    'ins_id' => $ins_id, /// Id Insumo
+                    'mes_id' => $i, /// Mes 
+                    'ipm_fis' => $pfin, /// Valor mes
+                    'g_id' => $this->gestion, /// Gestion 
+                  );
+                  $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
+                }
             }
           }
           /*------------------------------------------*/
@@ -1560,7 +1534,7 @@ class Cmod_insumo extends CI_Controller {
       }
     }
 
-     /*----- MIGRACION DE REQUERIMIENTOS A UNA OPERACIÓN (2019) -----*/
+     /*----- MIGRACION DE REQUERIMIENTOS A UNA OPERACIÓN (2023) -----*/
     function valida_add_requerimientos(){
       if ($this->input->post()) {
           $post = $this->input->post();
@@ -1659,13 +1633,15 @@ class Cmod_insumo extends CI_Controller {
                             /*------ PARA LA GESTION 2020 ------*/
                             for ($p=1; $p <=12 ; $p++) { 
                               if($m[$p]!=0){
-                               $data_to_store4 = array( 
-                                  'ins_id' => $ins_id, /// Id Insumo
-                                  'mes_id' => $p, /// Mes 
-                                  'ipm_fis' => $m[$p], /// Valor mes
-                                  'g_id' => $this->gestion, /// Gestion 
-                                );
-                                $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
+                                if(count($this->model_certificacion->get_insumo_programado_mes($ins_id,$p))==0){
+                                    $data_to_store4 = array( 
+                                    'ins_id' => $ins_id, /// Id Insumo
+                                    'mes_id' => $p, /// Mes 
+                                    'ipm_fis' => $m[$p], /// Valor mes
+                                    'g_id' => $this->gestion, /// Gestion 
+                                  );
+                                  $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
+                                }
                               }
                             }
                             /*----------------------------------*/

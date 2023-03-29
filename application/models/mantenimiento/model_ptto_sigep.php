@@ -743,11 +743,17 @@ class Model_ptto_sigep extends CI_Model{
 
     /*---- Get Partida Programado - gasto corriente ---*/
     public function get_partida_accion($aper_id,$par_id){
-        $sql = 'select i.aper_id,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(ip.programado_total) as monto
+        $sql = 'select i.aper_id,i.par_id,par.par_codigo as codigo,par.par_nombre, SUM(i.ins_costo_total) as monto
+                    from insumos i
+                    Inner Join partidas as par On par.par_id=i.par_id
+                    where i.aper_id='.$aper_id.' and i.par_id='.$par_id.'
+                    group by i.aper_id,i.par_id,par.par_codigo,par.par_nombre';
+
+        /*$sql = 'select i.aper_id,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(ip.programado_total) as monto
                 from vlista_insumos i
                 Inner Join vista_temporalidad_insumo as ip on ip.ins_id = i.ins_id
                 where i.aper_id='.$aper_id.' and i.par_id='.$par_id.'
-                group by i.aper_id,i.par_id, i.par_codigo, i.par_nombre';
+                group by i.aper_id,i.par_id, i.par_codigo, i.par_nombre';*/
         
         $query = $this->db->query($sql);
         return $query->result_array();

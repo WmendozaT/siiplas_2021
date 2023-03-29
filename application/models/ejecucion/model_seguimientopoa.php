@@ -46,6 +46,29 @@ class Model_seguimientopoa extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*-- GET SUMA PROGRAMADO Y EJECUTADO POA MENSUAL POR FORM 4--*/
+    public function get_programado_ejecutado_al_mes($tp,$prod_id,$mes_id){
+        /// tp (0) programado
+        /// tp (1) ejecutado
+        if($tp==0){
+            $sql = 'select SUM(pg_fis) programado
+                    from prod_programado_mensual
+                    where prod_id='.$prod_id.' and (m_id>\'0\' and m_id<='.$mes_id.')
+                    group by prod_id';
+        }
+        else{
+            $sql = 'select SUM(pejec_fis) ejecutado
+                    from prod_ejecutado_mensual
+                    where prod_id='.$prod_id.' and (m_id>\'0\' and m_id<='.$mes_id.')
+                    group by prod_id';
+        }
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
     /*-- GET SEGUIMIENTO (EJECUTADO) POA MENSUAL (Cumplidas, En proceso) --*/
     public function get_seguimiento_poa_mes($prod_id,$mes_id){
         $sql = 'select *

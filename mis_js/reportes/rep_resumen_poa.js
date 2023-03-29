@@ -92,6 +92,7 @@
           rep_id=$('[name="rep_id"]').val();
           tp_id=$(this).val();
 
+          //alert(dep_id+'-'+dist_id+'-'+rep_id+'-'+tp_id)
           if(rep_id!=4){
             //  alert("dep_id="+dep_id+"dist_id="+dist_id+" &tp_id="+tp_id+" &tp_rep="+rep_id)
               $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Reporte Consolidado POA ...</div>');

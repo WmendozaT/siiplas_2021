@@ -375,22 +375,14 @@
 
     /*--- FORM 4 EJECUCION PRESUPUESTARIA (PROG-CERT) POR SUBACTIVIDAD (2020 - 2021) PDF ---*/
     public function rep_ejecucion_requerimientos_servicio($com_id){
-      if($this->gestion==2019){
-        echo 'No disponible';
-      }
-      else{
-        $requerimientos=$this->mrep_operaciones->lista_insumo_subactividad($com_id); /// Lista de requerimientos certificados por Subactividad (2020-2021)
+        $requerimientos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id);
         $data['componente']=$this->model_componente->get_componente($com_id,$this->gestion);
         $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
         $data['proyecto']=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
         $data['mes'] = $this->mes_nombre();
         $data['cabecera']=$this->cabecera($data['componente'],$data['proyecto'],1); /// Cabecera
         $data['requerimientos']=$this->rep_lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id); // Requerimientos Distrital 2020-2021
-       // $data['ejecucion']=$this->ejecucion_presupuestaria_acumulado_total($com_id);
-        //$data['ejecucion']=$this->ejecucion_presupuestaria_acumulado($com_id); /// anterior
         $this->load->view('admin/reportes_cns/programacion_poa/reporte_poa_form5', $data);
-      //echo $data['requerimientos'];
-      }
     }
 
     /*----- EJECUCION POA REQUERIMIENTOS SUBACTIVIDAD (2020-2021) PDF----*/

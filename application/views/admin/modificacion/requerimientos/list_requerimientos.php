@@ -158,8 +158,7 @@
 
 							<div id="tabs-a">
 								<div class="row">
-									<div >
-            			
+									<div>
 										<div class="jarviswidget jarviswidget-color-darken">
 			                              <header>
 			                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>

@@ -464,7 +464,7 @@ class Seguimientopoa extends CI_Controller{
                   if($row['indi_id']==2 & $row['mt_id']==1){
                     $indi_id='%';
                   }
-                  $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$verif_mes[1]);
+                  $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$verif_mes[1],$row['mt_id']);
                   
                   if($diferencia[1]!=0 || $diferencia[2]!=0){
                     $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($row['prod_id'],$verif_mes[1]);
@@ -2063,7 +2063,7 @@ class Seguimientopoa extends CI_Controller{
 
     /*--- LISTA DE  OPERACIONES PROGRAMADOS EN EL MES ACTUAL 2021 ---*/
     function lista_operaciones_programados($com_id,$mes_id,$regresion){
-      $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
+      $form4=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
       $tabla='';
       $tabla.=' 
       <form class="smart-form" method="post">
@@ -2123,15 +2123,25 @@ class Seguimientopoa extends CI_Controller{
               </thead>
               <tbody>';
               $nro=0;
-              foreach($operaciones as $row){
+              foreach($form4 as $row){
                 $indi_id='';
                 if($row['indi_id']==2 & $row['mt_id']==1){
                   $indi_id='%';
                 }
-                $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$mes_id);
+                $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$mes_id,$row['mt_id']);
                 if($diferencia[1]!=0 || $diferencia[2]!=0){
                   $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($row['prod_id'],$mes_id); // Ejecutado
-                //  $nejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($row['prod_id'],$mes_id); // no Ejec
+                  /*$mes_ejec=0;$mverificacion='';$prob_presentados='';$acciones='';
+
+                  if(count($ejec)!=0){
+                    $mes_ejec=0;$mverificacion='';$prob_presentados='';$acciones='';
+                  }
+                  else{
+                    $no_ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($row['prod_id'],$mes_id);
+                  }
+                  */
+
+
                   $nro++;
                   $tabla.='
                   <tr>
@@ -2711,10 +2721,47 @@ class Seguimientopoa extends CI_Controller{
       return $matriz;
     }
 
+    /*---VERIFICANDO VALORES NO EJECUTADOS EN MESES ANTERIORES (FORMULARIO N 4)--*/
+    function verif_valor_no_ejecutado($prod_id,$mes,$indi_id){
+      $diferencia[1]=0;$diferencia[2]=0;$diferencia[3]=0;
+      
+      $sum_prog=0;$sum_ejec=0;
+      $prog=$this->model_seguimientopoa->get_programado_ejecutado_al_mes(0,$prod_id,$mes-1); /// Programado
+      $ejec=$this->model_seguimientopoa->get_programado_ejecutado_al_mes(1,$prod_id,$mes-1); /// Ejecutado
+      
+      if(count($prog)!=0){
+        $sum_prog=$prog[0]['programado'];
+      }
+
+      if(count($ejec)!=0){
+        $sum_ejec=$ejec[0]['ejecutado'];
+      }
 
 
-    /*---VERIFICANDO VALORES NO EJECUTADOS EN MESES ANTERIORES (OPERACIONES)--*/
-    function verif_valor_no_ejecutado($prod_id,$mes){
+      $prog=$this->model_seguimientopoa->get_programado_poa_mes($prod_id,$mes); /// Programado mes actual
+      $diferencia[2]=0;
+      if(count($prog)!=0){
+        $diferencia[2]=round($prog[0]['pg_fis'],2);
+      }
+
+      $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$mes); /// Ejecutado mes actual
+      $diferencia[3]=0;
+      if(count($ejec)!=0){
+        $diferencia[3]=round($ejec[0]['pejec_fis'],2);
+      }
+
+      $diferencia[1]=($sum_prog-$sum_ejec); /// no ejecutado en el mes anterior
+      if($indi_id==2 & $indi_id==1){
+        $diferencia[1]=0;
+      }
+      
+      return $diferencia;
+    }
+
+
+
+    /*---VERIFICANDO VALORES NO EJECUTADOS EN MESES ANTERIORES (FORMULARIO N 4)--*/
+    function verif_valor_no_ejecutado2($prod_id,$mes){
       $producto=$this->model_producto->get_producto_id($prod_id);
       $diferencia[1]=0;$diferencia[2]=0;$diferencia[3]=0;
       $sum_prog=0;
@@ -2752,6 +2799,12 @@ class Seguimientopoa extends CI_Controller{
       
       return $diferencia;
     }
+
+
+
+
+
+
 
     /*------ NOMBRE MES -------*/
     public function mes_nombre_completo(){

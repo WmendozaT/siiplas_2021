@@ -32,6 +32,7 @@ class Modificacionpoa extends CI_Controller{
         $this->adm = $this->session->userData('adm');
         //$this->rol = $this->session->userData('rol_id');
         $this->dist = $this->session->userData('dist');
+        $this->dep_id = $this->session->userData('dep_id');
         //$this->dist_tp = $this->session->userData('dist_tp');
         $this->tmes = $this->session->userData('trimestre');
         $this->fun_id = $this->session->userData('fun_id');
@@ -314,22 +315,6 @@ class Modificacionpoa extends CI_Controller{
     }
 
 //////////////// FORMULARIO N° 4 
-        /*--- VERIFICA SI SE TIENE ALGUN REGISTRO (ABM) ---*/
-/*    public function verif_cite($cite_id){
-      $cite=$this->model_modfisica->get_cite_fis($cite_id); // CITE
-      $proyecto=$this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// PROYECTO
-
-      $ca=$this->model_modfisica->operaciones_adicionados($cite_id);
-      $cm=$this->model_modfisica->operaciones_modificados($cite_id);
-      $cd=$this->model_modfisica->operaciones_eliminados($cite_id);
-
-      $sw=0;
-      if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
-        $sw=1;
-      }
-
-      return $sw;
-    }*/
 
     /*------ VERIFICANDO CODIGO DE MODIFICACION POA (2020)-----*/
     public function datos_cite($cite){
@@ -370,14 +355,14 @@ class Modificacionpoa extends CI_Controller{
     public function ppto($proyecto){
       $monto_a=0;$monto_p=0;$monto_saldo=0;
       $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
-      
-      if($proyecto[0]['tp_id']==1){ /// proy inversion
+      $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
+      /*if($proyecto[0]['tp_id']==1){ /// proy inversion
         $monto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto[0]['proy_id']);
       }
       else{ /// gasto corriente
         $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
       }
-
+*/
       if(count($monto_asig)!=0){
         $monto_a=$monto_asig[0]['monto']+$monto_asig[0]['saldo'];
       }
@@ -1269,7 +1254,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='
                 </tbody>
                   <tr class="modo1">
-                    <td colspan="8"> TOTAL </td>
+                    <td colspan="8">proy: '.$cite[0]['proy_id'].' | aper: '.$cite[0]['aper_id'].' <b>TOTAL</b> </td>
                     <td><font color="blue" size=1>'.number_format($total, 2, ',', '.') .'</font></td>
                     <td colspan="16"></td>
                   </tr>
@@ -1412,7 +1397,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='
                 </tbody>
                   <tr class="modo1">
-                    <td colspan="8"> TOTAL </td>
+                    <td colspan="8">proy: '.$cite[0]['proy_id'].' | aper: '.$cite[0]['aper_id'].' <b>TOTAL</b> </td>
                     <td><font color="blue" size=1>'.number_format($total, 2, ',', '.') .'</font></td>
                     <td colspan="16"></td>
                   </tr>
@@ -2242,7 +2227,7 @@ class Modificacionpoa extends CI_Controller{
                   </table>
 
                 </td>';*/
-            if(($this->fun_id==738 || $this->fun_id==401 || $this->fun_id==399)){ /// Ritha
+            if($this->dep_id==10){ /// Ritha
               $tabla.='
               <td style="width:30%;">
                      <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
