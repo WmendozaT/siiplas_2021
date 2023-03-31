@@ -335,13 +335,21 @@ class Model_insumo extends CI_Model{
 
 
     function lista_insumos_prod($prod_id){
-        $sql = 'select *
+        $sql = 'select prod.prod_id,prod.prod_cod,par.par_codigo,i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,ins_monto_certificado,ins_observacion
+                from _insumoproducto ip
+                Inner Join _productos as prod On prod.prod_id=ip.prod_id
+                Inner Join insumos as i On i.ins_id=ip.ins_id
+                Inner Join partidas as par On par.par_id=i.par_id
+                where ip.prod_id=77903 and i.ins_estado!=3 and i.aper_id!=0
+                group by prod.prod_id,prod.prod_cod,par.par_codigo,i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,ins_monto_certificado,ins_observacion
+                order by par.par_codigo,i.ins_id asc';
+        /*$sql = 'select *
                 from _insumoproducto ip
                 Inner Join _productos as prod On prod.prod_id=ip.prod_id
                 Inner Join insumos as i On i.ins_id=ip.ins_id
                 Inner Join partidas as par On par.par_id=i.par_id
                 where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\'
-                order by par.par_codigo,i.ins_id asc';
+                order by par.par_codigo,i.ins_id asc';*/
 
         
         $query = $this->db->query($sql);

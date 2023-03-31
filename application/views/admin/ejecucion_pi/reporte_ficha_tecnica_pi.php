@@ -14,7 +14,7 @@ ob_start();
 }
 </style>
 
-<page backtop="32mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="35mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <?php echo $cabecera; ?>         
@@ -24,6 +24,17 @@ ob_start();
         <?php echo $pie;?>
     </page_footer>
     <?php echo $datos_proyecto;?>
+</page>
+<page backtop="32mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
+    <page_header>
+        <br><div class="verde"></div>
+        <?php echo $cabecera; ?>         
+    </page_header>
+    
+    <page_footer>
+        <?php echo $pie;?>
+    </page_footer>
+    <?php echo $detalle_ejecucion;?>
 </page>
 
 <?php

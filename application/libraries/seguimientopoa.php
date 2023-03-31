@@ -2061,7 +2061,7 @@ class Seguimientopoa extends CI_Controller{
 
 
 
-    /*--- LISTA DE  OPERACIONES PROGRAMADOS EN EL MES ACTUAL 2021 ---*/
+    /*--- LISTA DE FORMULARIO N 4 PROGRAMADOS AL MES ACTUAL 2021-2023 ---*/
     function lista_operaciones_programados($com_id,$mes_id,$regresion){
       $form4=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
       $tabla='';
@@ -2117,7 +2117,7 @@ class Seguimientopoa extends CI_Controller{
                   <th style="width:8%;">PROBLEMAS PRESENTADOS</th>
                   <th style="width:8%;">ACCIONES REALIZADOS</th>
                   <th style="width:2%;"></th>
-                  <th style="width:2%;">ELIMINAR</th>
+                  <th style="width:2%; font-size:9px;"></th>
                   <th style="width:3%;"></th>
                 </tr>
               </thead>
@@ -2125,23 +2125,30 @@ class Seguimientopoa extends CI_Controller{
               $nro=0;
               foreach($form4 as $row){
                 $indi_id='';
-                if($row['indi_id']==2 & $row['mt_id']==1){
+                if($row['indi_id']==2){
                   $indi_id='%';
                 }
                 $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$mes_id,$row['mt_id']);
                 if($diferencia[1]!=0 || $diferencia[2]!=0){
                   $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($row['prod_id'],$mes_id); // Ejecutado
-                  /*$mes_ejec=0;$mverificacion='';$prob_presentados='';$acciones='';
+                  $tp=0;$mes_ejec=0;$mverificacion='';$prob_presentados='';$acciones=''; 
+                  $btn_='<font color=red size=1px><b>REGISTRAR?</b></font>';
+                  $background='style="background:#fdeaeb;"';
 
                   if(count($ejec)!=0){
-                    $mes_ejec=0;$mverificacion='';$prob_presentados='';$acciones='';
+                    $tp=1;$mes_ejec=round($ejec[0]['pejec_fis'],2);$mverificacion=$ejec[0]['medio_verificacion'];$prob_presentados=$ejec[0]['observacion'];$acciones=$ejec[0]['acciones'];
+                    $btn_='<font color=green size=1px><b>MODIFICAR</b></font>';
+                    $background='style="background:#ffffff;"';
                   }
                   else{
                     $no_ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($row['prod_id'],$mes_id);
+                    if(count($no_ejec)!=0){
+                      $tp=0;$mes_ejec=0;$mverificacion=$no_ejec[0]['medio_verificacion'];$prob_presentados=$no_ejec[0]['observacion'];$acciones=$no_ejec[0]['acciones'];
+                      $btn_='<font color=orange size=1px><b>MODIFICAR</b></font>';
+                      $background='style="background:#fdeaeb;"';
+                    }
                   }
-                  */
-
-
+                  
                   $nro++;
                   $tabla.='
                   <tr>
@@ -2150,7 +2157,7 @@ class Seguimientopoa extends CI_Controller{
                       $tabla.=$nro;
                     }
                     else{
-                      $tabla.='<br><img src="'.base_url().'assets/ifinal/ok.png" WIDTH="37" HEIGHT="30"/><br><font size=1 color=green><b>ACTIVIDAD<br>PRIORIZADO</b></font>';
+                      $tabla.='<br><img src="'.base_url().'assets/ifinal/ok.png" WIDTH="37" HEIGHT="30"/><br><font size=1 color=green><b>ACTIVIDAD<br>PRIORIZADA</b></font>';
                     }
                     $tabla.='
                     </td>
@@ -2158,113 +2165,44 @@ class Seguimientopoa extends CI_Controller{
                     <td style="width:1%;font-size: 17px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
                     <td bgcolor="#f6fbf4">'.$row['prod_producto'].'</td>
                     <td bgcolor="#f6fbf4">'.$row['prod_indicador'].'</td>
-                    <td align=right bgcolor="#f6fbf4"><b>'.round($row['prod_meta'],2).''.$indi_id.'</b></td>
+                    <td align=right bgcolor="#f6fbf4"><b>'.round($row['prod_meta'],2).' '.$indi_id.'</b></td>
                     <td align=center bgcolor="#f7e1e2">'.$diferencia[1].'</td>
-                    <td align=center bgcolor="#f6fbf4">'.$diferencia[2].''.$indi_id.' <input type="hidden" name="pg_fis[]" value="'.($diferencia[1]+$diferencia[2]).'"></td>';
-                    if(count($ejec)!=0){
-                      $tabla.='
-                      <td>
-                        <label class="input">
-                          <i class="icon-append fa fa-tag"></i>
-                          <input type="text" id=ejec'.$nro.' value="'.round($ejec[0]['pejec_fis'],2).'" onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$row['prod_id'].','.$nro.',1,'.$mes_id.');" title="'.($diferencia[1]+$diferencia[2]).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
-                        </label>
-                      </td>
-                      <td>
-                        <label class="textarea">
-                          <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN">'.$ejec[0]['medio_verificacion'].'</textarea>
-                        </label>
-                      </td>
-                      <td>
-                        <label class="textarea">
-                          <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS">'.$ejec[0]['observacion'].'</textarea>
-                        </label>
-                      </td>
-                      <td>
-                        <label class="textarea">
-                          <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="3" id=acc'.$nro.' title="ACCIONES REALIZADOS">'.$ejec[0]['acciones'].'</textarea>
-                        </label>
-                      </td>
-                      <td align=center title="MODIFICAR SEGUIMIENTO POA">
-                        <div id="but'.$nro.'"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/drive_disk.png" WIDTH="40" HEIGHT="40"/><br>MODIFICAR</button></div>
-                      </td>
-                      <td align="center">
-                        <br>
-                        <a href="#" data-toggle="modal" data-target="#modal_del_ope" class="btn btn-default del_ope" title="ELIMINAR EVALUACIÓN POA"  name="'.$row['prod_id'].'" id="'.$mes_id.'">
-                          <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
-                        </a>
-                      </td>';
-                    }
-                    else{
-                      $tabla.='
-                      <td>
-                        <label class="input">
-                          <i class="icon-append fa fa-tag"></i>
-                          <input type="text" id=ejec'.$nro.' value="" onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$row['prod_id'].','.$nro.',0,'.$mes_id.');" title="'.($diferencia[1]+$diferencia[2]).'"  onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
-                        </label>
-                      </td>';
-                      $no_ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes_noejec($row['prod_id'],$mes_id);
-                      if(count($no_ejec)!=0){
-                        $tabla.='
-                          <td>
-                            <label class="textarea">
-                              <i class="icon-append fa fa-tag"></i>
-                              <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN">'.$no_ejec[0]['medio_verificacion'].'</textarea>
-                            </label>
-                          </td>
-                          <td>
-                            <label class="textarea">
-                              <i class="icon-append fa fa-tag"></i>
-                              <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS">'.$no_ejec[0]['observacion'].'</textarea>
-                            </label>
-                          </td>
-                          <td>
-                            <label class="textarea">
-                              <i class="icon-append fa fa-tag"></i>
-                              <textarea rows="3" id=acc'.$nro.' title="ACCIONES REALIZADOS">'.$no_ejec[0]['acciones'].'</textarea>
-                            </label>
-                          </td>
-                          <td align=center title="MODIFICAR SEGUIMIENTO POA">
-                            <div id="but'.$nro.'"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/drive_disk.png" WIDTH="40" HEIGHT="40"/><br>MODIFICAR</button></div>
-                          </td>
-                          <td align="center">
-                            <br>
-                            <a href="#" data-toggle="modal" data-target="#modal_del_ope" class="btn btn-default del_ope" title="ELIMINAR EVALUACIÓN POA"  name="'.$row['prod_id'].'" id="'.$mes_id.'">
-                              <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
-                            </a>
-                          </td>';
-                      }
-                      else{
-                        $tabla.='
-                        <td>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN"></textarea>
-                          </label>
-                        </td>
-                        <td>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS"></textarea>
-                          </label>
-                        </td>
-                        <td>
-                          <label class="textarea">
-                            <i class="icon-append fa fa-tag"></i>
-                            <textarea rows="3" id=acc'.$nro.' title="ACCIONES REALIZADOS"></textarea>
-                          </label>
-                        </td>';
-                        $tabla.='
-                        <td align=center title="GUARDAR SEGUIMIENTO POA">
-                          <div id="but'.$nro.'" style="display:none;"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="37" HEIGHT="37"/><br>GUARDAR</button></div>
-                        </td>
-                        <td align="center">
-                        </td>';
-                      }
+                    <td align=center bgcolor="#f6fbf4">'.$diferencia[2].' '.$indi_id.' <input type="hidden" name="pg_fis[]" value="'.($diferencia[1]+$diferencia[2]).'"></td>
+                    <td>
+                      <label class="input">
+                        <i class="icon-append fa fa-tag"></i>
+                        <input type="text" id=ejec'.$nro.' value="'.$mes_ejec.'" '.$background.' onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$row['prod_id'].','.$nro.','.$tp.','.$mes_id.');" title="'.($diferencia[1]+$diferencia[2]).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                      </label>
+                    </td>
+                    <td>
+                      <label class="textarea">
+                        <i class="icon-append fa fa-tag"></i>
+                        <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN">'.$mverificacion.'</textarea>
+                      </label>
+                    </td>
+                    <td>
+                      <label class="textarea">
+                        <i class="icon-append fa fa-tag"></i>
+                        <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS">'.$prob_presentados.'</textarea>
+                      </label>
+                    </td>
+                    <td>
+                      <label class="textarea">
+                        <i class="icon-append fa fa-tag"></i>
+                        <textarea rows="3" id=acc'.$nro.' title="ACCIONES REALIZADOS">'.$acciones.'</textarea>
+                      </label>
+                    </td>
+                    <td align=center title="GUARDAR/MODIFICAR">
+                      <div id="but'.$nro.'"><button type="button" name="'.$row['prod_id'].'" id="'.$nro.'" onclick="guardar('.$row['prod_id'].','.$nro.');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="40" HEIGHT="40"/><br><div id="btn'.$nro.'">'.$btn_.'</div></button></div>
+                    </td>
+                    <td align="center">
                       
-                    }
+                      <a href="#" data-toggle="modal" data-target="#modal_del_ope" class="btn btn-default del_ope" title="ELIMINAR REGISTRO SEGUIMIENTO POA"  name="'.$row['prod_id'].'" id="'.$mes_id.'">
+                        <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
+                        <br><font size=0.1px color=red><b>ELIMNAR<br>REGISTRO<b></font>
+                      </a>
+                    </td>';
+
                     $tabla.='
                     <td align="center"><br>'.$this->calificacion_form4($row['prod_id'],$diferencia).'</td>
                   </tr>';

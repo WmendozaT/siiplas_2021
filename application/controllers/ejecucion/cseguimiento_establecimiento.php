@@ -47,53 +47,21 @@ class Cseguimiento_establecimiento extends CI_Controller {
       $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
 
-      $data['titulo']=
-        '
+      $data['titulo']='
       <h2 title='.$data['proyecto'][0]['aper_id'].'>BIENVENIDO : '.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h2>
       <h1><small>TRIMESTRE VIGENTE : </small> '.$data['tmes'][0]['trm_descripcion'].'</h1>
       <h1><small>FORMULARIO DE SEGUIMIENTO MES : </small> '.$this->verif_mes[2].' / '.$this->gestion.'</h1>';
 
-      $data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1,$this->tmes);
-    //  $data['seguimiento_operacion']=$this->seguimientopoa->temporalidad_operacion($com_id); /// temporalidad Programado-Ejecutado Subactividad
-    //  $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($com_id); /// grafico
-    //  $data['titulo']=$titulo; /// Titulo de la cabecera
-      
-      $data['matriz_temporalidad_subactividad']=$this->seguimientopoa->temporalizacion_x_componente($com_id); /// grafico
-      $data['tabla_temporalidad_componente']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],1); /// Vista 
-      $data['tabla_temporalidad_componente_impresion']=$this->seguimientopoa->tabla_temporalidad_componente($data['matriz_temporalidad_subactividad'],0); /// Impresion 
-
+      //$data['cabecera1']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],1,$this->tmes); /// cabecera reporte
       $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id,$this->tmes); /// Tabla para el grafico al trimestre
 
-      /*--- Regresion lineal trimestral ---*/
-     // $data['cabecera2']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],2,$this->tmes);
-     // $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id,$this->tmes); /// Tabla para el grafico al trimestre
-     // $data['tabla_regresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$this->tmes,2,1); /// Tabla que muestra el acumulado por trimestres Regresion Vista
-     // $data['tabla_regresion_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$this->tmes,2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
-
-      /*--- grafico Pastel trimestral ---*/
-     // $data['tabla_pastel_todo']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$this->tmes,4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
-     // $data['tabla_pastel_todo_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla'],$this->tmes,4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
-
-      /*--- Regresion lineal Gestion */
-     // $data['cabecera3']=$this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($data['proyecto'][0]['act_id']),$data['componente'],3,$this->tmes);
-     // $data['tabla_gestion']=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($com_id); /// Matriz para el grafico Total Gestion
-     // $data['tabla_regresion_total']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$this->tmes,3,1); /// Tabla que muestra el acumulado Gestion Vista
-     // $data['tabla_regresion_total_impresion']=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($data['tabla_gestion'],$this->tmes,3,0); /// Tabla que muestra el acumulado Gestion Impresion
-
-      //$data['calificacion']=$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]);
-     // $data['nota']=$this->notificacion();
-      $data['calificacion']='<hr>
-        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div></fieldset>';
+      $data['calificacion']='<hr><div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div>';
+      
       $data['update_eval']=$this->seguimientopoa->button_update_($com_id);
       $data['operaciones_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']); /// Lista de Operaciones programados en el mes
       
-    //  $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
-      //$data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($com_id); /// Reporte Seguimiento (Mes vigente) POA
-    //  $data['formularios_poa']=$this->seguimientopoa->formularios_poa($com_id,$this->establecimiento[0]['proy_id']);
       $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($com_id);
-      $data['salir']='<a href="'.site_url("").'/dashboar_seguimiento_poa" title="SALIR" class="btn btn-default">
-                          <img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="19"/>&nbsp; SALIR
-                        </a>';
+      $data['salir']='<a href="'.site_url("").'/dashboar_seguimiento_poa" title="SALIR" class="btn btn-default"><img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="19"/>&nbsp; SALIR</a>';
       $this->load->view('admin/evaluacion/seguimiento_establecimiento/formulario_seguimiento_establecimiento', $data);
     }
     else{

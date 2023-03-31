@@ -1741,12 +1741,18 @@ public function get_tp_reporte(){
     $regional=$this->model_proyecto->get_departamento($this->dep_id);
     $data['titulo_pie_rep']='Ficha_Tecnica_PI'.strtoupper($regional[0]['dep_departamento']).' '.$this->gestion;
     $titulo_reporte='FICHA TÉCNICA';
+
+    ///---------
+    $proyecto = $this->model_proyecto->get_proyecto_inversion($proy_id); // get proyecto
+    $cumplimiento=$this->ejecucion_finpi->cumplimiento_pi($proyecto); // cumplimiento ppto gestion
+    $parametro_cumplimiento=$this->calificacion_proyecto($proyecto);
+    ///---------
+
     $data['cabecera']=$this->ejecucion_finpi->cabecera_ficha_tecnica($titulo_reporte);
     $data['pie']=$this->ejecucion_finpi->pie_ficha_tecnica();
-    $data['datos_proyecto']=$this->ejecucion_finpi->datos_proyecto_inversion($proy_id);
+    $data['datos_proyecto']=$this->ejecucion_finpi->datos_proyecto_inversion($proyecto,$cumplimiento); /// Datos Tecnicos
+    $data['detalle_ejecucion']=$this->ejecucion_finpi->detalle_ejecucion_presupuestaria_pi($proyecto,$parametro_cumplimiento); /// Detalle Ejecucion
 
-   // echo $data['datos_proyecto'];
-   // $data['datos_proyecto']='';
     $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
   }
 

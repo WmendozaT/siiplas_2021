@@ -94,8 +94,7 @@
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <section id="widget-grid" class="well">
                                 <div class="">
-                                    <?php echo $titulo;?>
-                                    <?php echo $formularios_seguimiento.' '.$salir;?>
+                                    <?php echo $titulo.' '.$formularios_seguimiento.' '.$salir;?>
                                 </div>
                             </section>
                         </article>
@@ -143,7 +142,7 @@
 
                                             <div class="tab-pane fade" id="s3" title="CUADRO DE SEGUIMIENTO POA">
                                                <div class="row">
-                                                <div class="well">
+                                               <!--  <div class="well">
                                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
                                                     </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
@@ -169,7 +168,7 @@
                                                         <div align="right">
                                                             <button id="btnImprimir_seguimiento" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE SEGUIMIENTO MENSUAL POA</b></button>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                                </div>
                                             </div>
@@ -279,7 +278,7 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento.js"></script> 
-        <script type="text/javascript">
+        <!-- <script type="text/javascript">
             Highcharts.chart('container', {
             chart: {
                 type: 'column',
@@ -349,6 +348,6 @@
                 ]
             }]
         });
-        </script>
+        </script> -->
     </body>
 </html>

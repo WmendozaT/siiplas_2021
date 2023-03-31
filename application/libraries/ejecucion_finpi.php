@@ -1600,7 +1600,7 @@ class ejecucion_finpi extends CI_Controller{
 
 
   //// Get % de ejecucion financiera de Proyecto en la Gestion
-  public function get_ejec_ppto_proyecto_gestion($proyecto){
+/*  public function get_ejec_ppto_proyecto_gestion($proyecto){
     $ppto_asig=$this->model_ptto_sigep->get_ppto_asignado_proyecto_gestion($proyecto[0]['proy_id']); // asignado gestion
     $ppto_ejec=$this->model_ptto_sigep->get_ppto_ejecutado_proyecto($proyecto[0]['proy_id']); // ejecutado gestion
 
@@ -1610,20 +1610,10 @@ class ejecucion_finpi extends CI_Controller{
     }
 
     return $ejec_ppto;
-  }
+  }*/
 
-
-
-  ///// ============== FICHA TECNICA
-  /// Datos Generales - Proyectos de Inversion
-  public function datos_proyecto_inversion($proy_id){
-    //$proyecto=$this->model_proyecto->get_id_proyecto($proy_id);
-    $proyecto = $this->model_proyecto->get_proyecto_inversion($proy_id);
-    $imagen=$this->model_proyecto->get_img_ficha_tecnica($proy_id);
-
-    $lista_partidas_ppto_asig=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
-   // $avance_financiero_gestion=$this->get_ejec_ppto_proyecto_gestion($proyecto);
-
+  /// % DE CUMPLIMIENTO POR PROYECTOS DE INVERSION
+  public function cumplimiento_pi($proyecto){
     //// DATOS DE PPTO (ASIG-EJEC)
     $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1); /// monto total asignado poa
     $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($proyecto[0]['aper_id']); /// monto total ejecutado poa
@@ -1638,13 +1628,26 @@ class ejecucion_finpi extends CI_Controller{
     }
 
 
-
-    $cumplimiento=0;
     if(count($total_ppto_asignado)!=0 & count($total_ppto_ejecutado)!=0){
-      $cumplimiento=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['monto']))*100,2);
+      $cumplimiento_pi=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['monto']))*100,2);
     }
     ////
 
+    $cumplimiento[1]=$ppto_asig; /// ppto asignado
+    $cumplimiento[2]=$ppto_ejec; /// ppto ejecutado
+    $cumplimiento[3]=$cumplimiento_pi; /// % cumplimiento
+
+    return $cumplimiento;
+  }
+
+
+
+
+
+  ///// ============== FICHA TECNICA
+  /// Datos Generales - Proyectos de Inversion
+  public function datos_proyecto_inversion($proyecto,$cumplimiento){
+    $imagen=$this->model_proyecto->get_img_ficha_tecnica($proyecto[0]['proy_id']);
     if($proyecto[0]['fecha_observacion']!=''){
       $fecha_plazo=date('d/m/Y',strtotime($proyecto[0]['fecha_observacion']));
     }
@@ -1654,7 +1657,7 @@ class ejecucion_finpi extends CI_Controller{
 
     $tabla='';
      $tabla.='
-      <div style="height:20px;"><b>DATOS GENERALES</b></div>
+      <div style="height:25px;"><b>DATOS GENERALES</b></div>
        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <tbody>
           <tr>
@@ -1710,7 +1713,7 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
         </tbody>
        </table><br>
-        <div style="height:20px;"><b>OBJETIVOS DEL PROYECTO</b></div>
+        <div style="height:25px;"><b>OBJETIVOS DEL PROYECTO</b></div>
        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <tbody>
           <tr style="font-family: Arial; font-size: 10px;text-align: justify;">
@@ -1723,7 +1726,7 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
         </tbody>
        </table><br>
-       <div style="height:20px;"><b>DETALLE DEL PROYECTO</b></div>
+       <div style="height:25px;"><b>DETALLE DEL PROYECTO</b></div>
        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <tbody>
           <tr style="font-family: Arial; font-size: 10px;">
@@ -1754,15 +1757,15 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>PPTO. ASIGNADO - GESTIÓN '.$this->gestion.'</b></td>
-            <td style="width:75%; font-size: 9px;">Bs. '.number_format($ppto_asig, 2, ',', '.').'</td>
+            <td style="width:75%; font-size: 9px;">Bs. '.number_format($cumplimiento[1], 2, ',', '.').'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>PPTO. EJECUTADO - GESTIÓN '.$this->gestion.'</b></td>
-            <td style="width:75%; font-size: 9px;">Bs. '.number_format($ppto_ejec, 2, ',', '.').'</td>
+            <td style="width:75%; font-size: 9px;">Bs. '.number_format($cumplimiento[2], 2, ',', '.').'</td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>AVANCE FINANCIERO GESTIÓN '.$this->gestion.'</b></td>
-            <td style="width:75%; font-size: 10px;">&nbsp;<b>'.$cumplimiento.' %</b></td>
+            <td style="width:75%; font-size: 10px;">&nbsp;<b>'.$cumplimiento[3].' %</b></td>
           </tr>
           <tr style="font-family: Arial; font-size: 10px;">
             <td style="width:25%; height:20px;" bgcolor="#e8e7e7"><b>FISCAL DE OBRA</b></td>
@@ -1803,9 +1806,21 @@ class ejecucion_finpi extends CI_Controller{
             <td style="width:75%; font-size: 9px;">&nbsp;'.strtoupper($proyecto[0]['proy_desc_solucion']).'</td>
           </tr>
         </tbody>
-       </table><hr>
+       </table>';
         
-       <div style="height:20px;"><b>EJECUCION PRESUPUESTARIA '.$this->gestion.'</b></div>';
+    return $tabla;
+  }
+
+
+  /// Lista de Ejecucion Presupuestaria - Proyectos de Inversion
+  public function detalle_ejecucion_presupuestaria_pi($proyecto,$cumplimiento){
+    $tabla='';
+    $lista_partidas_ppto_asig=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
+
+    $tabla.='
+        &nbsp;'.$proyecto[0]['proy'].' - '.$proyecto[0]['proyecto'].'
+        <hr>
+        <div style="height:25px;"><b>EJECUCION PRESUPUESTARIA '.$this->gestion.'</b></div>';
        foreach($lista_partidas_ppto_asig as $partida){
         $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($partida['sp_id']); /// temporalidad ejec partida
         /// ------ Datos de Modifcacion de la partida
@@ -1827,7 +1842,7 @@ class ejecucion_finpi extends CI_Controller{
         }
 
         $tabla.='
-        <div style="font-family: Arial; height:18px;font-size: 11px;"><b>PARTIDA : '.$partida['partida'].' - '.strtoupper($partida['par_nombre']).'</b></div>
+        <div style="font-family: Arial; height:18px;font-size: 11px;">PARTIDA : '.$partida['partida'].' - '.strtoupper($partida['par_nombre']).'</div>
         <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
           <thead>
             <tr  bgcolor="#e8e7e7" align=center>
@@ -1874,8 +1889,20 @@ class ejecucion_finpi extends CI_Controller{
         </table><br>';
        }
 
+       $tabla.=$cumplimiento;
+
     return $tabla;
   }
+
+
+
+
+
+
+
+
+
+
 
   /// Cabecera Reporte Ficha Tecnica
   public function cabecera_ficha_tecnica($titulo_reporte){
