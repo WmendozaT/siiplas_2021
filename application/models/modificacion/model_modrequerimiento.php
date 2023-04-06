@@ -617,5 +617,11 @@ class Model_modrequerimiento extends CI_Model{
         return $query->result_array();
     }
 
-
+    /*-------- Lista Requerimientos Modificados a Nivel Nacional --------*/
+    public function lista_requerimientos_modificados_nacional(){
+        $sql = 'select *
+                from lista_modificaciones_form5_nacional('.$this->gestion.')';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 }

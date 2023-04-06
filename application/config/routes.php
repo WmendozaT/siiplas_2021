@@ -484,6 +484,7 @@ $route['ejec/detalle_ediciones'] = 'ejecucion/cert_poa/reporte_ediciones_cpoas';
 $route['mod/ope_aprobadas'] = 'modificaciones/cmodificaciones/operaciones_aprobadas';  ///// lista de operaciones aprobadas
 $route['mod/derivar_operacion'] = 'modificaciones/cmodificaciones/derivar_operacion';  ///// derivar Operacion a TOP
 $route['mod/list_top'] = 'modificaciones/cmodificaciones/list_poas_aprobados';  ///// Lista de POas Aprobados
+$route['mod/exportar_mod_requerimientos_institucional'] = 'modificaciones/cmodificaciones/consolidado_modificacion_requerimientos_institucional'; ///// Exportar Consolidado de Modificaciones POA (form 5)
 
 $route['mod/list_cites/(:any)'] = 'modificaciones/cmodificaciones/lista_cites/$1';  ///// Lista de Modificaciones POA 
 

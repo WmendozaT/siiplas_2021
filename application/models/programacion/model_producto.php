@@ -20,10 +20,6 @@ class model_producto extends CI_Model {
 
     /*----- LISTA DE FORMULARIO 4 (2022) para el SEguimiento POA -----*/
     function list_operaciones_subactividad($com_id){
-        /*$sql = 'select *
-                from v_operaciones_subactividad
-                where com_id='.$com_id.''; */
-
         $sql = '
         select 
             p.prod_id,
@@ -162,18 +158,18 @@ class model_producto extends CI_Model {
 
     /*----- RELACION INSUMO PRODUCTO (VIGENTE) -----*/
     function insumo_producto($prod_id){
-        $sql = 'select *
+        $sql = 'select ip.ins_id
                 from _insumoproducto ip
                 Inner Join insumos as i On i.ins_id=ip.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.''; 
+                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.' and i.aper_id!=\'30\'
+                group by ip.ins_id'; 
 
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
     /*--- MONTO TOTAL OPERACION - INSUMOPRODUCTO (2019) ------*/
-    function monto_insumoproducto($prod_id){
+/*    function monto_insumoproducto($prod_id){
         $sql = 'select ip.prod_id,SUM(i.ins_costo_total) as total
                 from _insumoproducto ip
                 Inner Join insumos as i On i.ins_id=ip.ins_id
@@ -182,7 +178,7 @@ class model_producto extends CI_Model {
  
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*--------- ULTIMO PRODUCTO (2021-2022) ----------*/
     function ult_operacion($com_id){
@@ -195,19 +191,6 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-    /*=========== LISTA DE PRODUCTOS  ==============*/
-/*    function list_prod2($com_id){
-        $sql = 'select *
-            from _productos as p
-            Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
-            Inner Join indicador as tp On p.indi_id=tp.indi_id
-            Inner Join meta_relativo as mt On mt.mt_id=p.mt_id
-            Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=p.prod_id
-            where p.com_id='.$com_id.' and p.estado!=\'3\' and prog.g_id='.$this->gestion.'
-            ORDER BY p.prod_cod asc'; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
         function list_prod($com_id){
         $sql = 'select *
@@ -269,6 +252,7 @@ class model_producto extends CI_Model {
     /*===================================================================*/
 
 
+
     /*=== LISTA DE OPERACIONES (2020 - 2022) REPORTE - GASTO CORRIENTE ===*/
     function lista_operaciones($com_id){
         $sql = 'select p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
@@ -324,32 +308,6 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-    /*------ lista de Objetivos Estrategicos por producto alineado 2016-2020 -----*/
-/*    function list_oestrategico($com_id){
-        $sql = 'select oe.obj_id,obj_codigo,obj_descripcion, count(p.prod_id),oe.obj_gestion_inicio gi,oe.obj_gestion_fin gf
-                from _productos p
-                Inner Join _acciones_estrategicas as ae On ae.ae=p.acc_id
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
-                where p.com_id='.$com_id.' and p.estado!=\'3\' and ('.$this->gestion.'>=ae.g_id_inicio and '.$this->gestion.'<=ae.g_id_fin)
-                group by oe.obj_id,obj_codigo,obj_descripcion
-                order by oe.obj_id asc'; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*------ lista de productos alineado a un objetivo estrategico 2016-2020 -----*/
-/*    function list_producto_programado_oestrategico($com_id,$gestion,$obj_id,$gi,$gf){
-        $sql = 'select *
-                from _productos p
-                Inner Join indicador as i On i.indi_id=p.indi_id
-                Inner Join _acciones_estrategicas as ae On ae.ae=p.acc_id
-                Inner Join vista_productos_temporalizacion_programado_dictamen as pr On pr.prod_id=p.prod_id
-                where p.com_id='.$com_id.' and p.estado!=\'3\' and pr.g_id='.$gestion.' and ae.obj_id='.$obj_id.' and (pr.g_id>=ae.g_id_inicio and pr.g_id<=ae.g_id_fin)
-                order by ae.acc_id asc'; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
 
     function producto_ejecutado($prod_id,$gestion){
         $sql = 'select *
@@ -384,8 +342,8 @@ class model_producto extends CI_Model {
         $query = $this->db->get();
         return $query->num_rows();
     } 
-    /*==============================================================================================================*/
-    /*=================================== LISTA DE PRODUCTOS EJECUTADO GESTION  ====================================*/
+    /*==========================================================*/
+    /*================= LISTA DE PRODUCTOS EJECUTADO GESTION  ==============*/
     public function prod_ejec_mensual($id_pr,$gest){
         $this->db->from('prod_ejecutado_mensual');
         $this->db->where('prod_id', $id_pr);
@@ -402,25 +360,9 @@ class model_producto extends CI_Model {
         return $query->num_rows();
     }
 
-    /*==============================================================================================================*/
-    /*=================================== LISTA DE PRODUCTOS EJECUTADO RELATIVO GESTION  ====================================*/
-/*    public function prod_ejecr_mensual($id_pr,$gest){
-        $this->db->from('prod_ejecutado_mensual_relativo');
-        $this->db->where('prod_id', $id_pr);
-        $this->db->where('g_id', $gest);
-        $query = $this->db->get();
-        return $query->result_array();
-    }*/
+    /*==========================================================*/
 
-/*    public function nro_prod_ejecr_mensual($id_pr,$gest){
-        $this->db->from('prod_ejecutado_mensual_relativo');
-        $this->db->where('prod_id', $id_pr);
-        $this->db->where('g_id', $gest);
-        $query = $this->db->get();
-        return $query->num_rows();
-    } */
-    /*==============================================================================================================*/
-    /*=================================== LISTA DE PRODUCTOSGESTION ANUAL ====================================*/
+    /*============ LISTA DE PRODUCTOSGESTION ANUAL =====================*/
     function list_prodgest_anual($id_prod){
         $sql = 'SELECT *
             from prod_programado_mensual
@@ -495,17 +437,17 @@ class model_producto extends CI_Model {
         $this->db->where('g_id', $gest);
         $this->db->delete('prod_ejecutado_mensual_relativo'); 
     }
-    /*=================================================================================================*/
+    /*==============================================================*/
 
-    /*================================= NRO DE PRODUCTOS ======================================*/
+    /*==================== NRO DE PRODUCTOS ========================*/
     public function productos_nro($id_c){
         $this->db->from('_productos');
         $this->db->where('com_id', $id_c);
         $query = $this->db->get();
         return $query->num_rows();
     }
-    /*================================================================================================*/    
-    /*============================ BORRA DATOS PRODUCTOS =================================*/
+    /*=============================================================*/    
+    /*================ BORRA DATOS PRODUCTOS ======================*/
     public function delete_producto_p($id_p){ 
 
         $this->db->where('prod_id', $id_p);

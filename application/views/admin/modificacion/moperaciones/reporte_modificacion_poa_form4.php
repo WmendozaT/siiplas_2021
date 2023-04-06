@@ -13,7 +13,7 @@ ob_start();
     }
 }
 </style>
-    <page orientation="paysage"  backtop="73mm" backbottom="38mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+    <page orientation="paysage"  backtop="73mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
         <page_header>
         <br><div class="verde"></div>
             <?php echo $cabecera_modpoa;?> 

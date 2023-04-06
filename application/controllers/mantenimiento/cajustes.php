@@ -15,6 +15,7 @@ class Cajustes extends CI_Controller {
                 $this->load->model('programacion/model_faseetapa');
                 $this->load->model('programacion/model_proyecto');
                 $this->load->model('programacion/model_producto');
+                $this->load->model('mestrategico/model_objetivogestion');
                 $this->load->model('reporte_eval/model_evalregional');
                 $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
                 $this->load->model('ejecucion/model_ejecucion');
@@ -70,8 +71,80 @@ class Cajustes extends CI_Controller {
     }
 
 
-  /*---- IMPORTAR ARCHIVO PARA EL AJUSTE DE APERTURA PROYECTOS----*/
+
+
+  /*---- AJUSTAR FORM 4 ALINEACIONES ----*/
   function importar_archivo(){
+    if ($this->input->post()) {
+        $post = $this->input->post();
+
+        $tipo = $_FILES['archivo']['type'];
+        $tamanio = $_FILES['archivo']['size'];
+        $archivotmp = $_FILES['archivo']['tmp_name'];
+
+        $filename = $_FILES["archivo"]["name"];
+        $file_basename = substr($filename, 0, strripos($filename, '.'));
+        $file_ext = substr($filename, strripos($filename, '.'));
+        $allowed_file_types = array('.csv');
+        if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
+          $i=0;
+          $lineas = file($archivotmp);
+
+          foreach ($lineas as $linea_num => $linea){ 
+            if($i != 0){ 
+              $datos = explode(";",$linea);
+
+                if(count($datos)==6){
+                  $dep_id = intval(trim($datos[0])); //// dep_id
+                  $prod_id = intval(trim($datos[1])); //// prod id
+                  $codigo_og = intval(trim($datos[2])); //// cod objetivo gestion
+                  $codigo_or = intval(trim($datos[3])); //// cod objetivo regional
+                  $codigo_form4 = intval(trim($datos[4])); //// cod form 4
+                  $prioridad = intval(trim($datos[5])); //// prioridad
+
+                  $get_informacion_alineacion=$this->model_objetivogestion->get_alineacion_habilitado_oregional_a_form4($codigo_og,$codigo_or,$dep_id);
+
+                  if(count($get_informacion_alineacion)!=0){
+                    
+                      $update_alineacion= array(
+                        'or_id' => $get_informacion_alineacion[0]['or_id'],
+                        'prod_priori' => $prioridad
+                      );
+                      $this->db->where('prod_id', $prod_id);
+                      $this->db->update('_productos', $update_alineacion);
+                  }
+
+
+                }
+              }
+
+              $i++;
+            }
+
+            //$this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO');
+            //redirect(site_url("").'/ediciones');
+
+        } 
+        elseif (empty($file_basename)) {
+          echo "<script>alert('SELECCIONE ARCHIVO .CSV')</script>";
+        } 
+        elseif ($filesize > 100000000) {
+          //redirect('');
+        } 
+        else {
+          $mensaje = "Sólo estos tipos de archivo se permiten para la carga: " . implode(', ', $allowed_file_types);
+          echo '<script>alert("' . $mensaje . '")</script>';
+        }
+
+    } else {
+        show_404();
+    }
+  }
+
+
+
+  /*---- IMPORTAR ARCHIVO PARA EL AJUSTE DE APERTURA PROYECTOS----*/
+  function importar_archivo3(){
     if ($this->input->post()) {
         $post = $this->input->post();
 

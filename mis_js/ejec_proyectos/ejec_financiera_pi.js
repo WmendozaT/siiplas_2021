@@ -490,6 +490,18 @@ $(document).ready(function() {
           if (response.respuesta == 'correcto') {
               if(dep_id==0){ /// Institucional
                 $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+
+                document.getElementById('cuadro_consolidado_vista').innerHTML = response.cuadro_consolidado;
+                graf_regresion_consolidado_pi('container',response.matriz1,'EJECUCIÓN PRESUPUESTARIA - '+response.mes,'INSTITUCIONAL','(Bs)'); /// vista
+                let detalle_ejecucion1=[];
+                for (var i = 0; i < 12; i++) {
+                    detalle_ejecucion1[i]= { name: response.matriz1[0][i+1],y: response.matriz1[7][i+1]};
+                }
+
+                cuadro_grafico_en_barras_verticales('proyectos1',detalle_ejecucion1,'% EJECUCION PRESUPUESTARIA MENSUAL',response.regional,'CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// vista
+                cuadro_grafico_en_barras_verticales('proyectos_impresion1',detalle_ejecucion1,'','% EJECUCION PRESUPUESTARIA MENSUAL','CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// impresion
+
+                ///////
                 cuadro_grafico_distribucion_proyectos(response.matriz_reg,response.nro_reg); /// grafico 1 detalle por proyecto
                 cuadro_grafico_distribucion_presupuesto_asignado(response.matriz_reg,response.nro_reg)  /// grafico 1 detalle por presupuesto
 
@@ -518,11 +530,26 @@ $(document).ready(function() {
                 //// --- end
 
                 cuadro_grafico_ppto_ejec_meses(response.vector_meses,'INSTITUCIONAL');  //// mensual
-                cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'INSTITUCIONAL') /// meses Acumulado
+                //cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'INSTITUCIONAL') /// meses Acumulado
 
               }
               else{ /// Regional
                 $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+
+                document.getElementById('cuadro_consolidado_vista').innerHTML = response.cuadro_consolidado;
+                graf_regresion_consolidado_pi('container',response.matriz1,'EJECUCIÓN PRESUPUESTARIA - '+response.mes,response.regional,'(Bs)'); /// vista
+                graf_regresion_consolidado_pi('container_impresion',response.matriz1,'','EJECUCIÓN PRESUPUESTARIA - '+response.mes,'(Bs)'); /// impresion
+                
+                let detalle_ejecucion1=[];
+                for (var i = 0; i < 12; i++) {
+                    detalle_ejecucion1[i]= { name: response.matriz1[0][i+1],y: response.matriz1[7][i+1]};
+                }
+
+                cuadro_grafico_en_barras_verticales('proyectos1',detalle_ejecucion1,'% EJECUCION PRESUPUESTARIA MENSUAL',response.regional,'CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// vista
+                cuadro_grafico_en_barras_verticales('proyectos_impresion1',detalle_ejecucion1,'','% EJECUCION PRESUPUESTARIA MENSUAL','CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// impresion
+
+                
+
 
               //// Avance de Proyectos
                 let detalle_ejecucion=[];
@@ -548,7 +575,7 @@ $(document).ready(function() {
               ///
 
                 cuadro_grafico_ppto_ejec_meses(response.vector_meses,'REGIONAL');  //// mensual
-                cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
+                //cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
               }
           }
           else{
@@ -1026,7 +1053,7 @@ function cuadro_grafico_ppto_ejec_meses(matriz,titulo){
 }
 
 //// grafico REGRESION ppto ejecjutado por meses ACUMULADO PROYECTO DE INVERSION
-function cuadro_grafico_ppto_ejec_meses_acumulado(matriz,titulo){
+/*function cuadro_grafico_ppto_ejec_meses_acumulado(matriz,titulo){
   let ejecucion=[];
   for (var i = 0; i <=11; i++) {
       ejecucion[i]= matriz[i];
@@ -1083,7 +1110,7 @@ function cuadro_grafico_ppto_ejec_meses_acumulado(matriz,titulo){
     ],
     
   });
-}
+}*/
 
 
 //// Verificando valor ejecutado por partida
@@ -1171,7 +1198,7 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
                 cuadro_grafico_en_barras_horizontales('partidas',partida,partida_ejecucion,'CONSOLIDADO POR PARTIDAS - REGIONAL : '+response.regional);/// detalle partidas
               ////
               cuadro_grafico_ppto_ejec_meses(response.vector_meses,'REGIONAL');  //// mensual
-              cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
+              //cuadro_grafico_ppto_ejec_meses_acumulado(response.vector_meses_acumulado,'REGIONAL') /// meses Acumulado
           }
           else{
             alertify.error("ERROR AL LISTAR");

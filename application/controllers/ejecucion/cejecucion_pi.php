@@ -126,10 +126,10 @@ class Cejecucion_pi extends CI_Controller {
       $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa (Actual)
       $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_pinversion($proyecto[0]['aper_id']); /// Ppto Ejecutado sigep
 
-      $matriz=$this->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
+      $matriz=$this->ejecucion_finpi->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
 
-      $cuadro_consolidado=$this->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
-      $cuadro_consolidado_impresion=$this->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
+      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
+      $cuadro_consolidado_impresion=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
 
       $result = array(
         'respuesta' => 'correcto',
@@ -150,7 +150,7 @@ class Cejecucion_pi extends CI_Controller {
 
 
   /*-- TABLA PARA CUADRO CONSOLIDADO VISTA --*/
-  public function tabla_consolidado_ejecucion_pinversion($matriz){
+  /*public function tabla_consolidado_ejecucion_pinversion($matriz){
     $tabla='';
     $tabla.='
     <center>
@@ -247,11 +247,11 @@ class Cejecucion_pi extends CI_Controller {
     </center>';
 
     return $tabla;
-  }
+  }*/
 
 
   /*-- TABLA PARA CUADRO CONSOLIDADO --*/
-  public function tabla_consolidado_ejecucion_pinversion_impresion($matriz){
+ /* public function tabla_consolidado_ejecucion_pinversion_impresion($matriz){
     $tabla='';
     $tabla.='
     <center>
@@ -290,11 +290,11 @@ class Cejecucion_pi extends CI_Controller {
     </center>';
 
     return $tabla;
-  }
+  }*/
 
 
   /*-- MATRIZ PARA CUADRO CONSOLIDADO DE EJECUCION --*/
-  public function matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep){
+  /*public function matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep){
 
     /// Temporalidad Inicial Programado
     if(count($ppto_programado_poa_inicial)!=0){
@@ -419,7 +419,7 @@ class Cejecucion_pi extends CI_Controller {
     }
 
     return $matriz;
-  }
+  }*/
 
 
   /*-- CALIFICACION EJECUCION POR PROYECTO --*/
@@ -688,7 +688,7 @@ class Cejecucion_pi extends CI_Controller {
             </thead>
             <tbody>
               <tr>
-                <td style="height:12px;font-size:13px" align="right"><b>'.number_format($monto_partida[1], 0, ',', '.').'</b></td>
+                <td style="height:12px;font-size:13px" align="right" title="'.$partida['sp_id'].'"><b>'.number_format($monto_partida[1], 0, ',', '.').'</b></td>
                 <td align="right" style="font-size:13px"><b>'.number_format($monto_partida[2], 0, ',', '.').'</b></td>
                 <td align="right" style="font-size:13px"><b>'.number_format($monto_partida[3], 0, ',', '.').'</b></td>';
                 if(count($temporalidad_ejec)!=0){

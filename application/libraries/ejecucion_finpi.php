@@ -580,7 +580,7 @@ class ejecucion_finpi extends CI_Controller{
   }
 
 
-  /*------- DETALLE EJECUCION PI EXCEL (2)--------*/
+  /*------- (excel) DETALLE EJECUCION PI EXCEL (2)--------*/
   public function reporte2_pdf_excel($dep_id,$tipo_reporte){
     /// tipo_reporte : 1 pdf
     /// tipo_reporte : 0 excel
@@ -969,7 +969,7 @@ class ejecucion_finpi extends CI_Controller{
   }
 
 
-  /*------- REPORTE 3 DETALLE POR PARTIDA EJECUCION FISICA Y FINANCIERA A RESUMEN --------*/
+  /*-------(excel) REPORTE 3 DETALLE POR PARTIDA EJECUCION FISICA Y FINANCIERA A RESUMEN --------*/
   public function reporte_consolidado_institucional_resumen(){
     $tabla='';
     $proyectos=$this->model_proyecto->list_proy_inversion();
@@ -1121,6 +1121,289 @@ class ejecucion_finpi extends CI_Controller{
 
     return $tabla;
   }
+
+
+  //// ======== CUADRO COMPARATIVO (INICIAL - MODIFICADO - EJECUTADO)
+  /*-- MATRIZ PARA CUADRO CONSOLIDADO DE EJECUCION --*/
+  public function matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep){
+
+    /// Temporalidad Inicial Programado
+    if(count($ppto_programado_poa_inicial)!=0){
+     for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect_ini[$i]=$ppto_programado_poa_inicial[0]['programado_total'];;
+        }
+        else{
+          $vect_ini[$i]=round($ppto_programado_poa_inicial[0]['mes'.$i],2);
+        }
+      }
+    }
+    else{
+      for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect_ini[$i]=0;
+        }
+        else{
+          $vect_ini[$i]=0;
+        }
+      }
+    }
+
+    /// Temporalidad Programado Ajustado (actual)
+    if(count($ppto_programado_poa)!=0){
+     for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect_p[$i]=$ppto_programado_poa[0]['programado_total'];;
+        }
+        else{
+          $vect_p[$i]=round($ppto_programado_poa[0]['mes'.$i],2);
+        }
+      }
+    }
+    else{
+      for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect_p[$i]=0;
+        }
+        else{
+          $vect_p[$i]=0;
+        }
+      }
+    }
+
+    /// Temporalidad Ejecutado
+    if(count($ppto_ejecutado_sigep)!=0){
+      for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect[$i]=$ppto_ejecutado_sigep[0]['ejecutado_total'];;
+        }
+        else{
+          $vect[$i]=round($ppto_ejecutado_sigep[0]['m'.$i],2);
+        }
+      }
+    }
+    else{
+      for ($i=0; $i <=12 ; $i++) { 
+        if($i==0){
+          $vect[$i]=0;
+        }
+        else{
+          $vect[$i]=0;
+        }
+      }
+    }
+
+
+    for ($i=0; $i <=7; $i++) { 
+      for ($j=0; $j <=12; $j++) { 
+        $matriz[$i][$j]=0;
+      }
+    }
+
+
+    $matriz[0][1]='ENE.';
+    $matriz[0][2]='FEB.';
+    $matriz[0][3]='MAR.';
+    $matriz[0][4]='ABR.';
+    $matriz[0][5]='MAY.';
+    $matriz[0][6]='JUN.';
+    $matriz[0][7]='JUL.';
+    $matriz[0][8]='AGO.';
+    $matriz[0][9]='SEPT.';
+    $matriz[0][10]='OCT.';
+    $matriz[0][11]='NOV.';
+    $matriz[0][12]='DIC.';
+
+
+    $suma_prog_inicial=0;
+    $suma_prog=0;
+    $suma_ejec=0;
+    for ($j=0; $j <=12 ; $j++) { 
+
+      if($j==0){
+        $matriz[1][$j]=$vect_ini[$j]; // total prog inicial
+        $matriz[2][$j]=0;
+        $matriz[3][$j]=$vect_p[$j]; // total prog actual
+        $matriz[4][$j]=0;
+        $matriz[5][$j]=$vect[$j]; // total ejecutado
+        $matriz[6][$j]=0;
+        $matriz[7][$j]=0;
+      }
+      else{
+        $suma_prog_inicial=$suma_prog_inicial+$vect_ini[$j];
+        $suma_prog=$suma_prog+$vect_p[$j];
+        $suma_ejec=$suma_ejec+$vect[$j]; 
+
+        $matriz[1][$j]=$vect_ini[$j];
+        $matriz[2][$j]=$suma_prog_inicial; /// acumulado ini
+
+        $matriz[3][$j]=$vect_p[$j];
+        $matriz[4][$j]=$suma_prog; /// acumulado prog
+
+        $matriz[5][$j]=$vect[$j];
+        $matriz[6][$j]=$suma_ejec; /// acumulado ejec
+      }
+       
+      if($matriz[2][$j]!=0){
+        $matriz[7][$j]=round(($matriz[6][$j]/$matriz[2][$j])*100,2);
+      }
+    }
+
+    return $matriz;
+  }
+
+
+  /*-- TABLA PARA CUADRO CONSOLIDADO VISTA --*/
+  public function tabla_consolidado_ejecucion_pinversion($matriz){
+    $tabla='';
+    $tabla.='
+    <center>
+    <table class="table table-bordered" style="width:98%;">
+      <thead>
+        <tr>
+          <th></th>
+          <th>ENE.</th>
+          <th>FEB.</th>
+          <th>MAR.</th>
+          <th>ABR.</th>
+          <th>MAY.</th>
+          <th>JUN.</th>
+          <th>JUL.</th>
+          <th>AGO.</th>
+          <th>SEPT.</th>
+          <th>OCT.</th>
+          <th>NOV.</th>
+          <th>DIC.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td bgcolor="#79aee1"><b style="font-family: Arial;font-size: 13px;color:white">PPTO. PROGRAMADO INICIAL '.$this->gestion.'</b></td>';
+        for ($i=1; $i <=12 ; $i++) {
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#e0edf9"';
+          }
+          $tabla.='<td style="font-family: Arial;font-size: 12px; text-align:right" '.$color.'><b>'.number_format($matriz[1][$i], 2, ',', '.').'</b></td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b>PPTO. PROGRAMADO INICIAL ACUMULADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) {
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#e0edf9"';
+          }
+          $tabla.='<td style="font-family: Arial;font-size: 11px; text-align:right" '.$color.'>'.number_format($matriz[2][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td bgcolor="#515660"><b style="font-family: Arial;font-size: 13px;color:white"><b>PPTO. RE-FORMULADO '.$this->gestion.'</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#e0edf9"';
+          }
+          $tabla.='<td style="font-family: Arial;font-size: 12px; text-align:right" '.$color.'><b>'.number_format($matriz[3][$i], 2, ',', '.').'</b></td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b>PPTO. RE-FORMULADO ACUMULADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#e0edf9"';
+          }
+          $tabla.='<td style="font-family: Arial;font-size: 11px; text-align:right" '.$color.'>'.number_format($matriz[4][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td bgcolor="#a8f199"><b style="font-family: Arial;font-size: 13px;color:black"><b>PPTO. EJECUTADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#e0edf9"';
+          }
+          $tabla.='<td style="font-family: Arial;font-size: 12px; text-align:right" '.$color.'><b>'.number_format($matriz[5][$i], 2, ',', '.').'</b></td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b>PPTO. EJECUTADO ACUMULADO</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#e0edf9"';
+          }
+          $tabla.='<td style="font-family: Arial;font-size: 11px; text-align:right" '.$color.'>'.number_format($matriz[6][$i], 2, ',', '.').'</td>';
+        }
+      $tabla.='
+        </tr>
+        <tr>
+          <td><b style="font-family: Arial;font-size: 13px">(%) CUMPLIMIENTO MENSUAL</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#e0edf9"';
+          }
+          $tabla.='<td align="right" style="font-size:14px" '.$color.'><b>'.$matriz[7][$i].'%</b></td>';
+        }
+      $tabla.='
+        </tr>
+      </tbody>
+    </table>
+    </center>';
+
+    return $tabla;
+  }
+
+
+  /*-- TABLA PARA CUADRO CONSOLIDADO --*/
+  public function tabla_consolidado_ejecucion_pinversion_impresion($matriz){
+    $tabla='';
+    $tabla.='
+    <center>
+    <table class="change_order_items" border=1 style="width:100%;">
+      <thead>
+        <tr>
+          <th style="width:16%;"></th>
+          <th style="width:7%;">ENE.</th>
+          <th style="width:7%;">FEB.</th>
+          <th style="width:7%;">MAR.</th>
+          <th style="width:7%;">ABR.</th>
+          <th style="width:7%;">MAY.</th>
+          <th style="width:7%;">JUN.</th>
+          <th style="width:7%;">JUL.</th>
+          <th style="width:7%;">AGO.</th>
+          <th style="width:7%;">SEPT.</th>
+          <th style="width:7%;">OCT.</th>
+          <th style="width:7%;">NOV.</th>
+          <th style="width:7%;">DIC.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>(%) CUMPLIMIENTO MENSUAL</b></td>';
+        for ($i=1; $i <=12 ; $i++) { 
+          $color='';
+          if($this->verif_mes[1]==$i){
+            $color='bgcolor="#cff2db"';
+          }
+          $tabla.='<td align="right" style="font-size:10px" '.$color.'>'.$matriz[7][$i].'%</td>';
+        }
+      $tabla.='
+        </tr>
+      </tbody>
+    </table>
+    </center>';
+
+    return $tabla;
+  }
+  //// ==============================================================
 
 
   /// Tabla reporte Consolidado de Partidas Vista o Excel
@@ -1476,7 +1759,7 @@ class ejecucion_finpi extends CI_Controller{
   }
 
   /// Vector Consolidado de presupuesto Acummulado Mensual nivel Inatitucional
-  public function vector_consolidado_ppto_acumulado_mensual_institucional(){
+/*  public function vector_consolidado_ppto_acumulado_mensual_institucional(){
     $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_institucional();// lista ppto temporalidad ejecutado Institucional
     if(count($ppto)!=0){
       $j=0;$suma=0;
@@ -1496,7 +1779,7 @@ class ejecucion_finpi extends CI_Controller{
     }
 
     return $ppto_pi;
-  }
+  }*/
 
     /// Vector Consolidado de presupuesto Mensual por REGIONAL
   public function vector_consolidado_ppto_mensual_regional($dep_id){
@@ -1521,7 +1804,7 @@ class ejecucion_finpi extends CI_Controller{
   }
 
   /// Vector Consolidado de presupuesto Acummulado Mensual por REGIONAL
-  public function vector_consolidado_ppto_acumulado_mensual_regional($dep_id){
+/*  public function vector_consolidado_ppto_acumulado_mensual_regional($dep_id){
     $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_regional($dep_id);// lista ppto temporalidad ejecutado por regional
     if(count($ppto)!=0){
       $j=0;$suma=0;
@@ -1541,7 +1824,7 @@ class ejecucion_finpi extends CI_Controller{
     }
 
     return $ppto_pi;
-  }
+  }*/
 
 
   /// detalle de la Ejecucion de la temporalidad de presupuesto por partida nivel Regional
@@ -1627,7 +1910,7 @@ class ejecucion_finpi extends CI_Controller{
       $ppto_ejec=$total_ppto_ejecutado[0]['ejecutado_total'];
     }
 
-
+    $cumplimiento_pi=0;
     if(count($total_ppto_asignado)!=0 & count($total_ppto_ejecutado)!=0){
       $cumplimiento_pi=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['monto']))*100,2);
     }
@@ -1867,7 +2150,7 @@ class ejecucion_finpi extends CI_Controller{
           </thead>
           <tbody>
             <tr style="text-align:right;">
-              <td style="height:12px;">'.number_format($monto_partida[1], 0, ',', '.').'</td>
+              <td style="height:12px;" title="'.$partida['sp_id'].'">'.number_format($monto_partida[1], 0, ',', '.').'</td>
               <td>'.number_format($monto_partida[2], 0, ',', '.').'</td>
               <td>'.number_format($monto_partida[3], 0, ',', '.').'</td>';
               if(count($temporalidad_ejec)!=0){

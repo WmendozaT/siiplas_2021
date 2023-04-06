@@ -94,7 +94,8 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    // ------ lista Temporalidad Insumo por Unidad/ proyecto
+    ///================= TEMPORALIDAD INSUMO
+    // ------ lista Temporalidad Insumo por UNIDAD / PROYECTO
     public function list_temporalidad_programado_unidad($aper_id){
         $sql = '
             select *
@@ -105,8 +106,55 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+    // ------ Temporalidad formulario 5  DISTRITAL
+    public function temporalidad_programado_form5_distrital($dist_id){
+        $sql = '
+            select pi.dist_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
+            from vista_temporalidad_form5_unidad temp
+            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
+            where pi.dist_id='.$dist_id.'
+            group by pi.dist_id
+            order by pi.dist_id asc';
 
-    // ------ Temporalidad Inicial Proyectos de Inversion
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    // ------ Temporalidad formulario 5  REGIONAL
+    public function temporalidad_programado_form5_regional($dep_id){
+        $sql = '
+            select pi.dep_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
+            from vista_temporalidad_form5_unidad temp
+            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
+            where pi.dist_id='.$dep_id.'
+            group by pi.dep_id
+            order by pi.dep_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    // ------ Temporalidad formulario 5  REGIONAL INSTITUCIONAL
+    public function temporalidad_programado_form5_institucional(){
+        $sql = '
+            select SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
+            from vista_temporalidad_form5_unidad temp
+            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+    ///=====================================
+
+
+
+
+
+
+
+
+    ///=================== TEMPORALIDAD INICIAL======
+    // ------ Temporalidad Inicial PROYECTO DE INVERSION
     public function temporalidad_inicial_pinversion($aper_id){
         $sql = '
             select *
@@ -117,6 +165,45 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+    // ------ Temporalidad Inicial Proyectos de Inversion DISTRITAL
+    public function temporalidad_inicial_pinversion_distrital($dist_id){
+        $sql = '
+            select pi.dist_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
+            from vista_temporalidad_inicial_form5_x_proyecto temp
+            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
+            where pi.dist_id='.$dist_id.'
+            group by pi.dist_id
+            order by pi.dist_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    // ------ Temporalidad Inicial Proyectos de Inversion REGIONAL
+    public function temporalidad_inicial_pinversion_regional($dep_id){
+        $sql = '
+            select pi.dep_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
+            from vista_temporalidad_inicial_form5_x_proyecto temp
+            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
+            where pi.dist_id='.$dep_id.'
+            group by pi.dep_id
+            order by pi.dep_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    // ------ Temporalidad Inicial Proyectos de Inversion INSTITUCIONAL
+    public function temporalidad_inicial_pinversion_institucional(){
+        $sql = '
+            select SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
+            from vista_temporalidad_inicial_form5_x_proyecto temp
+            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+    ///================================================
 
     // ------ lista Unidad de Medida
     public function list_unidadmedida(){
@@ -164,7 +251,7 @@ class Model_insumo extends CI_Model{
     public function insumos_por_unidad($aper_id){
         $sql = 'select *
                 from insumos
-                where aper_id='.$aper_id.'';
+                where aper_id='.$aper_id.' and ins_estado!=\'3\' and ins_gestion='.$this->gestion.'';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -340,17 +427,9 @@ class Model_insumo extends CI_Model{
                 Inner Join _productos as prod On prod.prod_id=ip.prod_id
                 Inner Join insumos as i On i.ins_id=ip.ins_id
                 Inner Join partidas as par On par.par_id=i.par_id
-                where ip.prod_id=77903 and i.ins_estado!=3 and i.aper_id!=0
+                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\'
                 group by prod.prod_id,prod.prod_cod,par.par_codigo,i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,ins_monto_certificado,ins_observacion
                 order by par.par_codigo,i.ins_id asc';
-        /*$sql = 'select *
-                from _insumoproducto ip
-                Inner Join _productos as prod On prod.prod_id=ip.prod_id
-                Inner Join insumos as i On i.ins_id=ip.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\'
-                order by par.par_codigo,i.ins_id asc';*/
-
         
         $query = $this->db->query($sql);
         return $query->result_array();

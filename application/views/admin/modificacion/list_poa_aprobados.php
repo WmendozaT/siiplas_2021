@@ -39,7 +39,7 @@
 			table{font-size: 10px;
             width: 100%;
             max-width:1550px;;
-			overflow-x: scroll;
+						overflow-x: scroll;
             }
             th{
               padding: 1.4px;
@@ -92,9 +92,9 @@
 			<div class="login-info">
 				<span> <!-- User image size is adjusted inside CSS, it should stay as is --> 
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                        <span>
-                           <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
-                        </span>
+            <span>
+             <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
+            </span>
 						<i class="fa fa-angle-down"></i>
 					</a> 
 				</span>
@@ -103,12 +103,12 @@
 			<nav>
 				<ul>
 					<li class="">
-	                <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-	            	</li>
-		            <li class="text-center">
-		                <a href="<?php echo base_url().'index.php/admin/dm/2/' ?>" title="MODIFICACIONES"> <span class="menu-item-parent">MODIFICACIONES</span></a>
-		            </li>
-		            <?php echo $menu;?>
+	          <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+	        </li>
+		      <li class="text-center">
+		        <a href="<?php echo base_url().'index.php/admin/dm/2/' ?>" title="MODIFICACIONES"> <span class="menu-item-parent">MODIFICACIONES</span></a>
+		      </li>
+		        <?php echo $menu;?>
 				</ul>
 			</nav>
 			<span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
@@ -133,9 +133,14 @@
 			<div id="content">
 				<section id="widget-grid" class="">
 					<div class="row">
-						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<article class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 							<div class="well well-sm well-light">
 								<h3>MODIFICACI&Oacute;N POA - GESTI&Oacute;N <?php echo $this->session->userdata('gestion')?></h3>
+							</div>
+						</article>
+						<article class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+							<div class="well well-sm well-light">
+								<?php echo $rep_listado_modificacionespoa; ?>
 							</div>
 						</article>
 					</div>

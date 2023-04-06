@@ -1763,6 +1763,124 @@ class Modificacionpoa extends CI_Controller{
   }
 
 
+  //// Lista de Items MODIFICADOS (Nuevo) Nacional
+  public function items_modificados_form5_historial_nacional(){
+    $items_modificados=$this->model_modrequerimiento->lista_requerimientos_modificados_nacional();
+    $tabla='';
+    $tabla.='
+      <style>
+        table{font-size: 9px;
+          width: 100%;
+          max-width:1550px;
+          overflow-x: scroll;
+        }
+        th{
+          padding: 1.4px;
+          text-align: center;
+          font-size: 10px;
+        }
+      </style>
+    <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+      <thead>
+        <tr style="background-color: #66b2e8">
+          <th style="width:1%;height:20px;background-color: #eceaea;">#</th>
+          <th style="width:5%;background-color: #eceaea;">COD. DEP.</th>
+          <th style="width:10%;background-color: #eceaea;">REGIONAL</th>
+          <th style="width:5%;background-color: #eceaea;">COD. DIST.</th>
+          <th style="width:10%;background-color: #eceaea;">DISTRITAL</th>
+          <th style="width:10%;background-color: #eceaea;">GASTO CORRIENTE / PROYECTO DE INVERSION</th>
+          <th style="width:10%;background-color: #eceaea;">CITE CODIGO</th>
+          <th style="width:10%;background-color: #eceaea;">CITE NOTA</th>
+          <th style="width:10%;background-color: #eceaea;">PARTIDA</th>
+          <th style="width:2.1%;background-color: #eceaea;">COD.<br>ACT.</th>
+          <th style="width:3.8%;background-color: #eceaea;">PARTIDA</th>
+          <th style="width:16%;background-color: #eceaea;">DETALLE REQUERIMIENTO</th>
+          <th style="width:5%;background-color: #eceaea;">UNIDAD MEDIDA</th>
+          <th style="width:5%;background-color: #eceaea;">CANTIDAD</th>
+          <th style="width:5%;background-color: #eceaea;">PRECIO UNITARIO</th>
+          <th style="width:5%;background-color: #eceaea;">COSTO TOTAL</th>
+          <th style="width:5%;background-color: #eceaea;">ENE.</th>
+          <th style="width:5%;background-color: #eceaea;">FEB.</th>
+          <th style="width:5%;background-color: #eceaea;">MAR.</th>
+          <th style="width:5%;background-color: #eceaea;">ABR.</th>
+          <th style="width:5%;background-color: #eceaea;">MAY.</th>
+          <th style="width:5%;background-color: #eceaea;">JUN.</th>
+          <th style="width:5%;background-color: #eceaea;">JUL.</th>
+          <th style="width:5%;background-color: #eceaea;">AGO.</th>
+          <th style="width:5%;background-color: #eceaea;">SEPT.</th>
+          <th style="width:5%;background-color: #eceaea;">OCT.</th>
+          <th style="width:5%;background-color: #eceaea;">NOV.</th>
+          <th style="width:5%;background-color: #eceaea;">DIC.</th>
+          <th style="width:6%;background-color: #eceaea;">OBSERVACION</th>
+          <th style="width:8%;background-color: #eceaea;">TIPO MODIFICACION</th>
+          <th style="width:8%;background-color: #eceaea;">FECHA MODIFICACION</th>
+          <th style="width:8%;background-color: #eceaea;">RESPONSABLE</th>
+        </tr>
+      </thead>
+      <tbody>';
+      $nro=0;
+      foreach($items_modificados as $row){
+        $nro++;
+        $tabla.='
+        <tr>
+          <td>'.$nro.'</td>
+          <td>'.$row['dep_id'].'</td>
+          <td>'.$row['da'].'</td>
+          <td>'.$row['dep_departamento'].'</td>
+          <td>'.$row['ue'].'</td>
+          <td>'.$row['dist_distrital'].'</td>
+          <td>'.mb_convert_encoding(strtoupper($row['tipo'].' '.$row['actividad'].' '.$row['abrev']), 'cp1252', 'UTF-8').'</td>
+          <td>'.$row['cite_codigo'].'</td>
+          <td style="width:3.8%; font-size: 15px;">'.$row['cite_nota'].'</td>
+          <td style="width:2.1%; font-size: 15px;" align=center>'.$row['prod_cod'].'</td>
+          <td style="width:3.8%; font-size: 15px;" align=center><b>'.$row['par_codigo'].'</b></td>
+          <td>'.$row['ins_detalle'].'</td>
+          <td>'.round($row['ins_unidad_medida'],2).'</td>
+          <td>'.round($row['ins_cant_requerida'],2).'</td>
+          <td>'.round($row['ins_costo_unitario'],2).'</td>
+          <td>'.round($row['ins_costo_total'],2).'</td>';
+          for ($i=1; $i <=12 ; $i++) { 
+            $tabla.='<td align="left">'.round($row['mes'.$i]).'</td>';
+          }
+          $tabla.='
+          <td>'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+          <td>';
+            $tipo='AGREGADO';
+            if($row['tipo_mod']==2){
+              $tipo='MODIFICADO';
+            }
+            else{
+              $tipo='ELIMINADO'; 
+            }
+          $tabla.='
+          </td>
+          <td bgcolor="#dbfbf6">'.date('d/m/Y',strtotime($row['fecha_creacion'])).'</td>
+          <td bgcolor="#dbfbf6">'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
+        </tr>';
+      }
+      $tabla.='
+      </tbody>
+    </table>';
+
+
+    return $tabla;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   //// Lista de Items MODIFICADOS (listado anterior vigente)
@@ -2345,6 +2463,24 @@ class Modificacionpoa extends CI_Controller{
 
     return $tabla;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /*------- GENERAR MENU --------*/
     function menu($mod){

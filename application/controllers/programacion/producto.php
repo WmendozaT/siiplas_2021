@@ -571,7 +571,7 @@ class Producto extends CI_Controller {
                     <th style="width:4%; text-align=center"><b>DIC.</b></th>
                     <th style="width:10%; text-align=center"><b>MEDIO DE VERIFICACI&Oacute;N</b></th>
                     <th style="width:7%; text-align=center"><b>ELIMINAR ACTIVIDAD</b></th>
-                    <th style="width:7%; text-align=center"><b>PTTO.</b></th>
+                   
                     <th style="width:7%; text-align=center"><b>NRO. REQ.</b></th>
                   </tr>
                 </thead>
@@ -580,7 +580,7 @@ class Producto extends CI_Controller {
                 foreach($productos as $rowp){
                   $cont++;
                   $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                  $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+                  //$monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                   $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
 
                   if($proyecto[0]['por_id']==0){
@@ -596,10 +596,10 @@ class Producto extends CI_Controller {
                   }
 
                   
-                  $ptto=0;
+                  /*$ptto=0;
                   if(count($monto)!=0){
                     $ptto=$monto[0]['total'];
-                  }
+                  }*/
 
                   $color='#f1fdf1'; $titulo=''; $por=''; 
                   if($proyecto[0]['tp_id']==1){
@@ -681,14 +681,15 @@ class Producto extends CI_Controller {
                     }
                     $tabla.='<td style="width:10%;" bgcolor="#e5fde5">'.$rowp['prod_fuente_verificacion'].'</td>';
                     $tabla.='<td style="width:7%;">';
-                      if($this->tp_adm==1 || $this->conf_form4==1){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a><br><br>';
-                        $tabla.=' <center>
-                                    <input type="checkbox" name="req[]" value="'.$rowp['prod_id'].'" onclick="scheck'.$cont.'(this.checked);"/>
-                                  </center>';
+                      if(count($this->model_producto->insumo_producto($rowp['prod_id']))==0){
+                        if($this->tp_adm==1 || $this->conf_form4==1){
+                          $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a><br><br>';
+                          $tabla.=' <center>
+                                      <input type="checkbox" name="req[]" value="'.$rowp['prod_id'].'" onclick="scheck'.$cont.'(this.checked);"/>
+                                    </center>';
+                        }
                       }
                     $tabla.='</td>';
-                    $tabla.='<td>'.number_format($ptto, 2, ',', '.').'</td>';
                     $tabla.='<td style="width:7%;" align="center"><font color="blue" size="2"><b>'.count($this->model_producto->insumo_producto($rowp['prod_id'])).'</b></font></td>';
                   $tabla .='</tr>';
                   ?>

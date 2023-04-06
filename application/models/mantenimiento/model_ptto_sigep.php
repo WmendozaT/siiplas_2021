@@ -1052,7 +1052,17 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------- Get Ptto Ejecutado a nivel Institucional 2022 --------*/
+    /*-------- Get Ptto Ejecutado x Proyecto de Inversion 2023 --------*/
+    public function get_ppto_ejecutado_pinversion($aper_id){
+        $sql = 'select *
+                from lista_detalle_ejecucion_ppto_proyectos('.$this->gestion.')
+                where aper_id='.$aper_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*-------- Get Ptto Ejecutado a nivel Institucional 2023 --------*/
     public function get_ppto_ejecutado_institucional(){
         $sql = 'select 
                 SUM(ppto_asignado_gestion) ppto_asignado_gestion,
@@ -1074,7 +1084,7 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------- Get Ptto Ejecutado x Regional 2022 --------*/
+    /*-------- Get Ptto Ejecutado x Regional 2023 --------*/
     public function get_ppto_ejecutado_regional($dep_id){
         $sql = 'select 
                 SUM(ppto_asignado_gestion) ppto_asignado_gestion,
@@ -1098,14 +1108,30 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
-    /*-------- Get Ptto Ejecutado x Proyecto de Inversion 2023 --------*/
-    public function get_ppto_ejecutado_pinversion($aper_id){
-        $sql = 'select *
+    /*-------- Get Ptto Ejecutado x Distrital 2023 --------*/
+    public function get_ppto_ejecutado_distrital($dist_id){
+        $sql = 'select 
+                SUM(ppto_asignado_gestion) ppto_asignado_gestion,
+                SUM(m1) m1,
+                SUM(m2) m2,
+                SUM(m3) m3,
+                SUM(m4) m4,
+                SUM(m5) m5,
+                SUM(m6) m6,
+                SUM(m7) m7,
+                SUM(m8) m8,
+                SUM(m9) m9,
+                SUM(m10) m10,
+                SUM(m11) m11,
+                SUM(m12) m12,
+                SUM(ejecutado_total) ejecutado_total
                 from lista_detalle_ejecucion_ppto_proyectos('.$this->gestion.')
-                where aper_id='.$aper_id.'';
+                where dist_id='.$dist_id.'
+                group by dist_id';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
 
 
     /*-------- Techo Partida Adcionado --------*/

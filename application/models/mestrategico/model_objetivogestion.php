@@ -249,6 +249,20 @@ class Model_objetivogestion extends CI_Model{
                 order by oge.og_codigo,oreg.or_codigo asc';
         }
         
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*---- Get Datos de Alineacion OR, OG, ACP ----*/
+    public function get_alineacion_habilitado_oregional_a_form4($og_codigo,$or_codigo,$dep_id){
+        $sql = 'select opge.dep_id,ae.acc_codigo,oge.og_codigo,oreg.or_codigo,oreg.or_id,oreg.or_objetivo
+                from objetivo_gestion oge
+                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+                Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
+                where opge.dep_id='.$dep_id.' and oge.og_codigo='.$og_codigo.' and oreg.or_codigo='.$or_codigo.' and oge.g_id='.$this->gestion.'
+                order by oge.og_codigo,oreg.or_codigo asc';
         
         $query = $this->db->query($sql);
         return $query->result_array();

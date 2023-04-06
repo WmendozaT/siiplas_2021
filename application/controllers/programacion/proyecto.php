@@ -168,7 +168,7 @@ class Proyecto extends CI_Controller {
         foreach($proyectos as $row){
           $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
           $tabla.='<tr style="height:35px;">';
-            $tabla .= '<td title='.$row['proy_id'].'>';
+            $tabla .= '<td title="'.$row['proy_id'].' - '.$row['aper_id'].'">';
               if(count($fase)!=0){
                 if($this->adm==1){ 
                   $tabla .= '<center><a href="'.site_url("").'/prog/list_serv/'.$row['proy_id'].'" title="PROGRAMACION FÍSICA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/bien.png" WIDTH="30" HEIGHT="30"/></a></center>';
@@ -203,8 +203,8 @@ class Proyecto extends CI_Controller {
               $tabla .='<td bgcolor=#efb0b0><font color=red>Sin Fase</font></td>';
               $tabla .='<td bgcolor=#efb0b0><font color=red>Sin Fase</font></td>';
             }
-            $tabla .='<td title="'.$row['aper_id'].'">';
-              if(count($this->model_ptto_sigep->suma_ptto_pinversion($row['proy_id']))!=0){
+            $tabla .='<td title="aper_id '.$row['aper_id'].'">';
+              if(count($this->model_insumo->insumos_por_unidad($row['aper_id']))!=0){
                 $tabla .= '<center><a href="#" data-toggle="modal" data-target="#modal_aprob_pi" class="btn btn-default aprob_pi" title="VALIDAR PROYECTO POA" name="'.$row['proy_id'].'" ><img src="'.base_url().'assets/img/ok1.jpg" WIDTH="35" HEIGHT="35"/></a></center><br>';
               }
             $tabla .='</td>';
@@ -1248,7 +1248,12 @@ class Proyecto extends CI_Controller {
           $this->db->where('proy_id', $proyecto[0]['proy_id']);
           $this->db->update('_proyectos', $update_proy);
 
-
+          if($proyecto[0]['tp_id']==1){
+            /// eliminando registro de temporalidad inicial form5
+            $this->db->where('proy_id', $proy_id);
+            $this->db->delete('temporalidad_inicial_total_insumo');
+          }
+          
           $result = array(
             'respuesta' => 'correcto',
           
@@ -1302,13 +1307,27 @@ class Proyecto extends CI_Controller {
           $this->db->where('aper_id', $proyecto[0]['aper_id']);
           $this->db->update('aperturaprogramatica', $update_aper);
 
-          /*--- UPDATE ESTADO POA ---*/
-/*          $update_proy = array(
-            'proy_estado' => 4,
-            'fun_id' => $this->fun_id
-          );
-          $this->db->where('proy_id', $proyecto[0]['proy_id']);
-          $this->db->update('_proyectos', $update_proy);*/
+          ///----------- eliminando el registro anterior de la temporalidad inicial
+            if(count($this->model_insumo->temporalidad_inicial_total_unidad($proy_id))!=0){
+              $this->db->where('proy_id', $proy_id);
+              $this->db->delete('temporalidad_inicial_total_insumo');
+            }
+          ///-------------
+
+          /// ----- registramos temporalidad inicial
+            $get_temporalidad=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']);
+            for ($i=1; $i <=12 ; $i++) { 
+              if($get_temporalidad[0]['mes'.$i]!=0){
+                  $data_to_store3 = array(
+                    'proy_id' => $proy_id,
+                    'aper_id' => $proyecto[0]['aper_id'],
+                    'mes_id' => $i,
+                    'temp_fis' => $get_temporalidad[0]['mes'.$i],
+                  );
+                  $this->db->insert('temporalidad_inicial_total_insumo', $data_to_store3);
+              }
+            }
+
         }
         else{ /// Gasto Corriente
           /*--- UPDATE ESTADO POA ---*/

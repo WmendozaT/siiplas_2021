@@ -4067,3 +4067,82 @@ CREATE OR REPLACE VIEW public.vista_temporalidad_inicial_form5_x_proyecto AS
 
 ALTER TABLE public.vista_temporalidad_inicial_form5_x_proyecto
   OWNER TO postgres;
+
+
+
+
+
+
+
+
+  ====================== FUNCION LISTA DE ITEMS MODIFICADOS
+
+  CREATE OR REPLACE FUNCTION lista_modificaciones_form5_nacional(gestion integer) RETURNS TABLE(
+dep_id numeric,
+da varchar,
+dep_departamento varchar,
+dist_id integer,
+ue varchar,
+dist_distrital varchar,
+abrev varchar,
+insh_id integer,
+cite_codigo text,
+cite_nota varchar,
+ins_codigo varchar,
+ins_cant_requerida numeric,
+ins_costo_unitario numeric,
+ins_costo_total numeric,
+ins_detalle varchar,
+ins_unidad_medida varchar,
+par_id integer,
+mes1 numeric,
+mes2 numeric,
+mes3 numeric,
+mes4 numeric,
+mes5 numeric,
+mes6 numeric,
+mes7 numeric,
+mes8 numeric,
+mes9 numeric,
+mes10 numeric,
+mes11 numeric,
+mes12 numeric,
+fun_id integer,
+fecha_creacion timestamp,
+ins_observacion varchar,
+tipo_mod integer,
+par_codigo integer,
+par_nombre varchar,
+prod_id numeric,
+prod_cod integer,
+fun_nombre varchar,
+fun_paterno varchar,
+fun_materno varchar,
+proy_id numeric,
+aper_id numeric,
+prog varchar,
+proy varchar,
+act varchar,
+actividad varchar,
+tipo varchar,
+proy_sisin varchar,
+proy_nombre varchar,
+aper_gestion integer,
+tp_id numeric) AS
+
+$$
+select  poa.dep_id,poa.da,dep_departamento,poa.dist_id,poa.ue,poa.dist_distrital,abrev,ih.insh_id,cite.cite_codigo,cite.cite_nota,ih.ins_codigo,ih.ins_cant_requerida,
+    ih.ins_costo_unitario,ih.ins_costo_total,ih.ins_detalle,ih.ins_unidad_medida,ih.par_id,vt.mes1,vt.mes2,vt.mes3,vt.mes4,vt.mes5,vt.mes6,vt.mes7,vt.mes8,vt.mes9,vt.mes10,vt.mes11,vt.mes12,
+    ih.fun_id,ih.fecha_creacion,ih.ins_observacion,ih.tipo_mod,pa.par_codigo,pa.par_nombre,p.prod_id,p.prod_cod,f.fun_nombre,f.fun_paterno,f.fun_materno,poa.proy_id,poa.aper_id,poa.prog,
+    poa.proy,poa.act,poa.actividad,poa.tipo,poa.proy_sisin,poa.proy_nombre,poa.aper_gestion,poa.tp_id
+                from insumos_historial ih
+                Inner Join partidas as pa On pa.par_id=ih.par_id
+                Inner Join vista_temporalidad_insumo_historial as vt On vt.insh_id=ih.insh_id
+                Inner Join cite_mod_requerimientos as cite On cite.cite_id=ih.cite_id
+                Inner Join _productos as p On p.prod_id=ih.id
+                Inner Join funcionario as f On ih.fun_id=f.fun_id
+                Inner Join lista_poa_nacional(gestion) as poa On poa.aper_id=ih.aper_id
+        where ih.historial_activo!=0
+                order by poa.dep_id,poa.dist_id,cite.cite_codigo,poa.aper_id,poa.proy_id,ih.tipo_mod,ih.insh_id asc;
+
+$$ LANGUAGE sql;

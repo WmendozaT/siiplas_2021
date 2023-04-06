@@ -49,7 +49,12 @@ class Cmodificaciones extends CI_Controller {
       
       $data['proyectos']=$this->modificacionpoa->list_pinversion(4); // Aprobados
       $data['gasto_corriente']=$this->modificacionpoa->list_unidades_es(4); // Aprobados
+      $data['rep_listado_modificacionespoa']='';
 
+      if($this->tp_adm==1){
+        $data['rep_listado_modificacionespoa']='<center><a href="'.site_url("").'/mod/exportar_mod_requerimientos_institucional" target=_blank class="btn btn-default" title="EXPORTAR MODIFICACION FORM. N5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR MOD. FORM 5</a></center>';
+      }
+      
 /*      $requerimientos=$this->model_modrequerimiento->lista_requerimientos(5367);
 
       foreach($requerimientos as $row){
@@ -68,6 +73,31 @@ class Cmodificaciones extends CI_Controller {
 
 
    
+
+
+    /*--- EXPORTAR CONSOLIDADO DE MODIFICACION POA INSTITUCIONAL ---*/
+    public function consolidado_modificacion_requerimientos_institucional(){
+      date_default_timezone_set('America/Lima');
+      $fecha = date("d-m-Y H:i:s");
+      $titulo='INSTITUCIONAL';
+      $tabla=$this->modificacionpoa->items_modificados_form5_historial_nacional();
+
+      header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=Consolidado_Modificacion_Requerimiento_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      echo "";
+      ini_set('max_execution_time', 0); 
+      ini_set('memory_limit','3072M');
+      echo $tabla;
+    }
+
+
+
+
+
+
+
 
 
   /*--- LISTA DE CITES FORM 4-FORM 5 (2020-2021) ---*/
