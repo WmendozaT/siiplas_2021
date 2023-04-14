@@ -234,20 +234,20 @@ class Cseguimiento extends CI_Controller {
           <tbody>';
             $nro=0;
             foreach($proyectos as $row){
+              $componentes=$this->model_componente->lista_subactividad($row['proy_id']);
               $temp_inicial=$this->model_insumo->temporalidad_inicial_total_unidad($row['proy_id']); /// temporalidad inicial
               $nro++;
               $tabla.='
                 <tr style="height:50px;">
                   <td title='.$row['proy_id'].'><center>'.$nro.'</center></td>
                   <td align=center bgcolor="#deebfb">';
-                  if($row['pfec_estado']==1){
+                  foreach($componentes as $rowc){
+                  if(count($this->model_producto->list_prod($rowc['com_id']))!=0){
                     $tabla.='
-                    <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).'" style="font-size:10px">
-                      <i class="glyphicon glyphicon-list"></i> <b>MIS UNIDADES RESPONSABLES</b>
-                    </a>';
-                  }
-                  else{
-                    $tabla.='SIN FASE ACTIVA';
+                      <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">
+                        REGISTRAR EJECUCIÓN '.$this->verif_mes[2].' / '.$this->gestion.'
+                      </a>';
+                    }
                   }
                   $tabla.='
                   </td>
@@ -1221,15 +1221,20 @@ class Cseguimiento extends CI_Controller {
           
         }
 
-      $result = array(
-        'respuesta' => 'correcto',
-        'prod_id' => $prod_id,
-        'mes_id' => $this->verif_mes[1],
-        'ejecucion' => round($ejec,2),
-        'm_verificacion' => strtoupper($mv),
-        'observacion' => strtoupper($obs),
-        'acciones' => strtoupper($acc),
-      );
+        $producto=$this->model_producto->get_producto_id($prod_id);
+        $diferencia=$this->seguimientopoa->verif_valor_no_ejecutado($prod_id,$this->verif_mes[1],$producto[0]['mt_id']);
+
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'prod_id' => $prod_id,
+          'mes_id' => $this->verif_mes[1],
+          'ejecucion' => round($ejec,2),
+          'm_verificacion' => strtoupper($mv),
+          'observacion' => strtoupper($obs),
+          'acciones' => strtoupper($acc),
+          'calif' => $this->seguimientopoa->calificacion_form4($prod_id,$diferencia),
+        );
 
       echo json_encode($result);
     }else{

@@ -424,6 +424,7 @@ function abreVentana(PDF){
                     document.getElementById('obs'+nro).value = response.observacion;
                     document.getElementById('acc'+nro).value = response.acciones;
                     document.getElementById('btn'+nro).innerHTML = '<font color=green size=1px><b>MODIFICAR</b></font>';
+                    document.getElementById('calif'+nro).innerHTML = response.calif;
                     document.getElementById("ejec"+nro).style.backgroundColor = "#ffffff";
                     if(response.ejecucion==0){
                       document.getElementById('btn'+nro).innerHTML = '<font color=orange size=1px><b>MODIFICAR</b></font>';

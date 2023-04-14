@@ -1950,7 +1950,7 @@ class Certificacionpoa extends CI_Controller{
             $tabla.='  
             </td>
             <td style="width: 40%;">';
-            if($this->fun_id==738 || $this->fun_id==401 || $this->fun_id==399){
+            if($certpoa[0]['dep_id']==10){ /// solo para Oficina Nacional
               $tabla.='
                   <table style="width:100%;" border=0>
                       <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">

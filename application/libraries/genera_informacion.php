@@ -453,7 +453,7 @@ class Genera_informacion extends CI_Controller{
               <th style="width:3%;">COD. ACP.</th>
               <th style="width:3%;">COD. OPE.</th>
               <th style="width:3%;">COD. ACT.</th>
-              <th style="width:3%;">PRIORITARIO</th>
+              <th style="width:3%;">PRIORIDAD</th>
               <th style="width:25%;">DESCRIPCION ACTIVIDAD</th>
               <th style="width:15%;">RESULTADO</th>
               <th style="width:15%;">INDICADOR</th>
@@ -472,32 +472,20 @@ class Genera_informacion extends CI_Controller{
               <th style="width:4%;">P. OCT.</th>
               <th style="width:4%;">P. NOV.</th>
               <th style="width:4%;">P. DIC.</th>
-              <th style="width:6%;">PRESUPUESTO POA</th>
-              <th style="width:4%;">E. ENE.</th>
-              <th style="width:4%;">E. FEB.</th>
-              <th style="width:4%;">E. MAR.</th>
-              <th style="width:4%;">E. ABR.</th>
-              <th style="width:4%;">E. MAY.</th>
-              <th style="width:4%;">E. JUN.</th>
-              <th style="width:4%;">E. JUL.</th>
-              <th style="width:4%;">E. AGOS.</th>
-              <th style="width:4%;">E. SEPT.</th>
-              <th style="width:4%;">E. OCT.</th>
-              <th style="width:4%;">E. NOV.</th>
-              <th style="width:4%;">E. DIC.</th>
+             
             </tr>
           </thead>
           <tbody id="bdi">';
           $nro=0;
           foreach ($operaciones as $row){
-            $monto=$this->model_producto->monto_insumoproducto($row['prod_id']);
+            //$monto=$this->model_producto->monto_insumoproducto($row['prod_id']);
             $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
-            $ejec=$this->model_producto->producto_ejecutado($row['prod_id'],$this->gestion);
+            //$ejec=$this->model_producto->producto_ejecutado($row['prod_id'],$this->gestion);
               
-            $ptto=0;
+            /*$ptto=0;
             if(count($monto)!=0){
               $ptto=$monto[0]['total'];
-            }
+            }*/
 
             $priori='';
             if($row['prod_priori']==1){
@@ -559,7 +547,7 @@ class Genera_informacion extends CI_Controller{
                       }
                     }
 
-                $tabla.='<td style="width: 5%; text-align: right;">'.round($ptto,2).'</td>';
+               /* $tabla.='<td style="width: 5%; text-align: right;">'.round($ptto,2).'</td>';
 
                 if(count($ejec)!=0){
                   $tabla.='
@@ -580,7 +568,7 @@ class Genera_informacion extends CI_Controller{
                   for ($i=1; $i <=12 ; $i++) { 
                     $tabla.='<td bgcolor="#d2f5f0">0</td>';
                   }
-                }
+                }*/
 
             $tabla.='</tr>';
           }
@@ -593,7 +581,7 @@ class Genera_informacion extends CI_Controller{
     }
 
      /*-----EXCEL  LISTA DE OPERACIONES POR DISTRITAL, REGIONAL (2020-2021) ----*/
-    public function lista_operaciones_regional_distrital($operaciones,$titulo,$tip_rep){
+   public function lista_operaciones_regional_distrital($operaciones,$titulo,$tip_rep){
         $tabla='';
         $tabla .='
           <style>
@@ -629,14 +617,13 @@ class Genera_informacion extends CI_Controller{
                   <th style="width:3%;background-color: #eceaea;">COD. ACP.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. OPE.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
-                  <th style="width:1%;background-color: #eceaea;">ID</th>
-                  <th style="width:3%;background-color: #eceaea;">PRIORITARIO</th>
+                  <th style="width:3%;background-color: #eceaea;">PRIORIDAD</th>
                   <th style="width:25%;background-color: #eceaea;">DESCRIPCION ACTIVIDAD</th>
                   <th style="width:15%;background-color: #eceaea;">RESULTADO</th>
                   <th style="width:15%;background-color: #eceaea;">INDICADOR</th>
                   <th style="width:5%;background-color: #eceaea;">LINEA BASE</th>
                   <th style="width:5%;background-color: #eceaea;">META</th>
-                  <th style="width:15%;background-color: #eceaea;">MEDIO DE VERIFICACIÓN</th>
+                  <th style="width:15%;background-color: #eceaea;">MEDIO DE VERIFICACION</th>
                   <th style="width:4%;background-color: #eceaea;">P. ENE.</th>
                   <th style="width:4%;background-color: #eceaea;">P. FEB.</th>
                   <th style="width:4%;background-color: #eceaea;">P. MAR.</th>
@@ -649,7 +636,7 @@ class Genera_informacion extends CI_Controller{
                   <th style="width:4%;background-color: #eceaea;">P. OCT.</th>
                   <th style="width:4%;background-color: #eceaea;">P. NOV.</th>
                   <th style="width:4%;background-color: #eceaea;">P. DIC.</th>
-                  <th style="width:6%;background-color: #eceaea;">PRESUPUESTO POA</th>
+                  <th style="width:6%;background-color: #eceaea;"></th>
                   <th style="width:4%;background-color: #eceaea;">E. ENE.</th>
                   <th style="width:4%;background-color: #eceaea;">E. FEB.</th>
                   <th style="width:4%;background-color: #eceaea;">E. MAR.</th>
@@ -667,14 +654,14 @@ class Genera_informacion extends CI_Controller{
             <tbody>';
             $nro=0;
             foreach ($operaciones as $row){
-              $monto=$this->model_producto->monto_insumoproducto($row['prod_id']);
+              //$monto=$this->model_producto->monto_insumoproducto($row['prod_id']);
               $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
               $ejec=$this->model_producto->producto_ejecutado($row['prod_id'],$this->gestion);
               
-              $ptto=0;
+/*              $ptto=0;
               if(count($monto)!=0){
                 $ptto=$monto[0]['total'];
-              }
+              }*/
 
               $priori='';
               if($row['prod_priori']==1){
@@ -707,11 +694,10 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='</td>';
                 $tabla.='<td>\''.strtoupper($row['serv_cod']).'\'</td>';
                 $tabla.='<td>'.$row['tipo_subactividad'].' '.strtoupper($row['serv_descripcion']).'</td>';
-                $tabla.='<td>'.$row['acc_codigo'].'</td>';
-                $tabla.='<td>'.$row['og_codigo'].'</td>';
-                $tabla.='<td>'.$row['or_codigo'].'</td>';
-                $tabla.='<td>'.$row['prod_cod'].'</td>';
-                $tabla.='<td>'.$row['prod_id'].'</td>';
+                $tabla.='<td align=center><font size=4>'.$row['acc_codigo'].'</font></td>';
+                $tabla.='<td align=center><font size=4>'.$row['og_codigo'].'</font></td>';
+                $tabla.='<td align=center><font size=4>'.$row['or_codigo'].'</font></td>';
+                $tabla.='<td align=center><font size=4>'.$row['prod_cod'].'</font></td>';
                 $tabla.='<td align=center><font size=5>'.$priori.'</font></td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_producto'], 'cp1252', 'UTF-8').'</td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_resultado'], 'cp1252', 'UTF-8').'</td>';
@@ -739,7 +725,7 @@ class Genera_informacion extends CI_Controller{
                       }
                     }
 
-                $tabla.='<td style="width: 5%; text-align: right;">'.round($ptto,2).'</td>';
+                $tabla.='<td style="width: 5%; text-align: right;"></td>';
 
                 if(count($ejec)!=0){
                   $tabla.='

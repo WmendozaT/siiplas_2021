@@ -176,7 +176,7 @@
           },
           title: {
             align: 'center',
-            text: '<b>EJECUCION PRESUPUESTARIA DE PROYECTOS DE INVERSION A NIVEL INSTITUCIONAL</b>'
+            text: '<b>EJECUCION FINANCIERA DE INVERSIÓN A NIVEL INSTITUCIONAL</b>'
           },
           subtitle: {
             align: 'center',
@@ -192,7 +192,7 @@
           },
           yAxis: {
             title: {
-              text: '(%) Cumplimiento al Trimestre'
+              text: '(%) Cumplimiento por Regional'
             }
 
           },
@@ -216,7 +216,7 @@
 
           series: [
             {
-              name: "PROYECTO DE INVERSION",
+              name: "(%) DE CUMPLIMIENTO",
               colorByPoint: true,
               data: [
                     <?php 
@@ -278,7 +278,7 @@
 
         series: [
           {
-            name: "DEPARTAMENTO",
+            name: "REGIONAL",
             colorByPoint: true,
             data: [
                 <?php 
@@ -338,7 +338,7 @@
 
         series: [
           {
-            name: "DEPARTAMENTO",
+            name: "REGIONAL",
             colorByPoint: true,
             data:  [
                 <?php 
@@ -369,7 +369,7 @@
           type: 'bar'
       },
       title: {
-          text: '<b>CUADRO DE EJECUCIÓN PRESUPUESTARIA POR PARTIDA '+<?php echo $this->session->userData('gestion');?>+'</b>'
+          text: '<b>CUADRO DE EJECUCIÓN FINANCIERA POR PARTIDA '+<?php echo $this->session->userData('gestion');?>+'</b>'
       },
       subtitle: {
           text: 'INSTITUCIONAL'
@@ -422,7 +422,7 @@
       },
 
       series: [{
-          name: '% EJEC. PRESUPUESTARIA A ',
+          name: '% EJEC. FINANCIERA',
           data: [
                 <?php 
                   for ($i=0; $i <$nro_part ; $i++){

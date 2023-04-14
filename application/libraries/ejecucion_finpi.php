@@ -27,6 +27,39 @@ class ejecucion_finpi extends CI_Controller{
 
   }
 
+  /*-- CALIFICACION EJECUCION FINANCIERA INSTITUCIONAL/REGIONAL --*/
+  public function calificacion_pi_regional_institucional($dep_id){
+    if($dep_id==0){ /// Institucional
+      $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_institucional_pi_aprobados(1); /// monto total asignado poa
+      $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep_institucional(); /// monto total ejecutado poa
+    }
+    else{ /// Regional
+      $regional=$this->model_proyecto->get_departamento($dep_id);
+      $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_regional_pi_aprobados($dep_id,1); /// monto total asignado poa
+      $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep_regional($dep_id); /// monto total ejecutado poa
+    }
+
+    $eficacia=0;
+    if(count($total_ppto_asignado)!=0 & count($total_ppto_ejecutado)!=0){
+      $eficacia=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['asignado']))*100,2);
+    }
+
+    $titulo='';
+    if($eficacia<=50){$tp='danger';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
+    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (REGULAR)';} /// Regular - Amarillo
+    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (BUENO))';} /// Bueno - Azul
+    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (OPTIMO)';} /// Optimo - verde
+
+    $tabla='
+     
+      <div class="alert alert-'.$tp.'" role="alert" align="center">
+        <h2><b>'.$titulo.'</b></h2>
+      </div>';
+
+    return $tabla;
+  }
+
+
   /*------- TITULO --------*/
   public function formulario(){
     $regional=$this->model_proyecto->get_departamento($this->dep_id);
@@ -338,12 +371,15 @@ class ejecucion_finpi extends CI_Controller{
 
     $tabla='';
     if($tipo==0){
-      $tabla.='';
+      $tab='class="table table-bordered" style="width:80%;"';
     }
     else{
-      $tabla.='
+      $tab='class="change_order_items" border=1 style="width:90%;"';
+    }
+
+    $tabla.='
       <center>
-      <table class="change_order_items" border=1 style="width:60%;">
+      <table '.$tab.'>
         <thead>
           <tr>
             <th style="width:2%;">#</th>
@@ -363,11 +399,11 @@ class ejecucion_finpi extends CI_Controller{
             $tabla.='
               <tr>
                 <td style="width:2%;" align=center>'.$nro_proy.'</td>
-                <td style="width:10%;" align=center>'.$matriz[$i][8].'</td>
-                <td style="width:40%;">'.$matriz[$i][10].'</td>
+                <td style="width:10%;" align=center><b>'.$matriz[$i][8].'</b></td>
+                <td style="width:40%;"><b>'.$matriz[$i][10].'</b></td>
                 <td style="width:10%;" align=right>Bs. '.number_format($matriz[$i][13], 2, ',', '.').'</td>
                 <td style="width:10%;" align=right>Bs. '.number_format($matriz[$i][14], 2, ',', '.').'</td>
-                <td style="width:10%;" align=right><b>'.$matriz[$i][15].'%</b></td>
+                <td style="width:10%; font-size:12px" align=right><b>'.$matriz[$i][15].'%</b></td>
               </tr>';
               $ppto_asignado=$ppto_asignado+$matriz[$i][13];
               $ppto_ejec=$ppto_ejec+$matriz[$i][14];
@@ -381,13 +417,12 @@ class ejecucion_finpi extends CI_Controller{
         </tbody>
           <tr>
             <td colspan=3></td>
-            <td align=right>Bs. '.number_format($ppto_asignado, 2, ',', '.').'</td>
-            <td align=right>Bs. '.number_format($ppto_ejec, 2, ',', '.').'</td>
-            <td align=right><b>'.$cum.' %</b></td>
+            <td style="font-size:12px" align=right><b>Bs. '.number_format($ppto_asignado, 2, ',', '.').'</b></td>
+            <td style="font-size:12px" align=right><b>Bs. '.number_format($ppto_ejec, 2, ',', '.').'</b></td>
+            <td style="font-size:12px" align=right><b>'.$cum.' %</b></td>
           </tr>
       </table>
       </center>';
-    }
 
     return $tabla;
   } 
@@ -781,7 +816,7 @@ class ejecucion_finpi extends CI_Controller{
   public function reporte3_pdf_excel($dep_id,$tipo_reporte){
     /// tipo_reporte : 1 pdf
     /// tipo_reporte : 0 excel
-
+    $calificacion=$this->calificacion_pi_regional_institucional($dep_id); /// % CUMPLIMIENTO
     if($dep_id==0){ /// institucional
       $proyectos=$this->model_proyecto->list_proy_inversion();
     }
@@ -807,7 +842,6 @@ class ejecucion_finpi extends CI_Controller{
               <th style="width:3%; font-size: 12px; text-align:center"><b>REGIONAL</b></th>
               <th style="width:5%; font-size: 12px; text-align:center"><b>DISTRITAL</b></th>
               <th style="width:5%; font-size: 12px; text-align:center"><b>CODIGO SISIN</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>CATEGORIA PROGRAMATICA</b></th>
               <th style="width:15%; font-size: 12px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
               <th style="width:5%; font-size: 12px; text-align:center"><b>COSTO TOTAL<br>PROYECTO (Bs.)</b></th>
               <th style="width:5%; font-size: 12px; text-align:center"><b>ESTADO<br>PROYECTO</b></th>
@@ -850,7 +884,6 @@ class ejecucion_finpi extends CI_Controller{
                 <td style="width:3%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
                 <td style="width:5%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
                 <td style="width:5%;font-size: 12px;font-family: Arial;">'.$row['proy'].'</td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;">\''.$row['prog'].' '.$row['proy'].' 000\'</td>
                 <td style="width:15%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
                 <td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
                 <td style="width:5%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
@@ -918,22 +951,21 @@ class ejecucion_finpi extends CI_Controller{
     else{
 
       $tabla.='
-        <div style="font-size: 10px; height:20px;">DETALLE EJECUCIÓN FISICO FINANCIERO</div>
-        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:95%;" align=center>
+
+        '.$calificacion.'<br>
+        <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
           <thead>
             <tr bgcolor="#e8e7e7" align=center>
               <th style="width:10%;">DISTRITAL</th>
               <th style="width:10%;">CÓDIGO SISIN</th>
-              <th style="width:8%;">CATEGORIA PROGRAMATICA '.$this->gestion.'</th>
-              <th style="width:20%;">PROYECTO DE INVERSIÓN</th>
-              <th style="width:8%;">COSTO TOTAL PROYECTO</th>
+              <th style="width:25%;">PROYECTO DE INVERSIÓN</th>
+              <th style="width:8%;">PPTO. TOTAL PROYECTO</th>
               <th style="width:12%;">ESTADO DEL PROYECTO</th>
               <th style="width:7%;">PPTO. INICIAL</th>
               <th style="width:7%;">PPTO. MOD.</th>
               <th style="width:7%;">PPTO. VIGENTE</th>
-              <th style="width:5%;">PPTO. EJECUTADO</th>
-              <th style="width:5%;">EJEC. FÍS. TOTAL</th>
-              <th style="width:5%;">EJEC. FIN. TOTAL</th>
+              <th style="width:7%;">PPTO. EJECUTADO</th>
+              <th style="width:7%;">(%) CUMP.</th>
             </tr>
           </thead>
           <tbody>';
@@ -942,11 +974,14 @@ class ejecucion_finpi extends CI_Controller{
             $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
             $modificacion_partida=$this->detalle_modificacion_ppto_x_proyecto($row['aper_id']);
 
+            $cumplimiento=0;
+            if($modificacion_partida[3]!=0){
+              $cumplimiento=round((($ejec_fin[1]/$modificacion_partida[3])*100),2);
+            }
             $tabla.='
             <tr>
               <td style="font-size: 7px; height:12px;width:10%;">'.strtoupper($row['dist_distrital']).'</td>
               <td style="width:10%;">'.$row['proy'].'</td>
-              <td style="width:8%;">'.$row['prog'].' '.$row['proy'].' 000</td>
               <td style="width:20%;">'.strtoupper($row['proyecto']).'</td>
               <td style="width:8%;" align=right>Bs. '.number_format($row['proy_ppto_total'], 2, ',', '.').'</td>
               <td style="width:10%;">'.strtoupper($row['ep_descripcion']).'</td>
@@ -954,10 +989,7 @@ class ejecucion_finpi extends CI_Controller{
               <td style="width:7%;" align=right>'.number_format($modificacion_partida[2], 2, ',', '.').'</td>
               <td style="width:7%;" align=right>'.number_format($modificacion_partida[3], 2, ',', '.').'</td>
               <td style="width:5%;" align=right>'.number_format($ejec_fin[1], 2, ',', '.').'</td>
-
-
-              <td style="width:5%;" align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
-              <td style="width:5%;" align=right><b>'.round($row['avance_financiero'],2).' %</b></td>
+              <td style="width:5%;" align=right>'.$cumplimiento.' %</td>
             </tr>';
           }
       $tabla.='
@@ -1261,85 +1293,85 @@ class ejecucion_finpi extends CI_Controller{
     <table class="table table-bordered" style="width:98%;">
       <thead>
         <tr>
-          <th></th>
-          <th>ENE.</th>
-          <th>FEB.</th>
-          <th>MAR.</th>
-          <th>ABR.</th>
-          <th>MAY.</th>
-          <th>JUN.</th>
-          <th>JUL.</th>
-          <th>AGO.</th>
-          <th>SEPT.</th>
-          <th>OCT.</th>
-          <th>NOV.</th>
-          <th>DIC.</th>
+          <th style="color:black"></th>
+          <th style="color:black">ENE.</th>
+          <th style="color:black">FEB.</th>
+          <th style="color:black">MAR.</th>
+          <th style="color:black">ABR.</th>
+          <th style="color:black">MAY.</th>
+          <th style="color:black">JUN.</th>
+          <th style="color:black">JUL.</th>
+          <th style="color:black">AGO.</th>
+          <th style="color:black">SEPT.</th>
+          <th style="color:black">OCT.</th>
+          <th style="color:black">NOV.</th>
+          <th style="color:black">DIC.</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td bgcolor="#79aee1"><b style="font-family: Arial;font-size: 13px;color:white">PPTO. PROGRAMADO INICIAL '.$this->gestion.'</b></td>';
+          <td><b>PPTO. PROGRAMADO INICIAL '.$this->gestion.'</b></td>';
         for ($i=1; $i <=12 ; $i++) {
           $color='';
           if($this->verif_mes[1]==$i){
             $color='bgcolor="#e0edf9"';
           }
-          $tabla.='<td style="font-family: Arial;font-size: 12px; text-align:right" '.$color.'><b>'.number_format($matriz[1][$i], 2, ',', '.').'</b></td>';
+          $tabla.='<td style="font-family: Arial;font-size: 11px; text-align:right" '.$color.'>'.number_format($matriz[1][$i], 2, ',', '.').'</td>';
         }
       $tabla.='
         </tr>
         <tr>
-          <td><b>PPTO. PROGRAMADO INICIAL ACUMULADO</b></td>';
+          <td bgcolor="#79aee1"><b style="font-family: Arial;font-size: 13px;color:white">PPTO. PROGRAMADO INICIAL ACUMULADO</b></td>';
         for ($i=1; $i <=12 ; $i++) {
           $color='';
           if($this->verif_mes[1]==$i){
             $color='bgcolor="#e0edf9"';
           }
-          $tabla.='<td style="font-family: Arial;font-size: 11px; text-align:right" '.$color.'>'.number_format($matriz[2][$i], 2, ',', '.').'</td>';
+          $tabla.='<td style="font-family: Arial;font-size: 12px; text-align:right" '.$color.'><b>'.number_format($matriz[2][$i], 2, ',', '.').'</b></td>';
         }
       $tabla.='
         </tr>
         <tr>
-          <td bgcolor="#515660"><b style="font-family: Arial;font-size: 13px;color:white"><b>PPTO. RE-FORMULADO '.$this->gestion.'</b></td>';
+          <td><b>PPTO. RE-FORMULADO '.$this->gestion.'</b></td>';
         for ($i=1; $i <=12 ; $i++) { 
           $color='';
           if($this->verif_mes[1]==$i){
             $color='bgcolor="#e0edf9"';
           }
-          $tabla.='<td style="font-family: Arial;font-size: 12px; text-align:right" '.$color.'><b>'.number_format($matriz[3][$i], 2, ',', '.').'</b></td>';
+          $tabla.='<td style="font-family: Arial;font-size: 11px; text-align:right" '.$color.'>'.number_format($matriz[3][$i], 2, ',', '.').'</td>';
         }
       $tabla.='
         </tr>
         <tr>
-          <td><b>PPTO. RE-FORMULADO ACUMULADO</b></td>';
+          <td bgcolor="#515660"><b style="font-family: Arial;font-size: 13px;color:white">PPTO. RE-FORMULADO ACUMULADO</b></td>';
         for ($i=1; $i <=12 ; $i++) { 
           $color='';
           if($this->verif_mes[1]==$i){
             $color='bgcolor="#e0edf9"';
           }
-          $tabla.='<td style="font-family: Arial;font-size: 11px; text-align:right" '.$color.'>'.number_format($matriz[4][$i], 2, ',', '.').'</td>';
+          $tabla.='<td style="font-family: Arial;font-size: 12px; text-align:right" '.$color.'><b>'.number_format($matriz[4][$i], 2, ',', '.').'</b></td>';
         }
       $tabla.='
         </tr>
         <tr>
-          <td bgcolor="#a8f199"><b style="font-family: Arial;font-size: 13px;color:black"><b>PPTO. EJECUTADO</b></td>';
+          <td><b>PPTO. EJECUTADO</b></td>';
         for ($i=1; $i <=12 ; $i++) { 
           $color='';
           if($this->verif_mes[1]==$i){
             $color='bgcolor="#e0edf9"';
           }
-          $tabla.='<td style="font-family: Arial;font-size: 12px; text-align:right" '.$color.'><b>'.number_format($matriz[5][$i], 2, ',', '.').'</b></td>';
+          $tabla.='<td style="font-family: Arial;font-size: 11px; text-align:right" '.$color.'>'.number_format($matriz[5][$i], 2, ',', '.').'</td>';
         }
       $tabla.='
         </tr>
         <tr>
-          <td><b>PPTO. EJECUTADO ACUMULADO</b></td>';
+          <td bgcolor="#a8f199"><b style="font-family: Arial;font-size: 13px;color:black">PPTO. EJECUTADO ACUMULADO</b></td>';
         for ($i=1; $i <=12 ; $i++) { 
           $color='';
           if($this->verif_mes[1]==$i){
             $color='bgcolor="#e0edf9"';
           }
-          $tabla.='<td style="font-family: Arial;font-size: 11px; text-align:right" '.$color.'>'.number_format($matriz[6][$i], 2, ',', '.').'</td>';
+          $tabla.='<td style="font-family: Arial;font-size: 12px; text-align:right" '.$color.'><b>'.number_format($matriz[6][$i], 2, ',', '.').'</b></td>';
         }
       $tabla.='
         </tr>
@@ -1411,55 +1443,49 @@ class ejecucion_finpi extends CI_Controller{
     //// tp_reporte : 0 (Vista normal)
     //// tp_reporte : 1 (Excel)
     //// tp_reporte : 2 (Grafico)
+    //// tp_reporte : 3 (pdf)
     if($tp_reporte==0){
       $class_table='class="table table-bordered" style="width:100%;"';
     }
     elseif($tp_reporte==1){
       $class_table='border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla"';
     }
-    else{
+    elseif($tp_reporte==2){
       $class_table='class="change_order_items" border=1 style="width:100%;"';
+    }
+    else{
+      $class_table='border="0.2" cellpadding="0" cellspacing="0" width:100%; class="tabla"';
     }
 
     $tabla='';
    // $partidas=$this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id);
       $tabla.='
-      <center>
-      <style>
-      table{font-size: 10px;
-          width: 100%;
-          max-width:1550px;;
-          overflow-x: scroll;
-      }
-      th{
-          padding: 1.4px;
-          text-align: center;
-          font-size: 10px;
-          
-      }
-      </style>
+      <div align="center">
       <table '.$class_table.'>
         <thead>
           <tr>
-            <th style="text-align:center;height:20px;">#</th>
-            <th style="text-align:center">PARTIDA</th>
-            <th style="text-align:center">DETALLE</th>
-            <th style="text-align:center">PPTO. ASIGNADO</th>
+            <th colspan=18 style="text-align:left;height:25px;font-size:15px"><b>DETALLE EJECUCIÓN FINANCIERA POR PARTIDAS</b></th>
+          </tr>
+          <tr bgcolor="#f4f4f4">
+            <th style="text-align:center;height:15px;width:1%">#</th>
+            <th style="text-align:center;width:5%">PARTIDA</th>
+            <th style="text-align:center;width:24%">DETALLE</th>
+            <th style="text-align:center;width:6%">PPTO. ASIGNADO</th>
 
-            <th style="text-align:center">ENE.</th>
-            <th style="text-align:center">FEB.</th>
-            <th style="text-align:center">MAR.</th>
-            <th style="text-align:center">ABR.</th>
-            <th style="text-align:center">MAY.</th>
-            <th style="text-align:center">JUN.</th>
-            <th style="text-align:center">JUL.</th>
-            <th style="text-align:center">AGO.</th>
-            <th style="text-align:center">SEPT.</th>
-            <th style="text-align:center">OCT.</th>
-            <th style="text-align:center">NOV.</th>
-            <th style="text-align:center">DIC.</th>
-            <th style="text-align:center">PPTO. EJECUTADO</th>
-            <th style="text-align:center">(%) EJECUCION</th>
+            <th style="text-align:center;width:4%">ENE.</th>
+            <th style="text-align:center;width:4%">FEB.</th>
+            <th style="text-align:center;width:4%">MAR.</th>
+            <th style="text-align:center;width:4%">ABR.</th>
+            <th style="text-align:center;width:4%">MAY.</th>
+            <th style="text-align:center;width:4%">JUN.</th>
+            <th style="text-align:center;width:4%">JUL.</th>
+            <th style="text-align:center;width:4%">AGO.</th>
+            <th style="text-align:center;width:4%">SEPT.</th>
+            <th style="text-align:center;width:4%">OCT.</th>
+            <th style="text-align:center;width:4%">NOV.</th>
+            <th style="text-align:center;width:4%">DIC.</th>
+            <th style="text-align:center;width:7%">PPTO. EJECUTADO</th>
+            <th style="text-align:center;width:7%">(%) EJECUCION</th>
           </tr>
         </thead>
         <tbody>';
@@ -1474,15 +1500,15 @@ class ejecucion_finpi extends CI_Controller{
           $ppto_total_asignado=$ppto_total_asignado+$matriz[$i][4];
             $tabla.='
             <tr>
-            <td style="text-align:center;height:20px;">'.$nro_tr.'</td>
-            <td style="text-align:center">'.$matriz[$i][2].'</td>';
-            if($tp_reporte==0 || $tp_reporte==2){
+            <td style="text-align:center;height:20px;width:1%">'.$nro_tr.'</td>
+            <td style="text-align:center; font-size:11px;width:5%"><b>'.$matriz[$i][2].'</b></td>';
+            if($tp_reporte==0 || $tp_reporte==2 || $tp_reporte==3){
               $tabla.='
-              <td style="text-align:left">'.$matriz[$i][3].'</td>
-              <td style="text-align:right">'.number_format($matriz[$i][4], 2, ',', '.').'</td>';
+              <td style="text-align:left;width:24%"><b>'.$matriz[$i][3].'</b></td>
+              <td style="text-align:right;width:6%">'.number_format($matriz[$i][4], 2, ',', '.').'</td>';
               for ($j=5; $j <=18 ; $j++) {
                 $mes[$j]=$mes[$j]+$matriz[$i][$j];
-                $tabla.='<td style="text-align:right">'.number_format($matriz[$i][$j], 2, ',', '.').'</td>';
+                $tabla.='<td style="text-align:right;width:4%">'.number_format($matriz[$i][$j], 2, ',', '.').'</td>';
               }
             }
             else{
@@ -1497,13 +1523,14 @@ class ejecucion_finpi extends CI_Controller{
             
           $tabla.='</tr>';
         }
+        $cumplimiento=0;
       $tabla.='
           <tr>
-            <td colspan=3>TOTAL</td>
-            <td align=right>'.$ppto_total_asignado.'</td>';
-            if($tp_reporte==0 || $tp_reporte==2){
+            <td colspan=3 style="height:15px;font-size:12px; text-align:right"><b>TOTAL PPTO.</b></td>
+            <td align=right style="font-size:12px"><b>'.number_format($ppto_total_asignado, 2, ',', '.').'</b></td>';
+            if($tp_reporte==0 || $tp_reporte==2 || $tp_reporte==3){
               for ($i=5; $i <=17 ; $i++) { 
-                $tabla.='<td align=right>'.number_format($mes[$i], 2, ',', '.').'</td>';
+                $tabla.='<td align=right style="font-size:12px"><b>'.number_format($mes[$i], 2, ',', '.').'</b></td>';
               }
             }
             else{
@@ -1516,7 +1543,7 @@ class ejecucion_finpi extends CI_Controller{
           </tr>
         </tbody>
       </table>
-    </center>';
+    </div>';
     return $tabla;
   }
 
@@ -2194,8 +2221,8 @@ class ejecucion_finpi extends CI_Controller{
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px black; text-align: center;">
               <td style="width:23%; text-align:center;">
-                <img src="'.getcwd().'/assets/ifinal/logo_cns.JPG" class="img-responsive" style="width:60px; height:60px;"/><br>
-                <b style="font-size: 9px;font-family: Arial;">CAJA NACIONAL DE SALUD</b><br>
+                <img src="'.getcwd().'/assets/ifinal/logo_cns.JPG" class="img-responsive" style="width:55px; height:55px;"/><br>
+                <b style="font-size: 7px;font-family: Arial;">CAJA NACIONAL DE SALUD</b><br>
                 DPTO. NAL. DE PLANIFICACIÓN
               </td>
               <td style="width:60%; height: 5%">
@@ -2261,9 +2288,9 @@ class ejecucion_finpi extends CI_Controller{
       <tr style="border: solid 0px black; text-align: center;">
         <td style="width:23%; text-align:center;">
           <center>
-            <img src="'.base_url().'assets/ifinal/logo_cns.jpg" class="img-responsive" style="width:55px; height:55px;"/><br>
-            <b style="font-size: 8px;font-family: Arial;">CAJA NACIONAL DE SALUD</b><br>
-            <div style="font-size: 9px;font-family: Arial;">DPTO. NAL. DE PLANIFICACIÓN</div>
+            <img src="'.base_url().'assets/ifinal/logo_cns.jpg" class="img-responsive" style="width:45px; height:45px;"/><br>
+            <b style="font-size: 6px;font-family: Arial;">CAJA NACIONAL DE SALUD</b><br>
+            <div style="font-size: 7px;font-family: Arial;">DPTO. NAL. DE PLANIFICACIÓN</div>
           </center>
         </td>
         <td style="width:60%; height: 5%">
@@ -2281,7 +2308,7 @@ class ejecucion_finpi extends CI_Controller{
         </td>
       </tr>
     </table>
-    <hr>
+    
     <div style="font-size: 12px;font-family: Arial; text-align:center"><b>'.$subtitulo.'</b></div>';
 
     return $tabla;

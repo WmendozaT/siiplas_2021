@@ -61,10 +61,6 @@ class Cejecucion_pi extends CI_Controller {
         $data['formulario_datos_generales']=$this->tabla_datos_generales($proyecto,$com_id); /// Datos Generales
         $data['formulario_ejec_partidas']=$this->tabla_formulario_ejecucion_partidas($proyecto); /// Ejecucion Partidas
         
-
-        //$matriz=$this->matriz_consolidado_ejecucion_pinversion($proyecto);
-        //$data['cuadro_consolidado']=$this->tabla_consolidado_ejecucion_pinversion($matriz);
-
         $data['cuadro_consolidado']='
         <div class="row" id="btn_generar">
           <center><button type="button" onclick="generar_cuadro_consolidado_ejecucion_pi('.$proyecto[0]['proy_id'].');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE DE EJECUCIÓN POA</b></button></center>
@@ -79,16 +75,16 @@ class Cejecucion_pi extends CI_Controller {
         <hr>
 
         <div class="col-sm-6">
-          <div id="grafico_ejec_pi">
-            <div id="container" style="width: 950px; height: 500px; margin: 0 auto" align="center"></div>
-            <div style="display: none"><div id="container_impresion"  style="width: 700px; height: 350px; margin: 0 auto"></div></div>
+          <div>
+            <div id="distribucion_ppto_ejecutado_inicial" style="width: 950px; height: 500px; margin: 0 auto" align="center"></div>
+            <div style="display: none"><div id="distribucion_ppto_ejecutado_inicial_impresion"  style="width: 700px; height: 350px; margin: 0 auto"></div></div>
           </div>
         </div>
 
         <div class="col-sm-6">
-          <div id="grafico_ejec_pi">
-            <div id="proyectos" style="width: 950px; height: 450px; margin: 0 auto" align="center"></div>
-            <div style="display: none"><div id="proyectos_impresion"  style="width: 700px; height: 350px; margin: 0 auto" align="center"></div></div>
+          <div>
+            <div id="cumplimiento_mensual_ppto_inicial_ejecutado" style="width: 950px; height: 450px; margin: 0 auto" align="center"></div>
+            <div style="display: none"><div id="cumplimiento_mensual_ppto_inicial_ejecutado_impresion"  style="width: 700px; height: 350px; margin: 0 auto" align="center"></div></div>
           </div>
         </div>
 
@@ -148,280 +144,6 @@ class Cejecucion_pi extends CI_Controller {
   }
 
 
-
-  /*-- TABLA PARA CUADRO CONSOLIDADO VISTA --*/
-  /*public function tabla_consolidado_ejecucion_pinversion($matriz){
-    $tabla='';
-    $tabla.='
-    <center>
-    <table class="table table-bordered" style="width:98%;">
-      <thead>
-        <tr>
-          <th></th>
-          <th>ENE.</th>
-          <th>FEB.</th>
-          <th>MAR.</th>
-          <th>ABR.</th>
-          <th>MAY.</th>
-          <th>JUN.</th>
-          <th>JUL.</th>
-          <th>AGO.</th>
-          <th>SEPT.</th>
-          <th>OCT.</th>
-          <th>NOV.</th>
-          <th>DIC.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><b>PPTO. PROGRAMADO INICIAL</b></td>';
-        for ($i=1; $i <=12 ; $i++) {
-          $tabla.='<td align="right" bgcolor="#cbedeb">'.number_format($matriz[1][$i], 2, ',', '.').'</td>';
-        }
-      $tabla.='
-        </tr>
-        <tr>
-          <td><b>PPTO. PROGRAMADO INICIAL ACUMULADO</b></td>';
-        for ($i=1; $i <=12 ; $i++) {
-          $tabla.='<td align="right" bgcolor="#cbedeb">'.number_format($matriz[2][$i], 2, ',', '.').'</td>';
-        }
-      $tabla.='
-        </tr>
-        <tr>
-          <td><b>PPTO. RE-FORMULADO</b></td>';
-        for ($i=1; $i <=12 ; $i++) { 
-          $color='';
-          if($this->verif_mes[1]==$i){
-            $color='bgcolor="#cff2db"';
-          }
-          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[3][$i], 2, ',', '.').'</td>';
-        }
-      $tabla.='
-        </tr>
-        <tr>
-          <td><b>PPTO. RE-FORMULADO ACUMULADO</b></td>';
-        for ($i=1; $i <=12 ; $i++) { 
-          $color='';
-          if($this->verif_mes[1]==$i){
-            $color='bgcolor="#cff2db"';
-          }
-          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[4][$i], 2, ',', '.').'</td>';
-        }
-      $tabla.='
-        </tr>
-        <tr>
-          <td><b>PPTO. EJECUTADO</b></td>';
-        for ($i=1; $i <=12 ; $i++) { 
-          $color='';
-          if($this->verif_mes[1]==$i){
-            $color='bgcolor="#cff2db"';
-          }
-          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[5][$i], 2, ',', '.').'</td>';
-        }
-      $tabla.='
-        </tr>
-        <tr>
-          <td><b>PPTO. EJECUTADO ACUMULADO</b></td>';
-        for ($i=1; $i <=12 ; $i++) { 
-          $color='';
-          if($this->verif_mes[1]==$i){
-            $color='bgcolor="#cff2db"';
-          }
-          $tabla.='<td align="right" '.$color.'>'.number_format($matriz[6][$i], 2, ',', '.').'</td>';
-        }
-      $tabla.='
-        </tr>
-        <tr>
-          <td><b>(%) CUMPLIMIENTO MENSUAL</b></td>';
-        for ($i=1; $i <=12 ; $i++) { 
-          $color='';
-          if($this->verif_mes[1]==$i){
-            $color='bgcolor="#cff2db"';
-          }
-          $tabla.='<td align="right" style="font-size:14px" '.$color.'><b>'.$matriz[7][$i].'%</b></td>';
-        }
-      $tabla.='
-        </tr>
-      </tbody>
-    </table>
-    </center>';
-
-    return $tabla;
-  }*/
-
-
-  /*-- TABLA PARA CUADRO CONSOLIDADO --*/
- /* public function tabla_consolidado_ejecucion_pinversion_impresion($matriz){
-    $tabla='';
-    $tabla.='
-    <center>
-    <table class="change_order_items" border=1 style="width:100%;">
-      <thead>
-        <tr>
-          <th style="width:16%;"></th>
-          <th style="width:7%;">ENE.</th>
-          <th style="width:7%;">FEB.</th>
-          <th style="width:7%;">MAR.</th>
-          <th style="width:7%;">ABR.</th>
-          <th style="width:7%;">MAY.</th>
-          <th style="width:7%;">JUN.</th>
-          <th style="width:7%;">JUL.</th>
-          <th style="width:7%;">AGO.</th>
-          <th style="width:7%;">SEPT.</th>
-          <th style="width:7%;">OCT.</th>
-          <th style="width:7%;">NOV.</th>
-          <th style="width:7%;">DIC.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><b>(%) CUMPLIMIENTO MENSUAL</b></td>';
-        for ($i=1; $i <=12 ; $i++) { 
-          $color='';
-          if($this->verif_mes[1]==$i){
-            $color='bgcolor="#cff2db"';
-          }
-          $tabla.='<td align="right" style="font-size:10px" '.$color.'>'.$matriz[7][$i].'%</td>';
-        }
-      $tabla.='
-        </tr>
-      </tbody>
-    </table>
-    </center>';
-
-    return $tabla;
-  }*/
-
-
-  /*-- MATRIZ PARA CUADRO CONSOLIDADO DE EJECUCION --*/
-  /*public function matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep){
-
-    /// Temporalidad Inicial Programado
-    if(count($ppto_programado_poa_inicial)!=0){
-     for ($i=0; $i <=12 ; $i++) { 
-        if($i==0){
-          $vect_ini[$i]=$ppto_programado_poa_inicial[0]['programado_total'];;
-        }
-        else{
-          $vect_ini[$i]=round($ppto_programado_poa_inicial[0]['mes'.$i],2);
-        }
-      }
-    }
-    else{
-      for ($i=0; $i <=12 ; $i++) { 
-        if($i==0){
-          $vect_ini[$i]=0;
-        }
-        else{
-          $vect_ini[$i]=0;
-        }
-      }
-    }
-
-    /// Temporalidad Programado Ajustado (actual)
-    if(count($ppto_programado_poa)!=0){
-     for ($i=0; $i <=12 ; $i++) { 
-        if($i==0){
-          $vect_p[$i]=$ppto_programado_poa[0]['programado_total'];;
-        }
-        else{
-          $vect_p[$i]=round($ppto_programado_poa[0]['mes'.$i],2);
-        }
-      }
-    }
-    else{
-      for ($i=0; $i <=12 ; $i++) { 
-        if($i==0){
-          $vect_p[$i]=0;
-        }
-        else{
-          $vect_p[$i]=0;
-        }
-      }
-    }
-
-    /// Temporalidad Ejecutado
-    if(count($ppto_ejecutado_sigep)!=0){
-      for ($i=0; $i <=12 ; $i++) { 
-        if($i==0){
-          $vect[$i]=$ppto_ejecutado_sigep[0]['ejecutado_total'];;
-        }
-        else{
-          $vect[$i]=round($ppto_ejecutado_sigep[0]['m'.$i],2);
-        }
-      }
-    }
-    else{
-      for ($i=0; $i <=12 ; $i++) { 
-        if($i==0){
-          $vect[$i]=0;
-        }
-        else{
-          $vect[$i]=0;
-        }
-      }
-    }
-
-
-    for ($i=0; $i <=7; $i++) { 
-      for ($j=0; $j <=12; $j++) { 
-        $matriz[$i][$j]=0;
-      }
-    }
-
-
-    $matriz[0][1]='ENE.';
-    $matriz[0][2]='FEB.';
-    $matriz[0][3]='MAR.';
-    $matriz[0][4]='ABR.';
-    $matriz[0][5]='MAY.';
-    $matriz[0][6]='JUN.';
-    $matriz[0][7]='JUL.';
-    $matriz[0][8]='AGO.';
-    $matriz[0][9]='SEPT.';
-    $matriz[0][10]='OCT.';
-    $matriz[0][11]='NOV.';
-    $matriz[0][12]='DIC.';
-
-
-    $suma_prog_inicial=0;
-    $suma_prog=0;
-    $suma_ejec=0;
-    for ($j=0; $j <=12 ; $j++) { 
-
-      if($j==0){
-        $matriz[1][$j]=$vect_ini[$j]; // total prog inicial
-        $matriz[2][$j]=0;
-        $matriz[3][$j]=$vect_p[$j]; // total prog actual
-        $matriz[4][$j]=0;
-        $matriz[5][$j]=$vect[$j]; // total ejecutado
-        $matriz[6][$j]=0;
-        $matriz[7][$j]=0;
-      }
-      else{
-        $suma_prog_inicial=$suma_prog_inicial+$vect_ini[$j];
-        $suma_prog=$suma_prog+$vect_p[$j];
-        $suma_ejec=$suma_ejec+$vect[$j]; 
-
-        $matriz[1][$j]=$vect_ini[$j];
-        $matriz[2][$j]=$suma_prog_inicial; /// acumulado ini
-
-        $matriz[3][$j]=$vect_p[$j];
-        $matriz[4][$j]=$suma_prog; /// acumulado prog
-
-        $matriz[5][$j]=$vect[$j];
-        $matriz[6][$j]=$suma_ejec; /// acumulado ejec
-      }
-       
-      if($matriz[2][$j]!=0){
-        $matriz[7][$j]=round(($matriz[6][$j]/$matriz[2][$j])*100,2);
-      }
-    }
-
-    return $matriz;
-  }*/
-
-
   /*-- CALIFICACION EJECUCION POR PROYECTO --*/
   public function calificacion_proyecto($proyecto){
     $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1); /// monto total asignado poa
@@ -432,10 +154,10 @@ class Cejecucion_pi extends CI_Controller {
     }
 
     $titulo='';
-    if($eficacia<=50){$tp='danger';$titulo='NIVEL DE CUMPLIMIENTO : '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
-    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='NIVEL DE CUMPLIMIENTO : '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
-    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE CUMPLIMIENTO : '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
-    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='NIVEL DE CUMPLIMIENTO : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+    if($eficacia<=50){$tp='danger';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
+    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (REGULAR)';} /// Regular - Amarillo
+    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (BUENO))';} /// Bueno - Azul
+    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (OPTIMO)';} /// Optimo - verde
 
     $tabla='
       <hr>
@@ -451,6 +173,7 @@ class Cejecucion_pi extends CI_Controller {
     $tabla='';
     $estado_proyecto=$this->model_proyecto->proy_estado();
     $fases=$this->model_faseetapa->fases();
+    $imagen=$this->model_proyecto->get_img_ficha_tecnica($proyecto[0]['proy_id']);
 
     $tabla.='
       <form action="'.site_url("").'/ejecucion/cejecucion_pi/update_datos'.'" id="form1" name="form1" method="post" id="comment-form" class="smart-form">
@@ -462,7 +185,9 @@ class Cejecucion_pi extends CI_Controller {
               <b> DATOS GENERALES DEL PROYECTO</b>
           </header>
 
-          <fieldset>
+          
+          <article class="col-sm-12 col-md-9 col-lg-9">
+            <fieldset>
               <div class="row">
                   <section class="col col-2">
                       <label class="label">COSTO TOTAL PROYECTO</label>
@@ -474,7 +199,7 @@ class Cejecucion_pi extends CI_Controller {
                     <label class="label">ESTADO DEL PROYECTO</label>
                       <select class="form-control" id="est_proy" name="est_proy" title="SELECCIONE ESTADO DE PROYECTO">';
                         foreach($estado_proyecto as $est){
-                          if($est['ep_id']==$proyecto[0]['proy_estado']){ 
+                          if($est['ep_id']==$proyecto[0]['ep_id']){ 
                             $tabla.='<option value="'.$est['ep_id'].'" selected>'.strtoupper($est['ep_descripcion']).'</option>';
                           }
                           else{ 
@@ -559,6 +284,27 @@ class Cejecucion_pi extends CI_Controller {
             <button type="button" name="subir_form1" id="subir_form1" class="btn btn-info">GUARDAR DATOS</button>
             <a href="'.base_url().'index.php/seg/seguimiento_poa#tabs-a" title="SALIR" class="btn btn-default">SALIR</a>
           </footer>
+        </article>
+
+        <article class="col-sm-12 col-md-3 col-lg-3">
+          <fieldset>
+            <div class="superbox col-sm-12" align="center">';
+              if(count($imagen)!=0){
+                if($imagen[0]['tp']==1){
+                  $tabla.='<img src="'.base_url().'/fotos_proyectos/'.$imagen[0]['imagen'].'" class="img-responsive" style="width:400px; height:300px;"/>';
+                }
+                else{
+                  $tabla.='<img src="'.base_url().'/fotos/simagen.jpg"  class="img-responsive" style="width:400px; height:300px;"/>';
+                }
+              }
+              else{
+                $tabla.='<img src="'.base_url().'/fotos/simagen.jpg"  class="img-responsive" style="width:400px; height:300px;"/>';
+              }
+              $tabla.='
+             
+            </div>
+          </fieldset>
+        </article>
       </form>';
     return $tabla;
   }
@@ -889,9 +635,10 @@ public function guardar_datos_ejecucion_pinversion(){
       $ppto_programado_poa=$this->model_insumo->list_temporalidad_programado_unidad($proyecto[0]['aper_id']); /// ppto poa (Actual)
       $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_pinversion($proyecto[0]['aper_id']); /// Ppto Ejecutado sigep
 
-      $matriz=$this->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
-      $cuadro_consolidado=$this->tabla_consolidado_ejecucion_pinversion($matriz);
-      $cuadro_consolidado_impresion=$this->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
+      $matriz=$this->ejecucion_finpi->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
+
+      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
+      $cuadro_consolidado_impresion=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
 
       $result = array(
         'respuesta' => 'correcto',
@@ -1761,7 +1508,7 @@ public function get_tp_reporte(){
   public function reporte_detalle_ejec_ppto_pi($dep_id,$tipo_reporte){
     $regional=$this->model_proyecto->get_departamento($dep_id);
     $data['titulo_pie_rep']='Ficha_Tecnica_PI'.strtoupper($regional[0]['dep_departamento']).' '.$this->gestion;
-    $titulo_reporte='DETALLE EJECUCIÓN PRESUPUESTARIA - '.strtoupper($regional[0]['dep_departamento']).'';
+    $titulo_reporte='DETALLE EJECUCIÓN FINANCIERA <br><b>'.strtoupper($regional[0]['dep_departamento']).'</b>';
     $data['cabecera']=$this->ejecucion_finpi->cabecera_ficha_tecnica($titulo_reporte);
     $data['pie']=$this->ejecucion_finpi->pie_ficha_tecnica();
 
@@ -1775,6 +1522,13 @@ public function get_tp_reporte(){
       $data['datos_proyecto']=$this->ejecucion_finpi->reporte3_pdf_excel($dep_id,1);
     }
 
+    //$data['detalle_ejecucion']=$this->ejecucion_finpi->tabla_consolidado_de_partidas($partidas,$nro_part,3);
+
+      $nro=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_regional($dep_id));
+      $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($dep_id); /// Matriz consolidado de partidas
+      $data['detalle_ejecucion']=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,3); /// Tabla Clasificacion de partidas asignados por regional
+
+    
     $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
   }
 

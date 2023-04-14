@@ -1591,7 +1591,7 @@ class Programacionpoa extends CI_Controller{
               foreach($operaciones as $rowp){
                 $nro++;
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+                //$monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                 $tp='';
                 if($rowp['indi_id']==2){
                   $tp='%';
@@ -1602,10 +1602,10 @@ class Programacionpoa extends CI_Controller{
                   $color_or='#fbd5d5';
                 }
 
-                $ptto=number_format(0, 2, '.', ',');
+               /* $ptto=number_format(0, 2, '.', ',');
                 if(count($monto)!=0){
                   $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                }
+                }*/
 
                 
                 $tabla.='
@@ -1679,7 +1679,6 @@ class Programacionpoa extends CI_Controller{
               
               foreach($operaciones as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                 $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
                 $color=''; $tp='';
                 if($rowp['indi_id']==1){
@@ -1696,10 +1695,7 @@ class Programacionpoa extends CI_Controller{
                   }
                 }
 
-                $ptto=number_format(0, 2, '.', ',');
-                if(count($monto)!=0){
-                  $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                }
+
 
                 $color_or='';
                 if($rowp['or_id']==0){
@@ -1809,7 +1805,7 @@ class Programacionpoa extends CI_Controller{
               foreach($operaciones as $rowp){
                 $nro++;
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+                //$monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                 $tp='';
                 if($rowp['indi_id']==2){
                   $tp='%';
@@ -1820,10 +1816,10 @@ class Programacionpoa extends CI_Controller{
                   $color_or='#fbd5d5';
                 }
 
-                $ptto=number_format(0, 2, '.', ',');
+               /* $ptto=number_format(0, 2, '.', ',');
                 if(count($monto)!=0){
                   $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                }
+                }*/
 
                 $tabla.='
                 <tr>
@@ -1851,7 +1847,7 @@ class Programacionpoa extends CI_Controller{
                   <td style="width:2.5%;" align=center>'.round($rowp['noviembre'],2).''.$tp.'</td>
                   <td style="width:2.5%;" align=center>'.round($rowp['diciembre'],2).''.$tp.'</td>
                   <td style="width:8.5%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
-                  <td style="width: 5%; text-align: right;">'.$ptto.'</td>
+                  <td style="width: 5%; text-align: right;"></td>
                 </tr>';            
               }
         $tabla.='
@@ -1898,7 +1894,7 @@ class Programacionpoa extends CI_Controller{
               
               foreach($operaciones as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+               // $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                 $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
                 $color=''; $tp='';
                 if($rowp['indi_id']==1){
@@ -1915,10 +1911,10 @@ class Programacionpoa extends CI_Controller{
                   }
                 }
 
-                $ptto=number_format(0, 2, '.', ',');
+                /*$ptto=number_format(0, 2, '.', ',');
                 if(count($monto)!=0){
                   $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                }
+                }*/
 
                 $color_or='';
                 if($rowp['or_id']==0){
@@ -1962,7 +1958,7 @@ class Programacionpoa extends CI_Controller{
 
                   $tabla.='
                   <td style="width: 9%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
-                  <td style="width: 5%; text-align: right;">'.$ptto.'</td>
+                  <td style="width: 5%; text-align: right;"></td>
                 </tr>';
 
               }

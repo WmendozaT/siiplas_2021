@@ -126,7 +126,7 @@ class Model_insumo extends CI_Model{
             select pi.dep_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
             from vista_temporalidad_form5_unidad temp
             Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
-            where pi.dist_id='.$dep_id.'
+            where pi.dep_id='.$dep_id.'
             group by pi.dep_id
             order by pi.dep_id asc';
 
@@ -185,7 +185,7 @@ class Model_insumo extends CI_Model{
             select pi.dep_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
             from vista_temporalidad_inicial_form5_x_proyecto temp
             Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
-            where pi.dist_id='.$dep_id.'
+            where pi.dep_id='.$dep_id.'
             group by pi.dep_id
             order by pi.dep_id asc';
 

@@ -412,7 +412,6 @@ class Modificacionpoa extends CI_Controller{
               <th style="width:2.5%;"><b>NOV.</b></th>
               <th style="width:2.5%;"><b>DIC.</b></th>
               <th style="width:8%;"><b>MEDIO DE VERIFICACI&Oacute;N</b></th>
-              <th style="width:6%;"><b>PTTO..</b></th>
               <th style="width:5%;"><b>NRO. REQ.</b></th>
             </tr>
           </thead>
@@ -421,12 +420,12 @@ class Modificacionpoa extends CI_Controller{
           foreach($productos as $rowp){
             $cont++;
             $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-            $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+            //$monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
             $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
-            $ptto=0;
+            /*$ptto=0;
             if(count($monto)!=0){
               $ptto=$monto[0]['total'];
-            }
+            }*/
 
             $color=''; $titulo=''; $por='';
             if($cite[0]['tp_id']==1){
@@ -461,7 +460,7 @@ class Modificacionpoa extends CI_Controller{
                     $tabla.='
                     <a href="#" data-toggle="modal" data-target="#modal_mod_form4" class="btn btn-default mod_form4" name="'.$rowp['prod_id'].'" title="MODIFICAR ACTIVIDAD"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="33" HEIGHT="34"/></a>';
                     if($this->tmes==1){
-                      if(count($monto)==0){
+                      if(count($this->model_producto->insumo_producto($rowp['prod_id']))==0){
                         $tabla.='<a href="#" data-toggle="modal" data-target="#modal_mdel_ff" class="btn btn-default mdel_ff" title="ELIMINAR FORM 4"  name="'.$rowp['prod_id'].'" id="'.$cite[0]['cite_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a>';
                       }
                     }
@@ -508,7 +507,6 @@ class Modificacionpoa extends CI_Controller{
                 }
               }
               $tabla.='<td style="width:8%;" bgcolor="#e5fde5" >'.$rowp['prod_fuente_verificacion'].'</td>';
-              $tabla.='<td style="width:6%;"  align=right><b>'.number_format($ptto, 2, ',', '.').'</b></td>';
               $tabla.='<td style="width:5%;" align="center"><font color="blue" size="2"><b>'.count($this->model_producto->insumo_producto($rowp['prod_id'])).'</b></font></td>';
             $tabla .='</tr>';
           }

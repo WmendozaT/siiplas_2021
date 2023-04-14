@@ -2204,7 +2204,7 @@ class Seguimientopoa extends CI_Controller{
                     </td>';
 
                     $tabla.='
-                    <td align="center"><br>'.$this->calificacion_form4($row['prod_id'],$diferencia).'</td>
+                    <td align="center"><br><div id="calif'.$nro.'">'.$this->calificacion_form4($row['prod_id'],$diferencia).'</div></td>
                   </tr>';
                 }
               }

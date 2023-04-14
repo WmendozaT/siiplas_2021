@@ -3413,6 +3413,7 @@ SUM(partidas_asig.importe) ppto_partida_asignado_gestion
 FROM lista_poa_pinversion_nacional(gestion) p
 Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=p.aper_id
 Inner Join partidas as partidas On partidas.par_id=partidas_asig.par_id
+where partidas_asig.estado!=3
 GROUP BY
 p.aper_id, 
 p.dep_id,
@@ -3474,6 +3475,7 @@ FROM lista_poa_pinversion_nacional(gestion) p
 Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=p.aper_id
 Inner Join partidas as partidas On partidas.par_id=partidas_asig.par_id
 Inner Join v_ejec_ppto_partidas as ppto_ejec On ppto_ejec.sp_id=partidas_asig.sp_id
+where partidas_asig.estado!=3
 GROUP BY
 p.dep_id,
 partidas_asig.aper_id,
