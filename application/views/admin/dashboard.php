@@ -151,7 +151,7 @@
         }
       ?>
 
-      <div class="row" >
+      <div class="row">
         <?php 
           $rol = $this->session->userdata('rol_id');
           if($rol!=''){

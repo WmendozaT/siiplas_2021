@@ -99,7 +99,7 @@ class C_consultas extends CI_Controller {
 
     }
 
-    //// MENU UNIDADES ORGANIZACIONAL 2020 - 2021
+    //// MENU PRINCIPAL - SELECCION DE OPCIONES
     public function menu_nacional(){
     $tabla='';
     $regionales=$this->model_proyecto->list_departamentos();
@@ -112,7 +112,7 @@ class C_consultas extends CI_Controller {
               <fieldset>          
                 <div class="row">
                   <section class="col col-3">
-                    <label class="label"><b>DIRECCIÓN ADMINISTRATIVA</b></label>
+                    <label class="label"><b>REGIONAL</b></label>
                     <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
                     <option value="">SELECCIONE REGIONAL</option> ';
                     foreach($regionales as $row){

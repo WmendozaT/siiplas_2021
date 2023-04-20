@@ -46,29 +46,14 @@ class C_consultaspi extends CI_Controller {
       $data['nro_part']=count($this->model_ptto_sigep->lista_consolidado_partidas_ppto_asignado_gestion_institucional());
       $data['matriz_partidas']=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_institucional(); /// Matriz consolidado de partidas Nacional
       
-        $ppto_programado_poa_inicial=$this->model_insumo->temporalidad_inicial_pinversion_institucional(); /// ppto poa Inicial
-        $ppto_programado_poa=$this->model_insumo->temporalidad_programado_form5_institucional(); /// ppto poa (Actual)
-        $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_institucional(); /// Ppto Ejecutado sigep
-
-        $matriz=$this->ejecucion_finpi->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
-        $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
-        $cuadro_consolidado_impresion=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
-
-        $data['datos_ppto_inicial'] = array(
-            /// s1
-            'matriz1' => $matriz,
-            'cuadro_consolidado' => $cuadro_consolidado,
-            'cuadro_consolidado_impresion' => $cuadro_consolidado_impresion,
-        );
-
-      $data['principal']=$this->menu_principal($data['nro_reg'],$data['matriz_reg'],$data['nro_part'],$data['matriz_partidas'],$data['datos_ppto_inicial']); /// Menu principal
+      $data['principal']=$this->menu_principal($data['nro_reg'],$data['matriz_reg'],$data['nro_part'],$data['matriz_partidas']); /// Menu principal
 
       $this->load->view('admin/reportes_cns/repejecucion_pi/menu_consultas_pi', $data);
 
     }
 
     //// menu principal de ejecucion Institucional
-    public function menu_principal($nro,$regional,$nro_part,$partidas,$datos_ppto_inicial){
+    public function menu_principal($nro,$regional,$nro_part,$partidas){
         $calificacion=$this->ejecucion_finpi->calificacion_pi_regional_institucional(0); /// % CUMPLIMIENTO
 
         /// s2
@@ -143,10 +128,9 @@ class C_consultaspi extends CI_Controller {
                                                 }
                                             $tabla.='
                                                 <span class="show-stat-buttons"> 
-                                                    <span class="col-xs-12 col-sm-6 col-md-4 col-lg-3"> <a onClick="imprimir_proyectos()" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>IMPRIMIR CUADRO</b></a></span> 
-                                                    <span class="col-xs-12 col-sm-6 col-md-4 col-lg-3"> <a href="javascript:abreVentana(\''.site_url("").'/reporte_ejecucion_pi_institucional/0\');" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>IMPRIMIR DETALLE</b></a></span> 
-                                                    <span class="col-xs-12 col-sm-6 col-md-4 col-lg-3"> <a href="'.site_url("").'/xls_rep_ejec_fin_pi/0/3" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR DETALLE</b></a></span> 
-                                                    <span class="col-xs-12 col-sm-6 col-md-4 col-lg-3"> <a href="'.site_url("").'/xls_rep_ejec_fin_pi_resumen" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR RESUMEN</b></a></span> 
+                                                    <span class="col-xs-12 col-sm-6 col-md-4 col-lg-4"> <a onClick="imprimir_proyectos()" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>IMPRIMIR CUADRO</b></a></span> 
+                                                    <span class="col-xs-12 col-sm-6 col-md-4 col-lg-4"> <a href="javascript:abreVentana(\''.site_url("").'/reporte_ejecucion_pi_institucional/0\');" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>IMPRIMIR DETALLE</b></a></span> 
+                                                    <span class="col-xs-12 col-sm-6 col-md-4 col-lg-4"> <a href="'.site_url("").'/xls_rep_ejec_fin_pi_resumen" target="_blank" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR RESUMEN</b></a></span> 
                                                 </span>
 
                                             </div>
@@ -161,22 +145,11 @@ class C_consultaspi extends CI_Controller {
                                 <div class="tab-pane fade" id="s2">
                                
                                     <div class="row">
-                                      <div class="col-sm-12">
-                                        <div>
-                                          <div id="distribucion_ppto_ejecutado_inicial" style="width: 950px; height: 500px; margin: 0 auto" align="center"></div>
-                                          <div style="display: none"><div id="distribucion_ppto_ejecutado_inicial_impresion"  style="width: 700px; height: 350px; margin: 0 auto"></div></div>
+                                        <div class="row" id="btn_generar">
+                                          <center><button type="button" onclick="generar_cuadro_consolidado_ejecucion_pi_institucional();" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE EJECUCIÓN FINANCIERA RESPECTO AL PPTO. INICIAL POA</b></button></center>
                                         </div>
-                                      </div>
-
-                                      <div align="right" id="botton">
-                                        <button onClick="imprimir_ejecucion_proyectos()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                      </div>
-
-                                      <div class="col-sm-12">
-                                        <hr>
-                                        <div class="table-responsive" id="cuadro_consolidado_vista"></div>
-                                        <div id="cuadro_consolidado_impresion" style="display: none"></div>
-                                      </div>
+                                        <div id="loading_sepoa"></div>
+                                        <div id="lista_consolidado"></div>
                                     </div>
                                  
                                 </div>
@@ -195,7 +168,7 @@ class C_consultaspi extends CI_Controller {
                                 <!-- end s3 tab pane -->
 
                                 <div class="tab-pane fade" id="s4">
-                                    <div id="partidas" style="width: 1000px; height: 750px; margin: 0 auto"></div>
+                                    <div id="partidas" style="width: 1000px; height: 950px; margin: 0 auto"></div>
                                      <div class="row">
                                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <div class="jarviswidget jarviswidget-color-darken" >
@@ -397,7 +370,7 @@ public function get_detalle_ejecucion_ppto_pi_regional(){
                                         <div class="row">';
                                             for ($i=0; $i <$nro_proy; $i++) { 
                                                 $tabla.='
-                                                <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> <b>'.$matriz_proyectos[$i][10].'</b> <span class="pull-right"> <b>'.$matriz_proyectos[$i][15].'</b>%  <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$matriz_proyectos[$i][2].'\');" title="REPORTE FICHA TECNICA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></span> </span>
+                                                <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> <b>'.$matriz_proyectos[$i][10].'</b> <span class="pull-right"> <b>'.$matriz_proyectos[$i][15].'</b>%  <a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$matriz_proyectos[$i][2].'\');" title="REPORTE POA "><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>-<a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$matriz_proyectos[$i][2].'\');" title="REPORTE FICHA TECNICA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></span> </span>
                                                     <div class="progress">
                                                         <div class="progress-bar bg-color-blueDark" style="width: '.$matriz_proyectos[$i][15].'%; height:100%"></div>
                                                     </div>
@@ -405,8 +378,9 @@ public function get_detalle_ejecucion_ppto_pi_regional(){
                                             }
                                         $tabla.='
                                             <span class="show-stat-buttons"> 
-                                                <span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a onClick="imprimir_proyectos_consultas()" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>IMPRIMIR EJECUCIÓN</b></a></span> 
-                                                <span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="javascript:abreVentana(\''.site_url("").'/reporte_detalle_ppto_pi/'.$dep_id.'/3\');" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>IMPRIMIR DETALLE</b></a></span> 
+                                                <span class="col-xs-12 col-sm-6 col-md-4 col-lg-4"> <a onClick="imprimir_proyectos_consultas()" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>IMPRIMIR EJECUCIÓN</b></a></span> 
+                                                <span class="col-xs-12 col-sm-6 col-md-4 col-lg-4"> <a href="javascript:abreVentana(\''.site_url("").'/reporte_detalle_ppto_pi/'.$dep_id.'/3\');" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>IMPRIMIR DETALLE</b></a></span> 
+                                                <span class="col-xs-12 col-sm-6 col-md-4 col-lg-4"> <a href="'.site_url("").'/xls_rep_ejec_fin_pi/'.$dep_id.'/3" target="_blank" style="font-size: 9.5px;font-family: Arial;" class="btn btn-default btn-block hidden-xs"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR DETALLE</b></a></span> 
                                             </span>
 
                                         </div>

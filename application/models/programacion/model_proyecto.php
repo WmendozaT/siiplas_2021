@@ -1477,8 +1477,13 @@ class Model_proyecto extends CI_Model{
     /*-------- LISTA PROYECTOS DE INVERSION POR REGIONAL --------*/
     public function list_proy_inversion_regional($dep_id){ /// aprobados
         $sql = 'select *
+                from lista_poa_pinversion_nacional('.$this->gestion.')
+                where dep_id='.$dep_id.'
+                order by proy_id, dep_id, dist_id asc';
+
+        /*$sql = 'select *
                 from lista_poa_pinversion_regional('.$dep_id.','.$this->gestion.')
-                order by proy_id,dep_id, dist_id asc';
+                order by proy_id,dep_id, dist_id asc';*/
         $query = $this->db->query($sql);
         return $query->result_array();
     }

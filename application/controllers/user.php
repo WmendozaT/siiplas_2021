@@ -205,7 +205,6 @@ class User extends CI_Controller{
             $data['dep_id']=$ddep[0]['dep_id'];
             $data['tmes']=$this->model_evaluacion->trimestre();
             $data['mes']=$this->verif_mes;
-            //$data['conf'] = $this->model_configuracion->get_configuracion_session();
             $data['gestiones']=$this->list_gestiones();
             $data['list_trimestre']=$this->list_trimestre();
             $rol=$this->model_funcionario->get_rol($this->fun_id);
@@ -239,10 +238,9 @@ class User extends CI_Controller{
                 </div>';
             }*/
 
-
-            if($rol[0]['r_id']==11){ /// Usuraio para proyectos de inversion
+            if($rol[0]['r_id']==11){ /// Usuario para ejecucion de proyectos de inversion
                 $data['mensaje']='<div class="alert alert-success" align="center">
-                  <a class="alert-link">EJECUCIÓN PRESUPUESTARIA - '.$this->verif_mes[2].' / '.$this->gestion.'</a>
+                  <a class="alert-link">EJECUCIÓN FINANCIERA DE INVERSIÓN - '.$this->verif_mes[2].' / '.$this->gestion.'</a>
                 </div>';
             }
             else{
@@ -454,24 +452,38 @@ class User extends CI_Controller{
                 if($rol[0]['r_id']==10){ /// REPORTES POA
                     $vector[0]=
                     '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
-                        <a href="'.base_url().'index.php/consulta/mis_operaciones"  onclick="reporte_internos()" class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <a href="'.base_url().'index.php/consulta/mis_operaciones"  onclick="gasto_corriente()" class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/impresora.png"  style="margin-left:0px; width: 95px"/>
-                            <h1 style="font-size: 11px;">RESUMEN POA '.$this->gestion.'</h1>
+                            <h1 style="font-size: 11px;">GASTO CORRIENTE / '.$this->gestion.'</h1>
                         </div>
                         </a>
                     </div>';
+                    ?>
+                    <script>
+                      function gasto_corriente(){
+                        document.getElementById("load").style.display = "block";
+                      }
+                    </script>
+                    <?php
                     $vector[1]=
                     '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
-                        <a href="'.base_url().'index.php/ejecucion_proyectos_inversion"  onclick="reporte_internos()" class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <a href="'.base_url().'index.php/ejecucion_proyectos_inversion"  onclick="inversion()" class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/ejecucion.png"  style="margin-left:0px; width: 95px"/>
-                            <h1 style="font-size: 11px;">PROYECTOS DE INVERSIÓN '.$this->gestion.'</h1>
+                            <h1 style="font-size: 11px;">PROYECTOS DE INVERSIÓN / '.$this->gestion.'</h1>
                         </div>
                         </a>
                     </div>';
+                    ?>
+                    <script>
+                      function inversion(){
+                        document.getElementById("load").style.display = "block";
+                      }
+                    </script>
+                    <?php
                 }
-                elseif ($rol[0]['r_id']==11) { /// PARA PROYECTOS DE INVERSION
+                elseif ($rol[0]['r_id']==11) { /// PARA EJECUCION DE PROYECTOS DE INVERSION
                     $vector[0]=
                     '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                         <a href="'.base_url().'index.php/ejec_fin_pi" class="jarvismetro-tile big-cubes bg-color-greenLight">

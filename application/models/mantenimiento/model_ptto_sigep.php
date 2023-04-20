@@ -374,6 +374,61 @@ class Model_ptto_sigep extends CI_Model{
     }
 
 
+    // ------ GET suma ppto MES Ejecutado por partida por unidad/proyecto 
+    public function get_list_temporalidad_insumo_mes_ejecutado($aper_id,$mes_id){
+        $sql = '
+                select asig.aper_id,SUM(ejec.ppto_ejec) ppto
+                from ejecucion_financiera_sigep ejec
+                Inner Join ptto_partidas_sigep as asig On asig.sp_id=ejec.sp_id
+                where asig.aper_id='.$aper_id.' and ejec.m_id='.$mes_id.'
+                group by asig.aper_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
+    // ------ GET suma ppto MES Ejecutado por partida por unidad/proyecto 
+    public function get_list_temporalidad_insumo_partida_mes_ejecutado($aper_id,$par_id,$mes_id){
+        $sql = '
+                select asig.par_id,asig.aper_id,SUM(ejec.ppto_ejec) ppto
+                from ejecucion_financiera_sigep ejec
+                Inner Join ptto_partidas_sigep as asig On asig.sp_id=ejec.sp_id
+                where asig.par_id='.$par_id.' and asig.aper_id='.$aper_id.' and ejec.m_id='.$mes_id.'
+                group by asig.par_id,asig.aper_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    // ------ GET suma ppto Ejecutado al MES por unidad/proyecto 
+    public function get_suma_ppto_ejecutado_al_mes_x_unidad($aper_id,$mes_id){
+        $sql = '
+                select asig.aper_id,SUM(ejec.ppto_ejec) ppto_ejec
+                from ejecucion_financiera_sigep ejec
+                Inner Join ptto_partidas_sigep as asig On asig.sp_id=ejec.sp_id
+                where asig.aper_id='.$aper_id.' and (ejec.m_id>\'0\' and ejec.m_id<='.$mes_id.')
+                group by asig.aper_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    // ------ GET suma ppto Ejecutado por partida al MES por unidad/proyecto 
+    public function get_suma_ppto_ejecutado_al_mes_x_partida_unidad($aper_id,$par_id,$mes_id){
+        $sql = '
+                select asig.par_id,asig.aper_id,SUM(ejec.ppto_ejec) ppto_ejec
+                from ejecucion_financiera_sigep ejec
+                Inner Join ptto_partidas_sigep as asig On asig.sp_id=ejec.sp_id
+                where asig.par_id='.$par_id.' and asig.aper_id='.$aper_id.' and (ejec.m_id>\'0\' and ejec.m_id<='.$mes_id.')
+                group by asig.par_id,asig.aper_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
     /*----- SUMA MONTO EJECUTADO DE PRESUPUESTO POR PARTIDA (vigente) -----*/
     public function suma_monto_ppto_ejecutado_partida($sp_id){

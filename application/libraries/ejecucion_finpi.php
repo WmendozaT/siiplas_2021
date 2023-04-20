@@ -10,6 +10,7 @@ class ejecucion_finpi extends CI_Controller{
     $this->load->model('mantenimiento/model_ptto_sigep');
     $this->load->model('programacion/model_componente');
     $this->load->model('mantenimiento/model_configuracion');
+    $this->load->model('programacion/insumos/model_insumo');
     $this->load->model('menu_modelo');
     $this->load->library('security');
     $this->gestion = $this->session->userData('gestion');
@@ -827,119 +828,188 @@ class ejecucion_finpi extends CI_Controller{
     $regional=$this->model_proyecto->get_departamento($dep_id);
     $tabla='';
 
-    if($tipo_reporte==0){
+    if($tipo_reporte==0){ /// excel
 
       $tabla.='
         <table border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla">
           <thead>
             <tr bgcolor="#f4f4f4">
-              <td style="width:40%; font-size: 15px; text-align:center;height:50px" colspan=13><b>DETALLE PROYECTO</b></td>
-              <td style="width:60%; font-size: 15px; text-align:center;" colspan=15><b>EJECUCION FINANCIERA</b></td>
-              <td colspan=2></td>
+              <td style="width:40%; font-size: 15px; text-align:center;height:50px" colspan=11><b>PROYECTO DE INVERSION</b></td>
+              <td style="width:60%; font-size: 15px; text-align:center;" colspan=40><b>PROGRAMACION FISICO Y EJECUCION FINANCIERA</b></td>
             </tr>
             <tr bgcolor="#f4f4f4" border=1>
-              <th style="width:1%; font-size: 12px; text-align:center;height:60px"><b>#</b></th>
-              <th style="width:3%; font-size: 12px; text-align:center"><b>REGIONAL</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>DISTRITAL</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>CODIGO SISIN</b></th>
-              <th style="width:15%; font-size: 12px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>COSTO TOTAL<br>PROYECTO (Bs.)</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>ESTADO<br>PROYECTO</b></th>
-              <th style="width:10%; font-size: 12px; text-align:center"><b>FASE</b></th>
-              <th style="width:2%; font-size: 12px; text-align:center"><b>PARTIDA</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. INICIAL <br>'.$this->gestion.'</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. MOD. <br>'.$this->gestion.'</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. VIGENTE <br>'.$this->gestion.'</b></th>
+              <th style="width:1%; font-size: 10px; text-align:center;height:60px"><b>#</b></th>
+              <th style="width:3%; font-size: 10px; text-align:center"><b>REGIONAL</b></th>
+              <th style="width:5%; font-size: 10px; text-align:center"><b>DISTRITAL</b></th>
+              <th style="width:5%; font-size: 10px; text-align:center"><b>CODIGO SISIN</b></th>
+              <th style="width:10%; font-size: 10px; text-align:center"><b>PROYECTO DE INVERSION</b></th>
+              <th style="width:5%; font-size: 10px; text-align:center"><b>ESTADO<br>PROYECTO</b></th>
+              <th style="width:10%; font-size: 10px; text-align:center"><b>FASE</b></th>
+              <th style="width:2%; font-size: 10px; text-align:center"><b>PARTIDAS ASIGNADAS '.$this->gestion.'</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>PPTO. INICIAL <br>'.$this->gestion.'</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>PPTO. MOD. <br>'.$this->gestion.'</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>PPTO. VIGENTE <br>'.$this->gestion.'</b></th>
 
-              <th style="width:5%; font-size: 12px; text-align:center"><b>ENERO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>FEBRERO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>MARZO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>ABRIL</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>MAYO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>JUNIO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>JULIO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>AGOSTO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>SEPTIEMBRE</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>OCTUBRE</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>NOVIEMBRE</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>DICIEMBRE</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>TOTAL EJECUTADO '.$this->gestion.'</b></th>
-              <th style="width:10%; font-size: 12px; text-align:center"><b>% EJEC. TOTAL '.$this->gestion.'</b></th>
-              <th style="width:8%; font-size: 12px; text-align:center"><b>ULTIMA OBSERVACION</b></th>
-              <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIS. TOTAL</b></th>
-              <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIN. TOTAL</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ENE. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ENE. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ENE. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>FEB. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>FEB. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>FEB. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAR. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAR. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAR. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ABR. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ABR. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ABR. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAY. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAY. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAY. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUN. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUN. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUN. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUL. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUL. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUL. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>AGO. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>AGO. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>AGO. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>SEP. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>SEP. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>SEP. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>OCT. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>OCT. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>OCT. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>NOV. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>NOV. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>NOV. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>DIC. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>DIC. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>DIC. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>PPTO. EJECUTADO '.$this->verif_mes[2].'/'.$this->gestion.'</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>(%) CUMPLIMIENTO '.$this->verif_mes[2].'/'.$this->gestion.'</b></th>
+              <th style="width:5%; font-size: 10px; text-align:center"><b>CALIFICACION</b></th>
             </tr>
           </thead>
           <tbody>';
            $nro=0;
             foreach($proyectos as $row){
-            //  $ejec_fin=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']); /// Ejecucion Presupuestaria PI
-              $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
               $modificaciones_ppto_proyecto=$this->detalle_modificacion_ppto_x_proyecto($row['aper_id']);
-              $ppto_ejecutado_proyecto=$this->model_ptto_sigep->get_ppto_ejecutado_proyecto($row['proy_id']); /// ejecucion de presupuesto por proyecto
+
+                ///----- ppto ejecutado al mes
+                $get_ppto_ejecutado_al_mes_pi=$this->model_ptto_sigep->get_suma_ppto_ejecutado_al_mes_x_unidad($row['aper_id'],$this->verif_mes[1]);
+                $ppto_ejec_pi=0;
+                if(count($get_ppto_ejecutado_al_mes_pi)!=0){
+                  $ppto_ejec_pi=$get_ppto_ejecutado_al_mes_pi[0]['ppto_ejec'];
+                }
+                ///--------------------------
+
+                ///----- cumplimiento (%)
+                $cumplimiento_pi=0;
+                if($modificaciones_ppto_proyecto[3]!=0){
+                  $cumplimiento_pi=round((($ppto_ejec_pi/$modificaciones_ppto_proyecto[3])*100),2);
+                }
+                ///----------------------
+
+                $calificacion=$this->calificacion_de_cumplimiento($cumplimiento_pi);
               $nro++;
               $tabla.='
               <tr bgcolor="#e7e741">
-                <td style="width:1%;font-size: 12px;font-family: Arial; height:50px; text-align:center" title='.$row['aper_id'].'>'.$nro.'</td>
-                <td style="width:3%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;">'.$row['proy'].'</td>
-                <td style="width:15%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:10%;font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($fase[0]['fase'].' - '.$fase[0]['descripcion']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:2%;font-size: 12px;font-family: Arial;"></td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($modificaciones_ppto_proyecto[1],2).'</b></td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($modificaciones_ppto_proyecto[2],2).'</b></td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($modificaciones_ppto_proyecto[3],2).'</b></td>';
-                $ppto_ejecutado=0;
-                if(count($ppto_ejecutado_proyecto)!=0){
-                  $ppto_ejecutado=round($ppto_ejecutado_proyecto[0]['ejecutado_total'],2);
-                  for ($i=1; $i <=12 ; $i++) { 
-                    $tabla.='<td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($ppto_ejecutado_proyecto[0]['m'.$i],2).'</b></td>';
-                  }
-                }
-                else{
-                  for ($i=1; $i <=12 ; $i++) { 
-                    $tabla.='<td style="width:5%;font-size: 12px;font-family: Arial;" align=right>0</td>';
-                  }
-                }
-                
-                $ppto_vigente=0;
-                if($modificaciones_ppto_proyecto[3]!=0){
-                  $ppto_vigente=$modificaciones_ppto_proyecto[3];
-                }
+                <td style="width:1%;font-size: 9px;font-family: Arial; height:50px; text-align:center" title='.$row['aper_id'].'>'.$nro.'</td>
+                <td style="width:3%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;">'.$row['proy'].'</td>
+                <td style="width:15%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:10%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['fas_fase']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:2%;font-size: 9px;font-family: Arial;"></td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;" align=right><b>'.round($modificaciones_ppto_proyecto[1],2).'</b></td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;" align=right><b>'.round($modificaciones_ppto_proyecto[2],2).'</b></td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;" align=right><b>'.round($modificaciones_ppto_proyecto[3],2).'</b></td>';
+                for ($i=1; $i <=12 ; $i++) { 
+                  $datos_pi=$this->get_distribucion_prog_ejec_unidad($i,$row['aper_id']);
+                    $color='';
+                    $cump_color='#ddeaf7';
+                    if($i<=$this->verif_mes[1]){
+                      $color='#bad8f5';
+                      $cump_color='#7cb5ec';
+                    }
 
-                //// Avance Financiero (%)
-                /*$avance_fin_total=0;
-                if($row['proy_ppto_total']!=0){
-                  $avance_fin_total=round(($ppto_ejecutado/$row['proy_ppto_total'])*100,2);
-                }*/
-                ///------
-
+                  $tabla.='
+                    <td style="font-size: 9px;font-family: Arial;text-align:right">'.round($datos_pi[1],2).'</td>
+                    <td style="font-size: 9px;font-family: Arial;text-align:right">'.round($datos_pi[2],2).'</td>
+                    <td style="font-size: 12px;font-family: Arial;text-align:right"><b>'.round($datos_pi[3],2).' %</b></td>';
+                }
                 $tabla.='
-                <td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($ppto_ejecutado,2).'</b></td>
-                <td style="font-size: 12px;font-family: Arial;" align=right>'.round((($ppto_ejecutado/$ppto_vigente)*100),2).'%</td>
-                <td></td>
-                <td style="width:8%;font-size: 12px;font-family: Arial;" align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
-                <td style="width:8%;font-size: 12px;font-family: Arial;" align=right><b>'.round($row['avance_financiero'],2).' %</b></td>
+                <td style="font-size: 10px;font-family: Arial; text-align:right"><b>'.round($ppto_ejec_pi,2).'</b></td>
+                <td style="font-size: 15px;font-family: Arial; text-align:right"><b>'.$cumplimiento_pi.' %</b></td>
+                <td>'.$calificacion.'</td>
               </tr>';
 
               $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($row['aper_id']); /// lista de partidas asignados por proyectos
               foreach($ppto_asig as $partida){
+                $monto_partida=$this->detalle_modificacion_partida($partida); /// detalle me modificacion ppto
+                
+                ///----- ppto ejecutado al mes
+                $get_ppto_ejecutado_al_mes=$this->model_ptto_sigep->get_suma_ppto_ejecutado_al_mes_x_partida_unidad($row['aper_id'],$partida['par_id'],$this->verif_mes[1]);
+                $ppto_ejec=0;
+                if(count($get_ppto_ejecutado_al_mes)!=0){
+                  $ppto_ejec=$get_ppto_ejecutado_al_mes[0]['ppto_ejec'];
+                }
+                ///--------------------------
+
+                ///----- cumplimiento (%)
+                $cumplimiento=0;
+                if($monto_partida[3]!=0){
+                  $cumplimiento=round((($ppto_ejec/$monto_partida[3])*100),2);
+                }
+                ///----------------------
+
                 $tabla.='
                 <tr>
-                  <td style="font-size: 12px;font-family: Arial; height:50px"></td>
-                  <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
-                  <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
-                  <td style="font-size: 12px;font-family: Arial;">'.$row['proy'].'</td>
-                  <td style="font-size: 12px;font-family: Arial;">\''.$row['prog'].' '.$row['proy'].' 000\'</td>
-                  <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
-                  <td style="font-size: 12px;font-family: Arial;" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
-                  <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
-                  <td style="font-size: 12px;font-family: Arial;">'.mb_convert_encoding(strtoupper($fase[0]['fase'].' - '.$fase[0]['descripcion']), 'cp1252', 'UTF-8').'</td>
-                  <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=center title='.$partida['sp_id'].'><b>'.$partida['partida'].'</b></td>
-                  '.$this->detalle_temporalidad_ejecucion_x_partida($partida).'
+                  <td style="font-size: 9px;font-family: Arial; height:50px"></td>
+                  <td style="font-size: 9px;font-family: Arial;"></td>
+                  <td style="font-size: 9px;font-family: Arial;"></td>
+                  <td style="font-size: 9px;font-family: Arial;"></td>
+                  <td style="font-size: 9px;font-family: Arial;"></td>
+                  <td style="font-size: 9px;font-family: Arial;"></td>
+                  <td style="font-size: 9px;font-family: Arial;"></td>
+                  <td style="font-size: 15px;font-family: Arial;" bgcolor="#c4efe9" align=center title='.$partida['sp_id'].'><b>'.$partida['partida'].'</b></td>
+                  <td style="font-size: 9px;font-family: Arial; text-align:right">'.round($monto_partida[1],2).'</td>
+                  <td style="font-size: 9px;font-family: Arial; text-align:right">'.round($monto_partida[2],2).'</td>
+                  <td style="font-size: 9px;font-family: Arial; text-align:right">'.round($monto_partida[3],2).'</td>';
+
+                  for ($i=1; $i <=12 ; $i++) { 
+                    $datos=$this->get_distribucion_prog_ejec_partida($i,$row['aper_id'],$partida['par_id']);
+                    $color='';
+                    $cump_color='#ddeaf7';
+                    if($i<=$this->verif_mes[1]){
+                      $color='#bad8f5';
+                      $cump_color='#7cb5ec';
+                    }
+
+
+                    $tabla.='
+                    <td style="font-size: 9px;font-family: Arial; text-align:right" bgcolor='.$color.'>'.round($datos[1],2).'</td>
+                    <td style="font-size: 9px;font-family: Arial; text-align:right" bgcolor='.$color.'>'.round($datos[2],2).'</td>
+                    <td style="font-size: 12px;font-family: Arial; text-align:right" bgcolor='.$cump_color.'><b>'.round($datos[3],2).' %</b></td>';
+                  }
+                  $tabla.='
+                    <td style="font-size: 9px;font-family: Arial; text-align:right">'.round($ppto_ejec,2).'</td>
+                    <td style="font-size: 12px;font-family: Arial; text-align:right"><b>'.$cumplimiento.' %</b></td>
+                    <td></td>
                 </tr>';
               }
             }
@@ -948,7 +1018,7 @@ class ejecucion_finpi extends CI_Controller{
         </table>';
 
     }
-    else{
+    else{ /// Pdf
 
       $tabla.='
 
@@ -1001,6 +1071,72 @@ class ejecucion_finpi extends CI_Controller{
   }
 
 
+  /*------ Distribucion MENSUAL Prog y ejec por partida de Unidad/Proyecto -----*/
+  public function get_distribucion_prog_ejec_partida($mes_id,$aper_id,$par_id){
+    for ($i=1; $i <=3; $i++) { 
+      $datos[$i]=0;
+    }
+    $get_mes_prog_partida=$this->model_insumo->get_list_temporalidad_insumo_partida_mes_programado($aper_id,$par_id,$mes_id);
+    $get_mes_ejec_partida=$this->model_ptto_sigep->get_list_temporalidad_insumo_partida_mes_ejecutado($aper_id,$par_id,$mes_id);
+
+  
+    if(count($get_mes_prog_partida)!=0){
+      $datos[1]=$get_mes_prog_partida[0]['ppto'];
+    }
+
+    if(count($get_mes_ejec_partida)!=0){
+      $datos[2]=$get_mes_ejec_partida[0]['ppto'];
+    }
+    
+
+    if($datos[1]!=0){
+      $datos[3]=round((($datos[2]/$datos[1])*100),2);
+    }
+
+    return $datos;
+  }
+
+
+  /*------ Distribucion TOTAL MENSUAL Prog y ejec por Unidad/Proyecto -----*/
+  public function get_distribucion_prog_ejec_unidad($mes_id,$aper_id){
+    for ($i=1; $i <=3; $i++) { 
+      $datos[$i]=0;
+    }
+    $get_mes_prog_partida=$this->model_insumo->get_list_temporalidad_insumo_mes_programado($aper_id,$mes_id);
+    $get_mes_ejec_partida=$this->model_ptto_sigep->get_list_temporalidad_insumo_mes_ejecutado($aper_id,$mes_id);
+
+  
+    if(count($get_mes_prog_partida)!=0){
+      $datos[1]=$get_mes_prog_partida[0]['ppto'];
+    }
+
+    if(count($get_mes_ejec_partida)!=0){
+      $datos[2]=$get_mes_ejec_partida[0]['ppto'];
+    }
+    
+
+    if($datos[1]!=0){
+      $datos[3]=round((($datos[2]/$datos[1])*100),2);
+    }
+
+    return $datos;
+  }
+
+
+  /*------ Calificacion Cumplimiento obtenido-----*/
+  public function calificacion_de_cumplimiento($valor){
+    $calificacion='';
+
+      if($valor<=50){$calificacion='<div style="color:red"><b>INSATISFACTORIO</b></div>';} /// Insatisfactorio - Rojo (1)
+      if($valor > 50 & $valor <= 75){$calificacion='<div style="color:yellow"><b>REGULAR</b></div>';} /// Regular - Amarillo (2)
+      if($valor > 75 & $valor <= 99){$calificacion='<div style="color:blue"><b>BUENO</b></div>';} /// Bueno - Azul (3)
+      if($valor > 99 & $valor <= 100){$calificacion='<div style="color:green"><b>OPTIMO</b></div>';} /// Optimo - verde (4)
+
+    return $calificacion;
+  }
+
+
+
   /*-------(excel) REPORTE 3 DETALLE POR PARTIDA EJECUCION FISICA Y FINANCIERA A RESUMEN --------*/
   public function reporte_consolidado_institucional_resumen(){
     $tabla='';
@@ -1009,148 +1145,131 @@ class ejecucion_finpi extends CI_Controller{
         <table border="1" cellpadding="0" cellspacing="0" width:100%; class="tabla">
           <thead>
             <tr bgcolor="#f4f4f4">
-              <td style="width:40%; font-size: 15px; text-align:center;height:50px" colspan=12><b>DETALLE PROYECTO - RESUMEN INSTITUCIONAL</b></td>
-              <td style="width:60%; font-size: 15px; text-align:center;" colspan=13><b>EJECUCION FINANCIERA</b></td>
-              <td colspan=2></td>
+              <td style="width:39%; font-size: 15px; text-align:center;height:50px" colspan=11><b>PROYECTO DE INVERSION</b></td>
+              <td style="width:60%; font-size: 15px; text-align:center;" colspan=40><b>PROGRAMACION FISICO Y EJECUCION FINANCIERA</b></td>
             </tr>
             <tr bgcolor="#f4f4f4" border=1>
-              <th style="width:1%; font-size: 12px; text-align:center;height:60px"><b>#</b></th>
-              <th style="width:3%; font-size: 12px; text-align:center"><b>REGIONAL</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>DISTRITAL</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>CODIGO SISIN</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>CATEGORIA PROGRAMATICA</b></th>
-              <th style="width:15%; font-size: 12px; text-align:center"><b>NOMBRE DEL PROYECTO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>COSTO TOTAL PROYECTO (Bs.)</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>ESTADO DEL PROYECTO</b></th>
-              <th style="width:10%; font-size: 12px; text-align:center"><b>FASE</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. INICIAL '.$this->gestion.'</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. MOD. '.$this->gestion.'</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>PPTO. VIGENTE '.$this->gestion.'</b></th>
+              <th style="width:1%; font-size: 10px; text-align:center;height:60px"><b>#</b></th>
+              <th style="width:3%; font-size: 10px; text-align:center"><b>REGIONAL</b></th>
+              <th style="width:5%; font-size: 10px; text-align:center"><b>DISTRITAL</b></th>
+              <th style="width:5%; font-size: 10px; text-align:center"><b>CODIGO SISIN</b></th>
+              <th style="width:10%; font-size: 10px; text-align:center"><b>PROYECTO DE INVERSION</b></th>
+              <th style="width:5%; font-size: 10px; text-align:center"><b>ESTADO<br>PROYECTO</b></th>
+              <th style="width:10%; font-size: 10px; text-align:center"><b>FASE</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>PPTO. INICIAL <br>'.$this->gestion.'</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>PPTO. MOD. <br>'.$this->gestion.'</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>PPTO. VIGENTE <br>'.$this->gestion.'</b></th>
 
-              <th style="width:5%; font-size: 12px; text-align:center"><b>ENERO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>FEBRERO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>MARZO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>ABRIL</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>MAYO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>JUNIO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>JULIO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>AGOSTO</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>SEPTIEMBRE</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>OCTUBRE</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>NOVIEMBRE</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>DICIEMBRE</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>TOTAL EJECUTADO '.$this->gestion.'</b></th>
-              <th style="width:5%; font-size: 12px; text-align:center"><b>% EJEC. PPTO. '.$this->gestion.'</b></th>
-              <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIS. TOTAL</b></th>
-              <th style="width:8%; font-size: 12px; text-align:center"><b>EJEC. FIN. TOTAL</b></th>
+             <th style="width:4%; font-size: 10px; text-align:center"><b>ENE. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ENE. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ENE. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>FEB. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>FEB. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>FEB. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAR. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAR. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAR. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ABR. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ABR. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>ABR. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAY. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAY. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>MAY. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUN. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUN. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUN. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUL. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUL. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>JUL. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>AGO. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>AGO. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>AGO. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>SEP. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>SEP. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>SEP. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>OCT. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>OCT. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>OCT. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>NOV. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>NOV. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>NOV. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>DIC. (Prog.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>DIC. (Ejec.)</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>DIC. (%)</b></th>
+
+              <th style="width:4%; font-size: 10px; text-align:center"><b>PPTO. EJECUTADO '.$this->verif_mes[2].'/'.$this->gestion.'</b></th>
+              <th style="width:4%; font-size: 10px; text-align:center"><b>(%) CUMPLIMIENTO '.$this->verif_mes[2].'/'.$this->gestion.'</b></th>
+              <th style="width:5%; font-size: 10px; text-align:center"><b>CALIFICACION</b></th>
             </tr>
           </thead>
           <tbody>';
            $nro=0;
-            $suma_ptto_ini=0;
-            $suma_ptto_mod=0;
-            $suma_ptto_vig=0;
-            $suma_ptto_ejec=0;
-            foreach($proyectos as $row){
-            //  $ejec_fin=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']); /// Ejecucion Presupuestaria PI
-              $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
+             foreach($proyectos as $row){
               $modificaciones_ppto_proyecto=$this->detalle_modificacion_ppto_x_proyecto($row['aper_id']);
-              $ppto_ejecutado_proyecto=$this->model_ptto_sigep->get_ppto_ejecutado_proyecto($row['proy_id']); /// ejecucion de presupuesto por proyecto
+
+                ///----- ppto ejecutado al mes
+                $get_ppto_ejecutado_al_mes_pi=$this->model_ptto_sigep->get_suma_ppto_ejecutado_al_mes_x_unidad($row['aper_id'],$this->verif_mes[1]);
+                $ppto_ejec_pi=0;
+                if(count($get_ppto_ejecutado_al_mes_pi)!=0){
+                  $ppto_ejec_pi=$get_ppto_ejecutado_al_mes_pi[0]['ppto_ejec'];
+                }
+                ///--------------------------
+
+                ///----- cumplimiento (%)
+                $cumplimiento_pi=0;
+                if($modificaciones_ppto_proyecto[3]!=0){
+                  $cumplimiento_pi=round((($ppto_ejec_pi/$modificaciones_ppto_proyecto[3])*100),2);
+                }
+                ///----------------------
+
+                $calificacion=$this->calificacion_de_cumplimiento($cumplimiento_pi);
               $nro++;
               $tabla.='
               <tr >
-                <td style="width:1%;font-size: 12px;font-family: Arial; height:50px; text-align:center" bgcolor="#d8f1dc" title='.$row['aper_id'].'>'.$nro.'</td>
-                <td style="width:3%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.$row['proy'].'</td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">\''.$row['prog'].' '.$row['proy'].' 000\'</td>
-                <td style="width:15%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($row['proy_ppto_total'],2).'</b></td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>';
-                if(count($fase)!=0){
-                  $tabla.='<td style="width:10%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">'.mb_convert_encoding(strtoupper($fase[0]['fase'].' - '.$fase[0]['descripcion']), 'cp1252', 'UTF-8').'</td>';
-                }
-                else{
-                  $tabla.='<td style="width:10%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc">--------</td>';
+                <td style="width:1%;font-size: 9px;font-family: Arial; height:50px; text-align:center" title='.$row['aper_id'].'>'.$nro.'</td>
+                <td style="width:3%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;">'.$row['proy'].'</td>
+                <td style="width:15%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ep_descripcion']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:10%;font-size: 9px;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['fas_fase']), 'cp1252', 'UTF-8').'</td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;" align=right><b>'.round($modificaciones_ppto_proyecto[1],2).'</b></td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;" align=right><b>'.round($modificaciones_ppto_proyecto[2],2).'</b></td>
+                <td style="width:5%;font-size: 9px;font-family: Arial;" align=right><b>'.round($modificaciones_ppto_proyecto[3],2).'</b></td>';
+                for ($i=1; $i <=12 ; $i++) { 
+                  $datos_pi=$this->get_distribucion_prog_ejec_unidad($i,$row['aper_id']);
+                    $color='';
+                    $cump_color='#ddeaf7';
+                    if($i<=$this->verif_mes[1]){
+                      $color='#bad8f5';
+                      $cump_color='#7cb5ec';
+                    }
+
+                  $tabla.='
+                    <td style="font-size: 9px;font-family: Arial;text-align:right" bgcolor='.$color.'>'.round($datos_pi[1],2).'</td>
+                    <td style="font-size: 9px;font-family: Arial;text-align:right" bgcolor='.$color.'>'.round($datos_pi[2],2).'</td>
+                    <td style="font-size: 12px;font-family: Arial;text-align:right" bgcolor='.$cump_color.'><b>'.round($datos_pi[3],2).' %</b></td>';
                 }
                 $tabla.='
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($modificaciones_ppto_proyecto[1],2).'</b></td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($modificaciones_ppto_proyecto[2],2).'</b></td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($modificaciones_ppto_proyecto[3],2).'</b></td>';
-                $ppto_ejecutado=0;
-                if(count($ppto_ejecutado_proyecto)!=0){
-                  $ppto_ejecutado=round($ppto_ejecutado_proyecto[0]['ejecutado_total'],2);
-                  for ($i=1; $i <=12 ; $i++) { 
-                    $tabla.='<td style="width:5%;font-size: 12px;font-family: Arial;" align=right><b>'.round($ppto_ejecutado_proyecto[0]['m'.$i],2).'</b></td>';
-                  }
-                }
-                else{
-                  for ($i=1; $i <=12 ; $i++) { 
-                    $tabla.='<td style="width:5%;font-size: 12px;font-family: Arial;" align=right>0</td>';
-                  }
-                }
-                
-                $ppto_vigente=0;
-                if($modificaciones_ppto_proyecto[3]!=0){
-                  $ppto_vigente=$modificaciones_ppto_proyecto[3];
-                }
-
-                //// Avance Financiero (%)
-                /*$avance_fin_total=0;
-                if($row['proy_ppto_total']!=0){
-                  $avance_fin_total=round(($ppto_ejecutado/$row['proy_ppto_total'])*100,2);
-                }*/
-                ///------
-
-                $tabla.='
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.$ppto_ejecutado.'</b></td>
-                <td style="width:5%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round((($ppto_ejecutado/$ppto_vigente)*100),2).'%</b></td>
-                <td style="width:8%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
-                <td style="width:8%;font-size: 12px;font-family: Arial;" bgcolor="#d8f1dc" align=right><b>'.round($row['avance_financiero'],2).' %</b></td>
+                <td style="font-size: 10px;font-family: Arial; text-align:right"><b>'.round($ppto_ejec_pi,2).'</b></td>
+                <td style="font-size: 15px;font-family: Arial; text-align:right"><b>'.$cumplimiento_pi.' %</b></td>
+                <td>'.$calificacion.'</td>
               </tr>';
-
-              $suma_ptto_ini=$suma_ptto_ini+$modificaciones_ppto_proyecto[1];
-              $suma_ptto_mod=$suma_ptto_mod+$modificaciones_ppto_proyecto[2];
-              $suma_ptto_vig=$suma_ptto_vig+$modificaciones_ppto_proyecto[3];
-              $suma_ptto_ejec=$suma_ptto_ejec+$ppto_ejecutado;
             }
           $tabla.='
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td style="width:5%;font-size: 12px;font-family: Arial;" align=right>'.round($suma_ptto_ini,2).'</td>
-              <td style="width:5%;font-size: 12px;font-family: Arial;" align=right>'.round($suma_ptto_mod,2).'</td>
-              <td>'.round($suma_ptto_vig,2).'</td>
-              <td style="width:5%;font-size: 12px;font-family: Arial;" align=right></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-
-              <td style="width:5%;font-size: 12px;font-family: Arial;" align=right>'.round($suma_ptto_ejec,2).'</td>
-              <td></td>
-              <td></td>
-              <td></td>
-
-            </tr>
           </tbody>
         </table>';
-
-
     return $tabla;
   }
 
@@ -1713,53 +1832,6 @@ class ejecucion_finpi extends CI_Controller{
     return $datos;
   }
 
-  /// detalle de la Ejecucion de la temporalidad de presupuesto por partida
-  public function detalle_temporalidad_ejecucion_x_partida($partida){
-    $tabla='';
-    
-    $monto_ejecutado=0;
-    $porcentaje_avance_fin=0;
-    $temporalidad_ejec=$this->model_ptto_sigep->get_temporalidad_ejec_ppto_partida($partida['sp_id']); /// temporalidad ejecucion de partida
-
-    /// ------ Datos de Modifcacion de la partida
-    $monto_partida=$this->detalle_modificacion_partida($partida);
-
-
-    /// Observacion
-    $obs_ejec_mensual=$this->model_ptto_sigep->get_obs_ejecucion_financiera_sigep($partida['sp_id'],$this->verif_mes[1]); /// Observacion
-    $observacion_ejecutado='';
-    if(count($obs_ejec_mensual)!=0){
-      $observacion_ejecutado=$obs_ejec_mensual[0]['observacion'];
-    }
-
-    $tabla.='
-        <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=right>'.round($monto_partida[1],2).'</td>
-        <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=right>'.round($monto_partida[2],2).'</td>
-        <td style="font-size: 12px;font-family: Arial;" bgcolor="#c4efe9" align=right>'.round($monto_partida[3],2).'</td>';
-
-        $monto_vigente=0;
-        if($monto_partida[3]!=0){
-          $monto_vigente=$monto_partida[3];
-        }
-
-      if(count($temporalidad_ejec)!=0){
-        $monto_ejecutado=round($temporalidad_ejec[0]['ejecutado_total'],2);
-          for ($i=1; $i <=12 ; $i++) { 
-            $tabla.='<td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right><b>'.round($temporalidad_ejec[0]['m'.$i],2).'</b></td>';
-          }
-      }
-      else{
-        for ($i=1; $i <=12 ; $i++) { 
-            $tabla.='<td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right><b>0</b></td>';
-          }
-      }
-      $tabla.=' <td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right><b>'.round($monto_ejecutado,2).'</b></td>
-                <td style="font-size: 12px;font-family: Arial;"  align=right>'.round((($monto_ejecutado/$monto_vigente)*100),2).'%</td>
-                <td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right>'.mb_convert_encoding(strtoupper($observacion_ejecutado), 'cp1252', 'UTF-8').'</td>
-                <td></td>
-                <td style="font-size: 12px;font-family: Arial;" bgcolor="#e5f7f5" align=right><b>'.round((($monto_ejecutado/$monto_partida[3])*100),2).' %</b></td>';
-    return $tabla;
-  }
 
 //////================= PARA EL TERCER GRAFICO
 
@@ -1785,29 +1857,6 @@ class ejecucion_finpi extends CI_Controller{
     return $ppto_pi;
   }
 
-  /// Vector Consolidado de presupuesto Acummulado Mensual nivel Inatitucional
-/*  public function vector_consolidado_ppto_acumulado_mensual_institucional(){
-    $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_institucional();// lista ppto temporalidad ejecutado Institucional
-    if(count($ppto)!=0){
-      $j=0;$suma=0;
-      for ($i=0; $i <=11 ; $i++) { 
-        $j++;
-        $suma=$suma+round($ppto[0]['m'.$j],2);
-        $ppto_pi[$i]=$suma;
-      }
-      $ppto_pi[12]=round($ppto[0]['ejecutado_total'],2);
-    }
-    else{
-      $j=0;
-      for ($i=0; $i <=12 ; $i++) {
-        $j++;
-        $ppto_pi[$i]=0;
-      }
-    }
-
-    return $ppto_pi;
-  }*/
-
     /// Vector Consolidado de presupuesto Mensual por REGIONAL
   public function vector_consolidado_ppto_mensual_regional($dep_id){
     $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_regional($dep_id);// lista ppto temporalidad ejecutado por regional
@@ -1829,29 +1878,6 @@ class ejecucion_finpi extends CI_Controller{
 
     return $ppto_pi;
   }
-
-  /// Vector Consolidado de presupuesto Acummulado Mensual por REGIONAL
-/*  public function vector_consolidado_ppto_acumulado_mensual_regional($dep_id){
-    $ppto=$this->model_ptto_sigep->get_ppto_ejecutado_regional($dep_id);// lista ppto temporalidad ejecutado por regional
-    if(count($ppto)!=0){
-      $j=0;$suma=0;
-      for ($i=0; $i <=11 ; $i++) { 
-        $j++;
-        $suma=$suma+round($ppto[0]['m'.$j],2);
-        $ppto_pi[$i]=$suma;
-      }
-      $ppto_pi[12]=round($ppto[0]['ejecutado_total'],2);
-    }
-    else{
-      $j=0;
-      for ($i=0; $i <=12 ; $i++) {
-        $j++;
-        $ppto_pi[$i]=0;
-      }
-    }
-
-    return $ppto_pi;
-  }*/
 
 
   /// detalle de la Ejecucion de la temporalidad de presupuesto por partida nivel Regional

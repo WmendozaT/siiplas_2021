@@ -94,6 +94,45 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+
+    // ------ GET Temporalidad Insumo por partida por unidad/proyecto 
+    public function get_list_temporalidad_insumo_partida_programado($aper_id,$par_id){
+        $sql = 'select i.aper_id,i.ins_id,i.par_id,SUM(temp.mes1) mes1,SUM(temp.mes2) mes2,SUM(temp.mes3) mes3,SUM(temp.mes4) mes4,SUM(temp.mes5) mes5,SUM(temp.mes6) mes6,SUM(temp.mes7) mes7,SUM(temp.mes8) mes8,SUM(temp.mes9) mes9,SUM(temp.mes10) mes10,SUM(temp.mes11) mes11,SUM(temp.mes12) mes12
+                from insumos i
+                Inner Join vista_temporalidad_insumo as temp On temp.ins_id=i.ins_id
+                where i.aper_id='.$aper_id.' and i.par_id='.$par_id.' 
+                group by i.aper_id,i.ins_id,i.par_id
+                order by i.ins_id,i.par_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    // ------ GET Temporalidad Insumo por MES por unidad/proyecto 
+    public function get_list_temporalidad_insumo_mes_programado($aper_id,$mes_id){
+        $sql = 'select i.aper_id,SUM(ipm_fis) ppto
+                from insumos i
+                Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
+                where aper_id='.$aper_id.' and temp.mes_id='.$mes_id.' and i.ins_gestion='.$this->gestion.'
+                group by i.aper_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    // ------ GET Temporalidad Insumo por PARTIDA MES por unidad/proyecto 
+    public function get_list_temporalidad_insumo_partida_mes_programado($aper_id,$par_id,$mes_id){
+        $sql = 'select i.aper_id,i.par_id,SUM(ipm_fis) ppto
+                from insumos i
+                Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
+                where aper_id='.$aper_id.' and par_id='.$par_id.' and temp.mes_id='.$mes_id.' and i.ins_gestion='.$this->gestion.'
+                group by i.aper_id,i.par_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     ///================= TEMPORALIDAD INSUMO
     // ------ lista Temporalidad Insumo por UNIDAD / PROYECTO
     public function list_temporalidad_programado_unidad($aper_id){

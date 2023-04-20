@@ -62,7 +62,6 @@ public function menu_pi(){
    
     $data['titulo_modulo']=$tabla;
     $this->load->view('admin/reportes_cns/repejecucion_pi/menu_pi', $data); 
-    
 }
 
   //// MENU UNIDADES ORGANIZACIONAL 2022
@@ -357,7 +356,6 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
         //'vector_meses_acumulado'=>$vector_meses_acumulado,
 
         'lista_reporte' => $tabla,
-
       );
 
     }

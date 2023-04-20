@@ -144,6 +144,70 @@ class Cejecucion_pi extends CI_Controller {
   }
 
 
+
+  /*------ GET CUADRO CONSOLIDADO DE EJECUCION RESPECTO AL PPTO INICIAL (MODULO DE CONSULTA POA)-----*/
+  public function get_cuadro_ejecucion_pi_institucional(){
+    if($this->input->is_ajax_request()){
+      $nro_reg=count($this->model_ptto_sigep->list_regionales());
+      $matriz_reg=$this->ejecucion_finpi->matriz_detalle_proyectos_clasificado_regional();
+
+      $cabecera_grafico=$this->ejecucion_finpi->cabecera_reporte_grafico('CONSOLIDADO INSTITUCIONAL','');
+
+      /// s1
+      $ppto_programado_poa_inicial=$this->model_insumo->temporalidad_inicial_pinversion_institucional(); /// ppto poa Inicial
+      $ppto_programado_poa=$this->model_insumo->temporalidad_programado_form5_institucional(); /// ppto poa (Actual)
+      $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_institucional(); /// Ppto Ejecutado sigep
+
+      $matriz=$this->ejecucion_finpi->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
+      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
+      $cuadro_consolidado_impresion=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
+
+      $tabla='<div class="row">
+                <article class="col-sm-12 col-md-12 col-lg-6">
+                  <div>
+                    <div id="distribucion_ppto_ejecutado_inicial" style="width: 850px; height: 500px; margin: 0 auto" align="center"></div>
+                    <div style="display: none"><div id="distribucion_ppto_ejecutado_inicial_impresion"  style="width: 700px; height: 350px; margin: 0 auto"></div></div>
+                  </div>
+                </article>
+                <article class="col-sm-12 col-md-12 col-lg-6">
+                  <div>
+                    <div id="cumplimiento_mensual_ppto_inicial_ejecutado" style="width: 850px; height: 500px; margin: 0 auto" align="center"></div>
+                    <div style="display: none"><div id="cumplimiento_mensual_ppto_inicial_ejecutado_impresion"  style="width: 700px; height: 350px; margin: 0 auto" align="center"></div></div>
+                  </div>
+                </article>
+
+                <div align="right" id="botton">
+                  <button onClick="imprimir_ejecucion_proyectos()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+
+                <article class="col-sm-12 col-md-12 col-lg-12">
+                  <hr>
+                  <div class="table-responsive" id="cuadro_consolidado_vista"></div>
+                  <div id="cuadro_consolidado_impresion" style="display: none"></div>
+                </article>
+              </div>';
+      
+      $result = array(
+        'respuesta' => 'correcto',
+        'mes' => $this->verif_mes[2].'/'.$this->gestion,
+
+        /// s1
+        'matriz1' => $matriz,
+        'cuadro_consolidado' => $cuadro_consolidado,
+        'cuadro_consolidado_impresion' => $cuadro_consolidado_impresion,
+
+        'lista_reporte' => $tabla,
+      );
+
+      echo json_encode($result);
+    }else{
+        show_404();
+    }
+  }
+
+
+
+
   /*-- CALIFICACION EJECUCION POR PROYECTO --*/
   public function calificacion_proyecto($proyecto){
     $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1); /// monto total asignado poa
@@ -1547,7 +1611,7 @@ public function get_tp_reporte(){
       $tabla=$this->ejecucion_finpi->reporte2_pdf_excel($dep_id,0);
     }
     else{
-      $tabla=$this->ejecucion_finpi->reporte3_pdf_excel($dep_id,0);
+      $tabla=$this->ejecucion_finpi->reporte3_pdf_excel($dep_id,0); //// resumen a detalle por partidas
     }
 
     header('Content-type: application/vnd.ms-excel');
@@ -1556,7 +1620,7 @@ public function get_tp_reporte(){
     header("Expires: 0");
     echo "";
     ini_set('max_execution_time', 0); 
-    ini_set('memory_limit','3072M');
+    ini_set('memory_limit','5120M');
     echo $tabla;
   }
 

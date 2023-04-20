@@ -3211,6 +3211,7 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
 CREATE OR REPLACE VIEW public.v_ejec_ppto_partidas AS 
  SELECT 
     ppto_asig.aper_id,
+    ppto_asig.par_id,
     ejec.sp_id,
     sum(ejec.ppto_ejec) AS ejecutado_total,
     to_number(COALESCE(string_agg(
@@ -3275,7 +3276,7 @@ CREATE OR REPLACE VIEW public.v_ejec_ppto_partidas AS
         END, ''::text), '0'::text), '999999999999.99'::text) AS m12
    FROM ejecucion_financiera_sigep ejec
    Inner Join ptto_partidas_sigep as ppto_asig On ppto_asig.sp_id=ejec.sp_id
-  GROUP BY ppto_asig.aper_id,ejec.sp_id;
+  GROUP BY ppto_asig.aper_id,ppto_asig.par_id,ejec.sp_id;
 
 ALTER TABLE public.v_ejec_ppto_partidas
   OWNER TO postgres;

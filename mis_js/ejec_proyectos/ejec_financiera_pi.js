@@ -250,7 +250,7 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
   });
 
 
-  //// funcion para generar el Consolidado de Ejecucion Proy Inversion (cuadro, grafico)
+  //// funcion para generar el Consolidado de Ejecucion Proy Inversion (cuadro, grafico) x proyecto de inversion
   function generar_cuadro_consolidado_ejecucion_pi(proy_id){
     $('#loading_sepoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
 
@@ -290,6 +290,80 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
 
         cuadro_grafico_en_barras_verticales('cumplimiento_mensual_ppto_inicial_ejecutado',detalle_ejecucion,'% EJECUCION FINANCIERA MENSUAL',response.datos_proyecto,'CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// vista
         cuadro_grafico_en_barras_verticales('cumplimiento_mensual_ppto_inicial_ejecutado_impresion',detalle_ejecucion,'','% EJECUCION FINANCIERA MENSUAL','CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// impresion
+
+      }
+      else{
+        alertify.error("ERROR !!!");
+      }
+    }); 
+  }
+
+
+  ////////
+/*  function realizaProceso(valorCaja1, valorCaja2){
+    var parametros = {
+            "valorCaja1" : valorCaja1,
+            "valorCaja2" : valorCaja2
+    };
+    $.ajax({
+            data:  parametros,
+            url:   'ejemplo_ajax_proceso.php',
+            type:  'post',
+            beforeSend: function () {
+                    $("#resultado").html("Procesando, espere por favor...");
+            },
+            success:  function (response) {
+                    $("#resultado").html(response);
+            }
+    });
+  }*/
+
+
+  ////////
+
+
+
+
+
+  //// funcion para generar el Consolidado de Ejecucion Proy Inversion (cuadro, grafico) INSTITUCIONAL (MODULO DE CONSULTAS)
+  function generar_cuadro_consolidado_ejecucion_pi_institucional(){
+    $('#loading_sepoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
+
+    var url = base+"index.php/ejecucion/cejecucion_pi/get_cuadro_ejecucion_pi_institucional";
+    var request;
+    if (request) {
+        request.abort();
+    }
+    request = $.ajax({
+      url: url,
+      type: "POST",
+      dataType: 'json'
+    });
+
+    request.done(function (response, textStatus, jqXHR) {
+        
+      if (response.respuesta == 'correcto') {
+        document.getElementById('btn_generar').innerHTML = '';
+        document.getElementById('loading_sepoa').innerHTML = '';
+
+         $('#lista_consolidado').fadeIn(1000).html(response.lista_reporte);
+
+        /// cuadro distribucion ppto
+        document.getElementById('cuadro_consolidado_vista').innerHTML = response.cuadro_consolidado;
+
+        /// grafico regresion ppto inicial, ejecutado
+        graf_regresion_consolidado_pi('distribucion_ppto_ejecutado_inicial',response.matriz1,'EJECUCIÓN FINANCIERA RESPECTO AL PPTO. INICIAL','INSTITUCIONAL - '+response.mes,response.regional,'(Bs)'); /// vista
+        graf_regresion_consolidado_pi('distribucion_ppto_ejecutado_inicial_impresion',response.matriz1,'','EJECUCIÓN FINANCIERA RESPECTO AL PPTO. INICIAL ','(Bs)'); /// impresion
+        
+
+        /// Graficos Barras Verticales
+        let detalle_ejecucion_mensual=[];
+        for (var i = 0; i < 12; i++) {
+            detalle_ejecucion_mensual[i]= { name: response.matriz1[0][i+1],y: response.matriz1[7][i+1]};
+        }
+
+        cuadro_grafico_en_barras_verticales('cumplimiento_mensual_ppto_inicial_ejecutado',detalle_ejecucion_mensual,'% EJECUCION FINANCIERA MENSUAL RESPECTO AL PPTO. INICIAL','INSTITUCIONAL',response.regional,'CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// vista
+        cuadro_grafico_en_barras_verticales('cumplimiento_mensual_ppto_inicial_ejecutado_impresion',detalle_ejecucion_mensual,'','% EJECUCION FINANCIERA MENSUAL RESPECTO AL PPTO. INICIAL','CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// impresion
 
       }
       else{
@@ -497,7 +571,7 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
 
 
 ///// ===================================================
-/// ------- MENU REPORTE EJECUCION PRESUPUESTARIA pi
+/// ------- MENU REPORTE EJECUCION PRESUPUESTARIA pi MODULO REPORTES PROY INV.
 $(document).ready(function() {
   pageSetUp();
   $("#dep_id").change(function () {
