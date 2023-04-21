@@ -337,6 +337,24 @@ function abreVentana(PDF){
 
 $(document).ready(function() {
   pageSetUp();
+
+    //// select POA Oficina Nacional
+    $("#proy_id").change(function () {
+      $("#proy_id option:selected").each(function () {
+        elegido=$(this).val();
+        //alert(elegido)
+        if(elegido!=0){
+          //$('#listado').slideDown();
+          $.post(base+"index.php/rep/get_consultas_da", { elegido: elegido,accion:'componentes' }, function(data){
+            $("#com_id").html(data);
+              $("#informacion_poa").html('');
+          });
+        }
+      });
+    });
+
+
+    //// select consulta POa NAcional
     $("#dep_id").change(function () {
         $("#dep_id option:selected").each(function () {
           elegido=$(this).val();
@@ -393,6 +411,48 @@ $(document).ready(function() {
           
       });
     });
+
+
+    ///// ============== MUESTRA INFORMACION DEL POA OFICINA NACIONAL
+    $("#com_id").change(function () {
+      $("#com_id option:selected").each(function () {
+        //dep_id=$('[name="dep_id"]').val();
+        //tp_rep=$('[name="tp_rep"]').val();
+        com_id=$(this).val();
+        
+        if(com_id!=0){
+          $('#informacion_poa').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información POA ...</div>');
+          var url = base+"index.php/consultas_cns/c_consultas/get_informacion_poa_ofc";
+          var request;
+          if (request) {
+              request.abort();
+          }
+          request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "com_id="+com_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                  $('#informacion_poa').fadeIn(1000).html(response.lista_reporte);
+              }
+              else{
+                  alertify.error("ERROR AL LISTAR");
+              }
+          });
+        }
+        else{
+          $("#informacion_poa").html('SELECCIONE');
+        }
+
+         
+          
+      });
+    });
+
+
 })
 
 

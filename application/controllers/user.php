@@ -352,11 +352,6 @@ class User extends CI_Controller{
 
 
 
-
-
-
-
-
     /*---- LISTA DE OPERACIONES A SER EJECUTADAS EN EL MES ----*/
     public function mensaje_ejecucion_operaciones_mes($nro){
         $tabla='';
@@ -452,10 +447,26 @@ class User extends CI_Controller{
                 if($rol[0]['r_id']==10){ /// REPORTES POA
                     $vector[0]=
                     '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+                        <a href="'.base_url().'index.php/consulta/poa_ofc"  onclick="gasto_corriente_ofc()" class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <div class="well1" align="center">
+                            <img class="img-circle" src="'.base_url().'assets/img/impresora.png"  style="margin-left:0px; width: 95px"/>
+                            <h1 style="font-size: 11px;"><b>POA OFICINA CENTRAL / '.$this->gestion.'</b></h1>
+                        </div>
+                        </a>
+                    </div>';
+                    ?>
+                    <script>
+                      function gasto_corriente_ofc(){
+                        document.getElementById("load").style.display = "block";
+                      }
+                    </script>
+                    <?php
+                    $vector[1]=
+                    '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                         <a href="'.base_url().'index.php/consulta/mis_operaciones"  onclick="gasto_corriente()" class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/impresora.png"  style="margin-left:0px; width: 95px"/>
-                            <h1 style="font-size: 11px;">GASTO CORRIENTE / '.$this->gestion.'</h1>
+                            <h1 style="font-size: 11px;"><b>POA NACIONAL/ '.$this->gestion.'</b></h1>
                         </div>
                         </a>
                     </div>';
@@ -466,12 +477,12 @@ class User extends CI_Controller{
                       }
                     </script>
                     <?php
-                    $vector[1]=
+                    $vector[2]=
                     '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                         <a href="'.base_url().'index.php/ejecucion_proyectos_inversion"  onclick="inversion()" class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/ejecucion.png"  style="margin-left:0px; width: 95px"/>
-                            <h1 style="font-size: 11px;">PROYECTOS DE INVERSIÓN / '.$this->gestion.'</h1>
+                            <h1 style="font-size: 11px;"><b>PROYECTOS DE INVERSIÓN / '.$this->gestion.'</b></h1>
                         </div>
                         </a>
                     </div>';
@@ -1061,29 +1072,6 @@ class User extends CI_Controller{
 
         return $data;
     }
-
-
-/// Sesion Administrador
-/*    public function validate_credentials2(){
-        $this->session->sess_destroy();
-
-        $gestion = $this->Users_model->obtener_gestion();
-        $entidad = $this->Users_model->get_entidad($gestion[0]['ide']);
-        $conf = $this->model_configuracion->get_configuracion();
-        $data = array(
-            
-            'gestion' => $gestion[0]['ide'],
-            'name' => 'SIIPLAS V1.0',
-            'direccion' => 'DEPARTAMENTO NACIONAL DE PLANIFICACI&Oacute;N',
-            'sistema' => 'SISTEMA DE PLANIFICACI&Oacute;N DE SALUD - SIIPLAS V2.0',
-            'sistema_pie' => 'SIIPLAS - Sistema de Planificaci&oacute;n de Salud',
-            'logged' => true
-        );
-
-        $this->session->set_userdata($data);
-       // echo $this->session->set_userdata($data);
-        redirect('cns_inversion');
-    }*/
 
 
     function logout(){

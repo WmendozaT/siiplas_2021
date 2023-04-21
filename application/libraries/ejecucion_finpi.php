@@ -2314,7 +2314,7 @@ class ejecucion_finpi extends CI_Controller{
       <tr style="border: solid 0px black; text-align: center;">
         <td style="width:23%; text-align:center;">
           <center>
-            <img src="'.base_url().'assets/ifinal/logo_cns.jpg" class="img-responsive" style="width:45px; height:45px;"/><br>
+            <img src="'.base_url().'assets/ifinal/logo_cns.JPG" class="img-responsive" style="width:45px; height:45px;"/><br>
             <b style="font-size: 6px;font-family: Arial;">CAJA NACIONAL DE SALUD</b><br>
             <div style="font-size: 7px;font-family: Arial;">DPTO. NAL. DE PLANIFICACIÓN</div>
           </center>

@@ -12,7 +12,7 @@ class C_consultas extends CI_Controller {
             $this->load->model('programacion/model_proyecto');
           //  $this->load->model('programacion/model_faseetapa');
           //  $this->load->model('programacion/model_actividad');
-          //  $this->load->model('programacion/model_producto');
+            $this->load->model('programacion/model_producto');
           //  $this->load->model('programacion/model_componente');
             $this->load->model('ejecucion/model_certificacion');
             $this->load->model('ejecucion/model_evaluacion');
@@ -55,19 +55,94 @@ class C_consultas extends CI_Controller {
       return $titulo;
     }
 
-
-    //// CONSOLIDADO POA POR REGIONALES (2020-2021)
-    public function mis_operaciones(){
+    //// CONSULTA POA A OFICINA CENTRAL
+    public function poa_oficina_central(){
       $data['menu']=$this->genera_informacion->menu(10);
-      $data['list']=$this->menu_nacional();
       $data['style']=$this->genera_informacion->style();
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
 
-      $data['mensaje']='<div class="jumbotron"><h1>RESUMEN POA '.$this->gestion.'</h1><p>Reporte Resumen consolidado de Programación POA a nivel Regional, segun la siguiente Clasificación :</p><ol style="font-size:16px;"><li>Genera informacion de Programación, Modificacion, Evaluación y Certificacion POA, segun el tipo de Gasto</li><li>Genera Reporte Consolidado del Fornulario N° 4 (Actividades) por Regional.</li><li>Genera Reporte Consolidado del Fornulario N° 5 (requerimientos) por Regional.</li><li>Genera el listado de Certificaciones POA por Regional.</li><li>Genera Informacion sobre la Evaluación POA a nivel Regional</li></ol></div>';
+      $data['formulario']='
+
+      <article class="col-sm-12 col-md-12 col-lg-12">
+        <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false">
+          <header>
+            <span class="widget-icon"> <i class="fa fa-eye"></i> </span>
+            <h2>CONSULTA POA</h2>
+          </header>
+          <div>
+            <div class="jarviswidget-editbox">
+            </div>
+            <div class="widget-body">
+              <form class="form-horizontal">
+                <input type="hidden" name="base" value="'.base_url().'">
+                <fieldset>
+                  <legend>CONSULTA POA - OFICINA CENTRAL</legend>
+                  <div class="form-group">
+                    <label class="control-label col-md-2"><b>GERENCIA DE AREA</b></label>
+                    <div class="col-md-8">
+                      <select class="form-control input-lg" id="proy_id" name="proy_id" title="SELECCIONE GERENCIA DE AREA">
+                        <option value="0">Seleccione Gerencia de Area</option>
+                        <option value="2848">000 00 002 - GERENCIA GENERAL</option>
+                        <option value="2886">000 00 003 - GERENCIA ADMINISTRATIVA FINANCIERA</option>
+                        <option value="2887">721 00 040 - GERENCIA DE SERVICIOS DE SALUD</option>
+                      </select>
+                    </div>
+                  </div>
+
+                   <div class="form-group">
+                    <label class="control-label col-md-2"><b>UNIDAD OPERATIVA</b></label>
+                    <div class="col-md-8">
+                      <select class="form-control input-lg" id="com_id" name="com_id">
+                      </select>
+                    </div>
+                  </div>
+                </fieldset>
+              
+                <hr>
+                <div id="informacion_poa"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </form>';
       $this->load->view('admin/consultas_internas/menu_consultas_poa', $data);
     }
 
-  /*-----  OPCIONES 2020-2021 -----*/
+
+    //// CONSULTA POA A NIVEL NACIONAL
+    public function consulta_poa_nacional(){
+      $data['menu']=$this->genera_informacion->menu(10);
+      //$data['list']=$this->menu_nacional();
+      $data['style']=$this->genera_informacion->style();
+      $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+
+      //$data['mensaje']='<div class="jumbotron"><h1>RESUMEN POA '.$this->gestion.'</h1><p>Reporte Resumen consolidado de Programación POA a nivel Regional, segun la siguiente Clasificación :</p><ol style="font-size:16px;"><li>Genera informacion de Programación, Modificacion, Evaluación y Certificacion POA, segun el tipo de Gasto</li><li>Genera Reporte Consolidado del Fornulario N° 4 (Actividades) por Regional.</li><li>Genera Reporte Consolidado del Fornulario N° 5 (requerimientos) por Regional.</li><li>Genera el listado de Certificaciones POA por Regional.</li><li>Genera Informacion sobre la Evaluación POA a nivel Regional</li></ol></div>';
+      
+      $data['formulario']='
+      '.$this->menu_nacional().'
+          <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div class="jarviswidget jarviswidget-color-darken" >
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                    <h2 class="font-md"><strong>RESUMEN POA - '.$this->gestion.'</strong></h2>  
+                </header>
+                  <div>
+                      <div class="widget-body no-padding">
+                         <div id="lista_consolidado">
+                         <div class="jumbotron"><h1>RESUMEN POA '.$this->gestion.'</h1><p>Reporte Resumen consolidado de Programación POA a nivel Regional, segun la siguiente Clasificación :</p><ol style="font-size:16px;"><li>Genera informacion de Programación, Modificacion, Evaluación y Certificacion POA, segun el tipo de Gasto</li><li>Genera Reporte Consolidado del Fornulario N° 4 (Actividades) por Regional.</li><li>Genera Reporte Consolidado del Fornulario N° 5 (requerimientos) por Regional.</li><li>Genera el listado de Certificaciones POA por Regional.</li><li>Genera Informacion sobre la Evaluación POA a nivel Regional</li></ol></div>
+                         </div>
+                      </div>
+                      <!-- end widget content -->
+                  </div>
+                  <!-- end widget div -->
+              </div>
+              <!-- end widget -->
+          </article>';
+
+      $this->load->view('admin/consultas_internas/menu_consultas_poa', $data);
+    }
+
+  /*-----  OPCIONES DE CONSULTA POA -----*/
     public function get_opciones($accion=''){ 
       $salida="";
       $accion=$_POST["accion"];
@@ -93,7 +168,22 @@ class C_consultas extends CI_Controller {
           $salida.= "<option value='1'>PROYECTO DE INVERSIÓN</option>";
 
         echo $salida; 
-        //return $salida;
+
+
+        case 'componentes':
+        $salida="";
+          $proy_id=trim($_POST["elegido"]);
+          $unidades=$this->model_componente->lista_subactividad($proy_id);
+          
+          $salida.= "<option value='0' style='color:blue'>Seleccione unidad operativa ....</option>";
+          foreach($unidades as $pr){
+            if(count($this->model_producto->list_prod($pr['com_id']))!=0){
+              $salida.= "<option value=".$pr['com_id'].">".$pr['serv_cod']." ".$pr['tipo_subactividad']." ".$pr['serv_descripcion']."</option>";
+            }
+          }
+
+        echo $salida; 
+
         break;
       }
 
@@ -113,7 +203,7 @@ class C_consultas extends CI_Controller {
                 <div class="row">
                   <section class="col col-3">
                     <label class="label"><b>REGIONAL</b></label>
-                    <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
+                    <select class="form-control input-lg" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
                     <option value="">SELECCIONE REGIONAL</option> ';
                     foreach($regionales as $row){
                       if($row['dep_id']!=0){
@@ -126,13 +216,13 @@ class C_consultas extends CI_Controller {
 
                   <section class="col col-3" id="tprep">
                     <label class="label"><b>TIPO DE REPORTE</b></label>
-                    <select class="form-control" id="tp_rep" name="tp_rep" title="SELECCIONE TIPO DE REPORTE">
+                    <select class="form-control input-lg" id="tp_rep" name="tp_rep" title="SELECCIONE TIPO DE REPORTE">
                     </select>
                   </section>
 
                   <section class="col col-3" id="tp">
                     <label class="label"><b>TIPO DE GASTO</b></label>
-                    <select class="form-control" id="tipo" name="tipo" title="SELECCIONE TIPO DE GASTO">
+                    <select class="form-control input-lg" id="tipo" name="tipo" title="SELECCIONE TIPO DE GASTO">
                     </select>
                   </section>
                 </div>
@@ -206,7 +296,85 @@ class C_consultas extends CI_Controller {
     }
 
 
-    /*--- GET TIPO DE REPORTE (2020 - 2021)---*/
+
+    /*--- GET TIPO DE REPORTE POA OFICINA CENTRAL ---*/
+    public function get_informacion_poa_ofc(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $com_id = $this->security->xss_clean($post['com_id']);
+        $unidad_responsable=$this->model_componente->get_componente($com_id,$this->gestion);
+        $salida='
+              <div class="well">
+                <div class="jumbotron">
+                  <h1>'.$unidad_responsable[0]['tipo_subactividad'].' '.$unidad_responsable[0]['serv_descripcion'].'</h1>
+                  <p>
+                    <a class="btn btn-primary btn-lg" role="button" style="font-size:11px">NOTIFICACION POA</a>
+                    <a class="btn btn-primary btn-lg" role="button" style="font-size:11px">EVALUACION POA</a>
+                    <a class="btn btn-primary btn-lg" role="button" style="font-size:11px">MODIFICACIONES POA</a>
+                    <a class="btn btn-primary btn-lg" role="button" style="font-size:11px">CERTIFICACIONES POA</a>
+                  </p>
+                </div>
+        
+                <h1><b>PLAN OPERATIVO ANUAL - '.$this->gestion.'</b></h1>
+        
+                <div class="row">
+        
+                  <div class="col-sm-3">
+                    <div class="well well-sm bg-color-teal txt-color-white text-center">
+                      <h5><b>POA / FORMULARIO N° 4 (.Pdf)</b></h5>
+                      <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$com_id.'\');" title="REPORTE FORM. 4">
+                        <img src="'.base_url().'assets/ifinal/requerimiento.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                      </a>
+                      <br><b>ACTIVIDADES.PDF</b>
+                    </div>
+                  </div>
+        
+                  <div class="col-sm-3">
+                    <div class="well well-sm bg-color-teal txt-color-white text-center">
+                      <h5><b>POA / FORMULARIO N° 4 (.Xls)</b></h5>
+                      <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$com_id.'\');" title="EXPORTAR REPORTE FORM. 4">
+                        <img src="'.base_url().'assets/ifinal/export_excel.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                      </a>
+                      <br><b>ACTIVIDADES.XLS</b>
+                    </div>
+                  </div>
+        
+                  <div class="col-sm-3">
+                    <div class="well well-sm bg-color-teal txt-color-white text-center">
+                      <h5><b>POA / FORMULARIO N° 5 (.Pdf)</b></h5>
+                      <a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$com_id.'\');" title="REPORTE FORM. 4">
+                        <img src="'.base_url().'assets/ifinal/requerimiento.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                      </a>
+                      <br><b>REQUERIMIENTOS.PDF</b>
+                    </div>
+                  </div>
+        
+                  <div class="col-sm-3">
+                    <div class="well well-sm bg-color-teal txt-color-white text-center">
+                      <h5><b>POA / FORMULARIO N° 5 (.Xls)</b></h5>
+                      <img src="'.base_url().'assets/ifinal/export_excel.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                      <br><b>REQUERIMIENTOS.XLS</b>
+                    </div>
+                  </div>
+                </div>
+              </div>';
+        
+        $result = array(
+          'respuesta' => 'correcto',
+          'lista_reporte' => $salida,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+
+
+    /*--- GET TIPO DE REPORTE POA NACIONAL ---*/
     public function get_lista_reportepoa(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();

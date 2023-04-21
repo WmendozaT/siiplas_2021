@@ -194,11 +194,20 @@ class Model_componente extends CI_Model{
         return $query->result_array();
     }
 
-    /*--- Lista de Subactividad ---*/
+    /*--- Lista de Unidades Operativas por Gerencias de Area ---*/
     function lista_subactividad($proy_id){
-        $sql = 'select *
+        if($this->gestion==2023){ /// excluyendo a todos los servicios
+            $sql = 'select *
+                from vista_subactividades
+                where proy_id='.$proy_id.' and aper_gestion='.$this->gestion.'  and (com_id!=\'6303\' and com_id!=\'6304\' and com_id!=\'6305\' and com_id!=\'6306\' and com_id!=\'6307\' and com_id!=\'6337\')
+                '; 
+        }
+        else{
+            $sql = 'select *
                 from vista_subactividades
                 where proy_id='.$proy_id.' and aper_gestion='.$this->gestion.''; 
+        }
+
         $query = $this->db->query($sql);
         return $query->result_array();
     }

@@ -627,7 +627,8 @@ $route['rep/ogestion/(:any)'] = 'reportes_cns/crep_ogestion/mis_ogestion/$1'; //
 $route['rep/regional_ogestion/(:any)'] = 'reportes_cns/crep_ogestion/list_regionales_ogestion/$1'; ///// Lista de Regionales - FORMULARIO SPO 02
 
 /*--------------------------- REPORTES - CONSULTAS INTERNAS ---------------------------*/
-$route['consulta/mis_operaciones'] = 'consultas_cns/c_consultas/mis_operaciones'; ///// Mis operaciones
+$route['consulta/poa_ofc'] = 'consultas_cns/c_consultas/poa_oficina_central'; ///// POA Oficina Central
+$route['consulta/mis_operaciones'] = 'consultas_cns/c_consultas/consulta_poa_nacional'; ///// POA Nacional
 $route['consulta/cambiar'] = 'consultas_cns/c_consultas/cambiar_gestion';//cambiar contralador
 $route['rep/get_consultas_da'] = 'consultas_cns/c_consultas/get_opciones'; ////// Combo Unidades Administrativas Seguimiento POA
 
