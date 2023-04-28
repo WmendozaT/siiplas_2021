@@ -13,7 +13,7 @@ ob_start();
     }
 }
 </style>
-    <page backtop="60mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+    <page backtop="65mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
         <page_header>
         <br><div class="verde"></div>
            <?php echo $cabecera; ?>
@@ -22,25 +22,10 @@ ob_start();
         <page_footer>
             <?php echo $pie;?>
         </page_footer>
-        <?php echo $operaciones;?>
+        <?php echo $evaluacion_form4;?>
     </page>
-
-    <page backtop="60mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
-        <page_header>
-        <br><div class="verde"></div>
-           <?php echo $cabecera; ?>
-        </page_header>
-
-        <page_footer>
-            <?php echo $pie;?>
-        </page_footer>&nbsp;&nbsp;&nbsp;&nbsp;
-        <div style="font-size: 12px;font-family: Arial; height:20px;"><b>CERTIFICACI&Oacute;N POA - GESTI&Oacute;N <?php echo $this->session->userData('gestion'); ?></b></div>
-        <?php echo $ejecucion_ppto;?>
-    </page>
-
 <?php
 $content = ob_get_clean();
-//require_once(dirname(__FILE__).'/../html2pdf.class.php');
 require_once('assets/html2pdf-4.4.0/html2pdf.class.php');
 try{
     

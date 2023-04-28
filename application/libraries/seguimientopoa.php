@@ -218,6 +218,7 @@ class Seguimientopoa extends CI_Controller{
     //// Cabecera Evaluacion Trimestral
     public function cabecera_evaluacion_trimestral($componente,$proyecto,$trimestre){
       $trimestre=$this->model_evaluacion->get_trimestre($trimestre);
+      $matriz=$this->tabla_regresion_lineal_servicio($componente[0]['com_id'],$this->tmes); /// Tabla para el grafico al trimestre
       $tabla='';
       $tabla.='
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
@@ -246,6 +247,9 @@ class Seguimientopoa extends CI_Controller{
                     <table align="center" border="0" style="width:100%;">
                         <tr style="font-size: 23px;font-family: Arial;">
                             <td style="height: 3%;"><b>EVALUACI&Oacute;N POA '.$this->gestion.'</b> - '.$trimestre[0]['trm_descripcion'].'</td>
+                        </tr>
+                        <tr style="font-size: 13px;font-family: Arial;">
+                            <td style="height: 1%;">'.$this->calificacion_eficacia($matriz[5][$this->tmes],1).'</td>
                         </tr>
                     </table>
                 </td>
@@ -356,13 +360,20 @@ class Seguimientopoa extends CI_Controller{
               <td style="width:2%;"></td>
           </tr>
           <tr>
-              <td style="width:2%;"></td>
-              <td style="width:96%;height: 1%;">
-                <hr>
-              </td>
-              <td style="width:2%;"></td>
+            <td style="width:2%;"></td>
+            <td style="width:96%;height: 1%;">
+              <hr>
+            </td>
+            <td style="width:2%;"></td>
+          </tr>
+        </table> 
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+           <tr>
+            <td style="width:2%;"></td>
+            <td style="width:98%;"><b>DETALLE DE EVALUACIÓN : </b></td>
           </tr>
         </table>';
+
       return $tabla;
     }
 
@@ -891,7 +902,7 @@ class Seguimientopoa extends CI_Controller{
 
 
    /*------- Ejecucion presupuestaria al total programado (Nuevo) --------*/
-    public function ejecucion_presupuestaria_acumulado_total($com_id){
+/*    public function ejecucion_presupuestaria_acumulado_total($com_id){
       $tabla='';
       $monto_total=0;
       $ppto_total=$this->model_componente->componente_ppto_total($com_id);
@@ -961,7 +972,7 @@ class Seguimientopoa extends CI_Controller{
         </div>';
 
       return $tabla;
-    }
+    }*/
 
 
 
@@ -1250,41 +1261,6 @@ class Seguimientopoa extends CI_Controller{
 
     return $tr;
     }
-
-    /*------ REGRESIÓN LINEAL PROG - CUMPLIDO 2020 ACUMULADO POR TRIMESTRE -------*/
-/*    public function tabla_regresion_lineal_servicio_trimestre($com_id,$trm_id){
-      $m[0]='';
-      $m[1]='I TRIMESTRE.';
-      $m[2]='II TRIMESTRE';
-      $m[3]='III TRIMESTRE';
-      $m[4]='IV TRIMESTRE';
-
-      for ($i=0; $i <=$trm_id; $i++){ 
-        $tr[1][$i]=$m[$i]; /// Trimestre
-        $tr[2][$i]=0; /// Prog
-        $tr[3][$i]=0; /// cumplidas
-        $tr[4][$i]=0; /// no cumplidas
-        $tr[5][$i]=0; /// eficacia %
-        $tr[6][$i]=0; /// no eficacia %
-        $tr[7][$i]=0; /// en proceso
-        $tr[8][$i]=0; /// en proceso %
-      }
-
-      for ($i=1; $i <=$trm_id; $i++) {
-        $valor=$this->obtiene_datos_evaluacíon($com_id,$i,1);
-        $tr[2][$i]=$valor[1]; /// Prog
-        $tr[3][$i]=$valor[2]; /// cumplidas
-        $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
-        if($tr[2][$i]!=0){
-          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
-        }
-        $tr[6][$i]=(100-$tr[5][$i]);
-        $proceso=$this->obtiene_datos_evaluacíon($com_id,$i,2);
-        $tr[7][$i]=$proceso[2]; /// En Proceso
-      }
-
-    return $tr;
-    }*/
 
 
 
@@ -1778,7 +1754,10 @@ class Seguimientopoa extends CI_Controller{
 
 
     /*------ Parametro de eficacia ------*/
-    public function calificacion_eficacia($eficacia){
+    public function calificacion_eficacia($eficacia,$tipo){
+      /// tp : 0 (Vista)
+      /// tp : 1 (Pdf)
+
       $tabla='';
       $tp='danger';
       $titulo='ERROR EN LOS VALORES';
@@ -1793,10 +1772,16 @@ class Seguimientopoa extends CI_Controller{
         if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
         if($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
         if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
-        if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
       }
       
-      $tabla.='<h4 class="alert alert-'.$tp.'" style="font-family: Arial;" align="center"><b>'.$titulo.'</b></h4>';
+
+      if($tipo==0){
+        $tabla.='<h4 class="alert alert-'.$tp.'" style="font-family: Arial;" align="center"><b>'.$titulo.'</b></h4>';
+      }
+      else{
+        $tabla.='<b>'.$titulo.'</b>';
+      }
 
       return $tabla;
     }

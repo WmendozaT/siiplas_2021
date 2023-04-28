@@ -237,6 +237,37 @@ function abreVentana(PDF){
   }
 
 
+  /// ver reportes CERTIFICACION POA FORMULARIO 5 por Componente
+  function ver_certpoa_uresponsable(com_id) {
+
+    $('#titulo_certpoa').html('<font size=3><b>Cargando ..</b></font>');
+    $('#content_certpoa').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion</div>');
+    var url = base+"index.php/consultas_cns/c_consultas/get_certpoa_uresponsable";
+    var request;
+    if (request) {
+        request.abort();
+    }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "com_id="+com_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+        $('#titulo_certpoa').html('<font size=3><b>'+response.titulo_poa+'</b></font>');
+        $('#content_certpoa').fadeIn(1000).html(response.tabla);
+      }
+      else{
+        alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+    });
+  }
+
+
   /// ver reportes EVALUACION POA
   function ver_evaluacionpoa(proy_id) {
    // alert(proy_id)

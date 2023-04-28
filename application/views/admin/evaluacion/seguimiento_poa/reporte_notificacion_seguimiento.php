@@ -10,13 +10,10 @@ ob_start();
     .verde{ width:100%; height:5px; background-color:#1c7368;}
     .blanco{ width:100%; height:5px; background-color:#F1F2F1;}
     .siipp{width:120px;}
-
-
     .tabla {
     font-size: 7px;
     width: 100%;
     }
-
 </style>
 
 <?php

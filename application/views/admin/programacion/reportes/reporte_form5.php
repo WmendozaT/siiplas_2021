@@ -17,29 +17,7 @@ ob_start();
         }
     </style>
 
-<page backtop="75mm" backbottom="22mm" backleft="5mm" backright="5mm" pagegroup="new">
-    <page_header>
-        <br><div class="verde"></div>
-        <?php echo $cabecera; ?>
-    </page_header>
-    <page_footer>
-        <?php echo $pie; ?>
-    </page_footer>
-    <?php echo $requerimientos;?>
-
-</page>
-
-<page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
-    <page_header>
-        <br><div class="verde"></div>
-        <?php echo $cabecera; ?>
-    </page_header>
-    <page_footer>
-        <?php echo $pie; ?>
-    </page_footer>
-    <?php echo $partidas;?>
-
-</page>
+    <?php echo $informacion; ?>
 
 <?php
 $content = ob_get_clean();

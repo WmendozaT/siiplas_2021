@@ -254,91 +254,6 @@ class Creporte extends CI_Controller {
                     </tr>
             </table>';
 
-/*        if($this->gestion<2023){ /// Gestion 2020-2021-2022
-            $tabla.='
-            <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:70%;" align=center>
-                <thead>
-                    <tr style="font-size: 7px;height:12px;" bgcolor="#eceaea" align=center>
-                        <th style="width:3%;"style="height:11px;">N°</th>
-                        <th style="width:10%;">C&Oacute;DIGO</th>
-                        <th style="width:50%;">DETALLE PARTIDA</th>
-                        <th style="width:12%;">MONTO PROGRAMADO</th>
-                    </tr>
-                </thead>
-                <tbody>';
-                $nro=0; $total=0;
-                    foreach ($partidas as $row){ 
-                        $nro++; $total=$total+$row['monto'];
-                        $tabla.=
-                        '<tr style="font-size: 7px;">
-                            <td style="width: 3%; height:11px; text-align: center">'.$nro.'</td>
-                            <td style="width: 10%; text-align: center;font-size: 8px;"><b>'.$row['par_codigo'].'</b></td>
-                            <td style="width: 50%; text-align: left;">'.$row['par_nombre'].'</td>
-                            <td style="width: 12%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
-                        </tr>';
-                    }
-            $tabla.=
-                '</tbody>
-                    <tr style="font-size: 7px;" bgcolor="#eceaea">
-                        <td style="width: 50%; height:10px; text-align: left;" colspan=3><b>TOTAL PROGRAMADO </b></td>
-                        <td style="width: 12%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
-                    </tr>
-            </table>';
-        }
-        else{ /// Gestion > 2023
-            $programas=$this->model_insumo->get_lista_clasificacion_x_programas_partidas_uresponsable($com_id); /// A NIVEL DE UNIDAD RESPONSABLE
-            $tabla.='
-            <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:70%;" align=center>
-                <thead>
-                    <tr style="font-size: 7px;height:12px;" bgcolor="#eceaea" align=center>
-                        <th style="width:3%;"style="height:11px;">N°</th>
-                        <th style="width:10%;">C&Oacute;DIGO</th>
-                        <th style="width:30%;">DETALLE PARTIDA</th>';
-                        foreach ($programas as $prog){ 
-                            $tabla.='
-                        <th style="width:15%;">PROG.<br>'.$prog['aper_programa'].'</th>';
-                        }
-                        $tabla.='
-                        <th style="width:12%;">MONTO PROGRAMADO</th>
-                    </tr>
-                </thead>
-                <tbody>';
-                $nro=0; $total=0;
-                    foreach ($partidas as $row){ 
-                        $nro++; $total=$total+$row['monto'];
-                        $tabla.=
-                        '<tr style="font-size: 7px;">
-                            <td style="width: 3%; height:11px; text-align: center">'.$nro.'</td>
-                            <td style="width: 10%; text-align: center;font-size: 8px;"><b>'.$row['par_codigo'].'</b></td>
-                            <td style="width: 30%; text-align: left;">'.$row['par_nombre'].'</td>';
-                            foreach ($programas as $prog){
-                            $datos_prog=$this->model_insumo->get_monto_programado_x_partida_programa_uresponsable($row['com_id'],$row['par_id'],$prog['aper_id_oe']);
-                            $ptto_prog=0;
-                            if(count($datos_prog)!=0){
-                                $ptto_prog=$datos_prog[0]['monto'];
-                            }
-
-                            $tabla.='
-                            <td style="width:15%;text-align: right;">'.number_format($ptto_prog, 2, ',', '.').'</td>';
-                            }
-                            $tabla.='
-                            <td style="width: 12%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
-                        </tr>';
-                    }
-            $tabla.=
-                '</tbody>
-                    <tr style="font-size: 7px;" bgcolor="#eceaea">
-                        <td style="width: 30%; height:10px; text-align: left;" colspan=3><b>TOTAL PROGRAMADO </b></td>';
-                        foreach ($programas as $prog){ 
-                        $tabla.='
-                        <td style="width:15%;text-align: right;"><b>'.number_format($prog['monto'], 2, ',', '.').'</b></td>';
-                        }
-                        $tabla.='
-                        <td style="width: 12%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
-                    </tr>
-            </table>';
-        }*/
-        
         return $tabla;
     }
 
@@ -377,96 +292,11 @@ class Creporte extends CI_Controller {
                     </tr>
             </table>';
 
-       /* if($this->gestion<2023){
-            $tabla.='
-            <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:80%;" align=center>
-                <thead>
-                    <tr style="font-size: 8px;" bgcolor="#eceaea" align=center>
-                        <th style="width:5%;height:15px;">Nro</th>
-                        <th style="width:15%;">C&Oacute;DIGO</th>
-                        <th style="width:50%;">DETALLE PARTIDA</th>
-                        <th style="width:15%;">MONTO PROGRAMADO</th>
-                    </tr>
-                </thead>
-                <tbody>';
-                $nro=0; $total=0;
-                    foreach ($partidas_prog as $row){ 
-                        $nro++; $total=$total+$row['monto'];
-                        $tabla.=
-                        '<tr style="font-size: 7px;">
-                            <td style="width: 3%;height:10px; text-align: center">'.$nro.'</td>
-                            <td style="width: 10%; text-align: center;font-size: 8px;"><b>'.$row['codigo'].'</b></td>
-                            <td style="width: 50%; text-align: left;">'.$row['nombre'].'</td>
-                            <td style="width: 9%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
-                        </tr>';
-                    }
-            $tabla.=
-                '</tbody>
-                    <tr style="font-size: 7px;" bgcolor="#eceaea">
-                        <td style="width: 50%;height:11px; text-align: left;" colspan=3><b>TOTAL PROGRAMADO</b></td>
-                        <td style="width: 9%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
-                    </tr>
-            </table>';
-        }
-         else{ /// Gestion > 2023
-            $programas=$this->model_insumo->get_lista_clasificacion_x_programas_partidas_unidad($proyecto[0]['proy_id']); /// A NIVEL DE UNIDAD / PROYECTO DE INVERSION
-            $tabla.='
-            <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:70%;" align=center>
-                <thead>
-                    <tr style="font-size: 7px;height:12px;" bgcolor="#eceaea" align=center>
-                        <th style="width:3%;"style="height:11px;">N°</th>
-                        <th style="width:10%;">C&Oacute;DIGO</th>
-                        <th style="width:30%;">DETALLE PARTIDA</th>';
-                        foreach ($programas as $prog){ 
-                            $tabla.='
-                        <th style="width:15%;">PROG.<br>'.$prog['aper_programa'].'</th>';
-                        }
-                        $tabla.='
-                        <th style="width:12%;">MONTO PROGRAMADO</th>
-                    </tr>
-                </thead>
-                <tbody>';
-                $nro=0; $total=0;
-                    foreach ($partidas_prog as $row){ 
-                        $nro++; $total=$total+$row['monto'];
-                        $tabla.=
-                        '<tr style="font-size: 7px;">
-                            <td style="width: 3%; height:11px; text-align: center">'.$nro.'</td>
-                            <td style="width: 10%; text-align: center;font-size: 8px;"><b>'.$row['codigo'].'</b></td>
-                            <td style="width: 30%; text-align: left;">'.$row['nombre'].'</td>';
-                            foreach ($programas as $prog){
-                            $datos_prog=$this->model_insumo->get_monto_programado_x_partida_programa_unidad($proyecto[0]['proy_id'],$row['par_id'],$prog['aper_id_oe']);
-                            $ptto_prog=0;
-                            if(count($datos_prog)!=0){
-                                $ptto_prog=$datos_prog[0]['monto'];
-                            }
-
-                            $tabla.='
-                            <td style="width:15%;text-align: right;">'.number_format($ptto_prog, 2, ',', '.').'</td>';
-                            }
-                            $tabla.='
-                            <td style="width: 12%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
-                        </tr>';
-                    }
-            $tabla.=
-                '</tbody>
-                    <tr style="font-size: 7px;" bgcolor="#eceaea">
-                        <td style="width: 30%; height:10px; text-align: left;" colspan=3><b>TOTAL PROGRAMADO </b></td>';
-                        foreach ($programas as $prog){ 
-                        $tabla.='
-                        <td style="width:15%;text-align: right;"><b>'.number_format($prog['monto'], 2, ',', '.').'</b></td>';
-                        }
-                        $tabla.='
-                        <td style="width: 12%; text-align: right;"><b>'.number_format($total, 2, ',', '.').'</b></td>
-                    </tr>
-            </table>';
-        }*/
-
         return $tabla;
     }
 
 
-    //// REPORTE FORMULARIO POA N 4
+    //// REPORTE FORMULARIO POA N 4 PDF
     public function reporte_formulario4($com_id){
         $componente=$this->model_componente->get_componente($com_id,$this->gestion);
         if(count($componente)!=0){
@@ -500,7 +330,7 @@ class Creporte extends CI_Controller {
             
             if($proyecto[0]['tp_id']==4){ //// Gasto Corriente
                 $tabla.=$this->programacionpoa->caratula_poa_gacorriente($proyecto);
-                $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$this->gestion;
+                $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['proy_nombre'].' '.$proyecto[0]['abrev'].'-'.$this->gestion;
             }
             else{ /// Proyecto de Inversion
                 $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); //// DATOS PROYECTO
@@ -508,13 +338,15 @@ class Creporte extends CI_Controller {
                 $data['pie_rep']=$proyecto[0]['proy_nombre'].'-'.$this->gestion;
             }
             
-            foreach($procesos  as $pr){
+            foreach($procesos as $pr){
                 if(count($this->model_producto->list_prod($pr['com_id']))!=0){
                     $componente=$this->model_componente->get_componente($pr['com_id'],$this->gestion);
                     $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$pr['com_id']);
                     $operaciones=$this->programacionpoa->operaciones_form4($componente,$proyecto); /// Reporte Form 4 Gasto Corriente, Proyecto de Inversion 2022
                     $cabecera_f5=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$pr['com_id']);
-                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($pr['com_id'],$proyecto[0]['tp_id']);
+                    
+
+                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']));
                     
                     $lista_partidas=$this->model_insumo->list_consolidado_partidas_componentes($pr['com_id']);
                     $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
@@ -552,10 +384,6 @@ class Creporte extends CI_Controller {
                             </page_footer>
                             '.$partidas.'
                         </page>';
-                    
-                        
-
-
                     }
                     
                 }
@@ -571,7 +399,7 @@ class Creporte extends CI_Controller {
     }
 
 
-    //// REPORTE FORMULARIO POA N 5
+    //// REPORTE FORMULARIO POA N 5 (NORMAL)
     public function reporte_formulario5($com_id){
         $componente=$this->model_componente->get_componente($com_id,$this->gestion);
         if(count($componente)!=0){
@@ -582,14 +410,143 @@ class Creporte extends CI_Controller {
                 $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
             }
 
-            $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$com_id);
-            $data['requerimientos']=$this->programacionpoa->list_requerimientos_reporte($com_id,$proyecto[0]['tp_id']);
+            $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$com_id);
+            
             $lista_partidas=$this->model_insumo->list_consolidado_partidas_componentes($com_id);
-            $data['partidas']=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
+            $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
+            $pie=$this->programacionpoa->pie_form($proyecto);
 
-            $data['pie']=$this->programacionpoa->pie_form($proyecto);
+            $requerimientos='<b>SIN REQUERIMIENTOS PROGRAMADOS .</b>';
+            if(count($this->model_insumo->list_requerimientos_operacion_procesos($com_id))!=0){
+                $requerimientos=$this->programacionpoa->list_requerimientos_reporte($this->model_insumo->list_requerimientos_operacion_procesos($com_id));
+            }
+
+            $tabla='';
+            $tabla.='
+                <page backtop="75mm" backbottom="22mm" backleft="5mm" backright="5mm" pagegroup="new">
+                    <page_header>
+                        <br><div class="verde"></div>
+                        '.$cabecera.'
+                    </page_header>
+                    <page_footer>
+                        '.$pie.'
+                    </page_footer>
+                    '.$requerimientos.'
+                </page>
+
+                <page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
+                    <page_header>
+                        <br><div class="verde"></div>
+                        '.$cabecera.'
+                    </page_header>
+                    <page_footer>
+                        '.$pie.'
+                    </page_footer>
+                    '.$partidas.'
+
+                </page>';
+
+            $data['informacion']=$tabla;
+
             $this->load->view('admin/programacion/reportes/reporte_form5', $data);
-            //echo $data['partidas'];
+        }
+        else{
+            echo "Error !!!";
+        }
+    }
+
+
+
+    //// REPORTE FORMULARIO POA N 5 (CONSOLIDADO CON PROGRAMAS BOLSAS)
+    public function reporte_formulario5_consolidado($com_id){
+        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+        if(count($componente)!=0){
+            $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); //// DATOS PROYECTO
+            $data['pie_rep']=$proyecto[0]['proy_nombre'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
+            if($proyecto[0]['tp_id']==4){
+                $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); /// PROYECTO
+                $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
+            }
+
+            $tabla='';
+            $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id); /// Lista requerimientos
+            $pie=$this->programacionpoa->pie_form($proyecto);
+
+            //// ----- Requerimiento form 5 Poa Normal
+            if(count($lista_insumos)!=0){
+                $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$com_id);
+                $requerimientos=$this->programacionpoa->list_requerimientos_reporte($lista_insumos);
+                $lista_partidas=$this->model_insumo->list_consolidado_partidas_componentes($com_id);
+                $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
+                
+                $tabla.='
+                <page orientation="paysage" backtop="75mm" backbottom="22mm" backleft="5mm" backright="5mm" pagegroup="new">
+                    <page_header>
+                        <br><div class="verde"></div>
+                        '.$cabecera.'
+                    </page_header>
+                    <page_footer>
+                        '.$pie.'
+                    </page_footer>
+                    '.$requerimientos.'
+                </page>
+
+                <page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
+                    <page_header>
+                        <br><div class="verde"></div>
+                        '.$cabecera.'
+                    </page_header>
+                    <page_footer>
+                        '.$pie.'
+                    </page_footer>
+                    '.$partidas.'
+                </page>';
+            }
+            /// -------------------------------------
+
+            /// --------- Programas Bolsas form 5 ---
+            $programas_bolsas=$this->model_producto->get_lista_form4_uniresp_prog_bolsas($com_id);
+            foreach($programas_bolsas as $row){
+                $componente = $this->model_componente->get_componente($row['uni_resp'],$this->gestion);
+                $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($row['proy_id']); //// DATOS PROYECTO
+
+                $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$row['uni_resp']);
+                $lista_insumos=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($row['prod_id'],$row['uni_resp']);
+                if(count($lista_insumos)!=0){
+                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($lista_insumos); /// lista de requerimientos
+                    $lista_partidas=$this->model_insumo->list_consolidado_partidas_programas_boLsas_uresponsable($row['prod_id'],$row['uni_resp']); /// consolidado por partidas
+                    $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
+
+                    $tabla.='
+                    <page orientation="paysage" backtop="75mm" backbottom="22mm" backleft="5mm" backright="5mm" pagegroup="new">
+                        <page_header>
+                            <br><div class="verde"></div>
+                            '.$cabecera.'
+                        </page_header>
+                        <page_footer>
+                            '.$pie.'
+                        </page_footer>
+                        '.$requerimientos.'
+                    </page>
+
+                    <page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
+                        <page_header>
+                            <br><div class="verde"></div>
+                            '.$cabecera.'
+                        </page_header>
+                        <page_footer>
+                            '.$pie.'
+                        </page_footer>
+                        '.$partidas.'
+
+                    </page>';
+                }
+            }
+
+
+            $data['informacion']=$tabla;
+            $data['pie_rep']=$proyecto[0]['proy_nombre'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
+            $this->load->view('admin/programacion/reportes/reporte_form5', $data);
         }
         else{
             echo "Error !!!";
@@ -601,6 +558,7 @@ class Creporte extends CI_Controller {
     //// REPORTE FORMULARIO POA N 5 PARA PROGRAMAS BOLSA 
     public function reporte_prog_bolsa_formulario5($prod_id){
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
+        $tabla='';
 
         if(count($producto)!=0){
             $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion);
@@ -612,20 +570,48 @@ class Creporte extends CI_Controller {
                 $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
             }
 
-                $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$producto[0]['uni_resp']);
-                $data['pie']=$this->programacionpoa->pie_form($proyecto);
+                $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$producto[0]['uni_resp']);
+                $pie=$this->programacionpoa->pie_form($proyecto);
 
-                $requerimientos_en_bolsa=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($prod_id,$producto[0]['uni_resp']);
-                if(count($requerimientos_en_bolsa)!=0){
-                    $data['requerimientos']=$this->programacionpoa->list_requerimientos_programas_bolsas_unidadresponsable($prod_id,$producto[0]['uni_resp']);
+
+                $lista_insumos=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($prod_id,$producto[0]['uni_resp']);
+                if(count($lista_insumos)!=0){
+                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($lista_insumos);
                     $lista_partidas=$this->model_insumo->list_consolidado_partidas_programas_boLsas_uresponsable($prod_id,$producto[0]['uni_resp']);
-                    $data['partidas']=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
+                    $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
                 }
                 else{
-                    $data['requerimientos']='No se Tiene Informacion Registrado !!!';   
-                    $data['partidas']='Sin Informacion';
+                    $requerimientos='No se Tiene Informacion Registrado !!!';   
+                    $partidas='Sin Informacion';
                 }
  
+
+                $tabla.='
+                    <page orientation="paysage" backtop="75mm" backbottom="22mm" backleft="5mm" backright="5mm" pagegroup="new">
+                        <page_header>
+                            <br><div class="verde"></div>
+                            '.$cabecera.'
+                        </page_header>
+                        <page_footer>
+                            '.$pie.'
+                        </page_footer>
+                        '.$requerimientos.'
+                    </page>
+
+                    <page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
+                        <page_header>
+                            <br><div class="verde"></div>
+                            '.$cabecera.'
+                        </page_header>
+                        <page_footer>
+                            '.$pie.'
+                        </page_footer>
+                        '.$partidas.'
+
+                    </page>';
+
+
+                $data['informacion']=$tabla;
                 $this->load->view('admin/programacion/reportes/reporte_form5', $data);
         }
         else{

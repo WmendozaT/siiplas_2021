@@ -858,7 +858,7 @@ class Seguimientopoa extends CI_Controller{
    /*------- Ejecucion presupuestaria al total programado (Nuevo) --------*/
     public function ejecucion_presupuestaria_acumulado_total($com_id){
       $tabla='';
-      $monto_total=0;
+/*      $monto_total=0;
       $ppto_total=$this->model_componente->componente_ppto_total($com_id);
       if (count($ppto_total)!=0) {
         $monto_total=$ppto_total[0]['total_ppto'];
@@ -925,7 +925,7 @@ class Seguimientopoa extends CI_Controller{
         </table>
         </div>';
 
-      return $tabla;
+      return $tabla;*/
     }
 
 

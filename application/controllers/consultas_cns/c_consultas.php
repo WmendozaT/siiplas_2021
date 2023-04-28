@@ -10,15 +10,17 @@ class C_consultas extends CI_Controller {
             $this->load->model('menu_modelo');
             $this->load->model('consultas/model_consultas');
             $this->load->model('programacion/model_proyecto');
-          //  $this->load->model('programacion/model_faseetapa');
+            $this->load->model('programacion/model_faseetapa');
           //  $this->load->model('programacion/model_actividad');
             $this->load->model('programacion/model_producto');
           //  $this->load->model('programacion/model_componente');
             $this->load->model('ejecucion/model_certificacion');
+            $this->load->model('programacion/insumos/model_insumo');
             $this->load->model('ejecucion/model_evaluacion');
             $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
             $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020
             $this->load->model('modificacion/model_modfisica'); /// Gestion 2020
+            $this->load->model('mantenimiento/model_configuracion');
             $this->pcion = $this->session->userData('pcion');
             $this->gestion = $this->session->userData('gestion');
             $this->adm = $this->session->userData('adm');
@@ -76,7 +78,7 @@ class C_consultas extends CI_Controller {
               <form class="form-horizontal">
                 <input type="hidden" name="base" value="'.base_url().'">
                 <fieldset>
-                  <legend>CONSULTA POA - OFICINA CENTRAL</legend>
+                  <legend>CONSULTA POA - OFICINA CENTRAL / '.$this->gestion.'</legend>
                   <div class="form-group">
                     <label class="control-label col-md-2"><b>GERENCIA DE AREA</b></label>
                     <div class="col-md-8">
@@ -175,7 +177,7 @@ class C_consultas extends CI_Controller {
           $proy_id=trim($_POST["elegido"]);
           $unidades=$this->model_componente->lista_subactividad($proy_id);
           
-          $salida.= "<option value='0' style='color:blue'>Seleccione unidad operativa ....</option>";
+          $salida.= "<option value='0'>Seleccione unidad operativa ....</option>";
           foreach($unidades as $pr){
             if(count($this->model_producto->list_prod($pr['com_id']))!=0){
               $salida.= "<option value=".$pr['com_id'].">".$pr['serv_cod']." ".$pr['tipo_subactividad']." ".$pr['serv_descripcion']."</option>";
@@ -203,7 +205,7 @@ class C_consultas extends CI_Controller {
                 <div class="row">
                   <section class="col col-3">
                     <label class="label"><b>REGIONAL</b></label>
-                    <select class="form-control input-lg" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
+                    <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
                     <option value="">SELECCIONE REGIONAL</option> ';
                     foreach($regionales as $row){
                       if($row['dep_id']!=0){
@@ -216,13 +218,13 @@ class C_consultas extends CI_Controller {
 
                   <section class="col col-3" id="tprep">
                     <label class="label"><b>TIPO DE REPORTE</b></label>
-                    <select class="form-control input-lg" id="tp_rep" name="tp_rep" title="SELECCIONE TIPO DE REPORTE">
+                    <select class="form-control" id="tp_rep" name="tp_rep" title="SELECCIONE TIPO DE REPORTE">
                     </select>
                   </section>
 
                   <section class="col col-3" id="tp">
                     <label class="label"><b>TIPO DE GASTO</b></label>
-                    <select class="form-control input-lg" id="tipo" name="tipo" title="SELECCIONE TIPO DE GASTO">
+                    <select class="form-control" id="tipo" name="tipo" title="SELECCIONE TIPO DE GASTO">
                     </select>
                   </section>
                 </div>
@@ -303,22 +305,65 @@ class C_consultas extends CI_Controller {
         $post = $this->input->post();
         $com_id = $this->security->xss_clean($post['com_id']);
         $unidad_responsable=$this->model_componente->get_componente($com_id,$this->gestion);
+        $meses = $this->model_configuracion->get_mes();
+        $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id);
+        
+        $matriz=$this->genera_informacion->tabla_regresion_lineal_servicio($com_id,$this->tmes); /// Tabla para el grafico al trimestre
+
+        $sw=0;
+        $programas_bolsas=$this->model_producto->get_lista_form4_uniresp_prog_bolsas($com_id);
+        foreach($programas_bolsas as $row){
+          if(count($this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($row['prod_id'],$row['uni_resp']))!=0){
+            $sw++;
+          }
+        }
+
         $salida='
+
               <div class="well">
-                <div class="jumbotron">
-                  <h1>'.$unidad_responsable[0]['tipo_subactividad'].' '.$unidad_responsable[0]['serv_descripcion'].'</h1>
-                  <p>
-                    <a class="btn btn-primary btn-lg" role="button" style="font-size:11px">NOTIFICACION POA</a>
-                    <a class="btn btn-primary btn-lg" role="button" style="font-size:11px">EVALUACION POA</a>
-                    <a class="btn btn-primary btn-lg" role="button" style="font-size:11px">MODIFICACIONES POA</a>
-                    <a class="btn btn-primary btn-lg" role="button" style="font-size:11px">CERTIFICACIONES POA</a>
-                  </p>
-                </div>
-        
-                <h1><b>PLAN OPERATIVO ANUAL - '.$this->gestion.'</b></h1>
-        
                 <div class="row">
-        
+                  <div class="collapse navbar-collapse navbar-inverse">
+                    <ul class="nav navbar-nav">
+                      <li class="active">
+                        <a href="javascript:abreVentana(\''.site_url("").'/seg/notificacion_poa_componente_mensual/'.$com_id.'\');" style="color:white">&nbsp;&nbsp;<b>NOTIFICACIÓN POA '.$this->verif_mes[2].' / '.$this->gestion.'</b></a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="modal" data-target="#modal_certpoa" onclick="ver_certpoa_uresponsable('.$com_id.');" style="color:white">&nbsp;&nbsp;<b>MIS CERTIFICACIONES POA  / '.$this->gestion.'</b></a>
+                      </li>
+                      <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" style="color:white"><b>FORMULARIO DE SEGUIMIENTO Y EVALUACION POA </b><b class="caret"></b> </a>
+                        <ul class="dropdown-menu">';
+                        foreach($meses as $rowm){
+                          if($rowm['m_id']<=$this->verif_mes[1]){
+                            $salida.='
+                            <li>
+                              <a href="'.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$com_id.'/'.$rowm['m_id'].'" target="_blank">REPORTE SEGUIMIENTO POA - '.$rowm['m_descripcion'].' / '.$this->gestion.'</a>
+                            </li>';
+                          }                     
+                        }
+
+                        $salida.='
+                        <hr>';
+                          for ($i=1; $i <=$this->tmes; $i++) { 
+                            $trimestre=$this->model_evaluacion->get_trimestre($i); /// Datos del Trimestre
+                            $salida.='
+                            <li>
+                              <a href="javascript:abreVentana(\''.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$com_id.'/'.$i.'\');" >REP. EVAL. POA - '.$trimestre[0]['trm_descripcion'].'</a>
+                            </li>';
+                          }
+                        $salida.='
+                        </ul>
+                      </li>
+                    </ul>
+                  </div>
+              
+
+                  <hr>
+                    <h4 class="alert-heading"><b>'.$unidad_responsable[0]['tipo_subactividad'].' '.$unidad_responsable[0]['serv_descripcion'].'</b></h4>
+                    <br>
+                    '.$this->genera_informacion->calificacion_eficacia($matriz[5][$this->tmes]).'
+                  <hr>
+
                   <div class="col-sm-3">
                     <div class="well well-sm bg-color-teal txt-color-white text-center">
                       <h5><b>POA / FORMULARIO N° 4 (.Pdf)</b></h5>
@@ -332,30 +377,37 @@ class C_consultas extends CI_Controller {
                   <div class="col-sm-3">
                     <div class="well well-sm bg-color-teal txt-color-white text-center">
                       <h5><b>POA / FORMULARIO N° 4 (.Xls)</b></h5>
-                      <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$com_id.'\');" title="EXPORTAR REPORTE FORM. 4">
+                      <a href="'.site_url("").'/rep/exportar_form4_uresponsable/'.$com_id.'" target=_blank title="DESCARGAR FORM 4 (EXCEL)">
                         <img src="'.base_url().'assets/ifinal/export_excel.PNG" style="margin-left:0px; width: 150px; height:150px"/>
                       </a>
                       <br><b>ACTIVIDADES.XLS</b>
                     </div>
-                  </div>
-        
-                  <div class="col-sm-3">
-                    <div class="well well-sm bg-color-teal txt-color-white text-center">
-                      <h5><b>POA / FORMULARIO N° 5 (.Pdf)</b></h5>
-                      <a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$com_id.'\');" title="REPORTE FORM. 4">
-                        <img src="'.base_url().'assets/ifinal/requerimiento.PNG" style="margin-left:0px; width: 150px; height:150px"/>
-                      </a>
-                      <br><b>REQUERIMIENTOS.PDF</b>
+                  </div>';
+                  
+                  if(count($lista_insumos)!=0 || $sw!=0){
+                    $salida.='
+                    <div class="col-sm-3">
+                      <div class="well well-sm bg-color-teal txt-color-white text-center">
+                        <h5><b>POA / FORMULARIO N° 5 (.Pdf)</b></h5>
+                        <a href="javascript:abreVentana(\''.site_url("").'/rep/rep_form5_consolidado/'.$com_id.'\');" title="REPORTE FORM. 5">
+                          <img src="'.base_url().'assets/ifinal/requerimiento.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                        </a>
+                        <br><b>REQUERIMIENTOS.PDF</b>
+                      </div>
                     </div>
-                  </div>
-        
-                  <div class="col-sm-3">
-                    <div class="well well-sm bg-color-teal txt-color-white text-center">
-                      <h5><b>POA / FORMULARIO N° 5 (.Xls)</b></h5>
-                      <img src="'.base_url().'assets/ifinal/export_excel.PNG" style="margin-left:0px; width: 150px; height:150px"/>
-                      <br><b>REQUERIMIENTOS.XLS</b>
-                    </div>
-                  </div>
+
+                    <div class="col-sm-3">
+                      <div class="well well-sm bg-color-teal txt-color-white text-center">
+                        <h5><b>POA / FORMULARIO N° 5 (.Xls)</b></h5>
+                          <a href="'.site_url("").'/rep/consolidado_requerimientos_mas_programas_bolsas_unidad/'.$com_id.'" target=_blank title="DESCARGAR FORM 5 (EXCEL)">
+                            <img src="'.base_url().'assets/ifinal/export_excel.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                          </a>
+                        <br><b>REQUERIMIENTOS.XLS</b>
+                      </div>
+                    </div>';
+                  }
+
+                  $salida.='
                 </div>
               </div>';
         
@@ -371,7 +423,40 @@ class C_consultas extends CI_Controller {
     }
 
 
+    /*-- LISTA DE FORMULARIOS REPORTE DE SEGUIMIENTO Y EVALUACION POA --*/
+/*    public function formularios_mensual($com_id){
+      $tabla='';
+      $meses = $this->model_configuracion->get_mes();
 
+      $tabla.='
+          <div class="btn-group">
+            <a class="btn btn-success"><img src="'.base_url().'assets/Iconos/application_cascade.png" WIDTH="19" HEIGHT="18"/>&nbsp; FORM. SEGUIMIENTO Y EVALUACIÓN POA </a>
+            <a class="btn btn-success dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+            <ul class="dropdown-menu">';
+              foreach($meses as $rowm){
+              if($rowm['m_id']<=$this->verif_mes[1]){
+                $tabla.='
+                <li>
+                  <a href="'.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$com_id.'/'.$rowm['m_id'].'" target="_blank">REPORTE SEGUIMIENTO POA - '.$rowm['m_descripcion'].'</a>
+                </li>';
+              }                     
+            }
+            $tabla.='
+            <hr>';
+              for ($i=1; $i <=$this->tmes; $i++) { 
+                $trimestre=$this->model_evaluacion->get_trimestre($i); /// Datos del Trimestre
+                $tabla.='
+                <li>
+                  <a href="javascript:abreVentana(\''.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$com_id.'/'.$i.'\');" >REP. EVAL. POA - '.$trimestre[0]['trm_descripcion'].'</a>
+                </li>';
+              }
+            
+            $tabla.='
+            </ul>
+          </div>';
+
+      return $tabla;
+    }*/
 
 
     /*--- GET TIPO DE REPORTE POA NACIONAL ---*/
@@ -571,6 +656,34 @@ class C_consultas extends CI_Controller {
         }
 
         $tabla=$this->genera_informacion->list_certificacionpoa($proy_id,$proyecto[0]['tp_id']); /// Mi evaluacion
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+          'proyecto'=>$proyecto,
+          'titulo_poa'=>$titulo_poa,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+    /*--- GET DATOS CERTIFICACION POA POR COMPONENTE 2023 ---*/
+    public function get_certpoa_uresponsable(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $com_id = $this->security->xss_clean($post['com_id']);
+        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+        $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']); /// PROYECTO
+
+        $titulo_poa=$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'];
+        
+
+        $tabla=$this->genera_informacion->list_certificacionpoa_componente($com_id); /// Mis Certificaciones
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,

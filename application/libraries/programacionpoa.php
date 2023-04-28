@@ -1155,7 +1155,7 @@ class Programacionpoa extends CI_Controller{
                     </td>
                     <td style="width:80%;">
                         <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                            <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.strtoupper ($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td></tr>
+                            <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.strtoupper ($proyecto[0]['proy_nombre']).' '.$proyecto[0]['abrev'].'</td></tr>
                         </table>
                     </td>';
                   }
@@ -1551,7 +1551,7 @@ class Programacionpoa extends CI_Controller{
       return $tabla;
   }
 
-  /*----- REPORTE FORMULARIO 4 (2021 - Operaciones, Proyectos de Inversion) ----*/
+  /*----- REPORTE FORMULARIO 4 (2023 - Gasto Corriente, Proyectos de Inversion) ----*/
   public function operaciones_form4($componente,$proyecto){
     $tabla='';
     
@@ -1970,8 +1970,10 @@ class Programacionpoa extends CI_Controller{
   }
 
   /*----- REPORTE - FORMULARIO 5 -----*/
-    public function list_requerimientos_reporte($com_id,$tp_id){
-      $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id); /// Lista requerimientos
+/*    public function list_requerimientos_reporte($com_id,$tp_id){
+      $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id); /// Lista requerimientos*/
+
+      public function list_requerimientos_reporte($lista_insumos){
       $tabla='';
       $tabla.=' 
           <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
@@ -2078,7 +2080,7 @@ class Programacionpoa extends CI_Controller{
 
 
     /*----- REPORTE - FORMULARIO 5 PARA PROGRAMAS BOSAS (LISTA LOS REQUERIMIENTOS QUE SE ENCUENTRAN EN PROGRAMAS BOLSAS POR UNIDAD RESPONSABLE)-----*/
-    public function list_requerimientos_programas_bolsas_unidadresponsable($prod_id,$com_id){
+   /* public function list_requerimientos_programas_bolsas_unidadresponsable($prod_id,$com_id){
       $lista_insumos=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($prod_id,$com_id); /// Lista requerimientos
       $tabla='';
       $tabla.=' 
@@ -2088,11 +2090,12 @@ class Programacionpoa extends CI_Controller{
                 <th style="width:1%;height:15px;">#</th>
                 <th style="width:2%;">COD.<br>ACT.</th> 
                 <th style="width:4%;">PARTIDA</th>
-                <th style="width:18%;">DETALLE REQUERIMIENTO</th>
-                <th style="width:5%;">UNIDAD</th>
-                <th style="width:4%;">CANTIDAD</th>
+                <th style="width:15%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:3%;">UNIDAD</th>
+                <th style="width:2%;">CANT.</th>
                 <th style="width:5%;">UNITARIO</th>
                 <th style="width:5%;">TOTAL</th>
+                <th style="width:5%;">TOTAL CERT.</th>
                 <th style="width:4%;">ENE.</th>
                 <th style="width:4%;">FEB.</th>
                 <th style="width:4%;">MAR.</th>
@@ -2109,11 +2112,12 @@ class Programacionpoa extends CI_Controller{
               </tr>
               </thead>
               <tbody>';
-              $cont = 0; $total=0; 
+              $cont = 0; $total=0; $total_cert=0;
               foreach ($lista_insumos as $row) {
               $cont++;
               $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
               $total=$total+$row['ins_costo_total'];
+              $total_cert=$total_cert+$row['ins_monto_certificado'];
               $color='';
               if(count($prog)!=0){
                 if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
@@ -2130,7 +2134,8 @@ class Programacionpoa extends CI_Controller{
                   <td style="width: 5%; text-align: left">'.strtoupper($row['ins_unidad_medida']).'</td>
                   <td style="width: 4%; text-align: right">'.round($row['ins_cant_requerida'],2).'</td>
                   <td style="width: 5%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
-                  <td style="width: 5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>'; 
+                  <td style="width: 5%; text-align: right;font-size: 7.5px;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>
+                  <td style="width: 5%; text-align: right;font-size: 7.5px;" bgcolor="#ecfbf9"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';  
                   if(count($prog)!=0){ 
                   $tabla.=
                   '<td style="width: 4%; text-align: right;">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
@@ -2171,13 +2176,14 @@ class Programacionpoa extends CI_Controller{
           $tabla.='
               </tbody>
               <tr class="modo1" bgcolor="#eceaea">
-                  <td colspan="6" style="height:10px;" ><b>TOTAL PROGRAMADO </b></td>
+                  <td colspan="7" style="height:10px;" ><b>TOTAL PROGRAMADO </b></td>
                   <td style="width: 4%; text-align: right; font-size: 7px;"><b>'.number_format($total, 2, ',', '.').'</b></td>
-                  <td colspan="14"></td>
+                  <td style="width: 4%; text-align: right; font-size: 7px;"><b>'.number_format($total_cert, 2, ',', '.').'</b></td>
+                  <td colspan="13"></td>
               </tr>
           </table><br>';
       return $tabla;
-    }
+    }*/
 
 
   /*----- REPORTE - FORMULARIO 5 VER REQ POR COMPONENTE-----*/

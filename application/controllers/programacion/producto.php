@@ -765,7 +765,7 @@ class Producto extends CI_Controller {
                 foreach($productos as $rowp){
                   $cont++;
                   $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                  $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
+                  //$monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
                   //$programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
 
                   if($proyecto[0]['por_id']==0){
@@ -782,10 +782,10 @@ class Producto extends CI_Controller {
                   }
 
                   
-                  $ptto=0;
+                  /*$ptto=0;
                   if(count($monto)!=0){
                     $ptto=$monto[0]['total'];
-                  }
+                  }*/
 
                   $color='#f1fdf1'; $titulo=''; $por=''; 
                   if($proyecto[0]['tp_id']==1){
@@ -850,7 +850,7 @@ class Producto extends CI_Controller {
                                   </center>';
                       }
                     $tabla.='</td>';
-                    $tabla.='<td>'.number_format($ptto, 2, ',', '.').'</td>';
+                    $tabla.='<td></td>';
                     $tabla.='<td style="width:7%;" align="center"><font color="blue" size="2"><b>'.count($this->model_producto->insumo_producto($rowp['prod_id'])).'</b></font></td>';
                   $tabla .='</tr>';
                   ?>

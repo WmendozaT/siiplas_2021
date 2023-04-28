@@ -1084,6 +1084,51 @@ class Genera_informacion extends CI_Controller{
     }
 
 
+
+    /*--- LISTA DE CERTIFICACIONES POA 2022 POR COMPONENTE ---*/
+    public function list_certificacionpoa_componente($com_id){
+      $tabla='';
+      $certificacionespoa=$this->model_certificacion->list_certpoa_componente($com_id);
+
+      $tabla.='<script src = "'.base_url().'mis_js/programacion/programacion/tablas1.js"></script>';
+      $tabla.='
+      <hr>
+      <table id="dt_basic1" class="table table-bordered" border=0.2 style="width:100%;">
+        <thead>
+          <tr>
+            <th style="width:1%;height:20px">#</th>
+            <th style="width:10%;">C&Oacute;DIGO</th>
+            <th style="width:5%;">FECHA</th>
+            <th style="width:10%;">UNIDAD RESPONSABLE</th>
+            <th style="width:5%;">VER CERTIFICADO POA</th>
+          </tr>
+        </thead>
+         <tbody>';
+          $nro=0;
+          foreach ($certificacionespoa as $row){
+            $nro++; $color='';$codigo=$row['cpoa_codigo'];
+            if($row['cpoa_estado']==0){
+              $color='#fddddd';
+              $codigo='<font color=red>SIN CÓDIGO</font>';
+            }
+
+            $tabla .='<tr>';
+              $tabla .='<td title='.$row['cpoa_id'].' align="center">'.$nro.'</td>';
+              $tabla .='<td><b>'.$codigo.'</b></td>';
+              $tabla .='<td>'.date('d-m-Y',strtotime($row['cpoa_fecha'])).'</td>';
+              $tabla .='<td>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>';
+              $tabla .='<td align=center><a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>';
+            $tabla .='</tr>';
+          }
+          
+          $tabla.='
+          </tbody>
+        </table>';
+
+      return $tabla;
+    }
+
+
     /*--- REPORTE EVALUACION POA POR UNIDAD 2022 ---*/
     public function detalle_evaluacionpoa($evaluacion,$proy_id){
         $tabla='';
@@ -1124,10 +1169,19 @@ class Genera_informacion extends CI_Controller{
       $tabla='';
       $tp='danger';
       $titulo='ERROR EN LOS VALORES';
-      if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
-      if ($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
-      if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
-      if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+      
+      if($this->gestion>2021){
+        if($eficacia<=50){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
+        if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
+        if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
+        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+      }
+      else{ /// Gestiones Anteriores
+        if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
+        if($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
+        if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
+        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+      }
 
       $tabla.='<h4 class="alert alert-'.$tp.'" style="font-family: Arial;" align="center"><b>'.$titulo.'</b></h4>';
 

@@ -159,33 +159,33 @@
 
     /*------ EXPORTAR FORM 2 LISTA DE FORM 4 POR DISTRITAL (2020-2021-2022) -------*/
     public function operaciones_distrital($dep_id,$dist_id,$tp_id){
-        $tip_rep='PROYECTO DE INVERSION';
-        if($tp_id==4){
-          $tip_rep='GASTO CORRIENTE';
-        }
+      $tip_rep='PROYECTO DE INVERSION';
+      if($tp_id==4){
+        $tip_rep='GASTO CORRIENTE';
+      }
 
 
-        if($dist_id==0){
-          $regional=$this->model_proyecto->get_departamento($dep_id);
-          $operaciones=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de distritales
-          $titulo='CONSOLIDADO : '.mb_convert_encoding($regional[0]['dep_departamento'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
-        }
-        else{
-          $dist=$this->model_proyecto->dep_dist($dist_id);
-          $titulo=' '.mb_convert_encoding($dist[0]['dist_distrital'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
-          $operaciones=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Operaciones a Nivel de distritales
-          
-        }
+      if($dist_id==0){
+        $regional=$this->model_proyecto->get_departamento($dep_id);
+        $operaciones=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de distritales
+        $titulo='CONSOLIDADO : '.mb_convert_encoding($regional[0]['dep_departamento'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
+      }
+      else{
+        $dist=$this->model_proyecto->dep_dist($dist_id);
+        $titulo=' '.mb_convert_encoding($dist[0]['dist_distrital'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
+        $operaciones=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Operaciones a Nivel de distritales
         
-        $tabla=$this->genera_informacion->lista_operaciones_regional_distrital($operaciones,$titulo,$tip_rep); // Regional Operaciones Distrital 2020-2021
+      }
+      
+      $tabla=$this->genera_informacion->lista_operaciones_regional_distrital($operaciones,$titulo,$tip_rep); // Regional Operaciones Distrital 2020-2021
 
-        date_default_timezone_set('America/Lima');
-        $fecha = date("d-m-Y H:i:s");
-        header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment; filename=CONSOLIDADO_FORMULARIO N4_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
-        header("Pragma: no-cache");
-        header("Expires: 0");
-        echo $tabla;
+      date_default_timezone_set('America/Lima');
+      $fecha = date("d-m-Y H:i:s");
+      header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=CONSOLIDADO_FORMULARIO N4_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      echo $tabla;
     }
 
 
@@ -241,14 +241,17 @@
 
 
 
-    /*--- FORM 4 EJECUCION PRESUPUESTARIA (PROG-CERT) POR SUBACTIVIDAD (2020 - 2021) EXCEL ---*/
+    /*--- FORM 5 EJECUCION CERTIFICACION POA POR UNIDAD RESPONSABLE (EXCEL) ---*/
     public function requerimientos_servicio($com_id){
       date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");
 
       $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+      $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+      $proyecto=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
+
       $requerimientos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id);
-      $tabla=$this->lista_ejecucion_requerimientos_uresponsable($requerimientos,$com_id); // Requerimientos Unidad responsable 2020-2021
+      $tabla=$this->lista_ejecucion_requerimientos_uresponsable($requerimientos,$proyecto,$componente); // Requerimientos Unidad responsable 2020-2021
 
       header('Content-type: application/vnd.ms-excel');
       header("Content-Disposition: attachment; filename=formulario_N5_".$componente[0]['tipo_subactividad']."_".$componente[0]['serv_descripcion']."_$fecha.xls"); //Indica el nombre del archivo resultante
@@ -260,11 +263,11 @@
       echo $tabla;
     }
 
-     /*----- LISTA DE REQUERIMIENTOS SUBACTIVIDAD (2020-2021-2022-2023) ----*/
-    public function lista_ejecucion_requerimientos_uresponsable($requerimientos,$com_id){
-        $componente=$this->model_componente->get_componente($com_id,$this->gestion);
-        $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
-        $proyecto=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
+
+
+
+     /*----- LISTA DE REQUERIMIENTOS POR UNIDAD RESPONSABLE (2023) ----*/
+    public function lista_ejecucion_requerimientos_uresponsable($requerimientos,$proyecto,$componente){
         $tit='PROYECTO DE INVERSI&Oacute;N';
         $tit_proy=$proyecto[0]['proy_sisin'].'.-'.$proyecto[0]['proy_nombre'];
         if($proyecto[0]['tp_id']==4){
@@ -288,9 +291,9 @@
           </style>';
 
         $tabla.='
-          <table border="0" cellpadding="0" cellspacing="0" class="tabla">
+          <table border="1" cellpadding="0" cellspacing="0" class="tabla">
             <tr class="modo1">
-              <td colspan=5 align=left style="height:50px;">
+              <td colspan=21 align=left style="height:50px;">
                 <b> DA : </b> '.$proyecto[0]['dep_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dep_departamento']), 'cp1252', 'UTF-8').'<br>
                 <b> UE : </b> '.$proyecto[0]['dist_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dist_distrital']), 'cp1252', 'UTF-8').'<br>
                 <b> '.mb_convert_encoding($tit, 'cp1252', 'UTF-8').' : </b> '.mb_convert_encoding($tit_proy, 'cp1252', 'UTF-8').'<br>
@@ -332,8 +335,8 @@
               $tabla.='<tr>';
                 $tabla.='<td style="width:2%; font-size: 15px; height:50px;" align=center><b>'.$row['prod_cod'].'</b></td>';
                 $tabla.='<td style="width:2%; font-size: 15px;" align=center><b>'.$row['par_codigo'].'</b></td>';
-                $tabla.='<td>'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
-                $tabla.='<td>'.strtoupper($row['ins_unidad_medida']).'</td>';
+                $tabla.='<td style="font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
+                $tabla.='<td style="font-family: Arial;">'.strtoupper($row['ins_unidad_medida']).'</td>';
                 $tabla.='<td>'.round($row['ins_cant_requerida'],2).'</td>';
                 $tabla.='<td>'.round($row['ins_costo_unitario'],2).'</td>';
                 $tabla.='<td>'.round($row['ins_costo_total'],2).'</td>';
@@ -352,7 +355,7 @@
                   }
                 }
                 $tabla.='
-                  <td style="width:5%;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
+                  <td style="width:5%;font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>
                 </tr>';
                 $sum_programado=$sum_programado+$row['ins_costo_total'];
                 $sum_certificado=$sum_certificado+$row['ins_monto_certificado'];
@@ -373,8 +376,256 @@
   /// ---------------------------------------------
 
 
+
+  /*--- FORM 5 POA POR UNIDAD RESPONSABLE + PROGRAMAS BOLSAS (EXCEL) ---*/
+  public function consolidado_requerimientos_mas_programas_bolsas_unidad($com_id){
+    date_default_timezone_set('America/Lima');
+    $fecha = date("d-m-Y H:i:s");
+    $tabla='';
+
+    $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+    $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+    $proyecto=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
+    $requerimientos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id);
+
+    ////---- requerimientos del programa original
+    $tabla.=$this->lista_ejecucion_requerimientos_uresponsable($requerimientos,$proyecto,$componente); // Requerimientos Unidad responsable 2020-2021
+    $tabla.='<br>';
+    /// -----------------------------------------
+
+    $programas_bolsas=$this->model_producto->get_lista_form4_uniresp_prog_bolsas($com_id);
+    foreach($programas_bolsas as $row){
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($row['proy_id']); //// DATOS PROYECTO
+        $lista_insumos=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($row['prod_id'],$row['uni_resp']);
+        if(count($lista_insumos)!=0){
+          $tabla.=$this->lista_ejecucion_requerimientos_uresponsable($lista_insumos,$proyecto,$componente); // Requerimientos Unidad responsable 2020-2021
+          $tabla.='<br>';
+        }
+    }
+
+
+    header('Content-type: application/vnd.ms-excel');
+    header("Content-Disposition: attachment; filename=formulario_N5_".$componente[0]['tipo_subactividad']."_".$componente[0]['serv_descripcion']."_$fecha.xls"); //Indica el nombre del archivo resultante
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo "";
+    ini_set('max_execution_time', 0); 
+    ini_set('memory_limit','3072M');
+    echo $tabla;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  /*--- FORM 4 POA POR UNIDAD RESPONSABLE (EXCEL) ---*/
+  public function form4_x_unidad_responsable($com_id){
+    date_default_timezone_set('America/Lima');
+    $fecha = date("d-m-Y H:i:s");
+
+    $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+    $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+    $proyecto=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
+
+    $tit='PROYECTO DE INVERSI&Oacute;N';
+    $tit_proy=$proyecto[0]['proy_sisin'].'.-'.$proyecto[0]['proy_nombre'];
+    if($proyecto[0]['tp_id']==4){
+      $tit_proy=$proyecto[0]['aper_prog'].''.$proyecto[0]['aper_proy'].''.$proyecto[0]['aper_act'].'.-'.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
+      $tit=$proyecto[0]['tipo_adm'];
+    }
+
+
+    $tabla='';
+    $tabla.='
+      <style>
+        table{font-size: 10px;
+          width: 100%;
+          max-width:1550px;
+          overflow-x: scroll;
+        }
+        th{
+          padding: 1.4px;
+          text-align: center;
+          font-size: 10px;
+        }
+      </style>
+      <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+      <tr class="modo1">
+        <td colspan=24 align=left style="height:50px;">
+          <b> DA : </b> '.$proyecto[0]['dep_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dep_departamento']), 'cp1252', 'UTF-8').'<br>
+          <b> UE : </b> '.$proyecto[0]['dist_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dist_distrital']), 'cp1252', 'UTF-8').'<br>
+          <b> '.mb_convert_encoding($tit, 'cp1252', 'UTF-8').' : </b> '.mb_convert_encoding($tit_proy, 'cp1252', 'UTF-8').'<br>
+          <b> UNIDAD RESPONSABLE : </b> '.mb_convert_encoding($componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'], 'cp1252', 'UTF-8').'<br>
+        </td>
+      </tr>
+      </table><br>
+      <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+        <thead>
+         <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
+            <th style="width:1%;height:15px;">#</th>
+            <th style="width:2%;">COD. ACE.</th>
+            <th style="width:2%;">COD. ACP.</th>
+            <th style="width:2%;">COD. OPE.</th>
+            <th style="width:2%;">COD. ACT.</th> 
+            <th style="width:13%;">ACTIVIDAD</th>
+            <th style="width:13%;">RESULTADO</th>
+            <th style="width:9%;">UNIDAD RESPONSABLE</th>
+            <th style="width:12%;">INDICADOR</th>
+            <th style="width:2.5%;">LB.</th>
+            <th style="width:2.5%;">META</th>
+            <th style="width:2.5%;">ENE.</th>
+            <th style="width:2.5%;">FEB.</th>
+            <th style="width:2.5%;">MAR.</th>
+            <th style="width:2.5%;">ABR.</th>
+            <th style="width:2.5%;">MAY.</th>
+            <th style="width:2.5%;">JUN.</th>
+            <th style="width:2.5%;">JUL.</th>
+            <th style="width:2.5%;">AGO.</th>
+            <th style="width:2.5%;">SEPT.</th>
+            <th style="width:2.5%;">OCT.</th>
+            <th style="width:2.5%;">NOV.</th>
+            <th style="width:2.5%;">DIC.</th>
+            <th style="width:9%;">VERIFICACI&Oacute;N</th> 
+        </tr>    
+       
+        </thead>
+        <tbody>';
+        $nro=0;
+        $form4=$this->model_producto->lista_operaciones($componente[0]['com_id']);
+        
+        foreach($form4 as $rowp){
+          $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
+          $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
+          $color=''; $tp='';
+          if($rowp['indi_id']==1){
+            if(($sum[0]['meta_gest'])!=$rowp['prod_meta']){
+              $color='#fbd5d5';
+            }
+          }
+          elseif ($rowp['indi_id']==2) {
+            $tp='%';
+            if($rowp['mt_id']==3){
+              if(($sum[0]['meta_gest'])!=$rowp['prod_meta']){
+                $color='#fbd5d5';
+              }
+            }
+          }
+
+
+
+          $color_or='';
+          if($rowp['or_id']==0){
+            $color_or='#fbd5d5';
+          }
+
+
+          if($proyecto[0]['por_id']==0){
+            $uresp=strtoupper($rowp['prod_unidades']);
+          }
+          else{
+            $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
+            
+            $uresp='';
+            if(count($unidad)!=0){
+              $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+              $uresp='<font size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
+            }
+          }
+
+          $nro++;
+          $tabla.=
+          '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">
+            <td style="width: 1%; height:35px;text-align: center;font-size: 8px;" bgcolor='.$color_or.'><b>'.$nro.'</b></td>
+            <td style="width: 2%; text-align: center;font-size: 9px;" bgcolor='.$color_or.'>'.$rowp['acc_codigo'].'</td>
+            <td style="width: 2%; text-align: center;font-size: 9px;" bgcolor='.$color_or.'>'.$rowp['og_codigo'].'</td>
+            <td style="width: 2%; text-align: center;font-size: 9px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
+            <td style="width: 2%; text-align: center; font-size: 9px;"><b>'.$rowp['prod_cod'].'</b></td>
+            <td style="width: 13%; text-align: left;font-size: 9px; font-family: Arial;">'.$rowp['prod_producto'].'</td>
+            <td style="width: 13%; text-align: left;font-family: Arial;font-size: 9px;">'.$rowp['prod_resultado'].'</td>
+            <td style="width: 9%; text-align: left;font-family: Arial;font-size: 9px;">'.$uresp.'</td>
+            <td style="width: 12%; text-align: left;font-family: Arial;font-size: 9px;">'.$rowp['prod_indicador'].'</td>
+            <td style="width: 2.5%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
+            <td style="width: 2.5%; text-align: center;font-size: 10px;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>';
+
+            if(count($programado)!=0){
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['enero'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['febrero'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['marzo'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['abril'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['mayo'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['junio'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['julio'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['agosto'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['septiembre'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['octubre'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['noviembre'],2).''.$tp.'</td>';
+              $tabla.='<td style="width:2.5%;font-size: 9px;" align=center>'.round($programado[0]['diciembre'],2).''.$tp.'</td>';
+            }
+            else{
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td style="width:2.5%;font-size: 9px;" bgcolor="#f5cace" align=center>0</td>';
+              }
+            }
+
+            $tabla.='
+            <td style="width: 9%; text-align: left;font-family: Arial;font-size: 9px;">'.$rowp['prod_fuente_verificacion'].'</td>
+          </tr>';
+
+        }
+        $tabla.='
+        </tbody>
+      </table>';
+
+    header('Content-type: application/vnd.ms-excel');
+    header("Content-Disposition: attachment; filename=formulario_N4_".$componente[0]['tipo_subactividad']."_".$componente[0]['serv_descripcion']."_$fecha.xls"); //Indica el nombre del archivo resultante
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo "";
+    ini_set('max_execution_time', 0); 
+    ini_set('memory_limit','3072M');
+    echo $tabla;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*--- FORM 4 EJECUCION PRESUPUESTARIA (PROG-CERT) POR SUBACTIVIDAD (2020 - 2021) PDF ---*/
-    public function rep_ejecucion_requerimientos_servicio($com_id){
+  /*  public function rep_ejecucion_requerimientos_servicio($com_id){
         $requerimientos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id);
         $data['componente']=$this->model_componente->get_componente($com_id,$this->gestion);
         $fase=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
@@ -383,10 +634,10 @@
         $data['cabecera']=$this->cabecera($data['componente'],$data['proyecto'],1); /// Cabecera
         $data['requerimientos']=$this->rep_lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id); // Requerimientos Distrital 2020-2021
         $this->load->view('admin/reportes_cns/programacion_poa/reporte_poa_form5', $data);
-    }
+    }*/
 
     /*----- EJECUCION POA REQUERIMIENTOS SUBACTIVIDAD (2020-2021) PDF----*/
-    public function rep_lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id){
+   /* public function rep_lista_ejecucion_requerimientos_subactividad($requerimientos,$com_id){
         $tabla='';
         $tabla.='
           <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;">
@@ -462,11 +713,11 @@
 
             </table>';
       return $tabla;
-    }
+    }*/
 
 
     /*------- Ejecucion presupuestaria al total programado (Nuevo) --------*/
-    public function ejecucion_presupuestaria_acumulado_total($com_id){
+/*    public function ejecucion_presupuestaria_acumulado_total($com_id){
       $tabla='';
       $monto_total=0;
       $ppto_total=$this->model_componente->componente_ppto_total($com_id);
@@ -538,7 +789,7 @@
       }
 
       return $tabla;
-    }
+    }*/
 
 
 
@@ -546,7 +797,7 @@
 
 
     /*------- Ejecucion presupuestaria al trimestre (a borrar) --------*/
-    public function ejecucion_presupuestaria_acumulado($com_id){
+   /* public function ejecucion_presupuestaria_acumulado($com_id){
       $tabla='';
       $monto_total=0;
       $ppto_total=$this->model_evaluacion->suma_ppto_programado_trimestre($com_id); // Prog. al trimestre
@@ -616,10 +867,10 @@
       }
 
       return $tabla;
-    }
+    }*/
 
     /*----- TITULO DEL REPORTE tp:1 (pdf), 2:(Excel) 2021 -----*/
-    public function cabecera($componente,$proyecto,$tp){
+/*    public function cabecera($componente,$proyecto,$tp){
       $tabla='';
       $tabla.=' <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                     <tr>
@@ -660,7 +911,7 @@
                     </tr>
                 </table>';
       return $tabla;
-    }
+    }*/
     /*----------------------------------------------------------------------------------------*/
 
 
@@ -759,7 +1010,7 @@
 
 
     /*------ LISTA DE REQUERIMIENTOS (2019) ------*/
-    public function list_requerimientos($proy_id,$tp_id){
+/*    public function list_requerimientos($proy_id,$tp_id){
       $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); //// DATOS DEL PROYECTO
       $fase = $this->model_faseetapa->get_id_fase($proy_id); //// DATOS FASE ACTIVA
       $tabla ='';
@@ -798,7 +1049,7 @@
           }
   
       return $tabla;
-    }
+    }*/
 
 
 
@@ -806,7 +1057,7 @@
  
 
     /*----- Consolidado por partidas ------*/
-    function list_consolidado_partidas($tp){
+   /* function list_consolidado_partidas($tp){
       $unidades=$this->minsumos->list_consolidado_partidas($tp);
       $tabla='';
       $tabla.='
@@ -858,7 +1109,7 @@
         $tabla.'</tbody>
               </table>';
       return $tabla;
-    }
+    }*/
 
 
    
@@ -904,7 +1155,7 @@
 
 
     /*----------------------------------- PRODUCTOS ----------------------------*/
-    public function temporalizacion_prod($prod_id,$gestion){
+/*    public function temporalizacion_prod($prod_id,$gestion){
         $prod=$this->model_producto->get_producto_id($prod_id); /// Producto Id
         $programado=$this->model_producto->producto_programado($prod_id,$gestion); /// Producto Programado
 
@@ -932,12 +1183,6 @@
         if(count($programado)!=0){
             for ($i=1; $i <=12 ; $i++) { 
                 $prog[1][$i]=$programado[0][$m[$i]];
-               /* $pa=$pa+$prog[1][$i];
-                $prog[2][$i]=$pa+$prod[0]['prod_linea_base'];
-
-              if($prod[0]['prod_meta']!=0){
-                $prog[3][$i]=round(((($pa+$prod[0]['prod_linea_base'])/$prod[0]['prod_meta'])*100),1);
-              }  */
             } 
         }
         
@@ -946,9 +1191,9 @@
           $tr_return .= '<td>'.$prog[1][$i].'</td>';
         }
         return $tr_return;
-    }
+    }*/
 
-    public function actividades($prod_id){
+/*    public function actividades($prod_id){
        $actividad=$this->model_actividad->list_act_anual($prod_id); /// Actividad
        $tabla='';
        $nro_a=0;
@@ -971,10 +1216,10 @@
        }
 
        return $tabla;
-    }
+    }*/
 
     /*----------------------------------- ACTIVIDADES ----------------------------*/
-    public function temporalizacion_act($act_id,$gestion){
+/*    public function temporalizacion_act($act_id,$gestion){
         $act=$this->model_actividad->get_actividad_id($act_id); /// programado
         $programado=$this->model_actividad->actividad_programado($act_id,$gestion); /// Actividad Programado
 
@@ -1002,12 +1247,6 @@
         if(count($programado)!=0){
             for ($i=1; $i <=12 ; $i++) { 
                 $prog[1][$i]=$programado[0][$m[$i]];
-               /* $pa=$pa+$prog[1][$i];
-                $prog[2][$i]=$pa+$act[0]['act_linea_base'];
-
-              if($act[0]['act_meta']!=0){
-                $prog[3][$i]=round(((($pa+$act[0]['act_linea_base'])/$act[0]['act_meta'])*100),2);
-              }  */
             } 
         }
         
@@ -1016,10 +1255,10 @@
             $tr_return .= '<td>'.$prog[1][$i].'</td>';
         }
         return $tr_return;
-    }
+    }*/
 
 
-    public function get_mes($mes_id){
+/*    public function get_mes($mes_id){
       $mes[1]='ENERO';
       $mes[2]='FEBRERO';
       $mes[3]='MARZO';
@@ -1050,9 +1289,9 @@
       $valor[2]=$dias[$mes_id];
 
       return $valor;
-    }
+    }*/
 
-    function mes_nombre(){
+/*    function mes_nombre(){
         $mes[1] = 'ENE.';
         $mes[2] = 'FEB.';
         $mes[3] = 'MAR.';
@@ -1066,9 +1305,9 @@
         $mes[11] = 'NOV.';
         $mes[12] = 'DIC.';
         return $mes;
-    }
+    }*/
     /*------------ MENU -----------*/
-    function menu($mod){
+/*    function menu($mod){
         $enlaces=$this->menu_modelo->get_Modulos($mod);
         for($i=0;$i<count($enlaces);$i++){
           $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
@@ -1090,6 +1329,6 @@
         }
 
         return $tabla;
-    }
+    }*/
 
 }

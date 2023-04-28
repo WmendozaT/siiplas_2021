@@ -129,7 +129,7 @@ class model_producto extends CI_Model {
 
     /*----- GET LISTA DE ACTIVIDADES ALINEADO A LA UNIDAD RESPONSABLE DE LOS PROGRAMAS BOLSA 2023 -----*/
     function get_lista_form4_uniresp_prog_bolsas($com_id){
-        $sql = 'select apg.aper_id,p.proy_id,apg.aper_gestion,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,prod.prod_id,prod.prod_cod,prod.prod_producto, prod.prod_indicador, prod.prod_meta,prod.prod_fuente_verificacion,prod.uni_resp
+        $sql = 'select apg.aper_id,p.proy_id,apg.aper_gestion,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,prod.com_id,prod.prod_id,prod.prod_cod,prod.prod_producto, prod.prod_indicador, prod.prod_meta,prod.prod_fuente_verificacion,prod.uni_resp
                 from _productos prod
                 Inner Join _componentes as c On prod.com_id=c.com_id
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id

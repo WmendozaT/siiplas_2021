@@ -916,7 +916,7 @@ class Cseguimiento extends CI_Controller {
     //$data['base'] = $this->seguimientopoa->menu(4);
     $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
 
-     $s1=' <input type="hidden" name="mes_activo" value='.$this->verif_mes[1].'>';
+      $s1=' <input type="hidden" name="mes_activo" value='.$this->verif_mes[1].'>';
       $s2='';
       $s4='';
       
@@ -924,7 +924,7 @@ class Cseguimiento extends CI_Controller {
       $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id,$this->tmes); /// Tabla para el grafico al trimestre
       $data['calificacion']='
         <hr>
-        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div></fieldset>';
+        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes],0).'</div></fieldset>';
       
       $s1.='
       <div class="row">
@@ -1321,8 +1321,8 @@ class Cseguimiento extends CI_Controller {
         }
         
         /// -----------------------------------------------------
-        $data['operaciones']=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$trm_id); /// Reporte Gasto Corriente, Proyecto de Inversion 2020
-        $data['ejecucion_ppto']=$this->seguimientopoa->ejecucion_presupuestaria_acumulado_total($com_id); /// Ejecucion ppto
+        $data['evaluacion_form4']=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$trm_id); /// Reporte Gasto Corriente, Proyecto de Inversion 2020
+        //$data['ejecucion_ppto']=$this->seguimientopoa->ejecucion_presupuestaria_acumulado_total($com_id); /// Ejecucion ppto
 
         $this->load->view('admin/evaluacion/seguimiento_poa/reporte_evaluacion_trimestral', $data);
       }
@@ -1749,7 +1749,7 @@ class Cseguimiento extends CI_Controller {
       return $tabla;
     }
 
-  /*----- REPORTE NOTIFICACION POA MENSUAL POR GASTO CORRIENTE 2021-2022-2023 -----*/
+  /*----- REPORTE NOTIFICACION POA MENSUAL POR GASTO CORRIENTE 2021-2022-2023 POR UNIDAD -----*/
   public function reporte_notificacion_operaciones_mensual($proy_id){
     $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
     if(count($data['proyecto'])!=0){
@@ -1767,10 +1767,27 @@ class Cseguimiento extends CI_Controller {
     else{
       echo "Error !!!";
     }
-
   }
 
-    
+  
+  /*----- REPORTE NOTIFICACION POA MENSUAL POR GASTO CORRIENTE POR COMPONENTE -----*/
+  public function reporte_notificacion_poa_mensual_componente($com_id){
+    $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+    if(count($componente)!=0){
+      $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+      $data['proyecto']=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
+      $data['verif_mes']=$this->verif_mes;
+      $data['principal']='';
+      $data['cuerpo']=$this->seguimientopoa->get_notificacion_subactividad($com_id); /// unidad operativa
+
+      $this->load->view('admin/evaluacion/seguimiento_poa/reporte_notificacion_seguimiento', $data); 
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
+
+
   /*------ GET CAMBIA MES ACTIVO -----*/
   public function get_update_mes(){
     if($this->input->is_ajax_request() && $this->input->post()){
@@ -1820,7 +1837,7 @@ class Cseguimiento extends CI_Controller {
         $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($this->com_id,$this->tmes); /// Tabla para el grafico al trimestre
 
         $data['calificacion']='<hr>
-        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div></fieldset>';
+        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes],0).'</div></fieldset>';
         $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($this->com_id);
         $data['salir']='<a href="'.site_url("").'/dashboar_seguimiento_poa" title="SALIR" class="btn btn-default">
                           <img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="19"/>&nbsp; SALIR

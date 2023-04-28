@@ -199,7 +199,7 @@ class Model_componente extends CI_Model{
         if($this->gestion==2023){ /// excluyendo a todos los servicios
             $sql = 'select *
                 from vista_subactividades
-                where proy_id='.$proy_id.' and aper_gestion='.$this->gestion.'  and (com_id!=\'6303\' and com_id!=\'6304\' and com_id!=\'6305\' and com_id!=\'6306\' and com_id!=\'6307\' and com_id!=\'6337\')
+                where proy_id='.$proy_id.' and aper_gestion='.$this->gestion.'  and (com_id!=\'6303\' and com_id!=\'6304\' and com_id!=\'6305\' and com_id!=\'6306\' and com_id!=\'6307\' and com_id!=\'6337\' and com_id!=\'6330\')
                 '; 
         }
         else{
@@ -244,7 +244,7 @@ class Model_componente extends CI_Model{
 
 ///// 2021
     /*--- Presupuesto Total Programado por Componente ---*/
-    function componente_ppto_total($com_id){
+/*    function componente_ppto_total($com_id){
         $sql = 'select sum(i.ins_costo_total) total_ppto
                 from _componentes c
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
@@ -255,6 +255,6 @@ class Model_componente extends CI_Model{
                 where pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and c.com_id='.$com_id.' and prod.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\''; 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 }

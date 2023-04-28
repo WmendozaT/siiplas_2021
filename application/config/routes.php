@@ -131,31 +131,22 @@ $route['prog/update_insumos/(:any)'] = 'programacion/crequerimiento/update_id_re
 ///=== Reporte Consolidado POA 2021
 $route['rep/list_operaciones_req'] = 'reportes_cns/rep_operaciones/list_regiones'; ///// Menu Lista de Regiones Consolidado POA (2020-2021)
 $route['rep/get_uadministrativas'] = 'reportes_cns/rep_operaciones/get_unidades_administrativas'; ////// Combo Unidades Administrativas (CONSOLIDADO REPORTES 2020-2021)
-//$route['rep/exportar_operaciones_regional/(:any)'] = 'reportes_cns/exporting_datos/operaciones_regional_nacional/$1/$2'; ///// Exportar Operaciones por regional 
 $route['rep/exportar_operaciones_distrital/(:any)'] = 'reportes_cns/exporting_datos/operaciones_distrital/$1/$2/$3'; ///// Exportar Operaciones por distrital 2020-2021
-//$route['rep/exportar_operaciones_unidad/(:any)'] = 'reportes_cns/exporting_datos/operaciones_unidad/$1'; ///// Exportar Operaciones por Unidad
+
 
 ///=== Reporte Consulta POA Presupuesto por Partidas
 $route['consulta_ppto_poa'] = 'reportes_cns/crep_consultafinanciera/index'; ///// Menu consulta Financiera 2022
 $route['exportar_consulta_ppto_poa/(:any)'] = 'reportes_cns/crep_consultafinanciera/exportar_consulta_financiera/$1/$2/$3'; ///// Menu consulta Financiera 2022
 
 
-//$route['rep/exportar_requerimientos_regional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_regional/$1/$2'; ///// Exportar Requerimientos por regional
+
 $route['rep/exportar_requerimientos_institucional'] = 'reportes_cns/exporting_datos/requerimientos_institucional'; ///// Exportar Requerimientos Institucional
 $route['rep/exportar_requerimientos_distrital/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_distrital/$1/$2/$3'; ///// Exportar Requerimientos por Regional / Distrital 2023
-//$route['rep/exportar_requerimientos_uresponsable/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_distrital/$1/$2/$3'; ///// Exportar Requerimientos por Unidad Responsable 2023
-//$route['rep/exportar_requerimientos_regional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_regional/$1/$2'; ///// Exportar Requerimientos por Regional 2020-2021
-//$route['rep/xls_unidades/(:any)'] = 'reportes_cns/exporting_datos/mis_unidades_pinversion/$1'; ///// Lista de Unidades, Establecimientos de la regional
-//$route['rep/ver_consolidado_requerimientos/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_consolidado/$1'; ///// Exportar Requerimientos Nacional (Consolidado)
-
 $route['rep/exportar_poa_oregional/(:any)']='reportes_cns/exporting_datos/ver_poa_oregional_distrital/$1/$2';// Consolidado operaciones por Objetivo Regional 2020-2021 (Distrital)
+$route['rep/exportar_requerimientos_servicio/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_servicio/$1'; ///// Exportar Requerimientos por Unidad Reponsable (Ejecucion Presupuestaria) (Excel)
+$route['rep/exportar_form4_uresponsable/(:any)'] = 'reportes_cns/exporting_datos/form4_x_unidad_responsable/$1'; ///// Exportar formulario 4 por Unidad Reponsable (Formulario 4) (Excel)
+$route['rep/consolidado_requerimientos_mas_programas_bolsas_unidad/(:any)'] = 'reportes_cns/exporting_datos/consolidado_requerimientos_mas_programas_bolsas_unidad/$1'; ///// Exportar Requerimientos consolidado (mas bolsas) por Unidad Reponsable (Ejecucion Presupuestaria) (Excel)
 
-//$route['rep/exportar_requerimientos_unidad/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_unidad/$1'; ///// Exportar Operaciones por Unidad
-$route['rep/exportar_requerimientos_servicio/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_servicio/$1'; ///// Exportar Requerimientos por Servicio (Ejecucion Presupuestaria) 2020-2021 (Excel)
-$route['rep/rep_requerimientos_ejecucion_servicio/(:any)'] = 'reportes_cns/exporting_datos/rep_ejecucion_requerimientos_servicio/$1'; ///// Imprimir Requerimientos por Servicio (Ejecucion Presupuestaria) 2020-2021
-
-//$route['rep/ver_partida_uni/(:any)'] = 'reportes_cns/exporting_datos/consolidado_partidas_unidad/$1/$2'; ///// Exportar Consolidado de partidas de cada unidad/Establecimiento por REGIONAL
-//$route['rep/ver_partida_consolidado_uni/(:any)'] = 'reportes_cns/exporting_datos/consolidado_nacional_partidas_unidad/$1'; ///// Exportar Consolidado Nacional de partidas de cada unidad/Establecimiento por REGIONAL
 
 $route['rep/comparativo_unidad_ppto/(:any)'] = 'reportes_cns/rep_operaciones/comparativo_presupuesto_distrital/$1/$2/$3'; ///// cuadro comparativo pto asig. poa - Partidas por unidad (DISTRITAL) 2020-2021
 $route['rep/establecimientos/(:any)'] = 'reportes_cns/rep_operaciones/establecimientos_salud/$1/$2'; ///// cuadro Establecimientos de salud (DISTRITAL) 2020-2021
@@ -183,6 +174,8 @@ $route['prog/reporte_datos/(:any)'] = 'programacion/creporte/datos_generales/$1'
 $route['prog/rep_operaciones/(:any)'] = 'programacion/creporte/programacion_fisica/$1';  //// Programacion Fisica
 $route['prog/rep_requerimientos/(:any)'] = 'programacion/creporte/programacion_financiera/$1';  //// Programacion Financiera
 $route['proy/orequerimiento_proceso/(:any)'] = 'programacion/creporte/reporte_formulario5/$1';  //// Reporte requerimiento por Unidad 2022
+$route['rep/rep_form5_consolidado/(:any)'] = 'programacion/creporte/reporte_formulario5_consolidado/$1';  //// Reporte requerimiento por Unidad 2022 (Consolidado + programas bolsas)
+
 $route['proy/ptto_consolidado/(:any)'] = 'programacion/creporte/reporte_presupuesto_consolidado/$1';  //// Reporte requerimiento total Unidad/Establecimiento/Proyecto de Inversion
 $route['proy/ptto_consolidado_comparativo/(:any)'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_comparativo/$1';  //// Reporte Comparativo Total de Ppto Unidad/Establecimiento/Proyecto de Inversion
 $route['ptto_consolidado_comparativo_regional/(:any)'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_comparativo_regional/$1/$2';  //// Reporte Comparativo Total de Ppto Unidad/Establecimiento/Proyecto de Inversion REGIONAL
@@ -354,7 +347,8 @@ $route['seg/ver_reporte_seguimientopoa/(:any)'] = 'ejecucion/cseguimiento/ver_re
 $route['seg/ver_reporte_evaluacionpoa/(:any)'] = 'ejecucion/cseguimiento/ver_reporteevalpoa/$1/$2'; ///// Ver Reporte Evaluacion POA Trimestral
 $route['seg/ver_reporte_evaluacionpoa_temporalidad/(:any)'] = 'ejecucion/cseguimiento/ver_reporteevalpoa_consolidado_temporalidad/$1'; ///// Ver Reporte Evaluacion POA Consolidado de todos los meses
 
-$route['seg/notificacion_operaciones_mensual/(:any)'] = 'ejecucion/cseguimiento/reporte_notificacion_operaciones_mensual/$1'; ///// Reporte Notificacion Seguimiento POA Mensual
+$route['seg/notificacion_operaciones_mensual/(:any)'] = 'ejecucion/cseguimiento/reporte_notificacion_operaciones_mensual/$1'; ///// Reporte Notificacion Seguimiento POA Mensual UNIDAD/PROY
+$route['seg/notificacion_poa_componente_mensual/(:any)'] = 'ejecucion/cseguimiento/reporte_notificacion_poa_mensual_componente/$1'; ///// Reporte Notificacion Seguimiento POA Mensual COMPONENTE
 $route['seg/reporte_consolidado_seguimientopoa_mensual/(:any)'] = 'ejecucion/cseguimiento/reporte_consolidadopoa_operaciones_mensual/$1/$2'; ///// Reporte formulario Seguimiento POA Mensual
 
 /*--- SEGUIMIENTO EVALUACION POA (GASTO CORRIENTE-PROYECTO DE INVERSION 2021) ---*/

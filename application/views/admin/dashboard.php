@@ -92,9 +92,13 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li>
             <?php
-              if($this->session->userdata('tp_adm')==1){ ?>
+              if($this->session->userdata('tp_adm')==1 || $this->session->userdata('rol_id')!=10){ ?>
+                <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li>
+                <?php
+              }
+
+              if($this->session->userdata('tp_adm')==1 || $this->session->userdata('rol_id')!=10){ ?>
                 <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_tr" title="CAMBIAR TRIMESTRE">Trimestre</a></li>
                 <?php
               }
@@ -102,12 +106,14 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Descarga de Archivos / Documentos">Descargas <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="<?php echo base_url(); ?>assets/video/configurar_csv.mp4" style="cursor: pointer;" download>Configurar equipo a .CSV</a></li>
-                <li class="divider"></li>
+                <li><a href="<?php echo base_url(); ?>assets/video/FORM_MOD_4_Y_5_2023.xlsx" style="cursor: pointer;" download>Descargar Formulario de Modificacion POA 2023</a></li>
+                <li><a href="<?php echo base_url(); ?>assets/video/FORM_SOL_POA_5_2023.xlsx" style="cursor: pointer;" download>Descargar Formulario de Certificacion POA 2023</a></li>
+                
+               <!--  <li class="divider"></li>
                 <li class="dropdown-header">Archivos/Tutoriales</li>
                 <li><a href="<?php echo base_url(); ?>assets/video/SEGUIMIENTO_POA.pdf" style="cursor: pointer;" download>Manual Notificacion POA</a></li>
                 <li><a href="<?php echo base_url(); ?>assets/video/SEGUIMIENTO_POA_2021_ES.pdf" style="cursor: pointer;" download>Seguimiento POA</a></li>
-                <li><a href="<?php echo base_url(); ?>assets/video/plantilla_migracion_poa.xlsx" style="cursor: pointer;" download>Plantilla de Migracion POa 2022</a></li>
+                <li><a href="<?php echo base_url(); ?>assets/video/plantilla_migracion_poa.xlsx" style="cursor: pointer;" download>Plantilla de Migracion POa 2022</a></li> -->
               </ul>
             </li>
           </ul>

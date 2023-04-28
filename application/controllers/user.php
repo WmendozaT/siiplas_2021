@@ -449,7 +449,7 @@ class User extends CI_Controller{
                     '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                         <a href="'.base_url().'index.php/consulta/poa_ofc"  onclick="gasto_corriente_ofc()" class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
-                            <img class="img-circle" src="'.base_url().'assets/img/impresora.png"  style="margin-left:0px; width: 95px"/>
+                            <img class="img-circle" src="'.base_url().'assets/img/proyectos.png"  style="margin-left:0px; width: 95px"/>
                             <h1 style="font-size: 11px;"><b>POA OFICINA CENTRAL / '.$this->gestion.'</b></h1>
                         </div>
                         </a>
@@ -481,7 +481,7 @@ class User extends CI_Controller{
                     '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                         <a href="'.base_url().'index.php/ejecucion_proyectos_inversion"  onclick="inversion()" class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
-                            <img class="img-circle" src="'.base_url().'assets/img/ejecucion.png"  style="margin-left:0px; width: 95px"/>
+                            <img class="img-circle" src="'.base_url().'assets/img/gerencia.png"  style="margin-left:0px; width: 95px"/>
                             <h1 style="font-size: 11px;"><b>PROYECTOS DE INVERSIÓN / '.$this->gestion.'</b></h1>
                         </div>
                         </a>
