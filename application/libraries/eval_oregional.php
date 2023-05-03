@@ -183,6 +183,7 @@ class Eval_oregional extends CI_Controller{
                     <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">OPERACI&Oacute;N</th>
                     <th style="width:11%;color:#FFF; text-align: center" bgcolor="#1c7368">RESULTADO</th>
                     <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">INDICADOR</th>
+                    <th style="width:5%;color:#FFF; text-align: center" bgcolor="#1c7368">TP. INDI.</th>
                     <th style="width:10%;color:#FFF; text-align: center" bgcolor="#1c7368">MEDIO VERIFICACI&Oacute;N</th>
                     <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META</th>
                     <th style="width:2%;color:#FFF; text-align: center" bgcolor="#1c7368">META ALINEADO</th>
@@ -243,6 +244,7 @@ class Eval_oregional extends CI_Controller{
                         <td style="width:11%;">'.$row['or_objetivo'].'</td>
                         <td style="width:11%;">'.$row['or_resultado'].'</td>
                         <td style="width:10%;">'.$row['or_indicador'].'</td>
+                        <td style="width:5%;"><b>'.strtoupper($row['indi_descripcion']).'</b></td>
                         <td style="width:10%;">'.$row['or_verificacion'].'</td>
                         <td style="width:2%; font-size: 15px;" align=center><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
                         <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
@@ -526,7 +528,7 @@ class Eval_oregional extends CI_Controller{
     public function create_temporalidad_oregional($dep_id){
       $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
       foreach($lista_ogestion as $row){
-
+        //echo $row['og_id'].'/'.$row['or_id'].'.-  '.$row['og_codigo'].'.'.$row['or_codigo'].'---'.$row['indi_id'].'<br>';
         if($row['indi_id']==1 || $row['indi_id']==3){
           $denominador=1;
           $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
@@ -551,13 +553,18 @@ class Eval_oregional extends CI_Controller{
               $metas_prioritarios=round($metas_prior[0]['meta_prog_actividades'],2);
             }
             elseif($row['indi_id']==2) { /// Recurrente
-              $metas_prioritarios=round($metas_prior[0]['meta_prog_actividades'],2);
+              $suma_meta_form4_alineados_todos=$this->model_objetivoregion->get_suma_meta_form4_alineado_x_oregional_todos($row['or_id']);
+              if(count($suma_meta_form4_alineados_todos)!=0){
+                $metas_prioritarios=round(($suma_meta_form4_alineados_todos[0]['suma_meta']/count($this->model_objetivoregion->get_lista_form4_alineado_x_oregional_todos($row['or_id']))),2);
+              }
+
+              //$metas_prioritarios=round($metas_prior[0]['meta_prog_actividades'],2);
               $denominador=$metas_prior[0]['nro']*3;
             }
             elseif($row['indi_id']==3){ /// Acumulativo 
               $metas_prioritarios=round($metas_prior[0]['nro'],2);
             } 
-
+            //echo round($row['or_meta'],2).'----'.$metas_prioritarios.'<br>';
             if(round($row['or_meta'],2)==$metas_prioritarios) { /// META == META ACUMULADO FORN 4
               /// creamos registro
                 for ($i=1; $i <=4 ; $i++) { 

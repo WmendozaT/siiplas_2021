@@ -118,7 +118,9 @@ class Model_objetivoregion extends CI_Model{
         $sql = 'select *
                 from objetivo_programado_mensual opg
                 Inner Join objetivo_gestion as og On og.og_id=opg.og_id
+
                 Inner Join objetivos_regionales as oreg On opg.pog_id=oreg.pog_id
+                Inner Join indicador as tp On oreg.indi_id=tp.indi_id
                 where opg.og_id='.$og_id.' and opg.dep_id='.$dep_id.' and oreg.estado!=\'3\'
                 order by oreg.or_codigo,oreg.or_id asc';
 
@@ -393,6 +395,33 @@ class Model_objetivoregion extends CI_Model{
         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
         where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\' and pr.indi_id=\'2\' and pr.mt_id=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\'
         group by pr.or_id';
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+
+    /*----- verif lista actividades alineados (todos)-----*/
+    public function get_lista_form4_alineado_x_oregional_todos($or_id){
+        $sql = '
+        select *
+        from _productos
+        where or_id='.$or_id.' and prod_priori=\'1\' and estado!=\'3\'';
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+
+    /*----- get suma meta de actividades alineados a operacion (todos)-----*/
+    public function get_suma_meta_form4_alineado_x_oregional_todos($or_id){
+        $sql = '
+        select or_id, SUM(prod_meta) suma_meta
+        from _productos
+        where or_id='.$or_id.' and prod_priori=\'1\' and estado!=\'3\'
+        group by or_id';
 
         $query = $this->db->query($sql);
 

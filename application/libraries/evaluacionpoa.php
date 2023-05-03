@@ -566,13 +566,13 @@ class Evaluacionpoa extends CI_Controller{
     $unidades=$this->model_evalinstitucional->list_unidades_organizacionales($tp_uni,$id);
     $distrital=$this->model_proyecto->dep_dist($id);
     
-    if($tp_uni==0){
+    if($tp_uni==0){ //// Regional
       $titulo_consolidado='% CONSOLIDADO ';
       $eficacia_distrital=$this->tabla_regresion_lineal_regional($id); /// Eficacia
       $economia_distrital=$this->economia_por_regional($id); /// Economia
       $eficiencia_distrital=$this->eficiencia_por_regional($eficacia_distrital[5][$this->tmes],$economia_distrital[3]); /// Eficiencia
     }
-    else{
+    else{ ///// Distrital
       $distrital=$this->model_proyecto->dep_dist($id);
       $titulo_consolidado='% CONSOLIDADO ';
       $eficacia_distrital=$this->tabla_regresion_lineal_distrital($id); /// Eficacia

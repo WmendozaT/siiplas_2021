@@ -50,6 +50,7 @@ class Cevaluacion_form2 extends CI_Controller {
       }
 
       $this->load->view('admin/evaluacion/evaluacion_form2/menu_regionales', $data);
+      //echo $this->eval_oregional->create_temporalidad_oregional(8);
     }
 
 

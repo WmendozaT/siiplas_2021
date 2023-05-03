@@ -58,7 +58,7 @@ class Eval_acp extends CI_Controller{
     } 
 
     /*---- LISTA DE REGIONALES FORM 1 ----*/
-    public function regionales(){
+/*    public function regionales(){
       $regionales=$this->model_proyecto->list_departamentos();
       $trimestre=$this->model_evaluacion->trimestre();
       $tabla='
@@ -90,7 +90,7 @@ class Eval_acp extends CI_Controller{
         </article>';
 
       return $tabla;
-    }
+    }*/
 
   //// FORMULARIO 1 POR REGIONAL 2022
   public function formulario_n1_regional($dep_id){
@@ -416,7 +416,7 @@ class Eval_acp extends CI_Controller{
 
 //////=============== PARA REPORTE DE EVALUACION DE ACP FORM 1
   /*---- LISTA DE REGIONALES FORM 1 ----*/
-  public function listado_regionales(){
+/*  public function listado_regionales(){
   $tabla='';
   $regionales=$this->model_proyecto->list_departamentos();
   $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
@@ -448,7 +448,7 @@ class Eval_acp extends CI_Controller{
         </div>
       </article>';
     return $tabla;
-  }
+  }*/
 
 
 
@@ -498,7 +498,7 @@ class Eval_acp extends CI_Controller{
 
 
 /*--- MATRIZ EVALUACION DE METAS ACP REGIONAL 2022 ---*/
-  public function matriz_evaluacion_meta_acp_regional($dep_id){
+/*  public function matriz_evaluacion_meta_acp_regional($dep_id){
     $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
     $nro=0;
     foreach($acp_regional as $row){
@@ -547,11 +547,11 @@ class Eval_acp extends CI_Controller{
     }
 
     return $tab;
-  }
+  }*/
 
 
  /*--- GET SUMA TOTAL EVALUADO ---*/
-  public function get_suma_total_evaluado($pog_id){
+/*  public function get_suma_total_evaluado($pog_id){
     $sum=0;
     for ($i=1; $i <=$this->tmes; $i++) { 
       $obj_gestion_evaluado=$this->model_objetivogestion->get_objetivo_programado_evaluado_trimestral($i,$pog_id);
@@ -561,10 +561,10 @@ class Eval_acp extends CI_Controller{
     }
 
     return $sum;
-  }
+  }*/
 
  /*--- DETALLE ACP REGIONAL ---*/
-  public function detalle_acp($eval,$nro,$tp_rep){
+/*  public function detalle_acp($eval,$nro,$tp_rep){
     $tabla='';
     if($tp_rep==1){ /// normal
       $font_size='style="font-size: 9px;"';
@@ -612,7 +612,7 @@ class Eval_acp extends CI_Controller{
       </table>';
 
     return $tabla;
-  }
+  }*/
 
 
 /*---- CABECERA REPORTE SEGUIMIENTO ACP (GRAFICO)----*/

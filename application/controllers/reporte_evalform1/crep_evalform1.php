@@ -41,26 +41,82 @@ class Crep_evalform1 extends CI_Controller {
     /// MENU EVALUACIÓN POA FORM 1
     public function menu_eval_acp(){
       $data['menu']=$this->eval_acp->menu(7); //// genera menu
-      $data['regional']=$this->eval_acp->listado_regionales();
-      $data['da']=$this->model_proyecto->list_departamentos();
+      $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+      $matriz=$this->matriz_cumplimiento_form1_institucional();
       $tabla='';
-      $tabla.='<div class="well">
-                <div class="jumbotron">
-                  <h1>Evaluaci&oacute;n A.C.P. '.$this->gestion.'</h1>
-                    <p>
-                      Reporte consolidado de evaluaci&oacute;n de Acciones de Corto Plazo acumulado al '.$this->trimestre[0]['trm_descripcion'].' de '.$this->gestion.' a nivel Institucional, Regional.
-                    </p>
+      $tabla.=' 
+      <input name="base" type="hidden" value="'.base_url().'">
+      <input name="gestion" type="hidden" value="'.$this->gestion.'">
+      <article class="col-sm-12">
+        <div class="well">
+          <form class="smart-form">
+            <header><b>CONSOLIDADO EVALUACI&Oacute;N INSTITUCIONAL A.C.P. - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
+            <fieldset>          
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  <div id="Evaluacion">
+                    <div id="container" style="width: 1000px; height: 900px; margin: 0 auto"></div>
+                  </div>
                 </div>
-              </div>';
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  HOLA MUNDO
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </article>';
 
-      $data['titulo_modulo']=$tabla;
+      $data['informacion']=$tabla;
+      $data['matriz']=$matriz;
+      $data['nro']=count($this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2());
 
       $this->load->view('admin/reportes_cns/repevaluacion_form1/rep_menu', $data);
     }
 
 
+
+  //// Matriz lista de cumplimiento de Form 1 Institucional 
+  public function matriz_cumplimiento_form1_institucional(){
+    $lista_acp=$this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2();
+     for ($i=0; $i <count($lista_acp); $i++) { 
+      for ($j=0; $j <4 ; $j++) { 
+        $matriz[$i][$j]=0;
+      } 
+     }
+
+     $nro=0;
+     foreach($lista_acp as $row){
+      $get_trm_ejec=$this->model_objetivogestion->get_ejec_acp_institucional_ejecutado($row['og_id']); /// Temporalidad Ejecutado
+      $ejec_form1_institucional=0;
+      if(count($get_trm_ejec)!=0){
+        $ejec_form1_institucional=$get_trm_ejec[0]['ejecutado'];
+      }  
+
+
+        $matriz[$nro][0]='<b>ACP.- '.$row['og_codigo'].'</b>'; /// cod OG
+        $matriz[$nro][1]=$row['og_objetivo']; /// detalle OG
+        $matriz[$nro][2]=$row['programado_total']; /// Programado Total
+        $matriz[$nro][3]=$ejec_form1_institucional; /// ejecutado Total
+        $ejecutado=0;
+        if($row['programado_total']!=0){
+          $ejecutado=round((($ejec_form1_institucional/$row['programado_total'])*100),2);
+        }
+        $matriz[$nro][4]=$ejecutado; /// ejecutado Total %
+
+        $nro++;
+     }
+
+     return $matriz;
+  }
+
+
+
+
+
+
     /*-------- GET CUADRO EVALUACION A.CP.--------*/
-    public function get_cuadro_evaluacion_objetivos(){
+/*    public function get_cuadro_evaluacion_objetivos(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $dep_id = $this->security->xss_clean($post['dep_id']); // dep id, 0: Nacional
@@ -76,11 +132,11 @@ class Crep_evalform1 extends CI_Controller {
       }else{
           show_404();
       }
-    }
+    }*/
 
 
   //// EVALUACIÓN ACP REGIONAL INSTITUCIONAL - IFRAME
-  public function evaluacion_objetivos($id){
+/*  public function evaluacion_objetivos($id){
     $data['trimestre']=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
     $tabla='';
     $dep_id=$id;
@@ -122,10 +178,10 @@ class Crep_evalform1 extends CI_Controller {
     $data['tabla_pastel_todo']=$this->eval_acp->tabla_gcumplimiento($data['matriz_pastel'],2,1);
 
     $this->load->view('admin/reportes_cns/repevaluacion_form1/reporte_grafico_eval_consolidado_regional_form1', $data);
-  }
+  }*/
 
   /*--- Detalle de evaluacion de informacion del trimestre ---*/
-  public function get_detalle_eval_trimestre($dep_id){
+/*  public function get_detalle_eval_trimestre($dep_id){
     $tabla='';
     $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
     $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
@@ -160,5 +216,5 @@ class Crep_evalform1 extends CI_Controller {
     $tabla.='</table>';
 
     return $tabla;
-  }
+  }*/
 }

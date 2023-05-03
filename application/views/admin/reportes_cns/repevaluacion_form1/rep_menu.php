@@ -92,14 +92,8 @@
             </div>
             <!-- MAIN CONTENT -->
                 <div id="content">
-                    <section id="widget-grid" class="">
-                        <div class="row">
-                            <?php echo $regional;?>
-                        </div>
-                        
-                        <div id="lista_consolidado"><?php echo $titulo_modulo;?></div>
-                    </section>
-            </div>
+                    <?php echo $informacion;?>
+                </div>
             <!-- END MAIN CONTENT -->
         </div>
         <!-- END MAIN PANEL -->
@@ -122,6 +116,9 @@
                 document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
             }
         </script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
@@ -143,8 +140,87 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
         <!-- JQUERY UI + Bootstrap Slider -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
-        <script src="<?php echo base_url(); ?>mis_js/seguimientoacp/evaluacionacp.js"></script> 
+        <!-- <script src="<?php echo base_url(); ?>mis_js/seguimientoacp/evaluacionacp.js"></script>  -->
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
+
+        <script type="text/javascript">
+        Highcharts.chart('container', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: '<b>EVALUACIÓN FORMULARIO N° 1</b>'
+            },
+            subtitle: {
+                text: '<b>CUMPLIMIENTO DE ACCIONES DE CORTO PLAZO AL <?php echo $trimestre[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></b>'
+            },
+            xAxis: {
+              categories: [
+                <?php 
+                  for ($i=0; $i <$nro ; $i++){ 
+                    ?>
+                      '<?php echo $matriz[$i][0];?> ',
+                    <?php
+                  } 
+                ?>
+              ],
+              title: {
+                  text: null
+              }
+            },
+            yAxis: {
+              min: 0,
+              title: {
+                  text: 'CUMPLIMIENTO (%)',
+                  align: 'high'
+              },
+              labels: {
+                  overflow: 'Acciones de Corto Plazo Institucional'
+              }
+            },
+            tooltip: {
+                valueSuffix: '%'
+            },
+            plotOptions: {
+              bar: {
+                  dataLabels: {
+                    enabled: true
+                  }
+              }
+            },
+
+            credits: {
+                enabled: false
+            },
+
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.1f}%'
+                    }
+                },
+                column: {
+                    borderRadius: '55%'
+                }
+            },
+
+            series: [{
+              name: 'CUMPLIMIENTO %',
+              color: '#296860',
+              data: [
+                <?php 
+                  for ($i=0; $i <$nro ; $i++){ 
+                    ?>
+                      <?php echo $matriz[$i][4];?>,
+                    <?php
+                  } 
+                ?>
+              ]
+            }]
+        });
+        </script>
     </body>
 </html>
