@@ -4176,3 +4176,31 @@ group by opge.g_id,og.og_id,og.og_codigo,og.og_objetivo,og.og_producto,og.og_res
 order by opge.g_id,og.og_codigo,oreg.or_codigo asc;
 
 $$ LANGUAGE sql;
+
+
+
+///======================== FUNCION LISTA DE FORM2 ALINEADOS A ACTIVIDADES PROGRAMADO AL TRIMESTRE
+CREATE OR REPLACE FUNCTION lista_form2_operaciones_alineados_a_form4_al_trimestre(gestion integer, trimestre integer) RETURNS TABLE(
+g_id integer,
+og_id integer,
+og_codigo integer,
+og_objetivo varchar,
+og_producto varchar,
+og_resultado varchar,
+
+or_id integer,
+or_codigo integer,
+or_objetivo varchar,
+programado_total numeric) AS
+
+$$
+select opge.g_id,og.og_id,og.og_codigo,og.og_objetivo,og.og_producto,og.og_resultado,oreg.or_id,oreg.or_codigo,oreg.or_objetivo,SUM(temprog.pg_fis) programado_total
+from temp_trm_prog_objetivos_regionales temprog
+Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
+Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+Inner Join objetivo_gestion as og on og.og_id = opge.og_id
+where oreg.estado!=3 and opge.g_id=gestion and (temprog.trm_id>0 and temprog.trm_id<=trimestre)
+group by opge.g_id,og.og_id,og.og_codigo,og.og_objetivo,og.og_producto,og.og_resultado,oreg.or_id,oreg.or_codigo,oreg.or_objetivo
+order by opge.g_id,og.og_codigo,oreg.or_codigo asc;
+
+$$ LANGUAGE sql;
