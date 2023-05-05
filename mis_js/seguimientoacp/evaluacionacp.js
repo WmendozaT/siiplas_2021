@@ -7,8 +7,6 @@ function abreVentana_eficiencia(PDF){
   window.open(direccion, "EVALUACION ACP" , "width=800,height=700,scrollbars=NO") ; 
 }
 
-
-
   function doSearch(){
     var tableReg = document.getElementById('datos');
     var searchText = document.getElementById('searchTerm').value.toLowerCase();
@@ -52,8 +50,46 @@ function abreVentana_eficiencia(PDF){
   }
 
 
+
+
+
+
+  //// imprimir ACP (Institucional)
+  function imprimir_grafico() {
+    var grafico = document.querySelector("#grafico1");
+    document.getElementById("cabecera").style.display = 'block';
+    var cabecera = document.querySelector("#cabecera");
+    //var eficacia = document.querySelector("#calificacion");
+    document.getElementById("tabla_impresion_detalle").style.display = 'block';
+    var tabla = document.querySelector("#tabla_impresion_detalle");
+    imprimirevaluacionform1(grafico,cabecera,tabla);
+    document.getElementById("cabecera").style.display = 'none';
+    document.getElementById("tabla_impresion_detalle").style.display = 'none';
+  }
+
+  function imprimirevaluacionform1(grafico,cabecera,tabla) {
+    var ventana = window.open('Evaluacion FORMULARIO N° 1 ', 'PRINT', 'height=800,width=1000');
+    ventana.document.write('<html><head><title>EVALUACION ACCIONES DE CORTO PLAZO INSTITUVIONAL - FORM. N° 1</title>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    ventana.document.write(cabecera.innerHTML);
+    //ventana.document.write('<hr>');
+   // ventana.document.write(eficacia.innerHTML);
+    ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(tabla.innerHTML);
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.onload = function() {
+      ventana.print();
+      ventana.close();
+    };
+    return true;
+  }
+
   //// LISTA DE REGIONALES PARA GENERAR LOS FORM 1
-  $("#d_id").change(function () {
+/*  $("#d_id").change(function () {
     $("#d_id option:selected").each(function () {
       dep_id=$(this).val();
       if(dep_id!=0){
@@ -85,14 +121,14 @@ function abreVentana_eficiencia(PDF){
         $('#titulo_lista').html('');
       }
     });
-  });
+  });*/
 
 
 
 
  /// ACP FORMULARIO N 1
   /// Funcion para guardar datos de Evaluacion POA ACP Regional 2022
-  function guardar_acp_regional(pog_id){
+/*  function guardar_acp_regional(pog_id){
     tp=($('[id="tp'+pog_id+'"]').val());
     ejec=($('[id="ejec'+pog_id+'"]').val());
     mverificacion=($('[id="mverificacion'+pog_id+'"]').val());
@@ -157,12 +193,12 @@ function abreVentana_eficiencia(PDF){
     });
 
     }
-  }
+  }*/
 
 
   /// ACP FORM 1
   //// Verificando valor ejecutado registrado 2022
-  function verif_valor_ejecucion(pog_id,valor_registrado){
+/*  function verif_valor_ejecucion(pog_id,valor_registrado){
     if(valor_registrado!=''){
         var url = base+"index.php/ejecucion/cevaluacion_form1/get_datos_acp_regional";
         var request;
@@ -230,7 +266,7 @@ function abreVentana_eficiencia(PDF){
       $('#btn_eval'+pog_id).slideUp();
     }
 
-  }
+  }*/
 
 
 
@@ -251,7 +287,7 @@ function abreVentana_eficiencia(PDF){
 
 ///// MODULO DE REPORTES ACP FORM 1
 ////------- menu select regionales
-  $("#dep_id").change(function () {
+/*  $("#dep_id").change(function () {
     $("#dep_id option:selected").each(function () {
       dep_id=$(this).val();
       if(dep_id!=''){
@@ -280,5 +316,5 @@ function abreVentana_eficiencia(PDF){
         $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Evaluaci&oacute;n A.C.P. '+gestion+'</h1></div></div>');
       }
     });
-  });
+  });*/
 

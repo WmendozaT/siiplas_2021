@@ -333,10 +333,6 @@ class Eval_oregional extends CI_Controller{
 
 
 
-
-
-
-
     /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL (TRIMESTRAL) 2022 --*/
     public function get_temporalidad_objetivo_regional($or_id,$tp_rep){
       /// tp_rep=0 normal

@@ -92,7 +92,39 @@
             </div>
             <!-- MAIN CONTENT -->
                 <div id="content">
-                    <?php echo $informacion;?>
+                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="well well-sm well-light">
+                            <form class="smart-form">
+                            <header><h2><b>EVALUACI&Oacute;N DE A.C.P. (FORMULARIO N° 1) </b> - INSTITUCIONAL</h2></header>
+                            <fieldset>          
+                                <div class="row">
+                                    <div id="tabs">
+                                        <ul>
+                                            <li>
+                                                <a href="#tabs-a"><b>CUMPLIMIENTO TRIMESTRAL</b></a>
+                                            </li>
+                                            <li>
+                                                <a href="#tabs-b"><b>CUMPLIMIENTO ANUAL</b></a>
+                                            </li>
+                                        </ul>
+                                        <div id="tabs-a">
+                                            <div class="row">
+                                              hhfghfg
+                                            </div>
+                                        </div>
+
+                                        <div id="tabs-b">
+                                            <div class="row">
+                                                <?php echo $informacion;?>
+                                                <button onClick="imprimir_grafico()" >IMPRIMIR CUADRO</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            </form>
+                        </div>
+                    </article>
                 </div>
             <!-- END MAIN CONTENT -->
         </div>
@@ -118,7 +150,6 @@
         </script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
@@ -140,17 +171,17 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
         <!-- JQUERY UI + Bootstrap Slider -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
-        <!-- <script src="<?php echo base_url(); ?>mis_js/seguimientoacp/evaluacionacp.js"></script>  -->
+        <script src="<?php echo base_url(); ?>mis_js/seguimientoacp/evaluacionacp.js"></script>
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
 
         <script type="text/javascript">
-        Highcharts.chart('container', {
+        Highcharts.chart('grafico1', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: '<b>EVALUACIÓN FORMULARIO N° 1</b>'
+                text: '<b>EVALUACIÓN A.C.P. INSTITUCIONAL - GESTIÓN <?php echo $this->session->userData('gestion');?></b>'
             },
             subtitle: {
                 text: '<b>CUMPLIMIENTO DE ACCIONES DE CORTO PLAZO AL <?php echo $trimestre[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></b>'
@@ -221,6 +252,15 @@
               ]
             }]
         });
+        </script>
+        <script type="text/javascript">
+            // DO NOT REMOVE : GLOBAL FUNCTIONS!
+            $(document).ready(function() {
+                pageSetUp();
+                $("#menu").menu();
+                $('.ui-dialog :button').blur();
+                $('#tabs').tabs();
+            })
         </script>
     </body>
 </html>

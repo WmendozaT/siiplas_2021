@@ -39,7 +39,7 @@ class Cevaluacion_form1 extends CI_Controller {
 
 
   /*-- MENU ACP --*/
-  public function menu_acp(){
+  /*public function menu_acp(){
     $data['menu']=$this->eval_acp->menu(4); //// genera menu
     $data['titulo']=$this->eval_acp->titulo();
     $configuracion=$this->model_configuracion->get_configuracion_session();
@@ -70,12 +70,12 @@ class Cevaluacion_form1 extends CI_Controller {
 
     $this->load->view('admin/evaluacion/evaluacion_form1/menu_regionales', $data);
 //    echo $this->eval_acp->formulario_n1_regional(10);
-  }
+  }*/
 
 
 
   /*---- FUNCION GET LISTA DE FORMULARIO 1 POR REGIONAL --------*/
-  public function get_lista_form1_x_regionales(){
+/*  public function get_lista_form1_x_regionales(){
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
       $dep_id = $this->security->xss_clean($post['dep_id']); /// Regional
@@ -91,12 +91,12 @@ class Cevaluacion_form1 extends CI_Controller {
     }else{
         show_404();
     }
-  }
+  }*/
 
 
 
   /*------- GET OBJETIVO REGIONAL -------*/
-  public function get_datos_acp_regional(){
+/*  public function get_datos_acp_regional(){
     if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $pog_id = $this->security->xss_clean($post['pog_id']);
@@ -126,7 +126,7 @@ class Cevaluacion_form1 extends CI_Controller {
     }else{
         show_404();
     }
-  }
+  }*/
 
 
 
@@ -135,7 +135,7 @@ class Cevaluacion_form1 extends CI_Controller {
 
 
   /*---- VALIDA ADD/UPDATE EVALUACION POA ACP 2022 ----*/
-  public function valida_update_evaluacion_acp(){
+/*  public function valida_update_evaluacion_acp(){
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
       $pog_id = $this->security->xss_clean($post['pog_id']);
@@ -211,7 +211,7 @@ class Cevaluacion_form1 extends CI_Controller {
     }else{
         show_404();
     }
-  }
+  }*/
 
 
 }

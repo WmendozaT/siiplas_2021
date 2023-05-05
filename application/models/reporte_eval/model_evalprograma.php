@@ -36,7 +36,31 @@ class Model_evalprograma extends CI_Model{
                 order by aper.aper_programa asc';
         }
         else{ /// gasto corriente
-            $sql = '
+            if($this->gestion>2022){
+                $sql = '
+                select aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,count(*) total_actividad
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join (
+                select apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion 
+                from aperturaprogramatica apg
+                where aper_gestion='.$this->gestion.' and aper_asignado=\'1\' and aper_estado!=\'3\'
+
+                ) as aper On aper.aper_programa=apg.aper_programa
+                        
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+                Inner Join _proyectofaseetapacomponente as pf On pf.proy_id=p.proy_id
+                Inner Join vista_componentes_dictamen as c On c.proy_id=p.proy_id
+                Inner Join _productos as prod On prod.com_id=c.com_id
+
+                where pf.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\')
+                group by aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion
+                order by aper.aper_programa asc';
+            }
+            else{
+                $sql = '
                 select aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,count(*) total_actividad
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -57,6 +81,8 @@ class Model_evalprograma extends CI_Model{
                 where pf.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'
                 group by aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion
                 order by aper.aper_programa asc';
+            }
+            
         }
 
         
@@ -98,7 +124,27 @@ class Model_evalprograma extends CI_Model{
                 group by apg.aper_programa';
         }
         else{
-            $sql = 'select apg.aper_programa,count(*) total
+            if($this->gestion>2022){
+                $sql = 'select apg.aper_programa,count(*) total
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+                
+                Inner Join vista_componentes_dictamen as c On c.proy_id=p.proy_id
+                Inner Join _productos as prod On prod.com_id=c.com_id
+                Inner Join (
+                        select prod_id
+                        from prod_programado_mensual
+                        where g_id='.$this->gestion.' and (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
+                        group by prod_id
+                    ) as pprog On pprog.prod_id=prod.prod_id
+                where apg.aper_programa=\''.$programa.'\' and prod.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\')
+                group by apg.aper_programa';
+            }
+            else{
+                $sql = 'select apg.aper_programa,count(*) total
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
@@ -115,6 +161,8 @@ class Model_evalprograma extends CI_Model{
                     ) as pprog On pprog.prod_id=prod.prod_id
                 where apg.aper_programa=\''.$programa.'\' and prod.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'
                 group by apg.aper_programa';
+            }
+            
         }
 
         $query = $this->db->query($sql);
@@ -136,7 +184,21 @@ class Model_evalprograma extends CI_Model{
                 group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval';
         }
         else{
-            $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+            if($this->gestion>2022){
+                $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+                Inner Join vista_componentes_dictamen as c On c.proy_id=p.proy_id
+                Inner Join _productos as pr On pr.com_id=c.com_id
+                Inner Join _productos_trimestral as pt On pr.prod_id=pt.prod_id
+                where apg.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and pt.g_id='.$this->gestion.' and apg.aper_gestion='.$this->gestion.' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\')
+                and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'';
+            }
+            else{
+                $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
@@ -147,6 +209,8 @@ class Model_evalprograma extends CI_Model{
                 Inner Join _productos_trimestral as pt On pr.prod_id=pt.prod_id
                 where apg.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and pt.g_id='.$this->gestion.' and apg.aper_gestion='.$this->gestion.' 
                 and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'';
+            }
+            
         }
 
         $query = $this->db->query($sql);
@@ -178,7 +242,31 @@ class Model_evalprograma extends CI_Model{
                 order by aper.aper_programa asc';
         }
         else{
-            $sql = '
+            if($this->gestion>2022){
+                $sql = '
+                select aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,p.dep_id,count(*) total_actividad
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join (
+                select apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion 
+                from aperturaprogramatica apg
+                where aper_gestion='.$this->gestion.' and aper_asignado=\'1\' and aper_estado!=\'3\'
+
+                ) as aper On aper.aper_programa=apg.aper_programa
+                        
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+                Inner Join _proyectofaseetapacomponente as pf On pf.proy_id=p.proy_id
+                Inner Join vista_componentes_dictamen as c On c.proy_id=p.proy_id
+                Inner Join _productos as prod On prod.com_id=c.com_id
+
+                where p.dep_id='.$dep_id.' and pf.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\')
+                group by aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,p.dep_id
+                order by aper.aper_programa asc';
+            }
+            else{
+                $sql = '
                 select aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,p.dep_id,count(*) total_actividad
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -199,6 +287,8 @@ class Model_evalprograma extends CI_Model{
                 where p.dep_id='.$dep_id.' and pf.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'
                 group by aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,p.dep_id
                 order by aper.aper_programa asc';
+            }
+            
         }
 
         
@@ -240,7 +330,27 @@ class Model_evalprograma extends CI_Model{
                 group by apg.aper_programa,p.dep_id';
         }
         else{
-            $sql = 'select apg.aper_programa,p.dep_id,count(*) total
+            if($this->gestion>2022){
+                $sql = 'select apg.aper_programa,p.dep_id,count(*) total
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+                
+                Inner Join vista_componentes_dictamen as c On c.proy_id=p.proy_id
+                Inner Join _productos as prod On prod.com_id=c.com_id
+                Inner Join (
+                        select prod_id
+                        from prod_programado_mensual
+                        where g_id='.$this->gestion.' and (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
+                        group by prod_id
+                    ) as pprog On pprog.prod_id=prod.prod_id
+                where p.dep_id='.$dep_id.' and apg.aper_programa=\''.$programa.'\' and prod.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\')
+                group by apg.aper_programa,p.dep_id';
+            }
+            else{
+                $sql = 'select apg.aper_programa,p.dep_id,count(*) total
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
@@ -257,6 +367,8 @@ class Model_evalprograma extends CI_Model{
                     ) as pprog On pprog.prod_id=prod.prod_id
                 where p.dep_id='.$dep_id.' and apg.aper_programa=\''.$programa.'\' and prod.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'
                 group by apg.aper_programa,p.dep_id';
+            }
+            
         }
 
         $query = $this->db->query($sql);
@@ -278,7 +390,21 @@ class Model_evalprograma extends CI_Model{
                 group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval';
         }
         else{
-            $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+            if($this->gestion>2022){
+                $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+                Inner Join vista_componentes_dictamen as c On c.proy_id=p.proy_id
+                Inner Join _productos as pr On pr.com_id=c.com_id
+                Inner Join _productos_trimestral as pt On pr.prod_id=pt.prod_id
+                where p.dep_id='.$dep_id.' and apg.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and pt.g_id='.$this->gestion.' and apg.aper_gestion='.$this->gestion.' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\')
+                and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'';
+            }
+            else{
+                $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
@@ -289,6 +415,8 @@ class Model_evalprograma extends CI_Model{
                 Inner Join _productos_trimestral as pt On pr.prod_id=pt.prod_id
                 where p.dep_id='.$dep_id.' and apg.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and pt.g_id='.$this->gestion.' and apg.aper_gestion='.$this->gestion.' 
                 and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'';
+            }
+            
         }
 
         $query = $this->db->query($sql);
@@ -323,7 +451,31 @@ class Model_evalprograma extends CI_Model{
                 order by aper.aper_programa asc';
         }
         else{
-            $sql = '
+            if($this->gestion>2022){
+                $sql = '
+                select aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,p.dist_id,count(*) total_actividad
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join (
+                select apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion 
+                from aperturaprogramatica apg
+                where aper_gestion='.$this->gestion.' and aper_asignado=\'1\' and aper_estado!=\'3\'
+
+                ) as aper On aper.aper_programa=apg.aper_programa
+                        
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+                Inner Join _proyectofaseetapacomponente as pf On pf.proy_id=p.proy_id
+                Inner Join vista_componentes_dictamen as c On c.proy_id=p.proy_id
+                Inner Join _productos as prod On prod.com_id=c.com_id
+
+                where p.dist_id='.$dist_id.' and pf.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\')
+                group by aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,p.dist_id
+                order by aper.aper_programa asc';
+            }
+            else{
+                $sql = '
                 select aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,p.dist_id,count(*) total_actividad
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -344,6 +496,8 @@ class Model_evalprograma extends CI_Model{
                 where p.dist_id='.$dist_id.' and pf.pfec_estado=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'
                 group by aper.aper_programa,aper.aper_proyecto,aper.aper_actividad,aper.aper_descripcion,p.dist_id
                 order by aper.aper_programa asc';
+            }
+            
         }
 
         
@@ -385,7 +539,27 @@ class Model_evalprograma extends CI_Model{
                 group by apg.aper_programa,p.dist_id';
         }
         else{
-            $sql = 'select apg.aper_programa,p.dist_id,count(*) total
+            if($this->gestion>2022){
+                $sql = 'select apg.aper_programa,p.dist_id,count(*) total
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+                
+                Inner Join vista_componentes_dictamen as c On c.proy_id=p.proy_id
+                Inner Join _productos as prod On prod.com_id=c.com_id
+                Inner Join (
+                        select prod_id
+                        from prod_programado_mensual
+                        where g_id='.$this->gestion.' and (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
+                        group by prod_id
+                    ) as pprog On pprog.prod_id=prod.prod_id
+                where p.dist_id='.$dist_id.' and apg.aper_programa=\''.$programa.'\' and prod.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\')
+                group by apg.aper_programa,p.dist_id';
+            }
+            else{
+                $sql = 'select apg.aper_programa,p.dist_id,count(*) total
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
@@ -402,6 +576,8 @@ class Model_evalprograma extends CI_Model{
                     ) as pprog On pprog.prod_id=prod.prod_id
                 where p.dist_id='.$dist_id.' and apg.aper_programa=\''.$programa.'\' and prod.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'
                 group by apg.aper_programa,p.dist_id';
+            }
+            
         }
 
         $query = $this->db->query($sql);
@@ -423,7 +599,21 @@ class Model_evalprograma extends CI_Model{
                 group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval';
         }
         else{
-            $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+            if($this->gestion>2022){
+                $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
+                from _proyectos p
+                Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join uni_gestion as ug On ua.act_id=ug.act_id
+                Inner Join vista_componentes_dictamen as c On c.proy_id=p.proy_id
+                Inner Join _productos as pr On pr.com_id=c.com_id
+                Inner Join _productos_trimestral as pt On pr.prod_id=pt.prod_id
+                where p.dist_id='.$dist_id.' and apg.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and pt.g_id='.$this->gestion.' and apg.aper_gestion='.$this->gestion.' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\')
+                and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'';
+            }
+            else{
+                $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.proy_id,c.com_id,pt.prod_id,pt.trm_id,pt.tp_eval,pt.tmed_verif,pt.tprob,pt.tacciones,pt.prog,pt.eval,pt.activo
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
@@ -434,6 +624,8 @@ class Model_evalprograma extends CI_Model{
                 Inner Join _productos_trimestral as pt On pr.prod_id=pt.prod_id
                 where p.dist_id='.$dist_id.' and apg.aper_programa=\''.$programa.'\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and pt.g_id='.$this->gestion.' and apg.aper_gestion='.$this->gestion.' 
                 and apg.aper_estado!=\'3\' and p.tp_id=\'4\' and ua.act_estado!=\'3\' and ug.g_id='.$this->gestion.'';
+            }
+            
         }
 
         $query = $this->db->query($sql);

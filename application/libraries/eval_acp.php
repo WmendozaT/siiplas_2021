@@ -27,8 +27,51 @@ class Eval_acp extends CI_Controller{
         $this->mes = $this->mes_nombre();
     }
 
+  //// Cabecera Reporte Grafico Form 1
+  function cabecera_reporte_grafico(){
+    $tabla='';
+
+    $tabla.='
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+        <tr style="border: solid 0px;">              
+            <td style="width:70%;height: 2%">
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="font-size: 15px;font-family: Arial;">
+                        <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+      </table>
+      <hr>
+      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+          <tr style="border: solid 0px black; text-align: center;">
+              <td style="width:10%; text-align:center;">
+              </td>
+              <td style="width:80%; height: 5%">
+                <table align="center" border="0" style="width:100%;">
+                  <tr style="font-size: 23px;font-family: Arial;">
+                    <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
+                  </tr>
+                </table>
+              </td>
+              <td style="width:10%; text-align:center;">
+              </td>
+          </tr>
+      </table>';
+
+    return $tabla;
+  }
+
+
     /*------- TITULO FORM 1 --------*/
-    public function titulo(){
+/*    public function titulo(){
       $tabla='';
       $trimestre=$this->model_evaluacion->trimestre();
       $tabla.='
@@ -55,7 +98,7 @@ class Eval_acp extends CI_Controller{
       </article>';
 
       return $tabla;
-    } 
+    } */
 
     /*---- LISTA DE REGIONALES FORM 1 ----*/
 /*    public function regionales(){
@@ -93,7 +136,7 @@ class Eval_acp extends CI_Controller{
     }*/
 
   //// FORMULARIO 1 POR REGIONAL 2022
-  public function formulario_n1_regional($dep_id){
+/*  public function formulario_n1_regional($dep_id){
     $tabla='';
     $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
     $departamento=$this->model_proyecto->get_departamento($dep_id);
@@ -232,11 +275,11 @@ class Eval_acp extends CI_Controller{
       </div>';
 
     return $tabla;
-  }
+  }*/
 
 
   //// FORMULARIO 1 POR REGIONAL 2022
-  public function cerrado($dep_id){
+/*  public function cerrado($dep_id){
     $departamento=$this->model_proyecto->get_departamento($dep_id);
     $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
     $tabla='
@@ -252,7 +295,7 @@ class Eval_acp extends CI_Controller{
       </div>';
 
     return $tabla;
-  }
+  }*/
 
 
 
@@ -260,7 +303,7 @@ class Eval_acp extends CI_Controller{
 
 
   /*--- PARAMETRO DE CALIFICACION ACP REGIONAL ---*/
-  public function calificacion_acp_regional($pog_id){
+/*  public function calificacion_acp_regional($pog_id){
     /// $tp_indicador_og : 0 (parametro normal)
     /// $tp_indicador_og : 1  x<=meta (optimo) , x>meta (insatisfactorio)
     /// $tp_indicador_og : 2 x>=meta & x<=100 (optimo), x<meta (insatisfactorio)
@@ -333,12 +376,12 @@ class Eval_acp extends CI_Controller{
     $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size=50>'.$valor.'%</font><br>'.$resp.'</center></div>';
     return $calificacion;
   }
-
+*/
 
 
 
   /*--- CALCULA DE CALIFICACION ACP REGIONAL ---*/
-  public function calcula_calificacion_acp_regional_al_registrar($tp_indicador_og,$eval_acumulado,$ejec,$meta){
+/*  public function calcula_calificacion_acp_regional_al_registrar($tp_indicador_og,$eval_acumulado,$ejec,$meta){
     /// $tp_indicador_og : 0 (parametro normal)
     /// $tp_indicador_og : 1  x<=meta (optimo) , x>meta (insatisfactorio)
     /// $tp_indicador_og : 2 x>=meta & x<=100 (optimo), x<meta (insatisfactorio)
@@ -397,11 +440,11 @@ class Eval_acp extends CI_Controller{
     $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size=50>'.$valor.'%</font><br>'.$resp.'</center></div>';
     return $calificacion;
   }
-
+*/
 
 
   /*--- GET SUMA EVALUADO ANTES DEL TRIMESTRE ACTUAL 2022---*/
-  public function get_suma_evaluado($pog_id,$trimestre){
+/*  public function get_suma_evaluado($pog_id,$trimestre){
     $sum=0;
     for ($i=1; $i <$trimestre ; $i++) { 
       $obj_gestion_evaluado=$this->model_evaluacion->get_objetivo_programado_evaluado_trimestral($i,$pog_id);
@@ -411,7 +454,7 @@ class Eval_acp extends CI_Controller{
     }
 
     return $sum;
-  }
+  }*/
 
 
 //////=============== PARA REPORTE DE EVALUACION DE ACP FORM 1
@@ -454,7 +497,7 @@ class Eval_acp extends CI_Controller{
 
   ///==================== PRIMER CUADRO
   /*--- Tabla Evaluacion Meta a nivel Institucional ---*/
-  public function tabla_evaluacion_meta_institucional(){
+/*  public function tabla_evaluacion_meta_institucional(){
     $lista_ogestion=$this->model_objetivogestion->list_objetivosgestion_general();
     $nro=0;
     foreach($lista_ogestion as $row){
@@ -479,12 +522,12 @@ class Eval_acp extends CI_Controller{
     }
 
     return $tab;
-  }
+  }*/
 
 
 
   /*--- GET SUMA TOTAL EVALUADO INSTITUCIONAL ---*/
-  public function get_suma_total_evaluado_institucional($og_id){
+/*  public function get_suma_total_evaluado_institucional($og_id){
     $sum=0;
       for ($i=1; $i <=$this->tmes; $i++) { 
         $obj_gestion_evaluado=$this->model_objetivogestion->get_objetivo_programado_evaluado_trimestral_institucional($i,$og_id);
@@ -494,7 +537,7 @@ class Eval_acp extends CI_Controller{
       }
 
     return $sum;
-  }
+  }*/
 
 
 /*--- MATRIZ EVALUACION DE METAS ACP REGIONAL 2022 ---*/
@@ -616,7 +659,7 @@ class Eval_acp extends CI_Controller{
 
 
 /*---- CABECERA REPORTE SEGUIMIENTO ACP (GRAFICO)----*/
-  function cabecera_reporte_grafico(){
+/*  function cabecera_reporte_grafico(){
     $tabla='';
 
     $tabla.='
@@ -658,11 +701,11 @@ class Eval_acp extends CI_Controller{
       </table>';
 
     return $tabla;
-  }
+  }*/
 
 
   //// Matriz Grado de Cumplimiento de acp por Regional
-  public function matriz_gcumplimiento($acp,$nro){
+/*  public function matriz_gcumplimiento($acp,$nro){
     $cumplido=0;$proceso=0;$ncumplido=0;
     for ($i=1; $i <=$nro ; $i++) {
       if($acp[$i][4]==$acp[$i][5]){
@@ -685,11 +728,11 @@ class Eval_acp extends CI_Controller{
     $matriz[7]=round((($ncumplido/$nro)*100),2); // % no cumplido
 
     return $matriz;
-  }
+  }*/
 
 
  /*--- Tabla cuadro de evaluacion ---*/
-  public function tabla_gcumplimiento($matriz,$tp_cuadro,$tp_rep){
+/*  public function tabla_gcumplimiento($matriz,$tp_cuadro,$tp_rep){
     $tabla='';
     if($tp_rep==1){ /// Normal
       $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -755,9 +798,9 @@ class Eval_acp extends CI_Controller{
 
     return $tabla;
   }
-
+*/
   /*------ NOMBRE MES -------*/
-  public function mes_nombre_completo(){
+/*  public function mes_nombre_completo(){
       $mes[1] = 'ENERO';
       $mes[2] = 'FEBRERO';
       $mes[3] = 'MARZO';
@@ -772,7 +815,7 @@ class Eval_acp extends CI_Controller{
       $mes[12] = 'DICIEMBRE';
 
     return $mes;
-  }
+  }*/
 
   /*------ NOMBRE MES -------*/
   public function mes_nombre(){

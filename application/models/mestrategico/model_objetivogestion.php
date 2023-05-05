@@ -395,6 +395,31 @@ class Model_objetivogestion extends CI_Model{
         return $query->result_array();
     }
 
+    /*-- Get Suma total Programado Alineado Institucional--*/
+    public function get_suma_total_programado_alineado_form1_institucional(){
+        $sql = 'select g_id,SUM(programado_total) programado_total
+                from lista_form2_operaciones_alineados_a_form4('.$this->gestion.')
+                group by g_id';
 
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+
+    /*-- Get Suma total Ejecutado Alineado Institucional--*/
+    public function get_suma_total_ejecutado_alineado_form1_institucional(){
+        $sql = 'select opge.g_id,SUM(temejec.ejec_fis) ejecutado
+                from temp_trm_ejec_objetivos_regionales temejec
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temejec.or_id
+                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+                Inner Join objetivo_gestion as og on og.og_id = opge.og_id
+                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.'
+                group by opge.g_id';
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
 
 }

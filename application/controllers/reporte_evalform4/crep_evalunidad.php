@@ -95,7 +95,7 @@ class Crep_evalunidad extends CI_Controller {
         $data['tabla_regresion_total']=$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
         $data['tabla_regresion_total_impresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
 
-        $data['calificacion']='<div id="eficacia">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes]).'</div><div id="efi"></div>'; /// calificacion
+        $data['calificacion']='<div id="eficacia">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes],0).'</div><div id="efi"></div>'; /// calificacion
 
         /// SERVICIOS
         $data['mis_servicios']=$this->mis_servicios(1,$proy_id); /// Lista de Subactividades

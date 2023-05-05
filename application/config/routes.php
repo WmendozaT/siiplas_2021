@@ -427,7 +427,7 @@ $route['ejec/get_uadministrativas'] = 'ejecucion/cert_poa/get_unidades_administr
 
 
 /*-- EVALUACION OBJETIVOS DE GESTION - FORMULARIO N° 1 (A.C.P.) ---*/
-$route['eval_acp'] = 'ejecucion/cevaluacion_form1/menu_acp';  ///// Objetivos Estrategicos
+//$route['eval_acp'] = 'ejecucion/cevaluacion_form1/menu_acp';  ///// Objetivos Estrategicos
 $route['eval_obj/rep_meta_oregional/(:any)'] = 'ejecucion/cevaluacion_pei/reporte_meta_oregional/$1'; //// Reporte Meta Objetivo Regional
 $route['eval_obj/rep_meta_oregional_grafico/(:any)'] = 'ejecucion/cevaluacion_pei/cuadro_evaluacion_grafico/$1'; //// Reporte Meta Objetivo Regional Grafico
 

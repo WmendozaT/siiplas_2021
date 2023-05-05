@@ -38,41 +38,182 @@ class Crep_evalform1 extends CI_Controller {
         }
     }
 
-    /// MENU EVALUACIÓN POA FORM 1
-    public function menu_eval_acp(){
-      $data['menu']=$this->eval_acp->menu(7); //// genera menu
-      $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      $matriz=$this->matriz_cumplimiento_form1_institucional();
-      $tabla='';
-      $tabla.=' 
-      <input name="base" type="hidden" value="'.base_url().'">
-      <input name="gestion" type="hidden" value="'.$this->gestion.'">
-      <article class="col-sm-12">
-        <div class="well">
-          <form class="smart-form">
-            <header><b>CONSOLIDADO EVALUACI&Oacute;N INSTITUCIONAL A.C.P. - '.$data['trimestre'][0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
-            <fieldset>          
-              <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                  <div id="Evaluacion">
-                    <div id="container" style="width: 1000px; height: 900px; margin: 0 auto"></div>
-                  </div>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                  HOLA MUNDO
-                </div>
+  /// MENU EVALUACIÓN POA FORM 1
+  public function menu_eval_acp(){
+    $data['menu']=$this->eval_acp->menu(7); //// genera menu
+    $data['trimestre']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+    $matriz=$this->matriz_cumplimiento_form1_institucional();
+    $detalle_acp=$this->detalle_cumplimiento_form1_institucional($matriz,0); /// Detalle de Form1 Alineados Vista
+    $detalle_acp_impresion=$this->detalle_cumplimiento_form1_institucional($matriz,1); /// Detalle de Form1 Alineados Impresion
+
+    $data['matriz']=$matriz; /// matriz para el grafico de evaluacion ACP
+    $data['nro']=count($this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2()); /// nro de ACP alineados
+    
+    $tabla='';
+    $tabla.=' 
+    <input name="base" type="hidden" value="'.base_url().'">
+    <input name="gestion" type="hidden" value="'.$this->gestion.'">
+        <div id="cabecera" style="display: none">'.$this->eval_acp->cabecera_reporte_grafico().'</div>
+        <form class="smart-form">
+         
+          <fieldset>   
+            <div>'.$this->calificacion_form1_institucional(0).'</div>
+            <hr>
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                <center>
+                  <div id="grafico1" style="width: 900px; height: 580px; margin: 10px auto; text-align:center"></div>
+                </center>
               </div>
-            </fieldset>
-          </form>
-        </div>
-      </article>';
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                <br>
+                <h4><b>DETALLE EJECUCION ACCIONES DE CORTO PLAZO '.$this->gestion.'</b></h4>
+                <br>
+                  <hr>
+                  '.$detalle_acp.'
+                  <hr>
+                  
+                  <div id="tabla_impresion_detalle" style="display: none">
+                    '.$detalle_acp_impresion.'
+                  </div>
 
-      $data['informacion']=$tabla;
-      $data['matriz']=$matriz;
-      $data['nro']=count($this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2());
+              </div>
+            </div>
+          </fieldset>
+        </form>';
+    $data['informacion']=$tabla;
+    
 
-      $this->load->view('admin/reportes_cns/repevaluacion_form1/rep_menu', $data);
+   $this->load->view('admin/reportes_cns/repevaluacion_form1/rep_menu', $data);
+  }
+
+
+  //// Calificacion Cumplimiento ACP Institucional
+  public function calificacion_form1_institucional($tp_rep){
+    $prog=$this->model_objetivogestion->get_suma_total_programado_alineado_form1_institucional();
+    $ejec=$this->model_objetivogestion->get_suma_total_ejecutado_alineado_form1_institucional();
+    $form1_prog=0; $form2_ejec=0;
+    $tabla='';
+
+    if(count($ejec)!=0){
+      $form1_ejec=$ejec[0]['ejecutado'];
     }
+
+    $eficacia=0;
+    if(count($prog)!=0 & $prog[0]['programado_total']!=0){
+      $eficacia=round((($form1_ejec/$prog[0]['programado_total'])*100),2);
+    }
+
+    $tp='danger';
+    $titulo='ERROR EN LOS VALORES';
+    if($eficacia<=50){$tp='danger';$titulo='CUMPLIMIENTO : '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
+    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='CUMPLIMIENTO : '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
+    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO : '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
+    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+
+    $tabla.='<h5 class="alert alert-'.$tp.'" style="font-family: Arial;" align="center"><b>'.$titulo.'</b></h5>';
+
+    return $tabla;
+  }
+
+  //// Detalle Ejecucion ACP Institucional 
+  public function detalle_cumplimiento_form1_institucional($matriz,$tp_rep){
+    /// tp_rep : 0 (vista)
+    /// tp_rep : 1 (impresion)
+    $tabla='';
+
+    if($tp_rep==0){
+    $tabla.='
+    <center>
+        <style>
+          table{font-size: 10px;
+            width: 100%;
+            max-width:1550px;
+            overflow-x: scroll;
+            font-family: Arial;
+          }
+          th{
+            padding: 1.4px;
+            text-align: center;
+            font-size: 10px;
+          }
+        </style>
+      <table class="table table-dark table-borderless" border=0.2 style="width:90%;">
+        <thead>
+          <tr>
+            <th style="width:10%;"></th>
+            <th style="width:60%;">DETALLE A.C.P. INSTITUCIONAL</th>
+            <th style="width:10%;">PROGRAMADO</th>
+            <th style="width:10%;">EJECUTADO</th>
+            <th style="width:10%;">(%) CUMPLIMIENTO</th>
+          </tr>
+        </thead>
+        <tbody>';
+      for ($i=0; $i < count($this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2()); $i++) { 
+        $tabla.='<tr>';
+        for ($j=0; $j < 5; $j++) { 
+          if($j==0){
+            $tabla.='<td style="font-size:13px; text-align:center">'.$matriz[$i][$j].'</td>';
+          }
+          elseif($j==2 || $j==3){
+            $tabla.='<td style="font-size:12px; text-align:right">'.$matriz[$i][$j].'</td>';  
+          }
+          elseif($j==4){
+            $tabla.='<td style="font-size:13px; text-align:right"><b>'.$matriz[$i][$j].' %</b></td>';  
+          }
+          else{
+            $tabla.='<td>'.$matriz[$i][$j].'</td>';
+          }
+        }
+        $tabla.='</tr>';
+      }
+      $tabla.='
+        </tbody>
+      </table>
+    </center>';
+    }
+    else{
+      $tabla.='
+      <center>
+          <style>
+            table{font-size: 10px;
+              font-family: Arial;
+            }
+            th{
+              padding: 1.4px;
+              text-align: center;
+              font-size: 10px;
+            }
+          </style>
+        <table cellpadding="0" cellspacing="0" class="tabla" border="0.5" style="width:100%;" align=center>
+          <thead>
+            <tr>
+              <th style="width:10%;"></th>
+              <th style="width:70%;">DETALLE A.C.P. INSTITUCIONAL</th>
+              <th style="width:5%;">(%) CUMP.</th>
+            </tr>
+          </thead>
+          <tbody>';
+        for ($i=0; $i < count($this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2()); $i++) { 
+          $tabla.='
+          <tr>
+            <td style="font-size:12px; text-align:center">'.$matriz[$i][0].'</td>
+            <td style="font-size:10px;">'.$matriz[$i][1].'</td>
+            <td style="font-size:10px; text-align:right"><b>'.$matriz[$i][4].' %</b></td>
+          </tr>';
+        }
+        $tabla.='
+          </tbody>
+        </table>
+      </center>';
+    }
+
+
+
+    return $tabla;
+  }
+
+
 
 
 
@@ -111,110 +252,4 @@ class Crep_evalform1 extends CI_Controller {
   }
 
 
-
-
-
-
-    /*-------- GET CUADRO EVALUACION A.CP.--------*/
-/*    public function get_cuadro_evaluacion_objetivos(){
-      if($this->input->is_ajax_request() && $this->input->post()){
-        $post = $this->input->post();
-        $dep_id = $this->security->xss_clean($post['dep_id']); // dep id, 0: Nacional
-        
-        $tabla='<center><iframe id="ipdf" width="100%" height="800px;" src="'.base_url().'index.php/rep_eval_obj/evaluacion_objetivos/'.$dep_id.'"></iframe></center>';
-
-        $result = array(
-          'respuesta' => 'correcto',
-          'tabla'=>$tabla,
-        );
-
-        echo json_encode($result);
-      }else{
-          show_404();
-      }
-    }*/
-
-
-  //// EVALUACIÓN ACP REGIONAL INSTITUCIONAL - IFRAME
-/*  public function evaluacion_objetivos($id){
-    $data['trimestre']=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
-    $tabla='';
-    $dep_id=$id;
-    if($id!=0){ //// REGIONAL
-      $regional=$this->model_proyecto->get_departamento($dep_id);
-      $data['titulo_graf']=strtoupper($regional[0]['dep_departamento']);
-      $data['cabecera']=$this->eval_acp->cabecera_reporte_grafico(); /// Cabecera Grafico
-      $data['nro']=count($this->model_objetivogestion->lista_acp_x_regional($dep_id));
-      $data['eval']=$this->eval_acp->matriz_evaluacion_meta_acp_regional($dep_id);
-      
-      $data['detalle_eval']=$this->get_detalle_eval_trimestre($dep_id);
-    }
-    else{ ///// INSTITUCIONAL
-      $data['titulo_graf']='INSTITUCIONAL';
-      $data['cabecera']=$this->eval_acp->cabecera_reporte_grafico(); /// Cabecera Grafico
-      $data['nro']=count($this->model_objetivogestion->list_objetivosgestion_general());
-      $data['eval']=$this->eval_acp->tabla_evaluacion_meta_institucional();
-      $data['detalle_eval']='';
-    }
-    
-    $data['tabla']=$this->eval_acp->detalle_acp($data['eval'],$data['nro'],1);
-    
-    ///----- Para impresion
-    $tabla.='<div style="font-family: Arial;">DETALLE A.C.P. '.$data['titulo_graf'].' / '.$this->gestion.'</div>
-              <ul>';
-              for ($i=1; $i <=$data['nro'] ; $i++) { 
-               
-                $tabla.='<li style="font-family: Arial;font-size: 11px;height: 1%;">'.$data['eval'][$i][1].'.- '.$data['eval'][$i][2].' - <b>'.$data['eval'][$i][6].' %</b></li>';
-              }
-              $tabla.='
-              </ul>
-            <hr>';
-    $data['detalle_acp']=$tabla;
-    //// -------------------
-
-
-    $data['matriz_pastel']=$this->eval_acp->matriz_gcumplimiento($data['eval'],$data['nro']);
-    $data['tabla_pastel']=$this->eval_acp->tabla_gcumplimiento($data['matriz_pastel'],1,1);
-    $data['tabla_pastel_todo']=$this->eval_acp->tabla_gcumplimiento($data['matriz_pastel'],2,1);
-
-    $this->load->view('admin/reportes_cns/repevaluacion_form1/reporte_grafico_eval_consolidado_regional_form1', $data);
-  }*/
-
-  /*--- Detalle de evaluacion de informacion del trimestre ---*/
-/*  public function get_detalle_eval_trimestre($dep_id){
-    $tabla='';
-    $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
-    $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
-
-    $tabla.='
-    <div style="height:45px; font-size: 18px;font-family: Arial;"><b>DETALLE DE EVALUACION TRIMESTRAL '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></div>
-    <table class="table table-bordered" align=center style="width:70%;">';
-    foreach($acp_regional as $oge){
-      $acp_eval_regional=$this->model_evaluacion->get_meta_oregional($oge['pog_id'],$this->tmes);/// datos de evaluacion al trimestre actual
-      $indi='';
-      if($oge['indi_id']==2){
-        $indi='%';
-      }
-
-      $dato_evaluado='<font color=red>SIN REGISTRO</font>';
-      $ejec='';
-
-      if(count($acp_eval_regional)!=0){
-        $dato_evaluado=$acp_eval_regional[0]['tmed_verif'];
-        $ejec=' <b>| CUMPLIDO : '.round($acp_eval_regional[0]['ejec_fis'],2).' '.$indi.'</b>';
-      }
-
-      $tabla.='
-      <tr style="height:25px; font-size: 13px;font-family: Arial;" bgcolor="#f0f0f0">
-        <td><b>A.C.P. '.$oge['og_codigo'].'.- </b>'.$oge['og_objetivo'].' <b>| META : </b>'.round($oge['prog_fis'],2).' '.$indi.'</td>
-      </tr>
-      <tr style="height:35px; font-size: 10px;font-family: Arial;">
-        <td><font color=blue>EVAL.: </font>'.$dato_evaluado.''.$ejec.'</td>
-      </tr>';
-    }
-
-    $tabla.='</table>';
-
-    return $tabla;
-  }*/
 }

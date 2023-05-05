@@ -516,7 +516,7 @@ class Model_evalinstitucional extends CI_Model{
                 Inner Join unidad_actividad as ua On ua.act_id=p.act_id
                 Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
                 Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                where p.dep_id='.$id.' and ua.act_estado!=\'3\' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and ug.g_id='.$this->gestion.' and apg.aper_estado!=\'3\' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\' and apg.aper_programa!=\'770\' and apg.aper_programa!=\'960\' and apg.aper_programa!=\'721\')
+                where p.dep_id='.$id.' and ua.act_estado!=\'3\' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and ug.g_id='.$this->gestion.' and apg.aper_estado!=\'3\' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\' and apg.aper_programa!=\'960\' and apg.aper_programa!=\'721\')
                 ORDER BY p.dist_id,apg.aper_programa,apg.aper_actividad,te.te_id,ua.act_id asc';
             }
             else{
@@ -545,7 +545,7 @@ class Model_evalinstitucional extends CI_Model{
                 Inner Join unidad_actividad as ua On ua.act_id=p.act_id
                 Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
                 Inner Join uni_gestion as ug On ua.act_id=ug.act_id
-                where p.dist_id='.$id.' and ua.act_estado!=\'3\' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and ug.g_id='.$this->gestion.' and apg.aper_estado!=\'3\' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\' and apg.aper_programa!=\'770\' and apg.aper_programa!=\'960\' and apg.aper_programa!=\'721\')
+                where p.dist_id='.$id.' and ua.act_estado!=\'3\' and p.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and ug.g_id='.$this->gestion.' and apg.aper_estado!=\'3\' and (apg.aper_programa!=\'098\' and apg.aper_programa!=\'099\' and apg.aper_programa!=\'960\' and apg.aper_programa!=\'721\')
                 ORDER BY p.dist_id,apg.aper_programa,apg.aper_actividad,te.te_id,ua.act_id asc';
             }
             else{
