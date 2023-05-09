@@ -736,10 +736,13 @@ abrev varchar,
 prog varchar,
 proy varchar,
 act varchar,
+aper_descripcion varchar,
 proy_id numeric,
 proy_estado integer,
 actividad varchar,
 tipo varchar,
+ta_id integer,
+tipo_adm varchar,
 aper_id numeric,
 aper_proy_estado integer,
 pfec_id numeric,
@@ -747,7 +750,7 @@ pfec_estado integer,
 aper_gestion integer) AS
 
 $$
-select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
+select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,apg.aper_descripcion,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,te.ta_id,te.tipo_adm,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
 from _proyectofaseetapacomponente pfe
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
 Inner Join _proyectos as p On p.proy_id=pfe.proy_id
@@ -758,8 +761,8 @@ Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
 Inner Join uni_gestion as ug On ua.act_id=ug.act_id
 where p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and p.tp_id=4 and ug.g_id=gestion and pfe.pfec_estado=1
 order by p.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
-
 $$ LANGUAGE sql;
+
 
 -----?> PROYECTO DE INVERSION REGIONAL
 Datos Ingreso 

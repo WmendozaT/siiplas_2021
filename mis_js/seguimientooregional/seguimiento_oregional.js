@@ -41,6 +41,7 @@
   $("#d_id").change(function () {
     $("#d_id option:selected").each(function () {
       dep_id=$(this).val();
+
       if(dep_id!=''){
         if(dep_id==0){ /// Institucional
             $('#lista_consolidado').fadeIn(1000).html('Cargando Informacion ....');
@@ -61,7 +62,9 @@
                 $('#lista_consolidado').fadeIn(1000).html(response.tabla);
                 cuadro_grafico_cumplimiento_operaciones_institucional(response.matriz,response.nro,response.titulo);
                 cuadro_grafico_cumplimiento_operaciones_regresion_intitucional(response.matriz_regresion,response.titulo); 
-                cuadro_grafico_cumplimiento_form2_detalle_institucional(response.matriz_form2,response.nro_form2,response.gestion)
+
+                cuadro_grafico_cumplimiento_form2_detalle_institucional('grafico_trimestre','CUMPLIMIENTO DE OPERACIONES AL '+response.trimestre[0]['trm_descripcion']+'<br>INSTITUCIONAL','#66efdc',response.matriz_form2_trimestre,response.nro_form2_trimestre,response.gestion) /// al trimestre
+                cuadro_grafico_cumplimiento_form2_detalle_institucional('grafico3','CUMPLIMIENTO DE OPERACIONES - GESTIÓN '+response.gestion+'<br>INSTITUCIONAL','#296860',response.matriz_form2,response.nro_form2,response.gestion) /// Acumulado a la Gestion
               }
               else{
                 alertify.error("ERROR AL LISTAR");
@@ -85,8 +88,8 @@
             request.done(function (response, textStatus, jqXHR) {
               if (response.respuesta == 'correcto') {
                 $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-                //alert(response.matriz[0][0]+'.'+response.matriz[0][1]+'--'+response.matriz[1][0]+'.'+response.matriz[1][1])
-                cuadro_grafico_cumplimiento_operaciones_regional(response.matriz,response.nro,response.dep_id,response.regional,response.trimestre,response.gestion,response.titulo);
+                cuadro_grafico_cumplimiento_operaciones_regional('grafico_trimestral',3,'CUMPLIMIENTO DE OPERACIONES AL '+response.trimestre[0]['trm_descripcion'],'#66efdc',response.matriz,response.nro,response.regional);                                                                                             
+                cuadro_grafico_cumplimiento_operaciones_regional('grafico1',4,'CUMPLIMIENTO ACUMULADO DE OPERACIONES - GESTIÓN '+response.gestion,'#296860',response.matriz,response.nro,response.regional);
               }
               else{
                 alertify.error("ERROR AL LISTAR");
@@ -95,7 +98,6 @@
 
         }
 
-        
       }
       else{
         $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Evaluaci&oacute;n OPERACIONES '+gestion+'</h1></div></div>');
@@ -238,7 +240,7 @@ function cuadro_grafico_cumplimiento_operaciones_regresion_intitucional(matriz,t
 
 
 //// grafico nivel de cumplimiento de operaciones Regional
-function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regional,trimestre,gestion,titulo){
+function cuadro_grafico_cumplimiento_operaciones_regional(titulo_grafico,j,titulo_texto,graf_color,matriz,nro,regional){
   let categoria=[];
   for (var i = 0; i < nro; i++) {
       categoria[i]= 'OPE. '+matriz[i][0]+'.'+matriz[i][1];
@@ -246,18 +248,18 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
 
   let detalle=[];
   for (var i = 0; i < nro; i++) {
-      detalle[i]= matriz[i][4];
+      detalle[i]= matriz[i][j];
   }
 
- Highcharts.chart('grafico1', {
+  Highcharts.chart(titulo_grafico, {
     chart: {
         type: 'bar'
     },
     title: {
-        text: ''
+        text: titulo_texto
     },
     subtitle: {
-        text: 'CUMPLIMIENTO DE OPERACIONES A LA GESTIÓN '+gestion+'<br><h1><b>'+regional+'</b></h1>'
+        text: '<b>'+regional+'</b>'
     },
     xAxis: {
         categories: categoria,
@@ -278,28 +280,46 @@ function cuadro_grafico_cumplimiento_operaciones_regional(matriz,nro,dep_id,regi
     tooltip: {
         valueSuffix: ' %'
     },
+
     plotOptions: {
-        bar: {
-            dataLabels: {
-                enabled: true
-            }
+      series: {
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true,
+          format: '{point.y:.1f}%'
         }
+      },
+      column: {
+          borderRadius: '55%'
+      }
+    },
+
+    legend: {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'top',
+      x: -40,
+      y: 80,
+      floating: true,
+      borderWidth: 1,
+      shadow: true
     },
 
     credits: {
-        enabled: false
+      enabled: false
     },
 
     series: [{
-        name: 'CUMPLIMIENTO %',
-        data: detalle
+      color: graf_color,
+      name: '(%) CUMPLIMIENTO',
+      data: detalle
     }]
   });
 }
 
 
 //// grafico nivel de cumplimiento de operaciones form2 detalle (Institucional)
-function cuadro_grafico_cumplimiento_form2_detalle_institucional(matriz,nro,gestion){
+function cuadro_grafico_cumplimiento_form2_detalle_institucional(grafico,titulo,graf_color,matriz,nro,gestion){
   let categoria=[];
   for (var i = 0; i < nro; i++) {
       categoria[i]= 'OPE. '+matriz[i][0]+'.'+matriz[i][1];
@@ -310,7 +330,7 @@ function cuadro_grafico_cumplimiento_form2_detalle_institucional(matriz,nro,gest
       detalle[i]= matriz[i][4];
   }
 
- Highcharts.chart('grafico3', {
+ Highcharts.chart(grafico, {
     chart: {
         type: 'bar'
     },
@@ -318,7 +338,7 @@ function cuadro_grafico_cumplimiento_form2_detalle_institucional(matriz,nro,gest
         text: ''
     },
     subtitle: {
-        text: 'CUMPLIMIENTO DE OPERACIONES A LA GESTIÓN '+gestion+'<br><h1><b>INSTITUCIONAL</b></h1>'
+        text: titulo
     },
     xAxis: {
         categories: categoria,
@@ -340,11 +360,27 @@ function cuadro_grafico_cumplimiento_form2_detalle_institucional(matriz,nro,gest
         valueSuffix: ' %'
     },
     plotOptions: {
-        bar: {
-            dataLabels: {
-                enabled: true
-            }
+      series: {
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true,
+          format: '{point.y:.1f}%'
         }
+      },
+      column: {
+          borderRadius: '55%'
+      }
+    },
+
+    legend: {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'top',
+      x: -40,
+      y: 80,
+      floating: true,
+      borderWidth: 1,
+      shadow: true
     },
 
     credits: {
@@ -352,7 +388,8 @@ function cuadro_grafico_cumplimiento_form2_detalle_institucional(matriz,nro,gest
     },
 
     series: [{
-        name: 'CUMPLIMIENTO %',
+        color: graf_color,
+        name: '(%) CUMPLIMIENTO',
         data: detalle
     }]
   });

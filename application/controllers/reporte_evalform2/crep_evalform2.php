@@ -51,24 +51,24 @@ class Crep_evalform2 extends CI_Controller {
       <article class="col-sm-12">
         <div class="well">
           <form class="smart-form">
-              <header><b>CONSOLIDADO EVALUACI&Oacute;N OPERACIONES - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
-              <fieldset>          
-                <div class="row">
-                  <section class="col col-3">
-                    <label class="label"><b>DIRECCIÓN ADMINISTRATIVA</b></label>
-                    <select class="form-control" id="d_id" name="d_id" title="SELECCIONE REGIONAL">
-                    <option value="">Seleccione Regional ....</option>
-                    <option value="0">0.- INSTITUCIONAL C.N.S.</option>';
-                    foreach($regionales as $row){
-                      if($row['dep_id']!=0){
-                        $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
-                      }
+            <header><b>CONSOLIDADO EVALUACI&Oacute;N OPERACIONES - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
+            <fieldset>          
+              <div class="row">
+                <section class="col col-3">
+                  <label class="label"><b>DIRECCIÓN ADMINISTRATIVA</b></label>
+                  <select class="form-control" id="d_id" name="d_id" title="SELECCIONE REGIONAL">
+                  <option value="">Seleccione Regional ....</option>
+                  <option value="0">0.- INSTITUCIONAL C.N.S.</option>';
+                  foreach($regionales as $row){
+                    if($row['dep_id']!=0){
+                      $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
                     }
-                    $tabla.='
-                    </select>
-                  </section>
-                </div>
-              </fieldset>
+                  }
+                  $tabla.='
+                  </select>
+                </section>
+              </div>
+            </fieldset>
           </form>
         </div>
       </article>';
@@ -130,13 +130,14 @@ class Crep_evalform2 extends CI_Controller {
       $tabla_vista_acumulado_impresion=$this->get_tabla_cumplimiento_form2_priorizados_institucional(1);
 
       //------
-      $matriz3=$this->eval_oregional->matriz_cumplimiento_operaciones_institucional(); /// Matriz detalle operaciones institucional;
+      $matriz3=$this->eval_oregional->matriz_cumplimiento_operaciones_institucional(); /// Matriz detalle operaciones institucional a la Gestion
+      $matriz4=$this->eval_oregional->matriz_cumplimiento_operaciones_institucional_al_trimestre(); /// Matriz detalle operaciones institucional al Trimestre
       /// ---------------------------------------------------------------------------------------------
       $lista='';
-      $lista.='<div style="font-family: Arial;">DETALLE DE CUMPLIMIENTO DE OPERACIONES - '.$this->gestion.'</div>
+      $lista.=' <div style="font-family: Arial;">DETALLE DE CUMPLIMIENTO DE OPERACIONES - '.$this->gestion.'</div>
                 <ul>';
                   for ($i=0; $i <count($this->eval_oregional->matriz_cumplimiento_operaciones_institucional()); $i++) { 
-                    $lista.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$matriz3[$i][0].'.'.$matriz3[$i][1].' - <b>'.$matriz3[$i][4].' %</b></li>';
+                    $lista.='<li style="font-family: Arial;font-size: 10px;height: 1%;">OPE. '.$matriz3[$i][0].'.'.$matriz3[$i][1].' - <b>'.$matriz3[$i][4].' %</b></li>';
                   }
                   $lista.='
                 </ul>
@@ -202,9 +203,14 @@ class Crep_evalform2 extends CI_Controller {
 
                   <div class="tab-pane fade" id="s3">
                     <div class="rows" align=center>
+                      <article class="col-sm-12 col-md-12 col-lg-6">
                       <div id="graf_detalle3">
-                        <div id="grafico3" style="width: 900px; height: 800px; margin: 2 auto"></div>
+                        <div id="grafico_trimestre" style="width: 900px; height: 800px; margin: 2 auto"></div>
                       </div>
+                      </article>
+                      <article class="col-sm-12 col-md-12 col-lg-6">
+                        <div id="grafico3" style="width: 900px; height: 800px; margin: 2 auto"></div>
+                      </article>
                       
                     </div>
                     <div id="tabla_impresion_detalle3" style="display: none">
@@ -223,14 +229,19 @@ class Crep_evalform2 extends CI_Controller {
 
       $result = array(
         'respuesta' => 'correcto',
+        'trimestre'=>$this->model_evaluacion->trimestre(),
         'gestion'=>$this->gestion,
         'titulo'=>$titulo,
         'tabla'=>$tabla,
         'nro'=>$nro,
         'matriz'=>$matriz,
         'matriz_regresion'=>$matriz_form2_regresion,
+        
         'nro_form2'=>count($this->eval_oregional->matriz_cumplimiento_operaciones_institucional()),
-        'matriz_form2'=>$matriz3, /// detalle form2 institucional
+        'matriz_form2'=>$matriz3, /// detalle form2 institucional a la gestion
+
+        'nro_form2_trimestre'=>count($this->eval_oregional->matriz_cumplimiento_operaciones_institucional_al_trimestre()),
+        'matriz_form2_trimestre'=>$matriz4, /// detalle form2 institucional al trimestre        
 
       );
 
@@ -250,10 +261,10 @@ class Crep_evalform2 extends CI_Controller {
 
       $titulo=strtoupper($regional[0]['dep_departamento']).' / '.$this->gestion;
       $nro=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
-      $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);      
+      $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id); /// Cumplimiento de Operaciones trimestral y anual 
       $cabecera=$this->eval_oregional->cabecera_reporte_grafico($regional);
-      $calificacion=$this->eval_oregional->calificacion_total_form2_regional($dep_id);
-
+      $calificacion_anual=$this->eval_oregional->calificacion_total_form2_regional($dep_id,1); /// cumplimiento Acumulado Anual
+      $calificacion_trimestral=$this->eval_oregional->calificacion_total_form2_regional($dep_id,0); /// cumplimiento trimestral
 
       
       /// ---------------------------------------------------------------------------------------------
@@ -261,7 +272,7 @@ class Crep_evalform2 extends CI_Controller {
       $lista.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>
                 <ul>';
                   for ($i=0; $i <$nro; $i++) { 
-                    $lista.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$matriz[$i][0].'.'.$matriz[$i][1].'.- '.$matriz[$i][2].' - <b>'.$matriz[$i][4].' %</b></li>';
+                    $lista.='<li style="font-family: Arial;font-size: 10px;height: 1%;">OPE. '.$matriz[$i][0].'.'.$matriz[$i][1].'.- '.$matriz[$i][2].' - <b>'.$matriz[$i][4].' %</b></li>';
                   }
                   $lista.='
                 </ul>
@@ -281,30 +292,42 @@ class Crep_evalform2 extends CI_Controller {
             <h2>Evaluación del Formulario N° 2 (Operaciones) - '.$titulo.'</h2>
               <ul id="myTab1" class="nav nav-tabs bordered">
                 <li class="active">
-                    <a href="#sA" data-toggle="tab"> (%) Cumplimiento de Operaciones</a>
+                  <a href="#sA" data-toggle="tab"> (%) Cumplimiento de Operaciones</a>
                 </li>
                 <li>
-                    <a href="#sB" data-toggle="tab"> Detalle de Cumplimiento</a>
+                  <a href="#sC" data-toggle="tab"> Detalle de Cumplimiento</a>
                 </li>
               </ul>
 
               <div id="myTabContent1" class="tab-content padding-10">
                 <div class="tab-pane fade in active" id="sA">
-                    <div id="calificacion">'.$calificacion.'</div>
+                  <article class="col-sm-12 col-md-12 col-lg-6">
+                    <div id="calificacion_trimestral">'.$calificacion_trimestral.'</div>
                     <div class="rows" align=center>
                       <div id="graf_detalle1">
-                        <div id="grafico1" style="width: 1000px; height: 900px; margin: 2 auto"></div>
+                        <div id="grafico_trimestral" style="width: 900px; height: 800px; margin: 2 auto"></div>
                       </div> 
                     </div>
+                  </article>
+                  <article class="col-sm-12 col-md-12 col-lg-6">
+                    <div id="calificacion">'.$calificacion_anual.'</div>
+                    <div class="rows" align=center>
+                      <div id="graf_detalle1">
+                        <div id="grafico1" style="width: 900px; height: 800px; margin: 2 auto"></div>
+                      </div> 
+                    </div>
+
                     <div id="tabla_impresion_detalle1" style="display: none">
                      '.$lista_operaciones.'
                     </div>
                     <div align="right">
                       <button  onClick="imprimir_grafico1()" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="30" HEIGHT="30"/></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
+                    <hr>
+                  </article>
                 </div>
                 
-                <div class="tab-pane fade" id="sB">
+                <div class="tab-pane fade" id="sC">
                   <div class="row">
                     '.$this->get_lista_acp_regional_con_operaciones($dep_id).'
                   </div>

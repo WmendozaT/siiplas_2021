@@ -1416,8 +1416,8 @@ class Modificacionpoa extends CI_Controller{
               <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
                 <th style="width:1%;height:20px;">#</th>
                 <th style="width:2.1%;">COD.<br>ACT.</th>
-                <th style="width:3.8%;">PARTIDA</th>
-                <th style="width:16%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:3.5%;">PARTIDA</th>
+                <th style="width:16.5%;">DETALLE REQUERIMIENTO</th>
                 <th style="width:4.6%;">UNIDAD MEDIDA</th>
                 <th style="width:4%;">CANT.</th>
                 <th style="width:4%;">PRECIO UNI.</th>
@@ -1447,8 +1447,8 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<tr class="modo1">
                   <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
                   <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$item_mod[0]['prod_cod'].'</b></td>
-                  <td style="width: 3.8%; text-align: center;">'.$item_mod[0]['par_codigo'].'</td>
-                  <td style="width: 16%; text-align: left;">'.$item_mod[0]['ins_detalle'].'</td>
+                  <td style="width: 3.5%; text-align: center;">'.$item_mod[0]['par_codigo'].'</td>
+                  <td style="width: 16.5%; text-align: left;text-align: justify;">'.$item_mod[0]['ins_detalle'].'</td>
                   <td style="width: 4.6%; text-align: left;">'.$item_mod[0]['ins_unidad_medida'].'</td>
                   <td style="width: 4%; text-align: right;">'.$item_mod[0]['ins_cant_requerida'].'</td>
                   <td style="width: 4%; text-align: right;">'.number_format($item_mod[0]['ins_costo_unitario'], 2, ',', '.').'</td>
@@ -1463,7 +1463,7 @@ class Modificacionpoa extends CI_Controller{
                       $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
                     }
                   }
-                  $tabla.='<td style="width: 6%; text-align: left;">'.$item_mod[0]['ins_observacion'].'</td>';
+                  $tabla.='<td style="width: 6%; text-align: left;text-align: justify;font-size: 6px;">'.$item_mod[0]['ins_observacion'].'</td>';
                 $tabla.='</tr>';
                 $monto=$monto+$item_mod[0]['ins_costo_total'];
               }
@@ -1482,8 +1482,8 @@ class Modificacionpoa extends CI_Controller{
               <tr class="modo1" style="text-align: center;" bgcolor="#efefef">
                 <th style="width:1%;height:20px;">#</th>
                 <th style="width:2.1%;">COD.<br>ACT.</th>
-                <th style="width:3.8%;">PARTIDA</th>
-                <th style="width:16%;">DETALLE REQUERIMIENTO</th>
+                <th style="width:3.5%;">PARTIDA</th>
+                <th style="width:16.5%;">DETALLE REQUERIMIENTO</th>
                 <th style="width:4.6%;">UNIDAD MEDIDA</th>
                 <th style="width:4%;">CANT.</th>
                 <th style="width:4%;">PRECIO UNI.</th>
@@ -1512,8 +1512,8 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='<tr class="modo1">
                   <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
                   <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$row['prod_cod'].'</b></td>
-                  <td style="width: 3.8%; text-align: center;">'.$row['par_codigo'].'</td>
-                  <td style="width: 16%; text-align: left;">'.$row['ins_detalle'].'</td>
+                  <td style="width: 3.5%; text-align: center;">'.$row['par_codigo'].'</td>
+                  <td style="width: 16.5%; text-align: left;text-align: justify;">'.$row['ins_detalle'].'</td>
                   <td style="width: 4.6%; text-align: left;">'.$row['ins_unidad_medida'].'</td>
                   <td style="width: 4%; text-align: right;">'.$row['ins_cant_requerida'].'</td>
                   <td style="width: 4%; text-align: right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
@@ -1528,7 +1528,7 @@ class Modificacionpoa extends CI_Controller{
                       $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
                     }
                   }
-                  $tabla.='<td style="width: 6%; text-align: left;">'.$row['ins_observacion'].'</td>';
+                  $tabla.='<td style="width: 6%; text-align: left;text-align: justify;font-size: 6px;">'.$row['ins_observacion'].'</td>';
                 $tabla.='</tr>';
                 $monto=$monto+$row['ins_costo_total'];
               }
@@ -1746,6 +1746,9 @@ class Modificacionpoa extends CI_Controller{
       if(count($requerimientos_del)!=0){
         $tabla.=$this->tabla(3,$requerimientos_del,'ITEMS ELIMINADOS ('.count($requerimientos_del).')');
       }
+
+
+      $cite=$this->model_modrequerimiento->get_cite_insumo($cite_id);
       $tabla.='
             <div style="font-size: 7.5px;font-family: Arial;">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; En atención a requerimiento de su unidad, comunicamos a usted que se ha procedido a efectivizar la modificación solicitada, toda vez que:<br>
@@ -1754,6 +1757,8 @@ class Modificacionpoa extends CI_Controller{
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b)&nbsp;&nbsp;&nbsp;No vulnera o contraviene disposiciones legales.<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c)&nbsp;&nbsp;&nbsp;No genera obligaciones o deudas por las modificaciones efectuadas.<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d)&nbsp;&nbsp;&nbsp;No compromete el pago de obligaciones previstas en el presupuesto.
+              <br><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>OBSERVACION :</b> '.$cite[0]['cite_observacion'].'
             </div>';
     }
     
@@ -2284,30 +2289,30 @@ class Modificacionpoa extends CI_Controller{
 //// Pie de Modificacion POA
   public function pie_modpoa($cite,$codigo){
     $tabla='';
-    $tabla.='
+/*    $tabla.='
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;">
-        <tr>
-          <td style="width: 1%;"></td>
-          <td style="width: 75%;">
-              <b>OBSERVACIÓN</b><hr>
-              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                <tr bgcolor="#cae4fb">
-                  <td style="width: 100%;height: 2%;">
-                    <b>'.$cite[0]['cite_observacion'].'</b>
-                  </td>
-                </tr>
-              </table>
-          </td>
-        </tr>
-      </table>
-     
+          <tr>
+            <td style="width: 1%;"></td>
+            <td style="width: 75%;">
+                <b>OBSERVACIÓN</b><hr>
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                  <tr bgcolor="#cae4fb">
+                    <td style="width: 100%;height: 2%; font-size:5px">
+                      <b>'.$cite[0]['cite_observacion'].'</b>
+                    </td>
+                  </tr>
+                </table>
+            </td>
+          </tr>
+        </table>';*/
+      $tabla.='
       <table border=0 style="width:100%;">
         <tr>
           <td style="width:1%;"></td>
           <td style="width:98%;">
             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
             <tr>';
-            /*$tabla.='
+            $tabla.='
               <td style="width:45%;">
                      <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                       <tr style="font-size: 10px;font-family: Arial;">
@@ -2315,7 +2320,7 @@ class Modificacionpoa extends CI_Controller{
                       </tr>
                      
                       <tr style="font-size: 8.5px;font-family: Arial; height:65px;">
-                          <td><br><br><br>
+                          <td><br><br>
                               <table>
                                   <tr style="font-size: 8px;font-family: Arial; height:65px;">
                                       <td><b>RESPONSABLE : </b></td>
@@ -2338,21 +2343,21 @@ class Modificacionpoa extends CI_Controller{
                       </tr>
                      
                       <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
-                          <td><b><br><br><br><br><br>FIRMA</b></td>
+                          <td><b><br><br><br><br>FIRMA</b></td>
                       </tr>
                   </table>
 
-                </td>';*/
-            if($this->dep_id==10){ /// Ritha
+                </td>';
+/*            if($cite[0]['dep_id']==10){ /// Ritha
               $tabla.='
-              <td style="width:30%;">
+                <td style="width:30%;">
                      <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                       <tr style="font-size: 10px;font-family: Arial;">
-                          <td style="width:100%;height:13px;"><b>ELABORADO POR<br></b></td>
+                          <td style="width:100%;height:13px;"><b>ELABORADO POR</b></td>
                       </tr>
                      
                       <tr style="font-size: 8.5px;font-family: Arial; height:65px;">
-                          <td><br><br><br>
+                          <td><br><br>
                               <table>
                                   <tr style="font-size: 8px;font-family: Arial; height:65px;">
                                       <td><b>RESPONSABLE : </b></td>
@@ -2367,17 +2372,17 @@ class Modificacionpoa extends CI_Controller{
                       </tr>
                   </table>
                 </td>
-                 <td style="width:30%;">
+                <td style="width:30%;">
                      <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                       <tr style="font-size: 10px;font-family: Arial;">
-                          <td style="width:100%;height:13px;"><b>APROBADO POR<br></b></td>
+                          <td style="width:100%;height:13px;"><b>APROBADO POR</b></td>
                       </tr>
                      
                       <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
-                          <td><br><br><br>
+                          <td><br><br>
                               <table style="width:100%;">
                                   <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
-                                      <td style="width:100%;">LIC. JUSTO ERLIN SOTTO SALVATIERRA</td>
+                                      <td style="width:100%;">LIC. JUAN MARCELO SEGALES CORONEL</td>
                                   </tr>
                                   <tr style="font-size: 10px;font-family: Arial; height:65px;">
                                       <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>
@@ -2388,17 +2393,14 @@ class Modificacionpoa extends CI_Controller{
                   </table>
                 </td>
                 <td style="width:30%;">
-
                   <table border="0.5" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                       <tr style="font-size: 10px;font-family: Arial;">
-                          <td style="width:100%;height:13px;"><b>FIRMA / SELLO DE RECEPCION DE LA UNIDAD SOLICITANTE<br></b></td>
+                          <td style="width:100%;height:13px;"><b>FIRMA / SELLO DE RECEPCION DE LA UNIDAD SOLICITANTE</b></td>
                       </tr>
-                     
                       <tr style="font-size: 8.5px;font-family: Arial; height:65px;" align="center">
-                          <td><b><br><br><br><br><br>FIRMA</b></td>
+                          <td><b><br><br><br><br>FIRMA</b></td>
                       </tr>
                   </table>
-
                 </td>';
             }
             else{
@@ -2438,7 +2440,7 @@ class Modificacionpoa extends CI_Controller{
                   </table>
 
                 </td>';
-            }
+            }*/
             $tabla.='
               
                 <td style="width:10%;" align=center>';
@@ -2455,7 +2457,7 @@ class Modificacionpoa extends CI_Controller{
               </tr>
             </table>
           </td>
-          <td style="width:1%;"></td>
+         
         </tr>
       </table>';
 

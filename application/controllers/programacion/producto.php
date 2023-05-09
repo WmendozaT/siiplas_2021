@@ -346,23 +346,23 @@ class Producto extends CI_Controller {
         $indi_id = $this->security->xss_clean($post['mtipo_i']); /// Tipo de Indicador
         $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador
         $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
-        $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
+      //  $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
         $linea_base = $this->security->xss_clean($post['mlbase']); /// Linea Base
         $meta = $this->security->xss_clean($post['mmeta']); /// Meta
         $presupuesto = $this->security->xss_clean($post['mppto']); /// Presupuesto
         $or_id = $this->security->xss_clean($post['mor_id']); /// Objetivo Regional
         $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
         $prioridad = $this->security->xss_clean($post['priori']); /// prioridad
-        $uni_resp = $this->security->xss_clean($post['um_resp']); /// unidad responsable
+        //$uni_resp = $this->security->xss_clean($post['um_resp']); /// unidad responsable
 
         $relacion_operacion_obj_estrategico=$this->model_objetivoregion->get_objetivosregional($or_id);
 
         $ae=0;
-        $get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
+        /*$get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
         if(count($get_acc)!=0){
           $ae=$get_acc[0]['ae'];
         }
-
+*/
         /*if($indi_id==1){
           $tp_met=3;
         }
@@ -378,11 +378,11 @@ class Producto extends CI_Controller {
             'prod_indicador' => strtoupper($indicador),
             'prod_linea_base' => $linea_base,
             'prod_meta' => $meta,
-            'prod_unidades' => $unidad,
+            //'prod_unidades' => $unidad,
             'prod_fuente_verificacion' => strtoupper($mverificacion),
             'estado' => 2,
             'or_id' => $or_id,
-            'uni_resp' => $uni_resp,
+            //'uni_resp' => $uni_resp,
             'obj_id' => $relacion_operacion_obj_estrategico[0]['obj_id'],
             'acc_id' => $ae,
             'fecha' => date("d/m/Y H:i:s"),

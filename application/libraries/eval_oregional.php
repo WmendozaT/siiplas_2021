@@ -130,11 +130,11 @@ class Eval_oregional extends CI_Controller{
             <p>
               <h2><b>EVALUACIÓN OPERACIONES '.strtoupper($departamento[0]['dep_departamento']).' </b> - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</h2>
               <br>
-                  <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>IMPRIMIR DETALLE (Form N° 2)</b></a>
-                  <a href="#" data-toggle="modal" data-target="#modal_cumplimiento_grafico" class="btn btn-lg btn-default" name="'.$dep_id.'" onclick="nivel_cumplimiento_operaciones_grafico('.$dep_id.','.$this->tmes.');" title="NIVEL DE CUMPLIMIENTO DE OPERACIONES (GRAFICO)" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>DETALLE CUMPLIMIENTO (Form N° 2)</b></a>
+                <a href="javascript:abreVentana(\''.site_url("").'/rep_eval_oregional/'.$dep_id.'\');" title="REPORTE EVALUACIÓN META REGIONAL" class="btn btn-lg btn-default" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>IMPRIMIR DETALLE (Form N° 2)</b></a>
+                <a href="#" data-toggle="modal" data-target="#modal_cumplimiento_grafico" class="btn btn-lg btn-default" name="'.$dep_id.'" onclick="nivel_cumplimiento_operaciones_grafico('.$dep_id.','.$this->tmes.');" title="NIVEL DE CUMPLIMIENTO DE OPERACIONES (GRAFICO)" style="font-size: 12px; color:#1e5e56; border-color:#1e5e56"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="20" HEIGHT="20"/> &nbsp;<b>DETALLE CUMPLIMIENTO (Form N° 2)</b></a>
             </p>
             <hr class="simple">
-            '.$this->calificacion_total_form2_regional($dep_id).'
+            '.$this->calificacion_total_form2_regional($dep_id,1).'
             <hr class="simple">
             <ul id="myTab1" class="nav nav-tabs bordered">';
               $nro=0;
@@ -277,7 +277,10 @@ class Eval_oregional extends CI_Controller{
 
 
     /*--- ACTUALIZA PARAMETRO DE CALIFICACION OPERACIONES REGIONAL ---*/
-    public function calificacion_total_form2_regional($dep_id){
+    public function calificacion_total_form2_regional($dep_id,$tp_calificacion){
+      /// tp_calificacion : 0 (trimestral)
+      /// tp_calificacion : 1 (Acumulado a la gestion)
+
       $prog_trimestre=0; $ejec_trimestre=0;$prog_total_form2=0;
 
       $prog_total=$this->model_objetivoregion->get_suma_total_prog_form2_regional($dep_id);
@@ -300,34 +303,45 @@ class Eval_oregional extends CI_Controller{
       $calif[1]=$prog_trimestre; /// programado trimestral
       $calif[2]=$ejec_trimestre; /// ejecutado trimestral
       $calif[3]=$prog_total_form2; /// total programado Gestion
-      $calif[4]=0;
+      $calif[4]=0; /// Cumplimiento trimestral
+      $calif[5]=0; /// Cumplimiento acumulado a la gestion
+
+      if($prog_trimestre!=0){
+        $calif[4]=round((($calif[2]/$prog_trimestre)*100),2);
+      }
 
       if($prog_total_form2!=0){
-        $calif[4]=round((($calif[2]/$prog_total_form2)*100),2);
+        $calif[5]=round((($calif[2]/$prog_total_form2)*100),2);
       }
+
+      $cumplimiento=$calif[4]; 
+      if($tp_calificacion==1){
+        $cumplimiento=$calif[5];
+      }
+
 
 
       $calificacion='';$resp='';
       $valor=0;$color='';
 
-      if($calif[4]>0 & $calif[4]<=50){
+      if($cumplimiento>0 & $cumplimiento<=50){
         $resp='<b>INSATISFACTORIO</b>';
         $color='#f95b4f';
       }
-      elseif($calif[4]>50 & $calif[4]<=75){
+      elseif($cumplimiento>50 & $cumplimiento<=75){
        $resp='<b>REGULAR</b>';
        $color='#edd094';
       }
-      elseif($calif[4]>75 & $calif[4]<=99){
+      elseif($cumplimiento>75 & $cumplimiento<=99){
        $resp='<b>BUENO</b>';
        $color='#83bad1';
       }
-      elseif($calif[4]==100){
+      elseif($cumplimiento==100){
        $resp='<b>OPTIMO</b>';
        $color='#4caf50';
       }
 
-      $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size="7px">'.$calif[4].'%</font><br>'.$resp.'</center></div>';
+      $calificacion.='<div style="color:white; background-color:'.$color.'"><center><font size="7px">'.$cumplimiento.'%</font><br>'.$resp.'</center></div>';
       return $calificacion;
     }
 
@@ -1092,7 +1106,7 @@ class Eval_oregional extends CI_Controller{
   }
 
 
-  //// Matriz lista de cumplimiento de Operaciones por Regional 
+  //// Matriz lista de cumplimiento de Operaciones por Regional ANUAL
   public function matriz_cumplimiento_operaciones_regional($dep_id){
     $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
      for ($i=0; $i <count($lista_ogestion); $i++) { 
@@ -1122,7 +1136,7 @@ class Eval_oregional extends CI_Controller{
 
 
 
-  //// Matriz lista de cumplimiento de Operaciones Institucional 
+  //// Matriz lista de cumplimiento de Operaciones Institucional a la Gestion
   public function matriz_cumplimiento_operaciones_institucional(){
     $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional_institucional();
      for ($i=0; $i <count($lista_ogestion); $i++) { 
@@ -1134,6 +1148,41 @@ class Eval_oregional extends CI_Controller{
      $nro=0;
      foreach($lista_ogestion as $row){
       $get_trm_ejec=$this->model_objetivoregion->get_ejec_form2_institucional($row['og_codigo'],$row['or_codigo']); /// Temporalidad Ejecutado
+      $ejec_form2_institucional=0;
+      if(count($get_trm_ejec)!=0){
+        $ejec_form2_institucional=$get_trm_ejec[0]['ejecutado'];
+      }  
+
+
+        $matriz[$nro][0]=$row['og_codigo']; /// cod OG
+        $matriz[$nro][1]=$row['or_codigo']; /// cod OR
+        $matriz[$nro][2]=$row['programado_total']; /// Programado Total
+        $matriz[$nro][3]=$ejec_form2_institucional; /// ejecutado Total
+        $ejecutado=0;
+        if($row['programado_total']!=0){
+          $ejecutado=round((($ejec_form2_institucional/$row['programado_total'])*100),2);
+        }
+        $matriz[$nro][4]=$ejecutado; /// ejecutado Total %
+
+        $nro++;
+     }
+
+     return $matriz;
+  }
+
+
+  //// Matriz lista de cumplimiento de Operaciones Institucional al Trimestre
+  public function matriz_cumplimiento_operaciones_institucional_al_trimestre(){
+    $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional_institucional_al_trimestre($this->tmes);
+     for ($i=0; $i <count($lista_ogestion); $i++) { 
+      for ($j=0; $j <4 ; $j++) { 
+        $matriz[$i][$j]=0;
+      } 
+     }
+
+     $nro=0;
+     foreach($lista_ogestion as $row){
+      $get_trm_ejec=$this->model_objetivoregion->get_ejec_form2_institucional_al_trimestre($row['og_codigo'],$row['or_codigo'],$this->tmes); /// Temporalidad Ejecutado
       $ejec_form2_institucional=0;
       if(count($get_trm_ejec)!=0){
         $ejec_form2_institucional=$get_trm_ejec[0]['ejecutado'];

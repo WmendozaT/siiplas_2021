@@ -567,17 +567,17 @@ class Evaluacionpoa extends CI_Controller{
     $distrital=$this->model_proyecto->dep_dist($id);
     
     if($tp_uni==0){ //// Regional
-      $titulo_consolidado='% CONSOLIDADO ';
-      $eficacia_distrital=$this->tabla_regresion_lineal_regional($id); /// Eficacia
+      $titulo_consolidado='% CONSOLIDADO REGIONAL';
+      $eficacia_distrital=$this->tabla_regresion_lineal_regional($id); /// Datos de Cumplimiento
       $economia_distrital=$this->economia_por_regional($id); /// Economia
-      $eficiencia_distrital=$this->eficiencia_por_regional($eficacia_distrital[5][$this->tmes],$economia_distrital[3]); /// Eficiencia
+      //$eficiencia_distrital=$this->eficiencia_por_regional($eficacia_distrital[5][$this->tmes],$economia_distrital[3]); /// Eficiencia
     }
     else{ ///// Distrital
       $distrital=$this->model_proyecto->dep_dist($id);
-      $titulo_consolidado='% CONSOLIDADO ';
-      $eficacia_distrital=$this->tabla_regresion_lineal_distrital($id); /// Eficacia
+      $titulo_consolidado='% CONSOLIDADO DISTRITAL';
+      $eficacia_distrital=$this->tabla_regresion_lineal_distrital($id); /// Datos de Cumplimiento
       $economia_distrital=$this->economia_por_distrital($id); /// Economia
-      $eficiencia_distrital=$this->eficiencia_por_distrital($eficacia_distrital[5][$this->tmes],$economia_distrital[3]); /// Eficiencia
+      //$eficiencia_distrital=$this->eficiencia_por_distrital($eficacia_distrital[5][$this->tmes],$economia_distrital[3]); /// Eficiencia
     }
 
 
@@ -628,7 +628,7 @@ class Evaluacionpoa extends CI_Controller{
             $tabla.='<tr style="font-size: 10px;" bgcolor='.$color.'>';
             $tabla.='<td style="width:1;height:10px;" align=center>'.$nro.'</td>';
             $tabla.='<td style="width:10%;">'.strtoupper($row['dist_distrital']).'</td>';
-            $tabla.='<td style="width:10%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
+            $tabla.='<td style="width:10%;">'.$row['prog'].' - '.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</td>';
             $tabla.='<td style="width:5%;" align=center>';
             $procesos=$this->model_componente->lista_subactividad($row['proy_id']);
               $tabla.=' <div class="btn-group">
@@ -639,7 +639,7 @@ class Evaluacionpoa extends CI_Controller{
                               if($row['ta_id']==2){
                                 $tabla.='
                                 <li>
-                                  <a href="'.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$pr['com_id'].'/'.$this->tmes.'"  target="_blank" title="VER EVALUACIÓN POA">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</a>
+                                  <a href="'.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$pr['com_id'].'/'.$this->tmes.'"  target="_blank" title="VER EVALUACIÓN POA">'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</a>
                                 </li>';
                               }
                               else{
