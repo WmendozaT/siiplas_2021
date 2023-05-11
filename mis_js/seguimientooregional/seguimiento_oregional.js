@@ -63,8 +63,8 @@
                 cuadro_grafico_cumplimiento_operaciones_institucional(response.matriz,response.nro,response.titulo);
                 cuadro_grafico_cumplimiento_operaciones_regresion_intitucional(response.matriz_regresion,response.titulo); 
 
-                cuadro_grafico_cumplimiento_form2_detalle_institucional('grafico_trimestre','CUMPLIMIENTO DE OPERACIONES AL '+response.trimestre[0]['trm_descripcion']+'<br>INSTITUCIONAL','#66efdc',response.matriz_form2_trimestre,response.nro_form2_trimestre,response.gestion) /// al trimestre
-                cuadro_grafico_cumplimiento_form2_detalle_institucional('grafico3','CUMPLIMIENTO DE OPERACIONES - GESTIÓN '+response.gestion+'<br>INSTITUCIONAL','#296860',response.matriz_form2,response.nro_form2,response.gestion) /// Acumulado a la Gestion
+                cuadro_grafico_cumplimiento_form2_detalle_institucional('grafico_trimestre','CUMPLIMIENTO DE OPERACIONES AL '+response.trimestre[0]['trm_descripcion']+'<br><b>INSTITUCIONAL</b>','#66efdc',response.matriz_form2_trimestre,response.nro_form2_trimestre,response.gestion) /// al trimestre
+                cuadro_grafico_cumplimiento_form2_detalle_institucional('grafico3','CUMPLIMIENTO DE OPERACIONES - GESTIÓN '+response.gestion+'<br><b>INSTITUCIONAL</b>','#296860',response.matriz_form2,response.nro_form2,response.gestion) /// Acumulado a la Gestion
               }
               else{
                 alertify.error("ERROR AL LISTAR");
@@ -335,10 +335,10 @@ function cuadro_grafico_cumplimiento_form2_detalle_institucional(grafico,titulo,
         type: 'bar'
     },
     title: {
-        text: ''
+        text: titulo
     },
     subtitle: {
-        text: titulo
+        text: ''
     },
     xAxis: {
         categories: categoria,

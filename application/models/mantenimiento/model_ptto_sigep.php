@@ -210,10 +210,10 @@ class Model_ptto_sigep extends CI_Model{
 //// =====================================
 
     /*-------------------- Apertura Programatica hijo ------------------------*/
-    public function get_apertura($da,$ue,$programa,$proyecto,$actividad){
+    public function get_apertura($programa,$proyecto,$actividad){
         $sql = 'select *
                 from lista_poa_gastocorriente_nacional('.$this->gestion.')
-                where prog=\''.$programa.'\' and proy=\''.$proyecto.'\' and act=\''.$actividad.'\' and da=\''.$da.'\' and ue=\''.$ue.'\' ';
+                where prog=\''.$programa.'\' and proy=\''.$proyecto.'\' and act=\''.$actividad.'\'  ';
 
         $query = $this->db->query($sql);
         return $query->result_array();

@@ -93,7 +93,9 @@
             <!-- MAIN CONTENT -->
                 <div id="content">
                     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="well well-sm well-light">
+                        <?php echo $informacion;?>
+                                                <button onClick="imprimir_grafico()" >IMPRIMIR CUADRO</button>
+                        <!-- <div class="well well-sm well-light">
                             <form class="smart-form">
                             <header><h2><b>EVALUACI&Oacute;N DE A.C.P. (FORMULARIO N° 1) </b> - INSTITUCIONAL</h2></header>
                             <fieldset>          
@@ -123,7 +125,7 @@
                                 </div>
                             </fieldset>
                             </form>
-                        </div>
+                        </div> -->
                     </article>
                 </div>
             <!-- END MAIN CONTENT -->

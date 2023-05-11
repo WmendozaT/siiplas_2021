@@ -293,11 +293,11 @@ class Cmod_presupuestario extends CI_Controller {
                     redirect(site_url("").'/mod_ppto/list_mod_ppto');
                   }
                   else{
-                    echo "No existe Archivo de importacion ..";
+                    echo "No existe Archivo de importacion1 ..";
                   }
               }
               else{
-                echo "No existe Archivo de importacion ..";
+                echo "No existe Archivo de importacion2 ..";
               }
           } 
           elseif (empty($file_basename)) {
@@ -334,8 +334,8 @@ class Cmod_presupuestario extends CI_Controller {
                     $tp=trim($datos[4]); /// tp : 1 (reduccion), 0 (Adicion)
                     $activo=trim($datos[5]); /// tp : 1 (activo), 0 (No activo)
 
-                    if(strlen($prog)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
-                      $aper=$this->model_ptto_sigep->get_apertura($prog,'0000',$act);
+                    if(strlen($prog)==3 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
+                      $aper=$this->model_ptto_sigep->get_apertura($prog,'00',$act);
                       //$aper=$this->model_ptto_sigep->get_apertura($prog,'0098',$act);
                       //$aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                       if(count($aper)!=0){
@@ -350,7 +350,7 @@ class Cmod_presupuestario extends CI_Controller {
                             'mp_id' => $mp_id,
                             'aper_id' => $aper[0]['aper_id'],
                             'aper_programa' => $prog,
-                            'aper_proyecto' => '0000',
+                            'aper_proyecto' => '00',
                             'aper_actividad' => $act,
                             'par_id' => $par_id,
                             'partida' => $cod_part,
