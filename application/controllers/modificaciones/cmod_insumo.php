@@ -42,7 +42,7 @@ class Cmod_insumo extends CI_Controller {
       if(count($data['proyecto'])!=0){
         if($data['proyecto'][0]['tp_id']==1){
           $titulo='
-          <h1> PROYECTO DE INVERSI&Oacute;N : <small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small>';
+          <h1> PROYECTO DE INVERSI&Oacute;N : <small>'.$data['proyecto'][0]['proy_sisin'].' - '.$data['proyecto'][0]['proy_nombre'].'</small>';
         }
         else{
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);

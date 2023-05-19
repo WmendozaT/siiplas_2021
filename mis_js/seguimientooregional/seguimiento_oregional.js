@@ -60,7 +60,7 @@
             request.done(function (response, textStatus, jqXHR) {
               if (response.respuesta == 'correcto') {
                 $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-                cuadro_grafico_cumplimiento_operaciones_institucional(response.matriz,response.nro,response.titulo);
+                cuadro_grafico_cumplimiento_operaciones_institucional(response.matriz,response.nro,response.titulo,response.gestion);
                 cuadro_grafico_cumplimiento_operaciones_regresion_intitucional(response.matriz_regresion,response.titulo); 
 
                 cuadro_grafico_cumplimiento_form2_detalle_institucional('grafico_trimestre','CUMPLIMIENTO DE OPERACIONES AL '+response.trimestre[0]['trm_descripcion']+'<br><b>INSTITUCIONAL</b>','#66efdc',response.matriz_form2_trimestre,response.nro_form2_trimestre,response.gestion) /// al trimestre
@@ -113,10 +113,10 @@
 
 
 //// grafico nivel de cumplimiento de operaciones Institucional
-function cuadro_grafico_cumplimiento_operaciones_institucional(matriz,nro,titulo){
+function cuadro_grafico_cumplimiento_operaciones_institucional(matriz,nro,titulo,gestion){
   let detalle=[];
   for (var i = 0; i < nro; i++) {
-      detalle[i]= { name: matriz[i][2],y: matriz[i][6]};
+      detalle[i]= { name: matriz[i][2],y: matriz[i][3]};
   }
 
    Highcharts.chart('grafico1', {
@@ -124,10 +124,10 @@ function cuadro_grafico_cumplimiento_operaciones_institucional(matriz,nro,titulo
       type: 'column'
     },
     title: {
-      text: ''
+      text: '(%) CUMPLIMIENTO DE OPERACIONES - GESTIÓN '+gestion+'</b>'
     },
     subtitle: {
-      text: '(%) de Cumplimiento de Operaciones (Formulario N° 2)<br><b>'+titulo+'</b>'
+      text: titulo
     },
     accessibility: {
       announceNewData: {
@@ -139,7 +139,7 @@ function cuadro_grafico_cumplimiento_operaciones_institucional(matriz,nro,titulo
     },
     yAxis: {
       title: {
-        text: '(%) de Cumplimiento de Operaciones a Nivel de Regionales'
+        text: '(%) de Cumplimiento de Operaciones (Formulario N° 2)'
       }
 
     },

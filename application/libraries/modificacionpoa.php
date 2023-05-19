@@ -1020,7 +1020,8 @@ class Modificacionpoa extends CI_Controller{
       $tabla='';
         if(count($fase)!=0){
             $componente=$this->model_componente->componentes_id($fase[0]['id'],$proyecto[0]['tp_id']);
-            $tabla.='<table id="dt_basic" class="table table table-bordered" width="100%">
+            $tabla.='
+              <table id="dt_basic" class="table table table-bordered" width="100%">
                 <thead>
                     <tr style="height:45px;">
                         <th style="width:1%;">#</th>

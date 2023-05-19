@@ -281,48 +281,27 @@ class Eval_oregional extends CI_Controller{
       /// tp_calificacion : 0 (trimestral)
       /// tp_calificacion : 1 (Acumulado a la gestion)
 
-      $prog_trimestre=0; $ejec_trimestre=0;$prog_total_form2=0;
+      $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
+      $nro_prog=count($lista_ogestion);
+      $suma_cumplimiento_trimestral=0;
+      $suma_cumplimiento_gestion=0;
+      
+      foreach($lista_ogestion as $row){
+        $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+        $suma_cumplimiento_trimestral=$suma_cumplimiento_trimestral+$calificacion[3];
+        $suma_cumplimiento_gestion=$suma_cumplimiento_gestion+$calificacion[4];
+     }
 
-      $prog_total=$this->model_objetivoregion->get_suma_total_prog_form2_regional($dep_id);
-      if(count($prog_total)!=0){
-        $prog_total_form2=$prog_total[0]['programado_total'];
-      }
-
-      for ($i=1; $i <=$this->tmes; $i++) { 
-        $prog=$this->model_objetivoregion->get_suma_trimestre_prog_form2_regional($dep_id,$i);
-        if(count($prog)!=0){
-          $prog_trimestre=$prog_trimestre+$prog[0]['prog'];
+     $cumplimiento=0;
+     if($nro_prog!=0){
+        $cumplimiento= round(($suma_cumplimiento_trimestral/$nro_prog),2);  
+        if($tp_calificacion==1){
+          $cumplimiento= round(($suma_cumplimiento_gestion/$nro_prog),2); 
         }
-
-        $ejec=$this->model_objetivoregion->get_suma_trimestre_ejec_form2_regional($dep_id,$i);
-        if(count($ejec)!=0){
-          $ejec_trimestre=$ejec_trimestre+$ejec[0]['ejec'];
-        }
-      }
-
-      $calif[1]=$prog_trimestre; /// programado trimestral
-      $calif[2]=$ejec_trimestre; /// ejecutado trimestral
-      $calif[3]=$prog_total_form2; /// total programado Gestion
-      $calif[4]=0; /// Cumplimiento trimestral
-      $calif[5]=0; /// Cumplimiento acumulado a la gestion
-
-      if($prog_trimestre!=0){
-        $calif[4]=round((($calif[2]/$prog_trimestre)*100),2);
-      }
-
-      if($prog_total_form2!=0){
-        $calif[5]=round((($calif[2]/$prog_total_form2)*100),2);
-      }
-
-      $cumplimiento=$calif[4]; 
-      if($tp_calificacion==1){
-        $cumplimiento=$calif[5];
-      }
+     }
 
 
-
-      $calificacion='';$resp='';
-      $valor=0;$color='';
+      $calificacion='';$resp='';$color='';
 
       if($cumplimiento>0 & $cumplimiento<=50){
         $resp='<b>INSATISFACTORIO</b>';

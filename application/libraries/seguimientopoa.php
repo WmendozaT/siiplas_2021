@@ -81,20 +81,13 @@ class Seguimientopoa extends CI_Controller{
             }
             else{ /// Gasto Corriente
                 $tabla.='
-                <td style="width:10%;"><b>ACTIVIDAD</b></td>
+                <td style="width:10%;"><b>PROGRAMA</b></td>
                 <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td>';
             }
           $tabla.='
           </tr>
           <tr style="font-size: 8pt;">
-              <td style="height: 1.2%; width:10%;"><b>';
-                if($proyecto[0]['tp_id']==1){
-                  $tabla.='UNI. RESP. ';
-                }
-                else{
-                  $tabla.='SUBACT. ';
-                }
-              $tabla.='</b></td>
+              <td style="height: 1.2%; width:10%;"><b>UNI. RESP.</b></td>
               <td style="width:90%;">: '.strtoupper($componente[0]['serv_cod']).' '.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_descripcion']).'</td>
           </tr>
         </table>';

@@ -52,30 +52,29 @@ function abreVentana_eficiencia(PDF){
 
 
 
-
-
   //// imprimir ACP (Institucional)
   function imprimir_grafico() {
-    var grafico = document.querySelector("#grafico1");
+    var grafico = document.querySelector("#grafico_gestion");
     document.getElementById("cabecera").style.display = 'block';
     var cabecera = document.querySelector("#cabecera");
-    //var eficacia = document.querySelector("#calificacion");
+    var calificacion = document.querySelector("#calificacion");
     document.getElementById("tabla_impresion_detalle").style.display = 'block';
     var tabla = document.querySelector("#tabla_impresion_detalle");
-    imprimirevaluacionform1(grafico,cabecera,tabla);
+    imprimirevaluacionform1(grafico,cabecera,calificacion,tabla);
     document.getElementById("cabecera").style.display = 'none';
     document.getElementById("tabla_impresion_detalle").style.display = 'none';
   }
 
-  function imprimirevaluacionform1(grafico,cabecera,tabla) {
+  function imprimirevaluacionform1(grafico,cabecera,calificacion,tabla) {
     var ventana = window.open('Evaluacion FORMULARIO N° 1 ', 'PRINT', 'height=800,width=1000');
-    ventana.document.write('<html><head><title>EVALUACION ACCIONES DE CORTO PLAZO INSTITUVIONAL - FORM. N° 1</title>');
+    ventana.document.write('<html><head><title>EVALUACION ACCIONES DE CORTO PLAZO INSTITUCIONAL - FORM. N° 1</title>');
     ventana.document.write('</head><body>');
     ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
-    ventana.document.write(cabecera.innerHTML);
-    //ventana.document.write('<hr>');
-   // ventana.document.write(eficacia.innerHTML);
+    //ventana.document.write(cabecera.innerHTML);
+    ventana.document.write('<hr>');
     ventana.document.write(grafico.innerHTML);
+    ventana.document.write('<hr>');
+    ventana.document.write(calificacion.innerHTML);
     ventana.document.write('<hr>');
     ventana.document.write(tabla.innerHTML);
     ventana.document.write('</body></html>');
@@ -87,234 +86,3 @@ function abreVentana_eficiencia(PDF){
     };
     return true;
   }
-
-  //// LISTA DE REGIONALES PARA GENERAR LOS FORM 1
-/*  $("#d_id").change(function () {
-    $("#d_id option:selected").each(function () {
-      dep_id=$(this).val();
-      if(dep_id!=0){
-        $('#titulo_lista').html('<font size=3><b>Cargando Informacion ..... </b></font>');
-          var url = base+"index.php/ejecucion/cevaluacion_form1/get_lista_form1_x_regionales";
-          var request;
-          if (request) {
-              request.abort();
-          }
-          request = $.ajax({
-              url: url,
-              type: "POST",
-              dataType: 'json',
-              data: "dep_id="+dep_id
-          });
-
-          request.done(function (response, textStatus, jqXHR) {
-
-          if (response.respuesta == 'correcto') {
-              $('#titulo_lista').html(response.tabla);
-          }
-          else{
-              alertify.error("ERROR AL RECUPERAR INFORMACION");
-          }
-
-        });
-      }
-      else{
-        $('#titulo_lista').html('');
-      }
-    });
-  });*/
-
-
-
-
- /// ACP FORMULARIO N 1
-  /// Funcion para guardar datos de Evaluacion POA ACP Regional 2022
-/*  function guardar_acp_regional(pog_id){
-    tp=($('[id="tp'+pog_id+'"]').val());
-    ejec=($('[id="ejec'+pog_id+'"]').val());
-    mverificacion=($('[id="mverificacion'+pog_id+'"]').val());
-
-    var $validator = $("#form_eval"+pog_id).validate({
-      rules: {
-        ejec: { //// ejecucion
-          required: true,
-        },
-        mverificacion: { //// medio de verificacion
-          required: true,
-          minlength : 50,
-        }
-      },
-      messages: {
-        ejec: "<font color=red>REGISTRE VALOR DE EJECUCION</font>",
-        mverificacion: "<font color=red>REGISTRE MEDIO DE VERIFICACION > 50 (Caracteres)</font>",
-      }
-    });
-
-    var $valid = $("#form_eval"+pog_id).valid();
-    if (!$valid) {
-        $validator.focusInvalid();
-    } else {
-
-      alertify.confirm("GUARDAR EVALUACIÓN ACP ?", function (a) {
-      if (a) {
-          var url = base+"index.php/ejecucion/cevaluacion_form1/valida_update_evaluacion_acp";
-          var request;
-          if (request) {
-              request.abort();
-          }
-          request = $.ajax({
-              url: url,
-              type: "POST",
-              dataType: 'json',
-              data: "pog_id="+pog_id+"&ejec="+ejec+"&mv="+mverificacion+"&tp="+tp
-          });
-
-          request.done(function (response, textStatus, jqXHR) {
-            document.getElementById('log'+pog_id).innerHTML = '<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/><b>GUARDANDO REGISTRO ....</b></div>';
-            $('#btn_eval'+pog_id).slideUp();
-            
-            if (response.respuesta == 'correcto') {
-                document.getElementById('log'+pog_id).innerHTML = '';
-                $('#btn_eval'+pog_id).slideDown();
-
-                document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-                
-                document.getElementById("ejec"+pog_id).value = response.info_evaluado[0]['ejec_fis'];
-                document.getElementById("mverificacion"+pog_id).value = response.info_evaluado[0]['tmed_verif'];
-                alertify.success("REGISTRO CORRECTAMENTE !!");
-            }
-            else{
-                alertify.error("ERROR AL GUARDAR INFORMACION");
-            }
-
-          });
-      } else {
-          alertify.error("OPCI\u00D3N CANCELADA");
-      }
-    });
-
-    }
-  }*/
-
-
-  /// ACP FORM 1
-  //// Verificando valor ejecutado registrado 2022
-/*  function verif_valor_ejecucion(pog_id,valor_registrado){
-    if(valor_registrado!=''){
-        var url = base+"index.php/ejecucion/cevaluacion_form1/get_datos_acp_regional";
-        var request;
-        if (request) {
-            request.abort();
-        }
-        request = $.ajax({
-            url: url,
-            type: "POST",
-            dataType: 'json',
-            data: "pog_id="+pog_id+"&ejec="+valor_registrado
-        });
-
-        request.done(function (response, textStatus, jqXHR) {
-        if (response.respuesta == 'correcto') {
-           if(response.acp_regional[0]['tp_indi_og']==0){
-              if((parseFloat(valor_registrado) + parseFloat(response.evaluado))<=response.meta_regional[0]['prog_fis']){
-                document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-                document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
-                document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
-                $('#btn_eval'+pog_id).slideDown();
-              }
-              else{
-                document.getElementById('porcentaje'+pog_id).innerHTML = '<center>---</center>';
-                document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#fff0f0";
-                document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#fff0f0";
-                $('#btn_eval'+pog_id).slideUp();
-              }
-           }
-
-           if(response.acp_regional[0]['tp_indi_og']==1){
-              document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-              document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
-              document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
-              $('#btn_eval'+pog_id).slideDown();
-           }
-
-           if(response.acp_regional[0]['tp_indi_og']==2){
-              if((parseFloat(valor_registrado))<=100){
-                document.getElementById('porcentaje'+pog_id).innerHTML = response.calificacion;
-                document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#ffffff";
-                document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#ffffff";
-                $('#btn_eval'+pog_id).slideDown();
-              }
-              else{
-                document.getElementById('porcentaje'+pog_id).innerHTML = '<center>---</center>';
-                document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#fff0f0";
-                document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#fff0f0";
-                $('#btn_eval'+pog_id).slideUp();
-              }
-           }
-          
-        }
-        else{
-            alertify.error("ERROR AL RECUPERAR DATOS");
-        }
-
-        });
-    }
-    else{
-
-      document.getElementById('porcentaje'+pog_id).innerHTML = '<center>---</center>';
-      document.getElementById("ejec"+pog_id+'').style.backgroundColor = "#fff0f0";
-      document.getElementById("mverificacion"+pog_id+'').style.backgroundColor = "#fff0f0";
-      $('#btn_eval'+pog_id).slideUp();
-    }
-
-  }*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-///// MODULO DE REPORTES ACP FORM 1
-////------- menu select regionales
-/*  $("#dep_id").change(function () {
-    $("#dep_id option:selected").each(function () {
-      dep_id=$(this).val();
-      if(dep_id!=''){
-        var url = base+"index.php/reporte_evalform1/crep_evalform1/get_cuadro_evaluacion_objetivos";
-        var request;
-        if (request) {
-            request.abort();
-        }
-        request = $.ajax({
-          url: url,
-          type: "POST",
-          dataType: 'json',
-          data: "dep_id="+dep_id
-        });
-
-        request.done(function (response, textStatus, jqXHR) {
-          if (response.respuesta == 'correcto') {
-            $('#lista_consolidado').fadeIn(1000).html(response.tabla);
-          }
-          else{
-            alertify.error("ERROR AL LISTAR");
-          }
-        }); 
-      }
-      else{
-        $('#lista_consolidado').fadeIn(1000).html('<div class="well"><div class="jumbotron"><h1>Evaluaci&oacute;n A.C.P. '+gestion+'</h1></div></div>');
-      }
-    });
-  });*/
-

@@ -605,7 +605,7 @@ class Model_objetivoregion extends CI_Model{
 
     //// REPORTE DE EVALUACION POA FORMUALRIO 2 - POR REGIONAL -----
     /*-- OBTIENE LA SUMATORIA TOTAL PROGRAMADO FORMULARIO 2 A LA GESTION POR REGIONALES --*/
-    public function get_suma_total_prog_form2_regional($dep_id){
+/*    public function get_suma_total_prog_form2_regional($dep_id){
         $sql = '
             select opge.dep_id,opge.g_id,SUM(temprog.pg_fis) programado_total
                 from temp_trm_prog_objetivos_regionales temprog
@@ -616,10 +616,10 @@ class Model_objetivoregion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-- OBTIENE LA SUMATORIA TOTAL EJECUTADO FORMULARIO 2 A LA GESTION POR REGIONALES --*/
-    public function get_suma_total_ejec_form2_regional($dep_id){
+/*    public function get_suma_total_ejec_form2_regional($dep_id){
         $sql = '
             select opge.dep_id,opge.g_id,SUM(temejec.ejec_fis) ejecutado_total
                 from temp_trm_ejec_objetivos_regionales temejec
@@ -630,10 +630,10 @@ class Model_objetivoregion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-- OBTIENE LA SUMATORIA PROGRAMADO FORMULARIO 2 AL TRIMESTRE POR REGIONALES --*/
-    public function get_suma_trimestre_prog_form2_regional($dep_id,$trimestre){
+/*    public function get_suma_trimestre_prog_form2_regional($dep_id,$trimestre){
         $sql = '
             select opge.dep_id,temprog.trm_id,opge.g_id,SUM(temprog.pg_fis) prog
                 from temp_trm_prog_objetivos_regionales temprog
@@ -644,10 +644,10 @@ class Model_objetivoregion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*-- OBTIENE LA SUMATORIA EJECUTADO FORMULARIO 2 AL TRIMESTRE POR REGIONALES --*/
-    public function get_suma_trimestre_ejec_form2_regional($dep_id,$trimestre){
+/*    public function get_suma_trimestre_ejec_form2_regional($dep_id,$trimestre){
         $sql = '
             select opge.dep_id,temejec.trm_id,opge.g_id,SUM(temejec.ejec_fis) ejec
                 from temp_trm_ejec_objetivos_regionales temejec
@@ -658,7 +658,10 @@ class Model_objetivoregion extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
+
+
+
 
 
     //// REPORTE DE EVALUACION POA FORMUALRIO 2 - INSTITUCIONAL -----

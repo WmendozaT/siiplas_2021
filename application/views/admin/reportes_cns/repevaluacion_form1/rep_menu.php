@@ -92,41 +92,16 @@
             </div>
             <!-- MAIN CONTENT -->
                 <div id="content">
-                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <?php echo $informacion;?>
-                                                <button onClick="imprimir_grafico()" >IMPRIMIR CUADRO</button>
-                        <!-- <div class="well well-sm well-light">
-                            <form class="smart-form">
-                            <header><h2><b>EVALUACI&Oacute;N DE A.C.P. (FORMULARIO N° 1) </b> - INSTITUCIONAL</h2></header>
-                            <fieldset>          
-                                <div class="row">
-                                    <div id="tabs">
-                                        <ul>
-                                            <li>
-                                                <a href="#tabs-a"><b>CUMPLIMIENTO TRIMESTRAL</b></a>
-                                            </li>
-                                            <li>
-                                                <a href="#tabs-b"><b>CUMPLIMIENTO ANUAL</b></a>
-                                            </li>
-                                        </ul>
-                                        <div id="tabs-a">
-                                            <div class="row">
-                                              hhfghfg
-                                            </div>
-                                        </div>
-
-                                        <div id="tabs-b">
-                                            <div class="row">
-                                                <?php echo $informacion;?>
-                                                <button onClick="imprimir_grafico()" >IMPRIMIR CUADRO</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            </form>
-                        </div> -->
-                    </article>
+                    <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+                    <header>
+                      <div id="cabecera" style="display: none"></div>
+                    </header>
+                    <div>
+                        <h2>CUADRO DE EVALUACIÓN - FORM 1 (A.C.P.) INSTITUCIONAL</h2>
+                          <?php echo $informacion_trimestral;?>
+                          <div align="right"><button onClick="imprimir_grafico()" >IMPRIMIR CUADRO</button><br><br></div>
+                        </div>
+                    </div>
                 </div>
             <!-- END MAIN CONTENT -->
         </div>
@@ -152,6 +127,7 @@
         </script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/modules/exporting.js"></script>
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
@@ -178,12 +154,12 @@
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
 
         <script type="text/javascript">
-        Highcharts.chart('grafico1', {
+        Highcharts.chart('grafico_trimestral', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: '<b>EVALUACIÓN A.C.P. INSTITUCIONAL - GESTIÓN <?php echo $this->session->userData('gestion');?></b>'
+                text: '<b>EVALUACIÓN A.C.P. INSTITUCIONAL</b>'
             },
             subtitle: {
                 text: '<b>CUMPLIMIENTO DE ACCIONES DE CORTO PLAZO AL <?php echo $trimestre[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></b>'
@@ -193,7 +169,84 @@
                 <?php 
                   for ($i=0; $i <$nro ; $i++){ 
                     ?>
-                      '<?php echo $matriz[$i][0];?> ',
+                      '<?php echo $matriz_trimestral[$i][1];?> ',
+                    <?php
+                  } 
+                ?>
+              ],
+              title: {
+                  text: null
+              }
+            },
+            yAxis: {
+              min: 0,
+              title: {
+                  text: 'CUMPLIMIENTO (%)',
+                  align: 'high'
+              },
+              labels: {
+                  overflow: 'Acciones de Corto Plazo Institucional'
+              }
+            },
+            tooltip: {
+                valueSuffix: '%'
+            },
+            plotOptions: {
+              bar: {
+                  dataLabels: {
+                    enabled: true
+                  }
+              }
+            },
+
+            credits: {
+                enabled: false
+            },
+
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.1f}%'
+                    }
+                },
+                column: {
+                    borderRadius: '55%'
+                }
+            },
+
+            series: [{
+              name: 'CUMPLIMIENTO %',
+              color: '#66efdc',
+              data: [
+                <?php 
+                  for ($i=0; $i <$nro ; $i++){ 
+                    ?>
+                      <?php echo $matriz_trimestral[$i][3];?>,
+                    <?php
+                  } 
+                ?>
+              ]
+            }]
+        });
+
+        Highcharts.chart('grafico_gestion', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: '<b>EVALUACIÓN A.C.P. INSTITUCIONAL</b>'
+            },
+            subtitle: {
+                text: '<b>CUMPLIMIENTO DE ACCIONES DE CORTO PLAZO - GESTIÓN <?php echo $this->session->userData('gestion');?></b>'
+            },
+            xAxis: {
+              categories: [
+                <?php 
+                  for ($i=0; $i <$nro ; $i++){ 
+                    ?>
+                      '<?php echo $matriz_gestion[$i][1];?> ',
                     <?php
                   } 
                 ?>
@@ -247,7 +300,7 @@
                 <?php 
                   for ($i=0; $i <$nro ; $i++){ 
                     ?>
-                      <?php echo $matriz[$i][4];?>,
+                      <?php echo $matriz_gestion[$i][3];?>,
                     <?php
                   } 
                 ?>

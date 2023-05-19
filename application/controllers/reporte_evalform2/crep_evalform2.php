@@ -89,6 +89,7 @@ class Crep_evalform2 extends CI_Controller {
     $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_menu', $data);
 
 
+
 /*    $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_institucional();
     for ($i=0; $i < count($this->model_objetivogestion->get_list_ogestion_por_regional_institucional()); $i++) { 
       for ($j=0; $j < 5; $j++) { 
@@ -117,7 +118,8 @@ class Crep_evalform2 extends CI_Controller {
       $post = $this->input->post();
       $dep_id = $this->security->xss_clean($post['dep_id']); // dep id, 0: Nacional
         
-      $titulo='INSTITUCIONAL  / '.$this->gestion;
+      $titulo='<b>ACUMULADO INSTITUCIONAL</b>';
+      
       $nro=count($this->model_proyecto->list_departamentos()); /// nro de regionales
       $matriz=$this->matriz_eval_form2(); /// Matriz
       $cabecera=$this->cabecera_reporte_grafico(); /// Cabecera Grafico
@@ -301,6 +303,7 @@ class Crep_evalform2 extends CI_Controller {
 
               <div id="myTabContent1" class="tab-content padding-10">
                 <div class="tab-pane fade in active" id="sA">
+                  <div class="row">
                   <article class="col-sm-12 col-md-12 col-lg-6">
                     <div id="calificacion_trimestral">'.$calificacion_trimestral.'</div>
                     <div class="rows" align=center>
@@ -325,6 +328,7 @@ class Crep_evalform2 extends CI_Controller {
                     </div>
                     <hr>
                   </article>
+                  </div>
                 </div>
                 
                 <div class="tab-pane fade" id="sC">
@@ -782,7 +786,7 @@ class Crep_evalform2 extends CI_Controller {
             <tr>
               <td style="height:20px;"><b>(%) CUMPLIMIENTO</b></td>';
               for ($i=0; $i<$nro; $i++) { 
-                $tabla.='<td style="width:9.09%;" align=right><b>'.$matriz[$i][6].' %</b></td>';
+                $tabla.='<td style="width:9.09%;" align=right><b>'.$matriz[$i][3].' %</b></td>';
               }
               $tabla.='
             </tr>
@@ -796,6 +800,41 @@ class Crep_evalform2 extends CI_Controller {
 
   /// MATRIZ EVALUACION DE FORMULARIO 2
   public function matriz_eval_form2(){
+    $regionales=$this->model_proyecto->list_departamentos();
+    
+
+    $nro=0;
+    foreach($regionales as $reg){
+        
+        /// -----------------------------------------------------------------------------------------
+        $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($reg['dep_id']);
+        $nro_prog=count($lista_ogestion);
+        $suma_cumplimiento_trimestral=0;
+        $suma_cumplimiento_gestion=0;
+        
+        foreach($lista_ogestion as $row){
+          $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+          $suma_cumplimiento_trimestral=$suma_cumplimiento_trimestral+$calificacion[3];
+          $suma_cumplimiento_gestion=$suma_cumplimiento_gestion+$calificacion[4];
+        }
+
+         $cumplimiento=0;
+         if($nro_prog!=0){
+            $cumplimiento= round(($suma_cumplimiento_gestion/$nro_prog),2); 
+         }
+
+        /// -----------------------------------------------------------------------------------------
+
+      $mat[$nro][1]=$reg['dep_id'];
+      $mat[$nro][2]=strtoupper($reg['dep_sigla']);
+      $mat[$nro][3]=$cumplimiento; /// % cumplimiento
+      $nro++;
+    }
+
+    return $mat;
+  }
+
+/*  public function matriz_eval_form2(){
     $regionales=$this->model_proyecto->list_departamentos();
     $nro=0;
     foreach($regionales as $row){
@@ -811,11 +850,11 @@ class Crep_evalform2 extends CI_Controller {
     }
 
     return $mat;
-  }
+  }*/
 
 
   /*--- PARAMETROS DE CALIFICACION OPERACIONES REGIONAL ---*/
-  public function calificacion_total_form2_regional($dep_id){
+/*  public function calificacion_total_form2_regional($dep_id){
     $prog_trimestre=0; $ejec_trimestre=0;$prog_total_form2=0;
 
     $prog_total=$this->model_objetivoregion->get_suma_total_prog_form2_regional($dep_id);
@@ -845,7 +884,7 @@ class Crep_evalform2 extends CI_Controller {
     }
 
     return $calif;
-  }
+  }*/
 
 
 
