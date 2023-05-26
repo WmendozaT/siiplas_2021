@@ -26,7 +26,7 @@ class Cptto_poa extends CI_Controller {
                 $this->rol = $this->session->userData('rol');
                 $this->fun_id = $this->session->userData('fun_id');
                 $this->tp_adm = $this->session->userData('tp_adm');
-                $this->ppto_poa = $this->session->userData('verif_ppto');
+                //$this->ppto_poa = $this->session->userData('verif_ppto');
                 $this->modulos = $this->session->userData('modulos');
                 $this->verif_ppto = $this->session->userData('verif_ppto'); /// AnteProyecto Ptto POA : 0, Ptto Aprobado Sigep : 1
             }
@@ -46,25 +46,60 @@ class Cptto_poa extends CI_Controller {
       
       //$data['mod2']=count($this->model_configuracion->verif_modulo(2));
 
-      $sw=$this->ppto_poa;
-      $data['proyectos']=$this->list_pinversion(1); /// Proyecto de Inversion
-      $data['operacion']=$this->list_unidades_es(1);  /// Gasto corriente
-
-      //// Asignacion Poa Presupuesto Inicial
-     /* if($this->verif_ppto==0){
-        $this->load->view('admin/mantenimiento/ptto_sigep/vlist_ope', $data);
-      }*/
-      //// Re-Asignacion Poa Presupuesto Final (Aprobado)
-      /*else{
-        $data['regionales']=$this->model_ptto_sigep->list_regionales();
-        $this->load->view('admin/mantenimiento/ptto_sigep/reajustado_ptto', $data);
-      }*/
+      //$sw=$this->ppto_poa;
       
 
-      $data['regionales']=$this->model_ptto_sigep->list_regionales();
-      $this->load->view('admin/mantenimiento/ptto_sigep/reajustado_ptto', $data);
+      //// Asignacion Poa Presupuesto Inicial
+      if($this->verif_ppto==0){
+        $data['proyectos']=$this->list_pinversion(1); /// Proyecto de Inversion Aprobado
+        $data['operacion']=$this->list_unidades_es(1);  /// Gasto corriente Aprobado
+        $this->load->view('admin/mantenimiento/ptto_sigep/vlist_ope', $data);
+      }
+      //// Re-Asignacion Poa Presupuesto Final (Aprobado)
+      else{
+        $data['proyectos']=$this->list_pinversion(4); /// Proyecto de Inversion Aprobado
+        $data['operacion']=$this->list_unidades_es(4);  /// Gasto corriente Aprobado
+        $data['regionales']=$this->model_ptto_sigep->list_regionales();
+        $this->load->view('admin/mantenimiento/ptto_sigep/reajustado_ptto', $data);
+      }
+      
+/*      $partidas=$this->model_insumo->lista_consolidado_ejecucion_partidas(10);
+      $tabla='';
+       $tabla.='
+          <table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:50%;">
+            <thead>
+              <tr style="height:50px;">
+                <th style="width:1%;" bgcolor="#474544" title="">#</th>
+                <th style="width:5%;" bgcolor="#474544" title="">PARTIDA</th>
+                <th style="width:5%;" bgcolor="#474544" title="VER PPTO">PPTO. ASIGNADO POA</th>
+                <th style="width:5%;" bgcolor="#474544" title="DIRECCION ADMINISTRATIVA">PPTO. CERTIFICADO</th>
+                <th style="width:5%;" bgcolor="#474544" title="UNIDAD EJECUTORA">(%) EJECUCION POA</th>
+              </tr>
+            </thead>
+            <tbody>';
+            $nro=0;
+            foreach($partidas as $row){
+              $nro++;
+              $tabla.='
+              <tr>
+                <td>'.$nro.'</td>
+                <td>'.$row['par_codigo'].'</td>
+                <td>'.$row['programado'].'</td>
+                <td>'.$row['certificado'].'</td>
+                <td>'.$row['round'].' %</td>
+              </tr>';
+            }
+            $tabla.='
+            </body>
+            </table>';*/
+
+            //echo $tabla;
+
+      //$data['regionales']=$this->model_ptto_sigep->list_regionales();
+      //$this->load->view('admin/mantenimiento/ptto_sigep/reajustado_ptto', $data);
 
       /// CARGAR PPTO INICIAL
+     // echo $this->verif_ppto;
       //$this->load->view('admin/mantenimiento/ptto_sigep/vlist_ope', $data);
     }
 
@@ -160,7 +195,14 @@ class Cptto_poa extends CI_Controller {
 
     /*---- Lista de Proyectos de Inversion (2020) -----*/
     public function list_pinversion($estado_ppto){
-      $proyectos=$this->model_proyecto->list_proy_inversion();
+      if($estado_ppto==1){
+        $proyectos=$this->model_proyecto->list_poa_general(1);
+
+      }
+      else{
+        $proyectos=$this->model_proyecto->list_proy_inversion();
+      }
+
       $tabla='';
 
       $color='';  
@@ -172,7 +214,7 @@ class Cptto_poa extends CI_Controller {
         <table id="dt_basic" class="table table-bordered" style="width:100%;">
             <thead>
               <tr style="height:50px;">
-                <th style="width:1%;" bgcolor="#474544" title="#">#</th>
+                <th style="width:1%;" bgcolor="#474544" title="#">APER ID</th>
                 <th style="width:5%;" bgcolor="#474544" title="VER PARTIDAS"></th>
                 <th style="width:5%;" bgcolor="#474544" title="VER PARTIDAS">VER PARTIDAS</th>
                 <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
@@ -185,6 +227,16 @@ class Cptto_poa extends CI_Controller {
             <tbody>';
             $nro=0;
             foreach($proyectos as $row){
+
+              if($estado_ppto==4){ // ppto final
+                $nombre=$row['proyecto'];
+                $codigo_sisin=$row['proy'];
+              }
+              else{ /// ppto inicial
+                $nombre=$row['proy_nombre'];
+                $codigo_sisin=$row['proy_sisin'];
+              }
+
               $aper=$this->model_ptto_sigep->partidas_proyecto($row['aper_id']);
               $tabla.='<tr bgcolor='.$color.'>';
               $tabla.='<td style="height:30px;" align=center><b>'.$row['aper_id'].'</b></td>';
@@ -236,9 +288,9 @@ class Cptto_poa extends CI_Controller {
                   }
                 }
               $tabla.='</td>';
-              $tabla.='<td><center>'.$row['prog'].''.$row['proy'].''.$row['act'].'</center></td>';
-              $tabla.='<td>'.$row['proyecto'].'</td>';
-              $tabla.='<td>'.$row['proy'].'</td>';
+              $tabla.='<td><center>'.$row['prog'].'</center></td>';
+              $tabla.='<td>'.$nombre.'</td>';
+              $tabla.='<td>'.$codigo_sisin.'</td>';
               $tabla.='<td>'.strtoupper($row['dep_departamento']).'</td>';
               $tabla.='<td>'.strtoupper($row['dist_distrital']).'</td>';
               $tabla.='</tr>';
@@ -671,12 +723,13 @@ class Cptto_poa extends CI_Controller {
           if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
                
             /*--------------------------------------------------------------*/
-            if($tp==0){
+            if($this->verif_ppto==0){
               $lineas=$this->subir_archivo($archivotmp,$tp_id); /// Techo Inicial
             }
             else{
               $lineas=$this->subir_archivo_aprobado($archivotmp,$tp_id); /// Techo Aprobado
             }
+            
             $this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO ('.$lineas.')');
             redirect(site_url("").'/ptto_asig_poa');
             /*--------------------------------------------------------------*/
@@ -703,7 +756,7 @@ class Cptto_poa extends CI_Controller {
         $nro=0;
         $lineas = file($archivotmp);
 
-        if($tp_id==1){
+        if($tp_id==1){ /// Proyecto de Inversion
           foreach ($lineas as $linea_num => $linea){ 
             if($i != 0){ 
               $datos = explode(";",$linea);
@@ -765,7 +818,7 @@ class Cptto_poa extends CI_Controller {
               $i++;
             }
         }
-        else{
+        else{  /// Gasto Corriente
           foreach ($lineas as $linea_num => $linea){ 
             if($i != 0){ 
                 $datos = explode(";",$linea);

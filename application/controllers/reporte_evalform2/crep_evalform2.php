@@ -272,12 +272,12 @@ class Crep_evalform2 extends CI_Controller {
       /// ---------------------------------------------------------------------------------------------
       $lista='';
       $lista.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>
-                <ul>';
+                <table>';
                   for ($i=0; $i <$nro; $i++) { 
-                    $lista.='<li style="font-family: Arial;font-size: 10px;height: 1%;">OPE. '.$matriz[$i][0].'.'.$matriz[$i][1].'.- '.$matriz[$i][2].' - <b>'.$matriz[$i][4].' %</b></li>';
+                    $lista.='<tr><td style="font-family: Arial;font-size: 8px;height: 1%;">OPE. '.$matriz[$i][0].'.'.$matriz[$i][1].'.- '.$matriz[$i][2].' - <b>'.$matriz[$i][4].' %</b></td></tr>';
                   }
                   $lista.='
-                </ul>
+                </table>
                 <hr>';
       $lista_operaciones=$lista;
       /// ----------------------------------------------------------------------------------------------
@@ -308,7 +308,7 @@ class Crep_evalform2 extends CI_Controller {
                     <div id="calificacion_trimestral">'.$calificacion_trimestral.'</div>
                     <div class="rows" align=center>
                       <div id="graf_detalle1">
-                        <div id="grafico_trimestral" style="width: 900px; height: 800px; margin: 2 auto"></div>
+                        <div id="grafico_trimestral" style="width: 900px; height: 770px; margin: 2 auto"></div>
                       </div> 
                     </div>
                   </article>
@@ -316,7 +316,7 @@ class Crep_evalform2 extends CI_Controller {
                     <div id="calificacion">'.$calificacion_anual.'</div>
                     <div class="rows" align=center>
                       <div id="graf_detalle1">
-                        <div id="grafico1" style="width: 900px; height: 800px; margin: 2 auto"></div>
+                        <div id="grafico1" style="width: 900px; height: 770px; margin: 2 auto"></div>
                       </div> 
                     </div>
 

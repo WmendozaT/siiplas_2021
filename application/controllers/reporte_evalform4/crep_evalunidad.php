@@ -544,7 +544,7 @@ class Crep_evalunidad extends CI_Controller {
     /*--------- Mis Servicios -------------*/
     public function mis_servicios($tp_rep,$proy_id){
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); 
-      $componentes=$this->model_componente->proyecto_componente($proy_id);           
+      $componentes=$this->model_componente->lista_subactividad($proy_id);
       $tabla='';
       // 1 : normal, 2 : Impresion
       if($tp_rep==1){ /// Normal
@@ -573,7 +573,7 @@ class Crep_evalunidad extends CI_Controller {
             <th style="width:8%;">TOTAL PROGRAMADO</th>
             <th style="width:8%;">TOTAL EVALUADO</th>
             <th style="width:8%;">TOTAL CUMPLIDOS</th>
-            <th style="width:8%;">CUMPLIDO PARCIAL</th>
+            <th style="width:8%;">EN CUMPLIMENTO PARCIAL</th>
             <th style="width:8%;">NO CUMPLIDOS</th>
             <th style="width:8%;">% CUMPLIDO</th>
             <th style="width:8%;">% NO CUMPLIDO</th>
@@ -586,8 +586,8 @@ class Crep_evalunidad extends CI_Controller {
             $eval=$this->tabla_regresion_lineal_servicio($rowc['com_id']);
             $nro++;
             $tabla.='<tr>';
-              $tabla.='<td style="height:2%;" align=center>'.$nro.'</td>';
-              $tabla.='<td>'.$rowc['com_componente'].'</td>';
+              $tabla.='<td style="height:2%;" align=center title="'.$rowc['com_id'].'">'.$nro.'</td>';
+              $tabla.='<td>'.$rowc['tipo_subactividad'].' '.$rowc['serv_descripcion'].'</td>';
               $tabla.='<td align=right><b>'.$eval[2][$this->tmes].'</b></td>';
               $tabla.='<td align=right><b>'.$eval[2][$this->tmes].'</b></td>';
               $tabla.='<td align=right><b>'.$eval[3][$this->tmes].'</b></td>';

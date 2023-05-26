@@ -29,6 +29,17 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
+    // ------ lista Programado ejecutado por partidas Regional
+    public function lista_consolidado_ejecucion_partidas($dep_id){
+        $sql = 'select dep_id,par_codigo,SUM(ins_costo_total) programado,SUM(ins_monto_certificado) certificado, round(((SUM(ins_monto_certificado)/SUM(ins_costo_total))*100),2) 
+                from lista_requerimientos_institucional(4,'.$this->gestion.')
+                where dep_id='.$dep_id.'
+                group by dep_id,par_codigo
+                order by par_codigo asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
 
     // ------ lista Programacion Financiera

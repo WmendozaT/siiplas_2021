@@ -1488,6 +1488,28 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*-------- LISTA POA PROGRAMADO--------*/
+    public function list_poa_general($tp_id){ /// Programado Inicial
+        /// tp_id : 1 Proy inversion
+        /// tp_id : 4 Gasto Corriente
+
+        $sql = 'select *
+                 from lista_poa_nacional('.$this->gestion.')
+                 where tp_id='.$tp_id.'
+                 order by dep_id,dist_id,prog,proy,act asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
+
+
+
+
+
     /*-------- IMAGEN DEL PROYECTO (Ficha Tecnica) --------*/
     public function get_img_ficha_tecnica($proy_id){ /// get imagen ficha tecnica
         $sql = '

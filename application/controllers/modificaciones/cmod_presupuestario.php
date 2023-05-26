@@ -265,6 +265,7 @@ class Cmod_presupuestario extends CI_Controller {
           $post = $this->input->post();
           $ue_id = $this->security->xss_clean($post['ue_id']);
           $rd = $this->security->xss_clean($post['rd']);
+          $tp_id = $this->security->xss_clean($post['tp_id']);
 
           $tipo = $_FILES['archivo']['type'];
           $tamanio = $_FILES['archivo']['size'];
@@ -288,7 +289,7 @@ class Cmod_presupuestario extends CI_Controller {
                   $mp_id=$this->db->insert_id();
                   /*-------------------------------------------------------*/
 
-                  if($this->add_modificacion_presupuestaria($archivotmp,$mp_id)!=0){
+                  if($this->add_modificacion_presupuestaria($archivotmp,$mp_id,$tp_id)!=0){
                     $this->session->set_flashdata('success','ARCHIVO CARGADO CORRECTAMENTE ....');
                     redirect(site_url("").'/mod_ppto/list_mod_ppto');
                   }
@@ -323,7 +324,11 @@ class Cmod_presupuestario extends CI_Controller {
         $nro=0;
         $lineas = file($archivotmp);
         
-        foreach ($lineas as $linea_num => $linea){ 
+        if($tp_id==1){ /// Proyecto de Inversion
+          echo "trabajando para pi";
+        }
+        else{ /// Gasto Corriente
+          foreach ($lineas as $linea_num => $linea){ 
             if($i != 0){ 
                 $datos = explode(";",$linea);
                 if(count($datos)==6){
@@ -366,9 +371,12 @@ class Cmod_presupuestario extends CI_Controller {
                     }
                 }
             }
-
             $i++;
+          }
         }
+
+
+
         return $nro;
      }
 

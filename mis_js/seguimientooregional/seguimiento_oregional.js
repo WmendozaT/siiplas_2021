@@ -443,7 +443,7 @@ function cuadro_grafico_cumplimiento_form2_detalle_institucional(grafico,titulo,
     ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
     ventana.document.write(cabecera.innerHTML);
     ventana.document.write('<hr>');
-    ventana.document.write(eficacia.innerHTML);
+    //ventana.document.write(eficacia.innerHTML);
     ventana.document.write(grafico.innerHTML);
     ventana.document.write('<hr>');
     ventana.document.write(tabla.innerHTML);

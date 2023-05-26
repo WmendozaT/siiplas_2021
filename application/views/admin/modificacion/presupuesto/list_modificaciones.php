@@ -212,6 +212,19 @@
 	                                        </div>
 	                                    </div>
 	                                </div>
+
+	                                <div class="form-group">
+	                                    <div class="form-group">
+	                                        <label class="col-md-2 control-label">TIPO DE GASTO </label>
+	                                        <div class="col-md-10">
+	                                            <select class="form-control" id="tp_id" name="tp_id" title="SELECCIONE TIPO DE GASTO">
+				                                    <option value="0">Seleccione tipo de Gasto</option>
+				                                    <option value="4">GASTO CORRIENTE</option>
+				                                    <option value="1">PROYECTO DE INVERSIÓN</option>
+				                                </select>
+	                                        </div>
+	                                    </div>
+	                                </div>
 		                            
 		                        </fieldset>  
                                 <hr>

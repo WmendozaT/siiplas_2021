@@ -57,25 +57,6 @@ class Model_modrequerimiento extends CI_Model{
                 Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
                 where i.com_id='.$com_id.' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and i.ins_activo=\'0\'
                 order by i.form4_cod, par.par_codigo, i.ins_id asc';
-        /*if($this->gestion>2021){
-            $sql = 'select *,i.form4_cod as prod_cod
-                from insumos i
-                Inner Join partidas as par On par.par_id=i.par_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
-                where i.com_id='.$com_id.' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and i.ins_activo=\'0\'
-                order by i.form4_cod, par.par_codigo, i.ins_id asc';
-            
-        }
-        else{
-            $sql = 'select p.com_id, p.prod_id,p.prod_cod,par.*,i.*
-                from _productos p
-                Inner Join _insumoproducto as ip On ip.prod_id=p.prod_id
-                Inner Join insumos as i On i.ins_id=ip.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
-                where p.com_id='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
-                order by p.prod_cod asc';
-        }*/
         
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -405,7 +386,7 @@ class Model_modrequerimiento extends CI_Model{
                 Inner Join _componentes as c On ci.com_id=c.com_id
                  Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
                 Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-                Inner Join lista_poa_gastocorriente_nacional(2022) as poa On poa.pfec_id=c.pfec_id
+                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.pfec_id=c.pfec_id
 
                 where poa.dist_id='.$dist_id.' and ci.cite_estado!=\'3\' and c.estado!=\'3\' and ci.cite_activo=\'1\' and extract(month from (ci.fecha_creacion))='.$mes_id.'
                 order by ci.cite_id asc';
@@ -422,7 +403,7 @@ class Model_modrequerimiento extends CI_Model{
                 Inner Join _componentes as c On ci.com_id=c.com_id
                  Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
                 Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-                Inner Join lista_poa_gastocorriente_nacional(2022) as poa On poa.pfec_id=c.pfec_id
+                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.pfec_id=c.pfec_id
 
                 where poa.dist_id='.$dep_id.' and ci.cite_estado!=\'3\' and c.estado!=\'3\' and ci.cite_activo=\'1\' and extract(month from (ci.fecha_creacion))='.$mes_id.'
                 order by ci.cite_id asc';
