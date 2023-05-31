@@ -51,7 +51,7 @@
               font-size: 10px;
             }
             #mdialTamanio{
-              width: 70% !important;
+              width: 80% !important;
             }
 		</style>
 	</head>
@@ -135,7 +135,7 @@
 					<div class="row">
 						<article class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 							<div class="well well-sm well-light">
-								<h3>MODIFICACI&Oacute;N POA - GESTI&Oacute;N <?php echo $this->session->userdata('gestion')?></h3>
+								<h3><b>MODIFICACI&Oacute;N POA - GESTI&Oacute;N <?php echo $this->session->userdata('gestion')?></b></h3>
 							</div>
 						</article>
 						<article class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
@@ -160,10 +160,10 @@
 										<div class="row">
 											<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 											<div class="jarviswidget jarviswidget-color-darken" >
-				                              <header>
-				                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-				                                  <h2 class="font-md"><strong>OPERACI&Oacute;N DE FUNCIONAMIENTO</strong></h2>  
-				                              </header>
+                          <header>
+                              <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                              <h2 class="font-md"><strong>GASTO CORRIENTE</strong></h2>  
+                          </header>
 												<div>
 													<div class="widget-body no-padding">
 														<?php echo $gasto_corriente; ?>
@@ -181,10 +181,10 @@
 										<div class="row">
 											<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 											<div class="jarviswidget jarviswidget-color-darken" >
-				                              <header>
-				                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-				                                  <h2 class="font-md"><strong>PROYECTOS DE INVERSI&Oacute;N</strong></h2>  
-				                              </header>
+				                  <header>
+				                    <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+				                    <h2 class="font-md"><strong>PROYECTOS DE INVERSI&Oacute;N</strong></h2>  
+				                  </header>
 												<div>
 													<div class="widget-body no-padding">
 														<?php echo $proyectos; ?>
@@ -207,6 +207,34 @@
 			<!-- END MAIN CONTENT -->
 		</div>
 		<!-- END MAIN PANEL -->
+
+			<!-- MODAL POA   -->
+	    <div class="modal fade" id="modal_opciones_modpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" id="mdialTamanio">
+          <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+            </div>
+            <div class="modal-body">
+            	<h2 class="alert alert-info"><center>MIS OPCIONES DE MODIFICACION POA - <?php echo $this->session->userData('gestion');?></center></h2>
+            
+                <div class="row">
+                	<table style="width:100%; height:50px;">
+              		<tr>
+              			<td style="width:90%;">
+              				<div id="titulo"></div>	
+              			</td>
+              		</tr>
+              	</table><br>
+                   <div id="contenido"></div>
+                </div>
+            </div>
+          </div>
+        </div>
+	    </div>
+	 	<!--  =============== -->
+
+
 		<!-- ========================================================================================================= -->
 		<!-- PAGE FOOTER -->
 		<div class="page-footer">
@@ -270,7 +298,49 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+		<script src="<?php echo base_url(); ?>mis_js/modificacionpoa/modppto.js"></script> 
 		<script type="text/javascript">
+			  //// ver opciones de modificacion poa
+		  $(function () {
+		    $(".modpoa").on("click", function (e) {
+		        proy_id = $(this).attr('name');
+		        establecimiento = $(this).attr('id');
+		        
+		        $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
+		        $('#contenido').html('<div class="loading" align="center"><br/><b>Cargando Informacion ....</b></div>');
+		        var url = "<?php echo site_url().'/modificaciones/cmodificaciones/get_opciones_modpoa'?>";
+		        var request;
+		        if (request) {
+		            request.abort();
+		        }
+		        request = $.ajax({
+		            url: url,
+		            type: "POST",
+		            dataType: 'json',
+		            data: "proy_id="+proy_id
+		        });
+
+		        request.done(function (response, textStatus, jqXHR) {
+		        if (response.respuesta == 'correcto') {
+		           $('#contenido').fadeIn(1000).html(response.tabla);
+		          // $('#caratula').fadeIn(1000).html(response.caratula);
+		        }
+		        else{
+		            alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
+		        }
+
+		        });
+		        request.fail(function (jqXHR, textStatus, thrown) {
+		            console.log("ERROR: " + textStatus);
+		        });
+		        request.always(function () {
+		            //console.log("termino la ejecuicion de ajax");
+		        });
+		        e.preventDefault();
+		        
+		      });
+		  });
+
 			$(document).ready(function() {
 				pageSetUp();
 				// menu

@@ -1089,6 +1089,25 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*-------- LISTA DE SALDOS PARTIDAS REVERTIDOS POR CITE --------*/
+    public function lista_monto_partidas_revertidos($cppto_id){
+        $sql = 'select *
+                from lista_partidas_revertidas('.$this->gestion.')
+                where cppto_id='.$cppto_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*-------- LISTA DE SALDOS PARTIDAS REVERTIDOS POR PROYECTO --------*/
+    public function lista_monto_partidas_revertidos_unidad($proy_id){
+        $sql = 'select *
+                from lista_partidas_revertidas('.$this->gestion.')
+                where proy_id='.$proy_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 ///// ====== DISTRIBUCION DE PPTO APROBADO POR DISTRITAL
     /*-------- LISTA DE UNIDADES QUE TIENEN PPTO DISPONIBLE A PROGRAMAR (DASHBOARD) A NIVEL DISTRITAL --------*/
     public function lista_unidades_con_saldo_a_distribuir($dep_id,$dist_id){

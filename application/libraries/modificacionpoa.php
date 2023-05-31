@@ -79,98 +79,7 @@ class Modificacionpoa extends CI_Controller{
                 $tabla.='
                   <tr style="height:40px;">
                     <td align=center><b>'.$nro.'</b></td>
-                    <td align=center>
-                      <a data-toggle="modal" data-target="#'.$row['proy_id'].'" title="SELECCIONAR OPCI&Oacute;N" class="btn btn-success"><font size=1>SELECCIONAR OPCION</font></a>
-                        <div class="modal fade bs-example-modal-lg" tabindex="-1" id="'.$row['proy_id'].'"  role="dialog" aria-labelledby="myLargeModalLabel">
-                          <div class="modal-dialog modal-lg" id="mdialTamanio">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close text-danger" data-dismiss="modal" aria-hidden="true">
-                                  &times;
-                                </button>
-                              </div>
-                              <div class="modal-body no-padding">
-                                  <div class="row">
-                                    <h2 class="alert alert-success"><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].' - '.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</center></h2>';
-                                    $link1=''; $color1='red'; $titulo1='MODIFICACI&Oacute;N NO HABILITADO';
-                                      if($this->conf_mod_ope==1 || $this->tp_adm==1){
-                                      $link1='onclick="mod_operacion'.$row['proy_id'].'()"';
-                                      $color1='teal';
-                                      $titulo1='MODIFICAR FORMULARIO N° 4';
-                                    }
-
-                                    $link2=''; $color2='red'; $titulo2='MODIFICACI&Oacute;N NO HABILITADO';
-                                      if($this->conf_mod_req==1 || $this->tp_adm==1){
-                                      $link2='onclick="mod_insumo'.$row['proy_id'].'()"';
-                                      $color2='teal';
-                                      $titulo2='MODIFICAR FORMULARIO N° 5';
-                                    }
-                                    $tabla.='
-                                    <a '.$link1.' class="ruta" title="'.$titulo1.'" >
-                                      <div class="well well-sm col-sm-4">
-                                        <div class="well well-sm bg-color-'.$color1.' txt-color-white text-center">
-                                          <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 4 - '.$this->gestion.'</h5>
-                                          <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                        </div>
-                                      </div>
-                                    </a>
-                                    
-                                    <a '.$link2.' class="ruta" title="'.$titulo2.'" >
-                                      <div class="well well-sm col-sm-4">
-                                        <div class="well well-sm bg-color-'.$color2.' txt-color-white text-center">
-                                          <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 5 - '.$this->gestion.'</h5>
-                                          <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                        </div>
-                                      </div>
-                                    </a>';
-
-                                    $link=''; $color='red'; $titulo='OPCI&Oacute;N BLOQUEADA';
-                                      if($this->tp_adm==1){
-                                      $link='onclick="mod_techo'.$row['proy_id'].'()"';
-                                      $color='teal';
-                                      $titulo='MODIFICAR TECHO PRESUPUESTARIO';
-                                    }
-
-                                    $tabla.='
-                                    <a '.$link.' class="ruta" title="'.$titulo.'" >
-                                      <div class="well well-sm col-sm-4">
-                                          <div class="well well-sm bg-color-'.$color.' txt-color-white text-center">
-                                            <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR TECHO PRESUPUESTARIO</h5>
-                                            <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                          </div>
-                                      </div>
-                                    </a>
-                                    
-                                  </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row"><br>
-                            <img id="load1'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                            <img id="load2'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                            <img id="load3'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                          </div>
-                        </div>';
-                        $tabla.='
-                          <script>
-                            function mod_operacion'.$row['proy_id'].'(){
-                              document.getElementById("load1'.$row['proy_id'].'").style.display = "block";
-                              window.location="'.site_url("").'/mod/list_componentes/'.$row['proy_id'].'"
-                            }
-                            
-                            function mod_insumo'.$row['proy_id'].'(){
-                              document.getElementById("load2'.$row['proy_id'].'").style.display = "block";
-                              window.location="'.site_url("").'/mod/procesos/'.$row['proy_id'].'"
-                            }
-
-                            function mod_techo'.$row['proy_id'].'(){
-                              document.getElementById("load3'.$row['proy_id'].'").style.display = "block";
-                              window.location="'.site_url("").'/mod/cite_techo/'.$row['proy_id'].'"
-                            }
-                          </script>';
-                $tabla .= '
-
-                    </td>
+                    <td><center><a href="#" data-toggle="modal" data-target="#modal_opciones_modpoa" class="btn btn-success modpoa" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'">SELECCIONAR OPCION</a></center></td>
                     <td align=center><a href="'.site_url("").'/mod/list_cites/'.$row['proy_id'].'" title="LISTA DE CITES GENERADOS POR MODIFICACI&Oacute;N" target="_blank" class="btn btn-default"><font size=1>LISTA DE CITES</font></a></td>
                     <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
                     <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
@@ -1007,16 +916,20 @@ class Modificacionpoa extends CI_Controller{
 //////////////// FORMULARIO N5
 
  /*------ Lista de Servicios para modificacion de Requerimientos --------*/
-    public function lista_servicio_componentes($proyecto){
+    public function lista_unidades_responsables($proyecto,$tp){
       $tabla='';
-      $tabla.=$this->servicios($proyecto);
+      $tabla.=$this->unidades_responsables($proyecto,$tp);
 
       return $tabla;
     }
 
     /*------ Lista de Servicios (Gasto Corriente) ------*/
-    public function servicios($proyecto){
+    public function unidades_responsables($proyecto,$tp){
       $fase = $this->model_faseetapa->get_id_fase($proyecto[0]['proy_id']);
+      $tipo_mod='';
+      if($tp==1){
+        $tipo_mod='<br><b>REVERSION DE SALDOS</b>';
+      }
       $tabla='';
         if(count($fase)!=0){
             $componente=$this->model_componente->componentes_id($fase[0]['id'],$proyecto[0]['tp_id']);
@@ -1027,7 +940,7 @@ class Modificacionpoa extends CI_Controller{
                         <th style="width:1%;">#</th>
                         <th style="width:5%;">COD. UNIDAD</th>
                         <th style="width:20%;">UNIDAD RESPONSABLE</th>
-                        <th style="width:15%;">RESPONSABLE</th>
+                
                         <th style="width:5%;">PONDERACI&Oacute;N</th>
                         <th style="width:5%;">ACT. PROGRAMADOS</th>
                         <th style="width:5%;">PRESUPUESTO POA</th>
@@ -1038,25 +951,25 @@ class Modificacionpoa extends CI_Controller{
                 <tbody>';
                 $num=0; $ponderacion=0; $sum=0;
                 foreach($componente as $row){
-                  $monto=$this->model_modrequerimiento->prespuesto_servicio_componente($row['com_id'],$proyecto[0]['tp_id']);
+                  /*$monto=$this->model_modrequerimiento->prespuesto_servicio_componente($row['com_id'],$proyecto[0]['tp_id']);
                   $ppto=number_format(0, 2, '.', ',');
                   
                   if(count($monto)!=0){
                     $ppto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                  }
+                  }*/
 
                   $num++;
                   $tabla.='
                   <tr>
-                    <td align=center>'.$num.'</td><td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO UNIDAD : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
+                    <td align=center title="'.$row['com_id'].'">'.$num.'</td><td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO UNIDAD : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
                     <td title='.$row['com_id'].'>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
-                    <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
+
                     <td align=center>'.$row['com_ponderacion'].' %</td>
                     <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
-                    <td align=right>'.$ppto.'</td>
+                    <td align=right></td>
                     <td>';
                       if($this->conf_mod_req==1 || $this->tp_adm==1){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" style="width:100%; color: green; background-color: #eeeeee;border-bottom-width: 5px;" title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'"><i class="glyphicon glyphicon-file"></i> INGRESAR CITE</a>';
+                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" style="width:100%; color: green; background-color: #eeeeee;border-bottom-width: 5px;" title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'"><i class="glyphicon glyphicon-file"></i> INGRESAR DATOS CITE '.$tipo_mod.'</a>';
                       }
                     $tabla.='
                     </td>
@@ -1148,6 +1061,12 @@ class Modificacionpoa extends CI_Controller{
                 foreach ($lista_insumos as $row) {
                   $color_tr=''; $dis=''; $title='title="REQUERIMIENTO"';
                   $monto_cert=0;$valor_mod=0; $valor_delete=0;
+                  $tp_mod_registro='<div style="color:blue"><b>POA</b></div>';
+                  if($row['ins_tipo_modificacion']==1){
+                    $tp_mod_registro='<div style="color:yellow"><b>REV.</b></div>';
+                  }
+
+
                   if($row['ins_monto_certificado']!=0){
                     if($row['ins_monto_certificado']==$row['ins_costo_total']){
                       $color_tr='#f9d8e0';
@@ -1161,8 +1080,8 @@ class Modificacionpoa extends CI_Controller{
 
                   $cont++;
                     $tabla .='<tr bgcolor='.$color_tr.'>';
-                    $tabla .='<td title='.$row['ins_id'].'>'.$cont.'</td>';
-                    $tabla .='<td align=center bgcolor="#ecf9f7" title="CODIGO ACTIVIDAD"><font size=3 color=blue><br>'.$row['prod_cod'].'</font></td>';
+                    $tabla .='<td title='.$row['ins_id'].'>'.$tp_mod_registro.'</td>';
+                    $tabla .='<td align=center bgcolor="#ecf9f7" title="CODIGO ACTIVIDAD"><font size=5 color=blue><br><b>'.$row['prod_cod'].'</b></font></td>';
                     $tabla .='<td align=center>';
                       if($valor_mod==0 & $valor_delete==0){
                         $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>
@@ -1322,9 +1241,14 @@ class Modificacionpoa extends CI_Controller{
                     }
                   }
 
+                  $tp_mod_registro='<div style="color:blue"><b>POA</b></div>';
+                  if($row['ins_tipo_modificacion']==1){
+                    $tp_mod_registro='<div style="color:yellow"><b>REV.</b></div>';
+                  }
+                  
                   $cont++;
                     $tabla .='<tr bgcolor='.$color_tr.'>';
-                    $tabla .='<td title='.$row['ins_id'].'>'.$cont.'</td>';
+                    $tabla .='<td title='.$row['ins_id'].'>'.$tp_mod_registro.'</td>';
                     $tabla .='<td align=center bgcolor="#ecf9f7" title="CODIGO ACTIVIDAD"><font size=3 color=blue><br>'.$row['prod_cod'].'</font></td>';
                     $tabla .='<td align=center>';
                       if($valor_mod==0 & $valor_delete==0){

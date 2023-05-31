@@ -499,7 +499,7 @@ $route['mod_ppto/ver_partidas_mod/(:any)'] = 'modificaciones/cmod_presupuestario
 
 
 /*------------- MODIFICAR REQUERIMIENTOS (2020)------------*/
-$route['mod/procesos/(:any)'] = 'modificaciones/cmod_insumo/cite_servicios/$1'; //// Lista cite de Servicios 
+$route['mod/form5/(:any)'] = 'modificaciones/cmod_insumo/cite_servicios/$1/$2'; //// Lista cite de Unidades Responsables
 $route['mod/list_requerimientos/(:any)'] = 'modificaciones/cmod_insumo/mis_requerimientos/$1'; //// Lista de Requerimientos
 $route['mod/del_select_ins/(:any)'] = 'modificaciones/cmod_insumo/elimina_requerimientos_producto_actividad/$1'; //// Elimina Requerimientos Seleccionados (2020)
 $route['mod/rep_mod_financiera/(:any)'] = 'modificaciones/cmod_insumo/reporte_modificacion_financiera/$1';  ///// Reporte Modificaciones Financiera 2020

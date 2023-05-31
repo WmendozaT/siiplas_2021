@@ -66,6 +66,9 @@ $(document).ready(function() {
 })
 
 
+
+
+
 $(function () {
     //SUBIR ARCHIVO
     $("#subir_archivo").on("click", function () {

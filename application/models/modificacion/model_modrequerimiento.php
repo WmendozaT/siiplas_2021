@@ -17,6 +17,13 @@ class Model_modrequerimiento extends CI_Model{
 
     /*----- MONTO POA POR SERVICIO -----*/
     function prespuesto_servicio_componente($com_id,$tp_id){
+        /*$sql = '
+            select com_id,SUM(ins_costo_total) total, SUM(ins_monto_certificado) certificado
+            from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+            where com_id='.$com_id.'
+            group by com_id'; */
+
+
         $sql = '
             select p.com_id,SUM(i.ins_costo_total) total
             from _productos p

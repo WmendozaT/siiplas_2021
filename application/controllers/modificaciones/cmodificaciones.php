@@ -47,6 +47,7 @@ class Cmodificaciones extends CI_Controller {
       $data['proyectos']='';
       $data['gasto_corriente']='';
       
+      $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
       $data['proyectos']=$this->modificacionpoa->list_pinversion(4); // Aprobados
       $data['gasto_corriente']=$this->modificacionpoa->list_unidades_es(4); // Aprobados
       $data['rep_listado_modificacionespoa']='';
@@ -73,6 +74,142 @@ class Cmodificaciones extends CI_Controller {
 
 
    
+    /*-------- GET OPCIONES DE MODIFICACION POA --------*/
+    public function get_opciones_modpoa(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $proy_id = $this->security->xss_clean($post['proy_id']);
+        $unidades=$this->model_componente->lista_subactividad($proy_id);
+        $saldos_revertidos_partidas=$this->model_ptto_sigep->lista_monto_partidas_revertidos_unidad($proy_id);
+        $tabla=''; 
+
+        if($this->tp_adm==1){ /// Administrador
+          $dim=3;
+          if(count($saldos_revertidos_partidas)==0){
+            $dim=4;
+          }
+
+          $tabla.='
+            <a onclick="cargar_informacion_form4()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 4 (ACTIVIDADES)" >
+              <div class="well well-sm col-sm-'.$dim.'">
+                <div class="well well-sm bg-color-teal txt-color-white text-center">
+                  <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORM. N° 4 - '.$this->gestion.'</h5>
+                  <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                </div>
+              </div>
+            </a>
+            <a onclick="cargar_informacion_form5()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 5 (REQUERIMIENTOS)" >
+              <div class="well well-sm col-sm-'.$dim.'">
+                <div class="well well-sm bg-color-teal txt-color-white text-center">
+                  <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORM. N° 5 - '.$this->gestion.'</h5>
+                  <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                </div>
+              </div>
+            </a>';
+
+            if(count($saldos_revertidos_partidas)!=0){
+              $tabla.='
+              <a onclick="cargar_informacion_form5_revertido()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 5 (REQUERIMIENTOS) SALDOS REVERTIDOS" >
+                <div class="well well-sm col-sm-'.$dim.'">
+                  <div class="well well-sm bg-color-blue txt-color-white text-center">
+                    <h5 style="font-weight: bold;font-style: italic;color: white">MOD. FORM. N° 5 (SALDOS REVERTIDOS) - '.$this->gestion.'</h5>
+                    <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                  </div>
+                </div>
+              </a>';
+            }
+
+            $tabla.='
+            <a onclick="cargar_informacion_techo()" class="ruta" title="MODIFICACION DEL TECHO PRESUPUESTARIO" >
+              <div class="well well-sm col-sm-'.$dim.'">
+                <div class="well well-sm bg-color-yellow txt-color-white text-center">
+                  <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR TECHO PPTARIO - '.$this->gestion.'</h5>
+                  <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                </div>
+              </div>
+            </a>';
+        }
+        else{ /// responsables regionales
+          $dim=4;
+          if(count($saldos_revertidos_partidas)==0){
+            $dim=6;
+          }
+
+              if($this->conf_mod_ope==1){
+                $tabla.='
+                <a onclick="cargar_informacion_form4()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 4 (ACTIVIDADES)" >
+                  <div class="well well-sm col-sm-'.$dim.'">
+                    <div class="well well-sm bg-color-teal txt-color-white text-center">
+                      <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 4 - '.$this->gestion.'</h5>
+                      <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                    </div>
+                  </div>
+                </a>';
+              }
+
+              if($this->conf_mod_req==1){
+                $tabla.='
+                <a onclick="cargar_informacion_form5()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 5 (REQUERIMIENTOS)" >
+                  <div class="well well-sm col-sm-'.$dim.'">
+                    <div class="well well-sm bg-color-teal txt-color-white text-center">
+                      <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 5 - '.$this->gestion.'</h5>
+                      <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                    </div>
+                  </div>
+                </a>';
+              }
+
+            if(count($saldos_revertidos_partidas)!=0){
+              $tabla.='
+              <a onclick="cargar_informacion_form5_revertido()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 5 (REQUERIMIENTOS) SALDOS REVERTIDOS" >
+                <div class="well well-sm col-sm-'.$dim.'">
+                  <div class="well well-sm bg-color-blue txt-color-white text-center">
+                    <h5 style="font-weight: bold;font-style: italic;color: white">MOD. FORM. N° 5 (SALDOS REVERTIDOS) - '.$this->gestion.'</h5>
+                    <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                  </div>
+                </div>
+              </a>';
+            }
+        }
+
+        $tabla.='
+          <script>
+            function cargar_informacion_form4(){
+              document.getElementById("loading").style.display = "block";
+              window.location="'.site_url("").'/mod/list_componentes/'.$proy_id.'"
+            }
+            function cargar_informacion_form5(){
+              document.getElementById("loading").style.display = "block";
+              window.location="'.site_url("").'/mod/form5/'.$proy_id.'/0"
+            }
+            function cargar_informacion_form5_revertido(){
+              document.getElementById("loading").style.display = "block";
+              window.location="'.site_url("").'/mod/form5/'.$proy_id.'/1"
+            }
+            function cargar_informacion_techo(){
+              document.getElementById("loading").style.display = "block";
+              window.location="'.site_url("").'/mod/cite_techo/'.$proy_id.'"
+            }
+          </script>
+          <br>
+          <div id="loading" style="display: none; text-align:center; color:blue"><b>CARGANDO INFORMACION .....</b></div>';
+
+
+        //$tabla=$this->conf_mod_ope.'----'.$this->conf_mod_req; /// Mis Subactividades
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+          //'proyecto'=>$proyecto,
+          //'titulo_poa'=>$titulo_poa,
+          //'caratula'=>$caratula_poa,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
 
 
     /*--- EXPORTAR CONSOLIDADO DE MODIFICACION POA INSTITUCIONAL ---*/
@@ -157,7 +294,7 @@ class Cmodificaciones extends CI_Controller {
       $this->db->update('cite_mod_requerimientos', $this->security->xss_clean($update_cite));
     }
 
-    /*--- LISTA DE MODIFCACIONES (REQUERIMIENTO-OPERACION-TECHO) 2020 ---*/
+    /*--- LISTA DE MODIFCACIONES (FORMULARIO 4 - FORMULARIO 5 - TECHO PRESUPUESTARIO) 2023 ---*/
     public function list_cites_generados($proy_id,$tp){
       $tabla='';
       // === LIST CITES REQUERIMIENTOS 
@@ -267,14 +404,9 @@ class Cmodificaciones extends CI_Controller {
                               </script>';
                 }
 
-
-                
               }
           }
-      
-
-
-          
+ 
       }
       // ----- LIST DE CITES TECHO PRESUPUESTARIO
       else{
@@ -283,10 +415,15 @@ class Cmodificaciones extends CI_Controller {
             $nro=0;
               foreach($cites  as $cit){
                 $nro++;
+                $tp_mod='<b>MODIFICACION RESPUESTARIA</b>';
+                if($cit['tp']==1){
+                  $tp_mod='<b>REVERSION DE SALDOS</b><br>'.$cit['observacion'].'';
+                }
                 $tabla .='<tr>';
                   $tabla .='<td align="center">'.$nro.'</td>';
                   $tabla .='<td><b>'.$cit['cppto_cite'].'</b></td>';
                   $tabla .='<td align="center"><b>'.date('d/m/Y',strtotime($cit['cppto_fecha'])).'</b></td>';
+                  $tabla .='<td align="center">'.$tp_mod.'</td>';
                   $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/rep_mod_techo/'.$cit['cppto_id'].'\');" title="REPORTE CITES - MODIFICACIÓN TECHO PRESUPUESTARIO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
                   $tabla .='<td align=center>';
                     if($this->fun_id==399){

@@ -1801,6 +1801,9 @@ cppto_fecha timestamp,
 fecha timestamp,
 cppto_estado integer,
 fun_id integer,
+mp_id integer,
+tp integer,
+observacion varchar,
 pfec_id numeric,
 pfec_estado integer,
 aper_id numeric,
@@ -1808,7 +1811,7 @@ aper_gestion integer) AS
 
 $$
 
-select ppto.cppto_id,ppto.proy_id,ppto.cppto_cite,ppto.cppto_fecha,ppto.fecha,ppto.cppto_estado,ppto.fun_id,pfe.pfec_id,pfe.pfec_estado,pfe.aper_id,apg.aper_gestion
+select ppto.cppto_id,ppto.proy_id,ppto.cppto_cite,ppto.cppto_fecha,ppto.fecha,ppto.cppto_estado,ppto.fun_id,ppto.mp_id,ppto.tp,ppto.observacion,pfe.pfec_id,pfe.pfec_estado,pfe.aper_id,apg.aper_gestion
             from ppto_cite ppto
             Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=ppto.proy_id
             Inner Join aperturaprogramatica as apg On pfe.aper_id=apg.aper_id
@@ -3181,6 +3184,7 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
        sp_id integer NOT NULL,
        cppto_id integer DEFAULT 0,
        saldo_estado integer DEFAULT 1,
+       ppto_anterior numeric(18,2) NOT NULL DEFAULT 0,
        monto_revertido numeric(18,2) NOT NULL DEFAULT 0,
        fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
        primary key(saldo_id)
@@ -3208,6 +3212,70 @@ CREATE OR REPLACE VIEW public.vista_alineacion_poa_acp AS
           fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
           primary key(obs_ejec_id)
      );
+
+
+
+//// FUNCION LISTA DE SALDOS PARTIDAS REVERTIDOS
+
+CREATE OR REPLACE FUNCTION lista_partidas_revertidas(gestion integer) RETURNS TABLE(
+aper_programa varchar,
+aper_proyecto varchar,
+aper_actividad varchar,
+aper_gestion integer,
+proy_nombre varchar,
+proy_sisin varchar,
+tp_id numeric,
+aper_id numeric,
+proy_id numeric,
+cppto_cite varchar,
+observacion varchar,
+cppto_id integer,
+sp_id integer,
+par_id integer,
+partida varchar,
+ppto_inicial numeric,
+presupuesto_revertido numeric
+) AS
+
+$$
+
+select 
+apg.aper_programa,
+apg.aper_proyecto,
+apg.aper_actividad,
+apg.aper_gestion,
+p.proy_nombre,
+p.proy_sisin,
+p.tp_id,
+p_asignadas.aper_id,
+cite.proy_id,
+cite.cppto_cite,
+cite.observacion,
+cite.cppto_id,
+saldo.sp_id,
+p_asignadas.par_id,
+p_asignadas.partida,
+saldo.ppto_anterior ppto_inicial,
+SUM(saldo.monto_revertido) presupuesto_revertido
+
+from saldo_partida saldo
+Inner Join ppto_cite as cite On cite.cppto_id=saldo.cppto_id
+Inner Join ptto_partidas_sigep as p_asignadas On saldo.sp_id=p_asignadas.sp_id
+Inner Join aperturaprogramatica as apg On apg.aper_id=p_asignadas.aper_id
+Inner Join _proyectos as p On p.proy_id=cite.proy_id
+where apg.aper_gestion=gestion and saldo.saldo_estado!=3
+group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_nombre,p.proy_sisin,p.tp_id,p_asignadas.aper_id,cite.proy_id,cite.cppto_cite,cite.observacion,cite.cppto_id,saldo.sp_id,p_asignadas.par_id,p_asignadas.partida,saldo.ppto_anterior,p_asignadas.importe
+order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,cite.cppto_id asc;
+$$ LANGUAGE sql;
+
+
+
+
+
+
+
+
+
 
 
 ///// VISTA Ejecucion de Partidas 

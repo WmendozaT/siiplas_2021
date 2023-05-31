@@ -39,6 +39,7 @@
     })
 
 
+
     /// ---- Generar Reporte Detallado por Regional sobre las modificaciones presupuestarias
     function generar_modppto_regional(mp_id) {
       document.getElementById("mp_id").value = mp_id;

@@ -89,9 +89,9 @@
 			<div class="login-info">
 				<span> <!-- User image size is adjusted inside CSS, it should stay as is --> 
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                        <span>
-                           <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
-                        </span>
+            <span>
+              <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
+            </span>
 						<i class="fa fa-angle-down"></i>
 					</a> 
 				</span>
@@ -100,12 +100,12 @@
 			<nav>
 				<ul>
 					<li class="">
-	                <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-	            	</li>
-		            <li class="text-center">
-		                <a href="<?php echo base_url().'index.php/admin/dm/2/' ?>" title="MODIFICACIONES"> <span class="menu-item-parent">MODIFICACIONES</span></a>
-		            </li>
-		            <?php echo $menu;?>
+	          <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+	        </li>
+		      <li class="text-center">
+		        <a href="<?php echo base_url().'index.php/admin/dm/2/' ?>" title="MODIFICACIONES"> <span class="menu-item-parent">MODIFICACIONES</span></a>
+		      </li>
+		      <?php echo $menu;?>
 				</ul>
 			</nav>
 			<span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
@@ -141,10 +141,10 @@
 								<div class="row">
 									<article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
 									<div class="jarviswidget jarviswidget-color-darken" >
-		                              <header>
-		                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-		                                  <h2 class="font-md"><strong>FORMULARIO N° 5</strong></h2>  
-		                              </header>
+		                <header>
+		                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+		                  <h2 class="font-md"><strong>FORMULARIO N° 5</strong></h2>  
+		                </header>
 										<div>
 											<div class="widget-body no-padding">
 												<table id="dt_basic2" class="table table-bordered" style="width:100%;">
@@ -174,10 +174,10 @@
 									</article>
 									<article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
 									<div class="jarviswidget jarviswidget-color-darken" >
-		                              <header>
-		                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-		                                  <h2 class="font-md"><strong>FORMULARIO N° 4</strong></h2>  
-		                              </header>
+		                <header>
+		                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+		                  <h2 class="font-md"><strong>FORMULARIO N° 4</strong></h2>  
+		                </header>
 										<div>
 											<div class="widget-body no-padding">
 												<table id="dt_basic1" class="table table-bordered" style="width:100%;">
@@ -202,10 +202,10 @@
 									</article>
 									<article class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
 									<div class="jarviswidget jarviswidget-color-darken" >
-		                              <header>
-		                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-		                                  <h2 class="font-md"><strong>TECHO</strong></h2>  
-		                              </header>
+		                <header>
+		                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+		                    <h2 class="font-md"><strong>TECHO</strong></h2>  
+		                  </header>
 										<div>
 											<div class="widget-body no-padding">
 												<table id="dt_basic3" class="table table-bordered" style="width:100%;">
@@ -213,7 +213,8 @@
 														<tr style="height:40px;">
 															<th style="width:1%;">#</th>
 															<th style="width:10%;">NRO CITE</th>
-															<th style="width:15%;">FECHA CITE </th>
+															<th style="width:10%;">FECHA CITE </th>
+															<th style="width:10%;">TIPO DE MODIFICACION </th>
 															<th style="width:5%;"></th>
 															<th style="width:5%;"></th>
 														</tr>

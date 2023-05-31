@@ -119,18 +119,18 @@
 					</section>
 				</article>
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
-                    <section id="widget-grid" class="well">
-                        <a href="<?php echo base_url().'index.php/mod/list_top'?>" title="SALIR" class="btn btn-default" style="width:100%;"><img src="<?php echo base_url(); ?>assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;SALIR A LISTA DE POAS</a>
-                    </section>
-                </article>
+          <section id="widget-grid" class="well">
+            <a href="<?php echo base_url().'index.php/mod/list_top'?>" title="SALIR" class="btn btn-default" style="width:100%;"><img src="<?php echo base_url(); ?>assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;SALIR A LISTA DE POAS</a>
+          </section>
+        </article>
 			</div>
 			<div class="row">
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<div class="jarviswidget jarviswidget-color-darken">
-                      <header>
-                          <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                          <h2 class="font-md"><strong></strong></h2>  
-                      </header>
+            <header>
+              <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+              <h2 class="font-md"><strong></strong></h2>  
+            </header>
 						<div>
 							<div class="widget-body no-padding">
 								<?php echo $tabla; ?>
@@ -167,6 +167,7 @@
 	                    </button>
 	                    <h4 class="modal-title text-center text-info">
 	                        <b>INGRESAR DATOS DE CITE</b>
+	                        <br><?php echo $titulo_cite; ?>
 	                    </h4>
 	                </div>
 	                <div class="modal-body no-padding">
@@ -174,38 +175,40 @@
 	                        <div id="bootstrap-wizard-1" class="col-sm-12">
 	                        	<div class="well">
 	                        		<form action="<?php echo site_url().'/modificaciones/cmod_insumo/valida_cite_modificacion'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
-									   	<input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-									   	<input type="hidden" name="com_id" id="com_id">
-									   	<fieldset>
-											<section>
-												<div class="row">
-													<label class="label col col-2">CITE</label>
-													<div class="col col-10">
-														<label class="input"> <i class="icon-append fa fa-user"></i>
-															<input type="text" name="cite" id="cite" placeholder="XX-XX-XXX" title="REGISTRE NUMERO DE CITE">
-														</label>
-													</div>
-												</div>
-											</section>
-											<section>
-												<div class="row">
-													<label class="label col col-2">FECHA</label>
-													<div class="col col-10">
-														<label class="input"> <i class="icon-append fa fa-calendar"></i>
-														<input type="text" name="fm" id="fm" class="form-control datepicker" data-dateformat="dd/mm/yy" onKeyUp="this.value=formateafecha(this.value);" placeholder="dd/mm/YY" title="SELECCIONE FECHA DE MODIFICACI&acute;ON DE CITE">
-													</label>
-													</div>
-												</div>
-											</section>
-										</fieldset>
-										
-										<footer>
-											<button type="button" name="add_form" id="add_form" class="btn btn-primary">Ingresar a Modificar</button>
-											<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-										</footer>
-										<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="35" height="35"></center></td>
-									</form>	
-								</div>
+															   	<input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
+															   	<input type="hidden" name="tp_mod" id="tp_mod" value="<?php echo $tp_mod;?>">
+															   	<input type="hidden" name="com_id" id="com_id">
+
+															   	<fieldset>
+																	<section>
+																		<div class="row">
+																			<label class="label col col-2">CITE</label>
+																			<div class="col col-10">
+																				<label class="input"> <i class="icon-append fa fa-user"></i>
+																					<input type="text" name="cite" id="cite" placeholder="XX-XX-XXX" title="REGISTRE NUMERO DE CITE">
+																				</label>
+																			</div>
+																		</div>
+																	</section>
+																	<section>
+																		<div class="row">
+																			<label class="label col col-2">FECHA</label>
+																			<div class="col col-10">
+																				<label class="input"> <i class="icon-append fa fa-calendar"></i>
+																				<input type="text" name="fm" id="fm" class="form-control datepicker" data-dateformat="dd/mm/yy" onKeyUp="this.value=formateafecha(this.value);" placeholder="dd/mm/YY" title="SELECCIONE FECHA DE MODIFICACI&acute;ON DE CITE">
+																			</label>
+																			</div>
+																		</div>
+																	</section>
+																</fieldset>
+																
+																<footer>
+																	<button type="button" name="add_form" id="add_form" class="btn btn-primary">Ingresar a Modificar</button>
+																	<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+																</footer>
+																<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="35" height="35"></center></td>
+															</form>	
+														</div>
 	                        </div>
 	                    </div>
 	                </div>

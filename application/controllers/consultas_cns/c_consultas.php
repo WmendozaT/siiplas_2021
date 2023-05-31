@@ -87,6 +87,7 @@ class C_consultas extends CI_Controller {
                         <option value="2848">000 00 002 - GERENCIA GENERAL</option>
                         <option value="2886">000 00 003 - GERENCIA ADMINISTRATIVA FINANCIERA</option>
                         <option value="2887">721 00 040 - GERENCIA DE SERVICIOS DE SALUD</option>
+                        <option value="2979">730 00 010 - MEDICINA DEL TRABAJO</option>
                       </select>
                     </div>
                   </div>

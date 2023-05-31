@@ -36,9 +36,17 @@ class Cmod_insumo extends CI_Controller {
     }
 
     /*----- cite Servicios de Unidad  ------*/
-    public function cite_servicios($proy_id){
+    public function cite_servicios($proy_id,$tp){
+      /// tp 0: Modificacion POA
+      /// tp 1: Modificacion POA (Reversion de saldos)
       $data['menu']=$this->menu(3); //// genera menu
       $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
+      $data['tp_mod']=$tp;
+      $data['titulo_cite']='';
+      if($tp==1){
+        $data['titulo_cite']='REVERSION DE SALDOS';
+      }
+
       if(count($data['proyecto'])!=0){
         if($data['proyecto'][0]['tp_id']==1){
           $titulo='
@@ -51,7 +59,7 @@ class Cmod_insumo extends CI_Controller {
         }
 
         $data['titulo']=$titulo;
-        $data['tabla']=$this->modificacionpoa->lista_servicio_componentes($data['proyecto']);
+        $data['tabla']=$this->modificacionpoa->lista_unidades_responsables($data['proyecto'],$tp);
         $this->load->view('admin/modificacion/requerimientos/cite_servicio', $data); 
       }
       else{
@@ -100,6 +108,7 @@ class Cmod_insumo extends CI_Controller {
           $cite = $this->security->xss_clean($post['cite']); /// Cite
           $fecha = $this->security->xss_clean($post['fm']); /// Fecha
           $com_id = $this->security->xss_clean($post['com_id']); /// Com id
+          $tp_mod = $this->security->xss_clean($post['tp_mod']); /// tipo mod
           $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
 
           if($proy_id!='' & count($proyecto)!=0){
@@ -108,6 +117,7 @@ class Cmod_insumo extends CI_Controller {
               'cite_nota' => strtoupper($cite),
               'cite_fecha' => $fecha,
               'com_id' => $com_id,
+              'tipo_modificacion' => $tp_mod,
               'fun_id' => $this->fun_id,
               'g_id' => $this->gestion,
               'num_ip' => $this->input->ip_address(), 
