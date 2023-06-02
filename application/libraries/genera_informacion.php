@@ -798,11 +798,16 @@ class Genera_informacion extends CI_Controller{
               <th style="width:5%;">COSTO TOTAL</th>
               <th style="width:5%;">MONTO CERTIFICADO</th>
               <th style="width:5%;">OBSERVACI&Oacute;N</th>
+              <th style="width:5%;">TIPO MOD.</th>
             </tr>
           </thead>
           <tbody id="bdi">';
           $nro=0;
           foreach ($requerimientos as $row){
+            $tipo_modificacion='<b style="color:blue">REG. POA</b>';
+            if($row['ins_tipo_modificacion']==1){
+              $tipo_modificacion='<b style="color:green">REG. REV. POA</b>';
+            }
             $nro++;
             $tabla.='<tr>';
                 $tabla.='<td style="height:50px;">'.$row['dep_cod'].'</td>';
@@ -834,6 +839,7 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
                 $tabla.='<td style="font-size: 13px;" align="right" bgcolor="#c1f5ee"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
                 $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_observacion']).'</td>';
+                $tabla.='<td align="center">'.$tipo_modificacion.'</td>';
             $tabla.='</tr>';
           }
           $tabla.='
@@ -898,12 +904,19 @@ class Genera_informacion extends CI_Controller{
                   <th style="width:4%;background-color: #eceaea;">P. NOV.</th>
                   <th style="width:4%;background-color: #eceaea;">P. DIC.</th>
                   <th style="width:10%;background-color: #eceaea;">OBSERVACION</th>
+                  <th style="width:5%;background-color: #eceaea;">TIPO MOD.</th>
                 </tr>
               </thead>
             <tbody>';
             $nro=0;
             foreach ($requerimientos as $row){
-              $prog="'".$row['aper_programa']."'";
+            $tipo_modificacion='<b style="color:blue">REG. POA</b>';
+            if($row['ins_tipo_modificacion']==1){
+              $tipo_modificacion='<b style="color:green">REG. REV. POA</b>';
+            }
+
+
+            $prog="'".$row['aper_programa']."'";
             $nro++;
             $tabla.='<tr>';
                 $tabla.='<td>'.$row['ins_id'].'</td>';
@@ -947,6 +960,7 @@ class Genera_informacion extends CI_Controller{
                   $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.round($row['mes'.$i],2).'</td>';
                 }
                 $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>';
+                $tabla.='<td align="center">'.$tipo_modificacion.'</td>';
             $tabla.='</tr>';
           }
 

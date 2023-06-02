@@ -193,7 +193,7 @@ class Modificacionpoa extends CI_Controller{
                                   
                                   function mod_insumo'.$row['proy_id'].'(){
                                     document.getElementById("load2'.$row['proy_id'].'").style.display = "block";
-                                    window.location="'.site_url("").'/mod/procesos/'.$row['proy_id'].'"
+                                    window.location="'.site_url("").'/mod/form5/'.$row['proy_id'].'/0"
                                   }
 
                                   function mod_techo'.$row['proy_id'].'(){
@@ -1061,9 +1061,9 @@ class Modificacionpoa extends CI_Controller{
                 foreach ($lista_insumos as $row) {
                   $color_tr=''; $dis=''; $title='title="REQUERIMIENTO"';
                   $monto_cert=0;$valor_mod=0; $valor_delete=0;
-                  $tp_mod_registro='<div style="color:blue"><b>POA</b></div>';
+                  $tp_mod_registro='<div style="color:blue"><b>REG. x POA</b></div>';
                   if($row['ins_tipo_modificacion']==1){
-                    $tp_mod_registro='<div style="color:yellow"><b>REV.</b></div>';
+                    $tp_mod_registro='<div style="color:green"><b>REG. x REV.</b></div>';
                   }
 
 
@@ -1245,7 +1245,7 @@ class Modificacionpoa extends CI_Controller{
                   if($row['ins_tipo_modificacion']==1){
                     $tp_mod_registro='<div style="color:yellow"><b>REV.</b></div>';
                   }
-                  
+
                   $cont++;
                     $tabla .='<tr bgcolor='.$color_tr.'>';
                     $tabla .='<td title='.$row['ins_id'].'>'.$tp_mod_registro.'</td>';

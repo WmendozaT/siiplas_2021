@@ -153,18 +153,19 @@ class Cmod_insumo extends CI_Controller {
 
       if(count($data['cite'])!=0){
         $proyecto = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); /// Proyecto de Inversion
+        //$data['tp_mod']=$data['cite'][0]['tipo_modificacion'];
         $data['cabecera']=$this->cabecera_formulario_mod5($data['cite'],$proyecto);
         $data['opciones']=$this->opciones_formulario_mod5($data['cite'],$proyecto);
         $data['style']=$this->style();
       
           if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
-            if($this->fun_id==598){ /// exclusivo doctor muruchi
+            /*if($this->fun_id==598){ /// exclusivo doctor muruchi
               $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2023
             }
             else{
               $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023 -> cargado rapido sin temporalidad
-            }
-            
+            }*/
+            $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023 -> cargado rapido sin temporalidad
           }
           else{
             $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022
@@ -306,6 +307,9 @@ class Cmod_insumo extends CI_Controller {
       if($this->input->post()) {
         $post = $this->input->post();
         $cite_id = $this->security->xss_clean($post['cite_id']); /// cite id
+        $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id); /// datos cite
+        $tipo_modificacion=$cite[0]['tipo_modificacion'];
+
         $detalle = $this->security->xss_clean($post['ins_detalle']); /// detalle
         $cantidad = $this->security->xss_clean($post['ins_cantidad']); /// cantidad
         $costo_unitario = $this->security->xss_clean($post['ins_costo_u']); /// costo unitario
@@ -332,6 +336,7 @@ class Cmod_insumo extends CI_Controller {
           'par_id' => $partida, /// Partidas
           'ins_tipo' => 1, /// Ins Tipo
           'ins_observacion' => strtoupper($observacion), /// Observacion
+          'ins_tipo_modificacion' => $tipo_modificacion, /// tipo modificacion
           'fun_id' => $this->fun_id, /// Funcionario
           'aper_id' => $proyecto[0]['aper_id'], /// aper id
           'com_id' => $producto[0]['com_id'], /// com id 
@@ -1620,6 +1625,7 @@ class Cmod_insumo extends CI_Controller {
                             'par_id' => $par_id[0]['par_id'], /// Partidas
                             'ins_tipo' => 1, /// Ins Tipo
                             'ins_observacion' => strtoupper($observacion), /// Observacion
+                            'ins_tipo_modificacion' => $cite[0]['tipo_modificacion'], /// tipo de registro // poa , reversion
                             'fun_id' => $this->fun_id, /// Funcionario
                             'ins_gestion' => $this->gestion, /// Gestion
                             'aper_id' => $proyecto[0]['aper_id'], /// aper id
@@ -1856,6 +1862,7 @@ class Cmod_insumo extends CI_Controller {
             'ins_tipo' => $insumo[0]['ins_tipo'], /// Ins Tipo
             'par_id' => $insumo[0]['par_id'], /// Partidas
             'ins_observacion' => $insumo[0]['ins_observacion'], /// Ins Observacion
+            'ins_tipo_modificacion' => $insumo[0]['ins_tipo_modificacion'], /// mod por poa o reversion
             'fun_id' => $this->fun_id, /// Funcionario quien realizo la ACCION DE MODIFICACION
             'aper_id' => $proyecto[0]['aper_id'], /// aper id
             'num_ip' => $this->input->ip_address(), 

@@ -1077,6 +1077,7 @@ ins_detalle varchar,
 ins_unidad_medida varchar,
 ins_gestion integer,
 ins_observacion varchar,
+ins_tipo_modificacion integer,
 par_id integer,
 par_codigo integer,
 par_nombre varchar,
@@ -1101,7 +1102,7 @@ $$
 
 select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,apg.aper_id,apg.aper_programa,apg.aper_proyecto,p.proy_sisin,apg.aper_actividad,p.proy_id,p.proy_nombre,p.tp_id,ds.abrev,ua.act_descripcion, te.tipo,
      c.com_id,ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_cod,prod.prod_producto,prod.or_id,ore.or_codigo,ore.or_objetivo,og.acc_id,og.og_id,og.og_codigo,og.og_objetivo,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_detalle,i.ins_unidad_medida,
-     i.ins_gestion,i.ins_observacion,i.par_id,par.par_codigo,par.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
+     i.ins_gestion,i.ins_observacion,i.ins_tipo_modificacion,i.par_id,par.par_codigo,par.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
      itemp.mes11,itemp.mes12,fun.fun_nombre,fun.fun_paterno,fun.fun_materno
                 from _proyectos p
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
@@ -1132,7 +1133,7 @@ select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_dist
 
     d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,apg.aper_id,apg.aper_programa,apg.aper_proyecto,p.proy_sisin,apg.aper_actividad,p.proy_id,p.proy_nombre,p.tp_id,ds.abrev,ua.act_descripcion, te.tipo,
      c.com_id,ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_cod,prod.prod_producto,prod.or_id,ore.or_codigo,ore.or_objetivo,og.acc_id,og.og_id,og.og_codigo,og.og_objetivo,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_detalle,i.ins_unidad_medida,
-     i.ins_gestion,i.ins_observacion,i.par_id,par.par_codigo,par.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
+     i.ins_gestion,i.ins_observacion,i.ins_tipo_modificacion,i.par_id,par.par_codigo,par.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
      itemp.mes11,itemp.mes12,fun.fun_nombre,fun.fun_paterno,fun.fun_materno
                 
                 order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,ser.serv_cod, prod.prod_cod, par.par_codigo, i.ins_id asc;
@@ -1384,6 +1385,7 @@ ins_unidad_medida varchar,
 ins_estado integer,
 ins_gestion integer,
 ins_observacion varchar,
+ins_tipo_modificacion integer,
 programado_total numeric,
 mes1 numeric,
 mes2 numeric,
@@ -1402,7 +1404,7 @@ $$
 
 select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
 p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.form4_cod,i.ins_id,i.par_id,par.par_codigo,par.par_nombre,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_unidad_medida,
-i.ins_estado,i.ins_gestion,i.ins_observacion,temp.programado_total,temp.mes1,temp.mes2,temp.mes3,temp.mes4,temp.mes5,temp.mes6,temp.mes7,temp.mes8,temp.mes9,temp.mes10,temp.mes11,temp.mes12
+i.ins_estado,i.ins_gestion,i.ins_observacion,i.ins_tipo_modificacion,temp.programado_total,temp.mes1,temp.mes2,temp.mes3,temp.mes4,temp.mes5,temp.mes6,temp.mes7,temp.mes8,temp.mes9,temp.mes10,temp.mes11,temp.mes12
 from _proyectofaseetapacomponente pfe
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
 Inner Join _proyectos as p On p.proy_id=pfe.proy_id

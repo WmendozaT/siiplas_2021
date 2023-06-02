@@ -293,7 +293,7 @@
         $tabla.='
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
             <tr class="modo1">
-              <td colspan=21 align=left style="height:50px;">
+              <td colspan=22 align=left style="height:50px;">
                 <b> DA : </b> '.$proyecto[0]['dep_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dep_departamento']), 'cp1252', 'UTF-8').'<br>
                 <b> UE : </b> '.$proyecto[0]['dist_cod'].' .-'.mb_convert_encoding(strtoupper($proyecto[0]['dist_distrital']), 'cp1252', 'UTF-8').'<br>
                 <b> '.mb_convert_encoding($tit, 'cp1252', 'UTF-8').' : </b> '.mb_convert_encoding($tit_proy, 'cp1252', 'UTF-8').'<br>
@@ -304,6 +304,7 @@
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                  <tr style="background-color: #66b2e8">
+                    <th style="width:3%;height:40px;background-color: #eceaea;">TIP. MOD.</th>
                     <th style="width:2%;height:40px;background-color: #eceaea;">COD. ACT.</th>
                     <th style="width:2%;background-color: #eceaea;">PARTIDA</th>
                     <th style="width:20%;background-color: #eceaea;">REQUERIMIENTO</th>
@@ -330,9 +331,14 @@
             <tbody>';
             $nro=0;$sum_programado=0;$sum_certificado=0;
             foreach ($requerimientos as $row){
+              $tipo_modificacion='REG. POA';
+              if($row['ins_tipo_modificacion']==1){
+                $tipo_modificacion='REG. REV. POA';
+              }
               $prog=$this->model_insumo->lista_prog_fin($row['ins_id']);
               $nro++;
               $tabla.='<tr>';
+                $tabla.='<td style="width:3%; font-size: 8px; height:50px;" align=center><b>'.$tipo_modificacion.'</b></td>';
                 $tabla.='<td style="width:2%; font-size: 15px; height:50px;" align=center><b>'.$row['prod_cod'].'</b></td>';
                 $tabla.='<td style="width:2%; font-size: 15px;" align=center><b>'.$row['par_codigo'].'</b></td>';
                 $tabla.='<td style="font-family: Arial;">'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
@@ -363,7 +369,7 @@
             $tabla.='
             </tbody>
             <tr>
-              <td colspan=6 style="height:30px;"></td>
+              <td colspan=7 style="height:30px;"></td>
               <td style="font-size: 15px;"  align=right><b>'.round($sum_programado,2).'</b></td>
               <td style="font-size: 15px;" align=right><b>'.round($sum_certificado,2).'</b></td>
               <td colspan=13></td>

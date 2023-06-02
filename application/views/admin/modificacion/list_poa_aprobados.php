@@ -260,7 +260,6 @@
 		</script>
 		<!-- IMPORTANT: APP CONFIG -->
 		<script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
-		<script src="<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
 		<!-- BOOTSTRAP JS -->
@@ -300,6 +299,14 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 		<script src="<?php echo base_url(); ?>mis_js/modificacionpoa/modppto.js"></script> 
 		<script type="text/javascript">
+			$(document).ready(function() {
+				pageSetUp();
+				// menu
+				$("#menu").menu();
+				$('.ui-dialog :button').blur();
+				$('#tabs').tabs();
+			})
+
 			  //// ver opciones de modificacion poa
 		  $(function () {
 		    $(".modpoa").on("click", function (e) {
@@ -340,14 +347,7 @@
 		        
 		      });
 		  });
-
-			$(document).ready(function() {
-				pageSetUp();
-				// menu
-				$("#menu").menu();
-				$('.ui-dialog :button').blur();
-				$('#tabs').tabs();
-			})
 		</script>
+		<script src="<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 	</body>
 </html>

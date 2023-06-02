@@ -324,13 +324,14 @@ class Model_insumo extends CI_Model{
                 i.ins_gestion,
                 i.ins_observacion,
                 i.ins_monto_certificado,
+                i.ins_tipo_modificacion,
                 par.par_id,
                 par.par_codigo,
                 par.par_nombre
                 from _componentes c
                 Inner Join insumos as i On c.com_id=i.com_id
                 Inner Join partidas as par On par.par_id=i.par_id
-                where c.com_id='.$com_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
+                where c.com_id='.$com_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.' 
                 order by i.form4_cod,par.par_codigo,i.ins_id asc';
         }
         else{
@@ -352,7 +353,7 @@ class Model_insumo extends CI_Model{
 
     // lista de requerimientos alineados a PROGRAMAS BOLSAS 
     function lista_requerimientos_inscritos_en_programas_bosas($prod_id,$com_id){
-         $sql = 'select p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,par.par_codigo,par.par_nombre
+         $sql = 'select p.prod_id,p.uni_resp,p.prod_cod,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_detalle,i.ins_unidad_medida,i.ins_gestion,i.ins_estado,i.par_id,i.ins_observacion,i.aper_id,i.ins_monto_certificado,i.ins_tipo_modificacion,par.par_codigo,par.par_nombre
                 from _productos p
                 Inner Join _insumoproducto as ip On p.prod_id=ip.prod_id
                 Inner Join insumos as i On i.ins_id=ip.ins_id
@@ -481,7 +482,7 @@ class Model_insumo extends CI_Model{
 
 
     function lista_insumos_prod($prod_id){
-        $sql = 'select prod.prod_id,prod.prod_cod,par.par_codigo,i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,ins_monto_certificado,ins_observacion
+        $sql = 'select prod.prod_id,prod.prod_cod,par.par_codigo,i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,ins_monto_certificado,ins_observacion,i.ins_tipo_modificacion
                 from _insumoproducto ip
                 Inner Join _productos as prod On prod.prod_id=ip.prod_id
                 Inner Join insumos as i On i.ins_id=ip.ins_id
