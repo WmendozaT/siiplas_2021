@@ -60,6 +60,7 @@ class Cejecucion_pi extends CI_Controller {
         $data['reporte']='<a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°4</b></font></a>';
         $data['formulario_datos_generales']=$this->tabla_datos_generales($proyecto,$com_id); /// Datos Generales
         $data['formulario_ejec_partidas']=$this->tabla_formulario_ejecucion_partidas($proyecto); /// Ejecucion Partidas
+        $data['galeria']=$this->galeria_pi($proyecto); /// Galeria de fotos P inversion
         
         $data['cuadro_consolidado']='
         <div class="row" id="btn_generar">
@@ -218,10 +219,10 @@ class Cejecucion_pi extends CI_Controller {
     }
 
     $titulo='';
-    if($eficacia<=50){$tp='danger';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
-    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (REGULAR)';} /// Regular - Amarillo
-    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (BUENO))';} /// Bueno - Azul
-    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (OPTIMO)';} /// Optimo - verde
+    if($eficacia<=50){$tp='danger';$titulo='EJECUCIÓN FINANCIERA : '.$eficacia.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
+    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='EJECUCIÓN FINANCIERA : '.$eficacia.'% (REGULAR)';} /// Regular - Amarillo
+    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='EJECUCIÓN FINANCIERA : '.$eficacia.'% (BUENO))';} /// Bueno - Azul
+    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='EJECUCIÓN FINANCIERA : '.$eficacia.'% (OPTIMO)';} /// Optimo - verde
 
     $tabla='
       <hr>
@@ -431,7 +432,7 @@ class Cejecucion_pi extends CI_Controller {
 
 
 
-  /*-- FORMULARIO EJECUCION DE PARTIDAS --*/
+  /*-- FORMULARIO EJECUCION FINANCIERA POR PARTIDAS --*/
   public function tabla_formulario_ejecucion_partidas($proyecto){
     $ppto_asig=$this->model_ptto_sigep->partidas_proyecto($proyecto[0]['aper_id']); /// lista de partidas asignados por proyectos
     $tabla='';
@@ -570,6 +571,88 @@ class Cejecucion_pi extends CI_Controller {
   }
 
 
+/*-- LISTADO DE FOTOS  --*/
+public function galeria_pi($proyecto){
+  $tabla='';
+    $galeria=$this->model_proyecto->lista_galeria_pinversion($proyecto[0]['proy_id']); /// Galeria
+
+    if(count($galeria)!=0){
+      $tabla.='
+        <div class="row hidden-mobile">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+              <i class="fa-fw fa fa-picture-o"></i> 
+              Gallery <span>>
+              Proyectos de Inversión
+          </div>
+        </div>
+        <div class="row">';
+      foreach($galeria as $row){
+        $background='';
+        if($row['tp']==1){
+          $background='background:#ccf5f0';
+        }
+
+        $tabla.='
+          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+            <table class="table table-bordered">
+              <tr style="'.$background.'" style="height:1000px;">
+                <td>
+                  <center><img src="'.base_url().'fotos_proyectos/'.$row['imagen'].'" data-img="'.base_url().'fotos_proyectos/'.$row['imagen'].'" style="width:1000%; height:150px;" alt="My first photoshop layer mask on a high end PSD template theme" title="Bridge of Edgen" class="superbox-img"/></center>
+                </td>
+              </tr>
+              <tr style="'.$background.'">
+                <td>'.strtoupper($row['detalle']).'</td>
+              </tr>
+            </table>
+          </div>
+        ';
+      }
+      $tabla.='</div>';
+    }
+    else{
+      $tabla.='<b>SIN REGISTRO ...</b>';
+    }
+
+    $tabla.='
+    <hr>
+    <form class="form-horizontal">
+      <input name="proy_id" id="proy_id" type="hidden" value="'.$proyecto[0]['proy_id'].'" >
+      <fieldset>
+        <legend>SUBIR ARCHIVO (IMAGEN)</legend>
+      
+        <div class="form-group">
+          <label class="col-md-2 control-label">Seleccione Archivo</label>
+          <div class="col-md-10">
+            <input type="file" class="btn btn-default" id="archivo">
+            <p class="help-block">
+              seleccione archivo
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-2 control-label">Descripción Imagen</label>
+          <div class="col-md-3">
+            <textarea class="form-control" placeholder="Descripcion" id="descripcion" rows="4"></textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="form-actions">
+        <div class="row">
+          <div class="col-md-5">
+            <button class="btn btn-primary" type="button" onclick="subirArchivo()">
+              <i class="fa fa-save"></i>
+              Subir archivo
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>';
+
+  return $tabla;
+}
 
 /*---- VERIFICA EL MONTO A EJECUTAR POR PARTIDA ----*/
 public function verif_valor_ejecutado_x_partida_form(){
@@ -743,21 +826,50 @@ public function guardar_datos_ejecucion_pinversion(){
 
 
 
-  //// EJECUCION DE PROYECTOS DE INVERSION (MODULO PARA REGIONALES)
+  //// MODULO EJECUCION DE PROYECTOS DE INVERSION (MODULO PARA REGIONALES)
   /*------- formulario ejecucion financiera MODULO PROYECTOS DE INVERSION-------*/
-  public function formulario_ejecucion_ppto(){
+  public function lista_pinversion_regional(){
     $data['menu']=$this->ejecucion_finpi->menu_pi();
     $data['style']=$this->ejecucion_finpi->style();
     $data['formulario']=$this->ejecucion_finpi->formulario();
 
-
     $this->load->view('admin/ejecucion_pi/form_ejec_fin_pi', $data);
+  }
 
+  //// SUBIR ARCHIVOS FOTOS PROYECTOS DE INVERSION
+  public function subir_archivos(){
+    if (isset($_FILES["archivo"]) && isset($_POST["descripcion"])) {
+      $archivo = $_FILES["archivo"];
+      $descripcion = $_POST["descripcion"];
+      $proy_id = $_POST["proy_id"];
+      $nombre_archivo = $archivo["name"];
+
+      $file_ext = substr($nombre_archivo, strripos($nombre_archivo, '.'));
+
+      $newfilename = $proy_id.'-'.$this->gestion.'-'.substr(md5(uniqid(rand())),0,5).$file_ext;
+      $ruta_archivo = "fotos_proyectos/$newfilename";
+
+      if (move_uploaded_file($archivo["tmp_name"], $ruta_archivo)) {
+              $data_to_store = array( 
+                'imagen' => $newfilename,
+                'proy_id' => $proy_id,
+                'detalle' => $descripcion,
+                'fun_id' => $this->fun_id,
+                );
+              $this->db->insert('imagenes_proy_inversion', $data_to_store);
+        
+        echo "El archivo:  $nombre_archivo se subió correctamente con la descripción: $descripcion";
+      } else {
+        
+        echo "Hubo un error al subir el archivo";
+      }
+
+    }
   }
 
 
   /*---- GET DATOS DEL PROYECTO Y PARTIDAS ----*/
-  public function get_formulario_proyecto_partidas(){
+/*  public function get_formulario_proyecto_partidas(){
     if($this->input->is_ajax_request() && $this->input->post()){
     $post = $this->input->post();
     $proy_id = $this->security->xss_clean($post['proy_id']); /// proyecto id
@@ -900,10 +1012,10 @@ public function guardar_datos_ejecucion_pinversion(){
     }else{
         show_404();
     }
-  }
+  }*/
 
 
- /*----- VALIDAR DATOS DEL PROYECTO Y EJECUCION FINANCIERA ----*/
+ /*----- VALIDAR DATOS DEL PROYECTO Y EJECUCION FINANCIERA A (ELIMINAR) ----*/
   public function valida_update_pi(){
     if($this->input->post()) {
       $post = $this->input->post();
@@ -1028,7 +1140,7 @@ public function guardar_datos_ejecucion_pinversion(){
     }
   }
 
-  ///// Adicionar Imgen del Proyecto
+  ///// Adicionar Imgen del Proyecto (a eliminar)
   function add_img(){
     if ($this->input->post()) {
         $post = $this->input->post();

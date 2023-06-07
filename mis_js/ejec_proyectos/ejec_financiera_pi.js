@@ -812,11 +812,45 @@ function cuadro_grafico_distribucion_presupuesto_asignado(grafico,matriz,nro){
 
 
 
-
+////// MODULO DE EJECUCION PRESUPUESTARIA POR REGIONAL
 
 /////====================================================
+
+
+/// subir archivo
+function subirArchivo() {
+  const archivo = document.getElementById("archivo").files[0];
+  const descripcion = document.getElementById("descripcion").value;
+  const proy_id = document.getElementById("proy_id").value;
+  const url = base+"index.php/ejecucion/cejecucion_pi/subir_archivos";
+  const formData = new FormData();
+
+  if (archivo.type === "image/jpeg" || archivo.type === "image/png" || archivo.type === "image/JPG" || archivo.type === "image/jpg") {
+      formData.append("archivo", archivo);
+      formData.append("descripcion", descripcion);
+      formData.append("proy_id", proy_id);
+
+      fetch(url, {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log(data);
+        alert(data);
+      })
+      .catch(error => console.error(error));
+  }
+  else {
+    alert("El archivo debe ser en formato JPG o PNG.");
+  }
+
+}
+
+
+
  /// ------ Ejecutar Presupuesto (FORMULARIO DE EJECUCION) POR REGIONAL
-  $(".ejec_ppto_pi").on("click", function (e) {
+/*  $(".ejec_ppto_pi").on("click", function (e) {
       proy_id = $(this).attr('name');
       document.getElementById("proy_id").value=proy_id;
       
@@ -933,10 +967,10 @@ function cuadro_grafico_distribucion_presupuesto_asignado(grafico,matriz,nro){
             });
           }
       });
-  });
+  });*/
 
 
-$(document).ready(function() {
+/*$(document).ready(function() {
   pageSetUp();
   $("#mes_id").change(function () {
     $("#mes_id option:selected").each(function () {
@@ -968,7 +1002,7 @@ $(document).ready(function() {
     });
   });
 
-})
+})*/
 
   //// SUBIR IMAGEN DEL PROYECTO
   $(function () {

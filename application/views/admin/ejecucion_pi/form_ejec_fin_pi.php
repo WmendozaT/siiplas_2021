@@ -96,7 +96,7 @@
 
 
         <!-- ============ Modal Subir Fotos del Proyecto ========= -->
-        <div class="modal fade" id="modal_mod_fotos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--         <div class="modal fade" id="modal_mod_fotos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog" id="csv">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -147,7 +147,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- ============ Modal Avances del Proyecto (IMAGENES)========= -->
         <div class="modal fade" id="modal_mod_imagenes" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -204,7 +204,7 @@
 
 
     <!-- ============ Modal ejecucion Presupuestaria ========= -->
-    <div class="modal fade" id="modal_mod_ppto_pi" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--     <div class="modal fade" id="modal_mod_ppto_pi" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog" id="ejecucion_ppto">
         <div class="modal-content">
           <div class="modal-header">
@@ -309,7 +309,7 @@
             </div>
           </div>
         </div>
-    </div>
+    </div> -->
     <!-- ======================================================== -->
 
 

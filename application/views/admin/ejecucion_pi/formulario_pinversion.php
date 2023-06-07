@@ -142,13 +142,16 @@
 
                                     <ul class="nav nav-tabs pull-right in" id="myTab">
                                         <li class="active">
-                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">DATOS DEL PROYECTO</span></a>
+                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>DATOS DEL PROYECTO</b></span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">EJECUCIÓN DE PARTIDAS</span></a>
+                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>EJECUCIÓN FINANCIERA</b></span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CONSOLIDADO EJECUCIÓN</span></a>
+                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>GALERIA</b></span></a>
+                                        </li>
+                                        <li>
+                                            <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>CONSOLIDADO EJECUCIÓN FINANCIERA</b></span></a>
                                         </li>
                                     </ul>
                                 </header>
@@ -174,7 +177,12 @@
                                             </div>
                                             <!-- end s2 tab pane -->
 
-                                            <div class="tab-pane fade" id="s3" title="CUADRO CONSOLIDADO POA">
+                                            <div class="tab-pane fade" id="s3" title="GALERIA DE FOTOS">
+                                               <?php echo $galeria;?>
+                                            </div>
+                                            <!-- end s2 tab pane -->
+
+                                            <div class="tab-pane fade" id="s4" title="CUADRO CONSOLIDADO POA">
                                                <?php echo $cuadro_consolidado ?>
                                             </div>
                                             <!-- end s3 tab pane -->
@@ -253,5 +261,13 @@
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/seguimiento.js"></script>  -->
         <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/ejec_financiera_pi.js"></script> 
+        <!-- <script src="<?php echo base_url(); ?>assets/js/plugin/superbox/superbox.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                pageSetUp();
+
+                $('.superbox').SuperBox();
+            })
+        </script> -->
     </body>
 </html>

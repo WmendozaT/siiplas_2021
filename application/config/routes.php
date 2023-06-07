@@ -635,8 +635,11 @@ $route['rep/resumen_act_programa'] = 'reporte_resumen_alineacion_poa/crep_actpro
 $route['rep/rep_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_actprog/reporte_alineacion_poa/$1';  //// Reporte Alineacion POA (2020-2021)
 $route['rep/exportar_alineacion_poa/(:any)'] = 'reporte_resumen_alineacion_poa/crep_actprog/exportar_alineacion_poa/$1';  //// Exportar Alineacion POA (2020-2021)
 
-//// EJECUCION FINANCIERA DE PROYECTOS DE INVERSION 2022-2023 POR REGIONAL
-$route['ejec_fin_pi'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_ppto'; ///// formulario de Ejecucion Resupuestaria
+//// MODULO EJECUCION FINANCIERA DE PROYECTOS DE INVERSION 2022-2023 POR REGIONAL
+$route['ejec_fin_pi'] = 'ejecucion/cejecucion_pi/lista_pinversion_regional'; ///// listado de Proyectos de Inversion (Ejecucion PI)
+//$route['form_ejecucion_pi/(:any)'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_pi/$1'; ///// formulario de Ejecucion PI (Ejecucion PI)
+
+
 $route['rep_ejec_fin_pi'] = 'ejecucion/cejecucion_pi/menu_rep_ejecucion_ppto'; ///// Menu para reportes
 $route['xls_rep_ejec_fin_pi/(:any)'] = 'ejecucion/cejecucion_pi/exportar_ejecucion_pi/$1/$2'; ///// exportar reporte a excel segun el tipo de reporte (A detalle por partidas)
 $route['xls_rep_ejec_fin_pi_resumen'] = 'ejecucion/cejecucion_pi/exportar_ejecucion_pi_resumen'; ///// exportar reporte a excel segun el tipo de reporte (Resumen)

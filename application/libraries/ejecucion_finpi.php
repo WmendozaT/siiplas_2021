@@ -11,6 +11,8 @@ class ejecucion_finpi extends CI_Controller{
     $this->load->model('programacion/model_componente');
     $this->load->model('mantenimiento/model_configuracion');
     $this->load->model('programacion/insumos/model_insumo');
+    $this->load->model('programacion/model_producto');
+    $this->load->model('programacion/model_componente');
     $this->load->model('menu_modelo');
     $this->load->library('security');
     $this->gestion = $this->session->userData('gestion');
@@ -71,7 +73,9 @@ class ejecucion_finpi extends CI_Controller{
     <input name="base" type="hidden" value="'.base_url().'">
     <input name="mes" type="hidden" value="'.$this->verif_mes[1].'">
     <input name="descripcion_mes" type="hidden" value="'.$this->verif_mes[2].'">
-    <input name="gestion" type="hidden" value="'.$this->gestion.'">
+    <input name="gestion" type="hidden" value="'.$this->gestion.'">';
+    
+/*    $tabla.='
     <article class="col-sm-12">
       <div class="well">
         <form class="smart-form">
@@ -112,8 +116,9 @@ class ejecucion_finpi extends CI_Controller{
         </form>
           <div align=center id=load></div>
         </div>
-      </article>
+      </article>';*/
 
+      $tabla.='
       <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="jarviswidget jarviswidget-color-darken" >
           <header>
@@ -147,7 +152,6 @@ class ejecucion_finpi extends CI_Controller{
           <tr>
             <th style="width:1%; height:40px;" bgcolor="#fafafa">#</th>
             <th style="width:2%;" bgcolor="#fafafa" title="ACTUALIZAR INFORMACION">FORMULARIO<br>EJECUCIÓN '.strtoupper($this->verif_mes[2]).'</th>
-            <th style="width:2%;" bgcolor="#fafafa" title="IMAGENES PROYECTO">SUBIR AVANCE (Imagen)</th>
             <th style="width:2%;" bgcolor="#fafafa" title="FICHA TECNICA">FICHA TÉCNICA</th>
             <th style="width:2%;" bgcolor="#fafafa" title="POA">POA '.$this->gestion.'</th>
             <th style="width:7%;" bgcolor="#fafafa" title="">REGIONAL</th>
@@ -166,6 +170,7 @@ class ejecucion_finpi extends CI_Controller{
         <tbody>';
         $nro=0;
         foreach($proyectos as $row){
+          $componentes=$this->model_componente->lista_subactividad($row['proy_id']);
           $img=$this->model_proyecto->get_img_ficha_tecnica($row['proy_id']);
           $bgcolor='';
           if(count($img)!=0){
@@ -175,11 +180,24 @@ class ejecucion_finpi extends CI_Controller{
           $tabla.='
           <tr bgcolor='.$bgcolor.'>
             <td style="width:1%; text-align:center" title='.$row['proy_id'].'>'.$nro.'</td>
+            <td align=center bgcolor="#deebfb">';
+            foreach($componentes as $rowc){
+              if(count($this->model_producto->list_prod($rowc['com_id']))!=0){
+                $tabla.='
+                  <a href="'.site_url("").'/form_ejec_pinversion/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-default" title="REALIZAR REGISTRO DE EJECUCION">
+                     <img src="'.base_url().'assets/ifinal/faseetapa.png" WIDTH="40" HEIGHT="40"/></a>
+                  </a>';
+                }
+              }
+            /*$tabla.='
             <td style="text-align:center">
               <a href="#" data-toggle="modal" data-target="#modal_mod_ppto_pi" class="btn btn-default ejec_ppto_pi" name="'.$row['proy_id'].'" title="REGISTRO DE EJECUCION PRESUPUESTARIA"><img src="'.base_url().'assets/ifinal/faseetapa.png" WIDTH="40" HEIGHT="40"/></a>
             </td>
             <td style="text-align:center">
               <a href="#" data-toggle="modal" data-target="#modal_mod_fotos" class="btn btn-default fotos_pi" name="'.$row['proy_id'].'" id="'.$row['proyecto'].'" title="SUBIR AVANCES DEL PROYECTO"><img src="'.base_url().'assets/ifinal/subir_img.jpg" WIDTH="40" HEIGHT="40"/></a>
+            </td>';*/
+
+            $tabla.='
             </td>
             <td style="width:5%; text-align:center">
               <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$row['proy_id'].'\');" class="btn btn-default" title="REPORTE FICHA TECNICA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="35" HEIGHT="35"/></a>
