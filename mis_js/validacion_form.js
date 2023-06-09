@@ -4,6 +4,10 @@ var site_url = document.getElementById("site_url").value;
 var gestion = document.getElementById("gestion").value;
 //alert(gestion);
 //======================================SCRIPT DE ALERTAS=====================================================
+/*document.getElementById("observacion").oninput = function() {
+  this.value = this.value.replace(/[<>'"]/g, '');
+};*/
+
 function reset() {
     ruta_alerta = base_url + 'assets/themes_alerta/alertify.default.css';
     $("#toggleCSS").attr("href", ruta_alerta);
@@ -19,6 +23,24 @@ function reset() {
 }
 /*-------------------- VALIDACION -------------------*/
 //validar que solo ingresen letras sin caracteres especiales incluye ñ
+function soloCaracteres_wil(e) {
+    key = e.keyCode || e.which;
+    tecla = String.fromCharCode(key).toLowerCase();
+    letras = " áéíóúabcdefghijklmnñopqrstuvwxyz0123456789";
+    especiales = '';
+
+    tecla_especial = false
+    for (var i in especiales) {
+        if (key == especiales[i]) {
+            tecla_especial = true;
+            break;
+        }
+    }
+
+    if (letras.indexOf(tecla) == -1 && !tecla_especial)
+        return false;
+}
+
 function soloLetras(e) {
     key = e.keyCode || e.which;
     tecla = String.fromCharCode(key).toLowerCase();

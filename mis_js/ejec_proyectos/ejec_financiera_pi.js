@@ -10,6 +10,19 @@ function abreVentana(PDF){
   window.open(direccion, "FICHA TECNICA" , "width=800,height=700,scrollbars=NO") ; 
 }
 
+//// funcion para evitar la inclusion de ciertos caracteres
+function mostrarAlerta() {
+  const valor = document.getElementById("observacion").value;
+  //alert(!valor.match(/[<>'"]/))
+/*  const patron = /^[a-zA-Z0-9]+$/;
+alert(patron.test(valor))*/
+ if(valor!='<'){
+    alert('todo bien')
+  }
+  else{
+    alert('mal')
+  }
+}
 
   function doSearch(){
     var tableReg = document.getElementById('datos');
@@ -824,26 +837,40 @@ function subirArchivo() {
   const proy_id = document.getElementById("proy_id").value;
   const url = base+"index.php/ejecucion/cejecucion_pi/subir_archivos";
   const formData = new FormData();
+  
+  if(archivo !='' && descripcion!=''){
+    if (archivo.type === "image/jpeg" || archivo.type === "image/png" || archivo.type === "image/JPG" || archivo.type === "image/jpg") {
+        formData.append("archivo", archivo);
+        formData.append("descripcion", descripcion);
+        formData.append("proy_id", proy_id);
 
-  if (archivo.type === "image/jpeg" || archivo.type === "image/png" || archivo.type === "image/JPG" || archivo.type === "image/jpg") {
-      formData.append("archivo", archivo);
-      formData.append("descripcion", descripcion);
-      formData.append("proy_id", proy_id);
+        fetch(url, {
+          method: "POST",
+          dataType: 'json',
+          body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+          $('#galery').fadeIn(1000).html(data);
+          document.getElementById("archivo").value = ''; 
+          document.getElementById("descripcion").value = ''; 
 
-      fetch(url, {
-        method: "POST",
-        body: formData
-      })
-      .then(response => response.text())
-      .then(data => {
-        console.log(data);
-        alert(data);
-      })
-      .catch(error => console.error(error));
+          /*console.log(data);
+          alert(data.trim());*/
+        })
+        .catch(error => console.error(error));
+      }
+      else {
+        document.getElementById("archivo").focus();
+        alert("El archivo debe ser en formato JPG o PNG.");
+      }
   }
-  else {
-    alert("El archivo debe ser en formato JPG o PNG.");
+  else{
+    alertify.error("COMPLETE DE REGISTRAR LOS DATOS REQUERIDOS !!");
+    document.getElementById("archivo").focus();
+    document.getElementById("descripcion").focus();
   }
+    
 
 }
 

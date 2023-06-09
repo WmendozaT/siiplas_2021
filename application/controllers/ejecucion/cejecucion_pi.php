@@ -59,7 +59,7 @@ class Cejecucion_pi extends CI_Controller {
         $data['calificacion']=$this->calificacion_proyecto($proyecto);
         $data['reporte']='<a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°4</b></font></a>';
         $data['formulario_datos_generales']=$this->tabla_datos_generales($proyecto,$com_id); /// Datos Generales
-        $data['formulario_ejec_partidas']=$this->tabla_formulario_ejecucion_partidas($proyecto); /// Ejecucion Partidas
+        $data['formulario_ejec_partidas']=$this->tabla_formulario_ejecucion_partidas($proyecto); /// Ejecucion Financiera por Partidas
         $data['galeria']=$this->galeria_pi($proyecto); /// Galeria de fotos P inversion
         
         $data['cuadro_consolidado']='
@@ -219,10 +219,10 @@ class Cejecucion_pi extends CI_Controller {
     }
 
     $titulo='';
-    if($eficacia<=50){$tp='danger';$titulo='EJECUCIÓN FINANCIERA : '.$eficacia.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
-    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='EJECUCIÓN FINANCIERA : '.$eficacia.'% (REGULAR)';} /// Regular - Amarillo
-    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='EJECUCIÓN FINANCIERA : '.$eficacia.'% (BUENO))';} /// Bueno - Azul
-    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='EJECUCIÓN FINANCIERA : '.$eficacia.'% (OPTIMO)';} /// Optimo - verde
+    if($eficacia<=50){$tp='danger';$titulo='EJECUCIÓN FINANCIERA '.$this->gestion.': '.$eficacia.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
+    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='EJECUCIÓN FINANCIERA '.$this->gestion.': '.$eficacia.'% (REGULAR)';} /// Regular - Amarillo
+    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='EJECUCIÓN FINANCIERA '.$this->gestion.': '.$eficacia.'% (BUENO))';} /// Bueno - Azul
+    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='EJECUCIÓN FINANCIERA '.$this->gestion.': '.$eficacia.'% (OPTIMO)';} /// Optimo - verde
 
     $tabla='
       <hr>
@@ -250,18 +250,23 @@ class Cejecucion_pi extends CI_Controller {
               <b> DATOS GENERALES DEL PROYECTO</b>
           </header>
 
-          
           <article class="col-sm-12 col-md-9 col-lg-9">
             <fieldset>
+
+              <div class="alert alert-block alert-info">
+                <h4 class="alert-heading">IMPORTANTE !!</h4>
+                El registro del presente formulario (<b>DATOS TÉCNICOS</b>) lo debe realizar el <b>FISCAL DE OBRAS REGIONAL</b> o en todo caso el <b>RESPONSABLE DE PLANIFICACIÓN.</b>
+              </div>
+
               <div class="row">
                   <section class="col col-2">
-                      <label class="label">COSTO TOTAL PROYECTO</label>
+                      <label class="label" style="color:#275c93;"><b>COSTO TOTAL PROYECTO</b></label>
                       <label class="input"> <i class="icon-append fa fa-tag"></i>
                           <input type="text" name="costo" value='.$proyecto[0]['proy_ppto_total'].' onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                       </label>
                   </section>
                   <section class="col col-2">
-                    <label class="label">ESTADO DEL PROYECTO</label>
+                    <label class="label" style="color:#275c93;"><b>ESTADO DEL PROYECTO</b></label>
                       <select class="form-control" id="est_proy" name="est_proy" title="SELECCIONE ESTADO DE PROYECTO">';
                         foreach($estado_proyecto as $est){
                           if($est['ep_id']==$proyecto[0]['ep_id']){ 
@@ -276,13 +281,13 @@ class Cejecucion_pi extends CI_Controller {
                     </label>
                   </section>
                   <section class="col col-2">
-                      <label class="label">MUNICIPIO</label>
+                      <label class="label" style="color:#275c93;"><b>MUNICIPIO</b></label>
                       <label class="input"> <i class="icon-append fa fa-tag"></i>
                           <input type="text" name="municipio" value="'.$proyecto[0]['municipio'].'">
                       </label>
                   </section>
                   <section class="col col-2">
-                      <label class="label">FASE</label>
+                      <label class="label" style="color:#275c93;"><b>ESTADO FASE</b></label>
                         <select class="form-control" id="fase_id" name="fase_id" title="SELECCIONE FASE">
                         <option value="0" selected>Seleccione Fase</option>';
                         foreach($fases as $fas){
@@ -298,7 +303,7 @@ class Cejecucion_pi extends CI_Controller {
                       </label>
                   </section>
                   <section class="col col-4">
-                      <label class="label">FISCAL DE OBRA</label>
+                      <label class="label" style="color:#275c93;"><b>FISCAL DE OBRA</b></label>
                       <label class="input"> <i class="icon-append fa fa-tag"></i>
                           <input type="text" name="fiscal" value="'.$proyecto[0]['fiscal_obra'].'">
                       </label>
@@ -307,24 +312,24 @@ class Cejecucion_pi extends CI_Controller {
 
               <div class="row">
                   <section class="col col-2">
-                      <label class="label">AVANCE FÍSICO</label>
+                      <label class="label" style="color:#275c93;"><b>AVANCE FÍSICO ACUMULADO</b></label>
                       <label class="input"> <i class="icon-append fa fa-tag"></i>
                           <input type="text" name="a_fisico" value='.round($proyecto[0]['avance_fisico'],2).' onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                       </label>
                   </section>
                   <section class="col col-2">
-                      <label class="label">AVANCE FINANCIERO</label>
+                      <label class="label" style="color:#275c93;"><b>AVANCE FINANCIERO ACUMULADO</b></label>
                       <label class="input"> <i class="icon-append fa fa-tag"></i>
                           <input type="text" name="a_financiero" value='.round($proyecto[0]['avance_financiero'],2).' onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                       </label>
                   </section>
                   <section class="col col-6">
-                      <label class="label">OBSERVACIÓN / COMPROMISO</label>
+                      <label class="label" style="color:#275c93;"><b>OBSERVACIÓN / COMPROMISO</b></label>
                       <label class="textarea"> <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="6" name="observacion">'.$proyecto[0]['proy_observacion'].'</textarea> </label>
+                          <textarea rows="6" name="observacion" id="observacion" onkeypress="mostrarAlerta();">'.$proyecto[0]['proy_observacion'].'</textarea> </label>
                   </section>
                   <section class="col col-2">
-                      <label class="label">PLAZO</label>
+                      <label class="label" style="color:#275c93;"><b>PLAZO</b></label>
                       <label class="input"> <i class="icon-append fa fa-calendar"></i>
                       <input type="text" name="f_plazo" id="f_plazo"  placeholder="Seleccione Fecha Plazo" class="form-control datepicker" data-dateformat="dd/mm/yy" value="'.date('d/m/Y',strtotime($proyecto[0]['fecha_observacion'])).'">
                       </label>
@@ -333,12 +338,12 @@ class Cejecucion_pi extends CI_Controller {
 
               <div class="row">
                 <section class="col col-6">
-                  <label class="label">PROBLEMA IDENTIFICADO</label>
+                  <label class="label" style="color:#275c93;"><b>PROBLEMA IDENTIFICADO</b></label>
                   <label class="textarea"> <i class="icon-append fa fa-tag"></i>
                       <textarea rows="6" name="problema">'.$proyecto[0]['proy_desc_problema'].'</textarea> </label>
                 </section>
                 <section class="col col-6">
-                  <label class="label">PROPUESTA DE SOLUCIÓN</label>
+                  <label class="label" style="color:#275c93;"><b>PROPUESTA DE SOLUCIÓN</b></label>
                   <label class="textarea"> <i class="icon-append fa fa-tag"></i>
                       <textarea rows="6" name="solucion">'.$proyecto[0]['proy_desc_solucion'].'</textarea> </label>
                 </section>
@@ -469,7 +474,7 @@ class Cejecucion_pi extends CI_Controller {
 
 
           $tabla.='
-          <div style="font-size: 15px;font-family: Arial;"><b>PARTIDA : '.$partida['partida'].'</b> - '.strtoupper($partida['par_nombre']).'</div>
+          <div style="font-size: 18px;font-family: Arial, sans-serif;"><b>PARTIDA : '.$partida['partida'].'</b> - '.strtoupper($partida['par_nombre']).'</div>
           
           <div class="table-responsive">
           <form class="smart-form">
@@ -572,22 +577,20 @@ class Cejecucion_pi extends CI_Controller {
 
 
 /*-- LISTADO DE FOTOS  --*/
-public function galeria_pi($proyecto){
+public function listado_imagenes($proyecto){
   $tabla='';
-    $galeria=$this->model_proyecto->lista_galeria_pinversion($proyecto[0]['proy_id']); /// Galeria
-
+  $galeria=$this->model_proyecto->lista_galeria_pinversion($proyecto[0]['proy_id']); /// Galeria
     if(count($galeria)!=0){
       $tabla.='
         <div class="row hidden-mobile">
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
               <i class="fa-fw fa fa-picture-o"></i> 
-              Gallery <span>>
-              Proyectos de Inversión
+              Gallery <span>>Proyectos de Inversión
           </div>
         </div>
         <div class="row">';
-      foreach($galeria as $row){
+        foreach($galeria as $row){
         $background='';
         if($row['tp']==1){
           $background='background:#ccf5f0';
@@ -605,14 +608,22 @@ public function galeria_pi($proyecto){
                 <td>'.strtoupper($row['detalle']).'</td>
               </tr>
             </table>
-          </div>
-        ';
+          </div>';
       }
       $tabla.='</div>';
     }
     else{
       $tabla.='<b>SIN REGISTRO ...</b>';
     }
+
+return $tabla;
+}
+
+public function galeria_pi($proyecto){
+  $tabla='';
+    
+
+    $tabla.='<div id="galery">'.$this->listado_imagenes($proyecto).'</div>';
 
     $tabla.='
     <hr>
@@ -843,22 +854,25 @@ public function guardar_datos_ejecucion_pinversion(){
       $descripcion = $_POST["descripcion"];
       $proy_id = $_POST["proy_id"];
       $nombre_archivo = $archivo["name"];
-
       $file_ext = substr($nombre_archivo, strripos($nombre_archivo, '.'));
 
       $newfilename = $proy_id.'-'.$this->gestion.'-'.substr(md5(uniqid(rand())),0,5).$file_ext;
       $ruta_archivo = "fotos_proyectos/$newfilename";
 
       if (move_uploaded_file($archivo["tmp_name"], $ruta_archivo)) {
-              $data_to_store = array( 
-                'imagen' => $newfilename,
-                'proy_id' => $proy_id,
-                'detalle' => $descripcion,
-                'fun_id' => $this->fun_id,
-                );
-              $this->db->insert('imagenes_proy_inversion', $data_to_store);
-        
-        echo "El archivo:  $nombre_archivo se subió correctamente con la descripción: $descripcion";
+        $data_to_store = array( 
+          'imagen' => $newfilename,
+          'proy_id' => $proy_id,
+          'detalle' => $descripcion,
+          'fun_id' => $this->fun_id,
+          );
+        $this->db->insert('imagenes_proy_inversion', $data_to_store);
+      
+        ////--------
+        $proyecto = $this->model_proyecto->get_proyecto_inversion($proy_id);
+        $tabla=$this->listado_imagenes($proyecto);
+        echo $tabla;
+
       } else {
         
         echo "Hubo un error al subir el archivo";
