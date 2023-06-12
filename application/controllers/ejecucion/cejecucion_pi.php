@@ -247,7 +247,7 @@ class Cejecucion_pi extends CI_Controller {
           <input type="hidden" name="pfec_id" value="'.$proyecto[0]['pfec_id'].'">
 
           <header>
-              <b> DATOS GENERALES DEL PROYECTO</b>
+              <b> DATOS GENERALES DEL PROYECTO </b>
           </header>
 
           <article class="col-sm-12 col-md-9 col-lg-9">
@@ -351,8 +351,14 @@ class Cejecucion_pi extends CI_Controller {
           </fieldset>
 
           <footer>
-            <button type="button" name="subir_form1" id="subir_form1" class="btn btn-info">GUARDAR DATOS</button>
-            <a href="'.base_url().'index.php/seg/seguimiento_poa#tabs-a" title="SALIR" class="btn btn-default">SALIR</a>
+            <button type="button" name="subir_form1" id="subir_form1" class="btn btn-info">GUARDAR DATOS</button>';
+            if($this->rol==11){ /// ejecucion PI (modulo regionales)
+              $tabla.='<a href="'.base_url().'index.php/ejec_fin_pi" title="SALIR" class="btn btn-default">SALIR</a>';
+            }
+            else{
+              $tabla.='<a href="'.base_url().'index.php/seg/seguimiento_poa#tabs-a" title="SALIR" class="btn btn-default">SALIR</a>';
+            }
+            $tabla.='
           </footer>
         </article>
 
@@ -444,7 +450,11 @@ class Cejecucion_pi extends CI_Controller {
 
       $tabla.='
       <article class="col-sm-12">
-        <input type="hidden" name="base" value="'.base_url().'">';
+        <input type="hidden" name="base" value="'.base_url().'">
+          <div class="alert alert-block alert-info">
+            <h4 class="alert-heading">IMPORTANTE !!</h4>
+            El registro del presente formulario (<b>EJECUCION FINANCIERA POR PARTIDAS</b>) lo debe realizar el <b>RESPONSABLE DE PRESUPUESTO</b> o en todo caso el <b>RESPONSABLE DE PLANIFICACIÓN.</b>
+          </div>';
         $nro=0;
         foreach($ppto_asig as $partida){
           $nro++;
@@ -474,6 +484,7 @@ class Cejecucion_pi extends CI_Controller {
 
 
           $tabla.='
+          <hr>
           <div style="font-size: 18px;font-family: Arial, sans-serif;"><b>PARTIDA : '.$partida['partida'].'</b> - '.strtoupper($partida['par_nombre']).'</div>
           
           <div class="table-responsive">
@@ -497,9 +508,10 @@ class Cejecucion_pi extends CI_Controller {
               <th style="width:4.5%;">NOV.</th>
               <th style="width:4.5%;">DIC.</th>
               <th style="width:15%;">OBSERVACIÓN</th>
-              <th style="width:4.5%;"></th>
+              <th style="width:4%;"></th>
               <th style="width:4.5%;">PPTO. EJECUTADO '.$this->gestion.'</th>
               <th style="width:4.5%;">% CUMPLIMIENTO '.$this->gestion.'</th>
+              <th style="width:4.5%;">CARGAR ARCHIVO DE RESPALDO</th>
             </tr>
             </thead>
             <tbody>
@@ -564,6 +576,7 @@ class Cejecucion_pi extends CI_Controller {
                 </td>
                 <td align="right" style="font-size:20px"><b><div id="ppto'.$partida['sp_id'].'">'.number_format($ppto_ejecutado, 0, ',', '.').'</div></b></td>
                 <td align="right" style="font-size:20px; color:blue"><b><div id="porcentaje'.$partida['sp_id'].'">'.$porcentaje_ejec.' %</div></b></td>
+                <td><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success enlace" name="">SUBIR ARCHIVO</a></td>
               </tr>
             </tbody>
           </table>
