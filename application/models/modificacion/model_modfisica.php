@@ -62,7 +62,7 @@ class Model_modfisica extends CI_Model{
 
         }
         else{
-            $sql = 'select *
+            $sql = 'select *,ph.ind_id
                 from _producto_historial ph
                 Inner Join indicador as i On i.indi_id=ph.indi_id
                 Inner Join objetivos_regionales as ore On ore.or_id=ph.or_id

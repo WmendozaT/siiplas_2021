@@ -647,6 +647,7 @@ $route['reporte_ficha_tecnica_pi/(:any)'] = 'ejecucion/cejecucion_pi/ficha_tecni
 $route['reporte_detalle_ppto_pi/(:any)'] = 'ejecucion/cejecucion_pi/reporte_detalle_ejec_ppto_pi/$1/$2'; ///// Generar Reporte PDF  
 
 // ---formulario de Ejecucion Proyectos de Inversion
+//$route['redirect/(:any)'] = 'ejecucion/cejecucion_pi/redirect/$1';
 $route['form_ejec_pinversion/(:any)'] = 'ejecucion/cejecucion_pi/formulario_ejecucion_pinversion/$1'; ///// formulario de Ejecucion Resupuestaria Proyectos de Inversion
 
 

@@ -497,13 +497,20 @@ class User extends CI_Controller{
                 elseif ($rol[0]['r_id']==11) { /// PARA EJECUCION DE PROYECTOS DE INVERSION
                     $vector[0]=
                     '<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
-                        <a href="'.base_url().'index.php/ejec_fin_pi" class="jarvismetro-tile big-cubes bg-color-greenLight">
+                        <a href="'.base_url().'index.php/ejec_fin_pi" onclick="inversion()" class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/proyectos.png"  style="margin-left:0px; width: 95px"/>
-                            <h1 style="font-size: 11px;">PROYECTOS DE INVERSION '.$this->gestion.'</h1>
+                            <h1 style="font-size: 11px;">EJECUCIÓN INVERSION '.$this->gestion.'</h1>
                         </div>
                         </a>
                     </div>';
+                    ?>
+                    <script>
+                      function inversion(){
+                        document.getElementById("load").style.display = "block";
+                      }
+                    </script>
+                    <?php
                 }
                 else{
                     foreach ($menus as $fila) {

@@ -95,59 +95,27 @@
 
 
 
-        <!-- ============ Modal Subir Fotos del Proyecto ========= -->
-<!--         <div class="modal fade" id="modal_mod_fotos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" id="csv">
+        <!-- ============ Modal VER ARCHIVOS DE RESPALDO PARA EJECUCION POR PARTIDAS ========= -->
+        <div class="modal fade" id="modal_mod_archivos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" id="programacion">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
                     </div>
                     <div class="modal-body">
-                        <h2 class="alert alert-info"><center>SUBIR FOTO DEL PROYECTO</center></h2>
-                        
-                        <form class="form-horizontal" action="<?php echo site_url().'/ejecucion/cejecucion_pi/add_img' ?>" method="post" enctype="multipart/form-data" id="form_subir_img" name="form_subir_img">
-                            <input type="hidden" name="p_id" id="p_id">
+                        <h2 class="alert alert-info"><center>LISTA DE ARCHIVOS ADJUNTOS</center></h2>
+                         <form class="form-horizontal">
                             <fieldset>
                                 <legend><div id="proyecto"></div></legend>
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label"><b>Imagen</b></label>
-                                    <div class="col-md-10">
-                                        <input type="file" class="btn btn-default" id="archivo" name="archivo" accept="image/png, .jpeg, .jpg, .png, .PNG, image/gif" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());">
-                                        <p class="help-block">
-                                            Seleccione foto del proyecto.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label"><b>Descripcion de la Imagen</b></label>
-                                    <div class="col-md-10">
-                                        <textarea class="form-control" name="detalle_imagen" id="detalle_imagen" rows="3"></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label"><b>imagen portada para la Ficha Técnica ?</b></label>
-                                    <div class="col-md-10">
-                                        <select class="form-control" id="tp_img" name="tp_img" title="SELECCIONE OPCION">
-                                          <option value="0">1.- NO</option>
-                                          <option value="1">2.- SI (Imprimir en Ficha Técnica)</option>
-                                        </select>
-                                    </div>
-                                </div>
+                                <div id="lista"></div>
                             </fieldset>
-                            <div class="form-actions">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <button class="btn btn-default" data-dismiss="modal" title="CANCELAR">CANCELAR</button>
-                                        <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-info">SUBIR ARCHIVO</button>
-                                    </div>
-                                </div>
-                              </div>
                         </form>
-
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
+
+
 
         <!-- ============ Modal Avances del Proyecto (IMAGENES)========= -->
         <div class="modal fade" id="modal_mod_imagenes" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -201,117 +169,6 @@
                 </div>
             </div>
         </div>
-
-
-    <!-- ============ Modal ejecucion Presupuestaria ========= -->
-<!--     <div class="modal fade" id="modal_mod_ppto_pi" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog" id="ejecucion_ppto">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-          </div>
-          <div class="modal-body">
-            <h2 class="alert alert-info"><center>REGISTRO DE EJECUCÍON PROYECTO DE INVERSIÓN - <?php echo $this->verif_mes[2].' / '.$this->session->userData('gestion') ?></center></h2>
-                <div id="calificacion"></div>
-                <form class="form-horizontal" action="<?php echo site_url().'/ejecucion/cejecucion_pi/valida_update_pi'?>" method="post" id="form_ejec" name="form_ejec">
-                    <input type="hidden" name="proy_id" id="proy_id">
-                    <fieldset>
-                        <legend>DATOS GENERALES DEL PROYECTO</legend>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Proyecto de Inversión</label>
-                            <div class="col-md-10">
-                                <textarea class="form-control" name="proy_nombre" id="proy_nombre" rows="3" disabled=true></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Costo Total Proyecto</label>
-                            <div class="col-md-10">
-                                <input class="form-control" name="ppto_total" id="ppto_total" type="text" onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Fase Proyecto</label>
-                            <div class="col-md-10">
-                                <div id="fase"></div>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>DETALLE DEL PROYECTO</legend>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Estado del Proyecto</label>
-                            <div class="col-md-10">
-                                <div id="estado"></div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Avance Físico (%)</label>
-                            <div class="col-md-10">
-                                <input class="form-control" name="ejec_fis" id="ejec_fis" type="text" onkeypress="if (this.value.length < 4) { return soloNumeros(event);}else{return false; }" onpaste="return false">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Avance Financiero (%)</label>
-                            <div class="col-md-10">
-                                <input class="form-control" name="ejec_fin" id="ejec_fin" type="text" onkeypress="if (this.value.length < 4) { return soloNumeros(event);}else{return false; }" onpaste="return false">>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Fiscal de Obras</label>
-                            <div class="col-md-10">
-                                <input class="form-control" name="f_obras" id="f_obras" type="text">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Observación / Compromiso</label>
-                            <div class="col-md-10">
-                                <textarea class="form-control" name="observacion" id="observacion" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Plazo</label>
-                            <div class="col-md-10">
-                                <input type="text" name="mydate" id="mydate"  placeholder="Seleccione Fecha" class="form-control datepicker" data-dateformat="dd/mm/yy" >
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Problema Identificado</label>
-                            <div class="col-md-10">
-                                <textarea class="form-control" name="problema" id="problema" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Propuesta de Solución</label>
-                            <div class="col-md-10">
-                                <textarea class="form-control" name="solucion" id="solucion" rows="3"></textarea>
-                            </div>
-                        </div>
-                    </fieldset>
-                    
-                    <fieldset>
-                        <legend>EJECUCIÓN PRESUPUESTARIA - GESTIÓN : <?php echo $this->verif_mes[2].' / '.$this->session->userData('gestion') ?></legend>
-                        <div id="lista_partidas"></div>
-                    </fieldset>
-
-
-                    <div class="form-actions" id="button">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-default" data-dismiss="modal" title="CANCELAR">CANCELAR</button>
-                            <button type="button" name="subir_ejec" id="subir_ejec" class="btn btn-info">GUARDAR EJECUCION</button>
-                        </div>
-                    </div>
-                  </div>
-                  <div id="load"></div>
-                </form>
-
-            </div>
-          </div>
-        </div>
-    </div> -->
-    <!-- ======================================================== -->
-
 
     <!-- END PAGE FOOTER -->
     <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->

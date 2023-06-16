@@ -329,8 +329,25 @@ class Model_ptto_sigep extends CI_Model{
     public function get_monto_ejecutado_ppto_sigep($sp_id,$mes_id){
         $sql = '
             select *
-            from ejecucion_financiera_sigep
-            where sp_id='.$sp_id.' and m_id='.$mes_id.'';
+            from ejecucion_financiera_sigep ejec
+            Inner Join mes as m On m.m_id=ejec.m_id
+            where ejec.sp_id='.$sp_id.' and ejec.m_id='.$mes_id.'';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*----- GET EJECUCION PARTIDA x MES PI (vigente) -----*/
+    public function get_datos_ejecucion_partidas($ejec_ppto_id){
+        $sql = '
+            select *
+            from ejecucion_financiera_sigep ejec
+            Inner Join ptto_partidas_sigep as part On part.sp_id=ejec.sp_id
+            Inner Join mes as m On m.m_id=ejec.m_id
+            Inner Join aperturaproyectos as ap On ap.aper_id=part.aper_id
+            Inner Join _proyectos as p On ap.proy_id=p.proy_id
+            where ejec.ejec_ppto_id='.$ejec_ppto_id.'';
     
         $query = $this->db->query($sql);
         return $query->result_array();

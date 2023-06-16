@@ -26,8 +26,7 @@ ob_start();
             <?php echo $pie_certpoa;?>
         </page_footer>
         <?php echo $items_certificados_final;?>
-        <!-- <br>
-        <div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>CERTIFICACIÓN POA ELIMINADO SEGUN CITE N° DI-1664/2022 DE FECHA 05/10/2022 , REGIONAL SANTA CRUZ</b></div> -->
+         <!-- <br><div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>CERTIFICACIÓN POA ELIMINADO SEGUN CITE N° 2377 DE FECHA 12/06/2023, EMITIDO POR LA GERENCIA ADMINISTRATIVA FINANCIERA</b></div>  -->
     </page>
     <?php
     }

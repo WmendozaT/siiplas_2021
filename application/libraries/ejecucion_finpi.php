@@ -158,11 +158,12 @@ class ejecucion_finpi extends CI_Controller{
             <th style="width:7%;" bgcolor="#fafafa" title="">DISTRITAL</th>
             <th style="width:10%;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
             <th style="width:10%;" bgcolor="#fafafa" title="CODIGO SISIN">CODIGO SISIN</th>
-            <th style="width:15%;" bgcolor="#fafafa" title="PROYECTO">PROYECTO DE INVERSI&Oacute;N</th>
+            <th style="width:20%;" bgcolor="#fafafa" title="PROYECTO">PROYECTO DE INVERSI&Oacute;N</th>
             <th style="width:10%;" bgcolor="#fafafa" title="SISIN">COSTO TOTAL DE PROYECTO</th>
-            <th style="width:15%;" bgcolor="#fafafa" title="FASE">FASE DEL PROYECTO</th>
+            <th style="width:10%;" bgcolor="#fafafa" title="FASE">FASE DEL PROYECTO</th>
             <th style="width:5%;" bgcolor="#fafafa" title="FASE">AVANCE FÍSICO</th>
             <th style="width:5%;" bgcolor="#fafafa" title="FASE">AVANCE FINANCIERO</th>
+            <th style="width:5%;" bgcolor="#fafafa" title="">VER ARCHIVOS ADJUNTOS</th>
             <th style="width:5%;" bgcolor="#fafafa" title="">VER AVANCES DEL PROYECTO</th>
             <th style="width:5%;" bgcolor="#fafafa" title=""></th>
           </tr>
@@ -214,6 +215,9 @@ class ejecucion_finpi extends CI_Controller{
             <td>'.strtoupper($row['pfec_descripcion']).'</td>
             <td style="text-align:right"><b>'.round($row['avance_fisico'],2).' %</b></td>
             <td style="text-align:right"><b>'.round($row['avance_financiero'],2).' %</b></td>
+            <td style="text-align:center">
+              <a href="#" data-toggle="modal" data-target="#modal_mod_archivos" class="btn btn-default lista_archivos_adjuntos" name="'.$row['proy_id'].'" "title="VER ARCHIVOS ADJUNTOS A LA EJECUCION"><img src="'.base_url().'assets/ifinal/doc.JPG" WIDTH="40" HEIGHT="40"/></a>
+            </td>
             <td style="text-align:center">
               <a href="#" data-toggle="modal" data-target="#modal_mod_imagenes" class="btn btn-default lista_img_pi" name="'.$row['proy_id'].'" "title="AVANCES DEL PROYECTOS (IMAGENES)"><img src="'.base_url().'assets/img/folder3.png" WIDTH="40" HEIGHT="40"/></a>
             </td>

@@ -203,27 +203,12 @@
         <!-- END MAIN PANEL -->
 
         <!-- MODAL SUBIR ARCHIVO DE RESPALDO DE EJECUCION POR PARTIDAS   -->
-        <div class="modal fade" id="modal_nuevo_ff" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="modal_nuevo_ff" data-backdrop="static" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog" id="mdialTamanio">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-                    </div>
                     <div class="modal-body">
-                        <h2 class="alert alert-info"><center>MI POA - <?php echo $this->session->userData('gestion');?></center></h2>
-                    
                         <div class="row">
-                            <table style="width:100%; height:50px;">
-                                <tr>
-                                    <td style="width:90%;">
-                                        <div id="titulo"></div> 
-                                    </td>
-                                    <td style="width:10%;" align="center">
-                                        <div id="caratula"></div>   
-                                    </td>
-                                </tr>
-                            </table><br>
-                            <div id="content1"></div>
+                            <div id="datos"></div>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 base = $('[name="base"]').val();
+com_id = $('[name="com_id"]').val();
 mes = $('[name="mes"]').val();
 descripcion_mes = $('[name="descripcion_mes"]').val();
 gestion = $('[name="gestion"]').val();
@@ -141,6 +142,7 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
       request.done(function (response, textStatus, jqXHR) {
 
       if (response.respuesta == 'correcto') {
+
             document.getElementById('btn_generar').innerHTML = '';
             document.getElementById("botton").style.display = 'block';
 
@@ -154,22 +156,24 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
 
             ///-------
             
-            document.getElementById('cuadro_consolidado_vista').innerHTML = response.cuadro_consolidado;
-            document.getElementById('cuadro_consolidado_impresion').innerHTML = response.cuadro_consolidado_impresion;
+            //document.getElementById('cuadro_consolidado_vista').innerHTML = response.cuadro_consolidado;
+            //document.getElementById('cuadro_consolidado_impresion').innerHTML = response.cuadro_consolidado_impresion;
 
             //// Grafico Regresion
-            graf_regresion_consolidado_pi('distribucion_ppto_ejecutado_inicial',response.matriz,'EJECUCIÓN FINANCIERA - '+response.mes,response.datos_proyecto,'(Bs)'); /// vista
-            graf_regresion_consolidado_pi('distribucion_ppto_ejecutado_inicial_impresion',response.matriz,'','EJECUCIÓN FINANCIERA - '+response.mes,'(Bs)'); /// impresion
+            //graf_regresion_consolidado_pi('distribucion_ppto_ejecutado_inicial',response.matriz,'EJECUCIÓN FINANCIERA - '+response.mes,response.datos_proyecto,'(Bs)'); /// vista
+            //graf_regresion_consolidado_pi('distribucion_ppto_ejecutado_inicial_impresion',response.matriz,'','EJECUCIÓN FINANCIERA - '+response.mes,'(Bs)'); /// impresion
 
 
             //// Graficos Barras Verticales
-            let detalle_ejecucion=[];
+            /*let detalle_ejecucion=[];
             for (var i = 0; i < 12; i++) {
                 detalle_ejecucion[i]= { name: response.matriz[0][i+1],y: response.matriz[7][i+1]};
             }
 
             cuadro_grafico_en_barras_verticales('cumplimiento_mensual_ppto_inicial_ejecutado',detalle_ejecucion,'% EJECUCION FINANCIERA MENSUAL',response.datos_proyecto,'CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// vista
-            cuadro_grafico_en_barras_verticales('cumplimiento_mensual_ppto_inicial_ejecutado_impresion',detalle_ejecucion,'','% EJECUCION FINANCIERA MENSUAL','CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// impresion
+            cuadro_grafico_en_barras_verticales('cumplimiento_mensual_ppto_inicial_ejecutado_impresion',detalle_ejecucion,'','% EJECUCION FINANCIERA MENSUAL','CUMPLIMIENTO MENSUAL','% CUMPLIMIENTO'); /// impresion*/
+     
+            window.location.href = base+"index.php/form_ejec_pinversion/"+com_id+"#s2";
       }
       else{
           alertify.error("ERROR AL GUARDAR EJECUCION POA");
@@ -828,9 +832,15 @@ function cuadro_grafico_distribucion_presupuesto_asignado(grafico,matriz,nro){
 ////// MODULO DE EJECUCION PRESUPUESTARIA POR REGIONAL
 
 /////====================================================
+function reset() {
+ // alert(base+'---'+com_id)
+//window.location.reload(true);
+  $('#datos').html('<div class="loading" align="center"><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" /></div>');
+  window.location.href = base+"index.php/form_ejec_pinversion/"+com_id+"#s2";
 
+}
 
-/// subir archivo
+/// subir archivo imagenes de los proyectos
 function subirArchivo() {
   const archivo = document.getElementById("archivo").files[0];
   const descripcion = document.getElementById("descripcion").value;
@@ -854,7 +864,6 @@ function subirArchivo() {
           $('#galery').fadeIn(1000).html(data);
           document.getElementById("archivo").value = ''; 
           document.getElementById("descripcion").value = ''; 
-
           /*console.log(data);
           alert(data.trim());*/
         })
@@ -870,9 +879,77 @@ function subirArchivo() {
     document.getElementById("archivo").focus();
     document.getElementById("descripcion").focus();
   }
-    
-
 }
+
+//// Subir archivos de respaldo para la ejecucion por partidas
+  function subirArchivo_respaldo() {
+    const archivo = document.getElementById("archivo_resp").files[0];
+    const descripcion = document.getElementById("descripcion_resp").value;
+    const ejec_id = document.getElementById("ejec_id").value;
+    //const com_id = document.getElementById("com_id").value;
+    const url = base+"index.php/ejecucion/cejecucion_pi/subir_archivo_respaldo";
+    const formData = new FormData();
+    //$('#datos').html('<div class="loading" align="center"><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" /></div>');
+    if(archivo !='' && descripcion!=''){
+      if (archivo.type === "application/pdf") {
+          formData.append("archivo", archivo);
+          formData.append("descripcion", descripcion);
+          formData.append("ejec_id", ejec_id);
+          //formData.append("com_id", com_id);
+
+          fetch(url, {
+            method: "POST",
+            dataType: 'json',
+            body: formData
+          })
+          .then(response => response.text())
+          .then(data => {
+            $('#datos').html(data); 
+          })
+          .catch(error => console.error(error));
+        }
+        else {
+          document.getElementById("archivo").focus();
+          alert("El archivo debe ser en formato PDF.");
+        }
+    }
+    else{
+      alertify.error("COMPLETE DE REGISTRAR LOS DATOS REQUERIDOS !!");
+      document.getElementById("archivo_resp").focus();
+      document.getElementById("descripcion_resp").focus();
+    }
+  }
+
+  //// subir archivos de respaldo de ejecucion de partidas
+  $(function () {
+    $(".subir_archivo_respaldo").on("click", function (e) {
+        id_ejec = $(this).attr('name');
+        
+
+        $('#datos').html('<div class="loading" align="center"><img src="'+base+'/assets/img/cargando-loading-039.gif" alt="loading" /></div>');
+        var url = base+"index.php/ejecucion/cejecucion_pi/get_archivos_subidos_mensual_partida";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "ejec_ppto_id="+id_ejec
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+            $('#datos').html(response.tabla);
+          }
+          else{
+              alertify.error("ERROR ");
+          }
+        }); 
+
+      });
+  });
 
 
 
@@ -1032,7 +1109,7 @@ function subirArchivo() {
 })*/
 
   //// SUBIR IMAGEN DEL PROYECTO
-  $(function () {
+/*  $(function () {
     $(".fotos_pi").on("click", function (e) {
       proy_id = $(this).attr('name');
       proyecto = $(this).attr('id');
@@ -1098,7 +1175,42 @@ function subirArchivo() {
       });
 
     });
+  });*/
+
+
+
+  //// VER ARCHIVOS ADJUNTOS A LA EJECUCION
+  $(function () {
+    $(".lista_archivos_adjuntos").on("click", function (e) {
+      proy_id = $(this).attr('name');
+
+      var url = base+"index.php/ejecucion/cejecucion_pi/get_lista_archivos_adjuntos";
+        var request;
+        if (request) {
+          request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "proy_id="+proy_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+            document.getElementById("proyecto").innerHTML = '<b>PROYECTO : </b>'+response.proyecto[0]['proy_nombre']; /// partidas
+            document.getElementById("lista").innerHTML = response.lista;
+        }
+        else{
+            alertify.error("ERROR !!!");
+        }
+
+      });
+
+    });
   });
+
+
 
   //// VER GALERIA DE IMEGENES DEL PROYECTO
   $(function () {
