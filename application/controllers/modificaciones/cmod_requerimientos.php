@@ -411,11 +411,11 @@ class Cmod_requerimientos extends CI_Controller {
                   </thead>
                   <tbody>';
                   foreach($partidas  as $row){
-                    $programado=$this->model_ptto_sigep->get_partida_accion($proyecto[0]['aper_id'],$row['par_id']);
+                    $programado=$this->model_ptto_sigep->get_partida_programado_poa($proyecto[0]['aper_id'],$row['par_id']);
                     $monto_poa=0;
 
                     if(count($programado)!=0){
-                      $monto_poa=$programado[0]['monto'];          
+                      $monto_poa=$programado[0]['ppto_programado'];          
                     }
 
                     $nro++;

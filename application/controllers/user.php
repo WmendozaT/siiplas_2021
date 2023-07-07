@@ -244,18 +244,28 @@ class User extends CI_Controller{
                 </div>';
             }
             else{
-                if($this->dep_id==2){ //// Exclusivo para la Regional LA paz
-                    $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));
-                }
-                else{ /// Listado normal
-                    $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_distrital($this->dist_id,$this->verif_mes[1],$this->gestion));
-                }
-                
-                if($nro_poa!=0){
-                    $data['seguimiento_poa']=$this->mensaje_ejecucion_operaciones_mes($nro_poa);
-                }
+                $data['mensaje']=$this->mensaje_sistema();   
 
-                $data['mensaje']=$this->mensaje_sistema();
+                ///===================== CONF NOTIFICACION POA =========================
+                $dia_cambios = 11;
+                $hoy = date("j");
+
+                if ($hoy == $dia_cambios) {
+                   if($this->dep_id==2){ //// Exclusivo para la Regional LA paz
+                        $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));;
+                    }
+                    else{ /// Listado normal
+                        $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_distrital($this->dist_id,$this->verif_mes[1],$this->gestion));
+                    }
+                    
+                    if($nro_poa!=0){
+                        $data['seguimiento_poa']=$this->mensaje_ejecucion_operaciones_mes($nro_poa);
+                    }
+                }
+                else{
+                    $data['seguimiento_poa']='';
+                }
+                ///=================================================
             }
             
             $this->load->view('admin/dashboard',$data);

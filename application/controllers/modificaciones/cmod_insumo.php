@@ -159,12 +159,12 @@ class Cmod_insumo extends CI_Controller {
         $data['style']=$this->style();
       
           if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
-            /*if($this->fun_id==598){ /// exclusivo doctor muruchi
+            if($this->fun_id==598){ /// exclusivo doctor muruchi
               $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2023
             }
             else{
               $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023 -> cargado rapido sin temporalidad
-            }*/
+            }
             $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023 -> cargado rapido sin temporalidad
           }
           else{
@@ -172,6 +172,10 @@ class Cmod_insumo extends CI_Controller {
           }
 
           $data['part_padres'] = $this->model_modificacion->list_part_padres_asig($proyecto[0]['aper_id']);//partidas padres
+          if($data['cite'][0]['tipo_modificacion']==1){
+            $data['part_padres'] = $this->model_ptto_sigep->lista_partidas_padres_revertidos($proyecto[0]['aper_id']);//partidas padres REVERTIDO
+          }
+
           $data['lista']=$this->tipo_lista_ope_act($data['cite']); /// LINEADO A ACTIVIDAD
 
           $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
@@ -190,7 +194,7 @@ class Cmod_insumo extends CI_Controller {
         <div>
           '.$this->modificacionpoa->datos_cite($cite).'
           '.$this->modificacionpoa->titulo_cabecera($cite).'';
-          if($monto[3]>1){
+          /*if($monto[3]>1){
             $tabla.='
             <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default" title="NUEVO REGISTRO">
               <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>NUEVO REGISTRO (FORM. N 5)</b>
@@ -198,7 +202,7 @@ class Cmod_insumo extends CI_Controller {
             <a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default importar_ff" title="SUBIR ARCHIVO EXCEL">
               <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="25" HEIGHT="20"/>&nbsp;<b>SUBIR REQUERIMIENTOS.CSV </b>
             </a>';
-          }
+          }*/
           $tabla.='
           <a href="'.site_url("").'/rep/exportar_requerimientos_servicio/'.$cite[0]['com_id'].'" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>DESCARGAR INFORMACION (EXCEL)</b></a>
         </div>
@@ -1549,7 +1553,7 @@ class Cmod_insumo extends CI_Controller {
       }
     }
 
-     /*----- MIGRACION DE REQUERIMIENTOS A UNA OPERACIÓN (2023) -----*/
+     /*----- MIGRACION DE REQUERIMIENTOS (2023) -----*/
     function valida_add_requerimientos(){
       if ($this->input->post()) {
           $post = $this->input->post();
@@ -1582,10 +1586,10 @@ class Cmod_insumo extends CI_Controller {
                       $detalle = strval(utf8_encode(trim($datos[2]))); //// descripcion form5
                       $unidad = strval(utf8_encode(trim($datos[3]))); //// Unidad
                       $cantidad = intval(trim($datos[4])); //// Cantidad
-                      $unitario = floatval(trim($datos[5])); //// Costo Unitario
-                      
-                      $p_total=($cantidad*$unitario);
-                      $total = floatval(trim($datos[6])); //// Costo Total
+                      $unitario = round(floatval(trim($datos[5])),2); //// Costo Unitario
+
+                      $p_total=round(($cantidad*$unitario),2);
+                      $total = round(floatval(trim($datos[6])),2); //// Costo Total
 
                       $var=7; $sum_prog=0;
                       for ($i=1; $i <=12 ; $i++) {
@@ -1599,16 +1603,31 @@ class Cmod_insumo extends CI_Controller {
                       $observacion = utf8_encode(trim($datos[19])); //// Observacion
                       $verif_operacion=$this->model_producto->verif_componente_operacion($cite[0]['com_id'],$cod_ope);
 
-                      if(count($par_id)!=0 & $cod_partida!=0 & ($total==$sum_prog) & count($verif_operacion)!=0){ /// D
-                        $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$par_id[0]['par_id']); /// Ppto. Asignado
-                        if(count($asig)!=0){ /// Verificando que haya presupuesto distinto a cero
-                          $prog=$this->model_ptto_sigep->get_partida_accion($proyecto[0]['aper_id'],$par_id[0]['par_id']); /// Ppto. Programado
-                          $monto_prog=0;
-                          if(count($prog)!=0){
-                            $monto_prog=$prog[0]['monto'];
-                          }
+                      if(count($par_id)!=0 & $cod_partida!=0 & ($p_total==$sum_prog) & ($total==$sum_prog) & count($verif_operacion)!=0){ /// D
+                        ///-------------
+                        $ppto_asignado=0;
+                        if($cite[0]['tipo_modificacion']==0){
+                          $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$par_id[0]['par_id']); /// Ppto. Asignado
+                          $ppto_asignado=$asig[0]['ppto_asignado'];
 
-                          $saldo_partida=$asig[0]['monto']-$monto_prog+$asig[0]['ppto_saldo_ncert'];
+                          $prog=$this->model_ptto_sigep->get_partida_programado_poa($proyecto[0]['aper_id'],$par_id[0]['par_id']); /// Programado POA
+                          if(count($prog)!=0){
+                            $monto_prog=$prog[0]['ppto_programado'];
+                          }
+                        }
+                        else{
+                          $asig=$this->model_ptto_sigep->get_ppto_partida_revertido_unidad($par_id[0]['par_id'],$proyecto[0]['aper_id']); /// Ppto. Asignado Revertido
+                          $ppto_asignado=$asig[0]['monto_revertido'];
+
+                          $prog=$this->model_ptto_sigep->get_ppto_poa_partida_x_reversion($proyecto[0]['aper_id'],$par_id[0]['par_id']); /// Programado POA Revertido
+                          if(count($prog)!=0){
+                            $monto_prog=$prog[0]['monto_programado_revertido'];
+                          }
+                        }
+
+
+                        if(count($asig)!=0){ /// Verificando que haya presupuesto distinto a cero
+                          $saldo_partida=$ppto_asignado-$monto_prog;
 
                           if($total<=$saldo_partida){ /// E
                             
@@ -1634,6 +1653,8 @@ class Cmod_insumo extends CI_Controller {
                             'num_ip' => $this->input->ip_address(), 
                             'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
                             'ins_mod' => 2,
+                            'ins_tipo_modificacion' => $cite[0]['tipo_modificacion'],
+                            'ins_tp_reg' => 1,
                             );
                             $this->db->insert('insumos', $data_to_store); ///// Guardar en Tabla Insumos 
                             $ins_id=$this->db->insert_id();
@@ -1646,7 +1667,7 @@ class Cmod_insumo extends CI_Controller {
                             $this->db->insert('_insumoproducto', $data_to_store2);
                             //--------------------------------------*/
 
-                            /*------ PARA LA GESTION 2020 ------*/
+                            /*------ PARA LA GESTION 2023 ------*/
                             for ($p=1; $p <=12 ; $p++) { 
                               if($m[$p]!=0){
                                 if(count($this->model_certificacion->get_insumo_programado_mes($ins_id,$p))==0){
@@ -1900,7 +1921,6 @@ class Cmod_insumo extends CI_Controller {
     public function registra_insumo_original($cite_id,$ins_id){
       $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id); /// Datos Cite
       $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// DATOS DEL PROYECTO
-     // $this->valida_update_temporalidad_inicial_total_unidad($cite,$proyecto); /// guardando el Programado Inicial
 
       $insumo = $this->model_insumo->get_requerimiento($ins_id); //// DATOS DEL REQUERIMIENTO
       
@@ -1964,25 +1984,63 @@ class Cmod_insumo extends CI_Controller {
 
         $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
 
-        $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$insumo[0]['par_id']);
-        $prog=$this->model_ptto_sigep->get_partida_accion($proyecto[0]['aper_id'],$insumo[0]['par_id']);
-
-        $lista_partidas=$this->partidas_dependientes($insumo); /// Lista de Insumos dependientes
-        $lista_prod_act=$this->list_operaciones($cite,$insumo); /// Lista de Productos, Actividades
-
+        if($insumo[0]['ins_tipo_modificacion']==0){
+          $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$insumo[0]['par_id']); /// Get partida -> Unidad (Asignado)
+          $prog=$this->model_ptto_sigep->get_partida_programado_poa($proyecto[0]['aper_id'],$insumo[0]['par_id']); /// Get partida -> Unidad (Programado)
+        
           /// -------------------------
           $monto_prog=0;
           if(count($prog)!=0){
-            $monto_prog=$prog[0]['monto'];
+            $monto_prog=$prog[0]['ppto_programado'];
           }
 
           $monto_asig=0;
           if(count($asig)!=0){
-            $monto_asig=($asig[0]['monto']+$asig[0]['ppto_saldo_ncert']);
+            $monto_asig=$asig[0]['ppto_asignado'];
           }
+          /// ------------------------
+
+          $partida_padres = $this->model_modificacion->list_part_padres_asig($proyecto[0]['aper_id']);//partidas padres          
+        }
+        else{
+           $asig=$this->model_ptto_sigep->get_ppto_partida_revertido_unidad($insumo[0]['par_id'],$proyecto[0]['aper_id']); /// Get partida -> Unidad (Asignado reversion)
+           $prog=$this->model_ptto_sigep->get_ppto_poa_partida_x_reversion($insumo[0]['par_id'],$proyecto[0]['aper_id']); /// Get partida -> Unidad (Programado reversion)
+        
+           /// -------------------------
+          $monto_prog=0;
+          if(count($prog)!=0){
+            $monto_prog=$prog[0]['monto_programado_revertido'];
+          }
+
+          $monto_asig=0;
+          if(count($asig)!=0){
+            $monto_asig=$asig[0]['monto_revertido'];
+          }
+          /// ------------------------
+
+          $partida_padres = $this->model_ptto_sigep->lista_partidas_padres_revertidos($proyecto[0]['aper_id']);//partidas padres REVERTIDO
+        }
+
+          /// ------ Partidas padres ------------
+          $partidas='';
+          $partidas.='
+            <option value="">Seleccione Grupo Partida</option>';
+            foreach($partida_padres as $row){
+              if($row['par_codigo']==$insumo[0]['par_depende']){
+                $partidas.='<option value="'.$row['par_codigo'].'" selected>'.$row['par_codigo'].' - '.$row['par_nombre'].'</option>';
+              }
+              else{
+                $partidas.='<option value="'.$row['par_codigo'].'">'.$row['par_codigo'].' - '.$row['par_nombre'].'</option>';
+              }
+            };
+          /// -------------------------------------                           
+
+          $lista_partidas=$this->partidas_dependientes($insumo); /// Lista de Insumos dependientes
+          $lista_prod_act=$this->list_operaciones($cite,$insumo); /// Lista de Productos, Actividades
+
           $saldo=$monto_asig-$monto_prog;
 
-          $par_padre=$this->model_partidas->get_partida_padre($insumo[0]['par_depende']); /// lista de partidas padres
+         // $par_padre=$this->model_partidas->get_partida_padre($insumo[0]['par_depende']); /// lista de partidas padres
           $prog=$this->model_insumo->list_temporalidad_insumo($insumo[0]['ins_id']); /// Temporalidad Requerimiento 2020
 
           if(count($prog)==0){
@@ -2012,11 +2070,12 @@ class Cmod_insumo extends CI_Controller {
             $result = array(
               'respuesta' => 'correcto',
               'insumo' => $insumo,
+              'partidas'=> $partidas,
               'lista_partidas'=> $lista_partidas,
               'lista_prod_act'=> $lista_prod_act,
               'monto_saldo' => $saldo+$insumo[0]['ins_costo_total'],
               'saldo_dif' => $saldo,
-              'ppdre' => $par_padre,
+              //'ppdre' => $par_padre,
               'prog' => $prog,
               'verif_mes' => $verf,
               'trimestre' => $verf,
@@ -2036,12 +2095,18 @@ class Cmod_insumo extends CI_Controller {
       }
     }
 
-    /*--- PARTIDAS DEPENDIENTES (MOD) ---*/
+    /*--- PARTIDAS DEPENDIENTES POA (MOD) ---*/
     function partidas_dependientes($insumo){
       $tabla='';
       $get_partida=$this->model_partidas->get_partida($insumo[0]['par_id']); /// datos de la partda
 
-      $lista_partidas=$this->model_modrequerimiento->lista_partidas_dependientes($insumo[0]['aper_id'],$get_partida[0]['par_depende']);
+      if($insumo[0]['ins_tipo_modificacion']==0){
+        $lista_partidas=$this->model_modrequerimiento->lista_partidas_dependientes($insumo[0]['aper_id'],$get_partida[0]['par_depende']);
+      }
+      else{
+        $lista_partidas=$this->model_ptto_sigep->lista_partidas_dependientes_revertidos($insumo[0]['aper_id'],$get_partida[0]['par_depende']);
+      }
+
       foreach ($lista_partidas as $row) {
         if($insumo[0]['par_id']==$row['par_id']){
           $tabla.='<option value="'.$row['par_id'].'" selected>'.$row['par_codigo'].'.- '.$row['par_nombre'].'</option>';
@@ -2053,6 +2118,8 @@ class Cmod_insumo extends CI_Controller {
 
       return $tabla;
     }
+
+
 
     /*--- LISTA DE PRODUCTOS, ACTIVIDADES (MOD) ---*/
     function list_operaciones($cite,$insumo){
@@ -2078,21 +2145,63 @@ class Cmod_insumo extends CI_Controller {
         $post = $this->input->post();
         $par_id = $this->security->xss_clean($post['par_id']);
         $proy_id = $this->security->xss_clean($post['proy_id']);
-        $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
+        $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// Datos Proyecto
+        $id = $this->security->xss_clean($post['id']);
+        $tp = $this->security->xss_clean($post['tp']);
 
-        $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$par_id);  /// Asignado
-        $prog=$this->model_ptto_sigep->get_partida_accion($proyecto[0]['aper_id'],$par_id); /// Programado
-        $monto_prog=0;
-
-        if(count($prog)!=0){
-          $monto_prog=$prog[0]['monto'];
+        if($tp==0){
+          $cite = $this->model_modrequerimiento->get_cite_insumo($id); /// Datos Cite
+          $tp_mod=$cite[0]['tipo_modificacion'];
+        }
+        else{
+          $insumo= $this->model_insumo->get_requerimiento($id); /// Datos requerimientos productos
+          $tp_mod=$insumo[0]['ins_tipo_modificacion'];
         }
 
-        $monto=($asig[0]['monto']+$asig[0]['ppto_saldo_ncert'])-$monto_prog;
+
+        
+        
+        
+
+        if($tp_mod==0){
+          $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$par_id); /// Get partida -> Unidad (Asignado)
+          $prog=$this->model_ptto_sigep->get_partida_programado_poa($proyecto[0]['aper_id'],$par_id); /// Get partida -> Unidad (Programado)
+        
+          /// -------------------------
+          $monto_prog=0;
+          if(count($prog)!=0){
+            $monto_prog=$prog[0]['ppto_programado'];
+          }
+
+          $monto_asig=0;
+          if(count($asig)!=0){
+            $monto_asig=$asig[0]['ppto_asignado'];
+          }
+          /// ------------------------
+        }
+        else{
+          $asig_rev=$this->model_ptto_sigep->get_ppto_partida_revertido_unidad($par_id,$proyecto[0]['aper_id']); /// Get partida -> Unidad (Asignado reversion)
+          $prog_rev=$this->model_ptto_sigep->get_ppto_poa_partida_x_reversion($par_id,$proyecto[0]['aper_id']); /// Get partida -> Unidad (Programado reversion)
+        
+           /// -------------------------
+          $monto_prog=0;
+          if(count($prog_rev)!=0){
+            $monto_prog=$prog_rev[0]['monto_programado_revertido'];
+          }
+
+          $monto_asig=0;
+          if(count($asig_rev)!=0){
+            $monto_asig=$asig_rev[0]['monto_revertido'];
+          }
+          /// ------------------------
+        }
+
+        $monto=$monto_asig-$monto_prog;
 
         $result = array(
           'respuesta' => 'correcto',
           'monto' => round($monto,2),
+          'datos' => $proyecto[0]['aper_id'].' <> '.$par_id.'--->'.$tp_mod.' || '.$monto_asig.'---'.$monto_prog,
         );
   
         echo json_encode($result);

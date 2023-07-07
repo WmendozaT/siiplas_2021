@@ -76,7 +76,7 @@ class Cppto_comparativo extends CI_Controller {
                       <td style="height: 30%;"><b>PLAN OPERATIVO ANUAL GESTIÓN - '.$this->gestion.'</b></td>
                   </tr>
                   <tr style="font-size: 17px;font-family: Arial;">
-                    <td style="height: 5%;">CUADRO COMPARATIVO PPTO. ASIGNADO VS PPTO. POA</td>
+                    <td style="height: 5%;">CUADRO CONSOLIDADO POA - PRESUPUESTO</td>
                   </tr>
                   <tr style="font-size: 25px;font-family: Arial;">
                     <td style="height: 5%;"><b>'.$titulo.'</b></td>
@@ -160,7 +160,7 @@ class Cppto_comparativo extends CI_Controller {
                     <td style="height: 30%;"><b>PLAN OPERATIVO ANUAL GESTIÓN - '.$this->gestion.'</b></td>
                 </tr>
                 <tr style="font-size: 17px;font-family: Arial;">
-                  <td style="height: 5%;">CUADRO COMPARATIVO PPTO. ASIGNADO VS PPTO. POA</td>
+                  <td style="height: 5%;">CUADRO CONSOLIDADO POA - PRESUPUESTO</td>
                 </tr>
                 <tr style="font-size: 25px;font-family: Arial;">
                   <td style="height: 5%;"><b>PPTO. CONSOLIDADO INSTITUCIONAL</b></td>
@@ -307,24 +307,11 @@ class Cppto_comparativo extends CI_Controller {
             $monto_asignado=$cod_part_asig[0]['sum_cod_partida'];
           }
 
-          /*if($data['proyecto'][0]['tp_id']==1){
-            $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog_pi($data['proyecto'][0]['proy_id']); //// ppto Programado POA - PI
-          }
-          else{
-            $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],2); //// suma codigo de partidas programadas
-          }*/
           $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],2); //// suma codigo de partidas programadas
 
           ///----- Genera lista de Partidas Asignadas y Programadas
           $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],1); // Asig
           $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],2); // Prog
-          /*if($data['proyecto'][0]['tp_id']==1){
-            $partidas_prog=$this->model_ptto_sigep->partidas_pi_prog_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['proy_id']);
-          }
-          else{
-            $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],2); // Prog
-          }*/
-          
 
 
           if($monto_asignado==$cod_part_prog[0]['sum_cod_partida']){ //// if (monto asignado = monto programado)
@@ -357,6 +344,7 @@ class Cppto_comparativo extends CI_Controller {
 
     /*---- COMPARATIVO DE PARTIDAS A NIVEL DE UNIDAD / ESTABLECIMIENTO  (las partidas cambian)---*/
     public function comparativo_update_partidas_normal($partidas_asig,$partidas_prog,$proyecto,$tipo_rep){
+      $saldos_revertidos_partidas=$this->model_ptto_sigep->lista_monto_partidas_revertidos_unidad($proyecto[0]['proy_id']); /// Saldos revertidos
       if($this->verif_ppto==0){
         $titulo='PRESUPUESTO ASIGNADO';
       }
@@ -374,7 +362,195 @@ class Cppto_comparativo extends CI_Controller {
       }
 
       $tabla ='';
-      $tabla .='
+
+      $saldos_revertidos_partidas=$this->model_ptto_sigep->lista_monto_partidas_revertidos_unidad($proyecto[0]['proy_id']); /// Saldos revertidos
+      if(count($saldos_revertidos_partidas)!=0){ /// POA con registro de reversion de saldos
+         $tabla .='
+          <table '.$tab.' align=center>
+          <thead>
+            <tr style="height:11px;" bgcolor="#eceaea" align=center>
+              <th style="width:3%;" align=center>#</th>
+              <th style="width:8%;">C&Oacute;DIGO PARTIDA</th>
+              <th style="width:20%;">DETALLE PARTIDA</th>
+              <th style="width:12%;">'.$titulo.' '.$this->gestion.'</th>
+              <th style="width:12%;">PROGRAMADO POA (SIIPLAS)</th>
+              <th style="width:12%;">SALDO POA</th>
+
+              <th style="width:12%;">PRESUPUESTO REVERTIDO '.$this->gestion.'</th>
+              <th style="width:12%;">PROGRAMADO POA (SIIPLAS)</th>
+              <th style="width:12%;">SALDO REVERTIDO</th>
+            </tr>
+          </thead>
+          <tbody>';
+          $nro=0;
+          $monto_asig=0;
+          $monto_prog=0;
+          $monto_asig_rev=0;
+          $monto_prog_rev=0;
+
+          foreach($partidas_asig as $row){
+            $part_prog=$this->model_ptto_sigep->get_partida_prog_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
+            $ppto_poa_revertido=$this->model_ptto_sigep->get_ppto_poa_partida_x_reversion($proyecto[0]['aper_id'],$row['par_id']); /// ppto poa revertido poa prtida
+
+            $prog=0; $ppto_revertido=0;
+            if(count($part_prog)!=0){
+              $prog=$part_prog[0]['ppto_programado'];
+              $ppto_revertido=$part[0]['ppto_revertido'];
+            }
+            $dif_ppto=($row['ppto_asignado']-$prog);
+           
+            $color='';
+            $sig='';
+            if($dif_ppto!=0){
+              if($dif_ppto<0){
+                $color='#f9cdcd';
+              }
+              else{
+                $color='#e5efd7';
+                $sig='+';
+              }
+            }
+
+            ////------- poa revertivo inscrito en el poa
+            $ppto_poa_revert=0;
+            if(count($ppto_poa_revertido)!=0){
+              $ppto_poa_revert=$ppto_poa_revertido[0]['monto_programado_revertido'];
+            }
+
+            $dif_ppto_rev=($ppto_revertido-$ppto_poa_revert);
+            $color_rev='';
+
+            if($dif_ppto_rev<0){
+              $color_rev='color:red;';
+            }
+
+
+            $nro++;
+            $tabla .='
+              <tr class="modo1">
+                <td style="width: 3%;height:11px; text-align: center" bgcolor='.$color.'>'.$nro.'</td>
+                <td style="width: 10%; text-align: center;" bgcolor='.$color.'>'.$row['codigo'].'</td>
+                <td style="width: 35%; text-align: left;" bgcolor='.$color.'>'.$row['nombre'].'</td>
+                <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.number_format($row['monto'], 2, ',', '.').'</td>
+                <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.number_format($prog, 2, ',', '.').'</td>
+                <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.$sig.''.number_format($dif_ppto, 2, ',', '.').'</td>
+
+                <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($ppto_revertido, 2, ',', '.').'</b></td>
+                <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($ppto_poa_revert, 2, ',', '.').'</b></td>
+                <td style="width: 12%; text-align: right; '.$color_rev.'" bgcolor="#EFF8FB"><b>'.number_format($dif_ppto_rev, 2, ',', '.').'</b></td>
+            
+              </tr>';
+            $monto_asig=$monto_asig+$row['monto'];
+            $monto_prog=$monto_prog+$prog; 
+
+            $monto_asig_rev=$monto_asig_rev+$ppto_revertido;
+            $monto_prog_rev=$monto_prog_rev+$ppto_poa_revert;
+
+          }
+
+          /////////----------------------------
+          foreach($partidas_prog as $row){
+            $part=$this->model_ptto_sigep->get_ppto_partida_asig_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']); /// ppto asignado 
+            $ppto_poa_revertido=$this->model_ptto_sigep->get_ppto_poa_partida_x_reversion($proyecto[0]['aper_id'],$row['par_id']); /// ppto poa revertido poa prtida
+
+            if(count($part)==0){ 
+              $ppto_asig=0; $ppto_revertido=0;
+              if(count($part)!=0){
+                $ppto_asig=$part[0]['ppto_asignado'];
+                $ppto_revertido=$part[0]['ppto_revertido'];
+              }
+              
+              $dif_ppto=($ppto_asig-$row['monto']);
+
+              $color='';
+              $sig='';
+              if($dif_ppto!=0){
+                if($dif_ppto<0){
+                  $color='#f9cdcd';
+                }
+                else{
+                  $color='#e5efd7';
+                  $sig='+';
+                }
+              }
+
+              ////------- poa revertivo inscrito en el poa
+              $ppto_poa_revert=0;
+              if(count($ppto_poa_revertido)!=0){
+                $ppto_poa_revert=$ppto_poa_revertido[0]['monto_programado_revertido'];
+              }
+
+              $dif_ppto_rev=($ppto_revertido-$ppto_poa_revert);
+              $color_rev='';
+
+              if($dif_ppto_rev<0){
+                $color_rev='color:red;';
+              }
+              
+            $nro++;
+            $tabla .='<tr class="modo1">
+                        <td style="width: 3%;height:11px; text-align: center" bgcolor='.$color.'>'.$nro.'</td>
+                        <td style="width: 8%; text-align: center;" bgcolor='.$color.'>'.$row['codigo'].'</td>
+                        <td style="width: 20%; text-align: left;" bgcolor='.$color.'>'.$row['nombre'].'</td>
+                        <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.number_format($ppto_asig, 2, ',', '.').'</td>
+                        <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.number_format($row['monto'], 2, ',', '.').'</td>
+                        <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.$sig.''.number_format($dif_ppto, 2, ',', '.').'</td>
+
+                        <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($ppto_revertido, 2, ',', '.').'</b></td>
+                        <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($ppto_poa_revert, 2, ',', '.').'</b></td>
+                        <td style="width: 12%; text-align: right; '.$color_rev.'" bgcolor="#EFF8FB"><b>'.number_format($dif_ppto_rev, 2, ',', '.').'</b></td>
+                      </tr>';
+            $monto_asig=$monto_asig+$ppto_asig;
+            $monto_prog=$monto_prog+$row['monto'];
+
+            $monto_asig_rev=$monto_asig_rev+$ppto_revertido;
+            $monto_prog_rev=$monto_prog_rev+$ppto_poa_revert;
+            }  
+          }
+
+          ////--------------------------------------------
+            $dif=($monto_asig-$monto_prog);
+            $color='#f1f1f1';
+            $sig='';
+            if($dif!=0){
+              if($dif<0){
+                $color='#f9cdcd';
+              }
+              else{
+                $color='#e5efd7';
+                $sig='+';
+              }
+            }
+
+            ////------- poa revertivo inscrito en el poa
+
+            $dif_ppto_rev=($monto_asig_rev-$monto_prog_rev);
+            $color_rev='';
+
+            if($dif_ppto_rev<0){
+              $color_rev='color:red;';
+            }
+
+            $tabla.='
+            <tr class="modo1" bgcolor='.$color.'>
+              <td colspan=3 style="height:11px;"><strong>TOTAL</strong></td>
+              <td align=right><b>'.number_format($monto_asig, 2, ',', '.').'</b></td>
+              <td align=right><b>'.number_format($monto_prog, 2, ',', '.').'</b></td>
+              <td align=right><b>'.$sig.''.number_format($dif, 2, ',', '.').'</b></td>
+
+
+              <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($monto_asig_rev, 2, ',', '.').'</b></td>
+              <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($monto_prog_rev, 2, ',', '.').'</b></td>
+              <td style="width: 12%; text-align: right; '.$color_rev.'" bgcolor="#EFF8FB"><b>'.number_format($dif_ppto_rev, 2, ',', '.').'</b></td>
+
+            </tr>
+
+          </tbody>
+        </table>';
+      }
+      else{
+
+      $tabla.='
       <table '.$tab.' align=center>
         <thead>
           <tr style="height:13px;" bgcolor="#eceaea" align=center>
@@ -382,12 +558,8 @@ class Cppto_comparativo extends CI_Controller {
             <th style="width:10%;">C&Oacute;DIGO PARTIDA</th>
             <th style="width:35%;">DETALLE PARTIDA</th>
             <th style="width:12%;">'.$titulo.' '.$this->gestion.'</th>
-            <th style="width:12%;">PRESUPUESTO POA (SIIPLAS)</th>
-            <th style="width:12%;">SALDO POA</th>';
-            if($this->tp_adm==1){
-              $tabla.='<th style="width:10%; color:#FFF; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
-            }
-            $tabla.='
+            <th style="width:12%;">PROGRAMADO POA (SIIPLAS)</th>
+            <th style="width:12%;">SALDO POA</th>
           </tr>
         </thead>
         <tbody>';
@@ -395,19 +567,13 @@ class Cppto_comparativo extends CI_Controller {
         $monto_asig=0;
         $monto_prog=0;
 
-        foreach($partidas_asig  as $row){
-          /*if($proyecto[0]['tp_id']==1){
-            $part=$this->model_ptto_sigep->get_partida_programado_pi($proyecto[0]['proy_id'],$row['par_id']);
-          }
-          else{
-            $part=$this->model_ptto_sigep->get_partida_accion_regional($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
-          }*/
-          $part=$this->model_ptto_sigep->get_partida_accion_regional($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
+        foreach($partidas_asig as $row){
+          $part=$this->model_ptto_sigep->get_partida_prog_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
             $prog=0;
             if(count($part)!=0){
-              $prog=$part[0]['monto'];
+              $prog=$part[0]['ppto_programado'];
             }
-            $dif=(($row['monto']+$row['saldo'])-$prog);
+            $dif=($row['ppto_asignado']-$prog);
            
            $color='';
             $sig='';
@@ -427,24 +593,23 @@ class Cppto_comparativo extends CI_Controller {
                 <td style="width: 3%;height:11px; text-align: center">'.$nro.'</td>
                 <td style="width: 10%; text-align: center;">'.$row['codigo'].'</td>
                 <td style="width: 35%; text-align: left;">'.$row['nombre'].'</td>
-                <td style="width: 12%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
+                <td style="width: 12%; text-align: right;">'.number_format($row['ppto_asignado'], 2, ',', '.').'</td>
                 <td style="width: 12%; text-align: right;">'.number_format($prog, 2, ',', '.').'</td>
-                <td style="width: 12%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
-                if($this->tp_adm==1){
-                  $tabla.='<td style="width: 10%; text-align: right;">'.number_format($row['saldo'], 2, ',', '.').'</td>';
-                }
-                $tabla.='
+                <td style="width: 12%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>
               </tr>';
-            $monto_asig=$monto_asig+($row['monto']+$row['saldo']);
+            $monto_asig=$monto_asig+$row['ppto_asignado'];
             $monto_prog=$monto_prog+$prog; 
         }
 
+
+        /////////----------------------------
         foreach($partidas_prog as $row){
-          $part=$this->model_ptto_sigep->get_partida_asig_accion($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
+          $part=$this->model_ptto_sigep->get_ppto_partida_asig_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']); /// ppto asignado 
+
            if(count($part)==0){ 
-            $asig=0;
+            $ppto_asig=0; $ppto_revertido=0;
             if(count($part)!=0){
-              $asig=($part[0]['monto']-$part[0]['saldo']);
+              $ppto_asig=($part[0]['ppto_asignado']-$part[0]['ppto_revertido']);
             }
             $dif=($asig-$row['monto']);
             $color='';
@@ -464,13 +629,9 @@ class Cppto_comparativo extends CI_Controller {
                       <td style="width: 3%;height:11px; text-align: center">'.$nro.'</td>
                       <td style="width: 10%; text-align: center;">'.$row['codigo'].'</td>
                       <td style="width: 35%; text-align: left;">'.$row['nombre'].'</td>
-                      <td style="width: 15%; text-align: right;">'.number_format($asig, 2, ',', '.').'</td>
+                      <td style="width: 15%; text-align: right;">'.number_format($ppto_asig, 2, ',', '.').'</td>
                       <td style="width: 15%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
-                      <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
-                if($this->tp_adm==1){
-                  $tabla.='<td style="width: 10%; text-align: right;"></td>';
-                }
-                $tabla.='
+                      <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>
                     </tr>';
           $monto_asig=$monto_asig+$asig;
           $monto_prog=$monto_prog+$row['monto'];
@@ -501,17 +662,19 @@ class Cppto_comparativo extends CI_Controller {
               
             </tr>
         </table>';
+      }
 
       return $tabla;
     }
 
     /*---- COMPARATIVO DE PARTIDAS A NIVEL DE UNIDAD / ESTABLECIMIENTO  (las partidas no cambian)---*/
     public function comparativo_partidas_normal($partidas_asig,$partidas_prog,$proyecto,$tipo_rep){ 
+      $tabla ='';
       if($this->verif_ppto==0){
         $titulo='PRESUPUESTO ASIGNADO';
       }
       else{
-        $titulo='PRESUPUESTO ASIGNADO APROBADO';
+        $titulo='PRESUPUESTO APROBADO';
       }
 
       /// 0 : normal
@@ -523,33 +686,149 @@ class Cppto_comparativo extends CI_Controller {
         $tab='cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:95%;font-size: 8px;"';
       }
 
-      $tabla ='';
-      $tabla .='
-        <table '.$tab.' align=center>
+
+      $saldos_revertidos_partidas=$this->model_ptto_sigep->lista_monto_partidas_revertidos_unidad($proyecto[0]['proy_id']); /// Saldos revertidos
+      if(count($saldos_revertidos_partidas)!=0){ /// POA con registro de reversion de saldos
+         $tabla .='
+          <table '.$tab.' align=center>
           <thead>
             <tr style="height:11px;" bgcolor="#eceaea" align=center>
               <th style="width:3%;" align=center>#</th>
-              <th style="width:10%;">C&Oacute;DIGO PARTIDA</th>
-              <th style="width:35%;">DETALLE PARTIDA</th>
-              <th style="width:15%;">'.$titulo.' '.$this->gestion.'</th>
-              <th style="width:15%;">PRESUPUESTO POA (SIIPLAS)</th>
-              <th style="width:15%;">SALDO POA</th>';
-            if($this->tp_adm==1){
-              $tabla.='<th style="width:10%; font-size:7px">SALDO PPTO. DE ADJUDICACIONES</th>';
-            }
-            $tabla.='
+              <th style="width:8%;">C&Oacute;DIGO PARTIDA</th>
+              <th style="width:20%;">DETALLE PARTIDA</th>
+              <th style="width:12%;">'.$titulo.' '.$this->gestion.'</th>
+              <th style="width:12%;">PROGRAMADO POA (SIIPLAS)</th>
+              <th style="width:12%;">SALDO POA</th>
+
+              <th style="width:12%;">PRESUPUESTO REVERTIDO '.$this->gestion.'</th>
+              <th style="width:12%;">PROGRAMADO POA (SIIPLAS)</th>
+              <th style="width:12%;">SALDO REVERTIDO</th>
+
             </tr>
           </thead>
           <tbody>';
+          $nro=0;
+          $monto_asig=0;
+          $monto_prog=0;
+          $monto_asig_rev=0;
+          $monto_prog_rev=0;
+          foreach($partidas_prog as $row){
+            $part=$this->model_ptto_sigep->get_ppto_partida_asig_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']); /// ppto asignado 
+            $ppto_poa_revertido=$this->model_ptto_sigep->get_ppto_poa_partida_x_reversion($proyecto[0]['aper_id'],$row['par_id']); /// ppto poa revertido poa prtida
+            $ppto_asig=0; $ppto_revertido=0;
+            if(count($part)!=0){
+              $ppto_asig=$part[0]['ppto_asignado'];
+              $ppto_revertido=$part[0]['ppto_revertido'];
+            }
+            $dif_ppto=($ppto_asig-$row['monto']);
 
+            $color='';
+              $sig='';
+              if($dif_ppto!=0){
+                if($dif_ppto<0){
+                  $color='#f9cdcd';
+                }
+                else{
+                  $color='#e5efd7';
+                  $sig='+';
+                }
+              }
+
+              ////------- poa revertivo inscrito en el poa
+              $ppto_poa_revert=0;
+              if(count($ppto_poa_revertido)!=0){
+                $ppto_poa_revert=$ppto_poa_revertido[0]['monto_programado_revertido'];
+              }
+
+              $dif_ppto_rev=($ppto_revertido-$ppto_poa_revert);
+              $color_rev='';
+
+              if($dif_ppto_rev<0){
+                $color_rev='color:red;';
+              }
+
+            $nro++;
+            $tabla.='
+            <tr class="modo1" >
+              <td style="width: 3%;height:11px; text-align: center" bgcolor='.$color.'>'.$nro.'</td>
+              <td style="width: 8%; text-align: center;" bgcolor='.$color.'>'.$row['codigo'].'</td>
+              <td style="width: 20%; text-align: left;" bgcolor='.$color.'>'.$row['nombre'].'</td>
+              <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.number_format($ppto_asig, 2, ',', '.').'</td>
+              <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.number_format($row['monto'], 2, ',', '.').'</td>
+              <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.$sig.''.number_format($dif_ppto, 2, ',', '.').'</td>
+
+              <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($ppto_revertido, 2, ',', '.').'</b></td>
+              <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($ppto_poa_revert, 2, ',', '.').'</b></td>
+              <td style="width: 12%; text-align: right; '.$color_rev.'" bgcolor="#EFF8FB"><b>'.number_format($dif_ppto_rev, 2, ',', '.').'</b></td>
+            </tr>';
+
+            $monto_asig=$monto_asig+$ppto_asig;
+            $monto_prog=$monto_prog+$row['monto'];
+
+            $monto_asig_rev=$monto_asig_rev+$ppto_revertido;
+            $monto_prog_rev=$monto_prog_rev+$ppto_poa_revert;
+          }
+
+          $dif=($monto_asig-$monto_prog);
+            $color='#f1f1f1';
+            $sig='';
+            if($dif!=0){
+              if($dif<0){
+                $color='#f9cdcd';
+              }
+              else{
+                $color='#e5efd7';
+                $sig='+';
+              }
+            }
+
+            ////------- poa revertivo inscrito en el poa
+
+            $dif_ppto_rev=($monto_asig_rev-$monto_prog_rev);
+            $color_rev='';
+
+            if($dif_ppto_rev<0){
+              $color_rev='color:red;';
+            }
+
+        $tabla.='
+            <tr class="modo1" bgcolor='.$color.'>
+              <td colspan=3 style="height:11px;"><strong>TOTAL</strong></td>
+              <td align=right><b>'.number_format($monto_asig, 2, ',', '.').'</b></td>
+              <td align=right><b>'.number_format($monto_prog, 2, ',', '.').'</b></td>
+              <td align=right><b>'.$sig.''.number_format($dif, 2, ',', '.').'</b></td>
+
+
+              <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($monto_asig_rev, 2, ',', '.').'</b></td>
+              <td style="width: 12%; text-align: right;" bgcolor="#EFF8FB"><b>'.number_format($monto_prog_rev, 2, ',', '.').'</b></td>
+              <td style="width: 12%; text-align: right; '.$color_rev.'" bgcolor="#EFF8FB"><b>'.number_format($dif_ppto_rev, 2, ',', '.').'</b></td>
+
+            </tr>
+          </tbody>
+        </table>';
+      }
+      else{ /// POA normal
+        $tabla .='
+          <table '.$tab.' align=center>
+          <thead>
+            <tr style="height:11px;" bgcolor="#eceaea" align=center>
+              <th style="width:3%;" align=center>#</th>
+              <th style="width:8%;">C&Oacute;DIGO PARTIDA</th>
+              <th style="width:20%;">DETALLE PARTIDA</th>
+              <th style="width:12%;">'.$titulo.' '.$this->gestion.'</th>
+              <th style="width:12%;">PROGRAMADO POA (SIIPLAS)</th>
+              <th style="width:12%;">SALDO POA</th>
+            </tr>
+          </thead>
+          <tbody>';
       $nro=0;
       $monto_asig=0;
       $monto_prog=0;
-      foreach($partidas_prog  as $row){
-        $part=$this->model_ptto_sigep->get_partida_asig_accion($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
+      foreach($partidas_prog as $row){
+        $part=$this->model_ptto_sigep->get_ppto_partida_asig_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']); /// ppto asignado 
           $asig=0;
           if(count($part)!=0){
-            $asig=$part[0]['monto'];
+            $asig=$part[0]['ppto_asignado'];
           }
           $dif=($asig-$row['monto']);
 
@@ -572,11 +851,8 @@ class Cppto_comparativo extends CI_Controller {
                     <td style="width: 35%; text-align: left;">'.$row['nombre'].'</td>
                     <td style="width: 15%; text-align: right;">'.number_format($asig, 2, ',', '.').'</td>
                     <td style="width: 15%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
-                    <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
-                if($this->tp_adm==1){
-                  $tabla.='<td style="width: 10%; text-align: right;">'.number_format($part[0]['saldo'], 2, ',', '.').'</td>';
-                }
-                $tabla.='</tr>';
+                    <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>
+                  </tr>';
         $monto_asig=$monto_asig+$asig;
         $monto_prog=$monto_prog+$row['monto'];
       }
@@ -600,13 +876,11 @@ class Cppto_comparativo extends CI_Controller {
               <td colspan=3 style="height:11px;"><strong>TOTAL</strong></td>
               <td align=right>'.number_format($monto_asig, 2, ',', '.').'</td>
               <td align=right>'.number_format($monto_prog, 2, ',', '.').'</td>
-              <td align=right>'.$sig.''.number_format($dif, 2, ',', '.').'</td>';
-              if($this->tp_adm==1){
-                $tabla.='<td></td>';
-              }
-             $tabla.='
+              <td align=right>'.$sig.''.number_format($dif, 2, ',', '.').'</td>
             </tr>
         </table>';
+      }
+
 
       return $tabla;
     }

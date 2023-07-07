@@ -1871,16 +1871,17 @@ class Seguimientopoa extends CI_Controller{
           $date_inicio = strtotime($configuracion[0]['eval_inicio']); /// Fecha Inicio
           $date_final = strtotime($configuracion[0]['eval_fin']); /// Fecha Final
 
-          if (($date_actual >= $date_inicio) && ($date_actual <= $date_final)){
-            $tabla.='   
-              <div id="row">
-                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                  <div class="alert alert-info" role="alert">
-                    <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-primary update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR DATOS PARA EVALUACI&Oacute;N POA</a>    
-                  </div>
-                </article>
-              </div>';
-          }
+
+        if (($date_actual >= $date_inicio) && ($date_actual <= $date_final)){
+          $tabla.='   
+            <div id="row">
+              <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="alert alert-info" role="alert">
+                  <a href="#" data-toggle="modal" data-target="#modal_update_eval" class="btn btn-primary update_eval" style="width:20%;" name="'.$com_id.'" id="'.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_cod']).' - '.strtoupper($componente[0]['serv_descripcion']).'" title="ACTUALIZAR EVALUACION POA" ><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;ACTUALIZAR DATOS PARA EVALUACI&Oacute;N POA</a>    
+                </div>
+              </article>
+            </div>';
+        }
       }
 
       return $tabla;

@@ -241,7 +241,7 @@ class Modificacionpoa extends CI_Controller{
     }
 
 
-    /*------ TITULO CABECERA (2020) (FORMULARIO N° 4)-----*/
+    /*------ TITULO CABECERA (2023) (FORMULARIO N° 4)-----*/
     public function titulo_cabecera($cite){
       $tabla='';
       if($cite[0]['tp_id']==1){ /// Proyecto de Inversion
@@ -254,26 +254,34 @@ class Modificacionpoa extends CI_Controller{
       }
 
       //// ------ Monto Presupuesto Programado-Asignado POA
-        $monto=$this->ppto($proyecto);
-        $tabla.='<h1><b> PPTO. ASIGNADO : <small>'.number_format($monto[1], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;PPTO PROGRAMADO : <small>'.number_format($monto[2], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;SALDO : <small>'.number_format($monto[3], 2, ',', '.').'</small></b></h1>';
-        
+        if($cite[0]['tipo_modificacion']==0){
+          $monto=$this->ppto($proyecto);
+          $tabla.='<h1><b> PPTO. ASIGNADO : <small>'.number_format($monto[1], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;PPTO PROGRAMADO : <small>'.number_format($monto[2], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;SALDO : <small>'.number_format($monto[3], 2, ',', '.').'</small></b></h1>';
+        }
+        else{
+          $monto=$this->ppto_revertido($proyecto);
+          $tabla.='<h1><b> PPTO. ASIGNADO (REVERTIDO) : <small>'.number_format($monto[1], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;PPTO PROGRAMADO (REVERTIDO) : <small>'.number_format($monto[2], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;SALDO : <small>'.number_format($monto[3], 2, ',', '.').'</small></b></h1>';
+        }
+
+        if($monto[3]>1){
+            $tabla.='
+            <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default" title="NUEVO REGISTRO">
+              <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>NUEVO REGISTRO (FORM. N 5)</b>
+            </a>
+            <a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default importar_ff" title="SUBIR ARCHIVO EXCEL">
+              <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="25" HEIGHT="20"/>&nbsp;<b>SUBIR REQUERIMIENTOS.CSV </b>
+            </a>';
+          }
       return $tabla;
     }
 
-    /*--- MONTO PRESUPUESTO (2020) ---*/
+    /*--- MONTO PRESUPUESTO ASIGNADO - PROGRAMADO (TOTAL UNIDAD)(2023) ---*/
     public function ppto($proyecto){
       $monto_a=0;$monto_p=0;$monto_saldo=0;
       $monto_asig=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
       $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
-      /*if($proyecto[0]['tp_id']==1){ /// proy inversion
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_pinversion($proyecto[0]['proy_id']);
-      }
-      else{ /// gasto corriente
-        $monto_prog=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
-      }
-*/
       if(count($monto_asig)!=0){
-        $monto_a=$monto_asig[0]['monto']+$monto_asig[0]['saldo'];
+        $monto_a=$monto_asig[0]['monto'];
       }
       if(count($monto_prog)!=0){
         $monto_p=$monto_prog[0]['monto'];
@@ -281,6 +289,25 @@ class Modificacionpoa extends CI_Controller{
 
       $monto[1]=$monto_a; /// Monto Asignado
       $monto[2]=$monto_p; /// Monto Programado
+      $monto[3]=($monto_a-$monto_p); /// Saldo
+
+      return $monto;
+    }
+
+    /*--- MONTO PRESUPUESTO ASIGNADO - PROGRAMADO (TOTAL UNIDAD REVERTIDO)(2023) ---*/
+    public function ppto_revertido($proyecto){
+      $monto_a=0;$monto_p=0;$monto_saldo=0;
+      $monto_asig=$this->model_ptto_sigep->suma_ptto_revertido_total_unidad($proyecto[0]['aper_id'],1); /// asig revertido
+      $monto_prog=$this->model_ptto_sigep->suma_ptto_revertido_total_unidad($proyecto[0]['aper_id'],2); /// prog revertido
+      if(count($monto_asig)!=0){
+        $monto_a=$monto_asig[0]['ppto_revertido'];
+      }
+      if(count($monto_prog)!=0){
+        $monto_p=$monto_prog[0]['poa_revertido'];
+      }
+
+      $monto[1]=$monto_a; /// Monto Asignado Revertido
+      $monto[2]=$monto_p; /// Monto Programado Revertido
       $monto[3]=($monto_a-$monto_p); /// Saldo
 
       return $monto;

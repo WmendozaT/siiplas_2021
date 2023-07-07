@@ -112,11 +112,45 @@ class Model_seguimientopoa extends CI_Model{
         return $query->result_array();
     }
 
+    ///// get nro de actividades a ser ejecutado por mes por distrital
+    public function get_nro_poa_mes_distrital($dist_id,$mes_id,$gestion){
+        $sql = 'select count(*) nro
+                    from _proyectos p
+                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                    Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+                    Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+                    Inner Join _productos as prod On prod.com_id=c.com_id
+                    Inner Join prod_programado_mensual as prog On prog.prod_id=prod.prod_id
+                    where p.dist_id='.$dist_id.' and prog.m_id='.$mes_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and c.estado!=\'3\' and p.estado!=\'3\' and apg.aper_estado!=\'3\' and prod.estado!=\'3\' and p.tp_id=\'4\'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
 
     /*-- GET LISTA DE OPERACIONES MENSUAL POR REGIONAL --*/
     public function get_seguimiento_poa_mes_regional($dep_id,$mes_id,$gestion){
         $sql = 'select *
                 from lista_seguimiento_operaciones_mensual_regional('.$dep_id.','.$mes_id.','.$gestion.')';
+        
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    ///// get nro de actividades a ser ejecutado por mes por regional
+    public function get_nro_poa_mes_regional($dep_id,$mes_id,$gestion){
+        $sql = 'select count(*) nro
+                    from _proyectos p
+                    Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id
+                    Inner Join aperturaprogramatica as apg On apg.aper_id=ap.aper_id
+                    Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
+                    Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
+                    Inner Join _productos as prod On prod.com_id=c.com_id
+                    Inner Join prod_programado_mensual as prog On prog.prod_id=prod.prod_id
+                    where p.dep_id='.$dep_id.' and prog.m_id='.$mes_id.' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and c.estado!=\'3\' and p.estado!=\'3\' and apg.aper_estado!=\'3\' and prod.estado!=\'3\' and p.tp_id=\'4\'';
 
         $query = $this->db->query($sql);
         return $query->result_array();

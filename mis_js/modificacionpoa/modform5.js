@@ -409,7 +409,6 @@ function valida_eliminar(){
         document.getElementById("ins_id").value=ins_id;
         cite_id=document.getElementById("cite_id").value;
     
-      //  var url = "<?php echo site_url().'/modificaciones/cmod_insumo/get_requerimiento'?>";
         var url = base+"index.php/modificaciones/cmod_insumo/get_requerimiento";
 
           var request;
@@ -459,12 +458,13 @@ function valida_eliminar(){
              document.getElementById("costot").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
              document.getElementById("costot2").value = parseFloat(response.insumo[0]['ins_costo_total']).toFixed(2);
              document.getElementById("umedida").value = response.insumo[0]['ins_unidad_medida'];
-             document.getElementById("par_padre").value = response.ppdre[0]['par_codigo'];
+             //document.getElementById("par_padre").value = response.ppdre[0]['par_codigo'];
              document.getElementById("par_hijo").value = response.insumo[0]['par_id'];
              document.getElementById("par_id").value = response.insumo[0]['par_id'];
              document.getElementById("mtot").value = response.prog[0]['programado_total'];
              document.getElementById("observacion").value = response.insumo[0]['ins_observacion'];
              document.getElementById("monto_cert").value = response.monto_certificado;
+             $("#par_padre").html(response.partidas);
              $("#par_hijo").html(response.lista_partidas);
              $("#id").html(response.lista_prod_act);
              $('#monto').html('<font color=blue size=2><b>MONTO CERTIFICADO : '+response.monto_certificado+'</b></font>');
@@ -494,7 +494,13 @@ function valida_eliminar(){
               $('#mbut').slideUp();
              }
              else{
-              $('#titulo_req').html('<center><h2 class="alert alert-info">MODIFICAR REQUERIMIENTO</h2></center>');
+              if(response.insumo[0]['ins_tipo_modificacion']==0){
+                $('#titulo_req').html('<center><h2 class="alert alert-info">MODIFICAR REQUERIMIENTO</h2></center>');
+              }
+              else{
+                $('#titulo_req').html('<center><h2 class="alert alert-info">MODIFICAR REQUERIMIENTO<br><b>(REVERSIÓN DE REQUERIMIENTO)</b></h2></center>');
+              }
+              
               $('#mbut').slideDown();
              }
 
@@ -689,12 +695,11 @@ $(function () {
 
 
 /////// FUNCIONES EXTRAS ======================
+//// partidas hijos (add)
   $(document).ready(function () {
     $("#partida_id").change(function () {            
-      var par_id = $(this).val(); /// Par id
-      //proy=<?php echo $proyecto[0]['proy_id']; ?>; /// Proy id
-      //alert(par_id+'--'+proy_id)
-      //  var url = "<?php echo site_url().'/modificaciones/cmod_insumo/get_monto_partida'?>";
+        var par_id = $(this).val(); /// Par id
+        var tp=0;
         var url = base+"index.php/modificaciones/cmod_insumo/get_monto_partida";
         var request;
         if (request) {
@@ -704,7 +709,7 @@ $(function () {
             url: url,
             type: "POST",
             dataType: 'json',
-            data: "par_id="+par_id+"&proy_id="+proy_id
+            data: "par_id="+par_id+"&proy_id="+proy_id+"&tp="+tp+"&id="+cite_id
         });
 
         request.done(function (response, textStatus, jqXHR) {
@@ -739,15 +744,16 @@ $(function () {
   });
 
 
-
+  //// partidas hijos (mod)
   $(document).ready(function () {
     $("#par_hijo").change(function () {            
       var par_id = $(this).val();
-    //  proy=<?php echo $proyecto[0]['proy_id']; ?>;
-      costo = parseFloat($('[name="costot"]').val()); //// costo
-    //  alert(par_id)
+      var tp=1;
+      var ins_id = $('[name="ins_id"]').val(); //// ins id
 
-      //  var url = "<?php echo site_url().'/modificaciones/cmod_insumo/get_monto_partida'?>";
+
+      //alert(tp+'----'+ins_id)
+      costo = parseFloat($('[name="costot"]').val()); //// costo
         var url = base+"index.php/modificaciones/cmod_insumo/get_monto_partida";
           var request;
           if (request) {
@@ -757,12 +763,13 @@ $(function () {
               url: url,
               type: "POST",
               dataType: 'json',
-              data: "par_id="+par_id+"&proy_id="+proy_id
+              data: "par_id="+par_id+"&proy_id="+proy_id+"&tp="+tp+"&id="+ins_id
           });
 
           request.done(function (response, textStatus, jqXHR) {
 
           if (response.respuesta == 'correcto') {
+            //alert(response.datos)
             par_id1 = parseFloat($('[name="par_id"]').val()); //// par id 
             costo = parseFloat($('[name="costot"]').val()); //// Costo
 
@@ -812,12 +819,12 @@ $(function () {
       $("#padre").change(function () {
           $("#padre option:selected").each(function () {
           elegido=$(this).val();
-        //  aper=<?php echo $proyecto[0]['aper_id']; ?>;
+          tp=0; /// nuevo
           $('[name="saldo"]').val((0).toFixed(2));
           $('#atit').html('');
           $('#but').slideUp();
 
-          $.post(base+"index.php/prog/combo_partidas_asig", { elegido: elegido,aper:aper_id }, function(data){ 
+          $.post(base+"index.php/prog/combo_partidas_asig", { elegido: elegido,aper:aper_id,tp:tp,id:cite_id }, function(data){ 
           $("#partida_id").html(data);
           });     
         });
@@ -826,6 +833,7 @@ $(function () {
     $("#partida_id").change(function () {
           $("#partida_id option:selected").each(function () {
             elegido=$(this).val();
+
             $.post(base+"index.php/prog/combo_umedida", { elegido: elegido }, function(data){ 
             $("#ins_um").html(data);
             });     
@@ -840,14 +848,15 @@ $(document).ready(function() {
     $("#par_padre").change(function () {
           $("#par_padre option:selected").each(function () {
           elegido=$(this).val();
-        //  aper=<?php echo $proyecto[0]['aper_id']; ?>;
+          ins_id = $('[name="ins_id"]').val(); //// costo Total Programado
+          tp=1; /// modificado
           $('[name="sal"]').val((0).toFixed(2));
           $('[name="saldo"]').val((0).toFixed(2));
           $('[name="monto_dif"]').val((0).toFixed(2));
           $('#amtit').html('');
           $('#mbut').slideUp();
 
-          $.post(base+"index.php/prog/combo_partidas_asig", { elegido: elegido,aper:aper_id }, function(data){ 
+          $.post(base+"index.php/prog/combo_partidas_asig", { elegido: elegido,aper:aper_id,tp:tp,id:ins_id }, function(data){ 
           $("#par_hijo").html(data);
           });     
       });
@@ -855,7 +864,19 @@ $(document).ready(function() {
   })
 
 
-  function suma_programado(){ 
+  function suma_programado(input){ 
+      //-------------------------------
+        const valor = input.value;
+        if (valor.indexOf('.') !== -1) {
+          const partes = valor.split('.');
+          
+          if (partes[1].length > 2) {
+            input.value = partes[0] + '.' + partes[1].slice(0, 2);
+          }
+        }
+      //------------------------------
+
+        
       sum=0;
       for (var i = 1; i<=12; i++) {
         sum=parseFloat(sum)+parseFloat($('[name="m'+i+'"]').val());
@@ -884,7 +905,18 @@ $(document).ready(function() {
       }
   }
 
-    function suma_programado_modificado(){ 
+    function suma_programado_modificado(input){
+        //-------------------------------
+        const valor = input.value;
+        if (valor.indexOf('.') !== -1) {
+          const partes = valor.split('.');
+          
+          if (partes[1].length > 2) {
+            input.value = partes[0] + '.' + partes[1].slice(0, 2);
+          }
+        }
+        //------------------------------
+
       sum=0;
       for (var i = 1; i <=12; i++) {
         sum=parseFloat(sum)+parseFloat($('[name="mm'+i+'"]').val());
@@ -911,7 +943,16 @@ $(document).ready(function() {
       }
     }
 
-    function costo_totalm(){ 
+    function costo_totalm(input){
+      const valor = input.value;
+      if (valor.indexOf('.') !== -1) {
+        const partes = valor.split('.');
+        
+        if (partes[1].length > 2) {
+          input.value = partes[0] + '.' + partes[1].slice(0, 2);
+        }
+      }
+
       s = parseFloat($('[name="sal"]').val()); //// saldo
       a = parseFloat($('[name="cantidad"]').val()); //// cantidad
       b = parseFloat($('[name="costou"]').val()); //// Costo
@@ -942,7 +983,16 @@ $(document).ready(function() {
       }
     }
 
-    function costo_total(){ 
+    function costo_total(input){ 
+      const valor = input.value;
+      if (valor.indexOf('.') !== -1) {
+        const partes = valor.split('.');
+        
+        if (partes[1].length > 2) {
+          input.value = partes[0] + '.' + partes[1].slice(0, 2);
+        }
+      }
+
       a = parseFloat($('[name="ins_cantidad"]').val()); //// cantidad
       b = parseFloat($('[name="ins_costo_u"]').val()); //// Costo unitario
       

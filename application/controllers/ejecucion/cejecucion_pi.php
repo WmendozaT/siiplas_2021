@@ -1946,7 +1946,7 @@ public function get_tp_reporte(){
     $data['datos_proyecto']=$this->ejecucion_finpi->datos_proyecto_inversion($proyecto,$cumplimiento); /// Datos Tecnicos
     $data['detalle_ejecucion']=$this->ejecucion_finpi->detalle_ejecucion_presupuestaria_pi($proyecto,$parametro_cumplimiento); /// Detalle Ejecucion
 
-    $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
+    //$this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
   }
 
 

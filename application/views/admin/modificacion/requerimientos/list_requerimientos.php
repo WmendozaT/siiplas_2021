@@ -115,7 +115,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>....</li><li>....</li><li>POAS Aprobados</li><li>Unidad Responsable</li><li>Mis Requerimientos - <?php echo $this->session->userData('gestion') ?></li>
+					<li>....</li><li>....</li><li>POAS Aprobados</li><li>Unidad Responsable</li><li>Mis Requerimientos - <?php echo $this->session->userData('gestion') ?> <?php if($cite[0]['tipo_modificacion']==1){ echo "<b>(REVERSION DE SALDOS)</b>";} ?></li>
 				</ol>
 			</div>
 			<!-- END RIBBON -->
@@ -198,8 +198,6 @@
 					</div>
 
 				</article>
-
-
 			</div>
 		</div>
 
@@ -239,7 +237,7 @@
                     <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; Salir Formulario</span></button>
                 </div>
                 <div class="modal-body">
-                	<h2 class="alert alert-info"><center>NUEVO REGISTRO - REQUERIMIENTO</center></h2>
+                	<h2 class="alert alert-info"><center>NUEVO REGISTRO - REQUERIMIENTO <?php if($cite[0]['tipo_modificacion']==1){ echo "<b>(REVERSION DE SALDOS)</b>";} ?></center></h2>
                     <form action="<?php echo site_url().'/modificaciones/cmod_insumo/valida_add_insumo'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
                         <input type="hidden" name="cite_id" id="cite_id" value="<?php echo $cite[0]['cite_id'];?>">
                         <header>
@@ -299,16 +297,17 @@
 										<label class="label"><b>CANTIDAD</b></label>
 										<label class="input">
 											<i class="icon-append fa fa-tag"></i>
-											<input type="text" name="ins_cantidad" id="ins_cantidad" onkeyup="costo_total()" value="0" onkeypress="return justNumbers(event);" title="REGISTRAR CANTIDAD">
+											<input type="text" name="ins_cantidad" id="ins_cantidad" onkeyup="costo_total(this)" value="0" required onkeypress="return justNumbers(event);" title="REGISTRAR CANTIDAD">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><b>COSTO UNITARIO <font color="blue">(2 decimales)</font></b></label>
 										<label class="input">
 											<i class="icon-append fa fa-tag"></i>
-											<input type="text" name="ins_costo_u" id="ins_costo_u" onkeyup="costo_total()" value="0" onkeypress="return justNumbers(event);" onpaste="return false" title="REGISTRAR COSTO UNITARIO">
+											<input type="text" name="ins_costo_u" id="ins_costo_u" step="0.01" onkeyup="costo_total(this)" value="0" required onkeypress="return justNumbers(event);" title="REGISTRAR COSTO UNITARIO">
 										</label>
 									</section>
+
 									<section class="col col-2">
 										<label class="label"><b>COSTO TOTAL</b></label>
 										<label class="input">
@@ -350,42 +349,42 @@
 										<label class="label">ENERO</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m1" id="m1" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ENERO - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m1" id="m1" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ENERO - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">FEBRERO</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m2" id="m2" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE FEBRERO - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m2" id="m2" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE FEBRERO - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">MARZO</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m3" id="m3" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MARZO - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m3" id="m3" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MARZO - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">ABRIL</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m4" id="m4" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ABRIL - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m4" id="m4" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ABRIL - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">MAYO</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m5" id="m5" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MAYO - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m5" id="m5" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MAYO - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">JUNIO</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m6" id="m6" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JUNIO - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m6" id="m6" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JUNIO - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 								</div>
@@ -394,42 +393,42 @@
 										<label class="label">JULIO</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m7" id="m7" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JULIO - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m7" id="m7" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JULIO - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">AGOSTO</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m8" id="m8" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m8" id="m8" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">SEPTIEMBRE</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m9" id="m9" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m9" id="m9" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">OCTUBRE</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m10" id="m10" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m10" id="m10" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">NOVIEMBRE</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m11" id="m11" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m11" id="m11" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label">DICIEMBRE</label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m12" id="m12" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+											<input type="text" name="m12" id="m12" value="0" onkeyup="suma_programado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
 										</label>
 									</section>
 								</div>
@@ -471,12 +470,7 @@
 										<label class="label"><b>GRUPO PARTIDA</b></label>
 										<label class="input">
 											<select class="form-control" id="par_padre" name="par_padre" title="SELECCIONE GRUPO DE PARTIDA">
-		                                        <option value="">Seleccione Grupo Partida</option>
-		                                        <?php 
-		                                            foreach($part_padres as $row){ ?>
-		                                                <option value="<?php echo $row['par_codigo'];?>" <?php if(@$_POST['pais']==$row['par_codigo']){ echo "selected";} ?>><?php echo $row['par_codigo'].' - '.$row['par_nombre'];?></option>
-		                                        <?php } ?>        
-		                                    </select>
+											</select>
 										</label>
 									</section>
 									<section class="col col-3">
@@ -524,14 +518,14 @@
 										<label class="label"><b>CANTIDAD</b></label>
 										<label class="input">
 											<i class="icon-append fa fa-tag"></i>
-											<input type="text" name="cantidad" id="cantidad" onkeyup="costo_totalm()" onkeypress="return justNumbers(event);" title="MODIFICAR CANTIDAD">
+											<input type="text" name="cantidad" id="cantidad" onkeyup="costo_totalm(this)" required onkeypress="return justNumbers(event);" title="MODIFICAR CANTIDAD">
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><b>COSTO UNITARIO <font color="blue">(2 decimales)</font></b></label>
 										<label class="input">
 											<i class="icon-append fa fa-tag"></i>
-											<input type="text" name="costou" id="costou" onkeyup="costo_totalm()" onkeypress="return justNumbers(event);" onpaste="return false" title="MODIFICAR COSTO UNITARIO">
+											<input type="text" name="costou" id="costou" onkeyup="costo_totalm(this)" required onkeypress="return justNumbers(event);" onpaste="return false" title="MODIFICAR COSTO UNITARIO">
 										</label>
 									</section>
 									<section class="col col-2">
@@ -580,42 +574,42 @@
 										<label class="label"><div id="mess1"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm1" id="mm1" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ENERO - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm1" id="mm1" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ENERO - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess2"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm2" id="mm2" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE FEBRERO - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm2" id="mm2" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE FEBRERO - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess3"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm3" id="mm3" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MARZO - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm3" id="mm3" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MARZO - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess4"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm4" id="mm4" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ABRIL - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm4" id="mm4" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ABRIL - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess5"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm5" id="mm5" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MAYO - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm5" id="mm5" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MAYO - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess6"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm6" id="mm6" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JUNIO - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm6" id="mm6" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JUNIO - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 								</div>
@@ -624,42 +618,42 @@
 										<label class="label"><div id="mess7"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm7" id="mm7" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JULIO - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm7" id="mm7" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JULIO - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess8"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm8" id="mm8" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm8" id="mm8" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess9"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm9" id="mm9" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm9" id="mm9" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess10"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm10" id="mm10" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm10" id="mm10" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess11"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm11" id="mm11" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm11" id="mm11" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 									<section class="col col-2">
 										<label class="label"><div id="mess12"></div></label>
 										<label class="input">
 											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="mm12" id="mm12" value="0" onkeyup="suma_programado_modificado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>" disabled>
+											<input type="text" name="mm12" id="mm12" value="0" onkeyup="suma_programado_modificado(this)" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>" disabled>
 										</label>
 									</section>
 								</div>
@@ -687,7 +681,7 @@
 	            	<div class="modal-header">
                     	<button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; Salir Formulario</span></button>
                     </div>
-	              <div class="modal-body">
+	              	<div class="modal-body">
 	              		<?php
 	              			if($cite[0]['cite_estado']==0){
 	              				echo '<h2 class="alert alert-warning"><center>CERRAR MODIFICACI&Oacute;N PRESUPUESTARIA</center></h2>';
@@ -736,15 +730,16 @@
 	                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
 	                </div>
 	                <div class="modal-body">
-	                	<h2><center>SUBIR ARCHIVO REQUERIMIENTO.CSV</center></h2>
-	                
+	                	<h2><center>SUBIR ARCHIVO REQUERIMIENTO.CSV <br><?php if($cite[0]['tipo_modificacion']==1){ echo "<b>(REVERSION DE SALDOS)</b>";} ?></center></h2>
+	                	
 	                    <div class="row">
-	                    	<script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
+	                    		<script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>
 	                    		<form action="<?php echo site_url().'/modificaciones/cmod_insumo/valida_add_requerimientos';?>" method="post" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep">
 	                            <input type="hidden" id="cite_id" name="cite_id" value="<?php echo $cite[0]['cite_id'];?>" />
 								
 								<div class="input-group">
-								  <span class="input-group-btn">
+								  	<span class="input-group-btn">
+								  	
 								    <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
 								    <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
 								  	<input name="MAX_FILE_SIZE" type="hidden" value="20000" />
@@ -753,6 +748,7 @@
 								</div>
 								<hr>
 								<div >
+									<?php if($cite[0]['tipo_modificacion']==1){ echo "<b>NOTA IMPORTANTE : </b> antes de migrar la plantilla debe verificar que exista saldos disponibles en las partidas revertidas ";} ?>
 	                                <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR REQUERIMIENTOS .CSV</button><br>
 			                        <center><img id="loads" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
 	                            </div>

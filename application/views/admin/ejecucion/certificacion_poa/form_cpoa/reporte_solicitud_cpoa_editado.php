@@ -26,7 +26,7 @@ ob_start();
             <?php echo $pie_certpoa;?>
         </page_footer>
         <?php echo $items_certificados_final;?>
-         <!-- <br><div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>CERTIFICACIÓN POA ELIMINADO SEGUN CITE N° 2377 DE FECHA 12/06/2023, EMITIDO POR LA GERENCIA ADMINISTRATIVA FINANCIERA</b></div>  -->
+         <!-- <br><div style="font-size: 20px;font-family: Arial; color: red; text-align: center;"><b>CERTIFICACIÓN POA ELIMINADO SEGUN CITE N° 39/2023 DE FECHA 29/06/2023, EMITIDO POR LA REGIONAL PANDO - BIENES Y SERVICIOS</b></div>  -->
     </page>
     <?php
     }

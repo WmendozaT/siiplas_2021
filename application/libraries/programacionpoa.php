@@ -1006,11 +1006,11 @@ class Programacionpoa extends CI_Controller{
     
     if($tp_rep==0){
       if($proyecto[0]['aper_proy_estado']==1){
-        $titulo_rep='CONSOLIDADO PRESUPUESTO POA';
+        $titulo_rep='CONSOLIDADO POA PRESUPUESTO';
         $titulo_form='PPTO. ANTEPROYECTO';
       } 
       else{
-        $titulo_rep='COMPARATIVO PRESUPUESTO POA - APROBADO';
+        $titulo_rep='CONSOLIDADO POA PRESUPUESTO - APROBADO';
         $titulo_form='PPTO. APROBADO - POA';
       }
       
