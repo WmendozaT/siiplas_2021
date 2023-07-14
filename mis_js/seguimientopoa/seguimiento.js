@@ -520,6 +520,7 @@ function abreVentana(PDF){
     /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL ------*/
     $(function () {
       $(".update_eval").on("click", function (e) {
+        
           com_id = $(this).attr('name');
           document.getElementById("com_id").value=com_id;
           $('#tit').html('<font size=3><b>'+$(this).attr('id')+'</b></font>');

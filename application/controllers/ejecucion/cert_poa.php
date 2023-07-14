@@ -707,25 +707,39 @@ class Cert_poa extends CI_Controller {
         $cpoa=$this->model_certificacion->get_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
 
         $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos 
-
-        $ptto_asig=$this->model_ptto_sigep->get_partida_asignado_sigep($cpoa[0]['aper_id'],$insumo[0]['par_id']); /// Ptto Asignado
-        if($cpoa[0]['tp_id']==1){
-          $ptto_prog=$this->model_ptto_sigep->get_partida_programado_pi($cpoa[0]['proy_id'],$insumo[0]['par_id']); /// Ptto Programado pi
-        }
-        else{
-          $ptto_prog=$this->model_ptto_sigep->get_partida_accion($cpoa[0]['aper_id'],$insumo[0]['par_id']); /// Ptto Programado Gasto Corriente
-        }
-
-                  /// -------------------------
+        
+        if($insumo[0]['ins_tipo_modificacion']==0){
+          $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($insumo[0]['aper_id'],$insumo[0]['par_id']); /// Get partida -> Unidad (Asignado)
+          $prog=$this->model_ptto_sigep->get_partida_programado_poa($insumo[0]['aper_id'],$insumo[0]['par_id']); /// Get partida -> Unidad (Programado)
+          
+          /// -------------------------
           $monto_prog=0;
-          if(count($ptto_prog)!=0){
-            $monto_prog=$ptto_prog[0]['monto'];
+          if(count($prog)!=0){
+            $monto_prog=$prog[0]['ppto_programado'];
           }
 
           $monto_asig=0;
-          if(count($ptto_asig)!=0){
-            $monto_asig=($ptto_asig[0]['monto']+$ptto_asig[0]['ppto_saldo_ncert']);
+          if(count($asig)!=0){
+            $monto_asig=$asig[0]['ppto_asignado'];
           }
+          /// ------------------------
+        }
+        else{
+          $asig=$this->model_ptto_sigep->get_ppto_partida_revertido_unidad($insumo[0]['par_id'],$proyecto[0]['aper_id']); /// Get partida -> Unidad (Asignado reversion)
+          $prog=$this->model_ptto_sigep->get_ppto_poa_partida_x_reversion($insumo[0]['par_id'],$proyecto[0]['aper_id']); /// Get partida -> Unidad (Programado reversion)
+        
+           /// -------------------------
+          $monto_prog=0;
+          if(count($prog)!=0){
+            $monto_prog=$prog[0]['monto_programado_revertido'];
+          }
+
+          $monto_asig=0;
+          if(count($asig)!=0){
+            $monto_asig=$asig[0]['monto_revertido'];
+          }
+        }
+
           $saldo=$monto_asig-$monto_prog;
 
           $prog=$this->model_insumo->list_temporalidad_insumo($insumo[0]['ins_id']); /// Temporalidad Requerimiento 2020

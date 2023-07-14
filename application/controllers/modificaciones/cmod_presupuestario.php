@@ -8,6 +8,7 @@ class Cmod_presupuestario extends CI_Controller {
             if($this->rolfun($this->rol)){ 
             $this->load->library('pdf2');
             $this->load->model('menu_modelo');
+            $this->load->model('ejecucion/model_certificacion');
             $this->load->model('programacion/model_proyecto');
             $this->load->model('mantenimiento/model_entidad_tras');
             $this->load->model('mantenimiento/model_partidas');
@@ -769,6 +770,216 @@ class Cmod_presupuestario extends CI_Controller {
       }
       else{
           echo "<b>ERROR !!!!!</b>";
+      }
+    }
+
+
+
+
+
+    /*----- formulario para ppto por saldo revertidos -----*/
+    public function form_ppto_revertido($proy_id){
+      
+      /// tp 0: Modificacion POA
+      /// tp 1: Modificacion POA (Reversion de saldos)
+      $data['menu'] = $this->menu->genera_menu(); //// genera menu
+      $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
+
+      if(count($data['proyecto'])!=0){
+        if($data['proyecto'][0]['tp_id']==1){
+          $titulo='
+          <h1> PROYECTO DE INVERSI&Oacute;N : <small>'.$data['proyecto'][0]['proy_sisin'].' - '.$data['proyecto'][0]['proy_nombre'].'</small>';
+        }
+        else{
+          $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
+          $titulo='
+          <h1> <b>'.$data['proyecto'][0]['tipo_adm'].' : </b><small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' '.$data['proyecto'][0]['abrev'].'</small>';
+        }
+        $data['titulo']=$titulo;
+
+
+
+        $lista_certpoa=$this->model_certificacion->get_lista_certificacion_poa_unidad($proy_id);
+        $tabla='';
+        $tabla.='
+            <article class="col-sm-12 col-md-12 col-lg-5">
+              <div id="cuerpo1">
+                <input type="hidden" name="base" id="base" value="'.base_url().'">
+                <div class="jarviswidget" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
+                  <header>
+                    <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                    <h2>Reversión de Presupuesto POA</h2>
+                  </header>
+                  <div>
+                    <div class="jarviswidget-editbox">
+                    </div>
+                    <div class="widget-body">
+
+                      <form class="form-horizontal" id="formulario">
+                        <input type="hidden" id="proy_id" name="proy_id" value="'.$proy_id.'">
+                        <fieldset>
+                          <legend>Seleccion de Informacion</legend>
+                          <div class="form-group">
+                            <label class="col-md-3 control-label">Seleccione Certificacion POA</label>
+                            <div class="col-md-9">
+                              <select class="select2" id="certpoa" name="certpoa">
+                                <option value="0">Seleccione Certificacion POA...</option>';
+                                foreach ($lista_certpoa as $row){
+                                  $tabla.='<option value="'.$row['cpoa_id'].'"><b>'.$row['cpoa_codigo'].'</b></option>';
+                                }
+                                $tabla.='
+                              </select>
+                            </div>
+                          </div>
+                          
+                          <div class="form-group">
+                            <label class="col-md-3 control-label">Certificación Presupuestaria </label>
+                            <div class="col-md-9">
+                              <input type="text" id="certppto" name="certppto" class="form-control" data-mask="999999-999999-'.$this->gestion.'" data-mask-placeholder= "X">
+                                <p class="note">
+                                  Datos a registrar XXXXXX-XXXXXX-'.$this->gestion.'
+                                </p>
+                            </div>
+                          </div>
+                          
+                        </fieldset>
+
+                        <div class="form-actions" id="boton">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <a href="'.base_url().'index.php/mod/list_top" title="SALIR" class="btn btn-default">&nbsp;Salir</a>
+                              <button class="btn btn-primary" type="button" name="generar_datos" id="generar_datos">
+                                <i class="fa fa-save"></i>
+                                Generar Formulario de Reversión
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="col-sm-12 col-md-12 col-lg-7">
+              <div id="form_certpoa"></div>
+            </article>';
+
+          $data['tabla']=$tabla;
+
+        $this->load->view('admin/modificacion/reversion_ppto/form_reversion_saldos', $data); 
+      }
+      else{
+        redirect('mod/list_top');
+      }
+
+    }
+
+
+    /*------ APERTURAR CERTIFICACION POA ------*/
+    function aperturar_cert_poa(){
+      if ($this->input->is_ajax_request() && $this->input->post()) {
+          $post = $this->input->post();
+          $proy_id = $this->security->xss_clean($post['proy_id']); // proy_id
+          $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); // datos del proyecto
+
+          $cpoa_id = $this->security->xss_clean($post['cpoa_id']); // cpoa_id
+          $certificacion=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Generales de la Certificacion POA
+          $partidas_certificadas=$this->model_certificacion->get_lista_detalle_partidas_certificados_cpoa($cpoa_id);
+
+          $cppto = $this->security->xss_clean($post['cppto']); // certificacion presupuestaria
+
+          $cuerpo1='';
+          $cuerpo1.='
+          <div class="jarviswidget" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
+            <header>
+              <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+              <h2><b>Certificación POA</b></h2>
+            </header>
+            <div>
+              <div class="jarviswidget-editbox">
+              </div>
+              <div class="widget-body">
+
+                <div align="right"><a href="'.base_url().'index.php/mod/add_ppto_reversion/'.$proy_id.'" title="NUEVA REVERSIÓN" class="btn btn-default"><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;Generar Nueva Reversión</a></div>
+                <hr>
+                <iframe width="100%"  height="700px;" src="'.base_url().'index.php/cert/rep_cert_poa/'.$cpoa_id.'"></iframe>
+              </div>
+            </div>
+          </div>';
+
+
+          $tabla='';
+          $tabla.='
+          <div class="jarviswidget" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
+                <header>
+                  <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                  <h2><b>Formulario de Reversión por Partidas</b></h2>
+                </header>
+                <div>
+                  <div class="jarviswidget-editbox">
+                  </div>
+                  <div class="widget-body">
+
+                    <form  id="comment-form" class="smart-form">
+                      <header>
+                        <b>CERT. POA N° .- '.$certificacion[0]['cpoa_codigo'].'</b>
+                      </header>';
+                      $nro=0;
+                      foreach ($partidas_certificadas as $row){
+                        $nro++;
+                        $tabla.='
+                        <fieldset>
+                          <b style="font-size: 15px;font-family: Arial;">PARTIDA : '.$row['par_codigo'].' '.$row['par_nombre'].'</b>
+                          <br>
+                          <hr>
+                          <br>
+                          <div class="row">
+                            <section class="col col-3">
+                              <label class="label" style="font-size: 11px;font-family: Arial;color:red">PPTO. CERTIFICADO</label>
+                              <label class="input"> <i class="icon-append fa fa-money"></i>
+                                <input type="hidden" name="ppto_cert" id="ppto_cert" value="'.$row['ppto_partida_certificado'].'">
+                                <input type="text" name="ppto_cert" id="ppto_cert" value="'.number_format($row['ppto_partida_certificado'], 2, ',', '.').'" disabled="true">
+                              </label>
+                            </section>
+                            <section class="col col-3">
+                              <label class="label" style="font-size: 11px;font-family: Arial;color:blue;">SALDO A REVERTIR</label>
+                              <label class="input"> <i class="icon-append fa fa-money"></i>
+                                <input type="number" name="saldo'.$nro.'" value="0" onkeyup="verif_ppto_cert('.$nro.',this.value,'.$row['ppto_partida_certificado'].');"  onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                              </label>
+                            </section>
+                            <section class="col col-3">;
+                                <div id="but'.$nro.'" style="display:none;" align="center">
+                                  Hola mundo
+                                </div>';
+                              // <div id="but'.$partida['sp_id'].'" style="display:none;" align="center">
+                              //   <button type="button" name="'.$partida['sp_id'].'" id="'.$nro.'" onclick="guardar_pi('.$proyecto[0]['proy_id'].','.$tp.','.$partida['sp_id'].','.$this->verif_mes[1].','.$id_ejec.','.$partida['partida'].');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="37" HEIGHT="37"/><br>GUARDAR</button>
+                              // </div>
+                            
+                            $tabla.='
+                            </section>
+                          </div>
+
+                        </fieldset>';
+                      }
+                    $tabla.='
+                    </form>
+
+                  </div>
+                </div>
+              </div>';
+
+          $result = array(
+            'respuesta' => 'correcto',
+            'cuerpo1' => $cuerpo1,
+            'datos' => $tabla
+          );
+          
+          echo json_encode($result);
+
+      } else {
+          echo 'DATOS ERRONEOS';
       }
     }
 

@@ -71,7 +71,7 @@ class reportes_evaluacionpoa extends CI_Controller{
             $tabla.='<tr style="font-size: 9px;" >';
             $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
             $tabla.='<td style="width:15%;">'.strtoupper($row['dist_distrital']).'</td>';
-            $tabla.='<td style="width:20%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
+            $tabla.='<td style="width:20%;">'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</td>';
             $tabla.='<td style="width:8%;" align=right><b>'.$eficacia[2][$this->tmes].'</b></td>';
             $tabla.='<td style="width:8%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';

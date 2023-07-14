@@ -312,6 +312,19 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*----- GET SUMA PARTIDAS CERTIFICADOS PARA REVERSION  ----*/
+    public function get_lista_detalle_partidas_certificados_cpoa($cpoa_id){
+        $sql = 'select cpoa_id,par_id,par_codigo,par_nombre,SUM(monto_certificado) ppto_partida_certificado
+                from vrequerimiento_certificado
+                where cpoa_id='.$cpoa_id.'
+                group by cpoa_id,par_id,par_codigo,par_nombre
+                order by par_codigo asc';
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
     /*----- GET REQUERIMIENTO CERTIFICADO  ----*/
     public function get_item_certificados($ins_id,$cpoa_id){
         $sql = 'select *
@@ -369,6 +382,23 @@ class Model_certificacion extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*----- GET LISTA DE CERTIFICACIONES GENERADOS POR UNIDAD/PROYECTO  ----*/
+    public function get_lista_certificacion_poa_unidad($proy_id){
+        $sql = 'select *
+                from vista_get_certificacionpoa
+                where proy_id='.$proy_id.'
+                order by cpoa_id asc';
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+
+
+
+
+
         /*----- GET DATOS GENERALES CERTIFICACION ANULADOS Y GUARDADOS  ----*/
     public function get_datos_certificacion_poa_anulados($cpoa_id){
         $sql = 'select *
@@ -378,6 +408,7 @@ class Model_certificacion extends CI_Model{
 
         return $query->result_array();
     }
+
 
     /*----- GET MES CERTIFICADO POR ITEMS 2021 ----*/
     public function get_meses_certificacion_items($cpoad_id){

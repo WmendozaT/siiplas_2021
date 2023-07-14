@@ -121,7 +121,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Modificaciones</li><li>Modificar Requerimientos</li><li>Cite</li>
+					<li>Modificaciones</li><li>Modificar Requerimientos</li><li>Cite <?php if($cite[0]['tipo_modificacion']==1){ echo "<b>(REVERSION DE SALDOS)</b>";} ?></li>
 				</ol>
 			</div>
 			<!-- END RIBBON -->

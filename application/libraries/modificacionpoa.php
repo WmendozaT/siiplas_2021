@@ -242,7 +242,7 @@ class Modificacionpoa extends CI_Controller{
 
 
     /*------ TITULO CABECERA (2023) (FORMULARIO N° 4)-----*/
-    public function titulo_cabecera($cite){
+    public function titulo_cabecera($cite,$tp){
       $tabla='';
       if($cite[0]['tp_id']==1){ /// Proyecto de Inversion
         $proyecto = $this->model_proyecto->get_id_proyecto($cite[0]['proy_id']); /// Proyecto de Inversion
@@ -263,7 +263,8 @@ class Modificacionpoa extends CI_Controller{
           $tabla.='<h1><b> PPTO. ASIGNADO (REVERTIDO) : <small>'.number_format($monto[1], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;PPTO PROGRAMADO (REVERTIDO) : <small>'.number_format($monto[2], 2, ',', '.').'</small>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;SALDO : <small>'.number_format($monto[3], 2, ',', '.').'</small></b></h1>';
         }
 
-        if($monto[3]>1){
+        if($tp==1){
+          if($monto[3]>1){
             $tabla.='
             <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default" title="NUEVO REGISTRO">
               <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>NUEVO REGISTRO (FORM. N 5)</b>
@@ -272,6 +273,8 @@ class Modificacionpoa extends CI_Controller{
               <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="25" HEIGHT="20"/>&nbsp;<b>SUBIR REQUERIMIENTOS.CSV </b>
             </a>';
           }
+        }
+        
       return $tabla;
     }
 
@@ -1041,7 +1044,7 @@ class Modificacionpoa extends CI_Controller{
 
     /*----- LISTA REQUERIMIENTOS POR SUBACTIVIDAD AUXILIAR (2022) en casos de que sean muchos requerimientos ------*/
     public function modificar_requerimientos_auxiliar($cite){
-      $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id']);
+      $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id'],$cite[0]['tipo_modificacion']);
       $tabla='';
       $total=0;
       $tabla.=' <input type="hidden" name="base" value="'.base_url().'">
@@ -1089,8 +1092,10 @@ class Modificacionpoa extends CI_Controller{
                   $color_tr=''; $dis=''; $title='title="REQUERIMIENTO"';
                   $monto_cert=0;$valor_mod=0; $valor_delete=0;
                   $tp_mod_registro='<div style="color:blue"><b>REG. x POA</b></div>';
+                  $tp_mod_color='';
                   if($row['ins_tipo_modificacion']==1){
-                    $tp_mod_registro='<div style="color:green"><b>REG. x REV.</b></div>';
+                    $tp_mod_registro='<div style="color:F5AB39"><b>REG. x REV.</b></div>';
+                    $tp_mod_color='';
                   }
 
 
@@ -1211,7 +1216,7 @@ class Modificacionpoa extends CI_Controller{
 
     /*----- LISTA REQUERIMIENTOS POR SUBACTIVIDAD COMPLETO (2022) ------*/
     public function modificar_requerimientos($cite){
-      $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id']);
+      $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id'],$cite[0]['tipo_modificacion']);
 
       $tabla='';
       $total=0;
@@ -1268,9 +1273,9 @@ class Modificacionpoa extends CI_Controller{
                     }
                   }
 
-                  $tp_mod_registro='<div style="color:blue"><b>POA</b></div>';
+                  $tp_mod_registro='<div style="color:blue"><b>REG. x POA</b></div>';
                   if($row['ins_tipo_modificacion']==1){
-                    $tp_mod_registro='<div style="color:yellow"><b>REV.</b></div>';
+                    $tp_mod_registro='<div style="color:#2BD6C7"><b>REG. x REV.</b></div>';
                   }
 
                   $cont++;

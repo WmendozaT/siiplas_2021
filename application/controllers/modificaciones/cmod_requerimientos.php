@@ -211,7 +211,6 @@ class Cmod_requerimientos extends CI_Controller {
       }
     }
 
-
     /*----------- Cite Techo Presupuestario -----------*/
     public function cite_techo($proy_id){
       $data['menu']=$this->menu(3); //// genera menu

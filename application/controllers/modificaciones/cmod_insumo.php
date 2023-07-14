@@ -158,7 +158,7 @@ class Cmod_insumo extends CI_Controller {
         $data['opciones']=$this->opciones_formulario_mod5($data['cite'],$proyecto);
         $data['style']=$this->style();
       
-          if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id']))>50){
+          if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id'],$data['cite'][0]['tipo_modificacion']))>50){
             if($this->fun_id==598){ /// exclusivo doctor muruchi
               $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2023
             }
@@ -193,16 +193,7 @@ class Cmod_insumo extends CI_Controller {
       <section id="widget-grid" class="well" title="'.$proyecto[0]['proy_id'].'">
         <div>
           '.$this->modificacionpoa->datos_cite($cite).'
-          '.$this->modificacionpoa->titulo_cabecera($cite).'';
-          /*if($monto[3]>1){
-            $tabla.='
-            <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default" title="NUEVO REGISTRO">
-              <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>NUEVO REGISTRO (FORM. N 5)</b>
-            </a>
-            <a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default importar_ff" title="SUBIR ARCHIVO EXCEL">
-              <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="25" HEIGHT="20"/>&nbsp;<b>SUBIR REQUERIMIENTOS.CSV </b>
-            </a>';
-          }*/
+          '.$this->modificacionpoa->titulo_cabecera($cite,1).'';
           $tabla.='
           <a href="'.site_url("").'/rep/exportar_requerimientos_servicio/'.$cite[0]['com_id'].'" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>DESCARGAR INFORMACION (EXCEL)</b></a>
         </div>
@@ -1790,7 +1781,7 @@ class Cmod_insumo extends CI_Controller {
       if(count($data['cite'])!=0){
         $data['menu']=$this->menu(3); //// genera menu
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
-        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']); /// CABECERA
+        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite'],0); /// CABECERA
         $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
 
         $data['datos_historial_cite_modificado']='';

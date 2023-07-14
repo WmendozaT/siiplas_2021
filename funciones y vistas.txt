@@ -1708,6 +1708,7 @@ cite_fecha timestamp,
 fecha_creacion timestamp,
 cite_estado integer,
 cite_activo integer,
+tipo_modificacion integer,
 fun_id integer,
 fun_nombre varchar,
 fun_paterno varchar,
@@ -1727,7 +1728,7 @@ aper_gestion integer) AS
 
 $$
 
-select ci.cite_id,ci.com_id,ci.cite_codigo, ci.cite_nota, ci.cite_fecha, ci.fecha_creacion, ci.cite_estado,ci.cite_activo,f.fun_id,f.fun_nombre, f.fun_paterno,f.fun_materno,f.fun_usuario,
+select ci.cite_id,ci.com_id,ci.cite_codigo, ci.cite_nota, ci.cite_fecha, ci.fecha_creacion, ci.cite_estado,ci.cite_activo,ci.tipo_modificacion,f.fun_id,f.fun_nombre, f.fun_paterno,f.fun_materno,f.fun_usuario,
 c.pfec_id,c.com_componente,c.estado,sa.serv_id, sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad, pfe.proy_id,pfe.aper_id,pfe.pfec_estado,apg.aper_gestion
                 from cite_mod_requerimientos ci
                 Inner Join funcionario as f On ci.fun_id=f.fun_id

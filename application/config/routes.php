@@ -489,6 +489,8 @@ $route['mod/techo/(:any)'] = 'modificaciones/cmod_requerimientos/techo/$1'; ////
 $route['mod/rep_mod_techo/(:any)'] = 'modificaciones/cmod_requerimientos/reporte_techo/$1';  ///// Reporte Modificaciones Techo 2019
 //$route['mod/techo/(:any)'] = 'modificaciones/cmod_requerimientos/techo/$1'; //// Ver Modificacion de  Techo
 
+$route['mod/add_ppto_reversion/(:any)'] = 'modificaciones/cmod_presupuestario/form_ppto_revertido/$1'; //// add ppto x saldo revertidos 
+
 /*---- MODIFICACIÓN PRESUPUESTARIA 202-2021 -----*/
 $route['mod_ppto/list_mod_ppto'] = 'modificaciones/cmod_presupuestario/lista_mod_ppto'; //// Valida Cite Modificacion Presupuestaria
 $route['mod_ppto/delete_mod_ppto'] = 'modificaciones/cmod_presupuestario/delete_modificacion_presupuestaria';//// Elimina Modificacion Presupuestaria

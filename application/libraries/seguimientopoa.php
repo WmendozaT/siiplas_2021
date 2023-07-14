@@ -1613,8 +1613,8 @@ class Seguimientopoa extends CI_Controller{
         $this->eliminando_registro_evaluacion($row['prod_id'],$this->tmes);
         /// ----------
         $temporalidad=$this->obtiene_suma_temporalidad_prog_ejec($row['prod_id']);
-
-        if($row['indi_id']==2 & $row['mt_id']==1){ /// ==== RELATIVO RECURRENTE
+       // echo $row['indi_id'].'---'.$row['mt_id'].'<br>';
+        if($row['indi_id']==2 || ($row['mt_id']==1 || $row['mt_id']==5)){ /// ==== RELATIVO RECURRENTE
           
           if($temporalidad[1]==$temporalidad[2]){ /// Cumplido
             $this->insertando_datos($row['prod_id'],$this->tmes,1,1,'Trimestre Cumplido');
@@ -1626,10 +1626,10 @@ class Seguimientopoa extends CI_Controller{
         }
         else{ /// ==== ABSOLUTO
 
-        //$vector[1]=$acu_prog_actual; /// Suma Programado al trimestre Actual 
-        //$vector[2]=$acu_ejec_actual; /// Suma Ejecutado al trimestre Actual
-        //$vector[3]=$acu_prog_anterior; /// Suma Programado al trimestre Anterior
-        //$vector[4]=$acu_ejec_anterior; /// Suma Ejecutado al trimestre Anterior
+        //$temporalidad[1]=$acu_prog_actual; /// Suma Programado al trimestre Actual 
+        //$temporalidad[2]=$acu_ejec_actual; /// Suma Ejecutado al trimestre Actual
+        //$temporalidad[3]=$acu_prog_anterior; /// Suma Programado al trimestre Anterior
+        //$temporalidad[4]=$acu_ejec_anterior; /// Suma Ejecutado al trimestre Anterior
 
             /*----- Temporalidad Programado / Ejecutado -----*/
             if($temporalidad[1]!=0 & $temporalidad[4]<$row['prod_meta'] & $temporalidad[2]>0 & ($temporalidad[2]<=$temporalidad[1]) & (/*$temporalidad[1]!=$temporalidad[3] & */$temporalidad[2]!=$temporalidad[4])){
@@ -1671,7 +1671,6 @@ class Seguimientopoa extends CI_Controller{
                 }
               
             }  
-
         }  
       }
     

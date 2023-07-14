@@ -135,31 +135,31 @@ class Cmodificaciones extends CI_Controller {
             $dim=6;
           }
 
-              if($this->conf_mod_ope==1){
-                $tabla.='
-                <a onclick="cargar_informacion_form4()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 4 (ACTIVIDADES)" >
-                  <div class="well well-sm col-sm-'.$dim.'">
-                    <div class="well well-sm bg-color-teal txt-color-white text-center">
-                      <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 4 - '.$this->gestion.'</h5>
-                      <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                    </div>
+            if($this->conf_mod_ope==1){ /// conf mod actividades
+              $tabla.='
+              <a onclick="cargar_informacion_form4()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 4 (ACTIVIDADES)" >
+                <div class="well well-sm col-sm-'.$dim.'">
+                  <div class="well well-sm bg-color-teal txt-color-white text-center">
+                    <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 4 - '.$this->gestion.'</h5>
+                    <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
                   </div>
-                </a>';
-              }
+                </div>
+              </a>';
+            }
 
-              if($this->conf_mod_req==1){
-                $tabla.='
-                <a onclick="cargar_informacion_form5()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 5 (REQUERIMIENTOS)" >
-                  <div class="well well-sm col-sm-'.$dim.'">
-                    <div class="well well-sm bg-color-teal txt-color-white text-center">
-                      <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 5 - '.$this->gestion.'</h5>
-                      <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                    </div>
+            if($this->conf_mod_req==1){ /// conf mod requerimientos
+              $tabla.='
+              <a onclick="cargar_informacion_form5()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 5 (REQUERIMIENTOS)" >
+                <div class="well well-sm col-sm-'.$dim.'">
+                  <div class="well well-sm bg-color-teal txt-color-white text-center">
+                    <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR FORMULARIO N° 5 - '.$this->gestion.'</h5>
+                    <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
                   </div>
-                </a>';
-              }
+                </div>
+              </a>';
+            }
 
-            if(count($saldos_revertidos_partidas)!=0){
+            if(count($saldos_revertidos_partidas)!=0){ /// conf requerimientos por reversion de presupuesto
               $tabla.='
               <a onclick="cargar_informacion_form5_revertido()" class="ruta" title="MODIFICACION DEL FORMULARIO N° 5 (REQUERIMIENTOS) SALDOS REVERTIDOS" >
                 <div class="well well-sm col-sm-'.$dim.'">
@@ -170,6 +170,16 @@ class Cmodificaciones extends CI_Controller {
                 </div>
               </a>';
             }
+
+            $tabla.='
+            <a onclick="cargar_ppto_reversion()" class="ruta" title="REGISTRAR SALDOS REVERTIDOS" >
+              <div class="well well-sm col-sm-'.$dim.'">
+                <div class="well well-sm bg-color-yellow txt-color-white text-center">
+                  <h5 style="font-weight: bold;font-style: italic;color: white">ASIGNAR PPTO POR REVERSIÓN DE SALDOS - '.$this->gestion.'</h5>
+                  <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
+                </div>
+              </div>
+            </a>';
         }
 
         $tabla.='
@@ -190,6 +200,10 @@ class Cmodificaciones extends CI_Controller {
               document.getElementById("loading").style.display = "block";
               window.location="'.site_url("").'/mod/cite_techo/'.$proy_id.'"
             }
+            function cargar_ppto_reversion(){
+              document.getElementById("loading").style.display = "block";
+              window.location="'.site_url("").'/mod/add_ppto_reversion/'.$proy_id.'"
+            }
           </script>
           <br>
           <div id="loading" style="display: none; text-align:center; color:blue"><b>CARGANDO INFORMACION .....</b></div>';
@@ -199,9 +213,6 @@ class Cmodificaciones extends CI_Controller {
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
-          //'proyecto'=>$proyecto,
-          //'titulo_poa'=>$titulo_poa,
-          //'caratula'=>$caratula_poa,
         );
           
         echo json_encode($result);
@@ -307,7 +318,7 @@ class Cmodificaciones extends CI_Controller {
             $codigo='<font color=blue><b>'.$cit['cite_codigo'].'</b></font>';
             if($cit['cite_estado']==0){
               $color='#fbdfdf';
-              $codigo='<font color=red><b>SIN CÓDIGO</b></font>';
+              $codigo='<font color=red><b>SIN CÓDIGO DE MODIFICACIÓN</b></font>';
             }
 
               $nro++;
@@ -316,8 +327,14 @@ class Cmodificaciones extends CI_Controller {
                 $tabla .='<td><b>'.$cit['cite_nota'].'</b></td>';
                 $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
                 $tabla .='<td>'.$codigo.'</td>';
-                $tabla .='<td>'.$cit['com_componente'].'</td>';
-                $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/rep_mod_financiera/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE REQUERIMIENTOS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
+                $tabla .='<td><font size=1.5px;><b>'.$cit['tipo_subactividad'].' '.$cit['serv_descripcion'].'</b></font></td>';
+                if($cit['tipo_modificacion']==0){
+                  $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/rep_mod_financiera/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE REQUERIMIENTOS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
+                }
+                else{
+                  $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/rep_mod_financiera/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE REQUERIMIENTOS POR REVERSION"><img src="'.base_url().'assets/ifinal/rep_pdf.png" WIDTH="33" HEIGHT="28"/><br><b>REVERSIÓN<br>POA</b></a></td>';
+                }
+                
                 $tabla .='<td align="center">';
                   if($this->conf_mod_req==1 || $this->tp_adm==1){
                     $tabla .='<a href="'.base_url().'index.php/mod/update_cite/'.$cit['cite_id'].'" id="myBtn'.$cit['cite_id'].'" title="MODIFICAR CITE"><img src="'.base_url().'assets/ifinal/form1.jpg" width="30" height="30"/></a><br>
