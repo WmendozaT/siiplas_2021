@@ -1348,13 +1348,14 @@ class Genera_informacion extends CI_Controller{
           <tr align=center bgcolor=#f4f4f4>
             <th style="width:3%;height:2%;">#</th>
             <th style="width:20%;">UNIDAD RESPONSABLE</th>
-            <th style="width:8%;">TOTAL PROGRAMADO</th>
-            <th style="width:8%;">TOTAL EVALUADO</th>
-            <th style="width:8%;">TOTAL CUMPLIDOS</th>
-            <th style="width:8%;">EN PROCESO</th>
-            <th style="width:8%;">NO CUMPLIDOS</th>
-            <th style="width:8%;">% CUMPLIDO</th>
-            <th style="width:8%;">% NO CUMPLIDO</th>
+            <th style="width:6%;">TOTAL PROG.</th>
+            <th style="width:6%;">TOTAL EVAL.</th>
+            <th style="width:6%;">TOTAL CUMP.</th>
+            <th style="width:6%;">EN PROCESO</th>
+            <th style="width:6%;">NO CUMP.</th>
+            <th style="width:6%;">% CUMP.</th>
+            <th style="width:6%;">% NO CUMP.</th>
+            <th style="width:12%;">REP. EVAL. POA</th>
           </tr>
           </thead>
           <tbody>';
@@ -1375,9 +1376,27 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='<td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$eval[6][$this->tmes].'%</b></button></td>';
               }
               else{
-                $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[5][$this->tmes].'%</b></td>';
-                $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[6][$this->tmes].'%</b></td>';
+                $tabla.='<td align=right style="font-size: 6px;"><b>'.$eval[5][$this->tmes].'%</b></td>';
+                $tabla.='<td align=right style="font-size: 6px;"><b>'.$eval[6][$this->tmes].'%</b></td>';
               }
+              $tabla.='
+              <td style="height:12%;" align=center>
+                <div class="btn-group">
+                  <a class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_cascade.png" WIDTH="25" HEIGHT="25"/></a>
+                  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                  <ul class="dropdown-menu">';
+                    for ($i=1; $i <$this->tmes; $i++) { 
+                      $trimestre=$this->model_evaluacion->get_trimestre($i); /// Datos del Trimestre
+                      $tabla.='
+                      <li>
+                        <a href="javascript:abreVentana(\''.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$rowc['com_id'].'/'.$i.'\');" >'.$trimestre[0]['trm_descripcion'].'</a>
+                      </li>';
+                    }
+                  
+                  $tabla.='
+                  </ul>
+                </div>
+              </td>';
             $tabla.='</tr>';
           }
         $tabla.='
@@ -1614,7 +1633,7 @@ class Genera_informacion extends CI_Controller{
           width: 40% !important;
         }
         #evaluacion{
-          width: 80% !important;
+          width: 85% !important;
         }
           input[type="checkbox"] {
           display:inline-block;

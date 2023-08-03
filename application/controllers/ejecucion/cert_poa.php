@@ -704,7 +704,7 @@ class Cert_poa extends CI_Controller {
         $ins_id = $this->security->xss_clean($post['ins_id']);
         $cpoaa_id = $this->security->xss_clean($post['cpoaa_id']);
         $cert_editado=$this->model_certificacion->get_cert_poa_editado($cpoaa_id); /// Datos de la Certificacion Anulado
-        $cpoa=$this->model_certificacion->get_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
+        $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
 
         $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos 
         

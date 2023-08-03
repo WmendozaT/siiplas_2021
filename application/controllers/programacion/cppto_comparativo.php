@@ -389,15 +389,14 @@ class Cppto_comparativo extends CI_Controller {
           $monto_prog_rev=0;
 
           foreach($partidas_asig as $row){
-            $part_prog=$this->model_ptto_sigep->get_partida_prog_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
+            $part_prog=$this->model_ptto_sigep->get_partida_prog_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']); /// poa programado
             $ppto_poa_revertido=$this->model_ptto_sigep->get_ppto_poa_partida_x_reversion($proyecto[0]['aper_id'],$row['par_id']); /// ppto poa revertido poa prtida
 
-            $prog=0; $ppto_revertido=0;
+            $prog=0; 
             if(count($part_prog)!=0){
-              $prog=$part_prog[0]['ppto_programado'];
-              $ppto_revertido=$part[0]['ppto_revertido'];
+              $prog=$part_prog[0]['ppto_programado']; // poa programado
             }
-            $dif_ppto=($row['ppto_asignado']-$prog);
+            $dif_ppto=($row['ppto_asignado']-$prog); /// poa Normal
            
             $color='';
             $sig='';
@@ -412,6 +411,16 @@ class Cppto_comparativo extends CI_Controller {
             }
 
             ////------- poa revertivo inscrito en el poa
+            $ppto_asig_revertido=$this->model_ptto_sigep->suma_saldo_revertido($row['sp_id']); // ppto asignado revertido
+            $ppto_revertido=0;
+            if(count($ppto_asig_revertido)!=0){
+              $ppto_revertido=$ppto_asig_revertido[0]['saldo'];
+            }
+
+
+            /// ---------------------------------------
+
+
             $ppto_poa_revert=0;
             if(count($ppto_poa_revertido)!=0){
               $ppto_poa_revert=$ppto_poa_revertido[0]['monto_programado_revertido'];
@@ -429,9 +438,9 @@ class Cppto_comparativo extends CI_Controller {
             $tabla .='
               <tr class="modo1">
                 <td style="width: 3%;height:11px; text-align: center" bgcolor='.$color.'>'.$nro.'</td>
-                <td style="width: 10%; text-align: center;" bgcolor='.$color.'>'.$row['codigo'].'</td>
-                <td style="width: 35%; text-align: left;" bgcolor='.$color.'>'.$row['nombre'].'</td>
-                <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.number_format($row['monto'], 2, ',', '.').'</td>
+                <td style="width: 8%; text-align: center;" bgcolor='.$color.'>'.$row['codigo'].'</td>
+                <td style="width: 20%; text-align: left;" bgcolor='.$color.'>'.$row['nombre'].'</td>
+                <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.number_format($row['ppto_asignado'], 2, ',', '.').'</td>
                 <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.number_format($prog, 2, ',', '.').'</td>
                 <td style="width: 12%; text-align: right;" bgcolor='.$color.'>'.$sig.''.number_format($dif_ppto, 2, ',', '.').'</td>
 
@@ -440,7 +449,7 @@ class Cppto_comparativo extends CI_Controller {
                 <td style="width: 12%; text-align: right; '.$color_rev.'" bgcolor="#EFF8FB"><b>'.number_format($dif_ppto_rev, 2, ',', '.').'</b></td>
             
               </tr>';
-            $monto_asig=$monto_asig+$row['monto'];
+            $monto_asig=$monto_asig+$row['ppto_asignado'];
             $monto_prog=$monto_prog+$prog; 
 
             $monto_asig_rev=$monto_asig_rev+$ppto_revertido;
@@ -611,7 +620,7 @@ class Cppto_comparativo extends CI_Controller {
             if(count($part)!=0){
               $ppto_asig=($part[0]['ppto_asignado']-$part[0]['ppto_revertido']);
             }
-            $dif=($asig-$row['monto']);
+            $dif=($ppto_asig-$row['monto']);
             $color='';
             $sig='';
             if($dif!=0){
@@ -633,7 +642,7 @@ class Cppto_comparativo extends CI_Controller {
                       <td style="width: 15%; text-align: right;">'.number_format($row['monto'], 2, ',', '.').'</td>
                       <td style="width: 15%; text-align: right;">'.$sig.''.number_format($dif, 2, ',', '.').'</td>
                     </tr>';
-          $monto_asig=$monto_asig+$asig;
+          $monto_asig=$monto_asig+$ppto_asig;
           $monto_prog=$monto_prog+$row['monto'];
           }  
         }

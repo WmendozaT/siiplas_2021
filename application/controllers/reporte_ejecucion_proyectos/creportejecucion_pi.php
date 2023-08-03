@@ -3,7 +3,7 @@ class Creportejecucion_pi extends CI_Controller {
   public $rol = array('1' => '1','2' => '11'); 
   public function __construct (){
     parent::__construct();
-    if($this->session->userdata('fun_id')!=null){
+    if($this->session->userdata('fun_id')!=null && ($this->session->userdata('fun_id')!=415 || $this->session->userdata('fun_id')!=1076 || $this->session->userdata('fun_id')!=1302)){
         $this->load->model('Users_model','',true);
         if($this->rolfun($this->rol)){ 
           $this->load->library('pdf2');

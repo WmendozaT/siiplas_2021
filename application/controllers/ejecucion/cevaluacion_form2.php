@@ -310,20 +310,19 @@ class Cevaluacion_form2 extends CI_Controller {
       $data['nro']=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
       $data['eval']=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);      
       $data['cabecera']=$this->eval_oregional->cabecera_reporte_grafico($data['regional']);
-      $data['calificacion']=$this->eval_oregional->calificacion_total_form2_regional($dep_id);
+      $data['calificacion']=$this->eval_oregional->calificacion_total_form2_regional($dep_id,1);
 
       
       $tabla='';
       $tabla.='<div style="font-family: Arial;">DETALLE DE OPERACIONES REGIONALES '.$this->gestion.'</div>
-              <ul>';
+              <table>';
                 for ($i=0; $i <$data['nro'] ; $i++) { 
-                  $tabla.='<li style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$data['eval'][$i][0].'.'.$data['eval'][$i][1].'.- '.$data['eval'][$i][2].' - <b>'.$data['eval'][$i][4].' %</b></li>';
+                  $tabla.='<tr><td style="font-family: Arial;font-size: 11px;height: 1%;">OPE. '.$data['eval'][$i][0].'.'.$data['eval'][$i][1].'.- '.$data['eval'][$i][2].' - <b>'.$data['eval'][$i][4].' %</b></td></tr>';
                 }
                 $tabla.='
-              </ul>
+              </table>
               <hr>';
       $data['tabla_detalle']=$tabla;
-
 
       $this->load->view('admin/evaluacion/evaluacion_form2/reporte_grafico_meta_form2', $data);
 

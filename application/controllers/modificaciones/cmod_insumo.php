@@ -36,16 +36,13 @@ class Cmod_insumo extends CI_Controller {
     }
 
     /*----- cite Servicios de Unidad  ------*/
-    public function cite_servicios($proy_id,$tp){
+    public function cite_servicios($proy_id){
       /// tp 0: Modificacion POA
       /// tp 1: Modificacion POA (Reversion de saldos)
       $data['menu']=$this->menu(3); //// genera menu
       $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
-      $data['tp_mod']=$tp;
+      $data['tp_mod']=0;
       $data['titulo_cite']='';
-      if($tp==1){
-        $data['titulo_cite']='REVERSION DE SALDOS';
-      }
 
       if(count($data['proyecto'])!=0){
         if($data['proyecto'][0]['tp_id']==1){
@@ -59,7 +56,7 @@ class Cmod_insumo extends CI_Controller {
         }
 
         $data['titulo']=$titulo;
-        $data['tabla']=$this->modificacionpoa->lista_unidades_responsables($data['proyecto'],$tp);
+        $data['tabla']=$this->modificacionpoa->lista_unidades_responsables($data['proyecto']);
         $this->load->view('admin/modificacion/requerimientos/cite_servicio', $data); 
       }
       else{
@@ -566,7 +563,7 @@ class Cmod_insumo extends CI_Controller {
           $cpoaa_id = $this->security->xss_clean($post['cpoaa_id']); /// cpoaa_id de la anulacion
 
           $cert_editado=$this->model_certificacion->get_cert_poa_editado($cpoaa_id); /// Datos de la Certificacion Anulado
-          $cpoa=$this->model_certificacion->get_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
+          $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
           $detalle_cert=$this->model_certificacion->get_certificado_poa_detalle($cpoa[0]['cpoa_id'],$ins_id); /// item certificado
 
           $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos 
@@ -687,7 +684,7 @@ class Cmod_insumo extends CI_Controller {
         $post = $this->input->post();
           $cpoaa_id = $this->security->xss_clean($post['cpoaa_id']); /// cpoaa_id
           $cert_editado=$this->model_certificacion->get_cert_poa_editado($cpoaa_id); /// Datos de la Certificacion Anulado
-          $cpoa=$this->model_certificacion->get_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
+          $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
 
           $tipo = $_FILES['archivo']['type'];
           $tamanio = $_FILES['archivo']['size'];
@@ -877,7 +874,24 @@ class Cmod_insumo extends CI_Controller {
     public function reporte_modificacion_financiera($cite_id){
     $data['cite']=$this->model_modrequerimiento->get_cite_insumo($cite_id);
     if(count($data['cite'])!=0){ /// Nuevo formato de Reporte
-      if($this->fecha_entrada<strtotime($data['cite'][0]['cite_fecha'])){
+
+        $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],2);
+
+        if($data['cite'][0]['tp_reporte']==0){ /// rep anterior
+          $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id); /// anterior reporte
+        }
+        else{
+         $data['items_modificados']=$this->modificacionpoa->items_modificados_form5_historial($cite_id,1); //// Nuevo Reporte
+        }
+        
+        $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
+        $data['pie_rep']='MOD_POA_FORM5_'.$data['cite'][0]['cite_nota'].' de '.date('d-m-Y',strtotime($data['cite'][0]['cite_fecha'])).' - '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].' - '.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
+
+        $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
+
+
+
+/*      if($this->fecha_entrada<strtotime($data['cite'][0]['cite_fecha'])){
         $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],2);
 
         if($data['cite'][0]['tp_reporte']==0){ /// rep anterior
@@ -922,7 +936,7 @@ class Cmod_insumo extends CI_Controller {
         $data['mes'] = $this->mes_nombre();
         $data['requerimientos']=$this->rep_requerimiento($cite_id); /// listado antiguo
         $this->load->view('admin/modificacion/requerimientos/reporte_modificacion_requerimientos', $data);
-      }
+      }*/
     }
     else{
       echo "Error !!!";

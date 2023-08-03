@@ -383,4 +383,41 @@ class Model_seguimientopoa extends CI_Model{
     $query = $this->db->query($sql);
     return $query->result_array();
     }
+
+
+
+    //// EVALUACION POA COMVINADO A SEGUIMIENTO POA
+    /*------------- Rango Trimestre actual programado -----------------*/
+    public function rango_programado_trimestre_actual($prod_id,$trimestre){
+      $vfinal=0;
+      if($trimestre==0){$vinicial=0;$vfinal=0;}
+      elseif($trimestre==1){$vinicial=0;$vfinal=3;}
+      elseif ($trimestre==2) {$vinicial=3;$vfinal=6;}
+      elseif ($trimestre==3) {$vinicial=6;$vfinal=9;}
+      elseif ($trimestre==4) {$vinicial=9;$vfinal=12;}
+
+        $sql = 'select prod_id,(CASE WHEN sum(pg_fis)!=0 THEN sum(pg_fis) ELSE 0 END) as trimestre, g_id
+                from prod_programado_mensual
+                where prod_id='.$prod_id.' and (m_id>'.$vinicial.' and m_id<='.$vfinal.') and g_id='.$this->gestion.'
+                GROUP BY prod_id,g_id';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*------------- Rango Trimestre actual ejecutado -----------------*/
+    public function rango_ejecutado_trimestre_actual($prod_id,$trimestre){
+      $vfinal=0;
+      if($trimestre==0){$vinicial=0;$vfinal=0;}
+      elseif($trimestre==1){$vinicial=0;$vfinal=3;}
+      elseif ($trimestre==2) {$vinicial=3;$vfinal=6;}
+      elseif ($trimestre==3) {$vinicial=6;$vfinal=9;}
+      elseif ($trimestre==4) {$vinicial=9;$vfinal=12;}
+
+    $sql = 'select prod_id,(CASE WHEN sum(pejec_fis)!=0 THEN sum(pejec_fis) ELSE 0 END) as trimestre, g_id
+            from prod_ejecutado_mensual
+            where prod_id='.$prod_id.' and (m_id>'.$vinicial.' and m_id<='.$vfinal.') and g_id='.$this->gestion.'
+            GROUP BY prod_id,g_id';
+    $query = $this->db->query($sql);
+    return $query->result_array();
+    }
 }

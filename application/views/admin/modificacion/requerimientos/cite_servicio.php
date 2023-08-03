@@ -21,7 +21,7 @@
 		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
 		<!--para las alertas-->
     	<meta name="viewport" content="width=device-width">
-		<style>
+<!-- 		<style>
 			table{font-size: 10px;
             width: 100%;
             max-width:1550px;;
@@ -32,7 +32,7 @@
               text-align: center;
               font-size: 10px;
             }
-		</style>
+		</style> -->
 	</head>
 	<body class="">
 		<!-- HEADER -->
@@ -114,8 +114,8 @@
 			<div class="row">
 				<article class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 					<section id="widget-grid" class="well">
-						<h2><b> REGISTRO DE NOTA PARA LA MODIFICACION FORM. N° 5 - GESTI&Oacute;N <?php echo $this->session->userData('gestion') ?><b></h2>
-						<?php echo $titulo;?>
+						<h2><b> REGISTRO CITE NOTA PARA LA MODIFICACION FORM. N° 5 - GESTI&Oacute;N <?php echo $this->session->userData('gestion').'<br>'.$titulo; ?></b>
+						</h2>
 					</section>
 				</article>
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
@@ -125,21 +125,10 @@
         </article>
 			</div>
 			<div class="row">
-				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<div class="jarviswidget jarviswidget-color-darken">
-            <header>
-              <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-              <h2 class="font-md"><strong></strong></h2>  
-            </header>
-						<div>
-							<div class="widget-body no-padding">
-								<?php echo $tabla; ?>
-							</div>
-							<!-- end widget content -->
-						</div>
-						<!-- end widget div -->
-					</div>
-					<!-- end widget -->
+				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
+				</article>
+				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+					<?php echo $tabla;?>
 				</article>
 				
 			</div>
@@ -166,20 +155,18 @@
 	                        &times;
 	                    </button>
 	                    <h4 class="modal-title text-center text-info">
-	                        <b>INGRESAR DATOS DE CITE</b>
-	                        <br><?php echo $titulo_cite; ?>
+	                        <div id="titulo"></div>
 	                    </h4>
 	                </div>
 	                <div class="modal-body no-padding">
 	                    <div class="row">
 	                        <div id="bootstrap-wizard-1" class="col-sm-12">
-	                        	<div class="well">
 	                        		<form action="<?php echo site_url().'/modificaciones/cmod_insumo/valida_cite_modificacion'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
-															   	<input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-															   	<input type="hidden" name="tp_mod" id="tp_mod" value="<?php echo $tp_mod;?>">
-															   	<input type="hidden" name="com_id" id="com_id">
+															  <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
+															  <input type="hidden" name="tp_mod" id="tp_mod">
+															  <input type="hidden" name="com_id" id="com_id">
 
-															   	<fieldset>
+															  <fieldset>
 																	<section>
 																		<div class="row">
 																			<label class="label col col-2">CITE</label>
@@ -207,8 +194,7 @@
 																	<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
 																</footer>
 																<center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="35" height="35"></center></td>
-															</form>	
-														</div>
+															</form>
 	                        </div>
 	                    </div>
 	                </div>
@@ -287,38 +273,47 @@
 		$(function () {
 			$(".nuevo_ff").on("click", function (e) {
 				com_id = $(this).attr('name');
-		        document.getElementById("com_id").value=com_id;
+				tp = $(this).attr('id');
+		    document.getElementById("com_id").value=com_id;
+		    document.getElementById("tp_mod").value=tp;
+		    
+		    if(tp==0){
+		    	$('#titulo').html('<center><b>REGISTRE NOTA CITE</b></center>');
+		    }
+		    else{
+		    	$('#titulo').html('<center><b>REGISTRE NOTA CITE</b><br><div style=color:#BDAA1F;><b>REVERSION DE SALDOS</b></div></center>');
+		    }
 
 		    $("#add_form").on("click", function () {
 		    	var $validator = $("#form_nuevo").validate({
-		                rules: {
-		                    cite: { //// Cite
-		                        required: true,
-		                    },
-		                    fm: { //// Fecha de Solicitud
-		                        required: true,
-		                    }
-		                },
-		                messages: {
-		                    cite: "<font color=red>REGISTRE CITE</font>",
-		                    fm: "<font color=red>SELECCIONE FECHA</font>",		                    
-		                },
-		                highlight: function (element) {
-		                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-		                },
-		                unhighlight: function (element) {
-		                    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-		                },
-		                errorElement: 'span',
-		                errorClass: 'help-block',
-		                errorPlacement: function (error, element) {
-		                    if (element.parent('.input-group').length) {
-		                        error.insertAfter(element.parent());
-		                    } else {
-		                        error.insertAfter(element);
-		                    }
-		                }
-		            });
+              rules: {
+                cite: { //// Cite
+                    required: true,
+                },
+                fm: { //// Fecha de Solicitud
+                    required: true,
+                }
+              },
+              messages: {
+                cite: "<font color=red>REGISTRE CITE</font>",
+                fm: "<font color=red>SELECCIONE FECHA</font>",		                    
+              },
+              highlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+              },
+              unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+              },
+              errorElement: 'span',
+              errorClass: 'help-block',
+              errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+              }
+            });
 
 		        var $valid = $("#form_nuevo").valid();
 		        if (!$valid) {
@@ -327,17 +322,17 @@
 		        	fecha = document.getElementById('fm').value;
 		            if(validarFormatoFecha(fecha)){
 					      if(existeFecha(fecha)){
-					            alertify.confirm("DESEA INGRESAR A REALIZAR LA MODIFICACI\u00D3N DE REQUERIMIENTOS ?", function (a) {
-				                    if (a) {
-				                        document.getElementById("load").style.display = 'block';
-				                        document.getElementById('add_form').disabled = true;
-				                        document.forms['form_nuevo'].submit();
-				                    } else {
-				                        alertify.error("OPCI\u00D3N CANCELADA");
-				                    }
-				                });
+		            	alertify.confirm("DESEA INGRESAR A REALIZAR LA MODIFICACI\u00D3N DE REQUERIMIENTOS ?", function (a) {
+                    if (a) {
+                        document.getElementById("load").style.display = 'block';
+                        document.getElementById('add_form').disabled = true;
+                        document.forms['form_nuevo'].submit();
+                    } else {
+                        alertify.error("OPCI\u00D3N CANCELADA");
+                    }
+	                });
 					      }else{
-					            alertify.error("La fecha introducida no existe.");
+					         alertify.error("La fecha introducida no existe.");
 					      }
 					}else{
 					      alertify.error("El formato de la fecha es incorrecto.");

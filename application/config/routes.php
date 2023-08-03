@@ -489,7 +489,8 @@ $route['mod/techo/(:any)'] = 'modificaciones/cmod_requerimientos/techo/$1'; ////
 $route['mod/rep_mod_techo/(:any)'] = 'modificaciones/cmod_requerimientos/reporte_techo/$1';  ///// Reporte Modificaciones Techo 2019
 //$route['mod/techo/(:any)'] = 'modificaciones/cmod_requerimientos/techo/$1'; //// Ver Modificacion de  Techo
 
-$route['mod/add_ppto_reversion/(:any)'] = 'modificaciones/cmod_presupuestario/form_ppto_revertido/$1'; //// add ppto x saldo revertidos 
+$route['mod/add_ppto_reversion/(:any)'] = 'modificaciones/cmod_presupuestario/form_ppto_revertido/$1'; //// formulario para saldos revertidos 
+$route['mod/form_reporte_revertido/(:any)'] = 'modificaciones/cmod_presupuestario/form_reporte_revertido/$1'; //// reporte para saldos revertidos 
 
 /*---- MODIFICACIÓN PRESUPUESTARIA 202-2021 -----*/
 $route['mod_ppto/list_mod_ppto'] = 'modificaciones/cmod_presupuestario/lista_mod_ppto'; //// Valida Cite Modificacion Presupuestaria
@@ -501,7 +502,7 @@ $route['mod_ppto/ver_partidas_mod/(:any)'] = 'modificaciones/cmod_presupuestario
 
 
 /*------------- MODIFICAR REQUERIMIENTOS (2020)------------*/
-$route['mod/form5/(:any)'] = 'modificaciones/cmod_insumo/cite_servicios/$1/$2'; //// Lista cite de Unidades Responsables
+$route['mod/form5/(:any)'] = 'modificaciones/cmod_insumo/cite_servicios/$1'; //// Lista cite de Unidades Responsables
 $route['mod/list_requerimientos/(:any)'] = 'modificaciones/cmod_insumo/mis_requerimientos/$1'; //// Lista de Requerimientos
 $route['mod/del_select_ins/(:any)'] = 'modificaciones/cmod_insumo/elimina_requerimientos_producto_actividad/$1'; //// Elimina Requerimientos Seleccionados (2020)
 $route['mod/rep_mod_financiera/(:any)'] = 'modificaciones/cmod_insumo/reporte_modificacion_financiera/$1';  ///// Reporte Modificaciones Financiera 2020

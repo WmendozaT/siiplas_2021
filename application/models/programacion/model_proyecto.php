@@ -1446,6 +1446,40 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }
 
+    ///// LISTADO DE PROYECTOS DE INVERSION APROBADOS SEGUN EL TIPO DE RESPONSABLE
+    public function listado_proyectos_inversion_aprobados_segun_tipo_responsable(){ /// aprobados
+        $dep=$this->dep_dist($this->dist);
+
+        if($this->adm==1){ /// Nacional
+                $sql = '
+                select *
+                from lista_poa_pinversion_nacional('.$this->gestion.')
+                order by dep_id, dist_id, proy_id asc';
+        }
+        else{
+            if($this->dist_tp==1){ /// Regional
+                $sql = '
+                select *
+                from lista_poa_pinversion_nacional('.$this->gestion.')
+                where dep_id='.$dep[0]['dep_id'].'
+                order by dep_id, dist_id, proy_id asc';
+            }
+            else{
+                $sql = '
+                select *
+                from lista_poa_pinversion_nacional('.$this->gestion.')
+                where dep_id='.$dep[0]['dep_id'].' and dist_id='.$this->dist.'
+                order by dep_id, dist_id, proy_id asc';
+            }
+        }
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
     /*-------- LISTA PROYECTOS DE INVERSION funcion INSTITUCIONAL--------*/
     public function list_proy_inversion(){ /// aprobados Institucional
         $sql = 'select *
@@ -1465,25 +1499,24 @@ class Model_proyecto extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*-------- LISTA PROYECTOS DE INVERSION POR REGIONAL --------*/
+    public function list_proy_inversion_regional($dep_id){ /// aprobados
+        $sql = '
+            select *
+            from lista_poa_pinversion_nacional('.$this->gestion.')
+            where dep_id='.$dep_id.'
+            order by dep_id, dist_id, proy_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*-------- GET PROYECTOS DE INVERSION (Aprobado)--------*/
     public function get_proyecto_inversion($proy_id){ /// aprobados Institucional
         $sql = 'select *
                 from lista_poa_pinversion_nacional('.$this->gestion.')
                 where proy_id='.$proy_id.'';
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
-
-    /*-------- LISTA PROYECTOS DE INVERSION POR REGIONAL --------*/
-    public function list_proy_inversion_regional($dep_id){ /// aprobados
-        $sql = 'select *
-                from lista_poa_pinversion_nacional('.$this->gestion.')
-                where dep_id='.$dep_id.'
-                order by proy_id, dep_id, dist_id asc';
-
-        /*$sql = 'select *
-                from lista_poa_pinversion_regional('.$dep_id.','.$this->gestion.')
-                order by proy_id,dep_id, dist_id asc';*/
         $query = $this->db->query($sql);
         return $query->result_array();
     }

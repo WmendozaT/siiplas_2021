@@ -162,7 +162,6 @@ class Cmod_presupuestario extends CI_Controller {
     else{
       echo "Error !!!";
     }
-    
   }
 
 
@@ -199,10 +198,10 @@ class Cmod_presupuestario extends CI_Controller {
                 </thead>
                 <tbody>';
                 foreach ($partidas as $row){
-                  $partida_actual=$this->model_ptto_sigep->get_partida_asig_accion($row['dep_id'],$row['aper_id'],$row['par_id']);
+                  $partida_actual=$this->model_ptto_sigep->get_ppto_partida_asig_unidad($row['dep_id'],$row['aper_id'],$row['par_id']);
                   $presupuesto_actual_registrado=0;
                   if(count($partida_actual)!=0){
-                    $presupuesto_actual_registrado=$partida_actual[0]['monto'];
+                    $presupuesto_actual_registrado=$partida_actual[0]['ppto_asignado'];
                   }
 
                   if($tp==0){
@@ -779,7 +778,6 @@ class Cmod_presupuestario extends CI_Controller {
 
     /*----- formulario para ppto por saldo revertidos -----*/
     public function form_ppto_revertido($proy_id){
-      
       /// tp 0: Modificacion POA
       /// tp 1: Modificacion POA (Reversion de saldos)
       $data['menu'] = $this->menu->genera_menu(); //// genera menu
@@ -798,8 +796,7 @@ class Cmod_presupuestario extends CI_Controller {
         $data['titulo']=$titulo;
 
 
-
-        $lista_certpoa=$this->model_certificacion->get_lista_certificacion_poa_unidad($proy_id);
+        $lista_certpoa=$this->model_certificacion->get_lista_certificacion_poa_unidad_no_revertidos($proy_id); /// lista certificacion para reversion
         $tabla='';
         $tabla.='
             <article class="col-sm-12 col-md-12 col-lg-5">
@@ -818,9 +815,9 @@ class Cmod_presupuestario extends CI_Controller {
                       <form class="form-horizontal" id="formulario">
                         <input type="hidden" id="proy_id" name="proy_id" value="'.$proy_id.'">
                         <fieldset>
-                          <legend>Seleccion de Informacion</legend>
+                          <legend>Seleccione la siguiente informacion :</legend>
                           <div class="form-group">
-                            <label class="col-md-3 control-label">Seleccione Certificacion POA</label>
+                            <label class="col-md-3 control-label"><b>Seleccione Certificacion POA</b></label>
                             <div class="col-md-9">
                               <select class="select2" id="certpoa" name="certpoa">
                                 <option value="0">Seleccione Certificacion POA...</option>';
@@ -833,15 +830,14 @@ class Cmod_presupuestario extends CI_Controller {
                           </div>
                           
                           <div class="form-group">
-                            <label class="col-md-3 control-label">Certificación Presupuestaria </label>
+                            <label class="col-md-3 control-label"><b>Certificación Presupuestaria</b></label>
                             <div class="col-md-9">
-                              <input type="text" id="certppto" name="certppto" class="form-control" data-mask="999999-999999-'.$this->gestion.'" data-mask-placeholder= "X">
+                              <input type="text"  class="form-control" data-mask="999999-999999-'.$this->gestion.'" data-mask-placeholder= "X" id="certpptos" name="certpptos">
                                 <p class="note">
                                   Datos a registrar XXXXXX-XXXXXX-'.$this->gestion.'
                                 </p>
                             </div>
                           </div>
-                          
                         </fieldset>
 
                         <div class="form-actions" id="boton">
@@ -922,50 +918,58 @@ class Cmod_presupuestario extends CI_Controller {
                   </div>
                   <div class="widget-body">
 
-                    <form  id="comment-form" class="smart-form">
+                    <form action="'.site_url("").'/modificaciones/cmod_presupuestario/valida_reversion_saldos" id="miFormulario" name="miFormulario" class="smart-form" method="post">
+                    <input type="hidden" name="base" id="base" value="'.base_url().'">
+                    <input type="hidden" name="cpoa_id" id="cpoa_id" value="'.$cpoa_id.'">
+                    <input type="hidden" name="cert_ppto" id="cert_ppto" value="'.$cppto.'">
+                    <div class="alert alert-block alert-success">
+                      <a class="close" data-dismiss="alert" href="#">×</a>
+                      <h4 class="alert-heading"><i class="fa fa-check-square-o"></i> CERT. POA N° .- '.$certificacion[0]['cpoa_codigo'].'</h4>
+                    </div>
+                      
                       <header>
-                        <b>CERT. POA N° .- '.$certificacion[0]['cpoa_codigo'].'</b>
+                      Registre los saldo a ser revertidos por partida
                       </header>';
                       $nro=0;
                       foreach ($partidas_certificadas as $row){
                         $nro++;
                         $tabla.='
                         <fieldset>
-                          <b style="font-size: 15px;font-family: Arial;">PARTIDA : '.$row['par_codigo'].' '.$row['par_nombre'].'</b>
-                          <br>
-                          <hr>
-                          <br>
+                          <input type="hidden" name="par_id[]" value="'.$row['par_id'].'">
+                          <b style="font-size: 15px;font-family: Arial;">PARTIDA : '.$row['par_codigo'].' '.strtoupper($row['par_nombre']).'</b>
+                          
                           <div class="row">
                             <section class="col col-3">
-                              <label class="label" style="font-size: 11px;font-family: Arial;color:red">PPTO. CERTIFICADO</label>
+                              <label class="label" style="font-size: 11px;font-family: Arial;color:blue"><b>PPTO. CERTIFICADO</b></label>
                               <label class="input"> <i class="icon-append fa fa-money"></i>
-                                <input type="hidden" name="ppto_cert" id="ppto_cert" value="'.$row['ppto_partida_certificado'].'">
-                                <input type="text" name="ppto_cert" id="ppto_cert" value="'.number_format($row['ppto_partida_certificado'], 2, ',', '.').'" disabled="true">
+                                <input type="hidden" name="ppto_cert[]" id="ppto_cert'.$nro.'" value="'.$row['ppto_partida_certificado'].'">
+                                <input type="text" value="'.number_format($row['ppto_partida_certificado'], 2, ',', '.').'" disabled="true">
                               </label>
                             </section>
                             <section class="col col-3">
-                              <label class="label" style="font-size: 11px;font-family: Arial;color:blue;">SALDO A REVERTIR</label>
+                              <label class="label" style="font-size: 11px;font-family: Arial;color:green;"><b>SALDO A REVERTIR</b></label>
                               <label class="input"> <i class="icon-append fa fa-money"></i>
-                                <input type="number" name="saldo'.$nro.'" value="0" onkeyup="verif_ppto_cert('.$nro.',this.value,'.$row['ppto_partida_certificado'].');"  onkeypress="if (this.value.length < 15) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                                <input type="number" name="saldo[]" id="saldo'.$nro.'" value="0" onkeyup="verif_ppto_cert('.$nro.',this.value,'.$row['ppto_partida_certificado'].');">
                               </label>
                             </section>
-                            <section class="col col-3">;
-                                <div id="but'.$nro.'" style="display:none;" align="center">
-                                  Hola mundo
-                                </div>';
-                              // <div id="but'.$partida['sp_id'].'" style="display:none;" align="center">
-                              //   <button type="button" name="'.$partida['sp_id'].'" id="'.$nro.'" onclick="guardar_pi('.$proyecto[0]['proy_id'].','.$tp.','.$partida['sp_id'].','.$this->verif_mes[1].','.$id_ejec.','.$partida['partida'].');"  class="btn btn-default"><img src="'.base_url().'assets/Iconos/disk.png" WIDTH="37" HEIGHT="37"/><br>GUARDAR</button>
-                              // </div>
-                            
-                            $tabla.='
+                            <section class="col col-3">
+                              <div id="verif'.$nro.'"></div>
                             </section>
                           </div>
-
                         </fieldset>';
                       }
                     $tabla.='
+                      <input type="hidden" name="total_partidas" id="total_partidas" value="'.count($partidas_certificadas).'">
+                      <input type="hidden" name="suma" id="suma" value="0">
+                      <div id="buton_save" style="display:none;">
+                        <footer>
+                          <input type="button" value="GENERAR REVERSIÓN DE SALDOS" id="btsubmit" class="btn btn-success" onclick="valida_envia()">
+                          <button type="button" class="btn btn-default">
+                            <b>SALIR</b>
+                          </button>
+                        </footer>
+                      </div>
                     </form>
-
                   </div>
                 </div>
               </div>';
@@ -982,6 +986,135 @@ class Cmod_presupuestario extends CI_Controller {
           echo 'DATOS ERRONEOS';
       }
     }
+
+
+    /*----- formulario reporte de reversion -----*/
+    public function form_reporte_revertido($cppto_id){
+      $data['menu'] = $this->menu->genera_menu(); //// genera menu
+      $data['cite']=$this->model_ptto_sigep->get_cite_techo($cppto_id);
+      $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
+
+      if(count($data['cite'])!=0){
+        if($data['proyecto'][0]['tp_id']==1){
+          $titulo='
+          <h1> PROYECTO DE INVERSI&Oacute;N : <small>'.$data['proyecto'][0]['proy_sisin'].' - '.$data['proyecto'][0]['proy_nombre'].'</small>';
+        }
+        else{
+          $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
+          $titulo='
+          <h1> <b>'.$data['proyecto'][0]['tipo_adm'].' : </b><small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' '.$data['proyecto'][0]['abrev'].'</small>';
+        }
+        $data['titulo']=$titulo;
+
+        $data['tabla']='
+
+          <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+              <div class="well">
+
+              <ul class="demo-btns text-left">
+                <li>
+                  <a href="'.base_url().'index.php/mod/add_ppto_reversion/'.$data['cite'][0]['proy_id'].'" class="btn btn-default" target=_black rel="tooltip" data-placement="top" data-original-title="<h1><b>GENERAR NUEVA REVERSION</b></h1>" data-html="true"><img src="'.base_url().'assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;<b>GENERAR NUEVA REVERSION DE SALDOS</b></a>
+                </li>
+                <li>
+                  <a href="'.base_url().'index.php/mod/form5/'.$data['cite'][0]['proy_id'].'" class="btn btn-default" target=_black rel="tooltip" data-placement="top" data-original-title="<h1><b>REGISTRAR DATOS CITE</b></h1>" data-html="true"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp;<b>REGISTRAR MODIFICACION POA (REVERSION)</b></a>
+                </li>
+              </ul>
+              </div>
+            </div>
+          </div>
+  
+        <iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/mod/rep_mod_techo/'.$cppto_id.'"></iframe>';
+
+        $this->load->view('admin/modificacion/reversion_ppto/form_reversion_saldos', $data); 
+      }
+      else{
+        redirect('mod/list_top');
+      }
+    }
+
+    /*----- Valida reversion de saldos ------*/
+    public function valida_reversion_saldos(){
+      if ($this->input->post()) {
+          $post = $this->input->post();
+          $cpoa_id = $this->security->xss_clean($post['cpoa_id']); // id cert poa
+          $cert_ppto = $this->security->xss_clean($post['cert_ppto']); // cert presupuestaria
+          
+          $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id);
+         
+          if (!empty($_POST["par_id"]) && is_array($_POST["par_id"]) && count($this->model_ptto_sigep->partidas_proyecto($cpoa[0]['aper_id']))!=0) {
+            
+            /// ------ GENERANDO CITE DE MODIFICACION
+               $data_to_store = array(
+                'proy_id' => $cpoa[0]['proy_id'],
+                'cppto_cite' => 'REV. SALDOS - '.$cpoa[0]['cpoa_codigo'],
+                'cppto_fecha' => date("d/m/Y H:i:s"),
+                'tp' => 1,
+                'observacion' => 'Reversion de Saldos de las siguientes Certificaciones: CERTIFICACION POA : N° '.$cpoa[0]['cpoa_codigo'].' y CERTIFICACION PRESUPUESTARIA : N° '.$cert_ppto,
+                'fun_id' => $this->fun_id,
+                );
+              $this->db->insert('ppto_cite',$data_to_store);
+              $cppto_id=$this->db->insert_id();
+            /// -------------------------------------
+
+            $nro=0;
+            foreach ( array_keys($_POST["par_id"]) as $como){
+              if($_POST["saldo"][$como]!=0){ /// saldo != 0
+                $get_ppto_partida_asignado=$this->model_ptto_sigep->get_partida_asignado_unidad($cpoa[0]['aper_id'],$_POST["par_id"][$como]);
+
+                if(($_POST["saldo"][$como]<$_POST["ppto_cert"][$como]) && count($get_ppto_partida_asignado)!=0){
+                    //echo $get_ppto_partida_asignado[0]['sp_id'].'----->'.$_POST["par_id"][$como].'---'.$_POST["saldo"][$como].'<br>';
+                  $partida_ppto=$this->model_ptto_sigep->get_sp_id($get_ppto_partida_asignado[0]['sp_id']);
+
+                  /*------- Insert historial de saldos -------*/
+                  $data_to_store = array(
+                    'sp_id' => $get_ppto_partida_asignado[0]['sp_id'],
+                    'monto_revertido' => $_POST["saldo"][$como],
+                    'ppto_anterior' => $partida_ppto[0]['importe'],
+                    'cppto_id' => $cppto_id,
+                  );
+                  $this->db->insert('saldo_partida',$data_to_store);
+                  /*------------------------------------------*/
+
+                  $saldo=$this->model_ptto_sigep->suma_saldo_revertido($get_ppto_partida_asignado[0]['sp_id']);
+
+                  if(count($saldo)!=0){
+                    $update_saldo = array(
+                      'ppto_saldo_ncert' => $saldo[0]['saldo']
+                    );
+                    $this->db->where('sp_id', $get_ppto_partida_asignado[0]['sp_id']);
+                    $this->db->update('ptto_partidas_sigep', $update_saldo);
+                  }
+
+                  ///---- update certificacion poa
+                  $update_cpoa = array(
+                      'cpoa_rev' => 1
+                    );
+                    $this->db->where('cpoa_id', $cpoa_id);
+                    $this->db->update('certificacionpoa', $update_cpoa);
+                  ///-----------------------------
+
+
+                  $nro++;
+                }
+              }
+            }
+
+          $this->session->set_flashdata('success','REVERSION DE  '.$nro.' PARTIDAS');
+          redirect(site_url("").'/mod/form_reporte_revertido/'.$cppto_id);
+        }
+        else{
+          $this->session->set_flashdata('danger','ERROR AL GENERAR REVERSION DE PARTIDAS');
+          redirect(site_url("").'/mod/add_ppto_reversion/'.$cpoa[0]['proy_id']);
+        }
+      }
+      else{
+        echo "<font color=red><b>Error al Eliminar Operaciones</b></font>";
+      }
+    }
+
+
+
 
     /*------------------------------*/
     function rolfun($rol){

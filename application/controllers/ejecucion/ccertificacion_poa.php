@@ -172,7 +172,7 @@ class Ccertificacion_poa extends CI_Controller {
 
 /// ACTUALIZA CERTIFICACION POA (para reportes sin Codigo)
   public function generar_codigo($cpoa_id){
-    $get_cpoa=$this->model_certificacion->get_certificacion_poa($cpoa_id);
+    $get_cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id);
     if(count($get_cpoa)!=0){
         if($get_cpoa[0]['cpoa_estado']==0){
           $verificando=$this->model_modrequerimiento->verif_modificaciones_distrital($get_cpoa[0]['dist_id']);
@@ -424,7 +424,7 @@ class Ccertificacion_poa extends CI_Controller {
       $total = $this->security->xss_clean($post['tot']); /// Total Items
 
       $cert_anulado=$this->model_certificacion->get_cert_poa_editado($cpoaa_id); /// Datos de la Certificación Anulado
-      $cpoa=$this->model_certificacion->get_certificacion_poa($cert_anulado[0]['cpoa_id']); /// Datos de la Certificación POA
+      $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cert_anulado[0]['cpoa_id']); /// Datos de la Certificación POA
       $cite_mod_req = $this->model_modrequerimiento->get_cite_insumo($cert_anulado[0]['cite_id']); // Datos Cite Modificación de requerimiento
 
         $this->delete_certificacion_item($cert_anulado[0]['cpoa_id']); // Eliminando anterior Registro Certificación POA
@@ -736,7 +736,7 @@ class Ccertificacion_poa extends CI_Controller {
 
     /*----- REPORTE CERTIFICADO POA PDF -------*/
     public function reporte_cpoa($cpoa_id){
-      $data['cpoa']=$this->model_certificacion->get_certificacion_poa($cpoa_id); /// Datos Certificacion
+      $data['cpoa']=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Certificacion
       if (count($data['cpoa'])!=0) {
           $data['programa'] = $this->model_certificacion->get_apertura_programatica($data['cpoa'][0]['aper_id']);
           $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cpoa'][0]['prod_id']); // Datos completos hasta apertura
@@ -765,7 +765,7 @@ class Ccertificacion_poa extends CI_Controller {
      /*-------- LISTA DE ITEMS CERTIFICADOS 2020 -------*/
     public function mis_items_certificados($cpoa_id){
       $tabla='';
-      $cpoa=$this->model_certificacion->get_certificacion_poa($cpoa_id); /// Datos Certificacion
+      $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Certificacion
       if($cpoa[0]['cpoa_estado']==3){
         $requerimientos=$this->model_certificacion->lista_items_certificados_anulados($cpoa_id); /// lista de items certificados Eliminados
       }
@@ -832,7 +832,7 @@ class Ccertificacion_poa extends CI_Controller {
     public function modificar_cpoa($cpoaa_id){
       $data['cert_editado']=$this->model_certificacion->get_cert_poa_editado($cpoaa_id);
       if(count($data['cert_editado'])!=0 & $data['cert_editado'][0]['cpoa_estado']!=3){
-        $data['cpoa']=$this->model_certificacion->get_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
+        $data['cpoa']=$this->model_certificacion->get_datos_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
           $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cert_editado'][0]['prod_id']); /// Datos completos de la Unidad/ Proyectos de Inversión
           $data['menu']=$this->certificacionpoa->menu(4);
           $data['titulo']=$this->certificacionpoa->titulo_cabecera($data['datos']);
@@ -953,7 +953,7 @@ class Ccertificacion_poa extends CI_Controller {
 
     /*-------- EXPORTAR ITEMS CERTIFICADOS -------*/
     public function exportar_certificacion($cpoa_id){
-      $cpoa=$this->model_certificacion->get_certificacion_poa($cpoa_id); /// Datos Certificacion
+      $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Certificacion
       $lista_requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id); /// Lista Requerimientos
       if(count($lista_requerimientos)!=0){
         

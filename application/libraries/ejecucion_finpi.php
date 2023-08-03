@@ -1417,8 +1417,8 @@ class ejecucion_finpi extends CI_Controller{
         $matriz[6][$j]=$suma_ejec; /// acumulado ejec
       }
        
-      if($matriz[2][$j]!=0){
-        $matriz[7][$j]=round(($matriz[6][$j]/$matriz[2][$j])*100,2);
+      if($matriz[4][$j]!=0){
+        $matriz[7][$j]=round(($matriz[6][$j]/$matriz[4][$j])*100,2);
       }
     }
 

@@ -46,26 +46,37 @@ class Modificacionpoa extends CI_Controller{
     }
 
 
-    /*---- Lista de Unidades / Establecimientos de Salud (2020) -----*/
+    /*---- Lista de Unidades / Establecimientos de Salud (2023) -----*/
     public function list_unidades_es($proy_estado){
         $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);
-        $tabla='';
         
+        $titulo_ppto='TECHO PPTO.'; /// Administrador
+        if($this->tp_adm!=1){
+          $titulo_ppto='REV. PPTO.'; /// Responsables POA
+        }
+
+        $tabla='';
         $tabla.='
         <table id="dt_basic" class="table table-bordered" style="width:100%;">
           <thead>
-            <tr >
+            <tr style="font-size:10.5px;">
               <th style="width:1%;" bgcolor="#fafafa">#</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="SELECCIONAR TIPO DE MODIFICACIÓN">SELECCIONAR TIPO DE MODIFICACIÓN</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="HISTORIAL DE CITES"></th>
-              <th style="width:10%;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
-              <th style="width:20%;" bgcolor="#fafafa" title="DESCRIPCI&Oacute;N">GASTO CORRIENTE</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="NIVEL">ESCALON</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="NIVEL">NIVEL</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="ESTADO"></th>
+              <th style="width:3%; text-align:center;" bgcolor="#fafafa" title="MODIFICACION FORMULARIO N° 4">MOD. FORM. N° 4</th>
+              <th style="width:3%; text-align:center;" bgcolor="#fafafa" title="MODIFICACION FORMULARIO N° 5">MOD. FORM. N° 5</th>
+              <th style="width:5%; text-align:center;" bgcolor="#fafafa" title="HISTORIAL DE CITES"></th>
+              <th style="width:5%; text-align:center;" bgcolor="#fafafa" title="REVERSION DE SALDOS CERTIFICADOS">REVERSION DE SALDOS</th>';
+              if($this->tp_adm==1){
+                $tabla.='<th style="width:5%; text-align:center;" bgcolor="#fafafa" title="TECHO PRESUPUESTARIO"></th>';
+              }
+              $tabla.='
+              <th style="width:10%; text-align:center;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
+              <th style="width:20%; text-align:center;" bgcolor="#fafafa" title="DESCRIPCI&Oacute;N">GASTO CORRIENTE</th>
+              <th style="width:10%; text-align:center;" bgcolor="#fafafa" title="NIVEL">ESCALON</th>
+              <th style="width:10%; text-align:center;" bgcolor="#fafafa" title="NIVEL">NIVEL</th>
+              <th style="width:10%; text-align:center;" bgcolor="#fafafa" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
+              <th style="width:10%; text-align:center;" bgcolor="#fafafa" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
+              <th style="width:10%; text-align:center;" bgcolor="#fafafa" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
+              <th style="width:5%; text-align:center;" bgcolor="#fafafa" title="ESTADO"></th>
             </tr>
           </thead>
           <tbody>';
@@ -75,21 +86,56 @@ class Modificacionpoa extends CI_Controller{
               $estado='APROBADO';
 
               if($row['proy_estado']==4){
+                
+                /*$link=site_url("").'/mod/cite_techo/'.$row['proy_id']; /// link de modificacion presupuestaria
+                if($this->tp_adm!=1){
+                  $link=site_url("").'/mod/add_ppto_reversion/'.$row['proy_id']; /// link de reversion de presupuestos
+                }*/
+
                 $nro++;
                 $tabla.='
-                  <tr style="height:40px;">
-                    <td align=center><b>'.$nro.'</b></td>
-                    <td><center><a href="#" data-toggle="modal" data-target="#modal_opciones_modpoa" class="btn btn-success modpoa" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'">SELECCIONAR OPCION</a></center></td>
-                    <td align=center><a href="'.site_url("").'/mod/list_cites/'.$row['proy_id'].'" title="LISTA DE CITES GENERADOS POR MODIFICACI&Oacute;N" target="_blank" class="btn btn-default"><font size=1>LISTA DE CITES</font></a></td>
-                    <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
-                    <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
-                    <td>'.$row['escalon'].'</td>
-                    <td>'.$row['nivel'].'</td>
-                    <td>'.$row['tipo_adm'].'</td>
-                    <td>'.strtoupper($row['dep_departamento']).'</td>
-                    <td>'.strtoupper($row['dist_distrital']).'</td>
-                    <td><center><b>'.$estado.'</b></center></td>
-                  </tr>';
+                <tr style="font-size:10px;">
+                  <td align=center><b>'.$nro.'</b></td>
+                  <td align=center>';
+                    if($this->conf_mod_ope==1){
+                      $tabla.='<a href="'.site_url("").'/mod/list_componentes/'.$row['proy_id'].'" title="MODIFICAR ACTIVIDADES" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_edit.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px;"><b>FORM. N°4</b></div></a>';
+                    }
+                    else{
+                      $tabla.='<div style="color:red; font-size:9px"><b>NO DISPONIBLE</b></div>';
+                    }
+                    $tabla.='
+                  </td>
+                  <td align=center>';
+                    if($this->conf_mod_req==1){
+                      $tabla.='<a href="'.site_url("").'/mod/form5/'.$row['proy_id'].'" title="MODIFICAR REQUERIMIENTOS" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_edit.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px;"><b>FORM. N°5</b></div></a>';
+                    }
+                    else{
+                      $tabla.='<div style="color:red; font-size:9px"><b>NO DISPONIBLE</b></div>';
+                    }
+                  $tabla.='
+                  </td>
+                  <td align=center>
+                    <a href="'.site_url("").'/mod/list_cites/'.$row['proy_id'].'" title="LISTA DE CITES GENERADOS POR MODIFICACI&Oacute;N" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_side_list.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px; color:blue"><b>LISTA CITES</b></div></a>
+                  </td>
+                  <td align=center>
+                    <a href="'.site_url("").'/mod/add_ppto_reversion/'.$row['proy_id'].'" title="REVERSION DE SALDOS" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/money_add.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px; color:green"><b>SALDOS POA</b></div></a>
+                  </td>';
+                  if($this->tp_adm==1){
+                    $tabla.='
+                    <td align=center bgcolor="green">
+                      <a href="'.site_url("").'/mod/cite_techo/'.$row['proy_id'].'" title="TECHO PRESUPUESTARIO" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/money_dollar.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px; color:green"><b>TECHO PPTO.</b></div></a>
+                    </td>';
+                  }
+                  $tabla.='
+                  <td><center>'.$row['aper_programa'].''.$row['aper_proyecto'].''.$row['aper_actividad'].'</center></td>
+                  <td><b>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</b></td>
+                  <td>'.$row['escalon'].'</td>
+                  <td>'.$row['nivel'].'</td>
+                  <td>'.$row['tipo_adm'].'</td>
+                  <td>'.strtoupper($row['dep_departamento']).'</td>
+                  <td>'.strtoupper($row['dist_distrital']).'</td>
+                  <td><center><b>'.$estado.'</b></center></td>
+                </tr>';
               }
             }
           $tabla.='
@@ -98,123 +144,87 @@ class Modificacionpoa extends CI_Controller{
       return $tabla;
     }
 
-    /*---- Lista de Proyectos de Inversion (2020) -----*/
-    public function list_pinversion($proy_estado){
-      $proyectos=$this->model_proyecto->list_pinversion(1,$proy_estado);
+    /*---- Lista de Proyectos de Inversion Aprobados -----*/
+    public function list_pinversion_aprobados(){
+      $proyectos=$this->model_proyecto->listado_proyectos_inversion_aprobados_segun_tipo_responsable();
+        $titulo_ppto='TECHO PPTO.'; /// Administrador
+        if($this->tp_adm!=1){
+          $titulo_ppto='REV. PPTO.'; /// Responsables POA
+        }
+
       $tabla='';
       $tabla.='
         <table id="dt_basic1" class="table1 table-bordered" style="width:100%;">
           <thead>
-            <tr>
-              <th style="width:1%; height:40px;" bgcolor="#fafafa">#</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="SELECCIONAR">SELECCIONAR TIPO DE MODIFICACIÓN</th>
-              <th style="width:5%;" bgcolor="#fafafa" title="LISTA DE CITES GENERADOS"></th>
-              <th style="width:10%;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
-              <th style="width:20%;" bgcolor="#fafafa" title="DESCRIPCI&Oacute;N">PROYECTO DE INVERSI&Oacute;N</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="SISIN">C&Oacute;DIGO_SISIN</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
-              <th style="width:10%;" bgcolor="#fafafa" title="FASE - ETAPA">DESCRIPCI&Oacute;N FASE</th>
+            <tr style="font-size:10.5px;">
+              <th style="width:1%; height:70px;" bgcolor="#fafafa">#</th>
+              <th style="width:4%; text-align:center;" bgcolor="#fafafa" title="MODIFICACION FORMULARIO N° 4">MOD. FORM. N° 4</th>
+              <th style="width:4%; text-align:center;" bgcolor="#fafafa" title="MODIFICACION FORMULARIO N° 5">MOD. FORM. N° 5</th>
+              <th style="width:4%; text-align:center;" bgcolor="#fafafa" title="HISTORIAL DE CITES"></th>
+              <th style="width:4%; text-align:center;" bgcolor="#fafafa" title="REVERSION DE SALDOS">REVERSION DE SALDOS</th>';
+              if($this->tp_adm==1){
+                $tabla.='<th style="width:4%; text-align:center;" bgcolor="#fafafa" title="TECHO PRESUPUESTARIO"></th>';
+              }
+              $tabla.='
+              <th style="width:5%; text-align:center;" bgcolor="#fafafa" title="LISTA DE CITES GENERADOS">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
+              <th style="width:10%; text-align:center;" bgcolor="#fafafa" title="APERTURA PROGRAM&Aacute;TICA">PROYECTO DE INVERSI&Oacute;N</th>
+              <th style="width:5%; text-align:center;" bgcolor="#fafafa" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
+              <th style="width:5%; text-align:center;" bgcolor="#fafafa" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
+              <th style="width:5%; text-align:center;" bgcolor="#fafafa" title="FASE - ETAPA">DESCRIPCI&Oacute;N FASE</th>
+              <th style="width:15%;" bgcolor="#fafafa"></th>
+              <th style="width:15%;" bgcolor="#fafafa"></th>
             </tr>
           </thead>
           <tbody>';
             $nro=0;
             foreach($proyectos as $row){
+              /*$link=site_url("").'/mod/cite_techo/'.$row['proy_id']; /// link de modificacion presupuestaria
+                if($this->tp_adm!=1){
+                  $link=site_url("").'/mod/add_ppto_reversion/'.$row['proy_id']; /// link de reversion de presupuestos
+                }*/
               $nro++;
-              $tabla.='<tr>';
-               $tabla .= '<td style="height:40px;" title='.$row['proy_id'].'><center>'.$nro.'</center></td>
-                          <td align=center>';
-                          if($row['pfec_estado']==1){
-                              $tabla.='
-                          <a data-toggle="modal" data-target="#'.$row['proy_id'].'" title="SELECCIONAR OPCI&Oacute;N" class="btn btn-success"><font size=1>SELECCIONAR OPCIÓN</font></a>
-                            <div class="modal fade bs-example-modal-lg" tabindex="-1" id="'.$row['proy_id'].'"  role="dialog" aria-labelledby="myLargeModalLabel">
-                              <div class="modal-dialog modal-lg" id="mdialTamanio">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <button type="button" class="close text-danger" data-dismiss="modal" aria-hidden="true">
-                                      &times;
-                                    </button>
-                                  </div>
-                                  <div class="modal-body no-padding">
-                                      <div class="row">
-                                        <h2 class="alert alert-success"><center>'.$row['aper_programa'].' '.$row['proy_sisin'].' 000 - '.$row['proy_nombre'].'</center></h2>
-                                        
-                                        <a onclick="mod_operacion'.$row['proy_id'].'()" class="ruta" title="MODIFICAR ACTIVIDADES">
-                                          <div class="well well-sm col-sm-4">
-                                              <div class="well well-sm bg-color-teal txt-color-white text-center">
-                                                <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR ACTIVIDADES '.$this->gestion.'</h5>
-                                                <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                              </div>
-                                          </div>
-                                        </a>
-                                        
-                                        <a onclick="mod_insumo'.$row['proy_id'].'()"  class="ruta" title="MODIFICAR REQUERIMIENTOS">
-                                          <div class="well well-sm col-sm-4">
-                                              <div class="well well-sm bg-color-teal txt-color-white text-center">
-                                                <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR REQUERIMIENTOS '.$this->gestion.'</h5>
-                                                <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                              </div>
-                                          </div>
-                                        </a>';
-
-                                        $link=''; $color='red'; $titulo='OPCI&Oacute;N BLOQUEADA';
-                                          if($this->tp_adm==1){
-                                          $link='onclick="mod_techo'.$row['proy_id'].'()"';
-                                          $color='teal';
-                                          $titulo='MODIFICAR TECHO PRESUPUESTARIO';
-                                        }
-
-                                        $tabla.='
-                                        <a '.$link.' class="ruta" title="'.$titulo.'" >
-                                          <div class="well well-sm col-sm-4">
-                                              <div class="well well-sm bg-color-'.$color.' txt-color-white text-center">
-                                                <h5 style="font-weight: bold;font-style: italic;color: white">MODIFICAR TECHO PRESUPUESTARIO</h5>
-                                                <i class="glyphicon glyphicon-list-alt" aria-hidden="true" id="graf"></i>
-                                              </div>
-                                          </div>
-                                        </a>
-                                        
-                                      </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row"><br>
-                                <img id="load1'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                                <img id="load2'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                                <img id="load3'.$row['proy_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="65" height="65" title="CARGANDO INFORMACI&Oacute;N..">
-                              </div>
-                            </div>';
-                            $tabla.='
-                                <script>
-                                  function mod_operacion'.$row['proy_id'].'(){
-                                    document.getElementById("load1'.$row['proy_id'].'").style.display = "block";
-                                    window.location="'.site_url("").'/mod/list_componentes/'.$row['proy_id'].'"
-                                  }
-                                  
-                                  function mod_insumo'.$row['proy_id'].'(){
-                                    document.getElementById("load2'.$row['proy_id'].'").style.display = "block";
-                                    window.location="'.site_url("").'/mod/form5/'.$row['proy_id'].'/0"
-                                  }
-
-                                  function mod_techo'.$row['proy_id'].'(){
-                                    document.getElementById("load3'.$row['proy_id'].'").style.display = "block";
-                                    window.location="'.site_url("").'/mod/cite_techo/'.$row['proy_id'].'"
-                                  }
-                                </script>';
-                          }
-                          else{
-                            $tabla.='FASE NO ACTIVA';
-                          }
-                $tabla .= '
-                    </td>
-                    <td align=center><a href="'.site_url("").'/mod/list_cites/'.$row['proy_id'].'" title="LISTA DE CITES GENERADOS POR MODIFICACI&Oacute;N" target="_blank" class="btn btn-default"><font size=1>LISTA DE CITES</font></a></td>
-                    <td><center>'.$row['aper_programa'].' '.$row['proy_sisin'].' '.$row['aper_actividad'].'</center></td>';
-                $tabla.='<td>'.$row['proy_nombre'].'</td>';
-                $tabla.='<td>'.$row['proy_sisin'].'</td>';
-                $tabla.='<td>'.$row['dep_cod'].' '.strtoupper($row['dep_departamento']).'</td>';
-                $tabla.='<td>'.$row['dist_cod'].' '.strtoupper($row['dist_distrital']).'</td>';
-                $tabla.='<td>'.strtoupper($row['pfec_descripcion']).'</td>';
-              $tabla.='</tr>';
+              $tabla.='
+              <tr style="font-size:10px;">
+                <td style="height:70px;width:1%;" title='.$row['proy_id'].'></td>
+                <td style="width:4%;" align=center>';
+                  if($this->conf_mod_ope==1){
+                    $tabla.='<a href="'.site_url("").'/mod/list_componentes/'.$row['proy_id'].'" title="MODIFICAR ACTIVIDADES" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_edit.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px;"><b>FORM. N°4</b></div></a>';
+                  }
+                  else{
+                    $tabla.='<div style="color:red; font-size:9px"><b>NO DISPONIBLE</b></div>';
+                  }
+                  $tabla.='
+                </td>
+                <td style="width:4%;" align=center>';
+                  if($this->conf_mod_req==1){
+                    $tabla.='<a href="'.site_url("").'/mod/form5/'.$row['proy_id'].'" title="MODIFICAR REQUERIMIENTOS" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_edit.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px;"><b>FORM. N°5</b></div></a>';
+                  }
+                  else{
+                    $tabla.='<div style="color:red; font-size:9px"><b>NO DISPONIBLE</b></div>';
+                  }
+                $tabla.='
+                </td>
+                <td style="width:4%;" align=center>
+                  <a href="'.site_url("").'/mod/list_cites/'.$row['proy_id'].'" title="LISTA DE CITES GENERADOS POR MODIFICACI&Oacute;N" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_side_list.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px; color:blue"><b>LISTA CITES</b></div></a>
+                </td>
+                <td style="width:4%;" align=center>
+                  <a href="'.site_url("").'/mod/add_ppto_reversion/'.$row['proy_id'].'" title="REVERSION DE SALDOS" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/money_add.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px; color:green"><b>SALDOS POA</b></div></a>
+                </td>';
+                  if($this->tp_adm==1){
+                    $tabla.='
+                    <td style="width:4%;" align=center bgcolor="green">
+                      <a href="'.site_url("").'/mod/cite_techo/'.$row['proy_id'].'" title="TECHO PRESUPUESTARIO" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/money_dollar.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px; color:green"><b>TECHO PPTO.</b></div></a>
+                    </td>';
+                  }
+                  $tabla.='
+                <td style="width:5%;"><center>'.$row['proy'].'</center></td>
+                <td style="width:10%;">'.$row['proyecto'].'</td>
+                <td style="width:5%;">'.strtoupper($row['dep_departamento']).'</td>
+                <td style="width:5%;">'.strtoupper($row['dist_distrital']).'</td>
+                <td style="width:5%;">'.strtoupper($row['pfec_descripcion']).'</td>
+                <td style="width:15%;">'.strtoupper($row['proy_obj_general']).'</td>
+                <td style="width:15%;">'.strtoupper($row['proy_obj_especifico']).'</td>
+              </tr>';
             }
           $tabla.='
           </tbody>
@@ -946,63 +956,66 @@ class Modificacionpoa extends CI_Controller{
 //////////////// FORMULARIO N5
 
  /*------ Lista de Servicios para modificacion de Requerimientos --------*/
-    public function lista_unidades_responsables($proyecto,$tp){
+    public function lista_unidades_responsables($proyecto){
       $tabla='';
-      $tabla.=$this->unidades_responsables($proyecto,$tp);
+      $tabla.=$this->unidades_responsables($proyecto);
 
       return $tabla;
     }
 
     /*------ Lista de Servicios (Gasto Corriente) ------*/
-    public function unidades_responsables($proyecto,$tp){
+    public function unidades_responsables($proyecto){
       $fase = $this->model_faseetapa->get_id_fase($proyecto[0]['proy_id']);
-      $tipo_mod='';
-      if($tp==1){
-        $tipo_mod='<br><b>REVERSION DE SALDOS</b>';
-      }
+      $saldos_revertidos_partidas=$this->model_ptto_sigep->lista_monto_partidas_revertidos_unidad($proyecto[0]['proy_id']);
       $tabla='';
         if(count($fase)!=0){
             $componente=$this->model_componente->componentes_id($fase[0]['id'],$proyecto[0]['tp_id']);
             $tabla.='
-              <table id="dt_basic" class="table table table-bordered" width="100%">
+              <div class="well">
+              <table class="table table-bordered" width="100%">
                 <thead>
-                    <tr style="height:45px;">
-                        <th style="width:1%;">#</th>
-                        <th style="width:5%;">COD. UNIDAD</th>
-                        <th style="width:20%;">UNIDAD RESPONSABLE</th>
-                
-                        <th style="width:5%;">PONDERACI&Oacute;N</th>
-                        <th style="width:5%;">ACT. PROGRAMADOS</th>
-                        <th style="width:5%;">PRESUPUESTO POA</th>
-                        <th style="width:5%;"></th>
-                        <th style="width:2%;"></th>
-                    </tr>
+                  <tr style="height:45px;">
+                    <th style="width:1%; text-align:center;">'.count($saldos_revertidos_partidas).'</th>
+                    <th style="width:5%; text-align:center;">CODIGO</th>
+                    <th style="width:20%; text-align:center;">UNIDAD RESPONSABLE</th>
+                    <th style="width:5%; text-align:center;">REG. CITE<br>MODIFICACION POA</th>';
+                    if(count($saldos_revertidos_partidas)!=0){
+                      $tabla.='<th style="width:5%; text-align:center;"><b>REG. CITE<br>REVERSION POA</b></th>';
+                    }
+
+                    $tabla.='
+                    <th style="width:2%;"></th>
+                  </tr>
                 </thead>
                 <tbody>';
                 $num=0; $ponderacion=0; $sum=0;
                 foreach($componente as $row){
-                  /*$monto=$this->model_modrequerimiento->prespuesto_servicio_componente($row['com_id'],$proyecto[0]['tp_id']);
-                  $ppto=number_format(0, 2, '.', ',');
-                  
-                  if(count($monto)!=0){
-                    $ppto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                  }*/
-
                   $num++;
                   $tabla.='
                   <tr>
                     <td align=center title="'.$row['com_id'].'">'.$num.'</td><td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO UNIDAD : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
                     <td title='.$row['com_id'].'>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
-
-                    <td align=center>'.$row['com_ponderacion'].' %</td>
-                    <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
-                    <td align=right></td>
-                    <td>';
+                    <td align=center>';
                       if($this->conf_mod_req==1 || $this->tp_adm==1){
-                        $tabla.='<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff" style="width:100%; color: green; background-color: #eeeeee;border-bottom-width: 5px;" title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'"><i class="glyphicon glyphicon-file"></i> INGRESAR DATOS CITE '.$tipo_mod.'</a>';
+                        $tabla.='
+                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'" id="0">
+                          <img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="30" HEIGHT="30"/>&nbsp;
+                          <b style="font-size:10px;">INGRESAR DATOS CITE</b>
+                        </a>';
                       }
                     $tabla.='
-                    </td>
+                    </td>';
+                      if(count($saldos_revertidos_partidas)!=0){
+                        $tabla.='
+                        <td align=center>
+                          <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-warning nuevo_ff"  title="MODIFICAR REQUERIMIENTOS POR REVERSION DE SALDOS" name="'.$row['com_id'].'" id="1">
+                            <img src="'.base_url().'assets/Iconos/application_form_magnify.png" WIDTH="30" HEIGHT="30"/>&nbsp;
+                          <b style="font-size:10px;">INGRESAR DATOS CITE</b>
+                        </a>
+                        </td>';
+                      }
+                    $tabla.='
+                    
                     <td align=center>';
                       if($this->fun_id==399){
                         $tabla.='
@@ -1013,22 +1026,11 @@ class Modificacionpoa extends CI_Controller{
                     $tabla.='
                     </td>
                   </tr>';
-                  $sum=$sum+count($this->model_producto->list_prod($row['com_id']));
-                  $ponderacion=$ponderacion+$row['com_ponderacion'];
                 }
                 $tabla.='    
                 </tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td align=center>'.$ponderacion.'%</td>
-                    <td align=center>'.$sum.'</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </table>';
+              </table>
+            </div>';
         }
         else{
           $tabla.='<hr>

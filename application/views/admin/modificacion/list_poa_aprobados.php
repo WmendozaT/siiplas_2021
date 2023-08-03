@@ -21,39 +21,6 @@
 		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
 		<!--para las alertas-->
     	<meta name="viewport" content="width=device-width">
-		<!--fin de stiloh-->
-		<script>
-	  	function abreVentana(PDF){
-			var direccion;
-			direccion = '' + PDF;
-			window.open(direccion, "Reporte de Cites Generados" , "width=800,height=650,scrollbars=SI") ;
-		}                                                  
-        </script>
-		<style>
-			.table1{
-	          display: inline-block;
-	          width:100%;
-	          max-width:1550px;
-	          overflow-x: scroll;
-	          }
-			table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-						overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-   
-            }
-            td{
-              font-size: 10px;
-            }
-            #mdialTamanio{
-              width: 80% !important;
-            }
-		</style>
 	</head>
 	<body class="">
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -125,7 +92,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Modificaciones</li><li>Modificaci&oacute;n POA</li><li>POAS Aprobados</li>
+					<li>Modificaciones</li><li>Modificaci&oacute;n POA</li>
 				</ol>
 			</div>
 
@@ -207,34 +174,6 @@
 			<!-- END MAIN CONTENT -->
 		</div>
 		<!-- END MAIN PANEL -->
-
-			<!-- MODAL POA   -->
-	    <div class="modal fade" id="modal_opciones_modpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog" id="mdialTamanio">
-          <div class="modal-content">
-            <div class="modal-header">
-                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-            </div>
-            <div class="modal-body">
-            	<h2 class="alert alert-info"><center>MIS OPCIONES DE MODIFICACION POA - <?php echo $this->session->userData('gestion');?></center></h2>
-            
-                <div class="row">
-                	<table style="width:100%; height:50px;">
-              		<tr>
-              			<td style="width:90%;">
-              				<div id="titulo"></div>	
-              			</td>
-              		</tr>
-              	</table><br>
-                   <div id="contenido"></div>
-                </div>
-            </div>
-          </div>
-        </div>
-	    </div>
-	 	<!--  =============== -->
-
-
 		<!-- ========================================================================================================= -->
 		<!-- PAGE FOOTER -->
 		<div class="page-footer">
@@ -306,47 +245,6 @@
 				$('.ui-dialog :button').blur();
 				$('#tabs').tabs();
 			})
-
-			  //// ver opciones de modificacion poa
-		  $(function () {
-		    $(".modpoa").on("click", function (e) {
-		        proy_id = $(this).attr('name');
-		        establecimiento = $(this).attr('id');
-		        
-		        $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');
-		        $('#contenido').html('<div class="loading" align="center"><br/><b>Cargando Informacion ....</b></div>');
-		        var url = "<?php echo site_url().'/modificaciones/cmodificaciones/get_opciones_modpoa'?>";
-		        var request;
-		        if (request) {
-		            request.abort();
-		        }
-		        request = $.ajax({
-		            url: url,
-		            type: "POST",
-		            dataType: 'json',
-		            data: "proy_id="+proy_id
-		        });
-
-		        request.done(function (response, textStatus, jqXHR) {
-		        if (response.respuesta == 'correcto') {
-		           $('#contenido').fadeIn(1000).html(response.tabla);
-		          // $('#caratula').fadeIn(1000).html(response.caratula);
-		        }
-		        else{
-		            alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
-		        }
-
-		        });
-		        request.fail(function (jqXHR, textStatus, thrown) {
-		            console.log("ERROR: " + textStatus);
-		        });
-		        request.always(function () {
-		            //console.log("termino la ejecuicion de ajax");
-		        });
-		        e.preventDefault();
-		        
-		      });
-		  });
 		</script>
 		<script src="<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 	</body>

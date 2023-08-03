@@ -23,7 +23,7 @@ ob_start();
     <page_footer>
       
     </page_footer>
-    <?php echo $consolidado;?>
+    <?php echo $consolidado.'<br>'.$observacion;?>
 
 </page>
 <?php

@@ -93,7 +93,7 @@ class Certificacionpoa extends CI_Controller{
 
   /*--- GENERAR CÓDIGO CERTIFICACION POA ---*/
   public function generar_certificacion_poa($cpoa_id){
-    $get_cpoa=$this->model_certificacion->get_certificacion_poa($cpoa_id);
+    $get_cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id);
     $verificando=$this->model_modrequerimiento->verif_modificaciones_distrital($get_cpoa[0]['dist_id']);
     if(count($verificando)==0){ // Creando campo para la distrital
       $data_to_store2 = array(
@@ -1954,7 +1954,7 @@ class Certificacionpoa extends CI_Controller{
               $tabla.='
                   <table style="width:100%;" border=0>
                       <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
-                          <td style="width:100%;">LIC. JUSTO ERLIN SOTTO SALVATIERRA</td>
+                          <td style="width:100%;">LIC. JUAN MARCELO SEGALES CORONEL</td>
                       </tr>
                       <tr style="font-size: 10px;font-family: Arial; height:65px;" align="center">
                           <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>
@@ -2732,7 +2732,8 @@ class Certificacionpoa extends CI_Controller{
           <td style="width:1%;"></td>
           <td style="width:98%;">';
 
-            $requerimientos_mod = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,2);
+           // $requerimientos_mod = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,2);
+            $requerimientos_mod = $this->model_modrequerimiento->get_list_form5_historial_modificados($cite_id,2); /// Mod
             if(count($requerimientos_mod)!=0){
               $tabla.='<div style="font-size: 10px;height:16px;"><b>ITEMS MODIFICADOS ('.count($requerimientos_mod).')</b></div>';
               $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
@@ -2766,6 +2767,34 @@ class Certificacionpoa extends CI_Controller{
               $nro=0;
               $monto=0;
               foreach ($requerimientos_mod as $row){
+                $item_mod=$this->model_modrequerimiento->get_item_insumo_modificado_ultimo($row['cite_id'],2,$row['ins_id']);
+                $prog = $this->model_modrequerimiento->list_temporalidad_insumo_historial($item_mod[0]['insh_id']);
+                $nro++;
+                $tabla.='<tr class="modo1">
+                  <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
+                  <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$item_mod[0]['prod_cod'].'</b></td>
+                  <td style="width: 3.8%; text-align: center;">'.$item_mod[0]['par_codigo'].'</td>
+                  <td style="width: 16%; text-align: left;text-align: justify;">'.$item_mod[0]['ins_detalle'].'</td>
+                  <td style="width: 4.6%; text-align: left;">'.$item_mod[0]['ins_unidad_medida'].'</td>
+                  <td style="width: 4%; text-align: right;">'.$item_mod[0]['ins_cant_requerida'].'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($item_mod[0]['ins_costo_unitario'], 2, ',', '.').'</td>
+                  <td style="width: 4%; text-align: right;">'.number_format($item_mod[0]['ins_costo_total'], 2, ',', '.').'</td>';
+                  if(count($prog)!=0){
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+                    }
+                  }
+                  else{
+                    for ($i=1; $i <=12 ; $i++) { 
+                      $tabla .= '<td style="width: 4.4%; text-align: right;" bgcolor=red>-</td>';
+                    }
+                  }
+                  $tabla.='<td style="width: 8%; text-align: left;text-align: justify;font-size: 6px;">'.$item_mod[0]['ins_observacion'].'</td>';
+                $tabla.='</tr>';
+                $monto=$monto+$item_mod[0]['ins_costo_total'];
+              }
+
+              /*foreach ($requerimientos_mod as $row){
                 $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
                 $nro++;
                 $tabla.='<tr class="modo1">
@@ -2790,7 +2819,7 @@ class Certificacionpoa extends CI_Controller{
                   $tabla.='<td style="width: 8%; text-align: left;">'.$row['ins_observacion'].'</td>';
                 $tabla.='</tr>';
                 $monto=$monto+$row['ins_costo_total'];
-              }
+              }*/
               $tabla.='</tbody>
                 <tr class="modo1">
                   <td style="height:10px;" colspan=7></td>

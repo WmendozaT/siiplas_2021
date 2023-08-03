@@ -61,7 +61,8 @@ class Cseguimiento extends CI_Controller {
       
       $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
       $this->load->view('admin/evaluacion/seguimiento_poa/list_poas_aprobados', $data);
-    
+    //$temporalidad=$this->seguimientopoa->obtiene_suma_temporalidad_prog_ejec(77056);
+   // echo $temporalidad[1].'----'.$temporalidad[2].'----'.$temporalidad[3].'----'.$temporalidad[4].'----'.$temporalidad[5].'----'.$temporalidad[6];
       /*$insumos=$this->model_insumo->lista_insumos(2021);
 
       $tabla='';
@@ -123,8 +124,6 @@ class Cseguimiento extends CI_Controller {
       echo "";*/
 
      // echo $tabla;
-
-
     }
 
 

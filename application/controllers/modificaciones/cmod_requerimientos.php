@@ -745,9 +745,12 @@ class Cmod_requerimientos extends CI_Controller {
         
         if($cite[0]['tp']==0){
           $data['consolidado']=$this->mis_modificaciones_techo($cppto_id); /// modificacion presupuestaria
+          $data['observacion']='';
         }
         else{
           $data['consolidado']=$this->reversion_saldos($cite); /// reversion de saldos
+          $data['observacion']='<div style="font-size: 10px;font-family: Arial;">'.$cite[0]['observacion'].'<br><br><br>
+          Señor : <b>'.$cite[0]['fun_nombre'].' '.$cite[0]['fun_paterno'].'</b>, debe realizar la programacion de requerimientos a traves del modulo de Modificacion POA - <b>MOD. FORM. N° 5 (SALDOS REVERTIDOS) - '.$this->gestion.'</b>, segun el detalle del monto revertido a la partida correspondiente.</div>';
         }
         
         $data['pie_rep']=$cite[0]['cppto_cite'];

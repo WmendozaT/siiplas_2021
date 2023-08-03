@@ -48,7 +48,7 @@ class Cmodificaciones extends CI_Controller {
       $data['gasto_corriente']='';
       
       $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
-      $data['proyectos']=$this->modificacionpoa->list_pinversion(4); // Aprobados
+      $data['proyectos']=$this->modificacionpoa->list_pinversion_aprobados(); // Aprobados
       $data['gasto_corriente']=$this->modificacionpoa->list_unidades_es(4); // Aprobados
       $data['rep_listado_modificacionespoa']='';
 
@@ -75,7 +75,7 @@ class Cmodificaciones extends CI_Controller {
 
    
     /*-------- GET OPCIONES DE MODIFICACION POA --------*/
-    public function get_opciones_modpoa(){
+/*    public function get_opciones_modpoa(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $proy_id = $this->security->xss_clean($post['proy_id']);
@@ -208,8 +208,6 @@ class Cmodificaciones extends CI_Controller {
           <br>
           <div id="loading" style="display: none; text-align:center; color:blue"><b>CARGANDO INFORMACION .....</b></div>';
 
-
-        //$tabla=$this->conf_mod_ope.'----'.$this->conf_mod_req; /// Mis Subactividades
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
@@ -219,7 +217,7 @@ class Cmodificaciones extends CI_Controller {
       }else{
           show_404();
       }
-    }
+    }*/
 
 
 

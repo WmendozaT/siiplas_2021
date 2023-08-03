@@ -173,7 +173,7 @@ class Model_modrequerimiento extends CI_Model{
 
 
 
-    /*--- LISTA MODIFICADOS ITEMS 2023 (ADICION Y ELIMINADO)---*/
+    /*--- LISTA MODIFICADOS ITEMS 2023 (ADICION Y ELIMINADO) (a eliminar la consulta) ---*/
     public function list_form5_historial_modificados($cite_id,$tipo_mod){
         ///ih.historial_activo : 0 (no se muestra)
         ///ih.historial_activo : 1 (se muestra)
@@ -198,8 +198,7 @@ class Model_modrequerimiento extends CI_Model{
                 Inner Join _productos as p On p.prod_id=ih.id
               
                 where ih.cite_id='.$cite_id.' and ih.tipo_mod='.$tipo_mod.' and ih.historial_activo!=\'0\'
-                group by ih.ins_id,ih.tipo_mod,ih.cite_id
-                ';
+                group by ih.ins_id,ih.tipo_mod,ih.cite_id';
 
         $query = $this->db->query($sql);
         return $query->result_array();

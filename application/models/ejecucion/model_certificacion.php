@@ -356,7 +356,7 @@ class Model_certificacion extends CI_Model{
     }
 
     /*----- GET DATOS CERTIFICACION POA 2020 ----*/
-    public function get_certificacion_poa($cpoa_id){
+/*    public function get_certificacion_poa($cpoa_id){
         $sql = 'select cpoa.*,c.*,f.*,p.*,dist.*,dep.*,ua.act_id,ua.act_cod,ua.act_descripcion,te.*
                 from certificacionpoa cpoa
                 Inner Join _componentes as c On c.com_id=cpoa.com_id
@@ -370,7 +370,7 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
     /*----- GET DATOS GENERALES CERTIFICACION POA 2021 ----*/
     public function get_datos_certificacion_poa($cpoa_id){
@@ -388,6 +388,18 @@ class Model_certificacion extends CI_Model{
         $sql = 'select *
                 from vista_get_certificacionpoa
                 where proy_id='.$proy_id.'
+                order by cpoa_id asc';
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+
+    /*----- GET LISTA DE CERTIFICACIONES GENERADOS POR UNIDAD/PROYECTO NO REVERTIDOS ----*/
+    public function get_lista_certificacion_poa_unidad_no_revertidos($proy_id){
+        $sql = 'select *
+                from vista_get_certificacionpoa
+                where proy_id='.$proy_id.' and cpoa_rev=\'0\'
                 order by cpoa_id asc';
         $query = $this->db->query($sql);
 
