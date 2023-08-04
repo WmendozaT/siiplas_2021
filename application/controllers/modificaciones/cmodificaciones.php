@@ -356,7 +356,7 @@ class Cmodificaciones extends CI_Controller {
         
           if(count($cites)!=0){
             $nro=0;
-              foreach($cites  as $cit){
+              foreach($cites as $cit){
 
                 if($cit['tp_reporte']==0){
                   $ca=$this->model_modfisica->operaciones_adicionados($cit['cite_id']);

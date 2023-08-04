@@ -816,6 +816,14 @@ class Cmod_presupuestario extends CI_Controller {
                         <input type="hidden" id="proy_id" name="proy_id" value="'.$proy_id.'">
                         <fieldset>
                           <legend>Seleccione la siguiente informacion :</legend>
+                          
+                          <div class="form-group">
+                            <label class="col-md-3 control-label"><b>Nota CITE</b></label>
+                            <div class="col-md-9">
+                              <input type="text" placeholder= "XXX" class="form-control" id="cite" name="cite">
+                            </div>
+                          </div>
+
                           <div class="form-group">
                             <label class="col-md-3 control-label"><b>Seleccione Certificacion POA</b></label>
                             <div class="col-md-9">
@@ -880,6 +888,7 @@ class Cmod_presupuestario extends CI_Controller {
           $proy_id = $this->security->xss_clean($post['proy_id']); // proy_id
           $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); // datos del proyecto
 
+          $cite = $this->security->xss_clean($post['cite']); // cite
           $cpoa_id = $this->security->xss_clean($post['cpoa_id']); // cpoa_id
           $certificacion=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Generales de la Certificacion POA
           $partidas_certificadas=$this->model_certificacion->get_lista_detalle_partidas_certificados_cpoa($cpoa_id);
@@ -920,6 +929,7 @@ class Cmod_presupuestario extends CI_Controller {
 
                     <form action="'.site_url("").'/modificaciones/cmod_presupuestario/valida_reversion_saldos" id="miFormulario" name="miFormulario" class="smart-form" method="post">
                     <input type="hidden" name="base" id="base" value="'.base_url().'">
+                    <input type="hidden" name="cite" id="cite" value="'.$cite.'">
                     <input type="hidden" name="cpoa_id" id="cpoa_id" value="'.$cpoa_id.'">
                     <input type="hidden" name="cert_ppto" id="cert_ppto" value="'.$cppto.'">
                     <div class="alert alert-block alert-success">
@@ -1037,6 +1047,7 @@ class Cmod_presupuestario extends CI_Controller {
     public function valida_reversion_saldos(){
       if ($this->input->post()) {
           $post = $this->input->post();
+          $cite = $this->security->xss_clean($post['cite']); // cite
           $cpoa_id = $this->security->xss_clean($post['cpoa_id']); // id cert poa
           $cert_ppto = $this->security->xss_clean($post['cert_ppto']); // cert presupuestaria
           
@@ -1047,7 +1058,7 @@ class Cmod_presupuestario extends CI_Controller {
             /// ------ GENERANDO CITE DE MODIFICACION
                $data_to_store = array(
                 'proy_id' => $cpoa[0]['proy_id'],
-                'cppto_cite' => 'REV. SALDOS - '.$cpoa[0]['cpoa_codigo'],
+                'cppto_cite' => 'REV. SALDOS - '.$cite,
                 'cppto_fecha' => date("d/m/Y H:i:s"),
                 'tp' => 1,
                 'observacion' => 'Reversion de Saldos de las siguientes Certificaciones: CERTIFICACION POA : N° '.$cpoa[0]['cpoa_codigo'].' y CERTIFICACION PRESUPUESTARIA : N° '.$cert_ppto,

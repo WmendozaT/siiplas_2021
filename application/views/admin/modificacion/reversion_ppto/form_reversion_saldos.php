@@ -188,6 +188,14 @@
     		$("#generar_datos").on("click", function () {
     				const base = $('#base').val();
     				const proy_id = $('#proy_id').val();
+    				
+    				const cite = $('#cite').val();
+				    if (cite==0) {
+				      	alertify.error("REGISTRE EL CITE DE REVERSION POA");
+			        	$('#cite').focus(); 
+			          return 0;
+				    }
+
     				const certpoa = $('#certpoa').val();
 				    if (certpoa==0) {
 				      	alertify.error("SELECCIONE CERTIFICACION POA");
@@ -217,7 +225,7 @@
                       url: url,
                       type: "POST",
                       dataType: "json",
-                      data: "proy_id="+proy_id+"&cpoa_id="+certpoa+"&cppto="+certppto
+                      data: "proy_id="+proy_id+"&cpoa_id="+certpoa+"&cppto="+certppto+"&cite="+cite
                   });
 
                   request.done(function (response, textStatus, jqXHR) { 

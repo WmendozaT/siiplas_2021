@@ -210,7 +210,7 @@ class Cmod_insumo extends CI_Controller {
               $tabla.='<button type="button" class="btn btn-success btn-sm btn-block" data-toggle="modal" data-target="#modal_cerrar" title="MODIFICACION CERRADA"><i class="fa fa-save"></i><b>&nbsp;MODIFICACI&Oacute;N CONCLUIDA</b></button><br>';
             }
             else{
-              $tabla.='<button type="button" class="btn btn-warning btn-sm btn-block" data-toggle="modal" data-target="#modal_cerrar" title="CONSLUIR MODIFICACION"><i class="fa fa-save"></i><b>&nbsp;CERRAR MODIFICACIÓN</b></button><br>';
+              $tabla.='<button type="button" class="btn btn-warning btn-sm btn-block" data-toggle="modal" data-target="#modal_cerrar" title="CONCLUIR MODIFICACION"><i class="fa fa-save"></i><b>&nbsp;CERRAR MODIFICACIÓN</b></button><br>';
             }
 
             $tabla.='
@@ -1824,7 +1824,7 @@ class Cmod_insumo extends CI_Controller {
       if(count($data['cite'])!=0){
         $data['menu']=$this->menu(3); //// genera menu
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
-        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']); /// CABECERA
+        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite'],0); /// CABECERA
         $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
 
         $this->load->view('admin/modificacion/requerimientos/ver_modificado_poa', $data);

@@ -906,20 +906,19 @@ class Model_ptto_sigep extends CI_Model{
     }
 
 
-    /*-------------------- Get Partida Accion Regional programado (vigente)------------------------*/
+    /*-------------------- Get Partida Accion Regional programado (a eliminar)------------------------*/
     public function get_partida_prog_unidad($dep_id,$aper_id,$par_id){
         $sql = 'select i.aper_id,i.par_id, i.par_codigo as codigo, i.par_nombre as nombre, SUM(i.ins_costo_total) as ppto_programado
                 from vlista_insumos i
                 Inner Join aperturaproyectos as ap On ap.aper_id=i.aper_id
                   
-                where i.aper_id='.$aper_id.' and i.aper_id!=\'0\' and par_id='.$par_id.'
+                where i.aper_id='.$aper_id.' and i.aper_id!=\'0\' and par_id='.$par_id.' 
                 group by i.aper_id,i.par_id, i.par_codigo, i.par_nombre
                 order by i.par_codigo';
         
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-
 
 
     /*---------- Get ppto asignado x Partida unidad (vigente)-------------*/

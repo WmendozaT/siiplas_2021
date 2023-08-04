@@ -389,7 +389,7 @@ class Cppto_comparativo extends CI_Controller {
           $monto_prog_rev=0;
 
           foreach($partidas_asig as $row){
-            $part_prog=$this->model_ptto_sigep->get_partida_prog_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']); /// poa programado
+            $part_prog=$this->model_ptto_sigep->get_partida_programado_poa($proyecto[0]['aper_id'],$row['par_id']); /// poa programado
             $ppto_poa_revertido=$this->model_ptto_sigep->get_ppto_poa_partida_x_reversion($proyecto[0]['aper_id'],$row['par_id']); /// ppto poa revertido poa prtida
 
             $prog=0; 
@@ -577,7 +577,7 @@ class Cppto_comparativo extends CI_Controller {
         $monto_prog=0;
 
         foreach($partidas_asig as $row){
-          $part=$this->model_ptto_sigep->get_partida_prog_unidad($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
+          $part=$this->model_ptto_sigep->get_partida_programado_poa($proyecto[0]['aper_id'],$row['par_id']);
             $prog=0;
             if(count($part)!=0){
               $prog=$part[0]['ppto_programado'];

@@ -424,42 +424,6 @@ class C_consultas extends CI_Controller {
     }
 
 
-    /*-- LISTA DE FORMULARIOS REPORTE DE SEGUIMIENTO Y EVALUACION POA --*/
-/*    public function formularios_mensual($com_id){
-      $tabla='';
-      $meses = $this->model_configuracion->get_mes();
-
-      $tabla.='
-          <div class="btn-group">
-            <a class="btn btn-success"><img src="'.base_url().'assets/Iconos/application_cascade.png" WIDTH="19" HEIGHT="18"/>&nbsp; FORM. SEGUIMIENTO Y EVALUACIÓN POA </a>
-            <a class="btn btn-success dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
-            <ul class="dropdown-menu">';
-              foreach($meses as $rowm){
-              if($rowm['m_id']<=$this->verif_mes[1]){
-                $tabla.='
-                <li>
-                  <a href="'.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$com_id.'/'.$rowm['m_id'].'" target="_blank">REPORTE SEGUIMIENTO POA - '.$rowm['m_descripcion'].'</a>
-                </li>';
-              }                     
-            }
-            $tabla.='
-            <hr>';
-              for ($i=1; $i <=$this->tmes; $i++) { 
-                $trimestre=$this->model_evaluacion->get_trimestre($i); /// Datos del Trimestre
-                $tabla.='
-                <li>
-                  <a href="javascript:abreVentana(\''.site_url("").'/seg/ver_reporte_evaluacionpoa/'.$com_id.'/'.$i.'\');" >REP. EVAL. POA - '.$trimestre[0]['trm_descripcion'].'</a>
-                </li>';
-              }
-            
-            $tabla.='
-            </ul>
-          </div>';
-
-      return $tabla;
-    }*/
-
-
     /*--- GET TIPO DE REPORTE POA NACIONAL ---*/
     public function get_lista_reportepoa(){
       if($this->input->is_ajax_request() && $this->input->post()){
@@ -572,13 +536,26 @@ class C_consultas extends CI_Controller {
                 </tr>
               </thead>
               <tbody>';
-                $nro=0;
-                foreach($cites_form4 as $cit){
-                  $ca=$this->model_modfisica->operaciones_adicionados($cit['cite_id']);
-                  $cm=$this->model_modfisica->operaciones_modificados($cit['cite_id']);
-                  $cd=$this->model_modfisica->operaciones_eliminados($cit['cite_id']);
+              $nro=0;
+              foreach($cites_form4 as $cit){
+                if($cit['tp_reporte']==0){
+                    $ca=$this->model_modfisica->operaciones_adicionados($cit['cite_id']);
+                    $cm=$this->model_modfisica->operaciones_modificados($cit['cite_id']);
+                    $cd=$this->model_modfisica->operaciones_eliminados($cit['cite_id']);
 
-                  if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
+                    if(count($ca)!=0 || count($cm)!=0 || count($cd)!=0){
+                      $nro++;
+                      $tabla .='<tr>';
+                        $tabla .='<td align="center">'.$nro.'</td>';
+                        $tabla .='<td><b>'.$cit['cite_nota'].'</b></td>';
+                        $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
+                        $tabla .='<td></td>';
+                        $tabla .='<td>'.$cit['com_componente'].'</td>';
+                        $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/reporte_modfis/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE ACTIVIDADES"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
+                      $tabla .='</tr>';
+                    }
+                }
+                else{
                     $nro++;
                     $tabla .='<tr>';
                       $tabla .='<td align="center">'.$nro.'</td>';
@@ -586,10 +563,10 @@ class C_consultas extends CI_Controller {
                       $tabla .='<td align="center">'.date('d/m/Y',strtotime($cit['cite_fecha'])).'</td>';
                       $tabla .='<td></td>';
                       $tabla .='<td>'.$cit['com_componente'].'</td>';
-                      $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/reporte_modfis/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE ACTIVIDADES"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
+                      $tabla .='<td align=center><a href="javascript:abreVentana(\''.site_url("").'/mod/reporte_modfis/'.$cit['cite_id'].'\');" title="REPORTE CITES - MODIFICACION DE OPERACIONES"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>';
                     $tabla .='</tr>';
-                  }
                 }
+              }
               $tabla.='
               </tbody>
             </table>

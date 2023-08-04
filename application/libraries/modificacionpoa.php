@@ -1679,6 +1679,7 @@ class Modificacionpoa extends CI_Controller{
   public function items_modificados_form5_historial($cite_id,$tp_rep){
     /// tp_rep : 0 update
     /// tp_rep : 1 reporte
+    $cite=$this->model_modrequerimiento->get_cite_insumo($cite_id);
     $tabla='';
     $requerimientos_add = $this->model_modrequerimiento->list_form5_historial_modificados($cite_id,1); /// Add
     $requerimientos_mod = $this->model_modrequerimiento->get_list_form5_historial_modificados($cite_id,2); /// Mod
@@ -1696,6 +1697,7 @@ class Modificacionpoa extends CI_Controller{
       }
     }
     else{
+
       if(count($requerimientos_add)!=0){
         $tabla.=$this->tabla(1,$requerimientos_add,'ITEMS AGREGADOS ('.count($requerimientos_add).')');
       }
@@ -1707,7 +1709,7 @@ class Modificacionpoa extends CI_Controller{
       }
 
 
-      $cite=$this->model_modrequerimiento->get_cite_insumo($cite_id);
+      
       $tabla.='
             <div style="font-size: 7.5px;font-family: Arial;">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; En atención a requerimiento de su unidad, comunicamos a usted que se ha procedido a efectivizar la modificación solicitada, toda vez que:<br>
@@ -2078,6 +2080,11 @@ class Modificacionpoa extends CI_Controller{
         $codigo=$cite[0]['cite_codigo'];
       }
 
+      $tipo_mod='';
+      if($cite[0]['tipo_modificacion']==1){
+        $tipo_mod='(Rev. POA)';
+      }
+
       $tabla.='
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px;">              
@@ -2122,7 +2129,7 @@ class Modificacionpoa extends CI_Controller{
                 <td style="width:50%; height: 3%">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                       <tr style="font-size: 15px;font-family: Arial;">
-                          <td colspan=2 align=center style="width:100%;height: 40%;"><b>FORMULARIO MOD. N° 8 </b></td>
+                          <td colspan=2 align=center style="width:100%;height: 40%;"><b>FORMULARIO MOD. N° 8 </b> '.$tipo_mod.'</td>
                       </tr>
                       <tr style="font-size: 10px;font-family: Arial;">
                           <td style="width:47%;height: 30%;"><b>CITE : '.$cite[0]['cite_nota'].'</b></td>
