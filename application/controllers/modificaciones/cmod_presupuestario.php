@@ -22,6 +22,7 @@ class Cmod_presupuestario extends CI_Controller {
             $this->rol_id = $this->session->userData('rol_id'); /// Rol Id
             $this->adm = $this->session->userData('adm');
             $this->tp_adm = $this->session->userData('tp_adm');
+            $this->dep_id = $this->session->userData('dep_id'); /// Dep ID
             $this->load->library('menu');
             $this->menu->const_menu(3);
             

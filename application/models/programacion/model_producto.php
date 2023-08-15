@@ -254,7 +254,7 @@ class model_producto extends CI_Model {
 
 
     /*=== LISTA DE OPERACIONES (2020 - 2022) REPORTE - GASTO CORRIENTE ===*/
-    function lista_operaciones($com_id){
+/*    function lista_operaciones($com_id){
         $sql = 'select p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
                 p.prod_resultado,p.acc_id,p.prod_cod,p.uni_resp,p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
                 ore.or_id,ore.or_codigo,og.og_id,og.og_codigo, ae.acc_id,ae.acc_codigo,oe.obj_id,oe.obj_codigo, apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad
@@ -274,13 +274,37 @@ class model_producto extends CI_Model {
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+*/
+
+
+    function lista_operaciones($com_id){
+        $sql = ' select p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
+                p.prod_resultado,p.acc_id,p.prod_cod,p.uni_resp,p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
+                ore.or_id,ore.or_codigo,og.og_id,og.og_codigo,oe.obj_id,oe.obj_codigo, apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad
+                from _productos p
+                Inner Join indicador as i On i.indi_id=p.indi_id
+                
+                Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
+
+                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+              
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=og.aper_id
+                
+                where p.com_id='.$com_id.' and p.estado!=\'3\'
+                order by p.prod_cod, oe.obj_codigo asc'; 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
 
     /*=== LISTA DE OPERACIONES (2020) REPORTE - GASTO CORRIENTE ===*/
     function list_operaciones_pi($com_id){
         $sql = 'select p.prod_id,p.com_id,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
                 p.prod_resultado,p.acc_id,p.prod_cod, p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,
-                ore.or_id,ore.or_codigo,og.og_id,og.og_codigo, ae.acc_id,ae.acc_codigo,oe.obj_codigo,pr.*
+                ore.or_id,ore.or_codigo,og.og_id,og.og_codigo, oe.obj_codigo,pr.*
                 from _productos p
                 Inner Join indicador as i On i.indi_id=p.indi_id
                 Inner Join vista_productos_temporalizacion_programado_dictamen as pr On pr.prod_id=p.prod_id
@@ -289,11 +313,11 @@ class model_producto extends CI_Model {
 
                 Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
                 Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-                Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
+              
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
                 
                 where p.com_id='.$com_id.' and p.estado!=\'3\' and pr.g_id='.$this->gestion.'
-                order by p.prod_cod, oe.obj_codigo, ae.ae asc'; 
+                order by p.prod_cod, oe.obj_codigo asc'; 
         $query = $this->db->query($sql);
         return $query->result_array();
     }

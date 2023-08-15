@@ -214,7 +214,7 @@ $route['prog/reporte_form4_consolidado/(:any)'] = 'programacion/creporte/reporte
 
 
 /*-----------------------------  PROGRAMACION REQUERIMIENTOS (2020) -------------------------------*/
-$route['prog/prog_financiera/(:any)'] = 'programacion/crequerimiento/list_componente/$1';  //// Listado de componentes/operacione, segun el tipo de proyecto
+//$route['prog/prog_financiera/(:any)'] = 'programacion/crequerimiento/list_componente/$1';  //// Listado de componentes/operacione, segun el tipo de proyecto
 $route['prog/requerimiento/(:any)'] = 'programacion/crequerimiento/list_requerimientos/$1';  //// Listado de Requerimientos
 $route['prog/eliminar_insumos_todos/(:any)'] = 'programacion/crequerimiento/eliminar_todos_insumos/$1';  //// eliminar todos los requerimientos
 

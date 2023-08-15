@@ -192,7 +192,7 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">PROGRAMA</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" maxlength="2" size="2" name="prog" id="prog">
+                                        <input class="form-control" type="text" maxlength="3" size="3" name="prog" id="prog">
                                     </div>
                                 </div>
                             </div>

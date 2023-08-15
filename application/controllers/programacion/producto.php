@@ -85,7 +85,7 @@ class Producto extends CI_Controller {
         }
 
         $uresponsable='';
-        if($data['proyecto'][0]['por_id']==1){
+        if($data['proyecto'][0]['por_id']==1){ /// para programas bolsas
           $unidades=$this->model_producto->list_uresponsables_regional($data['proyecto'][0]['dist_id']);
 
           $uresponsable.='
@@ -106,7 +106,7 @@ class Producto extends CI_Controller {
           $uresponsable.='
                       <input type="text" name="u_resp" value="0" hidden>
                       <section class="col col-4">
-                        <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
+                        <label class="label"><b>UNIDAD RESPONSABLE</b></label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
                           <textarea rows="2" name="unidad" id="unidad" title="REGISTRE UNIDAD RESPONSABLE"></textarea>

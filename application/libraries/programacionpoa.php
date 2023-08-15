@@ -1560,7 +1560,7 @@ class Programacionpoa extends CI_Controller{
               <thead>
                 <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
                   <th style="width:1%;height:15px;">#</th>
-                  <th style="width:2%;">COD.<br>ACE.</th>
+                  <th style="width:2%;">COD.<br>OE.</th>
                   <th style="width:2%;">COD.<br>ACP.</th>
                   <th style="width:2%;">COD.<br>OPE.</th>
                   <th style="width:2%;">COD.<br>ACT.</th>
@@ -1610,10 +1610,10 @@ class Programacionpoa extends CI_Controller{
                 
                 $tabla.='
                 <tr>
-                  <td style="font-size: 6.5px; height:12px;">'.$nro.'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
+                  <td style="font-size: 6.5px; height:12px;text-align: center;">'.$nro.'</td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['obj_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></b></td>
                   <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
                   <td style="width: 9%; text-align: left;">'.$componente[0]['com_componente'].'</td>
                   <td style="width: 14%; text-align: left;">'.$rowp['prod_producto'].'</td>
@@ -1647,7 +1647,7 @@ class Programacionpoa extends CI_Controller{
               <thead>
                <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
                   <th style="width:1%;height:15px;">#</th>
-                  <th style="width:2%;">COD.<br>ACE.</th>
+                  <th style="width:2%;">COD.<br>OE.</th>
                   <th style="width:2%;">COD.<br>ACP.</th>
                   <th style="width:2%;">COD.<br>OPE.</th>
                   <th style="width:2%;">COD.<br>ACT.</th> 
@@ -1719,11 +1719,11 @@ class Programacionpoa extends CI_Controller{
                 $nro++;
                 $tabla.=
                 '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">
-                  <td style="width: 1%; height:12px;text-align: center;font-size: 8px;" bgcolor='.$color_or.'><b>'.$nro.'</b></td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
-                  <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 1%; height:12px;text-align: center;font-size: 8px;" bgcolor='.$color_or.'>'.$nro.'</td>
+                  <td style="width: 2%; text-align: center; font-size: 8.5px;" bgcolor='.$color_or.'><b>'.$rowp['obj_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8.5px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8.5px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8.5px;"><b>'.$rowp['prod_cod'].'</b></td>
                   <td style="width: 13%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
                   <td style="width: 13%; text-align: left;">'.$rowp['prod_resultado'].'</td>
                   <td style="width: 9%; text-align: left;">'.$uresp.'</td>
@@ -1773,7 +1773,7 @@ class Programacionpoa extends CI_Controller{
               <thead>
                 <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
                   <th style="width:1%;height:15px;">#</th>
-                  <th style="width:2%;">COD.<br>ACE.</th>
+                  <th style="width:2%;">COD.<br>OE.</th>
                   <th style="width:2%;">COD.<br>ACP.</th>
                   <th style="width:2%;">COD.<br>OPE.</th>
                   <th style="width:2%;">COD.<br>ACT.</th>
@@ -1823,10 +1823,10 @@ class Programacionpoa extends CI_Controller{
 
                 $tabla.='
                 <tr>
-                  <td style="font-size: 6.5px; height:12px;">'.$nro.'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
+                  <td style="font-size: 6.5px; height:12px; text-align: center;">'.$nro.'</td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['obj_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
                   <td style="width: 9%; text-align: left;">'.$componente[0]['com_componente'].'</td>
                   <td style="width: 11.5%; text-align: left;">'.$rowp['prod_producto'].'</td>
@@ -1861,7 +1861,7 @@ class Programacionpoa extends CI_Controller{
               <thead>
                <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
                   <th style="width:1%;height:15px;">#</th>
-                  <th style="width:2%;">COD.<br>ACE.</th>
+                  <th style="width:2%;">COD.<br>OE.</th>
                   <th style="width:2%;">COD.<br>ACP.</th>
                   <th style="width:2%;">COD.<br>OPE.</th>
                   <th style="width:2%;">COD.<br>ACT.</th> 
@@ -1925,9 +1925,9 @@ class Programacionpoa extends CI_Controller{
                 $tabla.=
                 '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">
                   <td style="height:12px;" bgcolor='.$color_or.'>'.$nro.'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'>'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2%; text-align: center;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['obj_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
                   <td style="width: 11.5%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
                   <td style="width: 11.5%; text-align: left;">'.$rowp['prod_resultado'].'</td>

@@ -1029,7 +1029,7 @@ class Model_proyecto extends CI_Model{
     }
     /*============== LISTA DE APERTURAS PROGRAMAS PADRES ============*/
     public function list_prog(){   
-        if($this->gestion>2022){
+       /* if($this->gestion>2022){
             $sql = 'select *
                 from aperturaprogramatica
                 where aper_proyecto=\'00\' and aper_actividad=\'000\' and aper_gestion='.$this->gestion.' and aper_asignado=\'1\' and aper_estado!=\'3\'
@@ -1040,9 +1040,14 @@ class Model_proyecto extends CI_Model{
                 from aperturaprogramatica
                 where aper_proyecto=\'0000\' and aper_actividad=\'000\' and aper_gestion='.$this->gestion.' and aper_asignado=\'1\' and aper_estado!=\'3\'
                 order by aper_gestion,aper_programa,aper_proyecto,aper_actividad asc';
-        }
+        }*/
 
-        
+        $sql = '
+                select *
+                from aperturaprogramatica a
+                where a.aper_estado!=\'3\' and a.aper_gestion='.$this->gestion.' and a.aper_asignado=\'1\'
+                order by a.aper_gestion,a.aper_programa,a.aper_proyecto,a.aper_actividad asc';
+                
         $query = $this->db->query($sql);
         return $query->result_array(); 
     }

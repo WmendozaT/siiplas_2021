@@ -2,37 +2,37 @@
 
 class Certificacionpoa extends CI_Controller{
     public function __construct (){
-        parent::__construct();
-        $this->load->model('programacion/model_proyecto');
-        $this->load->model('mantenimiento/model_entidad_tras');
-        $this->load->model('mantenimiento/model_partidas');
-        $this->load->model('mantenimiento/model_ptto_sigep');
-        $this->load->model('modificacion/model_modrequerimiento');
-        $this->load->model('programacion/insumos/minsumos');
-        $this->load->model('ejecucion/model_seguimientopoa');
-        $this->load->model('programacion/model_componente');
-        $this->load->model('ejecucion/model_notificacion');
-        $this->load->model('programacion/model_producto');
-        $this->load->model('ejecucion/model_evaluacion');
-        $this->load->model('mantenimiento/model_configuracion');
-        $this->load->model('ejecucion/model_certificacion');
-        $this->load->model('programacion/insumos/minsumos');
-        $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
-        $this->load->model('menu_modelo');
-        $this->load->library('security');
+      parent::__construct();
+      $this->load->model('programacion/model_proyecto');
+      $this->load->model('mantenimiento/model_entidad_tras');
+      $this->load->model('mantenimiento/model_partidas');
+      $this->load->model('mantenimiento/model_ptto_sigep');
+      $this->load->model('modificacion/model_modrequerimiento');
+      $this->load->model('programacion/insumos/minsumos');
+      $this->load->model('ejecucion/model_seguimientopoa');
+      $this->load->model('programacion/model_componente');
+      $this->load->model('ejecucion/model_notificacion');
+      $this->load->model('programacion/model_producto');
+      $this->load->model('ejecucion/model_evaluacion');
+      $this->load->model('mantenimiento/model_configuracion');
+      $this->load->model('ejecucion/model_certificacion');
+      $this->load->model('programacion/insumos/minsumos');
+      $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
+      $this->load->model('menu_modelo');
+      $this->load->library('security');
 
-        $this->gestion = $this->session->userData('gestion');
-        $this->adm = $this->session->userData('adm');
-        //$this->rol = $this->session->userData('rol_id');
-        $this->dist = $this->session->userData('dist');
-        //$this->dist_tp = $this->session->userData('dist_tp');
-        $this->tmes = $this->session->userData('trimestre');
-        $this->fun_id = $this->session->userData('fun_id');
-       // $this->tp_adm = $this->session->userData('tp_adm');
-        $this->verif_mes=$this->session->userData('mes_actual');
-        $this->resolucion=$this->session->userdata('rd_poa');
-        $this->tp_adm = $this->session->userData('tp_adm');
-        $this->mes = $this->mes_nombre();
+      $this->gestion = $this->session->userData('gestion');
+      $this->adm = $this->session->userData('adm');
+      //$this->rol = $this->session->userData('rol_id');
+      $this->dist = $this->session->userData('dist');
+      //$this->dist_tp = $this->session->userData('dist_tp');
+      $this->tmes = $this->session->userData('trimestre');
+      $this->fun_id = $this->session->userData('fun_id');
+     // $this->tp_adm = $this->session->userData('tp_adm');
+      $this->verif_mes=$this->session->userData('mes_actual');
+      $this->resolucion=$this->session->userdata('rd_poa');
+      $this->tp_adm = $this->session->userData('tp_adm');
+      $this->mes = $this->mes_nombre();
     }
 
 //// ADMINISTRADOR 
@@ -1058,7 +1058,7 @@ class Certificacionpoa extends CI_Controller{
 
 
 
-  /*------- LISTA DE REQUERIMIENTOS CON TEMPORALIDAD UNICA (2022) ------*/
+  /*------- LISTA DE REQUERIMIENTOS CON TEMPORALIDAD UNICA (2023) ------*/
   public function list_requerimientos_temporalidad_unica($prod_id){
     /// tp 0: lista de requerimientos por unidad responsable
     /// tp 1: lista de requerimientos del prog 72 BIENES Y SERVICIOS

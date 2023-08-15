@@ -100,10 +100,16 @@ function abreVentana(PDF){
       $("#subir_act").on("click", function () {
           var $validator = $("#form_nuevo").validate({
               rules: {
-                  obj_id: { //// Objetivo Estrategico
+                 /* obj_id: { //// Objetivo Estrategico
                     required: true,
                   },
                   acc_id: { //// Accion Estrategico
+                     required: true,
+                  },*/
+                  aper_id: { //// Apertura Programatica
+                     required: true,
+                  },
+                  oe_id: { //// Objetivo estrategico
                      required: true,
                   },
                   ogestion: { //// Objetivo de Gestion
@@ -132,8 +138,10 @@ function abreVentana(PDF){
                   }
               },
               messages: {
-                obj_id: "<font color=red>SELECCIONE OBJETIVO ESTRATEGICO</font>", 
-                acc_id: "<font color=red>SELECCIONE ACCIÓN ESTRATEGICA</font>", 
+                /*obj_id: "<font color=red>SELECCIONE OBJETIVO ESTRATEGICO</font>", 
+                acc_id: "<font color=red>SELECCIONE ACCIÓN ESTRATEGICA</font>", */
+                aper_id: "<font color=red>SELECCIONE PROGRAMA PRESUPUESTARIO</font>",
+                oe_id: "<font color=red>SELECCIONE OBJETIVO ESTRATEGICO</font>",
                 ogestion: "<font color=red>REGISTRE ACCION DE CORTO PLAZO</font>", 
                 producto: "<font color=red>REGISTRE PRODUCTO</font>", 
                 resultado: "<font color=red>REGISTRE RESULTADO</font>", 
@@ -278,10 +286,12 @@ $(function () {
 
         request.done(function (response, textStatus, jqXHR) {
         if (response.respuesta == 'correcto') {
-          $('#macc_id').html('<option value="'+response.ogestion[0]['acc_id']+'">'+response.ogestion[0]['acc_codigo']+'.- '+response.ogestion[0]['acc_descripcion']+'</option>');
-          document.getElementById("mobj_id").value = response.ogestion[0]['obj_id'];
-          document.getElementById("mogestion").value = response.ogestion[0]['og_objetivo'];
+            $('#apert').html(response.apertura);
+            $('#oest').html(response.tab_oe);
+            
+            document.getElementById("mogestion").value = response.ogestion[0]['og_objetivo'];
             document.getElementById("mproducto").value = response.ogestion[0]['og_producto'];
+            document.getElementById("mformula").value = response.ogestion[0]['og_formula'];
             document.getElementById("mresultado").value = response.ogestion[0]['og_resultado'];
             document.getElementById("mtp_indi").value = response.ogestion[0]['indi_id'];
             document.getElementById("mindicador").value = response.ogestion[0]['og_indicador'];

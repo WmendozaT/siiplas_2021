@@ -91,15 +91,26 @@ class Model_objetivogestion extends CI_Model{
     }*/
 
 
-   /*---- LIST OBJETIVOS DE GESTION GENERAL ----*/
+   /*---- LIST OBJETIVOS DE GESTION GENERAL 2020-20021-2022-2023----*/
     public function list_objetivosgestion_general(){
-        $sql = 'select *
+        if($this->gestion>2023){ /// gestion 2024
+             $sql = 'select *
+                from objetivo_gestion og
+                Inner Join indicador as tp On og.indi_id=tp.indi_id
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
+                where og.estado!=\'3\' and og.g_id='.$this->gestion.'
+                order by og.og_codigo,og.og_id asc';
+        }
+        else{
+             $sql = 'select *
                 from objetivo_gestion og
                 Inner Join indicador as tp On og.indi_id=tp.indi_id
                 Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
                 Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
                 where og.estado!=\'3\' and og.g_id='.$this->gestion.'
                 order by og.og_codigo,og.og_id asc';
+        }
+       
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -119,13 +130,23 @@ class Model_objetivogestion extends CI_Model{
 
     /*---------- GET OBJETIVOS DE GESTION --------------*/
     public function get_objetivosgestion($og_id){
-        $sql = 'select *
+        if($this->gestion>2023){
+            $sql = '
+                select *
+                from objetivo_gestion og
+                Inner Join indicador as tp On og.indi_id=tp.indi_id
+                where og.og_id='.$og_id.' and og.estado!=\'3\'';
+        }
+        else{
+            $sql = '
+            select *
                 from objetivo_gestion og
                 Inner Join indicador as tp On og.indi_id=tp.indi_id
                 Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
                 Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
                 where og.og_id='.$og_id.' and og.estado!=\'3\'';
-
+        }
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }

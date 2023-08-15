@@ -39,24 +39,6 @@
 			<div id="logo-group">
 				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
 			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
 				<!-- collapse menu button -->
@@ -89,9 +71,9 @@
 			<div class="login-info">
 				<span> <!-- User image size is adjusted inside CSS, it should stay as is --> 
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                              <span>
-                                  <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
-                              </span>
+            <span>
+              <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
+            </span>
 						<i class="fa fa-angle-down"></i>
 					</a>
 				</span>
@@ -99,11 +81,11 @@
 			<nav>
 				<ul>
 					<li class="">
-	                <a href="<?php echo site_url("admin").'/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-	            	</li>
-		            <li class="text-center">
-		                <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">PROGRAMACI&Oacute;N DEL POA</span></a>
-		            </li>
+	          <a href="<?php echo site_url("admin").'/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+	        </li>
+		      <li class="text-center">
+		        <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">PROGRAMACI&Oacute;N DEL POA</span></a>
+		      </li>
 					<?php echo $menu;?>
 				</ul>
 			</nav>
@@ -122,7 +104,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>...</li><li>....</li><li>....</li><li>Objetivos de Gesti&oacute;n</li><li>Mis Objetivos Regional</li><li>Nuevo Registro</li>
+					<li>...</li><li>....</li><li>Objetivos de Gesti&oacute;n</li><li>Operaciones</li><li>Nuevo Registro</li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->
@@ -131,34 +113,33 @@
 				<section id="widget-grid" class="">
 					<div class="row">
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
-	                        <section id="widget-grid" class="well">
-	                            <div class="">
-	                            	<h1>OBJETIVO ESTRAT&Eacute;GICO : <small><?php echo $obj_estrategico[0]['obj_codigo'].' .- '.$obj_estrategico[0]['obj_descripcion'];?></small></h1>
-	                              	<h1>ACCI&Oacute;N ESTRAT&Eacute;GICO : <small><?php echo $accion_estrategica[0]['acc_codigo'].' .- '.$accion_estrategica[0]['acc_descripcion'];?></small></h1>
-	                              	<h1>ACCI&Oacute;N DE CORTO PLAZO : <small><?php echo $ogestion[0]['og_codigo'].' .- '.$ogestion[0]['og_objetivo'];?></small> || META : <?php echo round($ogestion[0]['og_meta'],2);?></h1>
-	                              	<h1>OPERACIÓN REGIONAL : <small><?php echo strtoupper($regional[0]['dep_departamento']);?></small></h1>
-	                            </div>
-	                        </section>
-	                    </article>
-	                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
-                            <section id="widget-grid" class="well">
-                                <a href="<?php echo base_url().'index.php/me/objetivos_regionales/'.$ogestion[0]['og_id'];?>" title="SALIR" class="btn btn-default" style="width:100%;"><img src="<?php echo base_url(); ?>assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;SALIR</a>
-                            </section>
-                        </article>
-	                </div>
-	                <div class="row">
-	                	<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<?php 
-			                  if($this->session->flashdata('success')){ ?>
-			                    <div class="alert alert-success">
-			                      <?php echo $this->session->flashdata('success'); ?>
-			                    </div>
-			                <?php }
-			                    elseif($this->session->flashdata('danger')){ ?>
-		                    	<div class="alert alert-danger">
-			                      <?php echo $this->session->flashdata('danger'); ?>
-			                    </div><?php }
-			                ?>
+                <section id="widget-grid" class="well">
+                  <div class="">
+                  	<h1>OBJETIVO ESTRAT&Eacute;GICO : <small><?php echo $obj_estrategico[0]['obj_codigo'].' .- '.$obj_estrategico[0]['obj_descripcion'];?></small></h1>
+                    <h1>ACCI&Oacute;N DE CORTO PLAZO : <small><?php echo $ogestion[0]['og_codigo'].' .- '.$ogestion[0]['og_objetivo'];?></small> || META : <?php echo round($ogestion[0]['og_meta'],2);?></h1>
+                    <h1>OPERACIÓN REGIONAL : <small><?php echo strtoupper($regional[0]['dep_departamento']);?></small></h1>
+                  </div>
+                </section>
+            </article>
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+                <section id="widget-grid" class="well">
+                  <a href="<?php echo base_url().'index.php/me/objetivos_regionales/'.$ogestion[0]['og_id'];?>" title="SALIR" class="btn btn-default" style="width:100%;"><img src="<?php echo base_url(); ?>assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;SALIR</a>
+                </section>
+              </article>
+            </div>
+	          <div class="row">
+            	<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<?php 
+                  if($this->session->flashdata('success')){ ?>
+                    <div class="alert alert-success">
+                      <?php echo $this->session->flashdata('success'); ?>
+                    </div>
+                <?php }
+                    elseif($this->session->flashdata('danger')){ ?>
+                  	<div class="alert alert-danger">
+                      <?php echo $this->session->flashdata('danger'); ?>
+                    </div><?php }
+                ?>
 							<div class="well well-sm well-light">
 								<div class="row">
 									<?php echo $formulario;?>

@@ -36,6 +36,7 @@ class Cobjetivo_gestion extends CI_Controller {
       $data['titulo']=$this->acortoplazo->titulo();
       $data['oestrategicos'] = $this->model_mestrategico->list_objetivos_estrategicos(); /// Objetivos Estrategicos
       $data['indi']= $this->model_proyecto->indicador(); /// indicador
+      $data['programas']=$this->model_proyecto->list_prog(); /// Aperturas Programatica
       $data['ogestion']=$this->acortoplazo->mis_ogestion_gral();
       $this->load->view('admin/mestrategico/objetivos_gestion/list_ogestion_general', $data);
     }
@@ -91,7 +92,7 @@ class Cobjetivo_gestion extends CI_Controller {
       $this->load->view('admin/mestrategico/objetivos_gestion/list_ogestion', $data);
     }
 
-    /*------- VALIDA OBJETIVO DE GESTION -------*/
+    /*------- VALIDA ACP -------*/
     public function valida_ogestion(){
       if($this->input->post()) {
         $post = $this->input->post();
@@ -99,10 +100,14 @@ class Cobjetivo_gestion extends CI_Controller {
         $form = $this->security->xss_clean($post['form']); /// from 1: por accion estrategica, 0: lista de Objetivos de gestion 
         
         if($tp==1){
-          $acc_id = $this->security->xss_clean($post['acc_id']); /// acc id
+          //$acc_id = $this->security->xss_clean($post['acc_id']); /// acc id
+          $acc_id = 0; /// acc id
+          $aper_id = $this->security->xss_clean($post['aper_id']); /// aper id
+          $oe_id = $this->security->xss_clean($post['oe_id']); /// id Objetivo Estrategico
           $objetivo = $this->security->xss_clean($post['ogestion']); /// Objetivo
           $codigo = $this->security->xss_clean($post['cod']); /// Codigo
           $producto = $this->security->xss_clean($post['producto']); /// Producto
+          $formula = $this->security->xss_clean($post['formula']); /// formula
           $resultado = $this->security->xss_clean($post['resultado']); /// Resultado
           $tp_indi = $this->security->xss_clean($post['tp_indi']); /// Tipo de Indicador
           $indicador = $this->security->xss_clean($post['indicador']); /// Indicador
@@ -114,8 +119,11 @@ class Cobjetivo_gestion extends CI_Controller {
 
           $data_to_store = array( 
             'acc_id' => $acc_id,
+            'aper_id' => $aper_id,
+            'oe_id' => $oe_id,
             'og_codigo' => $codigo,
             'og_objetivo' => strtoupper($objetivo),
+            'og_formula' => strtoupper($formula),
             'og_producto' => strtoupper($producto),
             'og_resultado' => strtoupper($resultado),
             'indi_id' => $tp_indi,
@@ -164,9 +172,13 @@ class Cobjetivo_gestion extends CI_Controller {
         }
         else{
           $og_id = $this->security->xss_clean($post['mog_id']); /// Obj id
-          $acc_id = $this->security->xss_clean($post['macc_id']); /// acc id
+          //$acc_id = $this->security->xss_clean($post['macc_id']); /// acc id
+          $acc_id = 0; /// acc id
+          $aper_id = $this->security->xss_clean($post['maper_id']); /// aper
+          $oe_id = $this->security->xss_clean($post['moe_id']); /// oe_id
           $codigo = $this->security->xss_clean($post['mcod']); /// codigo
           $objetivo = $this->security->xss_clean($post['mogestion']); /// Objetivo
+          $formula = $this->security->xss_clean($post['mformula']); /// Formula
           $producto = $this->security->xss_clean($post['mproducto']); /// Producto
           $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
           $tp_indi = $this->security->xss_clean($post['mtp_indi']); /// Tipo de Indicador
@@ -178,10 +190,12 @@ class Cobjetivo_gestion extends CI_Controller {
           $observacion = $this->security->xss_clean($post['mobservacion']); /// Observacion
 
           $update_og= array(
-            'acc_id' => $acc_id,
+            'aper_id' => $aper_id,
+            'oe_id' => $oe_id,
             'og_codigo' => $codigo,
             'og_objetivo' => strtoupper($objetivo),
             'og_producto' => strtoupper($producto),
+            'og_formula' => strtoupper($formula),
             'og_resultado' => strtoupper($resultado),
             'indi_id' => $tp_indi,
             'og_indicador' => strtoupper($indicador),
@@ -281,6 +295,40 @@ class Cobjetivo_gestion extends CI_Controller {
         $ogestion=$this->model_objetivogestion->get_objetivosgestion($og_id); 
         $ogestion_programado=$this->model_objetivogestion->get_objetivosgestion_temporalidad($og_id);
         $ogestion_programado_mes=$this->model_objetivogestion->get_objetivosgestion_temporalidad_mensual($og_id);
+
+        $apertura='';
+        $programas=$this->model_proyecto->list_prog();
+        $apertura.='
+          <select class="form-control" id="maper_id" name="maper_id" title="SELECCIONE CATEGORIA PROGRAMATICA">
+            <option value="">Seleccione Programa</option>';
+            foreach($programas as $row){
+              if($row['aper_id']==$ogestion[0]['aper_id']){
+                $apertura.='<option value="'.$row['aper_id'].'" selected>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].' - '.$row['aper_descripcion'].'</option>';
+              }
+              else{
+                $apertura.='<option value="'.$row['aper_id'].'">'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].' - '.$row['aper_descripcion'].'</option>';
+              }
+            }
+            $apertura.='
+          </select>';
+
+        $tab_oe='';
+        $oestrategicos = $this->model_mestrategico->list_objetivos_estrategicos(); /// Objetivos Estrategicos
+        $tab_oe.='
+          <select class="form-control" id="moe_id" name="moe_id" title="SELECCIONE OBJETIVOS ESTRATEGICOS INSTITUCIONALES">
+            <option value="">Seleccione Objetivos Estrategicos</option>';
+            foreach($oestrategicos as $row){
+              if($row['obj_id']==$ogestion[0]['oe_id']){
+                $tab_oe.='<option value="'.$row['obj_id'].'" selected>'.$row['obj_codigo'].'.- '.$row['obj_descripcion'].'</option>';
+              }
+              else{
+                $tab_oe.='<option value="'.$row['obj_id'].'">'.$row['obj_codigo'].'.- '.$row['obj_descripcion'].'</option>';
+              }
+            }
+            $tab_oe.='
+          </select>';
+
+
         $suma=0;$suma_mes=0;
         for ($i=1; $i <=10; $i++) { 
           $dep['reg'.$i.'']=0;
@@ -314,6 +362,8 @@ class Cobjetivo_gestion extends CI_Controller {
         if(count($ogestion)!=0){
           $result = array(
             'respuesta' => 'correcto',
+            'apertura' => $apertura,
+            'tab_oe' => $tab_oe,
             'ogestion' => $ogestion,
             'oprogramado' => $dep,
             'temporalidad' => $temp_mes,
@@ -374,92 +424,6 @@ class Cobjetivo_gestion extends CI_Controller {
       }
     }
 
-
-    /*----- Reporte objetivo de Gestion segun Accion estrategica -----*/
-/*    public function reporte_objetivos_gestion($acc_id){
-      $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($acc_id);
-      if(count($data['accion_estrategica'])!=0){
-        $data['mes'] = $this->acortoplazo->mes_nombre();
-        $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($acc_id);
-        $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
-        $data['ogestion']=$this->rep_list_ogestion($acc_id);
-
-        $this->load->view('admin/mestrategico/objetivos_gestion/reporte_ogestion', $data); 
-      }
-      else{
-        echo "Error !!!";
-      }
-    }*/
-
-    /*----- Reporte Lista de objetivo de Gestion -----*/
-  /*  public function rep_list_ogestion($acc_id){
-      $ogestion = $this->model_objetivogestion->list_objetivosgestion($acc_id); /// OBJETIVOS DE GESTION
-      $acciones = $this->model_mestrategico->get_acciones_estrategicas($acc_id); // ACCIONES ESTRATEGICAS
-      $objetivos =$this->model_mestrategico->get_objetivos_estrategicos($acciones[0]['obj_id']); /// OBJETIVOS ESTRATEGICOS
-      $tabla='';
-      $tabla.='  
-      <table cellpadding="0" cellspacing="0" class="tabla" border=0.4 style="width:100%;">
-        <thead>
-          <tr style="font-size: 8px;" bgcolor="#d8d8d8" align=center>
-            <th style="width:2%;height:20px;">#</th>
-            <th style="width:3%;">COD. O.E.</th>
-            <th style="width:3%;">COD. A.E.</th>
-            <th style="width:10%;">ACCIÓN DE CORTO PLAZO</th>
-            <th style="width:10%;">PRODUCTO</th>
-            <th style="width:10%;">RESULTADO</th>
-            <th style="width:5%;">TP. INDI.</th>
-            <th style="width:9%;">INDICADOR</th>
-            <th style="width:3.3%;">LINEA BASE</th>
-            <th style="width:3.3%;">META</th>
-            <th style="width:3.3%;" title="CHUQUISACA">CH.</th>
-            <th style="width:3.3%;" title="LA PAZ">LPZ.</th>
-            <th style="width:3.3%;" title="COCHABAMBA">CBBA.</th>
-            <th style="width:3.3%;" title="ORURO">OR.</th>
-            <th style="width:3.3%;" title="POTOSI">POT.</th>
-            <th style="width:3.3%;" title="TARIJA">TJA.</th>
-            <th style="width:3.3%;" title="SANTA CRUZ">SCZ.</th>
-            <th style="width:3.3%;" title="BENI">BE.</th>
-            <th style="width:3.3%;" title="PANDO">PN</th>
-            <th style="width:3.3%;" title="OFICINA NACIONAL">OFN</th>
-            <th style="width:8%;">MEDIO VERIFICACI&Oacute;N</th>
-          </tr>
-        </thead>
-        <tbody>';
-        $nro=0;
-        foreach($ogestion  as $row){
-          $nro++;
-          $tabla .='<tr style="font-size: 7px;">';
-            $tabla .='<td style="width:2%; height:15px;" align=center>'.$nro.'</td>';
-            $tabla .='<td style="width:3%;" align="center">'.$objetivos[0]['obj_codigo'].'</td>';
-            $tabla .='<td style="width:3%;" align="center">'.$acciones[0]['acc_codigo'].'</td>';
-            $tabla .='<td style="width:10%;">'.$row['og_objetivo'].'</td>';
-            $tabla .='<td style="width:10%;">'.$row['og_producto'].'</td>';
-            $tabla .='<td style="width:10%;">'.$row['og_resultado'].'</td>';
-            $tabla .='<td style="width:5%;">'.strtoupper($row['indi_descripcion']).'</td>';
-            $tabla .='<td style="width:9%;">'.$row['og_indicador'].'</td>';
-            $tabla .='<td style="width:3.3%;">'.$row['og_linea_base'].'</td>';
-            $tabla .='<td style="width:3.3%;">'.$row['og_meta'].'</td>';
-            
-            for ($i=1; $i <=10 ; $i++) { 
-              $dep=$this->model_objetivogestion->get_ogestion_regional($row['og_id'],$i);
-              if(count($dep)!=0){
-                $tabla.='<td style="width:3.3%;" bgcolor="#f5f5f5">'.$dep[0]['prog_fis'].'</td>';
-              }
-              else{
-                $tabla.='<td style="width:3.3%;" bgcolor="#f5f5f5">0</td>';
-              }
-            }
-            $tabla.='<td style="width:8%;">'.$row['og_verificacion'].'</td>';
-          $tabla.='</tr>';
-        }
-        $tabla.='
-        </tbody>
-       </table>';
-
-       return $tabla;
-    }*/
-
-
     /*------------------------- COMBO RESPONSABLES ----------------------*/
     public function combo_funcionario_unidad_organizacional($accion=''){ 
       $salida="";
@@ -481,11 +445,6 @@ class Cobjetivo_gestion extends CI_Controller {
         break;
       }
     }
-
-
-
-
-
 
 
 

@@ -10,7 +10,7 @@ class Model_mestrategico extends CI_Model{
         $this->dist_tp = $this->session->userData('dist_tp'); /// dist_tp->1 Regional, dist_tp->0 Distritales
     }
    
-   /*============================ OBJETIVOS ESTRATEGICOS ================================*/
+   /*============ OBJETIVOS ESTRATEGICOS ===============*/
 
     /*--- pdes -----*/
     public function lista_pdes_pilares(){
@@ -28,7 +28,6 @@ class Model_mestrategico extends CI_Model{
     public function list_objetivos_estrategicos(){
         $sql = 'select *
                 from _objetivos_estrategicos oe
-                Inner Join aperturaprogramatica as apg On apg.aper_id=oe.aper_id
                 where (oe.obj_gestion_inicio<='.$this->gestion.' and oe.obj_gestion_fin>='.$this->gestion.') and oe.obj_estado!=\'3\'
                 order by oe.obj_id asc';
 

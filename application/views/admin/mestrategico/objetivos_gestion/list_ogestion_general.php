@@ -30,15 +30,16 @@
 		  }
 		</script>
 		<style>
-			table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
+			table{
+					font-size: 10px;
+          width: 100%;
+          max-width:1550px;
+          }
+          th{
+            padding: 1.4px;
+            text-align: center;
+            font-size: 10px;
+          }
             #mdialTamanio{
 	          width: 70% !important;
 	        }
@@ -47,31 +48,13 @@
 	        }
 	        #mdialTamanio_subir_archivo{
               width: 80% !important;
-            }
+          }
 		</style>
 	</head>
 	<body class="">
 		<header id="header">
 			<div id="logo-group">
 				<!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-			</div>
-			<div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-				<span>
-					&nbsp;&nbsp;&nbsp; 
-					<div class="badge bg-color-blue">
-						<span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-					</div>
-				</span>
-				<div class="project-context hidden-xs">
-					<span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-						<i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-					</span>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-						</li>
-					</ul>
-				</div>
 			</div>
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
@@ -105,9 +88,9 @@
 			<div class="login-info">
 				<span> <!-- User image size is adjusted inside CSS, it should stay as is --> 
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                            <span>
-                                <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
-                            </span>
+            <span>
+              <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
+            </span>
 						<i class="fa fa-angle-down"></i>
 					</a>
 				</span>
@@ -115,11 +98,11 @@
 			<nav>
 				<ul>
 					<li class="">
-	                <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-	            	</li>
-		            <li class="text-center">
-		                <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">PROGRAMACI&Oacute;N DEL POA</span></a>
-		            </li>
+	          <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+	        </li>
+		      <li class="text-center">
+		        <a href="#" title="PROGRAMACION"> <span class="menu-item-parent">PROGRAMACI&Oacute;N DEL POA</span></a>
+		      </li>
 					<?php echo $menu;?>
 				</ul>
 			</nav>
@@ -209,7 +192,7 @@
       </div>
     </div>
 
-<!-- MODAL NUEVO REGISTRO DE OBJETIVOS DE GESTION   -->
+	<!-- MODAL NUEVO REGISTRO ACP  -->
   <div class="modal fade" id="modal_nuevo_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" id="mdialTamanio">
       <div class="modal-content">
@@ -221,54 +204,71 @@
               <form action="<?php echo site_url().'/mestrategico/cobjetivo_gestion/valida_ogestion';?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
                   <input type="hidden" name="tp" id="tp" value="1">
                   <input type="hidden" name="form" id="form" value="0"> 
-                  <header><b>ALINEACION PEI</b></header>
+                 
                   <fieldset>
                   	<div class="row">
-	                      <section class="col col-4">
-	                        <label class="label">OBJETIVO ESTRATEGICO</label>
-	                        <select class="form-control" id="obj_id" name="obj_id" title="SELECCIONE OBJETIVO ESTRATEGICO">
-	                          <option value="">Seleccione Objetivo Estrategico</option>
-	                            <?php 
-	                              foreach($oestrategicos as $row){ ?>
-	                                <option value="<?php echo $row['obj_id']; ?>"><?php echo $row['obj_codigo'].'.- '.$row['obj_descripcion']; ?></option>
-	                                <?php   
-	                              }
-	                            ?>
-	                        </select>
-	                      </section>
-	                      <section class="col col-4">
-	                        <label class="label">ACCI&Oacute;N ESTRATEGICA</label>
-	                        <select class="form-control" id="acc_id" name="acc_id" title="SELECCIONE ACCIÓN ESTRATEGICA"></select>
-	                      </section>
+                  		<section class="col col-2">
+                        <label class="label"><b style="color:green;">C&Oacute;DIGO ACP</b></label>
+                        <label class="input">
+                          <i class="icon-append fa fa-tag"></i>
+                          <input type="text" name="cod" id="cod" value="0" title="CODIGO A.C.P." onkeypress="if (this.value.length < 10) { return soloNumeros(event);}else{return false; }" onpaste="return false" onkeyup="verif_codigo()">
+                        </label>
+                      </section>
+
+                      <section class="col col-4">
+                        <label class="label"><b style="color:green;">OBJETIVO ESTRATEGICO INSTITUCIONAL</b></label>
+                        <select class="form-control" id="oe_id" name="oe_id" title="SELECCIONE OBJETIVO ESTRATEGICO">
+                          <option value="">Seleccione Objetivo Estrategico</option>
+                            <?php 
+                              foreach($oestrategicos as $row){ ?>
+                                <option value="<?php echo $row['obj_id']; ?>"><?php echo $row['obj_codigo'].'.- '.$row['obj_descripcion'];?></option>
+                                <?php   
+                              }
+                            ?>
+                        </select>
+                      </section>
+
+                      <section class="col col-4">
+                        <label class="label"><b style="color:green;">PROGRAMA PRESUPUESTARIO <?php echo $this->session->userData('gestion') ?></b></label>
+                        <select class="form-control" id="aper_id" name="aper_id" title="SELECCIONE CATEGORIA PROGRAMATICA">
+                          <option value="">Seleccione Programa</option>
+                            <?php 
+                              foreach($programas as $row){ ?>
+                                <option value="<?php echo $row['aper_id']; ?>"><?php echo $row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].' - '.$row['aper_descripcion'];?></option>
+                                <?php   
+                              }
+                            ?>
+                        </select>
+                      </section>
                   	</div>
                   </fieldset>
 
                   <header><b>DATOS GENERALES ACCI&Oacute;N DE CORTO PLAZO</b></header>
                   <fieldset>          
                     <div class="row">
-                      <section class="col col-1">
-                        <label class="label">C&Oacute;DIGO</label>
-                        <label class="input">
-                          <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="cod" id="cod" value="0" title="CODIGO ACP" onkeypress="if (this.value.length < 10) { return soloNumeros(event);}else{return false; }" onpaste="return false" onkeyup="verif_codigo()">
-                        </label>
-                      </section>
-                      <section class="col col-4">
-                        <label class="label">ACCI&Oacute;N DE CORTO PLAZO</label>
+                      <section class="col col-3">
+                        <label class="label"><b>ACCI&Oacute;N DE CORTO PLAZO</b></label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="3" name="ogestion" id="ogestion" title="REGISTRAR OBJETIVO"></textarea>
+                          <textarea rows="3" name="ogestion" id="ogestion" title="REGISTRAR ACP"></textarea>
                         </label>
                       </section>
-                      <section class="col col-4">
-                        <label class="label">PRODUCTO</label>
+                      <section class="col col-3">
+                        <label class="label"><b>FORMULA</b></label>
+                        <label class="textarea">
+                          <i class="icon-append fa fa-tag"></i>
+                          <textarea rows="3" name="formula" id="formula" title="REGISTRE FORMULA"></textarea>
+                        </label>
+                      </section>
+                      <section class="col col-3">
+                        <label class="label"><b>PRODUCTO</b></label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
                           <textarea rows="3" name="producto" id="producto" title="REGISTRAR PRODUCTO"></textarea>
                         </label>
                       </section>
                       <section class="col col-3">
-                        <label class="label">RESULTADO</label>
+                        <label class="label"><b>RESULTADO</b></label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
                           <textarea rows="3" name="resultado" id="resultado" title="REGISTRAR RESULTADO"></textarea>
@@ -555,37 +555,28 @@
               	<input type="hidden" name="mog_id" id="mog_id">
               	<input type="hidden" name="form" id="form" value="0"> 
 
-              	<header><b>ALINEACION PEI</b></header>
               	<fieldset>
 	              	<div class="row">
+		              		<section class="col col-2">
+	                      <label class="label">C&Oacute;DIGO </label>
+	                      <label class="input">
+	                        <i class="icon-append fa fa-tag"></i>
+	                        <input type="text" name="mcod" id="mcod" onkeypress="if (this.value.length < 10) { return soloNumeros(event);}else{return false; }" onpaste="return false" required="true">
+	                      </label>
+	                    </section>
                       <section class="col col-4">
-                        <label class="label">OBJETIVO ESTRATEGICO</label>
-                        <select class="form-control" id="mobj_id" name="mobj_id" title="SELECCIONE OBJETIVO ESTRATEGICO">
-                          <option value="">Seleccione Objetivo Estrategico</option>
-                            <?php 
-                              foreach($oestrategicos as $row){ ?>
-                                <option value="<?php echo $row['obj_id']; ?>"><?php echo $row['obj_codigo'].'.- '.$row['obj_descripcion']; ?></option>
-                                <?php   
-                              }
-                            ?>
-                        </select>
+                        <label class="label"><b>OBJETIVO ESTRATEGICO INSTITUCIONAL</b></label>
+                        <div id="oest"></div>
                       </section>
                       <section class="col col-4">
-                        <label class="label">ACCI&Oacute;N ESTRATEGICA</label>
-                        <select class="form-control" id="macc_id" name="macc_id" title="SELECCIONE ACCIÓN ESTRATEGICA"></select>
+                        <label class="label"><b>PROGRAMA PRESUPUESTARIO <?php echo $this->session->userData('gestion') ?></b></label>
+                        <div id="apert"></div>
                       </section>
 	              	</div>
               	</fieldset>
                 <header><b>DATOS GENERALES ACCI&Oacute;N DE CORTO PLAZO</b></header>
                 <fieldset>          
                   <div class="row">
-                  	<section class="col col-1">
-                        <label class="label">C&Oacute;DIGO</label>
-                        <label class="input">
-                          <i class="icon-append fa fa-tag"></i>
-                          <input type="text" name="mcod" id="mcod" onkeypress="if (this.value.length < 10) { return soloNumeros(event);}else{return false; }" onpaste="return false" required="true">
-                        </label>
-                      </section>
                     <section class="col col-3">
                       <label class="label">ACCI&Oacute;N DE CORTO PLAZO</label>
                       <label class="textarea">
@@ -593,14 +584,21 @@
                         <textarea rows="3" name="mogestion" id="mogestion" title="MODIFICAR OBJETIVO DE GESTION"></textarea>
                       </label>
                     </section>
-                    <section class="col col-4">
+                    <section class="col col-3">
+                      <label class="label"><b>FORMULA</b></label>
+                      <label class="textarea">
+                        <i class="icon-append fa fa-tag"></i>
+                        <textarea rows="3" name="mformula" id="mformula" title="REGISTRE FORMULA"></textarea>
+                      </label>
+                    </section>
+                    <section class="col col-3">
                       <label class="label">PRODUCTO</label>
                       <label class="textarea">
                         <i class="icon-append fa fa-tag"></i>
                         <textarea rows="3" name="mproducto" id="mproducto" title="MODIFICAR PRODUCTO"></textarea>
                       </label>
                     </section>
-                    <section class="col col-4">
+                    <section class="col col-3">
                       <label class="label">RESULTADO</label>
                       <label class="textarea">
                         <i class="icon-append fa fa-tag"></i>

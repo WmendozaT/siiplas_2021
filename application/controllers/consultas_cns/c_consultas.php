@@ -369,7 +369,7 @@ class C_consultas extends CI_Controller {
                     <div class="well well-sm bg-color-teal txt-color-white text-center">
                       <h5><b>POA / FORMULARIO N° 4 (.Pdf)</b></h5>
                       <a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$com_id.'\');" title="REPORTE FORM. 4">
-                        <img src="'.base_url().'assets/ifinal/requerimiento.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                        <img src="'.base_url().'assets/ifinal/requerimiento.png" style="margin-left:0px; width: 150px; height:150px"/>
                       </a>
                       <br><b>ACTIVIDADES.PDF</b>
                     </div>
@@ -379,7 +379,7 @@ class C_consultas extends CI_Controller {
                     <div class="well well-sm bg-color-teal txt-color-white text-center">
                       <h5><b>POA / FORMULARIO N° 4 (.Xls)</b></h5>
                       <a href="'.site_url("").'/rep/exportar_form4_uresponsable/'.$com_id.'" target=_blank title="DESCARGAR FORM 4 (EXCEL)">
-                        <img src="'.base_url().'assets/ifinal/export_excel.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                        <img src="'.base_url().'assets/ifinal/export_excel.png" style="margin-left:0px; width: 150px; height:150px"/>
                       </a>
                       <br><b>ACTIVIDADES.XLS</b>
                     </div>
@@ -391,7 +391,7 @@ class C_consultas extends CI_Controller {
                       <div class="well well-sm bg-color-teal txt-color-white text-center">
                         <h5><b>POA / FORMULARIO N° 5 (.Pdf)</b></h5>
                         <a href="javascript:abreVentana(\''.site_url("").'/rep/rep_form5_consolidado/'.$com_id.'\');" title="REPORTE FORM. 5">
-                          <img src="'.base_url().'assets/ifinal/requerimiento.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                          <img src="'.base_url().'assets/ifinal/requerimiento.png" style="margin-left:0px; width: 150px; height:150px"/>
                         </a>
                         <br><b>REQUERIMIENTOS.PDF</b>
                       </div>
@@ -401,7 +401,7 @@ class C_consultas extends CI_Controller {
                       <div class="well well-sm bg-color-teal txt-color-white text-center">
                         <h5><b>POA / FORMULARIO N° 5 (.Xls)</b></h5>
                           <a href="'.site_url("").'/rep/consolidado_requerimientos_mas_programas_bolsas_unidad/'.$com_id.'" target=_blank title="DESCARGAR FORM 5 (EXCEL)">
-                            <img src="'.base_url().'assets/ifinal/export_excel.PNG" style="margin-left:0px; width: 150px; height:150px"/>
+                            <img src="'.base_url().'assets/ifinal/export_excel.png" style="margin-left:0px; width: 150px; height:150px"/>
                           </a>
                         <br><b>REQUERIMIENTOS.XLS</b>
                       </div>

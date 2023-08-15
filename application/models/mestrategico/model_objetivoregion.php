@@ -254,7 +254,17 @@ class Model_objetivoregion extends CI_Model{
 
     /*----- GET UNIDAD/ESTABLECIMIENTO EN OBJETIVO REGIONAL (GASTO CORRIENTE) -----*/
     public function get_unidad_pregional_programado($act_id){
-        $sql = 'select *
+        $sql = ' select *
+              from objetivo_regional_programado orp
+              Inner Join objetivos_regionales as oreg On oreg.or_id=orp.or_id
+              Inner Join objetivo_programado_mensual as ogp On ogp.pog_id=oreg.pog_id
+              Inner Join objetivo_gestion as og On og.og_id=ogp.og_id
+              Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
+              Inner Join aperturaprogramatica as apg On apg.aper_id=og.aper_id
+              where orp.act_id='.$act_id.' and oreg.g_id='.$this->gestion.'
+              order by og.og_codigo,oreg.or_codigo asc';
+
+        /*$sql = 'select *
               from objetivo_regional_programado orp
               Inner Join objetivos_regionales as oreg On oreg.or_id=orp.or_id
               Inner Join objetivo_programado_mensual as ogp On ogp.pog_id=oreg.pog_id
@@ -263,7 +273,7 @@ class Model_objetivoregion extends CI_Model{
               Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
               Inner Join aperturaprogramatica as apg On apg.aper_id=oe.aper_id
               where orp.act_id='.$act_id.' and oreg.g_id='.$this->gestion.'
-              order by og.og_codigo,oreg.or_codigo asc';
+              order by og.og_codigo,oreg.or_codigo asc';*/
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -286,10 +296,9 @@ class Model_objetivoregion extends CI_Model{
                 Inner Join objetivo_regional_programado as orp On orp.por_id=por.por_id
                 Inner Join objetivos_regionales as obr On obr.or_id=orp.or_id
                 Inner Join objetivo_programado_mensual as opm On obr.pog_id=opm.pog_id
-                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-                Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=oe.aper_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id 
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=og.aper_id
                 where por.proy_id='.$proy_id.' and obr.estado!=\'3\' and og.g_id='.$this->gestion.'
                 order by og.og_codigo,obr.or_codigo asc';
 
@@ -304,10 +313,9 @@ class Model_objetivoregion extends CI_Model{
                 Inner Join objetivo_regional_programado as orp On orp.por_id=por.por_id
                 Inner Join objetivos_regionales as obr On obr.or_id=orp.or_id
                 Inner Join objetivo_programado_mensual as opm On obr.pog_id=opm.pog_id
-                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-                Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=oe.aper_id
+                Inner Join objetivo_gestion as og On og.og_id=ogp.og_id
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=og.aper_id
                 where por.proy_id='.$proy_id.' and og.og_codigo='.$og_codigo.' and obr.or_codigo='.$or_codigo.' and obr.estado!=\'3\' and og.g_id='.$this->gestion.'';
 
         $query = $this->db->query($sql);

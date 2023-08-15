@@ -34,8 +34,8 @@ class Cobjetivo_regional extends CI_Controller {
       $data['menu']=$this->oregional->menu(1);
       $data['ogestion']=$this->model_objetivogestion->get_objetivosgestion($og_id);
       if(count($data['ogestion'])!=0){
-        $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
-        $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
+        //$data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
+        $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['ogestion'][0]['oe_id']);
         $data['regionales']=$this->oregional->regionales_seleccionados($og_id);
 
         $this->load->view('admin/mestrategico/objetivos_region/list_oregion', $data);
@@ -52,8 +52,8 @@ class Cobjetivo_regional extends CI_Controller {
     public function form_oregional($dep_id,$og_id){
       $data['menu']=$this->oregional->menu(1);
       $data['ogestion']=$this->model_objetivogestion->get_objetivosgestion($og_id);
-      $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
-      $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
+      //$data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
+      $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['ogestion'][0]['oe_id']);
       $data['regional']=$this->model_proyecto->get_departamento($dep_id);
       
       $data['formulario']=$this->oregional->formulario_add($dep_id,$og_id);
@@ -65,8 +65,8 @@ class Cobjetivo_regional extends CI_Controller {
       $data['menu']=$this->oregional->menu(1);
       $data['oregion']=$this->model_objetivoregion->get_objetivosregional($or_id); /// Objetivo Regional
       $data['ogestion']=$this->model_objetivogestion->get_objetivosgestion($data['oregion'][0]['og_id']); /// Objetivo de Gestion
-      $data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
-      $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['accion_estrategica'][0]['obj_id']);
+      //$data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
+      $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['ogestion'][0]['oe_id']);
       $data['regional']=$this->model_proyecto->get_departamento($data['oregion'][0]['dep_id']);
       
       $data['formulario']=$this->oregional->formulario_update($data['oregion']);

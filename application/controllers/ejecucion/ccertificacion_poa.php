@@ -127,19 +127,12 @@ class Ccertificacion_poa extends CI_Controller {
         $data['resp']=$this->session->userdata('funcionario');
         $data['res_dep']=$this->certificacionpoa->tp_resp();
         $data['titulo']=$this->certificacionpoa->titulo_cabecera($data['datos']);
-        //$requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
-      //  $this->update_gestion_temporalidad($requerimientos);
-        if($this->gestion>2022){
-          if(count($this->model_certificacion->requerimientos_operacion($prod_id))>500){
-            $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_temporalidad_unica($prod_id); /// para listas mayores a 500 (2023)
-          }
-          else{
-            $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_2022($prod_id,0,0); /// para listas menores a 500 (2023)
-          }
+
+        if(count($this->model_certificacion->requerimientos_operacion($prod_id))>500){
+          $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_temporalidad_unica($prod_id); /// para listas mayores a 500 (2023)
         }
         else{
-          //$data['requerimientos'] = $this->certificacionpoa->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
-          $data['requerimientos'] = 'error'; /// para listas mayores a 500
+          $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_2022($prod_id,0,0); /// para listas menores a 500 (2023)
         }
         
       //  echo $data['requerimientos'];

@@ -44,14 +44,12 @@ class Cservicios extends CI_Controller {
             else{ /// Gasto Corriente
 
                 if($data['proyecto'][0]['por_id']==0){
-                    $this->lista_servicios($proy_id); /// lista de unidades responsables
+                    $this->lista_uresponsables($proy_id); /// lista de unidades responsables
                 }
                 else{
-                    $componente=$this->model_componente->proyecto_componente($proy_id);
-                    redirect(site_url("").'/admin/prog/list_prod/'.$componente[0]['com_id'].''); /// Lista de Productos
-                    //$this->lista_servicios($proy_id);
+                    $componente=$this->model_componente->proyecto_componente($proy_id); /// Programas Bolsa
+                    redirect(site_url("").'/admin/prog/list_prod/'.$componente[0]['com_id'].''); /// redireccionadmos a Lista de form 4
                 }
-                
             }
         }
         else{
@@ -61,14 +59,14 @@ class Cservicios extends CI_Controller {
 
     }
 
-    /*------- OPERACION DE FUNCIONAMIENTO-----------*/
-    /*--------- LISTA DE SERVICIOS (UNIDADES/ESTABLECIMIENTOS)------*/
-    public function lista_servicios($proy_id){
+    /*------- GASTO CORRIENTE-----------*/
+    /*--------- LISTA DE UNIDADES RESPONSABLES ------*/
+    public function lista_uresponsables($proy_id){
         $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
         if(count($data['proyecto'])!=0){
             $data['menu']=$this->genera_menu($proy_id);
             $data['oregional']=$this->verif_oregional($proy_id);
-            $data['componente']= $this->mis_servicios($proy_id);
+            $data['componente']= $this->unidades_resp($proy_id);
 
             $data['button']='';
             if($this->conf_form4==1 || $this->tp_adm==1){
@@ -101,7 +99,7 @@ class Cservicios extends CI_Controller {
         return $tabla;
     }
 
-    /*---- IMPORTAR OPERACIONES POR SERVICIOS -----*/
+    /*---- IMPORTAR FORMULARIO N 4 POR UNIDAD RESPONSABLE -----*/
     function importar_operaciones_global(){
         if ($this->input->post()) {
             $post = $this->input->post();
@@ -206,10 +204,8 @@ class Cservicios extends CI_Controller {
                                 
                                 }
 
-                            
                             }
                             /// end codigo de unidad
-
    
                         }//// End count($datos)==23
                         else{
@@ -253,8 +249,8 @@ class Cservicios extends CI_Controller {
       }
     }
 
-  /*---- SUBACTIVIDAD (2021) ---------*/
-  function mis_servicios($proy_id){
+  /*---- UNIDADES RESPONSABLES (2024) ---------*/
+  function unidades_resp($proy_id){
     $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
     $fase = $this->model_faseetapa->get_id_fase($proy_id);
 
