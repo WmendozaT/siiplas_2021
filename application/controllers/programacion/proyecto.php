@@ -522,6 +522,10 @@ class Proyecto extends CI_Controller {
             $this->db->delete('proy_oregional');
           }
           else{ /// Selecciona
+
+            $this->db->where('proy_id', $proy_id);
+            $this->db->delete('proy_oregional');
+            
             foreach($oregionales as $row){
               $data_to_store3 = array(
                 'proy_id' => $proy_id,

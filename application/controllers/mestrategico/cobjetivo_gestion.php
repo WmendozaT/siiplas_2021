@@ -30,7 +30,7 @@ class Cobjetivo_gestion extends CI_Controller {
 
  
     
-    /*----- LISTA ACCION DE CORTO PLAZO 2022 ----*/
+    /*----- LISTA ACCION DE CORTO PLAZO 2024 ----*/
     public function list_objetivos_gestion(){
       $data['menu']=$this->acortoplazo->menu(1);
       $data['titulo']=$this->acortoplazo->titulo();

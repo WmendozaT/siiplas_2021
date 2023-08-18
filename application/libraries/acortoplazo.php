@@ -42,7 +42,7 @@ class Acortoplazo extends CI_Controller{
                 <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;REP. A.C.P. (FORM N° 1)
               </a>';
               if($this->fun_id==399){
-                $tabla.='&nbsp;<a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default" title="SUBIR ARCHIVO - PDES" >SUBIR ARCHIVO (PDES)</a><br><br>';
+                $tabla.='&nbsp;<a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default" title="SUBIR ARCHIVO - PDES" >SUBIR OPERACIONES REGIONALES</a><br><br>';
               }
             $tabla.='
             </div>

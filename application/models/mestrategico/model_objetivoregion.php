@@ -313,7 +313,7 @@ class Model_objetivoregion extends CI_Model{
                 Inner Join objetivo_regional_programado as orp On orp.por_id=por.por_id
                 Inner Join objetivos_regionales as obr On obr.or_id=orp.or_id
                 Inner Join objetivo_programado_mensual as opm On obr.pog_id=opm.pog_id
-                Inner Join objetivo_gestion as og On og.og_id=ogp.og_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
                 Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=og.aper_id
                 where por.proy_id='.$proy_id.' and og.og_codigo='.$og_codigo.' and obr.or_codigo='.$or_codigo.' and obr.estado!=\'3\' and og.g_id='.$this->gestion.'';

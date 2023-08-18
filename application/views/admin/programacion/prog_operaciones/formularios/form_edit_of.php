@@ -220,59 +220,6 @@
         <script src="<?php echo base_url();?>/assets/form/js/jquery.backstretch.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <script src="<?php echo base_url(); ?>mis_js/programacionpoa/programacionpoa.js"></script> 
-
-<!--         <script type="text/javascript">
-        $(function () {
-            $("#subir_form1").on("click", function () {
-                var $validator = $("#form1").validate({
-                        rules: {
-                            proy_id: { //// proy id
-                            	required: true,
-                            },
-                            act_id: { //// act id
-                            	required: true,
-                            }
-                        },
-                        messages: {
-                            proy_id: "<font color=red>PROYECTO ID</font>", 
-                            act_id: "<font color=red>ACTIVIDAD ID</font>",                  
-                        },
-                        highlight: function (element) {
-                            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-                        },
-                        unhighlight: function (element) {
-                            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-                        },
-                        errorElement: 'span',
-                        errorClass: 'help-block',
-                        errorPlacement: function (error, element) {
-                            if (element.parent('.input-group').length) {
-                                error.insertAfter(element.parent());
-                            } else {
-                                error.insertAfter(element);
-                            }
-                        }
-                    });
-
-                var $valid = $("#form1").valid();
-                if (!$valid) {
-                    $validator.focusInvalid();
-                } else {
-                	alertify.confirm("MODIFICAR DATOS ?", function (a) {
-                        if (a) {
-                            document.getElementById('subir_form1').disabled = true;
-                            document.forms['form1'].submit();
-                        } else {
-                            alertify.error("OPCI\u00D3N CANCELADA");
-                        }
-                    });
-                }
-            });
-        });    
-
-
-
-        </script> -->
 		<script type="text/javascript">
 			// DO NOT REMOVE : GLOBAL FUNCTIONS!
 			$(document).ready(function() {

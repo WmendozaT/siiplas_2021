@@ -1112,7 +1112,7 @@ class Certificacionpoa extends CI_Controller{
           if($row['ins_monto_certificado']!=$row['ins_costo_total'] & $temp==1){
               $nro++;
               $tabla.='
-              <tr  title='.$row['ins_id'].' id="tr'.$nro.'" >
+              <tr title='.$row['ins_id'].' id="tr'.$nro.'" >
                 <td style="width:1%;">'.$nro.'</td>
                 <td style="width:2%;">';
                 if(count($this->model_certificacion->get_items_solicitado($row['ins_id']))==0){ /// EN CASO DE QUENO TENGA SOLICITUD

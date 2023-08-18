@@ -485,14 +485,13 @@ class Cobjetivo_regional extends CI_Controller {
                   $indicador=trim($datos[6]); /// indicador
                   $linea_base=0;
                   $meta=0;
-                  $mverificacion=trim($datos[9]); /// indicador
-                  $observacion=trim($datos[10]); /// observacion
+                  $mverificacion=trim($datos[7]); /// indicador
+                  $observacion=trim($datos[8]); /// observacion
 
                   $acp=$this->model_objetivogestion->get_objetivosgestion($acp_id);
                   if(count($acp)!=0){
                     $get_meta_prog=$this->model_objetivogestion->get_temporalidad_regional($acp_id,$dep_id);
                     $pog_id = $this->security->xss_clean($get_meta_prog[0]['pog_id']); /// pog id
-                    //$ogestion=$this->model_objetivogestion->get_objetivo_temporalidad($pog_id);
                     $data_to_store = array(
                       'pog_id' => $pog_id,
                       'or_objetivo' => mb_convert_encoding($operacion, 'cp1252', 'UTF-8'),
@@ -518,8 +517,8 @@ class Cobjetivo_regional extends CI_Controller {
                 $i++;
               } /// A
 
-              //$this->session->set_flashdata('success','SE REGISTRARON '.$nro.' REQUERIMIENTOS');
-              //redirect(site_url("").'/me/acciones_estrategicas/11');
+              $this->session->set_flashdata('success','SE REGISTRARON '.$i.' OPERACIONES');
+              redirect(site_url("").'/me/mis_ogestion');
           }
           else{
             echo "Error !!!";

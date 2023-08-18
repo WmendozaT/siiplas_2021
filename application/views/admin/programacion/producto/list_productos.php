@@ -219,14 +219,14 @@
                         <label class="label"><b>DESCRIPCI&Oacute;N DE LA ACTIVIDAD</b></label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="2" name="prod" id="prod" title="REGISTRAR OPERACIÓN"></textarea>
+                          <textarea rows="2" name="prod" id="prod" title="REGISTRAR ACTIVIDAD"><?php echo $form4;?></textarea>
                         </label>
                       </section>
                       <section class="col col-4">
                         <label class="label"><b>RESULTADO</b></label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="2" name="resultado" id="resultado" title="REGISTRAR RESULTADO"></textarea>
+                          <textarea rows="2" name="resultado" id="resultado" title="REGISTRAR RESULTADO"><?php echo $resultado;?></textarea>
                         </label>
                       </section>
                       <section class="col col-2">
@@ -246,14 +246,14 @@
                         <label class="label"><b>INDICADOR</b></label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="2" name="indicador" id="indicador" title="REGISTRE DESCRIPCIÓN INDICADOR"></textarea>
+                          <textarea rows="2" name="indicador" id="indicador" title="REGISTRE DESCRIPCIÓN INDICADOR"><?php echo $indicador;?></textarea>
                         </label>
                       </section>
                       <section class="col col-4">
                         <label class="label"><b>MEDIO DE VERIFICACI&Oacute;N</b></label>
                         <label class="textarea">
                           <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="2" name="verificacion" id="verificacion" title="REGISTRE MEDIO DE VERIFICACIÓN"></textarea>
+                          <textarea rows="2" name="verificacion" id="verificacion" title="REGISTRE MEDIO DE VERIFICACIÓN"><?php echo $mverificacion;?></textarea>
                         </label>
                       </section>
                       <?php echo $uni_responsables;?>
@@ -323,42 +323,42 @@
                         <label class="label"><b>ENERO</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m1" id="m1" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ENERO - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m1" id="m1" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ENERO - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>FEBRERO</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m2" id="m2" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="FEBRERO - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m2" id="m2" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="FEBRERO - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>MARZO</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m3" id="m3" value="0" onkeyup="suma_programado()"onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MARZO - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m3" id="m3" value="0" onkeyup="suma_programado()"onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MARZO - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>ABRIL</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m4" id="m4" value="0" onkeyup="suma_programado()"onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ABRIL - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m4" id="m4" value="0" onkeyup="suma_programado()"onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ABRIL - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>MAYO</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m5" id="m5" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MAYO - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m5" id="m5" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MAYO - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>JUNIO</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m6" id="m6" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JUNIO - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m6" id="m6" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JUNIO - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                     </div>
@@ -367,42 +367,42 @@
                         <label class="label"><b>JULIO</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m7" id="m7" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JULIO - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m7" id="m7" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JULIO - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>AGOSTO</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m8" id="m8" value="0" onkeyup="suma_programado()"onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="AGOSTO - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m8" id="m8" value="0" onkeyup="suma_programado()"onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="AGOSTO - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>SEPTIEMBRE</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m9" id="m9" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m9" id="m9" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>OCTUBRE</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m10" id="m10" value="0" onkeyup="suma_programado()"onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m10" id="m10" value="0" onkeyup="suma_programado()"onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>NOVIEMBRE</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m11" id="m11" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m11" id="m11" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                       <section class="col col-2">
                         <label class="label"><b>DICIEMBRE</b></label>
                         <label class="input">
                           <i class="icon-append fa fa-money"></i>
-                          <input type="text" name="m12" id="m12" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                          <input type="text" name="m12" id="m12" value="0" onkeyup="suma_programado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
                         </label>
                       </section>
                     </div>
@@ -568,42 +568,42 @@
                   <label class="label"><b>ENERO</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm1" id="mm1" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ENERO - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm1" id="mm1" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ENERO - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>FEBRERO</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm2" id="mm2" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="FEBRERO - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm2" id="mm2" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="FEBRERO - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>MARZO</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm3" id="mm3" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MARZO - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm3" id="mm3" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MARZO - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>ABRIL</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm4" id="mm4" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ABRIL - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm4" id="mm4" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="ABRIL - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>MAYO</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm5" id="mm5" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MAYO - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm5" id="mm5" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="MAYO - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>JUNIO</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm6" id="mm6" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JUNIO - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm6" id="mm6" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JUNIO - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
               </div>
@@ -612,42 +612,42 @@
                   <label class="label"><b>JULIO</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm7" id="mm7" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JULIO - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm7" id="mm7" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="JULIO - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>AGOSTO</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm8" id="mm8" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }"  onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm8" id="mm8" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }"  onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>SEPTIEMBRE</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm9" id="mm9" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm9" id="mm9" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>OCTUBRE</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm10" id="mm10" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm10" id="mm10" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>NOVIEMBRE</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm11" id="mm11" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm11" id="mm11" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
                 <section class="col col-2">
                   <label class="label"><b>DICIEMBRE</b></label>
                   <label class="input">
                     <i class="icon-append fa fa-money"></i>
-                    <input type="text" name="mm12" id="mm12" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 4) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+                    <input type="text" name="mm12" id="mm12" value="0" onkeyup="suma_programado_modificado()" onkeypress="if (this.value.length < 5) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
                   </label>
                 </section>
               </div>

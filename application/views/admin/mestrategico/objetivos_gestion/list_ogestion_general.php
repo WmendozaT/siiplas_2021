@@ -159,7 +159,7 @@
 	</div>
 	<!-- END MAIN PANEL -->
 
-		<!-- ================== MODAL SUBIR ARCHIVO PDES ========================== -->
+		<!-- ================== MODAL SUBIR ARCHIVO OPERACIONES ========================== -->
   	<div class="modal fade" id="modal_importar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document" class="modal-dialog modal-sm" >
         <div class="modal-content">
@@ -167,7 +167,7 @@
                 <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
             </div>
             <div class="modal-body">
-            	<h2><center>SUBIR ARCHIVO </center></h2>
+            	<h2><center>SUBIR ARCHIVO - OPERACIONES.csv</center></h2>
             
                 <div class="row">
                 	<script src="<?php echo base_url(); ?>assets/file_nuevo/jquery.min.js"></script>

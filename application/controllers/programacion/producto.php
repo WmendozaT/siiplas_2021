@@ -87,6 +87,10 @@ class Producto extends CI_Controller {
         $uresponsable='';
         if($data['proyecto'][0]['por_id']==1){ /// para programas bolsas
           $unidades=$this->model_producto->list_uresponsables_regional($data['proyecto'][0]['dist_id']);
+          $data['form4']='INCREMENTAR LA CAPACIDAD INSTALADA CON EQUIPAMIENTO';
+          $data['resultado']='UNIDADES CON EQUIPAMIENTO MEDICO Y/O ADMINISTRATIVO';
+          $data['indicador']='NRO. DE EQUIPOS ADQUIRIDOS';
+          $data['mverificacion']='ACTA DE RECEPCION';
 
           $uresponsable.='
                       <section class="col col-4">
@@ -103,6 +107,11 @@ class Producto extends CI_Controller {
                       </section>';
         }
         else{
+          $data['form4']='';
+          $data['resultado']='';
+          $data['indicador']='';
+          $data['mverificacion']='';
+
           $uresponsable.='
                       <input type="text" name="u_resp" value="0" hidden>
                       <section class="col col-4">
@@ -240,7 +249,7 @@ class Producto extends CI_Controller {
 
 
 
-  /*--------- VALIDA OPERACIONES (2020) -----------*/
+  /*--------- VALIDA OPERACIONES (2024) -----------*/
   public function valida_producto(){
     if ($this->input->server('REQUEST_METHOD') === 'POST'){
         $this->form_validation->set_rules('prod', 'Producto', 'required|trim');
@@ -627,7 +636,7 @@ class Producto extends CI_Controller {
                   
                   
                   $tabla .='<tr bgcolor="'.$color.'" class="modo1" title='.$titulo.'>';
-                    $tabla.='<td align="center">';
+                    $tabla.='<td align="center" title="'.$rowp['prod_id'].'">';
                       if($rowp['prod_priori']==1){
                         $tabla.='<br><img src="'.base_url().'assets/ifinal/ok.png" WIDTH="40" HEIGHT="33"/><br><font size=1 color=green><b>PRIORITARIO</b></font>';
                       }
@@ -1588,7 +1597,7 @@ class Producto extends CI_Controller {
     /*--- MIGRACION DE OPERACIONES (2020-2022) Y REQUERIMIENTOS (revisar) ---*/
     function importar_operaciones_requerimientos(){
       if ($this->input->post()) {
-        $post = $this->input->post();
+          $post = $this->input->post();
           $com_id = $this->security->xss_clean($post['com_id']); /// com id
           $componente = $this->model_componente->get_componente_pi($com_id);
           $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
@@ -1620,23 +1629,21 @@ class Producto extends CI_Controller {
                   if(count($datos)==22){
 
                     $cod_og = intval(trim($datos[0])); // Codigo ACP
-                    $cod_or = intval(trim($datos[1])); // Codigo Objetivo Regional
+                    $cod_or = intval(trim($datos[1])); // Codigo Operacion
                     $cod_form4 = intval(trim($datos[2])); // Codigo Form 4
                     $descripcion = strval(utf8_encode(trim($datos[3]))); //// descripcion form4
                     $resultado = strval(utf8_encode(trim($datos[4]))); //// descripcion Resultado
-                    //$unidad = strval(utf8_encode(trim($datos[5]))); //// Unidad responsable
-                    $unidad = intval(trim($datos[5])); //// id Unidad responsable PRG Bolsas
+                    $unidad = strval(utf8_encode(trim($datos[5]))); //// Unidad responsable
+                   // $unidad = intval(trim($datos[5])); //// id Unidad responsable PRG Bolsas
                     $indicador = strval(utf8_encode(trim($datos[6]))); //// descripcion Indicador
                     $lbase = intval(trim($datos[7])); //// Linea Base
                     $meta = intval(trim($datos[8])); //// Meta
                     $mverificacion = strval(utf8_encode(trim($datos[21]))); //// Medio de verificacion
 
-                    $ae=0;
                     $or_id=0;
                     if(count($list_oregional)!=0){
                       $get_acc=$this->model_objetivoregion->get_alineacion_proyecto_oregional($fase[0]['proy_id'],$cod_og,$cod_or);
                       if(count($get_acc)!=0){
-                        $ae=$get_acc[0]['ae'];
                         $or_id=$get_acc[0]['or_id'];
                       }
                     }
@@ -1645,6 +1652,7 @@ class Producto extends CI_Controller {
                         $query=$this->db->query('set datestyle to DMY');
                         $data_to_store = array(
                           'com_id' => $com_id,
+                          'prod_cod'=>$cod_form4,
                           'prod_producto' => strtoupper($descripcion),
                           'prod_resultado' => strtoupper($resultado),
                           'indi_id' => 1,
@@ -1652,12 +1660,11 @@ class Producto extends CI_Controller {
                           'prod_fuente_verificacion' => strtoupper($mverificacion), 
                           'prod_linea_base' => $lbase,
                           'prod_meta' => $meta,
-                          'uni_resp' => $unidad, //// para prog bolsas
-                          //'prod_unidades' => $unidad,
-                          'acc_id' => $ae,
+                          //'uni_resp' => $unidad, //// para prog bolsas
+                          'prod_unidades' => $unidad,
+                          'acc_id' => 0,
                           'prod_ppto' => 1,
                           'fecha' => date("d/m/Y H:i:s"),
-                         // 'prod_cod'=>$cod_ope,
                           'or_id'=>$or_id,
                           'fun_id' => $this->fun_id,
                           'num_ip' => $this->input->ip_address(), 
@@ -1704,7 +1711,7 @@ class Producto extends CI_Controller {
                 $datos = explode(";",$linea);
              
                 if(count($datos)==20){
-                    echo count($datos).'<br>';
+                    //echo count($datos).'<br>';
                     $prod_cod = intval(trim($datos[0])); //// Codigo Actividad
                     $cod_partida = intval(trim($datos[1])); //// Codigo partida
                     $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
@@ -1731,12 +1738,12 @@ class Producto extends CI_Controller {
                     $verif_cod=$this->model_producto->verif_componente_operacion($com_id,$prod_cod);
                    // echo count($verif_cod).'--'.count($par_id).'--'.$cod_partida.'--'.round($sum_temp,2).'=='.round($total,2)."<br>";
 
-                    if(count($verif_cod)!=0 & count($par_id)!=0 & $cod_partida!=0 & round($sum_temp,2)==round($total,2)){ /// Verificando si existe Codigo de Actividad, par id, Codigo producto
+                    if(count($verif_cod)!=0 & count($par_id)!=0 & $cod_partida!=0 & round($sum_temp,2)==round($total,2) & round($p_total,2)==round($total,2)){ /// Verificando si existe Codigo de Actividad, par id, Codigo producto
                         $producto=$this->model_producto->get_producto_id($verif_cod[0]['prod_id']); /// Get producto
                         $guardado++;
-                        echo $guardado.'---'.$detalle.'<br>';
+                        //echo $guardado.'---'.$detalle.'<br>';
                         /*-------- INSERTAR DATOS REQUERIMIENTO ---------*/
-                       /* $query=$this->db->query('set datestyle to DMY');
+                        $query=$this->db->query('set datestyle to DMY');
                         $data_to_store = array( 
                         'ins_codigo' => $this->session->userdata("name").'/REQ/'.$this->gestion, /// Codigo Insumo
                         'ins_fecha_requerimiento' => date('d/m/Y'), /// Fecha de Requerimiento
@@ -1757,17 +1764,17 @@ class Producto extends CI_Controller {
                         'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
                         );
                         $this->db->insert('insumos', $data_to_store); ///// Guardar en Tabla Insumos 
-                        $ins_id=$this->db->insert_id();*/
+                        $ins_id=$this->db->insert_id();
 
                         /*--------------------------------------------------------*/
-                         /* $data_to_store2 = array( ///// Tabla InsumoProducto
+                          $data_to_store2 = array( ///// Tabla InsumoProducto
                             'prod_id' => $verif_cod[0]['prod_id'], /// prod id
                             'ins_id' => $ins_id, /// ins_id
                           );
-                          $this->db->insert('_insumoproducto', $data_to_store2);*/
+                          $this->db->insert('_insumoproducto', $data_to_store2);
                         /*----------------------------------------------------------*/
 
-                       /* for ($p=1; $p <=12 ; $p++) { 
+                        for ($p=1; $p <=12 ; $p++) { 
                           if($m[$p]!=0 & is_numeric($unitario)){
                             $data_to_store4 = array(
                               'ins_id' => $ins_id, /// Id Insumo
@@ -1777,7 +1784,7 @@ class Producto extends CI_Controller {
                             );
                             $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
                           }
-                        }*/
+                        }
                     }
                
                 } /// end dimension (20)
@@ -1790,7 +1797,7 @@ class Producto extends CI_Controller {
               $this->session->set_flashdata('success','SE REGISTRARON '.$guardado.' REQUERIMIENTOS');
             } /// end else
 
-           // redirect('admin/prog/list_prod/'.$com_id.'');
+            redirect('admin/prog/list_prod/'.$com_id.'');
           }
           else{
             $this->session->set_flashdata('danger','SELECCIONE ARCHIVO ');

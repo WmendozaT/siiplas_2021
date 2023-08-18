@@ -1,31 +1,31 @@
 <?php if (!defined('BASEPATH')) exit('No se permite el acceso directo al script');
 
 class Oregional extends CI_Controller{
-        public function __construct (){
-            parent::__construct();
-            $this->load->model('programacion/model_proyecto');
-            $this->load->model('resultados/model_resultado');
-            $this->load->model('mestrategico/model_mestrategico');
-            $this->load->model('mestrategico/model_objetivogestion');
-            $this->load->model('mestrategico/model_objetivoregion');
-            $this->load->model('menu_modelo');
-            $this->load->library('security');
+    public function __construct (){
+        parent::__construct();
+        $this->load->model('programacion/model_proyecto');
+        $this->load->model('resultados/model_resultado');
+        $this->load->model('mestrategico/model_mestrategico');
+        $this->load->model('mestrategico/model_objetivogestion');
+        $this->load->model('mestrategico/model_objetivoregion');
+        $this->load->model('menu_modelo');
+        $this->load->library('security');
 
-            $this->gestion = $this->session->userData('gestion');
-            $this->adm = $this->session->userData('adm');
-            //$this->rol = $this->session->userData('rol_id');
-            $this->dist = $this->session->userData('dist');
-            //$this->dist_tp = $this->session->userData('dist_tp');
-            $this->tmes = $this->session->userData('trimestre');
-            $this->fun_id = $this->session->userData('fun_id');
-           // $this->tp_adm = $this->session->userData('tp_adm');
-            $this->verif_mes=$this->session->userData('mes_actual');
-            $this->resolucion=$this->session->userdata('rd_poa');
-            $this->tp_adm = $this->session->userData('tp_adm');
-            $this->dep_id = $this->session->userData('dep_id');
-            $this->mes = $this->mes_nombre();
-            $this->conf_form4 = $this->session->userData('conf_form4');
-            $this->conf_form5 = $this->session->userData('conf_form5');
+        $this->gestion = $this->session->userData('gestion');
+        $this->adm = $this->session->userData('adm');
+        //$this->rol = $this->session->userData('rol_id');
+        $this->dist = $this->session->userData('dist');
+        //$this->dist_tp = $this->session->userData('dist_tp');
+        $this->tmes = $this->session->userData('trimestre');
+        $this->fun_id = $this->session->userData('fun_id');
+       // $this->tp_adm = $this->session->userData('tp_adm');
+        $this->verif_mes=$this->session->userData('mes_actual');
+        $this->resolucion=$this->session->userdata('rd_poa');
+        $this->tp_adm = $this->session->userData('tp_adm');
+        $this->dep_id = $this->session->userData('dep_id');
+        $this->mes = $this->mes_nombre();
+        $this->conf_form4 = $this->session->userData('conf_form4');
+        $this->conf_form5 = $this->session->userData('conf_form5');
     }
 
     /*-------- TIPO DE RESPONSABLE -------*/
