@@ -81,7 +81,7 @@ class Cert_poa extends CI_Controller {
         }
 
 
-          if($this->fun_adm==1){ /// Administrador Nacional
+          if($this->fun_adm==1){ /// Administrador Oficina Nacional
             $data['cuerpo']='
                 '.$this->menu_cpoa_nacional().'
                 <input name="base" type="hidden" value="'.base_url().'">
