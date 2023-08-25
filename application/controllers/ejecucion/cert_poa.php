@@ -68,7 +68,7 @@ class Cert_poa extends CI_Controller {
         $data['res_dep']=$this->tp_resp();
 
         $data['generar_certpoa']='';
-        // $this->conf_certificacion==1 || $this->tp_adm==1
+        // $this->conf_certificacion==1 || $this->tp_adm==111
         if($this->conf_certificacion==1 || $this->tp_adm==1){
           $data['generar_certpoa']='
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
