@@ -20,7 +20,7 @@
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" /> 
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <meta name="viewport" content="width=device-width">
-          <style>
+<!--           <style>
             table{font-size: 9.5px;
             width: 100%;
             max-width:1550px;
@@ -40,7 +40,7 @@
               vertical-align:middle;
               cursor:pointer;
             }
-          </style>
+          </style> -->
           <script language="javascript">
             function doSearch(){
               var tableReg = document.getElementById('datos');
@@ -77,24 +77,6 @@
         <header id="header">
             <div id="logo-group">
               <!-- <span id="logo"> <img src="<?php echo base_url(); ?>assets/img/logo.png" alt="SmartAdmin"> </span> -->
-            </div>
-            <div class="col-md-4 " style="font-size:18px;margin-top:10px;margin-bottom:-10px;">
-              <span>
-                &nbsp;&nbsp;&nbsp; 
-                <div class="badge bg-color-blue">
-                  <span style="font-size:15px;"><b>Fecha Sesi&oacute;n: <?php echo $this->session->userdata('desc_mes').' / '.$this->session->userdata('gestion');?></b></span>
-                </div>
-              </span>
-              <div class="project-context hidden-xs">
-                <span class="project-selector dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="font-size:19px;">
-                  <i class="fa fa-lg fa-fw fa-calendar txt-color-blue"></i>
-                </span>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a href="<?php echo base_url();?>index.php/cambiar_gestion">Cambiar Gestión</a>
-                  </li>
-                </ul>
-              </div>
             </div>
             <div class="pull-right">
                 <div id="hide-menu" class="btn-header pull-right">
@@ -150,7 +132,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Evaluaci&oacute;n POA</li><li>...</li><li>Mis Certificaciones POA</li><li>....</li><li>Mis Requerimientos</li>
+                    <li>Evaluaci&oacute;n POA</li><li>...</li><li>Mis Certificaciones POA</li><li>Generar Certificacion POA</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->
@@ -160,10 +142,7 @@
                     <div class="row">
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
                             <section id="widget-grid" class="well">
-                                <div class="">
-                                    <h1><b>RESPONSABLE : </b><?php echo $resp; ?> -> <small><?php echo $res_dep;?></small>
-                                    <?php echo $titulo;?>
-                                </div>
+                                <?php echo $titulo;?>
                             </section>
                         </article>
                         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
@@ -175,87 +154,8 @@
                         </article>
                     </div>
                     
-                    <div class="row">
-                      <?php 
-                          if($this->session->flashdata('danger')){ ?>
-                              <div class="alert alert-danger">
-                                <?php echo $this->session->flashdata('danger'); ?>
-                              </div>
-                              <script type="text/javascript">alertify.error("<?php echo '<font size=2>'.$this->session->flashdata('danger').'</font>'; ?>")</script>
-                            <?php
-                          }
-                        ?>    
-                      <article class="col-sm-12 col-md-12 col-lg-12">
-                          <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
-                            <header>
-                              <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-                              <h2>MIS REQUERIMIENTOS <?php echo $this->session->userData('gestion') ?></h2>
-                            </header>
-                            <div>
-                              <div class="jarviswidget-editbox">
-                              </div>
-                              <div class="widget-body no-padding">
-                              <form id="cert_form" name="cert_form" novalidate="novalidate" action="<?php echo site_url().'/ejecucion/ccertificacion_poa/valida_cpoa'?>" method="post" class="smart-form">
-                                <input type="hidden" name="prod_id" id="prod_id" value="<?php echo $datos[0]['prod_id'];?>">
-                                <input type="hidden" name="tp_id" id="tp_id" value="<?php echo $datos[0]['tp_id'];?>">
-                                <fieldset>
-                                  <div class="row">
-                                    <section class="col col-3">
-                                      <label class="label">NOTA / CITE </label>
-                                      <label class="input">
-                                        <i class="icon-append fa fa-tag"></i>
-                                        <input type="text" name="cite_cpoa" id="cite_cpoa" value="" placeholder="XX-XX-XXX">
-                                      </label>
-                                    </section>
-                                    <section class="col col-3">
-                                      <label class="label">FECHA CITE</label>
-                                      <div class="row">
-                                        <div class="col col-10">
-                                          <label class="input"> <i class="icon-append fa fa-calendar"></i>
-                                          <input type="text" name="cite_fecha" id="cite_fecha" class="form-control datepicker" data-dateformat="dd/mm/yy" onKeyUp="this.value=formateafecha(this.value);" value="<?php echo date('d/m/Y') ?>" placeholder="dd/mm/YY" title="SELECCIONE FECHA CITE">
-                                        </label>
-                                        </div>
-                                      </div>
-                                    </section>
-                                    <section class="col col-6">
-                                      <label class="label">RECOMENDACI&Oacute;N</label>
-                                      <label class="input">
-                                        <i class="icon-append fa fa-tag"></i>
-                                        <textarea class="form-control" name="rec" id="rec" maxlength="2000" rows="3" style="width:100%;" placeholder="NOTA/RECOMENDACI&Oacute;N...."></textarea>
-                                      </label>
-                                    </section>
-                                  </div>
-                                </fieldset>
-
-                                  <fieldset>
-                                    <section class="col col-6">
-                                      <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR DE ITEM...."/><br>
-                                    </section>
-                                    <div class="row" align="center">
-                                      <div class="table-responsive" align="center">
-                                        <center>
-                                          <?php echo $requerimientos;?>
-                                        </center>
-                                      </div>
-                                    </div>
-                                  </fieldset>
-
-                                  <footer>
-                                    <input type="hidden" name="tot" id="tot" value="0">
-                                    <input type="hidden" name="tot_temp" id="tot_temp" value="0">
-                                    <div id="but" style="display:none;" align="right">
-                                      <input type="button" value="GENERAR CERTIFICACI&Oacute;N POA" id="btsubmit" class="btn btn-success" title="APROBAR REQUERIMIENTOS PARA CERTIFICACION POA">
-                                      <a href="<?php echo base_url().'index.php/cert/list_poas'; ?>" class="btn btn-default" title="MIS OPERACIONES"> CANCELAR </a>
-                                    </div>
-                                  </footer>
-                                  <div id="load" style="display: none" align="center">
-                                    <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO CERTIFICACI&Oacute;N POA ....</b>
-                                  </div>
-                              </form>
-                              </div>
-                            </div>
-                          </div>
-                        </article>
+                    <div class="row">  
+                        <?php echo $formulario; ?>
                     </div>
 
                 </section>
@@ -287,7 +187,7 @@
             }
         </script>
         <!-- IMPORTANT: APP CONFIG -->
-        <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
+        
         <script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
@@ -306,8 +206,6 @@
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
         <!-- JQUERY MASKED INPUT -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-        <!-- JQUERY SELECT2 INPUT -->
-        <script src="<?php echo base_url(); ?>assets/js/plugin/select2/select2.min.js"></script>
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
         <!-- FastClick: For mobile devices -->
@@ -318,17 +216,13 @@
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
         <script src="<?php echo base_url(); ?>assets/js/speech/voicecommand.min.js"></script>
-        <script type="text/javascript">
-          $(document).ready(function() {
-            pageSetUp();
-          })
-        </script>
 
         <script type="text/javascript">
-          /*------ ACTUALIZANDO DATOS DE EVALUACION POA AL TRIMESTRE ACTUAL ------*/
+          /*------ LISTADO DE REQUERIMIENTOS CON TEMPORALIDAD DISTRIBUIDA ------*/
         $(function () {
           $(".update_eval").on("click", function (e) {
               prod_id = $(this).attr('name');
+              cpoa_id = $(this).attr('id');
               document.getElementById("load_insumo").style.display = 'block';
               document.getElementById("btn_insumos").style.display = 'none';
               var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/get_insumos";
@@ -340,7 +234,7 @@
                   url: url,
                   type: "POST",
                   dataType: 'json',
-                  data: "prod_id="+prod_id
+                  data: "prod_id="+prod_id+"&cpoa_id="+cpoa_id
               });
 
               request.done(function (response, textStatus, jqXHR) {
@@ -363,8 +257,50 @@
         });
 
 
+        //// Subir Requerimientos a Lista de Certificados (nuevo)
+        function add_item_cpoa(ins_id,cpoa_id,nro,estaChequeado) {
+            //alert(ins_id+'---'+nro+'----'+estaChequeado)
+            
+            if (estaChequeado == true) { //// adicionar
+                document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
+               check=1;
+            }
+            else{
+                document.getElementById("tr"+nro).style.backgroundColor = "";
+                check=0;
+            }
+           // alert(ins_id+'--'+cpoa_id+'--'+check)
+            $('#vista_previa').fadeIn(1000).html('<center><img src="<?php echo base_url()?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/><font color=blue>Actualizando Vista Previa ......</font></center>');
+            var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/adiciona_cancela_items";
+              var request;
+              if (request) {
+                  request.abort();
+              }
+              request = $.ajax({
+                  url: url,
+                  type: "POST",
+                  dataType: 'json',
+                  data: "ins_id="+ins_id+"&check="+check+"&cpoa_id="+cpoa_id
+              });
 
-        function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
+              request.done(function (response, textStatus, jqXHR) {
+              if (response.respuesta == 'correcto') {
+                  $('#vista_previa').fadeIn(1000).html(response.vista_previa);
+              }
+              else{
+                  alertify.error("ERROR AL RECUPERAR DATOS");
+              }
+
+              });
+        }
+
+
+
+
+
+
+        //// a modificar
+/*        function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
           if (estaChequeado == true) { 
             document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
           }
@@ -393,7 +329,7 @@
             else{
               $('#but').slideDown();
             }
-        }
+        }*/
 
         function seleccionarFila(ins_id, estaChequeado) {
           if (estaChequeado == true) {            
@@ -424,9 +360,43 @@
           }
         }
 
-        function seleccionar_temporalidad(tins_id, estaChequeado) {
-          
+        //// Subir Requerimientos a Lista de Certificados distribucion de meses (nuevo)
+        function seleccionar_temporalidad(tins_id,cpoa_id,estaChequeado) {
+          //alert(tins_id+'---'+cpoa_id+'---'+estaChequeado)
           if (estaChequeado == true) { 
+            check=1;
+          }
+          else{
+            check=0;
+          }
+
+            $('#vista_previa').fadeIn(1000).html('<center><img src="<?php echo base_url()?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/><font color=blue>Actualizando Vista Previa ......</font></center>');
+            var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/adiciona_cancela_meses_items";
+          var request;
+          if (request) {
+              request.abort();
+          }
+          request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "tins_id="+tins_id+"&check="+check+"&cpoa_id="+cpoa_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+              $('#vista_previa').fadeIn(1000).html(response.vista_previa);
+          }
+          else{
+              alertify.error("ERROR AL RECUPERAR DATOS");
+          }
+
+          });
+
+
+
+
+/*          if (estaChequeado == true) { 
             val = parseInt($('[name="tot_temp"]').val());
             var url = "<?php echo site_url("")?>/ejecucion/ccertificacion_poa/verif_mes_certificado";
             $.ajax({
@@ -475,43 +445,48 @@
               $('#but').slideDown();
             }
           }
-
+*/
           
           
         }
         </script>
 
+
+
     <script>
-      function reset() {
-            $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
-            alertify.set({
-                labels: {
-                    ok: "ACEPTAR",
-                    cancel: "CANCELAR"
-                },
-                delay: 5000,
-                buttonReverse: false,
-                buttonFocus: "ok"
+        function guardar(){
+            if(document.form_cpoa.recomendacion.value==''){
+                alertify.error("REGISTRE RECOMENDACION") 
+                document.form_cpoa.recomendacion.focus() 
+                return 0; 
+            }
+
+            alertify.confirm("GENERAR REPORTE DE CERTIFICACION POA ?", function (a) {
+                if (a) {
+                    document.form_cpoa.submit();
+                   /* document.getElementById("load").style.display = 'block';
+                    document.getElementById("but").style.display = 'none';*/
+                } else {
+                    alertify.error("OPCI\u00D3N CANCELADA");
+                }
             });
         }
+
+
     $(function () {
-        $("#btsubmit").on("click", function (e) {
+        $("#subir_form1").on("click", function () {
             var $validator = $("#cert_form").validate({
                 rules: {
-                  cite_cpoa: {
-                      required: true,
-                  },
-                  rec: {
-                      required: true,
-                  },
-                  cite_fecha: {
-                      required: true,
-                  }
+                    cite_cpoa: { //// Nota cite
+                        required: true,
+                    },
+                    cite_fecha: { //// Fecha cite
+                        required: true,
+                    }
                 },
                 messages: {
-                  cite_cpoa: {required: "<font color=red size=1>REGISTRE NRO. DE CITE</font>"},
-                  rec: {required: "<font color=red size=1>REGISTRE RECOMENDACI&Oacute;N</font>"},
-                  cite_fecha: {required: "<font color=red size=1>REGISTRE FECHA CITE</font>"}
+                    cite_cpoa: "<font color=red>Registre Cite</font>", 
+                    cite_fecha: "<font color=red>Seleccione Fecha</font>",                    
                 },
                 highlight: function (element) {
                     $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -529,18 +504,17 @@
                     }
                 }
             });
+
             var $valid = $("#cert_form").valid();
             if (!$valid) {
                 $validator.focusInvalid();
-            } 
-            else {
-              reset();
-                alertify.confirm("GENERAR CERTIFICACI&Oacute;N POA ?", function (a) {
+            } else {
+
+                alertify.confirm("VALIDAR DATOS CITE ?", function (a) {
                     if (a) {
-                        //document.getElementById('btsubmit').disabled = true;
-                        document.cert_form.submit();
+                        document.getElementById('subir_form1').disabled = true;
+                        document.forms['cert_form'].submit();
                         document.getElementById("load").style.display = 'block';
-                       document.getElementById("but").style.display = 'none';
                     } else {
                         alertify.error("OPCI\u00D3N CANCELADA");
                     }

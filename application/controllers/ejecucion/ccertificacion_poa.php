@@ -118,23 +118,85 @@ class Ccertificacion_poa extends CI_Controller {
 
 
 
-  /*---- Lista de items a Certificar -----*/
+  /*---- formulario Datos Cite -----*/
   public function list_items_cert($prod_id){
     $data['datos']=$this->model_certificacion->get_datos_unidad_prod($prod_id);
     if(count($data['datos'])!=0){
         $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
         $data['menu']=$this->certificacionpoa->menu(4);
-        $data['resp']=$this->session->userdata('funcionario');
-        $data['res_dep']=$this->certificacionpoa->tp_resp();
         $data['titulo']=$this->certificacionpoa->titulo_cabecera($data['datos']);
 
-        if(count($this->model_certificacion->requerimientos_operacion($prod_id))>500){
-          $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_temporalidad_unica($prod_id); /// para listas mayores a 500 (2023)
-        }
-        else{
-          $data['requerimientos'] = $this->certificacionpoa->list_requerimientos_2022($prod_id,0,0); /// para listas menores a 500 (2023)
-        }
         
+        /// actualizando ejcucion de items
+        $requerimientos=$this->model_insumo->insumos_por_unidad($data['datos'][0]['aper_id']);/// TODOS LOS ITEMS DE LA UNIDAD
+        foreach ($requerimientos as $row) {
+          if($row['ins_costo_total']==$row['ins_monto_certificado']){
+              $update_ins = array(
+                'ins_ejec_cpoa' => 1
+              );
+              $this->db->where('ins_id', $row['ins_id']);
+              $this->db->update('insumos', $update_ins);
+          }
+        }
+        /// ------------------------------
+
+
+
+        $data['formulario']='
+        <article class="col-sm-12 col-md-12 col-lg-3">
+        </article>
+        <article class="col-sm-12 col-md-12 col-lg-6">
+
+        <div class="jarviswidget" id="wid-id-8" data-widget-editbutton="false" data-widget-custombutton="false">
+        <header>
+          <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+          <h2>VALIDAR DATOS CITE </h2>
+        </header>
+        <div>
+          <div class="jarviswidget-editbox">
+          </div>
+          <div class="widget-body no-padding">
+            
+            <form id="cert_form" name="cert_form" action="'.site_url().'/ejecucion/ccertificacion_poa/valida_datos_cite" method="post" class="smart-form">
+              <header>REGISTRE LOS DATOS DE LA NOTA CITE DE SOLICITUD</header>
+              <input type="hidden" name="prod_id" id="prod_id" value="'.$data['datos'][0]['prod_id'].'">
+              <input type="hidden" name="tp_id" id="tp_id" value="'.$data['datos'][0]['tp_id'].'">
+              <fieldset>          
+                <div class="row">
+                  <section class="col col-6">
+                    <label class="label">Nro. CITE</label>
+                    <label class="input">
+                      <i class="icon-append fa fa-user"></i>
+                      <input type="text" name="cite_cpoa" id="cite_cpoa" maxlength="17" onpaste="return false" >
+                    </label>
+                  </section>
+                  <section class="col col-6">
+                    <label class="label">Fecha CITE</label>
+                    <label class="input">
+                      <i class="icon-append fa fa-envelope-o"></i>
+                      <input type="text" name="cite_fecha" id="cite_fecha" placeholder="FECHA CITE" class="form-control datepicker" data-dateformat="dd/mm/yy" onKeyUp="this.value=formateafecha(this.value);" value="'.date('d/m/Y').'" placeholder="dd/mm/YY" title="SELECCIONE FECHA CITE">
+                    </label>
+                  </section>
+                </div>
+
+              </fieldset>
+              
+              <footer>
+                <button type="button" name="subir_form1" id="subir_form1" class="btn btn-info">VALIDAR DATOS CITE</button>
+              </footer>
+              <div id="load" style="display: none" align="center">
+                <br><img  src="'.base_url().'/assets/img_v1.1/preloader.gif" width="100px"><br><b>Generando listado de Requerimientos ....</b>
+              </div>
+            </form>           
+            
+          </div>
+        </div>
+      </div>
+
+        </article>
+        <article class="col-sm-12 col-md-12 col-lg-3">
+        </article>';
+
       //  echo $data['requerimientos'];
         $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/form_items_prevista', $data);
     }
@@ -144,15 +206,398 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
+
+  /// valida datos CIte
+  public function valida_datos_cite(){
+    if ($this->input->post()) {
+      $post = $this->input->post();
+      $prod_id = $this->security->xss_clean($post['prod_id']);
+      $tp_id = $this->security->xss_clean($post['tp_id']);
+      $cite_poa = $this->security->xss_clean($post['cite_cpoa']);
+      $cite_fecha = $this->security->xss_clean($post['cite_fecha']);
+
+      $prod_id = filter_var($prod_id, FILTER_SANITIZE_NUMBER_INT);
+      $tp_id = filter_var($tp_id, FILTER_SANITIZE_NUMBER_INT); 
+      $cite_poa = htmlspecialchars($cite_poa, ENT_QUOTES, 'UTF-8');
+     
+
+      if($tp_id==1){
+        $datos=$this->model_certificacion->get_datos_pi_prod($prod_id); /// Gasto Proyecto de Inversión
+      }
+      else{
+        $datos=$this->model_certificacion->get_datos_unidad_prod($prod_id); /// Gasto Corriente
+      }
+
+      /*------ INSERTANDO CERTIFICADO ------*/
+      $data_to_store = array( 
+        'proy_id' => $datos[0]['proy_id'],
+        'aper_id' => $datos[0]['aper_id'], /// aper del programa padre
+        'cpoa_fecha' => date("d/m/Y H:i:s"), /// fecha de registro (por defecto)
+        'cpoa_gestion' => $this->gestion,
+        'cpoa_estado' => 0, /// 0 : en proceso, 1 elaborado, 2, modificado, 3 Eliminado
+        'fun_id' => $this->fun_id,
+        'com_id' => $datos[0]['com_id'],
+        'cpoa_cite' => $cite_poa,
+        'cite_fecha' => $cite_fecha, /// fecha del Cite
+        'prod_id' => $prod_id,
+      );
+      $this->db->insert('certificacionpoa', $data_to_store);
+      $cpoa_id=$this->db->insert_id();
+      
+      $get_cpoa=$this->model_certificacion->get_certificado_poa($cpoa_id);
+      if(count($get_cpoa)!=0){
+        redirect('cert/lista_requerimientos/'.$cpoa_id.'');
+      }
+      else{
+        $this->session->set_flashdata('error','ERROR ... ');
+        redirect('cert/form_items/'.$prod_id);
+      }
+
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
+
+  /// valida Certificacion POA
+  public function valida_form_cpoa(){
+    if ($this->input->post()) {
+      $post = $this->input->post();
+      $cpoa_id = $this->security->xss_clean($post['cpoa_id']);
+      $recomendacion = $this->security->xss_clean($post['recomendacion']);
+      
+      $this->certificacionpoa->generar_certificacion_poa($cpoa_id);
+
+      $update_cpoa= array(
+        'cpoa_recomendacion' => $recomendacion,
+      );
+      $this->db->where('cpoa_id', $cpoa_id);
+      $this->db->update('certificacionpoa', $this->security->xss_clean($update_cpoa));
+
+      /*--- Redirecciona Vista a Certificacion POA ---*/
+      redirect('cert/ver_cpoa/'.$cpoa_id.'');
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
+
+
+  //// lista de Requerimientos a Certificar
+ public function lista_requerimientos_cpoa($cpoa_id){
+    $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id);
+    if(count($cpoa)!=0){
+        $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
+        $data['menu']=$this->certificacionpoa->menu(4);
+        $data['titulo']='
+            <div role="alert">
+              <h1><b>CERTIFICACION POA N° CITE </b> : <small><font color="#000">'.strtoupper($cpoa[0]['cpoa_cite']).'</font> | </small>'.strtoupper($cpoa[0]['proy_nombre'].' - '.$cpoa[0]['tipo_subactividad'].' '.$cpoa[0]['serv_descripcion']).'</h1>
+            </div> ';
+
+        $requerimientos = $this->certificacionpoa->list_requerimientos_unica_temporalidad($cpoa); /// para listas mayores a 500 (2023)
+        if($cpoa[0]['cpoa_estado']==1){
+          redirect('cert/ver_cpoa/'.$cpoa_id.''); /// redireccionando al reporte de certificacion poa
+        }
+        else{
+          $data['formulario']='
+            <div class=row>
+            
+            <article class="col-sm-12 col-md-12 col-lg-12">
+              <!-- Widget ID (each widget will need unique ID)-->
+              <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+                <header>
+                  <span class="widget-icon"> <i class="fa fa-hand-o-up"></i> </span>
+                  <h2><b>VISTA PREVIA - CERTIFICACION POA</b></h2>
+                </header>
+                <div>
+                  <div class="jarviswidget-editbox">
+                  </div>
+                  <div class="widget-body">
+                    <div class="alert alert-block alert-success">
+                      <a class="close" data-dismiss="alert" href="#">×</a>
+                      <h4 class="alert-heading"><i class="fa fa-check-square-o"></i> REQUERIMIENTOS SELECCIONADOS!</h4>
+                      <p>
+                        Antes de Generar la Certificacion POA Verifique los datos completos de los items seleccionados!!
+                      </p>
+                    </div>
+                    <div id="vista_previa">'.$this->certificacionpoa->vista_previa_items_certificados($cpoa_id).'</div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <div class="col-sm-12">
+            
+            <div class="well">
+              <h1 class="semi-bold"><b>REQUERIMIENTOS DISPONIBLES PARA SU CERTIFICACION POA</b></h1>
+              '.$requerimientos.'
+              </div>
+            </div>
+
+          </div>';
+        }
+
+        $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/form_items_prevista', $data);
+
+    }
+    else{
+      echo "Error !!!";
+    }
+  }
+
+
+
+
+    /*--- GET ADICIONA O ANULA 1 ITEM SELECCIONADO---*/
+    public function adiciona_cancela_items(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $ins_id = $this->security->xss_clean($post['ins_id']);
+        $cpoa_id = $this->security->xss_clean($post['cpoa_id']);
+        $check = $this->security->xss_clean($post['check']); /// 1: adiciona, 0: elimina
+        
+        $get_cert_detalle=$this->model_certificacion->get_certificado_poa_detalle($cpoa_id,$ins_id);
+        $lista_temporalidad=$this->model_insumo->lista_prog_fin($ins_id);
+       
+          if($check==1){ /// adiciona requerimiento
+
+            if(count($get_cert_detalle)==0){ /// ingresa siempre y cuando no haya registro del item
+
+              $update_ins = array(
+                'ins_monto_certificado' => $lista_temporalidad[0]['ipm_fis'],
+                'ins_ejec_cpoa' => 1
+              );
+              $this->db->where('ins_id', $ins_id);
+              $this->db->update('insumos', $update_ins);
+
+              $data_to_store = array( 
+                'cpoa_id' => $cpoa_id,
+                'ins_id' => $ins_id,
+                'ifin_id' => 0,
+                'fun_id' => $this->fun_id,
+              );
+              $this->db->insert('certificacionpoadetalle', $data_to_store);
+              $cpoad_id=$this->db->insert_id();
+
+              /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
+                $data_to_store = array(
+                  'cpoad_id' => $cpoad_id,
+                  'tins_id' => $lista_temporalidad[0]['tins_id'],
+                );
+                $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
+              /*--------------------------------------------*/
+
+              /// Actualizando el estado de la temporalidad a 1
+                $update_proyect = array(
+                  'estado_cert' => 1
+                );
+                $this->db->where('tins_id', $lista_temporalidad[0]['tins_id']);
+                $this->db->where('ins_id', $ins_id);
+                $this->db->update('temporalidad_prog_insumo', $update_proyect);
+            }
+            
+          }
+          else{ /// quita requerimiento a certificar
+            if(count($get_cert_detalle)==1){ /// ingresa siempre y cuando no haya registro del item
+
+              $update_ins = array(
+                'ins_monto_certificado' => 0,
+                'ins_ejec_cpoa' => 0
+              );
+              $this->db->where('ins_id', $ins_id);
+              $this->db->update('insumos', $update_ins);
+
+
+              /// Actualizando el estado de la temporalidad a 1
+              $update_proyect = array(
+                'estado_cert' => 0
+              );
+              $this->db->where('tins_id', $lista_temporalidad[0]['tins_id']);
+              $this->db->where('ins_id', $ins_id);
+              $this->db->update('temporalidad_prog_insumo', $update_proyect);
+
+              ///-----------------------------------------
+              $this->db->where('tins_id',$lista_temporalidad[0]['tins_id']);
+              $this->db->delete('cert_temporalidad_prog_insumo');
+
+              ///-----------------------------------------
+              $this->db->where('cpoad_id',$get_cert_detalle[0]['cpoad_id']);
+              $this->db->delete('certificacionpoadetalle');
+            }
+            
+          }
+          
+          $lista='';
+          $requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id); /// lista de items certificados  
+          if(count($requerimientos)!=0){
+            $lista.=$this->certificacionpoa->vista_previa_items_certificados($cpoa_id);
+          }
+
+        //$lista='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/reporte_solicitud_poa_aprobado/'.$cpoa_id.'"></iframe>';
+        $result = array(
+          'respuesta' => 'correcto',
+          'vista_previa' => $lista,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+
+    /*--- GET ADICIONA O ANULA ITEM SELECCIONADO POR MESES ---*/
+    public function adiciona_cancela_meses_items(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $tins_id = $this->security->xss_clean($post['tins_id']);
+        $cpoa_id = $this->security->xss_clean($post['cpoa_id']);
+        $check = $this->security->xss_clean($post['check']); /// 1: adiciona, 0: elimina
+
+        $get_temp_ins=$this->model_certificacion->get_id_insumo_programado_mes($tins_id); /// get mes seleccionado
+        $get_insumo=$this->model_insumo->get_insumo_producto($get_temp_ins[0]['ins_id']); /// get datos insumo
+
+          if($check==1){ /// adiciona requerimiento
+
+            //if(count($get_temp_ins)==0){ /// ingresa siempre y cuando no haya registro del item
+
+              $get_cert_detalle=$this->model_certificacion->get_certificado_poa_detalle($cpoa_id,$get_temp_ins[0]['ins_id']); // verificando el registro del detalle de certificacion poa
+              if(count($get_cert_detalle)==0){
+
+                $data_to_store = array( 
+                  'cpoa_id' => $cpoa_id,
+                  'ins_id' => $get_temp_ins[0]['ins_id'],
+                  'ifin_id' => 0,
+                  'fun_id' => $this->fun_id,
+                );
+                $this->db->insert('certificacionpoadetalle', $data_to_store);
+                $cpoad_id=$this->db->insert_id();
+              }
+              else{
+                $cpoad_id=$get_cert_detalle[0]['cpoad_id'];
+              }
+
+
+              /*-------- GUARDANDO ITEMS MES PROGRAMADOS -------*/
+                $data_to_store = array(
+                  'cpoad_id' => $cpoad_id,
+                  'tins_id' => $tins_id,
+                );
+                $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
+              /*--------------------------------------------*/
+
+              /// Actualizando el estado de la temporalidad a 1
+                $update_proyect = array(
+                  'estado_cert' => 1
+                );
+                $this->db->where('tins_id', $tins_id);
+                $this->db->where('ins_id', $get_temp_ins[0]['ins_id']);
+                $this->db->update('temporalidad_prog_insumo', $update_proyect);
+
+              /// Actualizando el monto total certificado
+                $update_ins = array(
+                  'ins_monto_certificado' => $get_insumo[0]['ins_monto_certificado']+$get_temp_ins[0]['ipm_fis']
+                );
+                $this->db->where('ins_id', $get_temp_ins[0]['ins_id']);
+                $this->db->update('insumos', $update_ins);
+
+                $get_insumo=$this->model_insumo->get_insumo_producto($get_temp_ins[0]['ins_id']); /// get datos insumo
+                $ejec=0;
+                if($get_insumo[0]['ins_costo_total']==$get_insumo[0]['ins_monto_certificado']){
+                  $ejec=1;
+                }
+
+                $update_ins = array(
+                  'ins_ejec_cpoa' => $ejec
+                );
+                $this->db->where('ins_id', $get_temp_ins[0]['ins_id']);
+                $this->db->update('insumos', $update_ins);
+            //}
+            
+          }
+          else{ /// quita requerimiento a certificar
+            //if(count($get_temp_ins)==1){ /// ingresa siempre y cuando no haya registro del item
+
+              $update_ins = array(
+                'ins_monto_certificado' => $get_insumo[0]['ins_monto_certificado']-$get_temp_ins[0]['ipm_fis'],
+                'ins_ejec_cpoa' => 0
+              );
+              $this->db->where('ins_id', $get_temp_ins[0]['ins_id']);
+              $this->db->update('insumos', $update_ins);
+
+
+              /// Actualizando el estado de la temporalidad a 1
+              $update_proyect = array(
+                'estado_cert' => 0
+              );
+              $this->db->where('tins_id', $tins_id);
+              $this->db->where('ins_id', $get_temp_ins[0]['ins_id']);
+              $this->db->update('temporalidad_prog_insumo', $update_proyect);
+
+              ///-----------------------------------------
+              $this->db->where('tins_id',$tins_id);
+              $this->db->delete('cert_temporalidad_prog_insumo');
+
+              ///-----------------------------------------
+
+              $get_cert_detalle=$this->model_certificacion->get_certificado_poa_detalle($cpoa_id,$get_temp_ins[0]['ins_id']); // verificando el registro del detalle de certificacion poa
+
+              if(count($this->model_certificacion->get_list_cert_temporalidad_prog_insumo($get_cert_detalle[0]['cpoad_id']))==0){
+                $this->db->where('cpoad_id',$get_cert_detalle[0]['cpoad_id']);
+                $this->db->delete('certificacionpoadetalle');
+              }
+
+
+               /// Actualizando el monto total certificado
+                $update_ins = array(
+                  'ins_monto_certificado' => $get_insumo[0]['ins_monto_certificado']-$get_temp_ins[0]['ipm_fis']
+                );
+                $this->db->where('ins_id', $get_temp_ins[0]['ins_id']);
+                $this->db->update('insumos', $update_ins);
+
+                
+                $update_ins = array(
+                  'ins_ejec_cpoa' => 0
+                );
+                $this->db->where('ins_id', $get_temp_ins[0]['ins_id']);
+                $this->db->update('insumos', $update_ins);
+              
+            //}
+            
+          }
+          
+          $lista='';
+          $requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id); /// lista de items certificados  
+          if(count($requerimientos)!=0){
+            $lista.=$this->certificacionpoa->vista_previa_items_certificados($cpoa_id);
+          }
+
+       
+        $result = array(
+          'respuesta' => 'correcto',
+          'vista_previa' => $lista,
+        );
+          
+        echo json_encode($result);
+
+      }else{
+          show_404();
+      }
+    }
+
+
+
     /*-------- GET INSUMOS CON TEMPORALIDAD DISTRIBUIDA --------*/
     public function get_insumos(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $prod_id = $this->security->xss_clean($post['prod_id']);
+        $cpoa_id = $this->security->xss_clean($post['cpoa_id']);
        
         $result = array(
           'respuesta' => 'correcto',
-          'lista' => $this->certificacionpoa->list_requerimientos_temporalidad_variada($prod_id),
+          'lista' => $this->certificacionpoa->list_requerimientos_temporalidad_variada($prod_id,$cpoa_id),
         );
 
         echo json_encode($result);
@@ -228,8 +673,14 @@ class Ccertificacion_poa extends CI_Controller {
 
 
 
-  /*------ VALIDA CERTIFICACION POA (2020 - 2021) ------*/
-  public function valida_cpoa(){
+ 
+
+
+
+
+
+/// valida a corregir
+public function valida_cpoas(){
     if ($this->input->post()) {
       $post = $this->input->post();
       $prod_id = $this->security->xss_clean($post['prod_id']);
@@ -275,48 +726,24 @@ class Ccertificacion_poa extends CI_Controller {
         $this->db->insert('certificacionpoadetalle', $data_to_store);
         $cpoad_id=$this->db->insert_id();
 
-          $lista_temporalidad=$this->model_insumo->lista_prog_fin($_POST["ins"][$como]);
-          if(count($lista_temporalidad)>1){
-            for ($i=1; $i <=12 ; $i++) {
-              if(!empty($_POST["ipm".$i."".$_POST["ins"][$como]])){
-                /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
-                $data_to_store = array(
-                  'cpoad_id' => $cpoad_id,
-                  'tins_id' => $_POST["ipm".$i."".$_POST["ins"][$como]],
-                );
-                $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
-                /*--------------------------------------------*/
+         $lista_temporalidad=$this->model_insumo->lista_prog_fin($_POST["ins"][$como]);
+          /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
+            $data_to_store = array(
+              'cpoad_id' => $cpoad_id,
+              'tins_id' => $lista_temporalidad[0]['tins_id'],
+            );
+            $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
+          /*--------------------------------------------*/
 
-                /// Actualizando el estado de la temporalidad
-                $update_proyect = array(
-                  'estado_cert' => 1
-                );
-                $this->db->where('tins_id', $_POST["ipm".$i."".$_POST["ins"][$como]]);
-                $this->db->where('ins_id', $_POST["ins"][$como]);
-                $this->db->update('temporalidad_prog_insumo', $update_proyect);
-              // echo "ins_id : ".$_POST["ins"][$como]." -----muchos  tins_id ".$_POST["ipm".$i."".$_POST["ins"][$como]]."<br>";
-              } 
-            }
-          }
-          else{
-            /*-------- GUARDANDO ITEMS PROGRAMADOS -------*/
-              $data_to_store = array(
-                'cpoad_id' => $cpoad_id,
-                'tins_id' => $lista_temporalidad[0]['tins_id'],
-              );
-              $this->db->insert('cert_temporalidad_prog_insumo', $data_to_store);
-            /*--------------------------------------------*/
+          /// Actualizando el estado de la temporalidad
+            $update_proyect = array(
+              'estado_cert' => 1
+            );
+            $this->db->where('tins_id', $lista_temporalidad[0]['tins_id']);
+            $this->db->where('ins_id', $_POST["ins"][$como]);
+            $this->db->update('temporalidad_prog_insumo', $update_proyect);
 
-            /// Actualizando el estado de la temporalidad
-              $update_proyect = array(
-                'estado_cert' => 1
-              );
-              $this->db->where('tins_id', $lista_temporalidad[0]['tins_id']);
-              $this->db->where('ins_id', $_POST["ins"][$como]);
-              $this->db->update('temporalidad_prog_insumo', $update_proyect);
-
-             // echo "ins_id : ".$_POST["ins"][$como]." -----uno tins_id ".$lista_temporalidad[0]['tins_id']."<br>";
-          }
+           // echo "ins_id : ".$_POST["ins"][$como]." -----uno tins_id ".$lista_temporalidad[0]['tins_id']."<br>";
           
 
           $get_cert_insumo=$this->model_insumo->lista_prog_fin_certificado($_POST["ins"][$como]);
@@ -356,7 +783,6 @@ class Ccertificacion_poa extends CI_Controller {
       echo "Error !!!";
     }
   }
-
 
 
   /*--- ACTUALIZA EL MONTO CERTIFICADO A CADA REQUERIMIENTO (NUEVO 2021) ---*/
@@ -910,7 +1336,7 @@ class Ccertificacion_poa extends CI_Controller {
 
 
   /*======= FUNCIONES EXTRAS ======*/
-    /*-------- GET DATOS OPERACIONES 2021 --------*/
+    /*-------- GET DATOS DE ALINEACION PARA CERTIFICACION --------*/
     public function get_actividades(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -918,12 +1344,12 @@ class Ccertificacion_poa extends CI_Controller {
         $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
         
         if($proyecto[0]['tp_id']==1){
-          $tabla=$this->certificacionpoa->mis_productos($proy_id); /// Mis operaciones por Subactividad
+          $tabla=$this->certificacionpoa->mis_formulariosN4($proy_id); /// Mis operaciones por Unidad Responsable
         }
         else{
           $presupuesto=$this->model_certificacion->saldo_presupuesto_unidad($proy_id);
           if(($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0){
-            $tabla=$this->certificacionpoa->mis_productos($proy_id); /// Mis operaciones por Subactividad
+            $tabla=$this->certificacionpoa->mis_formulariosN4($proy_id); /// Mis Formularios n° 4 por Unidad Responsable
           }
           else{
             $tabla='<div class="alert alert-danger" role="alert">

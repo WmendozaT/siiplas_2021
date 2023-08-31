@@ -356,7 +356,11 @@ class Cert_poa extends CI_Controller {
                         $tabla.='
                         <td>';
                           if($row['cpoa_estado']==0){ /// CUANDO NO TIENE CODIGO DE CERTIFICACIÓN
-                            $tabla.='<center><a href="'.site_url("").'/cert/generar_codigo/'.$row['cpoa_id'].'" title="GENERAR CÓDIGO DE CERTIFICACIÓN" class="btn btn-default">GENERAR CÓDIGO</a></center>';
+                            $tabla.='
+                            <center>
+                              <a href="'.site_url("").'/cert/generar_codigo/'.$row['cpoa_id'].'" title="GENERAR CÓDIGO DE CERTIFICACIÓN" class="btn btn-default">GENERAR CÓDIGO</a><br><br>
+                              <a href="'.site_url("").'/cert/lista_requerimientos/'.$row['cpoa_id'].'" target=_blank title="GENERAR CÓDIGO DE CERTIFICACIÓN" class="btn btn-default">INGRESAR A FORM</a>
+                            </center>';
                           }
                         $tabla.='
                         </td>
@@ -565,6 +569,12 @@ class Cert_poa extends CI_Controller {
               $cpoa_id = $this->security->xss_clean($post['cpoa_id']); /// cpoa id
               $cite = $this->security->xss_clean($post['cite']); /// Cite
               $justificacion = $this->security->xss_clean($post['justificacion']); /// Justificacion
+
+
+              $cpoa_id = filter_var($cpoa_id, FILTER_SANITIZE_NUMBER_INT);
+              $cite = filter_var($cite, FILTER_SANITIZE_NUMBER_INT); 
+              $justificacion = htmlspecialchars($justificacion, ENT_QUOTES, 'UTF-8');
+
 
               $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id); /// Datos Generales de la Certificacion POA
               $items=$this->model_certificacion->lista_items_certificados($cpoa_id); /// Lista de items Certificados

@@ -267,8 +267,18 @@ class User extends CI_Controller{
                 }
                 ///=================================================
             }
-            
+
             $this->load->view('admin/dashboard',$data);
+            
+            /*if($this->fun_id==1365){ /// redireccionando a Cert POA
+    
+                redirect('cert/form_items/76808');
+
+            }
+            else{
+                $this->load->view('admin/dashboard',$data);
+            }*/
+            
         } else{
             $this->session->sess_destroy();
             redirect('/','refresh');

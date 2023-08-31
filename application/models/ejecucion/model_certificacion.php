@@ -572,7 +572,7 @@ class Model_certificacion extends CI_Model{
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
                         Inner Join unidad_actividad as ua On ua.act_id=p.act_id
                         Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                        where p.dep_id='.$dep[0]['dep_id'].' and cpoa_gestion='.$this->gestion.' and cp.cpoa_estado!=\'3\' and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
+                        where p.dep_id='.$dep[0]['dep_id'].' and cpoa_gestion='.$this->gestion.' and (cp.cpoa_estado!=\'3\' and cp.cpoa_estado!=\'0\') and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
                         order by cpoa_id asc';
             }
             else{ /// Distrital
@@ -590,7 +590,7 @@ class Model_certificacion extends CI_Model{
                         Inner Join _distritales as ds On ds.dist_id=p.dist_id
                         Inner Join unidad_actividad as ua On ua.act_id=p.act_id
                         Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                        where p.dep_id='.$dep[0]['dep_id'].' and p.dist_id='.$this->dist.'and cpoa_gestion='.$this->gestion.' and cp.cpoa_estado!=\'3\' and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
+                        where p.dep_id='.$dep[0]['dep_id'].' and p.dist_id='.$this->dist.'and cpoa_gestion='.$this->gestion.' and (cp.cpoa_estado!=\'3\' and cp.cpoa_estado!=\'0\') and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.'
                         order by cpoa_id asc';
             }
         }
