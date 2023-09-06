@@ -132,7 +132,7 @@ $route['prog/update_insumos/(:any)'] = 'programacion/crequerimiento/update_id_re
 $route['rep/list_operaciones_req'] = 'reportes_cns/rep_operaciones/list_regiones'; ///// Menu Lista de Regiones Consolidado POA (2020-2021)
 $route['rep/get_uadministrativas'] = 'reportes_cns/rep_operaciones/get_unidades_administrativas'; ////// Combo Unidades Administrativas (CONSOLIDADO REPORTES 2020-2021)
 $route['rep/exportar_operaciones_distrital/(:any)'] = 'reportes_cns/exporting_datos/operaciones_distrital/$1/$2/$3'; ///// Exportar Operaciones por distrital 2020-2021
-
+$route['rep/exportar_form4_institucional'] = 'reportes_cns/exporting_datos/formulario4_institucional'; ///// Exportar formulario N 4 Institucional
 
 ///=== Reporte Consulta POA Presupuesto por Partidas
 $route['consulta_ppto_poa'] = 'reportes_cns/crep_consultafinanciera/index'; ///// Menu consulta Financiera 2022

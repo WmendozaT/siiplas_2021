@@ -106,6 +106,9 @@ class Model_componente extends CI_Model{
                 Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
                 Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join _proyectos as p On pfe.proy_id=p.proy_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
                 where c.com_id='.$com_id.' and apg.aper_gestion='.$gestion.' and apg.aper_estado!=\'3\' and pfe.pfec_estado=\'1\''; 
         $query = $this->db->query($sql);

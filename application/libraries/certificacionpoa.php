@@ -38,27 +38,27 @@ class Certificacionpoa extends CI_Controller{
 //// ADMINISTRADOR 
   /*-------- MENU -----*/
     function menu($mod){
-        $enlaces=$this->menu_modelo->get_Modulos($mod);
-        for($i=0;$i<count($enlaces);$i++){
-          $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
-        }
+      $enlaces=$this->menu_modelo->get_Modulos($mod);
+      for($i=0;$i<count($enlaces);$i++){
+        $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
+      }
 
-        $tabla ='';
-        for($i=0;$i<count($enlaces);$i++){
-            if(count($subenlaces[$enlaces[$i]['o_child']])>0){
-                $tabla .='<li>';
-                    $tabla .='<a href="#">';
-                        $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
-                        $tabla .='<ul>';    
-                            foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
-                            $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
-                        }
-                        $tabla .='</ul>';
-                $tabla .='</li>';
-            }
-        }
+      $tabla ='';
+      for($i=0;$i<count($enlaces);$i++){
+          if(count($subenlaces[$enlaces[$i]['o_child']])>0){
+              $tabla .='<li>';
+                  $tabla .='<a href="#">';
+                      $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
+                      $tabla .='<ul>';    
+                          foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
+                          $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
+                      }
+                      $tabla .='</ul>';
+              $tabla .='</li>';
+          }
+      }
 
-        return $tabla;
+      return $tabla;
     }
 
   /*------ TITULO CABECERA (2020)-----*/
@@ -180,9 +180,13 @@ class Certificacionpoa extends CI_Controller{
           $nro=0;
           foreach($unidades as $row){
             if($row['proy_estado']==4){
+              $color='';
+              if($row['por_id']==1){
+                $color='#EFFEFD';
+              }
               $nro++;
               $tabla.='
-                <tr style="height:45px;">
+                <tr style="height:45px;" bgcolor='.$color.'>
                   <td align=center title="'.$row['proy_id'].'-'.$row['aper_id'].'"><b>'.$nro.'</b></td>
                   <td align=center>
                     <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" style="color: green; background-color: #eeeeee;border-bottom-width: 5px;" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" title="SELECCIONAR ACTIVIDAD"> 
@@ -264,18 +268,9 @@ class Certificacionpoa extends CI_Controller{
 
   /*------ GET FORMULARIOS N° 4 -----*/
     public function mis_formulariosN4($proy_id){
-      $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
-      /*$titulo='UNIDAD RESPONSABLE';
-      if($proyecto[0]['tp_id']==4){
-        $titulo='SUBACTIVIDAD';
-      }*/
-
-
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
       $productos = $this->model_certificacion->list_operaciones_x_subactividad_ppto($proy_id); /// PRODUCTOS
       $tabla='';
-      if($this->gestion>2020){ /// 2021
-      $tabla='          
-          ';
       $tabla.='
       <form>
         <section class="col col-6">
@@ -301,9 +296,17 @@ class Certificacionpoa extends CI_Controller{
               $nro++;
               $tabla.=
               '<tr>
-                <td align=center>'.$nro.'</td>
-                <td><b>'.$row['tipo_subactividad'].' '.$row['serv_cod'].' '.$row['serv_descripcion'].'</b></td>
-                <td align=center><span class="badge bg-color-blue txt-color-white">'.$row['prod_cod'].'</span></td>
+                <td align=center>'.$nro.'</td>';
+                  if($proyecto[0]['por_id']==1){
+                    $programa=$this->model_componente->get_componente($row['resp_id'],$this->gestion);
+                    $tabla.='<td bgcolor="#EFFEFD"><b style="font-size:12px;">'.$programa[0]['tipo'].' '.$programa[0]['act_descripcion'].'</b><br>'.$row['tipo_unidad'].' '.$row['unidad_responsable'].'</td>';
+                  }
+                  else{
+                    $tabla.='<td bgcolor="#EFFEFD"><b style="font-size:12px;">'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</b></td>';
+                  }
+                $tabla.='
+                
+                <td align=center><span class="badge bg-color-blue txt-color-white" style="font-size:12px;">'.$row['prod_cod'].'</span></td>
                 <td>'.$row['prod_producto'].'</td>
                 <td>'.$row['prod_resultado'].'</td>
                 <td align=right>'.number_format($row['monto'], 2, ',', '.').'</td>
@@ -323,157 +326,11 @@ class Certificacionpoa extends CI_Controller{
             </tbody>
           </table>
         </form>';
-      }
-      else{ /// 2020
-      $tabla.='
-        <table class="table table-bordered" border=1 style="width:100%;">
-          <thead>
-            <tr>
-              <th style="width:1%;" bgcolor="#3276b1">#</th>
-              <th style="width:9%;" bgcolor="#3276b1" title="SERVICIO / COMPONENTE">SERVICIO / COMPONENTE </th>
-              <th style="width:1%;" bgcolor="#3276b1" title="CÓDIGO">COD. ACT.</th>
-              <th style="width:17%;" bgcolor="#3276b1" title="ACTIVIDAD">ACTIVIDAD</th>
-              <th style="width:17%;" bgcolor="#3276b1" title="RESULTADO">RESULTADO</th>
-              <th style="width:3%;" bgcolor="#3276b1" title="MONTO PRESUPUESTO POA">PPTO. POA</th>
-              <th style="width:3%;" bgcolor="#3276b1" title="ITEMS A CERTIFICAR"></th>
-              <th style="width:1%;" bgcolor="#3276b1"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tbody>'; 
-            $nro=0;
-            foreach($productos as $row){
-              $nro++;
-              $tabla.=
-              '<tr bgcolor=#eef3f9>
-                <td align=center>'.$nro.'</td>
-                <td><b>'.$row['com_componente'].'</b></td>
-                <td align=center><span class="badge bg-color-blue txt-color-white">'.$row['prod_cod'].'</span></td>
-                <td>'.$row['prod_producto'].'</td>
-                <td>'.$row['prod_resultado'].'</td>
-                <td align=right>'.number_format($row['monto'], 2, ',', '.').'</td>
-                <td align=center><a class="btn btn-primary" href="'.site_url("").'/cert/form_items/'.$row['prod_id'].'" id="myBtn'.$row['prod_id'].'" title="INGRESAR A LISTA DE ITEMS A CERTIFICAR" style="width:100%;"><i class="fa fa-lg fa-fw fa-list-alt"></i> CERTIFICAR ITEMS</a></td>
-                <td align=center><img id="load'.$row['prod_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="35" height="35" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO.."></td>
-              </tr>';
 
-              $tabla.=' <script>
-                          document.getElementById("myBtn'.$row['prod_id'].'").addEventListener("click", function(){
-                            this.disabled = true;
-                            document.getElementById("load'.$row['prod_id'].'").style.display = "block";
-                            document.getElementById("mload").style.display = "block";
-                          });
-                        </script>';
-            }
-            $tabla.='
-            </tbody>
-          </table>';
-      }
 
       return $tabla;
     }
 
-  
-  /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS (REFORMULACION) ------*/
-/*  public function list_requerimientos_certificados2($requerimientos,$cpoa_id){
-    $tabla='<style>
-            table{font-size: 9.5px;
-            width: 100%;
-            max-width:1550px;
-            overflow-x: scroll;
-            font-family: Copperplate;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 9.5px;
-            }
-            input[type="checkbox"] {
-              display:inline-block;
-              width:20px;
-              height:20px;
-              margin:-1px 6px 0 0;
-              vertical-align:middle;
-              cursor:pointer;
-            }
-            #mdialTamanio{
-              width: 70% !important;
-            }
-          </style>';
-    //$requerimientos=$this->model_certificacion->requerimientos_modificar_cpoa($cpoa_id);
-      //$requerimientos=$this->model_certificacion->lista_items_certificados($cpoa_id);
-    $tabla.='
-      <table class="table table-bordered" style="width:97%;" align="center" id="datos">
-        <thead >
-          <tr>
-            <th style="width:1%;">'.$cpoa_id.'</th>
-            <th style="width:2%;"></th>
-            <th style="width:2%;"></th>
-            <th style="width:4%;">PARTIDA</th>
-            <th style="width:16%;">REQUERIMIENTO</th>
-            <th style="width:5%;">UNIDAD DE MEDIDA</th>
-            <th style="width:3%;">CANTIDAD</th>
-            <th style="width:5%;">COSTO UNITARIO</th>
-            <th style="width:5%;">COSTO TOTAL</th>
-            <th style="width:5%;">MONTO CERTIFICADO</th>
-            <th style="width:4.5%;">ENE.</th>
-            <th style="width:4.5%;">FEB.</th>
-            <th style="width:4.5%;">MAR.</th>
-            <th style="width:4.5%;">ABR.</th>
-            <th style="width:4.5%;">MAY.</th>
-            <th style="width:4.5%;">JUN.</th>
-            <th style="width:4.5%;">JUL.</th>
-            <th style="width:4.5%;">AGO.</th>
-            <th style="width:4.5%;">SEPT.</th>
-            <th style="width:4.5%;">OCT.</th>
-            <th style="width:4.5%;">NOV.</th>
-            <th style="width:4.5%;">DIC.</th>
-          </tr>
-        </thead>
-        <tbody>';
-        $nro=0;
-        foreach($requerimientos as $row){
-          $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-          $display='style="display: none"';
-          $check='';
-          $bgcolor='#f2fded';
-          $nro_mes=count($this->model_certificacion->verif_temporalidad_certificado($row['ins_id']));
-          $nro++;
-          $tabla.='
-          <tr bgcolor='.$bgcolor.' title='.$row['ins_id'].' id="tr'.$nro.'" >
-            <td>'.$nro.'</td>
-            <td>
-              <input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila_edit(this.value,'.$nro.','.$cpoa_id.',this.checked);" '.$check.'/><br>
-              <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
-            </td>
-            <td>
-              <a href="#" data-toggle="modal" data-target="#modal_mod_ins" class="btn-default mod_ins" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>
-            </td>
-            <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
-            <td id="det'.$row['ins_id'].'">'.$row['ins_detalle'].'</td>
-            <td id="umedida'.$row['ins_id'].'">'.$row['ins_unidad_medida'].'</td>
-            <td align=right>'.$row['ins_cant_requerida'].'</td>
-            <td align=right>'.$row['ins_costo_unitario'].'</td>
-            <td align=right>'.$row['ins_costo_total'].'</td>
-            <td align=right bgcolor="#e7f5f3"><b>'.number_format($row['monto_certificado'], 2, ',', '.').'</b></td>';
-            if($nro_mes==1){
-              for ($i=1; $i <=12 ; $i++) { 
-                $tabla.='<td align=right>'.$row['mes'.$i].'</td>';
-              }
-            }
-            else{
-              for ($i=1; $i <=12 ; $i++) { 
-                $tabla.='<td align=right></td>';
-              }
-            }
-            $tabla.='
-          </tr>';
-        }
-      $tabla.='
-        </tbody>
-      </table>';
-
-    return $tabla;
-  }*/
 
  /*------- LISTA DE REQUERIMIENTOS CERTIFICADOS A MODIFICAR------*/
   public function list_requerimientos_certificados($requerimientos,$cpoa_id){
@@ -683,159 +540,13 @@ class Certificacionpoa extends CI_Controller{
   }
 
 
-/*------- LISTA DE REQUERIMIENTOS PRE LISTA 2021 ------*/
-/*  public function list_requerimientos_prelista($prod_id){
-    $tabla='';
-    $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
-    $tabla='<style>
-            input[type="checkbox"] {
-              display:inline-block;
-              width:20px;
-              height:20px;
-              margin:-1px 6px 0 0;
-              vertical-align:middle;
-              cursor:pointer;
-            }
-          </style>';
-    $tabla.='
-      <table class="table table-bordered" style="width:97%;" align="center" id="datos">
-        <thead >
-          <tr>
-            <th style="width:1%;">#</th>
-            <th style="width:2%;"></th>
-            <th style="width:4%;">PARTIDA</th>
-            <th style="width:16%;">REQUERIMIENTO</th>
-            <th style="width:5%;">UNIDAD DE MEDIDA</th>
-            <th style="width:3%;">CANTIDAD</th>
-            <th style="width:5%;">PRECIO</th>
-            <th style="width:5%;">COSTO TOTAL</th>
-            <th style="width:4.5%;">ENE.</th>
-            <th style="width:4.5%;">FEB.</th>
-            <th style="width:4.5%;">MAR.</th>
-            <th style="width:4.5%;">ABR.</th>
-            <th style="width:4.5%;">MAY.</th>
-            <th style="width:4.5%;">JUN.</th>
-            <th style="width:4.5%;">JUL.</th>
-            <th style="width:4.5%;">AGO.</th>
-            <th style="width:4.5%;">SEPT.</th>
-            <th style="width:4.5%;">OCT.</th>
-            <th style="width:4.5%;">NOV.</th>
-            <th style="width:4.5%;">DIC.</th>
-            <th style="width:8%;">OBSERVACIÓN</th>
-          </tr>
-        </thead>
-        <tbody>';
-        $nro=0;
-        foreach($requerimientos as $row){
-          $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-          $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
-
-          if(count($mcertificado)!=0){
-            $monto_certificado=$mcertificado[0]['certificado'];
-          }
-
-          if($monto_certificado!=$row['ins_costo_total']){
-          //  if($row['ins_monto_certificado']!=$row['ins_costo_total']){
-              $nro++;
-              $tabla.='
-              <tr  title='.$row['ins_id'].' id="tr'.$nro.'" >
-                <td>'.$nro.'</td>
-                <td>';
-                if(count($this->model_certificacion->get_items_solicitado($row['ins_id']))==0){
-                    if($this->model_certificacion->get_insumo_programado($row['ins_id'])>1){
-                      $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila(this.value, this.checked);"/><br>';
-                    }
-                    else{
-                      $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFilacompleta(this.value,'.$nro.',this.checked);"/><br>';
-                    }
-                }
-                else{
-                  $tabla.='<img src="'.base_url().'assets/Iconos/cancel.png" WIDTH="20" HEIGHT="20"/>';
-                }
-                $tabla.='
-                <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
-                </td>
-                <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
-                <td>'.$row['ins_detalle'].'</td>
-                <td>'.$row['ins_unidad_medida'].'</td>
-                <td align=right>'.$row['ins_cant_requerida'].'</td>
-                <td align=right>'.$row['ins_costo_unitario'].'</td>
-                <td align=right>'.$row['ins_costo_total'].'</td>';
-                if($this->model_certificacion->get_insumo_programado($row['ins_id'])>1){
-                  for ($i=1; $i <=12 ; $i++) {
-                    $color=''; 
-                    $m=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
-                    $tabla.='
-                    <td align=right>
-                      <table align=right>
-                        <tr>
-                          <td>
-                            <div id="m'.$i.''.$row['ins_id'].'" style="display: none;">';
-                            if(count($m)!=0){
-                              if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
-                                $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value, this.checked);"/>';
-                              }
-                              else{
-                                $color='green';
-                              }
-                            }
-                    $tabla.='
-                          </td>
-                          <td align=right>';
-                          if(count($m)!=0){
-                            $tabla.='<font color="'.$color.'">'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</font>';
-                          }
-                          else{
-                            $tabla.='0,00';
-                          }
-                    $tabla.='
-                          </td>
-
-                        </tr>
-                      </table>
-                    </td>';
-                  }
-                }
-                else{
-                  $temp=$this->model_insumo->list_temporalidad_insumo($row['ins_id']);
-                  for ($j=1; $j <=12 ; $j++) {
-                    $bgcolor='';
-                    if($temp[0]['mes'.$j.'']!=0){
-                      $bgcolor='#d5f5f0';
-                    }
-                    $tabla.='
-                    <td align="right" bgcolor='.$bgcolor.'>
-                      '.number_format($temp[0]['mes'.$j.''], 2, ',', '.').'
-                    </td>';
-                  }
-                }
-
-                $tabla.='
-                <td>'.$row['ins_observacion'].'</td>
-              </tr>';
-          }
-        }
-      $tabla.='
-        </tbody>
-      </table>';
-
-    return $tabla;
-  }*/
-
-
-/*------- LISTA DE REQUERIMIENTOS PRE LISTA (2022) ------*/
-  public function list_requerimientos_2022($prod_id,$tp,$com_id){
+/*------- LISTA DE REQUERIMIENTOS DISPONIBLES (DIST. UNICA Y DIST.) (2023) ------*/
+  public function list_requerimientos_disponibles_total($cpoa,$tp){
     /// tp 0: lista de requerimientos por unidad responsable
     /// tp 1: lista de requerimientos del prog 72 BIENES Y SERVICIOS
 
     $tabla='';
-    if($tp==0){ /// Filtrado normal
-      $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
-    }
-    else{ /// filtrado para el programa 72 BIENES Y SERVICIO por unidad responsable
-      $requerimientos=$this->model_certificacion->requerimientos_x_uresponsables_bienes_servicios($prod_id,$com_id);
-    }
-
+    $requerimientos=$this->model_certificacion->list_items_disponibles_paraCertificacion_total($cpoa[0]['prod_id']); /// Lista de Items Disponibles a Certificar
     $tabla='<style>
             input[type="checkbox"] {
               display:inline-block;
@@ -847,6 +558,9 @@ class Certificacionpoa extends CI_Controller{
             }
           </style>';
     $tabla.='
+      <section class="col col-2">
+        <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR DE ITEM...."/><br>
+      </section>
       <table class="table table-bordered" style="width:97%;" align="center" id="datos">
         <thead >
           <tr>
@@ -877,25 +591,18 @@ class Certificacionpoa extends CI_Controller{
         $nro=0;
         foreach($requerimientos as $row){
           $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-
-          if($row['ins_monto_certificado']!=$row['ins_costo_total']){
               $temp=$this->model_certificacion->get_insumo_programado($row['ins_id']);
               $nro++;
               $tabla.='
               <tr  title='.$row['ins_id'].' id="tr'.$nro.'" >
                 <td>'.$nro.'</td>
                 <td>';
-                if(count($this->model_certificacion->get_items_solicitado($row['ins_id']))==0){ /// EN CASO DE QUENO TENGA SOLICITUD
                   if($temp>1){
                     $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila(this.value, this.checked);"/><br>';
                   }
                   else{
-                    $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFilacompleta(this.value,'.$nro.',this.checked);"/><br>';
+                    $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="add_item_cpoa(this.value,'.$cpoa[0]['cpoa_id'].','.$nro.',this.checked);"/><br>';
                   }
-                }
-                else{
-                  $tabla.='<img src="'.base_url().'assets/Iconos/cancel.png" WIDTH="20" HEIGHT="20"/>';
-                }
                 $tabla.='
                 <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
                 </td>
@@ -910,14 +617,14 @@ class Certificacionpoa extends CI_Controller{
                     $color=''; 
                     $m=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
                     $tabla.='
-                    <td align=right>
-                      <table align=right>
+                    <td style="width:4.5%;" align=right>
+                      <table align=right border=0>
                         <tr>
                           <td>
-                            <div id="m'.$i.''.$row['ins_id'].'" style="display: none;">';
+                            <div id="m'.$i.''.$row['ins_id'].'" style="display: none; text-align:right" >';
                             if(count($m)!=0){
                               if($m[0]['estado_cert']==0){
-                                $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value, this.checked);"/>';
+                                $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value,'.$cpoa[0]['cpoa_id'].',this.checked);"/>';
                               }
                               else{
                                 $color='green';
@@ -927,10 +634,10 @@ class Certificacionpoa extends CI_Controller{
                           </td>
                           <td style="font-size: 11px;" align=right>';
                           if(count($m)!=0){
-                            $tabla.='<font color="'.$color.'">'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</font>';
+                            $tabla.='<font color="'.$color.'"><b>'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</b></font>';
                           }
                           else{
-                            $tabla.='0,00';
+                            $tabla.='<b>0,00</b>';
                           }
                     $tabla.='
                           </td>
@@ -956,7 +663,6 @@ class Certificacionpoa extends CI_Controller{
                 $tabla.='
                 <td style="font-size: 11px;">'.$row['ins_observacion'].'</td>
               </tr>';
-          }
         }
       $tabla.='
         </tbody>
@@ -966,10 +672,9 @@ class Certificacionpoa extends CI_Controller{
   }
 
 
-/*------- LISTA DE REQUERIMIENTOS CON TEMPORALIDAD UNICA (2023) ------*/
-  public function list_requerimientos_unica_temporalidad($cpoa){
+/*------- ITEMS DISPONIBLES A CERTIFICAR ------*/
+  public function items_disponibles_a_certificar($cpoa){
     /// tp 0: lista de requerimientos por unidad responsable
-    /// tp 1: lista de requerimientos del prog 72 BIENES Y SERVICIOS
 
     $tabla='';
     $tabla='
@@ -984,11 +689,11 @@ class Certificacionpoa extends CI_Controller{
             }
           </style>';
 
-    if($cpoa[0]['tp_id']==1){
-      $tabla.=$this->list_requerimientos_temporalidad_variada($cpoa[0]['prod_id'],$cpoa[0]['cpoa_id']); //// insumos con distribucion variada
+    if($cpoa[0]['tp_id']==1){/// Proyectos de Inversion
+      $tabla.=$this->list_requerimientos_disponibles_total($cpoa,0); //// todos los requerimientos 
     }
-    else{
-      $requerimientos=$this->model_certificacion->requerimientos_operacion($cpoa[0]['prod_id']);
+    else{ /// Gasto corriente (Temp unica)
+      $requerimientos=$this->model_certificacion->list_items_disponibles_paraCertificacion_total($cpoa[0]['prod_id']); /// Lista de Items Disponibles a Certificar
       $tabla.='
       <section class="col col-2">
         <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR DE ITEM...."/><br>
@@ -1022,7 +727,7 @@ class Certificacionpoa extends CI_Controller{
         $nro=0;
         foreach($requerimientos as $row){
           $temp=$this->model_certificacion->get_insumo_programado($row['ins_id']);
-          if($row['ins_monto_certificado']!=$row['ins_costo_total'] & $temp==1){
+          if($temp==1){
             $nro++;
             $tabla.='
             <tr title='.$row['ins_id'].' id="tr'.$nro.'" bgcolor="#EFF0EF">
@@ -1112,8 +817,7 @@ class Certificacionpoa extends CI_Controller{
         foreach($requerimientos as $row){
           $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
           $temp=$this->model_certificacion->get_insumo_programado($row['ins_id']);
-
-          if($row['ins_monto_certificado']!=$row['ins_costo_total'] & $temp>1){    
+          if($temp>1){    
             $nro++;
             $tabla.='
             <tr title='.$row['ins_id'].' id="tr'.$nro.'" bgcolor="#EFF0EF">
@@ -1179,122 +883,6 @@ class Certificacionpoa extends CI_Controller{
     return $tabla;
   }
 
-
-/*------- LISTA DE REQUERIMIENTOS NORMAL ------*/
-  /*public function list_requerimientos($prod_id){
-    $tabla='';
-    $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
-
-    $tabla.='
-      <table class="table table-bordered" style="width:97%;" align="center" id="datos">
-        <thead>
-          <tr>
-            <th style="width:1%;">#</th>
-            <th style="width:2%;"></th>
-            <th style="width:4%;">PARTIDA</th>
-            <th style="width:16%;">REQUERIMIENTO</th>
-            <th style="width:5%;">UNIDAD DE MEDIDA</th>
-            <th style="width:3%;">CANTIDAD</th>
-            <th style="width:5%;">COSTO UNITARIO</th>
-            <th style="width:5%;">COSTO TOTAL</th>
-            <th style="width:5%;">MONTO CERTIFICADO</th>
-            <th style="width:4.5%;">ENE.</th>
-            <th style="width:4.5%;">FEB.</th>
-            <th style="width:4.5%;">MAR.</th>
-            <th style="width:4.5%;">ABR.</th>
-            <th style="width:4.5%;">MAY.</th>
-            <th style="width:4.5%;">JUN.</th>
-            <th style="width:4.5%;">JUL.</th>
-            <th style="width:4.5%;">AGO.</th>
-            <th style="width:4.5%;">SEPT.</th>
-            <th style="width:4.5%;">OCT.</th>
-            <th style="width:4.5%;">NOV.</th>
-            <th style="width:4.5%;">DIC.</th>
-          </tr>
-        </thead>
-        <tbody>';
-        $nro=0;
-        foreach($requerimientos as $row){
-          $monto_certificado=0;$verif=0; $color_tr=''; $tit='';
-          $mcertificado=$this->model_certificacion->get_insumo_monto_certificado($row['ins_id']);
-
-          if(count($mcertificado)!=0){
-            $monto_certificado=$mcertificado[0]['certificado'];
-            
-
-            if($monto_certificado==$row['ins_costo_total']){
-              $verif=1;
-              $color_tr="#f7d6dc";
-            }
-            elseif($monto_certificado<$row['ins_costo_total']){
-              $color_tr="#f6f7cb";
-            }
-          }
-
-          if($monto_certificado!=$row['ins_costo_total']){
-              $nro++;
-              $tabla.='
-              <tr bgcolor="'.$color_tr.'" title='.$row['ins_id'].'>
-                <td>'.$nro.'</td>
-                <td>';
-                  if($verif==0){
-                    $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'" onclick="seleccionarFila(this.value, this.checked);"/><br>
-                            <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">';
-                  }
-                $tabla.='
-                </td>
-                <td style="font-size: 12px;" align=center><b>'.$row['par_codigo'].'</b></td>
-                <td>'.$row['ins_detalle'].'</td>
-                <td>'.$row['ins_unidad_medida'].'</td>
-                <td align=right>'.$row['ins_cant_requerida'].'</td>
-                <td align=right>'.$row['ins_costo_unitario'].'</td>
-                <td align=right>'.$row['ins_costo_total'].'</td>
-                <td align=right bgcolor="#e7f5f3">'.number_format($monto_certificado, 2, ',', '.').'</td>';
-
-                for ($i=1; $i <=12 ; $i++) {
-                    $color=''; 
-                    $m=$this->model_certificacion->get_insumo_programado_mes($row['ins_id'],$i);
-                    $tabla.='
-                    <td align=right>
-                      <table align=right>
-                        <tr>
-                          <td>
-                            <div id="m'.$i.''.$row['ins_id'].'" style="display: none;">';
-                            if(count($m)!=0){
-                              if(count($this->model_certificacion->get_mes_certificado($m[0]['tins_id']))==0){
-                                $tabla.='<input type="checkbox" name="ipm'.$i.''.$row['ins_id'].'" title="Item Seleccionado" value="'.$m[0]['tins_id'].'" onclick="seleccionar_temporalidad(this.value, this.checked);"/>';
-                              }
-                              else{
-                                $color='green';
-                              }
-                            }
-                    $tabla.='
-                          </td>
-                          <td align=right >';
-                          if(count($m)!=0){
-                            $tabla.='<font color="'.$color.'">'.number_format($m[0]['ipm_fis'], 2, ',', '.').'</font>';
-                          }
-                          else{
-                            $tabla.='0,00';
-                          }
-                    $tabla.='
-                          </td>
-                        </tr>
-                      </table>
-                    </td>';
-                  }
-                
-                $tabla.='
-              </tr>';
-          }
-
-        }
-      $tabla.='
-        </tbody>
-      </table>';
-
-    return $tabla;
-  }*/
 
  //// ======== SOLICITUD DE CERTIFICACION POA ========
 /*-- CABECERA (Solicitud Certificacion POa) --*/

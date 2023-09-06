@@ -208,6 +208,21 @@
       echo $tabla;
     }
 
+    /*--- EXPORTAR CONSOLIDADO FORMULARIO N 4 INSTITUCIONAL ---*/
+    public function formulario4_institucional(){
+      $titulo='FORMULARIO N° 4 - INSTITUCIONAL';
+      $operaciones=$this->mrep_operaciones->operaciones_consolidado_nacional(); /// Formulario N 4 a Nivel Institucional
+      $tabla=$this->genera_informacion->lista_operaciones_regional_distrital($operaciones,$titulo,0); // Regional Operaciones Distrital 2020-2021
+
+      date_default_timezone_set('America/Lima');
+      $fecha = date("d-m-Y H:i:s");
+      header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=CONSOLIDADO_FORMULARIO N4_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      echo $tabla;
+    }
+
 
     /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR DISTRITAL, REGIONAL (2020 - 2021) ---*/
     public function requerimientos_distrital($dep_id,$dist_id,$tp_id){

@@ -60,6 +60,7 @@ class Rep_operaciones extends CI_Controller {
       if($this->fun_id==399){
         $data['informacion_consolidado']='
         <a href="'.site_url("").'/rep/exportar_requerimientos_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR FORMULARIO 5 (INSTITUCIONAL)</a>
+        <a href="'.site_url("").'/rep/exportar_form4_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N4"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR FORMULARIO 4 (INSTITUCIONAL)</a>
         <a href="'.site_url("").'/ptto_consolidado_comparativo_regional/0/4" target=_blank class="btn btn-default" title="CUADRO COMPARATIVO INSTITUCIONAL"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;PPTO. COMPARATIVO (INSTITUCIONAL)</a>
         <a href="'.site_url("").'/ptto_consolidado_distribucion_nacional" target=_blank class="btn btn-default" title="CUADRO COMPARATIVO PPTO. DISTRIBUCION NACIONAL"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;PPTO. DISTRIBUCION NACIONAL</a>
         <hr>';

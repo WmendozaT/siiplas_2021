@@ -102,7 +102,7 @@ class Cmod_insumo extends CI_Controller {
       if ($this->input->post()) {
           $post = $this->input->post();
           $proy_id = $this->security->xss_clean($post['proy_id']); /// Proy id 
-          $cite = $this->security->xss_clean($post['cite']); /// Cite
+          $cite = preg_replace('/[^\w\s]/u', '', htmlspecialchars($this->security->xss_clean($post['cite']), ENT_QUOTES, 'UTF-8')); /// Cite
           $fecha = $this->security->xss_clean($post['fm']); /// Fecha
           $com_id = $this->security->xss_clean($post['com_id']); /// Com id
           $tp_mod = $this->security->xss_clean($post['tp_mod']); /// tipo mod
@@ -302,13 +302,14 @@ class Cmod_insumo extends CI_Controller {
         $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id); /// datos cite
         $tipo_modificacion=$cite[0]['tipo_modificacion'];
 
-        $detalle = filter_var($this->security->xss_clean($post['ins_detalle']), FILTER_SANITIZE_STRING); /// detalle
+        $detalle = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['ins_detalle'])); /// detalle  
         $cantidad = filter_var($this->security->xss_clean($post['ins_cantidad']), FILTER_SANITIZE_NUMBER_INT); /// cantidad
         $costo_unitario = filter_var($this->security->xss_clean($post['ins_costo_u']), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); /// costo unitario
         $costo_total = $this->security->xss_clean($post['costo']); /// costo Total
         $um_id = $this->security->xss_clean($post['ins_um']); /// Unidad de medida
         $partida = $this->security->xss_clean($post['partida_id']); /// partida id
-        $observacion = $this->security->xss_clean($post['ins_observacion']); /// Observacion
+        //$observacion = $this->security->xss_clean($post['ins_observacion']); /// Observacion
+        $observacion = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['ins_observacion'])); /// observacion  
         $id = $this->security->xss_clean($post['dato_id']); /// Alineacion id Producto, Actividad
         $producto=$this->model_producto->get_producto_id($id); /// Get producto
         $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id);
@@ -418,16 +419,17 @@ class Cmod_insumo extends CI_Controller {
           $observacion = $insumo[0]['ins_observacion']; /// Observacion
         }
         else{ /// Aun no esta certificado
-          $detalle = strval($this->security->xss_clean($post['detalle'])); /// detalle
+          $detalle = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['detalle'])); /// detalle
         //  $costo_unitario = $this->security->xss_clean($post['costou']); /// costo unitario
           $unidad = $this->security->xss_clean($post['umedida']); /// Unidad de medida
           $partida = $this->security->xss_clean($post['par_hijo']); /// costo unitario
-          $observacion = strval($this->security->xss_clean($post['observacion'])); /// Observacion
+          //$observacion = strval(); /// Observacion
 
-          $detalle = filter_var($detalle, FILTER_SANITIZE_STRING);  /// detalle
-          $unidad = filter_var($unidad, FILTER_SANITIZE_STRING); /// Unidad de medida
+          //$detalle = filter_var($detalle, FILTER_SANITIZE_STRING);  /// detalle
+          //$unidad = filter_var($unidad, FILTER_SANITIZE_STRING); /// Unidad de medida
           $partida = $this->security->xss_clean($post['par_hijo']); /// costo unitario
-          $observacion = filter_var($observacion, FILTER_SANITIZE_STRING); /// Observacion
+          //$observacion = filter_var($observacion, FILTER_SANITIZE_STRING); /// Observacion
+          $observacion = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['observacion'])); /// detalle
         }
         
         $cantidad = $this->security->xss_clean($post['cantidad']); /// cantidad
@@ -437,10 +439,10 @@ class Cmod_insumo extends CI_Controller {
         $producto=$this->model_producto->get_producto_id($id); /// Get producto
 
 
-        $cantidad = filter_var($cantidad, FILTER_SANITIZE_NUMBER_INT); /// cantidad
-        $costo_unitario = filter_var($costo_unitario, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); /// costo unitario /// temporal
-        $costo_total = filter_var($costo_total, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); /// costo Total
-        $id = filter_var($this->security->xss_clean($post['id']), FILTER_SANITIZE_NUMBER_INT); /// id : prod,act
+       // $cantidad = filter_var($cantidad, FILTER_SANITIZE_NUMBER_INT); /// cantidad
+      //  $costo_unitario = filter_var($costo_unitario, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); /// costo unitario /// temporal
+      //  $costo_total = filter_var($costo_total, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); /// costo Total
+        $id = $this->security->xss_clean($post['id']); /// id : prod,act
         $producto=$this->model_producto->get_producto_id($id); /// Get producto
 
 
@@ -776,19 +778,6 @@ class Cmod_insumo extends CI_Controller {
         echo "Error !!";
       }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

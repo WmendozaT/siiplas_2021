@@ -79,8 +79,220 @@
     });
   });
 
+  /// ============ GENERACION DE CERTIFICACION POA
 
-    //// =========================LISTA DE CERTIFICACION POA (EDICION Y ANULACION) 
+    $(function () {
+      $(".update_eval").on("click", function (e) {
+          prod_id = $(this).attr('name');
+          cpoa_id = $(this).attr('id');
+          document.getElementById("load_insumo").style.display = 'block';
+          document.getElementById("btn_insumos").style.display = 'none';
+          var url = base+"index.php/ejecucion/ccertificacion_poa/get_insumos";
+          var request;
+          if (request) {
+              request.abort();
+          }
+          request = $.ajax({
+              url: url,
+              type: "POST",
+              dataType: 'json',
+              data: "prod_id="+prod_id+"&cpoa_id="+cpoa_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) {
+          if (response.respuesta == 'correcto') {
+            document.getElementById("load_insumo").style.display = 'none';
+              $('#lista').fadeIn(1000).html(response.lista);
+          }
+          else{
+              alertify.error("ERROR AL RECUPERAR DATOS");
+          }
+
+          });
+          request.fail(function (jqXHR, textStatus, thrown) {
+              console.log("ERROR: " + textStatus);
+          });
+          request.always(function () {
+          });
+          e.preventDefault();
+      });
+    });
+
+    //// adiciona el item (temporalidad unica) a la Certificacion POA
+    function add_item_cpoa(ins_id,cpoa_id,nro,estaChequeado) {
+      if (estaChequeado == true) { //// adicionar
+          document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
+         check=1;
+      }
+      else{
+          document.getElementById("tr"+nro).style.backgroundColor = "";
+          check=0;
+      }
+
+      $('#vista_previa').fadeIn(1000).html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif"  alt="loading" /><br/><font color=blue>Actualizando Vista Previa ......</font></center>');
+        var url = base+"index.php/ejecucion/ccertificacion_poa/adiciona_cancela_items";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "ins_id="+ins_id+"&check="+check+"&cpoa_id="+cpoa_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+            $('#vista_previa').fadeIn(1000).html(response.vista_previa);
+        }
+        else{
+            alertify.error("ERROR AL RECUPERAR DATOS");
+        }
+
+        });
+    }
+
+    //// Adicionar el MES seleccionado de un Items con Temporalidad Distribuida
+    function seleccionar_temporalidad(tins_id,cpoa_id,estaChequeado) {
+      if (estaChequeado == true) { 
+        check=1;
+      }
+      else{
+        check=0;
+      }
+
+      $('#vista_previa').fadeIn(1000).html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/><font color=blue>Actualizando Vista Previa ......</font></center>');
+        var url = base+"index.php/ejecucion/ccertificacion_poa/adiciona_cancela_meses_items";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "tins_id="+tins_id+"&check="+check+"&cpoa_id="+cpoa_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+        if (response.respuesta == 'correcto') {
+            $('#vista_previa').fadeIn(1000).html(response.vista_previa);
+        }
+        else{
+            alertify.error("ERROR AL RECUPERAR DATOS");
+        }
+
+      });
+
+    }
+
+    //// Validar Datos de la Nota CITE
+    $(function () {
+        $("#subir_form1").on("click", function () {
+            var $validator = $("#cert_form").validate({
+              rules: {
+                  cite_cpoa: { //// Nota cite
+                      required: true,
+                  },
+                  cite_fecha: { //// Fecha cite
+                      required: true,
+                  }
+              },
+              messages: {
+                  cite_cpoa: "<font color=red>Registre Cite</font>", 
+                  cite_fecha: "<font color=red>Seleccione Fecha</font>",                    
+              },
+              highlight: function (element) {
+                  $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+              },
+              unhighlight: function (element) {
+                  $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+              },
+              errorElement: 'span',
+              errorClass: 'help-block',
+              errorPlacement: function (error, element) {
+                  if (element.parent('.input-group').length) {
+                      error.insertAfter(element.parent());
+                  } else {
+                      error.insertAfter(element);
+                  }
+              }
+            });
+
+            var $valid = $("#cert_form").valid();
+            if (!$valid) {
+                $validator.focusInvalid();
+            } else {
+
+              if(validarCaracteres(document.getElementById('cite_cpoa').value)==true){
+                  alertify.confirm("VALIDAR DATOS CITE ?", function (a) {
+                      if (a) {
+                          document.getElementById('subir_form1').disabled = true;
+                          document.forms['cert_form'].submit();
+                          document.getElementById("load").style.display = 'block';
+                      } else {
+                          alertify.error("OPCI\u00D3N CANCELADA");
+                      }
+                  });
+              }
+              else{
+                  alertify.error("CORRIGA CARACTERES ESPECIALES") 
+                  document.cert_form.cite_cpoa.focus() 
+                  return 0; 
+              }
+
+            }
+        });
+    });
+
+    //// Valida Caracteres Especiales
+    function validarCaracteres(cadena) {
+      let caracteresNoPermitidos = ['(', ')', '/'];
+      let contieneCaracteresNoPermitidos = false;
+      
+      $.each(caracteresNoPermitidos, function(index, caracter) {
+        if (cadena.indexOf(caracter) !== -1) {
+          contieneCaracteresNoPermitidos = true;
+          return false; // Para salir del bucle each() si se encuentra un caracter no permitido
+        }
+      });
+      
+      if (contieneCaracteresNoPermitidos) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    //// Valida Para Reporte de Certificacion POA
+    function guardar(){
+      if(document.form_cpoa.recomendacion.value==''){
+        alertify.error("REGISTRE RECOMENDACION") 
+        document.form_cpoa.recomendacion.focus() 
+        return 0; 
+      }
+
+      if(validarCaracteres(document.getElementById('recomendacion').value)==true){
+        alertify.confirm("GENERAR REPORTE DE CERTIFICACION POA ?", function (a) {
+          if (a) {
+              document.form_cpoa.submit();
+          } else {
+              alertify.error("OPCI\u00D3N CANCELADA");
+          }
+        });
+      }
+      else{
+          alertify.error("CORRIGA CARACTERES ESPECIALES") 
+          document.form_cpoa.recomendacion.focus() 
+          return 0; 
+      }
+    }
+
+
+  /// ============================================
+
+  //// EDITAR CERTIFICACION POA (NOTA CITE)
     function editar_certpoa(cert_id) {
         document.getElementById("cert_id").value = cert_id;
         var url = base+"index.php/ejecucion/cert_poa/get_datos_certificado";
@@ -96,16 +308,16 @@
         });
 
         request.done(function (response, textStatus, jqXHR) { 
-            if (response.respuesta == 'correcto') {
-                $('#titulo_edit').html('<h2 class="alert alert-warning"><center>EDICI&Oacute;N PARCIAL - CERTIFICACI&Oacute;N : '+response.certificado[0]['cpoa_codigo']+'</center></h2>');
-                $('#titulo2').html('<font color="blue" size="3">U.E. '+response.certificado[0]['proy_nombre']+'</font>');
-                document.getElementById("cite_edit").value = '';
-                document.getElementById("justificacion_edit").value = '';
-                $('#error1').html('NRO CITE');
-                $('#error2').html('JUSTIFICACIÓN');
-            } else {
-                alertify.error("ERROR AL RECUPERAR DATOS, PORFAVOR CONTACTESE CON EL ADMINISTRADOR"); 
-            }
+          if (response.respuesta == 'correcto') {
+              $('#titulo_edit').html('<h2 class="alert alert-warning"><center>MODIFICACIÓN DE CERTIFICACI&Oacute;N POA N° : '+response.certificado[0]['cpoa_codigo']+'</center></h2>');
+              $('#titulo2').html('<font color="blue" size="3">U.E. '+response.certificado[0]['proy_nombre']+'</font>');
+              document.getElementById("cite_edit").value = '';
+              document.getElementById("justificacion_edit").value = '';
+              $('#error1').html('NRO CITE');
+              $('#error2').html('JUSTIFICACIÓN');
+          } else {
+              alertify.error("ERROR AL RECUPERAR DATOS"); 
+          }
         });
 
         request.fail(function (jqXHR, textStatus, thrown) {
@@ -135,15 +347,23 @@
             if(cite.length!=0 & justificacion.length!=0){
                 $('#error1').html('NRO CITE');
                 $('#error2').html('JUSTIFICACIÓN');
-                 alertify.confirm("DESEA REALIZAR LA MODIFICACIÓN DE LA CERTIFICACI&Oacute;N ?", function (a) {
-                    if (a) {
-                        document.getElementById("loads").style.display = 'block';
-                        document.forms['form_anular'].submit(); /// id del formulario
-                        document.getElementById("but").style.display = 'none';
-                    } else {
-                        alertify.error("OPCI\u00D3N CANCELADA");
-                    }
-                });
+
+                if(validarCaracteres(document.getElementById('cite_edit').value)==true){
+                  alertify.confirm("DESEA REALIZAR LA MODIFICACIÓN DE LA CERTIFICACI&Oacute;N ?", function (a) {
+                      if (a) {
+                          document.getElementById("loads").style.display = 'block';
+                          document.forms['form_anular'].submit(); /// id del formulario
+                          document.getElementById("but").style.display = 'none';
+                      } else {
+                          alertify.error("OPCI\u00D3N CANCELADA");
+                      }
+                  }); 
+                }
+                else{
+                  alertify.error("CORRIGA CARACTERES ESPECIALES") 
+                  document.form_anular.cite_edit.focus() 
+                  return 0;
+                }
             }
             else{
                 alertify.error("REGISTRE DATOS");
@@ -151,6 +371,7 @@
         });
     }
 
+    //// Anula Certificacion POA 
     function eliminar_certpoa(cert_id) {
       document.getElementById("cpoa_id").value = cert_id;
       var url = base+"index.php/ejecucion/cert_poa/get_datos_certificado";
@@ -205,15 +426,22 @@
         if(cite.length!=0 & justificacion.length!=0){
             $('#error1').html('NRO CITE');
             $('#error2').html('JUSTIFICACIÓN');
-             alertify.confirm("DESEA REALIZAR LA ANULACIÓN DE LA CERTIFICACI&Oacute;N ?", function (a) {
-                if (a) {
-                    document.getElementById("load_del").style.display = 'block';
-                    document.forms['form_delete'].submit(); /// id del formulario
-                    document.getElementById("but_del").style.display = 'none';
-                } else {
-                    alertify.error("OPCI\u00D3N CANCELADA");
-                }
-            });
+              if(validarCaracteres(document.getElementById('cite').value)==true){
+                  alertify.confirm("DESEA REALIZAR LA ANULACIÓN DE LA CERTIFICACI&Oacute;N ?", function (a) {
+                  if (a) {
+                      document.getElementById("load_del").style.display = 'block';
+                      document.forms['form_delete'].submit(); /// id del formulario
+                      document.getElementById("but_del").style.display = 'none';
+                  } else {
+                      alertify.error("OPCI\u00D3N CANCELADA");
+                  }
+                });   
+              }
+              else{
+                  alertify.error("CORRIGA CARACTERES ESPECIALES") 
+                  document.form_delete.cite.focus() 
+                  return 0; 
+              }
         }
         else{
             alertify.error("REGISTRE DATOS");
@@ -317,7 +545,7 @@
     });
 
     /// === funcion para seleccionar el itema (solo para un mes)
-    function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
+/*    function seleccionarFilacompleta(ins_id,nro,estaChequeado) {
       if (estaChequeado == true) { 
         document.getElementById("tr"+nro).style.backgroundColor = "#c6f1d7";
       }
@@ -348,7 +576,7 @@
         else{
           $('#paso3').slideDown();
         }
-    }
+    }*/
       /// =====------------------------------
 
       //// ============= funcion : para items con varios meses programados
@@ -384,7 +612,7 @@
       }
 
       /// --- seleccionar el mes programado
-      function seleccionar_temporalidad(tins_id, estaChequeado) {
+/*      function seleccionar_temporalidad(tins_id, estaChequeado) {
         if (estaChequeado == true) { 
           val = parseInt($('[name="tot_temp"]').val());
         var url = base+"index.php/ejecucion/ccertificacion_poa/verif_mes_certificado";
@@ -440,7 +668,7 @@
             $('#paso3').slideDown();
           }
         }
-      }
+      }*/
 
       /// Seleccion de opcion para guardar solicitud
       $(document).ready(function(){
@@ -873,6 +1101,7 @@
 
     //// Valida formulario de Modificacion POA
       $(function () {
+
           $(".mod_ins").on("click", function (e) {
             ins_id = $(this).attr('name');
             document.getElementById("ins_id").value=ins_id;
@@ -1132,7 +1361,7 @@
           
         }
 
-        /// nuevo selecciona toda la fila (nuevo)
+        /// nuevo selecciona toda la fila (Modificacion de Certificacion POA)
         function seleccionarFila_cpoa(ins_id,nro,cpoa_id,estaChequeado) {
           val = parseInt($('[name="tot"]').val());
           if (estaChequeado == true) {
@@ -1259,7 +1488,7 @@
           }
         }
 
-      
+      /// GENERAR EDICION DE CERTIFICACION POA
       $(function () {
         $("#btsubmit_edit").on("click", function (e) {
           var $validator = $("#cert_form").validate({
@@ -1301,7 +1530,7 @@
           } 
           else {
             reset();
-              alertify.confirm("GENERAR EDICIÓN DE CERTIFICACI&Oacute;N POA sss?", function (a) {
+              alertify.confirm("GENERAR EDICIÓN DE CERTIFICACI&Oacute;N POA?", function (a) {
                   if (a) {
                       //document.getElementById('btsubmit').disabled = true;
                       document.cert_form.submit();

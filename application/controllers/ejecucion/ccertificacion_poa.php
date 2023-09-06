@@ -130,13 +130,16 @@ class Ccertificacion_poa extends CI_Controller {
         /// actualizando ejcucion de items
         $requerimientos=$this->model_insumo->insumos_por_unidad($data['datos'][0]['aper_id']);/// TODOS LOS ITEMS DE LA UNIDAD
         foreach ($requerimientos as $row) {
+          $tp_ejec=0;
           if($row['ins_costo_total']==$row['ins_monto_certificado']){
-              $update_ins = array(
-                'ins_ejec_cpoa' => 1
-              );
-              $this->db->where('ins_id', $row['ins_id']);
-              $this->db->update('insumos', $update_ins);
+              $tp_ejec=1;
           }
+
+          $update_ins = array(
+            'ins_ejec_cpoa' => $tp_ejec
+          );
+          $this->db->where('ins_id', $row['ins_id']);
+          $this->db->update('insumos', $update_ins);
         }
         /// ------------------------------
 
@@ -218,9 +221,8 @@ class Ccertificacion_poa extends CI_Controller {
 
       $prod_id = filter_var($prod_id, FILTER_SANITIZE_NUMBER_INT);
       $tp_id = filter_var($tp_id, FILTER_SANITIZE_NUMBER_INT); 
-      $cite_poa = htmlspecialchars($cite_poa, ENT_QUOTES, 'UTF-8');
+      $cite_poa = preg_replace('/[^\w\s]/u', '', htmlspecialchars($cite_poa, ENT_QUOTES, 'UTF-8'));
      
-
       if($tp_id==1){
         $datos=$this->model_certificacion->get_datos_pi_prod($prod_id); /// Gasto Proyecto de Inversión
       }
@@ -287,27 +289,29 @@ class Ccertificacion_poa extends CI_Controller {
  public function lista_requerimientos_cpoa($cpoa_id){
     $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cpoa_id);
     if(count($cpoa)!=0){
-        $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cpoa[0]['proy_id']); /// PROYECTO
+        //$data['base']='<input name="base" type="text" value="'.base_url().'">';
         $data['menu']=$this->certificacionpoa->menu(4);
         $data['titulo']='
             <div role="alert">
               <h1><b>CERTIFICACION POA N° CITE </b> : <small><font color="#000">'.strtoupper($cpoa[0]['cpoa_cite']).'</font> | </small>'.strtoupper($cpoa[0]['proy_nombre'].' - '.$cpoa[0]['tipo_subactividad'].' '.$cpoa[0]['serv_descripcion']).'</h1>
             </div> ';
 
-        $requerimientos = $this->certificacionpoa->list_requerimientos_unica_temporalidad($cpoa); /// para listas mayores a 500 (2023)
+        $requerimientos = $this->certificacionpoa->items_disponibles_a_certificar($cpoa); /// Items Disponibles
+        //$requerimientos=$this->certificacionpoa->list_requerimientos_2022($cpoa,$proyecto[0]['por_id']);
         if($cpoa[0]['cpoa_estado']==1){
           redirect('cert/ver_cpoa/'.$cpoa_id.''); /// redireccionando al reporte de certificacion poa
         }
         else{
           $data['formulario']='
             <div class=row>
-            
+            <input name="base" type="hidden" value="'.base_url().'">
             <article class="col-sm-12 col-md-12 col-lg-12">
               <!-- Widget ID (each widget will need unique ID)-->
               <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
                 <header>
                   <span class="widget-icon"> <i class="fa fa-hand-o-up"></i> </span>
-                  <h2><b>VISTA PREVIA - CERTIFICACION POA</b></h2>
+                  <h2><b>VISTA PREVIA - CERTIFICACION POA </b></h2>
                 </header>
                 <div>
                   <div class="jarviswidget-editbox">
@@ -315,7 +319,7 @@ class Ccertificacion_poa extends CI_Controller {
                   <div class="widget-body">
                     <div class="alert alert-block alert-success">
                       <a class="close" data-dismiss="alert" href="#">×</a>
-                      <h4 class="alert-heading"><i class="fa fa-check-square-o"></i> REQUERIMIENTOS SELECCIONADOS!</h4>
+                      <h4 class="alert-heading"><i class="fa fa-check-square-o"></i> REQUERIMIENTOS SELECCIONADOS! ('.$cpoa[0]['prod_id'].')</h4>
                       <p>
                         Antes de Generar la Certificacion POA Verifique los datos completos de los items seleccionados!!
                       </p>
@@ -1247,7 +1251,7 @@ public function valida_cpoas(){
     }
 
 
-    /*-------- FORMULARIO EDICION DE CERTIFICACIÓN POA 2023 -------*/
+    /*-------- FORMULARIO MODIFICACION DE CERTIFICACIÓN POA 2023 -------*/
     public function modificar_cpoa($cpoaa_id){
       $data['cert_editado']=$this->model_certificacion->get_cert_poa_editado($cpoaa_id);
       if(count($data['cert_editado'])!=0 & $data['cert_editado'][0]['cpoa_estado']!=3){
@@ -1336,7 +1340,7 @@ public function valida_cpoas(){
 
 
   /*======= FUNCIONES EXTRAS ======*/
-    /*-------- GET DATOS DE ALINEACION PARA CERTIFICACION --------*/
+    /*-------- GET ACTIVIDADES DE ALINEACION PARA CERTIFICACION --------*/
     public function get_actividades(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();

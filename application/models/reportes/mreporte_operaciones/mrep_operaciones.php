@@ -286,6 +286,8 @@ class Mrep_operaciones extends CI_Model {
                 Inner Join unidad_actividad as ua On ua.act_id=p.act_id
                 Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
                 Inner Join _componentes as c On c.pfec_id=pf.pfec_id
+                Inner Join servicios_actividad as ser On c.serv_id=ser.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
                 Inner Join _productos as pr On pr.com_id=c.com_id
                 Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=pr.prod_id
 

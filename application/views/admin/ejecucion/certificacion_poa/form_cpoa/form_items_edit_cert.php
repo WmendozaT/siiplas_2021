@@ -45,22 +45,22 @@
             <div class="login-info">
                 <span> <!-- User image size is adjusted inside CSS, it should stay as is --> 
                     <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                            <span>
-                                <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
-                            </span>
+                        <span>
+                          <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
+                        </span>
                         <i class="fa fa-angle-down"></i>
                     </a>
                 </span>
             </div>
             <nav>
                 <ul>
-                    <li class="">
-                        <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-                    </li>
-                    <li class="text-center">
-                        <a href="#" title="EVALUACIÓN POA"> <span class="menu-item-parent">EVALUACI&Oacute;N POA</span></a>
-                    </li>
-                    <?php echo $menu;?>
+                  <li class="">
+                      <a href="<?php echo site_url("admin") . '/dashboard'; ?>" title="MENÚ PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+                  </li>
+                  <li class="text-center">
+                      <a href="#" title="EVALUACIÓN POA"> <span class="menu-item-parent">EVALUACI&Oacute;N POA</span></a>
+                  </li>
+                  <?php echo $menu;?>
                 </ul>
             </nav>
             <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
@@ -77,7 +77,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Evaluaci&oacute;n POA</li><li>Mis Certificaciones POA</li><li>Editar Certificaci&oacute;n POA</li><li>Mis Requerimientos</li>
+                    <li>Evaluaci&oacute;n POA</li><li>Mis Certificaciones POA</li><li>Editar Certificaci&oacute;n POA</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->

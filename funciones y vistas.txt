@@ -1605,7 +1605,7 @@ SE REALIZO LA CREACION DE UNA VISTA  vista_operaciones_por_subactividad_ppto, CO
 
 
 CREATE OR REPLACE VIEW public.vista_operaciones_por_subactividad_ppto AS 
-SELECT 
+    SELECT 
     pfe.proy_id,
     c.com_id,
     c.com_componente,
@@ -1620,6 +1620,12 @@ SELECT
     pr.prod_indicador,
     pr.prod_fuente_verificacion,
     pr.prod_resultado,
+    pr.uni_resp,
+    com.pfec_id,
+    com.com_id as resp_id,
+    serv.serv_descripcion as unidad_responsable,
+    tip.tipo_subactividad as tipo_unidad,
+    com.estado,
     SUM(i.ins_costo_total) monto,
     apg.aper_id,
     apg.aper_programa,
@@ -1632,12 +1638,16 @@ Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
 Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
 Inner Join _productos as pr On pr.com_id=c.com_id
+Inner Join _componentes as com On com.com_id=pr.uni_resp
+Inner Join servicios_actividad as serv On serv.serv_id=com.serv_id
+Inner Join tipo_subactividad as tip On tip.tp_sact=com.tp_sact
 Inner Join _insumoproducto as ip On ip.prod_id=pr.prod_id
 Inner Join insumos as i On i.ins_id=ip.ins_id
 
 where pfe.pfec_estado=1 and c.estado!=3 and apg.aper_estado!=3 and pr.estado!=3 and i.ins_estado!=3 and i.aper_id!=0
 group by pfe.proy_id,c.com_id,c.com_componente,c.com_ponderacion,sa.serv_id,sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad,pr.prod_id,
-pr.prod_cod,pr.prod_producto,pr.prod_indicador,pr.prod_fuente_verificacion,pr.prod_resultado,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion
+pr.prod_cod,pr.prod_producto,pr.prod_indicador,pr.prod_fuente_verificacion,pr.prod_resultado,pr.uni_resp,com.pfec_id,com.com_id,serv.serv_descripcion,
+tip.tipo_subactividad,com.estado,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion
 order by apg.aper_gestion,sa.serv_cod, pr.prod_cod asc;
 
 ALTER TABLE public.vista_operaciones_por_subactividad_ppto
