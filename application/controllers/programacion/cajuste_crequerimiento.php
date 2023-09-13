@@ -95,10 +95,48 @@ class cajuste_crequerimiento extends CI_Controller{
 
     /*----- LISTA REQUERIMIENTOS COMPLETO (2020) ------*/
     public function lista_requerimientos($com_id){
-     // $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($com_id);
       $lista_insumos=$this->model_insumo->list_requerimientos_operacion_procesos($com_id); /// Lista requerimientos
 
-      $tabla='';
+      $tabla='
+      <style>
+      aside{background: #05678B;}
+      .table1{
+            display: inline-block;
+            width:100%;
+            max-width:1550px;
+            overflow-x: scroll;
+            }
+      table{font-size: 10px;
+            width: 100%;
+            max-width:1550px;;
+      overflow-x: scroll;
+            }
+            th{
+              padding: 1.4px;
+              text-align: center;
+              font-size: 10px;
+            }
+            #comparativo{
+          width: 50% !important;
+        }
+        #csv{
+          width: 30% !important;
+        }
+            #mdialTamanio{
+          width: 80% !important;
+        }
+        #mdialTamanio2{
+          width: 55% !important;
+        }
+        input[type="checkbox"] {
+                display:inline-block;
+                width:25px;
+                height:25px;
+                margin:-1px 4px 0 0;
+                vertical-align:middle;
+                cursor:pointer;
+            }
+      </style>';
       $total=0;
       $tabla.='<input name="base" type="hidden" value="'.base_url().'">
                 <table id="dt_basic" class="table table table-bordered" width="100%">
@@ -133,13 +171,6 @@ class cajuste_crequerimiento extends CI_Controller{
                 <tbody>';
                 $cont = 0;
                 foreach ($lista_insumos as $row) {
-                  /*$update_poa = array(
-                    'g_id' => $row['ins_gestion'],
-                  );
-                  $this->db->where('ins_id', $row['ins_id']);
-                  $this->db->update('temporalidad_prog_insumo', $update_poa);*/
-
-                  //$prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
                   $cont++;
                     $tabla .='<tr>';
                     $tabla .='<td title='.$row['ins_id'].'>'.$cont.'</td>';
@@ -156,39 +187,6 @@ class cajuste_crequerimiento extends CI_Controller{
                     $tabla .= '<td style="width:5%;">'.$row['ins_cant_requerida'].'</td>'; /// cantidad
                     $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
                     $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-
-                    /*if(count($prog)!=0){
-                      $tabla.='
-                      <td style="width:5%;">'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td> 
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes2'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes3'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes4'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes5'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes6'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes7'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes8'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes9'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes10'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes11'], 2, ',', '.').'</td>
-                      <td style="width:5%;" bgcolor="#eaf9f7">'.number_format($prog[0]['mes12'], 2, ',', '.').'</td>';
-                    }
-                    else{
-                      $tabla.='
-                      <td style="width:5%;">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>
-                      <td style="width:5%;" bgcolor="#ffeeeb">0</td>';
-                    }*/
                     $tabla.='
                       <td style="width:5%;">0</td>
                       <td style="width:5%;">0</td>
@@ -248,14 +246,14 @@ class cajuste_crequerimiento extends CI_Controller{
         $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
 
         $monto_asig=$this->model_ptto_sigep->get_partida_asignado_sigep($insumo[0]['aper_id'],$insumo[0]['par_id']);
-        $monto_prog=$this->model_ptto_sigep->get_partida_accion($insumo[0]['aper_id'],$insumo[0]['par_id']);
-
+        $monto_prog=$this->model_ptto_sigep->get_partida_programado_poa($insumo[0]['aper_id'],$insumo[0]['par_id']); /// Get partida -> Unidad (Programado)
+        
         $m_asig=0;$m_prog=0;
         if(count($monto_asig)!=0){
-          $m_asig=$monto_asig[0]['monto'];
+          $m_asig=$monto_asig[0]['ppto_asignado'];
         }
         if(count($monto_prog)!=0){
-          $m_prog=$monto_prog[0]['monto'];
+          $m_prog=$monto_prog[0]['ppto_programado'];
         }
 
         $saldo=($m_asig-$m_prog);

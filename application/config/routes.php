@@ -133,6 +133,9 @@ $route['rep/list_operaciones_req'] = 'reportes_cns/rep_operaciones/list_regiones
 $route['rep/get_uadministrativas'] = 'reportes_cns/rep_operaciones/get_unidades_administrativas'; ////// Combo Unidades Administrativas (CONSOLIDADO REPORTES 2020-2021)
 $route['rep/exportar_operaciones_distrital/(:any)'] = 'reportes_cns/exporting_datos/operaciones_distrital/$1/$2/$3'; ///// Exportar Operaciones por distrital 2020-2021
 $route['rep/exportar_form4_institucional'] = 'reportes_cns/exporting_datos/formulario4_institucional'; ///// Exportar formulario N 4 Institucional
+$route['rep/exportar_detalle_reg_dist_partidas_asignadas_institucional'] = 'reportes_cns/exporting_datos/consolidado_partidas_reg_dist_asignadas_institucional'; ///// Exportar Consolidado Partidas Reg Dist (PPto Asignado) Institucional
+$route['rep/exportar_detalle_partidas_asignadas_institucional'] = 'reportes_cns/exporting_datos/consolidado_partidas_asignadas_institucional'; ///// Exportar Consolidado Partidas (PPto Asignado) Institucional
+$route['rep/exportar_detalle_partidas_unidad'] = 'reportes_cns/exporting_datos/consolidado_partidas_asignadas_unidad'; ///// Exportar Consolidado Partidas (PPto Asignado) por Unidad
 
 ///=== Reporte Consulta POA Presupuesto por Partidas
 $route['consulta_ppto_poa'] = 'reportes_cns/crep_consultafinanciera/index'; ///// Menu consulta Financiera 2022
@@ -178,8 +181,8 @@ $route['rep/rep_form5_consolidado/(:any)'] = 'programacion/creporte/reporte_form
 
 $route['proy/ptto_consolidado/(:any)'] = 'programacion/creporte/reporte_presupuesto_consolidado/$1';  //// Reporte requerimiento total Unidad/Establecimiento/Proyecto de Inversion
 $route['proy/ptto_consolidado_comparativo/(:any)'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_comparativo/$1';  //// Reporte Comparativo Total de Ppto Unidad/Establecimiento/Proyecto de Inversion
-$route['ptto_consolidado_comparativo_regional/(:any)'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_comparativo_regional/$1/$2';  //// Reporte Comparativo Total de Ppto Unidad/Establecimiento/Proyecto de Inversion REGIONAL
-$route['ptto_consolidado_distribucion_nacional'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_distribucion_nacional';  //// Reporte Comparativo PPTO DISTRBUCION NACIONAL
+//$route['ptto_consolidado_comparativo_regional/(:any)'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_comparativo_regional/$1/$2';  //// Reporte Comparativo Total de Ppto Unidad/Establecimiento/Proyecto de Inversion REGIONAL
+//$route['ptto_consolidado_distribucion_nacional'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_distribucion_nacional';  //// Reporte Comparativo PPTO DISTRBUCION NACIONAL
 
 $route['proy/rep_form5_programa_bolsa/(:any)'] = 'programacion/creporte/reporte_prog_bolsa_formulario5/$1';  //// Reporte requerimiento por ID PRODUCTO
 

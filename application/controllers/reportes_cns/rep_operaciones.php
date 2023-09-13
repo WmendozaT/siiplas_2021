@@ -59,10 +59,11 @@ class Rep_operaciones extends CI_Controller {
       $data['informacion_consolidado']='';
       if($this->fun_id==399){
         $data['informacion_consolidado']='
-        <a href="'.site_url("").'/rep/exportar_requerimientos_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR FORMULARIO 5 (INSTITUCIONAL)</a>
-        <a href="'.site_url("").'/rep/exportar_form4_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N4"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR FORMULARIO 4 (INSTITUCIONAL)</a>
-        <a href="'.site_url("").'/ptto_consolidado_comparativo_regional/0/4" target=_blank class="btn btn-default" title="CUADRO COMPARATIVO INSTITUCIONAL"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;PPTO. COMPARATIVO (INSTITUCIONAL)</a>
-        <a href="'.site_url("").'/ptto_consolidado_distribucion_nacional" target=_blank class="btn btn-default" title="CUADRO COMPARATIVO PPTO. DISTRIBUCION NACIONAL"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;PPTO. DISTRIBUCION NACIONAL</a>
+        <a href="'.site_url("").'/rep/exportar_requerimientos_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="18" HEIGHT="18"/>&nbsp;<b>EXPORTAR FORMULARIO 5 (INSTITUCIONAL)</b></a>
+        <a href="'.site_url("").'/rep/exportar_form4_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N4" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR FORMULARIO 4 (INSTITUCIONAL)</b></a>
+        <a href="'.site_url("").'/rep/exportar_detalle_partidas_asignadas_institucional" target=_blank class="btn btn-default" title="CUADRO COMPARATIVO INSTITUCIONAL" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR COMPARATIVO PARTIDAS (INSTITUCIONAL)</b></a>
+        <a href="'.site_url("").'/rep/exportar_detalle_reg_dist_partidas_asignadas_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N4" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR COMPARATIVO PARTIDAS (DISTRIBUCION)</b></a>
+        <a href="'.site_url("").'/rep/exportar_detalle_partidas_unidad" target=_blank class="btn btn-default" title="EXPORTAR FORM. N4" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR COMPARATIVO PARTIDAS (UNIDAD)</b></a>
         <hr>';
       }
       $data['mensaje']='

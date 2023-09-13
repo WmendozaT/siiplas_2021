@@ -784,6 +784,49 @@ class Model_insumo extends CI_Model{
     }
 
 
+    //// ---- GET PROG Y CERT PARTIDAS POR REGIONAL Y DISTRITAL
+    function get_partida_programado_certificado_regional_distrital($dep_id,$dist_id,$partida){
+        $sql = 'select p.dep_id,p.dist_id,par.par_nombre,par.par_codigo,i.par_id,SUM(i.ins_costo_total) ppto_programado,SUM(i.ins_monto_certificado) ppto_certificado
+                from insumos i
+                Inner Join partidas as par on par.par_id = i.par_id
+                Inner Join aperturaprogramatica as apg on apg.aper_id = i.aper_id
+                Inner Join aperturaproyectos as ap on ap.aper_id = apg.aper_id
+                Inner Join _proyectos as p on p.proy_id = ap.proy_id
+                where p.dep_id='.$dep_id.' and p.dist_id='.$dist_id.' and par.par_codigo='.$partida.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and apg.aper_gestion='.$this->gestion.' and i.ins_ejec_cpoa=\'0\' 
+                group by p.dep_id,p.dist_id,par.par_nombre,par.par_codigo,i.par_id
+                order by p.dep_id,p.dist_id,par.par_codigo asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    //// ---- GET PROG Y CERT PARTIDAS INSTITUCIONAL
+    function get_partida_programado_certificado_institucional($partida){
+        $sql = 'select par.par_nombre,par.par_codigo,i.par_id,SUM(i.ins_costo_total) ppto_programado,SUM(i.ins_monto_certificado) ppto_certificado
+                from insumos i
+                Inner Join partidas as par on par.par_id = i.par_id
+                Inner Join aperturaprogramatica as apg on apg.aper_id = i.aper_id
+                Inner Join aperturaproyectos as ap on ap.aper_id = apg.aper_id
+                Inner Join _proyectos as p on p.proy_id = ap.proy_id
+                where par.par_codigo='.$partida.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and apg.aper_gestion='.$this->gestion.' and i.ins_ejec_cpoa=\'0\'
+                group by par.par_nombre,par.par_codigo,i.par_id
+                order by par.par_codigo asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    //// ---- GET PROG Y CERT PARTIDAS X UNIDAD
+    function get_partida_programado_certificado_unidad($aper_id,$par_id){
+        $sql = 'select aper_id,par_id, SUM(ins_costo_total) ppto_programado,SUM(ins_monto_certificado) ppto_certificado
+                from insumos
+                where aper_id='.$aper_id.' and par_id='.$par_id.' and ins_estado!=\'3\' and ins_tp_reg=\'0\' and aper_id!=\'0\'
+                group by aper_id,par_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
 
     //// ---- GET DETALLE DE PRESUPUESTO POA (FORM 5) REGIONAL POR CATEGORIA PROGRAMATICA

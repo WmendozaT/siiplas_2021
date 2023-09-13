@@ -94,6 +94,40 @@ class Model_ptto_sigep extends CI_Model{
     }
 
 
+    /*------ Lista Consolidado detalle de Partidas (Regional, Distrital Asignadas) Institucional (Gasto Corriente / Proyecto de Inversion)-----*/
+    public function lista_detalle_regional_distrital_consolidado_partidas_asignadas_nacional(){
+        $sql = 'select poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.partida, poa.par_nombre, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_asignado_gestion
+                from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.') poa
+                group by poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.partida, poa.par_nombre
+                order by poa.dep_id,poa.dist_id,poa.partida asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*------ Lista Consolidado detalle de Partidas (Asignadas) Institucional (Gasto Corriente / Proyecto de Inversion)-----*/
+    public function lista_detalle_consolidado_partidas_asignadas_nacional(){
+        $sql = 'select poa.partida, poa.par_nombre, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_asignado_gestion
+                from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.') poa
+                group by poa.partida, poa.par_nombre
+                order by poa.partida asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*------ Lista Consolidado detalle de Partidas (Asignadas) Por Unidad (Gasto Corriente / Proyecto de Inversion)-----*/
+    public function lista_detalle_consolidado_partidas_asignadas_unidades(){
+        $sql = 'select *
+                from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.')
+                where tp_id=\'4\'
+                order by dep_id,dist_id,prog,act,partida asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
     /*------ Lista Partida Ppto Asignado Sigep Regional 2023-----*/
     public function lista_partidas_asignado_regional($dep_id,$tp_id){
         if($dep_id==0){ //// Institucional
@@ -525,7 +559,7 @@ class Model_ptto_sigep extends CI_Model{
 
 
 ////// REPORTES DE EJECUCION PRESUPUESTARIA POR PARTIDAS 2022
-    /*----- LISTA CONSOLIDADO REGIONAL DE PARTIDAS ASIGNADOS EN LA GESTION INSTITUCIONAL  -----*/
+    /*----- LISTA CONSOLIDADO REGIONAL DE PARTIDAS ASIGNADOS EN LA GESTION INSTITUCIONAL (INVERSION) -----*/
     public function lista_consolidado_partidas_ppto_asignado_gestion_institucional(){
         $sql = '
             select par_id,partida,par_nombre,SUM(ppto_partida_asignado_gestion) ppto_partida_asignado_gestion

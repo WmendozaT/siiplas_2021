@@ -3586,6 +3586,72 @@ create table imagenes_proy_inversion(
  );
 
 
+
+
+
+=========== LISTA PARTIDAS ASIGNADAS NACIONAL (GASTO CORRIENTE / PROY INVERSION)
+
+
+CREATE OR REPLACE FUNCTION public.lista_partidas_ppto_asignadas_gestion_nacional(IN gestion integer)
+  RETURNS TABLE(aper_id numeric, dep_id numeric, dep_departamento character varying, abrev character varying,dist_id integer, dist_distrital character varying, prog character varying, act character varying, proy_id numeric, proy_sisin character varying,tp_id numeric, tipo character varying, actividad character varying, proy_nombre character varying, par_id integer, partida character varying, par_nombre character varying, ppto_partida_asignado_gestion numeric) AS
+$BODY$
+
+SELECT 
+p.aper_id,
+p.dep_id,
+p.dep_departamento,
+p.abrev,
+p.dist_id,
+p.dist_distrital,
+p.prog,
+p.act,
+p.proy_id,
+p.proy_sisin,
+p.tp_id,
+p.tipo,
+p.actividad,
+p.proy_nombre,
+partidas_asig.par_id, 
+partidas_asig.partida, 
+partidas.par_nombre,
+SUM(partidas_asig.importe) ppto_partida_asignado_gestion
+
+FROM lista_poa_nacional(gestion) p
+Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=p.aper_id
+Inner Join partidas as partidas On partidas.par_id=partidas_asig.par_id
+where partidas_asig.estado!=3
+GROUP BY
+p.aper_id, 
+p.dep_id,
+p.dep_departamento,
+p.abrev,
+p.dist_id,
+p.dist_distrital,
+p.prog,
+p.act,
+p.proy_id,
+p.proy_sisin,
+p.tp_id,
+p.tipo,
+p.actividad,
+p.proy_nombre,
+partidas_asig.par_id, 
+partidas_asig.partida,
+partidas.par_nombre
+
+ORDER BY p.dep_id,p.proy_id asc;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100
+  ROWS 1000;
+ALTER FUNCTION public.lista_partidas_ppto_asignadas_gestion_nacional(integer)
+  OWNER TO postgres;
+
+
+
+
+
+
   ========================= REPORTE CONSOLIDADO DE PARTIDAS 2023 VISTA PARA EL LISTADO DE PROGRAMAS ALINEADOS AL FORM 5
 
      /// creamos vista para generar el listado de programas alineados al formulario 5

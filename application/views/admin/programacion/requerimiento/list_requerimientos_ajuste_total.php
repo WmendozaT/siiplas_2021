@@ -11,62 +11,15 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css">
 		<!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
-		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/smartadmin-production.min.css"> 
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/smartadmin-production.min.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/smartadmin-skins.min.css">
 		<!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
-		<!--estiloh-->
-		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css"> 
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
-	    <meta name="viewport" content="width=device-width">
+	  <meta name="viewport" content="width=device-width">
 		<!--fin de stiloh-->
-          <script>
-		  	function abreVentana(PDF){
-				var direccion;
-				direccion = '' + PDF;
-				window.open(direccion, "Reporte de Consolidado Partida" , "width=800,height=650,scrollbars=SI") ;
-			}                                                  
-          </script>
-			<style>
-			aside{background: #05678B;}
-			.table1{
-	          display: inline-block;
-	          width:100%;
-	          max-width:1550px;
-	          overflow-x: scroll;
-	          }
-			table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-			overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-            #comparativo{
-		      width: 50% !important;
-		    }
-		    #csv{
-		      width: 30% !important;
-		    }
-            #mdialTamanio{
-		      width: 80% !important;
-		    }
-		    #mdialTamanio2{
-		      width: 55% !important;
-		    }
-		    input[type="checkbox"] {
-                display:inline-block;
-                width:25px;
-                height:25px;
-                margin:-1px 4px 0 0;
-                vertical-align:middle;
-                cursor:pointer;
-            }
-			</style>
 	</head>
 	<body class="">
 		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -104,9 +57,9 @@
 			<div class="login-info">
 				<span> <!-- User image size is adjusted inside CSS, it should stay as is --> 
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                        <span>
-                            <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
-                        </span>
+            <span>
+              <i class="fa fa-user" aria-hidden="true"></i>  <?php echo $this->session->userdata("user_name");?>
+            </span>
 					</a> 
 				</span>
 			</div>
@@ -136,25 +89,26 @@
 					<div class="row">
 						<?php echo $titulo; ?>
 						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<?php 
-			                  if($this->session->flashdata('success')){ ?>
-			                    <div class="alert alert-success">
-			                      	<?php echo $this->session->flashdata('success'); ?>
-			                    </div>
-			                    <script type="text/javascript">alertify.success("<?php echo '<font size=2>'.$this->session->flashdata('success').'</font>'; ?>")</script>
-			                <?php }
-			                  elseif($this->session->flashdata('danger')){ ?>
-			                      <div class="alert alert-danger">
-			                        <?php echo $this->session->flashdata('danger'); ?>
-			                      </div>
-			                      <script type="text/javascript">alertify.error("<?php echo '<font size=2>'.$this->session->flashdata('danger').'</font>'; ?>")</script>
-			                    <?php
-			                  }
-			                ?>
-			               <div class="well well-sm well-light">
-			               		<div class="alert alert-info" role="alert">
-								  <h1><b>AJUSTE POA - <?php echo $this->session->userData('gestion');?>, REQUERIMIENTOS</b></h1>
-								</div>
+								<?php 
+                  if($this->session->flashdata('success')){ ?>
+                    <div class="alert alert-success">
+                      	<?php echo $this->session->flashdata('success'); ?>
+                    </div>
+                    <script type="text/javascript">alertify.success("<?php echo '<font size=2>'.$this->session->flashdata('success').'</font>'; ?>")</script>
+                <?php }
+                  elseif($this->session->flashdata('danger')){ ?>
+                      <div class="alert alert-danger">
+                        <?php echo $this->session->flashdata('danger'); ?>
+                      </div>
+                      <script type="text/javascript">alertify.error("<?php echo '<font size=2>'.$this->session->flashdata('danger').'</font>'; ?>")</script>
+                    <?php
+                  }
+                ?>
+                
+			          <div class="well well-sm well-light">
+			            <div class="alert alert-info" role="alert">
+								  	<h1><b>AJUSTE POA - <?php echo $this->session->userData('gestion');?>, REQUERIMIENTOS</b></h1>
+									</div>
 								<div id="tabs">
 									<ul>
 										<li>
@@ -167,29 +121,27 @@
 
 									<div id="tabs-a">
 										<div class="row">
-											<div >
 	                			
-												<div class="jarviswidget jarviswidget-color-darken">
-					                              <header>
-					                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-					                                  <h2 class="font-md"><strong></strong></h2>  
-					                              </header>
-													<div>
-														<div class="widget-body no-padding">
-															<form id="del_req" name="del_req" novalidate="novalidate" action="<?php echo site_url().'/programacion/cajuste_crequerimiento/delete_requerimientos_ajustes'?>" method="post">
-																<input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-																<input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id']; ?>">
-																<?php echo $requerimientos;?>
-																<input type="hidden" name="tot" id="tot" value="0">
-										                    </form>
-														</div>
-														<!-- end widget content -->
+											<div class="jarviswidget jarviswidget-color-darken">
+                          <header>
+                            <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                            <h2 class="font-md"><strong></strong></h2>  
+                          </header>
+												<div>
+													<div class="widget-body no-padding">
+														<form id="del_req" name="del_req" novalidate="novalidate" action="<?php echo site_url().'/programacion/cajuste_crequerimiento/delete_requerimientos_ajustes'?>" method="post">
+															<input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
+															<input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id']; ?>">
+															<?php echo $requerimientos;?>
+															<input type="hidden" name="tot" id="tot" value="0">
+									          </form>
 													</div>
-													<!-- end widget div -->
+													<!-- end widget content -->
 												</div>
-												<!-- end widget -->
-										
+												<!-- end widget div -->
 											</div>
+											<!-- end widget -->
+										
 										</div>
 									</div>
 
@@ -197,11 +149,11 @@
 										<div class="row">
 											<hr>
 											<div align="left" id="boton_comparativo">
-                                                <a href="#" class="btn btn-default boton_cuadro_comparativo" title="CUADRO DE CUMPLIMIENTO" style="width:40%;"> <img src="<?php echo base_url(); ?>assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;ACTUALIZAR CONSOLIDADO DE PRESUPUESTO POR PARTIDAS</a>
-                                            </div>
-                                            <div class="row">
-                                              <div id="partidas"></div>
-                                            </div>
+                        <a href="#" class="btn btn-default boton_cuadro_comparativo" title="CUADRO DE CUMPLIMIENTO" style="width:40%;"> <img src="<?php echo base_url(); ?>assets/Iconos/arrow_refresh.png" WIDTH="25" HEIGHT="25"/>&nbsp;&nbsp;ACTUALIZAR CONSOLIDADO DE PRESUPUESTO POR PARTIDAS</a>
+                      </div>
+                      <div class="row">
+                        <div id="partidas"></div>
+                      </div>
 										</div>
 									</div>
 									
@@ -222,210 +174,210 @@
             <div class="modal-content">
             	<div class="modal-header">
 		            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
-		        </div>
+		        	</div>
                 <div class="modal-body">
                 	<h2 class="alert alert-info"><center>NUEVO REGISTRO - REQUERIMIENTO</center></h2>
                     <form action="<?php echo site_url().'/programacion/cajuste_crequerimiento/valida_update_insumo_ajuste'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
-                        <input type="hidden" name="tp" id="tp" value="0">
-                        <input type="hidden" name="aper_id" id="aper_id" value="<?php echo $proyecto[0]['aper_id'];?>">
-                        <input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
-                        <header><b>DATOS GENERALES DEL REQUERIMIENTO</b></header>
-							<fieldset>					
-								<div class="row">
-									<section class="col col-3">
-										<label class="label"><b>GRUPO PARTIDA</b></label>
-										<label class="input">
-											<select class="form-control" id="padre" name="padre" title="SELECCIONE GRUPO DE PARTIDA">
-		                                        <option value="">Seleccione</option>
-		                                        <?php 
-		                                            foreach($part_padres as $row){ 
-		                                            	if($row['par_codigo']!=0){ ?>
-		                                                <option value="<?php echo $row['par_codigo'];?>"><?php echo $row['par_codigo'].' - '.$row['par_nombre'];?></option>
-		                                        		<?php }
-		                                           	} ?>        
-		                                    </select>
-										</label>
-									</section>
-									<section class="col col-3">
-										<label class="label"><b>PARTIDA</b></label>
-										<label class="input">
-											<select class="form-control" id="partida_id" name="partida_id" title="SELECCIONE PARTIDA">
-		                                        <option value="">Seleccione Partida</option>        
-		                                    </select>
-										</label>
-									</section>
-									<section class="col col-3">
-										<label class="label"><b>UNIDAD DE MEDIDA</b></label>
-										<label class="input">
-											<select class="form-control" id="um_id" name="um_id" title="SELECCIONE UNIDAD DE MEDIDA">
-		                                        <option value="">Seleccione</option>
-		                                    </select>
-										</label>
-									</section>
-									<section class="col col-3">
-										<label class="label"><font color=blue><b>MONTO SALDO (TECHO)</b></font></label>
-										<label class="input">
-											<i class="icon-append fa fa-tag"></i>
-											<input type="text" name="saldo" id="saldo" disabled="true" value="<?php echo round(($monto_a-$monto_p),2);?>">
-										</label>
-									</section>
-								</div>
+                    <input type="hidden" name="tp" id="tp" value="0">
+                    <input type="hidden" name="aper_id" id="aper_id" value="<?php echo $proyecto[0]['aper_id'];?>">
+                    <input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
+                    <header><b>DATOS GENERALES DEL REQUERIMIENTO</b></header>
+										<fieldset>					
+											<div class="row">
+												<section class="col col-3">
+													<label class="label"><b>GRUPO PARTIDA</b></label>
+													<label class="input">
+														<select class="form-control" id="padre" name="padre" title="SELECCIONE GRUPO DE PARTIDA">
+		                          <option value="">Seleccione</option>
+		                          <?php 
+		                              foreach($part_padres as $row){ 
+		                              	if($row['par_codigo']!=0){ ?>
+		                                  <option value="<?php echo $row['par_codigo'];?>"><?php echo $row['par_codigo'].' - '.$row['par_nombre'];?></option>
+		                          		<?php }
+		                          } ?>        
+			                      </select>
+													</label>
+												</section>
+												<section class="col col-3">
+													<label class="label"><b>PARTIDA</b></label>
+													<label class="input">
+														<select class="form-control" id="partida_id" name="partida_id" title="SELECCIONE PARTIDA">
+					                    <option value="">Seleccione Partida</option>        
+					                  </select>
+													</label>
+												</section>
+												<section class="col col-3">
+													<label class="label"><b>UNIDAD DE MEDIDA</b></label>
+													<label class="input">
+														<select class="form-control" id="um_id" name="um_id" title="SELECCIONE UNIDAD DE MEDIDA">
+					                    <option value="">Seleccione</option>
+					                  </select>
+													</label>
+												</section>
+												<section class="col col-3">
+													<label class="label"><font color=blue><b>MONTO SALDO (TECHO)</b></font></label>
+													<label class="input">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="saldo" id="saldo" disabled="true" value="<?php echo round(($monto_a-$monto_p),2);?>">
+													</label>
+												</section>
+											</div>
 
-								<div class="row">
-									<section class="col col-6">
-										<label class="label"><b>DETALLE</b></label>
-										<label class="textarea">
-											<i class="icon-append fa fa-tag"></i>
-											<textarea rows="2" name="ins_detalle" id="ins_detalle" title="REGISTRAR DETALLE DEL REQUERIMIENTO"></textarea>
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>CANTIDAD</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-tag"></i>
-											<input type="text" name="ins_cantidad" id="ins_cantidad" onkeyup="costo_total()" value="0" onkeypress="return justNumbers(event);" title="REGISTRAR CANTIDAD">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>COSTO UNITARIO <font color="blue">(2 decimales)</font></b></label>
-										<label class="input">
-											<i class="icon-append fa fa-tag"></i>
-											<input type="text" name="ins_costo_u" id="ins_costo_u" onkeyup="costo_total()" value="0" onkeypress="return justNumbers(event);" onpaste="return false" title="REGISTRAR COSTO UNITARIO">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>COSTO TOTAL</b></label>
-										<label class="input">
-											<input type="hidden" name="costo" id="costo">
-											<i class="icon-append fa fa-tag"></i>
-											<input type="text" name="costo2" id="costo2" value="0" disabled="true">
-										</label>
-									</section>
-								</div>
+											<div class="row">
+												<section class="col col-6">
+													<label class="label"><b>DETALLE</b></label>
+													<label class="textarea">
+														<i class="icon-append fa fa-tag"></i>
+														<textarea rows="2" name="ins_detalle" id="ins_detalle" title="REGISTRAR DETALLE DEL REQUERIMIENTO"></textarea>
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>CANTIDAD</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="ins_cantidad" id="ins_cantidad" onkeyup="costo_total()" value="0" onkeypress="return justNumbers(event);" title="REGISTRAR CANTIDAD">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>COSTO UNITARIO <font color="blue">(2 decimales)</font></b></label>
+													<label class="input">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="ins_costo_u" id="ins_costo_u" onkeyup="costo_total()" value="0" onkeypress="return justNumbers(event);" onpaste="return false" title="REGISTRAR COSTO UNITARIO">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>COSTO TOTAL</b></label>
+													<label class="input">
+														<input type="hidden" name="costo" id="costo">
+														<i class="icon-append fa fa-tag"></i>
+														<input type="text" name="costo2" id="costo2" value="0" disabled="true">
+													</label>
+												</section>
+											</div>
 
-								<div class="row">
-									<section class="col col-6">
-										<label class="label"><b>OBSERVACI&Oacute;N</b></label>
-										<label class="textarea">
-											<i class="icon-append fa fa-tag"></i>
-											<textarea rows="2" name="ins_observacion" id="ins_observacion"></textarea>
-										</label>
-									</section>
-									<?php echo $lista;?>
-								</div>
-								<br>
-								<div id="atit"></div>
-								<header><b>DISTRIBUCI&Oacute;N FINANCIERA: <?php echo $this->session->userdata('gestion')?></b><br>
-								<label class="label"><div id="ff"></div></label>
-								</header>
-								<br>
-								<div class="row">
-									<section class="col col-2">
-										<label class="label"><b>PROGRAMADO TOTAL</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="tot" id="tot" value="0" disabled="true">
-										</label>
-									</section>
-								</div>
-								<div class="row">
-									<section class="col col-2">
-										<label class="label"><b>ENERO</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m1" id="m1" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ENERO - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>FEBRERO</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m2" id="m2" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE FEBRERO - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>MARZO</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m3" id="m3" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MARZO - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>ABRIL</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m4" id="m4" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ABRIL - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>MAYO</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m5" id="m5" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MAYO - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>JUNIO</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m6" id="m6" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JUNIO - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-								</div>
-								<div class="row">
-									<section class="col col-2">
-										<label class="label"><b>JULIO</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m7" id="m7" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JULIO - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>AGOSTO</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m8" id="m8" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>SEPTIEMBRE</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m9" id="m9" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>OCTUBRE</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m10" id="m10" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>NOVIEMBRE</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m11" id="m11" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-									<section class="col col-2">
-										<label class="label"><b>DICIEMBRE</b></label>
-										<label class="input">
-											<i class="icon-append fa fa-money"></i>
-											<input type="text" name="m12" id="m12" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
-										</label>
-									</section>
-								</div>
+											<div class="row">
+												<section class="col col-6">
+													<label class="label"><b>OBSERVACI&Oacute;N</b></label>
+													<label class="textarea">
+														<i class="icon-append fa fa-tag"></i>
+														<textarea rows="2" name="ins_observacion" id="ins_observacion"></textarea>
+													</label>
+												</section>
+												<?php echo $lista;?>
+											</div>
+											<br>
+											<div id="atit"></div>
+											<header><b>DISTRIBUCI&Oacute;N FINANCIERA: <?php echo $this->session->userdata('gestion')?></b><br>
+											<label class="label"><div id="ff"></div></label>
+											</header>
+											<br>
+											<div class="row">
+												<section class="col col-2">
+													<label class="label"><b>PROGRAMADO TOTAL</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="tot" id="tot" value="0" disabled="true">
+													</label>
+												</section>
+											</div>
+											<div class="row">
+												<section class="col col-2">
+													<label class="label"><b>ENERO</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m1" id="m1" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ENERO - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>FEBRERO</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m2" id="m2" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE FEBRERO - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>MARZO</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m3" id="m3" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MARZO - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>ABRIL</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m4" id="m4" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE ABRIL - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>MAYO</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m5" id="m5" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE MAYO - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>JUNIO</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m6" id="m6" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JUNIO - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+											</div>
+											<div class="row">
+												<section class="col col-2">
+													<label class="label"><b>JULIO</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m7" id="m7" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE JULIO - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>AGOSTO</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m8" id="m8" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE AGOSTO - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>SEPTIEMBRE</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m9" id="m9" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE SEPTIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>OCTUBRE</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m10" id="m10" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE OCTUBRE - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>NOVIEMBRE</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m11" id="m11" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE NOVIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+												<section class="col col-2">
+													<label class="label"><b>DICIEMBRE</b></label>
+													<label class="input">
+														<i class="icon-append fa fa-money"></i>
+														<input type="text" name="m12" id="m12" value="0" onkeyup="suma_programado()" onkeypress="return justNumbers(event);" onpaste="return false" required="true" title="PROGRAMACION FINANCIERA MES DE DICIEMBRE - <?php echo $this->session->userdata('gestion')?>">
+													</label>
+												</section>
+											</div>
 
-							</fieldset>
+										</fieldset>
 							
-							<div id="but" style="display:none;">
-								<footer>
-									<button type="button" name="subir_ins" id="subir_ins" class="btn btn-info" >GUARDAR REQUERIMIENTO</button>
-									<button class="btn btn-default" data-dismiss="modal" id="amcl" title="CANCELAR">CANCELAR</button>
-								</footer>
-								<center><img id="loadi" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="45" height="45"></center>
-							</div>
+										<div id="but" style="display:none;">
+											<footer>
+												<button type="button" name="subir_ins" id="subir_ins" class="btn btn-info" >GUARDAR REQUERIMIENTO</button>
+												<button class="btn btn-default" data-dismiss="modal" id="amcl" title="CANCELAR">CANCELAR</button>
+											</footer>
+											<center><img id="loadi" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="45" height="45"></center>
+										</div>
                     </form>
                     </div>
                 </div>
@@ -443,9 +395,9 @@
 	              <div class="modal-body">
 	              	<h2 class="alert alert-info"><center>MODIFICAR REGISTRO - REQUERIMIENTO</center></h2>
 	                <form action="<?php echo site_url().'/programacion/cajuste_crequerimiento/valida_update_insumo_ajuste'?>" method="post" id="form_mod" name="form_mod" class="smart-form">
-						<input type="hidden" name="tp" id="tp" value="1">
-						<input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
-						<input type="hidden" name="ins_id" id="ins_id">
+									<input type="hidden" name="tp" id="tp" value="1">
+									<input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>">
+									<input type="hidden" name="ins_id" id="ins_id">
 							<header><b>DATOS GENERALES DEL REQUERIMIENTO</b><br><label class="label"><b>C&Oacute;DIGO DE ACTIVIDAD : </b></label></header>
 							<fieldset>
 								<div class="row">
@@ -453,19 +405,19 @@
 										<label class="label"><b>GRUPO PARTIDA</b></label>
 										<label class="input">
 											<select class="form-control" id="par_padre" name="par_padre" title="SELECCIONE GRUPO DE PARTIDA">
-		                                        <option value="">Seleccione Grupo Partida</option>
-		                                        <?php 
-		                                            foreach($part_padres as $row){ ?>
-		                                                <option value="<?php echo $row['par_codigo'];?>" <?php if(@$_POST['pais']==$row['par_codigo']){ echo "selected";} ?>><?php echo $row['par_codigo'].' - '.$row['par_nombre'];?></option>
-		                                        <?php } ?>        
-		                                    </select>
+                        <option value="">Seleccione Grupo Partida</option>
+                        <?php 
+                            foreach($part_padres as $row){ ?>
+                                <option value="<?php echo $row['par_codigo'];?>" <?php if(@$_POST['pais']==$row['par_codigo']){ echo "selected";} ?>><?php echo $row['par_codigo'].' - '.$row['par_nombre'];?></option>
+                        <?php } ?>        
+                      </select>
 										</label>
 									</section>
 									<section class="col col-3">
 										<label class="label"><b>PARTIDA</b></label>
 										<label class="input">
 											<select class="form-control" id="par_hijo" name="par_hijo" title="SELECCIONE PARTIDA">       
-		                                    </select>
+		                  </select>
 										</label>
 									</section>
 									<section class="col col-3">
@@ -503,7 +455,7 @@
 										<label class="label"><b>COSTO UNITARIO <font color="blue">(2 decimales)</font></b></label>
 										<label class="input">
 											<i class="icon-append fa fa-tag"></i>
-											<input type="text" name="costou" id="costou" onkeyup="costo_totalm()" onkeypress="return justNumbers(event);" onpaste="return false" title="MODIFICAR COSTO UNITARIO">
+											<input type="text" name="costou" id="costou" step="0.01" onkeyup="costo_totalm()" onkeypress="return justNumbers(event);" onpaste="return false" title="MODIFICAR COSTO UNITARIO">
 										</label>
 									</section>
 									<section class="col col-2">
@@ -767,15 +719,12 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
 		<!-- JQUERY MASKED INPUT -->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-		<!-- JQUERY SELECT2 INPUT -->
-		<script src="<?php echo base_url(); ?>assets/js/plugin/select2/select2.min.js"></script>
 		<!-- JQUERY UI + Bootstrap Slider -->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
 		<!-- browser msie issue fix -->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
 		<!-- FastClick: For mobile devices -->
 		<script src="<?php echo base_url(); ?>assets/js/plugin/fastclick/fastclick.min.js"></script>
-		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
 		<!-- Demo purpose only -->
 		<script src="<?php echo base_url(); ?>assets/js/demo.min.js"></script>
 		<!-- MAIN APP JS FILE -->

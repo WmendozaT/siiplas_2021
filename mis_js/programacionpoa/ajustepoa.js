@@ -14,7 +14,11 @@ function abreVentana_eficiencia(PDF){
   window.open(direccion, "EVALUACION POA" , "width=800,height=700,scrollbars=NO") ; 
 }
 
-
+function abreVentana(PDF){
+    var direccion;
+    direccion = '' + PDF;
+    window.open(direccion, "Reporte de Consolidado Partida" , "width=800,height=650,scrollbars=SI") ;
+  }  
 
   function doSearch(){
     var tableReg = document.getElementById('datos');
@@ -85,6 +89,14 @@ function abreVentana_eficiencia(PDF){
     return true;           
     return /\d/.test(String.fromCharCode(keynum));
   }
+
+/*  $('#ins_costo_u').on('input', function() {
+    let valor = parseFloat($(this).val());
+    if (isNaN(valor)) {
+      valor = 0;
+    }
+    $(this).val(valor.toFixed(2));
+  });*/
 
 
     /// 2021
@@ -190,15 +202,14 @@ function abreVentana_eficiencia(PDF){
 
 
 
-    /*------------ MODIFICAR REQUERIMIENTO ----------------*/
+    /*---- MODIFICAR REQUERIMIENTO (AJUSTE POA) ----*/
     $(function () {
         $(".mod_ff").on("click", function (e) {
             ins_id = $(this).attr('name');
             document.getElementById("ins_id").value=ins_id;
             com_id=document.getElementById("com_id").value;
+            //alert(ins_id+'---'+com_id)
             var url = base+"index.php/programacion/cajuste_crequerimiento/get_requerimiento_ajuste";
-
-          //  var url = "<?php echo site_url().'/programacion/cajuste_crequerimiento/get_requerimiento_ajuste'?>";
             var request;
             if (request) {
                 request.abort();

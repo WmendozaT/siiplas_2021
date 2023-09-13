@@ -219,9 +219,9 @@ class Ccertificacion_poa extends CI_Controller {
       $cite_poa = $this->security->xss_clean($post['cite_cpoa']);
       $cite_fecha = $this->security->xss_clean($post['cite_fecha']);
 
-      $prod_id = filter_var($prod_id, FILTER_SANITIZE_NUMBER_INT);
-      $tp_id = filter_var($tp_id, FILTER_SANITIZE_NUMBER_INT); 
-      $cite_poa = preg_replace('/[^\w\s]/u', '', htmlspecialchars($cite_poa, ENT_QUOTES, 'UTF-8'));
+     // $prod_id = filter_var($prod_id, FILTER_SANITIZE_NUMBER_INT);
+     // $tp_id = filter_var($tp_id, FILTER_SANITIZE_NUMBER_INT); 
+     // $cite_poa = $cite_poa;
      
       if($tp_id==1){
         $datos=$this->model_certificacion->get_datos_pi_prod($prod_id); /// Gasto Proyecto de Inversión

@@ -223,6 +223,168 @@
       echo $tabla;
     }
 
+    /*--- EXPORTAR LISTADO DE PARTIDAS ASIGNADAS PPTO (REGIONAL - DISTRITAL)---*/
+    public function consolidado_partidas_reg_dist_asignadas_institucional(){
+      $titulo='CUADRO COMPARATIVO PARTIDAS ASIGNADAS - INSTITUCIONAL';
+      $tabla='';
+      $detalle=$this->model_ptto_sigep->lista_detalle_regional_distrital_consolidado_partidas_asignadas_nacional();
+      $tabla.='
+        <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+          <thead>
+          <tr>
+            <td>REGIONAL</td>
+            <td>DISTRITAL</td>
+            <td>PARTIDA</td>
+            <td></td>
+            <td>PPTO. ASIGNADO '.$this->gestion.'</td>
+            <td>PPTO. PROG. POA</td>
+            <td>PPTO. CERT. POA</td>
+          </tr>
+          </thead>
+          <tbody>';
+      foreach ($detalle as $row){
+        $part_prog=$this->model_insumo->get_partida_programado_certificado_regional_distrital($row['dep_id'],$row['dist_id'],$row['partida']);
+        $monto_prog=0;$monto_cert=0;
+        if(count($part_prog)!=0){
+          $monto_prog=$part_prog[0]['ppto_programado'];
+          $monto_cert=$part_prog[0]['ppto_certificado'];
+        }
+        $tabla.='
+        <tr>
+          <td>'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
+          <td>'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
+          <td>'.$row['partida'].'</td>
+          <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
+          <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
+          <td align="right">'.round($monto_prog,2).'</td>
+          <td align="right">'.round($monto_cert,2).'</td>
+        </tr>';
+      }
+      $tabla.='
+        </tbody>
+      </table>';
+
+      
+      date_default_timezone_set('America/Lima');
+      $fecha = date("d-m-Y H:i:s");
+      header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=CONSOLIDADO_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      echo $tabla;
+    }
+
+    /*--- EXPORTAR LISTADO DE PARTIDAS ASIGNADAS PPTO (INSTITUCIONAL)---*/
+    public function consolidado_partidas_asignadas_institucional(){
+      $titulo='CUADRO COMPARATIVO PARTIDAS ASIGNADAS - INSTITUCIONAL';
+      $tabla='';
+      $detalle=$this->model_ptto_sigep->lista_detalle_consolidado_partidas_asignadas_nacional();
+      $tabla.='
+        <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+          <thead>
+          <tr>
+            <td>PARTIDA</td>
+            <td></td>
+            <td>PPTO. ASIGNADO '.$this->gestion.'</td>
+            <td>PPTO. PROG. POA</td>
+            <td>PPTO. CERT. POA</td>
+          </tr>
+          </thead>
+          <tbody>';
+      foreach ($detalle as $row){
+        $part_prog=$this->model_insumo->get_partida_programado_certificado_institucional($row['partida']);
+        $monto_prog=0;$monto_cert=0;
+        if(count($part_prog)!=0){
+          $monto_prog=$part_prog[0]['ppto_programado'];
+          $monto_cert=$part_prog[0]['ppto_certificado'];
+        }
+        $tabla.='
+        <tr>
+          <td>'.$row['partida'].'</td>
+          <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
+          <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
+          <td align="right">'.round($monto_prog,2).'</td>
+          <td align="right">'.round($monto_cert,2).'</td>
+        </tr>';
+      }
+      $tabla.='
+        </tbody>
+      </table>';
+
+      date_default_timezone_set('America/Lima');
+      $fecha = date("d-m-Y H:i:s");
+      header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=CONSOLIDADO_PARTIDAS_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      echo $tabla;
+    }
+
+
+    /*--- EXPORTAR LISTADO DE PARTIDAS ASIGNADAS PPTO (UNIDAD / INVERSION)---*/
+    public function consolidado_partidas_asignadas_unidad(){
+      $titulo='UNIDAD_ORGANIZACIONAL';
+      $tabla='';
+      $detalle=$this->model_ptto_sigep->lista_detalle_consolidado_partidas_asignadas_unidades();
+      $tabla.='
+      <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+        <thead>
+        <tr>
+          <td>REGIONAL</td>
+          <td>DISTRITAL</td>
+          <td>PROGRAMA</td>
+          <td>UNIDAD/ESTABLECIMIENTO/INVERSION</td>
+          <td>PARTIDA</td>
+          <td></td>
+          <td>PPTO. ASIGNADO '.$this->gestion.'</td>
+          <td>PPTO. PROG. POA</td>
+          <td>PPTO. CERT. POA</td>
+        </tr>
+        </thead>
+        <tbody>';
+        foreach ($detalle as $row){
+          $part_prog=$this->model_insumo->get_partida_programado_certificado_unidad($row['aper_id'],$row['par_id']);
+          
+          $monto_prog=0;$monto_cert=0;
+          if(count($part_prog)!=0){
+            $monto_prog=$part_prog[0]['ppto_programado'];
+            $monto_cert=$part_prog[0]['ppto_certificado'];
+          }
+          $tabla.='
+          <tr>
+            <td>'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
+            <td>'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
+            <td>\''.$row['prog'].'\'</td>';
+            if($row['tp_id']==1){
+              $tabla.='<td>'.mb_convert_encoding(strtoupper($row['proy_sisin'].' '.$row['proy_nombre']), 'cp1252', 'UTF-8').'</td>';
+            }
+            else{
+              $tabla.='<td>'.mb_convert_encoding(strtoupper($row['act'].'-'.$row['tipo'].' '.$row['actividad']), 'cp1252', 'UTF-8').'</td>';
+            }
+            $tabla.='
+            
+            <td>'.$row['partida'].'</td>
+            <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
+            <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
+            <td align="right">'.round($monto_prog,2).'</td>
+            <td align="right">'.round($monto_cert,2).'</td>
+          </tr>';
+        }
+      $tabla.='
+        </tbody>
+      </table>';
+
+      date_default_timezone_set('America/Lima');
+      $fecha = date("d-m-Y H:i:s");
+      header('Content-type: application/vnd.ms-excel');
+      header("Content-Disposition: attachment; filename=CONSOLIDADO_PARTIDAS_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
+      header("Pragma: no-cache");
+      header("Expires: 0");
+      ini_set('max_execution_time', 0); 
+      ini_set('memory_limit','3072M');
+      echo $tabla;
+    }
+
 
     /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR DISTRITAL, REGIONAL (2020 - 2021) ---*/
     public function requerimientos_distrital($dep_id,$dist_id,$tp_id){

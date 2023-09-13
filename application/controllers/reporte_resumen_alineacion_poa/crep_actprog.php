@@ -68,16 +68,17 @@ class Crep_actprog extends CI_Controller {
         $style='border="1" cellpadding="0" cellspacing="0" class="tabla"';
       }
 
-       $tabla.='<table '.$style.'>
+       $tabla.='
+              <table '.$style.'>
                 <thead>
                   <tr>
-                    <th style="height:18px;" colspan=4>ALINEACI&Oacute;N DE ACTIVIDADES POR PROGRAMAS</th>
+                    <th style="height:20px;font-size:10px;" colspan=4>ALINEACI&Oacute;N DE ACTIVIDADES POR CATEGORIA PROGRAMÁTICA</th>
                   </tr>
                   <tr>
-                    <th style="width:3%; height:15px;" align=center>#</th>
-                    <th style="width:10%;" align=center>PROGRAMA</th>
-                    <th style="width:40%;" align=center>DESCRIPCI&Oacute;N</th>
-                    <th style="width:10%;" align=center>NRO DE ACT.</th>
+                    <th style="width:3%; height:20px;font-size:10px;" align=center>#</th>
+                    <th style="width:20%;font-size:10px;" align=center>PROGRAMA</th>
+                    <th style="width:40%;font-size:10px;" align=center>DESCRIPCI&Oacute;N</th>
+                    <th style="width:10%;font-size:10px;" align=center>NRO DE ACT.</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -87,29 +88,29 @@ class Crep_actprog extends CI_Controller {
                 $sum=$sum+$row['actividades'];
                 $tabla.='
                 <tr>
-                  <td style="height:14px;">'.$nro.'</td>
-                  <td>'.$row['aper_programa'].' 0000 000</td>';
+                  <td style="height:15px; text-align:center; font-size:8px;">'.$nro.'</td>
+                  <td style="font-size:11px; text-align:center"><b>'.$row['aper_programa'].' 00 000</b></td>';
                   if($tp_rep==2){ /// excel
                     $tabla.='<td>'.mb_convert_encoding($row['aper_descripcion'], 'cp1252', 'UTF-8').'</td>';
                   }
                   else{ /// normal
-                    $tabla.='<td>'.$row['aper_descripcion'].'</td>';
+                    $tabla.='<td style="font-size:9px;">'.$row['aper_descripcion'].'</td>';
                   }
                   $tabla.='
-                  <td align=center>'.$row['actividades'].'</td>
+                  <td style="font-size:10px; text-align:right;"><b>'.$row['actividades'].'</b></td>
                 </tr>';
               }
         $tabla.='
               </tbody>
                 <tr>
-                  <td colspan=3 style="height:14px;"> TOTAL </td>
-                  <td align=center >'.$sum.'</td>
+                  <td colspan=3 style="height:14px; font-size:10px;"> TOTAL </td>
+                  <td style="font-size:10px; text-align:right;"><b>'.$sum.'</b></td>
                 </tr>
             </table>';
       return $tabla;
     }
     
-      ///// OPE-PROGRAMA : REGIONAL
+      ///// OPE - APERTURA PROGRAMATICA : REGIONAL
       public function alineacion_operacion_programa_regional($dep_id,$tp_rep){
       // tp_rep=0 (normal), tp_rep=1 (Reporte) 
       $act_programa=$this->model_resumenactividad->resumen_actividad_categoria_regional($dep_id);
@@ -125,13 +126,13 @@ class Crep_actprog extends CI_Controller {
        $tabla.='<table '.$style.'>
                 <thead>
                   <tr>
-                    <th style="height:18px;" colspan=4>ALINEACI&Oacute;N DE ACTIVIDADES POR PROGRAMAS</th>
+                    <th style="height:20px;font-size:10px;" colspan=4>ALINEACI&Oacute;N DE ACTIVIDADES POR CATEGORIA PROGRAMÁTICA</th>
                   </tr>
                   <tr>
-                    <th style="width:3%;height:15px;" align=center>#</th>
-                    <th style="width:10%;" align=center>PROGRAMA</th>
-                    <th style="width:40%;" align=center>DESCRIPCI&Oacute;N</th>
-                    <th style="width:10%;" align=center>NRO DE ACT.</th>
+                    <th style="width:3%;height:20px;font-size:10px;" align=center>#</th>
+                    <th style="width:10%;font-size:10px;" align=center>PROGRAMA</th>
+                    <th style="width:40%;font-size:10px;" align=center>DESCRIPCI&Oacute;N</th>
+                    <th style="width:10%;font-size:10px;" align=center>NRO DE ACT.</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -141,23 +142,23 @@ class Crep_actprog extends CI_Controller {
                 $sum=$sum+$row['actividades'];
                 $tabla.='
                 <tr>
-                  <td style="height:14px;">'.$nro.'</td>
-                  <td>'.$row['aper_programa'].' 0000 000</td>';
+                  <td style="height:14px;text-align:center;font-size:8px;">'.$nro.'</td>
+                  <td style="font-size:11px; text-align:center"><b>'.$row['aper_programa'].' 00 000</b></td>';
                   if($tp_rep==2){ /// excel
                     $tabla.='<td>'.mb_convert_encoding($row['aper_descripcion'], 'cp1252', 'UTF-8').'</td>';
                   }
                   else{ /// normal
-                    $tabla.='<td>'.$row['aper_descripcion'].'</td>';
+                    $tabla.='<td style="font-size:9px;">'.$row['aper_descripcion'].'</td>';
                   }
                   $tabla.='
-                  <td align=center>'.$row['actividades'].'</td>
+                  <td style="font-size:10px; text-align:right;">'.$row['actividades'].'</td>
                 </tr>';
               }
         $tabla.='
               </tbody>
                 <tr>
-                  <td colspan=3 style="height:14px;"> TOTAL </td>
-                  <td align=center>'.$sum.'</td>
+                  <td colspan=3 style="height:14px; font-size:10px;"> TOTAL </td>
+                  <td style="font-size:10px; text-align:right;"><b>'.$sum.'</b></td>
                 </tr>
             </table>';
       return $tabla;
@@ -177,15 +178,15 @@ class Crep_actprog extends CI_Controller {
         $style='border="1" cellpadding="0" cellspacing="0" class="tabla"';
       }
 
-       $tabla.='<table '.$style.'>
+       $tabla.='
+              <table '.$style.'>
                 <thead>
                   <tr>
-                    <th style="height:18px;" colspan=3>ALINEACI&Oacute;N DE ACTIVIDADES POR A.C.P.</th>
+                    <th style="height:20px;font-size:10px;" colspan=3>ALINEACI&Oacute;N DE ACTIVIDADES POR A.C.P.</th>
                   </tr>
                   <tr>
-                    <th style="width:3%;height:15px;" align=center>#</th>
-                    <th style="width:40%;" align=center>ACCION DE CORTO PLAZO '.$this->gestion.'</th>
-                    <th style="width:5%;" align=center>NRO DE ACT.</th>
+                    <th style="width:90%;height:20px;font-size:10px;" align=center>ACCION DE CORTO PLAZO '.$this->gestion.'</th>
+                    <th style="width:10%;font-size:10px;" align=center>NRO DE ACT.</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -194,23 +195,22 @@ class Crep_actprog extends CI_Controller {
                 $nro++;
                 $sum=$sum+$row['actividades'];
                 $tabla.='
-                <tr>
-                  <td style="height:14px;">'.$nro.'</td>';
+                <tr>';
                   if($tp_rep==2){ /// excel
-                    $tabla.='<td>'.mb_convert_encoding($row['og_codigo'].'.- '.$row['og_objetivo'], 'cp1252', 'UTF-8').'</td>';
+                    $tabla.='<td style="width:90%; height:10px;">'.mb_convert_encoding($row['og_codigo'].'.- '.$row['og_objetivo'], 'cp1252', 'UTF-8').'</td>';
                   }
                   else{ /// normal
-                    $tabla.='<td>'.$row['og_codigo'].'.- '.$row['og_objetivo'].'</td>';
+                    $tabla.='<td style="width:90%; height:10px;font-size:9px;">&nbsp;<b>'.$row['og_codigo'].'.- </b>'.$row['og_objetivo'].'</td>';
                   }
                   $tabla.='
-                  <td align=center>'.$row['actividades'].'</td>
+                  <td style="width:10%; text-align:right; font-size:10px;"><b>'.$row['actividades'].'</b></td>
                 </tr>';
               }
         $tabla.='
               </tbody>
                 <tr>
-                  <td colspan=2 style="height:14px;"> TOTAL </td>
-                  <td align=center>'.$sum.'</td>
+                  <td style="height:14px; font-size:10px;"> TOTAL </td>
+                  <td style="text-align:right; font-size:10px;"><b>'.$sum.'</b></td>
                 </tr>
             </table>';
       return $tabla;
@@ -229,15 +229,15 @@ class Crep_actprog extends CI_Controller {
         $style='border="1" cellpadding="0" cellspacing="0" class="tabla"';
       }
 
-       $tabla.='<table '.$style.'>
+       $tabla.='
+              <table '.$style.'>
                 <thead>
                   <tr>
-                    <th style="height:18px;" colspan=3>ALINEACI&Oacute;N DE ACTIVIDADES POR A.C.P.</th>
+                    <th style="height:20px; font-size: 10px;" colspan=3>ALINEACI&Oacute;N DE ACTIVIDADES POR A.C.P.</th>
                   </tr>
                   <tr>
-                    <th style="width:3%;" align=center>#</th>
-                    <th style="width:50%;" align=center>ACCION DE CORTO PLAZO '.$this->gestion.'</th>
-                    <th style="width:10%;" align=center>NRO DE ACT.</th>
+                    <th style="width:90%;height:20px;font-size: 10px;" align=center>ACCION DE CORTO PLAZO '.$this->gestion.'</th>
+                    <th style="width:10%;font-size: 10px;" align=center>NRO DE ACT.</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -246,23 +246,22 @@ class Crep_actprog extends CI_Controller {
                 $nro++;
                 $sum=$sum+$row['actividades'];
                 $tabla.='
-                <tr>
-                  <td style="width:3%; height:14px;">'.$nro.'</td>';
+                <tr>';
                   if($tp_rep==2){ /// excel
-                    $tabla.='<td>'.mb_convert_encoding($row['og_codigo'].'.- '.$row['og_objetivo'], 'cp1252', 'UTF-8').'</td>';
+                    $tabla.='<td style="width:90%; height:10px;">'.mb_convert_encoding($row['og_codigo'].'.- '.$row['og_objetivo'], 'cp1252', 'UTF-8').'</td>';
                   }
                   else{ /// normal
-                    $tabla.='<td>'.$row['og_codigo'].'.- '.$row['og_objetivo'].'</td>';
+                    $tabla.='<td style="width:90%; height:10px;font-size:9px;">&nbsp;<b>'.$row['og_codigo'].'.- </b>'.$row['og_objetivo'].'</td>';
                   }
                   $tabla.='
-                  <td style="width:10%;" align=center>'.$row['actividades'].'</td>
+                  <td style="width:10%; text-align:right; font-size:10px;"><b>'.$row['actividades'].'</b></td>
                 </tr>';
               }
         $tabla.='
               </tbody>
                 <tr>
-                  <td style="height:14px;" colspan=2> TOTAL </td>
-                  <td align=center>'.$sum.'</td>
+                  <td style="height:14px; font-size:10px;"> TOTAL </td>
+                  <td style="text-align:right; font-size:10px;"><b>'.$sum.'</b></td>
                 </tr>
             </table>';
       return $tabla;
@@ -275,22 +274,57 @@ class Crep_actprog extends CI_Controller {
       $data['mes'] = $this->mes_nombre();
       if(count($data['departamento'])!=0){
         if($dep_id==0){
-          $data['titulo']='INSTITUCIONAL';
+          $titulo='INSTITUCIONAL';
           $data['aling_prog']=$this->alineacion_operacion_programa_institucional(1); /// Institucional Programa
           $data['aling_og']=$this->alineacion_operacion_ogestion_institucional(1); /// Institucional Ogestion
         }
         else{
-          $data['titulo']=strtoupper($data['departamento'][0]['dep_departamento']);
+          $titulo=strtoupper($data['departamento'][0]['dep_departamento']);
           $data['aling_prog']=$this->alineacion_operacion_programa_regional($dep_id,1); /// Oficina Nacional Programa
           $data['aling_og']=$this->alineacion_operacion_ogestion_regional($dep_id,1); /// pando Programa
         }
         
-          $this->load->view('admin/reportes_cns/resumen_actividad_programa/reporte_alineacion_poa', $data);
+        $data['cabecera']='
+        <page_header>
+          <br><div class="verde"></div>
+          <table class="page_header" border="0">
+              <tr>
+                <td style="width: 100%; text-align: left">
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
+                      
+                      <td width=80%; align=left>
+                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                          <tr>
+                              <td style="width:100%; height: 1.2%; font-size: 25px;"><b>CAJA NACIONAL DE SALUD</b></td>
+                          </tr>
+                          <tr>
+                            <td style="width:100%; height: 1.2%; font-size: 15px;">CUADRO DE ALINEACION POA - ACP / '.$this->gestion.' - <b>'.$titulo.'</b></td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+          </table>
+        </page_header>';
+        $this->load->view('admin/reportes_cns/resumen_actividad_programa/reporte_alineacion_poa', $data);
       }
       else{
         echo "Error !!!";
       }
     }
+
+    /*----- CABECERA REPORTE -----*/
+    public function cabecera_reporte($titulo){
+      $tabla='';
+
+
+
+      return $tabla;
+    }
+
 
 
     /*----- EXPORTAR ALINEACION POA -----*/

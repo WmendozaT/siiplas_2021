@@ -1968,31 +1968,32 @@ class Producto extends CI_Controller {
       $id_f = $this->model_faseetapa->get_id_fase($proy_id);
       $enlaces=$this->menu_modelo->get_Modulos_programacion(2);
       $tabla='';
-      $tabla.='<nav>
-              <ul>
-                  <li>
-                      <a href='.site_url("admin").'/dashboard'.' title="MENU PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
-                  </li>
-                  <li class="text-center">
-                      <a href='.base_url().'index.php/admin/proy/mis_proyectos/1'.' title="PROGRAMACI&Oacute;N POA"> <span class="menu-item-parent">PROGRAMACI&Oacute;N POA</span></a>
-                  </li>';
-                  if(count($id_f)!=0){
-                      for($i=0;$i<count($enlaces);$i++){ 
-                          $tabla.='
-                          <li>
-                              <a href="#" >
-                                  <i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>
-                              <ul >';
-                              $submenu= $this->menu_modelo->get_Modulos_sub($enlaces[$i]['o_child']);
-                              foreach($submenu as $row) {
-                                 $tabla.='<li><a href='.base_url($row['o_url'])."/".$id_f[0]['proy_id'].'>'.$row['o_titulo'].'</a></li>';
-                              }
-                          $tabla.='</ul>
-                          </li>';
-                      }
-                  }
-              $tabla.='
-              </ul>
+      $tabla.='
+          <nav>
+            <ul>
+                <li>
+                    <a href='.site_url("admin").'/dashboard'.' title="MENU PRINCIPAL"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">MEN&Uacute; PRINCIPAL</span></a>
+                </li>
+                <li class="text-center">
+                    <a href='.base_url().'index.php/admin/proy/mis_proyectos/1'.' title="PROGRAMACI&Oacute;N POA"> <span class="menu-item-parent">PROGRAMACI&Oacute;N POA</span></a>
+                </li>';
+                if(count($id_f)!=0){
+                    for($i=0;$i<count($enlaces);$i++){ 
+                        $tabla.='
+                        <li>
+                            <a href="#" >
+                                <i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>
+                            <ul >';
+                            $submenu= $this->menu_modelo->get_Modulos_sub($enlaces[$i]['o_child']);
+                            foreach($submenu as $row) {
+                               $tabla.='<li><a href='.base_url($row['o_url'])."/".$id_f[0]['proy_id'].'>'.$row['o_titulo'].'</a></li>';
+                            }
+                        $tabla.='</ul>
+                        </li>';
+                    }
+                }
+            $tabla.='
+            </ul>
           </nav>';
 
       return $tabla;

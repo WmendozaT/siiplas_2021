@@ -36,7 +36,7 @@ class Cppto_comparativo extends CI_Controller {
 
     //// ====== COMPARATIVO POR REGIONAL
     /*----- REPORTE COMPARATIVO DE PARTIDAS (ASIG - PROG) ----*/
-    public function reporte_presupuesto_consolidado_comparativo_regional($dep_id,$tp_id){
+/*    public function reporte_presupuesto_consolidado_comparativo_regional($dep_id,$tp_id){
       $data['mes'] = $this->mes_nombre();
       $data['regional']=$this->model_proyecto->get_departamento($dep_id);
       $data['titulo_reporte']='CONSOLIDADO_PARTIDAS_NACIONAL';
@@ -116,21 +116,21 @@ class Cppto_comparativo extends CI_Controller {
           //$data['tabla'] = 'REGIONAL NO AJUSTADO';
           $data['tabla'] =$this->comparativo_update_partidas_normal_regional($partidas_asig,$partidas_prog,$dep_id);
         }
-        //echo $data['tabla'];
+        echo $data['tabla'];
         //$data['tabla']=$tabla;
 
-        $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo_regional', $data);
+       // $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo_regional', $data);
       }
       else{
           echo "<b>ERROR !!!!!</b>";
       }
-    }
+    }*/
 
 
 
     //// ====== DISTRIBUCION PRESUPUESTO NACIONAL
     /*----- REPORTE COMPARATIVO distribucion nacional Presupuesto ----*/
-    public function reporte_presupuesto_consolidado_distribucion_nacional(){
+    /*public function reporte_presupuesto_consolidado_distribucion_nacional(){
       $data['mes'] = $this->mes_nombre();
 
       $data['cabecera']='
@@ -223,7 +223,7 @@ class Cppto_comparativo extends CI_Controller {
 
         $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo_regional', $data);
 
-    }
+    }*/
 
 
 
