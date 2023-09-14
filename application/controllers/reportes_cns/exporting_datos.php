@@ -227,23 +227,38 @@
     public function consolidado_partidas_reg_dist_asignadas_institucional(){
       $titulo='CUADRO COMPARATIVO PARTIDAS ASIGNADAS - INSTITUCIONAL';
       $tabla='';
-      $detalle=$this->model_ptto_sigep->lista_detalle_regional_distrital_consolidado_partidas_asignadas_nacional();
+      $detalle=$this->model_ptto_sigep->lista_detalle_regional_distrital_consolidado_partidas_asignadas_nacional(4);
       $tabla.='
+        <style>
+          table{font-size: 9px;
+            width: 100%;
+            max-width:1550px;
+            overflow-x: scroll;
+          }
+          th{
+            padding: 1.4px;
+            text-align: center;
+            font-size: 10px;
+          }
+          td{
+            font-size: 9.5px;
+          }
+        </style>
         <table border="1" cellpadding="0" cellspacing="0" class="tabla">
           <thead>
           <tr>
-            <td>REGIONAL</td>
-            <td>DISTRITAL</td>
-            <td>PARTIDA</td>
-            <td></td>
-            <td>PPTO. ASIGNADO '.$this->gestion.'</td>
-            <td>PPTO. PROG. POA</td>
-            <td>PPTO. CERT. POA</td>
+            <th style="height:30px;">REGIONAL</th>
+            <th>DISTRITAL</th>
+            <th>PARTIDA</th>
+            <th></th>
+            <th>PPTO. ASIGNADO '.$this->gestion.'</th>
+            <th>PPTO. PROG. POA</th>
+            <th>PPTO. CERT. POA</th>
           </tr>
           </thead>
           <tbody>';
       foreach ($detalle as $row){
-        $part_prog=$this->model_insumo->get_partida_programado_certificado_regional_distrital($row['dep_id'],$row['dist_id'],$row['partida']);
+        $part_prog=$this->model_insumo->get_partida_programado_certificado_regional_distrital($row['dep_id'],$row['dist_id'],$row['par_id']);
         $monto_prog=0;$monto_cert=0;
         if(count($part_prog)!=0){
           $monto_prog=$part_prog[0]['ppto_programado'];
@@ -253,7 +268,7 @@
         <tr>
           <td>'.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</td>
           <td>'.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</td>
-          <td>'.$row['partida'].'</td>
+          <td style="text-align:center; font-size:11px">'.$row['partida'].'</td>
           <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
           <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
           <td align="right">'.round($monto_prog,2).'</td>
@@ -278,21 +293,36 @@
     public function consolidado_partidas_asignadas_institucional(){
       $titulo='CUADRO COMPARATIVO PARTIDAS ASIGNADAS - INSTITUCIONAL';
       $tabla='';
-      $detalle=$this->model_ptto_sigep->lista_detalle_consolidado_partidas_asignadas_nacional();
+      $detalle=$this->model_ptto_sigep->lista_detalle_consolidado_partidas_asignadas_nacional(4);
       $tabla.='
+        <style>
+          table{font-size: 9px;
+            width: 100%;
+            max-width:1550px;
+            overflow-x: scroll;
+          }
+          th{
+            padding: 1.4px;
+            text-align: center;
+            font-size: 10px;
+          }
+          td{
+            font-size: 9.5px;
+          }
+        </style>
         <table border="1" cellpadding="0" cellspacing="0" class="tabla">
           <thead>
           <tr>
-            <td>PARTIDA</td>
-            <td></td>
-            <td>PPTO. ASIGNADO '.$this->gestion.'</td>
-            <td>PPTO. PROG. POA</td>
-            <td>PPTO. CERT. POA</td>
+            <th style="height:30px;">PARTIDA</th>
+            <th></th>
+            <th>PPTO. ASIGNADO '.$this->gestion.'</th>
+            <th>PPTO. PROG. POA</th>
+            <th>PPTO. CERT. POA</th>
           </tr>
           </thead>
           <tbody>';
       foreach ($detalle as $row){
-        $part_prog=$this->model_insumo->get_partida_programado_certificado_institucional($row['partida']);
+        $part_prog=$this->model_insumo->get_partida_programado_certificado_institucional($row['par_id']);
         $monto_prog=0;$monto_cert=0;
         if(count($part_prog)!=0){
           $monto_prog=$part_prog[0]['ppto_programado'];
@@ -300,7 +330,7 @@
         }
         $tabla.='
         <tr>
-          <td>'.$row['partida'].'</td>
+          <td style="text-align:center; font-size:11px">'.$row['partida'].'</td>
           <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
           <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
           <td align="right">'.round($monto_prog,2).'</td>
@@ -325,20 +355,35 @@
     public function consolidado_partidas_asignadas_unidad(){
       $titulo='UNIDAD_ORGANIZACIONAL';
       $tabla='';
-      $detalle=$this->model_ptto_sigep->lista_detalle_consolidado_partidas_asignadas_unidades();
+      $detalle=$this->model_ptto_sigep->lista_detalle_consolidado_partidas_asignadas_unidades(4);
       $tabla.='
+        <style>
+          table{font-size: 9px;
+            width: 100%;
+            max-width:1550px;
+            overflow-x: scroll;
+          }
+          th{
+            padding: 1.4px;
+            text-align: center;
+            font-size: 10px;
+          }
+          td{
+            font-size: 9.5px;
+          }
+        </style>
       <table border="1" cellpadding="0" cellspacing="0" class="tabla">
         <thead>
         <tr>
-          <td>REGIONAL</td>
-          <td>DISTRITAL</td>
-          <td>PROGRAMA</td>
-          <td>UNIDAD/ESTABLECIMIENTO/INVERSION</td>
-          <td>PARTIDA</td>
-          <td></td>
-          <td>PPTO. ASIGNADO '.$this->gestion.'</td>
-          <td>PPTO. PROG. POA</td>
-          <td>PPTO. CERT. POA</td>
+          <th style="height:30px;">REGIONAL</th>
+          <th>DISTRITAL</th>
+          <th>PROGRAMA</th>
+          <th>UNIDAD ORGANIZACIONAL</th>
+          <th>PARTIDA</th>
+          <th></th>
+          <th>PPTO. ASIGNADO '.$this->gestion.'</th>
+          <th>PPTO. PROG. POA</th>
+          <th>PPTO. CERT. POA</th>
         </tr>
         </thead>
         <tbody>';
@@ -363,7 +408,7 @@
             }
             $tabla.='
             
-            <td>'.$row['partida'].'</td>
+            <td style="text-align:center; font-size:11px">'.$row['partida'].'</td>
             <td>'.mb_convert_encoding($row['par_nombre'], 'cp1252', 'UTF-8').'</td>
             <td align="right">'.round($row['ppto_partida_asignado_gestion'],2).'</td>
             <td align="right">'.round($monto_prog,2).'</td>
@@ -1335,183 +1380,5 @@
           show_404();
       }
     }
-
-
-    /*----------------------------------- PRODUCTOS ----------------------------*/
-/*    public function temporalizacion_prod($prod_id,$gestion){
-        $prod=$this->model_producto->get_producto_id($prod_id); /// Producto Id
-        $programado=$this->model_producto->producto_programado($prod_id,$gestion); /// Producto Programado
-
-        $m[0]='g_id';
-        $m[1]='enero';
-        $m[2]='febrero';
-        $m[3]='marzo';
-        $m[4]='abril';
-        $m[5]='mayo';
-        $m[6]='junio';
-        $m[7]='julio';
-        $m[8]='agosto';
-        $m[9]='septiembre';
-        $m[10]='octubre';
-        $m[11]='noviembre';
-        $m[12]='diciembre';
-
-        for ($i=1; $i <=12 ; $i++) { 
-            $prog[1][$i]=0;
-            $prog[2][$i]=0;
-            $prog[3][$i]=0;
-        }
-
-        $pa=0;
-        if(count($programado)!=0){
-            for ($i=1; $i <=12 ; $i++) { 
-                $prog[1][$i]=$programado[0][$m[$i]];
-            } 
-        }
-        
-        $tr_return = '';
-        for($i = 1 ;$i<=12 ;$i++) {
-          $tr_return .= '<td>'.$prog[1][$i].'</td>';
-        }
-        return $tr_return;
-    }*/
-
-/*    public function actividades($prod_id){
-       $actividad=$this->model_actividad->list_act_anual($prod_id); /// Actividad
-       $tabla='';
-       $nro_a=0;
-       if(count($actividad)!=0){
-            foreach ($actividad as $row){
-                $nro_a++;
-                $tabla.='<tr class="modo1" bgcolor="#e5f3f1">';
-                    $tabla.='<td>'.$nro_a.'</td>';
-                    $tabla.='<td></td>';
-                    $tabla.='<td>'.mb_convert_encoding(''.$row['act_actividad'], 'cp1252', 'UTF-8').'</td>';
-                    $tabla.='<td>'.$row['indi_abreviacion'].'</td>';
-                    $tabla.='<td>'.mb_convert_encoding(''.$row['act_indicador'], 'cp1252', 'UTF-8').'</td>';
-                    $tabla.='<td>'.round($row['act_linea_base'],2).'</td>';
-                    $tabla.='<td>'.round($row['act_meta'],2).'</td>';
-                    $tabla.='<td>'.$row['act_ponderacion'].' %</td>';
-                    $tabla.='<td>'.mb_convert_encoding(''.$row['act_fuente_verificacion'], 'cp1252', 'UTF-8').'</td>';
-                    $tabla.='<td>'.$this->temporalizacion_act($row['act_id'],$this->session->userdata('gestion')).'</td>';
-                $tabla.='</tr>';
-            }
-       }
-
-       return $tabla;
-    }*/
-
-    /*----------------------------------- ACTIVIDADES ----------------------------*/
-/*    public function temporalizacion_act($act_id,$gestion){
-        $act=$this->model_actividad->get_actividad_id($act_id); /// programado
-        $programado=$this->model_actividad->actividad_programado($act_id,$gestion); /// Actividad Programado
-
-        $m[0]='g_id';
-        $m[1]='enero';
-        $m[2]='febrero';
-        $m[3]='marzo';
-        $m[4]='abril';
-        $m[5]='mayo';
-        $m[6]='junio';
-        $m[7]='julio';
-        $m[8]='agosto';
-        $m[9]='septiembre';
-        $m[10]='octubre';
-        $m[11]='noviembre';
-        $m[12]='diciembre';
-
-        for ($i=1; $i <=12 ; $i++) { 
-            $prog[1][$i]=0;
-            $prog[2][$i]=0;
-            $prog[3][$i]=0;
-        }
-
-        $pa=0;
-        if(count($programado)!=0){
-            for ($i=1; $i <=12 ; $i++) { 
-                $prog[1][$i]=$programado[0][$m[$i]];
-            } 
-        }
-        
-        $tr_return = '';
-        for($i = 1 ;$i<=12 ;$i++){
-            $tr_return .= '<td>'.$prog[1][$i].'</td>';
-        }
-        return $tr_return;
-    }*/
-
-
-/*    public function get_mes($mes_id){
-      $mes[1]='ENERO';
-      $mes[2]='FEBRERO';
-      $mes[3]='MARZO';
-      $mes[4]='ABRIL';
-      $mes[5]='MAYO';
-      $mes[6]='JUNIO';
-      $mes[7]='JULIO';
-      $mes[8]='AGOSTO';
-      $mes[9]='SEPTIEMBRE';
-      $mes[10]='OCTUBRE';
-      $mes[11]='NOVIEMBRE';
-      $mes[12]='DICIEMBRE';
-
-      $dias[1]='31';
-      $dias[2]='28';
-      $dias[3]='31';
-      $dias[4]='30';
-      $dias[5]='31';
-      $dias[6]='30';
-      $dias[7]='31';
-      $dias[8]='31';
-      $dias[9]='30';
-      $dias[10]='31';
-      $dias[11]='30';
-      $dias[12]='31';
-
-      $valor[1]=$mes[$mes_id];
-      $valor[2]=$dias[$mes_id];
-
-      return $valor;
-    }*/
-
-/*    function mes_nombre(){
-        $mes[1] = 'ENE.';
-        $mes[2] = 'FEB.';
-        $mes[3] = 'MAR.';
-        $mes[4] = 'ABR.';
-        $mes[5] = 'MAY.';
-        $mes[6] = 'JUN.';
-        $mes[7] = 'JUL.';
-        $mes[8] = 'AGOS.';
-        $mes[9] = 'SEPT.';
-        $mes[10] = 'OCT.';
-        $mes[11] = 'NOV.';
-        $mes[12] = 'DIC.';
-        return $mes;
-    }*/
-    /*------------ MENU -----------*/
-/*    function menu($mod){
-        $enlaces=$this->menu_modelo->get_Modulos($mod);
-        for($i=0;$i<count($enlaces);$i++){
-          $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
-        }
-
-        $tabla ='';
-        for($i=0;$i<count($enlaces);$i++){
-          if(count($subenlaces[$enlaces[$i]['o_child']])>0){
-              $tabla .='<li>';
-                  $tabla .='<a href="#">';
-                      $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
-                      $tabla .='<ul>';    
-                          foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
-                          $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
-                      }
-                      $tabla .='</ul>';
-              $tabla .='</li>';
-          }
-        }
-
-        return $tabla;
-    }*/
 
 }

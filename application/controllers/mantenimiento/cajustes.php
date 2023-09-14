@@ -114,7 +114,6 @@ class Cajustes extends CI_Controller {
                       $this->db->update('_productos', $update_alineacion);
                   }
 
-
                 }
               }
 

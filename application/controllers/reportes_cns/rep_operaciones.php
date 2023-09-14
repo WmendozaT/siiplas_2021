@@ -57,14 +57,46 @@ class Rep_operaciones extends CI_Controller {
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
       $data['list']=$this->menu_nacional();
       $data['informacion_consolidado']='';
-      if($this->fun_id==399){
+      if($this->fun_id==399 || $this->fun_id==401){
         $data['informacion_consolidado']='
-        <a href="'.site_url("").'/rep/exportar_requerimientos_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N5" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="18" HEIGHT="18"/>&nbsp;<b>EXPORTAR FORMULARIO 5 (INSTITUCIONAL)</b></a>
-        <a href="'.site_url("").'/rep/exportar_form4_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N4" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR FORMULARIO 4 (INSTITUCIONAL)</b></a>
-        <a href="'.site_url("").'/rep/exportar_detalle_partidas_asignadas_institucional" target=_blank class="btn btn-default" title="CUADRO COMPARATIVO INSTITUCIONAL" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR COMPARATIVO PARTIDAS (INSTITUCIONAL)</b></a>
-        <a href="'.site_url("").'/rep/exportar_detalle_reg_dist_partidas_asignadas_institucional" target=_blank class="btn btn-default" title="EXPORTAR FORM. N4" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR COMPARATIVO PARTIDAS (DISTRIBUCION)</b></a>
-        <a href="'.site_url("").'/rep/exportar_detalle_partidas_unidad" target=_blank class="btn btn-default" title="EXPORTAR FORM. N4" style="font-size:10px;"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>EXPORTAR COMPARATIVO PARTIDAS (UNIDAD)</b></a>
-        <hr>';
+        <div class="row">
+        
+          <div class="col-sm-2">
+            <div class="well well-sm bg-color-darken txt-color-white text-center">
+              <h5>EXPORTAR FORMULARIO N° 5.xls<br><b>INSTITUCIONAL</b></h5>
+              <a href="'.site_url("").'/rep/exportar_requerimientos_institucional" target=_blank title="EXPORTAR FORM. N 5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+            </div>
+          </div>
+
+          <div class="col-sm-2">
+            <div class="well well-sm bg-color-darken txt-color-white text-center">
+              <h5>EXPORTAR FORMULARIO N° 4.xls<br><b>INSTITUCIONAL</b></h5>
+              <a href="'.site_url("").'/rep/exportar_form4_institucional" target=_blank title="CONSOLIDADO FORMULARIO N° 4"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+            </div>
+          </div>
+
+          <div class="col-sm-2">
+            <div class="well well-sm bg-color-teal txt-color-white text-center">
+              <h5>CONSOLIDADO x PARTIDA.xls<br><b>INSTITUCIONAL</b></h5>
+              <a href="'.site_url("").'/rep/exportar_detalle_partidas_asignadas_institucional" target=_blank title="DETALLE PARTIDA INSTITUCIONAL"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+            </div>
+          </div>
+
+          <div class="col-sm-2">
+            <div class="well well-sm bg-color-teal txt-color-white text-center">
+              <h5>CONSOLIDADO x PARTIDA.xls<br><b>REGIONAL / DISTRITAL</b></h5>
+              <a href="'.site_url("").'/rep/exportar_detalle_reg_dist_partidas_asignadas_institucional" target=_blank title="DETALLE PARTIDA por REGIONAL DISTRITAL"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+            </div>
+          </div>
+
+          <div class="col-sm-2">
+            <div class="well well-sm bg-color-teal txt-color-white text-center">
+              <h5>CONSOLIDADO x PARTIDA.xls<br><b>UNIDAD ORGANIZACIONAL</b></h5>
+              <a href="'.site_url("").'/rep/exportar_detalle_partidas_unidad" target=_blank title="DETALLE PARTIDA POR UNIDAD ORGANIZACIONAL"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+            </div>
+          </div>
+          <hr>
+        </div>';
       }
       $data['mensaje']='
       <div class="jumbotron"><h1>Consolidado Programación POA '.$this->gestion.'</h1><p>Reporte consolidado de Programación POA a nivel Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Reportes POA Formulario N° 4 y 5, Notificación POA Mensual por Unidad.</li><li>Genera Reporte Consolidado de Actividades por Regional y Distrital.</li><li>Genera Reporte Consolidado de Requerimientos por Regional y Distrital.</li><li>Genera Reporte de Ejecución Presupuestaria por Unidad Organizacional.</li><li>Genera el nro. de Actividades alineados a cada Acción Regional por Regional y Distrital.</li><li>Genera el nro. de Actividades alineados por cada Programa por Regional y Distrital.</li><li>Genera Reporte de nro. de Modificaciones POA realizados mensualmente por Regional y Distrital.</li><li>Genera Reporte de nro. de Certificaciones POA realizados mensualmente por Regional y Distrital.</li></ol></div>';
