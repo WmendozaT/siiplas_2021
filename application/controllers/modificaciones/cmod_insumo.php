@@ -1665,7 +1665,7 @@ class Cmod_insumo extends CI_Controller {
                             'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
                             'ins_mod' => 2,
                             'ins_tipo_modificacion' => $cite[0]['tipo_modificacion'],
-                            'ins_tp_reg' => 1,
+                            'ins_tp_reg' => 1, //// migracion (1)
                             );
                             $this->db->insert('insumos', $data_to_store); ///// Guardar en Tabla Insumos 
                             $ins_id=$this->db->insert_id();

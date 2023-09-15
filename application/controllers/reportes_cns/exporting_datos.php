@@ -252,8 +252,8 @@
             <th>PARTIDA</th>
             <th></th>
             <th>PPTO. ASIGNADO '.$this->gestion.'</th>
-            <th>PPTO. PROG. POA</th>
-            <th>PPTO. CERT. POA</th>
+            <th>PPTO. PROG. POA '.$this->gestion.'</th>
+            <th>PPTO. CERT. POA '.$this->gestion.'</th>
           </tr>
           </thead>
           <tbody>';
@@ -316,8 +316,8 @@
             <th style="height:30px;">PARTIDA</th>
             <th></th>
             <th>PPTO. ASIGNADO '.$this->gestion.'</th>
-            <th>PPTO. PROG. POA</th>
-            <th>PPTO. CERT. POA</th>
+            <th>PPTO. PROG. POA '.$this->gestion.'</th>
+            <th>PPTO. CERT. POA '.$this->gestion.'</th>
           </tr>
           </thead>
           <tbody>';
@@ -382,8 +382,8 @@
           <th>PARTIDA</th>
           <th></th>
           <th>PPTO. ASIGNADO '.$this->gestion.'</th>
-          <th>PPTO. PROG. POA</th>
-          <th>PPTO. CERT. POA</th>
+          <th>PPTO. PROG. POA '.$this->gestion.'</th>
+          <th>PPTO. CERT. POA '.$this->gestion.'</th>
         </tr>
         </thead>
         <tbody>';

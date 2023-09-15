@@ -790,7 +790,7 @@ class Model_insumo extends CI_Model{
                 from insumos i
                 Inner Join aperturaproyectos as ap on ap.aper_id = i.aper_id
                 Inner Join _proyectos as p on p.proy_id = ap.proy_id
-                where p.dep_id='.$dep_id.' and p.dist_id='.$dist_id.' and i.par_id='.$par_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_ejec_cpoa=\'0\' and i.ins_gestion='.$this->gestion.'
+                where p.dep_id='.$dep_id.' and p.dist_id='.$dist_id.' and i.par_id='.$par_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_tipo_modificacion=\'0\' and i.ins_gestion='.$this->gestion.'
                 group by p.dep_id,p.dist_id,i.par_id
                 order by p.dep_id,p.dist_id,i.par_id asc';
 
@@ -802,7 +802,7 @@ class Model_insumo extends CI_Model{
     function get_partida_programado_certificado_institucional($par_id){
         $sql = 'select i.par_id,SUM(i.ins_costo_total) ppto_programado,SUM(i.ins_monto_certificado) ppto_certificado
                 from insumos i
-                where i.par_id='.$par_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_ejec_cpoa=\'0\' and i.ins_gestion='.$this->gestion.'
+                where i.par_id='.$par_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_tipo_modificacion=\'0\' and i.ins_gestion='.$this->gestion.'
                 group by i.par_id
                 order by i.par_id asc';
 
@@ -814,7 +814,7 @@ class Model_insumo extends CI_Model{
     function get_partida_programado_certificado_unidad($aper_id,$par_id){
         $sql = 'select aper_id,par_id, SUM(ins_costo_total) ppto_programado,SUM(ins_monto_certificado) ppto_certificado
                 from insumos
-                where aper_id='.$aper_id.' and par_id='.$par_id.' and ins_estado!=\'3\' and ins_tp_reg=\'0\' and aper_id!=\'0\' and ins_gestion='.$this->gestion.'
+                where aper_id='.$aper_id.' and par_id='.$par_id.' and ins_estado!=\'3\' and ins_tipo_modificacion=\'0\' and aper_id!=\'0\' and ins_gestion='.$this->gestion.'
                 group by aper_id,par_id';
 
         $query = $this->db->query($sql);
