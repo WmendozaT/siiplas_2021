@@ -998,7 +998,7 @@ class Oregional extends CI_Controller{
       $nro++;
       $tabla.='
       <tr style="font-size: 6.5px;">
-        <td style="width:1%; height:18px;" align=center>'.$nro.'</td>
+        <td style="width:1%; height:18px;" align=center>'.$row['or_id'].'</td>
         <td style="width:2.5%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
         <td style="width:2.5%;" align="center"><b>'.$row['og_codigo'].'</b></td>
         <td style="width:2.5%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>

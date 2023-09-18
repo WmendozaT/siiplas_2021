@@ -45,7 +45,20 @@ class Model_objetivogestion extends CI_Model{
 
     /*---- GET PRESUPUESTO OGESTION - GASTO CORRIENTE (REGIONAL) ----*/
     public function get_ppto_form2_regional($or_id,$dep_id){
-        $sql = 'select prod.or_id,uni.dep_id,SUM(i.ins_costo_total) presupuesto
+        $sql = 'select  prod.or_id, SUM(i.ins_costo_total) presupuesto
+                from _productos prod
+                Inner Join (
+                select prod_id,ins_id
+                from _insumoproducto
+                group by prod_id,ins_id
+
+                ) as ipr On ipr.prod_id=prod.prod_id
+                Inner Join insumos as i On i.ins_id=ipr.ins_id
+              
+                where prod.or_id='.$or_id.' and prod.estado!=\'3\' and i.aper_id!=\'0\' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.' and i.ins_tipo_modificacion=\'0\'
+                group by prod.or_id';
+
+        /*$sql = 'select prod.or_id,uni.dep_id,SUM(i.ins_costo_total) presupuesto
                 from lista_poa_nacional('.$this->gestion.') uni
                 Inner Join _componentes as c On c.pfec_id=uni.pfec_id
                 Inner Join _productos as prod On prod.com_id=c.com_id
@@ -60,7 +73,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join objetivo_gestion as og On og.og_id=opm.og_id
                 where uni.dep_id='.$dep_id.' and prod.or_id='.$or_id.' and prod.estado!=\'3\' and og.g_id='.$this->gestion.' and og.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and c.estado!=\'3\'
     
-                group by prod.or_id,uni.dep_id';
+                group by prod.or_id,uni.dep_id';*/
 
         $query = $this->db->query($sql);
         return $query->result_array();

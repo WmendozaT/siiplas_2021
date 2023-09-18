@@ -637,7 +637,7 @@ class Ccertificacion_poa extends CI_Controller {
               $update_cpoa= array(
                 'cpoa_codigo' => $codigo,
                 'cpoa_estado' => 1,
-                'fun_id'=>$this->fun_id
+                'fun_id'=>$get_cpoa[0]['fun_id']
               );
               $this->db->where('cpoa_id', $cpoa_id);
               $this->db->update('certificacionpoa', $this->security->xss_clean($update_cpoa));

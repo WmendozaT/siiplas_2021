@@ -1617,7 +1617,7 @@ class Programacionpoa extends CI_Controller{
                 <tr>
                   <td style="font-size: 6.5px; height:12px;text-align: center;">'.$nro.'</td>
                   <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
-                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
                   <td style="width: 9%; text-align: left;">'.$componente[0]['com_componente'].'</td>
                   <td style="width: 15%; text-align: left;">'.$rowp['prod_producto'].'</td>
