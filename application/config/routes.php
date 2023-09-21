@@ -66,7 +66,7 @@ $route['me/rep_objetivos_gestion/(:any)'] = 'mestrategico/cobjetivo_gestion/repo
 
 /* OBJETIVOS DE GESTION INSTITUCIONAL */
 $route['me/mis_ogestion'] = 'mestrategico/cobjetivo_gestion/list_objetivos_gestion'; //// Lista Objetivos de Gestion General
-$route['me/rep_ogestion'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion'; //// Reporte Acciones de Corto Plazo Form 1 2022
+$route['me/rep_ogestion/(:any)'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion/$1'; //// Reporte Acciones de Corto Plazo Form 1 2022 (NORMAL - PPTO)
 //$route['me/rep_ogestion_mes'] = 'mestrategico/cobjetivo_gestion/reporte_ogestion_mes'; //// Reporte Objetivo de Gestion General Msnual
 $route['me/alineacion_ope_acp/(:any)'] = 'mestrategico/cobjetivo_gestion/rep_alineacion_acp_act/$1'; ///// ver Alineacion completa de actividades a operaciones y acciones 2022
 $route['me/exportar_alineacion_ope_acp/(:any)'] = 'mestrategico/cobjetivo_gestion/exportar_alineacion_acp_act/$1'; ///// Exportar Alineacion completa de actividades a operaciones y acciones 2022

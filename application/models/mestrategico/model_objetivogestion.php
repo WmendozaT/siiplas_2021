@@ -23,7 +23,25 @@ class Model_objetivogestion extends CI_Model{
 
     /*---- GET PRESUPUESTO OBJERTIVO GESTION - GC/PI (NACIONAL) ----*/
     public function get_ppto_ogestion_gc($og_id){
-            $sql = 'select opm.og_id,og.og_codigo,SUM(i.ins_costo_total) presupuesto
+        $sql = 'select og.og_id,SUM(i.ins_costo_total) presupuesto
+                from objetivo_gestion og
+                Inner Join objetivo_programado_mensual as ogm On ogm.og_id=og.og_id
+                Inner Join objetivos_regionales as oreg On oreg.pog_id=ogm.pog_id
+                Inner Join _productos as prod On prod.or_id=oreg.or_id
+
+                Inner Join (
+                select prod_id,ins_id
+                from _insumoproducto
+                group by prod_id,ins_id
+
+                ) as ipr On ipr.prod_id=prod.prod_id
+                Inner Join insumos as i On i.ins_id=ipr.ins_id
+                
+                where og.og_id='.$og_id.' and oreg.estado!=\'3\' and oreg.g_id='.$this->gestion.' and prod.estado!=\'3\' and i.aper_id!=\'0\' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.' and i.ins_tipo_modificacion=\'0\'
+                group by og.og_id';
+
+
+            /*$sql = 'select opm.og_id,og.og_codigo,SUM(i.ins_costo_total) presupuesto
                 from lista_poa_nacional('.$this->gestion.') uni
                 Inner Join _componentes as c On c.pfec_id=uni.pfec_id
                 Inner Join _productos as prod On prod.com_id=c.com_id
@@ -37,7 +55,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join objetivo_gestion as og On og.og_id=opm.og_id
                 where opm.og_id='.$og_id.' and prod.estado!=\'3\' and og.g_id='.$this->gestion.' and og.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and c.estado!=\'3\'
                 group by opm.og_id,og.og_codigo
-                order by og.og_codigo asc';
+                order by og.og_codigo asc';*/
 
         $query = $this->db->query($sql);
         return $query->result_array();

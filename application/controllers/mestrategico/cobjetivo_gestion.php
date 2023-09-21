@@ -42,14 +42,26 @@ class Cobjetivo_gestion extends CI_Controller {
     }
 
     /*----- REPORTE DE ACCION CORTO PLAZO 2022 ----*/
-    public function reporte_ogestion(){
+    public function reporte_ogestion($tp){
       // tp : 1 distribucion Regional
       // tp : 2 distribuacion mensual
       $data['mes'] = $this->acortoplazo->mes_nombre();
 
       $data['gestion']=$this->gestion;
       $data['cabecera']=$this->acortoplazo->cabecera_acp();
-      $data['lista1']= $this->acortoplazo->distribucion_regional(); /// lista 1
+      if($tp==0){
+        if($this->gestion>2023){
+          $data['lista1']= $this->acortoplazo->distribucion_regional_2024(); /// lista 1
+        }
+        else{
+          $data['lista1']= $this->acortoplazo->distribucion_regional_2023(); /// lista 1
+        }
+        
+      }
+      else{
+        $data['lista1']= $this->acortoplazo->distribucion_regional_ppto(); /// lista 1 con ppto
+      }
+      
       $data['lista2']= $this->acortoplazo->distribucion_mensual(); /// lista 2
       $data['pie']=$this->acortoplazo->pie_form1();
       $this->load->view('admin/mestrategico/objetivos_gestion/reporte_form1', $data);

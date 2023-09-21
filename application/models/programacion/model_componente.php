@@ -202,8 +202,7 @@ class Model_componente extends CI_Model{
         if($this->gestion==2023){ /// excluyendo a todos los servicios
             $sql = 'select *
                 from vista_subactividades
-                where proy_id='.$proy_id.' and aper_gestion='.$this->gestion.'  and (com_id!=\'6303\' and com_id!=\'6304\' and com_id!=\'6305\' and com_id!=\'6306\' and com_id!=\'6307\'  and com_id!=\'6336\' and com_id!=\'6337\' and com_id!=\'6330\' and com_id!=\'6333\' and com_id!=\'6335\' and com_id!=\'6719\' and com_id!=\'6647\')
-                '; 
+                where proy_id='.$proy_id.' and aper_gestion='.$this->gestion.'  and (com_id!=\'6303\' and com_id!=\'6304\' and com_id!=\'6305\' and com_id!=\'6306\' and com_id!=\'6307\'  and com_id!=\'6336\' and com_id!=\'6337\' and com_id!=\'6330\' and com_id!=\'6333\' and com_id!=\'6335\' and com_id!=\'6719\' and com_id!=\'6647\')'; 
         }
         else{
             $sql = 'select *

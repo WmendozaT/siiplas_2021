@@ -19,7 +19,7 @@
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css"> 
         <meta name="viewport" content="width=device-width">
         <!--fin de stiloh-->
-          <script>
+<!--           <script>
             function abreVentana(PDF){
                 var direccion;
                 direccion = '' + PDF;
@@ -40,7 +40,7 @@
             td{
               font-size: 10px;
             }
-        </style>
+        </style> -->
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -101,7 +101,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Reportes</li><li>Marco Estrategico</li><li>formulario SPO - 02, <?php echo $this->session->userdata('gestion')?></li>
+                    <li>Reportes</li><li>Presentación POA</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->

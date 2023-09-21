@@ -22,6 +22,9 @@ class Cconfiguracion extends CI_Controller {
               $this->dist_tp = $this->session->userData('dist_tp');
               $this->tmes = $this->session->userData('trimestre');
               $this->fun_id = $this->session->userData('fun_id');
+              $this->entidad = $this->session->userData('entidad');
+              $this->resolucion=$this->session->userdata('rd_poa');
+              $this->sistema=$this->session->userdata('sistema');
               $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
             }
             else{
@@ -716,10 +719,181 @@ echo "post_max_size = 2000M";*/
 
     /*-------- CARATULA POA (Gasto Corriente)---------*/
     public function ver_caratula_poa($dep_id){
-        $data['regional']=$this->model_proyecto->get_departamento($dep_id);
-        $data['mes'] = $this->mes_nombre();
-        $this->load->view('admin/mantenimiento/caratula_poa/caratula_regional', $data);
+      $data['regional']=$this->model_proyecto->get_departamento($dep_id);
+      $distritales=$this->model_proyecto->list_distritales($dep_id);
+      //$data['mes'] = $this->mes_nombre();
+      $tabla='';
+
+      if($dep_id==2 || $dep_id==5 || $dep_id==7){
+        $tabla.='
+        <page backtop="185mm" backbottom="19mm" backleft="5mm" backright="5mm" pagegroup="new">
+          <page_header>
+            <br><div class="verde"></div>
+            '.$this->cabecera_rep_caratulapoa().'
+          </page_header>';
+          $tabla.='
+            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;" align="center">
+            <tr>
+              <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">
+                <hr style="border:3px">
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                  <tr>
+                      <td style="width:100%; height: 5.5%; font-size: 40px;" align="center"><b>REGIONAL '.strtoupper($data['regional'][0]['dep_departamento']).'</b></td>
+                  </tr>
+                  <tr>
+                      <td style="width:100%; height: 1.2%; font-size: 45px;" align="center">TOMO I de II</td>
+                  </tr>
+                </table>
+                <hr style="border:3px">
+              </td>
+            </tr>
+          </table>
+          '.$this->pie_rep_caratulapoa().'
+        </page>';
+        $tabla.='
+        <page backtop="185mm" backbottom="19mm" backleft="5mm" backright="5mm" pagegroup="new">
+          <page_header>
+            <br><div class="verde"></div>
+            '.$this->cabecera_rep_caratulapoa().'
+          </page_header>';
+          $tabla.='
+            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;" align="center">
+            <tr>
+              <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">
+                <hr style="border:3px">
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                  <tr>
+                      <td style="width:100%; height: 5.5%; font-size: 40px;" align="center"><b>REGIONAL '.strtoupper($data['regional'][0]['dep_departamento']).'</b></td>
+                  </tr>
+                  <tr>
+                      <td style="width:100%; height: 1.2%; font-size: 45px;" align="center">TOMO II de II</td>
+                  </tr>
+                </table>
+                <hr style="border:3px">
+              </td>
+            </tr>
+          </table>
+          '.$this->pie_rep_caratulapoa().'
+        </page>';
+      }
+      else{
+        $tabla.='
+        <page backtop="185mm" backbottom="19mm" backleft="5mm" backright="5mm" pagegroup="new">
+          <page_header>
+            <br><div class="verde"></div>
+            '.$this->cabecera_rep_caratulapoa().'
+          </page_header>';
+          $tabla.='
+            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;" align="center">
+            <tr>
+              <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">
+                <hr style="border:3px">
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                  <tr>
+                      <td style="width:100%; height: 5.5%; font-size: 40px;" align="center"><b>REGIONAL '.strtoupper($data['regional'][0]['dep_departamento']).'</b></td>
+                  </tr>
+                  <tr>
+                      <td style="width:100%; height: 1.2%; font-size: 45px;" align="center">TOMO I de I</td>
+                  </tr>
+                </table>
+                <hr style="border:3px">
+              </td>
+            </tr>
+          </table>
+          '.$this->pie_rep_caratulapoa().'
+        </page>';
+      }
+      
+
+      foreach($distritales as $row){
+        $tabla.='
+        <page backtop="185mm" backbottom="19mm" backleft="5mm" backright="5mm" pagegroup="new">
+          <page_header>
+            <br><div class="verde"></div>
+            '.$this->cabecera_rep_caratulapoa().'
+          </page_header>';
+          $tabla.='
+            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;" align="center">
+            <tr>
+              <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">
+                <hr style="border:2px">
+                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                  <tr>
+                      <td style="width:100%; height: 5.5%; font-size: 32pt;" align="center">'.strtoupper($row['dist_distrital']).'</td>
+                  </tr>
+                </table>
+                <hr style="border:2px">
+              </td>
+            </tr>
+          </table>
+          '.$this->pie_rep_caratulapoa().'
+        </page>';
+      }
+
+      
+      $data['cuerpo']=$tabla;
+
+      $this->load->view('admin/mantenimiento/caratula_poa/caratula_regional', $data);
     }
+
+
+
+    /*--- CABECERA ----*/
+    public function cabecera_rep_caratulapoa(){
+      $tabla='
+        <table class="page_header" border="0">
+          <tr>
+            <td style="width: 100%; text-align: left">
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                <tr>
+                  <td style="width:100%; font-size: 38px;" align="center"><b>'.$this->entidad.'</b></td>
+                </tr>
+                <tr>
+                  <td style="width:100%;  font-size: 20px;" align="center">DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                </tr>
+                <tr>
+                  <td style="width:100%;" align="center"><br><br></td>
+                </tr>
+                <tr>
+                  <td style="width:100%;" align="center"><img src="'.getcwd().'/assets/ifinal/CnsLogo.JPG" alt="" style="width:45%;"></td>
+                </tr>
+                <tr>
+                  <td style="width:100%; font-size: 50px;" align="center"><b>PLAN OPERATIVO ANUAL</b></td>
+                </tr>
+                <tr>
+                  <td style="width:100%; font-size: 40px;" align="center">GESTI&Oacute;N '.$this->gestion.'</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>';
+
+      return $tabla;
+    }
+
+    /*--- PIE REPORTE ----*/
+    public function pie_rep_caratulapoa(){
+      $tabla='
+        <page_footer>
+          <hr>
+          <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99%;" align="center">
+            <tr>
+              <td style="width: 50%; text-align: left; font-size:9px;">
+                Wmendoza7 - <b>POA - '.$this->gestion.' '.$this->resolucion.'</b>
+              </td>
+              <td style="width: 50%; text-align: right; font-size:9px;">
+                <b>'.$this->sistema.'</b>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2"><br></td>
+            </tr>
+          </table>
+        </page_footer>';
+
+      return $tabla;
+    }
+
 
     /*-------- CARATULA POA (Proyectos de Inversion)---------*/
     public function ver_caratula_pi($dep_id){

@@ -1,31 +1,31 @@
 <?php if (!defined('BASEPATH')) exit('No se permite el acceso directo al script');
 
 class Acortoplazo extends CI_Controller{
-        public function __construct (){
-            parent::__construct();
-            $this->load->model('programacion/model_proyecto');
-            $this->load->model('resultados/model_resultado');
-            $this->load->model('mestrategico/model_mestrategico');
-            $this->load->model('mestrategico/model_objetivogestion');
-            $this->load->model('mestrategico/model_objetivoregion');
-            $this->load->model('menu_modelo');
-            $this->load->library('security');
+    public function __construct (){
+        parent::__construct();
+        $this->load->model('programacion/model_proyecto');
+        $this->load->model('resultados/model_resultado');
+        $this->load->model('mestrategico/model_mestrategico');
+        $this->load->model('mestrategico/model_objetivogestion');
+        $this->load->model('mestrategico/model_objetivoregion');
+        $this->load->model('menu_modelo');
+        $this->load->library('security');
 
-            $this->gestion = $this->session->userData('gestion');
-            $this->adm = $this->session->userData('adm');
-            //$this->rol = $this->session->userData('rol_id');
-            $this->dist = $this->session->userData('dist');
-            //$this->dist_tp = $this->session->userData('dist_tp');
-            $this->tmes = $this->session->userData('trimestre');
-            $this->fun_id = $this->session->userData('fun_id');
-           // $this->tp_adm = $this->session->userData('tp_adm');
-            $this->verif_mes=$this->session->userData('mes_actual');
-            $this->resolucion=$this->session->userdata('rd_poa');
-            $this->tp_adm = $this->session->userData('tp_adm');
-            $this->mes = $this->mes_nombre();
-            $this->dep_id = $this->session->userData('dep_id');
-            $this->conf_form4 = $this->session->userData('conf_form4');
-            $this->conf_form5 = $this->session->userData('conf_form5');
+        $this->gestion = $this->session->userData('gestion');
+        $this->adm = $this->session->userData('adm');
+        //$this->rol = $this->session->userData('rol_id');
+        $this->dist = $this->session->userData('dist');
+        //$this->dist_tp = $this->session->userData('dist_tp');
+        $this->tmes = $this->session->userData('trimestre');
+        $this->fun_id = $this->session->userData('fun_id');
+       // $this->tp_adm = $this->session->userData('tp_adm');
+        $this->verif_mes=$this->session->userData('mes_actual');
+        $this->resolucion=$this->session->userdata('rd_poa');
+        $this->tp_adm = $this->session->userData('tp_adm');
+        $this->mes = $this->mes_nombre();
+        $this->dep_id = $this->session->userData('dep_id');
+        $this->conf_form4 = $this->session->userData('conf_form4');
+        $this->conf_form5 = $this->session->userData('conf_form5');
     }
 
     /*------- TIPO --------*/
@@ -38,8 +38,11 @@ class Acortoplazo extends CI_Controller{
               <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default" title="NUEVO REGISTRO">
                 <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;NUEVO REGISTRO (A.C.P.)
               </a>
-              <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion\');" title="IMPRIMIR ACP DISTRIBUCION REGIONAL" class="btn btn-default">
+              <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion/0\');" title="IMPRIMIR A.C.P." class="btn btn-default">
                 <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;REP. A.C.P. (FORM N° 1)
+              </a>
+              <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion/1\');" title="IMPRIMIR A.C.P. CON PPTO." class="btn btn-default">
+                <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;REP. A.C.P. (FORM N° 1 - PPTO)
               </a>';
               if($this->fun_id==399){
                 $tabla.='&nbsp;<a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default" title="SUBIR ARCHIVO - PDES" >SUBIR OPERACIONES REGIONALES</a><br><br>';
@@ -57,11 +60,11 @@ class Acortoplazo extends CI_Controller{
 
       $tabla ='<input type="hidden" name="base" value="'.base_url().'">';
       $tabla .='<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <div class="jarviswidget jarviswidget-color-darken" >
-                    <header>
-                      <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                      <h2 class="font-md"><strong></strong></h2>  
-                    </header>
+                <div class="jarviswidget jarviswidget-color-darken" >
+                  <header>
+                    <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                    <h2 class="font-md"><strong></strong></h2>  
+                  </header>
                 <div>
                   
                   <div class="widget-body no-padding">
@@ -93,17 +96,11 @@ class Acortoplazo extends CI_Controller{
                           <th style="width:4%;" title="PANDO">PN</th>
                           <th style="width:4%;" title="OFICINA NACIONAL">OFN</th>
                           <th style="width:10%;">MEDIO VERIFICACI&Oacute;N</th>
-                          <th style="width:5%;">PPTO.<br>'.$this->gestion.'</th>
                         </tr>
                       </thead>
                       <tbody>';
                       $nro=0;
                         foreach($ogestion  as $row){
-                          $presupuesto_gc=$this->model_objetivogestion->get_ppto_ogestion_gc($row['og_id']); // ppto Gasto Corriente
-                          $ppto=0;$ppto_pi=0;
-                          if(count($presupuesto_gc)!=0){
-                            $ppto=$presupuesto_gc[0]['presupuesto'];
-                          }
                           $nro++;
                           $tabla .='<tr title='.$row['og_id'].'>';
                             $tabla .='<td>'.$nro.'</td>';
@@ -137,7 +134,6 @@ class Acortoplazo extends CI_Controller{
                               }
                             }
                             $tabla.='<td>'.$row['og_verificacion'].'</td>';
-                            $tabla.='<td align="right">'.number_format(($ppto), 2, ',', '.').'</td>';
                           $tabla.='</tr>';
                         }
                       $tabla .='
@@ -275,8 +271,8 @@ class Acortoplazo extends CI_Controller{
   }
 
 
-    /// FORM 1 Distribucion Regional 2024
-    public function distribucion_regional(){
+    /// FORM 1 Distribucion Regional 2023
+    public function distribucion_regional_2023(){
       $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// LISTA FORM 1 (ACP)
       $tabla='';
       $tabla.='  
@@ -286,14 +282,80 @@ class Acortoplazo extends CI_Controller{
             <th style="width:0.5%;height:20px;">#</th>
             <th style="width:2%;">COD. O.E.</th>
             <th style="width:2%;">COD. ACP.</th>
-            <th style="width:10%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
+            <th style="width:13%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
+            <th style="width:12%;">PRODUCTO</th>
+            <th style="width:12%;">RESULTADO</th>
+            <th style="width:12%;">INDICADOR</th>
+            <th style="width:3%;">LINEA BASE</th>
+            <th style="width:3%;">META</th>
+            <th style="width:3%;" title="CHUQUISACA">CH.</th>
+            <th style="width:3%;" title="LA PAZ">LPZ.</th>
+            <th style="width:3%;" title="COCHABAMBA">CBBA.</th>
+            <th style="width:3%;" title="ORURO">OR.</th>
+            <th style="width:3%;" title="POTOSI">POT.</th>
+            <th style="width:3%;" title="TARIJA">TJA.</th>
+            <th style="width:3%;" title="SANTA CRUZ">SCZ.</th>
+            <th style="width:3%;" title="BENI">BE.</th>
+            <th style="width:3%;" title="PANDO">PAN.</th>
+            <th style="width:3%;" title="OFICINA NACIONAL">OFN.</th>
+            <th style="width:9%;">MEDIO VERIFICACI&Oacute;N</th>
+          </tr>
+        </thead>
+        <tbody>';
+        $nro=0; $monto_total=0;
+        foreach($ogestion  as $row){
+            $prc='';
+            if($row['indi_id']==2){
+              $prc='%';
+            }
+          $nro++;
+           $tabla .='<tr style="font-size: 6px;">';
+            $tabla .='<td style="width:0.5%; height:15px;" align=center>'.$nro.'</td>';
+            $tabla .='<td style="width:2%; font-size: 10px;" align="center" align="center"><b>'.$row['obj_codigo'].'</b></td>';
+            $tabla .='<td style="width:2%; font-size: 10px;" align="center"><b>'.$row['og_codigo'].'</b></td>';
+            $tabla .='<td style="width:13%;">'.$row['og_objetivo'].'</td>';
+            $tabla .='<td style="width:12%;">'.$row['og_producto'].'</td>';
+            $tabla .='<td style="width:12%;">'.$row['og_resultado'].'</td>';
+            $tabla .='<td style="width:12%;">'.$row['og_indicador'].'</td>';
+            $tabla .='<td style="width:3%; text-align: right;">'.round($row['og_linea_base'],2).'</td>';
+            $tabla .='<td style="width:3%; text-align: right;">'.round($row['og_meta'],2).''.$prc.'</td>';
             
-            <th style="width:5%;">PRODUCTO</th>
-            <th style="width:9%;">RESULTADO</th>
-            <th style="width:9%;">INDICADOR</th>
-            <th style="width:8%;">UNIDAD DE MEDIDA</th>
-            <th style="width:10%;">FORMULA</th>
-            <th style="width:2.5%;">LINEA BASE</th>
+            for ($i=1; $i <=10 ; $i++) { 
+              $dep=$this->model_objetivogestion->get_ogestion_regional($row['og_id'],$i);
+              if(count($dep)!=0){
+                $tabla.='<td style="width:3%; text-align: right;">'.round($dep[0]['prog_fis'],2).''.$prc.'</td>';
+              }
+              else{
+                $tabla.='<td style="width:3%;" bgcolor="#f5f5f5" align=center>0</td>';
+              }
+            }
+            $tabla.='<td style="width:10%;">'.$row['og_verificacion'].'</td>';
+          $tabla.='</tr>';
+
+        }
+        $tabla.='
+        </tbody>
+       </table>';
+
+      return $tabla;
+    }
+
+    /// FORM 1 Distribucion Regional 2024
+    public function distribucion_regional_2024(){
+      $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// LISTA FORM 1 (ACP)
+      $tabla='';
+      $tabla.='  
+      <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
+        <thead>
+          <tr style="font-size: 6.5px;" bgcolor="#eceaea" align=center>
+            <th style="width:0.5%;height:20px;">#</th>
+            <th style="width:2%;">COD. O.E.</th>
+            <th style="width:2%;">COD. ACP.</th>
+            <th style="width:12%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
+            <th style="width:11%;">PRODUCTO</th>
+            <th style="width:10.5%;">RESULTADO</th>
+            <th style="width:10%;">INDICADOR</th>
+            <th style="width:3%;">LINEA BASE</th>
             <th style="width:3%;">META</th>
             <th style="width:3%;" title="CHUQUISACA">CH.</th>
             <th style="width:3%;" title="LA PAZ">LPZ.</th>
@@ -351,20 +413,19 @@ class Acortoplazo extends CI_Controller{
     }
 
     /// FORM 1 distribucion con presupuesto
-  /*  public function distribucion_regional2(){
+    public function distribucion_regional_ppto(){
       $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
       $tabla='';
       $tabla.='  
       <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;">
         <thead>
           <tr style="font-size: 6.5px;" bgcolor="#eceaea" align=center>
-            <th style="width:1%;height:20px;">#</th>
+            <th style="width:0.5%;height:20px;">#</th>
             <th style="width:2%;">COD. O.E.</th>
-            <th style="width:2%;">COD. A.E.</th>
             <th style="width:2%;">COD. ACP.</th>
-            <th style="width:11%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
-            <th style="width:10%;">PRODUCTO</th>
-            <th style="width:10%;">RESULTADO</th>
+            <th style="width:12%;">ACCI&Oacute;N DE CORTO PLAZO '.$this->gestion.'</th>
+            <th style="width:11%;">PRODUCTO</th>
+            <th style="width:10.5%;">RESULTADO</th>
             <th style="width:10%;">INDICADOR</th>
             <th style="width:3%;">LINEA BASE</th>
             <th style="width:3%;">META</th>
@@ -398,13 +459,12 @@ class Acortoplazo extends CI_Controller{
             }
           $nro++;
           $tabla .='<tr style="font-size: 6px;">';
-            $tabla .='<td style="width:1%; height:15px;" align=center>'.$nro.'</td>';
-            $tabla .='<td style="width:2%;" align="center">'.$row['obj_codigo'].'</td>';
-            $tabla .='<td style="width:2%;" align="center"></td>';
+            $tabla .='<td style="width:0.5%; height:15px;" align=center>'.$nro.'</td>';
+            $tabla .='<td style="width:2%; font-size: 10px;" align="center" align="center"><b>'.$row['obj_codigo'].'</b></td>';
             $tabla .='<td style="width:2%; font-size: 10px;" align="center"><b>'.$row['og_codigo'].'</b></td>';
-            $tabla .='<td style="width:11%;">'.$row['og_objetivo'].'</td>';
-            $tabla .='<td style="width:10%;">'.$row['og_producto'].'</td>';
-            $tabla .='<td style="width:10%;">'.$row['og_resultado'].'</td>';
+            $tabla .='<td style="width:12%;">'.$row['og_objetivo'].'</td>';
+            $tabla .='<td style="width:11%;">'.$row['og_producto'].'</td>';
+            $tabla .='<td style="width:10.5%;">'.$row['og_resultado'].'</td>';
             $tabla .='<td style="width:10%;">'.$row['og_indicador'].'</td>';
             $tabla .='<td style="width:3%; text-align: right;">'.round($row['og_linea_base'],2).'</td>';
             $tabla .='<td style="width:3%; text-align: right;">'.round($row['og_meta'],2).''.$prc.'</td>';
@@ -427,13 +487,13 @@ class Acortoplazo extends CI_Controller{
         $tabla.='
         </tbody>
         <tr>
-          <td style="height:11px; text-align: right;" colspan=21><b>PRESUPUESTO TOTAL : </b></td>
+          <td style="height:11px; text-align: right;" colspan=20><b>PRESUPUESTO TOTAL : </b></td>
           <td style="text-align: right;">'.number_format($monto_total, 2, ',', '.').'</td>
         </tr>
        </table>';
 
       return $tabla;
-    }*/
+    }
 
     /*----- Distribucion Mensual -----*/
     public function distribucion_mensual(){

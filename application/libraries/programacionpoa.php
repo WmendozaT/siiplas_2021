@@ -1079,26 +1079,26 @@ class Programacionpoa extends CI_Controller{
       </table>
       <hr>
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-          <tr style="border: solid 0px black; text-align: center;">
-              <td style="width:12%; text-align:center;">';
-              if($proyecto[0]['proy_estado']==4 && $this->gestion>2021){
-                $tabla.='<qrcode value="'.$this->session->userdata('rd_poa').'" style="border: none; width: 14mm; color: #1c7368"></qrcode><br><b>POA APROBADO</b>';
-              }
-              $tabla.='
-              </td>
-              <td style="width:80%; height: 5%">
-                  <table align="center" border="0" style="width:100%;">
-                      <tr style="font-size: 23px;font-family: Arial;">
-                          <td style="height: 30%;"><b>PLAN OPERATIVO ANUAL GESTIÓN - '.$this->gestion.'</b></td>
-                      </tr>
-                      <tr style="font-size: 20px;font-family: Arial;">
-                        <td style="height: 5%;">'.$titulo_rep.'</td>
-                      </tr>
-                  </table>
-              </td>
-              <td style="width:10%; text-align:center;">
-              </td>
-          </tr>
+        <tr style="border: solid 0px black; text-align: center;">
+          <td style="width:12%; text-align:center;">';
+          if($proyecto[0]['proy_estado']==4 && $this->gestion>2021){
+            $tabla.='<qrcode value="'.$this->session->userdata('rd_poa').'" style="border: none; width: 14mm; color: #1c7368"></qrcode><br><b>POA APROBADO</b>';
+          }
+          $tabla.='
+          </td>
+          <td style="width:80%; height: 5%">
+            <table align="center" border="0" style="width:100%;">
+              <tr style="font-size: 23px;font-family: Arial;">
+                  <td style="height: 30%;"><b>PLAN OPERATIVO ANUAL GESTIÓN - '.$this->gestion.'</b></td>
+              </tr>
+              <tr style="font-size: 20px;font-family: Arial;">
+                <td style="height: 5%;">'.$titulo_rep.'</td>
+              </tr>
+            </table>
+          </td>
+          <td style="width:10%; text-align:center;">
+          </td>
+        </tr>
       </table>
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px;">              
@@ -1118,7 +1118,7 @@ class Programacionpoa extends CI_Controller{
          <tr>
             <td style="width:1.5%;"></td>
             <td style="width:97%;height: 1%;">
-              <hr>
+              <hr style="border:1px;">
             </td>
             <td style="width:1.5%;"></td>
         </tr>
@@ -1188,7 +1188,7 @@ class Programacionpoa extends CI_Controller{
         <tr>
           <td style="width:1.5%;"></td>
           <td style="width:97%;height: 1%;">
-            <hr>
+            <hr style="border:1px;">
             <br><b style="font-size: 8px;font-family: Arial;">DETALLE : </b>
           </td>
           <td style="width:1.5%;"></td>
@@ -1316,34 +1316,30 @@ class Programacionpoa extends CI_Controller{
         <page orientation="portrait" backtop="50mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
             <page_header>
                 <br><div class="verde"></div>
-                    <table class="page_header" border="0">
-                      <tr>
-                        <td style="width: 100%; text-align: left">
-                          <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99.5%;">
-                              <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                                <td width=20%; text-align:center;"">
-                                </td>
-                                <td width=60%; align=left>
-                                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                                    <tr>
-                                      <td style="width:100%; height: 1.2%; font-size: 25pt; font-family: Arial;" align="center"><b>'.$this->session->userdata('entidad').'</b></td>
-                                    </tr>
-                                    <tr>
-                                      <td style="width:100%; height: 1.2%; font-size: 20pt; font-family: Arial;" align="center">'.strtoupper($proyecto[0]['dep_departamento']).'</td>
-                                    </tr>
-                                    <tr>
-                                      <td style="width:100%; height: 1.2%; font-size: 15pt; font-family: Arial;" align="center">'.strtoupper($proyecto[0]['dist_distrital']).'</td>
-                                    </tr>
-                                  </table>
-                                </td>
-                                <td width=20%; align=left style="font-size: 8px;">
-                                </td>
-                              </tr>
-                          </table>
-                        </td>
-                      </tr>
-                  </table><br>
-                  <div align="center"></div>
+                 
+                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                    <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
+                      <td width=20%; text-align:center;"">
+                      </td>
+                      <td width=60%; align=left>
+                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                          <tr>
+                            <td style="width:100%; height: 1.2%; font-size: 35px; font-family: Arial;" align="center"><b>'.$this->session->userdata('entidad').'</b></td>
+                          </tr>
+                          <tr>
+                            <td style="width:100%; height: 1.2%; font-size: 30px; font-family: Arial;" align="center">'.strtoupper($proyecto[0]['dep_departamento']).'</td>
+                          </tr>
+                          <tr>
+                            <td style="width:100%; height: 1.2%; font-size: 25px; font-family: Arial;" align="center">'.strtoupper($proyecto[0]['dist_distrital']).'</td>
+                          </tr>
+                        </table>
+                      </td>
+                      <td width=20%; align=left style="font-size: 8px;">
+                      </td>
+                    </tr>
+                  </table>
+                  <hr style="border:2px;">
+                
             </page_header>
             <page_footer>
             <hr>
@@ -1351,121 +1347,56 @@ class Programacionpoa extends CI_Controller{
             </page_footer>
                 <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
                   <tr>
-                    <td style="width:100%; height: 50%; font-size: 18pt;" align="center">';
-                       if($proyecto[0]['img']!=''){
-                            $tabla.='<img src="'.getcwd().'/fotos/'.$proyecto[0]['img'].'" class="img-responsive" style="width:80%; height:90%;" align=center />';
-                        }
-                        else{
-                            $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:50%; height:60%;"/>';
-                        }
-                        $tabla.='
-                        <br>
+                    <td style="width:100%; height: 50%; font-size: 18pt; text-align:center">';
+                     if($proyecto[0]['img']!=''){
+                          $tabla.='<img src="'.getcwd().'/fotos/'.$proyecto[0]['img'].'" class="img-responsive" style="width:70%; height:90%;" align=center />';
+                      }
+                      else{
+                          $tabla.='<img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:50%; height:60%;"/>';
+                      }
+                      $tabla.='
+                      <br>
                     </td>
                   </tr>
                   <tr>
                     <td style="width:100%; height: 1.2%; font-size: 12pt;" align="center">
-                        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-                          <tr>
-                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 50px;" align="center"><b>POA '.$this->gestion.'</b></td>
-                          </tr>';
-                            if($proyecto[0]['tn_id']!=0){ 
-                                $tabla.='
-                                <tr>
-                                    <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 20px;" align="center"><br>'.$proyecto[0]['tipo_adm'].'</td>
-                                </tr>';
-                            }
-                          $tabla.='
-                          <tr>
-                            <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 26px;" align="center"><b>'.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev'].'</b></td>
-                          </tr>
-                        </table>
+                      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                          <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 60px;" align="center"><b>POA '.$this->gestion.'</b></td>
+                        </tr>';
+                          if($proyecto[0]['tn_id']!=0){ 
+                              $tabla.='
+                              <tr>
+                                  <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 26px;" align="center"><br>'.$proyecto[0]['tipo_adm'].'</td>
+                              </tr>';
+                          }
+                        $tabla.='
+                        <tr>
+                          <td style="font-family: Arial; width:100%; height: 1.2px; font-size: 26px;" align="center"><b>'.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev'].'</b></td>
+                        </tr>
+                      </table>
                     </td>
                   </tr>
-                </table>';
+                </table><br>';
                  if($proyecto[0]['tn_id']==0){
-                    $servicios=$this->model_componente->lista_subactividad($proyecto[0]['proy_id']);
-                    $size='font-size: 13px;';
-                    if(count($servicios)>12){
-                      $size='font-size: 13px;';
-                    }
-
-                     $tabla.="<br>
-                            <table border=0 style='width:90%;' align=center>
-                            <tr>
-                              <td style='width:50%;'>
-                                <ul>";
-                                $cont=0;
-                                foreach($servicios as $row){
-                                  if(count($this->model_producto->list_prod($row['com_id']))!=0){
-                                    $cont++;
-                                    if($cont<=8){
-                                      $tabla.="<li style='font-family: Arial;height: 12px; ".$size."'><b>".$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion']."</b></li>";
-                                    }
-                                  }
+                    $UnidadesResponsables=$this->model_componente->lista_subactividad($proyecto[0]['proy_id']);
+                     $tabla.="
+                      <table border=0 style='width:100%;' align=center>
+                        <tr>
+                          <td style='width:100%;'>
+                            <hr style='border:2px;'>
+                            <ul>";
+                            $cont=0;
+                              foreach($UnidadesResponsables as $row){
+                                if(count($this->model_producto->list_prod($row['com_id']))!=0){
+                                  $tabla.="<li style='font-family: Arial;height: 15px; font-size: 15px; text-align:justify'>".$row['tipo_subactividad'].' '.$row['serv_descripcion']."</li>";
                                 }
-                        $tabla.="  </ul>
-                              </td>
-                              <td style='width:50%;'>
-                                <ul>";
-                                $cont=0;
-                                foreach($servicios as $row){
-                                  if(count($this->model_producto->list_prod($row['com_id']))!=0){
-                                    $cont++;
-                                    if($cont>8){
-                                      $tabla.= "<li style='height: 15px; ".$size."'><b>".$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion']."</b></li>";
-                                    }
-                                  }
-                                }
-
-                                if($proyecto[0]['te_id']==16){
-                                  if($this->gestion==2020){
-                                    $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>97 - SERVICIO DE LA DEUDA Y TRANSFERENCIAS ".$proyecto[0]['abrev']."</b></li>";
-                                    $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
-                                  }
-                                  else{
-                                    $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
-                                    $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>99 - PAGO DE BENEFICIOS SOCIALES".$proyecto[0]['abrev']."</b></li>";
-                                  }
-                                 
-                                }
-                                elseif ($proyecto[0]['te_id']==12) {
-                                  $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>72 - BIENES Y SERVICIOS ".$proyecto[0]['abrev']."</b></li>";
-                                  $tabla.= "<li style='font-family: Arial;height: 12px; ".$size."'><b>96 - GESTI&Oacute;N DE RIESGOS ".$proyecto[0]['abrev']."</b></li>";
-                                }
-                                elseif($proyecto[0]['te_id']==10 & $proyecto[0]['act_id']!=39){
-                                  $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>72 - BIENES Y SERVICIOS ".$proyecto[0]['abrev']."</b></li>";
-                                  $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>96 - GESTI&Oacute;N DE RIESGOS ".$proyecto[0]['abrev']."</b></li>";
-                                  
-                                  if($this->gestion==2020){
-                                    $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>97 - SERVICIO DE LA DEUDA Y TRANSFERENCIAS ".$proyecto[0]['abrev']."</b></li>";
-                                    $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
-                                  }
-                                  else{
-                                    $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
-                                    $tabla.= "<li style='font-family: Arial;height: 14px; ".$size."'><b>99 - PAGO DE BENEFICIOS SOCIALES ".$proyecto[0]['abrev']."</b></li>";
-                                  }
-                                  
-                                }
-                                elseif ($proyecto[0]['act_id']==250) {
-                                  if($this->gestion==2020){
-                                    $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>97 - SERVICIO DE LA DEUDA Y TRANSFERENCIAS ".$proyecto[0]['abrev']."</b></li>";
-                                    $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
-                                  }
-                                  else{
-                                    $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>98 - TRANSFERENCIAS MINISTERIO DE SALUD ".$proyecto[0]['abrev']."</b></li>";
-                                    $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>99 - PAGO DE BENEFICIOS SOCIALES ".$proyecto[0]['abrev']."</b></li>";
-                                  }
-                                  
-                                }
-                                elseif ($proyecto[0]['act_id']==252) {
-                                  $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>96 - GESTIÓN DE RIESGOS ".$proyecto[0]['abrev']."</b></li>";
-                                  $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>72 - BIENES Y SERVICIOS ".$proyecto[0]['abrev']."</b></li>";
-                                  $tabla.= "<li style='font-family: Arial;height: 11px; ".$size."'><b>73 - MEDICINA DEL TRABAJO ".$proyecto[0]['abrev']."</b></li>";
-                                }
-                        $tabla.= "  </ul>
-                              </td>
-                            </tr>";
-                      $tabla.= "</table>";
+                              }
+                    $tabla.="</ul>
+                            <hr style='border:2px;'>
+                          </td>
+                        </tr>
+                      </table>";
                   }
         $tabla.='
         </page>';
@@ -1558,7 +1489,7 @@ class Programacionpoa extends CI_Controller{
   }
 
   /*----- REPORTE FORMULARIO 4 (2023 - Gasto Corriente, Proyectos de Inversion) ----*/
-  public function operaciones_form4($componente,$proyecto){
+  public function operaciones_form4($com_id,$componente,$proyecto){
     $tabla='';
     
     if($proyecto[0]['tp_id']==1){ /// Proyectos de Inversion
@@ -1591,7 +1522,7 @@ class Programacionpoa extends CI_Controller{
                 </tr>
               </thead>
               <tbody>';
-              $operaciones=$this->model_producto->list_operaciones_pi($componente[0]['com_id']);  /// 2020
+              $operaciones=$this->model_producto->list_operaciones_pi($com_id);  /// 2020
               $nro=0;
               foreach($operaciones as $rowp){
                 $nro++;
@@ -1619,10 +1550,10 @@ class Programacionpoa extends CI_Controller{
                   <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
-                  <td style="width: 9%; text-align: left;">'.$componente[0]['com_componente'].'</td>
-                  <td style="width: 15%; text-align: left;">'.$rowp['prod_producto'].'</td>
-                  <td style="width: 13%; text-align: left;">'.$rowp['prod_resultado'].'</td>
-                  <td style="width:12%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                  <td style="width: 9%; text-align: left;">'.$componente.'</td>
+                  <td style="width: 15%; text-align: justify;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 13%; text-align: justify;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width:12%; text-align: justify;">'.$rowp['prod_indicador'].'</td>
                   <td style="width:2%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
                   <td style="width:2.5%; text-align: center;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>
                   <td style="width:2.5%;" align=center>'.round($rowp['enero'],2).''.$tp.'</td>
@@ -1678,7 +1609,7 @@ class Programacionpoa extends CI_Controller{
               </thead>
               <tbody>';
               $nro=0;
-              $operaciones=$this->model_producto->lista_operaciones($componente[0]['com_id']);
+              $operaciones=$this->model_producto->lista_operaciones($com_id);
               
               foreach($operaciones as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
@@ -1726,10 +1657,10 @@ class Programacionpoa extends CI_Controller{
                   <td style="width: 2%; text-align: center; font-size: 10px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 10px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
                   <td style="width: 2%; text-align: center; font-size: 7px;">'.$rowp['prod_cod'].'</td>
-                  <td style="width: 15%; text-align: left;font-size: 7px;">'.$rowp['prod_producto'].'</td>
-                  <td style="width: 14%; text-align: left;">'.$rowp['prod_resultado'].'</td>
-                  <td style="width: 9%; text-align: left;">'.$uresp.'</td>
-                  <td style="width: 12%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                  <td style="width: 15%; text-align: justify;font-size: 7px;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 14%; text-align: justify;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 9%; text-align: justify;">'.$uresp.'</td>
+                  <td style="width: 12%; text-align: justify;">'.$rowp['prod_indicador'].'</td>
                   <td style="width: 2%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
                   <td style="width: 2.5%; text-align: center;font-size: 10px;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>';
 
@@ -1754,7 +1685,7 @@ class Programacionpoa extends CI_Controller{
                   }
 
                   $tabla.='
-                  <td style="width: 9%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                  <td style="width: 9%; text-align: justify;">'.$rowp['prod_fuente_verificacion'].'</td>
                 </tr>';
 
               }

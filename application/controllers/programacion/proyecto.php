@@ -880,21 +880,32 @@ class Proyecto extends CI_Controller {
   }
 
 
-  /*----- PRESENTACION POA (2020) -----*/
+  /*----- CARATULA UNIDAD ORGANIZACIONAL POA (2023) -----*/
   public  function presentacion_poa($proy_id){
     $data['menu']=$this->programacionpoa->menu(2);
     $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
     if(count($data['proyecto'])!=0){
       $data['mes'] = $this->mes_nombre();
+      $data['cuerpo']=$this->programacionpoa->caratula_poa_gacorriente($data['proyecto']);
       $this->load->view('admin/programacion/reportes/presentacion_poa', $data);
-
-     // $data['regional']=$this->model
-     // $this->load->view('admin/mantenimiento/caratula_poa/caratula_regional', $data);
     }
     else{
       echo "ERROR !!!!";
     }
   }
+
+
+
+  /*----- CUERPO CARATULA -----*/
+/*  public  function cuerpo_caratula($proyecto){
+    $tabla='';
+    $tabla.='';
+
+    return $tabla;
+  }*/
+
+
+
 
   /*----- DATOS GENERALES POA (2020) -----*/
   public  function datos_generales_pi($proy_id){

@@ -14,7 +14,7 @@ ob_start();
 }
 </style>
 
-<page backtop="50mm" backbottom="50mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="50mm" backbottom="35mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <?php echo $cabecera; ?>         
@@ -26,7 +26,7 @@ ob_start();
     <?php echo $lista1;?>
 </page>
 
-<page backtop="50mm" backbottom="50mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="50mm" backbottom="35mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <?php echo $cabecera; ?>         
