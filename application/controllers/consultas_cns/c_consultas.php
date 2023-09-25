@@ -509,6 +509,7 @@ class C_consultas extends CI_Controller {
     }
 
 
+
     /*--- LISTA DE MODIFCACIONES FORMULARIO 4 Y 5 ---*/
     public function list_cites_generados($proy_id){
       $tabla='';
@@ -516,8 +517,50 @@ class C_consultas extends CI_Controller {
         $cites_form5=$this->model_modrequerimiento->list_cites_requerimientos_proy($proy_id);
         $cites_form4=$this->model_modfisica->list_cites_Operaciones_proy($proy_id);
 
+        if($this->fun_id==399){
+           $tabla.='
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <section id="widget-grid" >
+                <div class="well">
+                    <b>RESUMEN DE MODIFICACIONES POA POR MESES</b>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <td>ENE.</td>
+                          <td>FEB.</td>
+                          <td>MAR.</td>
+                          <td>ABR.</td>
+                          <td>MAY.</td>
+                          <td>JUN.</td>
+                          <td>JUL.</td>
+                          <td>AGO.</td>
+                          <td>SEPT.</td>
+                          <td>OCT.</td>
+                          <td>NOV.</td>
+                          <td>DIC.</td>
+                        </tr> 
+                      </thead>
+                      <tbody>
+                        <tr>';
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla.='
+                        <td align="center">';
+                          if(count($this->model_modrequerimiento->list_cites_requerimientos_proy_x_mes($proy_id,$i))!=0){
+                            $tabla.='<a href="'.site_url("").'/rep/consolidado_mod5_mensual/'.$proy_id.'/'.$i.'" target=_blank title="MODIFICACION POA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a>';
+                          }
+                        $tabla.='
+                        </td>';  
+                      }
+                      $tabla.='
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </section>
+            </article>';
+        }
+       
         $tabla.='
-        <hr>
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
           <section id="widget-grid" >
             <section class="col col-6">

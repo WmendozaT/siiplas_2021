@@ -137,6 +137,10 @@ $route['rep/exportar_detalle_reg_dist_partidas_asignadas_institucional'] = 'repo
 $route['rep/exportar_detalle_partidas_asignadas_institucional'] = 'reportes_cns/exporting_datos/consolidado_partidas_asignadas_institucional'; ///// Exportar Consolidado Partidas (PPto Asignado) Institucional
 $route['rep/exportar_detalle_partidas_unidad'] = 'reportes_cns/exporting_datos/consolidado_partidas_asignadas_unidad'; ///// Exportar Consolidado Partidas (PPto Asignado) por Unidad
 
+$route['rep/consolidado_mod5_mensual/(:any)'] = 'modificaciones/cmod_insumo/consolidado_form5_mensual/$1/$2'; ///// Generar Reporte de Modificaciones POa por Meses
+
+
+
 ///=== Reporte Consulta POA Presupuesto por Partidas
 $route['consulta_ppto_poa'] = 'reportes_cns/crep_consultafinanciera/index'; ///// Menu consulta Financiera 2022
 $route['exportar_consulta_ppto_poa/(:any)'] = 'reportes_cns/crep_consultafinanciera/exportar_consulta_financiera/$1/$2/$3'; ///// Menu consulta Financiera 2022

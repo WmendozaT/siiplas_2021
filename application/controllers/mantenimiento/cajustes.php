@@ -101,7 +101,7 @@ class Cajustes extends CI_Controller {
                   $codigo_or = intval(trim($datos[3])); //// cod objetivo regional
                   $codigo_form4 = intval(trim($datos[4])); //// cod form 4
                   $prioridad = intval(trim($datos[5])); //// prioridad
-                  $descripcion = intval(trim($datos[6])); //// descr act
+                  $descripcion = strval(utf8_encode(trim($datos[6]))); //// descr act
 
                   $get_informacion_alineacion=$this->model_objetivogestion->get_alineacion_habilitado_oregional_a_form4($codigo_og,$codigo_or,$dep_id);
 

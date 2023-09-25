@@ -881,80 +881,74 @@ class Cmod_insumo extends CI_Controller {
     $data['cite']=$this->model_modrequerimiento->get_cite_insumo($cite_id);
     if(count($data['cite'])!=0){ /// Nuevo formato de Reporte
 
-        $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],2);
+        $cabecera_modpoa=$this->modificacionpoa->cabecera_modpoa($data['cite'],2);
 
         if($data['cite'][0]['tp_reporte']==0){ /// rep anterior
-          $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id); /// anterior reporte
+          $items_modificados=$this->modificacionpoa->items_modificados_form5($cite_id); /// anterior reporte
         }
         else{
-         $data['items_modificados']=$this->modificacionpoa->items_modificados_form5_historial($cite_id,1); //// Nuevo Reporte
+         $items_modificados=$this->modificacionpoa->items_modificados_form5_historial($cite_id,1); //// Nuevo Reporte
         }
         
-        $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
+        $pie_mod=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
         $data['pie_rep']='MOD_POA_FORM5_'.$data['cite'][0]['cite_nota'].' de '.date('d-m-Y',strtotime($data['cite'][0]['cite_fecha'])).' - '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].' - '.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
 
-        $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
 
+        $data['informacion']='
+        <page orientation="paysage"  backtop="73mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+          <page_header>
+          <br><div class="verde"></div>
+              '.$cabecera_modpoa.'
+          </page_header>
 
-
-/*      if($this->fecha_entrada<strtotime($data['cite'][0]['cite_fecha'])){
-        $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],2);
-
-        if($data['cite'][0]['tp_reporte']==0){ /// rep anterior
-          $data['items_modificados']=$this->modificacionpoa->items_modificados_form5($cite_id); /// anterior reporte
-        }
-        else{
-         $data['items_modificados']=$this->modificacionpoa->items_modificados_form5_historial($cite_id,1); //// Nuevo Reporte
-        }
-        
-        $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
-        $data['pie_rep']='MOD_POA_FORM5_'.$data['cite'][0]['cite_nota'].' de '.date('d-m-Y',strtotime($data['cite'][0]['cite_fecha'])).' - '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].' - '.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
+          <page_footer>
+           '.$pie_mod.'
+          </page_footer>
+          '.$items_modificados.'
+        </page> ';
 
         $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
-      }
-      else{ /// Formato Antiguo de Reporte 2020
-        $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']); 
-        if($data['proyecto'][0]['tp_id']==1){
-          $titulo='
-                  <tr style="font-size: 8pt;">
-                    <td style="height: 1.2%"><b>PROYECTO</b></td>
-                    <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</td>
-                  </tr>
-                  <tr style="font-size: 8pt;">
-                    <td style="height: 1.2%"><b>UNIDAD RESPONSABLE</b></td>
-                    <td style="width:90%;">: '.$data['cite'][0]['serv_cod'].' '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].'</td>
-                  </tr>';
-        }
-        else{
-          $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['cite'][0]['proy_id']);
-          $titulo='       
-                  <tr style="font-size: 8pt;">
-                    <td style="height: 1.2%"><b>'.$data['proyecto'][0]['tipo_adm'].' </b></td>
-                    <td style="width:90%;">: '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' '.$data['proyecto'][0]['tipo'].'   '.strtoupper($data['proyecto'][0]['act_descripcion']).' '.$data['proyecto'][0]['abrev'].'</td>
-                  </tr>
-                  <tr style="font-size: 8pt;">
-                      <td style="height: 1.2%"><b>SUBACTIVIDAD</b></td>
-                      <td style="width:90%;">: '.$data['cite'][0]['serv_cod'].' '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].'</td>
-                  </tr>';
-        }
-
-        $data['titulo']=$titulo;
-        $data['mes'] = $this->mes_nombre();
-        $data['requerimientos']=$this->rep_requerimiento($cite_id); /// listado antiguo
-        $this->load->view('admin/modificacion/requerimientos/reporte_modificacion_requerimientos', $data);
-      }*/
     }
     else{
       echo "Error !!!";
     }
   }
 
+    //// CONSOLIDADO FORMULARIO N5 POR MESES
+    public function consolidado_form5_mensual($proy_id,$mes){
+      $tabla='';
+      $get_mes=$this->model_modrequerimiento->get_mes($mes);
 
+      $cites_mod5=$this->model_modrequerimiento->list_cites_requerimientos_proy_x_mes($proy_id,$mes);
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cites_mod5[0]['proy_id']); /// PROYECTO
+      $data['pie_rep']=$get_mes[0]['m_descripcion'].' '.$this->gestion.' - MOD_POA_FORM5 -'.$proyecto[0]['tipo_adm'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
+      
+      $tabla='';
+      foreach ($cites_mod5 as $row){
+        $cite=$this->model_modrequerimiento->get_cite_insumo($row['cite_id']);
+        if(count($cite)!=0){
+            $cabecera_modpoa=$this->modificacionpoa->cabecera_modpoa($cite,2);
+            $items_modificados=$this->modificacionpoa->items_modificados_form5_historial($row['cite_id'],1); //// Nuevo Reporte
+            $pie_mod=$this->modificacionpoa->pie_modpoa($cite,$row['cite_codigo']);
+        
+            $tabla.='
+            <page orientation="paysage"  backtop="73mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+              <page_header>
+              <br><div class="verde"></div>
+                  '.$cabecera_modpoa.'
+              </page_header>
 
+              <page_footer>
+               '.$pie_mod.'
+              </page_footer>
+              '.$items_modificados.'
+            </page> ';
+        }
+      }
 
-
-
-
+      $data['informacion']=$tabla;
+      $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
+    }
 
 
 

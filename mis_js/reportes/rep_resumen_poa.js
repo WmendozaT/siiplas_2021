@@ -247,6 +247,37 @@
     });
   }
 
+
+  /// ver reportes MODIFICACION POA FORMULARIO 4 Y 5 CLASIFICADO POR MESES
+/*  function ver_mpoa_mensual(proy_id) {
+   // alert(proy_id)
+    $('#titulo_mod').html('<font size=3><b>Cargando ..</b></font>');
+    $('#content_mod').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion</div>');
+    var url = base+"index.php/consultas_cns/c_consultas/get_mpoa_mensual";
+    var request;
+    if (request) {
+        request.abort();
+    }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "proy_id="+proy_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+        $('#titulo_mod').html('<font size=3><b>'+response.titulo_poa+'</b></font>');
+        $('#content_mod').fadeIn(1000).html(response.tabla);
+      }
+      else{
+        alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+    });
+  }*/
+
     /// ver reportes CERTIFICACION POA FORMULARIO 5
   function ver_certpoa(proy_id) {
    // alert(proy_id)

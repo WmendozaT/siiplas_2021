@@ -640,16 +640,33 @@ class Cmod_fisica extends CI_Controller {
      //echo strtotime($data['cite'][0]['cite_fecha'])."---".$this->fecha_entrada;
         if(count($data['cite'])!=0){
           if($this->fecha_entrada<strtotime($data['cite'][0]['cite_fecha'])){
-            $data['cabecera_modpoa']=$this->modificacionpoa->cabecera_modpoa($data['cite'],1);
+            $tabla='';
+            $cabecera_modpoa=$this->modificacionpoa->cabecera_modpoa($data['cite'],1);
             
             if($data['cite'][0]['tp_reporte']==0){ /// rep anterior
-              $data['items_modificados']=$this->modificacionpoa->items_modificados_form4($cite_id); /// anterior reporte
+              $items_modificados=$this->modificacionpoa->items_modificados_form4($cite_id); /// anterior reporte
             }
             else{ /// reporte nuevo 2023
-             $data['items_modificados']=$this->modificacionpoa->items_modificados_form4_historial($cite_id,1); //// Nuevo Reporte
+             $items_modificados=$this->modificacionpoa->items_modificados_form4_historial($cite_id,1); //// Nuevo Reporte
             }
 
-            $data['pie_mod']=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
+            $pie_mod=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
+            
+            $tabla.='
+            <page orientation="paysage"  backtop="73mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+              <page_header>
+              <br><div class="verde"></div>
+                  '.$cabecera_modpoa.'
+              </page_header>
+
+              <page_footer>
+               '.$pie_mod.'
+              </page_footer>
+              '.$items_modificados.'
+            </page> ';
+
+            $data['informacion']=$tabla;
+
             $data['pie_rep']='MOD_POA_FORM4_'.$data['cite'][0]['cite_nota'].' de '.date('d-m-Y',strtotime($data['cite'][0]['cite_fecha'])).' - '.$data['cite'][0]['tipo_subactividad'].' '.$data['cite'][0]['serv_descripcion'].' | '.$data['cite'][0]['tipo_adm'].' '.$data['cite'][0]['act_descripcion'].' '.$data['cite'][0]['abrev'].'/'.$this->gestion.'';
             $this->load->view('admin/modificacion/moperaciones/reporte_modificacion_poa_form4', $data); 
           }
@@ -1120,7 +1137,7 @@ class Cmod_fisica extends CI_Controller {
       if(count($data['cite'])!=0){
         $data['menu']=$this->modificacionpoa->menu(3); //// genera menu
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
-        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']); /// CABECERA
+        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite'],0); /// CABECERA
         $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
         $this->load->view('admin/modificacion/moperaciones/ver_modificado_poa', $data);
       }

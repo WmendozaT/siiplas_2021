@@ -200,7 +200,7 @@ class Crep_actprog extends CI_Controller {
                     $tabla.='<td style="width:90%; height:10px;">'.mb_convert_encoding($row['og_codigo'].'.- '.$row['og_objetivo'], 'cp1252', 'UTF-8').'</td>';
                   }
                   else{ /// normal
-                    $tabla.='<td style="width:90%; height:10px;font-size:9px;">&nbsp;<b>'.$row['og_codigo'].'.- </b>'.$row['og_objetivo'].'</td>';
+                    $tabla.='<td style="width:90%; height:10px;font-size:10.5px;">&nbsp;<b> ACP '.$row['og_codigo'].' - </b>'.$row['og_objetivo'].'</td>';
                   }
                   $tabla.='
                   <td style="width:10%; text-align:right; font-size:10px;"><b>'.$row['actividades'].'</b></td>
@@ -251,7 +251,7 @@ class Crep_actprog extends CI_Controller {
                     $tabla.='<td style="width:90%; height:10px;">'.mb_convert_encoding($row['og_codigo'].'.- '.$row['og_objetivo'], 'cp1252', 'UTF-8').'</td>';
                   }
                   else{ /// normal
-                    $tabla.='<td style="width:90%; height:10px;font-size:9px;">&nbsp;<b>'.$row['og_codigo'].'.- </b>'.$row['og_objetivo'].'</td>';
+                    $tabla.='<td style="width:90%; height:10px;font-size:10.5px;">&nbsp;<b>ACP '.$row['og_codigo'].' - </b>'.$row['og_objetivo'].'</td>';
                   }
                   $tabla.='
                   <td style="width:10%; text-align:right; font-size:10px;"><b>'.$row['actividades'].'</b></td>

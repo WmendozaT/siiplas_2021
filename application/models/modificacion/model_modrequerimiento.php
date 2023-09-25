@@ -15,6 +15,16 @@ class Model_modrequerimiento extends CI_Model{
         $this->dist_tp = $this->session->userData('dist_tp');
     }
 
+    /*------- DATOS MES --------*/
+    public function get_mes($m_id){
+        $sql = 'select *
+                from mes
+                where m_id='.$m_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+    
     /*----- MONTO POA POR SERVICIO -----*/
     function prespuesto_servicio_componente($com_id,$tp_id){
         /*$sql = '
@@ -311,6 +321,19 @@ class Model_modrequerimiento extends CI_Model{
                 where cite_activo=\'1\'
                 order by cite_id desc';
         }
+    
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*---- Get cite Proyecto - Requerimientos ----*/
+    function list_cites_requerimientos_proy_x_mes($proy_id,$mes){
+        $sql = 'select *
+                from lista_modificacion_requerimiento('.$proy_id.','.$this->gestion.')
+                where cite_activo=\'1\' and EXTRACT(MONTH FROM fecha_creacion) = '.$mes.' 
+                order by cite_id desc';
     
 
         $query = $this->db->query($sql);

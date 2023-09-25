@@ -13,17 +13,7 @@ ob_start();
     }
 }
 </style>
-    <page orientation="paysage"  backtop="73mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
-        <page_header>
-        <br><div class="verde"></div>
-            <?php echo $cabecera_modpoa;?> 
-        </page_header>
-
-        <page_footer>
-         <?php echo $pie_mod;?>
-        </page_footer>
-        <?php echo $items_modificados;?>
-    </page>
+    <?php echo $informacion; ?>
 <?php
 
 $content = ob_get_clean();
