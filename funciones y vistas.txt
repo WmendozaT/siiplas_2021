@@ -4081,7 +4081,7 @@ create table insumo_original(
 
 
  ///============== FUNCION LISTA DE POAS CON PRESUPUESTO ASIGNADO Y PROGRAMADO
- CREATE OR REPLACE FUNCTION lista_ppto_poa_nacional(gestion integer) RETURNS TABLE(
+CREATE OR REPLACE FUNCTION lista_ppto_poa_nacional(gestion integer) RETURNS TABLE(
 dep_id numeric,
 da varchar,
 dep_departamento varchar,
@@ -4116,7 +4116,7 @@ Inner Join (
 Inner Join (
         select i.aper_id, SUM(i.ins_costo_total) as programado
                 from insumos i
-                where i.ins_estado!=3
+                where i.ins_estado!=3 and i.ins_tipo_modificacion=0
                 group by i.aper_id
                     
 ) as prog On prog.aper_id=poa.aper_id

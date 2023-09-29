@@ -816,7 +816,7 @@ class Model_ptto_sigep extends CI_Model{
             $sql = 'select p.dep_id, SUM(i.ins_costo_total) as programado
                     FROM lista_poa_gastocorriente_nacional('.$this->gestion.') p
                     Inner Join insumos as i On i.aper_id=p.aper_id
-                    where p.dep_id='.$dep_id.'
+                    where p.dep_id='.$dep_id.' and i.ins_estado!=\'3\' and i.ins_tipo_modificacion=\'0\'
                     group by p.dep_id';
         }
     
@@ -1245,12 +1245,12 @@ class Model_ptto_sigep extends CI_Model{
         if($dep_id==2){ /// Regional La paz
             $sql = 'select *
                 from lista_ppto_poa_nacional('.$this->gestion.')
-                where dep_id='.$dep_id.' and saldo>\'1\'';
+                where dep_id='.$dep_id.' and (saldo>\'2\' or saldo<\'0\') ';
         }
         else{
             $sql = 'select *
                 from lista_ppto_poa_nacional('.$this->gestion.')
-                where dist_id='.$dist_id.' and saldo>\'1\'';
+                where dist_id='.$dist_id.' and (saldo>\'2\' or saldo<\'0\') ';
         }
 
         $query = $this->db->query($sql);

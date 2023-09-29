@@ -302,14 +302,14 @@ class Cmod_insumo extends CI_Controller {
         $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id); /// datos cite
         $tipo_modificacion=$cite[0]['tipo_modificacion'];
 
-        $detalle = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['ins_detalle'])); /// detalle  
-        $cantidad = filter_var($this->security->xss_clean($post['ins_cantidad']), FILTER_SANITIZE_NUMBER_INT); /// cantidad
-        $costo_unitario = filter_var($this->security->xss_clean($post['ins_costo_u']), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); /// costo unitario
+        $detalle = $this->security->xss_clean($post['ins_detalle']); /// detalle  
+        $cantidad = $this->security->xss_clean($post['ins_cantidad']); /// cantidad
+        $costo_unitario = $this->security->xss_clean($post['ins_costo_u']); /// costo unitario
         $costo_total = $this->security->xss_clean($post['costo']); /// costo Total
         $um_id = $this->security->xss_clean($post['ins_um']); /// Unidad de medida
         $partida = $this->security->xss_clean($post['partida_id']); /// partida id
-        //$observacion = $this->security->xss_clean($post['ins_observacion']); /// Observacion
-        $observacion = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['ins_observacion'])); /// observacion  
+        $observacion = $this->security->xss_clean($post['ins_observacion']); /// Observacion
+        //$observacion = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['ins_observacion'])); /// observacion  
         $id = $this->security->xss_clean($post['dato_id']); /// Alineacion id Producto, Actividad
         $producto=$this->model_producto->get_producto_id($id); /// Get producto
         $cite = $this->model_modrequerimiento->get_cite_insumo($cite_id);
@@ -405,8 +405,8 @@ class Cmod_insumo extends CI_Controller {
         $ins_id = $this->security->xss_clean($post['ins_id']); /// Ins id
         $cite_id = $this->security->xss_clean($post['cite_id']); /// cite id
 
-        $ins_id = filter_var($ins_id, FILTER_SANITIZE_NUMBER_INT);
-        $cite_id = htmlspecialchars($cite_id, ENT_QUOTES, 'UTF-8');
+        //$ins_id = filter_var($ins_id, FILTER_SANITIZE_NUMBER_INT);
+        //$cite_id = htmlspecialchars($cite_id, ENT_QUOTES, 'UTF-8');
 
 
         //$insumo = $this->minsumos->get_dato_insumo($ins_id); //// DATOS DEL REQUERIMIENTO
@@ -419,7 +419,8 @@ class Cmod_insumo extends CI_Controller {
           $observacion = $insumo[0]['ins_observacion']; /// Observacion
         }
         else{ /// Aun no esta certificado
-          $detalle = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['detalle'])); /// detalle
+          $detalle = $this->security->xss_clean($post['detalle']); /// detalle
+          //$detalle = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['detalle'])); /// detalle
         //  $costo_unitario = $this->security->xss_clean($post['costou']); /// costo unitario
           $unidad = $this->security->xss_clean($post['umedida']); /// Unidad de medida
           $partida = $this->security->xss_clean($post['par_hijo']); /// costo unitario
@@ -429,7 +430,8 @@ class Cmod_insumo extends CI_Controller {
           //$unidad = filter_var($unidad, FILTER_SANITIZE_STRING); /// Unidad de medida
           $partida = $this->security->xss_clean($post['par_hijo']); /// costo unitario
           //$observacion = filter_var($observacion, FILTER_SANITIZE_STRING); /// Observacion
-          $observacion = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['observacion'])); /// detalle
+          //$observacion = preg_replace('/[^\w\s]/u', '', $this->security->xss_clean($post['observacion'])); /// detalle
+          $observacion = $this->security->xss_clean($post['observacion']); /// detalle
         }
         
         $cantidad = $this->security->xss_clean($post['cantidad']); /// cantidad
@@ -483,7 +485,7 @@ class Cmod_insumo extends CI_Controller {
                   if(!is_null ($post['mm'.$i])){
                     $verif_mes=$this->model_modrequerimiento->get_mes_item($ins_id,$i);
                     if(count($verif_mes)!=0){
-                      $pfin=filter_var($this->security->xss_clean($post['mm'.$i]), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                      $pfin=$this->security->xss_clean($post['mm'.$i]);
                       if($pfin==0){
                         /*----------------- ELIMINA IFIN PROG MES---------------*/
                           $this->db->where('ins_id', $ins_id);
@@ -504,7 +506,7 @@ class Cmod_insumo extends CI_Controller {
 
                     }
                     else{
-                      $pfin=filter_var($this->security->xss_clean($post['mm'.$i]), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                      $pfin=$this->security->xss_clean($post['mm'.$i]);
                       if($pfin!=0){
                           $data_to_store4 = array( 
                             'ins_id' => $ins_id, /// Id Insumo
@@ -928,7 +930,13 @@ class Cmod_insumo extends CI_Controller {
         $cite=$this->model_modrequerimiento->get_cite_insumo($row['cite_id']);
         if(count($cite)!=0){
             $cabecera_modpoa=$this->modificacionpoa->cabecera_modpoa($cite,2);
-            $items_modificados=$this->modificacionpoa->items_modificados_form5_historial($row['cite_id'],1); //// Nuevo Reporte
+            if($cite[0]['tp_reporte']==0){ /// rep anterior
+              $items_modificados=$this->modificacionpoa->items_modificados_form5($row['cite_id']); /// anterior reporte
+            }
+            else{
+              $items_modificados=$this->modificacionpoa->items_modificados_form5_historial($row['cite_id'],1); //// Nuevo Reporte
+            }
+
             $pie_mod=$this->modificacionpoa->pie_modpoa($cite,$row['cite_codigo']);
         
             $tabla.='

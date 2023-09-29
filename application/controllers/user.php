@@ -215,7 +215,7 @@ class User extends CI_Controller{
 
             ///------- Verificando Saldos
 
-/*            if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1 & $this->gestion>2022){
+            if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1 & $this->gestion>2022 & $this->dep_id!=10){
                 
                 $data['popup_saldos']='
                 <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false" style="">
@@ -236,7 +236,7 @@ class User extends CI_Controller{
                         </div>
                     </div>
                 </div>';
-            }*/
+            }
 
             if($rol[0]['r_id']==11){ /// Usuario para ejecucion de proyectos de inversion
                 $data['mensaje']='<div class="alert alert-success" align="center">
@@ -270,15 +270,6 @@ class User extends CI_Controller{
 
             $this->load->view('admin/dashboard',$data);
             
-            /*if($this->fun_id==1365){ /// redireccionando a Cert POA
-    
-                redirect('cert/form_items/76808');
-
-            }
-            else{
-                $this->load->view('admin/dashboard',$data);
-            }*/
-            
         } else{
             $this->session->sess_destroy();
             redirect('/','refresh');
@@ -309,12 +300,13 @@ class User extends CI_Controller{
         $ppto_programado=$programado[0]['programado'];
       }
 
-      if(($ppto_asignado-$ppto_programado)!=0){
+      if(round(($ppto_asignado-$ppto_programado),2)>5 || round(($ppto_asignado-$ppto_programado),2)<0){ /// 
         $valor=1;
       }
 
       return $valor;
     }
+
 
     /*----- UNIDADES CON SALDOS A DISTRBUIR (DASHBOARD) -----*/
     public function lista_unidades_con_saldo($dep_id,$dist_id){
@@ -350,7 +342,7 @@ class User extends CI_Controller{
                     <td style="text-align:right;font-size:8.5px"><b>'.number_format($row['programado'], 2, ',', '.').'</b></td>
                     <td style="text-align:right;font-size:8.5px"><b>'.number_format($row['saldo'], 2, ',', '.').'</b></td>
                     <td style="text-align:center">
-                        <a href="'.site_url("").'/mod/procesos/'.$row['proy_id'].'" title="AJUSTE POA" class="btn btn-default" onClick="imprimir_grafico1()">
+                        <a href="'.site_url("").'/mod/form5/'.$row['proy_id'].'" title="AJUSTE POA" class="btn btn-default" onClick="imprimir_grafico1()">
                             <img src="'.base_url().'assets/Iconos/page_edit.png" WIDTH="20" HEIGHT="20"/>
                         </a>
                     </td>

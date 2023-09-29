@@ -114,7 +114,8 @@ class Genera_informacion extends CI_Controller{
           $rep='';
           $estado='<font color="red"><b>NO APROBADO</b></font>';
           if($row['aper_proy_estado']==4){
-            $rep='<center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" title="REPORTE POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></center>';
+            //$rep='<center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" title="REPORTE POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></center>';
+            $rep='<center><a href="'.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'" target=_blank title="REPORTE POA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></center>';
             $estado='<font color="#1c7368"><b>APROBADO</b></font>'; 
           }
 

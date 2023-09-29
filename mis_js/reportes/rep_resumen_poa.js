@@ -37,6 +37,66 @@
     }
   }
 
+  function doSearch_form5(){
+    var tableReg = document.getElementById('datos_form5');
+    var searchText = document.getElementById('searchTerm_form5').value.toLowerCase();
+    var cellsOfRow="";
+    var found=false;
+    var compareWith="";
+
+    // Recorremos todas las filas con contenido de la tabla
+    for (var i = 1; i < tableReg.rows.length; i++){
+      cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+      found = false;
+      // Recorremos todas las celdas
+      for (var j = 0; j < cellsOfRow.length && !found; j++){
+        compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+        // Buscamos el texto en el contenido de la celda
+        if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+          found = true;
+        }
+      }
+      if(found) {
+        tableReg.rows[i].style.display = '';
+      } else {
+        // si no ha encontrado ninguna coincidencia, esconde la
+        // fila de la tabla
+        tableReg.rows[i].style.display = 'none';
+      }
+    }
+  }
+
+
+  function doSearch_form4(){
+    var tableReg = document.getElementById('datos_form4');
+    var searchText = document.getElementById('searchTerm_form4').value.toLowerCase();
+    var cellsOfRow="";
+    var found=false;
+    var compareWith="";
+
+    // Recorremos todas las filas con contenido de la tabla
+    for (var i = 1; i < tableReg.rows.length; i++){
+      cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+      found = false;
+      // Recorremos todas las celdas
+      for (var j = 0; j < cellsOfRow.length && !found; j++){
+        compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+        // Buscamos el texto en el contenido de la celda
+        if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+          found = true;
+        }
+      }
+      if(found) {
+        tableReg.rows[i].style.display = '';
+      } else {
+        // si no ha encontrado ninguna coincidencia, esconde la
+        // fila de la tabla
+        tableReg.rows[i].style.display = 'none';
+      }
+    }
+  }
+
+
 
   //// Select Regional
   $("#dep_id").change(function () {
