@@ -1449,13 +1449,14 @@ class Mrep_operaciones extends CI_Model {
         if($tp_regional==0){ /// Regional
             $sql = '
             select *
-            from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
-            where dep_id='.$id.'';
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
+                where dep_id='.$id.'';
         }
         else{ /// Distrital
-            $sql = 'select *
-                    from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
-                    where dist_id='.$id.'';
+            $sql = '
+            select *
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
+                where dist_id='.$id.'';
         }
 
         $query = $this->db->query($sql);

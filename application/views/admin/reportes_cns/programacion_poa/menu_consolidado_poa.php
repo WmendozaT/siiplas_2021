@@ -155,6 +155,25 @@
                 </div>
             </div>
 
+
+            <!-- MODAL GET CERTIFICACION POA -->
+            <div class="modal fade" id="modal_getcertpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog" id="certificacion">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                        </div>
+                        <div class="modal-body">
+                        <h2 class="alert alert-info"><center>MIS CERTIFICACIONES POA - <?php echo $this->session->userData('gestion');?></center></h2>
+                            <div class="row">
+                                <div id="titulo_certpoa"></div>
+                                <div id="content_certpoa"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- MODAL EVALUACION POA -->
             <div class="modal fade" id="modal_eval" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog" id="evaluacion">
