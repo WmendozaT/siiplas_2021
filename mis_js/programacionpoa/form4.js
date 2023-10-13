@@ -717,6 +717,7 @@ $(document).ready(function() {
     /// ------ Editar Datos de Modificacion POA (Formulario N° 4)
     $(".mod_form4").on("click", function (e) {
         prod_id = $(this).attr('name');
+
         document.getElementById("prod_id").value=prod_id;
         //alert(prod_id)
         var url = base+"index.php/modificaciones/cmod_fisica/get_form4_mod";
@@ -751,18 +752,18 @@ $(document).ready(function() {
             document.getElementById("mor_id").value = response.producto[0]['or_id'];
 
            if(response.trimestre==1){
-            document.getElementById("mprod").disabled = false;
-            document.getElementById("mresultado").disabled = false;
-            document.getElementById("mverificacion").disabled = false;
+            //document.getElementById("mprod").disabled = false;
+            //document.getElementById("mresultado").disabled = false;
+            //document.getElementById("mverificacion").disabled = false;
 
             document.getElementById("mtipo_i").disabled = false;
             document.getElementById("mlbase").disabled = false;
             document.getElementById("mtp_met").disabled = false;
            }
            else{ 
-            document.getElementById("mprod").disabled = true;
-            document.getElementById("mresultado").disabled = true;
-            document.getElementById("mverificacion").disabled = true;
+            //document.getElementById("mprod").disabled = true;
+            //document.getElementById("mresultado").disabled = true;
+            //document.getElementById("mverificacion").disabled = true;
             
             document.getElementById("mtipo_i").disabled = true;
             document.getElementById("mlbase").disabled = true;

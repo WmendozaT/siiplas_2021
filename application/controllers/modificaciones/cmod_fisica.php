@@ -171,7 +171,7 @@ class Cmod_fisica extends CI_Controller {
         $data['menu']=$this->modificacionpoa->menu(3); //// genera menu
         $data['proyecto'] = $this->model_proyecto->get_id_proyecto($data['cite'][0]['proy_id']);
         $data['datos_cite']=$this->modificacionpoa->datos_cite($data['cite']); /// DATOS CITE
-        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite']);
+        $data['titulo']=$this->modificacionpoa->titulo_cabecera($data['cite'],0);
         $data['indi'] = $this->model_proyecto->indicador(); /// indicador
         $data['metas'] = $this->model_producto->tp_metas(); /// tp metas
 
@@ -306,20 +306,22 @@ class Cmod_fisica extends CI_Controller {
           $indi_id = $this->security->xss_clean($post['mtipo_i']); /// Tipo de Indicador
           $linea_base = $this->security->xss_clean($post['mlbase']); /// Linea Base
           $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
-          $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
-          $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
-          $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
+         // $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
+          //$resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
+          //$mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
         }
         else{
           $indi_id = $producto[0]['indi_id']; /// Tipo de Indicador
           $linea_base = $producto[0]['prod_linea_base']; /// Linea Base
           $tp_meta = $producto[0]['mt_id']; /// Tipo de Meta
-          $prod = $producto[0]['prod_producto']; /// detalle producto
-          $resultado = $producto[0]['prod_resultado']; /// Resultado
-          $mverificacion = $producto[0]['prod_fuente_verificacion']; /// Medio de Verificacion
+          //$prod = $producto[0]['prod_producto']; /// detalle producto
+          //$resultado = $producto[0]['prod_resultado']; /// Resultado
+          //$mverificacion = $producto[0]['prod_fuente_verificacion']; /// Medio de Verificacion
         }
 
-          //$mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
+          $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
+          $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
+          $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
           $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador
           $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
           $meta = $this->security->xss_clean($post['mmeta']); /// Meta

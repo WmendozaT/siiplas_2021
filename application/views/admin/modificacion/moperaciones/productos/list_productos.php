@@ -23,7 +23,7 @@
     	<meta name="viewport" content="width=device-width">
     	<style type="text/css">
         	hr {border: 0; height: 8; box-shadow: inset 0 8px 8px 8px #1c7368;}
-        </style>
+      </style>
 		<style>
 			table{font-size: 10px;
             width: 100%;
@@ -42,13 +42,13 @@
 		        margin:-1px 4px 0 0;
 		        vertical-align:middle;
 		        cursor:pointer;
-		    }
-            #mdialTamanio{
-		      width: 80% !important;
-		    }
-		    #mdialTamanio2{
-		      width: 45% !important;
-		    }
+			    }
+	            #mdialTamanio{
+			      width: 80% !important;
+			    }
+			    #mdialTamanio2{
+			      width: 45% !important;
+			    }
 		</style>
 	</head>
 	<body class="">

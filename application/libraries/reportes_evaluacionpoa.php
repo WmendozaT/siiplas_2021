@@ -766,6 +766,16 @@ class reportes_evaluacionpoa extends CI_Controller{
     /*--- OBTIENE DATOS DE EVALUACIÓN 2020 - APERTURA REGIONAL ---*/
     public function obtiene_datos_evaluacíon_programa_regional($dep_id,$aper_programa,$tipo_evaluacion){
       $nro_ope_eval=0; $nro_cumplidas=0;
+      /*$programadas=$this->model_evalprograma->nro_operaciones_programadas_regional($dep_id,$aper_programa,$this->tmes,4);
+        if(count($programadas)!=0){
+          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
+        }
+
+        if(count($this->model_evalprograma->list_operaciones_evaluadas_regional_trimestre($dep_id,$aper_programa,$this->tmes,$tipo_evaluacion,4))!=0){
+          $nro_cumplidas=$nro_cumplidas+count($this->model_evalprograma->list_operaciones_evaluadas_regional_trimestre($dep_id,$aper_programa,$this->tmes,$tipo_evaluacion,4));
+        }*/
+
+
       for ($i=1; $i <=$this->tmes; $i++) {
         $programadas=$this->model_evalprograma->nro_operaciones_programadas_regional($dep_id,$aper_programa,$i,4);
         if(count($programadas)!=0){

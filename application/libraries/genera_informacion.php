@@ -62,8 +62,11 @@ class Genera_informacion extends CI_Controller{
      
         <br>
         <div align=right>
-          <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/arrow_rotate_clockwise.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;SALIR</a>&nbsp;&nbsp;
-          <a href="'.site_url("").'/ptto_consolidado_comparativo_regional/'.$dep_id.'/4" target=_blank class="btn btn-default" title="CONSOLIDADO ppto"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;PPTO. COMPARATIVO</a>&nbsp;&nbsp;
+          <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/arrow_rotate_clockwise.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;SALIR</a>&nbsp;&nbsp;';
+          if($dep_id!=0 & $dist_id==0){
+            $tabla.='<a href="'.site_url("").'/me/rep_form2/'.$dep_id.'" target=_blank class="btn btn-default" title="FORMULARIO N° 2 (OPERACIONES)"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;FORMULARIO N°2 (OPERACIONES)</a>&nbsp;&nbsp;';
+          }
+        $tabla.='
           <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR DETALLE</a>&nbsp;&nbsp;
           <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;
         </div>
