@@ -368,6 +368,34 @@
     });
   }
 
+  
+  /// ver GET CERTIFICACION POA X ITEMS
+  function ver_getcertpoa(ins_id) {
+    $('#content_getcertpoa').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion</div>');
+    var url = base+"index.php/ejecucion/ccertificacion_poa/get_lista_certificaciones_por_items";
+    var request;
+    if (request) {
+        request.abort();
+    }
+      request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "ins_id="+ins_id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+          $("#content_getcertpoa").html(response.lista);
+      }
+      else{
+        alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+    });
+  }
+
 
   /// ver reportes EVALUACION POA
   function ver_evaluacionpoa(proy_id) {

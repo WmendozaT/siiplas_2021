@@ -70,11 +70,14 @@ class Ccertificacion_poa extends CI_Controller {
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
       $ins_id = $this->security->xss_clean($post['ins_id']); // ins id
+      //$insumo= $this->minsumos->get_requerimiento($ins_id); /// Datos requerimientos productos
+      $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos productos
 
         $tabla='';
         $ins_certificado=$this->model_certificacion->verif_insumo_certificados($ins_id);
         if(count($ins_certificado)!=0){
           $tabla.='
+            <b style="font-size:15px;">'.$insumo[0]['par_codigo'].' - '.$insumo[0]['ins_detalle'].'</b>
             <center>
               <table>
                 <tr>';

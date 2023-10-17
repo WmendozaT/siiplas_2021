@@ -666,7 +666,7 @@ class C_consultas extends CI_Controller {
 
 
 
-    /*--- GET DATOS CERTIFICACION POA POR UNIDAD 2022 ---*/
+    /*--- GET DATOS CERTIFICACION POA POR UNIDAD 2023 ---*/
     public function get_certpoa(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();

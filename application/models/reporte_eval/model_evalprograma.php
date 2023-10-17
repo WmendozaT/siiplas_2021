@@ -166,7 +166,7 @@ class Model_evalprograma extends CI_Model{
             $sql = '
                 select poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(pr.prod_id) total
                 from aperturaprogramatica apg
-                Inner Join lista_poa_gastocorriente_nacional(2023) as poa On poa.prog=apg.aper_programa
+                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.prog=apg.aper_programa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as pr On pr.com_id=c.com_id
                  Inner Join (

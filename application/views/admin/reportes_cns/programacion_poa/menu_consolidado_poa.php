@@ -156,8 +156,8 @@
             </div>
 
 
-            <!-- MODAL GET CERTIFICACION POA -->
-            <div class="modal fade" id="modal_getcertpoa" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <!-- MODAL GET CERTIFICACION POA x ITEMS -->
+            <div class="modal fade" id="modal_getcpoas" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog" id="certificacion">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -166,8 +166,7 @@
                         <div class="modal-body">
                         <h2 class="alert alert-info"><center>MIS CERTIFICACIONES POA - <?php echo $this->session->userData('gestion');?></center></h2>
                             <div class="row">
-                                <div id="titulo_certpoa"></div>
-                                <div id="content_certpoa"></div>
+                                <div id="content_getcertpoa"></div>
                             </div>
                         </div>
                     </div>

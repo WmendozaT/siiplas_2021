@@ -838,7 +838,7 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#e4f3dc"><b>'.$row['form4_cod'].'</b></td>';
                 $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3">';
                   if($row['ins_ejec_cpoa']==1){
-                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_certpoas" class="btn btn-default" name="'.$row['ins_id'].'" onclick="ver_evaluacionpoa('.$row['ins_id'].');" title="VER MIS CERTIFICACIONES POA- '.$row['ins_id'].'"><img src="'.base_url().'assets/img/ifinal/doc.jpg" WIDTH="35" HEIGHT="35"/></a>';
+                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_getcpoas" class="btn btn-default" name="'.$row['ins_id'].'" onclick="ver_getcertpoa('.$row['ins_id'].');" title="VER MIS CERTIFICACIONES POA - '.$row['ins_id'].'"><img src="'.base_url().'assets/img/ifinal/doc.jpg" WIDTH="35" HEIGHT="35"/></a>';
                   }
                 $tabla.='</td>';
                 $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3"><b>'.$row['par_codigo'].'</b></td>';

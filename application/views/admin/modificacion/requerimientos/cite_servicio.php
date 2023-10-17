@@ -21,18 +21,6 @@
 		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
 		<!--para las alertas-->
     	<meta name="viewport" content="width=device-width">
-<!-- 		<style>
-			table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;;
-						overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-		</style> -->
 	</head>
 	<body class="">
 		<!-- HEADER -->

@@ -102,7 +102,8 @@ class Cmod_insumo extends CI_Controller {
       if ($this->input->post()) {
           $post = $this->input->post();
           $proy_id = $this->security->xss_clean($post['proy_id']); /// Proy id 
-          $cite = preg_replace('/[^\w\s]/u', '', htmlspecialchars($this->security->xss_clean($post['cite']), ENT_QUOTES, 'UTF-8')); /// Cite
+          //$cite = preg_replace('/[^\w\s]/u', '', htmlspecialchars($this->security->xss_clean($post['cite']), ENT_QUOTES, 'UTF-8')); /// Cite
+          $cite=$this->security->xss_clean($post['cite']);
           $fecha = $this->security->xss_clean($post['fm']); /// Fecha
           $com_id = $this->security->xss_clean($post['com_id']); /// Com id
           $tp_mod = $this->security->xss_clean($post['tp_mod']); /// tipo mod
