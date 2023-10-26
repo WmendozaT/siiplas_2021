@@ -846,8 +846,8 @@ public function tabla_detalle_proyectos_clasificado_institucional($matriz,$nro){
         </tbody>
           <tr>
             <td align:right><b>TOTAL</b></td>
-            <td align=right>'.$ppto_total.'</td>
-            <td align=right>'.$disribucion.' %</td>
+            <td align=right>'.number_format($ppto_total, 2, ',', '.').'</td>
+            <td align=right><b>'.$disribucion.' %</b></td>
           </tr>
       </table>
       </center>';

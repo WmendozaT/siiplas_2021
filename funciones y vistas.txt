@@ -725,14 +725,17 @@ $$ LANGUAGE sql
 
 
 FUNCION POA NACIONAL (Gasto Corriente)
+
 CREATE OR REPLACE FUNCTION lista_poa_gastocorriente_nacional(gestion integer) RETURNS TABLE(
 dep_id numeric,
+dep_cod varchar,
 dep_departamento varchar,
-da varchar,
 dist_id integer,
+dist_cod varchar,
 dist_distrital varchar,
-ue varchar,
 abrev varchar,
+da varchar,
+ue varchar,
 prog varchar,
 proy varchar,
 act varchar,
@@ -750,7 +753,7 @@ pfec_estado integer,
 aper_gestion integer) AS
 
 $$
-select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,apg.aper_descripcion,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,te.ta_id,te.tipo_adm,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
+select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,ds.da,ds.ue,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,apg.aper_descripcion,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,te.ta_id,te.tipo_adm,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
 from _proyectofaseetapacomponente pfe
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
 Inner Join _proyectos as p On p.proy_id=pfe.proy_id
@@ -892,14 +895,14 @@ apg.aper_gestion,
 apg.avance_financiero as AVANCE_FINANCIERO_GESTION,
 pfe.pfec_descripcion
 
-                from _proyectofaseetapacomponente pfe
-                        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                        Inner Join _proyectos as p On p.proy_id=pfe.proy_id
-                        Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
-                        Inner Join _departamentos as d On d.dep_id=p.dep_id
-                        Inner Join _distritales as ds On ds.dist_id=p.dist_id
-                        where p.dist_id=id and apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and p.tp_id=1 and apg.aper_estado!=3 and apg.aper_proy_estado=4
-                        order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
+from _proyectofaseetapacomponente pfe
+Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+Inner Join _proyectos as p On p.proy_id=pfe.proy_id
+Inner Join _estadoproyecto as ep On ep.ep_id=p.proy_estado
+Inner Join _departamentos as d On d.dep_id=p.dep_id
+Inner Join _distritales as ds On ds.dist_id=p.dist_id
+where p.dist_id=id and apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and p.tp_id=1 and apg.aper_estado!=3 and apg.aper_proy_estado=4
+order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad asc;
 
 $$ LANGUAGE sql;
 
@@ -909,16 +912,20 @@ $$ LANGUAGE sql;
 FUNCION POA NACIONAL (PROYECTOS DE INVERSION)
 
 
+
+
 CREATE OR REPLACE FUNCTION lista_poa_pinversion_nacional(gestion integer) RETURNS TABLE(
 proy_id numeric,
 aper_id numeric,
-da varchar,
+dep_cod varchar,
 dep_id numeric,
 dep_departamento varchar,
 dist_id integer,
-ue varchar,
+dist_cod varchar,
 dist_distrital varchar,
 abrev varchar,
+da varchar,
+ue varchar,
 prog varchar,
 proy varchar,
 act varchar,
@@ -961,12 +968,14 @@ $$
 select 
 p.proy_id,
 apg.aper_id,
-d.dep_cod as DA,
+d.dep_cod,
 d.dep_id,
 d.dep_departamento,
 ds.dist_id,
-ds.dist_cod as UE,
+ds.dist_cod,
 ds.dist_distrital,
+ds.da,
+ds.ue,
 ds.abrev,
 apg.aper_programa as PROG,
 p.proy_sisin as PROY,
@@ -1350,7 +1359,7 @@ select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_dist
 CONSOLIDADO REQUERIMIENTOS (relación directa) INSUMO-UNIDAD A NIVEL REGIONAL 
 
 
- CREATE OR REPLACE FUNCTION lista_requerimientos_institucional_directo(tp numeric,gestion integer) RETURNS TABLE(
+CREATE OR REPLACE FUNCTION lista_requerimientos_institucional_directo(tp numeric,gestion integer) RETURNS TABLE(
 dep_id numeric,
 dep_cod varchar,
 dep_departamento varchar,
@@ -1358,6 +1367,8 @@ dist_id integer,
 dist_cod varchar,
 dist_distrital varchar,
 abrev varchar,
+da varchar,
+ue varchar,
 aper_id numeric,
 aper_programa varchar,
 aper_proyecto varchar,
@@ -1403,7 +1414,7 @@ mes12 numeric) AS
 
 $$
 
-select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
+select d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,ds.da,ds.ue,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
 p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.form4_cod,i.ins_id,i.par_id,par.par_codigo,par.par_nombre,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_unidad_medida,
 i.ins_estado,i.ins_gestion,i.ins_observacion,i.ins_tipo_modificacion,i.ins_ejec_cpoa,temp.programado_total,temp.mes1,temp.mes2,temp.mes3,temp.mes4,temp.mes5,temp.mes6,temp.mes7,temp.mes8,temp.mes9,temp.mes10,temp.mes11,temp.mes12
 from _proyectofaseetapacomponente pfe
@@ -1420,7 +1431,7 @@ Inner Join vista_temporalidad_insumo as temp On temp.ins_id=i.ins_id
 
 where apg.aper_gestion=gestion and pfe.estado!=3 and p.estado!=3 and apg.aper_estado!=3 and i.aper_id!=0 and i.ins_estado!=3 and p.tp_id=tp
 
-group by d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
+group by d.dep_id,d.dep_cod,d.dep_departamento,ds.dist_id,ds.dist_cod,ds.dist_distrital,ds.abrev,ds.da,ds.ue,apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_id,
 p.proy_sisin,p.proy_nombre,p.tp_id,p.proy_estado,ua.act_descripcion, te.tipo,pfe.pfec_id,i.form4_cod,i.ins_id,i.par_id,par.par_codigo,par.par_nombre,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_unidad_medida,
 i.ins_estado,i.ins_gestion,i.ins_observacion,temp.programado_total,temp.mes1,temp.mes2,temp.mes3,temp.mes4,temp.mes5,temp.mes6,temp.mes7,temp.mes8,temp.mes9,temp.mes10,temp.mes11,temp.mes12
                             
@@ -3372,6 +3383,7 @@ ALTER TABLE public.v_ejec_ppto_partidas
 CREATE OR REPLACE VIEW public.vista_ppto_asignado_gestion_proyecto AS 
 select aper_id, g_id, SUM(importe) ppto_asignado_gestion
 from ptto_partidas_sigep
+where estado!=3
 group by aper_id, g_id;
 
 ALTER TABLE public.vista_ppto_asignado_gestion_proyecto
@@ -3594,7 +3606,7 @@ create table imagenes_proy_inversion(
 
 
 CREATE OR REPLACE FUNCTION public.lista_partidas_ppto_asignadas_gestion_nacional(IN gestion integer)
-  RETURNS TABLE(aper_id numeric, dep_id numeric, dep_departamento character varying, abrev character varying,dist_id integer, dist_distrital character varying, prog character varying, act character varying, proy_id numeric, proy_sisin character varying,tp_id numeric, tipo character varying, actividad character varying, proy_nombre character varying, par_id integer, partida character varying, par_nombre character varying, ppto_partida_asignado_gestion numeric) AS
+  RETURNS TABLE(aper_id numeric, dep_id numeric, dep_departamento character varying, abrev character varying,dist_id integer, dist_distrital character varying,da varchar,ue varchar, prog character varying, act character varying, proy_id numeric, proy_sisin character varying,tp_id numeric, tipo character varying, actividad character varying, proy_nombre character varying, par_id integer, partida character varying, par_nombre character varying, ppto_partida_asignado_gestion numeric) AS
 $BODY$
 
 SELECT 
@@ -3604,6 +3616,8 @@ p.dep_departamento,
 p.abrev,
 p.dist_id,
 p.dist_distrital,
+p.da,
+p.ue,
 p.prog,
 p.act,
 p.proy_id,
@@ -3628,6 +3642,8 @@ p.dep_departamento,
 p.abrev,
 p.dist_id,
 p.dist_distrital,
+p.da,
+p.ue,
 p.prog,
 p.act,
 p.proy_id,
@@ -3963,11 +3979,13 @@ ALTER TABLE public.v_consolidado_temp_ejec_form4_unidad
 CREATE OR REPLACE FUNCTION lista_poa_nacional(gestion integer) RETURNS TABLE(
 dep_id numeric,
 dep_departamento varchar,
-da varchar,
+dep_cod varchar,
 dist_id integer,
 dist_distrital varchar,
-ue varchar,
+dist_cod varchar,
 abrev varchar,
+da varchar,
+ue varchar,
 prog varchar,
 proy varchar,
 act varchar,
@@ -3985,7 +4003,7 @@ aper_gestion integer,
 tp_id numeric) AS
 
 $$
-select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,p.proy_sisin,p.proy_nombre,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion,p.tp_id
+select d.dep_id,d.dep_departamento,d.dep_cod,ds.dist_id,ds.dist_distrital,ds.dist_cod,ds.abrev,ds.da,ds.ue,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,p.proy_sisin,p.proy_nombre,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion,p.tp_id
 from _proyectofaseetapacomponente pfe
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
 Inner Join _proyectos as p On p.proy_id=pfe.proy_id
@@ -3997,6 +4015,7 @@ where p.estado!=3 and apg.aper_gestion=gestion and apg.aper_estado!=3 and pfe.pf
 order by p.dep_id,p.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,p.tp_id asc;
 
 $$ LANGUAGE sql;
+
 
 
 ////////////// MODIFICACION POA REQUERIMIENTOS creacion de tabla 

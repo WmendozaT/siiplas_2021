@@ -106,11 +106,23 @@ class Model_ptto_sigep extends CI_Model{
         return $query->result_array();
     }
 
+    /*------ Lista Consolidado Get detalle de Partidas (Proyecto de Inversion)-----*/
+    public function get_detalle_regional_distrital_consolidado_partidas_asignadas_nacional_pi($dep_id,$dist_id,$par_id){
+        $sql = 'select poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_asignado_gestion
+                from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.') poa
+                where poa.tp_id=\'1\' and poa.dep_id='.$dep_id.' and poa.dist_id='.$dist_id.' and poa.par_id='.$par_id.'
+                group by poa.dep_id,poa.dep_departamento,poa.dist_id,poa.dist_distrital,poa.par_id,poa.partida, poa.par_nombre
+                order by poa.dep_id,poa.dist_id,poa.partida asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*------ Lista Consolidado detalle de Partidas (Asignadas) Institucional (Gasto Corriente o Proyecto de Inversion)-----*/
     public function lista_detalle_consolidado_partidas_asignadas_nacional($tp_id){
         $sql = 'select poa.par_id,poa.partida, poa.par_nombre, SUM(poa.ppto_partida_asignado_gestion) as ppto_partida_asignado_gestion
                 from lista_partidas_ppto_asignadas_gestion_nacional('.$this->gestion.') poa
-                where poa.tp_id='.$tp_id.'
+      
                 group by poa.par_id,poa.partida, poa.par_nombre
                 order by poa.partida asc';
 
@@ -246,20 +258,20 @@ class Model_ptto_sigep extends CI_Model{
 //// =====================================
 
     /*-------------------- Apertura Programatica hijo ------------------------*/
-    public function get_apertura($programa,$proyecto,$actividad){
+    public function get_apertura($da,$ue,$programa,$proyecto,$actividad){
         $sql = 'select *
                 from lista_poa_gastocorriente_nacional('.$this->gestion.')
-                where prog=\''.$programa.'\' and proy=\''.$proyecto.'\' and act=\''.$actividad.'\'  ';
+                where da=\''.$da.'\' and ue=\''.$ue.'\' and prog=\''.$programa.'\' and act=\''.$actividad.'\'  ';
 
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
     /*------- Presupuesto Sigep Inicial (Gasto Corriente) ----------*/
-    public function get_ptto_sigep($programa,$proyecto,$actividad,$partida){
+    public function get_ptto_sigep($da,$ue,$programa,$proyecto,$actividad,$partida){
         $sql = 'select *
                 from ptto_partidas_sigep
-                where aper_programa=\''.$programa.'\' and aper_proyecto=\''.$proyecto.'\' and aper_actividad=\''.$actividad.'\' and partida=\''.$partida.'\' and g_id='.$this->gestion.' and estado!=\'3\'';
+                where da=\''.$da.'\' and ue=\''.$ue.'\' and aper_programa=\''.$programa.'\' and aper_proyecto=\''.$proyecto.'\' and aper_actividad=\''.$actividad.'\' and partida=\''.$partida.'\' and g_id='.$this->gestion.' and estado!=\'3\'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

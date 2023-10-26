@@ -570,23 +570,13 @@ class Cptto_poa extends CI_Controller {
                             $ue=$datos[1]; /// Ue
                             $prog=$datos[2]; /// Aper Programa
                             $proy=trim($datos[3]);
-                            /*if(strlen($proy)==2){
-                              $proy='00'.$proy; /// Aper Proyecto
-                            }*/
                             $act=trim($datos[4]);  /// Aper Actividad
-                            if(strlen($act)==2){
-                              $act='0'.$act;
-                            }
                             $cod_part=trim($datos[5]); /// Partida
-                            if(strlen($cod_part)==3){
-                              $cod_part=$cod_part.'00';
-                            }
-
-                            $importe=(float)$datos[6]; /// Monto
+                            $importe=floatval(trim($datos[6])); /// Monto
 
                           //  echo $this->gestion."<br>";
-                            echo $prog.'- ('.strlen($prog).') -> '.$proy.' ('.strlen($proy).') -> '.$act.' ('.strlen(trim($act)).') ----'.$importe.'-- CODIGO PARTIDA '.is_numeric($cod_part).'<br>';
-                            if(strlen($prog)==3 & strlen($proy)==2 & strlen(trim($act))==3 & $importe!=0 & is_numeric($cod_part)){
+                            //echo $prog.'- ('.strlen($prog).') -> '.$proy.' ('.strlen($proy).') -> '.$act.' ('.strlen(trim($act)).') ----'.$importe.'-- CODIGO PARTIDA '.is_numeric($cod_part).'<br>';
+                            if(strlen(trim($act))==3 & $importe!=0 & is_numeric($cod_part)){
                               //  echo "INGRESA : ".$prog.'-'.$proy.'-'.$act.'..'.$importe."<br>";
                                 $nroo++;
                              //   echo "string<br>";
@@ -598,7 +588,7 @@ class Cptto_poa extends CI_Controller {
                                         $par_id=$partida[0]['par_id'];
                                     }
 
-                                    $ptto=$this->model_ptto_sigep->get_ptto_sigep($prog,$proy,$act,$cod_part);
+                                    $ptto=$this->model_ptto_sigep->get_ptto_sigep($da,$ue,$prog,$proy,$act,$cod_part);
                                     if(count($ptto)!=0){
                                       echo "UPDATES : ".$prog.'-'.$proy.'-'.$act.' cod '.$cod_part.'-- PAR ID : '.$par_id.' ->'.$importe."<br>";
                                        /*------------------- Update Datos ----------------------*/
@@ -614,7 +604,7 @@ class Cptto_poa extends CI_Controller {
                                        /*-------------------------------------------------------*/
                                     }
                                     else{
-                                      echo "INSERTS : ".$nroo." -".$prog.'-'.$proy.'-'.$act.' cod '.$cod_part.'-- PAR ID : '.$par_id.' ->'.$importe."<br>";
+                                      echo "INSERTS : ".$nroo." -> ".$da.' '.$ue.'  '.$prog.'-'.$proy.'-'.$act.' cod '.$cod_part.'-- PAR ID : '.$par_id.' ->'.$importe."<br>";
                                        /*-------------------- Guardando Datos ------------------*/
                                         /*$query=$this->db->query('set datestyle to DMY');
                                         $data_to_store = array( 
@@ -637,7 +627,7 @@ class Cptto_poa extends CI_Controller {
                                 $nro++;
                                 }
                                 else{
-                                  echo "NO INGRESA : ".$prog.'-'.$proy.'-'.$act.'..'.$importe."<br>";
+                                  echo "NO INGRESA : ".$da.'-'.$ue.'- > '.$prog.'-'.$proy.'-'.$act.'..'.$importe."<br>";
                                      /* $partida = $this->minsumos->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                                       $par_id=0;
                                       if(count($partida)!=0){
@@ -663,10 +653,13 @@ class Cptto_poa extends CI_Controller {
                                       /*-------------------------------------------------------*/ 
                                 }
                             }
-                            elseif(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe==0){
-                            $ptto=$this->model_ptto_sigep->get_ptto_sigep($prog,$proy,$act,$cod_part);
-                              if(count($ptto)!=0){
-                                echo "UPDATES 0->VALOR : ".$prog.'-'.$proy.'-'.$act.' cod '.$cod_part.'-- PAR ID : '.$par_id.' ->'.$importe."<br>";
+                            else{
+                              echo "WILMER ".$da.' '.$ue.'- > '.$prog.'-'.$proy.'-'.$act.'-'.$cod_part.' - '.$importe.'<br>';
+                            }
+                            //elseif(strlen($act)==3 & $importe==0){
+                            //$ptto=$this->model_ptto_sigep->get_ptto_sigep($da,$ue,$prog,$proy,$act,$cod_part);
+                              //if(count($ptto)!=0){
+                                //echo "UPDATES 0->VALOR : ".$prog.'-'.$proy.'-'.$act.' cod '.$cod_part.'-- PAR ID : '.$par_id.' ->'.$importe."<br>";
                                  /*------------------- Update Datos ----------------------*/
                                   /*$query=$this->db->query('set datestyle to DMY');
                                   $update_ptto = array(
@@ -678,8 +671,8 @@ class Cptto_poa extends CI_Controller {
                                   $this->db->where('sp_id', $ptto[0]['sp_id']);
                                   $this->db->update('ptto_partidas_sigep', $update_ptto);*/
                                  /*-------------------------------------------------------*/
-                              }
-                            }
+                              //}
+                            //}
                         }
                     }
 
@@ -831,19 +824,19 @@ class Cptto_poa extends CI_Controller {
                       $proy='00'.$proy; /// Aper Proyecto
                     }*/
                     $act=trim($datos[4]);  /// Aper Actividad
-                    if(strlen($act)==2){
+                    /*if(strlen($act)==2){
                       $act='0'.$act;
-                    }
+                    }*/
 
                     //$act='0'.trim($datos[4]);  /// Aper Actividad
                     $cod_part=trim($datos[5]); /// Partida
-                    if(strlen($cod_part)==3){
+                    /*if(strlen($cod_part)==3){
                       $cod_part=$cod_part.'00';
-                    }
+                    }*/
 
                     $importe=floatval($datos[6]); /// Monto
                     //if(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){ //// gestion 2021/2022
-                    if(strlen($prog)==3 & strlen($proy)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){ /// gestion 2023
+                    if(strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){ /// gestion 2024
                         $aper=$this->model_ptto_sigep->get_apertura($da,$ue,$prog,$proy,$act);
                         //$aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
                         if(count($aper)!=0){
@@ -854,7 +847,7 @@ class Cptto_poa extends CI_Controller {
                             }
 
                             //$ptto=$this->model_ptto_sigep->get_ptto_sigep($prog,$proy,$act,$cod_part);
-                            $ptto=$this->model_ptto_sigep->get_ptto_sigep($prog,$proy,$act,$cod_part);
+                            $ptto=$this->model_ptto_sigep->get_ptto_sigep($da,$ue,$prog,$proy,$act,$cod_part);
                             if(count($ptto)!=0){
                                /*------------------- Update Datos ----------------------*/
                                 $query=$this->db->query('set datestyle to DMY');
@@ -916,7 +909,7 @@ class Cptto_poa extends CI_Controller {
                               /*-------------------------------------------------------*/ 
                           }
                     }
-                    elseif(strlen($prog)==2 & strlen($proy)==4 & strlen($act)==3 & $importe==0){
+                    elseif(strlen($act)==3 & $importe==0){
                       $ptto=$this->model_ptto_sigep->get_ptto_sigep($prog,$proy,$act,$cod_part);
                       if(count($ptto)!=0){
                         //echo "UPDATES 0->VALOR : ".$prog.'-'.$proy.'-'.$act.' cod '.$cod_part.'-- PAR ID : '.$par_id.' ->'.$importe."<br>";
@@ -1146,8 +1139,8 @@ class Cptto_poa extends CI_Controller {
     public function comparativo_partidas_ppto_final($dep_id,$aper_id,$tp_tab){ 
      // echo "DEP : ".$dep_id." aper_id : ".$aper_id."<br>";
       $tabla ='';
-      $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,1); // Presupuesto Partidas Programado
-      $partidas_aprobados=$this->model_ptto_sigep->list_ppto_final_aprobado($aper_id); // Presupuesto Partidas Aprobado
+      $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,1); // Presupuesto Partidas asignado
+      $partidas_aprobados=$this->model_ptto_sigep->list_ppto_final_aprobado($aper_id); // Presupuesto Partidas Asignado
       if($tp_tab==1){
         $tab='id="table" class="table table-bordered"';
       }
@@ -1181,7 +1174,7 @@ class Cptto_poa extends CI_Controller {
             if(count($ppto)!=0){
               $monto_final_partida=$ppto[0]['monto'];
             }
-            $dif_monto=$monto_final_partida-$row['monto'];
+            $dif_monto=$monto_final_partida-$row['ppto_asignado'];
             $color='';$sig='';
             if($dif_monto<0){
               $color='#f7b1b0';
@@ -1205,12 +1198,12 @@ class Cptto_poa extends CI_Controller {
                 <td style="width:2%;height:12px;" align=center>'.$nro.'</td>
                 <td style="width:5%;" align=center><b>'.$row['codigo'].'</b></td>
                 <td style="width:30%;">'.$row['nombre'].'</td>
-                <td style="width:10%;" align=right><input type="text" class="form-control" name="monto'.$row['sp_id'].'" id="monto'.$row['sp_id'].'" value="'.round($row['monto'],2).'" title="MODIFICAR MONTO"></td>
+                <td style="width:10%;" align=right><input type="text" class="form-control" name="monto'.$row['sp_id'].'" id="monto'.$row['sp_id'].'" value="'.round($row['ppto_asignado'],2).'" title="MODIFICAR MONTO"></td>
                 <td align=center>'.$boton.' <div id="load'.$row['sp_id'].'" style="display: none"><br><img src="'.base_url().'assets/img/loading.gif" width="25" height="25"/></div></td>
                 <td style="width:12%;" align=right>'.number_format($monto_final_partida, 2, ',', '.').'</td>
                 <td style="width:12%;" align=right>'.$sig.''.number_format($dif_monto, 2, ',', '.').'</td>
               </tr>';
-            $monto_poa=$monto_poa+$row['monto'];
+            $monto_poa=$monto_poa+$row['ppto_asignado'];
             $monto_final=$monto_final+$monto_final_partida;
           }
           
