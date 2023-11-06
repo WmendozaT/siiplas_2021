@@ -215,7 +215,7 @@ class User extends CI_Controller{
 
             ///------- Verificando Saldos
 
-            if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1 & $this->gestion>2022 & $this->dep_id!=10){
+            /*if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1 & $this->gestion>2022 & $this->dep_id!=10){
                 
                 $data['popup_saldos']='
                 <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false" style="">
@@ -236,7 +236,7 @@ class User extends CI_Controller{
                         </div>
                     </div>
                 </div>';
-            }
+            }*/
 
             if($rol[0]['r_id']==11){ /// Usuario para ejecucion de proyectos de inversion
                 $data['mensaje']='<div class="alert alert-success" align="center">

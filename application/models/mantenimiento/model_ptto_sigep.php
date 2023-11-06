@@ -257,11 +257,19 @@ class Model_ptto_sigep extends CI_Model{
     }
 //// =====================================
 
-    /*-------------------- Apertura Programatica hijo ------------------------*/
+    /*------- Apertura Programatica hijo ----------*/
     public function get_apertura($da,$ue,$programa,$proyecto,$actividad){
-        $sql = 'select *
+        if($this->gestion>2023){ /// poa 2024
+            $sql = 'select *
                 from lista_poa_gastocorriente_nacional('.$this->gestion.')
                 where da=\''.$da.'\' and ue=\''.$ue.'\' and prog=\''.$programa.'\' and act=\''.$actividad.'\'  ';
+        }
+        else{ /// poa 2023
+            $sql = 'select *
+                from lista_poa_gastocorriente_nacional('.$this->gestion.')
+                where dep_cod=\''.$da.'\' and dist_cod=\''.$ue.'\' and prog=\''.$programa.'\' and act=\''.$actividad.'\'  ';
+        }
+        
 
         $query = $this->db->query($sql);
         return $query->result_array();

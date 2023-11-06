@@ -541,7 +541,7 @@ class Programacionpoa extends CI_Controller{
                   <thead>
                   <tr>
                     <th bgcolor="#f5f5f5">NRO.</th>
-                    <th bgcolor="#f5f5f5">UNIDAD / COMPONENTE </th>
+                    <th bgcolor="#f5f5f5">UNIDAD RESPONSABLE </th>
                     <th bgcolor="#f5f5f5">PONDERACI&Oacute;N</th>
                     <th bgcolor="#f5f5f5">ACTIVIDADES</th>
                     <th bgcolor="#f5f5f5">FORM. N 4</th>
@@ -551,14 +551,14 @@ class Programacionpoa extends CI_Controller{
                   </thead>
                   <tbody>';
                   $nroc=0; $nro_ppto=0;
-                    $procesos=$this->model_componente->proyecto_componente($proy_id);
-                    foreach($procesos  as $pr){
+                    $procesos=$this->model_componente->lista_subactividad($proy_id);
+                    foreach($procesos as $pr){
                       if(count($this->model_producto->list_prod($pr['com_id']))!=0){
                         $nroc++;
                         $tabla.=
                           '<tr>
                             <td>'.$nroc.'</td>
-                            <td>'.$pr['com_componente'].'</td>
+                            <td>'.$pr['serv_cod'].' '.$pr['tipo_subactividad'].' '.$pr['serv_descripcion'].'</td>
                             <td align=center>'.round($pr['com_ponderacion'],2).'%</td>
                             <td align=center>';
                               if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399 || $this->fun_id==583 || $this->fun_id==600){
@@ -587,7 +587,7 @@ class Programacionpoa extends CI_Controller{
                       
                     }
                   $tabla.='</tbody>';
-                    if($nro_ppto>0){
+                    //if($nro_ppto>0){
                       $tabla.='
                       <tr>
                         <td colspan=6><b>CONSOLIDADO PROGRAMADO PRESUPUESTO TOTAL POR PARTIDAS </b></td>
@@ -597,7 +597,7 @@ class Programacionpoa extends CI_Controller{
                         <td colspan=6><b>CONSOLIDADO PRESUPUESTO COMPARATIVO APROBADO TOTAL POR PARTIDAS </b></td> 
                         <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO COMPARATIVO PTTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>
                       </tr>';
-                    }
+                    //}
                   $tabla.='
                   
                 </table>';

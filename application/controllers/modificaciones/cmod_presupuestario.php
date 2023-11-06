@@ -320,7 +320,7 @@ class Cmod_presupuestario extends CI_Controller {
 
 
     /*--- AGREGANDO MODIFICACIONES PRESUPUESTARIAS ---*/
-    public function add_modificacion_presupuestaria($archivotmp,$mp_id){  
+    public function add_modificacion_presupuestaria($archivotmp,$mp_id,$tp_id){  
         $i=0;
         $nro=0;
         $lineas = file($archivotmp);
@@ -332,18 +332,18 @@ class Cmod_presupuestario extends CI_Controller {
           foreach ($lineas as $linea_num => $linea){ 
             if($i != 0){ 
                 $datos = explode(";",$linea);
-                if(count($datos)==6){
-                    $prog=trim($datos[0]); /// prog
-                    $act=trim($datos[1]); /// act
-                    $cod_part=trim($datos[2]); /// partida
-                    $importe=(float)$datos[3]; /// Monto
-                    $tp=trim($datos[4]); /// tp : 1 (reduccion), 0 (Adicion)
-                    $activo=trim($datos[5]); /// tp : 1 (activo), 0 (No activo)
+                if(count($datos)==8){
+                    $da=trim($datos[0]); /// DA
+                    $ue=trim($datos[1]); /// UE
+                    $prog=trim($datos[2]); /// prog
+                    $act=trim($datos[3]); /// act
+                    $cod_part=trim($datos[4]); /// partida
+                    $importe=(float)$datos[5]; /// Monto
+                    $tp=trim($datos[6]); /// tp : 1 (reduccion), 0 (Adicion)
+                    $activo=trim($datos[7]); /// tp : 1 (activo), 0 (No activo)
 
-                    if(strlen($prog)==3 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
-                      $aper=$this->model_ptto_sigep->get_apertura($prog,'00',$act);
-                      //$aper=$this->model_ptto_sigep->get_apertura($prog,'0098',$act);
-                      //$aper=$this->model_ptto_sigep->get_apertura($prog,$proy,$act);
+                    if(strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
+                      $aper=$this->model_ptto_sigep->get_apertura($da,$ue,$prog,'00',$act);
                       if(count($aper)!=0){
                           $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                           $par_id=0;
@@ -389,7 +389,7 @@ class Cmod_presupuestario extends CI_Controller {
         foreach ($lineas as $linea_num => $linea){ 
           if($i != 0){ 
               $datos = explode(";",$linea);
-              if(count($datos)==6){
+              if(count($datos)==8){
                 $nro++;
               }
           }

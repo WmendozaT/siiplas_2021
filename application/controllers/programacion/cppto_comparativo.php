@@ -308,13 +308,18 @@ class Cppto_comparativo extends CI_Controller {
           }
 
           $cod_part_prog=$this->model_ptto_sigep->sum_codigos_partidas_asig_prog($data['proyecto'][0]['aper_id'],2); //// suma codigo de partidas programadas
+          $suma_codigos_prog=0;
+          if(count($cod_part_prog)!=0){
+            $suma_codigos_prog=$cod_part_prog[0]['sum_cod_partida'];
+          }
+
 
           ///----- Genera lista de Partidas Asignadas y Programadas
           $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],1); // Asig
           $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],2); // Prog
 
 
-          if($monto_asignado==$cod_part_prog[0]['sum_cod_partida']){ //// if (monto asignado = monto programado)
+          if($monto_asignado==$suma_codigos_prog){ //// if (monto asignado = monto programado)
             $data['tabla'] = $this->comparativo_partidas_normal($partidas_asig,$partidas_prog,$data['proyecto'],1);
           }
           else{ /// Cuando existen diferencias en las partidas asignadas con las programas
@@ -334,7 +339,7 @@ class Cppto_comparativo extends CI_Controller {
             echo $monto_asignado.'---'.$cod_part_prog[0]['sum_cod_partida'];
             echo "<br>";
             echo count($partidas_asig).'---'.count($partidas_prog);*/
-
+            // echo $monto_asignado;
           $this->load->view('admin/programacion/reportes/reporte_consolidado_presupuesto_comparativo', $data);
       }
       else{
