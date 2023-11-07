@@ -179,22 +179,27 @@ class Cmod_presupuestario extends CI_Controller {
       $tab='dt_basic1';
     }
 
+    if($this->fun_id==399){
+       $tabla.='<br>
+              <a href="'.site_url("").'/mod_ppto/actualizar_modppto/'.$mp_id.'/'.$tp.'" title="ACTUALIZAR MONTOS" class="btn btn-info " style="width:30%;">Actualizar Modificacion</a>';
+    }
 
-    $tabla.='<table id='.$tab.' class="table table-bordered" style="width:100%;">
+    $tabla.='
+              <table id='.$tab.' class="table table-bordered" style="width:100%;">
                 <thead>
                     <tr style="height:45px;">
-                        <th style="width:1%;">DA</th>
-                        <th style="width:1%;">UE</th>
-                        <th style="width:1%;">PROG.</th>
-                        <th style="width:1%;">ACT.</th>
-                        <th style="width:13%;">ACTIVIDAD</th>
-                        <th style="width:2%;">PARTIDA</th>
-                        <th style="width:12%;">DESCRIPCI&Oacute;N PARTIDA</th>
-                        <th style="width:5%;">PPTO ACTUAL</th>
-                        <th style="width:5%;">IMPORTE</th>
-                        <th style="width:5%;">PPTO A MODIFICAR</th>
-                        <th style="width:3%;"></th>
-                        <th style="width:3%;">REP. POA</th>
+                      <th style="width:1%;">DA</th>
+                      <th style="width:1%;">UE</th>
+                      <th style="width:1%;">PROG.</th>
+                      <th style="width:1%;">ACT.</th>
+                      <th style="width:13%;">ACTIVIDAD</th>
+                      <th style="width:2%;">PARTIDA</th>
+                      <th style="width:12%;">DESCRIPCI&Oacute;N PARTIDA</th>
+                      <th style="width:5%;">PPTO ACTUAL</th>
+                      <th style="width:5%;">IMPORTE</th>
+                      <th style="width:5%;">PPTO A MODIFICAR</th>
+                      <th style="width:3%;"></th>
+                      <th style="width:3%;">REP. POA</th>
                     </tr>
                 </thead>
                 <tbody>';
@@ -248,8 +253,6 @@ class Cmod_presupuestario extends CI_Controller {
                           $tabla.='';
                         }
                       $tabla.='</td>
-
-                      
                   </tr>';
                 }
                 $tabla.='
@@ -257,6 +260,117 @@ class Cmod_presupuestario extends CI_Controller {
             </table>';
 
     return $tabla;
+  }
+
+
+  /*--- UPDATE MODIFICACION PPTO ---*/
+  public function update_modificacion_presupuestario($mp_id,$tp){
+    $cite = $this->model_modrequerimiento->get_cites_mod_presupuestaria($mp_id);
+    if(count($cite)!=0){
+      $partidas=$this->model_modrequerimiento->list_tipo_partidas_modificadas($mp_id,$tp);
+      foreach ($partidas as $row){
+        $get_partida=$this->model_modrequerimiento->get_partida_mppto($row['mpa_id']); // ger partida a ser modificado
+        $verif_cite_modificacion=$this->model_modrequerimiento->verif_get_cite_modifcado($row['mp_id'],$row['proy_id']); // Verificando si ya existe registro por el moduflo de modificaciones
+        
+        if(count($verif_cite_modificacion)==0){ /// Registrando Cite Presupuesto (Modificacion poa)
+            /*--------- GUARDANDO CITE PRESUPUESTO ---------*/
+            $data_to_store = array(
+              'proy_id' => $get_partida[0]['proy_id'],
+              'cppto_cite' => strtoupper($get_partida[0]['resolucion']),
+              'mp_id' => $get_partida[0]['mp_id'],
+              'cppto_fecha' => date("d/m/Y H:i:s"),
+              'fun_id' => $this->fun_id,
+              );
+            $this->db->insert('ppto_cite',$data_to_store);
+            $cppto_id=$this->db->insert_id();
+            /*----------------------------------------------*/
+          }
+          else{
+            $cppto_id=$verif_cite_modificacion[0]['cppto_id'];
+          }
+
+          $partida_actual=$this->model_ptto_sigep->get_partida_asignado_unidad($get_partida[0]['aper_id'],$get_partida[0]['par_id']);
+          if(count($partida_actual)!=0){ /// Existe partida registrado
+              if($get_partida[0]['tipo']==0){
+                $signo='';
+                $monto_final=($partida_actual[0]['importe']+$get_partida[0]['importe']);
+              }
+              else{
+                $signo='-';
+                $monto_final=($partida_actual[0]['importe']-$get_partida[0]['importe']);
+              }
+
+
+              $data_to_store2 = array(
+                'cppto_id' => $cppto_id,
+                'sp_id' => $partida_actual[0]['sp_id'],
+                'num_ip' => $this->input->ip_address(), 
+                'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                'ppto_ini' => $partida_actual[0]['importe'], 
+                'monto_dif' => $signo.''.$get_partida[0]['importe'],
+                'ppto_final' => $monto_final,
+              );
+              $this->db->insert('ppto_mod',$data_to_store2);
+              /*----------------------------------------*/
+
+              /*--------- Update ppto Sigep ----------*/
+              $update_ppto= array(
+                'importe' => $monto_final,
+                'estado' => 2,
+                'fun_id' => $this->fun_id
+              );
+              $this->db->where('sp_id', $partida_actual[0]['sp_id']);
+              $this->db->update('ptto_partidas_sigep', $this->security->xss_clean($update_ppto));
+              /*----------------------------------------*/
+
+          }
+          else{ /// Registrar Partida
+
+            /*-------- Insert ppto_adicionado ----------*/
+            $data_to_store = array(
+              'aper_id' => $get_partida[0]['aper_id'],
+              'aper_programa' => $get_partida[0]['aper_programa'],
+              'aper_proyecto' => $get_partida[0]['aper_proyecto'],
+              'aper_actividad' => $get_partida[0]['aper_actividad'],
+              'par_id' => $get_partida[0]['par_id'],
+              'partida' => $get_partida[0]['partida'],
+              'importe' => $get_partida[0]['importe'],
+              'g_id' => $this->gestion,
+              'estado' => 1,
+              'fun_id' => $this->fun_id,
+            );
+            $this->db->insert('ptto_partidas_sigep',$data_to_store);
+            $sp_id=$this->db->insert_id();
+            /*------------------------------------------*/
+
+            /*-------- Insert ppto_modifcado ----------*/
+              $data_to_store2 = array(
+                'cppto_id' => $cppto_id,
+                'sp_id' => $sp_id,
+                'ppto' => $get_partida[0]['importe'],
+                'num_ip' => $this->input->ip_address(), 
+                'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+              );
+              $this->db->insert('ppto_add',$data_to_store2);
+              $appto_id=$this->db->insert_id();
+            /*----------------------------------------*/
+          }
+
+          /*--------- Update ppto A subir ----------*/
+          $update_mppto= array(
+            'activo_mpa' => 1
+          );
+          $this->db->where('mpa_id', $row['mpa_id']);
+          $this->db->update('partidas_presupuestarias_modificadas', $this->security->xss_clean($update_mppto));
+          /*----------------------------------------*/
+      }
+
+      redirect(site_url("").'/mod_ppto/ver_partidas_mod/'.$mp_id);
+     
+    }
+    else{
+      echo "Error !!!";
+    }
   }
 
 
