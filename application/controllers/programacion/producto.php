@@ -98,9 +98,10 @@ class Producto extends CI_Controller {
                         <select class="form-control" id="u_resp" name="u_resp" title="SELECCIONE UNIDAD RESPONSABLE">
                           <option value="">Seleccione Unidad Responsable</option>';
                           foreach($unidades as $row){
-                            if(count($this->model_producto->get_uni_resp_prog770($com_id,$row['com_id']))==0){
+                            $uresponsable.='<option value="'.$row['com_id'].'">'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
+                            /*if(count($this->model_producto->get_uni_resp_prog770($com_id,$row['com_id']))==0){
                               $uresponsable.='<option value="'.$row['com_id'].'">'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
-                            }
+                            }*/
                           }       
                         $uresponsable.='
                         </select>
@@ -202,9 +203,10 @@ class Producto extends CI_Controller {
                       $uresponsable.='<option value="'.$row['com_id'].'" selected>'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
                     }
                     else{
-                      if(count($this->model_producto->get_uni_resp_prog770($producto[0]['com_id'],$row['com_id']))==0){
+                      $uresponsable.='<option value="'.$row['com_id'].'" >'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
+                      /*if(count($this->model_producto->get_uni_resp_prog770($producto[0]['com_id'],$row['com_id']))==0){
                         $uresponsable.='<option value="'.$row['com_id'].'" >'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
-                      }
+                      }*/
                     }
                   }       
                 $uresponsable.='
