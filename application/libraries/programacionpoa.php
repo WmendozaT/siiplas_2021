@@ -427,28 +427,24 @@ class Programacionpoa extends CI_Controller{
                   }
                   
                 }
-              $tabla.='</tbody>
-              <tr bgcolor="#C1F9D2">
-                <td colspan=2></td>
-                <td align=center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proy_id.'\');" class="btn btn-success" title="REPORTE FORM. 4 CONSOLIDADO"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br>CONSOLIDADO POA</a></td>
-                <td colspan=></td>
-                <td colspan=></td>
-              </tr>';
+              $tabla.='</tbody>';
                 if($nro_ppto>0){
-                  $tabla.='
-                  <tr>
-                    <td colspan=3><b>CONSOLIDADO PROGRAMADO PRESUPUESTO TOTAL POR PARTIDAS </b></td>
-                    <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO PRESUPUESTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
-                    <td colspan='.count($programas_bolsas).'></td>
-                  </tr>';
                   $partidas_asig=$this->model_ptto_sigep->partidas_accion_region($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],1);
                   if(count($partidas_asig)!=0){ //// POA APROBADO
                     $tabla.='
-                  <tr bgcolor="#d6ecb3">
-                    <td colspan=3><b>CONSOLIDADO PRESUPUESTO COMPARATIVO APROBADO TOTAL POR PARTIDAS </b></td> 
-                    <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO COMPARATIVO PTTO POR PARTIDAS"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/></a></td>
-                    <td colspan='.count($programas_bolsas).'></td>
-                  </tr>';
+                    <tr bgcolor="#d6ecb3">
+                      <td colspan=3><b>CONSOLIDADO TOTAL POA - PRESUPUESTO APROBADO TOTAL POR PARTIDAS </b></td> 
+                      <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado_comparativo/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO COMPARATIVO PTTO POR PARTIDAS" class="btn btn-default" ><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>
+                      <td colspan='.count($programas_bolsas).'></td>
+                    </tr>';
+                  }
+                  else{
+                    $tabla.='
+                    <tr>
+                      <td colspan=3><b>CONSOLIDADO TOTAL PROGRAMADO POR PARTIDAS </b></td>
+                      <td align=center><a href="javascript:abreVentana(\''.site_url("").'/proy/ptto_consolidado/'.$proy_id.'\');"  title="REPORTE CONSOLIDADO PRESUPUESTO POR PARTIDAS" class="btn btn-default" ><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="30" HEIGHT="30"/></a></td>
+                      <td colspan='.count($programas_bolsas).'></td>
+                    </tr>';
                   }
                 }
               $tabla.='
@@ -612,10 +608,10 @@ class Programacionpoa extends CI_Controller{
     public function tp_resp(){
       $ddep = $this->model_proyecto->dep_dist($this->dist);
       if($this->adm==1){
-        $titulo='<h3>RESPONSABLE : '.$this->session->userdata('funcionario').' -> <small>RESPONSABLE NACIONAL</h3>';
+        $titulo='<h1>RESPONSABLE : '.$this->session->userdata('funcionario').' -> <small>RESPONSABLE NACIONAL</h1>';
       }
       elseif($this->adm==2){
-        $titulo='<h3>RESPONSABLE : '.$this->session->userdata('funcionario').' -> <small>RESPONSABLE '.strtoupper($ddep[0]['dist_distrital']).'</h3>';
+        $titulo='<h1>RESPONSABLE : '.$this->session->userdata('funcionario').' -> <small>RESPONSABLE '.strtoupper($ddep[0]['dist_distrital']).'</h1>';
       }
 
       return $titulo;
@@ -1046,7 +1042,7 @@ class Programacionpoa extends CI_Controller{
         <tr>
           <td style="width:20%;">
               <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                  <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>UNIDAD REPONSABLE</b></td><td style="width:5%;"></td></tr>
+                  <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;UNIDAD RESPONSABLE</b></td><td style="width:5%;"></td></tr>
               </table>
           </td>
           <td style="width:80%;">
@@ -1065,7 +1061,7 @@ class Programacionpoa extends CI_Controller{
             <td style="width:70%;height: 2%">
                 <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
                     <tr style="font-size: 13px;font-family: Arial;">
-                        <td style="width:40%;height: 20%;">&nbsp;&nbsp;<b> '.$this->session->userData('entidad').'</b></td>
+                        <td style="width:40%;height: 20%;">&nbsp;<b> '.$this->session->userData('entidad').'</b></td>
                     </tr>
                     <tr>
                         <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
@@ -1130,7 +1126,7 @@ class Programacionpoa extends CI_Controller{
                 <tr>
                     <td style="width:20%;">
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>REGIONAL / DEPARTAMENTO</b></td><td style="width:5%;"></td></tr>
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;REGIONAL / DEPARTAMENTO</b></td><td style="width:5%;"></td></tr>
                         </table>
                     </td>
                     <td style="width:80%;">
@@ -1142,7 +1138,7 @@ class Programacionpoa extends CI_Controller{
                 <tr>
                     <td style="width:20%;">
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>UNIDAD EJECUTORA</b></td><td style="width:5%;"></td></tr>
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;UNIDAD EJECUTORA</b></td><td style="width:5%;"></td></tr>
                         </table>
                     </td>
                     <td style="width:80%;">
@@ -1156,7 +1152,7 @@ class Programacionpoa extends CI_Controller{
                     $tabla.='
                     <td style="width:20%;">
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>'.$proyecto[0]['tipo_adm'].'</b></td><td style="width:5%;"></td></tr>
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;PROGRAMA</b></td><td style="width:5%;"></td></tr>
                         </table>
                     </td>
                     <td style="width:80%;">
@@ -1169,7 +1165,7 @@ class Programacionpoa extends CI_Controller{
                     $tabla.='
                     <td style="width:20%;">
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>PROYECTO</b></td><td style="width:5%;"></td></tr>
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;PROYECTO</b></td><td style="width:5%;"></td></tr>
                         </table>
                     </td>
                     <td style="width:80%;">
@@ -1488,23 +1484,22 @@ class Programacionpoa extends CI_Controller{
       return $tabla;
   }
 
-  /*----- REPORTE FORMULARIO 4 (2023 - Gasto Corriente, Proyectos de Inversion) ----*/
-  public function operaciones_form4($com_id,$componente,$proyecto){
-    $tabla='';
+
+  /*----- REPORTE FORMULARIO 4 (2024 - Gasto Corriente) ----*/
+  public function rep_formulario_N4_v2($com_id,$componente,$proyecto){
     
-    if($proyecto[0]['tp_id']==1){ /// Proyectos de Inversion
-      $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+    $tabla='';
+    $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.09 style="width:100%;" align=center>
               <thead>
-                <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
-                  <th style="width:1%;height:15px;">#</th>
+                <tr style="font-size: 6.5px;" bgcolor=#eceaea align=center>
+                  <th style="width:2%;height:15px;">PROG.</th>
                   <th style="width:2%;">COD.<br>ACP.</th>
                   <th style="width:2%;">COD.<br>OPE.</th>
-                  <th style="width:2%;">COD.<br>ACT.</th>
-                  <th style="width:9%;">COMPONENTE</th>
+                  <th style="width:2%;">COD.<br>ACT.</th> 
                   <th style="width:15%;">ACTIVIDAD</th>
-                  <th style="width:13%;">RESULTADO</th>
-                  <th style="width:12%;">INDICADOR</th>
-                  <th style="width:2%;">LB.</th>
+                  <th style="width:13.5%;">RESULTADO</th>
+                  <th style="width:9%;">UNIDAD RESPONSABLE</th>
+                  <th style="width:13%;">INDICADOR</th>
                   <th style="width:2.5%;">META</th>
                   <th style="width:2.5%;">ENE.</th>
                   <th style="width:2.5%;">FEB.</th>
@@ -1518,19 +1513,27 @@ class Programacionpoa extends CI_Controller{
                   <th style="width:2.5%;">OCT.</th>
                   <th style="width:2.5%;">NOV.</th>
                   <th style="width:2.5%;">DIC.</th>
-                  <th style="width:10%;">VERIFICACI&Oacute;N</th> 
+                  <th style="width:9%;">VERIFICACI&Oacute;N</th> 
                 </tr>
               </thead>
               <tbody>';
-              $operaciones=$this->model_producto->list_operaciones_pi($com_id);  /// 2020
               $nro=0;
-              foreach($operaciones as $rowp){
-                $nro++;
+              $formularioN4=$this->model_producto->get_lista_form4_consolidado($com_id,0);
+              foreach($formularioN4 as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
-                //$monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
-                $tp='';
-                if($rowp['indi_id']==2){
+                $color=''; $tp='';
+                if($rowp['indi_id']==1){
+                  if(($sum[0]['meta_gest'])!=$rowp['prod_meta']){
+                    $color='#fbd5d5';
+                  }
+                }
+                elseif ($rowp['indi_id']==2) {
                   $tp='%';
+                  if($rowp['mt_id']==3){
+                    if(($sum[0]['meta_gest'])!=$rowp['prod_meta']){
+                      $color='#fbd5d5';
+                    }
+                  }
                 }
 
                 $color_or='';
@@ -1538,49 +1541,109 @@ class Programacionpoa extends CI_Controller{
                   $color_or='#fbd5d5';
                 }
 
-               /* $ptto=number_format(0, 2, '.', ',');
-                if(count($monto)!=0){
-                  $ptto="<b>".number_format($monto[0]['total'], 2, ',', '.')."</b>";
-                }*/
 
-                
-                $tabla.='
-                <tr>
-                  <td style="font-size: 6.5px; height:12px;text-align: center;">'.$nro.'</td>
-                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
-                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
-                  <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
-                  <td style="width: 9%; text-align: left;">'.$componente.'</td>
-                  <td style="width: 15%; text-align: justify;">'.$rowp['prod_producto'].'</td>
-                  <td style="width: 13%; text-align: justify;">'.$rowp['prod_resultado'].'</td>
-                  <td style="width:12%; text-align: justify;">'.$rowp['prod_indicador'].'</td>
-                  <td style="width:2%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
-                  <td style="width:2.5%; text-align: center;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['enero'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['febrero'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['marzo'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['abril'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['mayo'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['junio'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['julio'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['agosto'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['septiembre'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['octubre'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['noviembre'],2).''.$tp.'</td>
-                  <td style="width:2.5%;" align=center>'.round($rowp['diciembre'],2).''.$tp.'</td>
-                  <td style="width:10%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
-                </tr>';            
+                if($proyecto[0]['por_id']==0){
+                  $uresp=strtoupper($rowp['prod_unidades']);
+                }
+                else{
+                  $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
+                  
+                  $uresp='';
+                  if(count($unidad)!=0){
+                    $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                    $uresp='<font size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
+                  }
+                }
+
+                $nro++;
+                $tabla.=
+                '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">
+                  <td style="width: 2%; height:12px;text-align: center;font-size: 9px;" bgcolor='.$color_or.'><b>'.$proyecto[0]['aper_programa'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 9px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 9px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 9px;">'.$rowp['prod_cod'].'</td>
+                  <td style="width: 15%; text-align: justify;font-size: 7px;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 13.5%; text-align: justify;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width: 9%; text-align: justify;">'.$uresp.'</td>
+                  <td style="width: 13%; text-align: justify;">'.$rowp['prod_indicador'].'</td>
+                  <td style="width: 2.5%; text-align: center;font-size: 10px;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>';
+                  for ($i=1; $i <=12 ; $i++) { 
+                    $tabla.='<td style="width:2.5%;" align=center>'.round($rowp['m'.$i],2).''.$tp.'</td>';
+                  }
+
+                  $tabla.='
+                  <td style="width: 9%; text-align: justify;">'.$rowp['prod_fuente_verificacion'].'</td>
+                </tr>';
+
               }
-        $tabla.='
+
+              ///------------------------------------------------------------------------
+              $formularioN4=$this->model_producto->get_lista_form4_consolidado($com_id,1);
+              foreach($formularioN4 as $rowp){
+                $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
+                $color='#E8FCFB'; $tp='';
+                if($rowp['indi_id']==1){
+                  if(($sum[0]['meta_gest'])!=$rowp['prod_meta']){
+                    $color='#fbd5d5';
+                  }
+                }
+                elseif ($rowp['indi_id']==2) {
+                  $tp='%';
+                  if($rowp['mt_id']==3){
+                    if(($sum[0]['meta_gest'])!=$rowp['prod_meta']){
+                      $color='#fbd5d5';
+                    }
+                  }
+                }
+
+                $color_or='';
+                if($rowp['or_id']==0){
+                  $color_or='#fbd5d5';
+                }
+
+
+                $unidad=$this->model_componente->get_componente($rowp['uni_resp'],$this->gestion);
+                  
+                $uresp='';
+                  if(count($unidad)!=0){
+                    $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                    $uresp='<font size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
+                  }
+
+                $nro++;
+                $tabla.=
+                '<tr style="font-size: 6.5px;height:12px;" bgcolor="'.$color.'">
+                  <td style="width: 2%; height:12px;text-align: center;font-size: 9px;" bgcolor='.$color_or.'><b>'.$rowp['aper_programa'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 9px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 9px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 9px;"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 15%; text-align: justify;font-size: 7px;"><b>'.$rowp['prod_producto'].'</b></td>
+                  <td style="width: 13.5%; text-align: justify;"><b>'.$rowp['prod_resultado'].'</b></td>
+                  <td style="width: 9%; text-align: justify;">'.$uresp.'</td>
+                  <td style="width: 13%; text-align: justify;"><b>'.$rowp['prod_indicador'].'</b></td>
+                  <td style="width: 2.5%; text-align: center;font-size: 10px;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>';
+                  for ($i=1; $i <=12 ; $i++) { 
+                    $tabla.='<td style="width:2.5%;" align=center><b>'.round($rowp['m'.$i],2).''.$tp.'</b></td>';
+                  }
+
+                  $tabla.='
+                  <td style="width: 9%; text-align: justify;"><b>'.$rowp['prod_fuente_verificacion'].'</b></td>
+                </tr>';
+              }
+              $tabla.='
               </tbody>
-            </table>';
+            </table>
+            ';
+    return $tabla;
+  }
 
-    }
-    else{ //// Gasto Corriente
 
-       $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.09 style="width:100%;" align=center>
+  /*----- REPORTE FORMULARIO 4 (2023 - Gasto Corriente) ----*/
+  public function rep_formulario_N4_v1($com_id,$componente,$proyecto){
+    $tabla='';
+     $tabla.='<table cellpadding="0" cellspacing="0" class="tabla" border=0.09 style="width:100%;" align=center>
               <thead>
-               <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
+                <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
                   <th style="width:0.5%;height:15px;">#</th>
                   <th style="width:2%;">COD.<br>ACP.</th>
                   <th style="width:2%;">COD.<br>OPE.</th>
@@ -1604,14 +1667,13 @@ class Programacionpoa extends CI_Controller{
                   <th style="width:2.5%;">NOV.</th>
                   <th style="width:2.5%;">DIC.</th>
                   <th style="width:9%;">VERIFICACI&Oacute;N</th> 
-              </tr>    
-             
+                </tr>
               </thead>
               <tbody>';
               $nro=0;
-              $operaciones=$this->model_producto->lista_operaciones($com_id);
+              $form4=$this->model_producto->lista_operaciones($com_id);
               
-              foreach($operaciones as $rowp){
+              foreach($form4 as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
                 $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
                 $color=''; $tp='';
@@ -1628,8 +1690,6 @@ class Programacionpoa extends CI_Controller{
                     }
                   }
                 }
-
-
 
                 $color_or='';
                 if($rowp['or_id']==0){
@@ -1692,7 +1752,93 @@ class Programacionpoa extends CI_Controller{
               $tabla.='
               </tbody>
             </table>';
-    }
+
+    return $tabla;
+  }
+
+
+
+
+  /*----- REPORTE FORMULARIO 4 (2022 - 2023 - Proyectos de Inversion) ----*/
+  public function rep_formulario_N4_v1_pi($com_id,$componente){
+      $tabla='';
+
+      $tabla.='
+            <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
+              <thead>
+                <tr style="font-size: 6.7px;" bgcolor=#eceaea align=center>
+                  <th style="width:1%;height:15px;">#</th>
+                  <th style="width:2%;">COD.<br>ACP.</th>
+                  <th style="width:2%;">COD.<br>OPE.</th>
+                  <th style="width:2%;">COD.<br>ACT.</th>
+                  <th style="width:9%;">COMPONENTE</th>
+                  <th style="width:15%;">ACTIVIDAD</th>
+                  <th style="width:13%;">RESULTADO</th>
+                  <th style="width:12%;">INDICADOR</th>
+                  <th style="width:2%;">LB.</th>
+                  <th style="width:2.5%;">META</th>
+                  <th style="width:2.5%;">ENE.</th>
+                  <th style="width:2.5%;">FEB.</th>
+                  <th style="width:2.5%;">MAR.</th>
+                  <th style="width:2.5%;">ABR.</th>
+                  <th style="width:2.5%;">MAY.</th>
+                  <th style="width:2.5%;">JUN.</th>
+                  <th style="width:2.5%;">JUL.</th>
+                  <th style="width:2.5%;">AGO.</th>
+                  <th style="width:2.5%;">SEPT.</th>
+                  <th style="width:2.5%;">OCT.</th>
+                  <th style="width:2.5%;">NOV.</th>
+                  <th style="width:2.5%;">DIC.</th>
+                  <th style="width:10%;">VERIFICACI&Oacute;N</th> 
+                </tr>
+              </thead>
+              <tbody>';
+              $form4=$this->model_producto->list_operaciones_pi($com_id);  /// 2020
+              $nro=0;
+              foreach($form4 as $rowp){
+                $nro++;
+                //$sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
+                $tp='';
+                if($rowp['indi_id']==2){
+                  $tp='%';
+                }
+
+                $color_or='';
+                if($rowp['or_id']==0){
+                  $color_or='#fbd5d5';
+                }
+
+                $tabla.='
+                <tr>
+                  <td style="font-size: 6.5px; height:12px;text-align: center;">'.$nro.'</td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['og_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;" bgcolor='.$color_or.'><b>'.$rowp['or_codigo'].'</b></td>
+                  <td style="width: 2%; text-align: center; font-size: 8px;"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 9%; text-align: left;">'.$componente.'</td>
+                  <td style="width: 15%; text-align: justify;">'.$rowp['prod_producto'].'</td>
+                  <td style="width: 13%; text-align: justify;">'.$rowp['prod_resultado'].'</td>
+                  <td style="width:12%; text-align: justify;">'.$rowp['prod_indicador'].'</td>
+                  <td style="width:2%; text-align: center;">'.round($rowp['prod_linea_base'],2).'</td>
+                  <td style="width:2.5%; text-align: center;"><b>'.round($rowp['prod_meta'],2).''.$tp.'</b></td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['enero'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['febrero'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['marzo'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['abril'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['mayo'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['junio'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['julio'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['agosto'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['septiembre'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['octubre'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['noviembre'],2).''.$tp.'</td>
+                  <td style="width:2.5%;" align=center>'.round($rowp['diciembre'],2).''.$tp.'</td>
+                  <td style="width:10%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
+                </tr>';            
+              }
+        $tabla.='
+              </tbody>
+            </table>';
+
     return $tabla;
   }
 

@@ -106,6 +106,10 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Descarga de Archivos / Documentos">Descargas <b class="caret"></b></a>
               <ul class="dropdown-menu">
+                <li><a href="<?php echo base_url(); ?>assets/video/FORM_POA_N°4_ACTIVIDADES.xlsx" style="cursor: pointer;" download><b>Descargar Formulario N°4 POA 2023 (Actividades)</b></a></li>
+                <li><a href="<?php echo base_url(); ?>assets/video/FORM_POA_N°5_PROG FISICO FINANCIERA.xlsx" style="cursor: pointer;" download><b>Descargar Formulario N°5 POA 2023 (Requerimientos)</b></a></li>
+                <li><a href="<?php echo base_url(); ?>assets/video/PLANTILLA_MIGRACION_FORM5.xlsx" style="cursor: pointer;" download>Descargar Plantilla para migrar Requerimientos</a></li>
+                <li class="divider"></li>
                 <li><a href="<?php echo base_url(); ?>assets/video/FORM_MOD_4_Y_5_2023.xlsx" style="cursor: pointer;" download>Descargar Formulario de Modificacion POA 2023</a></li>
                 <li><a href="<?php echo base_url(); ?>assets/video/FORM_SOL_POA_5_2023.xlsx" style="cursor: pointer;" download>Descargar Formulario de Certificacion POA 2023</a></li>
                 

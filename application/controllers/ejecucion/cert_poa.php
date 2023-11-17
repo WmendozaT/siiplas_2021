@@ -6,12 +6,6 @@ class Cert_poa extends CI_Controller {
         if($this->session->userdata('fun_id')!=null & $this->session->userdata('fun_estado')!=3){
         $this->load->library('pdf2');
         $this->load->model('programacion/model_proyecto');
-      //  $this->load->model('programacion/model_faseetapa');
-      //  $this->load->model('programacion/model_actividad');
-      //  $this->load->model('programacion/model_producto');
-      //  $this->load->model('programacion/model_componente');
-      //  $this->load->model('programacion/model_mantenimiento');
-        //$this->load->model('ejecucion/model_ejecucion');
         $this->load->model('ejecucion/model_certificacion');
         $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
         $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020

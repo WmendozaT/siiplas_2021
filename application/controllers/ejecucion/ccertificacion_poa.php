@@ -32,6 +32,11 @@ class Ccertificacion_poa extends CI_Controller {
       $this->dist_tp = $this->session->userData('dist_tp');
       $this->tp_adm = $this->session->userData('tp_adm');
       $this->fun_id = $this->session->userData('fun_id');
+      $this->verif_ppto = $this->session->userData('verif_ppto'); /// AnteProyecto Ptto POA : 0, Ptto Aprobado Sigep : 1
+      $this->conf_form4 = $this->session->userData('conf_form4');
+      $this->conf_form5 = $this->session->userData('conf_form5');
+      $this->conf_poa_estado = $this->session->userData('conf_poa_estado'); /// Ajuste POA 1: Inicial, 2 : Ajuste, 3 : aprobado
+
       $this->load->library('certificacionpoa');
 
       $this->fecha_entrada = strtotime("31-05-2021 00:00:00");
@@ -147,8 +152,8 @@ class Ccertificacion_poa extends CI_Controller {
         /// ------------------------------
 
 
-
-        $data['formulario']='
+        $data['formulario']='';
+        $data['formulario'].='
         <article class="col-sm-12 col-md-12 col-lg-3">
         </article>
         <article class="col-sm-12 col-md-12 col-lg-6">
@@ -163,7 +168,16 @@ class Ccertificacion_poa extends CI_Controller {
           </div>
           <div class="widget-body no-padding">
             
-            <form id="cert_form" name="cert_form" action="'.site_url().'/ejecucion/ccertificacion_poa/valida_datos_cite" method="post" class="smart-form">
+            <form id="cert_form" name="cert_form" action="'.site_url().'/ejecucion/ccertificacion_poa/valida_datos_cite" method="post" class="smart-form">';
+              if($this->conf_poa_estado==2){
+                $data['formulario'].='
+                 <br>
+                <div class="alert alert-block alert-warning">
+                  <a class="close" data-dismiss="alert" href="#">×</a>
+                  <h4 class="alert-heading"><i class="fa fa-check-square-o"></i> Certificación POA (con cargo a presupesto aprobado 2024)!</h4>
+                </div>';
+              }
+              $data['formulario'].='
               <header>REGISTRE LOS DATOS DE LA NOTA CITE DE SOLICITUD</header>
               <input type="hidden" name="prod_id" id="prod_id" value="'.$data['datos'][0]['prod_id'].'">
               <input type="hidden" name="tp_id" id="tp_id" value="'.$data['datos'][0]['tp_id'].'">
@@ -633,7 +647,7 @@ class Ccertificacion_poa extends CI_Controller {
             $nro_cdep='0';
           }
 
-          $codigo='CPOA/'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa;
+          $codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa;
           
           if(count($this->model_certificacion->get_codigo_certpoa($codigo))==0){
               /*---- Update Estado Certificacion POA ----*/
@@ -1172,7 +1186,7 @@ public function valida_cpoas(){
           if($this->gestion==2020){ /// Gestion 2020
             $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/reporte_cert_poa_2020', $data);
           }
-          else{ /// Gestion 2021
+          else{ /// Gestion 2023
             if(strtotime($data['cpoa'][0]['cpoa_fecha'])>$this->fecha_entrada){
               redirect('reporte_solicitud_poa_aprobado/'.$cpoa_id); /// Reporte nuevo
             }

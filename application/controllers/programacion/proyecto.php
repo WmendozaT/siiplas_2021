@@ -44,68 +44,194 @@ class Proyecto extends CI_Controller {
       $data['menu']=$this->programacionpoa->menu(2);
       $data['mod']=1;
       $data['res_dep']=$this->programacionpoa->tp_resp();
-      $data['base']='<input name="base" type="hidden" value="'.base_url().'">';
       $data['estilo']=$this->programacionpoa->estilo_tabla();
-      //----- Gasto Corriente
-      $opc1='';
-      $opc1.='<a href="'.site_url("").'/proy/verif_plantillas" title="VERIFICAR PLANTILLA DE MIGRACIÓN" class="btn btn-info " style="width:13%;">VERIFICAR PLANTILLA DE MIGRACI&Oacute;N</a>';
-      /*if ($this->session->userData('conf_poa_estado')!=3) {
-        $opc1.='<a href="'.site_url("").'/proy/verif_plantillas" title="VERIFICAR PLANTILLA DE MIGRACIÓN" class="btn btn-default" style="width:13%;">VERIFICAR PLANTILLA DE MIGRACI&Oacute;N</a>';
-      }*/
-                  
-      $data['opc1']=$opc1;
-      $data['gasto_corriente']=$this->list_unidades_es(1); /// Gasto Corriente
-      
-      //---- Proyecto de Inversion
-      $data['proyectos']=$this->list_pinversion(1); /// Proyecto de Inversion
-
+      $data['listado']=$this->listado_programacion();
       $this->load->view('admin/programacion/proy_anual/top/list_proy', $data);
     }
+
+
+    /// Listado de Unidades y/o proyectos
+    public function listado_programacion(){
+      $tabla='';
+      $tabla.='
+        <input name="base" type="hidden" value="'.base_url().'">
+        <div id="tabs">
+          <ul>
+            <li>
+              <a href="#tabs-c">GASTO CORRIENTE</a>
+            </li>
+            <li>
+              <a href="#tabs-a">PROYECTOS DE INVERSI&Oacute;N P&Uacute;BLICA</a>
+            </li>
+          </ul>
+          <div id="tabs-c">
+            <div class="row">
+              <a href="'.site_url("").'/proy/add_unidad" class="btn btn-default" title="AGREGAR UNIDAD" target=_blank>
+                <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>AGREGAR UNIDAD</b>
+              </a>';
+              if ($this->session->userData('conf_poa_estado')!=3) {
+                $tabla.='
+                <a href="'.site_url("").'/proy/verif_plantillas" title="VERIFICAR PLANTILLA" class="btn btn-default" target=_blank>
+                  <img src="'.base_url().'assets/Iconos/application_osx.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>VERIFICAR PLANTILLA</b>
+                </a>';
+              }
+
+              $tabla.='
+              <br><br>
+              <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="jarviswidget jarviswidget-color-darken">
+                  <header>
+                    <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                    <h2 class="font-md"><strong>GASTO CORRIENTE</strong></h2>  
+                  </header>
+                    <div>
+                      <div class="widget-body no-padding">
+                        <table id="dt_basic3" class="table1 table-bordered" style="width:100%;">
+                              <thead>
+                                <tr style="height:65px;">
+                                  <th style="width:0.5%;" title=""></th>
+                                  <th style="width:4%;" >VALIDAR POA</th>
+                                  <th style="width:4%;" title="REPORTE POA - FORM. 4 Y 5">REPORTE POA</th>
+                                  <th style="width:4%;" title="CONSOLIDADO POA">CONSOLIDADO POA</th>
+                                  <th style="width:4%;" title="PROGRAMACIÓN FISICA Y FINANCIERA">PROG. POA</th>';
+
+                                  if($this->session->userData('conf_poa_estado')==2){
+                                    $tabla.='<th style="width:4%;" title="AJUSTE POA">AJUSTE POA - PPTO '.$this->gestion.'</th>';
+                                  }
+                                  $tabla.='
+                                  <th style="width:4%;" title="MODIFICAR">MODIFICAR</th>
+                                  <th style="width:4%;" title="ELIMINAR">ELIMINAR</th>
+                                  <th style="width:10%;" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
+                                  <th style="width:20%;" title="DESCRIPCI&Oacute;N">PROGRAMA / UNIDAD / ESTABLECIMIENTO</th>
+                                  <th style="width:10%;" title="NIVEL">NIVEL</th>
+                                  <th style="width:10%;" title="TIPO DE ADMINISTRACIÓN">TIPO DE ADMINISTRACI&Oacute;N</th>
+                                  <th style="width:10%;" title="UNIDAD ADMINISTRATIVA">UNIDAD ADMINISTRATIVA</th>
+                                  <th style="width:10%;" title="UNIDAD EJECUTORA">UNIDAD EJECUTORA</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              '.$this->list_unidades_es(1).'
+                              </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+                    </div>
+                  </div>
+
+                  <div id="tabs-a">
+                    <div class="row">';
+                      if($this->session->userdata('rol_id')==1){
+                        $tabla.=' 
+                          <a href="'.site_url("admin").'/proy/proyecto" class="btn btn-default" title="APERTURAR PROYECTO" target=_blank>
+                            <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>APERTURAR PROYECTO</b>
+                          </a>';
+                      }
+                      $tabla.='
+                      <br><br>
+                      <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                      <div class="jarviswidget jarviswidget-color-darken" >
+                        <header>
+                          <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                            <h2 class="font-md"><strong>PROYECTOS DE INVERSI&Oacute;N PUBLICA </strong></h2>  
+                        </header>
+                        <div>
+                          <div class="widget-body no-padding">
+                            <table id="dt_basic" class="table table-bordered" style="width:100%;">
+                              <thead>
+                                <tr style="height:65px;">
+                                  <th style="width:4%;">VALIDAR</th>
+                                  <th style="width:4%;">PROG. POA</th>
+                                  <th style="width:4%;" title="REPORTE POA">REPORTE POA</th>
+                                  <th style="width:4%;" title="MODIFICAR">MODIFICAR</th>
+                                  <th style="width:4%;" title="FASE">FASE</th>
+                                  <th style="width:4%;" title="ELIMINAR">ELIMINAR</th>
+                                  <th style="width:10%;" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
+                                  <th style="width:20%;" title="NOMBRE DEL PROYECTO DE INVERSI&Oacute;N">PROYECTO DE INVERSI&Oacute;N</th>
+                                  <th style="width:10%;" title="C&Oacute;DIGO SISIN">C&Oacute;DIGO SISIN</th>
+                                  <th style="width:10%;" title="UNIDAD ADMINISTRATIVA">UNIDAD_ADMINISTRATIVA</th>
+                                  <th style="width:10%;" title="UNIDAD EJECUTORA">UNIDAD_EJECUTORA</th>
+                                  <th style="width:10%;" title="FASE - ETAPA DE LA OPERACI&Oacute;N">FASE_ETAPA</th>
+                                  <th style="width:10%;" title="NUEVO - CONTINUO">NUEVO_CONTINUIDAD</th>
+                                  <th style="width:10%;" title="TIEMPO DE OPERACI&Oacute;N">ANUAL_PLURIANUAL</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                '.$this->list_pinversion(1).'
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      </article>
+                    </div>
+                  </div>
+                </div>';
+
+      return $tabla;
+    }
+
+
+
+
+
+
+
+
 
     /*---- Lista de Unidades / Establecimientos de Salud (2020) -----*/
     public function list_unidades_es($proy_estado){
       $unidades=$this->model_proyecto->list_unidades(4,$proy_estado);
       $tabla='';
       $nro=0;
+
       if($proy_estado==1){ /// Inicial
         foreach($unidades as $row){
           $nro++;
           $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
           $tabla.='<tr style="height:35px;">';
             $tabla.= '<td align=center title="'.$row['aper_id'].'"><b>'.$nro.'</b></td>';
-            $tabla.= '<td>';
-              if(count($fase)!=0){
-                $tabla .= '<center><a href="'.site_url("").'/prog/list_serv/'.$row['proy_id'].'" title="PROGRAMACION F&Iacute;SICA - FINANCIERA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/bien.png" WIDTH="30" HEIGHT="30"/></a></center>';
-              }
-            $tabla .= '</td>';
-           
-            $tabla .='<td><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success enlace" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'">VER POA</a></center></td>';
-            if($this->conf_poa_estado==2){
-              $tabla .='<td><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff2" class="btn btn-default enlace2" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'"><img src="'.base_url().'assets/img/ajuste_ppto.jpg" WIDTH="45" HEIGHT="45" title="AJUSTAR POA '.$this->gestion.'"/></a></center></td>';
-            }
-
-            $tabla .= '<td aling="center">';
-              if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399){
-              //if($this->tp_adm==1){
-                $tabla .= '<center><a href="'.site_url("").'/proy/update_unidad/'.$row['proy_id'].'" title="MODIFICAR DATOS DE LA UNIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="34" HEIGHT="30"/></a></center>';
-              }
-              /*---------------------------------------------*/
-              if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399){
-              //if($this->tp_adm==1){
-                $tabla .= '<center><a href="'.site_url("admin").'/proy/delete/1/'.$row['proy_id'].'" title="ELIMINAR" onclick="return confirmar()" class="btn btn-default"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="34" HEIGHT="30"/></a></center>';
-              }                              
-            $tabla .= '</td>';
-            $tabla .= '<td style="font-size: 9pt;"><center>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</center></td>';
-            $tabla.='<td style="font-size: 9pt;"><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>';
-            $tabla.='<td>'.$row['nivel'].'</td>';
-            $tabla.='<td>'.$row['tipo_adm'].'</td>';
-            $tabla.='<td>'.strtoupper($row['dep_departamento']).'</td>';
-            $tabla.='<td>'.strtoupper($row['dist_distrital']).'</td>';
-            $tabla.='<td>
+            $tabla.='<td bgcolor="#5B9360">
                       <center>
                         <a href="#" data-toggle="modal" data-target="#modal_verif_poa" class="btn btn-default verif_poa" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'" title="VALIDAR POA" ><img src="'.base_url().'assets/img/ok1.jpg" WIDTH="35" HEIGHT="35"/></a>
                       </center>
                       </td>';
+            $tabla .='<td bgcolor="#5B9360"><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'"><img src="'.base_url().'assets/ifinal/doc.jpg" WIDTH="38" HEIGHT="38" title="VER POA '.$this->gestion.'"/></a></center></td>';
+            $tabla .='<td bgcolor="#5B9360"><center><a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$row['proy_id'].'\');" class="btn btn-default" title="CONSOLIDADO POA"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="38" HEIGHT="38" title="VER POA '.$this->gestion.'"/></a></center></td>';
+            $tabla.= '<td bgcolor="#5B9360">';
+              if(count($fase)!=0){
+                $tabla .= '<center><a href="'.site_url("").'/prog/list_serv/'.$row['proy_id'].'" title="PROGRAMACION F&Iacute;SICA - FINANCIERA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/bien.png" WIDTH="38" HEIGHT="38"/></a></center>';
+              }
+            $tabla .= '</td>';
+            if($this->conf_poa_estado==2){
+              $tabla .='<td bgcolor="#5B9360"><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff2" class="btn btn-default enlace2" name="'.$row['proy_id'].'" id="'.strtoupper($row['tipo']).' '.strtoupper($row['proy_nombre']).' - '.strtoupper($row['abrev']).'"><img src="'.base_url().'assets/img/ajuste_ppto.jpg" WIDTH="38" HEIGHT="38" title="AJUSTAR POA '.$this->gestion.'"/></a></center></td>';
+            }
+
+            $tabla .= '<td aling="center" bgcolor="#F7F9BC">';
+              if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399){
+                $tabla .= '<center><a href="'.site_url("").'/proy/update_unidad/'.$row['proy_id'].'" title="MODIFICAR DATOS DE LA UNIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="38" HEIGHT="38"/></a></center>';
+              }
+              else{
+                $tabla .= '<center><a href="#" title="OPCION NO VALIDA" class="btn btn-warning"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="38" HEIGHT="38"/></a></center>';
+              }
+            $tabla .= '</td>';
+            $tabla .= '<td aling="center" bgcolor="#F7F9BC">';
+              /*---------------------------------------------*/
+              if($this->conf_form4==1 || $this->fun_id==401 || $this->fun_id==399){
+                $tabla .= '<center><a href="'.site_url("admin").'/proy/delete/1/'.$row['proy_id'].'" title="ELIMINAR" onclick="return confirmar()" class="btn btn-default"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="38" HEIGHT="38"/></a></center>';
+              }
+              else{
+                $tabla .= '<center><a href="#" title="OPCION NO VALIDA" class="btn btn-warning"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="38" HEIGHT="38"/></a></center>';
+              }                  
+            $tabla .= '</td>';
+            $tabla .= '<td style="font-size: 14px;"><center><b>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</b></center></td>';
+            $tabla.='<td style="font-size: 11px;"><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>';
+            $tabla.='<td>'.$row['nivel'].'</td>';
+            $tabla.='<td>'.$row['tipo_adm'].'</td>';
+            $tabla.='<td>'.strtoupper($row['dep_departamento']).'</td>';
+            $tabla.='<td>'.strtoupper($row['dist_distrital']).'</td>';
+            
           $tabla.='</tr>';
         }
       }
@@ -168,25 +294,33 @@ class Proyecto extends CI_Controller {
         foreach($proyectos as $row){
           $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
           $tabla.='<tr style="height:35px;">';
-            $tabla .= '<td title="'.$row['proy_id'].' - '.$row['aper_id'].'">';
+            $tabla .='<td title="aper_id '.$row['aper_id'].'" bgcolor="#5B9360">';
+              if(count($this->model_insumo->insumos_por_unidad($row['aper_id']))!=0){
+                $tabla .= '<center><a href="#" data-toggle="modal" data-target="#modal_aprob_pi" class="btn btn-default aprob_pi" title="VALIDAR PROYECTO POA" name="'.$row['proy_id'].'" ><img src="'.base_url().'assets/img/ok1.jpg" WIDTH="35" HEIGHT="35"/></a></center><br>';
+              }
+            $tabla .='</td>';
+            $tabla .= '<td title="'.$row['proy_id'].' - '.$row['aper_id'].'" bgcolor="#5B9360">';
               if(count($fase)!=0){
                 if($this->adm==1){ 
-                  $tabla .= '<center><a href="'.site_url("").'/prog/list_serv/'.$row['proy_id'].'" title="PROGRAMACION FÍSICA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/bien.png" WIDTH="30" HEIGHT="30"/></a></center>';
+                  $tabla .= '<center><a href="'.site_url("").'/prog/list_serv/'.$row['proy_id'].'" title="PROGRAMACION FÍSICA" class="btn btn-default"><img src="'.base_url().'assets/ifinal/bien.png" WIDTH="35" HEIGHT="35"/></a></center>';
                 }
               }
             $tabla .= '</td>';
 
-            $tabla .='<td><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success enlace" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).'">VER POA</a></center></td>';
+            $tabla .='<td bgcolor="#5B9360"><center><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default enlace" name="'.$row['proy_id'].'" id="'.strtoupper($row['proy_nombre']).'"><img src="'.base_url().'assets/ifinal/doc.jpg" WIDTH="35" HEIGHT="35"/></a></center></td>';
 
-            $tabla .= '<td aling="center">';
-              $tabla .= '<center><a href="'.site_url("admin").'/proy/edit/'.$row['proy_id'].'" title="MODIFICAR OPERACION" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="34" HEIGHT="30"/></a></center>';
-              $tabla .='<center><a href="'.site_url("admin").'/proy/fase_etapa/'.$row['proy_id'].'" title="FASE ETAPA DEL PROYECTO" class="btn btn-default"><img src="'.base_url().'assets/ifinal/faseetapa.png" WIDTH="34" HEIGHT="34"/></a></center>';
+              $tabla .= '<td bgcolor="#5B9360"><center><a href="'.site_url("admin").'/proy/edit/'.$row['proy_id'].'" title="MODIFICAR OPERACION" class="btn btn-default" target=_blank><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a></center></td>';
+              $tabla .='<td bgcolor="#5B9360"><center><a href="'.site_url("admin").'/proy/fase_etapa/'.$row['proy_id'].'" title="FASE ETAPA DEL PROYECTO" class="btn btn-default" target=_blank><img src="'.base_url().'assets/ifinal/faseetapa.png" WIDTH="35" HEIGHT="35"/></a></center></td>';
               /*---------------------------------------------*/
+              $tabla .='<td bgcolor="#F7F9BC">';
               if($this->tp_adm==1){
-                $tabla .= '<center><a href="'.site_url("admin").'/proy/delete/1/'.$row['proy_id'].'" title="ELIMINAR" onclick="return confirmar()" class="btn btn-default"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="34" HEIGHT="30"/></a></center>';
-              }                              
-            $tabla .= '</td>';
-            $tabla .= '<td><center>'.$row['aper_programa'].''.$row['proy_sisin'].''.$row['aper_actividad'].'</center></td>';
+                $tabla .= '<center><a href="'.site_url("admin").'/proy/delete/1/'.$row['proy_id'].'" title="ELIMINAR" onclick="return confirmar()" class="btn btn-default"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a></center>';
+              }
+              else{
+                $tabla .= '<center><a href="#" title="ELIMINAR" class="btn btn-default" title="OPCION NO VALIDA"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a></center>';
+              }                            
+            $tabla.='</td>';
+            $tabla.='<td><center>'.$row['aper_programa'].''.$row['proy_sisin'].''.$row['aper_actividad'].'</center></td>';
             $tabla.='<td>'.$row['proy_nombre'].'</td>';
             $tabla.='<td>'.$row['proy_sisin'].'</td>';
             $tabla.='<td>'.strtoupper($row['dep_departamento']).'</td>';
@@ -203,11 +337,7 @@ class Proyecto extends CI_Controller {
               $tabla .='<td bgcolor=#efb0b0><font color=red>Sin Fase</font></td>';
               $tabla .='<td bgcolor=#efb0b0><font color=red>Sin Fase</font></td>';
             }
-            $tabla .='<td title="aper_id '.$row['aper_id'].'">';
-              if(count($this->model_insumo->insumos_por_unidad($row['aper_id']))!=0){
-                $tabla .= '<center><a href="#" data-toggle="modal" data-target="#modal_aprob_pi" class="btn btn-default aprob_pi" title="VALIDAR PROYECTO POA" name="'.$row['proy_id'].'" ><img src="'.base_url().'assets/img/ok1.jpg" WIDTH="35" HEIGHT="35"/></a></center><br>';
-              }
-            $tabla .='</td>';
+            
           $tabla.='</tr>';
         }
       }
@@ -257,14 +387,14 @@ class Proyecto extends CI_Controller {
         $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id); /// PROYECTO
 
         $caratula_poa='';
-        $titulo_poa=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'];
+        $titulo_poa=$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' '.$proyecto[0]['proy_nombre'];
         if($proyecto[0]['tp_id']==4){
           $titulo_poa=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'];
           $caratula_poa='
-            <a href="javascript:abreVentana(\''.site_url("").'/proy/presentacion/'.$proy_id.'\');" title="CARATULA POA"  class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="45" HEIGHT="45"/><br>CARATULA POA</a>';
+          <a href="javascript:abreVentana(\''.site_url("").'/proy/presentacion/'.$proy_id.'\');" title="CARATULA POA"  class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="45" HEIGHT="45"/><br>CARATULA POA</a>';  
         }
 
-        $tabla=$this->programacionpoa->mi_poa($proy_id); /// Mis Subactividades
+        $tabla=$this->programacionpoa->mi_poa($proy_id); /// Mis Unidades Responsables
         $result = array(
           'respuesta' => 'correcto',
           'tabla'=>$tabla,
@@ -357,14 +487,14 @@ class Proyecto extends CI_Controller {
 
       $nro_dif=0;
       foreach($partidas_asig as $row){
-        $part=$this->model_ptto_sigep->get_partida_accion_regional($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
+        $part=$this->model_ptto_sigep->get_partida_programado_poa($proyecto[0]['aper_id'],$row['par_id']);
         $prog=0;
         
         if(count($part)!=0){
-          $prog=$part[0]['monto'];
+          $prog=$part[0]['ppto_programado'];
         }
 
-        $dif=($row['monto']-$prog);
+        $dif=($row['ppto_asignado']-$prog);
         
         if($dif!=0){
           $nro_dif++;
@@ -373,11 +503,11 @@ class Proyecto extends CI_Controller {
       }
 
       foreach($partidas_prog as $row){
-        $part=$this->model_ptto_sigep->get_partida_asig_accion($proyecto[0]['dep_id'],$proyecto[0]['aper_id'],$row['par_id']);
+        $part=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$row['par_id']);
          if(count($part)==0){ 
           $asig=0;
           if(count($part)!=0){
-            $asig=$part[0]['monto'];
+            $asig=$part[0]['ppto_asignado'];
           }
           $dif=($asig-$row['monto']);
 

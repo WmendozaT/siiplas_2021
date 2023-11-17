@@ -82,7 +82,7 @@ class model_producto extends CI_Model {
             Inner Join _componentes as c On c.pfec_id=poa.pfec_id
             Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
             Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-            where dist_id='.$dist_id.' and dist_id=\'21\' and c.estado!=\'3\' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'770\' and poa.prog!=\'960\' and poa.prog!=\'730\'
+            where dist_id='.$dist_id.' and dist_id=\'21\' and c.estado!=\'3\' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'770\' and poa.prog!=\'960\'
             order by poa.prog,poa.proy,poa.act asc'; 
         }
         else{
@@ -92,7 +92,7 @@ class model_producto extends CI_Model {
             Inner Join _componentes as c On c.pfec_id=poa.pfec_id
             Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
             Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-            where dist_id='.$dist_id.' and c.estado!=\'3\' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'770\' and poa.prog!=\'960\' and poa.prog!=\'730\'
+            where dist_id='.$dist_id.' and c.estado!=\'3\' and poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\' and poa.prog!=\'770\' and poa.prog!=\'960\' 
             order by poa.prog,poa.proy,poa.act asc'; 
         }
         
@@ -158,6 +158,55 @@ class model_producto extends CI_Model {
 
 
 
+
+
+    /*----- GET LISTA DE ACTIVIDADES PROGRAMA NORMAL O BOLSAS 2024 (Gasto Corriente) -----*/
+    function get_lista_form4_consolidado($com_id,$tp){
+        /// tp: 0 (listado normal de actividades)
+        /// tp: 1 (Listado de Actividades Bolsas por unidad responsable)
+
+        if($tp==0){ /// listado normal POA (Actividades)
+            $sql = '
+                select apg.aper_programa,p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
+                p.prod_resultado,p.acc_id,p.prod_cod,p.uni_resp,p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
+                ore.or_id,ore.or_codigo,og.og_id,og.og_codigo,enero as m1,febrero as m2, marzo as m3, abril as m4,mayo as m5, junio as m6, julio as m7, agosto as m8, septiembre as m9, octubre as m10, noviembre as m11, diciembre as m12, prog.g_id
+                from _productos p
+                Inner Join indicador as i On i.indi_id=p.indi_id
+                Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
+                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=og.aper_id
+                Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=p.prod_id
+                where p.com_id='.$com_id.' and p.estado!=\'3\'
+                order by p.prod_cod asc'; 
+        }
+        else{ /// listado POa bolsas
+            $sql = '
+                select apg.aper_programa,p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
+                p.prod_resultado,p.acc_id,p.prod_cod,p.uni_resp,p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
+                ore.or_id,ore.or_codigo,og.og_id,og.og_codigo,enero as m1,febrero as m2, marzo as m3, abril as m4,mayo as m5, junio as m6, julio as m7, agosto as m8, septiembre as m9, octubre as m10, noviembre as m11, diciembre as m12, prog.g_id
+                from _productos p
+                Inner Join indicador as i On i.indi_id=p.indi_id
+                Inner Join _componentes as c On p.com_id=c.com_id
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
+                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+
+                Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=p.prod_id
+                where p.uni_resp='.$com_id.' and prog.g_id='.$this->gestion.' and p.estado!=\'3\'
+                order by apg.aper_programa,p.prod_cod asc'; 
+        }
+        
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
+
     /// Migracion de temporalidad form 4 
     function list_temporalidad_total_form4(){
         $sql = 'select *
@@ -181,17 +230,6 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-    /*--- MONTO TOTAL OPERACION - INSUMOPRODUCTO (2019) ------*/
-/*    function monto_insumoproducto($prod_id){
-        $sql = 'select ip.prod_id,SUM(i.ins_costo_total) as total
-                from _insumoproducto ip
-                Inner Join insumos as i On i.ins_id=ip.ins_id
-                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.' and i.aper_id!=\'0\'
-                group by ip.prod_id'; 
- 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
     /*--------- ULTIMO PRODUCTO (2021-2022) ----------*/
     function ult_operacion($com_id){
@@ -217,7 +255,7 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-/*=================================== META GESTION ACTUAL PRODUCTO ====================================*/
+    /*========== META GESTION ACTUAL PRODUCTO ==========*/
     public function meta_prod_gest($id_prod){
         $sql = 'SELECT SUM(pg_fis) as meta_gest
             from prod_programado_mensual
@@ -225,8 +263,8 @@ class model_producto extends CI_Model {
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-/*==============================================================================================================*/
-/*=================================== LISTA DE PRODUCTOS ANUAL ====================================*/
+    /*====================================================*/
+    /*========== LISTA DE PRODUCTOS ANUAL ================*/
     function get_producto_id($id_prod){
         $sql = 'select *
                 from _productos p
@@ -243,14 +281,13 @@ class model_producto extends CI_Model {
         return $query->result_array();
 
     }
-    /*===================================================================*/
+    /*=====================================================*/
 
 
 
     /*=== LISTA DE OPERACIONES (2020 - 2022) REPORTE - GASTO CORRIENTE ===*/
     function lista_operaciones($com_id){
-        if($this->gestion>2023){
-            $sql = 'select p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
+        $sql = 'select p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
                 p.prod_resultado,p.acc_id,p.prod_cod,p.uni_resp,p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
                 ore.or_id,ore.or_codigo,og.og_id,og.og_codigo
                 from _productos p
@@ -260,25 +297,6 @@ class model_producto extends CI_Model {
                 Inner Join objetivo_gestion as og On og.og_id=opm.og_id
                 where p.com_id='.$com_id.' and p.estado!=\'3\'
                 order by p.prod_cod asc'; 
-        }
-        else{
-           $sql = ' select p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
-                p.prod_resultado,p.acc_id,p.prod_cod,p.uni_resp,p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
-                ore.or_id,ore.or_codigo,og.og_id,og.og_codigo,oe.obj_id,oe.obj_codigo, apg.aper_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad
-                from _productos p
-                Inner Join indicador as i On i.indi_id=p.indi_id
-                
-                Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
-
-                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
-                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-              
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=og.aper_id
-                
-                where p.com_id='.$com_id.' and p.estado!=\'3\'
-                order by p.prod_cod, oe.obj_codigo asc';  
-        }
         
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -381,8 +399,8 @@ class model_producto extends CI_Model {
         return $query->result_array();
 
     }
-    /*================================================================================*/
-    /*================== AGREGAR PRODUCTO  PROGRAMADO GESTION ========================*/
+    /*===================================================*/
+    /*======= AGREGAR PRODUCTO  PROGRAMADO GESTION =====*/
     function add_prod_gest($id_prod,$gestion,$m_id,$valor){
         $data = array(
             'prod_id' => $id_prod,
@@ -392,7 +410,7 @@ class model_producto extends CI_Model {
         );
         $this->db->insert('prod_programado_mensual',$data);
     }
-    /*==============================================================================================================*/
+    /*==================================================*/
 
     /*--------- VERIF MES EVALUADO-FORM 4 ---------*/
     public function verif_ope_evaluado_mes($prod_id,$mes_id){
@@ -478,9 +496,9 @@ class model_producto extends CI_Model {
         $this->db->where('prod_id', $id_p);
         $this->db->delete('_productos');
     }
-    /*======================================================================================*/
+    /*=============================================*/
 
-    /*------------------ GET PRODUCTO PROGRAMADO -------------------*/
+    /*----------- GET PRODUCTO PROGRAMADO ---------*/
     public function programado_producto($prod_id){ 
         $sql = 'select *
                 from prod_programado_mensual
@@ -508,15 +526,6 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-    /*------------------ ALINEACION ACCION - OPERACION -------------------*/
-/*    public function operacion_accion($ae){ 
-        $sql = 'select *
-            from _acciones_estrategicas ae
-            Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id 
-            where ae.ae='.$ae.''; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
     /*------ VERIF OPERACION REQUERIMIENTO -----*/
     public function verif_componente_operacion($com_id,$prod_cod){ 
@@ -538,19 +547,6 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-
-    /*---- LISTA DE PRODUCTOS-OPERACIONES ----*/
-/*    public function list_ope_proy($proy_id){
-        $sql = 'select *
-                from _proyectofaseetapacomponente pfe 
-                Inner Join _componentes as c On c.pfec_id=pfe.pfec_id
-                Inner Join _productos as pr On pr.com_id=c.com_id
-                Inner Join indicador as indi On pr.indi_id=indi.indi_id
-                where pfe.proy_id='.$proy_id.' and pfe.pfec_ejecucion=\'1\' and pfe.pfec_estado!=\'3\' and c.estado!=\'3\' and pr.estado!=\'3\'
-                order by c.com_id, pr.prod_id asc'; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
     /*----- SUMA PRODUCTO PROGRAMADO AL TRIMESTRE ACTUAL ----*/
     public function suma_prog_trimestre($prod_id,$fmes){ 

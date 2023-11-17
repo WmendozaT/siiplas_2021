@@ -355,6 +355,7 @@ class Acortoplazo extends CI_Controller{
             <th style="width:11%;">PRODUCTO</th>
             <th style="width:10.5%;">RESULTADO</th>
             <th style="width:10%;">INDICADOR</th>
+            <th style="width:8%;">FORMULA</th>
             <th style="width:3%;">LINEA BASE</th>
             <th style="width:3%;">META</th>
             <th style="width:3%;" title="CHUQUISACA">CH.</th>
@@ -367,7 +368,7 @@ class Acortoplazo extends CI_Controller{
             <th style="width:3%;" title="BENI">BE.</th>
             <th style="width:3%;" title="PANDO">PAN.</th>
             <th style="width:3%;" title="OFICINA NACIONAL">OFN.</th>
-            <th style="width:9%;">MEDIO VERIFICACI&Oacute;N</th>
+            <th style="width:8%;">MEDIO VERIFICACI&Oacute;N</th>
           </tr>
         </thead>
         <tbody>';
@@ -387,8 +388,7 @@ class Acortoplazo extends CI_Controller{
             $tabla .='<td style="width:5%;">'.$row['og_producto'].'</td>';
             $tabla .='<td style="width:9%;">'.$row['og_resultado'].'</td>';
             $tabla .='<td style="width:9%;">'.$row['og_indicador'].'</td>';
-            $tabla .='<td style="width:8%;">'.$row['og_observacion'].'</td>';
-            $tabla .='<td style="width:10%;">'.$row['og_formula'].'</td>';
+            $tabla .='<td style="width:8%;">'.$row['og_formula'].'</td>';
             $tabla .='<td style="width:2.5%; text-align: right;">'.round($row['og_linea_base'],2).'</td>';
             $tabla .='<td style="width:3%; text-align: right; font-size:9px;"><b>'.round($row['og_meta'],2).''.$prc.'</b></td>';
             
@@ -401,7 +401,7 @@ class Acortoplazo extends CI_Controller{
                 $tabla.='<td style="width:3%;" bgcolor="#f5f5f5" align=center>0</td>';
               }
             }
-            $tabla.='<td style="width:9%;">'.$row['og_verificacion'].'</td>';
+            $tabla.='<td style="width:8%;">'.$row['og_verificacion'].'</td>';
           $tabla.='</tr>';
 
         }

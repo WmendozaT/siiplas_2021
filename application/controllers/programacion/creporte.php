@@ -301,14 +301,23 @@ class Creporte extends CI_Controller {
         $componente=$this->model_componente->get_componente($com_id,$this->gestion);
         if(count($componente)!=0){
             $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); //// DATOS PROYECTO
+            
             $data['pie_rep']=$proyecto[0]['proy_nombre'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
+
+            $data['operaciones']=$this->programacionpoa->rep_formulario_N4_v1_pi($componente[0]['com_id'],$componente[0]['com_componente']); /// Reporte Gasto Corriente, Proyecto de Inversion 2022 //// PROYECTO DE INVERSION
+            
             if($proyecto[0]['tp_id']==4){
                 $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); /// PROYECTO
                 $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
+            
+                if($this->gestion>2023){
+                    $data['operaciones']=$this->programacionpoa->rep_formulario_N4_v2($componente[0]['com_id'],$componente[0]['com_componente'],$proyecto); /// 2024
+                }
+                else{
+                    $data['operaciones']=$this->programacionpoa->rep_formulario_N4_v1($componente[0]['com_id'],$componente[0]['com_componente'],$proyecto); /// 2023
+                }
             }
-
             $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$com_id);
-            $data['operaciones']=$this->programacionpoa->operaciones_form4($componente[0]['com_id'],$componente[0]['com_componente'],$proyecto); /// Reporte Gasto Corriente, Proyecto de Inversion 2022
             $data['pie']=$this->programacionpoa->pie_form($proyecto);
             $this->load->view('admin/programacion/reportes/reporte_form4', $data);
         }
@@ -341,9 +350,17 @@ class Creporte extends CI_Controller {
             foreach($unidades_responsables as $pr){
                 if($this->model_producto->productos_nro($pr['com_id'])!=0){
                     $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$pr['com_id']);
-                    $formulario_N4=$this->programacionpoa->operaciones_form4($pr['com_id'],$pr['com_componente'],$proyecto); /// Reporte Form 4 Gasto Corriente, Proyecto de Inversion 2022
-                    $cabecera_f5=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$pr['com_id']);
+                    $formulario_N4=$this->programacionpoa->rep_formulario_N4_v1_pi($pr['com_id'],$pr['com_componente']); /// Reporte Form 4 Gasto Corriente
+                    if($proyecto[0]['tp_id']==4){ /// gasto corriente
+                        if($this->gestion>2023){
+                            $formulario_N4=$this->programacionpoa->rep_formulario_N4_v2($pr['com_id'],$pr['com_componente'],$proyecto);
+                        }
+                        else{
+                            $formulario_N4=$this->programacionpoa->rep_formulario_N4_v1($pr['com_id'],$pr['com_componente'],$proyecto);
+                        }
+                    }
                     
+                    $cabecera_f5=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$pr['com_id']);
                     $requerimientos=$this->programacionpoa->list_requerimientos_reporte($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']));
                     
                     $lista_partidas=$this->model_insumo->list_consolidado_partidas_componentes($pr['com_id']);

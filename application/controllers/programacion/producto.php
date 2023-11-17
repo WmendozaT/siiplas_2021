@@ -364,7 +364,7 @@ class Producto extends CI_Controller {
         $or_id = $this->security->xss_clean($post['mor_id']); /// Objetivo Regional
         $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
         $prioridad = $this->security->xss_clean($post['priori']); /// prioridad
-        //$uni_resp = $this->security->xss_clean($post['um_resp']); /// unidad responsable
+        $uni_resp = $this->security->xss_clean($post['um_resp']); /// unidad responsable
 
         $relacion_operacion_obj_estrategico=$this->model_objetivoregion->get_objetivosregional($or_id);
 
@@ -393,7 +393,7 @@ class Producto extends CI_Controller {
             'prod_fuente_verificacion' => strtoupper($mverificacion),
             'estado' => 2,
             'or_id' => $or_id,
-            //'uni_resp' => $uni_resp,
+            'uni_resp' => $uni_resp,
             'obj_id' => $relacion_operacion_obj_estrategico[0]['obj_id'],
             'acc_id' => $ae,
             'fecha' => date("d/m/Y H:i:s"),

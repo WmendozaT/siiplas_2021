@@ -121,11 +121,11 @@ class Certificacionpoa extends CI_Controller{
           $nro_cdep='0';
         }
 
-        if($this->gestion>2022){
-          $codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa;
+        if($this->gestion>2023){
+          $codigo='CPOA.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev']; /// 2024
         }
         else{
-          $codigo='CPOA/'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'/'.$nro_cdep.''.$nro_cpoa;
+          $codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa; /// 2023
         }
 
         if(count($this->model_certificacion->get_codigo_certpoa($codigo))==0){
@@ -1536,7 +1536,7 @@ class Certificacionpoa extends CI_Controller{
               $tabla.='
                   <table style="width:100%;" border=0>
                       <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
-                          <td style="width:100%;">LIC. JUAN MARCELO SEGALES CORONEL</td>
+                          <td style="width:100%;">LIC. J. ERLIN SOTTO SALVATIERRA</td>
                       </tr>
                       <tr style="font-size: 10px;font-family: Arial; height:65px;" align="center">
                           <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>

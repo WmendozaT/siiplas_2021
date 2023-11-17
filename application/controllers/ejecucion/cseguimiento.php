@@ -1440,7 +1440,7 @@ class Cseguimiento extends CI_Controller {
 
     /*--- LISTA DE OPERACIONES A EJECUTAR EN EL MES ----*/
     public function seguimiento_form4_gc_mes($dist_id){
-      if($this->fun_id==592 || $this->fun_id==709){ /// Exclusivo La paz
+      if($this->dep_id==2){ /// Exclusivo La paz
         $unidades=$this->model_seguimientopoa->get_lista_unidad_operaciones_regional($this->dep_id,$this->verif_mes[1],$this->gestion);
       }
       else{

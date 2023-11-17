@@ -842,7 +842,7 @@ class Genera_informacion extends CI_Controller{
                   }
                 $tabla.='</td>';
                 $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3"><b>'.$row['par_codigo'].'</b></td>';
-                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_detalle']).'</td>';
+                $tabla.='<td bgcolor="#f4f5f3" title="'.$row['ins_id'].'">'.strtoupper($row['ins_detalle']).'</td>';
                 $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_unidad_medida']).'</td>';
                 $tabla.='<td bgcolor="#f4f5f3" align="right">'.round($row['ins_cant_requerida'],2).'</td>';
                 $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
