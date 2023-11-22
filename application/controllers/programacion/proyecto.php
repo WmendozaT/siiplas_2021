@@ -1026,17 +1026,6 @@ class Proyecto extends CI_Controller {
 
 
 
-  /*----- CUERPO CARATULA -----*/
-/*  public  function cuerpo_caratula($proyecto){
-    $tabla='';
-    $tabla.='';
-
-    return $tabla;
-  }*/
-
-
-
-
   /*----- DATOS GENERALES POA (2020) -----*/
   public  function datos_generales_pi($proy_id){
     $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO

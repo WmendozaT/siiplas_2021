@@ -376,11 +376,11 @@ class Programacionpoa extends CI_Controller{
               <tr>
                 <th>#</th>
                 <th>UNIDAD RESPONSABLE </th>
-                <th colspan=2>POA PROG. '.$proyecto[0]['aper_programa'].'</th>';
+                <th colspan=2><b>POA PROG. '.$proyecto[0]['aper_programa'].'</b><br>'.$proyecto[0]['aper_descripcion'].'</th>';
                 
                 if(count($programas_bolsas)!=0){
                   foreach($programas_bolsas  as $row){
-                    $tabla.='<th>POA PROG. '.$row['prog'].'</th>';
+                    $tabla.='<th><b>POA PROG. '.$row['prog'].'</b><br>'.$row['actividad'].'</th>';
                   }
                 }
 
@@ -413,7 +413,7 @@ class Programacionpoa extends CI_Controller{
                             $get_prog_bolsa=$this->model_producto->get_relacion_prog_770_producto($proyecto[0]['dist_id'],$row['prog'],$pr['com_id']); /// busca el registro
                             
                             $tabla.='<td align=center>';
-                            if(count($get_prog_bolsa)==1){
+                            if(count($get_prog_bolsa)!=0){
                               if(count($this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($get_prog_bolsa[0]['prod_id'],$get_prog_bolsa[0]['uni_resp']))!=0){
                                 $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/rep_form5_programa_bolsa/'.$get_prog_bolsa[0]['prod_id'].'\');" class="btn btn-default" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°5</b></font></a>';
                               }

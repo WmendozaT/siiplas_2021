@@ -1369,7 +1369,8 @@ public function valida_cpoas(){
         }
         else{
           $presupuesto=$this->model_certificacion->saldo_presupuesto_unidad($proy_id);
-          if(($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0){
+
+          if((($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0) || $proyecto[0]['proy_id']==2978){
             $tabla=$this->certificacionpoa->mis_formulariosN4($proy_id); /// Mis Formularios n° 4 por Unidad Responsable
           }
           else{
