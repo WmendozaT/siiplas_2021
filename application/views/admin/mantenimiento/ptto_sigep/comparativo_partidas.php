@@ -165,7 +165,7 @@
                                   <?php echo $this->session->flashdata('danger'); ?>
                                 </div><?php }
                             ?>
-
+                            <?php echo $boton; ?>
                             <div class="well well-sm well-light">
                                 <br>
                                 <b>BUSCAR PARTIDA : </b><input type="text" class="form-control" id="kwd_search" value="" style="width:40%;"/><br>
@@ -188,6 +188,64 @@
             </div>
         </div>
         <!-- END PAGE FOOTER -->
+
+        <!-- MODAL NUEVO REGISTRO DE ACTIVIDADES   -->
+        <div class="modal fade" id="modal_nuevo_ff" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <form action="<?php echo site_url("").'/mantenimiento/cptto_poa/valida_add_partida'?>"  id="form_nuevo2" name="form_nuevo2" class="form-horizontal" method="post">
+                        <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
+                        <h2 class="alert alert-info"><center>AGREGAR NUEVA PARTIDA</center></h2>                           
+                        <fieldset>
+
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">PARTIDA</label>
+                                    <div class="col-md-10">
+                                        <select class="form-control" id="par_id" name="par_id" title="SELECCIONE PARTIDA">
+                                                <option value="0">Seleccione Grupo Partida</option>
+                                                <?php 
+                                                    foreach($list_partidas as $row){ ?>
+                                                    <option value="<?php echo $row['par_id'];?>"><?php echo $row['par_codigo'].' - '.$row['par_nombre'];?></option>
+                                                        <?php
+                                                    } ?>        
+                                            </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">MONTO ASIGNADO</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="number" name="monto" id="monto" onkeyup="verif();" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </fieldset>                    
+                        <div class="form-actions">
+                            <div class="row">
+                                <div id="but">
+                                    <div class="col-md-12">
+                                        <div id="abut" style="display:none;">
+                                            <button class="btn btn-default" data-dismiss="modal" id="cl" title="CANCELAR">CANCELAR</button>
+                                            <button type="button" name="subir_form2" id="subir_form2" class="btn btn-info" >GUARDAR NUEVA PARTIDA</button>
+                                            <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
         <script data-pace-options='{ "restartOnRequestAfter": true }' src="<?php echo base_url(); ?>assets/js/plugin/pace/pace.min.js"></script>
         <script>
@@ -205,6 +263,7 @@
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <script src = "<?php echo base_url(); ?>mis_js/control_session.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
+
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
         <!-- BOOTSTRAP JS -->
         <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
@@ -357,9 +416,41 @@
                     return false;
                 });
             });
+
+            function verif(){ 
+                partida = $('[name="par_id"]').val(); /// Codigo sub act1
+                monto = $('[name="monto"]').val(); /// Codigo sub act2
+                if(partida!=null & (monto!='' & monto!=0 & monto>=50)){
+                    $('#abut').slideDown();
+                }
+                else{
+                    $('#abut').slideUp();
+                }
+            }
+
         </script>
 
-        </script>-->
+        <script type="text/javascript">
+        $(function () {
+            $("#subir_form2").on("click", function () {
+                var $valid = $("#form_nuevo2").valid();
+                if (!$valid) {
+                    $validator.focusInvalid();
+                } else {
+
+                    alertify.confirm("AGREGAR PARTIDA ?", function (a) {
+                        if (a) {
+                            document.getElementById("load").style.display = 'block';
+                            document.getElementById('subir_form2').disabled = true;
+                            document.forms['form_nuevo2'].submit();
+                        } else {
+                            alertify.error("OPCI\u00D3N CANCELADA");
+                        }
+                    });
+                }
+            });
+        });
+        </script>
         <script type="text/javascript">
         $(document).ready(function(){
           $("#kwd_search").keyup(function(){

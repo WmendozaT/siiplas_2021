@@ -1121,16 +1121,58 @@ class Cptto_poa extends CI_Controller {
 
     /*------------ Verificar Comparativo Partidas -----------*/
     public function ver_comparativo_partidas($proy_id){ 
-      $data['menu']=$this->menu(9);
-      $data['resp']=$this->session->userdata('funcionario');
+
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
       if(count($data['proyecto'])!=0){
+        $data['menu']=$this->menu(9);
+        $data['resp']=$this->session->userdata('funcionario');
         $data['partidas']= $this->comparativo_partidas_ppto_final($data['proyecto'][0]['dep_id'],$data['proyecto'][0]['aper_id'],1);
-      //echo $data['partidas'];
+        
+        $data['boton']='<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary nuevo_ff" title="NUEVO REGISTRO PARTIDA" style="width:10%;">NUEVO PARTIDA</a><br><br>';
+        $data['list_partidas']=$this->model_ptto_sigep->list_partidas_noasig($data['proyecto'][0]['aper_id']); /// Aper id
+
         $this->load->view('admin/mantenimiento/ptto_sigep/comparativo_partidas', $data);
       }
       else{
         redirect('ptto_asig_poa');
+      }
+    }
+
+    /*------------ ADICIONA PARTIDAS (PROG POA)--------------*/
+    public function valida_add_partida(){
+      if ($this->input->post()) {
+        $post = $this->input->post();
+        $proy_id = $this->security->xss_clean($post['proy_id']);
+        $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); //// DATOS DEL PROYECTO
+        $par_id = $this->security->xss_clean($post['par_id']);
+        $partida=$this->model_partidas->get_partida($par_id);
+        $importe = $this->security->xss_clean($post['monto']);
+
+        /*-------- Insert ppto_adicionado ----------*/
+          $query=$this->db->query('set datestyle to DMY');
+          $data_to_store = array( 
+              'aper_id' => $proyecto[0]['aper_id'],
+              'da' => $proyecto[0]['da'],
+              'ue' => $proyecto[0]['ue'],
+              'aper_programa' => $proyecto[0]['prog'],
+              'aper_proyecto' => $proyecto[0]['proy'],
+              'aper_actividad' => $proyecto[0]['act'],
+              'par_id' => $par_id,
+              'partida' => $partida[0]['par_codigo'],
+              'importe' => $importe,
+              'g_id' => $this->gestion,
+              'fun_id' => $this->session->userdata("fun_id"),
+          );
+          $this->db->insert('ptto_partidas_sigep', $data_to_store);
+          $sp_id=$this->db->insert_id();
+        /*------------------------------------------*/
+
+          $this->session->set_flashdata('success','SE REGISTRO CORRECTAMENTE');
+          redirect(site_url("").'/mnt/ver_ptto_asig_final/'.$proy_id);
+
+      }
+      else{
+        echo "<center><font color=red>Error al Registrar la Nueva Partida</font></center>";
       }
     }
 
@@ -1149,6 +1191,7 @@ class Cptto_poa extends CI_Controller {
       }
 
       $tabla .='
+
         <table '.$tab.'>
           <thead>
             <tr style="font-size: 7px;" align=center>

@@ -39,24 +39,6 @@ class Model_objetivogestion extends CI_Model{
                 
                 where og.og_id='.$og_id.' and oreg.estado!=\'3\' and oreg.g_id='.$this->gestion.' and prod.estado!=\'3\' and i.aper_id!=\'0\' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.' and i.ins_tipo_modificacion=\'0\'
                 group by og.og_id';
-
-
-            /*$sql = 'select opm.og_id,og.og_codigo,SUM(i.ins_costo_total) presupuesto
-                from lista_poa_nacional('.$this->gestion.') uni
-                Inner Join _componentes as c On c.pfec_id=uni.pfec_id
-                Inner Join _productos as prod On prod.com_id=c.com_id
-                Inner Join _insumoproducto as ipr On ipr.prod_id=prod.prod_id
-                Inner Join insumos as i On i.ins_id=ipr.ins_id
-                
-                Inner Join vista_temporalidad_insumo as itemp On itemp.ins_id=i.ins_id
-                Inner Join objetivos_regionales as ore On ore.or_id=prod.or_id
-
-                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
-                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-                where opm.og_id='.$og_id.' and prod.estado!=\'3\' and og.g_id='.$this->gestion.' and og.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and c.estado!=\'3\'
-                group by opm.og_id,og.og_codigo
-                order by og.og_codigo asc';*/
-
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -75,51 +57,9 @@ class Model_objetivogestion extends CI_Model{
               
                 where prod.or_id='.$or_id.' and prod.estado!=\'3\' and i.aper_id!=\'0\' and i.ins_estado!=\'3\' and i.ins_gestion='.$this->gestion.' and i.ins_tipo_modificacion=\'0\'
                 group by prod.or_id';
-
-        /*$sql = 'select prod.or_id,uni.dep_id,SUM(i.ins_costo_total) presupuesto
-                from lista_poa_nacional('.$this->gestion.') uni
-                Inner Join _componentes as c On c.pfec_id=uni.pfec_id
-                Inner Join _productos as prod On prod.com_id=c.com_id
-                Inner Join _insumoproducto as ipr On ipr.prod_id=prod.prod_id
-                Inner Join insumos as i On i.ins_id=ipr.ins_id
-                
-                Inner Join vista_temporalidad_insumo as itemp On itemp.ins_id=i.ins_id
-
-                 Inner Join objetivos_regionales as ore On ore.or_id=prod.or_id
-
-                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
-                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-                where uni.dep_id='.$dep_id.' and prod.or_id='.$or_id.' and prod.estado!=\'3\' and og.g_id='.$this->gestion.' and og.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and c.estado!=\'3\'
-    
-                group by prod.or_id,uni.dep_id';*/
-
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-
-    /*---- GET PRESUPUESTO OGESTION - PROYECTO DE INVERSION (REGIONAL) ----*/
-/*    public function get_ppto_ogestion_pi_regional($og_id,$dep_id){
-        $sql = 'select opm.og_id,opm.dep_id,SUM(ppto.ptto) presupuesto
-                from _productos p
-                Inner Join _actividades as a On a.prod_id=p.prod_id
-                Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
-                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
-                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-        
-                Inner Join (
-                   select ia.act_id,SUM(ins_costo_total) ptto
-                   from insumos i
-                   Inner Join _insumoactividad as ia On ia.ins_id=i.ins_id
-                   group by ia.act_id
-
-                   ) as ppto On ppto.act_id=a.act_id
-                                
-                where opm.og_id='.$og_id.' and opm.dep_id='.$dep_id.' and p.estado!=\'3\' and a.estado!=\'3\' and og.g_id='.$this->gestion.' and og.estado!=\'3\'
-                group by opm.og_id,opm.dep_id';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
 
    /*---- LIST OBJETIVOS DE GESTION GENERAL 2020-20021-2022-2023----*/
@@ -130,7 +70,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join indicador as tp On og.indi_id=tp.indi_id
                 Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
                 where og.estado!=\'3\' and og.g_id='.$this->gestion.'
-                order by og.og_codigo,og.og_id asc';
+                order by oe.obj_codigo,og.og_codigo asc';
         }
         else{
              $sql = 'select *
@@ -142,7 +82,6 @@ class Model_objetivogestion extends CI_Model{
                 order by og.og_codigo,og.og_id asc';
         }
        
-
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -285,8 +224,17 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
                 Inner Join _objetivos_estrategicos as oe on oe.obj_id = ae.obj_id
 
-                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=0
+                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
                 order by oge.og_codigo,oreg.or_codigo asc';
+        }
+        elseif($this->gestion>2023){ /// Gestion 2024
+            $sql = 'select opge.*,oge.*,oe.*,oreg.*
+                from objetivo_gestion oge
+                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=oge.oe_id
+                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
+                order by oe.obj_codigo,oge.og_codigo,oreg.or_codigo asc';
         }
         else{
             $sql = 'select opge.*,oge.*,ae.*,oe.*,oreg.*

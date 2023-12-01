@@ -915,13 +915,13 @@ class Oregional extends CI_Controller{
       <thead>
         <tr style="font-size: 6.7px;" bgcolor="#eceaea" align=center>
           <th style="width:1%;height:20px;">#</th>
-          <th style="width:2.5%;"><b>COD. ACE.</b></th>
-          <th style="width:2.5%;"><b>COD. ACP.</b></th>
-          <th style="width:2.5%;"><b>COD. OPE.</b></th>
+          <th style="width:2%;"><b>COD. OE.</b></th>
+          <th style="width:2%;"><b>COD. ACP.</b></th>
+          <th style="width:2%;"><b>COD. OPE.</b></th>
           <th style="width:20%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
           <th style="width:16%;">PRODUCTO</th>
           <th style="width:16%;">RESULTADO</th>
-          <th style="width:16%;">INDICADOR</th>
+          <th style="width:18%;">INDICADOR</th>
           <th style="width:4%;">META</th>
           <th style="width:18%;">MEDIO DE VERIFICACI&Oacute;N</th>
         </tr>
@@ -938,13 +938,13 @@ class Oregional extends CI_Controller{
       $tabla.='
       <tr style="font-size: 6.5px;">
         <td style="width:1%; height:18px;" align=center>'.$nro.'</td>
-        <td style="width:2.5%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
-        <td style="width:2.5%; font-size: 8px;" align="center"><b>'.$row['og_codigo'].'</b></td>
-        <td style="width:2.5%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
+        <td style="width:2%; font-size: 8px;" align="center"><b>'.$row['obj_codigo'].'</b></td>
+        <td style="width:2%; font-size: 8px;" align="center"><b>'.$row['og_codigo'].'</b></td>
+        <td style="width:2%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
         <td style="width:20%;">'.$row['or_objetivo'].'</td>
         <td style="width:16%;">'.$row['or_producto'].'</td>
         <td style="width:16%;">'.$row['or_resultado'].'</td>
-        <td style="width:16%;">'.$row['or_indicador'].'</td>
+        <td style="width:18%;">'.$row['or_indicador'].'</td>
         <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).''.$meta.'</b></td>
         <td style="width:18%;">'.$row['or_verificacion'].'</td>
       </tr>';
@@ -969,13 +969,13 @@ class Oregional extends CI_Controller{
       <thead>
         <tr style="font-size: 6.7px;" bgcolor="#eceaea" align=center>
           <th style="width:1%;height:20px;">#</th>
-          <th style="width:2.5%;"><b>COD. ACE.</b></th>
-          <th style="width:2.5%;"><b>COD. ACP.</b></th>
-          <th style="width:2.5%;"><b>COD. OPE.</b></th>
+          <th style="width:2%;"><b>COD. OE.</b></th>
+          <th style="width:2%;"><b>COD. ACP.</b></th>
+          <th style="width:2%; "><b>COD. OPE.</b></th>
           <th style="width:17%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
           <th style="width:15%;">PRODUCTO</th>
-          <th style="width:15%;">RESULTADO</th>
-          <th style="width:15%;">INDICADOR</th>
+          <th style="width:16%;">RESULTADO</th>
+          <th style="width:16%;">INDICADOR</th>
           <th style="width:4%;">META</th>
           <th style="width:18%;">MEDIO DE VERIFICACI&Oacute;N</th>
           <th style="width:7%;">PPTO. '.$this->gestion.'</th>
@@ -998,14 +998,14 @@ class Oregional extends CI_Controller{
       $nro++;
       $tabla.='
       <tr style="font-size: 6.5px;">
-        <td style="width:1%; height:18px;" align=center>'.$row['or_id'].'</td>
-        <td style="width:2.5%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
-        <td style="width:2.5%;" align="center"><b>'.$row['og_codigo'].'</b></td>
-        <td style="width:2.5%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
+        <td style="width:1%; height:18px; font-size: 5px;" align=center title="'.$row['or_id'].'">'.$nro.'</td>
+        <td style="width:2%; font-size: 8px;" align="center"><b>'.$row['obj_codigo'].'</b></td>
+        <td style="width:2%; font-size: 8px;" align="center"><b>'.$row['og_codigo'].'</b></td>
+        <td style="width:2%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
         <td style="width:17%;">'.$row['or_objetivo'].'</td>
         <td style="width:15%;">'.$row['or_producto'].'</td>
-        <td style="width:15%;">'.$row['or_resultado'].'</td>
-        <td style="width:15%;">'.$row['or_indicador'].'</td>
+        <td style="width:16%;">'.$row['or_resultado'].'</td>
+        <td style="width:16%;">'.$row['or_indicador'].'</td>
         <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).''.$meta.'</b></td>
         <td style="width:18%;">'.$row['or_verificacion'].'</td>
         <td style="width:7%;text-align: right;">'.number_format($ppto_gc, 2, ',', '.').'</td>

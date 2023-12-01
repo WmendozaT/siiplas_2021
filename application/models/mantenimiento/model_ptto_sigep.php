@@ -10,6 +10,17 @@ class Model_ptto_sigep extends CI_Model{
         $this->dist_tp = $this->session->userData('dist_tp');
     }
     
+    /// Get Proyecto
+    public function get_proy($proy_id){
+        $sql = '
+            select *
+            from lista_poa_gastocorriente_nacional('.$this->gestion.')
+            where proy_id='.$proy_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
     /// lista de Regionales incluyendo Oficina Nacional
     public function list_regionales(){
         $sql = '

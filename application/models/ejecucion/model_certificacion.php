@@ -261,8 +261,19 @@ class Model_certificacion extends CI_Model{
     /*------- OBTIENE DATOS PROG. FIN POR MES ----*/
     public function get_insumo_programado_mes($ins_id,$mes_id){
         $sql = 'select *
-                from temporalidad_prog_insumo
-                where ins_id='.$ins_id.' and mes_id='.$mes_id.'';
+                from temporalidad_prog_insumo temp
+                Inner Join mes as m On m.m_id=temp.mes_id
+                where temp.ins_id='.$ins_id.' and temp.mes_id='.$mes_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*------- OBTIENE DATOS PROG. FIN POR MES ----*/
+    public function get_insumo_programado_mes_prog($ins_id){
+        $sql = 'select *
+                from temporalidad_prog_insumo temp
+                Inner Join mes as m On m.m_id=temp.mes_id
+                where temp.ins_id='.$ins_id.'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -305,6 +316,7 @@ class Model_certificacion extends CI_Model{
 
         return $query->num_rows();
     }
+
 
     /*----- GET NUMERO DE TEMP. CERTIFICADO  ----*/
     public function get_lista_detalle_cert_poa($cpoa_id){

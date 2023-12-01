@@ -39,8 +39,9 @@ class cajuste_crequerimiento extends CI_Controller{
     /*---- LISTA DE REQUERIMIENTOS POR SERVICIO ----*/
     function list_requerimientos_total($com_id){
       $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion);
-      $data['menu']=$this->genera_menu($data['componente'][0]['proy_id']);
+      
       if(count($data['componente'])!=0){
+        $data['menu']=$this->genera_menu($data['componente'][0]['proy_id']);
         $fase = $this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
         $data['proyecto']=$this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
         $data['titulo']=$this->programacionpoa->titulo_ajuste($data['proyecto'],$data['componente']);
@@ -68,7 +69,7 @@ class cajuste_crequerimiento extends CI_Controller{
         $this->load->view('admin/programacion/requerimiento/list_requerimientos_ajuste_total', $data);
       }
       else{
-        echo "Error !!!";
+        redirect(site_url("admin").'/dashboard');
       }
     }
 

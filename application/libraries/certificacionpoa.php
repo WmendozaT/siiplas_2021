@@ -30,6 +30,7 @@ class Certificacionpoa extends CI_Controller{
       $this->fun_id = $this->session->userData('fun_id');
      // $this->tp_adm = $this->session->userData('tp_adm');
       $this->verif_mes=$this->session->userData('mes_actual');
+
       $this->resolucion=$this->session->userdata('rd_poa');
       $this->tp_adm = $this->session->userData('tp_adm');
       $this->mes = $this->mes_nombre();
@@ -672,7 +673,96 @@ class Certificacionpoa extends CI_Controller{
   }
 
 
-/*------- ITEMS DISPONIBLES A CERTIFICAR ------*/
+/*------- ITEMS DISPONIBLES A CERTIFICAR (rapido)------*/
+  public function items_disponibles_a_certificar_select_rapido($cpoa){
+    $tabla='';
+    $tabla='
+          <style>
+              input[type="checkbox"] {
+              display:inline-block;
+              width:20px;
+              height:20px;
+              margin:-1px 6px 0 0;
+              vertical-align:middle;
+              cursor:pointer;
+            }
+          </style>';
+
+      $requerimientos=$this->model_certificacion->list_items_disponibles_paraCertificacion_total($cpoa[0]['prod_id']); /// Lista de Items Disponibles a Certificar
+      $tabla.='
+      <section class="col col-2">
+        <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR DE ITEM...."/><br>
+      </section>
+      <form id="certpoa" name="certpoa" novalidate="novalidate" action="'.site_url().'/ejecucion/ccertificacion_poa/valida_cpoas" method="post" class="smart-form">
+      <input type="hidden" name="cpoa_id" id="cpoa_id" value="'.$cpoa[0]['cpoa_id'].'">
+        <center>
+          <table class="table table-bordered" style="width:80%;" align="center" id="datos">
+            <thead >
+              <tr style="text-align:center">
+                <th style="width:2%;"></th>
+                <th style="width:4%;">PARTIDA</th>
+                <th style="width:16%;">REQUERIMIENTO</th>
+                <th style="width:5%;">UNIDAD DE MEDIDA</th>
+                <th style="width:3%;">CANTIDAD</th>
+                <th style="width:5%;">PRECIO</th>
+                <th style="width:5%;">COSTO TOTAL</th>
+                <th style="width:5%;">MES PROGRAMADO</th>
+                <th style="width:10%;">OBSERVACION</th>
+              </tr>
+            </thead>
+            <tbody>';
+            $nro=0;
+            foreach($requerimientos as $row){
+              $temp=$this->model_certificacion->get_insumo_programado_mes_prog($row['ins_id']);
+              if(count($temp)==1){
+                $color='';
+                if($temp[0]['m_id']<$this->verif_mes[1]){
+                  $color='red';
+                }
+
+                $nro++;
+                $tabla.='
+                <tr title='.$row['ins_id'].' id="tr'.$nro.'" bgcolor="#EFF0EF">
+                  <td style="width:2%; text-align:center">';
+                  if(count($this->model_certificacion->get_items_solicitado($row['ins_id']))==0){ /// EN CASO DE QUENO TENGA SOLICITUD
+                    $tabla.='<input type="checkbox" name="ins[]" id="check'.$row['ins_id'].'" value="'.$row['ins_id'].'"/><br>';
+                  }
+                  else{
+                    $tabla.='<img src="'.base_url().'assets/Iconos/cancel.png" WIDTH="20" HEIGHT="20"/>';
+                  }
+                  $tabla.='
+                  <input type="hidden" name="ins'.$row['ins_id'].'" id="ins'.$row['ins_id'].'" value="'.$row['ins_id'].'">
+                  </td>
+                  <td style="width:4%; font-size: 17px;" align=center><b>'.$row['par_codigo'].'</b></td>
+                  <td style="width:16%; font-size: 12px;" >'.$row['ins_detalle'].'</td>
+                  <td style="width:5%; font-size: 12px;">'.$row['ins_unidad_medida'].'</td>
+                  <td style="width:3%; font-size: 12px;" align=right>'.$row['ins_cant_requerida'].'</td>
+                  <td style="width:5%; font-size: 12px;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                  <td style="width:5%; font-size: 12px;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>
+                  <td style="width:5%; font-size: 12px; color:'.$color.'" align=left>'.$temp[0]['m_descripcion'].' : <b>'.number_format($temp[0]['ipm_fis'], 2, ',', '.').'</b></td>';
+                  $tabla.='
+                  <td style="width:8%; font-size: 12px;">'.$row['ins_observacion'].'</td>
+                </tr>';
+              }
+            }
+          $tabla.='
+            </tbody>  
+          </table>
+        </center>
+        <footer>
+          <div id="but">
+            <input type="button" value="GUARDAR CERTIFICACI&Oacute;N POA" id="btsubmit_cpoa" class="btn btn-success" title="GENERAR CERTIFICACIÓN POA">
+          </div>
+        </footer>
+        <div id="load" style="display: none" align="center">
+          <br><img  src="'.base_url().'/assets/img_v1.1/preloader.gif" width="100"><br><b>GENERANDO CERTIFICACI&Oacute;N POA ....</b>
+        </div>
+      </form>';
+
+    return $tabla;
+  }
+
+/*------- ITEMS DISPONIBLES A CERTIFICAR (2023)------*/
   public function items_disponibles_a_certificar($cpoa){
     /// tp 0: lista de requerimientos por unidad responsable
 

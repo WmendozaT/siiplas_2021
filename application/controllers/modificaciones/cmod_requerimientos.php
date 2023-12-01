@@ -582,7 +582,6 @@ class Cmod_requerimientos extends CI_Controller {
     }
 
 
-
     /*------------ ADICIONA PARTIDAS (MODIFICACIONES)--------------*/
     public function valida_add_partida(){
       if ($this->input->post()) {

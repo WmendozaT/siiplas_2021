@@ -679,6 +679,8 @@ class Model_proyecto extends CI_Model{
 
                                         fu.*,
                                         dep.*,
+                                        ds."da",
+                                        ds."ue",
                                         ds."dist_id",
                                         ds."dist_cod",
                                         ds."dist_distrital"

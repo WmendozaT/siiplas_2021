@@ -1488,6 +1488,62 @@
           }
         }
 
+
+
+
+      ///// GENERAR CERTIFICACION POA (NORMAL RAPIDO)
+      $(function () {
+        $("#btsubmit_cpoa").on("click", function (e) {
+          var $validator = $("#certpoa").validate({
+              rules: {
+                cpoa_id: {
+                    required: true,
+                }
+              },
+              messages: {
+                cpoa_id: {required: "<font color=red size=1>REGISTRE CITE ID</font>"}
+              },
+              highlight: function (element) {
+                  $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+              },
+              unhighlight: function (element) {
+                  $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+              },
+              errorElement: 'span',
+              errorClass: 'help-block',
+              errorPlacement: function (error, element) {
+                  if (element.parent('.input-group').length) {
+                      error.insertAfter(element.parent());
+                  } else {
+                      error.insertAfter(element);
+                  }
+              }
+          });
+          var $valid = $("#certpoa").valid();
+          if (!$valid) {
+              $validator.focusInvalid();
+          } 
+          else {
+            reset();
+              alertify.confirm("GENERAR CERTIFICACI&Oacute;N POA?", function (a) {
+                  if (a) {
+                      //document.getElementById('btsubmit').disabled = true;
+                      document.certpoa.submit();
+                      document.getElementById("load").style.display = 'block';
+                     document.getElementById("but").style.display = 'none';
+                  } else {
+                      alertify.error("OPCI\u00D3N CANCELADA");
+                  }
+              });
+          }
+      });
+    });
+
+
+
+
+
+
       /// GENERAR EDICION DE CERTIFICACION POA
       $(function () {
         $("#btsubmit_edit").on("click", function (e) {
