@@ -44,7 +44,8 @@ class Oregional extends CI_Controller{
 
     /*---------- LISTA REGIONALES SEGUN OBJETIVO DE GESTION DETALLE COMPLETO------------*/
     public function regionales_seleccionados($og_id){
-      $regionales=$this->model_objetivogestion->list_temporalidad_regional($og_id);
+      $regionales=$this->model_objetivogestion->list_temporalidad_regional($og_id); /// REGIONALES HABILITADOS PARA EL ACP
+      $lista_form1=$this->model_objetivogestion->list_form1_objetivosgestion($og_id);
       $tabla='';
 
       $sw=0;
@@ -107,7 +108,7 @@ class Oregional extends CI_Controller{
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th style="width:1%;" bgcolor="#d2d2d2">#</th>
+                      <th style="width:5%;" bgcolor="#d2d2d2">#</th>
                       <th style="width:3%;" bgcolor="#d2d2d2">MOD.</th>
                       <th style="width:3%;" bgcolor="#d2d2d2">DEL.</th>
                       <th style="width:5%;" bgcolor="#d2d2d2">COD. ACP..</th>
@@ -126,7 +127,15 @@ class Oregional extends CI_Controller{
                 $nro++;
                 $tabla.='<tr>';
                   $tabla.='
-                  <td><b>'.$nro.'</b></td>
+                  <td title="'.$row_or['or_id'].'"><b>'.$nro.'</b>
+                    <select class="form-control" class="form-control" onchange="doSelectAlert(this.value,'.$row_or['or_id'].','.$row['dep_id'].');"> title="SELECCIONE ACP">
+                      <option value="0">ACP</option>';
+                      foreach($lista_form1 as $row_acp){
+                        $tabla.='<option value="'.$row_acp['og_id'].'">'.$row_acp['og_codigo'].'.- '.$row_acp['og_objetivo'].'</option>';
+                      }
+                      $tabla.='        
+                    </select>
+                  </td>
                   <td>';
                   if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401 || $this->fun_id==418){
                     $tabla.='<a href="'.site_url("").'/me/update_oregional/'.$row_or['or_id'].'" title="MODIFICAR DATOS" class="btn btn-default"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a>';

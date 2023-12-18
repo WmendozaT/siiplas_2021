@@ -132,7 +132,7 @@ class Producto extends CI_Controller {
         else{
           $data['prod'] = $this->form4($proy_id,$com_id); /// Lista de form4
         }
-        
+       // echo $data['proyecto'][0]['dist_id'];
         $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
 
 
@@ -357,7 +357,7 @@ class Producto extends CI_Controller {
         $indi_id = $this->security->xss_clean($post['mtipo_i']); /// Tipo de Indicador
         $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador
         $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
-      //  $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
+        $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
         $linea_base = $this->security->xss_clean($post['mlbase']); /// Linea Base
         $meta = $this->security->xss_clean($post['mmeta']); /// Meta
         $presupuesto = $this->security->xss_clean($post['mppto']); /// Presupuesto
@@ -389,7 +389,7 @@ class Producto extends CI_Controller {
             'prod_indicador' => strtoupper($indicador),
             'prod_linea_base' => $linea_base,
             'prod_meta' => $meta,
-            //'prod_unidades' => $unidad,
+            'prod_unidades' => $unidad,
             'prod_fuente_verificacion' => strtoupper($mverificacion),
             'estado' => 2,
             'or_id' => $or_id,
@@ -1635,8 +1635,8 @@ class Producto extends CI_Controller {
                     $cod_form4 = intval(trim($datos[2])); // Codigo Form 4
                     $descripcion = strval(utf8_encode(trim($datos[3]))); //// descripcion form4
                     $resultado = strval(utf8_encode(trim($datos[4]))); //// descripcion Resultado
-                    $unidad = strval(utf8_encode(trim($datos[5]))); //// Unidad responsable
-                   // $unidad = intval(trim($datos[5])); //// id Unidad responsable PRG Bolsas
+                   // $unidad = strval(utf8_encode(trim($datos[5]))); //// Unidad responsable
+                    $unidad = intval(trim($datos[5])); //// id Unidad responsable PRG Bolsas
                     $indicador = strval(utf8_encode(trim($datos[6]))); //// descripcion Indicador
                     $lbase = intval(trim($datos[7])); //// Linea Base
                     $meta = intval(trim($datos[8])); //// Meta
@@ -1662,8 +1662,8 @@ class Producto extends CI_Controller {
                           'prod_fuente_verificacion' => strtoupper($mverificacion), 
                           'prod_linea_base' => $lbase,
                           'prod_meta' => $meta,
-                          //'uni_resp' => $unidad, //// para prog bolsas
-                          'prod_unidades' => $unidad,
+                          'uni_resp' => $unidad, //// para prog bolsas
+                          //'prod_unidades' => $unidad,
                           'acc_id' => 0,
                           'prod_ppto' => 1,
                           'fecha' => date("d/m/Y H:i:s"),

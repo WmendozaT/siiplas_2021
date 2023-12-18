@@ -123,24 +123,6 @@ class Ccertificacion_poa extends CI_Controller {
   }
 
 
-  //// formulario (Anterior)
-/*  public function list_items_cert2($prod_id){
-    $data['datos']=$this->model_certificacion->get_datos_unidad_prod($prod_id);
-    if(count($data['datos'])!=0){
-        $data['menu']=$this->certificacionpoa->menu(4);
-        $data['resp']=$this->session->userdata('funcionario');
-        $data['res_dep']='hola mundo';
-        $data['titulo']='hola mundo';
-        $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
-        $this->update_gestion_temporalidad($requerimientos);
-        $data['requerimientos'] = $this->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
-        $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/items_disponibles', $data);
-    }
-    else{
-      echo "Error !!!";
-    }
-  }*/
-
 
 
   /*---- formulario Datos Cite -----*/
@@ -1409,7 +1391,7 @@ class Ccertificacion_poa extends CI_Controller {
     public function modificar_cpoa($cpoaa_id){
       $data['cert_editado']=$this->model_certificacion->get_cert_poa_editado($cpoaa_id);
       if(count($data['cert_editado'])!=0 & $data['cert_editado'][0]['cpoa_estado']!=3){
-        $data['cpoa']=$this->model_certificacion->get_datos_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
+          $data['cpoa']=$this->model_certificacion->get_datos_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
           $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cert_editado'][0]['prod_id']); /// Datos completos de la Unidad/ Proyectos de Inversión
           $data['menu']=$this->certificacionpoa->menu(4);
           $data['titulo']=$this->certificacionpoa->titulo_cabecera($data['datos']);
@@ -1432,6 +1414,7 @@ class Ccertificacion_poa extends CI_Controller {
               <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="25" HEIGHT="20"/>&nbsp;<b style="font-size:9px">SUBIR ARCHIVO.CSV</b>
             </a>';
           }
+         
           $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/form_items_edit_cert', $data);
       }
       else{

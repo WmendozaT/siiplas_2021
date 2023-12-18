@@ -218,6 +218,27 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 		<script type="text/javascript">
+			function doSelectAlert(select_og_id,or_id,dep_id) {
+				//alert(select_og_id+' - '+or_id+' - '+dep_id)
+			  alertify.confirm("DESEA CAMBIAR ALINEACION DE A.C.P. ?", function (a) {
+			      if (a) {
+			      url = "<?php echo site_url().'/mestrategico/cobjetivo_regional/cambia_alineacion_acp';?>";
+			      $.ajax({
+			          type: "post",
+			          url: url,
+			          data:{select_og_id:select_og_id,or_id:or_id,dep_id:dep_id},
+			              success: function (data) {
+			              window.location.reload(true);
+			          }
+			      });
+			      } else {
+			          alertify.error("OPCI\u00D3N CANCELADA");
+			      }
+			    });
+			}
+		</script>
+
+		<script type="text/javascript">
 	      $(function () {
 	          function reset() {
 	              $("#toggleCSS").attr("href", "<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css");
@@ -282,6 +303,7 @@
 
 	      });
 	  </script>
+
 		<script type="text/javascript">
 			$(document).ready(function() {
 				pageSetUp();
@@ -291,5 +313,6 @@
 				$('#tabs').tabs();
 			})
 		</script>
+
 	</body>
 </html>

@@ -1385,7 +1385,7 @@ class Programacionpoa extends CI_Controller{
                             $cont=0;
                               foreach($UnidadesResponsables as $row){
                                 if(count($this->model_producto->list_prod($row['com_id']))!=0){
-                                  $tabla.="<li style='font-family: Arial;height: 15px; font-size: 15px; text-align:justify'>".$row['tipo_subactividad'].' '.$row['serv_descripcion']."</li>";
+                                  $tabla.="<li style='font-family: Arial;height: 12px; font-size: 12.2px; text-align:justify'>".$row['tipo_subactividad'].' '.$row['serv_descripcion']."</li>";
                                 }
                               }
                     $tabla.="</ul>

@@ -701,7 +701,7 @@ class Cert_poa extends CI_Controller {
     }
 
 
-    /*----- GET REQUERIMIENTO certificado a modificar 2020 -----*/
+    /*----- GET REQUERIMIENTO (EDICION DE CERTIFICACION POA) -----*/
     public function get_requerimiento_cert(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -709,7 +709,8 @@ class Cert_poa extends CI_Controller {
         $cpoaa_id = $this->security->xss_clean($post['cpoaa_id']);
         $cert_editado=$this->model_certificacion->get_cert_poa_editado($cpoaa_id); /// Datos de la Certificacion Anulado
         $cpoa=$this->model_certificacion->get_datos_certificacion_poa($cert_editado[0]['cpoa_id']); /// Datos de la Certificacion POA
-
+        $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cpoa[0]['proy_id']);
+        
         $insumo= $this->model_insumo->get_requerimiento($ins_id); /// Datos requerimientos 
         
         if($insumo[0]['ins_tipo_modificacion']==0){

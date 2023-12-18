@@ -124,14 +124,6 @@ class Model_objetivoregion extends CI_Model{
                 where opg.og_id='.$og_id.' and opg.dep_id='.$dep_id.' and oreg.estado!=\'3\'
                 order by oreg.or_codigo,oreg.or_id asc';
 
-
-       /* $sql = 'select *
-                from objetivo_programado_mensual opg
-                Inner Join objetivo_gestion as og On og.og_id=opg.og_id
-                Inner Join objetivos_regionales as oreg On opg.pog_id=oreg.pog_id
-                where opg.og_id='.$og_id.' and opg.dep_id='.$dep_id.' and oreg.estado!=\'3\' and oreg.or_meta!=\'0\'
-                order by oreg.or_codigo,oreg.or_id asc';*/
-
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -436,6 +428,19 @@ class Model_objetivoregion extends CI_Model{
         return $query->result_array();
     }
 
+
+    /*-- GET Objetivo Regional --*/
+    public function get_form2_oregional($or_id){
+        $sql = 'select *
+                from objetivos_regionales
+                where or_id='.$or_id.' and g_id='.$this->gestion.'';
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+
     /*-- verifica si existe registro de temporalidad de Objetivos Regionales --*/
     public function verif_temporalidad_oregional($or_id){
         $sql = 'select *
@@ -609,67 +614,6 @@ class Model_objetivoregion extends CI_Model{
 
         return $query->result_array();
     }
-
-
-    //// REPORTE DE EVALUACION POA FORMUALRIO 2 - POR REGIONAL -----
-    /*-- OBTIENE LA SUMATORIA TOTAL PROGRAMADO FORMULARIO 2 A LA GESTION POR REGIONALES --*/
-/*    public function get_suma_total_prog_form2_regional($dep_id){
-        $sql = '
-            select opge.dep_id,opge.g_id,SUM(temprog.pg_fis) programado_total
-                from temp_trm_prog_objetivos_regionales temprog
-                Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
-                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
-                where oreg.estado!=\'3\' and opge.dep_id='.$dep_id.' and opge.g_id='.$this->gestion.'
-                group by opge.dep_id,opge.g_id';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*-- OBTIENE LA SUMATORIA TOTAL EJECUTADO FORMULARIO 2 A LA GESTION POR REGIONALES --*/
-/*    public function get_suma_total_ejec_form2_regional($dep_id){
-        $sql = '
-            select opge.dep_id,opge.g_id,SUM(temejec.ejec_fis) ejecutado_total
-                from temp_trm_ejec_objetivos_regionales temejec
-                Inner Join objetivos_regionales as oreg on oreg.or_id = temejec.or_id
-                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
-                where oreg.estado!=\'3\' and opge.dep_id='.$dep_id.' and opge.g_id='.$this->gestion.'
-                group by opge.dep_id,temejec.trm_id,opge.g_id';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*-- OBTIENE LA SUMATORIA PROGRAMADO FORMULARIO 2 AL TRIMESTRE POR REGIONALES --*/
-/*    public function get_suma_trimestre_prog_form2_regional($dep_id,$trimestre){
-        $sql = '
-            select opge.dep_id,temprog.trm_id,opge.g_id,SUM(temprog.pg_fis) prog
-                from temp_trm_prog_objetivos_regionales temprog
-                Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
-                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
-                where oreg.estado!=\'3\' and opge.dep_id='.$dep_id.' and temprog.trm_id='.$trimestre.' and opge.g_id='.$this->gestion.'
-                group by opge.dep_id,temprog.trm_id,opge.g_id';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-    /*-- OBTIENE LA SUMATORIA EJECUTADO FORMULARIO 2 AL TRIMESTRE POR REGIONALES --*/
-/*    public function get_suma_trimestre_ejec_form2_regional($dep_id,$trimestre){
-        $sql = '
-            select opge.dep_id,temejec.trm_id,opge.g_id,SUM(temejec.ejec_fis) ejec
-                from temp_trm_ejec_objetivos_regionales temejec
-                Inner Join objetivos_regionales as oreg on oreg.or_id = temejec.or_id
-                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
-                where oreg.estado!=\'3\' and opge.dep_id='.$dep_id.' and temejec.trm_id='.$trimestre.' and opge.g_id='.$this->gestion.'
-                group by opge.dep_id,temejec.trm_id,opge.g_id';
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
-
-
 
 
     //// REPORTE DE EVALUACION POA FORMUALRIO 2 - INSTITUCIONAL -----

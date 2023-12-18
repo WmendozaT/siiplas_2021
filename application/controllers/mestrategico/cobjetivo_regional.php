@@ -34,7 +34,6 @@ class Cobjetivo_regional extends CI_Controller {
       $data['menu']=$this->oregional->menu(1);
       $data['ogestion']=$this->model_objetivogestion->get_objetivosgestion($og_id);
       if(count($data['ogestion'])!=0){
-        //$data['accion_estrategica']=$this->model_mestrategico->get_acciones_estrategicas($data['ogestion'][0]['acc_id']);
         $data['obj_estrategico']=$this->model_mestrategico->get_objetivos_estrategicos($data['ogestion'][0]['oe_id']);
         $data['regionales']=$this->oregional->regionales_seleccionados($og_id);
 
@@ -58,6 +57,32 @@ class Cobjetivo_regional extends CI_Controller {
       
       $data['formulario']=$this->oregional->formulario_add($dep_id,$og_id);
       $this->load->view('admin/mestrategico/objetivos_region/form_oregional', $data);
+    }
+
+    /*------ CAMBIA ALINEACION A ACP 2023---------*/
+    function cambia_alineacion_acp(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+          $this->form_validation->set_rules('select_og_id', 'Objetivo Regional', 'required|trim');
+          $this->form_validation->set_message('required', 'El campo es es obligatorio');
+        
+          $post = $this->input->post();
+          $select_og_id= $this->security->xss_clean($post['select_og_id']);
+          $or_id= $this->security->xss_clean($post['or_id']);
+          $dep_id= $this->security->xss_clean($post['dep_id']);
+          
+          $get_form2=$this->model_objetivoregion->get_form2_oregional($or_id); /// get operacion (formulario 2)
+          $get_form1=$this->model_objetivoregion->list_oregional_regional($select_og_id,$dep_id); /// get acp donde se va a cambiar
+
+
+          $update_form2 = array(
+            'pog_id' => $get_form1[0]['pog_id'],
+          );
+          $this->db->where('or_id', $or_id);
+          $this->db->update('objetivos_regionales', $update_form2);
+    
+      }else{
+          show_404();
+      }
     }
 
     /*---------- FORMULARIO UPDATE OBJ. REGIONAL ------------*/

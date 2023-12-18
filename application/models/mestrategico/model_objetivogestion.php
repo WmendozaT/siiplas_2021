@@ -62,7 +62,7 @@ class Model_objetivogestion extends CI_Model{
     }
 
 
-   /*---- LIST OBJETIVOS DE GESTION GENERAL 2020-20021-2022-2023----*/
+   /*---- LIST OBJETIVOS DE GESTION GENERAL 2020-20021-2022-2023 ordenado por el codigo del Objetivo Estrategico ----*/
     public function list_objetivosgestion_general(){
         if($this->gestion>2023){ /// gestion 2024
              $sql = 'select *
@@ -81,6 +81,18 @@ class Model_objetivogestion extends CI_Model{
                 where og.estado!=\'3\' and og.g_id='.$this->gestion.'
                 order by og.og_codigo,og.og_id asc';
         }
+       
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+   /*---- LIST OBJETIVOS DE GESTION PARA FILTRAR LA SELECCION----*/
+    public function list_form1_objetivosgestion($og_id){
+        $sql = 'select *
+                from objetivo_gestion og
+                Inner Join indicador as tp On og.indi_id=tp.indi_id
+                where og.estado!=\'3\' and og.g_id='.$this->gestion.' and og.og_id!='.$og_id.'
+                order by og.og_codigo asc';
        
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -215,19 +227,7 @@ class Model_objetivogestion extends CI_Model{
     /*=========== REPORTE OBJETIVO GESTION ===========*/
     /*---- lista Objetivo Regional,Gestion segun su regional ----*/
     public function get_list_ogestion_por_regional($dep_id){
-        if($this->gestion==2021){
-            $sql = 'select opge.*,oreg.*,oge.*,ae.*,oe.*
-                from objetivo_gestion oge
-                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
-                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
-
-                Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
-                Inner Join _objetivos_estrategicos as oe on oe.obj_id = ae.obj_id
-
-                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
-                order by oge.og_codigo,oreg.or_codigo asc';
-        }
-        elseif($this->gestion>2023){ /// Gestion 2024
+        if($this->gestion>2023){ /// Gestion 2024
             $sql = 'select opge.*,oge.*,oe.*,oreg.*
                 from objetivo_gestion oge
                 Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id

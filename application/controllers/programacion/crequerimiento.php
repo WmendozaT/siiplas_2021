@@ -242,8 +242,7 @@ class crequerimiento extends CI_Controller{
     /*----------- LISTA DE REQUERIMIENTOS (2020) --------------*/
     public function mis_requerimientos($prod_id,$componente){
       $lista_insumos = $this->model_insumo->lista_insumos_prod($prod_id);
-     // $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
-     // $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']); 
+
       $tabla='';
       $total=0;
       $tabla.='
@@ -282,17 +281,17 @@ class crequerimiento extends CI_Controller{
           $cont = 0;
           foreach ($lista_insumos as $row) {
             $color='';
-            $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+           // $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
             $ins_cert=0;
             if($row['ins_monto_certificado']!=0){
               $ins_cert=1;
             }
 
-            if(count($prog)!=0){
+            /*if(count($prog)!=0){
               if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
                 $color='#f5bfb6';
               }
-            }      
+            } */     
             $cont++;
             $tabla .= '<tr class="modo1" bgcolor="'.$color.'" title='.$row['ins_id'].'>';
               $tabla .= '<td align="center">';
@@ -317,7 +316,11 @@ class crequerimiento extends CI_Controller{
               $tabla .= '<td>'.$row['ins_cant_requerida'].'</td>'; /// cantidad
               $tabla .= '<td>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
               $tabla .= '<td>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-              if(count($prog)!=0){
+              $tabla .= '<td></td>';
+              for ($i=1; $i <=12 ; $i++) { 
+                $tabla.='<td>0</td>';
+              }
+              /*if(count($prog)!=0){
                 $tabla.='
                 <td>'.number_format($prog[0]['programado_total'], 2, ',', '.').'</td> 
                 <td bgcolor="#dcfbf8">'.number_format($prog[0]['mes1'], 2, ',', '.').'</td>
@@ -348,7 +351,7 @@ class crequerimiento extends CI_Controller{
                 <td bgcolor="#f9d4ce">0</td>
                 <td bgcolor="#f9d4ce">0</td>
                 <td bgcolor="#f9d4ce">0</td>';
-              }
+              }*/
               $tabla .= '<td>'.$row['ins_observacion'].'</td>
               <td>';
               if($this->tp_adm==1 || $this->conf_form5==1){
