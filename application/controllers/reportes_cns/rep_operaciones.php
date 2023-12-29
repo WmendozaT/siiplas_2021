@@ -56,6 +56,7 @@ class Rep_operaciones extends CI_Controller {
       $data['style']=$this->genera_informacion->style();
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
       $data['list']=$this->menu_nacional();
+      $tp_id=4;
       $data['informacion_consolidado']='';
       if($this->fun_id==399 || $this->fun_id==401){
         $data['informacion_consolidado']='
@@ -64,7 +65,7 @@ class Rep_operaciones extends CI_Controller {
           <div class="col-sm-2">
             <div class="well well-sm bg-color-darken txt-color-white text-center">
               <h5>EXPORTAR FORMULARIO N° 5.xls<br><b>INSTITUCIONAL</b></h5>
-              <a href="'.site_url("").'/rep/exportar_requerimientos_institucional" target=_blank title="EXPORTAR FORM. N 5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+              <a href="'.site_url("").'/rep/exportar_requerimientos_institucional/'.$tp_id.'" target=_blank title="EXPORTAR FORM. N 5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
             </div>
           </div>
 

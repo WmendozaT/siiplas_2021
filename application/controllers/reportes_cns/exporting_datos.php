@@ -191,12 +191,12 @@
 
 
     /*--- EXPORTAR CONSOLIDADO FORMULARIO N 5 INSTITUCIONAL ---*/
-    public function requerimientos_institucional(){
+    public function requerimientos_institucional($tp_id){
       date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");
       $titulo='INSTITUCIONAL';
-      $requerimientos=$this->mrep_operaciones->consolidado_poa_formulario5_institucional(4); /// Consolidado formulario N5 completo INSTITUCIONAL
-      $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital_excel($requerimientos,$titulo); // Requerimientos Regional 2023
+      $requerimientos=$this->mrep_operaciones->consolidado_poa_formulario5_institucional($tp_id); /// Consolidado formulario N5 completo INSTITUCIONAL
+      $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital_excel($requerimientos,$titulo,$tp_id); // Requerimientos Regional 2023
 
       header('Content-type: application/vnd.ms-excel');
       header("Content-Disposition: attachment; filename=Consolidado_Requerimiento_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante
@@ -445,7 +445,7 @@
     }
 
 
-    /*--- FORM 3 CONSOLIDADO REQUERIMIENTOS (PROG) POR DISTRITAL, REGIONAL (2020 - 2021) ---*/
+    /*--- EXPORTAR REQUERIMIENTOS A DETALLE ---*/
     public function requerimientos_distrital($dep_id,$dist_id,$tp_id){
       date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");
@@ -454,14 +454,15 @@
         $regional=$this->model_proyecto->get_departamento($dep_id);
         $titulo='CONSOLIDADO REGIONAL FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($regional[0]['dep_departamento']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
         $requerimientos=$this->mrep_operaciones->consolidado_poa_formulario5_regional($dep_id,$tp_id); /// Consolidado formulario N5 completo
-        $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital_excel($requerimientos,$titulo); // Requerimientos Regional 2023
+        
       }
       else{
         $dist=$this->model_proyecto->dep_dist($dist_id);
         $titulo='CONSOLIDADO FORMULARIO N 5 - '.mb_convert_encoding(strtoupper($dist[0]['dist_distrital']), 'cp1252', 'UTF-8').' '.$this->gestion.'';
         $requerimientos=$this->mrep_operaciones->consolidado_poa_formulario5_distrital($dist_id,$tp_id); /// Consolidado formulario N5  completo
-        $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital_excel($requerimientos,$titulo); // Requerimientos Distrital 2023
       }
+
+      $tabla=$this->genera_informacion->lista_requerimientos_regional_distrital_excel($requerimientos,$titulo,$tp_id); // Requerimientos Regional 2023
 
       header('Content-type: application/vnd.ms-excel');
       header("Content-Disposition: attachment; filename=Consolidado_Requerimiento_".$titulo."_$fecha.xls"); //Indica el nombre del archivo resultante

@@ -584,7 +584,7 @@ class Genera_informacion extends CI_Controller{
       return $tabla;
     }
 
-     /*-----EXCEL  LISTA DE OPERACIONES POR DISTRITAL, REGIONAL (2020-2021) ----*/
+     /*-----EXCEL LISTA DE ACTIVIDADES (REGIONAL-DISTRITAL) ----*/
    public function lista_operaciones_regional_distrital($operaciones,$titulo,$tip_rep){
         $tabla='';
         $tabla .='
@@ -860,7 +860,7 @@ class Genera_informacion extends CI_Controller{
     }
 
  /*----- GENERA EXCEL LISTA DE REQUERIMIENTOS DISTRITAL (2023) ----*/
-    public function lista_requerimientos_regional_distrital_excel($requerimientos,$titulo){
+    public function lista_requerimientos_regional_distrital_excel($requerimientos,$titulo,$tp_id){
         $tabla='';
         $tabla .='
           <style>
@@ -933,21 +933,14 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='<td style="height:70px;">'."'".$row['dep_cod']."'".'</td>';
                 $tabla.='<td>'."'".$row['dist_cod']."'".'</td>';
                 $tabla.='<td>'.$prog.'</td>';
-                $tabla.='<td>';
-                if($row['tp_id']==1){
-                  $tabla.=$row['proy_sisin'];
-                }
-                else{
-                  $tabla.="'".$row['aper_proyecto']."'";
-                }
-                $tabla.='</td>';
+                $tabla.='<td>'."'".$row['aper_proyecto']."'".'</td>';
                 $tabla.='<td>'."'".$row['aper_actividad']."'".'</td>';
                 $tabla.='<td>';
-                  if($row['tp_id']==1){
-                    $tabla.=''.mb_convert_encoding($row['proy_nombre'], 'cp1252', 'UTF-8').'';
+                  if($tp_id==1){
+                    $tabla.=''.mb_convert_encoding($row['proyecto'], 'cp1252', 'UTF-8').'';
                   }
                   else{
-                    $tabla.=''.mb_convert_encoding($row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'], 'cp1252', 'UTF-8').'';
+                    $tabla.=''.mb_convert_encoding($row['tipo'].' '.$row['actividad'].' - '.$row['abrev'], 'cp1252', 'UTF-8').'';
                   }
                 $tabla.='</td>';
                 $tabla.='<td>'."'".$row['serv_cod']."'".'</td>';

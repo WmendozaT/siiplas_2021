@@ -147,7 +147,7 @@ $route['exportar_consulta_ppto_poa/(:any)'] = 'reportes_cns/crep_consultafinanci
 
 
 
-$route['rep/exportar_requerimientos_institucional'] = 'reportes_cns/exporting_datos/requerimientos_institucional'; ///// Exportar Requerimientos Institucional
+$route['rep/exportar_requerimientos_institucional/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_institucional/$1'; ///// Exportar Requerimientos Institucional
 $route['rep/exportar_requerimientos_distrital/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_distrital/$1/$2/$3'; ///// Exportar Requerimientos por Regional / Distrital 2023
 $route['rep/exportar_poa_oregional/(:any)']='reportes_cns/exporting_datos/ver_poa_oregional_distrital/$1/$2';// Consolidado operaciones por Objetivo Regional 2020-2021 (Distrital)
 $route['rep/exportar_requerimientos_servicio/(:any)'] = 'reportes_cns/exporting_datos/requerimientos_servicio/$1'; ///// Exportar Requerimientos por Unidad Reponsable (Ejecucion Presupuestaria) (Excel)
