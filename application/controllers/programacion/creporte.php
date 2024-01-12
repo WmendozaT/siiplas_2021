@@ -614,37 +614,32 @@ class Creporte extends CI_Controller {
 
 
     //// REPORTE FORMULARIO POA N 5 PARA PROGRAMAS BOLSA 
-    public function reporte_prog_bolsa_formulario5($prod_id){
-        $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
+    public function reporte_prog_bolsa_formulario5($aper_id,$com_id){
+        $get_actividades_global=$this->model_producto->verif_get_uni_resp_programaBolsa_prog($aper_id,$com_id);
+        $componente = $this->model_componente->get_componente($com_id,$this->gestion);
         $tabla='';
 
-        if(count($producto)!=0){
-            $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion);
-            $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']); //// DATOS PROYECTO
-            $data['pie_rep']=$producto[0]['proy_nombre'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
-
-            if($proyecto[0]['tp_id']==4){
-                $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); /// PROYECTO
+        if(count($componente)!=0){
+                $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($get_actividades_global[0]['proy_id']); /// PROYECTO
                 $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
-            }
-
-                $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$producto[0]['uni_resp']);
                 $pie=$this->programacionpoa->pie_form($proyecto);
 
+                foreach($get_actividades_global as $row){
+                    $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$row['uni_resp']);
+                    $lista_insumos=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($row['prod_id'],$row['uni_resp']);
 
-                $lista_insumos=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($prod_id,$producto[0]['uni_resp']);
-                if(count($lista_insumos)!=0){
-                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($lista_insumos);
-                    $lista_partidas=$this->model_insumo->list_consolidado_partidas_programas_boLsas_uresponsable($prod_id,$producto[0]['uni_resp']);
-                    $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
-                }
-                else{
-                    $requerimientos='No se Tiene Informacion Registrado !!!';   
-                    $partidas='Sin Informacion';
-                }
+                    if(count($lista_insumos)!=0){
+                        $requerimientos=$this->programacionpoa->list_requerimientos_reporte($lista_insumos);
+                        $lista_partidas=$this->model_insumo->list_consolidado_partidas_programas_boLsas_uresponsable($row['prod_id'],$row['uni_resp']);
+                        $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
+                    }
+                    else{
+                        $requerimientos='No se Tiene Informacion Registrado !!!';   
+                        $partidas='Sin Informacion';
+                    }
  
 
-                $tabla.='
+                    $tabla.='
                     <page orientation="paysage" backtop="75mm" backbottom="22mm" backleft="5mm" backright="5mm" pagegroup="new">
                         <page_header>
                             <br><div class="verde"></div>
@@ -667,7 +662,7 @@ class Creporte extends CI_Controller {
                         '.$partidas.'
 
                     </page>';
-
+                }
 
                 $data['informacion']=$tabla;
                 $this->load->view('admin/programacion/reportes/reporte_form5', $data);

@@ -188,7 +188,7 @@ $route['proy/ptto_consolidado_comparativo/(:any)'] = 'programacion/cppto_compara
 //$route['ptto_consolidado_comparativo_regional/(:any)'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_comparativo_regional/$1/$2';  //// Reporte Comparativo Total de Ppto Unidad/Establecimiento/Proyecto de Inversion REGIONAL
 //$route['ptto_consolidado_distribucion_nacional'] = 'programacion/cppto_comparativo/reporte_presupuesto_consolidado_distribucion_nacional';  //// Reporte Comparativo PPTO DISTRBUCION NACIONAL
 
-$route['proy/rep_form5_programa_bolsa/(:any)'] = 'programacion/creporte/reporte_prog_bolsa_formulario5/$1';  //// Reporte requerimiento por ID PRODUCTO
+$route['proy/rep_form5_programa_bolsa/(:any)'] = 'programacion/creporte/reporte_prog_bolsa_formulario5/$1/$2';  //// Reporte requerimiento por ID PRODUCTO
 
 
 /*-----------------------------  PROGRAMACION DEL PROYECTO - PRODUCTOS  -------------------------------*/

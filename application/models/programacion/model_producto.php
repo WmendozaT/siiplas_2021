@@ -116,10 +116,32 @@ class model_producto extends CI_Model {
     /*----- GET UNIDAD RESPONSABLE POR ACTIVIDAD (PROG BOLSA) -----*/
     function verif_get_uni_resp_programaBolsa($com_id){
         $sql = '
-            select *
+            select prod.*,apg.*,prog.*
             from _productos prod
+            Inner Join _componentes as c On prod.com_id=c.com_id
+            Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+            Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                
             Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=prod.prod_id
-            where prod.uni_resp='.$com_id.' and prog.g_id='.$this->gestion.''; 
+            where prod.uni_resp='.$com_id.' and prog.g_id='.$this->gestion.'
+            order by apg.aper_programa, prod.prod_cod asc'; 
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+        /*----- GET UNIDAD RESPONSABLE POR programa (PROG BOLSA) -----*/
+    function verif_get_uni_resp_programaBolsa_prog($aper_id,$com_id){
+        $sql = '
+            select prod.*,apg.*,prog.*,pfe.*
+            from _productos prod
+            Inner Join _componentes as c On prod.com_id=c.com_id
+            Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+            Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                
+            Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=prod.prod_id
+            where apg.aper_id='.$aper_id.' and prod.uni_resp='.$com_id.' and prog.g_id='.$this->gestion.'
+            order by apg.aper_programa, prod.prod_cod asc'; 
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -127,7 +149,7 @@ class model_producto extends CI_Model {
 
 
     /*-----GET RELACION PROG 770 - PROD PARA BUSCAR LA UNIDAD RESPONSABLE (2023) -----*/
-    function get_relacion_prog_770_producto($dist_id,$prog,$com_id){
+/*    function get_relacion_prog_770_producto($dist_id,$prog,$com_id){
         $sql = '
         select *
                 from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
@@ -137,10 +159,10 @@ class model_producto extends CI_Model {
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
-    /*----- GET LISTA DE ACTIVIDADES ALINEADO A LA UNIDAD RESPONSABLE DE LOS PROGRAMAS BOLSA 2023 -----*/
+    /*----- GET LISTA DE ACTIVIDADES ALINEADO A LA UNIDAD RESPONSABLE DE LOS PROGRAMAS BOLSA 2023 (REVISAR)-----*/
     function get_lista_form4_uniresp_prog_bolsas($com_id){
         $sql = 'select apg.aper_id,p.proy_id,apg.aper_gestion,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,prod.com_id,prod.prod_id,prod.prod_cod,prod.prod_producto, prod.prod_indicador, prod.prod_meta,prod.prod_fuente_verificacion,prod.uni_resp
                 from _productos prod

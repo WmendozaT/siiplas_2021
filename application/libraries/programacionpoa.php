@@ -410,13 +410,11 @@ class Programacionpoa extends CI_Controller{
 
                         if(count($programas_bolsas)!=0){
                           foreach($programas_bolsas  as $row){
-                            $get_prog_bolsa=$this->model_producto->get_relacion_prog_770_producto($proyecto[0]['dist_id'],$row['prog'],$pr['com_id']); /// busca el registro
-                            
+                            $get_prog_bolsa=$this->model_producto->verif_get_uni_resp_programaBolsa_prog($row['aper_id'],$pr['com_id']); // Verifica la Actividad de la Unidad Responsable del Programa Bolsa
+
                             $tabla.='<td align=center>';
                             if(count($get_prog_bolsa)!=0){
-                              if(count($this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($get_prog_bolsa[0]['prod_id'],$get_prog_bolsa[0]['uni_resp']))!=0){
-                                $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/rep_form5_programa_bolsa/'.$get_prog_bolsa[0]['prod_id'].'\');" class="btn btn-default" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°5</b></font></a>';
-                              }
+                              $tabla.='<a href="javascript:abreVentana(\''.site_url("").'/proy/rep_form5_programa_bolsa/'.$row['aper_id'].'/'.$pr['com_id'].'\');" class="btn btn-default" title="REPORTE FORM. 5"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°5</b></font></a>';
                             }
                             $tabla.='</td>';
                           
@@ -1001,9 +999,9 @@ class Programacionpoa extends CI_Controller{
 
 
 
-    //// ======== CABECERA Y PIE PARA LOS REPORTES POA 2022
+  //// ======== CABECERA Y PIE PARA LOS REPORTES POA 2024
   //// Cabecera Reporte form 3, 4 y 5
-    public function cabecera($tp_id,$tp_rep,$proyecto,$com_id){
+  public function cabecera($tp_id,$tp_rep,$proyecto,$com_id){
     /// tp_rep : 3 (Foda), 4 (Actividades), 5 (requerimientos), 0 (consolidado ppto)
     
     if($tp_rep==0){

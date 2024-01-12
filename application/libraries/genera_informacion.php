@@ -886,9 +886,13 @@ class Genera_informacion extends CI_Controller{
                   <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
                   <th style="width:10%;background-color: #eceaea;">COD. PROY.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
-                  <th style="width:35%;background-color: #eceaea;">GASTO CORRIENTE / PROY. INVERSION</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. U.RESP..</th>
-                  <th style="width:15%;background-color: #eceaea;">UNIDAD RESPONSABLE</th>
+                  <th style="width:35%;background-color: #eceaea;">GASTO CORRIENTE / PROY. INVERSION</th>';
+                  if($tp_id==4){
+                    $tabla.='
+                    <th style="width:3%;background-color: #eceaea;">COD. U.RESP..</th>
+                    <th style="width:15%;background-color: #eceaea;">UNIDAD RESPONSABLE</th>';
+                  }
+                  $tabla.='
                   <th style="width:3%;background-color: #eceaea;">COD. ACP.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. OPE.</th>
                   <th style="width:15%;background-color: #eceaea;">DESCRIPCION OPERACION '.$this->gestion.'</th>
@@ -943,8 +947,11 @@ class Genera_informacion extends CI_Controller{
                     $tabla.=''.mb_convert_encoding($row['tipo'].' '.$row['actividad'].' - '.$row['abrev'], 'cp1252', 'UTF-8').'';
                   }
                 $tabla.='</td>';
-                $tabla.='<td>'."'".$row['serv_cod']."'".'</td>';
-                $tabla.='<td>'.$row['tipo_subactividad'].' '.mb_convert_encoding(strtoupper($row['serv_descripcion']), 'cp1252', 'UTF-8').'</td>';
+              
+                  if($tp_id==4){
+                    $tabla.='<td>'."'".$row['serv_cod']."'".'</td>';
+                    $tabla.='<td>'.$row['tipo_subactividad'].' '.mb_convert_encoding(strtoupper($row['serv_descripcion']), 'cp1252', 'UTF-8').'</td>';
+                  }
                 
                 $tabla.='<td style="font-size: 15px;" bgcolor="#d9f5c9" align=center><b>'.$row['og_codigo'].'</b></td>';
                 $tabla.='<td style="font-size: 15px;" bgcolor="#d9f5c9" align=center><b>'.$row['or_codigo'].'</b></td>';

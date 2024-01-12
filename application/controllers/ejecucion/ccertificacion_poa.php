@@ -692,7 +692,14 @@ class Ccertificacion_poa extends CI_Controller {
             $nro_cdep='0';
           }
 
-          $codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa;
+          if($this->gestion>2023){
+            $codigo='CPOA.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev']; /// 2024
+          }
+          else{
+            $codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa; /// 2023
+          }
+
+          //$codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa;
           
           if(count($this->model_certificacion->get_codigo_certpoa($codigo))==0){
               /*---- Update Estado Certificacion POA ----*/
