@@ -950,25 +950,16 @@ class Cptto_poa extends CI_Controller {
               if(count($datos)==7){
                   $da=trim($datos[0]); /// Da
                   $ue=trim($datos[1]); /// Ue
-                  $prog=trim($datos[2]); /// Aper Programa
+                  $prog=trim($datos[2]); /// Programa
                   $proy=trim($datos[3]); /// proyecto
-                  /*if(strlen($proy)==2){
-                    $proy='00'.$proy; /// Aper Proyecto
-                  }*/
-                  $act=trim($datos[4]);  /// Aper Actividad
-                  if(strlen($act)==2){
-                    $act='0'.$act;
-                  }
-
-                  //$act='0'.trim($datos[4]);  /// Aper Actividad
+                  $act=trim($datos[4]);  /// Actividad
                   $cod_part=trim($datos[5]); /// Partida
                   if(strlen($cod_part)==3){
                     $cod_part=$cod_part.'00';
                   }
-
                   $importe=(float)$datos[6]; /// Monto
 
-                  if(strlen($da)==2 and strlen($ue)==3 and strlen($prog)==3 & strlen($proy)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
+                  if(strlen($da)==2 & strlen($ue)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
                       $aper=$this->model_ptto_sigep->get_apertura($da,$ue,$prog,$proy,$act);
                       if(count($aper)!=0){
                           $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
@@ -977,26 +968,30 @@ class Cptto_poa extends CI_Controller {
                             $par_id=$partida[0]['par_id'];
                           }
 
-                          $ptto=$this->model_ptto_sigep->get_ptto_sigep_aprobado($prog,$proy,$act,$cod_part);
+                          $ptto=$this->model_ptto_sigep->get_ptto_sigep_aprobado($da,$ue,$prog,$proy,$act,$cod_part);
                           if(count($ptto)!=0){
-                             /*------------------- Update Datos ----------------------*/
+                             /*------- Update Datos -------*/
                               $query=$this->db->query('set datestyle to DMY');
                               $update_ptto = array(
                                 'aper_id' => $aper[0]['aper_id'],
+                                'da' => $da,
+                                'ue' => $ue,
                                 'importe' => $importe,
                                 'fun_id' => $this->fun_id
                               );
 
                               $this->db->where('sp_id', $ptto[0]['sp_id']);
                               $this->db->update('ptto_partidas_sigep_aprobado', $update_ptto);
-                             /*-------------------------------------------------------*/
+                             /*-----------------------------*/
                              $nro++;
                           }
                           else{
-                             /*-------------------- Guardando Datos ------------------*/
+                             /*------- Guardando Datos --------*/
                               $query=$this->db->query('set datestyle to DMY');
                               $data_to_store = array( 
                                   'aper_id' => $aper[0]['aper_id'],
+                                  'da' => $da,
+                                  'ue' => $ue,
                                   'aper_programa' => $prog,
                                   'aper_proyecto' => $proy,
                                   'aper_actividad' => $act,
@@ -1036,24 +1031,6 @@ class Cptto_poa extends CI_Controller {
                             /*-------------------------------------------------------*/ 
                             $nro++;
                         }
-                  }
-                  elseif(strlen($prog)==3 & strlen($proy)==2 & strlen($act)==3 & $importe==0){
-                    $ptto=$this->model_ptto_sigep->get_ptto_sigep($prog,$proy,$act,$cod_part);
-                    if(count($ptto)!=0){
-                      //echo "UPDATES 0->VALOR : ".$prog.'-'.$proy.'-'.$act.' cod '.$cod_part.'-- PAR ID : '.$par_id.' ->'.$importe."<br>";
-                      /*------------------- Update Datos ----------------------*/
-                        $query=$this->db->query('set datestyle to DMY');
-                        $update_ptto = array(
-                          'aper_id' => $aper[0]['aper_id'],
-                          'importe' => $importe,
-                          'fun_id' => $this->fun_id
-                        );
-
-                        $this->db->where('sp_id', $ptto[0]['sp_id']);
-                        $this->db->update('ptto_partidas_sigep_aprobado', $update_ptto);
-                       /*-------------------------------------------------------*/
-                       $nro++;
-                    }
                   }
                 }
             }
@@ -1542,12 +1519,12 @@ class Cptto_poa extends CI_Controller {
     public function cuadro_excel($dep_id,$tp){
       $tabla='';
       if($tp==1){ /// Proyecto de Inversion
-        $unidades_proy=$this->model_proyecto->list_proy_inversion_regional($dep_id);
+        $poa=$this->model_proyecto->list_proy_inversion_regional($dep_id);
         $tit='PROYECTO DE INVERSIÓN';
       }
       else{ /// Gasto Corriente
-        $unidades_proy=$this->model_proyecto->list_gasto_corriente_regional($dep_id);
-        $tit='UNIDAD, ESTABLECIMIENTO';
+        $poa=$this->model_proyecto->list_gasto_corriente_regional($dep_id);
+        $tit='GASTO CORRIENTE';
       }
 
       $tabla .='
@@ -1575,19 +1552,20 @@ class Cptto_poa extends CI_Controller {
         </tr>
         </thead>
         <tbody>';
-        
-        foreach($unidades_proy as $rowp){
-          $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$rowp['aper_id'],1); // Presupuesto Partidas Programado
+        $ppto_siiplas=0;
+        $ppto_sigep=0;
+        foreach($poa as $rowp){
+          $partidas_inicial_asignado=$this->model_ptto_sigep->partidas_accion_region($dep_id,$rowp['aper_id'],1); // Presupuesto Partidas Asignado Inicial
           $partidas_aprobados=$this->model_ptto_sigep->list_ppto_final_aprobado($rowp['aper_id']); // Presupuesto Partidas Aprobado
           
-          foreach($partidas_prog as $row){
-            $ppto=$this->model_ptto_sigep->get_ptto_aprobado($rowp['aper_id'],$row['par_id']);
+          foreach($partidas_inicial_asignado as $row){
+            $ppto=$this->model_ptto_sigep->get_ptto_aprobado($rowp['aper_id'],$row['par_id']); /// ppto asignado aprobado
             $monto_final_partida=0;
             $dif_monto=0;
             if(count($ppto)!=0){
-              $monto_final_partida=$ppto[0]['monto'];
+              $monto_final_partida=$ppto[0]['monto']; /// monto final asignado (aprobado)
             }
-            $dif_monto=$monto_final_partida-$row['monto'];
+            $dif_monto=$monto_final_partida-$row['ppto_asignado']; /// monto final asignado (aprobado) - monto inicial asignado
             $color='';$sig='';
             if($dif_monto<0){
               $color='#f7b1b0';
@@ -1600,21 +1578,25 @@ class Cptto_poa extends CI_Controller {
      
             $tabla.='
               <tr bgcolor='.$color.'>
-                <td style="width:5%;height:25px;" align=center>\''.$rowp['aper_programa'].''.$rowp['aper_proyecto'].''.$rowp['aper_actividad'].'\'</td>
+                <td style="width:5%;height:25px;" align=center>\''.$rowp['prog'].''.$rowp['proy'].''.$rowp['act'].'\'</td>
                 <td>';
-                if($rowp['tp_id']==1){
+                if($tp==1){
                   $tabla.=''.mb_convert_encoding($rowp['proy_nombre'], 'cp1252', 'UTF-8').'';
                 }
                 else{
-                  $tabla.=''.mb_convert_encoding($rowp['tipo'].' '.$rowp['proy_nombre'].' - '.$rowp['abrev'], 'cp1252', 'UTF-8').'';
+                  $tabla.=''.mb_convert_encoding($rowp['tipo'].' '.$rowp['actividad'].' - '.$rowp['abrev'], 'cp1252', 'UTF-8').'';
                 }
                 $tabla.='
                 </td>
                 <td style="width:5%;" align=center><b>'.$row['codigo'].'</b></td>
-                <td style="width:12%;" align=right>'.$row['monto'].'</td>
+                <td style="width:12%;" align=right>'.$row['ppto_asignado'].'</td>
                 <td style="width:12%;" align=right>'.$monto_final_partida.'</td>
                 <td style="width:12%;" align=right>'.$dif_monto.'</td>
               </tr>';
+
+              $ppto_siiplas=$ppto_siiplas+$row['ppto_asignado'];
+              $ppto_sigep=$ppto_sigep+$monto_final_partida;
+
           }
 
           foreach($partidas_aprobados as $row){
@@ -1625,13 +1607,13 @@ class Cptto_poa extends CI_Controller {
               $dif_monto=$row['importe']-0;
               $tabla.='
                 <tr bgcolor="#f7b1b0">
-                  <td style="width:5%;height:25px;" align=center>\''.$rowp['aper_programa'].''.$rowp['aper_proyecto'].''.$rowp['aper_actividad'].'\'</td>
+                  <td style="width:5%;height:25px;" align=center>\''.$rowp['prog'].''.$rowp['proy'].''.$rowp['act'].'\'</td>
                   <td>';
-                  if($rowp['tp_id']==1){
+                  if($tp==1){
                     $tabla.=''.mb_convert_encoding($rowp['proy_nombre'], 'cp1252', 'UTF-8').'';
                   }
                   else{
-                    $tabla.=''.mb_convert_encoding($rowp['tipo'].' '.$rowp['proy_nombre'].' - '.$rowp['abrev'], 'cp1252', 'UTF-8').'';
+                    $tabla.=''.mb_convert_encoding($rowp['tipo'].' '.$rowp['actividad'].' - '.$rowp['abrev'], 'cp1252', 'UTF-8').'';
                   }
                   $tabla.='
                   </td>
@@ -1640,12 +1622,18 @@ class Cptto_poa extends CI_Controller {
                   <td style="width:12%;" align=right>'.$row['importe'].'</td>
                   <td style="width:12%;" align=right>'.$dif_monto.'</td>
                 </tr>';
-
+                $ppto_sigep=$ppto_sigep+$row['importe'];
             }
           }
 
         }
       $tabla.='
+        <tr>
+          <td colspan=3></td>
+          <td align=right>'.$ppto_siiplas.'</td>
+          <td align=right>'.$ppto_sigep.'</td>
+          <td></td>
+        </tr>
         </tbody>
       </table>';
       return $tabla;

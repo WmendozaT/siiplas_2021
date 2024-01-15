@@ -305,10 +305,10 @@ class Model_ptto_sigep extends CI_Model{
     }
 
     /*-------------------- Presupuesto Sigep Aprobado ------------------------*/
-    public function get_ptto_sigep_aprobado($programa,$proyecto,$actividad,$partida){
+    public function get_ptto_sigep_aprobado($da,$ue,$programa,$proyecto,$actividad,$partida){
         $sql = 'select *
                 from ptto_partidas_sigep_aprobado
-                where aper_programa=\''.$programa.'\' and aper_proyecto=\''.$proyecto.'\' and aper_actividad=\''.$actividad.'\' and partida=\''.$partida.'\' and g_id='.$this->gestion.' and estado!=\'3\'';
+                where da=\''.$da.'\' and ue=\''.$ue.'\' and aper_programa=\''.$programa.'\' and aper_proyecto=\''.$proyecto.'\' and aper_actividad=\''.$actividad.'\' and partida=\''.$partida.'\' and g_id='.$this->gestion.' and estado!=\'3\'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
