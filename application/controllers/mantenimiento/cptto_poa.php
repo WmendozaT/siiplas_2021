@@ -1548,7 +1548,7 @@ class Cptto_poa extends CI_Controller {
           <th>CODIGO PARTIDA</th>
           <th>PRESUPUESTO POA (SIIPLAS)</th>
           <th>PRESUPUESTO APROBADO (SIGEP)</th>
-          <th>MONTO DIFERENCIA (SIGEP-SIIPLAS)</th>
+          <th>MONTO DIFERENCIA (SIIPLAS-SIGEP)</th>
         </tr>
         </thead>
         <tbody>';
@@ -1604,9 +1604,9 @@ class Cptto_poa extends CI_Controller {
 
             $ppto=$this->model_ptto_sigep->get_partida_asignado_sigep($rowp['aper_id'],$row['par_id']);
             if(count($ppto)==0){
-              $dif_monto=$row['importe']-0;
+              $dif_monto='+'.$row['importe']-0;
               $tabla.='
-                <tr bgcolor="#f7b1b0">
+                <tr bgcolor="#dff0d8">
                   <td style="width:5%;height:25px;" align=center>\''.$rowp['prog'].''.$rowp['proy'].''.$rowp['act'].'\'</td>
                   <td>';
                   if($tp==1){
