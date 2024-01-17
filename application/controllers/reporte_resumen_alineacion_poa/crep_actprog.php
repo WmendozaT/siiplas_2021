@@ -85,36 +85,44 @@ class Crep_actprog extends CI_Controller {
               <tbody>';
               $nro=0;$sum=0;$sum_ppto=0;
               foreach($act_programa as $row){
-                $ppto=$this->model_resumenactividad->get_ppto_prog($row['aper_programa']);
                 $nro++;
                 $sum=$sum+$row['actividades'];
-                $prog=0;
-                if(count($ppto)!=0){
-                  $prog=$ppto[0]['ppto'];
-                  $sum_ppto=$sum_ppto+$ppto[0]['ppto'];
-                }
-                
+                $sum_ppto=$sum_ppto+$row['ppto'];
                 $tabla.='
                 <tr>
-                  <td style="height:15px; text-align:center; font-size:7px;">'.$nro.'</td>
-                  <td style="font-size:11px; text-align:center"><b>'.$row['aper_programa'].' 00 000</b></td>';
+                  <td style="height:14px;text-align:center;font-size:8px;">'.$nro.'</td>
+                  <td style="font-size:10px; text-align:center"><b>'.$row['aper_programa'].' 00 000</b></td>';
                   if($tp_rep==2){ /// excel
                     $tabla.='<td>'.mb_convert_encoding($row['aper_descripcion'], 'cp1252', 'UTF-8').'</td>';
                   }
                   else{ /// normal
-                    $tabla.='<td style="font-size:10px;">'.$row['aper_descripcion'].'</td>';
+                    $tabla.='<td style="font-size:9px;">'.$row['aper_descripcion'].'</td>';
                   }
                   $tabla.='
-                  <td style="font-size:11px; text-align:right;"><b>'.$row['actividades'].'</b></td>
-                  <td style="font-size:11px; text-align:right;"><b>'.round($prog,2).'</b></td>
+                  <td style="font-size:11px; text-align:right;"><b>'.$row['actividades'].'</b></td>';
+                  if($tp_rep==2){ /// excel
+                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.$row['ppto'].'</b></td>';
+                  }
+                  else{
+                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.number_format($row['ppto'], 2, ',', '.').'</b></td>';
+                  }
+                  $tabla.='
+                  
                 </tr>';
               }
-        $tabla.='
+            $tabla.='
               </tbody>
                 <tr>
                   <td colspan=3 style="height:14px; font-size:10px;"> TOTAL </td>
-                  <td style="font-size:11px; text-align:right;"><b>'.$sum.'</b></td>
-                  <td style="font-size:11px; text-align:right;"><b>'.round($sum_ppto,2).'</b></td>
+                  <td style="font-size:11px; text-align:right;"><b>'.$sum.'</b></td>';
+                  if($tp_rep==2){ /// excel
+                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.$sum_ppto.'</b></td>';
+                  }
+                  else{
+                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.number_format($sum_ppto, 2, ',', '.').'</b></td>';
+                  }
+                  $tabla.='
+                  
                 </tr>
             </table>';
       return $tabla;
@@ -149,17 +157,9 @@ class Crep_actprog extends CI_Controller {
               <tbody>';
               $nro=0;$sum=0;$sum_ppto=0;
               foreach($act_programa as $row){
-                $ppto=$this->model_resumenactividad->get_ppto_prog_dep($row['aper_programa'],$dep_id);
                 $nro++;
                 $sum=$sum+$row['actividades'];
-                $prog=0;
-                if(count($ppto)!=0){
-                  $prog=$ppto[0]['ppto'];
-                  $sum_ppto=$sum_ppto+$ppto[0]['ppto'];
-                }
-
-
-                
+                $sum_ppto=$sum_ppto+$row['ppto'];
                 $tabla.='
                 <tr>
                   <td style="height:14px;text-align:center;font-size:8px;">'.$nro.'</td>
@@ -171,16 +171,30 @@ class Crep_actprog extends CI_Controller {
                     $tabla.='<td style="font-size:9px;">'.$row['aper_descripcion'].'</td>';
                   }
                   $tabla.='
-                  <td style="font-size:11px; text-align:right;"><b>'.$row['actividades'].'</b></td>
-                  <td style="font-size:11px; text-align:right;"><b>'.round($prog,2).'</b></td>
+                  <td style="font-size:11px; text-align:right;"><b>'.$row['actividades'].'</b></td>';
+                  if($tp_rep==2){ /// excel
+                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.$row['ppto'].'</b></td>';
+                  }
+                  else{
+                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.number_format($row['ppto'], 2, ',', '.').'</b></td>';
+                  }
+                  $tabla.='
+                  
                 </tr>';
               }
         $tabla.='
               </tbody>
                 <tr>
                   <td colspan=3 style="height:14px; font-size:10px;"> TOTAL </td>
-                  <td style="font-size:11px; text-align:right;"><b>'.$sum.'</b></td>
-                  <td style="font-size:11px; text-align:right;"><b>'.round($sum_ppto,2).'</b></td>
+                  <td style="font-size:11px; text-align:right;"><b>'.$sum.'</b></td>';
+                  if($tp_rep==2){ /// excel
+                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.$sum_ppto.'</b></td>';
+                  }
+                  else{
+                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.number_format($sum_ppto, 2, ',', '.').'</b></td>';
+                  }
+                  $tabla.='
+                  
                 </tr>
             </table>';
       return $tabla;

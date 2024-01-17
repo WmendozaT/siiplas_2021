@@ -49,59 +49,21 @@ class Model_resumenactividad extends CI_Model{
     /////// ACTIVIDAD ---- APERTURA PROGRAMATICA
     /*---- GET DATOS DE RESUMEN NRO DE ACTIVIDAD POR CATEGORIA PROGRAMATICA ----*/
     public function resumen_actividad_categoria_institucional(){
-        $sql = 'select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(pr.prod_id) actividades
-                from aperturaprogramatica apg
-                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.prog=apg.aper_programa
-                Inner Join vista_componentes_dictamen as c On c.pfec_id=poa.pfec_id
-                Inner Join _productos as pr On pr.com_id=c.com_id
-
-               
-
-                where apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\'
-                group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion
-                order by apg.aper_programa';
+        $sql = 'select *
+                from alineacion_poa_programa_institucional('.$this->gestion.')';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-
-
-    public function get_ppto_prog($prog){
-        $sql = 'select aper_programa,SUM(ins_costo_total) ppto
-                from lista_requerimientos_institucional_directo(4,'.$this->gestion.')
-                where aper_programa=\''.$prog.'\'
-                group by aper_programa
-                order by aper_programa asc';
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
-
-
 
 
     /*---- GET DATOS DE RESUMEN NRO DE ACTIVIDAD POR CATEGORIA PROGRAMATICA - REGIONAL ----*/
     public function resumen_actividad_categoria_regional($dep_id){
-         $sql = 'select poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,count(pr.prod_id) actividades
-                from aperturaprogramatica apg
-                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as poa On poa.prog=apg.aper_programa
-                Inner Join vista_componentes_dictamen as c On c.pfec_id=poa.pfec_id
-                Inner Join _productos as pr On pr.com_id=c.com_id
-              
-                where poa.dep_id='.$dep_id.' and apg.aper_gestion='.$this->gestion.' and apg.aper_asignado=\'1\' and pr.estado!=\'3\'
-                group by poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion
-                order by poa.dep_id,apg.aper_programa asc';
+         $sql = '   select *
+                    from alineacion_poa_programa_regional('.$this->gestion.','.$dep_id.')';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
-    public function get_ppto_prog_dep($prog,$dep_id){
-        $sql = 'select aper_programa,SUM(ins_costo_total) ppto
-                from lista_requerimientos_institucional_directo(4,'.$this->gestion.')
-                where aper_programa=\''.$prog.'\' and dep_id='.$dep_id.'
-                group by aper_programa
-                order by aper_programa asc';
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }
 
 
 }
