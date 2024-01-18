@@ -35,6 +35,7 @@ class User extends CI_Controller{
         $this->verif_mes=$this->session->userData('mes_actual');
         $this->notificaciones=$this->session->userData('estado_notificaciones');
         $this->verif_mes=$this->session->userdata('mes_actual');
+        $this->conf_ajuste_poa=$this->session->userdata('conf_ajuste_poa');
         //$this->load->library('genera_informacion');
     }
 
@@ -105,7 +106,8 @@ class User extends CI_Controller{
                 'conf_mod_ope' => $conf[0]['conf_mod_ope'], /// Estado de Modificacion del formulario N4, 0 (Inactivo), 1 (Activo)
                 'conf_mod_req' => $conf[0]['conf_mod_req'], /// Estado de Modificacion del formulario N5, 0 (Inactivo), 1 (Activo)
                 'conf_certificacion' => $conf[0]['conf_certificacion'], /// Estado de Certificacion del formulario N5, 0 (Inactivo), 1 (Activo)
-                'rd_poa' => $conf[0]['rd_aprobacion_poa'] /// Ppto poa : 0 (Vigente), 1: (Aprobado)
+                'rd_poa' => $conf[0]['rd_aprobacion_poa'], /// Ppto poa : 0 (Vigente), 1: (Aprobado)
+                'conf_ajuste_poa' => $conf[0]['conf_ajuste_poa'] /// Ajuste POA
             );
             $this->session->set_userdata($data);
 
@@ -127,7 +129,8 @@ class User extends CI_Controller{
                 'trimestre' => $this->input->post('trimestre_usu'), /// Trimestre 1,2,3,4
                 'tr_id' => ($conf[0]['conf_mes_otro']+$conf[0]['conf_mes_otro']*2), /// Trimestre 3,6,9,12
                 'desc_mes' => $this->mes_texto($conf[0]['conf_mes']),
-                'verif_ppto' => $conf[0]['ppto_poa'] /// Ppto poa : 0 (Vigente), 1: (Aprobado)
+                'verif_ppto' => $conf[0]['ppto_poa'], /// Ppto poa : 0 (Vigente), 1: (Aprobado)
+                'conf_ajuste_poa' => $conf[0]['conf_ajuste_poa'] /// Ajuste POA
             );
             $this->session->set_userdata($data);
 
@@ -214,29 +217,30 @@ class User extends CI_Controller{
             $data['popup_saldos']='';
 
             ///------- Verificando Saldos
-
-            /*if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1 & $this->gestion>2022 & $this->dep_id!=10){
+            if($this->conf_ajuste_poa==1){
+                if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1 & $this->gestion>2022 & $this->dep_id!=10){
                 
-                $data['popup_saldos']='
-                <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false" style="">
-                    <div class="modal-dialog modal-login" id="mdialTamanio_saldos">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 style="color:red"><b>AJUSTAR DISTRIBUCION DE SALDOS !!!</b></h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="alert alert-danger" role="alert">
-                                  <p>Hola '.$this->session->userdata('funcionario').', la '.strtoupper($ddep[0]['dist_distrital']).' tiene saldo disponible por distribuir en su POA '.$this->gestion.', debe realizar el ajuste POA para realizar CERTIFICACIONES POA. </p>
+                    $data['popup_saldos']='
+                    <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false" style="">
+                        <div class="modal-dialog modal-login" id="mdialTamanio_saldos">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 style="color:red"><b>AJUSTAR DISTRIBUCION DE SALDOS - GESTIÓN '.$this->gestion.' !!!</b></h4>
                                 </div>
-                                '.$this->lista_unidades_con_saldo($this->dep_id,$this->dist_id).'
-                            </div>
-                            <div class="modal-footer">
-                            <a href="'.base_url().'index.php/admin/logout" class="btn btn-danger">salir de la sesion</a>
+                                <div class="modal-body">
+                                    <div class="alert alert-danger" role="alert">
+                                      <p>Hola '.$this->session->userdata('funcionario').', la '.strtoupper($ddep[0]['dist_distrital']).' tiene saldo disponible por distribuir en su POA '.$this->gestion.', debe realizar el ajuste POA para realizar CERTIFICACIONES POA. </p>
+                                    </div>
+                                    '.$this->lista_unidades_con_saldo($this->dep_id,$this->dist_id).'
+                                </div>
+                                <div class="modal-footer">
+                                <a href="'.base_url().'index.php/admin/logout" class="btn btn-danger">salir de la sesion</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>';
-            }*/
+                    </div>';
+                }
+            }
 
             if($rol[0]['r_id']==11){ /// Usuario para ejecucion de proyectos de inversion
                 $data['mensaje']='<div class="alert alert-success" align="center">
@@ -1015,6 +1019,7 @@ class User extends CI_Controller{
             'dep_id' => $data[0]['dep_id'],
             'gestion' => $gestion[0]['ide'],
             'mes' => $gestion[0]['conf_mes'],
+            'conf_ajuste_poa' => $gestion[0]['conf_ajuste_poa'],
             'estado_notificaciones' => $gestion[0]['conf_poa'], /// Estado para las Notificaciones 0:no activo, 1: Habilitado
             'entidad' => $gestion[0]['conf_nombre_entidad'],
             'trimestre' => $gestion[0]['conf_mes_otro'], /// Trimestre 1,2,3,4

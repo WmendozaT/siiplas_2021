@@ -57,6 +57,11 @@ class Cconfiguracion extends CI_Controller {
       
     }
 
+
+
+
+
+
     /*----- LISTA DE PERSONAL A EVALUAR ----*/
     public function responsables_evaluadores(){ 
       $responsables=$this->model_configuracion->get_list_responsables_evaluacion(); // responsables
@@ -1084,6 +1089,30 @@ echo "post_max_size = 2000M";*/
           $this->db->update('configuracion', $update_conf);
 
           $this->session->set_userdata('conf_poa', $estado);
+
+          echo "true";
+
+      }else{
+        show_404();
+      }
+    }
+
+
+    /*--- AJUSTE DE SALDOS POA ---*/
+    function valida_update_saldospoa(){
+      if($this->input->is_ajax_request()){
+          $post = $this->input->post();
+          $estado = $post['estado'];
+          $g_id= $post['g_id'];
+
+          $update_conf = array(
+            'conf_ajuste_poa' => $estado, //// ajuste poa
+            'fun_id' => $this->fun_id
+          );
+          $this->db->where('ide', $this->gestion);
+          $this->db->update('configuracion', $update_conf);
+
+          $this->session->set_userdata('conf_ajuste_poa', $estado);
 
           echo "true";
 
