@@ -4494,7 +4494,7 @@ select poa.dep_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.ape
         select poa.prog,SUM(i.ins_costo_total) ppto
                 from lista_poa_nacional(gestion) poa
                 Inner Join insumos as i On poa.aper_id=i.aper_id
-                where poa.dep_id=id and i.ins_estado!=3 and poa.aper_proy_estado=4
+                where poa.dep_id=id and i.ins_estado!=3 and poa.aper_proy_estado=4 and i.ins_tipo_modificacion=0
                 group by poa.dep_id,poa.prog
                 
         ) as ins On ins.prog=apg.aper_programa
@@ -4529,7 +4529,7 @@ select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripci
         select poa.prog,SUM(i.ins_costo_total) ppto
                 from lista_poa_nacional(gestion) poa
                 Inner Join insumos as i On poa.aper_id=i.aper_id
-                where i.ins_estado!=3 and poa.aper_proy_estado=4
+                where i.ins_estado!=3 and poa.aper_proy_estado=4 and i.ins_tipo_modificacion=0
                 group by poa.prog
                 
         ) as ins On ins.prog=apg.aper_programa
@@ -4537,5 +4537,79 @@ select apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripci
                 where apg.aper_gestion=gestion and apg.aper_asignado=1 and pr.estado!=3 and poa.aper_proy_estado=4
                 group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_descripcion,ins.ppto
                 order by apg.aper_programa asc;
+
+$$ LANGUAGE sql;
+
+
+==================
+ALINEACION DE PPTO POR ACP (FORM 1) INSTITUCIONAL
+
+CREATE OR REPLACE FUNCTION alineacion_poa_form1_institucional(gestion integer) RETURNS TABLE(
+og_id integer,
+og_codigo integer,
+og_objetivo varchar,
+
+act bigint,
+ppto numeric) AS
+
+$$
+    select og.og_id,og.og_codigo,og.og_objetivo,COUNT(ipr.prod_id) act, SUM(ipr.ppto) ppto
+    from lista_poa_nacional(gestion) poa
+    Inner Join vista_componentes_dictamen as c On c.pfec_id=poa.pfec_id
+    Inner Join _productos as pr On pr.com_id=c.com_id
+
+    Inner Join (
+    select prod_id,SUM(i.ins_costo_total) ppto
+    from _insumoproducto iprod
+    Inner Join insumos as i On i.ins_id=iprod.ins_id
+    where i.aper_id!=0 and i.ins_estado!=3 and i.ins_gestion=gestion and i.ins_tipo_modificacion=0
+    group by prod_id
+
+    ) as ipr On ipr.prod_id=pr.prod_id
+
+    Inner Join objetivos_regionales as ore On ore.or_id=pr.or_id
+    Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+    Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+    
+    where pr.estado!=3 and poa.aper_proy_estado=4
+    group by og.og_id,og.og_codigo,og.og_objetivo
+    order by og.og_codigo asc;
+
+$$ LANGUAGE sql;
+
+=================
+ALINEACION DE PPTO POR ACP (FORM 1) REGIONAL
+
+CREATE OR REPLACE FUNCTION alineacion_poa_form1_regional(gestion integer,id integer) RETURNS TABLE(
+dep_id numeric,
+og_id integer,
+og_codigo integer,
+og_objetivo varchar,
+
+act bigint,
+ppto numeric) AS
+
+$$
+select poa.dep_id,og.og_id,og.og_codigo,og.og_objetivo,COUNT(ipr.prod_id) act, SUM(ipr.ppto) ppto
+    from lista_poa_nacional(2024) poa
+    Inner Join vista_componentes_dictamen as c On c.pfec_id=poa.pfec_id
+    Inner Join _productos as pr On pr.com_id=c.com_id
+
+    Inner Join (
+    select prod_id,SUM(i.ins_costo_total) ppto
+    from _insumoproducto iprod
+    Inner Join insumos as i On i.ins_id=iprod.ins_id
+    where i.aper_id!=0 and i.ins_estado!=3 and i.ins_gestion=2024 and i.ins_tipo_modificacion=0
+    group by prod_id
+
+    ) as ipr On ipr.prod_id=pr.prod_id
+
+    Inner Join objetivos_regionales as ore On ore.or_id=pr.or_id
+    Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+    Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+    
+    where pr.estado!=3 and poa.aper_proy_estado=4 and poa.dep_id=id
+    group by poa.dep_id,og.og_id,og.og_codigo,og.og_objetivo
+    order by og.og_codigo asc;
 
 $$ LANGUAGE sql;

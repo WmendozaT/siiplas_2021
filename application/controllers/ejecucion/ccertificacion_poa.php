@@ -299,6 +299,7 @@ class Ccertificacion_poa extends CI_Controller {
   //// redirecciona a la vista 
   public function lista_requerimientos_cpoa($cpoa_id){
     if($this->fun_id==399){
+      //$this->lista_requerimientos_cpoa2($cpoa_id); //// Generacion normal de Certificacion POA
       $this->lista_requerimientos_cpoa_cert_rapida($cpoa_id); //// manera rapida
     }
     else{
