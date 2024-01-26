@@ -65,7 +65,8 @@ class Rep_operaciones extends CI_Controller {
           <div class="col-sm-2">
             <div class="well well-sm bg-color-darken txt-color-white text-center">
               <h5>EXPORTAR FORMULARIO N° 5.xls<br><b>INSTITUCIONAL</b></h5>
-              <a href="'.site_url("").'/rep/exportar_requerimientos_institucional/'.$tp_id.'" target=_blank title="EXPORTAR FORM. N 5"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+              <a href="'.site_url("").'/rep/exportar_requerimientos_institucional/1" target=_blank title="EXPORTAR FORM. N 5 - INVERSIÓN"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
+              <a href="'.site_url("").'/rep/exportar_requerimientos_institucional/4" target=_blank title="EXPORTAR FORM. N 5 - GASTO CORRIENTE"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="30px" HEIGHT="30px"/></a>
             </div>
           </div>
 

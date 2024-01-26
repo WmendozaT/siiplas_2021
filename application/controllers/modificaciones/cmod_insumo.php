@@ -278,14 +278,34 @@ class Cmod_insumo extends CI_Controller {
         $tabla.='
           <section class="col col-3">
             <label class="label"><b>ALINEACI&Oacute;N FORM 4 (ACTIVIDAD) '.$this->gestion.'</b></label>
-            <label class="input">
-              <select class="form-control" id="dato_id" name="dato_id" title="SELECCIONE ACTIVIDAD">
-                <option value="">Seleccione Actividad</option>';
-                foreach($operaciones as $row){ 
-                  $tabla.='<option value="'.$row['prod_id'].'">'.$row['or_codigo'].'/'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
-                } 
-                $tabla.='      
-              </select>
+            <label class="input">';
+              if($cite[0]['por_id']==0){
+                $tabla.='
+                <select class="form-control" id="dato_id" name="dato_id" title="SELECCIONE ACTIVIDAD">
+                  <option value="">Seleccione Actividad</option>';
+                  foreach($operaciones as $row){ 
+                    $tabla.='<option value="'.$row['prod_id'].'">'.$row['or_codigo'].'/'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
+                  } 
+                  $tabla.='      
+                </select>';
+              }
+              else{
+                $tabla.='
+                <select class="form-control" id="dato_id" name="dato_id" title="SELECCIONE ACTIVIDAD">
+                  <option value="">Seleccione Actividad</option>';
+                  foreach($operaciones as $row){ 
+                    $unidad=$this->model_componente->get_componente($row['uni_resp'],$this->gestion);
+          
+                    if(count($unidad)!=0){
+                      $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                      $tabla.='<option value="'.$row['prod_id'].'">'.$row['or_codigo'].'/'.$row['prod_cod'].' ('.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].') -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</option>';
+                    }
+                  } 
+                  $tabla.='      
+                </select>';
+              }
+            $tabla.='
+              
             </label>
           </section>';
 
@@ -2141,14 +2161,35 @@ class Cmod_insumo extends CI_Controller {
 
         $operaciones=$this->model_producto->lista_operaciones($cite[0]['com_id']);
         $tabla.='<option value="">Seleccione Actividad</option>';
-        foreach($operaciones as $row){
-          if($row['prod_id']==$insumo[0]['prod_id']){
-            $tabla.='<option value="'.$row['prod_id'].'" selected>'.$row['or_codigo'].'/'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
-          }
-          else{
-            $tabla.='<option value="'.$row['prod_id'].'">'.$row['or_codigo'].'/'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
-          }
-        } 
+
+        if($cite[0]['por_id']==0){
+          foreach($operaciones as $row){
+            if($row['prod_id']==$insumo[0]['prod_id']){
+              $tabla.='<option value="'.$row['prod_id'].'" selected>'.$row['or_codigo'].'/'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
+            }
+            else{
+              $tabla.='<option value="'.$row['prod_id'].'">'.$row['or_codigo'].'/'.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
+            }
+          } 
+        }
+        else{
+          foreach($operaciones as $row){
+            $unidad=$this->model_componente->get_componente($row['uni_resp'],$this->gestion);
+            $uresp=$row['or_codigo'].'/'.$row['prod_cod'].'.- '.$row['prod_producto'];
+            if(count($unidad)!=0){
+              $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+              $uresp=$row['or_codigo'].'/'.$row['prod_cod'].'.- ('.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].') -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
+            }
+
+            if($row['prod_id']==$insumo[0]['prod_id']){
+              $tabla.='<option value="'.$row['prod_id'].'" selected>'.$uresp.'</option>';
+            }
+            else{
+              $tabla.='<option value="'.$row['prod_id'].'">'.$uresp.'</option>';
+            }
+          } 
+        }
+
 
       return $tabla;
     }

@@ -314,7 +314,7 @@
                                                                 <form name="form_gest" id="form_gest" method="post" action="<?php echo site_url("") . '/mantenimiento/cconfiguracion/update_conf'?>" class="form-horizontal">
                                                                     <input type="hidden" name="ide" id="ide" value="<?php echo $conf[0]['ide'] ?>">
                                                                     <input type="hidden" name="tp" id="tp" value="1">
-                                                                    <input type="hidden" name="gest1" id="gest1" value="<?php echo $conf[0]['conf_gestion'] ?>">
+                                                                    <input type="hidden" name="gest_ini" id="gest_ini" value="<?php echo $conf[0]['conf_gestion'] ?>">
                                                                     <fieldset>
                                                                         <legend>CONFIGURAR GESTI&Oacute;N ACTIVA</legend>
                                                                         
@@ -769,7 +769,7 @@
                                                         </article>
                                                         <article class="col-sm-12 col-md-6 col-lg-6">
                                                             <div class="widget-body">
-                                                                <form name="form_gest" id="form_gest" method="post" class="form-horizontal">
+                                                                <form name="form_gest2" id="form_gest2" method="post" class="form-horizontal">
                                                                     <input type="text" name="ide" id="ide" value="<?php echo $conf[0]['ide'] ?>">
                                                                     <fieldset>
                                                                         <legend>CONFIGURAR SALDOS POA</legend>
@@ -868,8 +868,11 @@
             }
 
             function valida_gestion(){ 
-                gestantiguo=document.form_gest.gest1.value;
+                gestantiguo=document.form_gest.gest_ini.value;
                 gestnuevo=document.form_gest.gest_id.value;
+
+                //gestantiguo= $('[name="gest_ini"]').val(); /// proyecto document.form_gest.gest_ini.value;
+                //gestnuevo=$('[name="gest_id"]').val(); //document.form_gest.gest_id.value;
 
                 if(gestantiguo!=gestnuevo){
                    alertify.confirm('DESEA MODIFICAR LA GESTION '+gestantiguo+' POR '+gestnuevo+' ?', function (a) {

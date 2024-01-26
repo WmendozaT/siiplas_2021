@@ -116,6 +116,18 @@ class Model_componente extends CI_Model{
     }
 
 
+    /*====== GET COMPONENTE PARA SEGUIMIENTO POA (NUEVA GESTION) ======*/
+    public function get_servicio_siguiente_gestion($serv_id,$dist_id,$gestion){
+        $sql = 'select *
+                from _componentes c
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join _proyectos as p On pfe.proy_id=p.proy_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+                where serv_id='.$serv_id.' and p.dist_id='.$dist_id.' and apg.aper_gestion='.$gestion.' and pfe.pfec_estado=\'1\''; 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*================== COMPONENTE X (Proy Inversion) =================*/
     public function get_componente_pi($com_id){
         $sql = 'select *

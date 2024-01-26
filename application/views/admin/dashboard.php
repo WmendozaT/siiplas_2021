@@ -92,6 +92,7 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
+            
             <?php
               if($this->session->userdata('tp_adm')==1 || $this->session->userdata('rol_id')!=10){ ?>
                 <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li>

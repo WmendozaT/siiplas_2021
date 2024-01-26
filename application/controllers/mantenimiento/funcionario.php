@@ -80,39 +80,46 @@ class Funcionario extends CI_Controller {
             $data['list_responsables']=$this->get_responsables_poa();
             $this->load->view('admin/mantenimiento/funcionario/vlist_fun', $data);
         
-
-         /*$funcionarios=$this->model_funcionario->get_funcionarios_seguimiento_institucional(2021);
-         $tabla='';
+            /*--------- listado de unidades responsables de seguimiento poa -------*/
+          /*  $funcionarios=$this->model_funcionario->get_funcionarios_seguimiento_institucional($this->gestion);
+            $tabla='';
             if(count($funcionarios)!=0){
                 $tabla.='
                
                 <table border=0.9 style="width:100%;" align=center>
                     <thead>
                         <tr style="font-size: 8px;" bgcolor="#d8d8d8">
-                            <th style="width:2%; text-align: center;height:20px;">#</th>
+                            <th style="width:2%; text-align: center;height:20px;">SERV ID</th>
                             <th style="width:20%; text-align: center;">ACTIVIDAD</th>
                             <th style="width:26%; text-align: center;">SUBACTIVIDAD</th>
                             <th style="width:13%; text-align: center;">RESPONSABLE</th>
                             <th style="width:5%; text-align: center;">ID</th>
-                            <th style="width:5%; text-align: center;">COM ID 2021</th>
-                            <th style="width:5%; text-align: center;">COM ID 2023</th>
+                            <th style="width:5%; text-align: center;">COM ID '.$this->gestion.'</th>
+                            <th style="width:5%; text-align: center;">COM ID 2024</th>
                             <th style="width:13%; text-align: center;">USUARIO</th>
                         </tr>
                     </thead>
                     <tbody>';
                     $nro=0;
                     foreach($funcionarios  as $row){
+                        $get_serv=$this->model_componente->get_servicio_siguiente_gestion($row['serv_id'],$row['dist_id'],2024);
                         $nro++;
                      
                         $rol=$this->model_funcionario->verif_rol($row['id'],1);
                         $tabla .='<tr style="font-size: 7px;">';
-                            $tabla .='<td style="width:2%;height:15px;" align="center">'.$nro.'</td>';
+                            $tabla .='<td style="width:2%;height:15px;" align="center">'.$row['serv_id'].'</td>';
                             $tabla .='<td style="width:20%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>';
                             $tabla .='<td style="width:26%;">'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>';
                             $tabla .='<td style="width:13%;">'.$row['fun_nombre'].' '.$row['fun_paterno'].'</td>';
                             $tabla .='<td style="width:13%;"><b>'.$row['id'].'</b></td>';
                             $tabla .='<td style="width:13%;"><b>'.$row['cm_id'].'</b></td>';
-                            $tabla .='<td style="width:13%;"></td>';
+                            if(count($get_serv)!=0){
+                                $tabla .='<td style="width:13%;">'.$get_serv[0]['com_id'].'</td>';
+                            }
+                            else{
+                                $tabla .='<td style="width:13%;"></td>';
+                            }
+                            
                             $tabla .='<td style="width:13%;"><b>'.$row['fun_usuario'].'</b></td>';
                             
                         $tabla .='</tr>';
@@ -123,6 +130,23 @@ class Funcionario extends CI_Controller {
             }
              echo $tabla;*/
 
+            /*---------------*/
+
+            /*------- update de usuarios seguimiento poa a una nueva gestion --------*/
+            /*$funcionarios=$this->model_funcionario->get_funcionarios_seguimiento_institucional($this->gestion);
+            if(count($funcionarios)!=0){
+                foreach($funcionarios  as $row){
+                    $get_serv=$this->model_componente->get_servicio_siguiente_gestion($row['serv_id'],$row['dist_id'],2024);
+                    if(count($get_serv)!=0){
+                        $update_resp = array(
+                        'cm_id' => $get_serv[0]['com_id']
+                        );
+                        $this->db->where('fun_id', $row['id']);
+                        $this->db->update('funcionario', $update_resp);
+                    }
+                }
+            }*/
+            /*---------------*/
         }
         else{
             redirect('admin/dashboard');
@@ -376,9 +400,9 @@ class Funcionario extends CI_Controller {
                     <thead>
                         <tr style="font-size: 8px;" bgcolor="#d8d8d8">
                             <th style="width:2%; text-align: center;height:20px;">#</th>
-                            <th style="width:20%; text-align: center;">ACTIVIDAD</th>
-                            <th style="width:26%; text-align: center;">SUBACTIVIDAD</th>
-                            <th style="width:13%; text-align: center;">RESPONSABLE</th>
+                            <th style="width:20%; text-align: center;">PROGRAMA</th>
+                            <th style="width:26%; text-align: center;">UNIDAD RESPONSABLE</th>
+                            <th style="width:13%; text-align: center;">TRABAJADOR</th>
                             <th style="width:13%; text-align: center;">USUARIO</th>
                             <th style="width:13%; text-align: center;">CONTRASEÑA</th>
                             <th style="width:10%; text-align: center;">ROL ASIGNADO</th>

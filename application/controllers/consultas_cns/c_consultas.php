@@ -62,9 +62,9 @@ class C_consultas extends CI_Controller {
       $data['menu']=$this->genera_informacion->menu(10);
       $data['style']=$this->genera_informacion->style();
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+      $data['formulario']='';
 
-      $data['formulario']='
-
+      $data['formulario'].='
       <article class="col-sm-12 col-md-12 col-lg-12">
         <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false">
           <header>
@@ -83,11 +83,23 @@ class C_consultas extends CI_Controller {
                     <label class="control-label col-md-2"><b>GERENCIA DE AREA</b></label>
                     <div class="col-md-8">
                       <select class="form-control input-lg" id="proy_id" name="proy_id" title="SELECCIONE GERENCIA DE AREA">
-                        <option value="0">Seleccione Gerencia de Area</option>
-                        <option value="2848">000 00 002 - GERENCIA GENERAL</option>
-                        <option value="2886">000 00 003 - GERENCIA ADMINISTRATIVA FINANCIERA</option>
-                        <option value="2887">721 00 040 - GERENCIA DE SERVICIOS DE SALUD</option>
-                        <option value="2979">730 00 010 - MEDICINA DEL TRABAJO</option>
+                        <option value="0">Seleccione Gerencia de Area</option>';
+                        if($this->gestion>2023){
+                          $data['formulario'].='
+                          <option value="3073">000000001 - HONORABLE DIRECTORIO</option>
+                          <option value="3071">000000002 - GERENCIA GENERAL</option>
+                          <option value="3072">000000003 - GERENCIA ADMINISTRATIVA FINANCIERA</option>
+                          <option value="3074">000000004 - GERENCIA DE SERVICIOS DE SALUD</option>
+                          <option value="3335">7300000010 - MEDICINA DEL TRABAJO</option>';
+                        }
+                        else{
+                          $data['formulario'].='
+                          <option value="2848">000 00 002 - GERENCIA GENERAL</option>
+                          <option value="2886">000 00 003 - GERENCIA ADMINISTRATIVA FINANCIERA</option>
+                          <option value="2887">721 00 040 - GERENCIA DE SERVICIOS DE SALUD</option>
+                          <option value="2979">730 00 010 - MEDICINA DEL TRABAJO</option>';
+                        } 
+                        $data['formulario'].='
                       </select>
                     </div>
                   </div>
