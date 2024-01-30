@@ -2085,6 +2085,23 @@ class Modificacionpoa extends CI_Controller{
         $tipo_mod='(Rev. POA)';
       }
 
+      $comp='';
+      if($cite[0]['por_id']==0){
+        $comp='
+        <tr>
+          <td style="width:20%;">
+            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+              <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;UNIDAD RESPONSABLE</b></td><td style="width:5%;"></td></tr>
+            </table>
+          </td>
+          <td style="width:80%;">
+            <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+              <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</td></tr>
+            </table>
+          </td>
+        </tr>';
+      }
+
       $tabla.='
         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
           <tr style="border: solid 0px;">              
@@ -2190,28 +2207,14 @@ class Modificacionpoa extends CI_Controller{
                                 <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['proy_sisin'].' '.strtoupper ($cite[0]['proy_nombre']).'</td></tr>
                             </table>
                         </td>
-                      </tr>
-                      <tr>
-                      <td style="width:20%;">
-                          <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                              <tr><td style="width:95%;height: 40%;" bgcolor="#eceaea"><b>UNIDAD RESP.</b></td><td style="width:5%;"></td></tr>
-                          </table>
-                      </td>
-                      <td style="width:80%;">
-                          <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                              <tr>
-                                  <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</td>
-                              </tr>
-                          </table>
-                      </td>
-                    </tr>';
+                      </tr>';
                     }
                     else{
                       $tabla.='
                       <tr>
                         <td style="width:20%;">
                             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                                <tr><td style="width:95%;height: 40%;" bgcolor="#eceaea"><b>'.$cite[0]['tipo_adm'].'</b></td><td style="width:5%;"></td></tr>
+                                <tr><td style="width:95%;height: 40%;" bgcolor="#eceaea"><b>CAT. PROGRAMATICA '.$this->gestion.'</b></td><td style="width:5%;"></td></tr>
                             </table>
                         </td>
                         <td style="width:80%;">
@@ -2219,23 +2222,11 @@ class Modificacionpoa extends CI_Controller{
                                 <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['aper_programa'].''.$cite[0]['aper_proyecto'].''.$cite[0]['aper_actividad'].' '.strtoupper ($cite[0]['act_descripcion']).' '.$cite[0]['abrev'].'</td></tr>
                             </table>
                         </td>
-                      </tr>
-                      <tr>
-                      <td style="width:20%;">
-                          <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                              <tr><td style="width:95%;height: 40%;" bgcolor="#eceaea"><b>UNIDAD RESP.</b></td><td style="width:5%;"></td></tr>
-                          </table>
-                      </td>
-                      <td style="width:80%;">
-                          <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                              <tr>
-                                  <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$cite[0]['serv_cod'].' '.$cite[0]['tipo_subactividad'].' '.$cite[0]['serv_descripcion'].'</td>
-                              </tr>
-                          </table>
-                      </td>
-                  </tr>';
+                      </tr>';
                     }
+
                   $tabla.='
+                  '.$comp.'
               </table>
             </td>
             <td style="width:2%;"></td>

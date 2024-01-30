@@ -62,6 +62,7 @@ class Ccertificacion_poa extends CI_Controller {
         $data['proyectos']=$this->certificacionpoa->list_pinversion(4); /// Proyectos de Inversion
         $data['operacion']=$this->certificacionpoa->list_unidades_es(4); /// Gasto Corriente
 
+       // echo $this->certificacionpoa->mis_formulariosN4(3279);
         $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/list_poas_aprobados', $data);
       }
       else{
@@ -1494,7 +1495,7 @@ class Ccertificacion_poa extends CI_Controller {
         else{
           $presupuesto=$this->model_certificacion->saldo_presupuesto_unidad($proy_id);
 
-          if((($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0) || $proyecto[0]['proy_id']==2978){
+          if((($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0)){
             $tabla=$this->certificacionpoa->mis_formulariosN4($proy_id); /// Mis Formularios n° 4 por Unidad Responsable
           }
           else{
@@ -1728,6 +1729,7 @@ class Ccertificacion_poa extends CI_Controller {
       $presupuesto=$this->model_certificacion->saldo_presupuesto_unidad($componente[0]['proy_id']);
       if(($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0){
         $data['select_ope']=$this->certificacionpoa->select_mis_productos($com_id,$titulo,0); /// Seleccion de productos
+       // $data['select_ope']=$com_id;
       }
       else{
         $data['select_ope']='

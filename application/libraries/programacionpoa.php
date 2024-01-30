@@ -1036,22 +1036,25 @@ class Programacionpoa extends CI_Controller{
         $titulo_rep='REQUERIMIENTOS '.$estado;
         $titulo_form='FORMULARIO SPO N° 5';
       }
-      $comp='
-        <tr>
-          <td style="width:20%;">
-              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                  <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;UNIDAD RESPONSABLE</b></td><td style="width:5%;"></td></tr>
-              </table>
-          </td>
-          <td style="width:80%;">
-              <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                  <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'</td></tr>
-              </table>
-          </td>
-        </tr>';
     }
 
-    
+    $comp='';
+      if($proyecto[0]['por_id']==0){
+        $comp='
+        <tr>
+          <td style="width:20%;">
+            <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
+              <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;UNIDAD RESPONSABLE</b></td><td style="width:5%;"></td></tr>
+            </table>
+          </td>
+          <td style="width:80%;">
+            <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
+              <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'</td></tr>
+            </table>
+          </td>
+        </tr>';
+      }
+
     $tabla='';
     $tabla.='
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
@@ -1150,7 +1153,7 @@ class Programacionpoa extends CI_Controller{
                     $tabla.='
                     <td style="width:20%;">
                         <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;PROGRAMA</b></td><td style="width:5%;"></td></tr>
+                            <tr><td style="width:95%;height: 40%;" bgcolor="#e6e5e5"><b>&nbsp;CAT. PROGRAMATICA '.$this->gestion.'</b></td><td style="width:5%;"></td></tr>
                         </table>
                     </td>
                     <td style="width:80%;">

@@ -300,7 +300,13 @@ class Certificacionpoa extends CI_Controller{
                 <td align=center>'.$nro.'</td>';
                   if($proyecto[0]['por_id']==1){
                     $programa=$this->model_componente->get_componente($row['resp_id'],$this->gestion);
-                    $tabla.='<td bgcolor="#EFFEFD"><b style="font-size:12px;">'.$programa[0]['tipo'].' '.$programa[0]['act_descripcion'].'</b><br>'.$row['tipo_unidad'].' '.$row['unidad_responsable'].'</td>';
+                    if(count($programa)!=0){
+                      $tabla.='<td bgcolor="#EFFEFD"><b style="font-size:12px;">'.$programa[0]['tipo'].' '.$programa[0]['act_descripcion'].'</b><br>'.$row['tipo_unidad'].' '.$row['unidad_responsable'].'</td>';
+                    }
+                    else{
+                      $tabla.='<td bgcolor="#EFFEFD"><b style="font-size:12px; color:red"><b>SELECCIONAR UNIDAD RESPONSABLE</b></td>';
+                    }
+                    
                   }
                   else{
                     $tabla.='<td bgcolor="#EFFEFD"><b style="font-size:12px;">'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</b></td>';
@@ -310,8 +316,20 @@ class Certificacionpoa extends CI_Controller{
                 <td align=center><span class="badge bg-color-blue txt-color-white" style="font-size:12px;">'.$row['prod_cod'].'</span></td>
                 <td>'.$row['prod_producto'].'</td>
                 <td>'.$row['prod_resultado'].'</td>
-                <td align=right>'.number_format($row['monto'], 2, ',', '.').'</td>
-                <td align=center><a class="btn btn-primary" href="'.site_url("").'/cert/form_items/'.$row['prod_id'].'" id="myBtn'.$row['prod_id'].'" title="INGRESAR A LISTA DE ITEMS A CERTIFICAR" style="width:100%;"><i class="fa fa-lg fa-fw fa-list-alt"></i> CERTIFICAR ITEMS</a></td>
+                <td align=right>'.number_format($row['monto'], 2, ',', '.').'</td>';
+                if($proyecto[0]['por_id']==1){
+                    $programa=$this->model_componente->get_componente($row['resp_id'],$this->gestion);
+                    if(count($programa)!=0){
+                      $tabla.='<td align=center><a class="btn btn-primary" href="'.site_url("").'/cert/form_items/'.$row['prod_id'].'" id="myBtn'.$row['prod_id'].'" title="INGRESAR A LISTA DE ITEMS A CERTIFICAR" style="width:100%;"><i class="fa fa-lg fa-fw fa-list-alt"></i> CERTIFICAR ITEMS</a></td>';
+                    }
+                    else{
+                      $tabla.='<td bgcolor="#EFFEFD"></td>';
+                    }
+                }
+                else{
+                  $tabla.='<td align=center><a class="btn btn-primary" href="'.site_url("").'/cert/form_items/'.$row['prod_id'].'" id="myBtn'.$row['prod_id'].'" title="INGRESAR A LISTA DE ITEMS A CERTIFICAR" style="width:100%;"><i class="fa fa-lg fa-fw fa-list-alt"></i> CERTIFICAR ITEMS</a></td>';
+                }
+                $tabla.='
                 <td align=center><img id="load'.$row['prod_id'].'" style="display: none" src="'.base_url().'/assets/img/loading.gif" width="35" height="35" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO.."></td>
               </tr>';
 
@@ -501,8 +519,8 @@ class Certificacionpoa extends CI_Controller{
 
 
 
- ///// UNIDAD RESPONSABLE
-    //// SELECCION DE FORMULARIO N 4 PARA SELECCIONAR REQUERIMIENTOS 
+  ///// UNIDAD RESPONSABLE
+  //// SELECCION DE FORMULARIO N 4 PARA SELECCIONAR REQUERIMIENTOS 
   public function select_mis_productos($com_id,$titulo,$tp){
     /// tp : 0 (Normal)
     /// tp : 1 (Prog 72 - Bienes y Servicios)
