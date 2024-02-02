@@ -1431,7 +1431,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
      /*----- MIGRACION DE REQUERIMIENTOS A UNA OPERACIÓN (2019) -----*/
-    function valida_add_requerimientos2(){
+    function valida_add_requerimientos(){
       if ($this->input->post()) {
           $post = $this->input->post();
           $cite_id = $this->security->xss_clean($post['cite_id']);
@@ -1448,27 +1448,31 @@ class Cmod_insumo extends CI_Controller {
           $allowed_file_types = array('.csv');
 
           if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
+
               $lineas = file($archivotmp);
 
               $i=0;
               $nro=0;
               foreach ($lineas as $linea_num => $linea){ /// A
+
                 if($i != 0){ /// B
                   $datos = explode(";",$linea);
                   if(count($datos)==20){ /// C
-                      $cod_ope = (int)$datos[0]; //// Codigo Actividad
-                      $cod_partida = (int)$datos[1]; //// Codigo partida
+
+                      $cod_ope = intval(trim($datos[0])); //// Codigo Actividad
+                      $cod_partida = intval(trim($datos[1])); //// Codigo partida
                       $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// Datos Partida
 
-                      $detalle = utf8_encode(trim($datos[2])); //// Detalle Requerimiento
-                      $unidad = utf8_encode(trim($datos[3])); //// Unidad de medida
-                      $cantidad = (int)$datos[4]; //// Cantidad
-                      $unitario = (float)$datos[5]; //// Costo Unitario
+                      $detalle = strval(utf8_encode(trim($datos[2]))); //// descripcion form5
+                      $unidad = strval(utf8_encode(trim($datos[3]))); //// Unidad
+                      $cantidad = intval(trim($datos[4])); //// Cantidad
+                      $unitario = intval(trim($datos[5])); //// Costo Unitario
                       $total=round(($cantidad*$unitario),2); // Costo Total
 
                       $var=7; $sum_prog=0;
                       for ($i=1; $i <=12 ; $i++) {
-                        $m[$i]=(float)$datos[$var]; //// Mes i
+                        //$m[$i]=(float)$datos[$var]; //// Mes i
+                        $m[$i]=floatval(trim($datos[$var])); //// Mes i
                         if($m[$i]==''){
                           $m[$i]=0;
                         }
@@ -1477,7 +1481,8 @@ class Cmod_insumo extends CI_Controller {
                       }
                       $observacion = utf8_encode(trim($datos[19])); //// Observacion
                       $verif_operacion=$this->model_producto->verif_componente_operacion($cite[0]['com_id'],$cod_ope);
-                     // echo count($par_id).'--'.$cod_partida.'-- '.($total==$sum_prog)." --".count($verif_operacion)."<br>";
+                      echo $total.'---'.$sum_prog.'<br>';
+                      echo count($par_id).'--'.$cod_partida.'-- '.($total==$sum_prog)." --".count($verif_operacion)."<br>";
                       if(count($par_id)!=0 & $cod_partida!=0 & ($total==$sum_prog) & count($verif_operacion)!=0){ /// D
 
                         $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$par_id[0]['par_id']); /// Ppto. Asignado
@@ -1571,7 +1576,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
      /*----- MIGRACION DE REQUERIMIENTOS (2023) -----*/
-    function valida_add_requerimientos(){
+    function valida_add_requerimientos2(){
       if ($this->input->post()) {
           $post = $this->input->post();
           $cite_id = $this->security->xss_clean($post['cite_id']);

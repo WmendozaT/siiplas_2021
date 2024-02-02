@@ -68,12 +68,22 @@ class Model_modrequerimiento extends CI_Model{
 
     /*---- LISTA DE REQUERIMIENTOS ----*/
     function lista_requerimientos($com_id,$tp_mod){
-        $sql = 'select *,i.form4_cod as prod_cod
+        $sql = 'select *,p.prod_cod
                 from insumos i
+                Inner Join _insumoproducto as ipr On ipr.ins_id=i.ins_id
+                Inner Join _productos as p On p.prod_id=ipr.prod_id
                 Inner Join partidas as par On par.par_id=i.par_id
                 Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
                 where i.com_id='.$com_id.' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and i.ins_activo=\'0\' and i.ins_tipo_modificacion='.$tp_mod.'
                 order by i.form4_cod, par.par_codigo, i.ins_id asc';
+
+
+       /* $sql = 'select *,i.form4_cod as prod_cod
+                from insumos i
+                Inner Join partidas as par On par.par_id=i.par_id
+                Inner Join aperturaprogramatica as apg On apg.aper_id=i.aper_id
+                where i.com_id='.$com_id.' and i.ins_estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and i.ins_activo=\'0\' and i.ins_tipo_modificacion='.$tp_mod.'
+                order by i.form4_cod, par.par_codigo, i.ins_id asc';*/
         
         $query = $this->db->query($sql);
         return $query->result_array();

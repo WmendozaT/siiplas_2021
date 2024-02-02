@@ -1003,7 +1003,7 @@ class Programacionpoa extends CI_Controller{
   //// Cabecera Reporte form 3, 4 y 5
   public function cabecera($tp_id,$tp_rep,$proyecto,$com_id){
     /// tp_rep : 3 (Foda), 4 (Actividades), 5 (requerimientos), 0 (consolidado ppto)
-    
+    $comp='';
     if($tp_rep==0){
       if($proyecto[0]['aper_proy_estado']==1){
         $titulo_rep='CONSOLIDADO POA PRESUPUESTO';
@@ -1014,7 +1014,8 @@ class Programacionpoa extends CI_Controller{
         $titulo_form='PPTO. APROBADO - POA';
       }
       
-      $comp='';
+      
+
     }
     elseif($tp_rep==3){
       $titulo_rep='ANALISIS DE PROBLEMAS Y CAUSAS';
@@ -1022,7 +1023,7 @@ class Programacionpoa extends CI_Controller{
       $comp='';
     }
     else{
-      $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+      
       $estado='';
       if($proyecto[0]['aper_proy_estado']==1){
         $estado='<b>(ANTEPROYECTO)</b>';
@@ -1036,9 +1037,10 @@ class Programacionpoa extends CI_Controller{
         $titulo_rep='REQUERIMIENTOS '.$estado;
         $titulo_form='FORMULARIO SPO N° 5';
       }
-    }
 
-    $comp='';
+
+      $componente=$this->model_componente->get_componente($com_id,$this->gestion);
+ 
       if($proyecto[0]['por_id']==0){
         $comp='
         <tr>
@@ -1054,6 +1056,9 @@ class Programacionpoa extends CI_Controller{
           </td>
         </tr>';
       }
+    }
+
+    
 
     $tabla='';
     $tabla.='

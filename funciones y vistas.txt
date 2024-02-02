@@ -2702,87 +2702,88 @@ VISTA OBTIENE DATOS GENERALES DE LA CERTIFICACION POA
 
 CREATE OR REPLACE VIEW public.vista_get_certificacionpoa AS 
 select
-	cpoa.cpoa_id,
-                cpoa.proy_id,
-                cpoa.cpoa_codigo,
-                cpoa.cpoa_fecha,
-                cpoa.cpoa_gestion,
-                cpoa.cpoa_ref,
-                cpoa.cpoa_estado,
-                cpoa.fun_id,
-                cpoa.aper_id,
-                cpoa.cpoa_cite,
-                cpoa.cite_fecha,
+cpoa.cpoa_id,
+cpoa.proy_id,
+cpoa.cpoa_codigo,
+cpoa.cpoa_fecha,
+cpoa.cpoa_gestion,
+cpoa.cpoa_ref,
+cpoa.cpoa_estado,
+cpoa.fun_id,
+cpoa.aper_id,
+cpoa.cpoa_cite,
+cpoa.cite_fecha,
 cpoa.sol_id,
 cpoa.cpoa_recomendacion,
 cpoa.cpoa_sello,
 cpoa. cpoa_observacion,
 cpoa. cpoa_rev,
-                f.fun_nombre,
-                f.fun_paterno,
-                f.fun_materno,
-	f.fun_cargo,
-                cpoa.com_id,
-                c.com_componente,
-                c.pfec_id,
-                sa.serv_cod,
-                sa.serv_descripcion,
-                tpsa.tipo_subactividad,
-                p.proy_sisin,
-                p.proy_nombre,
-                p.tp_id,
-                te.tipo,
-                te.tipo_adm,
-	ua.act_descripcion,
-	p.dep_id,
-	dep.dep_cod,
-	dep.dep_departamento,
-	dist.dist_id,
-	dist.dist_distrital,
-	dist.dist_cod,
-	dist.abrev,
-    dist.adm,
-                apg.aper_programa,
-                apg.aper_proyecto,
-                apg.aper_actividad,
-                cpoa.prod_id,
-                ore.or_id,
-	ore.or_codigo,
-	ore.or_objetivo,
-	og.og_id,
-	og.og_codigo,
-	og.og_objetivo,
-	ae.acc_id,
-	ae.acc_codigo,
-	ae.acc_descripcion,
-	oe.obj_codigo,
-	oe.obj_descripcion,
-	prod.prod_cod,
-	prod.prod_producto
+f.fun_nombre,
+f.fun_paterno,
+f.fun_materno,
+f.fun_cargo,
+cpoa.com_id,
+c.com_componente,
+c.pfec_id,
+sa.serv_cod,
+sa.serv_descripcion,
+tpsa.tipo_subactividad,
+p.proy_sisin,
+p.proy_nombre,
+p.tp_id,
+p.por_id,
+te.tipo,
+te.tipo_adm,
+ua.act_descripcion,
+p.dep_id,
+dep.dep_cod,
+dep.dep_departamento,
+dist.dist_id,
+dist.dist_distrital,
+dist.dist_cod,
+dist.abrev,
+dist.adm,
+apg.aper_programa,
+apg.aper_proyecto,
+apg.aper_actividad,
+cpoa.prod_id,
+ore.or_id,
+ore.or_codigo,
+ore.or_objetivo,
+og.og_id,
+og.og_codigo,
+og.og_objetivo,
+ae.acc_id,
+ae.acc_codigo,
+ae.acc_descripcion,
+oe.obj_codigo,
+oe.obj_descripcion,
+prod.prod_cod,
+prod.prod_producto
 
-                from certificacionpoa cpoa
-                Inner Join _componentes as c On c.com_id=cpoa.com_id
-                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
-                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
-                Inner Join funcionario as f On f.fun_id=cpoa.fun_id
-                Inner Join _proyectos as p On p.proy_id=cpoa.proy_id
-                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
-                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
-                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                Inner Join _distritales as dist On dist.dist_id=p.dist_id
-	Inner Join _departamentos as dep On dep.dep_id=p.dep_id
-	Inner Join _productos as prod On prod.prod_id=cpoa.prod_id
-	Inner Join objetivos_regionales as ore On ore.or_id=prod.or_id
-	Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
-	Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-	Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
-	Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
+    from certificacionpoa cpoa
+        Inner Join _componentes as c On c.com_id=cpoa.com_id
+        Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+        Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+        Inner Join funcionario as f On f.fun_id=cpoa.fun_id
+        Inner Join _proyectos as p On p.proy_id=cpoa.proy_id
+        Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+        Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+        Inner Join _distritales as dist On dist.dist_id=p.dist_id
+    Inner Join _departamentos as dep On dep.dep_id=p.dep_id
+    Inner Join _productos as prod On prod.prod_id=cpoa.prod_id
+    Inner Join objetivos_regionales as ore On ore.or_id=prod.or_id
+    Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+    Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+    Inner Join _acciones_estrategicas as ae On ae.acc_id=og.acc_id
+    Inner Join _objetivos_estrategicos as oe On oe.obj_id=ae.obj_id
 
      where cpoa.cpoa_estado!=3 and c.estado!=3 and pfe.pfec_estado=1 and pfe.estado!=3;
 
-	ALTER TABLE public.vista_get_certificacionpoa
-	OWNER TO postgres
+    ALTER TABLE public.vista_get_certificacionpoa
+    OWNER TO postgres
 
 ///// VISTA DATOS GENERALES DE CERTIFICACIONES ANULADAS 
 
@@ -2846,7 +2847,9 @@ SELECT
     oe.obj_codigo,
     oe.obj_descripcion,
     prod.prod_cod,
-    prod.prod_producto
+    prod.prod_producto,
+    prod.uni_resp
+    
    FROM certificacionpoa_anulado canulado
      JOIN certificacionpoa cpoa ON cpoa.cpoa_id = canulado.cpoa_id
      JOIN _componentes c ON c.com_id = cpoa.com_id

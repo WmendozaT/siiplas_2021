@@ -748,8 +748,10 @@ $(document).ready(function() {
             document.getElementById("mtp_met").value = response.producto[0]['mt_id'];
 
             document.getElementById("mindicador").value = response.producto[0]['prod_indicador'];
-            document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
+           // document.getElementById("munidad").value = response.producto[0]['prod_unidades'];
             document.getElementById("mor_id").value = response.producto[0]['or_id'];
+
+            $('#resp').html(response.uresponsable);
 
            if(response.trimestre==1){
             //document.getElementById("mprod").disabled = false;

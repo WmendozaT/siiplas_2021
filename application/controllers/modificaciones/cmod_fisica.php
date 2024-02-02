@@ -236,6 +236,11 @@ class Cmod_fisica extends CI_Controller {
         $post = $this->input->post();
         $prod_id = $this->security->xss_clean($post['prod_id']);
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
+
+        $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion);
+        $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
+        $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
+
         $temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
         
         $sum_temp=0;
@@ -257,11 +262,48 @@ class Cmod_fisica extends CI_Controller {
           }
         }
 
+
+        $uresponsable='';
+        if($proyecto[0]['por_id']==1){
+          $unidades=$this->model_producto->list_uresponsables_regional($proyecto[0]['dist_id']);
+          $uresponsable.='
+              <section class="col col-4">
+                <label class="label"><b>UNIDAD RESPONSABLE</b></label>
+                <select class="form-control" id="um_resp" name="um_resp" title="SELECCIONE UNIDAD RESPONSABLE">
+                  <option value="">Seleccione Unidad Responsable</option>';
+                  foreach($unidades as $row){
+                    if($row['com_id']==$producto[0]['uni_resp']){
+                      $uresponsable.='<option value="'.$row['com_id'].'" selected>'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
+                    }
+                    else{
+                      $uresponsable.='<option value="'.$row['com_id'].'" >'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
+                      /*if(count($this->model_producto->get_uni_resp_prog770($producto[0]['com_id'],$row['com_id']))==0){
+                        $uresponsable.='<option value="'.$row['com_id'].'" >'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
+                      }*/
+                    }
+                  }       
+                $uresponsable.='
+                </select>
+              </section>';
+        }
+        else{
+          $uresponsable.='
+                <input type="text" name="um_resp" id="um_resp" value="0">
+                <section class="col col-4">
+                  <label class="label"><b>UNIDAD / SERVICIO RESPONSABLE</b></label>
+                  <label class="textarea">
+                    <i class="icon-append fa fa-tag"></i>
+                    <textarea rows="2" name="munidad" id="munidad" title="REGISTRE UNIDAD RESPONSABLE">'.$producto[0]['prod_unidades'].'</textarea>
+                  </label>
+                </section>';
+        }
+
         if(count($producto)!=0){
           $result = array(
             'respuesta' => 'correcto',
             'producto'=>$producto,
             'temp'=>$this->prog_mes,
+            'uresponsable'=>$uresponsable,
             'mes'=>$this->temp,
             'mes_actual'=>$this->verif_mes[1],
             'trimestre'=>$this->tmes,
@@ -324,6 +366,7 @@ class Cmod_fisica extends CI_Controller {
           $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
           $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador
           $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
+          $uni_resp = $this->security->xss_clean($post['um_resp']); /// unidad responsable
           $meta = $this->security->xss_clean($post['mmeta']); /// Meta
           $presupuesto = $this->security->xss_clean($post['mppto']); /// Presupuesto
           $or_id = $this->security->xss_clean($post['mor_id']); /// Objetivo Regional
@@ -345,6 +388,7 @@ class Cmod_fisica extends CI_Controller {
             'indi_id' => $indi_id,
             'prod_indicador' => strtoupper($indicador),
             'prod_unidades' => strtoupper($unidad),
+            'uni_resp' => $uni_resp,
             'prod_linea_base' => $linea_base,
             'prod_meta' => $meta,
             'prod_fuente_verificacion' => strtoupper($mverificacion),
@@ -649,7 +693,7 @@ class Cmod_fisica extends CI_Controller {
               $items_modificados=$this->modificacionpoa->items_modificados_form4($cite_id); /// anterior reporte
             }
             else{ /// reporte nuevo 2023
-             $items_modificados=$this->modificacionpoa->items_modificados_form4_historial($cite_id,1); //// Nuevo Reporte
+             $items_modificados=$this->modificacionpoa->items_modificados_form4_historial($data['cite'],1); //// Nuevo Reporte
             }
 
             $pie_mod=$this->modificacionpoa->pie_modpoa($data['cite'],$data['cite'][0]['cite_codigo']);
@@ -1175,6 +1219,7 @@ class Cmod_fisica extends CI_Controller {
         'prod_cod' => $producto[0]['prod_cod'],
         'prod_observacion' => $producto[0]['prod_observacion'],
         'prodh_unidades' => $producto[0]['prod_unidades'],
+        'huni_resp' => $producto[0]['uni_resp'],
         'mt_id' => $producto[0]['mt_id'],
         'prod_id' => $prod_id, ///prod id
         'tipo_mod' => $tipo, ///tipo de modificacion 1:adicion, 2:modificacion, 3: eliminacion

@@ -466,22 +466,22 @@ class Modificacionpoa extends CI_Controller{
     }
 
   //// Lista de Items MODIFICADOS (Nuevo) para el reporte 2023
-  public function items_modificados_form4_historial($cite_id,$tp_rep){
+  public function items_modificados_form4_historial($cite,$tp_rep){
     /// tp_rep : 0 update
     /// tp_rep : 1 reporte
     $tabla='';
-    $form4_add = $this->model_modfisica->list_form4_historial_modificados($cite_id,1); /// Add
-    $form4_mod = $this->model_modfisica->list_form4_historial_modificados($cite_id,2); /// Mod
-    $form4_del = $this->model_modfisica->list_form4_historial_modificados($cite_id,3); /// Del
+    $form4_add = $this->model_modfisica->list_form4_historial_modificados($cite[0]['cite_id'],1); /// Add
+    $form4_mod = $this->model_modfisica->list_form4_historial_modificados($cite[0]['cite_id'],2); /// Mod
+    $form4_del = $this->model_modfisica->list_form4_historial_modificados($cite[0]['cite_id'],3); /// Del
     
       if(count($form4_add)!=0){
-        $tabla.=$this->tabla_form4($form4_add,'ITEMS NUEVOS ('.count($form4_add).')');
+        $tabla.=$this->tabla_form4($cite[0]['por_id'],$form4_add,'ITEMS NUEVOS ('.count($form4_add).')');
       }
       if(count($form4_mod)!=0){
-        $tabla.=$this->tabla_form4($form4_mod,'ITEMS MODIFICADOS ('.count($form4_mod).')');
+        $tabla.=$this->tabla_form4($cite[0]['por_id'],$form4_mod,'ITEMS MODIFICADOS ('.count($form4_mod).')');
       }
       if(count($form4_del)!=0){
-        $tabla.=$this->tabla_form4($form4_del,'ITEMS ELIMINADOS ('.count($form4_del).')');
+        $tabla.=$this->tabla_form4($cite[0]['por_id'],$form4_del,'ITEMS ELIMINADOS ('.count($form4_del).')');
       }
     
     $tabla.='
@@ -498,19 +498,18 @@ class Modificacionpoa extends CI_Controller{
 
 
   //// Lista de Items MODIFICADOS PARA EL REPORTE (listado nuevo 2023) FORM 4
-  public function tabla_form4($listado,$detalle){
+  public function tabla_form4($por_id,$listado,$detalle){
     $tabla='<div style="font-size: 10px;height:16px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$detalle.'</b></div>';
               $tabla.='<table border="0.2" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">';
               $tabla.='<thead>';
               $tabla.='<tr class="modo1" style="text-align: center;" bgcolor="#efefef">';
                 $tabla.='<th style="width:1%;height:20px;">#</th>';
-                $tabla.='<th style="width:2.2%;">COD.<br>ACE.</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>ACP.</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>OPE.</th>';
                 $tabla.='<th style="width:2.1%;">COD.<br>ACT.</th>';
-                $tabla.='<th style="width:14%;">ACTIVIDAD</th>';
+                $tabla.='<th style="width:15%;">ACTIVIDAD</th>';
                 $tabla.='<th style="width:14%;">RESULTADO</th>';
-                $tabla.='<th style="width:7%;">UNIDAD RESPONSABLE</th>';
+                $tabla.='<th style="width:9%;">UNIDAD RESPONSABLE</th>';
                 $tabla.='<th style="width:8%;">INDICADOR</th>';
                 $tabla.='<th style="width:2%;">L.B.</th>';
                 $tabla.='<th style="width:2%;">META</th>';
@@ -556,17 +555,29 @@ class Modificacionpoa extends CI_Controller{
                   $color_or='#fbd5d5';
                 }
 
+                if($por_id==0){
+                  $uresp=strtoupper($rowp['prodh_unidades']);
+                }
+                else{
+                  $unidad=$this->model_componente->get_componente($rowp['huni_resp'],$this->gestion);
+                  
+                  $uresp='';
+                  if(count($unidad)!=0){
+                    $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                    $uresp='<font size=1.5><b>'.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</b></font>';
+                  }
+                }
+
                 $nro++;
                 $tabla.=
                 '<tr style="font-size: 6.5px;" bgcolor="'.$color.'">
                   <td style="width: 1%; height:12px;text-align: center;" bgcolor='.$color_or.'>'.$nro.'</td>
-                  <td style="width: 2.2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['acc_codigo'].'</td>
-                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
-                  <td style="width: 2.1%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
-                  <td style="width: 2.1%; text-align: center; font-size: 8px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
-                  <td style="width: 14%; text-align: left;font-size: 7px;">'.$rowp['prodh_producto'].'</td>
+                  <td style="width: 2.1%; text-align: center; font-size:10px" bgcolor='.$color_or.' ><b>'.$rowp['og_codigo'].'</b></td>
+                  <td style="width: 2.1%; text-align: center; font-size:10px" bgcolor='.$color_or.' ><b>'.$rowp['or_codigo'].'</b></td>
+                  <td style="width: 2.1%; text-align: center; font-size: 10px;" bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
+                  <td style="width: 15%; text-align: left;font-size: 7px;">'.$rowp['prodh_producto'].'</td>
                   <td style="width: 14%; text-align: left;">'.$rowp['prod_resultado'].'</td>
-                  <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prodh_unidades']).'</td>
+                  <td style="width: 9%; text-align: left;">'.$uresp.'</td>
                   <td style="width: 8%; text-align: left;">'.$rowp['prodh_indicador'].'</td>
                   <td style="width: 2%; text-align: right;">'.round($rowp['prodh_linea_base'],2).'</td>
                   <td style="width: 3%; text-align: right;" bgcolor="#eceaea"><b>'.round($rowp['prodh_meta'],2).' '.$tp.'</b></td>';

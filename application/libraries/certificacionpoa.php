@@ -1355,54 +1355,42 @@ class Certificacionpoa extends CI_Controller{
                         <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['proy_sisin'].' '.strtoupper ($certpoa[0]['proy_nombre']).'</td></tr>
                     </table>
                 </td>
-              </tr>
-              <tr>
-              <td style="width:20%;">
-                  <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                      <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESPONSABLE</b></td><td style="width:5%;"></td></tr>
-                  </table>
-              </td>
-              <td style="width:80%;">
-                  <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                      <tr>
-                          <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['tipo_subactividad'].' '.$certpoa[0]['serv_descripcion'].'</td>
-                      </tr>
-                  </table>
-              </td>
-          </tr>';
+              </tr>';
             }
             else{
               $tabla.='
               <tr>
                 <td style="width:20%;">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
-                        <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>'.$certpoa[0]['tipo_adm'].'</b></td><td style="width:5%;"></td></tr>
+                        <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>CAT. PROGRAMATICA '.$this->gestion.'</b></td><td style="width:5%;"></td></tr>
                     </table>
                 </td>
                 <td style="width:80%;">
                     <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
-                        <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['aper_actividad'].' '.strtoupper ($certpoa[0]['act_descripcion']).' '.$certpoa[0]['abrev'].'</td></tr>
+                        <tr><td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['aper_programa'].''.$certpoa[0]['aper_proyecto'].''.$certpoa[0]['aper_actividad'].' - '.strtoupper ($certpoa[0]['act_descripcion']).' '.$certpoa[0]['abrev'].'</td></tr>
                     </table>
                 </td>
-              </tr>
+              </tr>';
+            }
+
+            if($certpoa[0]['por_id']==0){
+              $tabla.='
               <tr>
-              <td style="width:20%;">
+                <td style="width:20%;">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
                       <tr><td style="width:95%;height: 40%;" bgcolor="#cae4fb"><b>UNIDAD RESPONSABLE</b></td><td style="width:5%;"></td></tr>
                   </table>
-              </td>
-              <td style="width:80%;">
+                </td>
+                <td style="width:80%;">
                   <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
                       <tr>
                           <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['tipo_subactividad'].' '.$certpoa[0]['serv_descripcion'].'</td>
                       </tr>
                   </table>
-              </td>
-          </tr>';
+                </td>
+              </tr>';
             }
           $tabla.='
-          
-          
           <tr>
               <td style="width:20%;">
                   <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 8px;">
@@ -1412,7 +1400,7 @@ class Certificacionpoa extends CI_Controller{
               <td style="width:80%;">
                   <table border="0.4" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;font-size: 7.5px;">
                       <tr>
-                          <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['obj_codigo'].' .-'.$certpoa[0]['obj_descripcion'].'</td>
+                          <td style="width:100%;height: 40%;" bgcolor="#f9f9f9">&nbsp;'.$certpoa[0]['or_codigo'].' .-'.$certpoa[0]['or_objetivo'].'</td>
                       </tr>
                   </table>
               </td>
