@@ -2821,6 +2821,7 @@ SELECT
     p.proy_sisin,
     p.proy_nombre,
     p.tp_id,
+    p.por_id,
     te.tipo,
     te.tipo_adm,
     ua.act_descripcion,

@@ -2101,15 +2101,16 @@ class Seguimientopoa extends CI_Controller{
           <table class="table table-bordered"width="100%" id="datos">
               <thead>                 
                 <tr>
-                  <th style="width:1%;"></th>
+                  <th style="width:0.5%;"></th>
                   <th style="width:1%;"><b>COD. OPE.</b></th>
                   <th style="width:1%;"><b>COD. ACT.</b></th>
                   <th style="width:13%;">ACTIVIDAD</th>
-                  <th style="width:8%;">INDICADOR</th>
-                  <th style="width:3%;">META TOTAL</th>
-                  <th style="width:5%;">META NO EJECUTADO</th>
-                  <th style="width:5%;">PROGRAMADO MES '.$this->verif_mes[2].'</th>
-                  <th style="width:5%;">EJECUTADO MES '.$this->verif_mes[2].'</th>
+                  <th style="width:7%;">INDICADOR</th>
+                  <th style="width:7%;">UNIDAD RESPONSABLE</th>
+                  <th style="width:2%;">META TOTAL</th>
+                  <th style="width:2%;">EJEC. PENDIENTE</th>
+                  <th style="width:3%;">PROG. MES '.$this->verif_mes[2].'</th>
+                  <th style="width:5%;">EJEC. MES '.$this->verif_mes[2].'</th>
                   <th style="width:8%;">MEDIO DE VERIFICACI&Oacute;N</th>
                   <th style="width:8%;">PROBLEMAS PRESENTADOS</th>
                   <th style="width:8%;">ACCIONES REALIZADOS</th>
@@ -2162,6 +2163,7 @@ class Seguimientopoa extends CI_Controller{
                     <td style="width:1%;font-size: 17px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
                     <td bgcolor="#f6fbf4">'.$row['prod_producto'].'</td>
                     <td bgcolor="#f6fbf4">'.$row['prod_indicador'].'</td>
+                    <td bgcolor="#f6fbf4"><b>'.strtoupper($row['prod_unidades']).'</b></td>
                     <td align=right bgcolor="#f6fbf4"><b>'.round($row['prod_meta'],2).' '.$indi_id.'</b></td>
                     <td align=center bgcolor="#f7e1e2">'.$diferencia[1].'</td>
                     <td align=center bgcolor="#f6fbf4">'.$diferencia[2].' '.$indi_id.' <input type="hidden" name="pg_fis[]" value="'.($diferencia[1]+$diferencia[2]).'"></td>
