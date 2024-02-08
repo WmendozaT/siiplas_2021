@@ -969,12 +969,18 @@ class Modificacionpoa extends CI_Controller{
  /*------ Lista de Servicios para modificacion de Requerimientos --------*/
     public function lista_unidades_responsables($proyecto){
       $tabla='';
-      $tabla.=$this->unidades_responsables($proyecto);
+      if($proyecto[0]['por_id']==1){
+        $tabla.='HOLA MUNDO';
+      }
+      else{
+        $tabla.=$this->unidades_responsables($proyecto);  
+      }
+      
 
       return $tabla;
     }
 
-    /*------ Lista de Servicios (Gasto Corriente) ------*/
+    /*------ Lista de Unidades Responsables (Gasto Corriente) ------*/
     public function unidades_responsables($proyecto){
       $fase = $this->model_faseetapa->get_id_fase($proyecto[0]['proy_id']);
       $saldos_revertidos_partidas=$this->model_ptto_sigep->lista_monto_partidas_revertidos_unidad($proyecto[0]['proy_id']);

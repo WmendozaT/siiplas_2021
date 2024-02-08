@@ -57,6 +57,7 @@ class Cmod_insumo extends CI_Controller {
 
         $data['titulo']=$titulo;
         $data['tabla']=$this->modificacionpoa->lista_unidades_responsables($data['proyecto']);
+       
         $this->load->view('admin/modificacion/requerimientos/cite_servicio', $data); 
       }
       else{
