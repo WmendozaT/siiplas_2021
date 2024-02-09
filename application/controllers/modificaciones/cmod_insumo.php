@@ -272,7 +272,7 @@ class Cmod_insumo extends CI_Controller {
     /*---- tipo lista : Operacion-Actividad ----*/
     public function tipo_lista_ope_act($cite){
       $tabla='';
-      $operaciones=$this->model_producto->lista_operaciones($cite[0]['com_id']);
+      $operaciones=$this->model_producto->lista_form4_x_unidadresponsable($cite[0]['com_id']);
         $tabla.='
           <section class="col col-3">
             <label class="label"><b>ALINEACI&Oacute;N FORM 4 (ACTIVIDAD) '.$this->gestion.'</b></label>
@@ -458,7 +458,7 @@ class Cmod_insumo extends CI_Controller {
           $id_anterior=$actividades[0]['act_id'];
         }
         else{
-          $operaciones=$this->model_producto->lista_operaciones($cite[0]['com_id']);
+          $operaciones=$this->model_producto->lista_form4_x_unidadresponsable($cite[0]['com_id']);
           $id_anterior=$operaciones[0]['prod_id'];
         }
 
@@ -2146,7 +2146,7 @@ class Cmod_insumo extends CI_Controller {
     function list_operaciones($cite,$insumo){
       $tabla='';
 
-        $operaciones=$this->model_producto->lista_operaciones($cite[0]['com_id']);
+        $operaciones=$this->model_producto->lista_form4_x_unidadresponsable($cite[0]['com_id']);
         $tabla.='<option value="">Seleccione Actividad</option>';
 
         if($cite[0]['por_id']==0){

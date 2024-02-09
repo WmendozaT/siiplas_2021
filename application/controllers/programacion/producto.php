@@ -546,7 +546,7 @@ class Producto extends CI_Controller {
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
 
       $fase = $this->model_faseetapa->get_id_fase($proy_id); //// recupera datos de la tabla fase activa
-      $productos = $this->model_producto->lista_operaciones($com_id,$this->gestion); // Lista de productos
+      $productos = $this->model_producto->lista_form4_x_unidadresponsable($com_id,$this->gestion); // Lista de productos
       
       $tabla ='';
       $tabla .='
@@ -677,18 +677,9 @@ class Producto extends CI_Controller {
                       $tabla.='<td style="width:4%;" bgcolor="'.$color.'">'.round($programado[0]['diciembre'],2).' '.$por.'</td>';
                     }
                     else{
-                      $tabla.='<td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>
-                                <td style="width:4%;" bgcolor="#f1bac6">0</td>';
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla.='<td style="width:4%;" bgcolor="#f1bac6">0</td>';
+                      }
                     }
                     $tabla.='<td style="width:10%;" bgcolor="#e5fde5">'.$rowp['prod_fuente_verificacion'].'</td>';
                     $tabla.='<td style="width:7%;">';
@@ -731,7 +722,7 @@ class Producto extends CI_Controller {
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
 
       $fase = $this->model_faseetapa->get_id_fase($proy_id); //// recupera datos de la tabla fase activa
-      $productos = $this->model_producto->lista_operaciones($com_id,$this->gestion); // Lista de productos
+      $productos = $this->model_producto->lista_form4_x_unidadresponsable($com_id,$this->gestion); // Lista de productos
       
       $tabla ='';
       $tabla .='
@@ -908,7 +899,7 @@ class Producto extends CI_Controller {
     /*--- ELIMINAR TOD@S LOS REQUERIMIENTOS DEL SERVICIO (SOLO REQUERIMIENTOS) (2020) ---*/
     public function delete_insumos_servicios($com_id){
     //  $productos = $this->model_producto->list_producto_programado($com_id,$this->gestion); // Lista de productos
-      $productos=$this->model_producto->lista_operaciones($com_id);
+      $productos=$this->model_producto->lista_form4_x_unidadresponsable($com_id);
       $nro=0;$nro_ins=0;
       //echo "eliminar productos";
       foreach($productos as $rowp){
@@ -1514,7 +1505,7 @@ class Producto extends CI_Controller {
                 </thead>
                 <tbody>';
                 $nro=0;
-                $operaciones=$this->model_producto->lista_operaciones($com_id);
+                $operaciones=$this->model_producto->lista_form4_x_unidadresponsable($com_id);
                 
                 foreach($operaciones as $rowp){
                   $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
@@ -1814,7 +1805,7 @@ class Producto extends CI_Controller {
     /*------ ACTUALIZA PRESUPUESTO EXISTENTE DE LAS OPERACIONES -------*/
     public function update_ptto_operaciones($com_id){
       //$operaciones=$this->model_producto->list_producto_programado($com_id,$this->gestion);
-      $operaciones=$this->model_producto->lista_operaciones($com_id);
+      $operaciones=$this->model_producto->lista_form4_x_unidadresponsable($com_id);
       foreach($operaciones as $rowp){
         $monto=$this->model_producto->monto_insumoproducto($rowp['prod_id']);
         if(count($monto)==0){

@@ -970,15 +970,78 @@ class Modificacionpoa extends CI_Controller{
     public function lista_unidades_responsables($proyecto){
       $tabla='';
       if($proyecto[0]['por_id']==1){
-        $tabla.='HOLA MUNDO';
+        $tabla.=$this->unidades_responsables_progBolsas($proyecto);
       }
       else{
         $tabla.=$this->unidades_responsables($proyecto);  
       }
       
+      return $tabla;
+    }
+
+
+    /*------ Lista de Unidades Responsables (Programas Bolsas) ------*/
+    public function unidades_responsables_progBolsas($proyecto){
+      $saldos_revertidos_partidas=$this->model_ptto_sigep->lista_monto_partidas_revertidos_unidad($proyecto[0]['proy_id']);
+      $tabla='';
+      if(count($proyecto)!=0){
+        $componente=$this->model_componente->proyecto_componente($proyecto[0]['proy_id']);
+        $form4=$this->model_producto->lista_form4_x_unidadresponsable($componente[0]['com_id']);
+
+         $tabla.='
+          <div class="well">
+            <table class="table table-bordered" width="100%">
+              <thead>
+                <tr style="height:45px;">
+                  <th style="width:0.5%; text-align:center;">CODIGO <br> ACTIVIDAD</th>
+                  <th style="width:5%; text-align:center;">PROGRAMA</th>
+                  <th style="width:5%; text-align:center;">UNIDAD RESPONSABLE</th>
+                  <th style="width:12%; text-align:center;">ACTIVIDAD</th>
+                  <th style="width:2%; text-align:center;">META</th>
+                  <th style="width:3%; text-align:center;">REG. CITE<br>MODIFICACION POA</th>';
+                  if(count($saldos_revertidos_partidas)!=0){
+                    $tabla.='<th style="width:5%; text-align:center;"><b>REG. CITE<br>REVERSION POA</b></th>';
+                  }
+                  $tabla.='
+                </tr>
+              </thead>
+              <tbody>';
+              $num=0; $ponderacion=0; $sum=0;
+              foreach($form4 as $row){
+                $num++;
+                $tabla.='
+                <tr>
+                  <td style="font-size: 15px; text-align:center"><b>'.$row['prod_cod'].'</b></td>
+                  <td><b>'.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>
+                  <td>'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
+                  <td>'.$row['prod_producto'].'</td>
+                  <td style="text-align:right; font-size:12px;"><b>'.round($row['prod_meta'],2).'</b></td>
+                  <td>';
+                    if($this->conf_mod_req==1 || $this->tp_adm==1){
+                      $tabla.='
+                      <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS" name="'.$componente[0]['com_id'].'" id="0">
+                        <img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="30" HEIGHT="30"/>&nbsp;
+                        <b style="font-size:10px;">INGRESAR DATOS CITE</b>
+                      </a>';
+                    }
+                  $tabla.='</td>';
+                  if(count($saldos_revertidos_partidas)!=0){
+                    $tabla.'
+                    <td></td>';
+                  }
+                $tabla.='
+                </tr>';
+              }
+              $tabla.='
+              </tbody>
+            </table>
+          </div>';
+      }
 
       return $tabla;
     }
+
+
 
     /*------ Lista de Unidades Responsables (Gasto Corriente) ------*/
     public function unidades_responsables($proyecto){

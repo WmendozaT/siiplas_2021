@@ -293,7 +293,7 @@ class Programacionpoa extends CI_Controller{
                             if(count($veri_cs)!=0){
                             $tabla.='
                             <td align="center">';
-                              if(count($this->model_producto->lista_operaciones($veri_cs[0]['com_id']))==0){
+                              if(count($this->model_producto->lista_form4_x_unidadresponsable($veri_cs[0]['com_id']))==0){
                                 $tabla.='<input type="checkbox" onclick="scheckk'.$cont.'(this.checked,'.$row['serv_id'].','.$fase[0]['id'].');" title="SERVICIO ACTIVADO" checked/>';
                               }
                             $tabla.='
@@ -651,7 +651,7 @@ class Programacionpoa extends CI_Controller{
 
   /*--- ACTUALIZA CODIGO DE ACTIVIDAD (FORM 4) ----*/
   public function update_codigo_actividad($com_id){  
-    $productos = $this->model_producto->lista_operaciones($com_id,$this->gestion); // Lista de productos
+    $productos = $this->model_producto->lista_form4_x_unidadresponsable($com_id,$this->gestion); // Lista de productos
     $nro=0;
     foreach($productos as $row){
       $nro++;
@@ -919,7 +919,7 @@ class Programacionpoa extends CI_Controller{
     function list_prod_actividad($com_id,$insumo){
       $tabla='';
 
-        $operaciones=$this->model_producto->lista_operaciones($com_id);
+        $operaciones=$this->model_producto->lista_form4_x_unidadresponsable($com_id);
         $tabla.='<option value="">Seleccione Actividad</option>';
         foreach($operaciones as $row){
           if($row['prod_id']==$insumo[0]['prod_id']){
@@ -1677,7 +1677,7 @@ class Programacionpoa extends CI_Controller{
               </thead>
               <tbody>';
               $nro=0;
-              $form4=$this->model_producto->lista_operaciones($com_id);
+              $form4=$this->model_producto->lista_form4_x_unidadresponsable($com_id);
               
               foreach($form4 as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
@@ -1975,7 +1975,7 @@ class Programacionpoa extends CI_Controller{
               </thead>
               <tbody>';
               $nro=0;
-              $operaciones=$this->model_producto->lista_operaciones($componente[0]['com_id']);
+              $operaciones=$this->model_producto->lista_form4_x_unidadresponsable($componente[0]['com_id']);
               
               foreach($operaciones as $rowp){
                 $sum=$this->model_producto->meta_prod_gest($rowp['prod_id']);
