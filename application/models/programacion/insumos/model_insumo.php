@@ -480,11 +480,16 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-
+    /// lista de requerimientos por cada formulario N° 4
     function lista_insumos_prod($prod_id){
-        $sql = 'select prod.prod_id,prod.prod_cod,par.par_codigo,i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,ins_monto_certificado,ins_observacion,i.ins_tipo_modificacion
-                from _insumoproducto ip
-                Inner Join _productos as prod On prod.prod_id=ip.prod_id
+        $sql = 'select prod.prod_id,prod.prod_cod,par.par_codigo,i.ins_id,i.ins_detalle,i.ins_unidad_medida,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,ins_monto_certificado,ins_observacion,i.ins_tipo_modificacion,i.ins_ejec_cpoa
+                from _productos prod
+                Inner Join (
+                select prod_id,ins_id,tp_ins
+                from _insumoproducto
+                group by prod_id,ins_id,tp_ins
+                ) as ip On ip.prod_id=prod.prod_id
+                
                 Inner Join insumos as i On i.ins_id=ip.ins_id
                 Inner Join partidas as par On par.par_id=i.par_id
                 where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\'

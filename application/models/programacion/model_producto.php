@@ -311,7 +311,7 @@ class model_producto extends CI_Model {
     function lista_form4_x_unidadresponsable($com_id){
         $sql = 'select p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
                 p.prod_resultado,p.acc_id,p.prod_cod,p.uni_resp,p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
-                ore.or_id,ore.or_codigo,og.og_id,og.og_codigo,c.com_id,sa.serv_descripcion,tpsa.tipo_subactividad,ua.act_descripcion,ds.abrev
+                ore.or_id,ore.or_codigo,og.og_id,og.og_codigo,c.com_id,sa.serv_descripcion,tpsa.tipo_subactividad,ua.act_descripcion,ds.abrev,te.tipo
                 from _productos p
                 Inner Join indicador as i On i.indi_id=p.indi_id
                 Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
@@ -325,6 +325,7 @@ class model_producto extends CI_Model {
                 Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
                 Inner Join _proyectos as proy On pfe.proy_id=proy.proy_id
                 Inner Join unidad_actividad as ua On ua.act_id=proy.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
                 Inner Join _distritales as ds On ds.dist_id=proy.dist_id
 
                 where p.com_id='.$com_id.' and p.estado!=\'3\'

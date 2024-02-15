@@ -990,14 +990,17 @@ class Modificacionpoa extends CI_Controller{
 
          $tabla.='
           <div class="well">
-            <table class="table table-bordered" width="100%">
+            <section class="col col-6">
+              <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="BUSCADOR...." style="width:45%;"/><br>
+            </section>
+            <table class="table table-bordered" border=1 style="width:100%;" id="datos">
               <thead>
                 <tr style="height:45px;">
-                  <th style="width:0.5%; text-align:center;">CODIGO <br> ACTIVIDAD</th>
-                  <th style="width:5%; text-align:center;">PROGRAMA</th>
-                  <th style="width:5%; text-align:center;">UNIDAD RESPONSABLE</th>
+                  <th style="width:0.5%; text-align:center;">COD. <br> ACT.</th>
+            
+                  <th style="width:15%; text-align:center;">UNIDAD RESPONSABLE</th>
                   <th style="width:12%; text-align:center;">ACTIVIDAD</th>
-                  <th style="width:2%; text-align:center;">META</th>
+                  <th style="width:1%; text-align:center;">VER</th>
                   <th style="width:3%; text-align:center;">REG. CITE<br>MODIFICACION POA</th>';
                   if(count($saldos_revertidos_partidas)!=0){
                     $tabla.='<th style="width:5%; text-align:center;"><b>REG. CITE<br>REVERSION POA</b></th>';
@@ -1011,17 +1014,20 @@ class Modificacionpoa extends CI_Controller{
                 $num++;
                 $tabla.='
                 <tr>
-                  <td style="font-size: 15px; text-align:center"><b>'.$row['prod_cod'].'</b></td>
-                  <td><b>'.$row['act_descripcion'].' - '.$row['abrev'].'</b></td>
-                  <td>'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
+                  <td style="font-size: 20px; text-align:center; color:blue" bgcolor="#d4f1fb" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
+                  <td><b>'.$row['tipo'].' '.$row['act_descripcion'].' - '.$row['abrev'].'</b> - <font color=blue>'.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</font></td>
                   <td>'.$row['prod_producto'].'</td>
-                  <td style="text-align:right; font-size:12px;"><b>'.round($row['prod_meta'],2).'</b></td>
-                  <td>';
+                  <td align=center>
+                    <a href="#" data-toggle="modal" data-target="#modal_ver" class="btn btn-default ver"  title="VER REQUERIMIENTOS ALINEADOS A LA ACTIVIDAD" name="'.$row['prod_id'].'" id="'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].' - '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'">
+                      <img src="'.base_url().'assets/ifinal/ver_proyecto.png" WIDTH="40" HEIGHT="40"/>
+                    </a>
+                  </td>
+                  <td align=center>';
                     if($this->conf_mod_req==1 || $this->tp_adm==1){
                       $tabla.='
-                      <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS" name="'.$componente[0]['com_id'].'" id="0">
+                      <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS" name="'.$componente[0]['com_id'].'" id="0" id1="'.$row['prod_id'].'">
                         <img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="30" HEIGHT="30"/>&nbsp;
-                        <b style="font-size:10px;">INGRESAR DATOS CITE</b>
+                        <b style="font-size:10px; color:blue">INGRESAR DATOS CITE</b>
                       </a>';
                     }
                   $tabla.='</td>';
@@ -1073,12 +1079,13 @@ class Modificacionpoa extends CI_Controller{
                   $num++;
                   $tabla.='
                   <tr>
-                    <td align=center title="'.$row['com_id'].'">'.$num.'</td><td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO UNIDAD : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
+                    <td align=center title="'.$row['com_id'].'">'.$num.'</td>
+                    <td bgcolor="#d4f1fb" align="center" title="C&Oacute;DIGO UNIDAD : '.$row["serv_descripcion"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
                     <td title='.$row['com_id'].'>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>
                     <td align=center>';
                       if($this->conf_mod_req==1 || $this->tp_adm==1){
                         $tabla.='
-                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'" id="0">
+                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'" id="0" id1="0">
                           <img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="30" HEIGHT="30"/>&nbsp;
                           <b style="font-size:10px;">INGRESAR DATOS CITE</b>
                         </a>';
@@ -1088,7 +1095,7 @@ class Modificacionpoa extends CI_Controller{
                       if(count($saldos_revertidos_partidas)!=0){
                         $tabla.='
                         <td align=center>
-                          <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-warning nuevo_ff"  title="MODIFICAR REQUERIMIENTOS POR REVERSION DE SALDOS" name="'.$row['com_id'].'" id="1">
+                          <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-warning nuevo_ff"  title="MODIFICAR REQUERIMIENTOS POR REVERSION DE SALDOS" name="'.$row['com_id'].'" id="1" id1="0">
                             <img src="'.base_url().'assets/Iconos/application_form_magnify.png" WIDTH="30" HEIGHT="30"/>&nbsp;
                           <b style="font-size:10px;">INGRESAR DATOS CITE</b>
                         </a>
@@ -1126,7 +1133,14 @@ class Modificacionpoa extends CI_Controller{
 
     /*----- LISTA REQUERIMIENTOS POR SUBACTIVIDAD AUXILIAR (2022) en casos de que sean muchos requerimientos ------*/
     public function modificar_requerimientos_auxiliar($cite){
-      $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id'],$cite[0]['tipo_modificacion']);
+      $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cite[0]['proy_id']); /// PROYECTO
+      if($proyecto[0]['por_id']==0){
+        $lista_insumos=$this->model_modrequerimiento->lista_requerimientos($cite[0]['com_id'],$cite[0]['tipo_modificacion']); /// Listado normal
+      }
+      else{
+        $lista_insumos=$this->model_insumo->lista_insumos_prod($cite[0]['prod_id']); /// listado de items segun actividad Programas Bolsas
+      }
+      
       $tabla='';
       $total=0;
       $tabla.=' <input type="hidden" name="base" value="'.base_url().'">
@@ -1224,21 +1238,10 @@ class Modificacionpoa extends CI_Controller{
                     $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
                     $tabla .= '<td style="width:5%;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
                     $tabla .= '<td style="width:5%;" bgcolor="#f1dfb9">'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</td>';
-                    
-                    $tabla.='
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>
-                          <td>0</td>';
+                    for ($i=1; $i <=13 ; $i++) { 
+                      $tabla.='<td>0</td>';
+                    }
+                   
                     $tabla .= ' 
                       <td style="width:8%;">'.$row['ins_observacion'].'</td>';
                       if($this->tp_adm==1 & $cite[0]['proy_id']==2651){

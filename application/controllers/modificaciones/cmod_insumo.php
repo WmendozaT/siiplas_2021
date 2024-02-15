@@ -108,6 +108,7 @@ class Cmod_insumo extends CI_Controller {
           $fecha = $this->security->xss_clean($post['fm']); /// Fecha
           $com_id = $this->security->xss_clean($post['com_id']); /// Com id
           $tp_mod = $this->security->xss_clean($post['tp_mod']); /// tipo mod
+          $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
           $proyecto = $this->model_proyecto->get_id_proyecto($proy_id);
 
           if($proy_id!='' & count($proyecto)!=0){
@@ -116,6 +117,7 @@ class Cmod_insumo extends CI_Controller {
               'cite_nota' => strtoupper($cite),
               'cite_fecha' => $fecha,
               'com_id' => $com_id,
+              'prod_id' => $prod_id, //// id de la actividad alienado a una unidad responsable en el caso de los programas Bolsas
               'tipo_modificacion' => $tp_mod,
               'fun_id' => $this->fun_id,
               'g_id' => $this->gestion,
@@ -228,6 +230,118 @@ class Cmod_insumo extends CI_Controller {
 
     return $tabla;
   }
+
+
+    /*--- Get Lista de Requerimientos por Actividad (form4)---*/
+    public function get_items_x_form4(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $prod_id = $this->security->xss_clean($post['prod_id']);
+        $form4=$this->model_producto->get_producto_id($prod_id); /// get form4
+        $requerimientos=$this->model_insumo->lista_insumos_prod($prod_id); /// lista de requerimientos para Programas Bolsas
+        $tabla='';
+        $tabla.='
+        <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>
+
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="jarviswidget jarviswidget-color-darken" >
+            <header>
+                <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                <h2 class="font-md"><strong></strong></h2>  
+            </header>
+          <div>
+            <div class="widget-body no-padding">
+              <table id="dt_basic" class="table table-bordered" style="width:100%;">
+                <thead>
+                  <tr style="text-align:center;">
+                    <th>#</th>
+                    <th>ACT.</th>
+                    <th>PARTIDA</th>
+                    <th style="text-align:center;">REQUERIMIENTO</th>
+                    <th style="text-align:center;">UNIDAD</th>
+                    <th style="text-align:center;">CANT.</th>
+                    <th style="text-align:center;">PRECIO</th>
+                    <th style="text-align:center;">PPTO. TOTAL</th>
+                    <th style="text-align:center;">PPTO. CERT.</th>
+                    <th style="text-align:center;">ENE.</th>
+                    <th style="text-align:center;">FEB.</th>
+                    <th style="text-align:center;">MAR.</th>
+                    <th style="text-align:center;">ABR.</th>
+                    <th style="text-align:center;">MAY.</th>
+                    <th style="text-align:center;">JUN.</th>
+                    <th style="text-align:center;">JUL.</th>
+                    <th style="text-align:center;">AGO.</th>
+                    <th style="text-align:center;">SEPT.</th>
+                    <th style="text-align:center;">OCT.</th>
+                    <th style="text-align:center;">NOV.</th>
+                    <th style="text-align:center;">DIC.</th>
+                    <th style="text-align:center;">OBSERVACION</th>
+                  </tr>
+                </thead>
+                <tbody>';
+                $nro=0;
+                $suma_ppto=0;$suma_cert=0;
+                foreach($requerimientos as $row){
+                  $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+                  $suma_ppto=$suma_ppto+$row['ins_costo_total'];
+                  $suma_cert=$suma_cert+$row['ins_monto_certificado'];
+                  $nro++;
+                  $color='';
+                  if($row['ins_ejec_cpoa']==1){
+                    $color='bgcolor="#FCE8E8"';
+                  }
+                  $tabla.='
+                  <tr '.$color.'>
+                    <td title="'.$row['ins_id'].'">'.$nro.'</td>
+                    <td style="font-size:20px; text-align:center"><b>'.$row['prod_cod'].'</b></td>
+                    <td style="font-size:20px; text-align:center"><b>'.$row['par_codigo'].'</b></td>
+                    <td style="font-size:10.7px;">'.$row['ins_detalle'].'</td>
+                    <td style="font-size:10.7px;">'.$row['ins_unidad_medida'].'</td>
+                    <td style="font-size:10.7px; text-align:right;">'.round($row['ins_cant_requerida'],2).'</td>
+                    <td style="font-size:10.7px; text-align:right;">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                    <td style="font-size:10.7px; text-align:right;">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>
+                    <td style="font-size:12px; text-align:right; color:#FDFDFD;" bgcolor="green"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
+                    if(count($prog)!=0){
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla .= '<td style="width: 4.5%; text-align: right;">' . number_format($prog[0]['mes'.$i], 2, ',', '.') . '</td>';
+                      }
+                    }
+                    else{
+                      for ($i=1; $i <=12 ; $i++) { 
+                        $tabla .= '<td style="width: 4.5%; text-align: right;">0</td>';
+                      }
+                    }
+                    
+                    $tabla.='
+                    <td style="font-size:10.7px;">'.$row['ins_observacion'].'</td>
+                  </tr>';
+                }
+                $tabla.='
+                <tbody>
+                <tr>
+                  <td colspan=7></td>
+                  <td align=right><b>'.number_format($suma_ppto, 2, ',', '.').'</b></td>
+                  <td align=right><b>'.number_format($suma_cert, 2, ',', '.').'</b></td>
+                  <td colspan=13></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          </div>
+        </article>';
+
+
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
 
 
     /// ---- STYLE -----
@@ -2201,9 +2315,6 @@ class Cmod_insumo extends CI_Controller {
         }
 
 
-        
-        
-        
 
         if($tp_mod==0){
           $asig=$this->model_ptto_sigep->get_partida_asignado_sigep($proyecto[0]['aper_id'],$par_id); /// Get partida -> Unidad (Asignado)

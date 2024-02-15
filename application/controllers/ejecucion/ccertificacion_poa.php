@@ -791,7 +791,8 @@ class Ccertificacion_poa extends CI_Controller {
           if(count($get_cert_insumo)!=0){
             /// Actualizando monto certificado por insumo
               $update_insumo = array(
-                'ins_monto_certificado' => $get_cert_insumo[0]['monto_certificado']
+                'ins_monto_certificado' => $get_cert_insumo[0]['monto_certificado'],
+                'ins_ejec_cpoa' => 1
               );
               $this->db->where('ins_id', $_POST["ins"][$como]);
               $this->db->update('insumos', $update_insumo);

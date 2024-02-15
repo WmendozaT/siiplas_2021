@@ -1158,6 +1158,8 @@ serv_id integer,
 serv_cod varchar,
 tipo_subactividad varchar,
 serv_descripcion varchar,
+
+prod_id numeric,
 prod_cod integer,
 prod_producto varchar,
 
@@ -1204,7 +1206,7 @@ fun_materno varchar) AS
 $$
 
 SELECT poa.dep_id,poa.dep_cod,poa.dep_departamento,poa.dist_id,poa.dist_cod,poa.dist_distrital,poa.da,poa.ue,poa.aper_id,poa.prog aper_programa,poa.proy aper_proyecto,poa.act aper_actividad,poa.proy_id,poa.actividad,poa.abrev, poa.tipo,
-     c.com_id,ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_cod,prod.prod_producto,prod.or_id,ore.or_codigo,ore.or_objetivo,og.acc_id,og.og_id,og.og_codigo,og.og_objetivo,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_detalle,i.ins_unidad_medida,
+     c.com_id,ser.serv_id,ser.serv_cod,tpsa.tipo_subactividad,ser.serv_descripcion,prod.prod_id,prod.prod_cod,prod.prod_producto,prod.or_id,ore.or_codigo,ore.or_objetivo,og.acc_id,og.og_id,og.og_codigo,og.og_objetivo,i.ins_id,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_monto_certificado,i.ins_detalle,i.ins_unidad_medida,
      i.ins_gestion,i.ins_observacion,i.ins_tipo_modificacion,i.par_id,par.par_codigo,par.par_nombre,itemp.programado_total,itemp.mes1,itemp.mes2,itemp.mes3,itemp.mes4,itemp.mes5,itemp.mes6,itemp.mes7,itemp.mes8,itemp.mes9,itemp.mes10,
      itemp.mes11,itemp.mes12,fun.fun_nombre,fun.fun_paterno,fun.fun_materno
 FROM lista_poa_gastocorriente_nacional(gestion) poa

@@ -18,10 +18,44 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
-
 		<script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
+		<style>
+      #mdialTamanio{
+        width: 90% !important;
+      }
+    </style>
+		<script language="javascript">
+      function doSearch(){
+        var tableReg = document.getElementById('datos');
+        var searchText = document.getElementById('searchTerm').value.toLowerCase();
+        var cellsOfRow="";
+        var found=false;
+        var compareWith="";
+   
+        // Recorremos todas las filas con contenido de la tabla
+        for (var i = 1; i < tableReg.rows.length; i++){
+          cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+          found = false;
+          // Recorremos todas las celdas
+          for (var j = 0; j < cellsOfRow.length && !found; j++){
+            compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+            // Buscamos el texto en el contenido de la celda
+            if (searchText.length == 0 || (compareWith.indexOf(searchText) > -1)){
+              found = true;
+            }
+          }
+          if(found) {
+            tableReg.rows[i].style.display = '';
+          } else {
+            // si no ha encontrado ninguna coincidencia, esconde la
+            // fila de la tabla
+            tableReg.rows[i].style.display = 'none';
+          }
+        }
+      }
+    </script>
 		<!--para las alertas-->
-    	<meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width">
 	</head>
 	<body class="">
 		<!-- HEADER -->
@@ -135,7 +169,26 @@
 		</div>
 		<!-- END PAGE FOOTER -->
 
-		<!-- ============================================ Modal NUEVO COMPONENTE  =============================================== -->
+		
+			<!-- MODAL REPORTE POA -->
+	    <div class="modal fade" id="modal_ver" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	        <div class="modal-dialog" id="mdialTamanio">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+	                </div>
+	                <div class="modal-body">
+	                <h2 class="alert alert-info"><center>MIS REQUERIMIENTOS ALINEADOS</center></h2>
+	                    <div class="row">
+	                    	<div id="titulo"></div><br>
+	                    	<div id="contenido"></div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+
+    	<!-- =========== Modal NUEVO REGISTRO DE MODIFICACION POA  =============== -->
 	    <div class="modal animated fadeInDown" id="modal_nuevo_ff" tabindex="-1" role="dialog">
 	        <div class="modal-dialog">
 	            <div class="modal-content">
@@ -154,6 +207,7 @@
 															  <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
 															  <input type="hidden" name="tp_mod" id="tp_mod">
 															  <input type="hidden" name="com_id" id="com_id">
+															  <input type="hidden" name="prod_id" id="prod_id">
 
 															  <fieldset>
 																	<section>
@@ -263,9 +317,12 @@
 			$(".nuevo_ff").on("click", function (e) {
 				com_id = $(this).attr('name');
 				tp = $(this).attr('id');
+				prod_id = $(this).attr('id1');
+		   
 		    document.getElementById("com_id").value=com_id;
 		    document.getElementById("tp_mod").value=tp;
-		    
+		    document.getElementById("prod_id").value=prod_id;
+
 		    if(tp==0){
 		    	$('#titulo').html('<center><b>REGISTRE NOTA CITE</b></center>');
 		    }
@@ -330,12 +387,54 @@
 		    });
 		    });
 	    });
+
+		//// Lista de requerimientos alineados a cada actividad
+		$(function () {
+      $(".ver").on("click", function (e) {
+        prod_id = $(this).attr('name');
+        unidad = $(this).attr('id');
+
+        $('#titulo').html('<font size=3><b>'+unidad+'</b></font>');
+        $('#contenido').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando requerimientos</div>');
+        
+        var url = "<?php echo site_url("")?>/modificaciones/cmod_insumo/get_items_x_form4";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "prod_id="+prod_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+
+        if (response.respuesta == 'correcto') {
+            $('#contenido').fadeIn(1000).html(response.tabla);
+        }
+        else{
+            alertify.error("ERROR AL RECUPERAR DATOS DE LOS SERVICIOS");
+        }
+
+        });
+        request.fail(function (jqXHR, textStatus, thrown) {
+            console.log("ERROR: " + textStatus);
+        });
+        request.always(function () {
+            //console.log("termino la ejecuicion de ajax");
+        });
+        e.preventDefault();
+        
+      });
+    });
 		</script>
-		<script type="text/javascript">
+<!-- 		<script type="text/javascript">
 			$(document).ready(function() {
 				pageSetUp();
 			})
-		</script>
+		</script> -->
 		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 	</body>
 </html>
