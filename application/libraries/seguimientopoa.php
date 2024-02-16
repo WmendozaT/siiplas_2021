@@ -2445,7 +2445,7 @@ class Seguimientopoa extends CI_Controller{
                         <th style="width:3%;"><b>COD. ACT.</b></th>
                         <th style="width:7%;"><b>PARTIDA</b></th>
                         <th style="width:29%;">DETALLE REQUERIMIENTO</th>
-                        <th style="width:10%;">UNIDAD DE MEDIDA</th>
+                        <th style="width:10%;">UNIDAD</th>
                         <th style="width:7%;">CANTIDAD</th>
                         <th style="width:8%;">PRECIO UNITARIO</th>
                         <th style="width:8%;">PRECIO TOTAL</th>

@@ -48,7 +48,7 @@ class Producto extends CI_Controller {
     }
 
   /*------- LISTA DE FORM 4 ----------*/
-    public function lista_productos($com_id){  
+    public function lista_productos($com_id){
       $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion);
       $data['stylo']=$this->programacionpoa->estilo_tabla_form4();
       if(count($data['componente'])!=0){
