@@ -272,8 +272,8 @@ class Model_ptto_sigep extends CI_Model{
     public function get_apertura($da,$ue,$programa,$proyecto,$actividad){
         if($this->gestion>2023){ /// poa 2024
             $sql = 'select *
-                from lista_poa_gastocorriente_nacional('.$this->gestion.')
-                where da=\''.$da.'\' and ue=\''.$ue.'\' and prog=\''.$programa.'\' and act=\''.$actividad.'\'  ';
+                from lista_poa_nacional('.$this->gestion.')
+                where da=\''.$da.'\' and ue=\''.$ue.'\' and prog=\''.$programa.'\' and proy=\''.$proyecto.'\' and act=\''.$actividad.'\'  ';
         }
         else{ /// poa 2023
             $sql = 'select *

@@ -199,6 +199,7 @@
                                               <header>
                                                   <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
                                                   <h2 class="font-md"><strong>PROYECTOS DE INVERSI&Oacute;N PUBLICA </strong></h2>  
+
                                               </header>
                                                 <div>
                                                     <div class="widget-body no-padding">
@@ -235,7 +236,7 @@
                                             <div class="jarviswidget jarviswidget-color-darken" >
                                               <header>
                                                   <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                                                  <h2 class="font-md"><strong>OPERACI&Oacute;N FUNCIONAMIENTO</strong></h2>  
+                                                  <h2 class="font-md"><strong>GASTO CORRIENTE</strong></h2>  
                                               </header>
                                                 <div>
                                                     <div class="widget-body no-padding">

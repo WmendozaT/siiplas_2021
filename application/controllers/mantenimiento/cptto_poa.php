@@ -44,11 +44,6 @@ class Cptto_poa extends CI_Controller {
       $data['menu']=$this->menu(9);
       $data['resp']=$this->session->userdata('funcionario');
       
-      //$data['mod2']=count($this->model_configuracion->verif_modulo(2));
-
-      //$sw=$this->ppto_poa;
-      
-
       //// Asignacion Poa Presupuesto Inicial
       if($this->verif_ppto==0){
         $data['proyectos']=$this->list_pinversion(1); /// Proyecto de Inversion Aprobado
@@ -61,8 +56,29 @@ class Cptto_poa extends CI_Controller {
         $data['operacion']=$this->list_unidades_es(4);  /// Gasto corriente Aprobado
         $data['regionales']=$this->model_ptto_sigep->list_regionales();
         $this->load->view('admin/mantenimiento/ptto_sigep/reajustado_ptto', $data);
+        
+        // $aper=$this->model_ptto_sigep->get_apertura('01','01','720','04170002400000','000');
+        //echo $aper[0]['aper_id'];
       }
       
+
+      //// lista de proyectos Aprobados para su actualizacion de codigos
+      /*$proyectos=$this->model_proyecto->list_proy_inversion();
+      foreach($proyectos as $row){
+        $proy= preg_replace('/[^0-9]/', '', $row['proy']);
+
+        $update_inversion = array(
+          'aper_proyecto' => $proy,
+          'aper_actividad' => '000'
+        );
+        $this->db->where('aper_id', $row['aper_id']);
+        $this->db->update('aperturaprogramatica', $update_inversion);
+      }*/
+
+
+
+
+
 /*      $partidas=$this->model_insumo->lista_consolidado_ejecucion_partidas(10);
       $tabla='';
        $tabla.='
@@ -288,7 +304,7 @@ class Cptto_poa extends CI_Controller {
                   }
                 }
               $tabla.='</td>';
-              $tabla.='<td><center>'.$row['prog'].'</center></td>';
+              $tabla.='<td><center>'.$row['prog'].' '.$row['proy'].' '.$row['act'].'</center></td>';
               $tabla.='<td>'.$nombre.'</td>';
               $tabla.='<td>'.$codigo_sisin.'</td>';
               $tabla.='<td>'.strtoupper($row['dep_departamento']).'</td>';
@@ -720,6 +736,7 @@ class Cptto_poa extends CI_Controller {
               $lineas=$this->subir_archivo($archivotmp,$tp_id); /// Techo Inicial
             }
             else{
+              //$lineas=$this->subir_archivo($archivotmp,$tp_id); /// Techo Inicial
               $lineas=$this->subir_archivo_aprobado($archivotmp,$tp_id); /// Techo Aprobado
             }
             
@@ -743,7 +760,7 @@ class Cptto_poa extends CI_Controller {
       }
     }
 
-    /*-------- Subir Archivo SIgep -----------*/
+    /*-------- Subir Archivo Presupuesto Inicial -----------*/
     public function subir_archivo($archivotmp,$tp_id){  
         $i=0;
         $nro=0;
@@ -1007,6 +1024,107 @@ class Cptto_poa extends CI_Controller {
                           }
                       $nro++;
                       }
+                      /*else{
+                            $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                            $par_id=0;
+                            if(count($partida)!=0){
+                                $par_id=$partida[0]['par_id'];
+                            }
+                         
+                            $query=$this->db->query('set datestyle to DMY');
+                            $data_to_store = array( 
+                                'aper_id' => 0,
+                                'aper_programa' => $prog,
+                                'aper_proyecto' => $proy,
+                                'aper_actividad' => $act,
+                                'par_id' => $par_id,
+                                'partida' => $cod_part,
+                                'importe' => $importe,
+                                'g_id' => $this->gestion,
+                                'fun_id' => $this->fun_id,
+                            );
+                            $this->db->insert('ptto_partidas_sigep_aprobado', $data_to_store);
+                            $sp_id=$this->db->insert_id();
+                         
+                            $nro++;
+                        }*/
+                  }
+                }
+            }
+            $i++;
+        }
+        return $nro;
+     }
+
+
+    public function subir_archivo_aprobado2($archivotmp,$tp_id){  
+      $i=0;
+      $nro=0;
+      $lineas = file($archivotmp);
+      
+      foreach ($lineas as $linea_num => $linea){ 
+          if($i != 0){ 
+              $datos = explode(";",$linea);
+              if(count($datos)==7){
+                  $da=trim($datos[0]); /// Da
+                  $ue=trim($datos[1]); /// Ue
+                  $prog=trim($datos[2]); /// Programa
+                  $proy=trim($datos[3]); /// proyecto
+                  $act=trim($datos[4]);  /// Actividad
+                  $cod_part=trim($datos[5]); /// Partida
+                  if(strlen($cod_part)==3){
+                    $cod_part=$cod_part.'00';
+                  }
+                  $importe=(float)$datos[6]; /// Monto
+
+                  if(strlen($da)==2 & strlen($ue)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
+                      $aper=$this->model_ptto_sigep->get_apertura($da,$ue,$prog,$proy,$act);
+                      if(count($aper)!=0){
+                          $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                          $par_id=0;
+                          if(count($partida)!=0){
+                            $par_id=$partida[0]['par_id'];
+                          }
+
+                          $ptto=$this->model_ptto_sigep->get_ptto_sigep_aprobado($da,$ue,$prog,$proy,$act,$cod_part);
+                          if(count($ptto)!=0){
+                             /*------- Update Datos -------*/
+                              $query=$this->db->query('set datestyle to DMY');
+                              $update_ptto = array(
+                                'aper_id' => $aper[0]['aper_id'],
+                                'da' => $da,
+                                'ue' => $ue,
+                                'importe' => $importe,
+                                'fun_id' => $this->fun_id
+                              );
+
+                              $this->db->where('sp_id', $ptto[0]['sp_id']);
+                              $this->db->update('ptto_partidas_sigep_aprobado', $update_ptto);
+                             /*-----------------------------*/
+                             $nro++;
+                          }
+                          else{
+                             /*------- Guardando Datos --------*/
+                              $query=$this->db->query('set datestyle to DMY');
+                              $data_to_store = array( 
+                                  'aper_id' => $aper[0]['aper_id'],
+                                  'da' => $da,
+                                  'ue' => $ue,
+                                  'aper_programa' => $prog,
+                                  'aper_proyecto' => $proy,
+                                  'aper_actividad' => $act,
+                                  'par_id' => $par_id,
+                                  'partida' => $cod_part,
+                                  'importe' => $importe,
+                                  'g_id' => $this->gestion,
+                                  'fun_id' => $this->fun_id,
+                              );
+                              $this->db->insert('ptto_partidas_sigep_aprobado', $data_to_store);
+                              $sp_id=$this->db->insert_id();
+                              /*-------------------------------------------------------*/
+                          }
+                      $nro++;
+                      }
                       else{
                             $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                             $par_id=0;
@@ -1038,9 +1156,6 @@ class Cptto_poa extends CI_Controller {
         }
         return $nro;
      }
-
-
-
 
 
     /*---- LISTA DE OPERACIONES PARA LA REASIGNACION DE PRESUPUESTO FINAL ---*/
@@ -1098,7 +1213,6 @@ class Cptto_poa extends CI_Controller {
 
     /*------------ Verificar Comparativo Partidas -----------*/
     public function ver_comparativo_partidas($proy_id){ 
-
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
       if(count($data['proyecto'])!=0){
         $data['menu']=$this->menu(9);
@@ -1158,7 +1272,7 @@ class Cptto_poa extends CI_Controller {
     public function comparativo_partidas_ppto_final($dep_id,$aper_id,$tp_tab){ 
      // echo "DEP : ".$dep_id." aper_id : ".$aper_id."<br>";
       $tabla ='';
-      $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,1); // Presupuesto Partidas asignado
+      $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,2); // Presupuesto Partidas asignado
       $partidas_aprobados=$this->model_ptto_sigep->list_ppto_final_aprobado($aper_id); // Presupuesto Partidas Asignado
       if($tp_tab==1){
         $tab='id="table" class="table table-bordered"';
