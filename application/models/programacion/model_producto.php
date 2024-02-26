@@ -18,6 +18,25 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
+
+    function get_datos_alineacion_unidadResponsable_seleccionado($prod_id){
+        $sql = 'select prod.prod_id,prod.prod_producto,tpsa.tipo_subactividad,sa.serv_descripcion,te.tipo,ua.act_descripcion
+                from _productos prod
+                Inner Join _componentes as c On c.com_id=prod.uni_resp
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+
+                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+                Inner Join _proyectos as p On pfe.proy_id=p.proy_id
+                Inner Join unidad_actividad as ua On ua.act_id=p.act_id
+                Inner Join v_tp_establecimiento as te On te.te_id=ua.te_id
+                where prod_id='.$prod_id.''; 
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
     /*----- LISTA DE FORMULARIO 4 (2022) para el SEguimiento POA -----*/
     function list_operaciones_subactividad($com_id){
         $sql = '
@@ -147,19 +166,6 @@ class model_producto extends CI_Model {
         return $query->result_array();
     }
 
-
-    /*-----GET RELACION PROG 770 - PROD PARA BUSCAR LA UNIDAD RESPONSABLE (2023) -----*/
-/*    function get_relacion_prog_770_producto($dist_id,$prog,$com_id){
-        $sql = '
-        select *
-                from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') poa
-                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
-                 Inner Join _productos as prod On prod.com_id=c.com_id
-                where poa.prog=\''.$prog.'\' and prod.uni_resp='.$com_id.' and prod.estado!=\'3\' and c.estado!=\'3\''; 
-
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
 
 
     /*----- GET LISTA DE ACTIVIDADES ALINEADO A LA UNIDAD RESPONSABLE DE LOS PROGRAMAS BOLSA 2023 (REVISAR)-----*/
@@ -330,17 +336,6 @@ class model_producto extends CI_Model {
 
                 where p.com_id='.$com_id.' and p.estado!=\'3\'
                 order by p.prod_cod asc'; 
-
-        /*$sql = 'select p.prod_id,p.com_id,p.prod_priori,p.prod_producto,p.prod_ppto,p.indi_id,p.prod_indicador,p.prod_linea_base, p.prod_meta,p.prod_fuente_verificacion,p.prod_unidades,p.prod_ponderacion,p.estado,p.prod_mod,
-                p.prod_resultado,p.acc_id,p.prod_cod,p.uni_resp,p.prod_observacion,p.mt_id,p.or_id,i.indi_descripcion,i.indi_abreviacion,
-                ore.or_id,ore.or_codigo,og.og_id,og.og_codigo
-                from _productos p
-                Inner Join indicador as i On i.indi_id=p.indi_id
-                Inner Join objetivos_regionales as ore On ore.or_id=p.or_id
-                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
-                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
-                where p.com_id='.$com_id.' and p.estado!=\'3\'
-                order by p.prod_cod asc'; */
         
         $query = $this->db->query($sql);
         return $query->result_array();

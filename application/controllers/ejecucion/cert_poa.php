@@ -62,7 +62,7 @@ class Cert_poa extends CI_Controller {
         $data['res_dep']=$this->tp_resp();
 
         $data['generar_certpoa']='';
-        // $this->conf_certificacion==1 || $this->tp_adm==111
+
         if($this->conf_certificacion==1 || $this->tp_adm==1){
           $data['generar_certpoa']='
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
@@ -77,40 +77,40 @@ class Cert_poa extends CI_Controller {
 
           if($this->fun_adm==1){ /// Administrador Oficina Nacional
             $data['cuerpo']='
-                '.$this->menu_cpoa_nacional().'
-                <input name="base" type="hidden" value="'.base_url().'">
-                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="jarviswidget jarviswidget-color-darken" >
-                      <header>
-                          <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                          <h2 class="font-md"><strong>MIS CERTIFICACIONES POA - '.$this->gestion.'</strong></h2>  
-                      </header>
-                        <div>
-                            <div class="widget-body no-padding">
-                               <div id="lista_certificaciones"></div>
-                            </div>
-                        </div>
-                    </div>
-                </article>';
+              '.$this->menu_cpoa_nacional().'
+              <input name="base" type="hidden" value="'.base_url().'">
+              <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <div class="jarviswidget jarviswidget-color-darken" >
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                        <h2 class="font-md"><strong>MIS CERTIFICACIONES POA - '.$this->gestion.'</strong></h2>  
+                    </header>
+                      <div>
+                          <div class="widget-body no-padding">
+                             <div id="lista_certificaciones"></div>
+                          </div>
+                      </div>
+                  </div>
+              </article>';
 
             //$this->load->view('admin/ejecucion/certificacion_poa/menu_certpoa_nacional', $data);
           }
           else{ //// Administrador Regional
             $data['cuerpo']='
-                <input name="base" type="hidden" value="'.base_url().'">
-                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="jarviswidget jarviswidget-color-darken" >
-                      <header>
-                          <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                          <h2 class="font-md"><strong>MIS CERTIFICACIONES POA - '.$this->gestion.'</strong></h2>  
-                      </header>
-                        <div>
-                            <div class="widget-body no-padding">
-                              '.$this->list_certpoas().'
-                            </div>
-                        </div>
-                    </div>
-                </article>';
+              <input name="base" type="hidden" value="'.base_url().'">
+              <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <div class="jarviswidget jarviswidget-color-darken" >
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                        <h2 class="font-md"><strong>MIS CERTIFICACIONES POA - '.$this->gestion.'</strong></h2>  
+                    </header>
+                      <div>
+                          <div class="widget-body no-padding">
+                            '.$this->list_certpoas().'
+                          </div>
+                      </div>
+                  </div>
+              </article>';
             //$this->load->view('admin/ejecucion/certificacion_poa/list_certificaciones_poa', $data);
           }
        $this->load->view('admin/ejecucion/certificacion_poa/menu_certpoa_nacional', $data);
@@ -160,8 +160,8 @@ class Cert_poa extends CI_Controller {
                     </div>
                   </fieldset>
               </form>
-              </div>
-            </article>';
+            </div>
+          </article>';
     return $tabla;
   }
 
@@ -212,8 +212,8 @@ class Cert_poa extends CI_Controller {
                   <th style="width:10%;">CITE </th>
                   <th style="width:10%;">CITE FECHA </th>
                   <th style="width:10%;">PROGRAMA</th>
-                  <th style="width:20%;">DESCRIPCI&Oacute;N</th>
-                  <th style="width:10%;">UNIDAD RESPONSABLE</th>
+                  <th style="width:15%;">GASTO CORRIENTE / INVERSIÓN</th>
+                  <th style="width:15%;">UNIDAD RESPONSABLE</th>
                   <th style="width:5%;">GESTI&Oacute;N</th>
                   <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">MODIFICAR CERTIFICACIÓN</th>
                   <th style="width:7%;" title="ANULAR CERTIFICACI&Oacute;N">ANULAR CERTIFICACIÓN</th>
@@ -260,7 +260,7 @@ class Cert_poa extends CI_Controller {
                   <th style="width:10%;">CITE </th>
                   <th style="width:10%;">CITE FECHA </th>
                   <th style="width:10%;">PROGRAMA</th>
-                  <th style="width:20%;">DESCRIPCI&Oacute;N</th>
+                  <th style="width:20%;">GASTO CORRIENTE / INVERSIÓN</th>
                   <th style="width:10%;">UNIDAD RESPONSABLE</th>
                   <th style="width:5%;">GESTI&Oacute;N</th>
                   <th style="width:7%;" title="EDITAR CERTIFICACI&Oacute;N">MODIFICAR CERTIFICACIÓN</th>
@@ -275,7 +275,7 @@ class Cert_poa extends CI_Controller {
               </tr>
             </thead>
             '.$this->lista_certificacionespoa($certificados).'
-        </table>';
+          </table>';
 
       return $tabla;
     }
@@ -299,9 +299,9 @@ class Cert_poa extends CI_Controller {
               }
 
               $tabla .='<tr bgcolor='.$color.'>
-                        <td title='.$row['cpoa_id'].'>'.$nro.' '.$row['cpoa_ref'].'</td>
-                        <td>'.$codigo.'</td>
-                        <td>'.$row['cpoa_cite'].'</td>
+                        <td title='.$row['cpoa_id'].'>'.$nro.' '.$row['por_id'].'</td>
+                        <td style="font-size:13px;"><b>'.$codigo.'</b></td>
+                        <td style="font-size:13px;"><b>'.$row['cpoa_cite'].'</b></td>
                         <td>'.date('d-m-Y',strtotime($row['cite_fecha'])).'</td>
                         <td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</td>
                         <td>';
@@ -376,32 +376,6 @@ class Cert_poa extends CI_Controller {
       return $tabla;
     }
 
-
-    /*------------------------------------- MENU -----------------------------------*/
-/*    function menu($mod){
-        $enlaces=$this->menu_modelo->get_Modulos($mod);
-        for($i=0;$i<count($enlaces);$i++){
-          $subenlaces[$enlaces[$i]['o_child']]=$this->menu_modelo->get_Enlaces($enlaces[$i]['o_child'], $this->session->userdata('user_name'));
-        }
-
-        $tabla ='';
-        for($i=0;$i<count($enlaces);$i++){
-            if(count($subenlaces[$enlaces[$i]['o_child']])>0){
-                $tabla .='<li>';
-                    $tabla .='<a href="#">';
-                        $tabla .='<i class="'.$enlaces[$i]['o_image'].'"></i> <span class="menu-item-parent">'.$enlaces[$i]['o_titulo'].'</span></a>';    
-                        $tabla .='<ul>';    
-                            foreach ($subenlaces[$enlaces[$i]['o_child']] as $item) {
-                            $tabla .='<li><a href="'.base_url($item['o_url']).'">'.$item['o_titulo'].'</a></li>';
-                        }
-                        $tabla .='</ul>';
-                $tabla .='</li>';
-            }
-        }
-
-        return $tabla;
-    }*/
-    /*=============================================================================================*/
 
     /*---- Obtiene Datos de la Certificacion 2020 (en uso) ---*/
     public function get_datos_certificado(){

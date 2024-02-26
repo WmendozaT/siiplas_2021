@@ -366,7 +366,7 @@ class crequerimiento extends CI_Controller{
                 </td>
                 <td>';
                   if($this->tp_adm==1 || $this->conf_form5==1){
-                  $productos = $this->model_producto->lista_operaciones($componente[0]['com_id']); // Lista de productos
+                  $productos = $this->model_producto->list_prod($componente[0]['com_id']); // Lista de productos
                     $tabla .='<select class="form-control" onchange="doSelectAlert(event,this.value,'.$row['ins_id'].');">';
                       foreach($productos as $pr){
                         if($pr['prod_ppto']==1){

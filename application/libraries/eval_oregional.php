@@ -109,7 +109,7 @@ class Eval_oregional extends CI_Controller{
 
   
 
-  //// FORMULARIO DE EVALUACION DE FORMULARIO 2 - REGIONAL ALINEADO A OBJETIVOS REGIONALES 2020-2021
+  //// FORMULARIO DE EVALUACION DE FORMULARIO 2 - REGIONAL ALINEADO A OBJETIVOS REGIONALES 2024
   public function ver_relacion_ogestion($dep_id){
     $tabla='';
     $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
@@ -214,7 +214,7 @@ class Eval_oregional extends CI_Controller{
                     
                     $boton_ajustar_apriorizados='
                         <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
-                        <br>AJUSTAR ALINEACIÓN</center>';
+                        <br>AJUSTAR ALINEACIÓN </center>';
 
                     if(count($metas_prior)!=0){
                       if($row['indi_id']==1 || $row['indi_id']==2){
@@ -248,7 +248,7 @@ class Eval_oregional extends CI_Controller{
                         <td style="width:10%;">'.$row['or_verificacion'].'</td>
                         <td style="width:2%; font-size: 15px;" align=center><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
                         <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
-                        '.$this->get_temporalidad_objetivo_regional($row['or_id'],0).'
+                        '.$this->get_temporalidad_objetivo_regional($row['or_id'],0,$row['or_tp']).'
                         <td style="font-family:Verdana;font-size: 18px;" align=center><b>'.$calificacion[3].' %</b></td>
                         <td style="font-family:Verdana;font-size: 18px;" align=center><b>'.$calificacion[4].' %</b></td>
                         <td>
@@ -326,8 +326,8 @@ class Eval_oregional extends CI_Controller{
 
 
 
-    /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL (TRIMESTRAL) 2022 --*/
-    public function get_temporalidad_objetivo_regional($or_id,$tp_rep){
+    /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL (TRIMESTRAL) 2024 --*/
+    public function get_temporalidad_objetivo_regional($or_id,$tp_rep,$tp_or){
       /// tp_rep=0 normal
       /// tp_rep=1 Reporte
 
@@ -336,8 +336,8 @@ class Eval_oregional extends CI_Controller{
 
       if(count($verif_temp)!=0){
         for ($i=1; $i <=4 ; $i++) {
-         $valor=$this->calificacion_trimestral_acumulado_x_oregional($or_id,$i);
-
+          $valor=$this->calificacion_trimestral_acumulado_x_oregional($or_id,$i);
+         
           $color='#f1f5f4';
           if($i<=$this->tmes){
             $color='#e4fdf7';
@@ -515,9 +515,29 @@ class Eval_oregional extends CI_Controller{
     
     /*-- UPDATE TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL --*/
     public function create_temporalidad_oregional($dep_id){
-      $lista_ogestion=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
-      foreach($lista_ogestion as $row){
-        //echo $row['og_id'].'/'.$row['or_id'].'.-  '.$row['og_codigo'].'.'.$row['or_codigo'].'---'.$row['indi_id'].'<br>';
+      $form2=$this->model_objetivogestion->get_list_ogestion_por_regional($dep_id);
+      foreach($form2 as $row){
+
+        if($row['or_tp']==0){ //// Generacion de Temporalidad - Gasto Corriente
+          $this->Genera_temporalidad_GastoCorriente($row);
+        }
+        else{ //// Generacion de Temporalidad - Proyecto de Inversion
+          $this->Genera_temporalidad_ProyectoInversion($row);
+        }
+
+      }
+
+    }
+
+
+    //// GENERA TEMPORALIDAD FORM 2 (PROYECTO DE INVERSION)
+    public function Genera_temporalidad_ProyectoInversion($row){
+      
+    }
+
+    //// GENERA TEMPORALIDAD FORM 2 (GASTO CORRIENTE)
+    public function Genera_temporalidad_GastoCorriente($row){
+      //echo $row['og_id'].'/'.$row['or_id'].'.-  '.$row['og_codigo'].'.'.$row['or_codigo'].'---'.$row['indi_id'].'<br>';
         if($row['indi_id']==1 || $row['indi_id']==3){
           $denominador=1;
           $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
@@ -526,7 +546,6 @@ class Eval_oregional extends CI_Controller{
           $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
          // $denominador=3;
         }
-
 
         if(count($metas_prior)!=0){
             /// Borrando temporalidad programado de Objetivos Regionales
@@ -587,9 +606,15 @@ class Eval_oregional extends CI_Controller{
               
             }
         }
-      }
-
     }
+
+
+
+
+
+
+
+
 
 
 
@@ -884,19 +909,18 @@ class Eval_oregional extends CI_Controller{
       <thead>
         <tr style="font-size: 6.7px;" bgcolor="#eceaea" align=center>
           <th style="width:0.9%;height:20px;">#</th>
-          <th style="width:2.2%;"><b>COD. ACE.</b></th>
           <th style="width:2.2%;"><b>COD. ACP.</b></th>
           <th style="width:2.2%;"><b>COD. OPE.</b></th>
-          <th style="width:12%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
-          <th style="width:12%;">PRODUCTO</th>
-          <th style="width:12%;">RESULTADO</th>
+          <th style="width:12.5%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
+          <th style="width:12.5%;">PRODUCTO</th>
+          <th style="width:12.5%;">RESULTADO</th>
           <th style="width:12%;">INDICADOR</th>
           <th style="width:4%;">META</th>
-          <th style="width:4.5%;">I TRIM.</th>
-          <th style="width:4.5%;">II. TRIM.</th>
-          <th style="width:4.5%;">III. TRIM.</th>
-          <th style="width:4.5%;">IV. TRIM.</th>
-          <th style="width:8%;">% CUMPLIMIENTO<br>A LA GESTIÓN '.$this->gestion.'</th>
+          <th style="width:5.5%;">I TRIM.</th>
+          <th style="width:5.5%;">II. TRIM.</th>
+          <th style="width:5.5%;">III. TRIM.</th>
+          <th style="width:5.5%;">IV. TRIM.</th>
+          <th style="width:5.5%;">% CUMP. <br>A LA GESTIÓN '.$this->gestion.'</th>
           <th style="width:10%;">MEDIO DE VERIFICACI&Oacute;N</th>
         </tr>
       </thead>
@@ -908,16 +932,15 @@ class Eval_oregional extends CI_Controller{
       $tabla.='
       <tr style="font-size: 6.5px;">
         <td style="width:0.9%; height:18px;" align=center>'.$nro.'</td>
-        <td style="width:2.2%;" align="center"><b>'.$row['acc_codigo'].'</b></td>
-        <td style="width:2.2%; font-size: 8px;" align="center"><b>'.$row['og_codigo'].'</b></td>
-        <td style="width:2.2%; font-size: 8px;" align="center"><b>'.$row['or_codigo'].'</b></td>
-        <td style="width:12%;">'.$row['or_objetivo'].'</td>
-        <td style="width:12%;">'.$row['or_producto'].'</td>
-        <td style="width:12%;">'.$row['or_resultado'].'</td>
+        <td style="width:2.2%; font-size: 10px;" align="center"><b>'.$row['og_codigo'].'</b></td>
+        <td style="width:2.2%; font-size: 10px;" align="center"><b>'.$row['or_codigo'].'</b></td>
+        <td style="width:12.5%;">'.$row['or_objetivo'].'</td>
+        <td style="width:12.5%;">'.$row['or_producto'].'</td>
+        <td style="width:12.5%;">'.$row['or_resultado'].'</td>
         <td style="width:12%;">'.$row['or_indicador'].'</td>
         <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).'</b></td>
-        '.$this->get_temporalidad_objetivo_regional($row['or_id'],1).'
-        <td style="font-family:Arial;font-size: 8px;" align=right><b>'.$calificacion[4].'%</b></td>
+        '.$this->get_temporalidad_objetivo_regional($row['or_id'],1,$row['or_tp']).'
+        <td style="font-family:Arial;font-size: 5px;" align=right><b>'.$calificacion[4].'%</b></td>
         <td style="width:10%;">'.$row['or_verificacion'].'</td>
       </tr>';
     }
@@ -965,7 +988,7 @@ class Eval_oregional extends CI_Controller{
             </tr>
           </thead>
           <tbody>
-            <tr>'.$this->get_temporalidad_objetivo_regional($or_id,1).'</tr>  
+            <tr>'.$this->get_temporalidad_objetivo_regional($or_id,1,$detalle_oregional[0]['or_tp']).'</tr>
           </tbody>
         </table>
         <br><br>

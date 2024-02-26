@@ -53,7 +53,7 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    // ------ lista Programacion Financiera INICIAL TOTAL 2023
+    // ------ lista Programacion Financiera INICIAL TOTAL - 2023 INVERSION
     public function temporalidad_inicial_total_unidad($proy_id){
         $sql = 'select *
                 from temporalidad_inicial_total_insumo
@@ -253,6 +253,39 @@ class Model_insumo extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+    // ------ Techo presupuestario inicial Imversion X REGIONAL
+    public function techo_ppto_inicial_inversion_regional($dep_id){
+        $sql = '
+            select pi.dep_id,SUM(temp.temp_fis) techo_ppto_inicial
+            from temporalidad_inicial_total_insumo temp
+            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
+            where pi.dep_id='.$dep_id.'
+            group by pi.dep_id
+            order by pi.dep_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    // ------ presupuestario inicial Inversion X REGIONAL al Trimestre
+    public function ppto_inicial_inversion_regional_trimestre($dep_id,$i){
+        $sql = '
+            select pi.dep_id,SUM(temp.temp_fis) ppto_inicial_trimestre
+            from temporalidad_inicial_total_insumo temp
+            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
+            where pi.dep_id='.$dep_id.' and (temp.mes_id>\'0\' and temp.mes_id<='.($i*3).')
+            group by pi.dep_id
+            order by pi.dep_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+
+
     ///================================================
 
     // ------ lista Unidad de Medida

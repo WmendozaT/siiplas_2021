@@ -68,13 +68,16 @@ class Proyecto extends CI_Controller {
             <div class="row">
               <a href="'.site_url("").'/proy/add_unidad" class="btn btn-default" title="AGREGAR UNIDAD" target=_blank>
                 <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>AGREGAR UNIDAD</b>
-              </a>';
-              if ($this->session->userData('conf_poa_estado')!=3) {
+              </a>
+              <a href="'.site_url("").'/proy/verif_plantillas" title="VERIFICAR PLANTILLA" class="btn btn-default" target=_blank>
+                  <img src="'.base_url().'assets/Iconos/application_osx.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>VERIFICAR PLANTILLA</b>
+                </a>';
+              /*if ($this->session->userData('conf_poa_estado')!=3) {
                 $tabla.='
                 <a href="'.site_url("").'/proy/verif_plantillas" title="VERIFICAR PLANTILLA" class="btn btn-default" target=_blank>
                   <img src="'.base_url().'assets/Iconos/application_osx.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>VERIFICAR PLANTILLA</b>
                 </a>';
-              }
+              }*/
 
               $tabla.='
               <br><br>

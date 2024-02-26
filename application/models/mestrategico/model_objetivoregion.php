@@ -159,6 +159,7 @@ class Model_objetivoregion extends CI_Model{
                 oreg.estado,
                 oreg.or_codigo,
                 oreg.or_meta,
+                oreg.or_tp,
                 oreg.or_observacion,
                 ogp.pog_id,
                 ogp.og_id,

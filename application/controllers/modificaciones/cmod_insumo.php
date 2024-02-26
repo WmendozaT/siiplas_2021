@@ -52,7 +52,7 @@ class Cmod_insumo extends CI_Controller {
         else{
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
           $titulo='
-          <h1> <b>'.$data['proyecto'][0]['tipo_adm'].' : </b><small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' '.$data['proyecto'][0]['abrev'].'</small>';
+          <h1> <b>GASTO CORRIENTE : </b><small>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' '.$data['proyecto'][0]['abrev'].'</small>';
         }
 
         $data['titulo']=$titulo;
@@ -1544,7 +1544,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
      /*----- MIGRACION DE REQUERIMIENTOS A UNA OPERACIÓN (2019) -----*/
-    function valida_add_requerimientos(){
+    function valida_add_requerimientos2(){
       if ($this->input->post()) {
           $post = $this->input->post();
           $cite_id = $this->security->xss_clean($post['cite_id']);
@@ -1689,7 +1689,7 @@ class Cmod_insumo extends CI_Controller {
     }
 
      /*----- MIGRACION DE REQUERIMIENTOS (2023) -----*/
-    function valida_add_requerimientos2(){
+    function valida_add_requerimientos(){
       if ($this->input->post()) {
           $post = $this->input->post();
           $cite_id = $this->security->xss_clean($post['cite_id']);

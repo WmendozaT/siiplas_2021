@@ -11,11 +11,13 @@ cpoa_cite varchar,
 cite_fecha timestamp,
 cpoa_estado integer,
 cpoa_ref integer,
+prod_id numeric,
 aper_programa varchar,
 aper_proyecto varchar,
 aper_actividad varchar,
 proy_nombre varchar, 
 tp_id numeric,
+por_id integer,
 com_id numeric,
 com_componente varchar,
 tipo_subactividad varchar,
@@ -31,15 +33,15 @@ tipo varchar) AS
 
 $$
 select 
-cp.cpoa_id, cp.proy_id,cp.cpoa_codigo,cp.cpoa_fecha,cp.cpoa_gestion,cp.cpoa_cite,cp.cite_fecha,cp.cpoa_estado,cp.cpoa_ref,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,
-p.proy_nombre,p.tp_id,c.com_id,c.com_componente,tpsa.tipo_subactividad,sa.serv_cod,sa.serv_descripcion,d.dep_id,d.dep_departamento,ds.dist_id,ds.dist_distrital,ds.abrev,ua.act_descripcion, te.tipo
+cp.cpoa_id, cp.proy_id,cp.cpoa_codigo,cp.cpoa_fecha,cp.cpoa_gestion,cp.cpoa_cite,cp.cite_fecha,cp.cpoa_estado,cp.cpoa_ref,cp.prod_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,
+p.proy_nombre,p.tp_id,p.por_id,c.com_id,c.com_componente,tpsa.tipo_subactividad,sa.serv_cod,sa.serv_descripcion,d.dep_id,d.dep_departamento,ds.dist_id,ds.dist_distrital,ds.abrev,ua.act_descripcion, te.tipo
                     from certificacionpoa cp
                     Inner Join _proyectos as p On p.proy_id=cp.proy_id
                     Inner Join _proyectofaseetapacomponente as pfe On pfe.proy_id=p.proy_id
                     Inner Join aperturaprogramatica as apg On pfe.aper_id=apg.aper_id
                     Inner Join _componentes as c On c.com_id=cp.com_id
                     Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
-		    Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+            Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
                     Inner Join _departamentos as d On d.dep_id=p.dep_id
                     Inner Join _distritales as ds On ds.dist_id=p.dist_id
                     Inner Join unidad_actividad as ua On ua.act_id=p.act_id
@@ -62,12 +64,14 @@ cpoa_cite varchar,
 cite_fecha timestamp,
 cpoa_estado integer,
 cpoa_ref integer,
+prod_id numeric,
 sol_id integer,
 aper_programa varchar,
 aper_proyecto varchar,
 aper_actividad varchar,
 proy_nombre varchar, 
 tp_id numeric,
+por_id integer,
 com_id numeric,
 com_componente varchar,
 pfec_id numeric,
@@ -84,8 +88,8 @@ tipo varchar) AS
 
 $$
 select 
-cp.cpoa_id, cp.proy_id,cp.cpoa_codigo,cp.cpoa_fecha,cp.cpoa_gestion,cp.cpoa_cite,cp.cite_fecha,cp.cpoa_estado,cp.cpoa_ref,cp.sol_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,
-p.proy_nombre,p.tp_id,c.com_id,c.com_componente,c.pfec_id,sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad,d.dep_id,d.dep_departamento,ds.dist_id,ds.dist_distrital,ds.abrev,ua.act_descripcion, te.tipo
+cp.cpoa_id, cp.proy_id,cp.cpoa_codigo,cp.cpoa_fecha,cp.cpoa_gestion,cp.cpoa_cite,cp.cite_fecha,cp.cpoa_estado,cp.cpoa_ref,cp.prod_id,cp.sol_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,
+p.proy_nombre,p.tp_id,p.por_id,c.com_id,c.com_componente,c.pfec_id,sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad,d.dep_id,d.dep_departamento,ds.dist_id,ds.dist_distrital,ds.abrev,ua.act_descripcion, te.tipo
                     from certificacionpoa cp
                     Inner Join _proyectos as p On p.proy_id=cp.proy_id
                     Inner Join _componentes as c On c.com_id=cp.com_id
@@ -1823,6 +1827,7 @@ fecha_creacion timestamp,
 cite_estado integer,
 cite_activo integer,
 tipo_modificacion integer,
+prod_id numeric,
 fun_id integer,
 fun_nombre varchar,
 fun_paterno varchar,
@@ -1842,7 +1847,7 @@ aper_gestion integer) AS
 
 $$
 
-select ci.cite_id,ci.com_id,ci.cite_codigo, ci.cite_nota, ci.cite_fecha, ci.fecha_creacion, ci.cite_estado,ci.cite_activo,ci.tipo_modificacion,f.fun_id,f.fun_nombre, f.fun_paterno,f.fun_materno,f.fun_usuario,
+select ci.cite_id,ci.com_id,ci.cite_codigo, ci.cite_nota, ci.cite_fecha, ci.fecha_creacion, ci.cite_estado,ci.cite_activo,ci.tipo_modificacion,ci.prod_id,f.fun_id,f.fun_nombre, f.fun_paterno,f.fun_materno,f.fun_usuario,
 c.pfec_id,c.com_componente,c.estado,sa.serv_id, sa.serv_cod,sa.serv_descripcion,tpsa.tipo_subactividad, pfe.proy_id,pfe.aper_id,pfe.pfec_estado,apg.aper_gestion
                 from cite_mod_requerimientos ci
                 Inner Join funcionario as f On ci.fun_id=f.fun_id

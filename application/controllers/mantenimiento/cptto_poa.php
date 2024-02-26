@@ -1272,7 +1272,7 @@ class Cptto_poa extends CI_Controller {
     public function comparativo_partidas_ppto_final($dep_id,$aper_id,$tp_tab){ 
      // echo "DEP : ".$dep_id." aper_id : ".$aper_id."<br>";
       $tabla ='';
-      $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,2); // Presupuesto Partidas asignado
+      $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,1); // Presupuesto Partidas asignado
       $partidas_aprobados=$this->model_ptto_sigep->list_ppto_final_aprobado($aper_id); // Presupuesto Partidas Asignado
       if($tp_tab==1){
         $tab='id="table" class="table table-bordered"';

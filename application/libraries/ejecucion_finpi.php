@@ -801,7 +801,7 @@ class ejecucion_finpi extends CI_Controller{
                   /// Porcentaje de Avance por partidas
                   $get_partida_sigep=$this->model_ptto_sigep->get_sp_id($partida['sp_id']); /// Get partida sigep
                   $porcentaje_avance_fin=0;
-                  if(count($get_partida_sigep)!=0){
+                  if(count($get_partida_sigep)!=0 & $get_partida_sigep[0]['importe']!=0){
                     $porcentaje_avance_fin=round((($monto_ejecutado/$get_partida_sigep[0]['importe'])*100),2);
                   }
 

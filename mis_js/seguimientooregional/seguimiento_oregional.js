@@ -695,8 +695,9 @@ $(function() {
 
 
   /// Lista de Actividades Priorizados por cada Objetivo Regional FORM 2
+  //// ACTUALIZAR EVALUACION TRIMESTRAL
   function update_temp(dep_id) {
-      $('#load_update').fadeIn(1000).html('<font size=4><b>Actualizando Temporalidad de Operaciones .....</b></font>');
+      $('#load_update').fadeIn(1000).html('<img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/><b>Actualizando Temporalidad de Operaciones .....</b>');
       var url = base+"index.php/ejecucion/cevaluacion_form2/update_temporalidad_oregional";
       var request;
       if (request) {

@@ -143,7 +143,7 @@
 									<div class="jarviswidget jarviswidget-color-darken" >
 		                <header>
 		                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-		                  <h2 class="font-md"><strong>FORMULARIO N° 5</strong></h2>  
+		                  <h2 class="font-md"><strong>FORMULARIO N° 5 (Requerimientos)</strong></h2>  
 		                </header>
 										<div>
 											<div class="widget-body no-padding">
@@ -154,13 +154,13 @@
 															<th style="width:10%;">NRO CITE</th>
 															<th style="width:10%;">FECHA CITE </th>
 															<th style="width:10%;">C&Oacute;DIGO </th>
-															<th style="width:15%;">SUBACTIVIDAD/UNIDAD RESPONSABLE</th>
+															<th style="width:15%;">UNIDAD RESPONSABLE</th>
 															<th style="width:5%;"></th>
 															<th style="width:5%;"></th>
 														</tr>
 													</thead>
 													<tbody>
-														<?php echo $requerimientos;?>
+														<?php echo $mod_formularioN5;?>
 													</tbody>
 													<tr bgcolor="#fafafa">
 														<td></td>
@@ -176,7 +176,7 @@
 									<div class="jarviswidget jarviswidget-color-darken" >
 		                <header>
 		                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-		                  <h2 class="font-md"><strong>FORMULARIO N° 4</strong></h2>  
+		                  <h2 class="font-md"><strong>FORMULARIO N° 4 (Actividades)</strong></h2>  
 		                </header>
 										<div>
 											<div class="widget-body no-padding">
@@ -187,13 +187,13 @@
 															<th style="width:10%;">NRO CITE</th>
 															<th style="width:10%;">FECHA CITE </th>
 															<th style="width:10%;">C&Oacute;DIGO </th>
-															<th style="width:20%;">SUBACTIVIDAD/UNIDAD RESPONSABLE</th>
+															<th style="width:20%;">UNIDAD RESPONSABLE</th>
 															<th style="width:5%;"></th>
 															<th style="width:5%;"></th>
 														</tr>
 													</thead>
 													<tbody>
-														<?php echo $operaciones;?>
+														<?php echo $mod_formularioN4;?>
 													</tbody>
 												</table>
 											</div>
@@ -204,7 +204,7 @@
 									<div class="jarviswidget jarviswidget-color-darken" >
 		                <header>
 		                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-		                    <h2 class="font-md"><strong>TECHO</strong></h2>  
+		                    <h2 class="font-md"><strong>TECHO (Presupuestario)</strong></h2>  
 		                  </header>
 										<div>
 											<div class="widget-body no-padding">
