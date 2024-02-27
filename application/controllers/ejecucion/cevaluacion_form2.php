@@ -15,6 +15,8 @@ class Cevaluacion_form2 extends CI_Controller {
         $this->load->model('mestrategico/model_mestrategico');
         $this->load->model('mestrategico/model_objetivogestion');
         $this->load->model('mestrategico/model_objetivoregion');
+        $this->load->model('mantenimiento/model_ptto_sigep');
+        $this->load->model('programacion/insumos/model_insumo');
         $this->load->model('menu_modelo');
         $this->load->model('Users_model','',true);
         $this->load->library('security');
@@ -50,7 +52,6 @@ class Cevaluacion_form2 extends CI_Controller {
       }
 
       $this->load->view('admin/evaluacion/evaluacion_form2/menu_regionales', $data);
-      //echo $this->eval_oregional->create_temporalidad_oregional(8);
     }
 
 

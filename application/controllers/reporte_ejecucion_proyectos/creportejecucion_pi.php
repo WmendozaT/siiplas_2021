@@ -61,17 +61,22 @@ public function menu_pi(){
     </div>';
    
     $data['titulo_modulo']=$tabla;
-    $dep_id=1;
-    //echo $this->tmes;
+
+
+
+
+    //// para operaciones de Inversion
+    /*$dep_id=1;
     $techo_ini_reg=$this->model_insumo->techo_ppto_inicial_inversion_regional($dep_id);
     echo $techo_ini_reg[0]['techo_ppto_inicial'].'<br>';
     for ($i=1; $i <=4; $i++) { 
       $ppto_trimestre=$this->model_insumo->ppto_inicial_inversion_regional_trimestre($dep_id,$i);
       echo "[".round((($ppto_trimestre[0]['ppto_inicial_trimestre']/$techo_ini_reg[0]['techo_ppto_inicial'])*100),2)."]<br>";
-    }
+    }*/
 
 
-    //$this->load->view('admin/reportes_cns/repejecucion_pi/menu_pi', $data); 
+
+    $this->load->view('admin/reportes_cns/repejecucion_pi/menu_pi', $data); 
 }
 
   //// MENU UNIDADES ORGANIZACIONAL 2022

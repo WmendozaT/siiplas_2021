@@ -330,7 +330,7 @@ class Modificacionpoa extends CI_Controller{
      /*------ LISTA FORMULARIO N° 4 (2020) (VISTA) ------*/
     public function mis_formulario4($cite){
       $proy_id=$cite[0]['proy_id'];
-      $productos = $this->model_producto->lista_operaciones($cite[0]['com_id'],$this->gestion); // Lista de Operaciones
+      $productos = $this->model_producto->lista_form4_x_unidadresponsable($cite[0]['com_id'],$this->gestion); // Lista de Operaciones
       $tabla ='';
       $tabla .='
         <input type="hidden" name="base" value="'.base_url().'">

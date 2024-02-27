@@ -464,7 +464,7 @@ class Model_objetivoregion extends CI_Model{
         return $query->result_array();
     }
 
-    /*-- Suma meta Total Programado por Operacion (Objetivo Regional) --*/
+    /*-- Suma meta Total Programado por Operacion (Objetivo Regional) Gasto Corriente--*/
     public function get_trm_temporalidad_prog_total_oregional($or_id){
         $sql = 'select SUM(pg_fis) total_prog
                 from temp_trm_prog_objetivos_regionales
