@@ -82,7 +82,7 @@ Highcharts.chart('container', {
         text: ''
     },
     subtitle: {
-        text: 'CUMPLIMIENTO DE OPERACIONES AL <?php echo $trimestre[0]['trm_descripcion']; ?>'
+        text: 'CUMPLIMIENTO DE OPERACIONES ACUMULADO A LA GESTIÓN : <?php echo $this->session->userData('gestion');?>'
     },
     xAxis: {
         categories: [

@@ -88,26 +88,6 @@ class Crep_evalform2 extends CI_Controller {
     $data['titulo_modulo']=$tabla;
     $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_menu', $data);
 
-
-
-/*    $matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_institucional();
-    for ($i=0; $i < count($this->model_objetivogestion->get_list_ogestion_por_regional_institucional()); $i++) { 
-      for ($j=0; $j < 5; $j++) { 
-        echo "[".$matriz[$i][$j]."]";
-      }
-      echo "<br>";
-    }*/
-
-
-    //echo count($this->model_objetivogestion->get_list_ogestion_por_regional(2));
-    /*$matriz=$this->eval_oregional->matriz_cumplimiento_operaciones_regional(2);
-    for ($i=0; $i < count($this->model_objetivogestion->get_list_ogestion_por_regional(2)); $i++) { 
-      for ($j=0; $j < 5; $j++) { 
-        echo "[".$matriz[$i][$j]."]";
-      }
-      echo "<br>";
-    }*/
-   // echo $this->matriz_cumplimiento_operaciones_acp_regional(36,1);
   }
 
 
@@ -441,12 +421,12 @@ class Crep_evalform2 extends CI_Controller {
 
   /*---- MATRIZ DETALLE DE CUMPLIMIENTO DE OPERACIONES POR ACP REGIONAL ---*/
   public function matriz_cumplimiento_operaciones_acp_regional($og_id,$dep_id){
-    $tabla='';
+    $matriz='';
     $lista_form2=$this->model_objetivoregion->list_oregional_regional($og_id,$dep_id);
 
     $nro=0;
     foreach($lista_form2 as $row){
-      $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+      $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
       $matriz[$nro][0]=$row['og_codigo'];
       $matriz[$nro][1]=$row['or_codigo'];
       $matriz[$nro][2]=$row['or_objetivo'];
@@ -559,30 +539,6 @@ class Crep_evalform2 extends CI_Controller {
 
     return $tabla;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -813,7 +769,7 @@ class Crep_evalform2 extends CI_Controller {
         $suma_cumplimiento_gestion=0;
         
         foreach($lista_ogestion as $row){
-          $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes);
+          $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
           $suma_cumplimiento_trimestral=$suma_cumplimiento_trimestral+$calificacion[3];
           $suma_cumplimiento_gestion=$suma_cumplimiento_gestion+$calificacion[4];
         }
@@ -833,60 +789,6 @@ class Crep_evalform2 extends CI_Controller {
 
     return $mat;
   }
-
-/*  public function matriz_eval_form2(){
-    $regionales=$this->model_proyecto->list_departamentos();
-    $nro=0;
-    foreach($regionales as $row){
-      $calificacion=$this->calificacion_total_form2_regional($row['dep_id']);
-      
-      $mat[$nro][1]=$row['dep_id'];
-      $mat[$nro][2]=strtoupper($row['dep_sigla']);
-      $mat[$nro][3]=$calificacion[1]; /// programado trimestral
-      $mat[$nro][4]=$calificacion[2]; /// ejecutado trimestral
-      $mat[$nro][5]=$calificacion[3]; /// total programado Gestion
-      $mat[$nro][6]=$calificacion[4]; /// % cumplimiento
-      $nro++;
-    }
-
-    return $mat;
-  }*/
-
-
-  /*--- PARAMETROS DE CALIFICACION OPERACIONES REGIONAL ---*/
-/*  public function calificacion_total_form2_regional($dep_id){
-    $prog_trimestre=0; $ejec_trimestre=0;$prog_total_form2=0;
-
-    $prog_total=$this->model_objetivoregion->get_suma_total_prog_form2_regional($dep_id);
-    if(count($prog_total)!=0){
-      $prog_total_form2=$prog_total[0]['programado_total'];
-    }
-
-    for ($i=1; $i <=$this->tmes; $i++) { 
-      $prog=$this->model_objetivoregion->get_suma_trimestre_prog_form2_regional($dep_id,$i);
-      if(count($prog)!=0){
-        $prog_trimestre=$prog_trimestre+$prog[0]['prog'];
-      }
-
-      $ejec=$this->model_objetivoregion->get_suma_trimestre_ejec_form2_regional($dep_id,$i);
-      if(count($ejec)!=0){
-        $ejec_trimestre=$ejec_trimestre+$ejec[0]['ejec'];
-      }
-    }
-
-    $calif[1]=$prog_trimestre; /// programado trimestral
-    $calif[2]=$ejec_trimestre; /// ejecutado trimestral
-    $calif[3]=$prog_total_form2; /// total programado Gestion
-    $calif[4]=0;
-
-    if($prog_total_form2!=0){
-      $calif[4]=round((($calif[2]/$prog_total_form2)*100),2);
-    }
-
-    return $calif;
-  }*/
-
-
 
 
  /*---- CABECERA REPORTE OPERACIONES POR REGIONALES (GRAFICO)----*/

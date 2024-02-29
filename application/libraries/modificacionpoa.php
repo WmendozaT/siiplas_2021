@@ -981,7 +981,7 @@ class Modificacionpoa extends CI_Controller{
 
 
     /*------ Lista de Unidades Responsables (Programas Bolsas) ------*/
-    public function unidades_responsables_progBolsas($proyecto){
+        public function unidades_responsables_progBolsas($proyecto){
       $saldos_revertidos_partidas=$this->model_ptto_sigep->lista_monto_partidas_revertidos_unidad($proyecto[0]['proy_id']);
       $tabla='';
       if(count($proyecto)!=0){
@@ -1001,11 +1001,13 @@ class Modificacionpoa extends CI_Controller{
                   <th style="width:15%; text-align:center;">UNIDAD RESPONSABLE</th>
                   <th style="width:12%; text-align:center;">ACTIVIDAD</th>
                   <th style="width:1%; text-align:center;">VER</th>
-                  <th style="width:3%; text-align:center;">REG. CITE<br>MODIFICACION POA</th>';
+                  <th style="width:3%; text-align:center;">REG. CITE<br>MODIFICACION POA </th>
+                  <th style="width:5%; text-align:center;">';
                   if(count($saldos_revertidos_partidas)!=0){
-                    $tabla.='<th style="width:5%; text-align:center;"><b>REG. CITE<br>REVERSION POA</b></th>';
+                    $tabla.='<b>REG. CITE<br>REVERSION POA</b>';
                   }
                   $tabla.='
+                  </th>
                 </tr>
               </thead>
               <tbody>';
@@ -1025,17 +1027,22 @@ class Modificacionpoa extends CI_Controller{
                   <td align=center>';
                     if($this->conf_mod_req==1 || $this->tp_adm==1){
                       $tabla.='
-                      <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS" name="'.$componente[0]['com_id'].'" id="0" id1="'.$row['prod_id'].'">
+                      <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS"  onclick="update_temp('.$componente[0]['com_id'].',0,'.$row['prod_id'].');">
                         <img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="30" HEIGHT="30"/>&nbsp;
                         <b style="font-size:10px; color:blue">INGRESAR DATOS CITE</b>
                       </a>';
                     }
-                  $tabla.='</td>';
+                  $tabla.='</td>
+                  <td align=center>';
+
                   if(count($saldos_revertidos_partidas)!=0){
-                    $tabla.'
-                    <td></td>';
+                  $tabla.='
+                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-warning nuevo_ff"  title="MODIFICAR REQUERIMIENTOS POR REVERSION DE SALDOS" onclick="update_temp('.$componente[0]['com_id'].',1,'.$row['prod_id'].');" >
+                        <img src="'.base_url().'assets/Iconos/application_form_magnify.png" WIDTH="30" HEIGHT="30"/>&nbsp;
+                        <b style="font-size:10px;">INGRESAR DATOS CITE</b>
+                      </a>';
                   }
-                $tabla.='
+                  $tabla.='</td>
                 </tr>';
               }
               $tabla.='
@@ -1061,15 +1068,16 @@ class Modificacionpoa extends CI_Controller{
               <table class="table table-bordered" width="100%">
                 <thead>
                   <tr style="height:45px;">
-                    <th style="width:1%; text-align:center;">'.count($saldos_revertidos_partidas).'</th>
+                    <th style="width:1%; text-align:center;">'.count($saldos_revertidos_partidas).' </th>
                     <th style="width:5%; text-align:center;">CODIGO</th>
                     <th style="width:20%; text-align:center;">UNIDAD RESPONSABLE</th>
-                    <th style="width:5%; text-align:center;">REG. CITE<br>MODIFICACION POA</th>';
+                    <th style="width:5%; text-align:center;">REG. CITE<br>MODIFICACION POA</th>
+                    <th style="width:5%; text-align:center;">';
                     if(count($saldos_revertidos_partidas)!=0){
-                      $tabla.='<th style="width:5%; text-align:center;"><b>REG. CITE<br>REVERSION POA</b></th>';
+                      $tabla.='<b>REG. CITE<br>REVERSION POA</b>';
                     }
-
                     $tabla.='
+                    </th>
                     <th style="width:2%;"></th>
                   </tr>
                 </thead>
@@ -1085,24 +1093,23 @@ class Modificacionpoa extends CI_Controller{
                     <td align=center>';
                       if($this->conf_mod_req==1 || $this->tp_adm==1){
                         $tabla.='
-                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS" name="'.$row['com_id'].'" id="0" id1="0">
+                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default nuevo_ff"  title="MODIFICAR REQUERIMIENTOS" onclick="update_temp('.$row['com_id'].',0,0);">
                           <img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="30" HEIGHT="30"/>&nbsp;
                           <b style="font-size:10px;">INGRESAR DATOS CITE</b>
                         </a>';
                       }
                     $tabla.='
-                    </td>';
+                    </td>
+                    <td align=center>';
                       if(count($saldos_revertidos_partidas)!=0){
                         $tabla.='
-                        <td align=center>
-                          <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-warning nuevo_ff"  title="MODIFICAR REQUERIMIENTOS POR REVERSION DE SALDOS" name="'.$row['com_id'].'" id="1" id1="0">
-                            <img src="'.base_url().'assets/Iconos/application_form_magnify.png" WIDTH="30" HEIGHT="30"/>&nbsp;
+                        <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-warning nuevo_ff"  title="MODIFICAR REQUERIMIENTOS POR REVERSION DE SALDOS" onclick="update_temp('.$row['com_id'].',1,0);">
+                          <img src="'.base_url().'assets/Iconos/application_form_magnify.png" WIDTH="30" HEIGHT="30"/>&nbsp;
                           <b style="font-size:10px;">INGRESAR DATOS CITE</b>
-                        </a>
-                        </td>';
+                        </a>';
                       }
                     $tabla.='
-                    
+                    </td>
                     <td align=center>';
                       if($this->fun_id==399){
                         $tabla.='

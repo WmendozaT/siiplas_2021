@@ -147,7 +147,7 @@ class Cmod_insumo extends CI_Controller {
       }
     }
 
-    /*----- REQUERIMIENTOS 2020-2021-2022 ------*/
+    /*----- LISTA REQUERIMIENTOS 2024 ------*/
     public function mis_requerimientos($cite_id){
       $data['menu']=$this->menu(3); //// genera menu
       $data['cite'] = $this->model_modrequerimiento->get_cite_insumo($cite_id);
@@ -175,7 +175,7 @@ class Cmod_insumo extends CI_Controller {
             $data['part_padres'] = $this->model_ptto_sigep->lista_partidas_padres_revertidos($proyecto[0]['aper_id']);//partidas padres REVERTIDO
           }
 
-          $data['lista']=$this->tipo_lista_ope_act($data['cite']); /// LINEADO A ACTIVIDAD
+          $data['lista']=$this->tipo_lista_ope_act($data['cite']); /// ALINEADO A ACTIVIDAD (FORM 4)
           $this->load->view('admin/modificacion/requerimientos/list_requerimientos', $data);
       }
       else{
@@ -389,9 +389,9 @@ class Cmod_insumo extends CI_Controller {
       $operaciones=$this->model_producto->lista_form4_x_unidadresponsable($cite[0]['com_id']);
         $tabla.='
           <section class="col col-3">
-            <label class="label"><b>ALINEACI&Oacute;N FORM 4 (ACTIVIDAD) '.$this->gestion.'</b></label>
+            <label class="label"><b>ALINEACI&Oacute;N FORM 4 (ACTIVIDAD) '.$this->gestion.'</b> (prod id: '.$cite[0]['prod_id'].')</label>
             <label class="input">';
-              if($cite[0]['por_id']==0){
+              if($cite[0]['por_id']==0){ /// Programas Normales
                 $tabla.='
                 <select class="form-control" id="dato_id" name="dato_id" title="SELECCIONE ACTIVIDAD">
                   <option value="">Seleccione Actividad</option>';
@@ -401,16 +401,22 @@ class Cmod_insumo extends CI_Controller {
                   $tabla.='      
                 </select>';
               }
-              else{
+              else{ /// Programas Bolsas
                 $tabla.='
-                <select class="form-control" id="dato_id" name="dato_id" title="SELECCIONE ACTIVIDAD">
-                  <option value="">Seleccione Actividad</option>';
-                  foreach($operaciones as $row){ 
+                <select class="form-control" id="dato_id" name="dato_id" title="SELECCIONE ACTIVIDAD">';
+                  //$tabla.='<option value="">Seleccione Actividad</option>';
+                  foreach($operaciones as $row){
                     $unidad=$this->model_componente->get_componente($row['uni_resp'],$this->gestion);
           
                     if(count($unidad)!=0){
                       $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
-                      $tabla.='<option value="'.$row['prod_id'].'">'.$row['or_codigo'].'/'.$row['prod_cod'].' ('.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].') -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</option>';
+                      if($cite[0]['prod_id']==$row['prod_id']){
+                        $tabla.='<option value="'.$row['prod_id'].'" selected>'.$row['or_codigo'].'/'.$row['prod_cod'].' ('.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].') -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</option>';
+                      }
+                      /*else{
+                        $tabla.='<option value="'.$row['prod_id'].'">'.$row['or_codigo'].'/'.$row['prod_cod'].' ('.$proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].') -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion'].'</option>';
+                      }*/
+                      
                     }
                   } 
                   $tabla.='      
@@ -2171,7 +2177,7 @@ class Cmod_insumo extends CI_Controller {
           /// -------------------------------------                           
 
           $lista_partidas=$this->partidas_dependientes($insumo); /// Lista de Insumos dependientes
-          $lista_prod_act=$this->list_operaciones($cite,$insumo); /// Lista de Productos, Actividades
+          $lista_prod_act=$this->list_operaciones($cite,$insumo); /// Lista de Actividades (Form 4)
 
           $saldo=$monto_asig-$monto_prog;
 
@@ -2256,7 +2262,7 @@ class Cmod_insumo extends CI_Controller {
 
 
 
-    /*--- LISTA DE PRODUCTOS, ACTIVIDADES (MOD) ---*/
+    /*--- LISTA DE FORMULARIO N° 4 (MOD) ---*/
     function list_operaciones($cite,$insumo){
       $tabla='';
 
@@ -2290,7 +2296,6 @@ class Cmod_insumo extends CI_Controller {
             }
           } 
         }
-
 
       return $tabla;
     }

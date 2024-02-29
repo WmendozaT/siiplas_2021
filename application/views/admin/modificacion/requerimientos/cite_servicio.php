@@ -197,7 +197,7 @@
 	                        &times;
 	                    </button>
 	                    <h4 class="modal-title text-center text-info">
-	                        <div id="titulo"></div>
+	                        <div id="titulo_form"></div>
 	                    </h4>
 	                </div>
 	                <div class="modal-body no-padding">
@@ -205,9 +205,9 @@
 	                        <div id="bootstrap-wizard-1" class="col-sm-12">
 	                        		<form action="<?php echo site_url().'/modificaciones/cmod_insumo/valida_cite_modificacion'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
 															  <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
-															  <input type="hidden" name="tp_mod" id="tp_mod">
 															  <input type="hidden" name="com_id" id="com_id">
-															  <input type="hidden" name="prod_id" id="prod_id">
+															  <input type="hidden" name="tp_mod" id="tp_mod">
+															  <input type="text" name="prod_id" id="prod_id">
 
 															  <fieldset>
 																	<section>
@@ -313,21 +313,17 @@
 	      }
 	      return true;
 		}
-		$(function () {
-			$(".nuevo_ff").on("click", function (e) {
-				com_id = $(this).attr('name');
-				tp = $(this).attr('id');
-				prod_id = $(this).attr('id1');
-		   
-		    document.getElementById("com_id").value=com_id;
-		    document.getElementById("tp_mod").value=tp;
-		    document.getElementById("prod_id").value=prod_id;
 
-		    if(tp==0){
-		    	$('#titulo').html('<center><b>REGISTRE NOTA CITE</b></center>');
+		function update_temp(com_id,tipo,prod_id) {
+			document.getElementById("com_id").value=com_id;
+		  document.getElementById("tp_mod").value=tipo;
+		  document.getElementById("prod_id").value=prod_id;
+
+		  if(tipo==0){
+		    	$('#titulo_form').html('<center><b>REGISTRE NOTA CITE</b></center>');
 		    }
 		    else{
-		    	$('#titulo').html('<center><b>REGISTRE NOTA CITE</b><br><div style=color:#BDAA1F;><b>REVERSION DE SALDOS</b></div></center>');
+		    	$('#titulo_form').html('<center><b>REGISTRE NOTA CITE</b><br><div style=color:#BDAA1F;><b>REVERSION DE SALDOS</b></div></center>');
 		    }
 
 		    $("#add_form").on("click", function () {
@@ -385,8 +381,9 @@
 					}
 		        }
 		    });
-		    });
-	    });
+
+  }
+
 
 		//// Lista de requerimientos alineados a cada actividad
 		$(function () {

@@ -72,7 +72,7 @@
             }); 
         }
         else{ /// Regional
-
+         
           var url = base+"index.php/reporte_evalform2/crep_evalform2/get_cuadro_evaluacion_formulario2_regional";
             var request;
             if (request) {
@@ -760,7 +760,7 @@ $(function() {
   }
 
   /// grado de cumplimiento por Objetivo Regional FORM 2
-  function nivel_cumplimiento(or_id,dep_id) {
+  function nivel_cumplimiento(or_id,dep_id,or_tp) {
     $('#titulo_grafico').html('<font size=3><b>Cargando ..</b></font>');
     $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
   //  alert(dep_id)
@@ -773,7 +773,7 @@ $(function() {
         url: url,
         type: "POST",
         dataType: 'json',
-        data: "or_id="+or_id+"&dep_id="+dep_id
+        data: "or_id="+or_id+"&dep_id="+dep_id+"&or_tp="+or_tp
     });
 
     request.done(function (response, textStatus, jqXHR) {

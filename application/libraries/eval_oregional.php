@@ -214,10 +214,14 @@ class Eval_oregional extends CI_Controller{
                     $color='';$grafico='';
                     $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
                     
-                    $boton_ajustar_apriorizados='
+                    $boton_ajustar_apriorizados='';
+
+                    if($row['or_tp']==0){
+                      $boton_ajustar_apriorizados='
                         <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
                         <br>AJUSTAR ALINEACIÓN </center>';
-
+                    }
+                    
                     if(count($metas_prior)!=0){
                       if($row['indi_id']==1 || $row['indi_id']==2){
                         $meta_priorizado=round($metas_prior[0]['meta_prog_actividades'],2);
@@ -228,7 +232,7 @@ class Eval_oregional extends CI_Controller{
 
                       if(round($row['or_meta'],2)==$meta_priorizado){
                         $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.$meta_priorizado.''.$meta.'</b></div>';
-                        $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="30" HEIGHT="30"/></a>';
+                        $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.','.$row['or_tp'].');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="30" HEIGHT="30"/></a>';
                       }
                       else{
                         $boton_ajustar_apriorizados='
@@ -597,15 +601,18 @@ class Eval_oregional extends CI_Controller{
 
             $ppto_trimestre_ejec=$this->model_ptto_sigep->ppto_ejecutado_inversion_regional_trimestre($row['dep_id'],$i); /// Suma ppto ejecutado al trimestre
             /*----------------------------------------------------*/
-            $data_to_store2 = array( ///// Tabla temp ejec oregional
-              'or_id' => $row['or_id'], /// or id
-              'trm_id' => $i, /// trimestre
-              'tp_id' => 1, /// inversion
-              'ejec_fis' => round((($ppto_trimestre_ejec[0]['ppto_ejec_trimestre']/$techo_ini_reg[0]['techo_ppto_inicial'])*100),2), /// valor Ejecutado %
-              'g_id' => $this->gestion, /// gestion                
-            );
-            $this->db->insert('temp_trm_ejec_objetivos_regionales', $data_to_store2);
-            /*----------------------------------------------------------*/
+            if(count($ppto_trimestre_ejec)!=0){
+                $data_to_store2 = array( ///// Tabla temp ejec oregional
+                  'or_id' => $row['or_id'], /// or id
+                  'trm_id' => $i, /// trimestre
+                  'tp_id' => 1, /// inversion
+                  'ejec_fis' => round((($ppto_trimestre_ejec[0]['ppto_ejec_trimestre']/$techo_ini_reg[0]['techo_ppto_inicial'])*100),2), /// valor Ejecutado %
+                  'g_id' => $this->gestion, /// gestion                
+                );
+                $this->db->insert('temp_trm_ejec_objetivos_regionales', $data_to_store2);
+                /*----------------------------------------------------------*/
+            }
+            
           }
       }
 
