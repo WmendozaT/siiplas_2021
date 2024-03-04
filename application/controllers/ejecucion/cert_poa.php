@@ -821,6 +821,7 @@ class Cert_poa extends CI_Controller {
       ///-----------------------------------------------------------
         $update_ins = array(
           'ins_monto_certificado' => ($row['ins_monto_certificado']-$sum_cert),
+          'ins_ejec_cpoa' => 1,
           'ins_activo' => 0,
         );
         $this->db->where('ins_id', $row['ins_id']);

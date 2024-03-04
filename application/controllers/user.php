@@ -217,8 +217,9 @@ class User extends CI_Controller{
             $data['popup_saldos']='';
 
             ///------- Verificando Saldos
+              //if($this->conf_ajuste_poa==1 & $this->dist_id!=10 & $this->dist_id!=5 & $this->gestion>2023){
             if($this->conf_ajuste_poa==1){
-                if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1 & $this->gestion>2022 & $this->dep_id!=10){
+                if($this->verif_saldos_disponibles_distrital($this->dep_id,$this->dist_id)==1 & $this->dep_id!=10 & $this->gestion>2023){
                 
                     $data['popup_saldos']='
                     <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false" style="">
@@ -229,7 +230,7 @@ class User extends CI_Controller{
                                 </div>
                                 <div class="modal-body">
                                     <div class="alert alert-danger" role="alert">
-                                      <p>Hola '.$this->session->userdata('funcionario').', la '.strtoupper($ddep[0]['dist_distrital']).' tiene saldo disponible por distribuir en su POA '.$this->gestion.', debe realizar el ajuste POA para realizar CERTIFICACIONES POA. </p>
+                                      <p>Hola: <b>'.$this->session->userdata('funcionario').'</b>, la <b>'.strtoupper($ddep[0]['dist_distrital']).'</b> a la fecha presenta saldos en su POA '.$this->gestion.' que deben ser ajustados y/o inscritos a traves de Modificaciones POA, mientras no se encuentre ajustado no podra realizar <b>CERTIFICACIONES POA.</b></p>
                                     </div>
                                     '.$this->lista_unidades_con_saldo($this->dep_id,$this->dist_id).'
                                 </div>
@@ -251,10 +252,10 @@ class User extends CI_Controller{
                 $data['mensaje']=$this->mensaje_sistema();   
 
                 ///===================== CONF NOTIFICACION POA =========================
-                $dia_cambios = 11;
+                $dia_cambios = 22;
                 $hoy = date("j");
 
-                if ($hoy == $dia_cambios) {
+                if ($this->gestion>2023 & ($hoy == $dia_cambios)) {
                    if($this->dep_id==2){ //// Exclusivo para la Regional LA paz
                         $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));;
                     }
@@ -323,8 +324,8 @@ class User extends CI_Controller{
                 <tr bgcolor="1c7368">
                   <th style="width:1%;text-align:center;color:white;font-size:9px">#</th>
                   <th style="width:20%;text-align:center;color:white;font-size:9px">UNIDAD / ESTABLECIMIENTO / PROY. INVERSIÓN</th>
-                  <th style="width:7%;text-align:center;color:white;font-size:9px">PPTO. ASIGNADO '.$this->gestion.'</th>
-                  <th style="width:7%;text-align:center;color:white;font-size:9px">PPTO. PROGRAMADO '.$this->gestion.'</th>
+                  <th style="width:7%;text-align:center;color:white;font-size:9px">PPTO. ASIGNADO '.$this->gestion.' (APROBADO)</th>
+                  <th style="width:7%;text-align:center;color:white;font-size:9px">PPTO. PROGRAMADO '.$this->gestion.' (SIIPLAS)</th>
                   <th style="width:7%;text-align:center;color:white;font-size:9px">SALDO '.$this->gestion.'</th>
                   <th style="width:4%;text-align:center;color:white;font-size:9px">AJUSTAR POA</th>
                   <th style="width:1%;text-align:center;color:white;font-size:9px"></th>
