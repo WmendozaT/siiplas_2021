@@ -97,8 +97,8 @@ class Cajustes extends CI_Controller {
                 if(count($datos)==7){
                   $dep_id = intval(trim($datos[0])); //// dep_id
                   $prod_id = intval(trim($datos[1])); //// prod id
-                  $codigo_og = intval(trim($datos[2])); //// cod objetivo gestion
-                  $codigo_or = intval(trim($datos[3])); //// cod objetivo regional
+                  $codigo_og = intval(trim($datos[2])); //// cod objetivo ACP FORM 1
+                  $codigo_or = intval(trim($datos[3])); //// cod objetivo regional FORM 2
                   $codigo_form4 = intval(trim($datos[4])); //// cod form 4
                   $prioridad = intval(trim($datos[5])); //// prioridad
                   $descripcion = strval(utf8_encode(trim($datos[6]))); //// descr act
@@ -106,14 +106,14 @@ class Cajustes extends CI_Controller {
                   $get_informacion_alineacion=$this->model_objetivogestion->get_alineacion_habilitado_oregional_a_form4($codigo_og,$codigo_or,$dep_id);
 
                   if(count($get_informacion_alineacion)!=0){
-                    
-                      $update_alineacion= array(
+                    echo $prod_id.'---> '.$get_informacion_alineacion[0]['or_id'].'---'.$prioridad.'<br>';
+                      /*$update_alineacion= array(
                         'or_id' => $get_informacion_alineacion[0]['or_id'],
                         'prod_priori' => $prioridad,
                         'prod_producto' => $descripcion
                       );
                       $this->db->where('prod_id', $prod_id);
-                      $this->db->update('_productos', $update_alineacion);
+                      $this->db->update('_productos', $update_alineacion);*/
                   }
 
                 }
