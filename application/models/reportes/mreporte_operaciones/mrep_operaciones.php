@@ -303,6 +303,43 @@ class Mrep_operaciones extends CI_Model {
          
         $query = $this->db->query($sql);
         return $query->result_array();
+
+        /*
+         select *
+                from lista_poa_nacional(2024) poa
+                Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                Inner Join servicios_actividad as ser On c.serv_id=ser.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join _productos as pr On pr.com_id=c.com_id
+                Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=pr.prod_id
+
+        Inner Join objetivos_regionales as ore On ore.or_id=pr.or_id
+                Inner Join objetivo_programado_mensual as opm On ore.pog_id=opm.pog_id
+                Inner Join objetivo_gestion as og On og.og_id=opm.og_id
+    
+                Inner Join _acciones_estrategicas as ae On ae.ae=pr.acc_id
+                
+                where poa.dep_id=1 and c.estado!=3 and pr.estado!=3 and prog.g_id=2024
+                order by poa.da,poa.prog,poa.act, poa.proy_id asc
+
+
+
+                ---
+
+
+                select *
+                from lista_poa_nacional(2024) poa
+                Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                Inner Join servicios_actividad as ser On c.serv_id=ser.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join _productos as pr On pr.com_id=c.com_id
+                Inner Join vista_productos_temporalizacion_programado_dictamen as prog On prog.prod_id=pr.prod_id
+        Inner Join objetivos_regionales as ore On ore.or_id=pr.or_id
+
+                
+                where poa.dep_id=1 and c.estado!=3 and pr.estado!=3 and prog.g_id=2024
+                order by poa.da,poa.prog,poa.act, poa.proy_id asc
+        */
     }
 
     /*---------------- OPERACIONES CONSOLIDADO NACIONAL SEGUN TIPO ----------------*/
