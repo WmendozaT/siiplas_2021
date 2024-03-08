@@ -211,8 +211,8 @@
     /*--- EXPORTAR CONSOLIDADO FORMULARIO N 4 INSTITUCIONAL ---*/
     public function formulario4_institucional(){
       $titulo='FORMULARIO N° 4 - INSTITUCIONAL';
-      $operaciones=$this->mrep_operaciones->operaciones_consolidado_nacional(); /// Formulario N 4 a Nivel Institucional
-      $tabla=$this->genera_informacion->lista_operaciones_regional_distrital($operaciones,$titulo,0); // Regional Operaciones Distrital 2020-2021
+      $formulario4=$this->mrep_operaciones->formulario_N4_institucional(); /// Formulario N 4 a Nivel Institucional
+      $tabla=$this->genera_informacion->lista_operaciones_regional_distrital($formulario4,$titulo,0); // Regional Operaciones Distrital 2020-2021
 
       date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");

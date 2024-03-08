@@ -106,14 +106,14 @@ class Cajustes extends CI_Controller {
                   $get_informacion_alineacion=$this->model_objetivogestion->get_alineacion_habilitado_oregional_a_form4($codigo_og,$codigo_or,$dep_id);
 
                   if(count($get_informacion_alineacion)!=0){
-                    echo $prod_id.'---> '.$get_informacion_alineacion[0]['or_id'].'---'.$prioridad.'<br>';
-                      /*$update_alineacion= array(
+                   // echo $prod_id.'---> '.$get_informacion_alineacion[0]['or_id'].'---'.$prioridad.'<br>';
+                      $update_alineacion= array(
                         'or_id' => $get_informacion_alineacion[0]['or_id'],
                         'prod_priori' => $prioridad,
                         'prod_producto' => $descripcion
                       );
                       $this->db->where('prod_id', $prod_id);
-                      $this->db->update('_productos', $update_alineacion);*/
+                      $this->db->update('_productos', $update_alineacion);
                   }
 
                 }
@@ -122,8 +122,8 @@ class Cajustes extends CI_Controller {
               $i++;
             }
 
-            //$this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO');
-            //redirect(site_url("").'/ediciones');
+            $this->session->set_flashdata('success','SE SUBIO CORRECTAMENTE EL ARCHIVO');
+            redirect(site_url("").'/ediciones');
 
         } 
         elseif (empty($file_basename)) {

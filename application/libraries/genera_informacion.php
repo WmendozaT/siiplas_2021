@@ -585,7 +585,7 @@ class Genera_informacion extends CI_Controller{
     }
 
      /*-----EXCEL LISTA DE ACTIVIDADES (REGIONAL-DISTRITAL) ----*/
-   public function lista_operaciones_regional_distrital($operaciones,$titulo,$tip_rep){
+   public function lista_operaciones_regional_distrital($formularioN4,$titulo,$tip_rep){
         $tabla='';
         $tabla .='
           <style>
@@ -605,7 +605,7 @@ class Genera_informacion extends CI_Controller{
           <table border="1" cellpadding="0" cellspacing="0" class="tabla">
               <thead>
                 <tr class="modo1">
-                  <td colspan=46 align=center style="height:50px;"><b> FORMULARIO N° 4 - '.strtoupper($titulo).'</b></td>
+                  <td colspan=45 align=center style="height:50px;"><b> FORMULARIO N° 4 - '.strtoupper($titulo).'</b></td>
                 </tr>
                 <tr style="background-color: #66b2e8">
                   <th style="width:3%; height:50px;background-color: #eceaea;"></th>
@@ -614,10 +614,9 @@ class Genera_informacion extends CI_Controller{
                   <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
                   <th style="width:10%;background-color: #eceaea;">COD. PROY.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
-                  <th style="width:35%;background-color: #eceaea;">'.$tip_rep.'</th>
+                  <th style="width:35%;background-color: #eceaea;">GASTO CORRIENTE / INVERSION</th>
                   <th style="width:3%;background-color: #eceaea;">COD. UNI. RESP.</th>
                   <th style="width:15%;background-color: #eceaea;">UNIDAD RESPONSABLE</th>
-                  <th style="width:3%;background-color: #eceaea;">COD. ACE.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACP.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. OPE.</th>
                   <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
@@ -657,48 +656,39 @@ class Genera_informacion extends CI_Controller{
               </thead>
             <tbody>';
             $nro=0;
-            foreach ($operaciones as $row){
-              //$monto=$this->model_producto->monto_insumoproducto($row['prod_id']);
-              $programado=$this->model_producto->producto_programado($row['prod_id'],$this->gestion);
+            foreach ($formularioN4 as $row){
               $ejec=$this->model_producto->producto_ejecutado($row['prod_id'],$this->gestion);
-              
-/*              $ptto=0;
-              if(count($monto)!=0){
-                $ptto=$monto[0]['total'];
-              }*/
 
               $priori='';
               if($row['prod_priori']==1){
                 $priori='<b>SI</b>';
               }
 
-              $nro++;
-
-               $tabla.='<tr>';
+                $nro++;
+                $tabla.='<tr>';
                 $tabla.='<td style="height:50px;">'.$row['prod_id'].'</td>';
                 $tabla.='<td style="height:50px;">\''.strtoupper($row['dep_cod']).'\'</td>';
                 $tabla.='<td>\''.strtoupper($row['dist_cod']).'\'</td>';
-                $tabla.='<td>\''.strtoupper($row['aper_programa']).'\'</td>';
+                $tabla.='<td>\''.strtoupper($row['prog']).'\'</td>';
                 $tabla.='<td>';
                 if($row['tp_id']==1){
                   $tabla.=''.$row['proy_sisin'].'';
                 }
                 else{
-                  $tabla.='\''.strtoupper($row['aper_proyecto']).'\'';
+                  $tabla.='\''.strtoupper($row['proy']).'\'';
                 }
                 $tabla.='</td>';
-                $tabla.='<td>\''.strtoupper($row['aper_actividad']).'\'</td>';
+                $tabla.='<td>\''.strtoupper($row['act']).'\'</td>';
                 $tabla.='<td>';
-                  if($row['tp_id']==1){
-                    $tabla.=''.mb_convert_encoding($row['proy_nombre'], 'cp1252', 'UTF-8').'';
-                  }
-                  else{
-                    $tabla.=''.mb_convert_encoding($row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'], 'cp1252', 'UTF-8').'';
-                  }
+                if($row['tp_id']==1){
+                  $tabla.=''.mb_convert_encoding($row['proy_nombre'], 'cp1252', 'UTF-8').'';
+                }
+                else{
+                  $tabla.=''.mb_convert_encoding($row['tipo'].' '.$row['actividad'].' - '.$row['abrev'], 'cp1252', 'UTF-8').'';
+                }
                 $tabla.='</td>';
                 $tabla.='<td>\''.strtoupper($row['serv_cod']).'\'</td>';
                 $tabla.='<td>'.$row['tipo_subactividad'].' '.strtoupper($row['serv_descripcion']).'</td>';
-                $tabla.='<td align=center><font size=4>'.$row['acc_codigo'].'</font></td>';
                 $tabla.='<td align=center><font size=4>'.$row['og_codigo'].'</font></td>';
                 $tabla.='<td align=center><font size=4>'.$row['or_codigo'].'</font></td>';
                 $tabla.='<td align=center><font size=4>'.$row['prod_cod'].'</font></td>';
@@ -709,26 +699,18 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='<td>'.round($row['prod_linea_base'],2).'</td>';
                 $tabla.='<td>'.round($row['prod_meta'],2).'</td>';
                 $tabla.='<td>'.mb_convert_encoding($row['prod_fuente_verificacion'], 'cp1252', 'UTF-8').'</td>';
-                if(count($programado)!=0){
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['enero'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['febrero'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['marzo'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['abril'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['mayo'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['junio'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['julio'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['agosto'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['septiembre'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['octubre'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['noviembre'],2).'</td>';
-                      $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($programado[0]['diciembre'],2).'</td>';
-                    }
-                    else{
-                      for ($i=1; $i <=12 ; $i++) { 
-                        $tabla.='<td bgcolor="#f5cace">0.00</td>';
-                      }
-                    }
-
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['enero'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['febrero'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['marzo'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['abril'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['mayo'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['junio'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['julio'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['agosto'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['septiembre'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['octubre'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['noviembre'],2).'</td>';
+                $tabla.='<td style="width:3%;" bgcolor="#e5fde5">'.round($row['diciembre'],2).'</td>';
                 $tabla.='<td style="width: 5%; text-align: right;"></td>';
 
                 if(count($ejec)!=0){
