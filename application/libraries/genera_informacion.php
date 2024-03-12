@@ -351,11 +351,13 @@ class Genera_informacion extends CI_Controller{
         $regional=$this->model_proyecto->get_departamento($dep_id);
         $establecimientos=$this->mrep_operaciones->establecimientos_salud_regional($dep_id);
         $data['titulo_reporte_pie']=$regional[0]['dep_departamento'];
+        $data['titulo']='REGIONAL : '.strtoupper($regional[0]['dep_departamento']);
       }
       else{
         $distrital=$this->model_proyecto->dep_dist($dist_id);
         $establecimientos=$this->mrep_operaciones->establecimientos_salud_distrital($dist_id);
         $data['titulo_reporte_pie']=$distrital[0]['dist_distrital'];
+        $data['titulo']='DISTRITAL : '.strtoupper($distrital[0]['dist_distrital']);
       }
 
 
@@ -387,8 +389,8 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='
                 <tr bgcolor="'.$color.'" >
                   <td style="width:1%;height:15px;" align=center>'.$nro.'</td>
-                  <td style="width:8;" align=center>'.$row['dep_cod'].'</td>
-                  <td style="width:8%;" align=center>'.$row['act_cod'].'</td>
+                  <td style="width:8; font-size:12px;" align=center>'.$row['dep_cod'].'</td>
+                  <td style="width:8%; font-size:12px;" align=center>'.$row['act_cod'].'</td>
                   <td style="width:50%;">'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
                   <td style="width:15%;" align=right>'.number_format($ppto[1], 2, ',', '.').'</td>
                 </tr>';
@@ -397,9 +399,8 @@ class Genera_informacion extends CI_Controller{
             </tbody>
           </table>';
 
-          $data['titulo_reporte']='ESTABLECIMIENTOS DE SALUD';
+          $data['titulo_reporte']='ESTABLECIMIENTOS DE SALUD / '.$this->gestion;
           $data['mes'] = $this->mes_nombre();
-          $data['titulo']='';
           $data['lista']=$tabla;
           $this->load->view('admin/reportes_cns/resumen_operaciones/reporte_comparativo', $data);
     }
@@ -453,7 +454,6 @@ class Genera_informacion extends CI_Controller{
               <th style="width:35%;">'.$titulo.'</th>
               <th style="width:3%;">COD. UNIDAD RESP.</th>
               <th style="width:15%;">UNIDAD RESPONSABLE</th>
-              <th style="width:3%;">COD. ACE.</th>
               <th style="width:3%;">COD. ACP.</th>
               <th style="width:3%;">COD. OPE.</th>
               <th style="width:3%;">COD. ACT.</th>
@@ -500,27 +500,26 @@ class Genera_informacion extends CI_Controller{
             $tabla.='<tr>';
                 $tabla.='<td style="height:50px;">'.strtoupper($row['dep_cod']).'</td>';
                 $tabla.='<td>'.strtoupper($row['dist_cod']).'</td>';
-                $tabla.='<td>'.$row['aper_programa'].'</td>';
+                $tabla.='<td>'.$row['prog'].'</td>';
                 $tabla.='<td>';
                 if($tp_id==1){
                   $tabla.=''.$row['proy_sisin'].'';
                 }
                 else{
-                  $tabla.=''.$row['aper_proyecto'].'';
+                  $tabla.=''.$row['proy'].'';
                 }
                 $tabla.='</td>';
-                $tabla.='<td>'.$row['aper_actividad'].'</td>';
+                $tabla.='<td>'.$row['act'].'</td>';
                 $tabla.='<td>';
                   if($row['tp_id']==1){
                     $tabla.=''.$row['proy_nombre'].'';
                   }
                   else{
-                    $tabla.=''.$row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'].'';
+                    $tabla.=''.$row['tipo'].' '.$row['actividad'].' - '.$row['abrev'].'';
                   }
                 $tabla.='</td>';
                 $tabla.='<td>'.$row['serv_cod'].'</td>';
                 $tabla.='<td>'.$row['tipo_subactividad'].' '.strtoupper($row['serv_descripcion']).'</td>';
-                $tabla.='<td>'.$row['acc_codigo'].'</td>';
                 $tabla.='<td>'.$row['og_codigo'].'</td>';
                 $tabla.='<td>'.$row['or_codigo'].'</td>';
                 $tabla.='<td>'.$row['prod_cod'].'</td>';

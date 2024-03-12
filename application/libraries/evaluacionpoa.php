@@ -599,7 +599,7 @@ class Evaluacionpoa extends CI_Controller{
               <th style="width:5%;">ACT NO CUMP.</th>
               <th style="width:5%;">% CUMP.</th>
               <th style="width:5%;">% NO CUMP.</th>
-              <th style="width:5%;">% EJEC. CERT. POA</th>
+              <th style="width:5%;">% EJEC. PPTO. POA AL TRIMESTRE</th>
               
             </tr>
           </thead>
@@ -608,7 +608,7 @@ class Evaluacionpoa extends CI_Controller{
           foreach($unidades as $row){
             $eficacia=$this->eficacia_por_unidad($row['proy_id']); /// Eficacia
             $economia=$this->economia_por_unidad($row['aper_id'],$row['proy_id']); /// Economia
-            $eficiencia=$this->eficiencia_unidad($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
+            //$eficiencia=$this->eficiencia_unidad($eficacia[5][$this->tmes],$economia[3]); /// Eficiencia
 
             $color='';
             if($this->gestion>2021){
@@ -1026,14 +1026,14 @@ class Evaluacionpoa extends CI_Controller{
     }
 
     /*------ EFICIENCIA POR UNIDAD ------*/
-    public function eficiencia_unidad($eficacia,$economia){
+/*    public function eficiencia_unidad($eficacia,$economia){
       $eficiencia=0;
       if($eficacia!=0){
         $eficiencia= round(($economia/$eficacia),2);
       }
 
       return $eficiencia;
-    }
+    }*/
 
 
     /*====== ECONOMIA NACIONAL ======*/

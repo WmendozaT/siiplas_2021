@@ -164,20 +164,18 @@
         $tip_rep='GASTO CORRIENTE';
       }
 
-
-      if($dist_id==0){
+      if($dist_id==0){ // Regional
         $regional=$this->model_proyecto->get_departamento($dep_id);
-        $operaciones=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de distritales
+        $form4=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de REGIONAL
         $titulo='CONSOLIDADO : '.mb_convert_encoding($regional[0]['dep_departamento'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
       }
-      else{
+      else{ /// Distrital
         $dist=$this->model_proyecto->dep_dist($dist_id);
         $titulo=' '.mb_convert_encoding($dist[0]['dist_distrital'], 'cp1252', 'UTF-8').' - '.$this->gestion.'';
-        $operaciones=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Operaciones a Nivel de distritales
-        
+        $form4=$this->mrep_operaciones->operaciones_por_distritales($dist_id,$tp_id); /// Operaciones a Nivel de distritales
       }
-      
-      $tabla=$this->genera_informacion->lista_operaciones_regional_distrital($operaciones,$titulo,$tip_rep); // Regional Operaciones Distrital 2020-2021
+
+      $tabla=$this->genera_informacion->lista_operaciones_regional_distrital($form4,$titulo,$tip_rep); // Regional Operaciones Distrital 2020-2021
 
       date_default_timezone_set('America/Lima');
       $fecha = date("d-m-Y H:i:s");
