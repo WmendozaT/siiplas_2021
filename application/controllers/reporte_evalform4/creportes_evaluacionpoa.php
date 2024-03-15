@@ -62,7 +62,7 @@ class Creportes_evaluacionpoa extends CI_Controller {
     }
 
 
-    /*-- GET CUADRO DE EFICIENCIA Y EFICACIA por UNIDAD NACIONA, REGIONAL, DISTRITAL --*/
+    /*-- GET CUADRO DE CUMPLIMIENTO POR CATEGORIA PROGRAMATICA POR DISTRITAL-REGIONAL-INSTITUCIONAL --*/
     public function get_programas_parametros(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();

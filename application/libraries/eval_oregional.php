@@ -214,14 +214,10 @@ class Eval_oregional extends CI_Controller{
                     $color='';$grafico='';
                     $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
                     
-                    $boton_ajustar_apriorizados='';
-
-                    if($row['or_tp']==0){
-                      $boton_ajustar_apriorizados='
+                    $boton_ajustar_apriorizados='
                         <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
                         <br>AJUSTAR ALINEACIÓN </center>';
-                    }
-                    
+
                     if(count($metas_prior)!=0){
                       if($row['indi_id']==1 || $row['indi_id']==2){
                         $meta_priorizado=round($metas_prior[0]['meta_prog_actividades'],2);
@@ -232,7 +228,7 @@ class Eval_oregional extends CI_Controller{
 
                       if(round($row['or_meta'],2)==$meta_priorizado){
                         $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.$meta_priorizado.''.$meta.'</b></div>';
-                        $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.','.$row['or_tp'].');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="30" HEIGHT="30"/></a>';
+                        $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="30" HEIGHT="30"/></a>';
                       }
                       else{
                         $boton_ajustar_apriorizados='

@@ -207,7 +207,7 @@
 															  <input type="hidden" name="proy_id" id="proy_id" value="<?php echo $proyecto[0]['proy_id'];?>">
 															  <input type="hidden" name="com_id" id="com_id">
 															  <input type="hidden" name="tp_mod" id="tp_mod">
-															  <input type="text" name="prod_id" id="prod_id">
+															  <input type="hidden" name="prod_id" id="prod_id">
 
 															  <fieldset>
 																	<section>

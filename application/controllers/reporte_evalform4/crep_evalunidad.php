@@ -62,13 +62,13 @@ class Crep_evalunidad extends CI_Controller {
         $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
 
         $data['tit_menu']='EVALUACI&oacute;N POA';
-        $data['tit']='<li>Evaluaci&oacute;n POA</li><li>Actividad</li>';
+        $data['tit']='<li>Evaluaci&oacute;n POA</li><li>formulario N° 4</li>';
         
         $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
         
         /*------ titulo ------*/
         $data['titulo']=
-          '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small><b>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</b></h1>
+          '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROGRAMA : </small><b>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</b></h1>
           <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>';
 
         if($data['proyecto'][0]['tp_id']==1){
@@ -98,7 +98,7 @@ class Crep_evalunidad extends CI_Controller {
         $data['calificacion']='<div id="eficacia">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes],0).'</div><div id="efi"></div>'; /// calificacion
 
         /// SERVICIOS
-        $data['mis_servicios']=$this->mis_servicios(1,$proy_id); /// Lista de Subactividades
+        $data['mis_servicios']=$this->mis_servicios(1,$proy_id); /// Lista de Unidades Responsables
         $data['economia']=$this->economia($data['proyecto']); /// Economia
         $data['eficiencia']=$this->eficiencia($data['tabla'][5][$this->tmes],$data['economia'][3]); /// Eficiencia
         $data['matriz']=$this->matriz_eficacia_unidad($proy_id);
@@ -559,10 +559,7 @@ class Crep_evalunidad extends CI_Controller {
         </div>';
       }
 
-      $tit='SUBACTIVIDAD';
-      if($proyecto[0]['tp_id']==1){
-        $tit='UNIDAD RESPONSABLE';
-      }
+      $tit='UNIDAD RESPONSABLE';
       $tabla.='
         '.$det.'
         <table '.$tab.'>
@@ -570,14 +567,13 @@ class Crep_evalunidad extends CI_Controller {
           <tr align=center bgcolor=#f4f4f4>
             <th style="width:3%;height:2%;">#</th>
             <th style="width:20%;">'.$tit.'</th>
-            <th style="width:8%;">TOTAL PROGRAMADO</th>
-            <th style="width:8%;">TOTAL EVALUADO</th>
-            <th style="width:8%;">TOTAL CUMPLIDOS</th>
-            <th style="width:8%;">EN CUMPLIMENTO PARCIAL</th>
-            <th style="width:8%;">NO CUMPLIDOS</th>
+            <th style="width:8%;">TOTAL PROG.</th>
+            <th style="width:8%;">TOTAL EVAL.</th>
+            <th style="width:8%;">TOTAL CUMP.</th>
+            <th style="width:8%;">EN PROC.</th>
+            <th style="width:8%;">NO CUMP.</th>
             <th style="width:8%;">% CUMPLIDO</th>
             <th style="width:8%;">% NO CUMPLIDO</th>
-            <th style="width:8%;">% EJEC. PPTO.</th>
           </tr>
           </thead>
           <tbody>';
@@ -601,7 +597,7 @@ class Crep_evalunidad extends CI_Controller {
                 $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[5][$this->tmes].'%</b></td>';
                 $tabla.='<td align=right style="font-size: 8px;"><b>'.$eval[6][$this->tmes].'%</b></td>';
               }
-              $tabla.='<td align=right></td>';
+         
             $tabla.='</tr>';
           }
         $tabla.='
@@ -649,7 +645,7 @@ class Crep_evalunidad extends CI_Controller {
     return $tr;
     }
 
-    /*------ OBTIENE DATOS DE EVALUACIÓN 2020 - SERVICIO -------*/
+    /*------ OBTIENE DATOS DE EVALUACIÓN 2020 - UNIDAD RESPONSABLE -------*/
     public function obtiene_datos_evaluacíon_servicio($com_id,$trimestre,$tipo_evaluacion){
       $nro_ope_eval=0; $nro_cumplidas=0;
       for ($i=1; $i <=$trimestre; $i++) {
@@ -673,16 +669,16 @@ class Crep_evalunidad extends CI_Controller {
     /*------ TABLA ACUMULADA EVALUACIÓN 2020 -------*/
     public function tabla_acumulada_evaluacion_unidad($regresion,$tp_graf,$tip_rep){
       $tabla='';
-      $tit[2]='<b>NRO. ACT. PROGRAMADAS</b>';
-      $tit[3]='<b>NRO. ACT. CUMPLIDAS</b>';
-      $tit[4]='<b>NRO. ACT. NO CUMPLIDAS</b>';
-      $tit[5]='<b>% CUMPLIDOS</b>';
-      $tit[6]='<b>% NO CUMPLIDOS</b>';
+      $tit[2]='<b>NRO. ACT. PROG.</b>';
+      $tit[3]='<b>NRO. ACT. CUMP.</b>';
+      $tit[4]='<b>NRO. ACT. NO CUMP.</b>';
+      $tit[5]='<b>% CUMP.</b>';
+      $tit[6]='<b>% NO CUMP.</b>';
 
-      $tit_total[2]='<b>NRO. ACT. PROGRAMADAS</b>';
-      $tit_total[3]='<b>NRO. ACT. CUMPLIDOS</b>';
-      $tit_total[4]='<b>% ACT. PROGRAMADOS</b>';
-      $tit_total[5]='<b>% ACT. CUMPLIDOS</b>';
+      $tit_total[2]='<b>NRO. ACT. PROG.</b>';
+      $tit_total[3]='<b>NRO. ACT. CUMP.</b>';
+      $tit_total[4]='<b>% ACT. PROG.</b>';
+      $tit_total[5]='<b>% ACT. CUMP.</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -698,12 +694,12 @@ class Crep_evalunidad extends CI_Controller {
         <table '.$tab.'>
           <thead>
               <tr align=center bgcolor='.$color.' style="font-family: Arial;">
-                <th>NRO. ACT. PROGRAMADAS</th>
-                <th>ACT. EVALUADAS</th>
-                <th>ACT. CUMPLIDAS</th>
-                <th>ACT. NO CUMPLIDAS</th>
-                <th>% CUMPLIDAS</th>
-                <th>% NO CUMPLIDAS</th>
+                <th>NRO. ACT. PROG.</th>
+                <th>ACT. EVAL.</th>
+                <th>ACT. CUMP./th>
+                <th>ACT. NO CUMP.</th>
+                <th>% CUMP.</th>
+                <th>% NO CUMP.</th>
               </tr>
               </thead>
             <tbody>
@@ -788,13 +784,13 @@ class Crep_evalunidad extends CI_Controller {
         <table '.$tab.'>
             <thead>
               <tr align=center style="font-family: Arial;" >
-                <th>NRO. ACT. PROGRAMADAS</th>
-                <th>NRO. ACT. EVALUADAS</th>
-                <th>NRO. ACT. CUMPLIDAS</th>
-                <th>NRO. ACT. EN CUMPLIMIENTO PARCIAL</th>
-                <th>NRO. ACT. NO CUMPLIDAS</th>
-                <th>% CUMPLIDAS</th>
-                <th>% NO CUMPLIDAS</th>
+                <th>NRO. ACT. PROG.</th>
+                <th>NRO. ACT. EVAL.</th>
+                <th>NRO. ACT. CUMP.</th>
+                <th>NRO. ACT. EN PROC.</th>
+                <th>NRO. ACT. NO CUMP.</th>
+                <th>% CUMP.</th>
+                <th>% NO CUMP.</th>
               </tr>
             </thead>
             <tbody>

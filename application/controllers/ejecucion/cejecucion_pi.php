@@ -614,13 +614,11 @@ class Cejecucion_pi extends CI_Controller {
                 </td>
                 <td align="right" style="font-size:20px"><b><div id="ppto'.$partida['sp_id'].'">'.number_format($ppto_ejecutado, 0, ',', '.').'</div></b></td>
                 <td align="right" style="font-size:20px; color:blue"><b><div id="porcentaje'.$partida['sp_id'].'">'.$porcentaje_ejec.' %</div></b></td>
-                <td>
-                  <div id="but_arch'.$partida['sp_id'].'" style="display:none;" align="center">';
+                <td>';
                   if(count($dato_mes_ejecutado_vigente)!=0){
                     $tabla.='<a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-default subir_archivo_respaldo" name="'.$id_ejec.'" id="'.$com_id.'"><center><img src="'.base_url().'assets/img/subir.png" WIDTH="60" HEIGHT="60" title="SUBIR ARCHIVO DE RESPALDO"/></center></a>';
                   }
                 $tabla.='
-                  </div>
                 </td>
               </tr>
             </tbody>
@@ -1946,7 +1944,7 @@ public function get_tp_reporte(){
     $data['datos_proyecto']=$this->ejecucion_finpi->datos_proyecto_inversion($proyecto,$cumplimiento); /// Datos Tecnicos
     $data['detalle_ejecucion']=$this->ejecucion_finpi->detalle_ejecucion_presupuestaria_pi($proyecto,$parametro_cumplimiento); /// Detalle Ejecucion
 
-    //$this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
+    $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
   }
 
 

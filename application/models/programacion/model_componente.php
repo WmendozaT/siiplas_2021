@@ -115,7 +115,6 @@ class Model_componente extends CI_Model{
         return $query->result_array();
     }
 
-
     /*====== GET COMPONENTE PARA SEGUIMIENTO POA (NUEVA GESTION) ======*/
     public function get_servicio_siguiente_gestion($serv_id,$dist_id,$gestion){
         $sql = 'select *
@@ -127,7 +126,7 @@ class Model_componente extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-
+    
     /*================== COMPONENTE X (Proy Inversion) =================*/
     public function get_componente_pi($com_id){
         $sql = 'select *

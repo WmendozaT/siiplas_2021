@@ -15,7 +15,7 @@ ob_start();
         }
 </style>
 
-<page backtop="45mm" backbottom="49mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="48mm" backbottom="48mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <table class="page_header" border="0">
@@ -23,10 +23,10 @@ ob_start();
                 <td style="width: 100%; text-align: left">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:91.8%;">
                         <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td width=14%; text-align:center;"">
+                          <td style="width:10%;">
                             <!-- <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:50%;"> -->
                           </td>
-                          <td width=76%; align=left>
+                          <td style="width:74%;" align=left>
                             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:93%;" align="center">
                                 <tr>
                                     <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b><?php echo $this->session->userdata('entidad')?></b></td>

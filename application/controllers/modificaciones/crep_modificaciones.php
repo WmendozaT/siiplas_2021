@@ -37,9 +37,6 @@ class Crep_modificaciones extends CI_Controller {
     /////======== CONSOLIDADO REQUERIMIENTOS EXCEL 2020 =======
     /*-------------- Requerimientos ---------------*/
     public function consolidado_xls_requerimientos($proy_id){
-      echo "Trabajando";
-    }
-/*    public function consolidado_xls_requerimientos($proy_id){
      $tabla='';
      $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); /// PROYECTO
      $titulo=''.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].'-'.$proyecto[0]['proy_nombre'].'';
@@ -253,7 +250,7 @@ class Crep_modificaciones extends CI_Controller {
       echo "";
       echo $tabla;
     }
-*/
+
 
 
     /*---------- Lista de Operaciones Aprobadas -----------*/

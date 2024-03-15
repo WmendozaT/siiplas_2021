@@ -18,6 +18,91 @@ ob_start();
 
 <?php echo $operaciones;?>
 
+
+
+
+
+
+<!-- <page backtop="42mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
+    <page_header>
+        <br><div class="verde"></div>
+        <table class="page_header" border="0" style="width:100%;">
+            <tr>
+                <td style="width: 100%; text-align: left">
+                    <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                        <tr style="border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
+                          <td style="width:15%; text-align:center;">
+                            <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:40%;">
+                          </td>
+                          <td style="width:65%;" align=left>
+                            <?php echo $cabecera;?>
+                          </td>
+                          <td style="width:15%;font-size: 8px;" align=left>
+                          </td>
+                        </tr>
+                  </table>
+                </td>
+            </tr>
+        </table><br>
+        <div align="center"><b>SEGUIMIENTO POA</b> - <?php echo $datos_mes[2].' DE '.$this->session->userdata('gestion')?>
+        </div><br>
+    </page_header>
+    <page_footer>
+        <hr>
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;" align="center">
+            <tr>
+                <td style="width: 33%;">
+                    <table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                            <td style="width:100%;height:12px;"><b>JEFATURA DE UNIDAD O AREA / REP. DE AREA REGIONALES</b></td>
+                        </tr>
+                        <tr>
+                            <td align=center><br><br><br><br><br><b>FIRMA</b></td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 33%;">
+                    <table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                          <td style="width:100%;height:12px;"><b>JEFATURA DE DEPARTAMENTOS / SERV. GENERALES REGIONAL / JEFATURA MEDICA </b></td>
+                        </tr>
+                        <tr>
+                          <td align=center><br><br><br><br><br><b>FIRMA</b></td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 33%;">
+                    <table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+                        <tr>
+                          <td style="width:100%;height:12px;"><b>GERENCIA GENERAL / GERENCIAS DE AREA / ADMINISTRADOR REGIONAL </b></td>
+                        </tr>
+                        <tr>
+                          <td align=center><br><br><br><br><br><b>FIRMA</b></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><br><br></td>
+            </tr>
+            <tr>
+                <td style="width: 33%; text-align: left">
+                    <?php echo "POA - ".$this->session->userdata('gestion').". ".$this->session->userdata('rd_poa'); ?>
+                </td>
+                <td style="width: 33%; text-align: center">
+                    <?php echo $this->session->userdata('sistema')?>
+                </td>
+                <td style="width: 33%; text-align: right">
+                    <?php echo $mes[ltrim(date("m"), "0")]. " / " . date("Y").', '.$this->session->userdata('funcionario'); ?> - pag. [[page_cu]]/[[page_nb]]
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><br><br></td>
+            </tr>
+        </table>
+    </page_footer>
+    <?php echo $operaciones;?>
+</page> -->
 <?php
 $content = ob_get_clean();
 //require_once(dirname(__FILE__).'/../html2pdf.class.php');

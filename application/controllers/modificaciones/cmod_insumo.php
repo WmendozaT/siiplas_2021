@@ -2297,6 +2297,7 @@ class Cmod_insumo extends CI_Controller {
           } 
         }
 
+
       return $tabla;
     }
 

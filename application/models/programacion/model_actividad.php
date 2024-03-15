@@ -14,7 +14,7 @@ class model_actividad extends CI_Model {
     function insumo_actividad($act_id){
         if($this->gestion!=2020){
             $sql = 'select *
-                from _insumoactividad ia
+                from _insumoactividad ia 
                 Inner Join insumos as i On i.ins_id=ia.ins_id
                 Inner Join insumo_gestion as ig On i.ins_id=ig.ins_id
                 where act_id='.$act_id.' and i.ins_estado!=\'3\'  and ig.g_id='.$this->gestion.''; 

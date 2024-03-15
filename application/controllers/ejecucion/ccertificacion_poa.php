@@ -62,7 +62,6 @@ class Ccertificacion_poa extends CI_Controller {
         $data['proyectos']=$this->certificacionpoa->list_pinversion(4); /// Proyectos de Inversion
         $data['operacion']=$this->certificacionpoa->list_unidades_es(4); /// Gasto Corriente
 
-       // echo $this->certificacionpoa->mis_formulariosN4(3279);
         $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/list_poas_aprobados', $data);
       }
       else{
@@ -123,6 +122,24 @@ class Ccertificacion_poa extends CI_Controller {
     }
   }
 
+
+  //// formulario (Anterior)
+/*  public function list_items_cert2($prod_id){
+    $data['datos']=$this->model_certificacion->get_datos_unidad_prod($prod_id);
+    if(count($data['datos'])!=0){
+        $data['menu']=$this->certificacionpoa->menu(4);
+        $data['resp']=$this->session->userdata('funcionario');
+        $data['res_dep']='hola mundo';
+        $data['titulo']='hola mundo';
+        $requerimientos=$this->model_certificacion->requerimientos_operacion($prod_id);
+        $this->update_gestion_temporalidad($requerimientos);
+        $data['requerimientos'] = $this->list_requerimientos_prelista($prod_id); /// para listas mayores a 500
+        $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/items_disponibles', $data);
+    }
+    else{
+      echo "Error !!!";
+    }
+  }*/
 
 
 
@@ -236,6 +253,10 @@ class Ccertificacion_poa extends CI_Controller {
       $cite_poa = $this->security->xss_clean($post['cite_cpoa']);
       $cite_fecha = $this->security->xss_clean($post['cite_fecha']);
 
+     // $prod_id = filter_var($prod_id, FILTER_SANITIZE_NUMBER_INT);
+     // $tp_id = filter_var($tp_id, FILTER_SANITIZE_NUMBER_INT); 
+     // $cite_poa = $cite_poa;
+     
       if($tp_id==1){
         $datos=$this->model_certificacion->get_datos_pi_prod($prod_id); /// Gasto Proyecto de Inversión
       }
@@ -297,16 +318,15 @@ class Ccertificacion_poa extends CI_Controller {
     }
   }
 
-  //// redirecciona a la vista 
+  //// redirecciona a la vista para Certificacion POA
   public function lista_requerimientos_cpoa($cpoa_id){
-    $this->lista_requerimientos_cpoa2($cpoa_id); //// Generacion normal de Certificacion POA
-    /*if($this->fun_id==399 || $this->dist==13){
+    if($this->fun_id==399 || $this->fun_id==401){
       //$this->lista_requerimientos_cpoa2($cpoa_id); //// Generacion normal de Certificacion POA
       $this->lista_requerimientos_cpoa_cert_rapida($cpoa_id); //// manera rapida
     }
     else{
       $this->lista_requerimientos_cpoa2($cpoa_id); //// Generacion normal de Certificacion POA
-    }*/
+    }
   }
 
   //// lista de Requerimientos a Certificar de Manera Rapida
@@ -695,14 +715,14 @@ class Ccertificacion_poa extends CI_Controller {
             $nro_cdep='0';
           }
 
+          //$codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa;
+          
           if($this->gestion>2023){
             $codigo='CPOA.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev']; /// 2024
           }
           else{
             $codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa; /// 2023
           }
-
-          //$codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa;
           
           if(count($this->model_certificacion->get_codigo_certpoa($codigo))==0){
               /*---- Update Estado Certificacion POA ----*/
@@ -1398,7 +1418,7 @@ class Ccertificacion_poa extends CI_Controller {
     public function modificar_cpoa($cpoaa_id){
       $data['cert_editado']=$this->model_certificacion->get_cert_poa_editado($cpoaa_id);
       if(count($data['cert_editado'])!=0 & $data['cert_editado'][0]['cpoa_estado']!=3){
-          $data['cpoa']=$this->model_certificacion->get_datos_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
+        $data['cpoa']=$this->model_certificacion->get_datos_certificacion_poa($data['cert_editado'][0]['cpoa_id']); /// Datos Certificacion
           $data['datos']=$this->model_certificacion->get_datos_unidad_prod($data['cert_editado'][0]['prod_id']); /// Datos completos de la Unidad/ Proyectos de Inversión
           $data['menu']=$this->certificacionpoa->menu(4);
           $data['titulo']=$this->certificacionpoa->titulo_cabecera($data['datos']);
@@ -1421,7 +1441,6 @@ class Ccertificacion_poa extends CI_Controller {
               <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="25" HEIGHT="20"/>&nbsp;<b style="font-size:9px">SUBIR ARCHIVO.CSV</b>
             </a>';
           }
-         
           $this->load->view('admin/ejecucion/certificacion_poa/form_cpoa/form_items_edit_cert', $data);
       }
       else{
@@ -1497,7 +1516,7 @@ class Ccertificacion_poa extends CI_Controller {
         else{
           $presupuesto=$this->model_certificacion->saldo_presupuesto_unidad($proy_id);
 
-          if((($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0)){
+          if((($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0) || $proyecto[0]['proy_id']==2978){
             $tabla=$this->certificacionpoa->mis_formulariosN4($proy_id); /// Mis Formularios n° 4 por Unidad Responsable
           }
           else{
@@ -1731,7 +1750,6 @@ class Ccertificacion_poa extends CI_Controller {
       $presupuesto=$this->model_certificacion->saldo_presupuesto_unidad($componente[0]['proy_id']);
       if(($presupuesto[0]['saldo']>0 || $presupuesto[0]['saldo']==0) & count($presupuesto)!=0){
         $data['select_ope']=$this->certificacionpoa->select_mis_productos($com_id,$titulo,0); /// Seleccion de productos
-       // $data['select_ope']=$com_id;
       }
       else{
         $data['select_ope']='

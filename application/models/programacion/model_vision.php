@@ -17,7 +17,7 @@ class model_vision extends CI_Model
     public function edita_vision($nueva_vision)
     {
         $data = array(
-            'conf_vision' => $nueva_vision
+            'conf_vision' => $nueva_vision 
         );
         $this->db->WHERE('conf_estado',1);
         return $this->db->UPDATE('configuracion',$data);

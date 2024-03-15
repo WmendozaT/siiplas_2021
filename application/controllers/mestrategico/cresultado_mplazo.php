@@ -260,7 +260,7 @@ class Cresultado_mplazo extends CI_Controller {
                         foreach($resultados  as $row){
                           $nro++;
                           $tabla .='<tr>';
-                            $tabla .='<td>'.$nro.'</td>';
+                            $tabla .='<td title='.$row['rm_id'].'>'.$nro.'</td>';
                             $tabla .='<td align="center">';
                               $tabla .='<a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-xs mod_ff"  title="MODIFICAR RESULTADO INTERMEDIO" name="'.$row['rm_id'].'"><img src="' . base_url() . 'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>';
                               $tabla .='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-xs del_ff" title="ELIMINAR RESULTADO DE MEDIANO PLAZO"  name="'.$row['rm_id'].'"><img src="'.base_url().'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a><br>';

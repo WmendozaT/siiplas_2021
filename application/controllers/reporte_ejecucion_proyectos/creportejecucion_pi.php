@@ -3,7 +3,7 @@ class Creportejecucion_pi extends CI_Controller {
   public $rol = array('1' => '1','2' => '11'); 
   public function __construct (){
     parent::__construct();
-    if($this->session->userdata('fun_id')!=null && ($this->session->userdata('fun_id')!=415 || $this->session->userdata('fun_id')!=1076 || $this->session->userdata('fun_id')!=1302)){
+    if($this->session->userdata('fun_id')!=null){
         $this->load->model('Users_model','',true);
         if($this->rolfun($this->rol)){ 
           $this->load->library('pdf2');
@@ -61,21 +61,6 @@ public function menu_pi(){
     </div>';
    
     $data['titulo_modulo']=$tabla;
-
-
-
-
-    //// para operaciones de Inversion
-    /*$dep_id=1;
-    $techo_ini_reg=$this->model_insumo->techo_ppto_inicial_inversion_regional($dep_id);
-    echo $techo_ini_reg[0]['techo_ppto_inicial'].'<br>';
-    for ($i=1; $i <=4; $i++) { 
-      $ppto_trimestre=$this->model_insumo->ppto_inicial_inversion_regional_trimestre($dep_id,$i);
-      echo "[".round((($ppto_trimestre[0]['ppto_inicial_trimestre']/$techo_ini_reg[0]['techo_ppto_inicial'])*100),2)."]<br>";
-    }*/
-
-
-
     $this->load->view('admin/reportes_cns/repejecucion_pi/menu_pi', $data); 
 }
 
@@ -83,6 +68,60 @@ public function menu_pi(){
   public function menu_nacional(){
   $tabla='';
   $regionales=$this->model_proyecto->list_departamentos();
+
+      $tabla.='
+    <article class="col-sm-12">
+      <div class="well">
+        <form class="smart-form">
+            <header><b>SEGUIMIENTO A PROYECTOS DE INVERSIÓN '.$this->gestion.'</b></header>
+            <fieldset>          
+              <div class="row">
+                <section class="col col-3">
+                  <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
+                  <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
+                  <option value="">SELECCIONE REGIONAL</option>
+                  <option value="0">0.- INSTITUCIONAL C.N.S.</option>';
+                  foreach($regionales as $row){
+                    if($row['dep_id']!=0){
+                      $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                    }
+                  }
+                  $tabla.='
+                  </select>
+                </section>
+              </div>
+            </fieldset>
+        </form>
+        </div>
+      </article>';
+/*  if($this->fun_id==1289){
+    $tabla.='
+    <article class="col-sm-12">
+      <div class="well">
+        <form class="smart-form">
+            <header><b>SEGUIMIENTO A PROYECTOS DE INVERSIÓN '.$this->gestion.'</b></header>
+            <fieldset>          
+              <div class="row">
+                <section class="col col-3">
+                  <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
+                  <select class="form-control" id="depp_id" name="depp_id" title="SELECCIONE REGIONAL">
+                  <option value="">SELECCIONE REGIONAL</option>
+                  <option value="0">0.- INSTITUCIONAL C.N.S.</option>';
+                  foreach($regionales as $row){
+                    if($row['dep_id']!=0){
+                      $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                    }
+                  }
+                  $tabla.='
+                  </select>
+                </section>
+              </div>
+            </fieldset>
+        </form>
+        </div>
+      </article>';
+  }
+  else{
     $tabla.='
     <article class="col-sm-12">
       <div class="well">
@@ -108,6 +147,9 @@ public function menu_pi(){
         </form>
         </div>
       </article>';
+  }*/
+  
+
   return $tabla;
 }
 
@@ -861,8 +903,8 @@ public function tabla_detalle_proyectos_clasificado_institucional($matriz,$nro){
         </tbody>
           <tr>
             <td align:right><b>TOTAL</b></td>
-            <td align=right>'.number_format($ppto_total, 2, ',', '.').'</td>
-            <td align=right><b>'.$disribucion.' %</b></td>
+            <td align=right>'.$ppto_total.'</td>
+            <td align=right>'.$disribucion.' %</td>
           </tr>
       </table>
       </center>';

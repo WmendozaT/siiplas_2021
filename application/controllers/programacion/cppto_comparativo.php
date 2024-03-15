@@ -294,7 +294,7 @@ class Cppto_comparativo extends CI_Controller {
 
 
     /*----- REPORTE COMPARATIVO DE PARTIDAS (ASIG - PROG) ----*/
-    public function reporte_presupuesto_consolidado_comparativo($proy_id){
+      public function reporte_presupuesto_consolidado_comparativo($proy_id){
       $data['mes'] = $this->mes_nombre();
       $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
       $data['cabecera']=$this->programacionpoa->cabecera($data['proyecto'][0]['tp_id'],0,$data['proyecto'],0);

@@ -259,9 +259,9 @@ class Cmodificaciones extends CI_Controller {
       }
 
       $data['titulo']=$titulo;
-      $data['mod_formularioN5']=$this->list_cites_generados($data['proyecto'],1); /// mod form 5
-      $data['mod_formularioN4']=$this->list_cites_generados($data['proyecto'],2); /// mod form 4
-      $data['techo']=$this->list_cites_generados($data['proyecto'],3); /// techo presupuestario
+      $data['requerimientos']=$this->list_cites_generados($proy_id,1);
+      $data['operaciones']=$this->list_cites_generados($proy_id,2);
+      $data['techo']=$this->list_cites_generados($proy_id,3);
       
       if($data['fase'][0]['pfec_estado']==1){
         $this->load->view('admin/modificacion/list_cites', $data);
@@ -304,14 +304,14 @@ class Cmodificaciones extends CI_Controller {
     }
 
     /*--- LISTA DE MODIFCACIONES (FORMULARIO 4 - FORMULARIO 5 - TECHO PRESUPUESTARIO) 2023 ---*/
-    public function list_cites_generados($proyecto,$tp){
+    public function list_cites_generados($proy_id,$tp){
       $tabla='';
       // === LIST CITES REQUERIMIENTOS 
       if($tp==1){
-        $cites=$this->model_modrequerimiento->list_cites_requerimientos_proy($proyecto[0]['proy_id']);
+        $cites=$this->model_modrequerimiento->list_cites_requerimientos_proy($proy_id);
         if(count($cites)!=0){
           $nro=0;
-          foreach($cites as $cit){
+          foreach($cites  as $cit){
             $color='';
             $codigo='<font color=blue><b>'.$cit['cite_codigo'].'</b></font>';
             if($cit['cite_estado']==0){
@@ -352,11 +352,11 @@ class Cmodificaciones extends CI_Controller {
       }
       // ----- LIST CITES FORM 4
       elseif($tp==2){
-        $cites=$this->model_modfisica->list_cites_Operaciones_proy($proyecto[0]['proy_id']);
+        $cites=$this->model_modfisica->list_cites_Operaciones_proy($proy_id);
         
           if(count($cites)!=0){
             $nro=0;
-              foreach($cites as $cit){
+              foreach($cites  as $cit){
 
                 if($cit['tp_reporte']==0){
                   $ca=$this->model_modfisica->operaciones_adicionados($cit['cite_id']);
@@ -425,7 +425,7 @@ class Cmodificaciones extends CI_Controller {
       }
       // ----- LIST DE CITES TECHO PRESUPUESTARIO
       else{
-        $cites=$this->model_modificacion->list_cites_techo($proyecto[0]['proy_id']);
+        $cites=$this->model_modificacion->list_cites_techo($proy_id);
         if(count($cites)!=0){
             $nro=0;
               foreach($cites  as $cit){

@@ -1273,7 +1273,7 @@ class Cptto_poa extends CI_Controller {
      // echo "DEP : ".$dep_id." aper_id : ".$aper_id."<br>";
       $tabla ='';
       $partidas_prog=$this->model_ptto_sigep->partidas_accion_region($dep_id,$aper_id,1); // Presupuesto Partidas asignado
-      $partidas_aprobados=$this->model_ptto_sigep->list_ppto_final_aprobado($aper_id); // Presupuesto Partidas Asignado
+      $partidas_aprobados=$this->model_ptto_sigep->list_ppto_final_aprobado($aper_id); // Presupuesto Partidas Aprobado
       if($tp_tab==1){
         $tab='id="table" class="table table-bordered"';
       }
@@ -1289,7 +1289,7 @@ class Cptto_poa extends CI_Controller {
               <th bgcolor="#1c7368" style="width:2%;color:#FFF;height:15px;">NRO. '.$aper_id.' -- '.$dep_id.'</th>
               <th bgcolor="#1c7368" style="width:5%;color:#FFF;" title="CODIGO PARTIDA">C&Oacute;DIGO</th>
               <th bgcolor="#1c7368" style="width:40%;color:#FFF;" title="DESCRIPCI&Oacute;N PARTIDA">DETALLE PARTIDA</th>
-              <th bgcolor="#1c7368" style="width:12%;color:#FFF;" title="MONTO PRESUPUESTO PROGRAMADO">PPTO. PROGRAMADO POA (SIIPLAS)</th>
+              <th bgcolor="#1c7368" style="width:12%;color:#FFF;" title="MONTO PRESUPUESTO PROGRAMADO">PPTO. ASIGNADO INICIAL</th>
               <th bgcolor="#1c7368" style="width:5%;color:#FFF;" title="AJUSTAR"></th>
               <th bgcolor="#1c7368" style="width:12%;color:#FFF;" title="MONTO PRESUPUESTO FINAL APROBADO">PPTO. FINAL APROBADO (SIGEP)</th>
               <th bgcolor="#1c7368" style="width:12%;color:#FFF;" title="MONTO DIFERENCIA (INICIAL - FINAL)">MONTO DIFERENCIA (SIGEP-SIIPLAS)</th>

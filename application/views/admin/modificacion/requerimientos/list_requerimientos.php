@@ -160,10 +160,10 @@
 								<div class="row">
 									<div>
 										<div class="jarviswidget jarviswidget-color-darken">
-			                              	<header>
+			                              <header>
 			                                  <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-			                                  <h2 class="font-md"><strong><?php if($cite[0]['tipo_modificacion']==1){ echo "REQUERIMIENTOS PROGRAMADOS POR REVERSION DE SALDOS";} ?></strong></h2>  
-			                              	</header>
+			                                  <h2 class="font-md"><strong></strong></h2>  
+			                              </header>
 											<div>
 												<div class="widget-body no-padding">
 													<form id="del_req" name="del_req" novalidate="novalidate" action="<?php echo site_url().'/modificaciones/cmod_insumo/delete_select_requerimientos'?>" method="post">
@@ -177,6 +177,7 @@
 											<!-- end widget div -->
 										</div>
 										<!-- end widget -->
+								
 									</div>
 								</div>
 							</div>
@@ -813,7 +814,7 @@
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 		<script src="<?php echo base_url(); ?>mis_js/modificacionpoa/modform5.js"></script> 
-		<script src="<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
+		<script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
 		
 		<script type="text/javascript">
 			$(document).ready(function() {

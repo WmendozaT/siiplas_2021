@@ -25,7 +25,7 @@ ob_start();
     </page_footer>
     <?php echo $datos_proyecto;?>
 </page>
-<page orientation="paysage" backtop="32mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page backtop="32mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
         <?php echo $cabecera; ?>         

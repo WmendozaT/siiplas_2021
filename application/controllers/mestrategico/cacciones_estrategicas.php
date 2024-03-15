@@ -95,10 +95,10 @@ class Cacciones_estrategicas extends CI_Controller {
                       <h2 class="font-md"><strong>'.count($acciones).'. ACCIONES ESTRAT&Eacute;GICAS</strong></h2>  
                     </header>
                 <div>
-                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - ACCIONES ESTRATEGICAS">NUEVO REGISTRO</a>';
-                  if($this->fun_id==399){
+                  <a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-success" style="width:14%;" title="NUEVO REGISTRO - ACCIONES ESTRATEGICAS">NUEVO REGISTRO</a><br><br>';
+                 /* if($this->fun_id==399){
                     $tabla.='<a href="#" data-toggle="modal" data-target="#modal_importar" class="btn btn-default" title="SUBIR ARCHIVO - PDES" style="width:14%;">SUBIR ARCHIVO (PDES)</a><br><br>';
-                  }
+                  }*/
                   $tabla.='
                   <div class="widget-body no-padding">
                     <table id="dt_basic" class="table table table-bordered" width="100%">
@@ -163,7 +163,7 @@ class Cacciones_estrategicas extends CI_Controller {
               $lineas = file($archivotmp);
               echo count($lineas);
               $i=0;
-              $nro=2278;
+              $nro=2280;
               foreach ($lineas as $linea_num => $linea){ /// A
                 if($i != 0){ /// B
                   $nro++;

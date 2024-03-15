@@ -13,7 +13,8 @@ class Consulta_pi extends CI_Controller {
       $this->load->model('programacion/model_componente');
       $this->load->model('mantenimiento/model_ptto_sigep');
       $this->load->model('mantenimiento/model_configuracion');
-      $this->gestion = $this->Users_model->obtener_gestion()[0]['ide'];
+      //$this->gestion = $this->Users_model->obtener_gestion()[0]['ide'];
+      $this->gestion = 2022;
       $this->mes = $this->mes_nombre();
       $this->entidad = $this->model_configuracion->get_configuracion()[0]['conf_nombre_entidad'];
   }
@@ -53,10 +54,13 @@ class Consulta_pi extends CI_Controller {
           </ul>
         </li>';
       }
-      $tabla.='
-      <li class="nav-item">
+
+      /*<li class="nav-item">
         <a class="nav-link" href="https://planificacion.cns.gob.bo" target=_blank style="color:#004640"><b>Ingreso SIIPLAS </b></a>
-      </li>
+      </li>*/
+
+      $tabla.='
+      
     </ul>';
 
 
@@ -100,6 +104,7 @@ class Consulta_pi extends CI_Controller {
           }
         //$foto='<center><img src="'.base_url().'fotos/simagen.jpg" style="width:250px; height:200px;text-align:center"/></center>';
       }
+
 
       $tabla=$this->formulario_pinversion($proyecto);
       $result = array(

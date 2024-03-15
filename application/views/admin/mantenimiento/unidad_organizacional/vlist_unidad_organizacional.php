@@ -1010,7 +1010,7 @@
         <!-- AGREGAR NUEVA SUBACTIVIDAD -->
         <script type="text/javascript">
         $(function () {
-            $("#subir_formsa").on("click", function () {
+            $("#subir_form").on("click", function () {
                 var $validator = $("#form_nuevo").validate({
                         rules: {
                             dep_id: { //// codigo

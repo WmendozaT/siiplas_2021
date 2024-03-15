@@ -164,6 +164,7 @@
         $tip_rep='GASTO CORRIENTE';
       }
 
+
       if($dist_id==0){ // Regional
         $regional=$this->model_proyecto->get_departamento($dep_id);
         $form4=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de REGIONAL

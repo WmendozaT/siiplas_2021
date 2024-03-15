@@ -34,7 +34,7 @@ class Seguimientopoa extends CI_Controller{
       $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
       $tabla.=
-      '<h1 title='.$proyecto[0]['aper_id'].'><small>'.$proyecto[0]['tipo_adm'].' : </small>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['proy_nombre'].' - '.$proyecto[0]['abrev'].'</h1>
+      '<h1 title='.$proyecto[0]['aper_id'].'><small>PROGRAMA : </small>'.$proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['proy_nombre'].' - '.$proyecto[0]['abrev'].'</h1>
       <h1><small>UNIDAD RESPONSABLE : </small> '.$componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].'</h1>
       <h1><small>TRIMESTRE VIGENTE : </small> '.$trimestre[0]['trm_descripcion'].'</h1>';
 
@@ -437,7 +437,7 @@ class Seguimientopoa extends CI_Controller{
     public function tabla_form_seguimientopoa_subactividad($com_id,$mes_id){
       $verif_mes=$this->update_mes_gestion($mes_id);
       $tabla='';
-        $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
+        $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE FORM4
         $tabla='';
         $tabla.='
             <table cellpadding="0" cellspacing="0" class="tabla" border=0.1 style="width:100%;" align=center>
@@ -722,7 +722,7 @@ class Seguimientopoa extends CI_Controller{
 
 
   /// Temporalidad de todas las operaciones de la SUbactividad 2021 (Reporte)
-  public function tabla_reporte_consolidado_temporalidad($com_id){
+/*  public function tabla_reporte_consolidado_temporalidad($com_id){
     $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
     $tabla='';
     $tabla.=' 
@@ -829,7 +829,7 @@ class Seguimientopoa extends CI_Controller{
             </tbody>
           </table>';
       return $tabla;
-  }
+  }*/
     
 
   /// Evaluación POA por Trimestre 2021 - Formulario 4 (Actividades)
@@ -1344,16 +1344,16 @@ class Seguimientopoa extends CI_Controller{
     /// GRAFICOS DE EVALUACION POA 
  public function tabla_acumulada_evaluacion_servicio($regresion,$trm_id,$tp_graf,$tip_rep){
       $tabla='';
-      $tit[2]='<b>NRO. ACT. PROGRAMADAS</b>';
-      $tit[3]='<b>NRO. ACT. CUMPLIDAS</b>';
-      $tit[4]='<b>NRO. ACT. NO CUMPLIDAS</b>';
-      $tit[5]='<b>% CUMPLIMIENTO</b>';
-      $tit[6]='<b>% NO CUMPLIDOS</b>';
+      $tit[2]='<b>NRO. ACT. PROG.</b>';
+      $tit[3]='<b>NRO. ACT. CUMP.</b>';
+      $tit[4]='<b>NRO. ACT. EN PROC.</b>';
+      $tit[5]='<b>% CUMP.</b>';
+      $tit[6]='<b>% NO CUMP.</b>';
 
-      $tit_total[2]='<b>NRO. ACT. PROGRAMADAS</b>';
-      $tit_total[3]='<b>NRO. ACT. CUMPLIDAS</b>';
-      $tit_total[4]='<b>% ACT. PROGRAMADAS AL TRIMESTRE</b>';
-      $tit_total[5]='<b>% ACT. CUMPLIDAS AL TRIMESTRE</b>';
+      $tit_total[2]='<b>NRO. ACT. PROG.</b>';
+      $tit_total[3]='<b>NRO. ACT. CUMP.</b>';
+      $tit_total[4]='<b>% ACT. PROG. AL TRIMESTRE</b>';
+      $tit_total[5]='<b>% ACT. CUMP. AL TRIMESTRE</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -1369,12 +1369,12 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center>
-                <th>NRO. ACT. PROGRAMADAS</th>
-                <th>ACT. EVALUADAS</th>
-                <th>ACT. CUMPLIDAS</th>
-                <th>ACT. NO CUMPLIDAS</th>
-                <th>% CUMPLIDAS</th>
-                <th>% NO CUMPLIDAS</th>
+                <th>NRO. ACT. PROG.</th>
+                <th>ACT. EVAL.</th>
+                <th>ACT. CUMP.</th>
+                <th>ACT. NO CUMP.</th>
+                <th>% CUMP.</th>
+                <th>% NO CUMP.</th>
                 </tr>
               </thead>
             <tbody>
@@ -1459,13 +1459,13 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center >
-                <th>NRO. ACT. PROGRAMADAS</th>
-                <th>NRO. ACT. EVALUADAS</th>
-                <th>NRO. ACT. CUMPLIDAS</th>
-                <th>NRO. ACT. EN PROCESO</th>
-                <th>NRO. ACT. NO CUMPLIDAS</th>
-                <th>% CUMPLIDAS</th>
-                <th>% NO CUMPLIDAS</th>
+                <th>NRO. ACT. PROG.</th>
+                <th>NRO. ACT. EVAL.</th>
+                <th>NRO. ACT. CUMP.</th>
+                <th>NRO. ACT. EN PROC.</th>
+                <th>NRO. ACT. NO CUMP.</th>
+                <th>% CUMP.</th>
+                <th>% NO CUMP.</th>
               </tr>
               </thead>
             <tbody>
@@ -2445,7 +2445,7 @@ class Seguimientopoa extends CI_Controller{
                         <th style="width:3%;"><b>COD. ACT.</b></th>
                         <th style="width:7%;"><b>PARTIDA</b></th>
                         <th style="width:29%;">DETALLE REQUERIMIENTO</th>
-                        <th style="width:10%;">UNIDAD</th>
+                        <th style="width:10%;">UNIDAD DE MEDIDA</th>
                         <th style="width:7%;">CANTIDAD</th>
                         <th style="width:8%;">PRECIO UNITARIO</th>
                         <th style="width:8%;">PRECIO TOTAL</th>

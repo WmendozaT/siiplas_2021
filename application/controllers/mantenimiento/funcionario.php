@@ -81,7 +81,7 @@ class Funcionario extends CI_Controller {
             $this->load->view('admin/mantenimiento/funcionario/vlist_fun', $data);
         
             /*--------- listado de unidades responsables de seguimiento poa -------*/
-          /*  $funcionarios=$this->model_funcionario->get_funcionarios_seguimiento_institucional($this->gestion);
+            /*$funcionarios=$this->model_funcionario->get_funcionarios_seguimiento_institucional($this->gestion);
             $tabla='';
             if(count($funcionarios)!=0){
                 $tabla.='
@@ -400,9 +400,9 @@ class Funcionario extends CI_Controller {
                     <thead>
                         <tr style="font-size: 8px;" bgcolor="#d8d8d8">
                             <th style="width:2%; text-align: center;height:20px;">#</th>
-                            <th style="width:20%; text-align: center;">PROGRAMA</th>
-                            <th style="width:26%; text-align: center;">UNIDAD RESPONSABLE</th>
-                            <th style="width:13%; text-align: center;">TRABAJADOR</th>
+                            <th style="width:20%; text-align: center;">ACTIVIDAD</th>
+                            <th style="width:26%; text-align: center;">SUBACTIVIDAD</th>
+                            <th style="width:13%; text-align: center;">RESPONSABLE</th>
                             <th style="width:13%; text-align: center;">USUARIO</th>
                             <th style="width:13%; text-align: center;">CONTRASEÑA</th>
                             <th style="width:10%; text-align: center;">ROL ASIGNADO</th>

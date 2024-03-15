@@ -94,7 +94,7 @@ class Model_funcionario extends CI_Model {
                         Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
                         Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
                         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                        where vf.cm_id!=\'0\' and apg.aper_gestion='.$this->gestion.''; 
+                        where vf.cm_id!=\'0\' and apg.aper_gestion='.$this->gestion.'';  
             }
             
         }
@@ -131,7 +131,6 @@ class Model_funcionario extends CI_Model {
         return $query->result_array();
     }
 
-
     /*--------- Lista de responsables Institucional (Seguimiento POA)----------*/
     public function get_funcionarios_seguimiento_institucional($gestion){
         $sql = 'select * 
@@ -150,8 +149,6 @@ class Model_funcionario extends CI_Model {
         $query = $this->db->query($sql);
         return $query->result_array();
     }
-
-
     public function get_rol($fun_id){
         $this->db->select("r.r_nombre, r.r_id");
         $this->db->from('rol r');

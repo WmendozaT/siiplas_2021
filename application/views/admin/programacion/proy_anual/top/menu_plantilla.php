@@ -243,7 +243,7 @@
 		          }
 		          else{
 		          	$('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE REQUERIMIENTOS.SCV</b></center>');
-		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 20</b></li> <li type="circle"><b>Columna (A) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (E-S), por tratarse de presupuesto el Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
+		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 22</b></li> <li type="circle"><b>Columna (A) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (E-S), por tratarse de presupuesto el Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
 		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/img_migracion/migracion_form5.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
 		            $('#buton').html('VER ARCHIVO DE REQUERIMIENTOS.CSV');
 		          }

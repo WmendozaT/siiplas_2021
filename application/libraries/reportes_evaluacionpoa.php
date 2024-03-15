@@ -52,13 +52,13 @@ class reportes_evaluacionpoa extends CI_Controller{
             <tr style="font-size: 9px;" align=center bgcolor="#f8f2f2">
               <th style="width:2%;height:15px;">#</th>
               <th style="width:15%;">DISTRITAL</th>
-              <th style="width:23%;">GASTO CORRIENTE / PROY. INV.</th>
-              <th style="width:8%;">ACT. PROGR.</th>
+              <th style="width:20%;">GASTO CORRIENTE</th>
+              <th style="width:8%;">ACT. PROG.</th>
               <th style="width:8%;">ACT. CUMP.</th>
               <th style="width:10%;">ACT. NO CUMP.</th>
-              <th style="width:10%;">% CUMP.</th>
-              <th style="width:10%;">% NO CUMP.</th>
-              <th style="width:10%;">% EJEC. PPTO. POA AL TRIMESTRE</th>
+              <th style="width:10%;">% CUMPLIMIENTO</th>
+              <th style="width:10%;">% NO CUMPLIDAS</th>
+              <th style="width:10%;">% EJEC. PPTO.</th>
             </tr>
           </thead>
           <tbody>';
@@ -71,7 +71,7 @@ class reportes_evaluacionpoa extends CI_Controller{
             $tabla.='<tr style="font-size: 9px;" >';
             $tabla.='<td style="width:2%;height:10px;" align=center>'.$nro.'</td>';
             $tabla.='<td style="width:15%;">'.strtoupper($row['dist_distrital']).'</td>';
-            $tabla.='<td style="width:23%;">'.$row['prog'].' - '.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</td>';
+            $tabla.='<td style="width:20%;">'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</td>';
             $tabla.='<td style="width:8%;" align=right><b>'.$eficacia[2][$this->tmes].'</b></td>';
             $tabla.='<td style="width:8%;" align=right><b>'.$eficacia[3][$this->tmes].'</b></td>';
             $tabla.='<td style="width:10%;" align=right><b>'.$eficacia[4][$this->tmes].'</b></td>';
@@ -100,12 +100,12 @@ class reportes_evaluacionpoa extends CI_Controller{
             <tr style="font-size: 10px;" align=center bgcolor="#f8f2f2">
               <th style="width:2%;height:15px;">#</th>
               <th style="width:20%;">DIRECCIÓN ADMINISTRATIVA</th>
-              <th style="width:12%;">ACT. PROGRAMADAS</th>
-              <th style="width:12%;">ACT. CUMPLIDAS</th>
-              <th style="width:12%;">ACT. NO CUMPLIDAS</th>
-              <th style="width:12%;">% CUMPLIMIENTO</th>
-              <th style="width:12%;">% NO CUMPLIDO</th>
-              <th style="width:12%;">% EJEC. PPTO.</th>
+              <th style="width:12%;">ACT. PROG.</th>
+              <th style="width:12%;">ACT. CUMP.</th>
+              <th style="width:12%;">ACT. NO CUMP.</th>
+              <th style="width:12%;">% CUMP.</th>
+              <th style="width:12%;">% NO CUMP.</th>
+              <th style="width:12%;">% CERT. POA</th>
             </tr>
           </thead>
           <tbody>';
@@ -400,12 +400,12 @@ class reportes_evaluacionpoa extends CI_Controller{
                 <th>#</th>
                 <th>APERTURA PROGRAM&Aacute;TICA</th>
                 <th>DESCRIPCI&Oacute;N</th>
-                <th>ACT. PROGRAMADAS</th>
-                <th>ACT. EVALUADAS</th>
+                <th>ACT. PROG.</th>
+                <th>ACT. EVAL.</th>
                 <th>ACT. CUMP.</th>
                 <th>ACT. NO CUMP.</th>
-                <th>% CUMPLIMIENTO</th>
-                <th>% NO CUMPLIDAS</th>
+                <th>% CUMP.</th>
+                <th>% NO CUMP.</th>
                 </tr>
               </thead>
             <tbody>';
@@ -460,13 +460,13 @@ class reportes_evaluacionpoa extends CI_Controller{
               <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
                 <th style="width:1%;height:15px;">#</th>
                 <th style="width:10%;">APERTURA PROGRAM&Aacute;TICA</th>
-                <th style="width:25%;">DESCRIPCI&Oacute;N</th>
-                <th style="width:8.5%;">TOTAL PROG.</th>
-                <th style="width:8.5%;">TOTAL EVAL.</th>
-                <th style="width:8.5%;">CUMP.</th>
-                <th style="width:8.5%;">NRO CUMP.</th>
-                <th style="width:8.5%;">% CUMP.</th>
-                <th style="width:8.5%;">% NO CUMP.</th>
+                <th style="width:23%;">DESCRIPCI&Oacute;N</th>
+                <th style="width:10%;">TOTAL PROG.</th>
+                <th style="width:10%;">TOTAL EVAL.</th>
+                <th style="width:10%;">CUMP.</th>
+                <th style="width:10%;">NO CUMP.</th>
+                <th style="width:10%;">% CUMP.</th>
+                <th style="width:10%;">% NO CUMP.</th>
               </tr>
             </thead>
             <tbody>';
@@ -763,30 +763,19 @@ class reportes_evaluacionpoa extends CI_Controller{
       return $tr;
     }
 
-    /*--- OBTIENE DATOS DE EVALUACIÓN 2024 - APERTURA REGIONAL ---*/
+    /*--- OBTIENE DATOS DE EVALUACIÓN 2020 - APERTURA REGIONAL ---*/
     public function obtiene_datos_evaluacíon_programa_regional($dep_id,$aper_programa,$tipo_evaluacion){
       $nro_ope_eval=0; $nro_cumplidas=0;
-
-      /*for ($i=1; $i <=$this->tmes; $i++) {
-        $programadas=$this->model_evalprograma->nro_form4_programadas_regional($dep_id,$aper_programa; ///2024 nro de Actividades (Form4) alineados al trimestre para su evaluacion
-        //$programadas=$this->model_evalprograma->nro_operaciones_programadas_regional($dep_id,$aper_programa,$i,4);/// 2020-2021-2022-2023
+      for ($i=1; $i <=$this->tmes; $i++) {
+        $programadas=$this->model_evalprograma->nro_operaciones_programadas_regional($dep_id,$aper_programa,$i,4);
         if(count($programadas)!=0){
-          $nro_ope_eval=$programadas[0]['total'];
+          $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
         }
 
         if(count($this->model_evalprograma->list_operaciones_evaluadas_regional_trimestre($dep_id,$aper_programa,$i,$tipo_evaluacion,4))!=0){
           $nro_cumplidas=$nro_cumplidas+count($this->model_evalprograma->list_operaciones_evaluadas_regional_trimestre($dep_id,$aper_programa,$i,$tipo_evaluacion,4));
         }
-      }*/
-
-      $programadas=$this->model_evalprograma->nro_form4_programadas_regional($dep_id,$aper_programa); ///2024 nro de Actividades (Form4) alineados al trimestre para su evaluacion
-        if(count($programadas)!=0){
-          $nro_ope_eval=$programadas[0]['total'];
-        }
-
-      if(count($this->model_evalprograma->list_operaciones_evaluadas_regional_trimestre($dep_id,$aper_programa,$this->tmes,$tipo_evaluacion,4))!=0){
-          $nro_cumplidas=count($this->model_evalprograma->list_operaciones_evaluadas_regional_trimestre($dep_id,$aper_programa,$this->tmes,$tipo_evaluacion,4));
-        }
+      }
 
       $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
       $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos
@@ -842,9 +831,8 @@ class reportes_evaluacionpoa extends CI_Controller{
     /*--- OBTIENE DATOS DE EVALUACIÓN 2020 - APERTURA REGIONAL ---*/
     public function obtiene_datos_evaluacíon_programa_distrital($dist_id,$aper_programa,$tipo_evaluacion){
       $nro_ope_eval=0; $nro_cumplidas=0;
-
-      /*for ($i=1; $i <=$this->tmes; $i++) {
-        $programadas=$this->model_evalprograma->nro_operaciones_programadas_distrital($dist_id,$aper_programa,$i,4); /// 2020-2021-2022-2023
+      for ($i=1; $i <=$this->tmes; $i++) {
+        $programadas=$this->model_evalprograma->nro_operaciones_programadas_distrital($dist_id,$aper_programa,$i,4);
         if(count($programadas)!=0){
           $nro_ope_eval=$nro_ope_eval+$programadas[0]['total'];
         }
@@ -852,17 +840,7 @@ class reportes_evaluacionpoa extends CI_Controller{
         if(count($this->model_evalprograma->list_operaciones_evaluadas_distrital_trimestre($dist_id,$aper_programa,$i,$tipo_evaluacion,4))!=0){
           $nro_cumplidas=$nro_cumplidas+count($this->model_evalprograma->list_operaciones_evaluadas_distrital_trimestre($dist_id,$aper_programa,$i,$tipo_evaluacion,4));
         }
-      }*/
-
-      $programadas=$this->model_evalprograma->nro_form4_programadas_distrital($dist_id,$aper_programa); /// 2024
-      if(count($programadas)!=0){
-        $nro_ope_eval=$programadas[0]['total'];
       }
-
-      if(count($this->model_evalprograma->list_operaciones_evaluadas_distrital_trimestre($dist_id,$aper_programa,$this->tmes,$tipo_evaluacion,4))!=0){
-        $nro_cumplidas=count($this->model_evalprograma->list_operaciones_evaluadas_distrital_trimestre($dist_id,$aper_programa,$this->tmes,$tipo_evaluacion,4));
-      }
-
 
       $vtrimestre[1]=$nro_ope_eval; // nro evaluadas
       $vtrimestre[2]=$nro_cumplidas; // Cumplidas/Proceso/No Cumplidos

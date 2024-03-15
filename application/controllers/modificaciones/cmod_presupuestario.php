@@ -188,18 +188,18 @@ class Cmod_presupuestario extends CI_Controller {
               <table id='.$tab.' class="table table-bordered" style="width:100%;">
                 <thead>
                     <tr style="height:45px;">
-                      <th style="width:1%;">DA</th>
-                      <th style="width:1%;">UE</th>
-                      <th style="width:1%;">PROG.</th>
-                      <th style="width:1%;">ACT.</th>
-                      <th style="width:13%;">ACTIVIDAD</th>
-                      <th style="width:2%;">PARTIDA</th>
-                      <th style="width:12%;">DESCRIPCI&Oacute;N PARTIDA</th>
-                      <th style="width:5%;">PPTO ACTUAL</th>
-                      <th style="width:5%;">IMPORTE</th>
-                      <th style="width:5%;">PPTO A MODIFICAR</th>
-                      <th style="width:3%;"></th>
-                      <th style="width:3%;">REP. POA</th>
+                        <th style="width:1%;">DA</th>
+                        <th style="width:1%;">UE</th>
+                        <th style="width:1%;">PROG.</th>
+                        <th style="width:1%;">ACT.</th>
+                        <th style="width:13%;">ACTIVIDAD</th>
+                        <th style="width:2%;">PARTIDA</th>
+                        <th style="width:12%;">DESCRIPCI&Oacute;N PARTIDA</th>
+                        <th style="width:5%;">PPTO ACTUAL</th>
+                        <th style="width:5%;">IMPORTE</th>
+                        <th style="width:5%;">PPTO A MODIFICAR</th>
+                        <th style="width:3%;"></th>
+                        <th style="width:3%;">REP. POA</th>
                     </tr>
                 </thead>
                 <tbody>';

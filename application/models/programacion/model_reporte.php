@@ -12,7 +12,7 @@ class Model_reporte extends CI_Model
     {
         $sql = 'select tap.*,p.*,fe.*,tp.*,fu.*
                 from _proyectos as p
-                Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
+                Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id 
                 Inner Join _proyectofaseetapacomponente as fe On p.proy_id=fe.proy_id
                 Inner Join (select apy.*,apg.* from aperturaprogramatica as apg, aperturaproyectos as apy where apy.aper_id=apg.aper_id) as tap On p.proy_id=tap.proy_id
                 Inner Join (select pf.proy_id,f.fun_id,f.fun_nombre,f.fun_paterno,f.fun_materno,u.uni_unidad as ue,ur.uni_unidad as ur

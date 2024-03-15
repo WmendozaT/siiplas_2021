@@ -17,16 +17,16 @@
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/smartadmin-skins.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>	  
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>   
 <link href="<?php echo base_url(); ?>assets/dashboard_pi/Content/css0d55.css" rel="stylesheet"/>
 <style type="text/css">
 
 .sidebar li .submenu{ 
-	list-style: none; 
-	margin: 0; 
-	padding: 0; 
-	padding-left: 1rem; 
-	padding-right: 1rem;
+    list-style: none; 
+    margin: 0; 
+    padding: 0; 
+    padding-left: 1rem; 
+    padding-right: 1rem;
 }
 .sidebar .nav-link {
     font-weight: 500;
@@ -70,22 +70,22 @@
 <div class="container">
 
 <section class="section-content py-3">
-	<div class="row">
-		<aside class="col-lg-3"> 
-	<!-- ============= COMPONENT ============== -->
-		<nav class="sidebar card py-2 mb-4">
-			<?php echo $menu;?>
-		</nav>
-	<!-- ============= COMPONENT END// ============== -->	
-	</aside>
-	<main class="col-lg-9">
+    <div class="row">
+        <aside class="col-lg-3"> 
+    <!-- ============= COMPONENT ============== -->
+        <nav class="sidebar card py-2 mb-4">
+            <?php echo $menu;?>
+        </nav>
+    <!-- ============= COMPONENT END// ============== -->   
+    </aside>
+    <main class="col-lg-9">
 
-	<!-- <h6>Proyecto de Inversi&oacute;n / <?php echo $this->session->userData('gestion') ?></h6> -->
-		<div id="detalle_proyecto"></div>
-		<div id="reporte"></div>
+    <!-- <h6>Proyecto de Inversi&oacute;n / <?php echo $this->session->userData('gestion') ?></h6> -->
+        <div id="detalle_proyecto"></div>
+        <div id="reporte"></div>
 
-	</main>
-	</div>
+    </main>
+    </div>
 </section>
 <div class="container body-content side-collapse-container">
         <footer class="text-muted well" id="last-footer">

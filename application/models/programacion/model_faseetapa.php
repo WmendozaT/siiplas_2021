@@ -121,6 +121,55 @@ class Model_faseetapa extends CI_Model{
         return $query->result_array();
     }
 
+
+/*    public function get_id_fase($id_proy){
+        $this->db->select(" p.pfec_id as id,
+                            p.proy_id,
+                            p.fas_id,
+                            ep.fas_fase as fase,
+                            p.eta_id,
+                            et.eta_etapa as etapa,
+                            p.pfec_descripcion as descripcion,
+                            p.pfec_fecha_inicio_ddmmaaa as inicio,
+                            p.pfec_fecha_inicio,
+                            p.pfec_fecha_fin_ddmmaaa as final,
+                            p.pfec_fecha_fin,
+                            p.pfec_ejecucion,
+                            (CASE WHEN p.pfec_ejecucion='1' THEN 'DIRECTA'
+                                  WHEN p.pfec_ejecucion='2' THEN 'DELEGADA'
+                                  ELSE 'NULL'
+                            END) ejec,
+                            p.pfec_estado,
+                            p.pfec_ptto_fase,
+                            p.pfec_ptto_fase_e,
+                            p.pfec_eficacia,
+                            p.pfec_eficiencia,
+                            p.pfec_eficiencia_pe,
+                            p.pfec_eficiencia_fi,
+                            uo.uni_unidad");
+        $this->db->from('_proyectofaseetapacomponente p');
+        $this->db->join('_fases ep', 'p.fas_id = ep.fas_id', 'left');
+        $this->db->join('_etapas et', 'p.eta_id = et.eta_id', 'left');
+        $this->db->join('unidadorganizacional uo', 'uo.uni_id = p.unidad_ejec', 'left');
+        $this->db->where('p.proy_id', $id_proy);
+        $this->db->where('p.pfec_estado', 1);
+        $query = $this->db->get();
+        return $query->result_array();
+    }*/
+    /*=========================== ================================ ============================*/
+    /*============================== LISTA PRESUPUESTO ASIGNADO =====================*/
+/*    public function fase_presupuesto_id($id_fg){
+        $query=$this->db->query('
+        select fg.*,ff.*,of.*                                
+        from "public"."_ffofet" as fg
+        Inner Join "public"."fuentefinanciamiento" as ff On ff."ff_id" = fg."ff_id"
+        Inner Join "public"."organismofinanciador" as of On of."of_id" = fg."of_id"
+        where fg."ptofecg_id"='.$id_fg.' 
+        ORDER BY fg."ffofet_id"  asc');
+
+        return $query->result_array();
+    }*/
+
     public function presupuesto_asignados($proy_id,$gestion){
          $sql = 'select *
                 from fnpresupuesto_asignado_proy('.$proy_id.','.$gestion.')';
@@ -368,6 +417,70 @@ class Model_faseetapa extends CI_Model{
         return $query->result_array();
     }
     /*=============================================================================*/
+    /*============================== INSERTA ASIGNACION DE PRESUPUESTOS =====================*/
+/*    public function store_asig($dat1,$dat2,$dat3,$dat4,$nro){
+            $data_to_store = array( ///// Tabla _ffofet
+                'ptofecg_id' => $dat1,
+                'ff_id' => $dat2,
+                'of_id' => $dat3,
+                'ffofet_monto' => $dat4,
+                'nro' => $nro,
+                );
+            $this->db->insert('_ffofet', $data_to_store);
+    }*/
+    /*=====================================================================================*/
+    /*============================== LISTA PRESUPUESTO ASIGNADO =====================*/
+/*    public function _ffofet($id_fg)
+    {
+        $query=$this->db->query('SELECT fg.*,ff.*,of.*
+                                        
+        FROM "public"."_ffofet" as fg
+        Inner Join "public"."fuentefinanciamiento" as ff On ff."ff_id" = fg."ff_id"
+        Inner Join "public"."organismofinanciador" as of On of."of_id" = fg."of_id"
+        where fg."ptofecg_id"='.$id_fg.' ORDER BY fg."ptofecg_id"  asc');
+
+        return $query->result_array();
+    }*/
+    /*=====================================================================================*/
+    /*============================================================ SUMA TECHO PRESUPUESTO ===================================================*/
+/*    public function get_techo_id($ffofet_id){
+        
+         $sql = 'SELECT ff.*,ffi.*,fof.*
+                from _ffofet as ff
+                Inner Join fuentefinanciamiento as ffi On ffi."ff_id" = ff."ff_id"
+                Inner Join organismofinanciador as fof On fof."of_id" = ff."of_id"
+                where ff."ffofet_id"='.$ffofet_id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }*/
+    /*============================================================================================== ===========================================*/
+    /*============================== NRO DE PRESUPUESTO ASIGNADOS =====================*/
+/*    public function verif_presupuesto_activo($id_fg){
+        $this->db->from('_ffofet');
+        $this->db->where('ptofecg_id', $id_fg);
+        $query = $this->db->get();
+        return $query->num_rows();
+    }*/
+    /*=====================================================================================*/
+
+    /*============================== FUENTE FINANCIAMIENTO =====================*/
+/*    public function fuentefinanciamiento(){
+        $this->db->from('fuentefinanciamiento');
+        $this->db->where('ff_estado', 1);
+    //    $this->db->where('ff_gestion', $this->session->userdata('gestion'));
+        $query = $this->db->get();
+        return $query->result_array();
+    }*/
+    /*=====================================================================================*/
+    /*============================== ORGANISMO FINANCIADOR =====================*/
+/*    public function organismofinanciador(){
+        $this->db->from('organismofinanciador');
+        $this->db->where('of_estado', 1);
+    //    $this->db->where('of_gestion', $this->session->userdata('gestion'));
+        $query = $this->db->get();
+        return $query->result_array();
+    }*/
+    /*=====================================================================================*/
     /*============================ BORRA DATOS F/E=================================*/
     public function delete_fe_ptto($id_f){ 
 

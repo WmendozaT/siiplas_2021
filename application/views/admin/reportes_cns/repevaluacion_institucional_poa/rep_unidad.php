@@ -261,7 +261,7 @@
                                               </div>
                                             </div>
 
-                                            <div class="tab-pane fade" id="s3" title="CUADRO MIS MIS SUBACTIVIDADES">
+                                            <div class="tab-pane fade" id="s3" title="CUADRO MIS  SUBACTIVIDADES">
                                                 <div class="row">
                                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                       <hr>
@@ -271,7 +271,7 @@
                                                         <br>
                                                         <div class="row">
                                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-                                                                <h2 class="alert alert-success" align="center">% CUMPLIMIENTO POR SUBACTIVIDAD</b></h2>
+                                                                <h2 class="alert alert-success" align="center">% CUMPLIMIENTO POR UNIDAD RESPONSABLE</b></h2>
                                                                 <?php echo $mis_servicios;?>
                                                             </div>
                                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
@@ -777,22 +777,22 @@ chart_gestion.render();
             },
             series: [{
                 type: 'pie',
-                name: 'N° Actividades',
+                name: 'Actividades',
                 data: [
                     {
-                      name: 'N° ACT. NO CUMPLIDAS : <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?> %',
+                      name: 'NO CUMPLIDO : <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?> %',
                       y: <?php echo ($tabla[6][$this->session->userData('trimestre')]-$tabla[8][$this->session->userData('trimestre')]);?>,
                       color: '#f98178',
                     },
 
                     {
-                      name: 'N° ACT. EN CUMPLIMIENTO PARCIAL : <?php echo $tabla[8][$this->session->userData('trimestre')];?> %',
+                      name: 'EN CUMPLIMIENTO PARCIAL : <?php echo $tabla[8][$this->session->userData('trimestre')];?> %',
                       y: <?php echo $tabla[8][$this->session->userData('trimestre')];?>,
                       color: '#f5eea3',
                     },
 
                     {
-                      name: 'N° ACT.  CUMPLIDAS : <?php echo $tabla[5][$this->session->userData('trimestre')];?> %',
+                      name: 'CUMPLIDO : <?php echo $tabla[5][$this->session->userData('trimestre')];?> %',
                       y: <?php echo $tabla[5][$this->session->userData('trimestre')];?>,
                       color: '#2CC8DC',
                       sliced: true,

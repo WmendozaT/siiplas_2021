@@ -304,7 +304,6 @@
         <script type="text/javascript">
             $(function () {
                 $(".enlace").on("click", function (e) {
-                    //alert('hola mundo')
                     proy_id = $(this).attr('name');
                     establecimiento = $(this).attr('id');
                     $('#titulo').html('<font size=3><b>'+establecimiento+'</b></font>');

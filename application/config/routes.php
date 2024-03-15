@@ -248,15 +248,13 @@ $route['admin/mantenimiento/del_aper'] = 'cmantenimiento/del_aper';*/
 
 
 /*-- Ptto Sipeg (MANTENIMIENTO)--*/
-$route['ptto_asig_poa'] = 'mantenimiento/cptto_poa/list_acciones_operativas'; /// Lista de UNIDADES, INVERSION 
+$route['ptto_asig_poa'] = 'mantenimiento/cptto_poa/list_acciones_operativas'; /// Lista de Acciones Operativas
 $route['mnt/rep_partidas/(:any)'] = 'mantenimiento/cptto_poa/rep_partida/$1'; /// Reporte Partida
 $route['mnt/edit_ptto_asig/(:any)'] = 'mantenimiento/cptto_poa/edit_partidas/$1'; /// Modifica Monto Partida
 $route['mnt/delete_partida'] = 'mantenimiento/cptto_poa/delete_partida';	//// Delete Partida
 $route['mnt/ver_ptto_asig_final/(:any)'] = 'mantenimiento/cptto_poa/ver_comparativo_partidas/$1'; /// Modifica Monto Partida
 $route['mnt/rep_mod_req/(:any)'] = 'mantenimiento/cptto_poa/reporte_comparativo_unidad/$1';///// Reporte Cuadro Comparativo de Partidas Asig-Prog-Final
 $route['mnt/xles_partidas/(:any)'] = 'mantenimiento/cptto_poa/exportar_cuadro_comparativo/$1/$2';///// Exportar cuadro Comparativo de Partidas Asig-Prog-Final en Excel
-
-//$route['update_cod_inversion'] = 'mantenimiento/cptto_poa/update_codigo_inversion'; /// Actualizar Proy y Act de Cada Proyecto de Inversion 
 
 /*-- Control de Calidad (MANTENIMIENTO) --*/
 $route['control_calidad'] = 'mantenimiento/ccontrol_calidad/control_calidad'; /// Control de Calidad

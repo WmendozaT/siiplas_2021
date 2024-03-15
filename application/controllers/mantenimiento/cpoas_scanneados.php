@@ -91,13 +91,13 @@ class Cpoas_scanneados extends CI_Controller {
                                 $tabla.='<td align=center>'.$nro.'</td>';
                                 $tabla.='<td>'.strtoupper($dist).'</td>';
                                 if(count($get_pdf)!=0){
-                                  $tabla.='<td align=center><a href="#" class="btn btn-default enlace" name="'.$row['dist_id'].'" id="'.strtoupper($row['dist_distrital']).'" title="VER "><img src="'.base_url().'assets/ifinal/ver.JPG" WIDTH="36" HEIGHT="36"/></a></td>';
+                                  $tabla.='<td align=center><a href="#" class="btn btn-default enlace" name="'.$row['dist_id'].'" id="'.strtoupper($row['dist_distrital']).'" title="VER "><img src="'.base_url().'assets/ifinal/ver.jpg" WIDTH="36" HEIGHT="36"/></a></td>';
                                 }
                                 else{
                                   $tabla.='<td></td>';  
                                 }
                                 $tabla.='<td align=center>
-                                            <a href="#" data-toggle="modal" data-target="#modal_mod_file" class="btn btn-default mod_file" name="'.$row['dist_id'].'" id="'.strtoupper($row['dist_distrital']).'" title="SUBIR ARCHIVO PDF"><img src="'.base_url().'assets/ifinal/upload.JPG" WIDTH="36" HEIGHT="36"/></a>
+                                            <a href="#" data-toggle="modal" data-target="#modal_mod_file" class="btn btn-default mod_file" name="'.$row['dist_id'].'" id="'.strtoupper($row['dist_distrital']).'" title="SUBIR ARCHIVO PDF"><img src="'.base_url().'assets/ifinal/upload.jpg" WIDTH="36" HEIGHT="36"/></a>
                                         </td>';
                                 if(count($get_pdf)!=0){
                                   $tabla.='<td align=center><a href="'.base_url().'scanneados/'.$get_pdf[0]['descripcion'].'" class="btn btn-default" target="_blank" title="DESCARGAR ARCHIVO PDF" download><img src="'.base_url().'assets/ifinal/download.jpg" WIDTH="36" HEIGHT="36"/></td>';

@@ -709,7 +709,7 @@ class model_estructura_org extends CI_Model {
 
     /*==== LISTA DE UNIDADES Y SERVICIOS A NIVEL NACIONAL ====*/
     public function lista_unidad_servicio_poa(){
-        $sql = 'select d.dep_id,ds.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, ua.act_descripcion,sa.serv_cod, sa.serv_descripcion, d.dep_departamento, ds.dist_distrital, ds.abrev, te.*,c.com_id
+        $sql = 'select d.dep_id,ds.dist_id,apg.aper_programa,apg.aper_proyecto,apg.aper_actividad, ua.act_descripcion,sa.serv_cod, sa.serv_descripcion, d.dep_departamento, ds.dist_distrital, ds.abrev, te.*, c.com_id
                 from _proyectos as p
                 Inner Join _tipoproyecto as tp On p.tp_id=tp.tp_id
                 Inner Join aperturaproyectos as ap On ap.proy_id=p.proy_id

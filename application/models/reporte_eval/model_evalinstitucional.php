@@ -36,13 +36,13 @@ class Model_evalinstitucional extends CI_Model{
     /*====== NACIONAL ======*/
     /*--- LISTA OPERACIONES EVALUADAS (CUMPLIDAS-PROCESO-NO CUMPLIDAS) NACIONAL ---*/
     public function list_operaciones_evaluadas_unidad_trimestre_tipo_nacional($trimestre,$tipo_eval,$tp_id){
-        if($this->gestion>2022){ /// 2023
+        if($this->gestion>2023){ /// 2023
             $sql = 'select poa.*,c.*,pt.*
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join _productos_trimestral as pt On pt.prod_id=p.prod_id
-                where c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+                where c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
                 order by pt.tprod_id asc';
         }
         else{ /// 2022
@@ -51,7 +51,7 @@ class Model_evalinstitucional extends CI_Model{
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join _productos_trimestral as pt On pt.prod_id=p.prod_id
-                where c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.'
+                where c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
                 order by pt.tprod_id asc';
         }
 
@@ -75,8 +75,22 @@ class Model_evalinstitucional extends CI_Model{
         }
 
 
-        if($this->gestion>2022){ /// 2023
+        if($this->gestion>2023){ /// 2024
             $sql = 'select count(*) total
+                        from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+                        Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                        Inner Join _productos as prod On prod.com_id=c.com_id
+                        
+                        Inner Join (
+                                select prod_id
+                                from prod_programado_mensual
+                                where (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
+                                group by prod_id
+                            ) as pprog On pprog.prod_id=prod.prod_id
+                        where c.estado!=\'3\' and prod.estado!=\'3\' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\') ';
+        }
+        else{ /// 2022
+           $sql = 'select count(*) total
                         from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                         Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                         Inner Join _productos as prod On prod.com_id=c.com_id
@@ -89,20 +103,6 @@ class Model_evalinstitucional extends CI_Model{
                             ) as pprog On pprog.prod_id=prod.prod_id
                         where c.estado!=\'3\' and prod.estado!=\'3\' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\') ';
         }
-        else{ /// 2022
-           $sql = ' select count(*) total
-                    from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
-                    Inner Join _componentes as c On c.pfec_id=poa.pfec_id
-                    Inner Join _productos as prod On prod.com_id=c.com_id
-                    
-                    Inner Join (
-                            select prod_id
-                            from prod_programado_mensual
-                            where (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
-                            group by prod_id
-                        ) as pprog On pprog.prod_id=prod.prod_id
-                    where c.estado!=\'3\' and prod.estado!=\'3\' ';
-        }
         
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -112,14 +112,14 @@ class Model_evalinstitucional extends CI_Model{
     /*====== REGIONAL ======*/
     /*--- LISTA OPERACIONES EVALUADAS (CUMPLIDAS-PROCESO-NO CUMPLIDAS) REGIONAL ---*/
     public function list_operaciones_evaluadas_unidad_trimestre_tipo_regional($dep_id,$trimestre,$tipo_eval,$tp_id){
-        if($this->gestion>2022){ /// 2023
+        if($this->gestion>2023){ /// 2024
             $sql = '
             select poa.*,c.*,pt.*
             from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
             Inner Join _componentes as c On c.pfec_id=poa.pfec_id
             Inner Join _productos as p On p.com_id=c.com_id
             Inner Join _productos_trimestral as pt On pt.prod_id=p.prod_id
-            where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+            where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
             order by pt.tprod_id asc';
         }
         else{ /// 2022
@@ -129,7 +129,7 @@ class Model_evalinstitucional extends CI_Model{
             Inner Join _componentes as c On c.pfec_id=poa.pfec_id
             Inner Join _productos as p On p.com_id=c.com_id
             Inner Join _productos_trimestral as pt On pt.prod_id=p.prod_id
-            where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.'
+            where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
             order by pt.tprod_id asc';
         }
 
@@ -155,7 +155,22 @@ class Model_evalinstitucional extends CI_Model{
             $vi=10;$vf=12;   
         }
 
-        if($this->gestion>2022){ /// 2023
+        if($this->gestion>2023){ /// 2024
+            $sql = 'select poa.dep_id, count(*) total
+                    from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+                    Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                    Inner Join _productos as prod On prod.com_id=c.com_id
+                    
+                    Inner Join (
+                            select prod_id
+                            from prod_programado_mensual
+                            where (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
+                            group by prod_id
+                        ) as pprog On pprog.prod_id=prod.prod_id
+                    where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and prod.estado!=\'3\' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
+                    group by poa.dep_id';
+        }
+        else{ /// 2023
             $sql = 'select poa.dep_id, count(*) total
                     from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                     Inner Join _componentes as c On c.pfec_id=poa.pfec_id
@@ -168,21 +183,6 @@ class Model_evalinstitucional extends CI_Model{
                             group by prod_id
                         ) as pprog On pprog.prod_id=prod.prod_id
                     where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and prod.estado!=\'3\' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
-                    group by poa.dep_id';
-        }
-        else{ /// 2022
-            $sql = 'select poa.dep_id, count(*) total
-                    from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
-                    Inner Join _componentes as c On c.pfec_id=poa.pfec_id
-                    Inner Join _productos as prod On prod.com_id=c.com_id
-                    
-                    Inner Join (
-                            select prod_id
-                            from prod_programado_mensual
-                            where (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
-                            group by prod_id
-                        ) as pprog On pprog.prod_id=prod.prod_id
-                    where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and prod.estado!=\'3\'
                     group by poa.dep_id';
         }
 
@@ -206,22 +206,22 @@ class Model_evalinstitucional extends CI_Model{
         }
 
 
-        if($this->gestion>2022){ /// 2023
+        if($this->gestion>2023){ /// 2024
+            $sql = 'select poa.dep_id, count(*) total, SUM(temp.pg_fis) suma_programado
+                from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+                Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                Inner Join _productos as p On p.com_id=c.com_id
+                Inner Join prod_programado_mensual as temp On temp.prod_id=p.prod_id
+                where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and temp.pg_fis!=\'0\' and (temp.m_id>='.$vi.' and temp.m_id<='.$vf.') and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
+                group by poa.dep_id';
+        }
+        else{ /// 2023
             $sql = 'select poa.dep_id, count(*) total, SUM(temp.pg_fis) suma_programado
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join prod_programado_mensual as temp On temp.prod_id=p.prod_id
                 where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and temp.pg_fis!=\'0\' and (temp.m_id>='.$vi.' and temp.m_id<='.$vf.') and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
-                group by poa.dep_id';
-        }
-        else{ /// 2022
-            $sql = 'select poa.dep_id, count(*) total, SUM(temp.pg_fis) suma_programado
-                from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
-                Inner Join _componentes as c On c.pfec_id=poa.pfec_id
-                Inner Join _productos as p On p.com_id=c.com_id
-                Inner Join prod_programado_mensual as temp On temp.prod_id=p.prod_id
-                where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and temp.pg_fis!=\'0\' and (temp.m_id>='.$vi.' and temp.m_id<='.$vf.')
                 group by poa.dep_id';
         }
 
@@ -246,13 +246,13 @@ class Model_evalinstitucional extends CI_Model{
         }
 
 
-        if($this->gestion>2022){ /// 2023
+        if($this->gestion>2023){ /// 2024
             $sql = 'select poa.dep_id, count(*) total, SUM(ejec.pejec_fis) suma_evaluado
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join prod_ejecutado_mensual as ejec On ejec.prod_id=p.prod_id
-                where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and ejec.pejec_fis!=\'0\' and (ejec.m_id>='.$vi.' and ejec.m_id<='.$vf.') and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+                where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and ejec.pejec_fis!=\'0\' and (ejec.m_id>='.$vi.' and ejec.m_id<='.$vf.') and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
                 group by poa.dep_id';
         }
         else{
@@ -261,7 +261,7 @@ class Model_evalinstitucional extends CI_Model{
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join prod_ejecutado_mensual as ejec On ejec.prod_id=p.prod_id
-                where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and ejec.pejec_fis!=\'0\' and (ejec.m_id>='.$vi.' and ejec.m_id<='.$vf.')
+                where poa.dep_id='.$dep_id.' and c.estado!=\'3\' and p.estado!=\'3\' and ejec.pejec_fis!=\'0\' and (ejec.m_id>='.$vi.' and ejec.m_id<='.$vf.') and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
                 group by poa.dep_id';
         }
 
@@ -274,14 +274,14 @@ class Model_evalinstitucional extends CI_Model{
     /*====== DISTRITAL ======*/
     /*--- LISTA OPERACIONES EVALUADAS (CUMPLIDAS-PROCESO-NO CUMPLIDAS) DISTRITAL ---*/
     public function list_operaciones_evaluadas_unidad_trimestre_tipo_distrital($dist_id,$trimestre,$tipo_eval,$tp_id){
-            if($this->gestion>2022){ /// 2023
+            if($this->gestion>2023){ /// 2024
                 $sql = '
                 select poa.*,c.*,pt.*
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join _productos_trimestral as pt On pt.prod_id=p.prod_id
-                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
                 order by pt.tprod_id asc';
             }
             else{ /// 2022
@@ -291,7 +291,7 @@ class Model_evalinstitucional extends CI_Model{
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join _productos_trimestral as pt On pt.prod_id=p.prod_id
-                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.'
+                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and pt.testado!=\'3\' and pt.trm_id='.$trimestre.' and pt.tp_eval='.$tipo_eval.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
                 order by pt.tprod_id asc';
             }
 
@@ -314,7 +314,22 @@ class Model_evalinstitucional extends CI_Model{
             $vi=10;$vf=12;   
         }
 
-        if($this->gestion>2022){ /// 2023
+        if($this->gestion>2023){ /// 2024
+            $sql = 'select poa.dist_id, count(*) total
+            from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+            Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+            Inner Join _productos as prod On prod.com_id=c.com_id
+            
+            Inner Join (
+                    select prod_id
+                    from prod_programado_mensual
+                    where (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
+                    group by prod_id
+                ) as pprog On pprog.prod_id=prod.prod_id
+            where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and prod.estado!=\'3\' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
+            group by poa.dist_id';
+        }
+        else{ /// 2023
             $sql = 'select poa.dist_id, count(*) total
             from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
             Inner Join _componentes as c On c.pfec_id=poa.pfec_id
@@ -327,21 +342,6 @@ class Model_evalinstitucional extends CI_Model{
                     group by prod_id
                 ) as pprog On pprog.prod_id=prod.prod_id
             where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and prod.estado!=\'3\' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
-            group by poa.dist_id';
-        }
-        else{ /// 2022
-            $sql = 'select poa.dist_id, count(*) total
-            from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
-            Inner Join _componentes as c On c.pfec_id=poa.pfec_id
-            Inner Join _productos as prod On prod.com_id=c.com_id
-            
-            Inner Join (
-                    select prod_id
-                    from prod_programado_mensual
-                    where (m_id>='.$vi.' and m_id<='.$vf.') and pg_fis!=\'0\'
-                    group by prod_id
-                ) as pprog On pprog.prod_id=prod.prod_id
-            where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and prod.estado!=\'3\'
             group by poa.dist_id';
         }
 
@@ -364,22 +364,22 @@ class Model_evalinstitucional extends CI_Model{
             $vi=10;$vf=12;   
         }
 
-        if($this->gestion>2022){ /// 2023
+        if($this->gestion>2023){ /// 2024
+            $sql = 'select poa.dist_id, count(*) total, SUM(temp.pg_fis) suma_programado
+                from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+                Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                Inner Join _productos as p On p.com_id=c.com_id
+                Inner Join prod_programado_mensual as temp On temp.prod_id=p.prod_id
+                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and temp.pg_fis!=\'0\' and (temp.m_id>='.$vi.' and temp.m_id<='.$vf.') and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
+                group by poa.dist_id';
+        }
+        else{ /// 2023
             $sql = 'select poa.dist_id, count(*) total, SUM(temp.pg_fis) suma_programado
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join prod_programado_mensual as temp On temp.prod_id=p.prod_id
                 where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and temp.pg_fis!=\'0\' and (temp.m_id>='.$vi.' and temp.m_id<='.$vf.') and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
-                group by poa.dist_id';
-        }
-        else{ /// 2022
-            $sql = 'select poa.dist_id, count(*) total, SUM(temp.pg_fis) suma_programado
-                from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
-                Inner Join _componentes as c On c.pfec_id=poa.pfec_id
-                Inner Join _productos as p On p.com_id=c.com_id
-                Inner Join prod_programado_mensual as temp On temp.prod_id=p.prod_id
-                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and temp.pg_fis!=\'0\' and (temp.m_id>='.$vi.' and temp.m_id<='.$vf.')
                 group by poa.dist_id';
         }
 
@@ -402,13 +402,13 @@ class Model_evalinstitucional extends CI_Model{
             $vi=10;$vf=12;   
         }
 
-        if($this->gestion>2022){ /// 2023
+        if($this->gestion>2023){ /// 2024
             $sql = 'select poa.dist_id, count(*) total, SUM(ejec.pejec_fis) suma_evaluado
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join prod_ejecutado_mensual as ejec On ejec.prod_id=p.prod_id
-                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and ejec.pejec_fis!=\'0\' and (ejec.m_id>='.$vi.' and ejec.m_id<='.$vf.') and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
+                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and ejec.pejec_fis!=\'0\' and (ejec.m_id>='.$vi.' and ejec.m_id<='.$vf.') and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')
                 group by poa.dist_id';
         }
         else{
@@ -417,7 +417,7 @@ class Model_evalinstitucional extends CI_Model{
                 Inner Join _componentes as c On c.pfec_id=poa.pfec_id
                 Inner Join _productos as p On p.com_id=c.com_id
                 Inner Join prod_ejecutado_mensual as ejec On ejec.prod_id=p.prod_id
-                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and ejec.pejec_fis!=\'0\' and (ejec.m_id>='.$vi.' and ejec.m_id<='.$vf.')
+                where poa.dist_id='.$dist_id.' and c.estado!=\'3\' and p.estado!=\'3\' and ejec.pejec_fis!=\'0\' and (ejec.m_id>='.$vi.' and ejec.m_id<='.$vf.') and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')
                 group by poa.dist_id';
         }
 
@@ -482,32 +482,32 @@ class Model_evalinstitucional extends CI_Model{
         // tp 0: Regional
         // tp 1: Distrital
         if($tp==0){
-            if($this->gestion>2022){ /// 2023
+            if($this->gestion>2023){ /// 2024
+                $sql = '
+                select *
+                from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+                where poa.dep_id='.$id.' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')';
+            }
+            else{
                 $sql = '
                 select *
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 where poa.dep_id='.$id.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')';
             }
-            else{
-                $sql = '
-                select *
-                from lista_poa_gastocorriente_nacional('.$this->gestion.')
-                where dep_id='.$id.'';
-            }
             
         }
         else{
-            if($this->gestion>2022){ /// 2023
+            if($this->gestion>2023){ /// 2024
+                $sql = '
+                select *
+                from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
+                where poa.dist_id='.$id.' and (poa.prog!=\'97\' and poa.prog!=\'98\' and poa.prog!=\'99\')';
+            }
+            else{
                 $sql = '
                 select *
                 from lista_poa_gastocorriente_nacional('.$this->gestion.') poa
                 where poa.dist_id='.$id.' and (poa.prog!=\'098\' and poa.prog!=\'099\' and poa.prog!=\'720\')';
-            }
-            else{
-                $sql = '
-                select *
-                from lista_poa_gastocorriente_nacional('.$this->gestion.')
-                where dist_id='.$id.'';
             }
             
         }

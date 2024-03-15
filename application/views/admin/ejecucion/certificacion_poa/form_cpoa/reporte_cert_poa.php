@@ -198,8 +198,6 @@ $msg = $cpoa[0]['cpoa_codigo']." - RESPONSABLE:".$cpoa[0]['fun_nombre']." - NRO.
     <div align="left" style="font-size: 11px;font-family: Arial;"><b>Descripci&oacute;n de lo solicitado :</b></div><br>
     <?php echo $items;?>
     <?php if($cpoa[0]['cpoa_estado']==0){echo "<br><br>(SIN C&Oacute;DIGO DE CERTIFICACIÓN, (Comuniquese con el Administrador SIIPLAS)...)";}?>
-<!-- <br><br>
-    <div align="center" style="font-size: 25px;font-family: Arial;">CERTIFICACIÓN ANULADA SEGUN CITE N° EGG-087/2021</div> -->
 </page>
 <?php
 $content = ob_get_clean();

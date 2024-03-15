@@ -54,7 +54,7 @@ class Cprog_insumo extends CI_Controller{
       $this->load->view('admin/programacion/proy_anual/top/menu_plantilla', $data);
     }
 
-    /*--- MIGRACION DE FORM4 (2020-2022-2024) Y FORM 5 ---*/
+    /*--- MIGRACION DE FORM4 (2020-2022) Y FORM 5 ---*/
     function ver_operaciones_requerimientos(){
       if ($this->input->post()) {
           $post = $this->input->post();

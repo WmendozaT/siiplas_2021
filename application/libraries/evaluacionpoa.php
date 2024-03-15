@@ -46,6 +46,7 @@ class Evaluacionpoa extends CI_Controller{
     $regionales=$this->model_proyecto->list_departamentos();
     $unidades=$this->model_estructura_org->list_unidades_apertura();
     $trimestre=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
+
       $tabla.='
           <input name="base" type="hidden" value="'.base_url().'">
           <article class="col-sm-12">
@@ -84,6 +85,88 @@ class Evaluacionpoa extends CI_Controller{
               </form>
               </div>
             </article>';
+/*    if($this->fun_id==1289){
+      $tabla.='
+          <input name="base" type="hidden" value="'.base_url().'">
+          <article class="col-sm-12">
+            <div class="well">
+              <form class="smart-form">
+                  <header><b>CONSOLIDADO EVALUACI&Oacute;N POA - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
+                  <fieldset>          
+                    <div class="row">
+                      <section class="col col-3">
+                        <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
+                        <select class="form-control" id="depp_id" name="depp_id" title="SELECCIONE REGIONAL">
+                        <option value="">SELECCIONE REGIONAL</option>
+                        <option value="0">0.- INSTITUCIONAL C.N.S.</option>';
+                        foreach($regionales as $row){
+                          if($row['dep_id']!=0){
+                            $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                          }
+                        }
+                        $tabla.='
+                        </select>
+                      </section>
+
+                      <section class="col col-3" id="ue">
+                        <label class="label">UNIDAD EJECUTORA</label>
+                        <select class="form-control" id="dist_id" name="dist_id" title="SELECCIONE DISTRITAL">
+                        </select>
+                      </section>
+
+                      <section class="col col-3" id="tp">
+                        <label class="label">TIPO DE GASTO</label>
+                        <select class="form-control" id="tp_id" name="tp_id" title="SELECCIONE TIPO">
+                        </select>
+                      </section>
+                    </div>
+                  </fieldset>
+              </form>
+              </div>
+            </article>';
+    }
+    else{
+      $tabla.='
+          <input name="base" type="hidden" value="'.base_url().'">
+          <article class="col-sm-12">
+            <div class="well">
+              <form class="smart-form">
+                  <header><b>CONSOLIDADO EVALUACI&Oacute;N POA - '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion.'</b></header>
+                  <fieldset>          
+                    <div class="row">
+                      <section class="col col-3">
+                        <label class="label">DIRECCIÓN ADMINISTRATIVA</label>
+                        <select class="form-control" id="dep_id" name="dep_id" title="SELECCIONE REGIONAL">
+                        <option value="">SELECCIONE REGIONAL</option>
+                        <option value="0">0.- INSTITUCIONAL C.N.S.</option>';
+                        foreach($regionales as $row){
+                          if($row['dep_id']!=0){
+                            $tabla.='<option value="'.$row['dep_id'].'">'.$row['dep_id'].'.- '.strtoupper($row['dep_departamento']).'</option>';
+                          }
+                        }
+                        $tabla.='
+                        </select>
+                      </section>
+
+                      <section class="col col-3" id="ue">
+                        <label class="label">UNIDAD EJECUTORA</label>
+                        <select class="form-control" id="dist_id" name="dist_id" title="SELECCIONE DISTRITAL">
+                        </select>
+                      </section>
+
+                      <section class="col col-3" id="tp">
+                        <label class="label">TIPO DE GASTO</label>
+                        <select class="form-control" id="tp_id" name="tp_id" title="SELECCIONE TIPO">
+                        </select>
+                      </section>
+                    </div>
+                  </fieldset>
+              </form>
+              </div>
+            </article>';
+    }*/
+
+      
     return $tabla;
   }
 
@@ -91,16 +174,16 @@ class Evaluacionpoa extends CI_Controller{
     public function tabla_acumulada_evaluacion_regional_distrital($regresion,$tp_graf,$tip_rep){
       $tabla='';
 
-      $tit[2]='<b>NRO. ACT. PROGRAMADAS</b>';
-      $tit[3]='<b>NRO. ACT. CUMPLIDAS</b>';
-      $tit[4]='<b>NRO. ACT. NO CUMPLIDOS</b>';
-      $tit[5]='<b>% CUMPLIDOS</b>';
-      $tit[6]='<b>% NO CUMPLIDOS</b>';
+      $tit[2]='<b>NRO. ACT. PROG.</b>';
+      $tit[3]='<b>NRO. ACT. CUMP.</b>';
+      $tit[4]='<b>NRO. ACT. NO CUMP.</b>';
+      $tit[5]='<b>% CUMP.</b>';
+      $tit[6]='<b>% NO CUMP.</b>';
 
-      $tit_total[2]='<b>NRO. ACT. PROGRAMADAS</b>';
-      $tit_total[3]='<b>NRO. ACT. CUMPLIDOS</b>';
-      $tit_total[4]='<b>% ACT. PROGRAMADOS</b>';
-      $tit_total[5]='<b>% ACT. CUMPLIDOS</b>';
+      $tit_total[2]='<b>NRO. ACT. PROG.</b>';
+      $tit_total[3]='<b>NRO. ACT. CUMP.</b>';
+      $tit_total[4]='<b>% ACT. PROG.</b>';
+      $tit_total[5]='<b>% ACT. CUMP.</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -116,12 +199,12 @@ class Evaluacionpoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center bgcolor='.$color.' style="font-family: Arial;">
-                <th>NRO. ACT. PROGRAMADAS</th>
-                <th>ACT. EVALUADAS</th>
-                <th>ACT. CUMPLIDAS</th>
-                <th>ACT. NO CUMPLIDAS</th>
-                <th>% CUMPLIDAS</th>
-                <th>% NO CUMPLIDAS</th>
+                <th>NRO. ACT. PROG.</th>
+                <th>ACT. EVAL.</th>
+                <th>ACT. CUMP.</th>
+                <th>ACT. NO CUMP.</th>
+                <th>% CUMP.</th>
+                <th>% NO CUMP.</th>
               </tr>
               </thead>
             <tbody>
@@ -206,13 +289,13 @@ class Evaluacionpoa extends CI_Controller{
         <table '.$tab.'>
             <thead>
               <tr align=center style="font-family: Arial;" >
-                <th>NRO. ACT. PROGRAMADAS</th>
-                <th>NRO. ACT. EVALUADAS</th>
-                <th>NRO. ACT. CUMPLIDAS</th>
-                <th>NRO. ACT. CUMPLIDO PARCIAL</th>
-                <th>NRO. ACT. NO CUMPLIDAS</th>
-                <th>% CUMPLIDAS</th>
-                <th>% NO CUMPLIDAS</th>
+                <th>NRO. ACT. PROG.</th>
+                <th>NRO. ACT. EVAL.</th>
+                <th>NRO. ACT. CUMP.</th>
+                <th>NRO. ACT. EN PROC.</th>
+                <th>NRO. ACT. NO CUMP.</th>
+                <th>% CUMP.</th>
+                <th>% NO CUMP.</th>
               </tr>
             </thead>
             <tbody>
@@ -504,7 +587,7 @@ class Evaluacionpoa extends CI_Controller{
     $regionales=$this->model_proyecto->list_departamentos();
     $eficacia_nacional=$this->tabla_regresion_lineal_nacional(); /// Eficacia
     $economia_nacional=$this->economia_institucional_nacional(); /// Economia
-    $eficiencia_nacional=$this->eficiencia_por_regional($eficacia_nacional[5][$this->tmes],$economia_nacional[3]); /// Eficiencia
+    //$eficiencia_nacional=$this->eficiencia_por_regional($eficacia_nacional[5][$this->tmes],$economia_nacional[3]); /// Eficiencia
 
     $tabla='';
       $tabla.='
@@ -513,12 +596,12 @@ class Evaluacionpoa extends CI_Controller{
          <thead>
             <tr style="font-size: 10px;" align=center>
               <th style="width:2%;height:15px;">#</th>
-              <th style="width:20%;">DIRECCIÓN ADMINISTRATIVA</th>
-              <th style="width:12%;">METAS PROGRAMADAS</th>
-              <th style="width:12%;">METAS CUMPLIDAS</th>
-              <th style="width:12%;">METAS NO CUMPLIDAS</th>
-              <th style="width:12%;">% CUMPLIMIENTO</th>
-              <th style="width:12%;">% NO CUMPLIDO</th>
+              <th style="width:20%;">REGIONAL</th>
+              <th style="width:12%;">ACT. PROG.</th>
+              <th style="width:12%;">ACT. CUMP.</th>
+              <th style="width:12%;">ACT. NO CUMP.</th>
+              <th style="width:12%;">% CUMP.</th>
+              <th style="width:12%;">% NO CUMP.</th>
               <th style="width:12%;">% EJEC. PPTO.</th>
             </tr>
           </thead>
@@ -592,14 +675,14 @@ class Evaluacionpoa extends CI_Controller{
             <tr style="font-size: 10px;" align=center>
               <th style="width:1%;height:15px;">#</th>
               <th style="width:10%;">DISTRITAL</th>
-              <th style="width:10%;">GASTO CORRIENTE / PROY. INV.</th>
+              <th style="width:10%;">GASTO CORRIENTE</th>
               <th style="width:5%;"></th>
               <th style="width:5%;">ACT. PROG.</th>
               <th style="width:5%;">ACT CUMP.</th>
               <th style="width:5%;">ACT NO CUMP.</th>
               <th style="width:5%;">% CUMP.</th>
               <th style="width:5%;">% NO CUMP.</th>
-              <th style="width:5%;">% EJEC. PPTO. POA AL TRIMESTRE</th>
+              <th style="width:5%;">% EJEC. CERT. POA</th>
               
             </tr>
           </thead>
@@ -690,7 +773,7 @@ class Evaluacionpoa extends CI_Controller{
     $distritales=$this->model_evalinstitucional->get_distritales($dep_id);
     $eficacia_regional=$this->tabla_regresion_lineal_regional($dep_id); /// Eficacia
     $economia_regional=$this->economia_por_regional($dep_id); /// Economia
-    $eficiencia_regional=$this->eficiencia_por_regional($eficacia_regional[5][$this->tmes],$economia_regional[3]); /// Eficiencia
+    //$eficiencia_regional=$this->eficiencia_por_regional($eficacia_regional[5][$this->tmes],$economia_regional[3]); /// Eficiencia
 
     $tabla='';
       // 1 : normal, 2 : Impresion
@@ -712,7 +795,7 @@ class Evaluacionpoa extends CI_Controller{
               <th style="width:40%;">DISTRITAL</th>
               <th style="width:15%;">% EFICACIA</th>
               <th style="width:15%;">% ECONOMIA</th>
-              <th style="width:15%;">EFICIENCIA</th>
+              <th style="width:15%;"></th>
             </tr>
           </thead>
           <tbody>';
@@ -720,7 +803,7 @@ class Evaluacionpoa extends CI_Controller{
           foreach($distritales as $row){
             $eficacia=$this->tabla_regresion_lineal_distrital($row['dist_id']); /// Eficacia
             $economia=$this->economia_por_distrital($row['dist_id']); /// Eficiencia
-            $eficiencia=$this->eficiencia_por_distrital($eficacia[5][$this->tmes],$economia[3]);
+            //$eficiencia=$this->eficiencia_por_distrital($eficacia[5][$this->tmes],$economia[3]);
             $nro++;
             $tabla.='<tr style="font-size: 9px;">';
             $tabla.='<td style="width:5%;height:10px;" align=center>'.$nro.'</td>';
@@ -736,7 +819,7 @@ class Evaluacionpoa extends CI_Controller{
             <td><b>CONSOLIDADO REGIONAL '.strtoupper($regional[0]['dep_departamento']).'</b></td>
             <td style="font-size: 10px;" align=right><b>'.$eficacia_regional[5][$this->tmes].'%</b></td>
             <td style="font-size: 10px;" align=right><b>'.$economia_regional[3].'%</b></td>
-            <td style="font-size: 10px;" align=right><b>'.$eficiencia_regional.'</b></td>
+            <td style="font-size: 10px;" align=right><b></b></td>
           </tr>
           </tbody>
         </table>';
@@ -1138,14 +1221,14 @@ class Evaluacionpoa extends CI_Controller{
     }
 
     /*------ EFICIENCIA POR REGIONAL ------*/
-    public function eficiencia_por_regional($eficacia,$economia){
+/*    public function eficiencia_por_regional($eficacia,$economia){
       $eficiencia=0;
       if($eficacia!=0){
         $eficiencia= round(($economia/$eficacia),2);
       }
 
       return $eficiencia;
-    }
+    }*/
 
 
 

@@ -1,12 +1,15 @@
 <?php
+
 ob_start();
 ?>
 <style type="text/css">
     table.page_header {width: 100%; border: none; border-bottom: solid 1mm; padding: 0mm }
     table.page_footer {width: 100%; border: none; background-color: #739e73; border-top: solid 1mm #AAAADD; padding: 2mm}
+}
         .verde{ width:100%; height:5px; background-color:#1c7368;}
         .blanco{ width:100%; height:5px; background-color:#F1F2F1;}
         .siipp{width:120px;}
+
         .tabla {
         font-size: 7px;
         width: 100%;
@@ -22,10 +25,10 @@ ob_start();
                 <td style="width: 100%; text-align: left">
                     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:91.8%;">
                         <tr style="width: 100%; border: solid 0px black; text-align: center; font-size: 8pt; font-style: oblique;">
-                          <td width=14%; text-align:center;"">
+                          <td style="width:14%;">
                            <!--  <img src="<?php echo base_url().'assets/ifinal/cns_logo.JPG'?>" alt="" style="width:50%;"> -->
                           </td>
-                          <td width=76%; align=left>
+                          <td style="width:74%;" align=left>
                             <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:93%;" align="center">
                                 <tr>
                                     <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b><?php echo $this->session->userdata('entidad')?></b></td>

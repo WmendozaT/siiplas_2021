@@ -242,7 +242,6 @@ class crequerimiento extends CI_Controller{
     /*----------- LISTA DE REQUERIMIENTOS (2020) --------------*/
     public function mis_requerimientos($prod_id,$componente){
       $lista_insumos = $this->model_insumo->lista_insumos_prod($prod_id);
-
       $tabla='';
       $total=0;
       $tabla.='
@@ -258,7 +257,6 @@ class crequerimiento extends CI_Controller{
               <th>CANTIDAD</th>
               <th>UNITARIO</th>
               <th>TOTAL</th>
-              <th>TOTAL PROG.</th>
               <th style="background-color: #0AA699;color: #FFFFFF">ENE.</th>
               <th style="background-color: #0AA699;color: #FFFFFF">FEB.</th>
               <th style="background-color: #0AA699;color: #FFFFFF">MAR.</th>
@@ -281,17 +279,17 @@ class crequerimiento extends CI_Controller{
           $cont = 0;
           foreach ($lista_insumos as $row) {
             $color='';
-           // $prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
+            //$prog = $this->model_insumo->list_temporalidad_insumo($row['ins_id']);
             $ins_cert=0;
             if($row['ins_monto_certificado']!=0){
               $ins_cert=1;
             }
 
-            /*if(count($prog)!=0){
+           /* if(count($prog)!=0){
               if(($row['ins_costo_total'])!=$prog[0]['programado_total']){
                 $color='#f5bfb6';
               }
-            } */     
+            }*/      
             $cont++;
             $tabla .= '<tr class="modo1" bgcolor="'.$color.'" title='.$row['ins_id'].'>';
               $tabla .= '<td align="center">';
@@ -316,7 +314,6 @@ class crequerimiento extends CI_Controller{
               $tabla .= '<td>'.$row['ins_cant_requerida'].'</td>'; /// cantidad
               $tabla .= '<td>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
               $tabla .= '<td>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-              $tabla .= '<td></td>';
               for ($i=1; $i <=12 ; $i++) { 
                 $tabla.='<td>0</td>';
               }

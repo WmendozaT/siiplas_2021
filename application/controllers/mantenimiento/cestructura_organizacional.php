@@ -766,7 +766,7 @@ class Cestructura_organizacional extends CI_Controller {
       $data['menu']=$this->menu(9);
       $data['resp']=$this->session->userdata('funcionario');
       $data['res_dep']=$this->tp_resp();
-      $data['programas'] = $this->model_proyecto->list_prog($this->gestion); ///// lista aperturas padres list_aperturas_programaticas()
+      $data['programas'] = $this->model_proyecto->list_prog($this->gestion); ///// lista aperturas padres
       
       $tabla='';
       $establecimientos=$this->model_estructura_org->list_tp_establecimiento();
@@ -819,22 +819,6 @@ class Cestructura_organizacional extends CI_Controller {
 
       $data['establecimiento']=$tabla;
       $this->load->view('admin/mantenimiento/unidad_organizacional/establecimiento', $data);
-
-
-      /*$te_id = 13; /// Tipo de Establecimiento
-        $relacion=$this->model_estructura_org->relacion_establecimiento_apertura($te_id);
-        $aper_id=0;
-        $ae_id=0;
-        if(count($relacion)!=0){
-          $aper_id=$relacion[0]['aper_id'];
-          $ae_id=$relacion[0]['ae_id'];
-        }
-
-        $result = array(
-          'respuesta' => 'correcto',
-          'aper_id' => $aper_id,
-          'ae_id' => $ae_id,
-        );*/
     }
 
     /*-------- GET LISTA DE SERVICIOS ------------*/
@@ -1106,43 +1090,8 @@ class Cestructura_organizacional extends CI_Controller {
           $tit='Lista_Unidades_medida'; 
         }
       
-      //$html = $this->estructura($tipo);
-      //echo $html;
-
-        /*$uni=$this->model_proyecto->todos();
-        $tabla='';
-        $tabla.='<table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;font-size: 8pt;" align="center" >
-                  <thead>
-                    <tr class="modo1">
-                      <th style="width:5%;">COD. REG.</th>
-                      <th style="width:10%;">REGIONAL</th>
-                      <th style="width:5%;">COD. DIST.</th>
-                      <th style="width:10%;">DISTRITAL</th>
-                      <th style="width:5%;">COD. UO.</th>
-                      <th style="width:15%;">UNIDAD ORGANIZACIONAL</th>
-                      <th style="width:5%;">COM ID</th>
-                      <th style="width:15%;">UNIDAD RESPONSABLE</th>
-                    </tr>
-                  </thead>
-                  <tbody>';
-                  foreach ($uni as $row){
-                    $tabla.='
-                    <tr>
-                      <td>'.$row['dep_id'].'</td>
-                      <td>'.strtoupper($row['dep_departamento']).'</td>
-                      <td>'.$row['dist_id'].'</td>
-                      <td>'.strtoupper($row['dist_distrital']).'</td>
-                      <td>'.$row['prog'].' '.$row['proy'].' '.$row['act'].'</td>
-                      <td>'.$row['com_id'].'</td>
-                      <td>'.$row['tipo'].' '.$row['actividad'].' '.$row['abrev'].'</td>
-                  
-                    </tr>';
-                  }
-                  $tabla.='
-                  </tbody>
-                </table>';
-                echo $tabla;*/
-
+      $html = $this->estructura($tipo);
+      echo $html;
      /* $dompdf = new DOMPDF();
       $dompdf->load_html($html);
       $dompdf->set_paper('letter', 'portrait');
@@ -1211,14 +1160,18 @@ class Cestructura_organizacional extends CI_Controller {
       $tabla.='<table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:90%;font-size: 8pt;" align="center" >
                   <thead>
                     <tr class="modo1">
-                      <th style="width:5%;">COD. REG.</th>
-                      <th style="width:10%;">REGIONAL</th>
-                      <th style="width:5%;">COD. DIST.</th>
-                      <th style="width:10%;">DISTRITAL</th>
-                      <th style="width:5%;">COD. UO.</th>
-                      <th style="width:15%;">UNIDAD ORGANIZACIONAL</th>
-                      <th style="width:5%;">COD. UNIDAD.</th>
-                      <th style="width:15%;">UNIDAD RESPONSABLE</th>
+                      <th style="width:5%;">COD. DA.</th>
+                      <th style="width:5%;">COD. UE.</th>
+                      <th style="width:5%;">COD. PROG.</th>
+                      <th style="width:5%;">COD. PROY.</th>
+                      <th style="width:5%;">COD. ACT.</th>
+                      <th style="width:5%;">COD. SUBACT.</th>
+                      <th style="width:10%;">DESCRIPCIÓN DA</th>
+                      <th style="width:10%;">DESCRIPCIÓN UE</th>
+                      <th style="width:10%;">DESCRIPCIÓN PROGRAMA</th>
+                      <th style="width:15%;">DESCRIPCIÓN ACTIVIDAD</th>
+                      <th style="width:15%;">DESCRIPCIÓN SUBACTIVIDAD</th>
+                      <th style="width:15%;">COM ID</th>
                     </tr>
                   </thead>
                   <tbody>';
@@ -1226,13 +1179,17 @@ class Cestructura_organizacional extends CI_Controller {
                     $tabla.='
                     <tr>
                       <td>'.$row['dep_id'].'</td>
-                      <td>'.strtoupper($row['dep_departamento']).'</td>
                       <td>'.$row['dist_id'].'</td>
-                      <td>'.strtoupper($row['dist_distrital']).'</td>
+                      <td>'.$row['aper_programa'].'</td>
+                      <td>'.$row['aper_proyecto'].'</td>
                       <td>'.$row['aper_actividad'].'</td>
-                      <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
                       <td>'.$row['serv_cod'].'</td>
+                      <td>'.strtoupper($row['dep_departamento']).'</td>
+                      <td>'.strtoupper($row['dist_distrital']).'</td>
+                      <td></td>
+                      <td>'.$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'].'</td>
                       <td>'.$row['serv_descripcion'].'</td>
+                      <td>'.$row['com_id'].'</td>
                     </tr>';
                   }
                   $tabla.='

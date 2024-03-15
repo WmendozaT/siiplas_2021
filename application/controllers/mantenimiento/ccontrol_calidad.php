@@ -400,7 +400,6 @@ class Ccontrol_calidad extends CI_Controller {
                             <th style="width:1%;" bgcolor="#474544">#</th>
                             <th style="width:5%;" bgcolor="#474544" title="REGIONAL">REGIONAL</th>
                             <th style="width:5%;" bgcolor="#474544" title="UNIDAD DE MEDIDA">UNIDAD DE MEDIDA</th>
-                            <th bgcolor="#474544" title="INS ID">ID</th>
                             <th bgcolor="#474544" title="DETALLE REQUERIMIENTO">DETALLE REQUERIMIENTO</th>
                             <th bgcolor="#474544" title="CANTIDAD">CANTIDAD</th>
                             <th bgcolor="#474544" title="COSTO UNITARIO">COSTO UNITARIO</th>
@@ -418,7 +417,6 @@ class Ccontrol_calidad extends CI_Controller {
                                     <td title="'.$row['ins_id'].'"><input type="hidden" name="ins_id[]" value="'.$row['ins_id'].'">'.$nro.'-'.$row['ins_id'].'</td>
                                     <td>'.strtoupper($row['dep_departamento']).'</td>
                                     <td bgcolor="'.$color1.'">'.$row['ins_unidad_medida'].'</td>
-                                    <td>'.$row['ins_id'].'</td>
                                     <td>'.$row['ins_detalle'].'</td>
                                     <td>'.$row['ins_cant_requerida'].'</td>
                                     <td>'.$row['ins_costo_unitario'].'</td>
@@ -487,7 +485,6 @@ class Ccontrol_calidad extends CI_Controller {
                             <th style="width:1%;" bgcolor="#474544">#</th>
                             <th style="width:5%;" bgcolor="#474544" title="REGIONAL">REGIONAL</th>
                             <th style="width:20%;" bgcolor="#474544" title="UNIDAD DE MEDIDA">UNIDAD DE MEDIDA</th>
-                            <th style="width:20%;" bgcolor="#474544" title="INS ID">ID</th>
                             <th style="width:20%;" bgcolor="#474544" title="DETALLE REQUERIMIENTO">DETALLE REQUERIMIENTO</th>
                             <th bgcolor="#474544" title="CANTIDAD">CANTIDAD</th>
                             <th bgcolor="#474544" title="COSTO UNITARIO">COSTO UNITARIO</th>
@@ -507,7 +504,6 @@ class Ccontrol_calidad extends CI_Controller {
                                     <td bgcolor="#f5c9c9" style="width:20%;" >
                                       <input type="text" class="form-control"  name="umedida[]" value="'.$row['ins_unidad_medida'].'" placeholder="Null">
                                     </td>
-                                    <td>'.$row['ins_id'].'</td>
                                     <td>'.$row['ins_detalle'].'</td>
                                     <td>'.$row['ins_cant_requerida'].'</td>
                                     <td>'.$row['ins_costo_unitario'].'</td>
@@ -555,7 +551,6 @@ class Ccontrol_calidad extends CI_Controller {
                             <th style="width:1%;" bgcolor="#474544">#</th>
                             <th style="width:5%;" bgcolor="#474544" title="REGIONAL">REGIONAL</th>
                             <th style="width:5%;" bgcolor="#474544" title="UNIDAD DE MEDIDA">UNIDAD DE MEDIDA</th>
-                            <th bgcolor="#474544" title="INS ID">ID</th>
                             <th bgcolor="#474544" title="DETALLE REQUERIMIENTO">DETALLE REQUERIMIENTO</th>
                             <th bgcolor="#474544" title="CANTIDAD">CANTIDAD</th>
                             <th bgcolor="#474544" title="COSTO UNITARIO">COSTO UNITARIO</th>
@@ -573,7 +568,6 @@ class Ccontrol_calidad extends CI_Controller {
                                     <td title="'.$row['ins_id'].'"><input type="hidden" name="ins_id[]" value="'.$row['ins_id'].'">'.$nro.'</td>
                                     <td>'.strtoupper($row['dep_departamento']).'</td>
                                     <td>'.$row['ins_unidad_medida'].'</td>
-                                    <td>'.$row['ins_id'].'</td>
                                     <td bgcolor="#d5f4f5">'.$row['ins_detalle'].'</td>
                                     <td>'.$row['ins_cant_requerida'].'</td>
                                     <td>'.$row['ins_costo_unitario'].'</td>

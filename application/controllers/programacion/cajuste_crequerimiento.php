@@ -648,7 +648,7 @@ class cajuste_crequerimiento extends CI_Controller{
                         }
                     }
 
-                } /// end dimension (22)
+                } /// end dimension (20)
               } /// i!=0
 
               $i++;
@@ -656,7 +656,7 @@ class cajuste_crequerimiento extends CI_Controller{
             }
 
             /// --- ACTUALIZANDO MONEDA PARA CARGAR PRESUPUESTO
-          //  $this->update_ptto_operaciones($com_id);
+            //  $this->update_ptto_operaciones($com_id);
 
             $this->session->set_flashdata('success','SE REGISTRARON '.$guardado.' REQUERIMIENTOS');
             redirect('prog/list_requerimiento/'.$com_id.'');

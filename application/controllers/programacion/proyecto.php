@@ -573,6 +573,7 @@ class Proyecto extends CI_Controller {
         $this->session->set_flashdata('danger','ERROR AL REGISTRAR');
         redirect('admin/proy/list_proy'); ///// Lista de Unidades/ Establecimientos
     }
+
   }
 
 

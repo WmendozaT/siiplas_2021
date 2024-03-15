@@ -2,31 +2,31 @@
 class Cobjetivo_gestion extends CI_Controller {
   public $rol = array('1' => '3','2' => '4');  
   public function __construct (){
-    parent::__construct();
-    if($this->session->userdata('fun_id')!=null){
-      $this->load->library('pdf');
-      $this->load->library('pdf2');
-      $this->load->model('programacion/model_proyecto');
-      $this->load->model('resultados/model_resultado');
-      $this->load->model('mestrategico/model_mestrategico');
-      $this->load->model('mestrategico/model_objetivogestion');
-      $this->load->model('mestrategico/model_objetivoregion');
-      $this->load->model('programacion/model_producto');
-      $this->load->model('menu_modelo');
-      $this->load->model('Users_model','',true);
-      $this->gestion = $this->session->userData('gestion');
-      $this->adm = $this->session->userData('adm');
-      $this->rol = $this->session->userData('rol_id');
-      $this->dist = $this->session->userData('dist');
-      $this->dist_tp = $this->session->userData('dist_tp');
-      $this->fun_id = $this->session->userData('fun_id');
-      $this->dep_id = $this->session->userData('dep_id');
-      $this->tp_adm = $this->session->userData('tp_adm');
-      $this->load->library('acortoplazo');
-    }else{
-        redirect('/','refresh');
+        parent::__construct();
+        if($this->session->userdata('fun_id')!=null){
+          $this->load->library('pdf');
+          $this->load->library('pdf2');
+          $this->load->model('programacion/model_proyecto');
+          $this->load->model('resultados/model_resultado');
+          $this->load->model('mestrategico/model_mestrategico');
+          $this->load->model('mestrategico/model_objetivogestion');
+          $this->load->model('mestrategico/model_objetivoregion');
+          $this->load->model('programacion/model_producto');
+          $this->load->model('menu_modelo');
+          $this->load->model('Users_model','',true);
+          $this->gestion = $this->session->userData('gestion');
+          $this->adm = $this->session->userData('adm');
+          $this->rol = $this->session->userData('rol_id');
+          $this->dist = $this->session->userData('dist');
+          $this->dist_tp = $this->session->userData('dist_tp');
+          $this->fun_id = $this->session->userData('fun_id');
+          $this->dep_id = $this->session->userData('dep_id');
+          $this->tp_adm = $this->session->userData('tp_adm');
+          $this->load->library('acortoplazo');
+        }else{
+            redirect('/','refresh');
+        }
     }
-  }
 
  
     
@@ -65,6 +65,7 @@ class Cobjetivo_gestion extends CI_Controller {
       $data['lista2']= $this->acortoplazo->distribucion_mensual(); /// lista 2
       $data['pie']=$this->acortoplazo->pie_form1();
       $this->load->view('admin/mestrategico/objetivos_gestion/reporte_form1', $data);
+      
     }
 
 

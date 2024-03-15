@@ -65,6 +65,7 @@ class Crep_seguimientopoa extends CI_Controller {
      
       $data['titulo_modulo']=$tabla;
 
+
       $this->load->view('admin/reportes_cns/seguimiento_poa/menu_seguimiento_poa', $data);
     }
 
