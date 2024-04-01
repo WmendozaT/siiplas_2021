@@ -39,7 +39,7 @@ class Cevaluacion_form2 extends CI_Controller {
         }
     }
 
-    /*-- Menu Regional 2022 FORMULARIO N° 2 --*/
+    /*-- Menu Regional 2024 FORMULARIO N° 2 --*/
     public function menu_regional(){
       $data['menu']=$this->eval_oregional->menu(4); //// genera menu
       $data['titulo']=$this->eval_oregional->titulo();

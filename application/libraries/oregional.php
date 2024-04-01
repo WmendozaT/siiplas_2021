@@ -75,23 +75,11 @@ class Oregional extends CI_Controller{
               <h1>OPERACI&Oacute;N REGIONAL : <small><font color="#000">'.strtoupper($row['dep_departamento']).'</font></small></h1>
               <h1>META : <small><font color="#000">'.round($row['prog_fis'],2).'</font></small></h1>
             </div>';
-            /*if($row['estado']!=0){
-       
-              if($valor_meta<$row['prog_fis']){
-                $tabla.='<a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>';
-              }
-            }
-            else{
-              if(count($meta)==0){
-                $tabla.='<a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>';
-              }
-            }*/
 
               if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401){
                 $tabla.='
                 <a href="'.site_url("").'/me/new_oregional/'.$row['dep_id'].'/'.$og_id.'" title="REGISTRO OBJETIVO REGIONAL" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_form_add.png" WIDTH="25" HEIGHT="25"/>&nbsp; NUEVA OPERACI&Oacute;N REGIONAL</a>';
               }
-              
               
               $tabla.='
               <a href="javascript:abreVentana(\''.site_url("").'/me/rep_form2/'.$row['dep_id'].'\');" title="IMPRIMIR OPERACIONES REGIONAL" class="btn btn-default">

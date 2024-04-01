@@ -191,9 +191,11 @@ h1 {
       </div>
       </div>
     </form>
- 
+<!--  <a data-modals href="https://ens.minsalud.gob.bo/images/comunicados/Comunicado_oct_23.pdf" title="Comunicado Octubre 2023 Escuela Nacional de Salud" data-modals-height="100%" data-modals-title="Comunicado Octubre 2023 Escuela Nacional de Salud" data-modals-width="100%"><img src="/images/permiso.jpg" alt="permiso.jpg" width="1654" height="2338" /></p></a> -->
   </div>
+  Developer: Wilmer Mendoza Trujillo
 </div>
+
 </div>
   <script src='<?php echo base_url(); ?>assets/login/js/jquery.min.js'></script>
   <script src='<?php echo base_url(); ?>assets/login/js/gubja.js'></script>

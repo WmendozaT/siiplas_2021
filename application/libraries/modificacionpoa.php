@@ -97,7 +97,7 @@ class Modificacionpoa extends CI_Controller{
                 <tr style="font-size:10px;">
                   <td align=center><b>'.$nro.'</b></td>
                   <td align=center>';
-                    if($this->conf_mod_ope==1){
+                    if($this->conf_mod_ope==1 || $this->tp_adm==1){
                       $tabla.='<a href="'.site_url("").'/mod/list_componentes/'.$row['proy_id'].'" title="MODIFICAR ACTIVIDADES" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_edit.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px;"><b>FORM. N°4</b></div></a>';
                     }
                     else{
@@ -106,7 +106,7 @@ class Modificacionpoa extends CI_Controller{
                     $tabla.='
                   </td>
                   <td align=center>';
-                    if($this->conf_mod_req==1){
+                    if($this->conf_mod_req==1  || $this->tp_adm==1){
                       $tabla.='<a href="'.site_url("").'/mod/form5/'.$row['proy_id'].'" title="MODIFICAR REQUERIMIENTOS" target="_blank" class="btn btn-default"><img src="'.base_url().'assets/Iconos/application_edit.png" WIDTH="30" HEIGHT="30"/><br><div style="font-size: 9px;"><b>FORM. N°5</b></div></a>';
                     }
                     else{

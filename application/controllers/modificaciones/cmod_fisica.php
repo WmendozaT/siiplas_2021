@@ -325,7 +325,171 @@ class Cmod_fisica extends CI_Controller {
 
 
     /*----- VALIDAR UPDATE MOD FORM 4 ----*/
-    public function valida_update_form4(){
+        public function valida_update_form4(){
+      if($this->input->post()) {
+        $post = $this->input->post();
+        $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
+        $producto=$this->model_producto->get_producto_id($prod_id);
+        $cite_id = $this->security->xss_clean($post['mcite_id']); /// Cite id
+        $cite=$this->model_modfisica->get_cite_fis($cite_id); /// Datos cite
+
+/*        if($this->verif_mes==3){
+          $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
+          $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
+          $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
+        }
+        else{
+          $prod = $producto[0]['prod_producto']; /// detalle producto
+          $resultado = $producto[0]['prod_resultado']; /// Resultado
+          $mverificacion = $producto[0]['prod_fuente_verificacion']; /// Medio de Verificacion
+        }*/
+
+        if($this->tmes==1){
+          $indi_id = $this->security->xss_clean($post['mtipo_i']); /// Tipo de Indicador
+          $linea_base = $this->security->xss_clean($post['mlbase']); /// Linea Base
+          $tp_meta = $this->security->xss_clean($post['mtp_met']); /// Tipo de Meta
+         // $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
+          //$resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
+          //$mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
+        }
+        else{
+          $indi_id = $producto[0]['indi_id']; /// Tipo de Indicador
+          $linea_base = $producto[0]['prod_linea_base']; /// Linea Base
+          $tp_meta = $producto[0]['mt_id']; /// Tipo de Meta
+          //$prod = $producto[0]['prod_producto']; /// detalle producto
+          //$resultado = $producto[0]['prod_resultado']; /// Resultado
+          //$mverificacion = $producto[0]['prod_fuente_verificacion']; /// Medio de Verificacion
+        }
+
+          $prod = $this->security->xss_clean($post['mprod']); /// detalle producto
+          $mverificacion = $this->security->xss_clean($post['mverificacion']); /// Medio de Verificacion
+          $resultado = $this->security->xss_clean($post['mresultado']); /// Resultado
+          $indicador = $this->security->xss_clean($post['mindicador']); /// Indicador
+          $unidad = $this->security->xss_clean($post['munidad']); /// Unidad Responsable
+          $uni_resp = $this->security->xss_clean($post['um_resp']); /// unidad responsable
+          $meta = $this->security->xss_clean($post['mmeta']); /// Meta
+          $presupuesto = $this->security->xss_clean($post['mppto']); /// Presupuesto
+          $or_id = $this->security->xss_clean($post['mor_id']); /// Objetivo Regional
+
+          $ae=0;
+          /*$get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
+          if(count($get_acc)!=0){
+            $ae=$get_acc[0]['ae'];
+          }*/
+//echo $indi_id.'----'.$tp_meta.'<br>';
+//echo $cite_id.'-'.$indi_id.'-'.$linea_base.'-'.$tp_meta.'-'.$prod.'-'.$resultado.'-'.$mverificacion.'-'.$indicador.'-'.$unidad.'-'.$meta.'-'.$presupuesto.'-'.$or_id.'--'.count($producto);
+        if($this->registra_form4_original($cite,$producto)){
+
+          /*--------- Update Producto --------*/
+          $update_prod = array(
+          //  'com_id' => $com_id, // com id
+            'prod_producto' => strtoupper($prod), // Producto
+            'prod_resultado' => strtoupper($resultado),
+            'indi_id' => $indi_id,
+            'prod_indicador' => strtoupper($indicador),
+            'prod_unidades' => strtoupper($unidad),
+            'uni_resp' => $uni_resp,
+            'prod_linea_base' => $linea_base,
+            'prod_meta' => $meta,
+            'prod_fuente_verificacion' => strtoupper($mverificacion),
+            'estado' => 2,
+            'acc_id' => $ae,
+            'fecha' => date("d/m/Y H:i:s"),
+            'mt_id' => $tp_meta,
+            'prod_mod' => 2,
+            'or_id' => $or_id,
+            'fun_id' => $this->fun_id,
+          );
+          $this->db->where('prod_id', $prod_id);
+          $this->db->update('_productos', $update_prod);
+          /*----------------------------------*/
+
+          $mes=0; 
+          // $this->verif_mes[1]
+          if($indi_id==1){
+            for ($i=1; $i <=12 ; $i++) {
+              if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$i))==0){
+              
+                $this->db->where('prod_id', $prod_id);
+                $this->db->where('m_id', $i);
+                $this->db->delete('prod_programado_mensual'); 
+
+                if($post['mm'.$i]!=0){
+                  $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$post['mm'.$i]);
+                }
+              }
+            }
+          }
+
+          if($indi_id==2){
+            if($tp_meta==3){
+              for ($i=1; $i <=12 ; $i++) { 
+                if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$i))==0){
+                 
+                  $this->db->where('prod_id', $prod_id);
+                  $this->db->where('m_id', $i);
+                  $this->db->delete('prod_programado_mensual'); 
+
+                  if($post['mm'.$i]!=0){
+                    $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$post['mm'.$i]);
+                  }
+                }
+              }
+            }
+            elseif($tp_meta==1){
+             // if(count($this->model_producto->prod_prog_mensual($prod_id,$this->gestion))!=0){
+                $this->db->where('prod_id', $prod_id);
+                $this->db->delete('prod_programado_mensual'); 
+                
+                for ($i=1; $i <=12 ; $i++) { 
+                    
+                 // if(count($this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$i))==0){
+          
+                    
+$this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$meta);
+                   /* if($post['mm'.$i]!=0){
+                      $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$meta);
+                    }*/
+                  //}
+                }
+              /*}
+              else{
+                for ($i=1; $i <=12 ; $i++) { 
+                  $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$meta);
+
+                }
+              }*/
+            }
+            elseif($tp_meta==5){
+              $this->db->where('prod_id', $prod_id);
+              $this->db->delete('prod_programado_mensual'); 
+
+              for ($i=1; $i <=4 ; $i++) { 
+                $this->model_producto->add_prod_gest($prod_id,$this->gestion,($i*3),$meta);
+              }
+                
+            }
+          } 
+
+
+
+            $this->copia_operacion($cite,$prod_id,2); /// historial de modificaciones para el reporte
+
+            /*---- iNSERT AUDI ADICIONAR INSUMOS ---*/
+            $this->update_activo_modificacion($cite_id);
+            /*--------------------------------------*/
+
+
+          /*-------------- Redireccionando a lista de Operaciones -------*/
+          $this->session->set_flashdata('success','LA ACTIVIDAD SE MODIFICO CORRECTAMENTE :)');
+          redirect(site_url("").'/mod/lista_operaciones/'.$cite_id.'');
+        }
+
+      } else {
+          show_404();
+      }
+    }
+    public function valida_update_form4_2(){
       if($this->input->post()) {
         $post = $this->input->post();
         $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
@@ -531,7 +695,7 @@ class Cmod_fisica extends CI_Controller {
     }
 
 
-    /*--- VALIDA NUEVA ACTIVIDAD (2020-2021-2022-2023) ---*/
+    /*--- VALIDA NUEVA ACTIVIDAD (2024) ---*/
     public function valida_form4(){
       if($this->input->post()) {
         $post = $this->input->post();
@@ -552,16 +716,17 @@ class Cmod_fisica extends CI_Controller {
         $tp_met = $this->security->xss_clean($post['tp_met']); /// Tipo de Meta
         $lb = $this->security->xss_clean($post['lbase']); /// Linea Base
 
-        $ae=0;
+       /* $ae=0;
         $get_acc=$this->model_objetivoregion->get_objetivosregional($or_id);
         if(count($get_acc)!=0){
           $ae=$get_acc[0]['ae'];
-        }
+        }*/
 
         if($tipo_i==1){
           $tp_met=3;
         }
 
+        //echo $this->input->post('tipo_i').'--'.$tp_met.'<br>';
           /*----- INSERT OPERACION ----*/
           $data_to_store = array(
             'com_id' => $cite[0]['com_id'],
@@ -593,6 +758,7 @@ class Cmod_fisica extends CI_Controller {
               }
             }
           }
+
           if($this->input->post('tipo_i')==2){
             if($tp_met==3){
               for ($i=1; $i <=12 ; $i++) {
@@ -604,6 +770,11 @@ class Cmod_fisica extends CI_Controller {
             elseif($tp_met==1){
               for ($i=1; $i <=12 ; $i++) {
                 $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$this->input->post('meta'));
+              }
+            }
+            elseif($tp_met==5){ /// trimestre recurrente
+              for ($i=1; $i <=4 ; $i++) {
+                $this->model_producto->add_prod_gest($prod_id,$this->gestion,($i*3),$this->input->post('meta'));
               }
             }
           }

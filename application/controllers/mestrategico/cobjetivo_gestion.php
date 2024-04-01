@@ -522,7 +522,7 @@ class Cobjetivo_gestion extends CI_Controller {
           </div>
         </article>';
 
-        if($this->fun_id==399 || $this->fun_id==401  || $this->fun_id==418){
+        if($this->fun_id==399 || $this->fun_id==401  || $this->fun_id==418 || $this->fun_id==738 || $this->fun_id==413 || $this->fun_id==740 || $this->fun_id==1259 || $this->fun_id==415){
           $alienacion_acp =$this->model_objetivogestion->vinculacion_acp_actividades($og_id); /// ALINEACION ACP a ACT. (Todos)
         }
         else{

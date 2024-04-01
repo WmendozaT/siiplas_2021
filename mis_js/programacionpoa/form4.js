@@ -774,14 +774,16 @@ $(document).ready(function() {
            
            //// MOUESTRA LOS MESES YA EVALUADOS
            for (var i = 1; i <=12; i++) {
-            if(response.temp_eval[i]==0){
+             document.getElementById("mm"+i).disabled = false;
+                $('#e'+i).html('<font color=green><b>'+(response.mes[i].toUpperCase())+'</b></font>');
+            /*if(response.temp_eval[i]==0){
                 document.getElementById("mm"+i).disabled = false;
                 $('#e'+i).html('<font color=green><b>'+(response.mes[i].toUpperCase())+'</b></font>');
               }
               else{
                 document.getElementById("mm"+i).disabled = true;
                 $('#e'+i).html('<font color=red><b>'+(response.mes[i].toUpperCase())+' (x)</b></font>');
-              }
+              }*/
            }
 
            /// MUESTYRA LA TEMPORALIDAD

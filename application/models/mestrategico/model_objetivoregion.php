@@ -394,7 +394,7 @@ class Model_objetivoregion extends CI_Model{
         Inner Join _componentes as c On c.com_id=pr.com_id
         Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-        where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\' and pr.indi_id=\'2\' and pr.mt_id=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\'
+        where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\' and pr.indi_id=\'2\' and (pr.mt_id=\'1\' or pr.mt_id=\'5\') and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\'
         group by pr.or_id';
 
         $query = $this->db->query($sql);
@@ -424,6 +424,19 @@ class Model_objetivoregion extends CI_Model{
         where or_id='.$or_id.' and prod_priori=\'1\' and estado!=\'3\'
         group by or_id';
 
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+    /*----- get suma meta de actividades alineados a operacion (recurrentes trimestral)-----*/
+    public function get_suma_meta_form4_alineado_x_oregional_todos_recurrente_trimestral($or_id,$mt_id){
+        $sql = '
+        select or_id, SUM(prod_meta) suma_meta
+        from _productos
+        where or_id='.$or_id.' and prod_priori=\'1\' and estado!=\'3\' and mt_id='.$mt_id.'
+        group by or_id';
+        
         $query = $this->db->query($sql);
 
         return $query->result_array();

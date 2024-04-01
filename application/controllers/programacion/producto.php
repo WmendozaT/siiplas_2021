@@ -324,6 +324,11 @@ class Producto extends CI_Controller {
                 $this->model_producto->add_prod_gest($id_pr,$this->gestion,$i,$this->input->post('met'));
               }
             }
+            elseif($tp_meta==5){ /// trimestre recurrente
+              for ($i=1; $i <=4 ; $i++) {
+                $this->model_producto->add_prod_gest($id_pr,$this->gestion,($i*3),$this->input->post('met'));
+              }
+            }
           }
 
           $producto=$this->model_producto->get_producto_id($id_pr);
