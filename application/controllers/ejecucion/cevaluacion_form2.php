@@ -212,9 +212,9 @@ class Cevaluacion_form2 extends CI_Controller {
         $detalle_oregional=$this->model_objetivoregion->get_objetivosregional($post['or_id']); /// Objetivo Regional
         $regional=$this->model_proyecto->get_departamento($dep_id);
       //  $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($or_id,$this->tmes);
-        $matriz=$this->eval_oregional->tabla_trimestral_acumulado_x_oregional($or_id,$or_tp); /// Matriz de Metas Trimestrales
-        $tab=$this->eval_oregional->get_temporalidad_objetivo_regional($or_id,0,$or_tp);
-        $tab_acumulado=$this->eval_oregional->get_temporalidad_acumulado_objetivo_regional($or_id,0,$or_tp);
+        $matriz=$this->eval_oregional->tabla_trimestral_acumulado_x_oregional($or_id,$or_tp,$detalle_oregional[0]['tp_meta']); /// Matriz de Metas Trimestrales
+        $tab=$this->eval_oregional->get_temporalidad_objetivo_regional($or_id,0,$or_tp,$detalle_oregional[0]['tp_meta']);
+        $tab_acumulado=$this->eval_oregional->get_temporalidad_acumulado_objetivo_regional($or_id,0,$or_tp,$detalle_oregional[0]['tp_meta']);
 
         $titulo='
         <b style="font-family:Verdana;font-size: 16px;">

@@ -212,7 +212,7 @@ class Eval_oregional extends CI_Controller{
                     }
 
                     $color='';$grafico='';
-                    $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
+                    $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp'],$row['tp_meta']);
                     
                     $boton_ajustar_apriorizados='
                         <center><a href="'.site_url("").'/me/alineacion_ope_acp/'.$row['og_id'].'" target="_blank" class="btn btn-default" title="VER ALINEACION ACP-FORM4"><img src="'.base_url().'assets/Iconos/application_double.png" WIDTH="30" HEIGHT="30"/></a>
@@ -228,7 +228,7 @@ class Eval_oregional extends CI_Controller{
 
                       if(round($row['or_meta'],2)==$meta_priorizado){
                         $boton_ajustar_apriorizados='<div style="font-size: 15px; color:blue" align=center><b>'.$meta_priorizado.''.$meta.'</b></div>';
-                        $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="30" HEIGHT="30"/></a>';
+                        $grafico='<br><a href="#" data-toggle="modal" data-target="#modal_cumplimiento" class="btn btn-lg btn-default" name="'.$row['or_id'].'"  onclick="nivel_cumplimiento('.$row['or_id'].','.$dep_id.','.$row['tp_meta'].');" title="NIVEL DE CUMPLIMIENTO"><img src="'.base_url().'assets/Iconos/chart_bar.png" WIDTH="30" HEIGHT="30"/></a>';
                       }
                       else{
                         $boton_ajustar_apriorizados='
@@ -250,7 +250,7 @@ class Eval_oregional extends CI_Controller{
                         <td style="width:10%;">'.$row['or_verificacion'].'</td>
                         <td style="width:2%; font-size: 15px;" align=center title="'.$row['tp_meta'].'"><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
                         <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
-                        '.$this->get_temporalidad_objetivo_regional($row['or_id'],0,$row['or_tp']).'
+                        '.$this->get_temporalidad_objetivo_regional($row['or_id'],0,$row['or_tp'],$row['tp_meta']).'
                         <td style="font-family:Verdana;font-size: 18px;" align=center><b>'.$calificacion[3].' %</b></td>
                         <td style="font-family:Verdana;font-size: 18px;" align=center><b>'.$calificacion[4].' %</b></td>
                         <td>
@@ -289,7 +289,7 @@ class Eval_oregional extends CI_Controller{
       $suma_cumplimiento_gestion=0;
       
       foreach($lista_ogestion as $row){
-        $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
+        $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp'],$row['tp_meta']);
         $suma_cumplimiento_trimestral=$suma_cumplimiento_trimestral+$calificacion[3];
         $suma_cumplimiento_gestion=$suma_cumplimiento_gestion+$calificacion[4];
      }
@@ -329,7 +329,7 @@ class Eval_oregional extends CI_Controller{
 
 
     /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL (TRIMESTRAL) 2024 --*/
-    public function get_temporalidad_objetivo_regional($or_id,$tp_rep,$tp_or){
+    public function get_temporalidad_objetivo_regional($or_id,$tp_rep,$tp_or,$tp_meta){
       /// tp_rep=0 normal
       /// tp_rep=1 Reporte
       /// tp_or=1 (inversion), 0 (gasto corriente) 1
@@ -343,7 +343,7 @@ class Eval_oregional extends CI_Controller{
 
       if(count($verif_temp)!=0){
         for ($i=1; $i <=4 ; $i++) {
-          $valor=$this->calificacion_trimestral_acumulado_x_oregional($or_id,$i,$tp_or); /// GASTO CORRIENTE / INVERSION
+          $valor=$this->calificacion_trimestral_acumulado_x_oregional($or_id,$i,$tp_or,$tp_meta); /// GASTO CORRIENTE / INVERSION
           
           $color='#f1f5f4';
           if($i<=$this->tmes){
@@ -403,12 +403,12 @@ class Eval_oregional extends CI_Controller{
 
 
     /*-- ARMANDO TEMPORALIDAD PARA OBJETIVOS REGIONAL POR REGIONAL (ACUMULADO) --*/
-    public function get_temporalidad_acumulado_objetivo_regional($or_id,$tp_rep,$tp_or){
+    public function get_temporalidad_acumulado_objetivo_regional($or_id,$tp_rep,$tp_or,$tp_meta){
       /// tp_rep=0 normal
       /// tp_rep=1 Reporte
       /// tp_or=1 (inversion), 0 (gasto corriente) 1
 
-      $valor=$this->tabla_trimestral_acumulado_x_oregional($or_id,$tp_or); /// 
+      $valor=$this->tabla_trimestral_acumulado_x_oregional($or_id,$tp_or,$tp_meta); /// 
       $tabla='';
 
           if($tp_rep==0){ /// VISTA NORMAL
@@ -453,10 +453,10 @@ class Eval_oregional extends CI_Controller{
 
 
     /*-- GENERA TABLA PARA EVALUACION TRIMESTRAL POR OBJETIVO REGIONAL --*/
-    public function tabla_trimestral_acumulado_x_oregional($or_id,$tp_or){
+    public function tabla_trimestral_acumulado_x_oregional($or_id,$tp_or,$tp_meta){
 
         for ($i=1; $i <=4 ; $i++) { 
-          $valor=$this->calificacion_trimestral_acumulado_x_oregional($or_id,$i,$tp_or); /// CALIFICACION TRIMESTRAL POR OBJETIVO REGIONAL GASTO CORRIENTE 
+          $valor=$this->calificacion_trimestral_acumulado_x_oregional($or_id,$i,$tp_or,$tp_meta); /// CALIFICACION TRIMESTRAL POR OBJETIVO REGIONAL GASTO CORRIENTE 
           $matriz[1][$i]=$valor[1];  /// prog
           $matriz[2][$i]=$valor[2];  /// ejec
           $matriz[3][$i]=$valor[3];  /// % cumplimiento trimestral
@@ -474,7 +474,7 @@ class Eval_oregional extends CI_Controller{
     }
 
     /*-- CALIFICACION TRIMESTRAL POR OBJETIVO REGIONAL GASTO CORRIENTE --*/
-    public function calificacion_trimestral_acumulado_x_oregional($or_id,$trimestre,$tp_or){
+    public function calificacion_trimestral_acumulado_x_oregional($or_id,$trimestre,$tp_or,$tp_meta){
       $valor = array( '1' => '0','2' => '0','3' => '0','4' => '0');
 
       if(count($this->model_objetivoregion->verif_temporalidad_oregional($or_id))!=0){
@@ -494,11 +494,21 @@ class Eval_oregional extends CI_Controller{
                   $get_trm_ejec=$this->model_objetivoregion->get_trm_temporalidad_ejec_oregional($or_id,$i); /// Temporalidad Ejecutado
 
                   if(count($get_trm)!=0){
-                    $suma_prog=$suma_prog+$get_trm[0]['pg_fis']; 
+                    if($tp_meta==5){ /// recurrente trimestral
+                      $suma_prog=round($get_trm[0]['pg_fis'],2); 
+                    }
+                    else{
+                      $suma_prog=$suma_prog+$get_trm[0]['pg_fis']; 
+                    }
                   }
 
                   if(count($get_trm_ejec)!=0){
-                    $suma_ejec=$suma_ejec+$get_trm_ejec[0]['ejec_fis'];
+                    if($tp_meta==5){ /// recurrente trimestral
+                      $suma_ejec=$get_trm_ejec[0]['ejec_fis'];
+                    }
+                    else{
+                      $suma_ejec=$suma_ejec+$get_trm_ejec[0]['ejec_fis'];
+                    }
                   }
 
                   $ejecucion=0;
@@ -640,19 +650,22 @@ class Eval_oregional extends CI_Controller{
               $metas_prioritarios=round($metas_prior[0]['meta_prog_actividades'],2);
             }
             elseif($row['indi_id']==2) { /// Recurrente
-                $suma_meta_form4_alineados_todos=$this->model_objetivoregion->get_suma_meta_form4_alineado_x_oregional_todos($row['or_id']);
-
-              if($row['mt_id']==5){ /// recurrente trimestral
-                $suma_meta_form4_alineados_todos=$this->model_objetivoregion->get_suma_meta_form4_alineado_x_oregional_todos_recurrente_trimestral($row['or_id'],$row['tp_meta']); /// recurrente trimestral
-              }
-              
-
+                
+              $suma_meta_form4_alineados_todos=$this->model_objetivoregion->get_suma_meta_form4_alineado_x_oregional_todos($row['or_id']);
               if(count($suma_meta_form4_alineados_todos)!=0){
                 $metas_prioritarios=round(($suma_meta_form4_alineados_todos[0]['suma_meta']/count($this->model_objetivoregion->get_lista_form4_alineado_x_oregional_todos($row['or_id']))),2);
               }
-
-              //$metas_prioritarios=round($metas_prior[0]['meta_prog_actividades'],2);
               $denominador=$metas_prior[0]['nro']*3;
+
+
+              if($row['tp_meta']==5){ /// recurrente trimestral
+                $denominador=$metas_prior[0]['nro'];
+                /*$suma_meta_form4_alineados_todos=$this->model_objetivoregion->get_suma_meta_form4_alineado_x_oregional_todos_recurrente_trimestral($row['or_id'],$row['tp_meta']); /// recurrente trimestral
+                if(count($suma_meta_form4_alineados_todos)!=0){
+                  $metas_prioritarios=round(($suma_meta_form4_alineados_todos[0]['suma_meta']/count($this->model_objetivoregion->get_lista_form4_alineado_x_oregional_todos__recurrente_trimestral($row['or_id'],$row['tp_meta']))),2);
+                }*/
+              }
+              
             }
             elseif($row['indi_id']==3){ /// Acumulativo 
               $metas_prioritarios=round($metas_prior[0]['nro'],2);
@@ -668,7 +681,7 @@ class Eval_oregional extends CI_Controller{
                       $data_to_store2 = array( ///// Tabla temp prog oregional
                         'or_id' => $row['or_id'], /// or id
                         'trm_id' => $i, /// trimestre
-                        'pg_fis' => ($get_dato_trimestre[0]['trimestre']/$denominador), /// valor
+                        'pg_fis' => round(($get_dato_trimestre[0]['trimestre']/$denominador),2), /// valor Programado Trimestral
                         'g_id' => $this->gestion, /// gestion                
                       );
                       $this->db->insert('temp_trm_prog_objetivos_regionales', $data_to_store2);
@@ -676,18 +689,18 @@ class Eval_oregional extends CI_Controller{
                     }
 
 
-                  $get_dato_trimestre=$this->model_objetivoregion->get_suma_trimestre_ejecucion_oregional($row['or_id'],$i);
-                  if(count($get_dato_trimestre)!=0){
+                    $get_dato_trimestre=$this->model_objetivoregion->get_suma_trimestre_ejecucion_oregional($row['or_id'],$i);
+                    if(count($get_dato_trimestre)!=0){
                       /*--------------------------------------------------------*/
                       $data_to_store2 = array( ///// Tabla temp prog oregional
                         'or_id' => $row['or_id'], /// or id
                         'trm_id' => $i, /// trimestre
-                        'ejec_fis' => ($get_dato_trimestre[0]['trimestre']/$denominador), /// valor
+                        'ejec_fis' => round(($get_dato_trimestre[0]['trimestre']/$denominador),2), /// valor Ejecutado Trimestral
                         'g_id' => $this->gestion, /// gestion                
                       );
                       $this->db->insert('temp_trm_ejec_objetivos_regionales', $data_to_store2);
                       /*----------------------------------------------------------*/
-                  }
+                    }
                 }
               
             }
@@ -1013,7 +1026,7 @@ class Eval_oregional extends CI_Controller{
       <tbody>';
     $nro=0;$monto_total=0; $suma1=0;
     foreach($lista_ogestion as $row){
-      $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
+      $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp'],$row['tp_meta']);
       $por='';
       if($row['or_tp']==1){
         $por='%';
@@ -1029,7 +1042,7 @@ class Eval_oregional extends CI_Controller{
         <td style="width:12.5%;">'.$row['or_resultado'].'</td>
         <td style="width:12%;">'.$row['or_indicador'].'</td>
         <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).''.$por.'</b></td>
-        '.$this->get_temporalidad_objetivo_regional($row['or_id'],1,$row['or_tp']).'
+        '.$this->get_temporalidad_objetivo_regional($row['or_id'],1,$row['or_tp'],$row['tp_meta']).'
         <td style="font-family:Arial;font-size: 11px;" align=right><b>'.$calificacion[4].'%</b></td>
         <td style="width:10%;">'.$row['or_verificacion'].'</td>
       </tr>';
@@ -1078,7 +1091,7 @@ class Eval_oregional extends CI_Controller{
             </tr>
           </thead>
           <tbody>
-            <tr>'.$this->get_temporalidad_objetivo_regional($or_id,1,$detalle_oregional[0]['or_tp']).'</tr>
+            <tr>'.$this->get_temporalidad_objetivo_regional($or_id,1,$detalle_oregional[0]['or_tp'],$detalle_oregional[0]['tp_meta']).'</tr>
           </tbody>
         </table>
         <br><br>
@@ -1093,7 +1106,7 @@ class Eval_oregional extends CI_Controller{
             </tr>
           </thead>
           <tbody>
-            <tr>'.$this->get_temporalidad_acumulado_objetivo_regional($or_id,1,$detalle_oregional[0]['or_tp']).'</tr>  
+            <tr>'.$this->get_temporalidad_acumulado_objetivo_regional($or_id,1,$detalle_oregional[0]['or_tp'],$detalle_oregional[0]['tp_meta']).'</tr>  
           </tbody>
         </table>';
 
@@ -1209,7 +1222,7 @@ class Eval_oregional extends CI_Controller{
 
      $nro=0;
      foreach($lista_ogestion as $row){
-      $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
+      $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp'],$row['tp_meta']);
         
         $matriz[$nro][0]=$row['og_codigo']; /// cod OG
         $matriz[$nro][1]=$row['or_codigo']; /// cod OR

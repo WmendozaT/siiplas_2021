@@ -161,6 +161,7 @@ class Model_objetivoregion extends CI_Model{
                 oreg.or_meta,
                 oreg.or_tp,
                 oreg.or_observacion,
+                oreg.tp_meta,
                 ogp.pog_id,
                 ogp.og_id,
                 ogp.dep_id,
@@ -409,6 +410,18 @@ class Model_objetivoregion extends CI_Model{
         select *
         from _productos
         where or_id='.$or_id.' and prod_priori=\'1\' and estado!=\'3\'';
+
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+    }
+
+    /*----- verif lista actividades alineados (todos)-----*/
+   public function get_lista_form4_alineado_x_oregional_todos__recurrente_trimestral($or_id,$mt_id){
+        $sql = '
+        select *
+        from _productos
+        where or_id='.$or_id.' and prod_priori=\'1\' and estado!=\'3\' and mt_id='.$mt_id.'';
 
         $query = $this->db->query($sql);
 

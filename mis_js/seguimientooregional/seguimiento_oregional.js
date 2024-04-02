@@ -761,6 +761,7 @@ $(function() {
 
   /// grado de cumplimiento por Objetivo Regional FORM 2
   function nivel_cumplimiento(or_id,dep_id,or_tp) {
+    //alert('hola mundo')
     $('#titulo_grafico').html('<font size=3><b>Cargando ..</b></font>');
     $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
   //  alert(dep_id)
