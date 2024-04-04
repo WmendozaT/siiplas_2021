@@ -387,15 +387,15 @@ class Model_objetivoregion extends CI_Model{
         return $query->result_array();
     }
 
-    /*----- Obtiene suma de metas priorizados (meta Recurrentes)-----*/
-    public function get_suma_meta_form4_x_oregional_recurrentes($or_id){
+    /*----- Obtiene suma de metas priorizados (meta Recurrentes y trimestral)-----*/
+    public function get_suma_meta_form4_x_oregional_recurrentes($or_id,$tipo_meta){
         $sql = '
         select pr.or_id, SUM(pr.prod_meta) suma, COUNT(pr.or_id) nro, round((SUM(pr.prod_meta)/COUNT(pr.or_id)),2) meta_prog_actividades
         from _productos pr
         Inner Join _componentes as c On c.com_id=pr.com_id
         Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
         Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-        where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\' and pr.indi_id=\'2\' and (pr.mt_id=\'1\' or pr.mt_id=\'5\') and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\'
+        where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\' and pr.indi_id=\'2\' and pr.mt_id='.$tipo_meta.' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\'
         group by pr.or_id';
 
         $query = $this->db->query($sql);
@@ -408,16 +408,18 @@ class Model_objetivoregion extends CI_Model{
     public function get_lista_form4_alineado_x_oregional_todos($or_id){
         $sql = '
         select *
-        from _productos
-        where or_id='.$or_id.' and prod_priori=\'1\' and estado!=\'3\'';
+        from _productos pr
+        Inner Join _componentes as c On c.com_id=pr.com_id
+        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+        where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\'';
 
         $query = $this->db->query($sql);
-
         return $query->result_array();
     }
 
     /*----- verif lista actividades alineados (todos)-----*/
-   public function get_lista_form4_alineado_x_oregional_todos__recurrente_trimestral($or_id,$mt_id){
+/*   public function get_lista_form4_alineado_x_oregional_todos__recurrente_trimestral($or_id,$mt_id){
         $sql = '
         select *
         from _productos
@@ -426,16 +428,19 @@ class Model_objetivoregion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
 
     /*----- get suma meta de actividades alineados a operacion (todos)-----*/
     public function get_suma_meta_form4_alineado_x_oregional_todos($or_id){
         $sql = '
-        select or_id, SUM(prod_meta) suma_meta
-        from _productos
-        where or_id='.$or_id.' and prod_priori=\'1\' and estado!=\'3\'
-        group by or_id';
+        select pr.or_id, SUM(pr.prod_meta) suma_meta
+        from _productos pr
+        Inner Join _componentes as c On c.com_id=pr.com_id
+        Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
+        Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
+        where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\' and apg.aper_gestion='.$this->gestion.' and apg.aper_estado!=\'3\'
+        GROUP BY pr.or_id';
 
         $query = $this->db->query($sql);
 
@@ -443,7 +448,7 @@ class Model_objetivoregion extends CI_Model{
     }
 
     /*----- get suma meta de actividades alineados a operacion (recurrentes trimestral)-----*/
-    public function get_suma_meta_form4_alineado_x_oregional_todos_recurrente_trimestral($or_id,$mt_id){
+/*    public function get_suma_meta_form4_alineado_x_oregional_todos_recurrente_trimestral($or_id,$mt_id){
         $sql = '
         select or_id, SUM(prod_meta) suma_meta
         from _productos
@@ -453,7 +458,7 @@ class Model_objetivoregion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
 
     /*-- GET Objetivo Regional --*/

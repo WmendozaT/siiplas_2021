@@ -721,8 +721,8 @@ class Seguimientopoa extends CI_Controller{
 
 
 
-  /// Temporalidad de todas las operaciones de la SUbactividad 2021 (Reporte)
-/*  public function tabla_reporte_consolidado_temporalidad($com_id){
+  /// Temporalidad de todas las actividades para ver el avance de cumplimiento 
+ public function tabla_reporte_consolidado_temporalidad($com_id){
     $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
     $tabla='';
     $tabla.=' 
@@ -742,7 +742,6 @@ class Seguimientopoa extends CI_Controller{
                 <th style="width:3.5%;">%EFI. '.$this->verif_mes[2].'</th>
                 <th style="width:5%;"></th>
 
-                
                 <th style="width:3.5%;">ENE.</th>
                 <th style="width:3.5%;">FEB.</th>
                 <th style="width:3.5%;">MAR.</th>
@@ -829,7 +828,7 @@ class Seguimientopoa extends CI_Controller{
             </tbody>
           </table>';
       return $tabla;
-  }*/
+  }
     
 
   /// Evaluación POA por Trimestre 2021 - Formulario 4 (Actividades)
@@ -2102,8 +2101,8 @@ class Seguimientopoa extends CI_Controller{
               <thead>                 
                 <tr>
                   <th style="width:0.5%;"></th>
-                  <th style="width:1%;"><b>COD. OPE.</b></th>
-                  <th style="width:1%;"><b>COD. ACT.</b></th>
+                  <th style="width:0.5%;"><b>COD. OPE.</b></th>
+                  <th style="width:0.5%;"><b>COD. ACT.</b></th>
                   <th style="width:13%;">ACTIVIDAD</th>
                   <th style="width:7%;">INDICADOR</th>
                   <th style="width:7%;">UNIDAD RESPONSABLE</th>
@@ -2126,6 +2125,23 @@ class Seguimientopoa extends CI_Controller{
                 if($row['indi_id']==2){
                   $indi_id='%';
                 }
+
+                ///----------------
+                ///---------- unidad responsable
+                if($row['uni_resp']==0){
+                  $uresp=strtoupper($row['prod_unidades']);
+                }
+                else{
+                  $unidad=$this->model_componente->get_componente($row['uni_resp'],$this->gestion);
+                  
+                  $uresp='';
+                  if(count($unidad)!=0){
+                    $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
+                    $uresp='<font size=1.5><b>'.strtoupper($proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion']).'</b></font>';
+                  }
+                }
+                /// ------------------------------
+
                 $diferencia=$this->verif_valor_no_ejecutado($row['prod_id'],$mes_id,$row['mt_id']);
                 if($diferencia[1]!=0 || $diferencia[2]!=0){
                   $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($row['prod_id'],$mes_id); // Ejecutado
@@ -2159,35 +2175,40 @@ class Seguimientopoa extends CI_Controller{
                     }
                     $tabla.='
                     </td>
-                    <td style="width:1%;" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
-                    <td style="width:1%;font-size: 17px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
+                    <td style="width:0.5%;font-size: 17px" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
+                    <td style="width:0.5%;font-size: 17px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
                     <td bgcolor="#f6fbf4">'.$row['prod_producto'].'</td>
                     <td bgcolor="#f6fbf4">'.$row['prod_indicador'].'</td>
-                    <td bgcolor="#f6fbf4"><b>'.strtoupper($row['prod_unidades']).'</b></td>
-                    <td align=right bgcolor="#f6fbf4"><b>'.round($row['prod_meta'],2).' '.$indi_id.'</b></td>
-                    <td align=center bgcolor="#f7e1e2">'.$diferencia[1].'</td>
+                    <td bgcolor="#f6fbf4"><b>'.$uresp.'</b></td>
+                    <td align=right bgcolor="#f6fbf4" title="'.$row['mt_tipo'].' : '.$row['mt_descripcion'].'" style="font-size: 11.5px;"><b>'.round($row['prod_meta'],2).' '.$indi_id.'</b></td>
+                    <td align=center bgcolor="#f7e1e2">';
+                    if($row['mt_id']==3){
+                      $tabla.=$diferencia[1];
+                    }
+                    $tabla.='
+                    </td>
                     <td align=center bgcolor="#f6fbf4">'.$diferencia[2].' '.$indi_id.' <input type="hidden" name="pg_fis[]" value="'.($diferencia[1]+$diferencia[2]).'"></td>
                     <td>
                       <label class="input">
-                        <i class="icon-append fa fa-tag"></i>
+                        
                         <input type="text" id=ejec'.$nro.' value="'.$mes_ejec.'" '.$background.' onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$row['prod_id'].','.$nro.','.$tp.','.$mes_id.');" title="'.($diferencia[1]+$diferencia[2]).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                       </label>
                     </td>
                     <td>
                       <label class="textarea">
-                        <i class="icon-append fa fa-tag"></i>
+                        
                         <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN">'.$mverificacion.'</textarea>
                       </label>
                     </td>
                     <td>
                       <label class="textarea">
-                        <i class="icon-append fa fa-tag"></i>
+                        
                         <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS">'.$prob_presentados.'</textarea>
                       </label>
                     </td>
                     <td>
                       <label class="textarea">
-                        <i class="icon-append fa fa-tag"></i>
+                        
                         <textarea rows="3" id=acc'.$nro.' title="ACCIONES REALIZADOS">'.$acciones.'</textarea>
                       </label>
                     </td>

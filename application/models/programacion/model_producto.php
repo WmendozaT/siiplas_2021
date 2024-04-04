@@ -36,6 +36,8 @@ class model_producto extends CI_Model {
             p.prod_resultado,
             p.acc_id,
             p.prod_priori,
+            p.prod_priori,
+            p.uni_resp,
             ore.or_id,
             ore.or_codigo,
             ore.or_objetivo,

@@ -120,7 +120,7 @@ class Cevaluacion_form2 extends CI_Controller {
             $denominador=1;
           }
           else{
-            $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
+            $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id'],$row['tp_meta']);
             $denominador=$metas_prior[0]['nro']*3;
           }
 

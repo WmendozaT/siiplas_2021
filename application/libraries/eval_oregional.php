@@ -207,8 +207,16 @@ class Eval_oregional extends CI_Controller{
                       $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
                     }
                     elseif ($row['indi_id']==2) {
-                      $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']);
+                      $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id'],$row['tp_meta']);
                       $meta='%';
+                    }
+
+                    $tp_meta='ACUMULADO';
+                    if($row['tp_meta']==1){
+                      $tp_meta='RECURRENTE MENSUAL';
+                    }
+                    elseif($row['tp_meta']==5){
+                      $tp_meta='RECURRENTE TRIMESTRAL';
                     }
 
                     $color='';$grafico='';
@@ -246,7 +254,7 @@ class Eval_oregional extends CI_Controller{
                         <td style="width:11%;">'.$row['or_objetivo'].'</td>
                         <td style="width:11%;">'.$row['or_resultado'].'</td>
                         <td style="width:10%;">'.$row['or_indicador'].'</td>
-                        <td style="width:5%;"><b>'.strtoupper($row['indi_descripcion']).'</b></td>
+                        <td style="width:5%;" title="'.$row['indi_id'].' -> '.$row['tp_meta'].'"><b>'.strtoupper($row['indi_descripcion']).'</b> <font color=blue>'.$tp_meta.'</font></td>
                         <td style="width:10%;">'.$row['or_verificacion'].'</td>
                         <td style="width:2%; font-size: 15px;" align=center title="'.$row['tp_meta'].'"><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
                         <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>
@@ -631,20 +639,21 @@ class Eval_oregional extends CI_Controller{
           $denominador=1;
           $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional($row['or_id']);
         }
-        else{ /// $row['indi_id']==2 (relativo)
-          $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id']); /// meta recurrente
+        else{ /// $row['indi_id']==2 (relativo : absoluto recurrente y trimestral)
+          $metas_prior=$this->model_objetivoregion->get_suma_meta_form4_x_oregional_recurrentes($row['or_id'],$row['tp_meta']); /// meta recurrente
          // $denominador=3;
         }
 
-        if(count($metas_prior)!=0){
-            /// Borrando temporalidad programado de Objetivos Regionales
+        /// Borrando temporalidad programado de Objetivos Regionales
             $this->db->where('or_id', $row['or_id']);
             $this->db->delete('temp_trm_prog_objetivos_regionales');
 
             /// --- eliminando ejecucion de Objetivos Regionales
             $this->db->where('or_id', $row['or_id']);
             $this->db->delete('temp_trm_ejec_objetivos_regionales');
+        ///---------------------------------------------------------
 
+        if(count($metas_prior)!=0){
             $metas_prioritarios=0;
             if($row['indi_id']==1){ /// absoluto
               $metas_prioritarios=round($metas_prior[0]['meta_prog_actividades'],2);
@@ -655,15 +664,16 @@ class Eval_oregional extends CI_Controller{
               if(count($suma_meta_form4_alineados_todos)!=0){
                 $metas_prioritarios=round(($suma_meta_form4_alineados_todos[0]['suma_meta']/count($this->model_objetivoregion->get_lista_form4_alineado_x_oregional_todos($row['or_id']))),2);
               }
-              $denominador=$metas_prior[0]['nro']*3;
+              
 
-
-              if($row['tp_meta']==5){ /// recurrente trimestral
+              if($row['tp_meta']==3){
+                $denominador=1; /// absoluto 
+              }
+              elseif($row['tp_meta']==1){ /// recurrente mensual
+                $denominador=$metas_prior[0]['nro']*3;
+              }
+              elseif($row['tp_meta']==5){ /// recurrente trimestral
                 $denominador=$metas_prior[0]['nro'];
-                /*$suma_meta_form4_alineados_todos=$this->model_objetivoregion->get_suma_meta_form4_alineado_x_oregional_todos_recurrente_trimestral($row['or_id'],$row['tp_meta']); /// recurrente trimestral
-                if(count($suma_meta_form4_alineados_todos)!=0){
-                  $metas_prioritarios=round(($suma_meta_form4_alineados_todos[0]['suma_meta']/count($this->model_objetivoregion->get_lista_form4_alineado_x_oregional_todos__recurrente_trimestral($row['or_id'],$row['tp_meta']))),2);
-                }*/
               }
               
             }
