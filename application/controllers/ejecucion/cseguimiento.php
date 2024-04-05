@@ -1897,11 +1897,11 @@ class Cseguimiento extends CI_Controller {
         $post = $this->input->post();
         $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
         $tp = $this->security->xss_clean($post['tp']); /// tp
-        $ejec= $this->security->xss_clean($post['ejec']);/// prod id
+        $ejec= $this->security->xss_clean($post['ejec']);/// ejec id
         $mes_id= $this->security->xss_clean($post['mes_id']);/// mes id
         $producto=$this->model_producto->get_producto_id($prod_id); /// datos del formulario N° 4
 
-        if($producto[0]['indi_id']==2 & $producto[0]['mt_id']==1){ //// INDICADOR RECURRENTE
+        if($producto[0]['indi_id']==2 || $producto[0]['mt_id']==1 || $producto[0]['mt_id']==5){ //// INDICADOR RECURRENTE
           $programado=$this->model_producto->get_mes_programado_form4($prod_id,$mes_id); /// Programado del mes
 
             if($ejec<=$programado[0]['pg_fis']){

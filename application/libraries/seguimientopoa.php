@@ -2681,6 +2681,7 @@ class Seguimientopoa extends CI_Controller{
 
     /*---VERIFICANDO VALORES NO EJECUTADOS EN MESES ANTERIORES (FORMULARIO N 4)--*/
     function verif_valor_no_ejecutado($prod_id,$mes,$indi_id){
+      $get_form4=$this->model_producto->get_producto_id($prod_id);
       $diferencia[1]=0;$diferencia[2]=0;$diferencia[3]=0;
       
       $sum_prog=0;$sum_ejec=0;
@@ -2708,10 +2709,14 @@ class Seguimientopoa extends CI_Controller{
         $diferencia[3]=round($ejec[0]['pejec_fis'],2);
       }
 
-      $diferencia[1]=($sum_prog-$sum_ejec); /// no ejecutado en el mes anterior
-      if($indi_id==2 & $indi_id==1){
-        $diferencia[1]=0;
+      // ---------
+      if($get_form4[0]['mt_id']==1 || $get_form4[0]['mt_id']==5){ // Meta Recurrente
+        $diferencia[1]=0; // no jala prog del mes anterior
       }
+      elseif($get_form4[0]['mt_id']==3){ /// Meta Acumulativo
+        $diferencia[1]=($sum_prog-$sum_ejec); /// no ejecutado en el mes anterior
+      }
+      // ---------
       
       return $diferencia;
     }

@@ -357,7 +357,7 @@ function abreVentana(PDF){
   function verif_valor(programado,ejecutado,prod_id,nro,tp,mes_id){
    /// tp 0 : Registro
    /// tp 1 : modifcacion  
-  
+
     if(ejecutado!= ''){
     //  alert(ejecutado+'-'+prod_id+'-'+nro+'-'+tp+'-'+mes_id)
       var url = base+"index.php/ejecucion/cseguimiento/verif_valor_ejecutado_x_form4";

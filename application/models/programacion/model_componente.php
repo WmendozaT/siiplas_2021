@@ -255,19 +255,4 @@ class Model_componente extends CI_Model{
         return $query->result_array();
     }
 
-///// 2021
-    /*--- Presupuesto Total Programado por Componente ---*/
-/*    function componente_ppto_total($com_id){
-        $sql = 'select sum(i.ins_costo_total) total_ppto
-                from _componentes c
-                Inner Join _proyectofaseetapacomponente as pfe On pfe.pfec_id=c.pfec_id
-                Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
-                Inner Join _productos as prod On prod.com_id=c.com_id
-                Inner Join _insumoproducto as iprod On iprod.prod_id=prod.prod_id
-                Inner Join insumos as i On i.ins_id=iprod.ins_id
-                where pfe.pfec_estado=\'1\' and pfe.estado!=\'3\' and apg.aper_gestion='.$this->gestion.' and c.com_id='.$com_id.' and prod.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\''; 
-        $query = $this->db->query($sql);
-        return $query->result_array();
-    }*/
-
 }
