@@ -1972,8 +1972,8 @@ public function get_tp_reporte(){
       $matriz_partidas=$this->ejecucion_finpi->matriz_consolidado_partidas_prog_ejec_regional($dep_id); /// Matriz consolidado de partidas
       $data['detalle_ejecucion']=$this->ejecucion_finpi->tabla_consolidado_de_partidas($matriz_partidas,$nro,3); /// Tabla Clasificacion de partidas asignados por regional
 
-    
-    $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
+      $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
+
   }
 
 

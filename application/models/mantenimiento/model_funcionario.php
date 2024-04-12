@@ -12,6 +12,22 @@ class Model_funcionario extends CI_Model {
         $this->dist_tp = $this->session->userData('dist_tp');
     }
 
+    public function get_jefe_DNP(){
+        $sql = ' select *
+                 from jefatura_DNP
+                 where estado=\'1\'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    public function jefe_DNP($id){
+        $sql = ' select *
+                 from jefatura_DNP
+                 where jef_id='.$id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     public function fun_ci($ci){
         $sql = 'select *
                 from funcionario

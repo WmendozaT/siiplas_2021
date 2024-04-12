@@ -87,7 +87,6 @@ class Crep_evalform2 extends CI_Controller {
 
     $data['titulo_modulo']=$tabla;
     $this->load->view('admin/reportes_cns/repevaluacion_form2/rep_menu', $data);
-
   }
 
 
@@ -426,7 +425,7 @@ class Crep_evalform2 extends CI_Controller {
 
     $nro=0;
     foreach($lista_form2 as $row){
-      $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
+      $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp'],$row['tp_meta']);
       $matriz[$nro][0]=$row['og_codigo'];
       $matriz[$nro][1]=$row['or_codigo'];
       $matriz[$nro][2]=$row['or_objetivo'];
@@ -769,7 +768,7 @@ class Crep_evalform2 extends CI_Controller {
         $suma_cumplimiento_gestion=0;
         
         foreach($lista_ogestion as $row){
-          $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp']);
+          $calificacion=$this->eval_oregional->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp'],$row['tp_meta']);
           $suma_cumplimiento_trimestral=$suma_cumplimiento_trimestral+$calificacion[3];
           $suma_cumplimiento_gestion=$suma_cumplimiento_gestion+$calificacion[4];
         }

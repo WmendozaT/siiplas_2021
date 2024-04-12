@@ -181,6 +181,7 @@ class Crep_evalinstitucional extends CI_Controller {
         <input name="tp_id" type="hidden" value="'.$tp_id.'">';
         $data['calificacion']=$this->evaluacionpoa->calificacion_eficacia($data['tabla'][5][$this->tmes]); /// Parametros de Eficacia
         $data['parametro_eficacia']=$this->evaluacionpoa->parametros_eficacia($data['matriz_parametro_unidad'],1);
+        
       $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_grafico_eval_consolidado_regional_distrital', $data);
     }
 

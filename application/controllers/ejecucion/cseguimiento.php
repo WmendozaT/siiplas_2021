@@ -62,6 +62,48 @@ class Cseguimiento extends CI_Controller {
       $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
       $this->load->view('admin/evaluacion/seguimiento_poa/list_poas_aprobados', $data);
     
+/*$prod_id=82775;
+$mes=3;
+      $get_form4=$this->model_producto->get_producto_id($prod_id);
+      $diferencia[1]=0;$diferencia[2]=0;$diferencia[3]=0;
+      
+      $sum_prog=0;$sum_ejec=0;
+      $prog=$this->model_seguimientopoa->get_programado_ejecutado_al_mes(0,$prod_id,$mes-1); /// Programado
+      $ejec=$this->model_seguimientopoa->get_programado_ejecutado_al_mes(1,$prod_id,$mes-1); /// Ejecutado
+      
+      if(count($prog)!=0){
+        $sum_prog=$prog[0]['programado'];
+      }
+
+      if(count($ejec)!=0){
+        $sum_ejec=$ejec[0]['ejecutado'];
+      }
+
+
+      $prog=$this->model_seguimientopoa->get_programado_poa_mes($prod_id,$mes); /// Programado mes actual
+      $diferencia[2]=0;
+      if(count($prog)!=0){
+        $diferencia[2]=round($prog[0]['pg_fis'],2);
+      }
+
+      $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$mes); /// Ejecutado mes actual
+      $diferencia[3]=0;
+      if(count($ejec)!=0){
+        $diferencia[3]=round($ejec[0]['pejec_fis'],2);
+      }
+
+      // ---------
+      if($get_form4[0]['mt_id']==1 || $get_form4[0]['mt_id']==5){ // Meta Recurrente
+        $diferencia[1]=0; // no jala prog del mes anterior
+      }
+      elseif($get_form4[0]['mt_id']==3){ /// Meta Acumulativo
+        $diferencia[1]=($sum_prog-$sum_ejec); /// no ejecutado en el mes anterior
+      }
+      // ---------
+      echo $get_form4[0]['mt_id'].'---'.$mes.'<br>';
+      echo $sum_prog.'---'.$sum_ejec.'<br>';
+      echo $diferencia[1].'-'.$diferencia[2].'-'.$diferencia[3];*/
+
       /*$insumos=$this->model_insumo->lista_insumos(2021);
 
       $tabla='';

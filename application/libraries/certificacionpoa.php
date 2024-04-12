@@ -18,6 +18,7 @@ class Certificacionpoa extends CI_Controller{
       $this->load->model('ejecucion/model_certificacion');
       $this->load->model('programacion/insumos/minsumos');
       $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
+      $this->load->model('mantenimiento/model_funcionario');
       $this->load->model('menu_modelo');
       $this->load->library('security');
 
@@ -1629,10 +1630,11 @@ class Certificacionpoa extends CI_Controller{
             </td>
             <td style="width: 40%;">';
             if($certpoa[0]['dep_id']==10){ /// solo para Oficina Nacional
+              $jefatura=$this->model_funcionario->jefe_DNP($certpoa[0]['jef_id']);
               $tabla.='
                   <table style="width:100%;" border=0>
                       <tr style="font-size: 9px;font-family: Arial; height:65px;" align="center">
-                          <td style="width:100%;">LIC. J. ERLIN SOTTO SALVATIERRA</td>
+                          <td style="width:100%;">'.$jefatura[0]['jef_nombre'].' '.$jefatura[0]['jef_apellidos'].'</td>
                       </tr>
                       <tr style="font-size: 10px;font-family: Arial; height:65px;" align="center">
                           <td style="width:100%;"><b>JEFE. a.i. DPTO. NAL. PLANIFICACION</b></td>

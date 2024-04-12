@@ -21,6 +21,7 @@ class Ccertificacion_poa extends CI_Controller {
       $this->load->model('mantenimiento/model_configuracion');
       $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020
       $this->load->model('programacion/insumos/model_insumo'); /// gestion 2020
+      $this->load->model('mantenimiento/model_funcionario');
       $this->load->model('menu_modelo');
       $this->load->model('Users_model','',true);
       $this->load->library('security');
@@ -198,6 +199,7 @@ class Ccertificacion_poa extends CI_Controller {
               <header>REGISTRE LOS DATOS DE LA NOTA CITE DE SOLICITUD</header>
               <input type="hidden" name="prod_id" id="prod_id" value="'.$data['datos'][0]['prod_id'].'">
               <input type="hidden" name="tp_id" id="tp_id" value="'.$data['datos'][0]['tp_id'].'">
+              <input type="hidden" name="dep_id" id="dep_id" value="'.$data['datos'][0]['dep_id'].'">
               <fieldset>          
                 <div class="row">
                   <section class="col col-6">
@@ -252,7 +254,7 @@ class Ccertificacion_poa extends CI_Controller {
       $tp_id = $this->security->xss_clean($post['tp_id']);
       $cite_poa = $this->security->xss_clean($post['cite_cpoa']);
       $cite_fecha = $this->security->xss_clean($post['cite_fecha']);
-
+      $dep_id = $this->security->xss_clean($post['dep_id']);
      // $prod_id = filter_var($prod_id, FILTER_SANITIZE_NUMBER_INT);
      // $tp_id = filter_var($tp_id, FILTER_SANITIZE_NUMBER_INT); 
      // $cite_poa = $cite_poa;
@@ -264,6 +266,11 @@ class Ccertificacion_poa extends CI_Controller {
         $datos=$this->model_certificacion->get_datos_unidad_prod($prod_id); /// Gasto Corriente
       }
 
+      $jef_id=0;
+      if($dep_id==10){ /// of nacional
+        $jefatura=$this->model_funcionario->get_jefe_DNP();
+        $jef_id=$jefatura[0]['jef_id'];
+      }
       /*------ INSERTANDO CERTIFICADO ------*/
       $data_to_store = array( 
         'proy_id' => $datos[0]['proy_id'],
@@ -276,6 +283,7 @@ class Ccertificacion_poa extends CI_Controller {
         'cpoa_cite' => $cite_poa,
         'cite_fecha' => $cite_fecha, /// fecha del Cite
         'prod_id' => $prod_id,
+        'jef_id' => $jef_id,
       );
       $this->db->insert('certificacionpoa', $data_to_store);
       $cpoa_id=$this->db->insert_id();

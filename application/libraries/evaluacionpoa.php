@@ -203,7 +203,7 @@ class Evaluacionpoa extends CI_Controller{
                 <th>ACT. EVAL.</th>
                 <th>ACT. CUMP.</th>
                 <th>ACT. NO CUMP.</th>
-                <th>% CUMP.</th>
+                <th>% CUMP. POA</th>
                 <th>% NO CUMP.</th>
               </tr>
               </thead>
@@ -294,7 +294,7 @@ class Evaluacionpoa extends CI_Controller{
                 <th>NRO. ACT. CUMP.</th>
                 <th>NRO. ACT. EN PROC.</th>
                 <th>NRO. ACT. NO CUMP.</th>
-                <th>% CUMP.</th>
+                <th>% CUMP. POA</th>
                 <th>% NO CUMP.</th>
               </tr>
             </thead>
@@ -370,7 +370,7 @@ class Evaluacionpoa extends CI_Controller{
       $tabla .='<table '.$class.'>
                     <thead>
                       <tr>
-                        <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
+                        <th style="width: 33%"><center><b>CALIFICACI&Oacute;N</b></center></th>
                         <th style="width: 33%"><center><b>PARAMETRO</b></center></th>
                         <th style="width: 33%"><center><b>NRO DE UNIDADES</b></center></th>
                       </tr>
@@ -600,9 +600,9 @@ class Evaluacionpoa extends CI_Controller{
               <th style="width:12%;">ACT. PROG.</th>
               <th style="width:12%;">ACT. CUMP.</th>
               <th style="width:12%;">ACT. NO CUMP.</th>
-              <th style="width:12%;">% CUMP.</th>
+              <th style="width:12%;">% CUMP. POA</th>
               <th style="width:12%;">% NO CUMP.</th>
-              <th style="width:12%;">% EJEC. PPTO.</th>
+              <th style="width:12%;">% CERT. POA</th>
             </tr>
           </thead>
           <tbody>';
@@ -666,7 +666,7 @@ class Evaluacionpoa extends CI_Controller{
 
     $tabla='';
     $tabla.='
-        <div style="font-size: 25px;font-family: Arial;"><b>CUADRO DE % CUMPLIMIENTO POR UNIDADES</b></div><br>
+        <div style="font-size: 25px;font-family: Arial;"><b>CUADRO DE % CUMPLIMIENTO POA POR UNIDADES</b></div><br>
             <section class="col col-3">
               <input id="searchTerm" type="text" style="width:50%;" onkeyup="doSearchuni()" class="form-control" placeholder="Buscador...."/><br>
             </section>
@@ -674,15 +674,15 @@ class Evaluacionpoa extends CI_Controller{
          <thead>
             <tr style="font-size: 10px;" align=center>
               <th style="width:1%;height:15px;">#</th>
-              <th style="width:10%;">DISTRITAL</th>
-              <th style="width:10%;">GASTO CORRIENTE</th>
+              <th style="width:10%;">REGIONAL / DISTRITAL</th>
+              <th style="width:10%;">PROGRAMA '.$this->gestion.'</th>
               <th style="width:5%;"></th>
               <th style="width:5%;">ACT. PROG.</th>
-              <th style="width:5%;">ACT CUMP.</th>
+              <th style="width:5%;">ACT. CUMP.</th>
               <th style="width:5%;">ACT NO CUMP.</th>
-              <th style="width:5%;">% CUMP.</th>
+              <th style="width:5%;">% CUMP. POA</th>
               <th style="width:5%;">% NO CUMP.</th>
-              <th style="width:5%;">% EJEC. CERT. POA</th>
+              <th style="width:5%;">% CERT. POA</th>
               
             </tr>
           </thead>
@@ -793,8 +793,8 @@ class Evaluacionpoa extends CI_Controller{
             <tr style="font-size: 9px;" align=center bgcolor='.$color.'>
               <th style="width:5%;height:15px;">#</th>
               <th style="width:40%;">DISTRITAL</th>
-              <th style="width:15%;">% EFICACIA</th>
-              <th style="width:15%;">% ECONOMIA</th>
+              <th style="width:15%;">% CUMP. POA.</th>
+              <th style="width:15%;">% CERT. POA</th>
               <th style="width:15%;"></th>
             </tr>
           </thead>

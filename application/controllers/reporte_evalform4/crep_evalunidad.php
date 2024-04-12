@@ -100,7 +100,7 @@ class Crep_evalunidad extends CI_Controller {
         /// SERVICIOS
         $data['mis_servicios']=$this->mis_servicios(1,$proy_id); /// Lista de Unidades Responsables
         $data['economia']=$this->economia($data['proyecto']); /// Economia
-        $data['eficiencia']=$this->eficiencia($data['tabla'][5][$this->tmes],$data['economia'][3]); /// Eficiencia
+        //$data['eficiencia']=$this->eficiencia($data['tabla'][5][$this->tmes],$data['economia'][3]); /// Eficiencia
         $data['matriz']=$this->matriz_eficacia_unidad($proy_id);
         $data['parametro_eficacia']=$this->parametros_eficacia_unidad($data['matriz'],$proy_id,1); /// Parametro de Eficacia
 
@@ -475,40 +475,17 @@ class Crep_evalunidad extends CI_Controller {
     }
 
 
-    /*------ Parametro de eficacia ------*/
-/*    public function calificacion_eficacia($eficacia){
-      $tabla='';
-      $tp='danger';
-      $titulo='ERROR EN LOS VALORES';
-      
-      if($this->gestion>2021){
-        if($eficacia<=50){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
-        if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
-        if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
-        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
-      }
-      else{ /// Gestiones Anteriores
-        if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
-        if($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
-        if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
-        if($eficacia > 99 & $eficacia <= 102){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
-      }
-      
-      $tabla.='<h4 class="alert alert-'.$tp.'" style="font-family: Arial;" align="center"><b>'.$titulo.'</b></h4>';
-
-      return $tabla;
-    }*/
 
     
     /*------ eficiencia ------*/
-    public function eficiencia($eficacia,$economia){
+/*    public function eficiencia($eficacia,$economia){
       $eficiencia=0;
       if($eficacia!=0){
         $eficiencia= round(($economia/$eficacia),2);
       }
 
       return $eficiencia;
-    }
+    }*/
 
     /*------ Economia ------*/
     public function economia($proyecto){
