@@ -2816,6 +2816,7 @@ SELECT
     cpoa.sol_id,
     cpoa.cpoa_recomendacion,
     cpoa.cpoa_observacion,
+    cpoa.jef_id,
     f.fun_nombre,
     f.fun_paterno,
     f.fun_materno,

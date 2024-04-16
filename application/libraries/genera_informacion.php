@@ -61,14 +61,15 @@ class Genera_informacion extends CI_Controller{
       $tabla.='
      
         <br>
-        <div align=right>
+        <div align=lefth>
           <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/arrow_rotate_clockwise.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;SALIR</a>&nbsp;&nbsp;';
           if($dep_id!=0 & $dist_id==0){
             $tabla.='<a href="'.site_url("").'/me/rep_form2/'.$dep_id.'" target=_blank class="btn btn-default" title="FORMULARIO N° 2 (OPERACIONES)"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;FORMULARIO N°2 (OPERACIONES)</a>&nbsp;&nbsp;';
           }
         $tabla.='
-          <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO OPERACIONES"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR DETALLE</a>&nbsp;&nbsp;
-          <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;ESTABLECIMIENTOS DE SALUD</a>&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="POA (ADMINISTRATIVO)"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR DETALLE POA</a>&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR (EST. DE SALUD)</a>&nbsp;&nbsp;
+          <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;CONSOLIDADO POA (FORM. N° 5)</a>&nbsp;&nbsp;
         </div>
         <br>
       <div class="alert alert-warning">

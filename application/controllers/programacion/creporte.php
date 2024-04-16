@@ -310,15 +310,36 @@ class Creporte extends CI_Controller {
                 $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); /// PROYECTO
                 $data['pie_rep']=$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' '.$proyecto[0]['abrev'].'-'.$componente[0]['serv_descripcion'].' '.$this->gestion;
             
-                if($this->gestion>2023){
+                /*if($this->gestion>2023){
                     $data['operaciones']=$this->programacionpoa->rep_formulario_N4_v2($componente[0]['com_id'],$componente[0]['com_componente'],$proyecto); /// 2024
                 }
                 else{
                     $data['operaciones']=$this->programacionpoa->rep_formulario_N4_v1($componente[0]['com_id'],$componente[0]['com_componente'],$proyecto); /// 2023
-                }
+                }*/
+               // $data['operaciones']='Hola mundo';
+                $data['operaciones']=$this->programacionpoa->rep_formulario_N4_v1($componente[0]['com_id'],$componente[0]['com_componente'],$proyecto); /// 2023
             }
             $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$com_id);
             $data['pie']=$this->programacionpoa->pie_form($proyecto);
+            
+            $data['rep']='
+            <page backtop="75mm" backbottom="30mm" backleft="5mm" backright="5mm" pagegroup="new">
+                <page_header>
+                    <br><div class="verde"></div>
+                    '.$data['cabecera'].'
+                </page_header>
+                <page_footer>
+                  
+                </page_footer>
+                '.$data['operaciones'].'
+
+            </page>';
+
+
+
+
+
+
             $this->load->view('admin/programacion/reportes/reporte_form4', $data);
         }
         else{
