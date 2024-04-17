@@ -145,7 +145,8 @@ class Crep_evalunidad extends CI_Controller {
       $data['lista']=$this->mis_servicios(0,$proy_id);
       $data['eficacia']=$tabla[5][$this->tmes];
       $data['economia']=$this->economia($proyecto); /// Economia
-      $data['eficiencia']=$this->eficiencia($tabla[5][$this->tmes],$data['economia'][3]); /// Eficiencia
+      //$data['eficiencia']='';
+      //$data['eficiencia']=$this->eficiencia($tabla[5][$this->tmes],$data['economia'][3]); /// Eficiencia
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes); /// Datos del Trimestre
      
       $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/reporte_evaluacion_eficiencia_por_unidad', $data);

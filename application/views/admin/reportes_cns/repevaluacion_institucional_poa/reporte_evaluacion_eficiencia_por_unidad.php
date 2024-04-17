@@ -25,7 +25,7 @@ ob_start();
         <?php echo $lista;?><br>
 
         <div style="font-size: 10px;font-family: Arial;height: 2.5%;">
-          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.- (%) EFICACIA</b>
+          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.- (%) CUMPLIMIENTO POA</b>
         </div>
         <table border="0" style="width:100%;">
             <tr>
@@ -44,7 +44,7 @@ ob_start();
         </table>
     
         <div style="font-size: 10px;font-family: Arial;height: 2.5%;">
-          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.- (%) ECONOMIA</b>
+          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.- (%) CERT. POA</b>
         </div>
         <table border="0" style="width:100%;">
             <tr>
@@ -62,7 +62,7 @@ ob_start();
             </tr>
         </table>
 
-        <div style="font-size: 10px;font-family: Arial;height: 2.5%;">
+<!--         <div style="font-size: 10px;font-family: Arial;height: 2.5%;">
           <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.- EFICIENCIA</b>
         </div>
         <table border="0" style="width:100%;">
@@ -79,7 +79,7 @@ ob_start();
                 </td>
                 <td style="width:20%;"></td>
             </tr>
-        </table>
+        </table> -->
     </page>
 
 <?php
