@@ -380,7 +380,8 @@ class Cmod_presupuestario extends CI_Controller {
           $post = $this->input->post();
           $ue_id = $this->security->xss_clean($post['ue_id']);
           $rd = $this->security->xss_clean($post['rd']);
-          $tp_id = $this->security->xss_clean($post['tp_id']);
+          //$tp_id = $this->security->xss_clean($post['tp_id']);
+          $tp_id=4;
 
           $tipo = $_FILES['archivo']['type'];
           $tamanio = $_FILES['archivo']['size'];
@@ -452,12 +453,12 @@ class Cmod_presupuestario extends CI_Controller {
                     $prog=trim($datos[2]); /// prog
                     $act=trim($datos[3]); /// act
                     $cod_part=trim($datos[4]); /// partida
-                    $importe=(float)$datos[5]; /// Monto
+                    $importe=floatval(trim($datos[5])); /// Monto
                     $tp=trim($datos[6]); /// tp : 1 (reduccion), 0 (Adicion)
                     $activo=trim($datos[7]); /// tp : 1 (activo), 0 (No activo)
 
-                    if(strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
-                      $aper=$this->model_ptto_sigep->get_apertura($da,$ue,$prog,'00',$act);
+                    if($importe!=0 & is_numeric($cod_part)){
+                      $aper=$this->model_ptto_sigep->get_apertura($da,$ue,$prog,'0000',$act);
                       if(count($aper)!=0){
                           $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
                           $par_id=0;
@@ -470,7 +471,7 @@ class Cmod_presupuestario extends CI_Controller {
                             'mp_id' => $mp_id,
                             'aper_id' => $aper[0]['aper_id'],
                             'aper_programa' => $prog,
-                            'aper_proyecto' => '00',
+                            'aper_proyecto' => '0000',
                             'aper_actividad' => $act,
                             'par_id' => $par_id,
                             'partida' => $cod_part,
