@@ -184,9 +184,10 @@ $mes=3;
         <thead>
           <tr style="height:35px;">
             <th style="width:1%;" bgcolor="#474544">#</th>
-            <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR">MIS UNIDADES</th>
-            <th style="width:10%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO MENSUAL</th>
-            <th style="width:3%;" bgcolor="#474544" title="EVALUACION POA">EVALUACION POA</th>
+            <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR">UNIDADES DEPENDIENTES</th>
+            <th style="width:8%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO MENSUAL</th>
+            <th style="width:3%;" bgcolor="#474544" title="EVALUACION POA">SUBIR NOTIFICACIONES</th>
+            <th style="width:3%;" bgcolor="#474544" title="EVALUACION POA">EVALUACION POA CONSOLIDADO</th>
             <th style="width:3%;" bgcolor="#474544" title="EJECUCION CERT. POA"></th>
             <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
             <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">UNIDAD / ESTABLECIMIENTO DE SALUD</th>
@@ -207,7 +208,7 @@ $mes=3;
                 <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>
                 <td align=center bgcolor="#deebfb">
                   <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" style="font-size:10px;">
-                    <i class="glyphicon glyphicon-list"></i> <b>UNIDADES OPERATIVAS</b>
+                    <i class="glyphicon glyphicon-list"></i> <b>UNIDADES <br> OPERATIVAS</b>
                   </a>
                 </td>
                 <td align=center bgcolor="#deebfb">
@@ -228,6 +229,7 @@ $mes=3;
                     </ul>
                   </div>
                 </td>
+                <td align=center><a href="'.site_url("").'/seg/add_scaneado/'.$row['proy_id'].'" title="SUBIR ARCHIVO SCANNEADO" ><img src="'.base_url().'assets/img/subir.png" WIDTH="38" HEIGHT="38"/></a></td>
                 <td align=center bgcolor="#deebfb">
                   <a href="'.site_url("").'/eval/eval_unidad/'.$row['proy_id'].'" title="REPORTE DE EVALUACION POA POR UNIDAD" target="_blank" ><img src="'.base_url().'assets/img/ejecucion.png" WIDTH="35" HEIGHT="35"/></a>
                 </td>
@@ -248,7 +250,7 @@ $mes=3;
         $tabla.='
         </tbody>
           <tr>
-            <td colspan="10" style="height:50px;"></td>
+            <td colspan="13" style="height:50px;"></td>
           </tr>
       </table>';
       return $tabla;

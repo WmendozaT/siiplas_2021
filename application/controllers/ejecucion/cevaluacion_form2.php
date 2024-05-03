@@ -312,7 +312,7 @@ class Cevaluacion_form2 extends CI_Controller {
       $data['regional']=$this->model_proyecto->get_departamento($dep_id);
       $data['trimestre']=$this->model_evaluacion->trimestre();
       $data['nro']=count($this->model_objetivogestion->get_list_ogestion_por_regional($dep_id));
-      $data['eval']=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id);      
+      $data['eval']=$this->eval_oregional->matriz_cumplimiento_operaciones_regional($dep_id); /// matriz form 2  
       $data['cabecera']=$this->eval_oregional->cabecera_reporte_grafico($data['regional']);
       $data['calificacion']=$this->eval_oregional->calificacion_total_form2_regional($dep_id,1);
 

@@ -1219,10 +1219,12 @@ class Modificacionpoa extends CI_Controller{
                     $tabla .='<td align=center bgcolor="#ecf9f7" title="CODIGO ACTIVIDAD"><font size=5 color=blue><br><b>'.$row['prod_cod'].'</b></font></td>';
                     $tabla .='<td align=center>';
                       if($valor_mod==0 & $valor_delete==0){
-                        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>
+                        if($row['ins_id']!=652774 || $this->fun_id==399){
+                                $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn-default mod_ff" name="'.$row['ins_id'].'" id="btn_m" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'" disabled="true"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="30" HEIGHT="30"/></a><br>
                                   <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-xs del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'" >
                                     <img src="'.base_url().'assets/img/delete.png" width="30" height="30"/>
                                   </a>';
+                        }
                       }
                       elseif($valor_mod==0 & $valor_delete==1){
                         $tabla.='
@@ -1376,10 +1378,17 @@ class Modificacionpoa extends CI_Controller{
                     $tabla .='<td align=center bgcolor="#ecf9f7" title="CODIGO ACTIVIDAD"><font size=3 color=blue><br>'.$row['prod_cod'].'</font></td>';
                     $tabla .='<td align=center>';
                       if($valor_mod==0 & $valor_delete==0){
-                        $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
+                         if($row['ins_id']!=652774 || $this->fun_id==399){
+                                $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
                                   <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'" >
                                     <img src="'.base_url().'assets/img/delete.png" width="35" height="35"/>
                                   </a>';
+                        }
+                        
+                        /*$tabla.=' <a href="#" data-toggle="modal" data-target="#modal_mod_ff" class="btn btn-default mod_ff" name="'.$row['ins_id'].'" title="MODIFICAR REQUERIMIENTO - '.$row['ins_id'].'"><img src="'.base_url().'assets/ifinal/modificar.png" WIDTH="35" HEIGHT="35"/></a><br>
+                                  <a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR REQUERIMIENTO"  name="'.$row['ins_id'].'" >
+                                    <img src="'.base_url().'assets/img/delete.png" width="35" height="35"/>
+                                  </a>';*/
                       }
                       elseif($valor_mod==0 & $valor_delete==1){
                         $tabla.='

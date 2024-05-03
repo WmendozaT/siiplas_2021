@@ -335,7 +335,7 @@ function cuadro_grafico_cumplimiento_form2_detalle_institucional(grafico,titulo,
         type: 'bar'
     },
     title: {
-        text: titulo
+        text: '<font size:20px>'+titulo+'</font>'
     },
     subtitle: {
         text: ''
@@ -761,7 +761,7 @@ $(function() {
 
   /// grado de cumplimiento por Objetivo Regional FORM 2
   function nivel_cumplimiento(or_id,dep_id,or_tp) {
-    //alert('hola mundo')
+
     $('#titulo_grafico').html('<font size=3><b>Cargando ..</b></font>');
     $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Ediciones </div>');
   //  alert(dep_id)
@@ -912,6 +912,7 @@ $(function() {
 
   /// GRADO DE CUMPLIMIENTO DE OPERACIONES CONSOLIDADO POR REGIONAL (GRAFICO) FORM 2
   function nivel_cumplimiento_operaciones_grafico(dep_id,trm_id) {
+
     var url = base+"index.php/ejecucion/cevaluacion_form2/get_cumplimiento_operaciones_grafico";
     var request;
     if (request) {
@@ -925,6 +926,7 @@ $(function() {
     });
 
     request.done(function (response, textStatus, jqXHR) {
+
       if (response.respuesta == 'correcto') {
         $('#titulo_graf').html(response.titulo_graf);
         $('#tabla').html(response.tabla);

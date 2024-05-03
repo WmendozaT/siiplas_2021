@@ -2394,7 +2394,7 @@ class Seguimientopoa extends CI_Controller{
                   $nro_ope++;
                   $tabla.= '
                     <tr>
-                      <td align=center style="height:15px; width:2%;">'.$nro_ope.'</td>
+                      <td align=center style="height:12px; width:2%;">'.$nro_ope.'</td>
                       <td align=center style="font-size: 10px; width:3%;">'.$row['or_codigo'].'</td>
                       <td align=center style="font-size: 10px; width:3%;">'.$row['prod_cod'].'</td>
                       <td style="width:32%;">'.$row['prod_producto'].'</td>
@@ -2462,7 +2462,7 @@ class Seguimientopoa extends CI_Controller{
                   <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:99%;" align=center>
                     <thead>
                       <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
-                        <th style="width:1.5%; height:18px;">#</th>
+                        <th style="width:1.5%; height:15px;">#</th>
                         <th style="width:3%;"><b>COD. ACT.</b></th>
                         <th style="width:7%;"><b>PARTIDA</b></th>
                         <th style="width:29%;">DETALLE REQUERIMIENTO</th>
@@ -2481,7 +2481,7 @@ class Seguimientopoa extends CI_Controller{
                         $nro_req++;
                         $tabla.= '
                         <tr>
-                            <td align=center style="height:14px; width:1.5%;">'.$nro_req.'</td>
+                            <td align=center style="height:12px; width:1.5%;">'.$nro_req.'</td>
                             <td align=center style="font-size: 10px; width:3%;">'.$row['prod_cod'].'</td>
                             <td align=center style="font-size: 10px; width:7%;">'.$row['par_codigo'].'</td>
                             <td style="width:29%;">'.$row['ins_detalle'].'</td>
@@ -2495,7 +2495,7 @@ class Seguimientopoa extends CI_Controller{
                       }
               $tabla.= '  
                       <tr>
-                          <td colspan=8 style="height:14px;" align=right><b>TOTAL MONTO A CERTIFICAR </b></td>
+                          <td colspan=8 style="height:12px;" align=right><b>TOTAL MONTO A CERTIFICAR </b></td>
                           <td align=right style="font-size: 9px;"><b>'.number_format($suma, 2, ',', '.').'</b></td>
                           <td></td>
                       </tr>
@@ -2546,7 +2546,7 @@ class Seguimientopoa extends CI_Controller{
                           $nro_req++;
                           $tabla.= '
                           <tr>
-                            <td align=center style="height:14px; width:1.5%;">'.$nro_req.'</td>
+                            <td align=center style="height:12px; width:1.5%;">'.$nro_req.'</td>
                             <td align=center style="font-size: 10px; width:3%;">'.$rowp['prod_cod'].'</td>
                             <td align=center style="font-size: 10px; width:7%;">'.$row['par_codigo'].'</td>
                             <td style="width:29%;">'.$row['ins_detalle'].'</td>
