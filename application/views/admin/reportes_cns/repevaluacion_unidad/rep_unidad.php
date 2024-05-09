@@ -325,7 +325,7 @@
                 document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
             }
         </script>
-                <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
+        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/modules/exporting.js"></script>
         <!-- IMPORTANT: APP CONFIG -->

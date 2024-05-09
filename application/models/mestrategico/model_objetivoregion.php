@@ -128,6 +128,21 @@ class Model_objetivoregion extends CI_Model{
         return $query->result_array();
     }
 
+    /*---------- LISTA OBJETIVOS REGIONALES SEGUN EL OBJETIVO DE GESTION Y REGIONAL (GRAFICO)--------------*/
+    public function list_oregional_regional_graf2($og_id,$dep_id){
+        $sql = 'select *
+                from objetivo_programado_mensual opg
+                Inner Join objetivo_gestion as og On og.og_id=opg.og_id
+
+                Inner Join objetivos_regionales as oreg On opg.pog_id=oreg.pog_id
+                Inner Join indicador as tp On oreg.indi_id=tp.indi_id
+                where opg.og_id='.$og_id.' and opg.dep_id='.$dep_id.' and oreg.estado!=\'3\' and oreg.or_meta!=\'0\'
+                order by oreg.or_codigo,oreg.or_id asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*---------- LISTA TEMPORALIDAD OREGIONALES ------------*/
     public function get_temporalidad_oregional($or_id,$tn_id){
         $sql = 'select *

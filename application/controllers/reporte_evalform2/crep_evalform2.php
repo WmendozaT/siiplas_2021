@@ -380,7 +380,7 @@ class Crep_evalform2 extends CI_Controller {
                 </thead>
                   <tbody>';
                   $nro=0;
-                for ($i=0; $i < count($this->model_objetivoregion->list_oregional_regional($og_id,$dep_id)); $i++) { 
+                for ($i=0; $i < count($this->model_objetivoregion->list_oregional_regional_graf2($og_id,$dep_id)); $i++) { 
                   $nro++;
                   $tabla.='
                   <tr>
@@ -403,7 +403,7 @@ class Crep_evalform2 extends CI_Controller {
           'acp_regional' => $acp_regional,
           'tabla' => $tabla,
           'matriz' => $matriz,
-          'nro' => count($this->model_objetivoregion->list_oregional_regional($og_id,$dep_id)),
+          'nro' => count($this->model_objetivoregion->list_oregional_regional_graf2($og_id,$dep_id)),
           'trimestre'=>$this->model_evaluacion->trimestre(),
           'gestion'=>$this->gestion,
           'regional'=>strtoupper($regional[0]['dep_departamento']),
@@ -421,7 +421,7 @@ class Crep_evalform2 extends CI_Controller {
   /*---- MATRIZ DETALLE DE CUMPLIMIENTO DE OPERACIONES POR ACP REGIONAL ---*/
   public function matriz_cumplimiento_operaciones_acp_regional($og_id,$dep_id){
     $matriz='';
-    $lista_form2=$this->model_objetivoregion->list_oregional_regional($og_id,$dep_id);
+    $lista_form2=$this->model_objetivoregion->list_oregional_regional_graf2($og_id,$dep_id);
 
     $nro=0;
     foreach($lista_form2 as $row){
@@ -506,7 +506,7 @@ class Crep_evalform2 extends CI_Controller {
                             </thead>
                               <tbody>';
                               $nro_form2=0;
-                            for ($i=0; $i < count($this->model_objetivoregion->list_oregional_regional($row['og_id'],$dep_id)); $i++) { 
+                            for ($i=0; $i < count($this->model_objetivoregion->list_oregional_regional_graf2($row['og_id'],$dep_id)); $i++) { 
                               $nro_form2++;
                               $tabla.='
                               <tr>

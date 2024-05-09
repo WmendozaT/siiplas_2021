@@ -39,6 +39,7 @@
 ///// =================== MODULO DE REPORTES POA - EVALUACION DE FORMULARIO 2
 ////------- menu select regionales
   $("#d_id").change(function () {
+ 
     $("#d_id option:selected").each(function () {
       dep_id=$(this).val();
 

@@ -323,7 +323,8 @@
         </script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
         <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
+        
+        <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script> 
         
         <script src="<?php echo base_url(); ?>assets/captura/html2canvas.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/captura/canvasjs.min.js"></script>
