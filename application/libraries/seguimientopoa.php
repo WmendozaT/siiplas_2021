@@ -444,19 +444,19 @@ class Seguimientopoa extends CI_Controller{
                 <thead>
                   <tr bgcolor=#f8f2f2 align=center>
                     <th style="font-size: 7px; height:17px;" colspan=9>DATOS POA (FORMULARIO N° 4 - ACTIVIDADES)</th>
-                    <th colspan=3>DATOS SEGUIMIENTO</th>
+                    <th colspan=3>DATOS SEGUIMIENTO POA - MES '.$verif_mes[2].' / '.$this->gestion.'</th>
                   </tr>   
                   <tr style="font-size: 7px; height:17px;" bgcolor=#f8f2f2 align=center>
                     <th style="width:1%;"></th>
-                    <th style="width:3%;"><b>COD. OPE.</b></th>
-                    <th style="width:3%;"><b>COD. ACT.</b></th>
-                    <th style="width:20%;">DESCRIPCI&Oacute;N ACTIVIDAD</th>
+                    <th style="width:2%;"><b>COD. OPE.</b></th>
+                    <th style="width:2%;"><b>COD. ACT.</b></th>
+                    <th style="width:22%;">DESCRIPCI&Oacute;N ACTIVIDAD</th>
                     <th style="width:16%;">MEDIO DE VERIFICACI&Oacute;N</th>
                     <th style="width:4%;">META ANUAL</th>
-                    <th style="width:4%;">PROG. MES '.$verif_mes[2].'</th>
-                    <th style="width:4%;">EJEC. MES '.$verif_mes[2].'</th>
-                    <th style="width:4%;">%EFI.</th>
-                    <th style="width:13%;">MEDIO DE VERIFICACIÓN</th> 
+                    <th style="width:4%;">PROG. '.$verif_mes[2].'</th>
+                    <th style="width:4%;">EJEC. '.$verif_mes[2].'</th>
+                    <th style="width:4%;">%CUMP.</th>
+                    <th style="width:15%;">FUENTE DE VERIFICACIÓN <br>(CUMPLIMIENTO)</th> 
                     <th style="width:13%;">PROBLEMAS PRESENTADOS</th>
                     <th style="width:13%;">ACCIONES REALIZADOS</th> 
                   </tr>
@@ -485,17 +485,19 @@ class Seguimientopoa extends CI_Controller{
                     $tabla.=
                     '<tr style="height:15px; font-size: 6.5px;" bgcolor="'.$color.'">
                         <td style="height:15px;  width: 1%; text-align: center;" >'.$nro.'</td>
-                        <td style="width: 3%; text-align: center; font-size: 9px;"><b>'.$row['or_codigo'].'</b></td>
-                        <td style="width: 3%; text-align: center; font-size: 9px;"><b>'.$row['prod_cod'].'</b></td>
-                        <td style="width: 20%;">'.$row['prod_producto'].'<br>'.$diferencia[3].'--'.$diferencia[1].'--'.$diferencia[2].'</td>
+                        <td style="width: 2%; text-align: center; font-size: 11px;"><b>'.$row['or_codigo'].'</b></td>
+                        <td style="width: 2%; text-align: center; font-size: 11px;"><b>'.$row['prod_cod'].'</b></td>';
+                        //<td style="width: 20%;">'.$row['prod_producto'].'<br>'.$diferencia[3].'--'.$diferencia[1].'--'.$diferencia[2].'</td>
+                        $tabla.='
+                        <td style="width: 22%;">'.$row['prod_producto'].'</td>
                         <td style="width: 16%;">'.$row['prod_fuente_verificacion'].'</td>
-                        <td align=right>'.round($row['prod_meta'],2).''.$indi_id.'</td>
+                        <td align=right style="font-size: 7px;"><b>'.round($row['prod_meta'],2).''.$indi_id.'</b></td>
                         <td style="width: 4%; text-align: right;">'.$diferencia[2].''.$indi_id.'</td>';
                         if(count($ejec)!=0){
                             $tabla.='
                             <td style="width: 4%; text-align: right;">'.$diferencia[3].''.$indi_id.'</td>
                             <td style="width: 4%; text-align: right;">'.$efi.' %</td>
-                            <td style="width: 13%;">'.$ejec[0]['medio_verificacion'].'</td>
+                            <td style="width: 14%;">'.$ejec[0]['medio_verificacion'].'</td>
                             <td style="width: 13%;">'.$ejec[0]['observacion'].'</td>
                             <td style="width: 13%;">'.$ejec[0]['acciones'].'</td>';
                           }
@@ -505,14 +507,14 @@ class Seguimientopoa extends CI_Controller{
                           if(count($no_ejec)!=0){
                             $tabla.='
                             <td style="width: 4%; text-align: right;"></td>
-                            <td style="width: 13%;">'.$no_ejec[0]['medio_verificacion'].'</td>
+                            <td style="width: 14%;">'.$no_ejec[0]['medio_verificacion'].'</td>
                             <td style="width: 13%;">'.$no_ejec[0]['observacion'].'</td>
                             <td style="width: 13%;">'.$no_ejec[0]['acciones'].'</td>';
                           }
                           else{
                             $tabla.='
                             <td style="width: 4%; text-align: right;"></td>
-                            <td style="width: 13%;"></td>
+                            <td style="width: 14%;"></td>
                             <td style="width: 13%;"></td>
                             <td style="width: 13%;"></td>';
                           }

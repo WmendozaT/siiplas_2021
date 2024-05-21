@@ -40,8 +40,8 @@ ob_start();
         </div><br>
     </page_header>
     <page_footer>
-        <hr>
-        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:96%;" align="center">
+    
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:99%;" align="center">
             <tr>
                 <td style="width: 33%;">
                     <table border="1" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
@@ -75,7 +75,7 @@ ob_start();
                 </td>
             </tr>
             <tr>
-                <td colspan="3"><br><br></td>
+                <td colspan="3"><br></td>
             </tr>
             <tr>
                 <td style="width: 33%; text-align: left">
@@ -89,7 +89,7 @@ ob_start();
                 </td>
             </tr>
             <tr>
-                <td colspan="3"><br><br></td>
+                <td colspan="3"><br></td>
             </tr>
         </table>
     </page_footer>

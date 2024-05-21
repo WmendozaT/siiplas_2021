@@ -134,20 +134,27 @@
 
 
       <!-- Main component for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div class="row box-green1">
+      <section id="widget-grid" >
         <div class="col-md-8">
-          <!-- <?php echo $_SERVER["HTTP_HOST"].''.$_SERVER["REQUEST_URI"].'-----'.base_url(); ?> -->
-          <h3>BIENVENIDO : <?php echo $resp; ?></h3>
-          <h4><?php echo $res_dep; ?></h4>
-          <h4><b>CARGO : </b><?php echo $this->session->userdata("cargo");?></h4>
-          <h4><b>MES / GESTI&Oacute;N VIGENTE : </b><?php echo $mes[2].' / '.$this->session->userdata("gestion");?></h4>
-          <h4><b>TRIMESTRE VIGENTE : </b><?php echo $tmes[0]['trm_descripcion'];?></h4>
+          <div >
+            <div style="font-size: 35px;">BIENVENIDO : <?php echo $resp; ?></div>
+            <h4><?php echo $res_dep; ?></h4>
+            <h4><b>CARGO : </b><?php echo $this->session->userdata("cargo");?></h4>
+            <h4><b>MES / GESTI&Oacute;N VIGENTE : </b><?php echo $mes[2].' / '.$this->session->userdata("gestion");?></h4>
+            <h4><b>TRIMESTRE VIGENTE : </b><?php echo $tmes[0]['trm_descripcion'];?></h4>
+          </div>
         </div>
         <div class="col-md-4" align="center">
           <img src="<?php echo base_url('assets/img_v1.1/moni.png');?>" style="width:85%;">
         </div>
-      </div>
+
+        <div id="load" class="col-lg-12" id="load" style="display: none" align="center">
+          <img  src="<?php echo base_url()?>/assets/img_v1.1/loading.gif" width="60" height="60" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO.."><br><font size="1"><b>ESPERE UN MOMENTO, CARGANDO MODULO ........</b></font>
+        </div>
+
+      </section>
+
+    <div class="jumbotron">
       <div id="load" class="col-lg-12" id="load" style="display: none" align="center">
         <img  src="<?php echo base_url()?>/assets/img_v1.1/loading.gif" width="60" height="60" title="ESPERE UN MOMENTO, LA PAGINA SE ESTA CARGANDO.."><br><font size="1"><b>ESPERE UN MOMENTO, CARGANDO MODULO ........</b></font>
       </div>

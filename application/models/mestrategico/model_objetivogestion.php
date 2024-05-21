@@ -216,7 +216,7 @@ class Model_objetivogestion extends CI_Model{
                 from objetivo_programado_mensual opg
                 Inner Join _departamentos as dep On dep.dep_id=opg.dep_id
                 Inner Join objetivos_regionales as oreg On oreg.pog_id=opg.pog_id
-                where opg.og_id='.$og_id.' and opg.dep_id='.$dep_id.'
+                where opg.og_id='.$og_id.' and opg.dep_id='.$dep_id.' and oreg.or_meta!=\'0\'
                 order by opg.dep_id asc';
 
         $query = $this->db->query($sql);
@@ -261,7 +261,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
                 Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
                 Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
-                where opge.dep_id='.$dep_id.' and oge.og_codigo='.$og_codigo.' and oreg.or_codigo='.$or_codigo.' and oge.g_id='.$this->gestion.'
+                where opge.dep_id='.$dep_id.' and oge.og_codigo='.$og_codigo.' and oreg.or_codigo='.$or_codigo.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
                 order by oge.og_codigo,oreg.or_codigo asc';
         
         $query = $this->db->query($sql);
@@ -356,10 +356,10 @@ class Model_objetivogestion extends CI_Model{
     public function get_list_ogestion_por_regional_institucional(){
         $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
                 from temp_trm_prog_objetivos_regionales temprog
-                Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id 
                 Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
                 Inner Join objetivo_gestion as og on og.og_id = opge.og_id
-                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.'
+                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
                 group by opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo
                 order by opge.g_id,og.og_codigo, oreg.or_codigo asc';
         $query = $this->db->query($sql);
@@ -373,7 +373,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
                 Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
                 Inner Join objetivo_gestion as og on og.og_id = opge.og_id
-                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and (temprog.trm_id>\'0\' and temprog.trm_id<='.$trimestre.') 
+                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and (temprog.trm_id>\'0\' and temprog.trm_id<='.$trimestre.') and oreg.or_meta!=\'0\'
                 group by opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo
                 order by opge.g_id,og.og_codigo, oreg.or_codigo asc';
         $query = $this->db->query($sql);
@@ -415,7 +415,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
                 Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
                 Inner Join objetivo_gestion as og on og.og_id = opge.og_id
-                where og.og_id='.$og_id.' and oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and (temprog.trm_id>\'0\' and temprog.trm_id<='.$trimestre.') 
+                where og.og_id='.$og_id.' and oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and (temprog.trm_id>\'0\' and temprog.trm_id<='.$trimestre.') and oreg.or_meta!=\'0\'
                 group by opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo
                 order by opge.g_id,og.og_codigo,oreg.or_codigo asc';
         $query = $this->db->query($sql);
@@ -469,7 +469,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join objetivos_regionales as oreg on oreg.or_id = temejec.or_id
                 Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
                 Inner Join objetivo_gestion as og on og.og_id = opge.og_id
-                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.'
+                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
                 group by opge.g_id';
 
         $query = $this->db->query($sql);
