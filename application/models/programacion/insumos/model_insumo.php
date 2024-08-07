@@ -32,7 +32,7 @@ class Model_insumo extends CI_Model{
     // ------ lista Programado ejecutado por partidas Regional
     public function lista_consolidado_ejecucion_partidas($dep_id){
         $sql = 'select dep_id,par_codigo,SUM(ins_costo_total) programado,SUM(ins_monto_certificado) certificado, round(((SUM(ins_monto_certificado)/SUM(ins_costo_total))*100),2) 
-                from lista_requerimientos_institucional(4,'.$this->gestion.')
+                from lista_requerimientos_institucional_directo(4,'.$this->gestion.')
                 where dep_id='.$dep_id.'
                 group by dep_id,par_codigo
                 order by par_codigo asc';
@@ -741,17 +741,18 @@ class Model_insumo extends CI_Model{
 
 
     //// ---- LISTA DE REQUERIMIENTOS POR UNIDAD ORGANIZACIONAL
-    function get_lista_requerimientos_unidad_partida($aper_id,$tp_id,$par_id){
-        if($par_id==0){ /// Consolidado
+    function get_lista_requerimientos_unidad_partida($aper_id,$tp_id,$par_id,$dep_id){
+        if($aper_id==0){ /// consolidado Regional
             $sql = 'select *
-                    from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
-                    where aper_id='.$aper_id.'';
+                    from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
+                    where dep_id='.$dep_id.'';
+
         }
-        else{ /// por partida
-            $sql = 'select *
-                    from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
-                    where aper_id='.$aper_id.' and par_id='.$par_id.'';
+        else{ /// detallado por unidad programa
+
+
         }
+
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -762,7 +763,7 @@ class Model_insumo extends CI_Model{
     //// ---- CONSOLIDADO DE PRESUPUESTO POA (FORM 5) INSTITUCIONAL POR CATEGORIA PROGRAMATICA
     function consolidado_ppto_x_programas_institucional($tp_id){
         $sql = 'select aper_programa, SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
-                from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
                 group by aper_programa
                 order by aper_programa asc';
 
@@ -773,7 +774,7 @@ class Model_insumo extends CI_Model{
     /// --- GET PPTO POA POR PARTIDAS INSTITUCIONAL, BUSQUEDA POR PROGRAMA
     function get_consolidado_partidas_ppto_x_programas_institucional($tp_id,$aper_programa){
         $sql = 'select aper_programa, par_id, par_codigo,SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
-                from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
                 where aper_programa=\''.$aper_programa.'\'
                 group by aper_programa, par_id, par_codigo
                 order by aper_programa, par_codigo asc';
@@ -788,7 +789,7 @@ class Model_insumo extends CI_Model{
     //// ---- CONSOLIDADO DE PRESUPUESTO POA (FORM 5) REGIONAL POR CATEGORIA PROGRAMATICA (TODOS) Regional
     function consolidado_ppto_x_programas_regional($tp_id,$dep_id){
         $sql = 'select dep_id,aper_programa, SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
-                from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
                 where dep_id='.$dep_id.'
                 group by dep_id, aper_programa
                 order by aper_programa asc';
@@ -800,7 +801,7 @@ class Model_insumo extends CI_Model{
     //// ---- GET LISTA DE UNIDADES PRESUPUESTO POA (FORM 5) REGIONAL POR CATEGORIA PROGRAMATICA
     function get_lista_unidad_ppto_programa($tp_id,$dep_id,$aper_programa){
         $sql = 'select dep_id, aper_programa, aper_id,proy_id,proy_nombre,tipo,act_descripcion,abrev,SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
-                from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
                 where dep_id='.$dep_id.' and aper_programa=\''.$aper_programa.'\'
                 group by dep_id, aper_programa, aper_id,proy_id,proy_nombre,tipo,act_descripcion,abrev
                 order by aper_programa asc';
@@ -812,7 +813,7 @@ class Model_insumo extends CI_Model{
     //// ---- GET LISTA DE PARTIDAS POR UNIDAD ORGANIZACIONAL
     function get_lista_partidas_unidad_organizacional($tp_id,$dep_id,$aper_programa,$aper_id){
         $sql = 'select dep_id, aper_programa, aper_id,par_id, par_codigo,SUM(ins_costo_total) ppto_poa, SUM(ins_monto_certificado) ppto_certificado
-                from lista_requerimientos_institucional('.$tp_id.','.$this->gestion.')
+                from lista_requerimientos_institucional_directo('.$tp_id.','.$this->gestion.')
                 where dep_id='.$dep_id.' and aper_programa=\''.$aper_programa.'\' and aper_id='.$aper_id.'
                 group by dep_id, aper_programa, aper_id,par_id, par_codigo
                 order by aper_programa,aper_id,par_id, par_codigo asc';

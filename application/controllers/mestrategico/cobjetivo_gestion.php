@@ -65,7 +65,6 @@ class Cobjetivo_gestion extends CI_Controller {
       $data['lista2']= $this->acortoplazo->distribucion_mensual(); /// lista 2
       $data['pie']=$this->acortoplazo->pie_form1();
       $this->load->view('admin/mestrategico/objetivos_gestion/reporte_form1', $data);
-      
     }
 
 

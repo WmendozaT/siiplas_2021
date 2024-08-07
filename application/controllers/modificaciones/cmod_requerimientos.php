@@ -17,6 +17,7 @@ class Cmod_requerimientos extends CI_Controller {
             $this->load->model('programacion/model_producto');
             $this->load->model('programacion/model_componente');
             $this->load->model('programacion/insumos/minsumos');
+            $this->load->model('ejecucion/model_certificacion');
             //$this->load->model('programacion/insumos/minsumos_delegado');
             $this->load->model('ejecucion/model_ejecucion');
             $this->load->model('mantenimiento/model_entidad_tras');
@@ -925,32 +926,33 @@ class Cmod_requerimientos extends CI_Controller {
           <thead>
             <tr style="font-size: 7px;" bgcolor=#1c7368 align=center>
               <th style="width:2%;height:15px;color:#FFF;">#</th>
-              <th style="width:15%;color:#FFF;">PARTIDA</th>
-              <th style="width:20%;color:#FFF;">PPTO. VIGENTE</th>
-              <th style="width:20%;color:#FFF;">PPTO. SALDO REVERTIDO</th>
-              <th style="width:20%; color:#FFF;">PPTO. TOTAL</th>
+              <th style="width:20%;color:#FFF;">CERT. POA</th>
+              <th style="width:20%;color:#FFF;">PARTIDA</th>
+              <th style="width:20%;color:#FFF;">PPTO. REVERTIDO</th>
+
             </tr>
           </thead>
           <tbody>';
           $nro=0;$suma=0;
             foreach($saldos_revertidos_partidas as $row){
               $suma=$suma+(($row['ppto_inicial']+$row['presupuesto_revertido']));
+              $certificacion=$this->model_certificacion->get_datos_certificacion_poa($row['cpoa_id']); /// Datos Certificacion
+              $codigo='S/C';
+              if(count($certificacion)!=0){
+                $codigo=$certificacion[0]['cpoa_codigo'];
+              }
               $nro++;
               $tabla.='
               <tr>
                 <td style="height:10px;" align="center">'.$nro.'</td>
+                <td style="font-size:13px; text-align:center"><b>'.$codigo.'</b></td>
                 <td style="font-size:15px; text-align:center"><b>'.$row['partida'].'</b></td>
-                <td style="text-align:right">'.number_format($row['ppto_inicial'], 2, ',', '.').'</td>
                 <td style="text-align:right">'.number_format($row['presupuesto_revertido'], 2, ',', '.').'</td>
-                <td style="text-align:right">'.number_format(($row['ppto_inicial']+$row['presupuesto_revertido']), 2, ',', '.').'</td>
               </tr>';
             }
           $tabla.='
           </tbody>
-            <tr>
-              <td colspan=4></td>
-              <td style="font-size:12px; text-align:right"><b>'.number_format($suma, 2, ',', '.').'</b></td>
-            </tr>
+            
           </table>';
       return $tabla;
     }

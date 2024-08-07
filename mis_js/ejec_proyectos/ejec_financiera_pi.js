@@ -110,6 +110,58 @@ alert(patron.test(valor))*/
     }
   }
 
+  //// Cambiar meses
+  function update_meses(mes_id,proy_id){
+   /// tp 0 : nuevo
+   /// tp 1 : modifcacion  
+   // alert(ejecutado+'-'+valor2+'-'+valor3)
+
+      alertify.confirm("CAMBIAR MES ?", function (a) {
+        if (a) {
+          var url = base+"index.php/user/update_mes";
+          $.ajax({
+            type: "post",
+            url: url,
+            data:{mes_id:mes_id},
+                success: function (data) {
+                window.location.reload(true);
+            }
+        });
+        } else {
+            alertify.error("OPCI\u00D3N CANCELADA");
+        }
+      });
+
+
+/*var url = base+"index.php/ejecucion/cejecucion_pi/verif_valor_ejecutado_x_partida_form";
+        var request;
+        if (request) {
+          request.abort();
+        }
+        request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "tipo="+tipo+"&ejec="+ejecutado+"&sp_id="+id+"&mes_id="+mes_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+          //alert(response.respuesta)
+        if (response.respuesta == 'correcto') {
+            
+            document.getElementById("ppto"+id).innerHTML = response.ejecucion_total_partida;
+            document.getElementById("porcentaje"+id).innerHTML = response.porcentaje_ejecucion_total_partida+' %';
+            $('#but'+id).slideDown();
+        }
+        else{
+            alertify.error("ERROR EN EL DATO REGISTRADO !");
+            document.getElementById("ppto"+id).innerHTML = '';
+            document.getElementById("porcentaje"+id).innerHTML = '';
+            $('#but'+id).slideUp();
+        }
+
+      });*/
+  }
 
   function verif_valor_pi(tipo,ejecutado,id,mes_id){
     verif_datos(tipo,ejecutado,id,mes_id)

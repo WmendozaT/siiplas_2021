@@ -158,10 +158,14 @@
 /// partida
     $("#par_id").change(function () {
         $("#par_id option:selected").each(function () {
+          //alert('hola')
             par_id=$(this).val();
             dep_id=$('[name="dep_id"]').val();
             tp_id=$('[name="tp_id"]').val();
             aper_id=$('[name="aper_id"]').val();
+            // $aper_id,$tp_id,$par_id,$dep_id
+            alert(aper_id+'-'+tp_id+'-'+par_id+'-'+dep_id)
+            //alert('hola mundo')
           
             $('#lista_consolidado').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Informacion ...</div>');
             var url = base+"index.php/reportes_cns/crep_consultafinanciera/get_reporte_ppto";

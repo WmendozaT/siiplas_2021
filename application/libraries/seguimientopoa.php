@@ -2267,7 +2267,7 @@ class Seguimientopoa extends CI_Controller{
       $tabla='';
       $nro_pag=0;
       foreach($subactividades as $rowu){ $nro_pag++; 
-        $tabla.=$this->get_notificacion_subactividad($rowu['com_id']); //// Get Notificacion por Subactividad
+        $tabla.=$this->get_notificacion_subactividad($rowu['com_id']); //// Get Notificacion por Unidad Responsable
         //$tabla.=$rowu['com_id'].'<br>';
       }
       return $tabla;
@@ -2510,68 +2510,71 @@ class Seguimientopoa extends CI_Controller{
           $form4_requerimientos=$this->model_producto->get_lista_form4_uniresp_prog_bolsas($com_id);
           if(count($form4_requerimientos)!=0){
               foreach ($form4_requerimientos as $rowp) { /// lista de actividades
-                for ($i=$this->verif_mes[1]; $i >=1 ; $i--) { 
-                  $items=$this->model_notificacion->list_requerimiento_mes_unidad_prog_bolsa($rowp['prod_id'],$i); /// lista de requerimientos
-                  
-                  if(count($items)!=0){
+                if(count($this->model_notificacion->verif_requerimiento_mes_unidad_prog_bolsa($rowp['prod_id']))!=0){
                     $tabla.='
-                    <br>
-                    <table border=0 style="width:99%;" align=center>
-                      <tr>
-                        <td style="width:99%;font-family: Arial;">
-                        <b>'.$rowp['aper_programa'].' '.$rowp['aper_proyecto'].' '.$rowp['aper_actividad'].' - '.$rowp['aper_descripcion'].'</b>
-                        </td>
-                      </tr>
-                    </table>';
-
-
-                    $tabla.= '
-                    <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:99%;" align=center>
-                      <thead>
-                        <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
-                          <th style="width:1.5%; height:17px;">#</th>
-                          <th style="width:3%;"><b>COD. ACT.</b></th>
-                          <th style="width:7%;"><b>PARTIDA</b></th>
-                          <th style="width:29%;">DETALLE REQUERIMIENTO</th>
-                          <th style="width:10%;">UNIDAD DE MEDIDA</th>
-                          <th style="width:7%;">CANTIDAD</th>
-                          <th style="width:8%;">PRECIO UNITARIO</th>
-                          <th style="width:8%;">PRECIO TOTAL</th>
-                          <th style="width:8%;">PROG. MES<br>'.$mes[2].'</th>
-                          <th style="width:15%;">OBSERVACI&Oacute;N</th>
+                 
+                      <table border=0 style="width:99%;" align=center>
+                        <tr>
+                          <td style="width:99%;font-family: Arial;">
+                          <b>'.$rowp['aper_programa'].' '.$rowp['aper_proyecto'].' '.$rowp['aper_actividad'].' - '.$rowp['aper_descripcion'].' / </b>'.$rowp['prod_cod'].' .-'.$rowp['prod_producto'].'
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>';
-                      $nro_req=0;$suma=0;
-                      foreach ($items as $row) {
-                          $suma=$suma+$row['ipm_fis'];
-                          $nro_req++;
-                          $tabla.= '
+                      </table>';
+
+                    for ($i=$this->verif_mes[1]; $i >=1 ; $i--) { 
+                      $mes=$this->verif_mes_gestion($i);
+                      $items=$this->model_notificacion->list_requerimiento_mes_unidad_prog_bolsa($rowp['prod_id'],$i); /// lista de requerimientos
+                      
+                      if(count($items)!=0){
+                        
+                        $tabla.= '
+                        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:99%;" align=center>
+                          <thead>
+                            <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
+                              <th style="width:1.5%; height:17px;">#</th>
+                              <th style="width:3%;"><b>COD. ACT.</b></th>
+                              <th style="width:7%;"><b>PARTIDA</b></th>
+                              <th style="width:29%;">DETALLE REQUERIMIENTO</th>
+                              <th style="width:10%;">UNIDAD DE MEDIDA</th>
+                              <th style="width:7%;">CANTIDAD</th>
+                              <th style="width:8%;">PRECIO UNITARIO</th>
+                              <th style="width:8%;">PRECIO TOTAL</th>
+                              <th style="width:8%;">PROG. MES<br>'.$mes[2].'</th>
+                              <th style="width:15%;">OBSERVACI&Oacute;N</th>
+                            </tr>
+                          </thead>
+                          <tbody>';
+                          $nro_req=0;$suma=0;
+                          foreach ($items as $row) {
+                              $suma=$suma+$row['ipm_fis'];
+                              $nro_req++;
+                              $tabla.= '
+                              <tr>
+                                <td align=center style="height:12px; width:1.5%;">'.$nro_req.'</td>
+                                <td align=center style="font-size: 10px; width:3%;">'.$rowp['prod_cod'].'</td>
+                                <td align=center style="font-size: 10px; width:7%;">'.$row['par_codigo'].'</td>
+                                <td style="width:29%;">'.$row['ins_detalle'].'</td>
+                                <td style="width:10%;">'.$row['ins_unidad_medida'].'</td>
+                                <td style="width:7%;" align=right>'.round($row['ins_cant_requerida'],2).'</td>
+                                <td style="width:8%;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
+                                <td style="width:8%;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>
+                                <td style="width:8%;" align=right><b>'.number_format($row['ipm_fis'], 2, ',', '.').'</b></td>
+                                <td style="width:15%;" align=left>'.$row['ins_observacion'].'</td>
+                              </tr>';
+                          }
+                      $tabla.= '  
                           <tr>
-                            <td align=center style="height:12px; width:1.5%;">'.$nro_req.'</td>
-                            <td align=center style="font-size: 10px; width:3%;">'.$rowp['prod_cod'].'</td>
-                            <td align=center style="font-size: 10px; width:7%;">'.$row['par_codigo'].'</td>
-                            <td style="width:29%;">'.$row['ins_detalle'].'</td>
-                            <td style="width:10%;">'.$row['ins_unidad_medida'].'</td>
-                            <td style="width:7%;" align=right>'.round($row['ins_cant_requerida'],2).'</td>
-                            <td style="width:8%;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
-                            <td style="width:8%;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>
-                            <td style="width:8%;" align=right><b>'.number_format($row['ipm_fis'], 2, ',', '.').'</b></td>
-                            <td style="width:15%;" align=left>'.$row['ins_observacion'].'</td>
-                          </tr>';
+                              <td colspan=8 style="height:14px;" align=right><b>TOTAL MONTO A CERTIFICAR </b></td>
+                              <td align=right style="font-size: 9px;"><b>'.number_format($suma, 2, ',', '.').'</b></td>
+                              <td></td>
+                          </tr>
+                          </tbody>
+                      </table><br>';
+
+
                       }
-                  $tabla.= '  
-                      <tr>
-                          <td colspan=8 style="height:14px;" align=right><b>TOTAL MONTO A CERTIFICAR </b></td>
-                          <td align=right style="font-size: 9px;"><b>'.number_format($suma, 2, ',', '.').'</b></td>
-                          <td></td>
-                      </tr>
-                      </tbody>
-                  </table><br>';
 
-
-                  }
-
+                    }
                 }
 
               }

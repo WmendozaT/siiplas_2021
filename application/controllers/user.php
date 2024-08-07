@@ -32,7 +32,7 @@ class User extends CI_Controller{
         $this->modulo = $this->session->userdata('modulos');
         $this->tp_adm = $this->session->userdata("tp_adm");
         $this->tmes = $this->session->userData('trimestre');
-        $this->verif_mes=$this->session->userData('mes_actual');
+
         $this->notificaciones=$this->session->userData('estado_notificaciones');
         $this->verif_mes=$this->session->userdata('mes_actual');
         $this->conf_ajuste_poa=$this->session->userdata('conf_ajuste_poa');
@@ -115,7 +115,30 @@ class User extends CI_Controller{
     }
 
 
+/// cambia mes para ejec inversion
+  function update_mes(){
+    if($this->input->is_ajax_request() && $this->input->post()){
+        $this->form_validation->set_rules('i', 'Mes', 'required|trim');
+        $mes_id= $this->security->xss_clean($post['mes_id']);
+        $conf=$this->model_proyecto->get_configuracion($this->gestion); 
 
+
+         /*$data = array(
+                'gestion' => $conf[0]['ide'],
+                'mes' => $mes_id,
+                'mes_actual'=>$this->verif_mes_gestion($mes_id),
+                'tr_id' => ($conf[0]['conf_mes_otro']+$conf[0]['conf_mes_otro']*2), /// Trimestre 3,6,9,12
+                'desc_mes' => $this->mes_texto($conf[0]['conf_mes']),
+                'verif_ppto' => $conf[0]['ppto_poa'], /// Ppto poa : 0 (Vigente), 1: (Aprobado)
+                'conf_ajuste_poa' => $conf[0]['conf_ajuste_poa'] /// Ajuste POA
+            );
+            $this->session->set_userdata($data);*/
+            $this->session->set_userdata('mes_actual', $this->verif_mes_gestion($mes_id));
+
+    }else{
+        show_404();
+    }
+  } 
     /*-------- Valida Cambio trimestre Session -----------*/
     public function cambiar_trimestre(){
         $conf=$this->model_proyecto->get_configuracion($this->gestion);

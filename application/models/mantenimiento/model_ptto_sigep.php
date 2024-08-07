@@ -464,7 +464,7 @@ class Model_ptto_sigep extends CI_Model{
                 select asig.aper_id,SUM(ejec.ppto_ejec) ppto
                 from ejecucion_financiera_sigep ejec
                 Inner Join ptto_partidas_sigep as asig On asig.sp_id=ejec.sp_id
-                where asig.aper_id='.$aper_id.' and ejec.m_id='.$mes_id.'
+                where asig.aper_id='.$aper_id.' and ejec.m_id='.$mes_id.'  and asig.estado!=\'3\'
                 group by asig.aper_id';
 
         $query = $this->db->query($sql);

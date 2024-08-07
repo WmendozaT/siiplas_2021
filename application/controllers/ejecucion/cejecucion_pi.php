@@ -28,6 +28,8 @@ class Cejecucion_pi extends CI_Controller {
           $this->tr_id = $this->session->userData('tr_id'); /// Trimestre Eficacia
           $this->ppto= $this->session->userData('verif_ppto'); 
           $this->verif_mes=$this->session->userData('mes_actual');
+          $this->mes=$this->session->userData('mes');
+          
           $this->tp_adm = $this->session->userData('tp_adm');
           $this->load->library('ejecucion_finpi');
         }else{
@@ -42,7 +44,9 @@ class Cejecucion_pi extends CI_Controller {
   //// FORMULARIO DE EJECUCION PROYECTOS DE INVERSION
   /*------- Formulario de Ejecucion Proyectos de Inversion -------*/
   public function formulario_ejecucion_pinversion($com_id){
-    $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
+echo "hola <br>";
+    echo $this->mes;
+/*    $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
     if(count($componente)!=0){
       $proyecto = $this->model_proyecto->get_proyecto_inversion($componente[0]['proy_id']);
       $regional=$this->model_proyecto->get_departamento($proyecto[0]['dep_id']);
@@ -55,15 +59,31 @@ class Cejecucion_pi extends CI_Controller {
             }
 
         $data['menu'] = $this->ejecucion_finpi->menu(4);
-        $data['cabecera_formulario']=
-        '<h2 title='.$proyecto[0]['aper_id'].'><small>PROYECTO : </small>'.$proyecto[0]['proy'].' - '.$proyecto[0]['proyecto'].'</h2>
+        $data['cabecera_formulario']='
+        <input name="base" type="hidden" value="'.base_url().'">
+        <h2 title='.$proyecto[0]['aper_id'].'><small>PROYECTO : </small>'.$proyecto[0]['proy'].' - '.$proyecto[0]['proyecto'].'</h2>
          <h2><small>MES VIGENTE : </small> '.$this->verif_mes[2].' / '.$this->gestion.'</h2>
           '.$salir.'&nbsp;
           <a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR REPORTE POA"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="18" HEIGHT="18"/>&nbsp;&nbsp;GENERAR POA '.$this->gestion.'</a>&nbsp;
-          <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR FICHA TECNICA DE PROYECTO"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="18" HEIGHT="18"/>&nbsp;&nbsp;GENERAR FICHA TECNICA</a>&nbsp;
-          ';
+          <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR FICHA TECNICA DE PROYECTO"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="18" HEIGHT="18"/>&nbsp;&nbsp;GENERAR FICHA TECNICA</a>&nbsp;';
+          
+          $data['cabecera_formulario'].='
+          <br><br>
+          <select class="form-control" onchange="update_meses(this.value,'.$proyecto[0]['proy_id'].');" style="width:10%;">';
+            for ($i=1; $i <=$this->verif_mes[1]; $i++) { 
+              $mes=$this->model_proyecto->mes_id($i);
+              if($i==$this->verif_mes[1]){
+                $data['cabecera_formulario'].="<option value=".$i." selected>".$mes[0]['m_descripcion']."</option>";
+              }
+              else{
+                $data['cabecera_formulario'].="<option value=".$i.">".$mes[0]['m_descripcion']."</option>";
+              }
 
-        
+            }
+
+          $data['cabecera_formulario'].='
+          </select>';
+          
         $data['calificacion']=$this->calificacion_proyecto($proyecto);
         $data['reporte']='<a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°4</b></font></a>';
         $data['formulario_datos_generales']=$this->tabla_datos_generales($proyecto,$com_id); /// Datos Generales
@@ -115,8 +135,10 @@ class Cejecucion_pi extends CI_Controller {
     }
     else{
       echo "Error !!!";
-    }
+    }*/
   }
+
+
 
 
   /*------ GET CUADRO CONSOLIDADO DE EJECUCION DE PI -----*/

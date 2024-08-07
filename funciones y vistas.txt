@@ -3364,7 +3364,9 @@ sp_id integer,
 par_id integer,
 partida varchar,
 ppto_inicial numeric,
+cpoa_id numeric,
 presupuesto_revertido numeric
+
 ) AS
 
 $$
@@ -3386,6 +3388,7 @@ saldo.sp_id,
 p_asignadas.par_id,
 p_asignadas.partida,
 saldo.ppto_anterior ppto_inicial,
+saldo.cpoa_id,
 SUM(saldo.monto_revertido) presupuesto_revertido
 
 from saldo_partida saldo
@@ -3394,10 +3397,9 @@ Inner Join ptto_partidas_sigep as p_asignadas On saldo.sp_id=p_asignadas.sp_id
 Inner Join aperturaprogramatica as apg On apg.aper_id=p_asignadas.aper_id
 Inner Join _proyectos as p On p.proy_id=cite.proy_id
 where apg.aper_gestion=gestion and saldo.saldo_estado!=3
-group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_nombre,p.proy_sisin,p.tp_id,p_asignadas.aper_id,cite.proy_id,cite.cppto_cite,cite.observacion,cite.cppto_id,saldo.sp_id,p_asignadas.par_id,p_asignadas.partida,saldo.ppto_anterior,p_asignadas.importe
+group by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,apg.aper_gestion,p.proy_nombre,p.proy_sisin,p.tp_id,p_asignadas.aper_id,cite.proy_id,cite.cppto_cite,cite.observacion,cite.cppto_id,saldo.sp_id,p_asignadas.par_id,p_asignadas.partida,saldo.ppto_anterior,p_asignadas.importe,saldo.cpoa_id
 order by apg.aper_programa,apg.aper_proyecto,apg.aper_actividad,cite.cppto_id asc;
 $$ LANGUAGE sql;
-
 
 
 

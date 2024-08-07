@@ -1020,7 +1020,7 @@ class Cmod_insumo extends CI_Controller {
 
 
         $data['informacion']='
-        <page orientation="paysage"  backtop="73mm" backbottom="30mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
+        <page orientation="paysage"  backtop="73mm" backbottom="28mm" backleft="2.6mm" backright="2.6mm" pagegroup="new">
           <page_header>
           <br><div class="verde"></div>
               '.$cabecera_modpoa.'

@@ -236,16 +236,16 @@
 		          tipo = $(this).attr('name');
 		          document.getElementById("tp").value=tipo;
 		          if(tipo==1){
-		            $('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE ACTIVIDADES.CSV</b></center>');
+		            $('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE FORMULARIO N°4.CSV</b></center>');
 		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 22</b></li> <li type="circle"><b>Columna (A) COD. ACP. : Codigo Acción Corto Plazo</b></li> <li type="circle"><b>Columna (B) COD. OPE. : Codigo Operación</b></li> <li type="circle"><b>Columna (C) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (H-U), Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
 		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/img_migracion/migracion_f4.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
-		            $('#buton').html('VER ARCHIVO DE ACTIVIDADES.CSV');
+		            $('#buton').html('VER ARCHIVO FORMULARIO N° 4 (ACTIVIDADES.CSV)');
 		          }
 		          else{
-		          	$('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE REQUERIMIENTOS.SCV</b></center>');
+		          	$('#titulo').html('<center><b>VERIFICAR PLANTILLA MIGRACI&Oacute;N DE FORMULARIO N°5.SCV</b></center>');
 		            $('#datos').html('<ul style="font-size: 13px;"><li type="circle"><b>Numero de columnas 22</b></li> <li type="circle"><b>Columna (A) COD. ACT. : Codigo de Actividad</b></li> <li type="circle"><b>Columnas (E-S), por tratarse de presupuesto el Tipo de Dato debe ser GENERAL</b></li> <li type="circle"><b>El archivo debe estar en formato .Csv</b></li></ul>');
 		            $('#img').html('<img  src="<?php echo base_url() ?>/assets/img/img_migracion/migracion_form5.JPG" style="border-style:solid;border-width:5px;" style="width:10px;">');
-		            $('#buton').html('VER ARCHIVO DE REQUERIMIENTOS.CSV');
+		            $('#buton').html('VER ARCHIVO DE FORMULARIO N° 5 (REQUERIMIENTOS.CSV)');
 		          }
 		        });
 		    });

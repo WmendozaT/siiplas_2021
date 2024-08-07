@@ -355,6 +355,7 @@ function abreVentana(PDF){
 
   //// Verificando valor ejecutado por form 4
   function verif_valor(programado,ejecutado,prod_id,nro,tp,mes_id){
+    //alert(programado+'-'+ejecutado+'-'+prod_id+'-'+nro+'-'+tp+'-'+mes_id)
    /// tp 0 : Registro
    /// tp 1 : modifcacion  
 

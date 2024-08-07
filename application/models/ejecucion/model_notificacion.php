@@ -70,6 +70,21 @@ class Model_notificacion extends CI_Model{
     }
 
 
+    /*------- verif (Unidad Responsable) PROGRAMA BOLSA--------*/
+    public function verif_requerimiento_mes_unidad_prog_bolsa($prod_id){
+        $sql = 'select ip.prod_id,i.ins_id,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,i.ins_observacion,i.par_id, par.par_codigo,temp.mes_id,temp.ipm_fis,temp.estado_cert
+                from _insumoproducto ip
+                Inner Join insumos as i On i.ins_id=ip.ins_id
+                Inner Join partidas as par On i.par_id=par.par_id
+                Inner Join temporalidad_prog_insumo as temp On temp.ins_id=i.ins_id
+                where ip.prod_id='.$prod_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and par.par_depende!=\'10000\' and temp.estado_cert=\'0\'
+                group by ip.prod_id,i.ins_id,i.ins_detalle,i.ins_cant_requerida,i.ins_costo_unitario,i.ins_costo_total,i.ins_unidad_medida,i.ins_observacion,i.par_id, par.par_codigo,temp.mes_id,temp.ipm_fis,temp.estado_cert
+                order by par.par_codigo asc';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 
 
 

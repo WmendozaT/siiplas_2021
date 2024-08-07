@@ -41,8 +41,9 @@ class Crep_consultafinanciera extends CI_Controller {
       $data['menu']=$this->menu(7);
       $data['list']=$this->menu_nacional();
       $data['mensaje']='<div class="jumbotron"><h1>Consulta Presupuestaria POA '.$this->gestion.'</h1><p>Reporte Presupuestaria POA (Requerimientos) Regional y Distrital.</p><ol style="font-size:16px;"><li>Genera Informacion Presupuestaria por Partidas</li></ol></div>';
-      $this->load->view('admin/reportes_cns/rep_consultas_presupuestarias/menu_index', $data);
+      //$this->load->view('admin/reportes_cns/rep_consultas_presupuestarias/menu_index', $data);
       //echo $this->consolidado_requerimientos_unidad_partida(15255,4,64);
+    $this->consolidado_requerimientos_unidad_partida(0,4,0,1);
     }
 
     //// MENU UNIDADES ORGANIZACIONAL 2020 - 2021
@@ -99,7 +100,7 @@ class Crep_consultafinanciera extends CI_Controller {
   }
 
 
-    /*--- GET PPTO X CATEGORIS PROGRAMA INSTITUCIONAL---*/
+    /*--- GET PPTO X CATEGORIA PROGRAMA INSTITUCIONAL---*/
     public function get_ppto_institucional(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -571,7 +572,7 @@ class Crep_consultafinanciera extends CI_Controller {
         $par_id = $this->security->xss_clean($post['par_id']); /// par id
       
         $salida='';
-        $salida=$this->consolidado_requerimientos_unidad_partida($aper_id,$tp_id,$par_id); /// Lista requerimientos
+        $salida=$this->consolidado_requerimientos_unidad_partida($aper_id,$tp_id,$par_id,$dep_id); /// Lista requerimientos
         
         $result = array(
           'respuesta' => 'correcto',
@@ -603,8 +604,8 @@ class Crep_consultafinanciera extends CI_Controller {
 
  /////========================================== CONSOLIDADO FORMULARIO N5 
     /*-- REPORTE (CONSOLIDADO REQUERIMIENTOS )--*/
-    public function consolidado_requerimientos_unidad_partida($aper_id,$tp_id,$par_id){
-      $requerimientos=$this->model_insumo->get_lista_requerimientos_unidad_partida($aper_id,$tp_id,$par_id); /// Lista requerimientos
+    public function consolidado_requerimientos_unidad_partida($aper_id,$tp_id,$par_id,$dep_id){
+      $requerimientos=$this->model_insumo->get_lista_requerimientos_unidad_partida($aper_id,$tp_id,$par_id,$dep_id); /// Lista requerimientos
 
       $tabla='';
       $tabla.='

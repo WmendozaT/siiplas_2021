@@ -61,7 +61,7 @@ class Crep_evalform1 extends CI_Controller {
     <input name="base" type="hidden" value="'.base_url().'">
     <input name="gestion" type="hidden" value="'.$this->gestion.'">
 
-        <div id="cabecera" style="display: none">HOLA MUNDO</div>
+        <div id="cabecera" style="display: none"></div>
         <div id="calificacion" style="display: none">'.$this->calificacion_form1_institucional(1,1).'</div>
         <form >
           <fieldset>   

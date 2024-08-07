@@ -86,6 +86,52 @@ $(document).ready(function() {
 })
 
 
+
+    //// ACTUALIZAR DATOS PARA LLENADOS DEL FORM 4
+    function datos_form4(nro,prod_id,detalle){ /// 
+      // nro: 1 (cod act)
+      // nro: 2 (actividad)
+      // nro: 3 (resultado)
+      // nro: 4 (unidad res)
+      // nro: 5 (índicador)
+      // nro: 6 (medio de verificacion)
+      // nro: 7 (meta)
+      
+      
+      alert(nro+'---'+prod_id)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   //// Subir Archivo de Migracionform 4 y form5
   $(function () {
     $(".importar_ff").on("click", function (e) {
@@ -320,7 +366,7 @@ $(document).ready(function() {
 
       /*------- ELIMINAR REQUERIMIENTOS DEL SERVICIO --------*/
       function eliminar_requerimientos_servicio(){
-        alertify.confirm("DESEA ELIMINAR TODOS LOS REQUERIMEINTOS DE LA UNIDAD ?", function (a) {
+        alertify.confirm("DESEA ELIMINAR TODOS LOS REQUERIMIENTOS DE LA UNIDAD ?", function (a) {
           if (a) {
             window.location=base+"index.php/prog/delete_insumos_servicio/"+com_id;
           } else {
@@ -492,7 +538,9 @@ $(document).ready(function() {
 
   /*---- MODIFICAR FORMULARIO N 4 ---*/
     $(function () {
+
         $(".mod_ff").on("click", function (e) {
+       
             prod_id = $(this).attr('name');
             document.getElementById("prod_id").value=prod_id;
             

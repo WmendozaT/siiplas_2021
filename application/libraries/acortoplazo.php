@@ -56,7 +56,7 @@ class Acortoplazo extends CI_Controller{
 
     /*---------- LISTA MIS OBJETIVOS DE GESTION (ACCION DE CORTO PLAZO)------------*/
     public function mis_ogestion_gral(){
-      $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// OBJETIVOS DE GESTION GENERAL
+      $ogestion = $this->model_objetivogestion->list_objetivosgestion_general(); /// ACCIONES DE CORTO PLAZO
 
       $tabla ='<input type="hidden" name="base" value="'.base_url().'">';
       $tabla .='<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

@@ -244,7 +244,7 @@ class C_consultas extends CI_Controller {
               </fieldset>
           </form>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion\');" title="IMPRIMIR ACP DISTRIBUCION REGIONAL" class="btn btn-default">
+            <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion/0\');" title="IMPRIMIR ACP DISTRIBUCION REGIONAL" class="btn btn-default">
               <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;REP. A.C.P. (FORM N° 1)
             </a>
             &nbsp;

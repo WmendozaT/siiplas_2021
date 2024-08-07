@@ -70,7 +70,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join indicador as tp On og.indi_id=tp.indi_id
                 Inner Join _objetivos_estrategicos as oe On oe.obj_id=og.oe_id
                 where og.estado!=\'3\' and og.g_id='.$this->gestion.'
-                order by oe.obj_codigo,og.og_codigo asc';
+                order by og.og_codigo asc';
         }
         else{
              $sql = 'select *

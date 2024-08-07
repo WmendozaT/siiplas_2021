@@ -10,6 +10,15 @@ class Model_proyecto extends CI_Model{
         $this->dist_tp = $this->session->userData('dist_tp');
     }
     
+    public function mes_id($mes_id){
+        $sql = 'select *
+                from mes ms
+                where ms.m_id='.$mes_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     public function dep_dist($dist_id){
         $sql = 'select *
                 from _distritales ds
@@ -1196,7 +1205,7 @@ class Model_proyecto extends CI_Model{
             $sql = '
             select *
             from aperturaprogramatica
-            where aper_programa=\''.$aper_programa.'\' and aper_estado!=\'3\' and aper_gestion='.$this->gestion.' and aper_proyecto=\'00\' and aper_actividad=\'000\' and aper_asignado=\'1\'';
+            where aper_programa=\''.$aper_programa.'\' and aper_estado!=\'3\' and aper_gestion='.$this->gestion.' and aper_asignado=\'1\'';
         }
         else{
             $sql = '

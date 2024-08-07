@@ -1198,6 +1198,7 @@ class Cmod_presupuestario extends CI_Controller {
                     'sp_id' => $get_ppto_partida_asignado[0]['sp_id'],
                     'monto_revertido' => $_POST["saldo"][$como],
                     'ppto_anterior' => $partida_ppto[0]['importe'],
+                    'cpoa_id' => $cpoa_id,
                     'cppto_id' => $cppto_id,
                   );
                   $this->db->insert('saldo_partida',$data_to_store);

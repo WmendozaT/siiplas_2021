@@ -50,100 +50,105 @@ class Producto extends CI_Controller {
   /*------- LISTA DE FORM 4 ----------*/
     public function lista_productos($com_id){
       $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion);
-      $data['stylo']=$this->programacionpoa->estilo_tabla_form4();
+
       if(count($data['componente'])!=0){
+      
+          if($this->conf_poa_estado==1){
+            $data['titulo']='
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <input type="hidden" name="base" value="'.base_url().'">
+              <div class="well">
+                <h2><b>FORMULARIO N 4 </b></h2>
+                <a href="'.site_url("").'/me/exportar_alineacion_ope_acp/" title="EXPORTAR EN EXCEL" class="btn btn-default">
+                  <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR ALINEACION EN EXCEL
+                </a>
+                <div class="btn-group">
+                  <button class="btn btn-default">
+                    <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;IMPRIMIR REPORTE DE ALINEACION POA
+                  </button>
+                  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/1\');" title="ALINEACION CHUQUISACA">ALINEACIÓN ACP  - CHUQUISACA</a>
+                    </li>
+                    <li>
+                      <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/2\');" title="ALINEACION LA PAZ">ALINEACIÓN ACP - LA PAZ</a>
+                    </li>
+                   
+                  </ul>
+                </div>
+              </div>
+            </article>';
 
-        $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
-        $proy_id=$data['fase'][0]['proy_id'];
-        $data['menu']=$this->genera_menu($proy_id);
-        $data['productos'] = $this->model_producto->list_prod($com_id); // Lista de productos
-        $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
-        $data['oregional']=$this->programacionpoa->verif_oregional($proy_id);  //// Verifica Objetivos regionales
-        $data['indi'] = $this->model_proyecto->indicador(); /// indicador
-        $data['metas'] = $this->model_producto->tp_metas(); /// tp metas
-        $data['oestrategicos'] = $this->model_mestrategico->list_objetivos_estrategicos(); /// Objetivos Estrategicos
-        if(count($this->model_producto->ult_operacion($com_id))!=0){
-          $data['cod_ope']=$this->model_producto->ult_operacion($com_id);
-        }
-        else{
-          $data['cod_ope']=0;
-        }
+            $tabla='';
+            $color_or='';
+            $form4=$this->model_producto->lista_form4_x_unidadresponsable($com_id);
+            foreach($form4  as $rowp){
+              $tabla.='
+              <tr>
+                <td></td>
+                <td></td>
+                <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['og_codigo'].'</td>
+                <td style="width: 2%; text-align: center;" bgcolor='.$color_or.' >'.$rowp['or_codigo'].'</td>
+                <td style="width: 2%; text-align: center; " bgcolor="#eceaea"><b>'.$rowp['prod_cod'].'</b></td>
+                <td style="width: 10%; text-align: left;">
+                  <textarea rows="5" class="form-control" onkeyup="datos_form4(1,'.$rowp['prod_id'].');" style="width:100%; font-size:10px; color:blue;background-color: #d7fcfa;" name="prod_form4" id="prod_form4" title="DETALLE ACTIVIDAD">'.$rowp['prod_producto'].'</textarea>
+                </td>
+                <td style="width: 9.5%; text-align: left;">
+                  <textarea rows="5" class="form-control" onkeyup="datos_form4(2,'.$rowp['prod_id'].');" style="width:100%; font-size:10px; color:blue;background-color: #d7fcfa;" name="prod_res" id="prod_res" title="DETALLE RESULTADO">'.$rowp['prod_resultado'].'</textarea>
+                </td>
+                <td style="width: 7%; text-align: left;">'.strtoupper($rowp['prod_unidades']).'</td>
+                <td style="width: 9%; text-align: left;">
+                  <textarea rows="5" class="form-control" style="width:100%; font-size:10px; color:blue; background-color: #d7fcfa;" name="prod_indi" id="prod_indi" title="DETALLE INDICADOR">'.$rowp['prod_indicador'].'</textarea>
+                </td>
+                <td style="width: 9%; text-align: left;">
+                  <textarea rows="5" class="form-control" style="width:100%; font-size:10px; color:blue;background-color: #d7fcfa;" name="prod_indi" id="prod_indi" title="DETALLE INDICADOR">'.$rowp['prod_fuente_verificacion'].'</textarea>
+                </td>
+                <td style="width: 3.5%; text-align: center;" bgcolor="#eceaea">
+                  <input name="m1" id="ms1" class="form-control" type="text" onkeyup="datos_form4(6,'.$rowp['prod_id'].');" style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;" value="'.round($rowp['prod_meta'],2).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              ';
+            }
 
-        /*------ Proyecto de Inversion -------*/
-        if($data['proyecto'][0]['tp_id']==1){
-          $data['datos_proyecto']='<h1> PROYECTO : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['proy_nombre'].'</small></h1>';
-          $data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['fase'][0]['proy_id']);
-          $data['list_oregional']=$this->programacionpoa->lista_oregional_pi($proy_id); //// Combo Lista de Operaciones Alineados
-        }
-        /*--------- Gasto Corriente ----------*/
-        else{
-          $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-          $data['objetivos']=$this->model_objetivoregion->list_proyecto_oregional($data['fase'][0]['proy_id']);
-          //$data['objetivos']=$this->model_objetivoregion->get_unidad_pregional_programado($data['proyecto'][0]['act_id']);
-          $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
-          $data['list_oregional']=$this->programacionpoa->lista_oregional($proy_id); //// Combo Lista de Operaciones Alineados
-        }
+            
 
-        $uresponsable='';
-        if($data['proyecto'][0]['por_id']==1){ /// para programas bolsas
-          $unidades=$this->model_producto->list_uresponsables_regional($data['proyecto'][0]['dist_id']);
-          $data['form4']='INCREMENTAR LA CAPACIDAD INSTALADA CON EQUIPAMIENTO';
-          $data['resultado']='UNIDADES CON EQUIPAMIENTO MEDICO Y/O ADMINISTRATIVO';
-          $data['indicador']='NRO. DE EQUIPOS ADQUIRIDOS';
-          $data['mverificacion']='ACTA DE RECEPCION';
+            $data['tabla']=$tabla;
 
-          $uresponsable.='
-                      <section class="col col-4">
-                        <label class="label"><b>UNIDAD RESPONSABLE</b></label>
-                        <select class="form-control" id="u_resp" name="u_resp" title="SELECCIONE UNIDAD RESPONSABLE">
-                          <option value="">Seleccione Unidad Responsable</option>';
-                          foreach($unidades as $row){
-                            $uresponsable.='<option value="'.$row['com_id'].'">'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
-                            /*if(count($this->model_producto->get_uni_resp_prog770($com_id,$row['com_id']))==0){
-                              $uresponsable.='<option value="'.$row['com_id'].'">'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
-                            }*/
-                          }       
-                        $uresponsable.='
-                        </select>
-                      </section>';
-        }
-        else{
-          $data['form4']='';
-          $data['resultado']='';
-          $data['indicador']='';
-          $data['mverificacion']='';
-
-          $uresponsable.='
-                      <input type="text" name="u_resp" value="0" hidden>
-                      <section class="col col-4">
-                        <label class="label"><b>UNIDAD RESPONSABLE</b></label>
-                        <label class="textarea">
-                          <i class="icon-append fa fa-tag"></i>
-                          <textarea rows="2" name="unidad" id="unidad" title="REGISTRE UNIDAD RESPONSABLE"></textarea>
-                        </label>
-                      </section>';
-        }
-
-        $data['uni_responsables']=$uresponsable;
-        $data['button']=$this->programacionpoa->button_form4(count($data['productos']),$com_id);
-        if($data['proyecto'][0]['por_id']==1){ /// actividades de programas Globales
-          $data['prod'] = $this->form4_prog_globales($proy_id,$com_id); /// Lista de productos
-        }
-        else{
-          $data['prod'] = $this->form4($proy_id,$com_id); /// Lista de form4
-        }
-       // echo $data['proyecto'][0]['dist_id'];
-        $this->load->view('admin/programacion/producto/list_productos', $data); /// Gasto Corriente
+            $this->load->view('admin/programacion/producto/form_anteproyecto_form4', $data); /// Gasto Corriente
+          }
+          else{
+            echo "final";
+          }
 
 
-        //$temporalidad=$this->model_producto->temporalidad_form4();
 
 
       }
       else{
         redirect('prog/list_serv/'.$com_id);
       }
-  }
+
+    }
+
+
+
+    public function form4_actividades(){
+
+    }
+
+
+
+
 
 
 
