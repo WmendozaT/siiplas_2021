@@ -104,18 +104,10 @@
                                 <!-- <table id="datatable_fixed_column" class="table table-bordered" width="100%"> -->
                                     <thead>
                                         <tr>
-                                            <th></th>
-                                            <th class="hasinput">
-                                                <input type="text" class="form-control" placeholder="PROGRAMA"/>
-                                            </th>
-                                            <th class="hasinput">
-                                                <input type="text" class="form-control" placeholder="COD. ACP."/>
-                                            </th>
-                                            <th class="hasinput">
-                                                <input type="text" class="form-control" placeholder="COD. OPE."/>
-                                            </th>
                                             <th class="hasinput">
                                                 <input type="text" class="form-control" placeholder="COD. ACT."/>
+                                            </th>
+                                            <th class="hasinput">
                                             </th>
                                             <th class="hasinput">
                                                 <input type="text" class="form-control" placeholder="ACTIVIDAD"/>
@@ -174,11 +166,8 @@
                                             
                                         </tr>                          
                                         <tr>
-                                            <th style="width:1%;"></th>
-                                            <th style="width:1%;">PROG.</th>
-                                            <th style="width:3%;">COD. ACP.</th>
-                                            <th style="width:3%;">COD. OPE.</th>
                                             <th style="width:3%;">COD. ACT.</th>
+                                            <th style="width:3%;">ALINEACION POA-ACP</th>
                                             <th style="width:10%;">ACTIVIDAD</th>
                                             <th style="width:10%;">RESULTADO</th>
                                             <th style="width:8%;">UNIDAD RESPONSABLE</th>
@@ -228,6 +217,7 @@
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
         <!-- BOOTSTRAP JS -->

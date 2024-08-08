@@ -88,7 +88,8 @@ $(document).ready(function() {
 
 
     //// ACTUALIZAR DATOS PARA LLENADOS DEL FORM 4
-    function datos_form4(nro,prod_id,detalle){ /// 
+    function datos_form4(tp,nro,prod_id,name_input){ /// 
+      // tp: 0 (datos), 1 (temporalidad)
       // nro: 1 (cod act)
       // nro: 2 (actividad)
       // nro: 3 (resultado)
@@ -96,15 +97,70 @@ $(document).ready(function() {
       // nro: 5 (índicador)
       // nro: 6 (medio de verificacion)
       // nro: 7 (meta)
+      //alert(tp+'--'+nro+'--'+prod_id+'--'+name_input)
+     if(tp==0){
+      informacion = document.getElementById(name_input+prod_id).value;
+     }
+     else{
+      informacion = document.getElementById('m'+name_input+prod_id).value;
+     }
       
-      
-      alert(nro+'---'+prod_id)
+
+      var url = base+"index.php/programacion/producto/update_datos_form4";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "prod_id="+prod_id+"&nro="+nro+"&detalle="+informacion+"&name_input="+name_input+"&tp="+tp
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+          //document.getElementById(name_input+prod_id).value = response.update_informacion;
+          document.getElementById('meta'+prod_id).value = response.update_meta;
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
     }
 
 
 
 
+    //// ACTUALIZAR UNIDAD RESPONSABLE (PROGRAMAS BOLSAS)
+    function select_uresp(com_id,prod_id){ /// 
+      var url = base+"index.php/programacion/producto/update_datos_form4_uresp";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "prod_id="+prod_id+"&uni_resp="+com_id
+      });
 
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+          alert(response.respuesta)
+          //document.getElementById(name_input+prod_id).value = response.update_informacion;
+          //document.getElementById('meta'+prod_id).value = response.update_meta;
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
+    }
 
 
 
