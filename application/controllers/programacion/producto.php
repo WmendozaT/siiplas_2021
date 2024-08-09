@@ -470,7 +470,8 @@ class Producto extends CI_Controller {
           'prod_resultado' => $resultado, /// 
           'indi_id' => $indi_id, /// 
           'prod_indicador' => $indicador,
-          'g_id' => $this->gestion, /// Gestion
+          $unidad => $uni_resp, /// Gestion
+          'prod_indicador' => $indicador,
         );
         $this->db->insert('_productos', $data_to_store);
         $pg_id=$this->db->insert_id();
