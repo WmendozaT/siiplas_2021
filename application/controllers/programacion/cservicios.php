@@ -73,7 +73,7 @@ class Cservicios extends CI_Controller {
                 $data['button']='
                 <br>&nbsp;
                 <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="1" title="MODIFICAR REGISTRO" >
-                    <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR ACTIVIDADES.CSV
+                    <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR FORMULARIO N 4.CSV
                 </a>
                 <hr>';
             }
@@ -267,7 +267,6 @@ class Cservicios extends CI_Controller {
                         <th style="width:1%;">#</th>
                         <th style="width:5%;">COD. UNIDAD</th>
                         <th style="width:20%;">UNIDAD RESPONSABLE</th>
-                        <th style="width:15%;">RESPONSABLE</th>
                         <th style="width:5%;">PONDERACI&Oacute;N</th>
                         <th style="width:5%;">NRO. ACT.</th>
                         <th style="width:5%;">MIS ACTIVIDADES</th>
@@ -309,11 +308,10 @@ class Cservicios extends CI_Controller {
                         $tabla.='
                         <td bgcolor="#d4f1fb" align="center" title="'.$row["com_id"].'"><font color="blue" size=3><b>'.$row['serv_cod'].'</b></font></td>
                         <td>'.$row['serv_descripcion'].'</td>
-                        <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
                         <td>'.$row['com_ponderacion'].' %</td>
                         <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
                         <td align="center">
-                            <a href="'.site_url("admin").'/prog/list_prod/'.$row['com_id'].'" title="MIS ACTIVIDADES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/archivo.png" WIDTH="34" HEIGHT="34"/></a>
+                            <a href="'.site_url("admin").'/prog/list_prod/'.$row['com_id'].'" title="MIS ACTIVIDADES" class="btn btn-default" target=_black><img src="'.base_url().'assets/ifinal/archivo.png" WIDTH="34" HEIGHT="34"/></a>
                         </td>
                         <td align="center"><a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$row['com_id'].'\');" title="REPORTE POA FORM 4" class="btn btn-default"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="35" HEIGHT="35"/></a></td>
                         <td align="center"><a href="javascript:abreVentana(\''.site_url("").'/proy/orequerimiento_proceso/'.$row['com_id'].'\');" title="REPORTE POA FORM 5" class="btn btn-default"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="35" HEIGHT="35"/></a></td>

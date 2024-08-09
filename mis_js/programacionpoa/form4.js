@@ -135,7 +135,9 @@ $(document).ready(function() {
 
 
     //// ACTUALIZAR UNIDAD RESPONSABLE (PROGRAMAS BOLSAS)
-    function select_uresp(com_id,prod_id){ /// 
+    function select_uresp_acp_indi(tp,id,prod_id){ /// 
+      /// tp 1 (acp), 2 (indi), 3 (uni resp)
+     // document.getElementById("meta"+prod_id).disabled = true;
       var url = base+"index.php/programacion/producto/update_datos_form4_uresp";
       var request;
       if (request) {
@@ -145,15 +147,22 @@ $(document).ready(function() {
           url: url,
           type: "POST",
           dataType: 'json',
-          data: "prod_id="+prod_id+"&uni_resp="+com_id
+          data: "prod_id="+prod_id+"&id="+id+"&tp="+tp
       });
 
       request.done(function (response, textStatus, jqXHR) {
 
       if (response.respuesta == 'correcto') {
-          alert(response.respuesta)
-          //document.getElementById(name_input+prod_id).value = response.update_informacion;
-          //document.getElementById('meta'+prod_id).value = response.update_meta;
+          if(tp==3){ // indi id
+            if(id==1){
+              document.getElementById("meta"+prod_id).disabled = true;
+            }
+            else{
+              document.getElementById("meta"+prod_id).disabled = false;
+            }
+          }
+
+          alertify.success("Seleccion procesada correctamente ...");
       }
       else{
           alertify.error("ERROR AL RECUPERAR INFORMACION");
@@ -164,7 +173,107 @@ $(document).ready(function() {
 
 
 
+    /// GUARDAR NUEVO FORMULARIO N4 2025 (NUEVO)
+    $(function () {
+        $("#subir_form4_nuv").on("click", function () {
+          var $validator = $("#form_nuevo2025").validate({
+              rules: {
+                com_id: {
+                  required: true,
+                },
+                descripcion: {
+                    required: true,
+                },
+                resultado: {
+                    required: true,
+                },
+                indi_id: {
+                    required: true,
+                },
+                indicador: {
+                    required: true,
+                },
+                uni_resp: {
+                    required: true,
+                },
+                m_verificacion: {
+                    required: true,
+                }
+              },
+              messages: {
+                descripcion: {required: "<font color=red size=1>REGISTRE ACTIVIDAD</font>"},
+                resultado: {required: "<font color=red size=1>REGISTRE RESULTADO</font>"},
+                indi_id: {required: "<font color=red size=1>SELECCIONE INDICADOR</font>"},
+                indicador: {required: "<font color=red size=1>REGISTRE INDICADOR</font>"},
+                uni_resp: {required: "<font color=red size=1>REGISTRE UNIDAD RESPONSABLE</font>"},
+                m_verificacion: {required: "<font color=red size=1>REGISTRE MEDIO DE VERIFICACION</font>"}                   
+              },
+              highlight: function (element) {
+                  $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+              },
+              unhighlight: function (element) {
+                  $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+              },
+              errorElement: 'span',
+              errorClass: 'help-block',
+              errorPlacement: function (error, element) {
+                  if (element.parent('.input-group').length) {
+                      error.insertAfter(element.parent());
+                  } else {
+                      error.insertAfter(element);
+                  }
+              }
+          });
 
+          var $valid = $("#form_nuevo2025").valid();
+          if (!$valid) {
+              $validator.focusInvalid();
+          } else {
+     
+            com_id = document.getElementById('com_id').value;
+            desc = document.getElementById('descripcion').value;
+            res = document.getElementById('resultado').value;
+            ind_id = document.getElementById('indi_id').value;
+            indi = document.getElementById('indicador').value;
+            uni = document.getElementById('uni_resp').value;
+            medio = document.getElementById('m_verificacion').value;
+            
+            //alert(desc+'-'+res+'-'+indi+'-'+indi)
+            var url = base+"index.php/programacion/producto/add_form4";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "com_id="+com_id+"&desc="+desc+"&res="+res+"&indi_id="+indi_id+"&indi="+indi+"&uni="+uni+"&medio="+medio
+            });
+
+            request.done(function (response, textStatus, jqXHR) {
+
+            if (response.respuesta == 'correcto') {
+                /*if(tp==3){ // indi id
+                  if(id==1){
+                    document.getElementById("meta"+prod_id).disabled = true;
+                  }
+                  else{
+                    document.getElementById("meta"+prod_id).disabled = false;
+                  }
+                }*/
+
+                alertify.success("Seleccion procesada correctamente ...");
+            }
+            else{
+                alertify.error("ERROR AL RECUPERAR INFORMACION");
+            }
+
+            });
+
+          }
+      });
+    });
 
 
 
@@ -475,7 +584,7 @@ $(document).ready(function() {
     }
 
 
-    /// GUARDAR NUEVO FORMULARIO N4 
+    /// GUARDAR NUEVO FORMULARIO N4 2023 (anular)
     $(function () {
         $("#subir_ope").on("click", function () {
           var $validator = $("#form_nuevo").validate({

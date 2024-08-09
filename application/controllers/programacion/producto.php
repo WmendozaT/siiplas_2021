@@ -50,23 +50,59 @@ class Producto extends CI_Controller {
   /*------- LISTA DE FORM 4 ----------*/
     public function lista_productos($com_id){
       $data['componente'] = $this->model_componente->get_componente($com_id,$this->gestion);
+      $data['stylo']=$this->programacionpoa->estilo_tabla_form4();
 
       if(count($data['componente'])!=0){
           
           $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
           $proy_id=$data['fase'][0]['proy_id'];
-          $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
+          $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
           $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
-          //$data['oregional']=$this->programacionpoa->verif_oregional($proy_id);  //// Verifica Objetivos regionales
-          //$data['list_oregional']=$this->programacionpoa->lista_oregional($proy_id); 
+          $data['indi'] = $this->model_proyecto->indicador(); /// indicador
+          $data['unidades']=$this->model_producto->list_uresponsables_regional($proyecto[0]['dist_id']);
+          $data['uni_resp']='';
 
-          $unidades=$this->model_producto->list_uresponsables_regional($data['proyecto'][0]['dist_id']);
+          if($proyecto[0]['por_id']==1){
+            $data['uni_resp'].='
+            <section class="col col-2">
+              <label class="label"><b>UNIDAD RESPONSABLE</b></label>
+                <select class="form-control" id="uni_resp" name="uni_resp" title="SELECCIONE UNIDAD RESPONSABLE" style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;">
+                  <option value="">Selec. Uni. Resp.</option>';
+                  foreach($data['unidades'] as $row){
+                    $data['uni_resp'].='<option value="'.$row['com_id'].'">'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
+                  }       
+                  $data['uni_resp'].='
+                </select>
+              </section>';
+          }
+          else{
+            $data['uni_resp']='
+            <section class="col col-2">
+              <label class="label"><b>UNIDAD RESPONSABLE</b></label>
+              <label class="textarea">
+                <i class="icon-append fa fa-tag"></i>
+                <textarea rows="3" name="uni_resp" id="uni_resp" title="REGISTRE UNIDAD RESPONSABLE" style="width:100%; font-size:11px; color:blue; background-color: #e3fcf8;"></textarea>
+              </label>
+            </section>';
+          }
+
+
           if($this->conf_poa_estado==1){ /// Ante proyecto
             $data['titulo']='
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <input type="hidden" name="base" value="'.base_url().'">
               <div class="well">
-                <h2><b>FORMULARIO N 4 </b></h2>
+                <h2>'.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['act_descripcion'].' - '.$proyecto[0]['abrev'].'  / '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h2>
+               
+                  <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO FORM N 4" >
+                    <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>NUEVO REGISTRO</b>
+                  </a>
+                  
+                  <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="1" title="MODIFICAR REGISTRO" >
+                    <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR NUEVAS ACTIVIDADES.CSV
+                  </a>
+
+
                 <a href="'.site_url("").'/me/exportar_alineacion_ope_acp/" title="EXPORTAR EN EXCEL" class="btn btn-default">
                   <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;EXPORTAR ALINEACION EN EXCEL
                 </a>
@@ -77,45 +113,46 @@ class Producto extends CI_Controller {
                   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                   </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/1\');" title="ALINEACION CHUQUISACA">ALINEACIÓN ACP  - CHUQUISACA</a>
-                    </li>
-                    <li>
-                      <a href="javascript:abreVentana(\''.site_url("").'/me/reporte_alineacion_ope_acp/2\');" title="ALINEACION LA PAZ">ALINEACIÓN ACP - LA PAZ</a>
-                    </li>
-                   
-                  </ul>
+                  
                 </div>
               </div>
             </article>';
 
             $tabla='';
             $color_or='';
+            $cont=0;
             $form4=$this->model_producto->lista_form4_x_unidadresponsable($com_id);
             foreach($form4  as $rowp){
-               $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
+              $programado=$this->model_producto->producto_programado($rowp['prod_id'],$this->gestion);
+              $disabled='disabled';
+              $cont++;
+              if($rowp['indi_id']==2){
+                $disabled='';
+              }
               $tabla.='
               <tr>
+                <td style="width: 2%; text-align: center;" bgcolor="red">
+                  <input type="checkbox" name="req[]" value="'.$rowp['prod_id'].'" onclick="scheck'.$cont.'(this.checked);"/>
+                </td>
                 <td style="width: 3%; text-align: center; " bgcolor="#eceaea" title='.$rowp['prod_id'].'>
                   <input name="prod_cod'.$rowp['prod_id'].'" id="prod_cod'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(0,1,'.$rowp['prod_id'].',\'prod_cod\');"  style="width:100%; font-size:13px; color:blue; background-color: #d7fcfa; text-align:center;" value="'.round($rowp['prod_cod'],2).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                 </td>
                 <td title='.$rowp['prod_id'].'>
                   <section class="col col-2">
-                  <label class="label"><b>ALINEACIÓN OPERACIÓN REGIONAL '.$this->gestion.'</b></label>
-                    <select class="form-control" id="or_id" name="or_id" style="width:100%; font-size:10.5px; color:blue; background-color: #fafcd7;" title="SELECCIONE ALINEACION">
-                      <option value="">SELECCIONE ALINEACIÓN OPERACIÓN</option>';
-                      foreach($list_oregional as $row){
-                        if($rowp['or_id']==$row['or_id']){
-                          $tabla.='<option value="'.$row['or_id'].'" selected>('.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].') <br> '.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
+                    <label class="label"><b>ALINEACI&Oacute;N OPERACI&Oacute;N '.$this->gestion.'</b></label>
+                      <select class="form-control" id="or_id'.$rowp['prod_id'].'" name="or_id'.$rowp['prod_id'].'" onchange="select_uresp_acp_indi(1,this.value,'.$rowp['prod_id'].');" style="width:100%; font-size:10.5px; color:blue; background-color: #fafcd7;" title="SELECCIONE ALINEACION">
+                        <option value="">SELECCIONE ALINEACIÓN OPERACIÓN</option>';
+                        foreach($list_oregional as $row){
+                          if($rowp['or_id']==$row['or_id']){
+                            $tabla.='<option value="'.$row['or_id'].'" selected>'.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
+                          }
+                          else{
+                            $tabla.='<option value="'.$row['or_id'].'">'.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
+                          }
                         }
-                        else{
-                          $tabla.='<option value="'.$row['or_id'].'">('.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].') / '.$row['og_codigo'].'.|'.$row['or_codigo'].'. .- '.$row['or_objetivo'].'</option>';    
-                        }
-                      }
-                    $tabla.='
-                  </select>
-                </section>
+                      $tabla.='
+                    </select>
+                  </section>
                 </td>
                 
                 <td style="width: 10%; text-align: left;">
@@ -124,12 +161,12 @@ class Producto extends CI_Controller {
                 <td style="width: 9.5%; text-align: left;">
                   <textarea rows="5" class="form-control" onkeyup="datos_form4(0,3,'.$rowp['prod_id'].',\'prod_res\');"  style="width:100%; font-size:10.5px; color:blue;background-color: #d7fcfa;" name="prod_res'.$rowp['prod_id'].'" id="prod_res'.$rowp['prod_id'].'" title="DETALLE RESULTADO">'.$rowp['prod_resultado'].'</textarea>
                 </td>';
-                if($data['proyecto'][0]['por_id']==1){ /// programas bolsas / Unidad Responable
+                if($proyecto[0]['por_id']==1){ /// programas bolsas / Unidad Responable
                   $tabla.='
                   <td style="width: 7%; text-align: left;">
-                    <select class="form-control" id="u_resp'.$rowp['prod_id'].'" name="u_resp'.$rowp['prod_id'].'" onchange="select_uresp(this.value,'.$rowp['prod_id'].');" title="SELECCIONE UNIDAD RESPONSABLE" style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;">
+                    <select class="form-control" id="u_resp'.$rowp['prod_id'].'" name="u_resp'.$rowp['prod_id'].'" onchange="select_uresp_acp_indi(2,this.value,'.$rowp['prod_id'].');" title="SELECCIONE UNIDAD RESPONSABLE" style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;">
                       <option value="">Selec. Uni. Resp.</option>';
-                      foreach($unidades as $row){
+                      foreach($data['unidades'] as $row){
                         if($rowp['uni_resp']==$row['com_id']){
                           $tabla.='<option value="'.$row['com_id'].'" selected>'.$row['tipo'].' '.$row['actividad'].'-'.$row['abrev'].' -> '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</option>';
                         }
@@ -149,6 +186,20 @@ class Producto extends CI_Controller {
                   </td>';
                 }
                 $tabla.='
+                <td style="width: 5%; text-align: left;">
+                    <select class="form-control" id="indi_id'.$rowp['prod_id'].'" name="indi_id'.$rowp['prod_id'].'" onchange="select_uresp_acp_indi(3,this.value,'.$rowp['prod_id'].');" style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;" title="SELECCIONE INDICADOR">
+                      <option value="">SELECCIONE INDICADOR</option>';
+                      foreach($data['indi'] as $row){
+                        if($rowp['indi_id']==$row['indi_id']){
+                          $tabla.='<option value="'.$row['indi_id'].'" selected>'.$row['indi_descripcion'].'</option>';    
+                        }
+                        else{
+                          $tabla.='<option value="'.$row['indi_id'].'">'.$row['indi_descripcion'].'</option>';    
+                        }
+                      }
+                    $tabla.='
+                  </select>
+                </td>
                 <td style="width: 9%; text-align: left;">
                   <textarea rows="5" class="form-control" onkeyup="datos_form4(0,5,'.$rowp['prod_id'].',\'prod_indi\');"  style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;" name="prod_indi'.$rowp['prod_id'].'" id="prod_indi'.$rowp['prod_id'].'" title="DETALLE INDICADOR">'.$rowp['prod_indicador'].'</textarea>
                 </td>
@@ -156,7 +207,7 @@ class Producto extends CI_Controller {
                   <textarea rows="5" class="form-control" onkeyup="datos_form4(0,6,'.$rowp['prod_id'].',\'prod_mverif\');"  style="width:100%; font-size:10.5px; color:blue;background-color: #d7fcfa;" name="prod_mverif'.$rowp['prod_id'].'" id="prod_mverif'.$rowp['prod_id'].'" title="DETALLE MEDIO DE VERIFICACION">'.$rowp['prod_fuente_verificacion'].'</textarea>
                 </td>
                 <td style="width: 3.7%; text-align: center;" >
-                  <input name="meta'.$rowp['prod_id'].'" id="meta'.$rowp['prod_id'].'" class="form-control" type="text" disabled style="width:100%; font-size:15px;  text-align:center" value="'.round($rowp['prod_meta'],2).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                  <input name="meta'.$rowp['prod_id'].'" id="meta'.$rowp['prod_id'].'" onkeyup="datos_form4(0,7,'.$rowp['prod_id'].',\'meta\');"  class="form-control" type="text" '.$disabled.' style="width:100%; font-size:15px; text-align:center" value="'.round($rowp['prod_meta'],2).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                 </td>';
                 if(count($programado)!=0){
                   $tabla.=' <td style="width:3.5%;" bgcolor="#e5fde5" >
@@ -227,7 +278,7 @@ class Producto extends CI_Controller {
 
 
 /////
-    /*---- UPDATE DATOS FORM 4 ----*/
+    /*---- UPDATE DATOS FORM 4 2025----*/
     public function update_datos_form4(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -237,12 +288,7 @@ class Producto extends CI_Controller {
         $name_input = $this->security->xss_clean($post['name_input']);
         $detalle = $this->security->xss_clean($post['detalle']);
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
-        //$componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion);
-        //$fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
-        //$proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
 
-        //$temporalidad=$this->model_producto->producto_programado($prod_id,$this->gestion); /// Temporalidad
-        
         if($tp==0){
           if($nro==1){ // cod act
             $campo='prod_cod';
@@ -262,6 +308,9 @@ class Producto extends CI_Controller {
           elseif($nro==6){
             $campo='prod_fuente_verificacion';
           }
+          elseif($nro==7){
+            $campo='prod_meta';
+          }
 
           /////
           $update_form4 = array(
@@ -274,40 +323,49 @@ class Producto extends CI_Controller {
           $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
           $informacion=$producto[0][$campo];
 
-          $suma_temp=$this->model_producto->suma_programado_producto($prod_id,$this->gestion);
-          $sum_meta=0;
-          if(count($suma_temp)!=0){
-            $sum_meta=round($suma_temp[0]['prog'],2);
+          if($producto[0]['indi_id']==1){
+            $suma_temp=$this->model_producto->suma_programado_producto($prod_id,$this->gestion);
+            $sum_meta=0;
+            if(count($suma_temp)!=0){
+              $sum_meta=round($suma_temp[0]['prog'],2);
+            }
           }
+          
         }
-        else{
-          $temp_prod=$this->model_producto->get_mes_programado_form4($prod_id,$name_input);
-          if(count($temp_prod)!=0){ /// tiene (update)
-            $update_tempform4 = array(
-              'pg_fis' => $detalle,
-            );
-            $this->db->where('pg_id', $temp_prod[0]['pg_id']);
-            $this->db->update('prod_programado_mensual', $update_tempform4);
-          }
-          else{ /// no tiene (add)
-            $data_to_store = array( 
-              'prod_id' => $prod_id, /// prod id
-              'm_id' => $name_input, /// mes id 
-              'pg_fis' => $detalle,
-              'g_id' => $this->gestion, /// Gestion
-            );
-            $this->db->insert('prod_programado_mensual', $data_to_store);
-            $pg_id=$this->db->insert_id();
+        else{ /// Temporalidad
+          /// --- eliminando el item del mes
+          $this->db->where('m_id', $name_input);
+          $this->db->where('prod_id', $prod_id);
+          $this->db->delete('prod_programado_mensual');
+          /// ------------------------------
+
+          if($detalle!=0){
+            /// --- Add insert temp
+              $data_to_store = array( 
+                'prod_id' => $prod_id, /// prod id
+                'm_id' => $name_input, /// mes id 
+                'pg_fis' => $detalle,
+                'g_id' => $this->gestion, /// Gestion
+              );
+              $this->db->insert('prod_programado_mensual', $data_to_store);
+              $pg_id=$this->db->insert_id();
+            /// -------------------
           }
 
           $temp_prod=$this->model_producto->get_mes_programado_form4($prod_id,$name_input);
-          $informacion=$temp_prod[0]['pg_fis'];
+          $informacion=0;
+          if(count($temp_prod)!=0){
+            $informacion=$temp_prod[0]['pg_fis'];
+          }
+          
 
           ////
-          $suma_temp=$this->model_producto->suma_programado_producto($prod_id,$this->gestion);
-          $sum_meta=0;
-          if(count($suma_temp)!=0){
-            $sum_meta=round($suma_temp[0]['prog'],2);
+          if($producto[0]['indi_id']==1){
+            $suma_temp=$this->model_producto->suma_programado_producto($prod_id,$this->gestion);
+            $sum_meta=0;
+            if(count($suma_temp)!=0){
+              $sum_meta=round($suma_temp[0]['prog'],2);
+            }
           }
 
           //// update meta
@@ -333,16 +391,41 @@ class Producto extends CI_Controller {
       }
     }
 
-    /*---- UPDATE DATOS FORM 4 - UNIDAD RESPONSABLE----*/
+    /*---- UPDATE DATOS FORM 4 - UNIDAD RESPONSABLE 2025----*/
     public function update_datos_form4_uresp(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
         $prod_id = $this->security->xss_clean($post['prod_id']);
-        $uni_resp = $this->security->xss_clean($post['uni_resp']);
+        $id = $this->security->xss_clean($post['id']);
+        $tp = $this->security->xss_clean($post['tp']);
         $producto=$this->model_producto->get_producto_id($prod_id); /// Get producto
 
+          if($tp==1){
+            $campo='or_id';
+          }
+          elseif($tp==2){
+            $campo='uni_resp';
+          }
+          elseif($tp==3){
+            $campo='indi_id';
+            $sum_meta=0;
+            if($id==1){
+              $suma_temp=$this->model_producto->suma_programado_producto($prod_id,$this->gestion);
+              
+              if(count($suma_temp)!=0){
+                $sum_meta=round($suma_temp[0]['prog'],2);
+              }
+            }
+
+            $update_prod = array(
+              'prod_meta' => $sum_meta,
+            );
+            $this->db->where('prod_id', $prod_id);
+            $this->db->update('_productos', $update_prod);
+          }
+
           $update_prod = array(
-            'uni_resp' => $uni_resp,
+            $campo => $id,
           );
           $this->db->where('prod_id', $prod_id);
           $this->db->update('_productos', $update_prod);
@@ -359,7 +442,50 @@ class Producto extends CI_Controller {
     }
 
 
+    /*---- ADD FORM 4 2025----*/
+    public function add_form4(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $com_id = $this->security->xss_clean($post['com_id']);
+        $descripcion = $this->security->xss_clean($post['desc']);
+        $resultado = $this->security->xss_clean($post['res']);
+        $indi_id = $this->security->xss_clean($post['indi_id']);
+        $indicador = $this->security->xss_clean($post['indi']);
+        $uni_resp = $this->security->xss_clean($post['uni']);
+        $m_verificacion = $this->security->xss_clean($post['medio']);
 
+
+        if($componente[0]['por_id']==1){
+          $unidad='uni_resp';
+        }
+        else{
+          $unidad='prod_unidades';
+        }
+
+
+        ///-----------------------
+        $data_to_store = array( 
+          'com_id' => $com_id, /// com id
+          'prod_producto' => $descripcion, /// 
+          'prod_resultado' => $resultado, /// 
+          'indi_id' => $indi_id, /// 
+          'prod_indicador' => $indicador,
+          'g_id' => $this->gestion, /// Gestion
+        );
+        $this->db->insert('_productos', $data_to_store);
+        $pg_id=$this->db->insert_id();
+        ///----------------------
+
+
+        $result = array(
+          'respuesta' => 'correcto',
+        );
+
+        echo json_encode($result);
+      }else{
+        show_404();
+      }
+    }
 
 //////
 

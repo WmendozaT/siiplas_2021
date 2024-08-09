@@ -28,17 +28,7 @@
             window.open(direccion, "Ver Alineacion POA" , "width=700,height=600,scrollbars=NO") ; 
           }
         </script>
-        <style>
-            table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
-        </style>
+        <?php echo $stylo;?>
     </head>
     <body class="">
         <header id="header">
@@ -104,6 +94,7 @@
                                 <!-- <table id="datatable_fixed_column" class="table table-bordered" width="100%"> -->
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th class="hasinput">
                                                 <input type="text" class="form-control" placeholder="COD. ACT."/>
                                             </th>
@@ -117,6 +108,9 @@
                                             </th>
                                             <th class="hasinput">
                                                 <input type="text" class="form-control" placeholder="UNIDAD RESPONSABLE"/>
+                                            </th>
+                                            <th class="hasinput">
+                                                <input type="text" class="form-control" placeholder="TIP. INDI."/>
                                             </th>
                                             <th class="hasinput">
                                                 <input type="text" class="form-control" placeholder="INDICADOR"/>
@@ -166,26 +160,28 @@
                                             
                                         </tr>                          
                                         <tr>
-                                            <th style="width:3%;">COD. ACT.</th>
-                                            <th style="width:3%;">ALINEACION POA-ACP</th>
-                                            <th style="width:10%;">ACTIVIDAD</th>
-                                            <th style="width:10%;">RESULTADO</th>
-                                            <th style="width:8%;">UNIDAD RESPONSABLE</th>
-                                            <th style="width:5%;">INDICADOR</th>
-                                            <th style="width:7%;">MEDIO DE VERIFICACIÓN</th>
-                                            <th style="width:3.3%;">META</th>
-                                            <th style="width:3.3%;">ENE.</th>
-                                            <th style="width:3.3%;">FEB.</th>
-                                            <th style="width:3.3%;">MAR.</th>
-                                            <th style="width:3.3%;">ABR.</th>
-                                            <th style="width:3.3%;">MAY.</th>
-                                            <th style="width:3.3%;">JUN.</th>
-                                            <th style="width:3.3%;">JUL.</th>
-                                            <th style="width:3.3%;">AGO.</th>
-                                            <th style="width:3.3%;">SEPT.</th>
-                                            <th style="width:3.3%;">OCT.</th>
-                                            <th style="width:3.3%;">NOV.</th>
-                                            <th style="width:3.3%;">DIC.</th>
+                                            <th style="width:1%; text-align: center;">ELI.</th>
+                                            <th style="width:3%; text-align: center;">COD. ACT.</th>
+                                            <th style="width:3%; text-align: center;">ALINEACION POA-ACP</th>
+                                            <th style="width:10%; text-align: center;">ACTIVIDAD</th>
+                                            <th style="width:10%; text-align: center;">RESULTADO</th>
+                                            <th style="width:8%; text-align: center;">UNIDAD RESPONSABLE</th>
+                                            <th style="width:5%; text-align: center;">TIPO INDICADOR</th>
+                                            <th style="width:5%; text-align: center;">INDICADOR</th>
+                                            <th style="width:7%; text-align: center;">MEDIO DE VERIFICACIÓN</th>
+                                            <th style="width:3.3%; text-align: center;">META</th>
+                                            <th style="width:3.3%; text-align: center;">ENE.</th>
+                                            <th style="width:3.3%; text-align: center;">FEB.</th>
+                                            <th style="width:3.3%; text-align: center;">MAR.</th>
+                                            <th style="width:3.3%; text-align: center;">ABR.</th>
+                                            <th style="width:3.3%; text-align: center;">MAY.</th>
+                                            <th style="width:3.3%; text-align: center;">JUN.</th>
+                                            <th style="width:3.3%; text-align: center;">JUL.</th>
+                                            <th style="width:3.3%; text-align: center;">AGO.</th>
+                                            <th style="width:3.3%; text-align: center;">SEPT.</th>
+                                            <th style="width:3.3%; text-align: center;">OCT.</th>
+                                            <th style="width:3.3%; text-align: center;">NOV.</th>
+                                            <th style="width:3.3%; text-align: center;">DIC.</th>
                                             
                                         </tr>
                                     </thead>
@@ -203,6 +199,79 @@
             </div>
             <!-- END MAIN CONTENT -->
         <!-- END PAGE FOOTER -->
+
+          <!-- ==== MODAL FORMULARIO DE REGISTRO FORM 4 ==== -->
+    <div class="modal fade" id="modal_nuevo_form" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" id="mdialTamanio">
+      <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+            <h2 class="alert alert-info"><center>NUEVO REGISTRO ACTIVIDAD (FORMULARIO N° 4 / <?php echo $this->session->userData('gestion');?>)</center></h2>
+              <form id="form_nuevo2025" name="form_nuevo2025" class="smart-form" method="post">
+                  <input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>"> 
+                  <fieldset>          
+                    <div class="row">
+                      <section class="col col-3">
+                        <label class="label"><b>ACTIVIDAD</b></label>
+                        <label class="textarea">
+                          <i class="icon-append fa fa-tag"></i>
+                          <textarea rows="3" name="descripcion" id="descripcion" title="REGISTRAR ACTIVIDAD" style="width:100%; font-size:11px; color:blue; background-color: #e3fcf8;"></textarea>
+                        </label>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>RESULTADO</b></label>
+                        <label class="textarea">
+                          <i class="icon-append fa fa-tag"></i>
+                          <textarea rows="3" name="resultado" id="resultado" title="REGISTRAR RESULTADO" style="width:100%; font-size:11px; color:blue; background-color: #e3fcf8;"></textarea>
+                        </label>
+                      </section>
+                      <section class="col col-1">
+                        <label class="label"><b>TIPO DE INDICADOR</b></label>
+                        <select class="form-control" id="indi_id" name="indi_id" title="SELECCIONE TIPO DE INDICADOR" style="width:100%; font-size:10px; color:blue; background-color: #e3fcf8;">
+                            <option value="">Seleccione Tipo de Indicador</option>
+                            <?php 
+                              foreach($indi as $row){ ?>
+                              <option value="<?php echo $row['indi_id'];?>"><?php echo $row['indi_descripcion'];?></option>
+                            <?php } ?>        
+                        </select>
+                      </section>
+                      <section class="col col-2">
+                        <label class="label"><b>INDICADOR</b></label>
+                        <label class="textarea">
+                          <i class="icon-append fa fa-tag"></i>
+                          <textarea rows="3" name="indicador" id="indicador" title="REGISTRE DESCRIPCIÓN INDICADOR" style="width:100%; font-size:11px; color:blue; background-color: #e3fcf8;"></textarea>
+                        </label>
+                      </section>
+                      <?php echo $uni_resp; ?>
+                      <section class="col col-2">
+                        <label class="label"><b>MEDIO DE VERIFICACION</b></label>
+                        <label class="textarea">
+                          <i class="icon-append fa fa-tag"></i>
+                          <textarea rows="3" name="m_verificacion" id="m_verificacion" title="REGISTRE MEDIO DE VERIFICACION" style="width:100%; font-size:11px; color:blue; background-color: #e3fcf8;"></textarea>
+                        </label>
+                      </section>
+                    </div>
+                  </fieldset>
+        
+                    <footer>
+                      <button type="button" name="subir_form4_nuv" id="subir_form4_nuv" class="btn btn-info" >GUARDAR INFORMACI&Oacute;N</button>
+                      <button class="btn btn-default" data-dismiss="modal" id="amcl" title="CANCELAR">CANCELAR</button>
+                    </footer>
+                    <div id="loadp" style="display: none" align="center">
+                      <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>GUARDANDO INFORMACI&Oacute;N</b>
+                    </div>
+                  </div>
+              </form>
+              </div>
+          </div>
+      </div>
+    </div>
+
+
+
+
         <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
         <script>
             if (!window.jQuery) {
