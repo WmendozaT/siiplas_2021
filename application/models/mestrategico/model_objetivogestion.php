@@ -233,7 +233,7 @@ class Model_objetivogestion extends CI_Model{
                 Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
                 Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
                 Inner Join _objetivos_estrategicos as oe On oe.obj_id=oge.oe_id
-                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
+                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta=\'0\'
                 order by oge.og_codigo,oreg.or_codigo asc';
         }
         else{

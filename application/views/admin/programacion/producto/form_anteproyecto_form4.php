@@ -29,10 +29,6 @@
           }
         </script>
         <?php echo $stylo;?>
-
-
-
-
     </head>
     <body class="">
         <header id="header">
@@ -63,8 +59,6 @@
         </header>
         <!-- END HEADER -->
         <!-- Left panel : Navigation area -->
-
-
             <!-- RIBBON -->
             <div id="ribbon">
                 <span class="ribbon-button-alignment"> 
@@ -85,115 +79,121 @@
                         <?php echo $titulo; ?>
                     </div>
                     <div class="row">
-<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <div class="jarviswidget jarviswidget-color-darken">
-        <header>
-            <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-            <h2 class="font-md"></h2>  
-        </header>
-        <div>
-            <div class="widget-body no-padding">
-                <div style="display: flex; flex-direction: column; width: 100%;">
-                    <div class="table-responsive" style="overflow-x: auto;">
-                        <table id="datatable_fixed_column" class="table table-bordered" style="width: 130%; table-layout: fixed;">
-                            <thead>
-                                <tr>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="COD. ACT."/>
-                                    </th>
-                                    <th class="hasinput" style="width:10%; text-align: center;"></th>
-                                    <th class="hasinput" style="width:12%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="ACTIVIDAD"/>
-                                    </th>
-                                    <th class="hasinput" style="width:12%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="RESULTADO"/>
-                                    </th>
-                                    <th class="hasinput" style="width:10%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="UNIDAD RESPONSABLE"/>
-                                    </th>
-                                    <th class="hasinput" style="width:8%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="TIP. INDI."/>
-                                    </th>
-                                    <th class="hasinput" style="width:8%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="INDICADOR"/>
-                                    </th>
-                                    <th class="hasinput" style="width:8%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="MEDIO DE VERIFICACION"/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="META"/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="ENE."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="FEB."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="MAR."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="ABR."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="MAY."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="JUN."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="JUL."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="AGO."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="SEPT."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="OCT."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="NOV."/>
-                                    </th>
-                                    <th class="hasinput" style="width:5%; text-align: center;">
-                                        <input type="text" class="form-control" placeholder="DIC."/>
-                                    </th>
-                                </tr>                          
-                                <tr>
-                                    <th style="width:5%; text-align: center;">COD. ACT.</th>
-                                    <th style="width:10%; text-align: center;">COD.<br>OPE.</th>
-                                    <th style="width:12%; text-align: center;">ACTIVIDAD</th>
-                                    <th style="width:12%; text-align: center;">RESULTADO</th>
-                                    <th style="width:10%; text-align: center;">UNIDAD RESPONSABLE</th>
-                                    <th style="width:8%; text-align: center;">TIPO INDICADOR</th>
-                                    <th style="width:8%; text-align: center;">INDICADOR</th>
-                                    <th style="width:8%; text-align: center;">MEDIO DE VERIFICACIÓN</th>
-                                    <th style="width:5%; text-align: center;">META</th>
-                                    <th style="width:5%; text-align: center;">ENE.</th>
-                                    <th style="width:5%; text-align: center;">FEB.</th>
-                                    <th style="width:5%; text-align: center;">MAR.</th>
-                                    <th style="width:5%; text-align: center;">ABR.</th>
-                                    <th style="width:5%; text-align: center;">MAY.</th>
-                                    <th style="width:5%; text-align: center;">JUN.</th>
-                                    <th style="width:5%; text-align: center;">JUL.</th>
-                                    <th style="width:5%; text-align: center;">AGO.</th>
-                                    <th style="width:5%; text-align: center;">SEPT.</th>
-                                    <th style="width:5%; text-align: center;">OCT.</th>
-                                    <th style="width:5%; text-align: center;">NOV.</th>
-                                    <th style="width:5%; text-align: center;">DIC.</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php echo $tabla; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</article>
+                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="jarviswidget jarviswidget-color-darken">
+                            <header>
+                                <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                                <h2 class="font-md"></h2>  
+                            </header>
+                            <div>
+                                <div class="widget-body no-padding">
+                                    <div style="display: flex; flex-direction: column; width: 100%;">
+                                        <div class="table-responsive" style="overflow-x: auto;">
+                                            <table id="datatable_fixed_column" class="table table-bordered" style="width: 130%; table-layout: fixed;">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="hasinput" style="width:4%; text-align: center;">
+                                                        </th>
+                                                        <th class="hasinput" style="width:4%; text-align: center;">
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="COD. ACT."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:10%; text-align: center;"></th>
+                                                        <th class="hasinput" style="width:12%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="ACTIVIDAD"/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:12%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="RESULTADO"/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:10%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="UNIDAD RESPONSABLE"/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:8%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="TIP. INDI."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:8%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="INDICADOR"/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:8%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="MEDIO DE VERIFICACION"/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="META"/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="ENE."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="FEB."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="MAR."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="ABR."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="MAY."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="JUN."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="JUL."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="AGO."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="SEPT."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="OCT."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="NOV."/>
+                                                        </th>
+                                                        <th class="hasinput" style="width:5%; text-align: center;">
+                                                            <input type="text" class="form-control" placeholder="DIC."/>
+                                                        </th>
+                                                    </tr>                          
+                                                    <tr>
+                                                        <th style="width:4%; text-align: center;">FORM N 5</th>
+                                                        <th style="width:4%; text-align: center;">ELIMINAR</th>
+                                                        <th style="width:5%; text-align: center;">COD. ACT.</th>
+                                                        <th style="width:10%; text-align: center;">COD.<br>OPE.</th>
+                                                        <th style="width:12%; text-align: center;">ACTIVIDAD</th>
+                                                        <th style="width:12%; text-align: center;">RESULTADO</th>
+                                                        <th style="width:10%; text-align: center;">UNIDAD RESPONSABLE</th>
+                                                        <th style="width:8%; text-align: center;">TIPO INDICADOR</th>
+                                                        <th style="width:8%; text-align: center;">INDICADOR</th>
+                                                        <th style="width:8%; text-align: center;">MEDIO DE VERIFICACIÓN</th>
+                                                        <th style="width:5%; text-align: center;">META</th>
+                                                        <th style="width:5%; text-align: center;">ENE.</th>
+                                                        <th style="width:5%; text-align: center;">FEB.</th>
+                                                        <th style="width:5%; text-align: center;">MAR.</th>
+                                                        <th style="width:5%; text-align: center;">ABR.</th>
+                                                        <th style="width:5%; text-align: center;">MAY.</th>
+                                                        <th style="width:5%; text-align: center;">JUN.</th>
+                                                        <th style="width:5%; text-align: center;">JUL.</th>
+                                                        <th style="width:5%; text-align: center;">AGO.</th>
+                                                        <th style="width:5%; text-align: center;">SEPT.</th>
+                                                        <th style="width:5%; text-align: center;">OCT.</th>
+                                                        <th style="width:5%; text-align: center;">NOV.</th>
+                                                        <th style="width:5%; text-align: center;">DIC.</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php echo $tabla; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
                     </div>
                 </section>
             </div>
@@ -212,7 +212,10 @@
               <form action="<?php echo site_url().'/programacion/producto/valida_producto'?>" id="form_nuevo" name="form_nuevo" class="smart-form" method="post">
                   <input type="hidden" name="com_id" id="com_id" value="<?php echo $componente[0]['com_id'];?>"> 
                   <header><b>DATOS GENERALES </b></header>
-                  <fieldset>          
+                  <fieldset>         
+                    <div class="row">
+                        <?php echo $alineacion; ?>
+                    </div> 
                     <div class="row">
                       <section class="col col-3">
                         <label class="label"><b>ACTIVIDAD</b></label>
@@ -405,6 +408,74 @@
     </div>
 
 
+    <!---- MODAL MIGRAR PLANTILLA ---->
+    <div class="modal fade" id="modal_importar_ff" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" id="mdialTamanio2">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+              <h2><div id="titulo"></div></h2>
+              <section id="widget-grid" class="">
+                <div>
+                  <?php echo $datos_proyecto;?>
+                  <h1> UNIDAD RESPONSABLE : <small><?php echo $componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion']; ?></small></h1>
+                </div>
+              </section>
+              <div class="row">
+                <form action="<?php echo site_url().'/programacion/producto/importar_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" class="form-horizontal" method="post">
+                  <input type="hidden" name="com_id" value="<?php echo $componente[0]['com_id'];?>">
+                  <input type="hidden" name="tp" id="tp">
+                  <fieldset>
+                    <div class="form-group">
+                      <center><div id="img"></div></center>
+                      <hr>
+                        <p class="alert alert-info">
+                          <i class="fa fa-info"></i> Por favor guardar el archivo (Excel.xls) a extension (.csv) delimitado por (; "Punto y comas"). verificar el archivo .csv para su correcta importaci&oacute;n
+                        </p>
+                    </div>
+                  </fieldset>  
+                
+                  <div class="form-group">
+                    <b>SELECCIONAR ARCHIVO CSV</b>
+                    <div class="input-group">
+                      <span class="input-group-btn">
+                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+                        <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+                      </span>
+                      <span class="form-control"></span>
+                    </div>
+                </div>
+                  
+                  <div>
+                      <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;"><div id="buton"></div></button><br>
+                      <center><img id="load" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                  </div>
+                </form> 
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!---- MODAL VER REQUERIMIENTOS ---->
+    <div class="modal fade" id="modal_ver_form5" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" id="mdialTamanio3">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+          </div>
+          <div class="modal-body">
+              <div id="contenido"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 
         <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
         <script>

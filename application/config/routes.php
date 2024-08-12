@@ -8,7 +8,6 @@ $route['admin/validate'] = 'user/validate_credentials';
 $route['admin/dashboard'] = 'user/dashboard_index';
 $route['admin/dm/(:any)'] = 'user/dashboard_menu/$1';
 $route['cambiar_session'] = 'user/cambiar_gestion';//cambiar contralador Administrador
-//$route['cambiar_session_mes'] = 'user/cambiar_gestion';//cambiar mes para ejec de proyecto
 //$route['cambiar_session_uresponsable'] = 'user/cambiar_gestion_uresponsable';//cambiar Session U responsable
 $route['cambiar_session_trimestre'] = 'user/cambiar_trimestre';//cambiar trimestre
 

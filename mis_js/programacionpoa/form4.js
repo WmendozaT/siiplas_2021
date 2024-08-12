@@ -136,7 +136,7 @@ $(document).ready(function() {
 
     //// ACTUALIZAR UNIDAD RESPONSABLE (PROGRAMAS BOLSAS)
     function select_uresp_acp_indi(tp,id,prod_id){ /// 
-      /// tp 1 (acp), 2 (indi), 3 (uni resp)
+      /// tp 1 (acp), 2 (uni resp), 3 (indi id)
      // document.getElementById("meta"+prod_id).disabled = true;
       var url = base+"index.php/programacion/producto/update_datos_form4_uresp";
       var request;
@@ -153,12 +153,16 @@ $(document).ready(function() {
       request.done(function (response, textStatus, jqXHR) {
 
       if (response.respuesta == 'correcto') {
-          if(tp==3){ // indi id
-            if(id==1){
+          if(tp==3){ // indi id (tipo de indicador)
+            if(id==1){ /// Absoluto
               document.getElementById("meta"+prod_id).disabled = true;
+              document.getElementById("tp_met"+prod_id).style.display = 'none';
             }
-            else{
+            else{ /// relativo
+              //alert('relativo')
+
               document.getElementById("meta"+prod_id).disabled = false;
+              document.getElementById("tp_met"+prod_id).style.display = 'block';
             }
           }
 
@@ -172,6 +176,31 @@ $(document).ready(function() {
     }
 
 
+
+    function select_tp_meta(id,prod_id){ /// 
+      var url = base+"index.php/programacion/producto/update_datos_tpmeta";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "prod_id="+prod_id+"&id="+id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+          alertify.success("Seleccion procesada correctamente ...");
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
+    }
 
 
   //// Subir Archivo de Migracionform 4 y form5
@@ -406,7 +435,7 @@ $(document).ready(function() {
         }
       }
 
-      /*------- ELIMINAR REQUERIMIENTOS DEL SERVICIO --------*/
+      /*------- ELIMINAR SOLO REQUERIMIENTOS DE LA UNIDAD (TODOS) --------*/
       function eliminar_requerimientos_servicio(){
         alertify.confirm("DESEA ELIMINAR TODOS LOS REQUERIMIENTOS DE LA UNIDAD ?", function (a) {
           if (a) {
@@ -416,6 +445,19 @@ $(document).ready(function() {
           }
         });
       }
+
+
+      /*------- ELIMINAR SOLO ACTIVIDADES Y REQUERIMIENTOS DE LA UNIDAD (TODOS) --------*/
+      function eliminar_form4_todos(){
+        alertify.confirm("DESEA ELIMINAR ACTIVIDADES ?", function (a) {
+          if (a) {
+            window.location=base+"index.php/prog/delete_form4/"+com_id;
+          } else {
+              alertify.error("OPCI\u00D3N CANCELADA");
+          }
+        });
+      }
+
 
       /*------- UPDATE CÓDIGO --------*/
       function update_codigo(){
