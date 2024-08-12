@@ -64,7 +64,7 @@ class Producto extends CI_Controller {
 
           if($proyecto[0]['por_id']==1){
             $data['uni_resp'].='
-            <section class="col col-2">
+            <section class="col col-3">
               <label class="label"><b>UNIDAD RESPONSABLE</b></label>
                 <select class="form-control" id="uni_resp" name="uni_resp" title="SELECCIONE UNIDAD RESPONSABLE" style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;">
                   <option value="">Selec. Uni. Resp.</option>';
@@ -77,7 +77,7 @@ class Producto extends CI_Controller {
           }
           else{
             $data['uni_resp']='
-            <section class="col col-2">
+            <section class="col col-3">
               <label class="label"><b>UNIDAD RESPONSABLE</b></label>
               <label class="textarea">
                 <i class="icon-append fa fa-tag"></i>
@@ -131,16 +131,13 @@ class Producto extends CI_Controller {
               }
               $tabla.='
               <tr>
-                <td style="width: 2%; text-align: center;" bgcolor="red">
-                  <input type="checkbox" name="req[]" value="'.$rowp['prod_id'].'" onclick="scheck'.$cont.'(this.checked);"/>
+                <td style="width: 5%; text-align: center; " bgcolor="#eceaea" title='.$rowp['prod_id'].'>
+                  <input name="prod_cod'.$rowp['prod_id'].'" id="prod_cod'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(0,1,'.$rowp['prod_id'].',\'prod_cod\');"  style="width:100%; font-size:10px; color:blue; background-color: #d7fcfa; text-align:center;" value="'.round($rowp['prod_cod'],2).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                 </td>
-                <td style="width: 3%; text-align: center; " bgcolor="#eceaea" title='.$rowp['prod_id'].'>
-                  <input name="prod_cod'.$rowp['prod_id'].'" id="prod_cod'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(0,1,'.$rowp['prod_id'].',\'prod_cod\');"  style="width:100%; font-size:13px; color:blue; background-color: #d7fcfa; text-align:center;" value="'.round($rowp['prod_cod'],2).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
-                </td>
-                <td title='.$rowp['prod_id'].'>
+                <td style="width: 10%; text-align: center; " title='.$rowp['prod_id'].'>
                   <section class="col col-2">
                     <label class="label"><b>ALINEACI&Oacute;N OPERACI&Oacute;N '.$this->gestion.'</b></label>
-                      <select class="form-control" id="or_id'.$rowp['prod_id'].'" name="or_id'.$rowp['prod_id'].'" onchange="select_uresp_acp_indi(1,this.value,'.$rowp['prod_id'].');" style="width:100%; font-size:10.5px; color:blue; background-color: #fafcd7;" title="SELECCIONE ALINEACION">
+                      <select class="form-control" id="or_id'.$rowp['prod_id'].'" name="or_id'.$rowp['prod_id'].'" onchange="select_uresp_acp_indi(1,this.value,'.$rowp['prod_id'].');" style="width:100%; font-size:12px; color:blue; background-color: #fafcd7;" title="SELECCIONE ALINEACION">
                         <option value="">SELECCIONE ALINEACIÓN OPERACIÓN</option>';
                         foreach($list_oregional as $row){
                           if($rowp['or_id']==$row['or_id']){
@@ -155,16 +152,16 @@ class Producto extends CI_Controller {
                   </section>
                 </td>
                 
-                <td style="width: 10%; text-align: left;">
-                  <textarea rows="5" class="form-control" onkeyup="datos_form4(0,2,'.$rowp['prod_id'].',\'prod_form4\');" name="prod_form4'.$rowp['prod_id'].'" id="prod_form4'.$rowp['prod_id'].'" style="width:100%; font-size:10.5px; color:blue;background-color: #d7fcfa;" title="DETALLE ACTIVIDAD">'.$rowp['prod_producto'].'</textarea>
+                <td style="width: 12%; text-align: left;">
+                  <textarea rows="5" class="form-control" onkeyup="datos_form4(0,2,'.$rowp['prod_id'].',\'prod_form4\');" name="prod_form4'.$rowp['prod_id'].'" id="prod_form4'.$rowp['prod_id'].'" style="width:100%; font-size:10px; color:blue;background-color: #d7fcfa;" title="DETALLE ACTIVIDAD">'.$rowp['prod_producto'].'</textarea>
                 </td>
-                <td style="width: 9.5%; text-align: left;">
-                  <textarea rows="5" class="form-control" onkeyup="datos_form4(0,3,'.$rowp['prod_id'].',\'prod_res\');"  style="width:100%; font-size:10.5px; color:blue;background-color: #d7fcfa;" name="prod_res'.$rowp['prod_id'].'" id="prod_res'.$rowp['prod_id'].'" title="DETALLE RESULTADO">'.$rowp['prod_resultado'].'</textarea>
+                <td style="width: 12%; text-align: left;">
+                  <textarea rows="5" class="form-control" onkeyup="datos_form4(0,3,'.$rowp['prod_id'].',\'prod_res\');"  style="width:100%; font-size:10px; color:blue;background-color: #d7fcfa;" name="prod_res'.$rowp['prod_id'].'" id="prod_res'.$rowp['prod_id'].'" title="DETALLE RESULTADO">'.$rowp['prod_resultado'].'</textarea>
                 </td>';
                 if($proyecto[0]['por_id']==1){ /// programas bolsas / Unidad Responable
                   $tabla.='
                   <td style="width: 7%; text-align: left;">
-                    <select class="form-control" id="u_resp'.$rowp['prod_id'].'" name="u_resp'.$rowp['prod_id'].'" onchange="select_uresp_acp_indi(2,this.value,'.$rowp['prod_id'].');" title="SELECCIONE UNIDAD RESPONSABLE" style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;">
+                    <select class="form-control" id="u_resp'.$rowp['prod_id'].'" name="u_resp'.$rowp['prod_id'].'" onchange="select_uresp_acp_indi(2,this.value,'.$rowp['prod_id'].');" title="SELECCIONE UNIDAD RESPONSABLE" style="width:100%; font-size:10px; color:blue; background-color: #d7fcfa;">
                       <option value="">Selec. Uni. Resp.</option>';
                       foreach($data['unidades'] as $row){
                         if($rowp['uni_resp']==$row['com_id']){
@@ -182,12 +179,12 @@ class Producto extends CI_Controller {
                 else{ /// programas normales / Unidad Responable
                   $tabla.='
                   <td style="width: 7%; text-align: left;">
-                    <textarea rows="5" class="form-control" onkeyup="datos_form4(0,4,'.$rowp['prod_id'].',\'prod_uni\');"  style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;" name="prod_uni'.$rowp['prod_id'].'" id="prod_uni'.$rowp['prod_id'].'" title="UNIDAD RESPONSABLE">'.$rowp['prod_unidades'].'</textarea>
+                    <textarea rows="5" class="form-control" onkeyup="datos_form4(0,4,'.$rowp['prod_id'].',\'prod_uni\');"  style="width:100%; font-size:10px; color:blue; background-color: #d7fcfa;" name="prod_uni'.$rowp['prod_id'].'" id="prod_uni'.$rowp['prod_id'].'" title="UNIDAD RESPONSABLE">'.$rowp['prod_unidades'].'</textarea>
                   </td>';
                 }
                 $tabla.='
                 <td style="width: 5%; text-align: left;">
-                    <select class="form-control" id="indi_id'.$rowp['prod_id'].'" name="indi_id'.$rowp['prod_id'].'" onchange="select_uresp_acp_indi(3,this.value,'.$rowp['prod_id'].');" style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;" title="SELECCIONE INDICADOR">
+                    <select class="form-control" id="indi_id'.$rowp['prod_id'].'" name="indi_id'.$rowp['prod_id'].'" onchange="select_uresp_acp_indi(3,this.value,'.$rowp['prod_id'].');" style="width:100%; font-size:10px; color:blue; background-color: #d7fcfa;" title="SELECCIONE INDICADOR">
                       <option value="">SELECCIONE INDICADOR</option>';
                       foreach($data['indi'] as $row){
                         if($rowp['indi_id']==$row['indi_id']){
@@ -200,51 +197,51 @@ class Producto extends CI_Controller {
                     $tabla.='
                   </select>
                 </td>
-                <td style="width: 9%; text-align: left;">
-                  <textarea rows="5" class="form-control" onkeyup="datos_form4(0,5,'.$rowp['prod_id'].',\'prod_indi\');"  style="width:100%; font-size:10.5px; color:blue; background-color: #d7fcfa;" name="prod_indi'.$rowp['prod_id'].'" id="prod_indi'.$rowp['prod_id'].'" title="DETALLE INDICADOR">'.$rowp['prod_indicador'].'</textarea>
+                <td style="width: 8%; text-align: left;">
+                  <textarea rows="5" class="form-control" onkeyup="datos_form4(0,5,'.$rowp['prod_id'].',\'prod_indi\');"  style="width:100%; font-size:10px; color:blue; background-color: #d7fcfa;" name="prod_indi'.$rowp['prod_id'].'" id="prod_indi'.$rowp['prod_id'].'" title="DETALLE INDICADOR">'.$rowp['prod_indicador'].'</textarea>
                 </td>
                 <td style="width: 8%; text-align: left;">
-                  <textarea rows="5" class="form-control" onkeyup="datos_form4(0,6,'.$rowp['prod_id'].',\'prod_mverif\');"  style="width:100%; font-size:10.5px; color:blue;background-color: #d7fcfa;" name="prod_mverif'.$rowp['prod_id'].'" id="prod_mverif'.$rowp['prod_id'].'" title="DETALLE MEDIO DE VERIFICACION">'.$rowp['prod_fuente_verificacion'].'</textarea>
+                  <textarea rows="5" class="form-control" onkeyup="datos_form4(0,6,'.$rowp['prod_id'].',\'prod_mverif\');"  style="width:100%; font-size:10px; color:blue;background-color: #d7fcfa;" name="prod_mverif'.$rowp['prod_id'].'" id="prod_mverif'.$rowp['prod_id'].'" title="DETALLE MEDIO DE VERIFICACION">'.$rowp['prod_fuente_verificacion'].'</textarea>
                 </td>
-                <td style="width: 3.7%; text-align: center;" >
-                  <input name="meta'.$rowp['prod_id'].'" id="meta'.$rowp['prod_id'].'" onkeyup="datos_form4(0,7,'.$rowp['prod_id'].',\'meta\');"  class="form-control" type="text" '.$disabled.' style="width:100%; font-size:15px; text-align:center" value="'.round($rowp['prod_meta'],2).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                <td style="width: 5%; text-align: center;" >
+                  <input name="meta'.$rowp['prod_id'].'" id="meta'.$rowp['prod_id'].'" onkeyup="datos_form4(0,7,'.$rowp['prod_id'].',\'meta\');"  class="form-control" type="text" '.$disabled.' style="width:100%; font-size:10.5px; text-align:center" value="'.round($rowp['prod_meta'],2).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                 </td>';
                 if(count($programado)!=0){
-                  $tabla.=' <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m1'.$rowp['prod_id'].'" id="m1'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,8,'.$rowp['prod_id'].',1);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['enero'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                  $tabla.=' <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m1'.$rowp['prod_id'].'" id="m1'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,8,'.$rowp['prod_id'].',1);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['enero'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5">
-                              <input name="m2'.$rowp['prod_id'].'" id="m2'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,9,'.$rowp['prod_id'].',2);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['febrero'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m2'.$rowp['prod_id'].'" id="m2'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,9,'.$rowp['prod_id'].',2);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['febrero'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m3'.$rowp['prod_id'].'" id="m3'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,10,'.$rowp['prod_id'].',3);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['marzo'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m3'.$rowp['prod_id'].'" id="m3'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,10,'.$rowp['prod_id'].',3);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['marzo'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m4'.$rowp['prod_id'].'" id="m4'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,11,'.$rowp['prod_id'].',4);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['abril'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m4'.$rowp['prod_id'].'" id="m4'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,11,'.$rowp['prod_id'].',4);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['abril'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m5'.$rowp['prod_id'].'" id="m5'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,12,'.$rowp['prod_id'].',5);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['mayo'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m5'.$rowp['prod_id'].'" id="m5'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,12,'.$rowp['prod_id'].',5);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['mayo'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m6'.$rowp['prod_id'].'" id="m6'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,13,'.$rowp['prod_id'].',6);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['junio'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m6'.$rowp['prod_id'].'" id="m6'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,13,'.$rowp['prod_id'].',6);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['junio'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m7'.$rowp['prod_id'].'" id="m7'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,14,'.$rowp['prod_id'].',7);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['julio'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m7'.$rowp['prod_id'].'" id="m7'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,14,'.$rowp['prod_id'].',7);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['julio'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m8'.$rowp['prod_id'].'" id="m8'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,15,'.$rowp['prod_id'].',8);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['agosto'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m8'.$rowp['prod_id'].'" id="m8'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,15,'.$rowp['prod_id'].',8);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['agosto'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m9'.$rowp['prod_id'].'" id="m9'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,16,'.$rowp['prod_id'].',9);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['septiembre'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m9'.$rowp['prod_id'].'" id="m9'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,16,'.$rowp['prod_id'].',9);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['septiembre'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m10'.$rowp['prod_id'].'" id="m10'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,17,'.$rowp['prod_id'].',10);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['octubre'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m10'.$rowp['prod_id'].'" id="m10'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,17,'.$rowp['prod_id'].',10);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['octubre'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m11'.$rowp['prod_id'].'" id="m11'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,18,'.$rowp['prod_id'].',11);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['noviembre'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m11'.$rowp['prod_id'].'" id="m11'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,18,'.$rowp['prod_id'].',11);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['noviembre'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>
-                            <td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m12'.$rowp['prod_id'].'" id="m12'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,19,'.$rowp['prod_id'].',12);"  style="width:100%; font-size:11px; color:blue;" value="'.round($programado[0]['diciembre'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                            <td style="width:5%;" bgcolor="#e5fde5" >
+                              <input name="m12'.$rowp['prod_id'].'" id="m12'.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,19,'.$rowp['prod_id'].',12);"  style="width:100%; font-size:10px; color:blue;" value="'.round($programado[0]['diciembre'],2).'" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>';
                     }
                 else{
@@ -252,7 +249,7 @@ class Producto extends CI_Controller {
                   for ($i=1; $i <=12 ; $i++) { 
                     $nro_i++;
                     $tabla.='<td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m'.$i.''.$rowp['prod_id'].'" id="m'.$i.''.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4_temp(1,'.$nro_i.','.$rowp['prod_id'].','.$i.');"  style="width:100%; font-size:11px; color:blue;" value="0" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                              <input name="m'.$i.''.$rowp['prod_id'].'" id="m'.$i.''.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4_temp(1,'.$nro_i.','.$rowp['prod_id'].','.$i.');"  style="width:100%; font-size:10px; color:blue;" value="0" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>';
                   }
                 }
@@ -261,8 +258,8 @@ class Producto extends CI_Controller {
             }
 
             $data['tabla']=$tabla;
-
             $this->load->view('admin/programacion/producto/form_anteproyecto_form4', $data); /// Gasto Corriente
+          
           }
           else{
             echo "final";
@@ -442,51 +439,6 @@ class Producto extends CI_Controller {
     }
 
 
-    /*---- ADD FORM 4 2025----*/
-    public function add_form4(){
-      if($this->input->is_ajax_request() && $this->input->post()){
-        $post = $this->input->post();
-        $com_id = $this->security->xss_clean($post['com_id']);
-        $descripcion = $this->security->xss_clean($post['desc']);
-        $resultado = $this->security->xss_clean($post['res']);
-        $indi_id = $this->security->xss_clean($post['indi_id']);
-        $indicador = $this->security->xss_clean($post['indi']);
-        $uni_resp = $this->security->xss_clean($post['uni']);
-        $m_verificacion = $this->security->xss_clean($post['medio']);
-
-
-        if($componente[0]['por_id']==1){
-          $unidad='uni_resp';
-        }
-        else{
-          $unidad='prod_unidades';
-        }
-
-
-        ///-----------------------
-        $data_to_store = array( 
-          'com_id' => $com_id, /// com id
-          'prod_producto' => $descripcion, /// 
-          'prod_resultado' => $resultado, /// 
-          'indi_id' => $indi_id, /// 
-          'prod_indicador' => $indicador,
-          $unidad => $uni_resp, /// Gestion
-          'prod_indicador' => $indicador,
-        );
-        $this->db->insert('_productos', $data_to_store);
-        $pg_id=$this->db->insert_id();
-        ///----------------------
-
-
-        $result = array(
-          'respuesta' => 'correcto',
-        );
-
-        echo json_encode($result);
-      }else{
-        show_404();
-      }
-    }
 
 //////
 
@@ -594,7 +546,7 @@ class Producto extends CI_Controller {
 
 
 
-  /*--------- VALIDA OPERACIONES (2024) -----------*/
+  /*--------- VALIDA FORM 4 (2025) -----------*/
   public function valida_producto(){
     if ($this->input->server('REQUEST_METHOD') === 'POST'){
         $this->form_validation->set_rules('prod', 'Producto', 'required|trim');
@@ -602,14 +554,7 @@ class Producto extends CI_Controller {
         $componente = $this->model_componente->get_componente($this->input->post('com_id'),$this->gestion);
         $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
         $proyecto = $this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
-        $relacion_operacion_obj_estrategico=$this->model_objetivoregion->get_objetivosregional($this->input->post('or_id'));
-
-        $ae=0;
-        $get_acc=$this->model_objetivoregion->get_objetivosregional($this->input->post('or_id'));
         
-        if(count($get_acc)!=0){
-          $ae=$get_acc[0]['ae'];
-        }
 
         if($this->input->post('tipo_i')==1){
           $tp_met=3;
@@ -628,18 +573,18 @@ class Producto extends CI_Controller {
             'indi_id' => $this->input->post('tipo_i'),
             'prod_indicador' => strtoupper($this->input->post('indicador')),
             'prod_fuente_verificacion' => strtoupper($this->input->post('verificacion')), 
-            'prod_linea_base' => $this->input->post('lbase'),
+            //'prod_linea_base' => $this->input->post('lbase'),
             'prod_meta' => $this->input->post('meta'),
-            'indi_pei' => 0,
-            'prod_ppto' => $this->input->post('ppto'),
+            //'indi_pei' => 0,
+            //'prod_ppto' => $this->input->post('ppto'),
             'prod_unidades' => $this->input->post('unidad'),
-            'acc_id' => $ae,
-            'or_id' => $this->input->post('or_id'),
+            //'acc_id' => $ae,
+            //'or_id' => $this->input->post('or_id'),
             'uni_resp' => $this->input->post('u_resp'),
-            'obj_id' => $relacion_operacion_obj_estrategico[0]['obj_id'],
+            
             'mt_id' => $tp_met,
             'fecha' => date("d/m/Y H:i:s"),
-            'prod_cod'=>$this->input->post('cod'),
+            //'prod_cod'=>$this->input->post('cod'),
             'fun_id' => $this->fun_id,
             'num_ip' => $this->input->ip_address(), 
             'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),

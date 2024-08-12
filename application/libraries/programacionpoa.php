@@ -680,8 +680,8 @@ class Programacionpoa extends CI_Controller{
         
       }
       if($this->conf_form5==1 || $this->fun_id==401 || $this->fun_id==399 || $this->fun_id==583 || $this->fun_id==600){
-     // if($this->tp_adm==1 || $this->conf_form5==1){
-        if($nro!=0){
+     // if($this->tp_adm==1 || $this->conf_form5==1){ 
+        if($nro!=0){ 
           $tabla.=' <a href="#" data-toggle="modal" data-target="#modal_importar_ff" class="btn btn-default importar_ff" name="2" title="SUBIR ARCHIVO REQUERIMIENTO (GLOBAL)" >
                       <img src="'.base_url().'assets/Iconos/arrow_up.png" WIDTH="30" HEIGHT="20"/>&nbsp;SUBIR REQUERIMIENTOS (GLOBAL)
                     </a>
@@ -793,7 +793,7 @@ class Programacionpoa extends CI_Controller{
       <style type="text/css">
         aside{background: #05678B;}
         #mdialTamanio{
-            width: 80% !important;
+            width: 95% !important;
         }
         #mdialTamanio2{
             width: 50% !important;

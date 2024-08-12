@@ -173,129 +173,6 @@ $(document).ready(function() {
 
 
 
-    /// GUARDAR NUEVO FORMULARIO N4 2025 (NUEVO)
-    $(function () {
-        $("#subir_form4_nuv").on("click", function () {
-          var $validator = $("#form_nuevo2025").validate({
-              rules: {
-                com_id: {
-                  required: true,
-                },
-                descripcion: {
-                    required: true,
-                },
-                resultado: {
-                    required: true,
-                },
-                indi_id: {
-                    required: true,
-                },
-                indicador: {
-                    required: true,
-                },
-                uni_resp: {
-                    required: true,
-                },
-                m_verificacion: {
-                    required: true,
-                }
-              },
-              messages: {
-                descripcion: {required: "<font color=red size=1>REGISTRE ACTIVIDAD</font>"},
-                resultado: {required: "<font color=red size=1>REGISTRE RESULTADO</font>"},
-                indi_id: {required: "<font color=red size=1>SELECCIONE INDICADOR</font>"},
-                indicador: {required: "<font color=red size=1>REGISTRE INDICADOR</font>"},
-                uni_resp: {required: "<font color=red size=1>REGISTRE UNIDAD RESPONSABLE</font>"},
-                m_verificacion: {required: "<font color=red size=1>REGISTRE MEDIO DE VERIFICACION</font>"}                   
-              },
-              highlight: function (element) {
-                  $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-              },
-              unhighlight: function (element) {
-                  $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-              },
-              errorElement: 'span',
-              errorClass: 'help-block',
-              errorPlacement: function (error, element) {
-                  if (element.parent('.input-group').length) {
-                      error.insertAfter(element.parent());
-                  } else {
-                      error.insertAfter(element);
-                  }
-              }
-          });
-
-          var $valid = $("#form_nuevo2025").valid();
-          if (!$valid) {
-              $validator.focusInvalid();
-          } else {
-     
-            com_id = document.getElementById('com_id').value;
-            desc = document.getElementById('descripcion').value;
-            res = document.getElementById('resultado').value;
-            ind_id = document.getElementById('indi_id').value;
-            indi = document.getElementById('indicador').value;
-            uni = document.getElementById('uni_resp').value;
-            medio = document.getElementById('m_verificacion').value;
-            
-            //alert(desc+'-'+res+'-'+indi+'-'+indi)
-            var url = base+"index.php/programacion/producto/add_form4";
-            var request;
-            if (request) {
-                request.abort();
-            }
-            request = $.ajax({
-                url: url,
-                type: "POST",
-                dataType: 'json',
-                data: "com_id="+com_id+"&desc="+desc+"&res="+res+"&indi_id="+indi_id+"&indi="+indi+"&uni="+uni+"&medio="+medio
-            });
-
-            request.done(function (response, textStatus, jqXHR) {
-
-            if (response.respuesta == 'correcto') {
-                /*if(tp==3){ // indi id
-                  if(id==1){
-                    document.getElementById("meta"+prod_id).disabled = true;
-                  }
-                  else{
-                    document.getElementById("meta"+prod_id).disabled = false;
-                  }
-                }*/
-
-                alertify.success("Seleccion procesada correctamente ...");
-            }
-            else{
-                alertify.error("ERROR AL RECUPERAR INFORMACION");
-            }
-
-            });
-
-          }
-      });
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   //// Subir Archivo de Migracionform 4 y form5
   $(function () {
@@ -498,13 +375,13 @@ $(document).ready(function() {
       /// -- SUMA PROGRAMADO
       function suma_programado(){ 
         sum=0;
-        linea = parseFloat($('[name="lbase"]').val()); //// linea base
+        //linea = parseFloat($('[name="lbase"]').val()); //// linea base
         codigo = parseFloat($('[name="cod"]').val()); //// codigo
         for (var i = 1; i<=12; i++) {
           sum=parseFloat(sum)+parseFloat($('[name="m'+i+'"]').val());
         }
 
-        $('[name="total"]').val((sum+linea).toFixed(2));
+        $('[name="total"]').val((sum).toFixed(2));
         programado = parseFloat($('[name="total"]').val()); //// programado total
         meta = parseFloat($('[name="meta"]').val()); //// Meta
 
@@ -584,7 +461,7 @@ $(document).ready(function() {
     }
 
 
-    /// GUARDAR NUEVO FORMULARIO N4 2023 (anular)
+    /// GUARDAR NUEVO FORMULARIO N4 2025
     $(function () {
         $("#subir_ope").on("click", function () {
           var $validator = $("#form_nuevo").validate({
@@ -604,9 +481,9 @@ $(document).ready(function() {
                 indicador: {
                     required: true,
                 },
-                lbase: {
+               /* lbase: {
                     required: true,
-                },
+                },*/
                 or_id: {
                     required: true,
                 },
@@ -622,7 +499,7 @@ $(document).ready(function() {
                 resultado: {required: "<font color=red size=1>REGISTRE RESULTADO</font>"},
                 tipo_i: {required: "<font color=red size=1>SELECCIONE UNIDAD EJECUTORA</font>"},
                 indicador: {required: "<font color=red size=1>REGISTRE INDICADOR</font>"},
-                lbase: {required: "<font color=red size=1>REGISTRE LINEA BASE</font>"},
+                //lbase: {required: "<font color=red size=1>REGISTRE LINEA BASE</font>"},
                 meta: {required: "<font color=red size=1>REGISTRE META DE LA ACTIVIDAD</font>"},
                 u_resp: {required: "<font color=red size=1>REGISTRE UNIDAD RESPONSABLE</font>"},
                 or_id: {required: "<font color=red size=1>SELECCIONE ALINEACION OPERACION</font>"}                    
@@ -676,15 +553,6 @@ $(document).ready(function() {
                 }
               }
             }
-
-            if(document.form_nuevo.cod.value==0 || document.form_nuevo.cod.value==''){
-              alertify.error("REGISTRE CÓDIGO DE ACTIVIDAD") 
-                document.form_nuevo.cod.focus() 
-                return 0;
-            }
-
-           // alert(document.form_nuevo.u_resp.value)
-
 
 
             alertify.confirm("GUARDAR DATOS DE LA ACTIVIDAD ?", function (a) {
