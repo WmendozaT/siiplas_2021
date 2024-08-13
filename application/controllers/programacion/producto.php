@@ -144,15 +144,20 @@ class Producto extends CI_Controller {
               if($rowp['indi_id']==2){
                 $disabled='';
               }
+
+              $style='none';
+              if($rowp['indi_id']==2){
+                $style='block';
+              }
               $tabla.='
               <tr>
                 <td style="width: 4%; text-align: center; " >
-                  <a href="'.site_url("").'/prog/requerimiento/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="33" HEIGHT="33"/></a>
+                  <center><a href="'.site_url("").'/prog/requerimiento/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="30" HEIGHT="30"/></a></center>
                 </td>
                 <td style="width: 4%; text-align: center; " >';
                       if(count($this->model_producto->insumo_producto($rowp['prod_id']))==0){
                         if($this->tp_adm==1 || $this->conf_form4==1){
-                          $tabla.='<a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="35" HEIGHT="35"/></a><br><br>';
+                          $tabla.='<center><a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="30" HEIGHT="30"/></a></center>';
                         }
                       }
                 $tabla.='
@@ -223,8 +228,8 @@ class Producto extends CI_Controller {
                     $tabla.='
                   </select>
 
-                  <div id="tp_met'.$rowp['prod_id'].'" style="display:none;" >
-                    <select class="form-control" id="tp_met" name="tp_met" style="width:100%; font-size:11px; color:blue; background-color: #e3fcf8;" title="SELECCIONE TIPO DE META" onchange="select_uresp_acp_indi(3,this.value,'.$rowp['prod_id'].');">
+                  <div id="tp_met'.$rowp['prod_id'].'" style="display:'.$style.';" >
+                    <select class="form-control" id="tp_met" name="tp_met" style="width:100%; font-size:11px; color:blue; background-color: #e3fcf8;" title="SELECCIONE TIPO DE META" onchange="select_tp_meta(this.value,'.$rowp['prod_id'].');">
                       <option value="">Seleccione Tipo de Meta</option>';
                       foreach($data['metas'] as $row){ 
                         if($row['mt_id']==$rowp['mt_id']){
@@ -448,20 +453,30 @@ class Producto extends CI_Controller {
           }
           elseif($tp==3){
             $campo='indi_id';
-            $sum_meta=0;
-            if($id==1){
+           
+            if($id==1){ /// absoluto
               $suma_temp=$this->model_producto->suma_programado_producto($prod_id,$this->gestion);
               
               if(count($suma_temp)!=0){
                 $sum_meta=round($suma_temp[0]['prog'],2);
               }
+
+              $update_prod = array(
+                'prod_meta' => $sum_meta,
+                'mt_id' => 3,
+              );
+              $this->db->where('prod_id', $prod_id);
+              $this->db->update('_productos', $update_prod);
+
+            }
+            else{ /// relativo
+              $update_prod = array(
+                'prod_meta' => 0,
+              );
+              $this->db->where('prod_id', $prod_id);
+              $this->db->update('_productos', $update_prod);
             }
 
-            $update_prod = array(
-              'prod_meta' => $sum_meta,
-            );
-            $this->db->where('prod_id', $prod_id);
-            $this->db->update('_productos', $update_prod);
           }
 
           $update_prod = array(
@@ -1230,46 +1245,37 @@ class Producto extends CI_Controller {
 
     /*--- ELIMINAR TOD@S LAS ACTIVIDADES REQUERIMIENTOS DE LA UNIDAD (2025) ---*/
     public function delete_form4_form5($com_id){
+      $form4=$this->model_producto->lista_form4_x_unidadresponsable($com_id); /// form 4
+      foreach($form4 as $rowp){
+        $insumos=$this->model_insumo->lista_insumos_prod($rowp['prod_id']); /// form 5
+        foreach ($insumos as $rowi) {
+          
+          /*--------- delete temporalidad --------*/
+           $this->db->where('ins_id', $rowi['ins_id']);
+           $this->db->delete('temporalidad_prog_insumo');
 
-      // $productos=$this->model_producto->lista_form4_x_unidadresponsable($com_id);
-      // $nro=0;$nro_ins=0;
-      // //echo "eliminar productos";
-      // foreach($productos as $rowp){
-      //   $insumos=$this->model_insumo->lista_insumos_prod($rowp['prod_id']);
-      //   foreach ($insumos as $rowi) {
-      //     /*--------- delete temporalidad --------*/
-      //     $this->db->where('ins_id', $rowi['ins_id']);
-      //     $this->db->delete('temporalidad_prog_insumo');
+           $this->db->where('ins_id', $rowi['ins_id']);
+           $this->db->delete('_insumoproducto');
 
-      //     $this->db->where('ins_id', $rowi['ins_id']);
-      //     $this->db->delete('_insumoproducto');
+          /*--------- delete form 5 --------*/
+           $this->db->where('ins_id', $rowi['ins_id']);
+           $this->db->delete('insumos');
 
-      //     /*--------- delete Insumos --------*/
-      //     $this->db->where('ins_id', $rowi['ins_id']);
-      //     $this->db->delete('insumos');
+        }
 
-      //     if(count($this->model_insumo->get_insumo_producto($rowi['ins_id']))==0){
-      //       $nro_ins++;
-      //     }
-      //   }
-      // }
+        /*------ delete form 4 -----*/
+          $this->db->where('prod_id', $rowp['prod_id']);
+          $this->db->delete('prod_programado_mensual');
 
-      // $update_prod= array(
-      //   'fun_id' => $this->fun_id,
-      //   'prod_ppto' => 1
-      // );
-      // $this->db->where('com_id', $com_id);
-      // $this->db->update('_productos', $update_prod);
+        /*------ delete form 4 -----*/
+          $this->db->where('prod_id', $rowp['prod_id']);
+          $this->db->delete('_productos');
+      }
 
-
-      // $this->session->set_flashdata('success','SE ELIMINO CORRECTAMENTE '.$nro_ins.' REQUERIMIENTOS DE LA UNIDAD ');
-      // redirect(site_url("").'/admin/prog/list_prod/'.$com_id);
-      echo " Trabajando ....";
+        ///-----------------
+        $this->session->set_flashdata('success','SE ELIMINO CORRECTAMENTE ');
+        redirect(site_url("").'/admin/prog/list_prod/'.$com_id);
     }
-
-
-
-
 
 
     /*--- ELIMINAR TOD@S LOS REQUERIMIENTOS DEL SERVICIO (SOLO REQUERIMIENTOS) (2025) ---*/

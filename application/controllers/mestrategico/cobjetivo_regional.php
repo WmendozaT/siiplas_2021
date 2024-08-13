@@ -472,7 +472,7 @@ class Cobjetivo_regional extends CI_Controller {
     $data['regional']=$this->model_proyecto->get_departamento($dep_id);
     //$data['mes'] = $this->mes_nombre();
     $data['cabecera']=$this->oregional->cabecera_form2($data['regional']);
-    $data['oregional']=$this->oregional->rep_lista_form2_sp($dep_id);
+    $data['oregional']=$this->oregional->rep_lista_form2($dep_id);
     $data['pie']=$this->oregional->pie_form2($data['regional']);
 
     $this->load->view('admin/mestrategico/objetivos_region/reporte_form2', $data);

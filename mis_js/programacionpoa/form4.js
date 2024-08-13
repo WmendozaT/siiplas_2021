@@ -176,7 +176,7 @@ $(document).ready(function() {
     }
 
 
-
+    /// selecciona tipo de meta
     function select_tp_meta(id,prod_id){ /// 
       var url = base+"index.php/programacion/producto/update_datos_tpmeta";
       var request;
