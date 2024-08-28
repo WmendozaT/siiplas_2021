@@ -473,7 +473,7 @@ class Cservicios extends CI_Controller {
                         <td>'.$row['fun_nombre'].' '.$row['fun_paterno'].' '.$row['fun_materno'].'</td>
                         <td>'.$row['com_ponderacion'].' %</td>
                         <td align=center bgcolor="#bee6e1"><font size=2 color=blue>'.count($this->model_producto->list_prod($row['com_id'])).'</font></td>
-                        <td align="center"><a href="'.site_url("admin").'/prog/list_prod/'.$row['com_id'].'" title="ACTIVIDADES DE LA FASE" class="btn btn-default"><img src="'.base_url().'assets/ifinal/archivo.png" WIDTH="34" HEIGHT="34"/></a></td>
+                        <td align="center"><a href="'.site_url("admin").'/prog/list_prod/'.$row['com_id'].'" target=_black title="MIS ACTIVIDADES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/archivo.png" WIDTH="34" HEIGHT="34"/></a></td>
                         <td align="center"><a href="javascript:abreVentana(\''.site_url("").'/prog/rep_operacion_componente/'.$row['com_id'].'\');" title="REPORTE DE ACTIVIDADES" class="btn btn-default"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="35" HEIGHT="35"/></a></td>
                         <td align="center"><a href="'.site_url("").'/prog/exportar_productos/'.$row['com_id'].'" title="EXPORTAR ACTIVIDADES" class="btn btn-default"><img src="' . base_url() . 'assets/ifinal/excel.jpg" WIDTH="38"/></a></td>
                         <td align="center">';

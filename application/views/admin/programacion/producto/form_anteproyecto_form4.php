@@ -68,7 +68,7 @@
                 </span>
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
-                    <li>Programacion POA</li><li>Formulario N° 4</li><li>Ante Proyecto POA</li>
+                    <li><a href="<?php echo base_url().'index.php/admin/dashboard';?>" title="MENU PRINCIPAL">DASHBOARD</a></li><li><a href="<?php echo base_url().'index.php/admin/proy/list_proy';?>" title="Lista POA">Programacion POA</a></li><li>Formulario N° 4</li><li>Ante Proyecto POA</li>
                 </ol>
             </div>
             <!-- MAIN CONTENT -->

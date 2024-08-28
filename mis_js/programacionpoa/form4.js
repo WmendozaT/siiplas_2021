@@ -105,7 +105,7 @@ $(document).ready(function() {
       informacion = document.getElementById('m'+name_input+prod_id).value;
      }
       
-
+//alert(informacion)
       var url = base+"index.php/programacion/producto/update_datos_form4";
       var request;
       if (request) {
@@ -201,6 +201,47 @@ $(document).ready(function() {
 
       });
     }
+
+    //// ELIMINAR ACTIVIDAD 2025
+  function delete_form4(prod_id){
+    alertify.confirm("DESEA ELIMINAR ACTIVIDAD ?", function (a) {
+        if (a) { 
+        //  alert(prod_id)
+          var url = base+"index.php/programacion/producto/desactiva_producto";
+          
+          request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: "prod_id="+prod_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) { 
+            if (response.respuesta == 'correcto') {
+                alertify.success("Se elimino correctamente ...");
+                window.location.reload(true);
+            } else {
+              alertify.danger("Error ...");
+            }
+          });
+            request.fail(function (jqXHR, textStatus, thrown) {
+              console.log("ERROR: " + textStatus);
+            });
+            request.always(function () {
+                //console.log("termino la ejecuicion de ajax");
+            });
+
+            e.preventDefault();
+
+        } else {
+            // user clicked "cancel"
+            alertify.error("CANCELADA");
+        }
+      });
+    return false;
+  }
+
+
 
 
   //// Subir Archivo de Migracionform 4 y form5
@@ -1243,7 +1284,7 @@ $(document).ready(function() {
 
 
     //// ELiminar Actividad
-  $(function () {
+/*  $(function () {
       function reset() {
         $("#toggleCSS").attr("href", base+"/assets/themes_alerta/alertify.default.css");
         alertify.set({
@@ -1309,7 +1350,7 @@ $(document).ready(function() {
         });
       return false;
     });
-  });
+  });*/
 
 
   //// MODIFICACION POA (ELIMINAR FORM 4)

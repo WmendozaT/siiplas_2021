@@ -57,8 +57,17 @@ class Producto extends CI_Controller {
           $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
           $proy_id=$data['fase'][0]['proy_id'];
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-          $data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
-          $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
+          //$data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
+          
+          if($data['proyecto'][0]['tp_id']==1){
+            //$data['datos_proyecto']='ddddd'.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['proy_nombre'].' </small></h1>';
+            $list_oregional=$this->model_objetivoregion->get_unidad_pregional_programado($data['fase'][0]['proy_id']);
+          }
+          else{
+            ///$data['datos_proyecto']='<h1> dfgf'.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
+            $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
+          }
+
           $data['indi'] = $this->model_proyecto->indicador(); /// indicador
           $data['unidades']=$this->model_producto->list_uresponsables_regional($data['proyecto'][0]['dist_id']);
           $data['metas'] = $this->model_producto->tp_metas(); /// tp metas
@@ -106,9 +115,16 @@ class Producto extends CI_Controller {
             $data['titulo'].='
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <input type="hidden" name="base" value="'.base_url().'">
-              <div class="well">
-                <h2>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'  / '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h2>
-               
+              <div class="well">';
+
+              if($data['proyecto'][0]['tp_id']==1){
+                $data['titulo'].='<h2>'.$data['proyecto'][0]['proy_sisin'].' - '.$data['proyecto'][0]['proy_nombre'].'</h2>';
+              }
+              else{
+                $data['titulo'].='<h2>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'  / '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h2>';
+              }
+
+              $data['titulo'].='
                   <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO FORM N 4" >
                     <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>NUEVO REGISTRO (ACTIVIDAD)</b>
                   </a>
@@ -157,7 +173,8 @@ class Producto extends CI_Controller {
                 <td style="width: 4%; text-align: center; " >';
                       if(count($this->model_producto->insumo_producto($rowp['prod_id']))==0){
                         if($this->tp_adm==1 || $this->conf_form4==1){
-                          $tabla.='<center><a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="30" HEIGHT="30"/></a></center>';
+                          //$tabla.='<center><a href="#" data-toggle="modal" data-target="#modal_del_ff" class="btn btn-default del_ff" title="ELIMINAR OPERACI&Oacute;N"  name="'.$rowp['prod_id'].'"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="30" HEIGHT="30"/></a></center>';
+                          $tabla.='<center><a name="del_prod'.$rowp['prod_id'].'" id="del_prod'.$rowp['prod_id'].'" onclick="delete_form4('.$rowp['prod_id'].');" class="btn btn-default" title="ELIMINAR ACTIVIDAD"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="30" HEIGHT="30"/></a></center>';
                         }
                       }
                 $tabla.='
@@ -297,7 +314,7 @@ class Producto extends CI_Controller {
                   for ($i=1; $i <=12 ; $i++) { 
                     $nro_i++;
                     $tabla.='<td style="width:3.5%;" bgcolor="#e5fde5" >
-                              <input name="m'.$i.''.$rowp['prod_id'].'" id="m'.$i.''.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4_temp(1,'.$nro_i.','.$rowp['prod_id'].','.$i.');"  style="width:100%; font-size:10px; color:blue;" value="0" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
+                              <input name="m'.$i.''.$rowp['prod_id'].'" id="m'.$i.''.$rowp['prod_id'].'" class="form-control" type="text" onkeyup="datos_form4(1,'.$nro_i.','.$rowp['prod_id'].','.$i.');"  style="width:100%; font-size:10px; color:blue;" value="0" onkeypress="if (this.value.length < 6) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                             </td>';
                   }
                 }
@@ -1568,9 +1585,6 @@ class Producto extends CI_Controller {
       if ($this->input->is_ajax_request() && $this->input->post()) {
           $post = $this->input->post();
           $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
-         // $proy_id = $this->security->xss_clean($post['proy_id']); /// proy id
-
-         // $proyecto = $this->model_proyecto->get_id_proyecto($proy_id); 
           $insumos = $this->model_producto->insumo_producto($prod_id); /// Insumo del producto
 
           foreach ($insumos as $rowi) {
@@ -1607,6 +1621,8 @@ class Producto extends CI_Controller {
             );
           }
 
+
+       
           echo json_encode($result);
       } else {
           echo 'DATOS ERRONEOS';
