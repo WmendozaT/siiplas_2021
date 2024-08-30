@@ -420,8 +420,7 @@
               <section id="widget-grid" class="">
                 <div>
                   <?php echo $datos_proyecto;?>
-                  <h1> UNIDAD RESPONSABLE : <small><?php echo $componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion']; ?></small></h1>
-                </div>
+                  </div>
               </section>
               <div class="row">
                 <form action="<?php echo site_url().'/programacion/producto/importar_operaciones_requerimientos'?>" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep" class="form-horizontal" method="post">

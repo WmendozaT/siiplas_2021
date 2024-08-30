@@ -264,7 +264,8 @@ $(document).ready(function() {
 
     /// ---- TIPO DE INDICADOR
     $(document).ready(function () {
-        $("#tipo_i").change(function () {            
+        $("#tipo_i").change(function () {   
+        alert('hola')         
           var tp_id = $(this).val();
             if(tp_id==2){
               $('#trep').slideDown();
@@ -284,8 +285,10 @@ $(document).ready(function() {
 
     /// TIPO DE META
       $(document).ready(function () {
-        $("#tp_met").change(function () {            
+        $("#tp_met").change(function () {   
+        //alert('hola')         
           var tp_met = $(this).val();
+
             if(tp_met==1){ /// recurrente
               meta = parseFloat($('[name="meta"]').val());
               for (var i = 1; i <= 12; i++) {

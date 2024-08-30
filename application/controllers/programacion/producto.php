@@ -57,15 +57,14 @@ class Producto extends CI_Controller {
           $data['fase']=$this->model_faseetapa->get_fase($data['componente'][0]['pfec_id']);
           $proy_id=$data['fase'][0]['proy_id'];
           $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-          //$data['datos_proyecto']='<h1> '.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
-          
+         
           if($data['proyecto'][0]['tp_id']==1){
-            //$data['datos_proyecto']='ddddd'.$data['proyecto'][0]['proy_sisin'].' '.$data['proyecto'][0]['proy_nombre'].' </small></h1>';
             $list_oregional=$this->model_objetivoregion->get_unidad_pregional_programado($data['fase'][0]['proy_id']);
+            $data['datos_proyecto']='<h2>'.$data['proyecto'][0]['proy_sisin'].' - '.$data['proyecto'][0]['proy_nombre'].'</h2>';
           }
           else{
-            ///$data['datos_proyecto']='<h1> dfgf'.$data['proyecto'][0]['establecimiento'].' : <small> '.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</small></h1>';
             $list_oregional=$this->model_objetivoregion->list_proyecto_oregional($proy_id);
+            $data['datos_proyecto']='<h2>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'  / '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h2>';
           }
 
           $data['indi'] = $this->model_proyecto->indicador(); /// indicador
@@ -115,16 +114,8 @@ class Producto extends CI_Controller {
             $data['titulo'].='
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <input type="hidden" name="base" value="'.base_url().'">
-              <div class="well">';
-
-              if($data['proyecto'][0]['tp_id']==1){
-                $data['titulo'].='<h2>'.$data['proyecto'][0]['proy_sisin'].' - '.$data['proyecto'][0]['proy_nombre'].'</h2>';
-              }
-              else{
-                $data['titulo'].='<h2>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['aper_proyecto'].' '.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'  / '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h2>';
-              }
-
-              $data['titulo'].='
+              <div class="well">
+                '.$data['datos_proyecto'].'
                   <a href="#" data-toggle="modal" data-target="#modal_nuevo_form" class="btn btn-default nuevo_form" title="NUEVO REGISTRO FORM N 4" >
                     <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>NUEVO REGISTRO (ACTIVIDAD)</b>
                   </a>
