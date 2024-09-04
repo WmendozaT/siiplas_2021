@@ -2008,6 +2008,7 @@ CREATE OR REPLACE VIEW public.v_seguimiento_operaciones_mensual AS
 	    p.com_id,
                     p.prod_cod,
 	    p.prod_producto,
+        p.indi_id,
 	    p.prod_indicador,
 	    p.prod_linea_base,
 	    p.prod_meta,

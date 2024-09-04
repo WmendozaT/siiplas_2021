@@ -262,7 +262,7 @@
                         <div id="trep" style="display:none;" >
                         <section class="col col-3">
                           <label class="label"><b>TIPO DE META</b></label>
-                            <select class="form-control" id="tp_met" name="tp_met" style="width:100%; font-size:11px; color:blue; background-color: #e3fcf8;" title="SELECCIONE TIPO DE META">
+                            <select class="form-control" id="tp_meta" name="tp_meta" style="width:100%; font-size:11px; color:blue; background-color: #e3fcf8;" title="SELECCIONE TIPO DE META">
                               <option value="">Seleccione Tipo de Meta</option>
                                 <?php 
                                   foreach($metas as $row){ 

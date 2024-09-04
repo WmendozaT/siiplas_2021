@@ -162,9 +162,9 @@ class Cmod_insumo extends CI_Controller {
           if(count($this->model_modrequerimiento->lista_requerimientos($data['cite'][0]['com_id'],$data['cite'][0]['tipo_modificacion']))>50){
             
             $data['tabla']=$this->modificacionpoa->modificar_requerimientos_auxiliar($data['cite']);  /// 2023 -> cargado rapido sin temporalidad
-            if($this->fun_id==598){ /// exclusivo doctor muruchi
+            /*if($this->fun_id==598){ /// exclusivo doctor muruchi
               $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2023
-            }
+            }*/
           }
           else{
             $data['tabla']=$this->modificacionpoa->modificar_requerimientos($data['cite']);  /// 2022

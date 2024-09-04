@@ -2376,51 +2376,35 @@ class Seguimientopoa extends CI_Controller{
                     <th style="width:2%; height:18px;"></th>
                     <th style="width:3%;"><b>COD. OPE.</b></th>
                     <th style="width:3%;"><b>COD. ACT.</b></th>
-                    <th style="width:32%;">ACTIVIDAD</th>
+                    <th style="width:39%;">ACTIVIDAD</th>
                     <th style="width:20%;">INDICADOR</th>
-                    <th style="width:22%;">MEDIO DE VERIFICACI&Oacute;N</th>
-                    <th style="width:5%;">META ANUAL</th>
-                    <th style="width:5%;">PROG. MES</th>
-                    <th style="width:5%;">EJEC.</th>
+                    <th style="width:25%;">MEDIO DE VERIFICACI&Oacute;N</th>
+                    <th style="width:5%;">PROG. '.$this->verif_mes[2].'</th>
                   </tr>
                 </thead>
                 <tbody>';
                 $nro_ope=0;
                 foreach ($form4 as $row) {
-                  $ejec=$this->model_producto->verif_ope_evaluado_mes($row['prod_id'],$this->verif_mes[1]);
-                  $evaluado=0;
-                    if(count($ejec)!=0){
-                      $evaluado=$ejec[0]['pejec_fis'];
-                    }
-
+                  $indi_id='';
+                  if($row['indi_id']==2){
+                    $indi_id='%';
+                  }
                   $nro_ope++;
                   $tabla.= '
                     <tr>
                       <td align=center style="height:12px; width:2%;">'.$nro_ope.'</td>
-                      <td align=center style="font-size: 10px; width:3%;">'.$row['or_codigo'].'</td>
-                      <td align=center style="font-size: 10px; width:3%;">'.$row['prod_cod'].'</td>
-                      <td style="width:32%;">'.$row['prod_producto'].'</td>
+                      <td align=center style="font-size: 12px; width:3%;"><b>'.$row['or_codigo'].'</b></td>
+                      <td align=center style="font-size: 12px; width:3%;"><b>'.$row['prod_cod'].'</b></td>
+                      <td style="width:39%;">'.$row['prod_producto'].'</td>
                       <td style="width:20%;">'.$row['prod_indicador'].'</td>
-                      <td style="width:22%;">'.$row['prod_fuente_verificacion'].'</td>
-                      <td style="width:5%;font-size: 9px; text-align:right">'.round($row['prod_meta'],2).'</td>
-                      <td style="width:5%;font-size: 9px; text-align:right"><b>'.round($row['pg_fis'],2).'</b></td>
-                      <td style="width:5%;font-size: 9px; text-align:right"><b>'.round($evaluado,2).'</b></td>
+                      <td style="width:25%;">'.$row['prod_fuente_verificacion'].'</td>
+                      <td style="width:5%;font-size: 10px; text-align:center"><b>'.round($row['pg_fis'],2).' '.$indi_id.'</b></td>
                     </tr>';
                 }
             $tabla.= '
                 </tbody>
               </table>
-              <br>
-              <table border=0 style="width:99%;" align=center>
-                <tr>
-                  <td style="width:98%;text-align: justify;">
-                  En el mismo sentido, efectuar las gestiones en el plazo programado para la ejecuci&oacute;n de la Solicitud de CERTIFICACIÓN POA
-                  <b>'.$this->verif_mes[2].' '.$this->gestion.'</b>. Recordar que en ambos casos para fines de control y gestión por resultados la 
-                  responsabilidad del cumplimiento corresponde a su autoridad.
-                  </td>
-                </tr>
-              </table>
-              <br>';
+              ';
         }
         else{ /// cuando no hay actividades programadas
             
@@ -2450,7 +2434,8 @@ class Seguimientopoa extends CI_Controller{
                     </td>
                 </tr>
               </table>
-              <br>';
+              <br>
+              <div align=center>-------------- SIN ACTIVIDADES PROGRAMADAS --------------</div>';
             }
         }
 
@@ -2461,14 +2446,25 @@ class Seguimientopoa extends CI_Controller{
               if(count($requerimientos)!=0){
 
               $tabla.= '
+                  <br>
+                  <table border=0 style="width:99%;" align=center>
+                    <tr>
+                      <td style="width:98%;text-align: justify;">
+                      En el mismo sentido, efectuar las gestiones en el plazo programado para la ejecuci&oacute;n de la Solicitud de CERTIFICACIÓN POA
+                      <b>'.$this->verif_mes[2].' '.$this->gestion.'</b>. Recordar que en ambos casos para fines de control y gestión por resultados la 
+                      responsabilidad del cumplimiento corresponde a su autoridad.
+                      </td>
+                    </tr>
+                  </table>
+                  <br>
                   <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:99%;" align=center>
                     <thead>
                       <tr style="font-size: 7px;" bgcolor=#f8f2f2 align=center>
                         <th style="width:1.5%; height:15px;">#</th>
                         <th style="width:3%;"><b>COD. ACT.</b></th>
                         <th style="width:7%;"><b>PARTIDA</b></th>
-                        <th style="width:29%;">DETALLE REQUERIMIENTO</th>
-                        <th style="width:10%;">UNIDAD DE MEDIDA</th>
+                        <th style="width:35%;">DETALLE REQUERIMIENTO</th>
+                        <th style="width:5%;">UNIDAD DE MEDIDA</th>
                         <th style="width:7%;">CANTIDAD</th>
                         <th style="width:8%;">PRECIO UNITARIO</th>
                         <th style="width:8%;">PRECIO TOTAL</th>
@@ -2486,8 +2482,8 @@ class Seguimientopoa extends CI_Controller{
                             <td align=center style="height:12px; width:1.5%;">'.$nro_req.'</td>
                             <td align=center style="font-size: 10px; width:3%;">'.$row['prod_cod'].'</td>
                             <td align=center style="font-size: 10px; width:7%;">'.$row['par_codigo'].'</td>
-                            <td style="width:29%;">'.$row['ins_detalle'].'</td>
-                            <td style="width:10%;">'.$row['ins_unidad_medida'].'</td>
+                            <td style="width:35%;">'.$row['ins_detalle'].'</td>
+                            <td style="width:5%;">'.$row['ins_unidad_medida'].'</td>
                             <td style="width:7%;" align=right>'.round($row['ins_cant_requerida'],2).'</td>
                             <td style="width:8%;" align=right>'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>
                             <td style="width:8%;" align=right>'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>

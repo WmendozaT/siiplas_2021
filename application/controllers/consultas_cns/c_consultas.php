@@ -167,8 +167,8 @@ class C_consultas extends CI_Controller {
         $salida="";
           $salida.= "<option value='0'>Seleccione tipo Reporte....</option>";
           $salida.= "<option value='1'>1.- CONSOLIDADO POA SEGUN TIPO DE GASTO</option>";
-          $salida.= "<option value='2'>2.- CONSOLIDADO FORMULARIO 4 (ACTIVIDADES)</option>";
-          $salida.= "<option value='3'>3.- CONSOLIDADO FORMULARIO 5 (REQUERIMEINTOS)</option>";
+          //$salida.= "<option value='2'>2.- CONSOLIDADO FORMULARIO 4 (ACTIVIDADES)</option>";
+          //$salida.= "<option value='3'>3.- CONSOLIDADO FORMULARIO 5 (REQUERIMEINTOS)</option>";
           $salida.= "<option value='4'>4.- LISTA DE CERTIFICACIONES POA</option>";
           $salida.= "<option value='5'>5.- CUADRO DE EVALUACION POA REGIONAL</option>";
 
@@ -242,7 +242,8 @@ class C_consultas extends CI_Controller {
                   </section>
                 </div>
               </fieldset>
-          </form>
+          </form>';
+         /* $tabla.='
             &nbsp;&nbsp;&nbsp;&nbsp;
             <a href="javascript:abreVentana(\''.site_url("").'/me/rep_ogestion/0\');" title="IMPRIMIR ACP DISTRIBUCION REGIONAL" class="btn btn-default">
               <img src="'.base_url().'assets/Iconos/printer_empty.png" WIDTH="20" HEIGHT="20"/>&nbsp;REP. A.C.P. (FORM N° 1)
@@ -304,7 +305,8 @@ class C_consultas extends CI_Controller {
                 </li>
 
               </ul>
-            </div>
+            </div>';*/
+            $tabla.='
           </div>
         </article>';
       return $tabla;

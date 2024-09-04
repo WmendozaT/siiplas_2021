@@ -19,6 +19,7 @@ class Genera_informacion extends CI_Controller{
         $this->load->model('ejecucion/model_evaluacion');
         $this->load->model('menu_modelo');
         $this->load->library('security');
+        $this->rol = $this->session->userData('rol_id');
         $this->gestion = $this->session->userData('gestion');
         $this->adm = $this->session->userData('adm');
         $this->dist = $this->session->userData('dist');
@@ -58,8 +59,9 @@ class Genera_informacion extends CI_Controller{
         }
 
       $tabla='';
-      $tabla.='
-     
+
+      if($this->rol!=10){ /// evitar audotira
+        $tabla.='
         <br>
         <div align=lefth>
           <a href="'.site_url("").'/admin/dashboard" class="btn btn-success" title="VOLVER ATRAS"><img src="'.base_url().'assets/Iconos/arrow_rotate_clockwise.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;SALIR</a>&nbsp;&nbsp;';
@@ -70,7 +72,10 @@ class Genera_informacion extends CI_Controller{
           <a href="'.site_url("").'/rep/comparativo_unidad_ppto/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="POA (ADMINISTRATIVO)"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR DETALLE POA</a>&nbsp;&nbsp;
           <a href="'.site_url("").'/rep/establecimientos/'.$dep_id.'/'.$dist_id.'" target=_blank class="btn btn-default" title="ESTABLECIMIENTOS DE SALUD"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;IMPRIMIR (EST. DE SALUD)</a>&nbsp;&nbsp;
           <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;CONSOLIDADO POA (FORM. N° 5)</a>&nbsp;&nbsp;
-        </div>
+        </div>';
+      }
+      
+        $tabla.='
         <br>
       <div class="alert alert-warning">
         <a href="#" class="alert-link" align=center><center><b>LISTA DE '.$titulo.' '.$this->gestion.' - '.strtoupper($tit_reg).'</b></center></a>

@@ -525,8 +525,50 @@ class Creporte extends CI_Controller {
 
                 </page>';
 
-            $data['informacion']=$tabla;
+            $get_uniresp_progBolsa=$this->model_producto->verif_get_uni_resp_programaBolsa($com_id); // Verifica la Actividad de la Unidad Responsable del Programa Bolsa
+            if(count($get_uniresp_progBolsa)!=0){
+                foreach($get_uniresp_progBolsa as $bolsa){
 
+                $lista_insumos=$this->model_insumo->lista_requerimientos_inscritos_en_programas_bosas($bolsa['prod_id'],$bolsa['uni_resp']);
+                if(count($lista_insumos)!=0){
+                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($lista_insumos);
+                    $lista_partidas=$this->model_insumo->list_consolidado_partidas_programas_boLsas_uresponsable($bolsa['prod_id'],$bolsa['uni_resp']);
+                    $partidas=$this->consolidado_partida_reporte($lista_partidas,4);
+                }
+                else{
+                    $requerimientos='No se Tiene Informacion Registrado !!!';   
+                    $partidas='Sin Informacion';
+                }
+
+                $componente = $this->model_componente->get_componente($bolsa['com_id'],$this->gestion);
+                $proyecto_bolsa = $this->model_proyecto->get_datos_proyecto_unidad($componente[0]['proy_id']); //// DATOS PROYECTO
+                $cabecera=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto_bolsa,$bolsa['uni_resp']);
+
+                $tabla.='
+                <page orientation="paysage" backtop="75mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
+                    <page_header>
+                    <br><div class="verde"></div>
+                    '.$cabecera.'
+                    </page_header>
+                    <page_footer>
+                    '.$pie.'
+                    </page_footer>
+                    '.$requerimientos.'
+                </page>
+                <page orientation="portrait" backtop="80mm" backbottom="33mm" backleft="5mm" backright="5mm" pagegroup="new">
+                    <page_header>
+                    <br><div class="verde"></div>
+                    '.$cabecera.'
+                    </page_header>
+                    <page_footer>
+                    '.$pie.'
+                    </page_footer>
+                    '.$partidas.'
+                </page>';
+                }
+            }
+
+            $data['informacion']=$tabla;
             $this->load->view('admin/programacion/reportes/reporte_form5', $data);
         }
         else{

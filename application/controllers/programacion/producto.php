@@ -110,7 +110,7 @@ class Producto extends CI_Controller {
           }
 
           $data['titulo']='';
-          if($this->conf_poa_estado==1){ /// Ante proyecto
+          //if($this->conf_poa_estado==1){ /// Ante proyecto
             $data['titulo'].='
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <input type="hidden" name="base" value="'.base_url().'">
@@ -158,8 +158,14 @@ class Producto extends CI_Controller {
               }
               $tabla.='
               <tr>
-                <td style="width: 4%; text-align: center; " >
-                  <center><a href="'.site_url("").'/prog/requerimiento/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="30" HEIGHT="30"/></a></center>
+                <td style="width: 4%; text-align: center;">';
+                  if($this->conf_poa_estado==2){
+                    $tabla.='<center><a href="'.site_url("").'/prog/list_requerimiento/'.$com_id.'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="30" HEIGHT="30"/></a></center>';
+                  }
+                  else{
+                    $tabla.='<center><a href="'.site_url("").'/prog/requerimiento/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="30" HEIGHT="30"/></a></center>';
+                  }
+                $tabla.='
                 </td>
                 <td style="width: 4%; text-align: center; " >';
                       if(count($this->model_producto->insumo_producto($rowp['prod_id']))==0){
@@ -316,10 +322,10 @@ class Producto extends CI_Controller {
             $data['tabla']=$tabla;
             $this->load->view('admin/programacion/producto/form_anteproyecto_form4', $data); /// Gasto Corriente
           
-          }
+          /*}
           else{
             echo "final";
-          }
+          }*/
 
       }
       else{
@@ -662,7 +668,7 @@ class Producto extends CI_Controller {
           $tp_met=3;
         }
         else{
-          $tp_met=$this->input->post('tp_met');
+          $tp_met=$this->input->post('tp_meta');
         }
     
 

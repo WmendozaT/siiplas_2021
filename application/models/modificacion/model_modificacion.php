@@ -1219,7 +1219,8 @@ class Model_modificacion extends CI_Model{
     public function list_cites_techo($proy_id){
         $sql = '
             select *
-            from lista_modificacion_techos_unidad('.$proy_id.','.$this->gestion.')';
+            from lista_modificacion_techos_unidad('.$proy_id.','.$this->gestion.')
+            order by cppto_id desc';
 
 /*        $sql = '
             select *

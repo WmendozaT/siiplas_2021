@@ -265,7 +265,7 @@ $(document).ready(function() {
     /// ---- TIPO DE INDICADOR
     $(document).ready(function () {
         $("#tipo_i").change(function () {   
-        alert('hola')         
+      //  alert('hola')         
           var tp_id = $(this).val();
             if(tp_id==2){
               $('#trep').slideDown();
@@ -285,7 +285,7 @@ $(document).ready(function() {
 
     /// TIPO DE META
       $(document).ready(function () {
-        $("#tp_met").change(function () {   
+        $("#tp_meta").change(function () {   
         //alert('hola')         
           var tp_met = $(this).val();
 
@@ -622,13 +622,13 @@ $(document).ready(function() {
               }
             } 
             else{
-              if(document.form_nuevo.tp_met.value==0){
+              if(document.form_nuevo.tp_meta.value==0){
                 alertify.error("SELECCIONE TIPO DE META") 
                   document.form_nuevo.resultado.focus() 
                   return 0; 
               }
               if(document.form_nuevo.tipo_i.value==2){
-                if(document.form_nuevo.tp_met.value==3){
+                if(document.form_nuevo.tp_meta.value==3){
                   meta = parseFloat($('[name="meta"]').val());
                   total = parseFloat($('[name="total"]').val());
                   if(parseFloat(meta)!=parseFloat(total)){

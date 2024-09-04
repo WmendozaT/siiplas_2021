@@ -76,7 +76,7 @@ class cajuste_crequerimiento extends CI_Controller{
     /*---- tipo lista : Operacion-Actividad ----*/
     public function tipo_lista_ope_act($com_id){
       $tabla='';
-      $operaciones=$this->model_producto->lista_operaciones($com_id);
+      $operaciones=$this->model_producto->list_prod($com_id);
         $tabla.='
           <section class="col col-4">
             <label class="label"><b>ALINEACI&Oacute;N ACTIVIDAD '.$this->gestion.'</b></label>

@@ -1138,7 +1138,7 @@ class Modificacionpoa extends CI_Controller{
 
 
 
-    /*----- LISTA REQUERIMIENTOS POR SUBACTIVIDAD AUXILIAR (2022) en casos de que sean muchos requerimientos ------*/
+    /*----- LISTA REQUERIMIENTOS POR UNIDAD RESPONSABLE AUXILIAR (2024) en casos de que sean muchos requerimientos ------*/
     public function modificar_requerimientos_auxiliar($cite){
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($cite[0]['proy_id']); /// PROYECTO
       if($proyecto[0]['por_id']==0){
