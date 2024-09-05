@@ -381,13 +381,6 @@ class Model_objetivoregion extends CI_Model{
 
     /*----- Obtiene suma de metas priorizados (meta acumulado)-----*/
     public function get_suma_meta_form4_x_oregional($or_id){
-        /*$sql = 'select * 
-        from vista_suma_meta_form4_x_oregional
-        where or_id='.$or_id.' and aper_gestion='.$this->gestion.'';*/
-
-      //  $query = $this->db->query($sql);
-
-        //// en caso de que no haya la vista
         $sql = '
         select p.or_id, SUM(p.prod_meta) as meta_prog_actividades, COUNT(p.or_id) nro
         from _productos p

@@ -36,6 +36,40 @@
     }
   }
 
+
+
+  /// Actualiza el Tipo de meta (Relativo)
+    function select_tp_meta(id,or_id){ /// 
+      var url = base+"index.php/ejecucion/cevaluacion_form2/update_datos_tpmeta";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "or_id="+or_id+"&id="+id
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+          alertify.success("Seleccion procesada correctamente ...");
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
+    }
+
+
+
+
+
+
+
 ///// =================== MODULO DE REPORTES POA - EVALUACION DE FORMULARIO 2
 ////------- menu select regionales
   $("#d_id").change(function () {

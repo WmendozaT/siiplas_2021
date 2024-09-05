@@ -117,7 +117,7 @@ class Eval_oregional extends CI_Controller{
     $acp_regional=$this->model_objetivogestion->lista_acp_x_regional($dep_id);
     $departamento=$this->model_proyecto->get_departamento($dep_id);
     $trimestre=$this->model_evaluacion->trimestre();
-    
+    $metas = $this->model_producto->tp_metas(); /// tp metas
     $tabla.='
       <input name="base" type="hidden" value="'.base_url().'">
       <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
@@ -254,7 +254,25 @@ class Eval_oregional extends CI_Controller{
                         <td style="width:11%;">'.$row['or_objetivo'].'</td>
                         <td style="width:11%;">'.$row['or_resultado'].'</td>
                         <td style="width:10%;">'.$row['or_indicador'].'</td>
-                        <td style="width:5%;" title="'.$row['indi_id'].' -> '.$row['tp_meta'].'"><b>'.strtoupper($row['indi_descripcion']).'</b> <font color=blue>'.$tp_meta.'</font></td>
+                        <td style="width:5%;" title="'.$row['indi_id'].' -> '.$row['tp_meta'].'">
+                          <b>'.strtoupper($row['indi_descripcion']).'</b>';
+                          if($row['indi_id']==2){
+                            $tabla.='
+                              <select class="form-control" id="tp_met" name="tp_met" style="width:100%; font-size:9px; color:blue; background-color: #e3fcf8;" title="SELECCIONE TIPO DE META" onchange="select_tp_meta(this.value,'.$row['or_id'].');">';
+                                foreach($metas as $rowm){ 
+                                  if($rowm['mt_id']==$row['tp_meta']){
+                                    $tabla.='<option value="'.$rowm['mt_id'].'" selected>'.$rowm['mt_tipo'].'</option>';
+                                  }
+                                  else{
+                                    $tabla.='<option value="'.$rowm['mt_id'].'" >'.$rowm['mt_tipo'].'</option>';
+                                  }
+                                }
+                                $tabla.='
+                              </select>';
+                          }
+                        $tabla.='
+                          <font color=blue>'.$tp_meta.'</font>
+                        </td>
                         <td style="width:10%;">'.$row['or_verificacion'].'</td>
                         <td style="width:2%; font-size: 15px;" align=center title="'.$row['tp_meta'].'"><b>'.round($row['or_meta'],2).' '.$meta.'</b></td>
                         <td style="width:2%;" align=center>'.$boton_ajustar_apriorizados.'</td>

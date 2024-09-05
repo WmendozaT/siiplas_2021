@@ -76,14 +76,14 @@ class cajuste_crequerimiento extends CI_Controller{
     /*---- tipo lista : Operacion-Actividad ----*/
     public function tipo_lista_ope_act($com_id){
       $tabla='';
-      $operaciones=$this->model_producto->list_prod($com_id);
+      $form4=$this->model_producto->list_prod($com_id);
         $tabla.='
           <section class="col col-4">
             <label class="label"><b>ALINEACI&Oacute;N ACTIVIDAD '.$this->gestion.'</b></label>
             <label class="input">
               <select class="form-control" id="prod_id" name="prod_id" title="SELECCIONE ACTIVIDAD">
                 <option value="">Seleccione Actividad</option>';
-                foreach($operaciones as $row){ 
+                foreach($form4 as $row){ 
                   $tabla.='<option value="'.$row['prod_id'].'">ACT. '.$row['prod_cod'].'.- '.$row['prod_producto'].'</option>';
                 } 
                 $tabla.='      

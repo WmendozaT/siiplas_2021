@@ -57,6 +57,33 @@ class Cevaluacion_form2 extends CI_Controller {
     }
 
 
+    /*---- UPDATE DATOS OPERACIONES TIPO DE META----*/
+    public function update_datos_tpmeta(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $or_id = $this->security->xss_clean($post['or_id']);
+        $id = $this->security->xss_clean($post['id']);
+        $detalle_oregional=$this->model_objetivoregion->get_objetivosregional($or_id); /// Objetivo Regional
+
+        if($detalle_oregional[0]['indi_id']==2){
+          $update_or = array(
+            'tp_meta' => $id,
+          );
+          $this->db->where('or_id', $or_id);
+          $this->db->update('objetivos_regionales', $update_or);
+        }
+          
+        $result = array(
+          'respuesta' => 'correcto',
+        );
+
+        echo json_encode($result);
+      }else{
+        show_404();
+      }
+    }
+
+
     /*---- FUNCION GET LISTA DE OPERACIONES POR REGIONAL --------*/
     public function get_lista_operaciones_x_regionales(){
       if($this->input->is_ajax_request() && $this->input->post()){
