@@ -1804,9 +1804,12 @@ $mes=3;
       if($data['proyecto'][0]['tp_id']==4){
         $data['principal']=$this->seguimientopoa->cuerpo_nota_notificacion($proy_id); /// Cuerpo Nota Principal
       }
+      
       $data['cuerpo']=$this->seguimientopoa->lista_subactividades_a_notificar($unidades_responsables); /// listado de unidades a notificar
       //echo $data['proyecto'][0]['dist_id'];
-      $this->load->view('admin/evaluacion/seguimiento_poa/reporte_notificacion_seguimiento', $data); 
+      
+      //$this->load->view('admin/evaluacion/seguimiento_poa/reporte_notificacion_seguimiento', $data); 
+      echo $data['cuerpo'];
     }
     else{
       echo "Error !!!";

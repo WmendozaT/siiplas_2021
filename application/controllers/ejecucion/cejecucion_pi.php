@@ -44,9 +44,7 @@ class Cejecucion_pi extends CI_Controller {
   //// FORMULARIO DE EJECUCION PROYECTOS DE INVERSION
   /*------- Formulario de Ejecucion Proyectos de Inversion -------*/
   public function formulario_ejecucion_pinversion($com_id){
-echo "hola <br>";
-    echo $this->mes;
-/*    $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
+    $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
     if(count($componente)!=0){
       $proyecto = $this->model_proyecto->get_proyecto_inversion($componente[0]['proy_id']);
       $regional=$this->model_proyecto->get_departamento($proyecto[0]['dep_id']);
@@ -106,14 +104,14 @@ echo "hola <br>";
         <div class="col-sm-6">
           <div>
             <div id="distribucion_ppto_ejecutado_inicial" style="width: 950px; height: 500px; margin: 0 auto" align="center"></div>
-            <div style="display: none"><div id="distribucion_ppto_ejecutado_inicial_impresion"  style="width: 700px; height: 350px; margin: 0 auto"></div></div>
+            <div style="display: none"><div id="distribucion_ppto_ejecutado_inicial_impresion" style="width: 700px; height: 350px; margin: 0 auto"></div></div>
           </div>
         </div>
 
         <div class="col-sm-6">
           <div>
             <div id="cumplimiento_mensual_ppto_inicial_ejecutado" style="width: 950px; height: 450px; margin: 0 auto" align="center"></div>
-            <div style="display: none"><div id="cumplimiento_mensual_ppto_inicial_ejecutado_impresion"  style="width: 700px; height: 350px; margin: 0 auto" align="center"></div></div>
+            <div style="display: none"><div id="cumplimiento_mensual_ppto_inicial_ejecutado_impresion" style="width: 700px; height: 350px; margin: 0 auto" align="center"></div></div>
           </div>
         </div>
 
@@ -135,7 +133,7 @@ echo "hola <br>";
     }
     else{
       echo "Error !!!";
-    }*/
+    }
   }
 
 
@@ -2035,13 +2033,13 @@ public function get_tp_reporte(){
     $tabla='';
     $tabla=$this->ejecucion_finpi->reporte_consolidado_institucional_resumen();
 
-    header('Content-type: application/vnd.ms-excel');
+/*    header('Content-type: application/vnd.ms-excel');
     header("Content-Disposition: attachment; filename=Detalle_ejec_pi_RESUMEN_INSTITUCIONAL/".$this->gestion."_$fecha.xls"); //Indica el nombre del archivo resultante
     header("Pragma: no-cache");
     header("Expires: 0");
     echo "";
     ini_set('max_execution_time', 0); 
-    ini_set('memory_limit','3072M');
+    ini_set('memory_limit','3072M');*/
     echo $tabla;
   }
 
