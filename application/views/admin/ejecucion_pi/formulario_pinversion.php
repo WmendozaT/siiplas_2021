@@ -145,6 +145,9 @@
                                             <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>DATOS DEL PROYECTO</b></span></a>
                                         </li>
                                         <li>
+                                            <a data-toggle="tab" href="#s5"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>CONTRATOS DE OBRA</b></span></a>
+                                        </li>
+                                        <li>
                                             <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>EJECUCIÓN FINANCIERA</b></span></a>
                                         </li>
                                         <li>
@@ -171,6 +174,11 @@
                                                 <?php echo $formulario_datos_generales; ?>
                                             </div>
                                             <!-- end s1 tab pane -->
+
+                                            <div class="tab-pane fade" id="s5" title="CUADRO DE CONTRATOS">
+                                               <?php echo $formulario_contratos;?>
+                                            </div>
+                                            <!-- end s3 tab pane -->
 
                                             <div class="tab-pane fade" id="s2" title="CUADRO DE SEGUIMIENTO POA">
                                                <?php echo $formulario_ejec_partidas;?>

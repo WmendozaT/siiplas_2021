@@ -65,7 +65,7 @@ class Cejecucion_pi extends CI_Controller {
           <a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR REPORTE POA"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="18" HEIGHT="18"/>&nbsp;&nbsp;GENERAR POA '.$this->gestion.'</a>&nbsp;
           <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR FICHA TECNICA DE PROYECTO"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="18" HEIGHT="18"/>&nbsp;&nbsp;GENERAR FICHA TECNICA</a>&nbsp;';
           
-          $data['cabecera_formulario'].='
+          /*$data['cabecera_formulario'].='
           <br><br>
           <select class="form-control" onchange="update_meses(this.value,'.$proyecto[0]['proy_id'].');" style="width:10%;">';
             for ($i=1; $i <=$this->verif_mes[1]; $i++) { 
@@ -80,12 +80,14 @@ class Cejecucion_pi extends CI_Controller {
             }
 
           $data['cabecera_formulario'].='
-          </select>';
+          </select>';*/
           
         $data['calificacion']=$this->calificacion_proyecto($proyecto);
         $data['reporte']='<a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°4</b></font></a>';
         $data['formulario_datos_generales']=$this->tabla_datos_generales($proyecto,$com_id); /// Datos Generales
         $data['formulario_ejec_partidas']=$this->tabla_formulario_ejecucion_partidas($proyecto,$com_id); /// Ejecucion Financiera por Partidas
+        $data['formulario_contratos']='Contratos'; /// Contratos de la Obra
+
         $data['galeria']=$this->galeria_pi($proyecto); /// Galeria de fotos P inversion
         
         $data['cuadro_consolidado']='
