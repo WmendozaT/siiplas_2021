@@ -94,7 +94,7 @@ class Cajustes extends CI_Controller {
             if($i != 0){ 
               $datos = explode(";",$linea);
 
-                if(count($datos)==7){
+                /*if(count($datos)==7){ //// ANTERIOR
                   $dep_id = intval(trim($datos[0])); //// dep_id
                   $prod_id = intval(trim($datos[1])); //// prod id
                   $codigo_og = intval(trim($datos[2])); //// cod objetivo ACP FORM 1
@@ -114,6 +114,59 @@ class Cajustes extends CI_Controller {
                       );
                       $this->db->where('prod_id', $prod_id);
                       $this->db->update('_productos', $update_alineacion);
+                  }
+
+                }*/
+
+
+
+                if(count($datos)==23){
+                  $dep_id = intval(trim($datos[0])); //// dep_id
+                  $prod_id = intval(trim($datos[1])); //// prod id
+                  $codigo_og0 = intval(trim($datos[2])); //// cod objetivo ACP FORM 1 (anterior)
+                  $codigo_og = intval(trim($datos[3])); //// cod objetivo ACP FORM 1 (nuevo)
+                  $codigo_or0 = intval(trim($datos[4])); //// cod objetivo regional FORM 2 (anterior)
+                  $codigo_or = intval(trim($datos[5])); //// cod objetivo regional FORM 2 (nuevo)
+                  
+                  $prioridad = intval(trim($datos[6])); //// prioridad
+                  $descripcion = strval(utf8_encode(trim($datos[7]))); //// descripcion
+                  $indicador = strval(utf8_encode(trim($datos[8]))); //// indicador
+                  $meta = intval(trim($datos[9])); //// meta
+                  $mverificacion = strval(utf8_encode(trim($datos[10]))); //// indicador
+
+                  $get_informacion_alineacion=$this->model_objetivogestion->get_alineacion_habilitado_oregional_a_form4($codigo_og,$codigo_or,$dep_id);
+
+                  if(count($get_informacion_alineacion)!=0){
+                   // echo $prod_id.'---> '.$get_informacion_alineacion[0]['or_id'].'---'.$prioridad.'<br>';
+                      $update_alineacion= array(
+                        'or_id' => $get_informacion_alineacion[0]['or_id'],
+                        'prod_priori' => $prioridad,
+                        'prod_producto' => $descripcion,
+                        'prod_indicador' => $indicador,
+                        'prod_meta' => $meta,
+                        'prod_fuente_verificacion' => $mverificacion
+                      );
+                      $this->db->where('prod_id', $prod_id);
+                      $this->db->update('_productos', $update_alineacion);
+
+                      //// ---------------------------------------
+                      $this->db->where('prod_id', $prod_id);
+                      $this->db->delete('prod_programado_mensual');
+
+
+                    ///--------------------  
+
+                      $var=11;
+                        for ($i=1; $i <=12 ; $i++) {
+                          $m[$i]=floatval(trim($datos[$var])); //// Mes i
+                          if($m[$i]!=0){
+                            if(strlen($m[$i])<=5){
+                              $this->model_producto->add_prod_gest($prod_id,$this->gestion,$i,$m[$i]);
+                            }
+                          }
+                          
+                          $var++;
+                        }
                   }
 
                 }
