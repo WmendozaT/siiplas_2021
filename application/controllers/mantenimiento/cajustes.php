@@ -67,11 +67,32 @@ class Cajustes extends CI_Controller {
       $tabla.='</table>';
 
       echo $tabla;*/
+      $data['certificado']='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/certificado/1"></iframe>';
       $this->load->view('admin/mantenimiento/ajustes_siiplas/menu_ajustes', $data);
     }
 
+    ////--------------------------
+    public function certificado($ci){
+      $data['pie']='hola mundo1';
+      $data['rep']='hola mundo2';
+      $data['pie_rep']='hola mundo3';
+      $data['certificado']='
+            <page backtop="75mm" backbottom="30mm" backleft="5mm" backright="5mm" pagegroup="new">
+                <page_header>
+                    <br><div class="verde"></div>
+                  cabecera
+                </page_header>
+                <page_footer>
+                  
+                </page_footer>
+           cuerpo
+
+            </page>';
 
 
+      $this->load->view('admin/programacion/reportes/reporte_form4', $data);
+
+    }
 
   /*---- AJUSTAR FORM 4 ALINEACIONES ----*/
   function importar_archivo(){

@@ -15,7 +15,7 @@ class Model_notificacion extends CI_Model{
     public function list_requerimiento_mes($proy_id,$com_id,$mes_id){
         $sql = 'select *
                 from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
-                where com_id='.$com_id.' and estado_cert=\'0\'';
+                where com_id='.$com_id.' and estado_cert=\'0\' and (par_codigo!=31110 and par_codigo!=22600)';
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -25,7 +25,7 @@ class Model_notificacion extends CI_Model{
     public function list_requerimiento_mes_unidad($proy_id,$mes_id){
         $sql = 'select *
                 from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
-                where estado_cert=\'0\'';
+                where estado_cert=\'0\' and (par_codigo!=31110 and par_codigo!=22600)';
 
         $query = $this->db->query($sql);
         return $query->result_array();

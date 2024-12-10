@@ -275,7 +275,7 @@ class User extends CI_Controller{
                 $data['mensaje']=$this->mensaje_sistema();   
 
                 ///===================== CONF NOTIFICACION POA =========================
-                $dia_cambios = 12;
+                $dia_cambios = 5;
                 $hoy = date("j");
 
                 if ($this->gestion>2023 & ($hoy == $dia_cambios)) {

@@ -11,6 +11,7 @@ class Genera_informacion extends CI_Controller{
         $this->load->model('modificacion/model_modrequerimiento'); /// Gestion 2020
         $this->load->model('modificacion/model_modfisica'); /// Gestion 2020
         $this->load->model('programacion/insumos/minsumos');
+        $this->load->model('ejecucion/model_certificacion');
         $this->load->model('ejecucion/model_seguimientopoa');
         $this->load->model('programacion/model_componente');
         $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
@@ -847,7 +848,7 @@ class Genera_informacion extends CI_Controller{
     }
 
  /*----- GENERA EXCEL LISTA DE REQUERIMIENTOS DISTRITAL (2023) ----*/
-    public function lista_requerimientos_regional_distrital_excel($requerimientos,$titulo,$tp_id){
+     public function lista_requerimientos_regional_distrital_excel($requerimientos,$titulo,$tp_id){
         $tabla='';
         $tabla .='
           <style>
@@ -958,6 +959,147 @@ class Genera_informacion extends CI_Controller{
                 }
                 $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>';
                 $tabla.='<td align="center">'.$tipo_modificacion.'</td>';
+                
+            $tabla.='</tr>';
+          }
+
+            $tabla.='
+            </tbody>
+          </table>';
+
+      return $tabla;
+    }
+
+    public function lista_requerimientos_regional_distrital_excel2($requerimientos,$titulo,$tp_id){
+        $tabla='';
+        $tabla .='
+          <style>
+            table{font-size: 9px;
+              width: 100%;
+              max-width:1550px;
+              overflow-x: scroll;
+            }
+            th{
+              padding: 1.4px;
+              text-align: center;
+              font-size: 10px;
+            }
+          </style>';
+
+        $tabla.='
+          <table border="1" cellpadding="0" cellspacing="0" class="tabla">
+              <thead>
+                <tr style="background-color: #66b2e8">
+                  <th style="width:3%;height:50px;background-color: #eceaea;"></th>
+                  <th style="width:3%;height:50px;background-color: #eceaea;">COD. DA.</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. UE.</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. PROG.</th>
+                  <th style="width:10%;background-color: #eceaea;">COD. PROY.</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
+                  <th style="width:35%;background-color: #eceaea;">GASTO CORRIENTE / PROY. INVERSION</th>';
+                  if($tp_id==4){
+                    $tabla.='
+                    <th style="width:3%;background-color: #eceaea;">COD. U.RESP..</th>
+                    <th style="width:15%;background-color: #eceaea;">UNIDAD RESPONSABLE</th>';
+                  }
+                  $tabla.='
+                  <th style="width:3%;background-color: #eceaea;">COD. ACP.</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. OPE.</th>
+                  <th style="width:15%;background-color: #eceaea;">DESCRIPCION OPERACION '.$this->gestion.'</th>
+                  <th style="width:3%;background-color: #eceaea;">COD. ACT.</th>
+                  <th style="width:25%;background-color: #eceaea;">DESCRIPCION ACTIVIDAD</th>
+                  <th style="width:15%;background-color: #eceaea;">PARTIDA</th>
+                  <th style="width:25%;background-color: #eceaea;">DETALLE REQUERIMIENTO</th>
+                  <th style="width:10%;background-color: #eceaea;">UNIDAD DE MEDIDA</th>
+                  <th style="width:5%;background-color: #eceaea;">CANTIDAD</th>
+                  <th style="width:5%;background-color: #eceaea;">PRECIO</th>
+                  <th style="width:15%;background-color: #eceaea;">COSTO TOTAL</th>
+                  <th style="width:15%;background-color: #eceaea;">MONTO CERTIFICADO</th>
+                  <th style="width:4%;background-color: #eceaea;">P. ENE.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. FEB.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. MAR.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. ABR.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. MAY.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. JUN.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. JUL.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. AGOS.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. SEPT.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. OCT.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. NOV.</th>
+                  <th style="width:4%;background-color: #eceaea;">P. DIC.</th>
+                  <th style="width:10%;background-color: #eceaea;">OBSERVACION</th>
+                  <th style="width:5%;background-color: #eceaea;">TIPO MOD.</th>
+                  <th style="width:5%;background-color: #eceaea;">COD. CERT.POA.</th>
+                </tr>
+              </thead>
+            <tbody>';
+            $nro=0;
+            foreach ($requerimientos as $row){
+            $ins_certificado=$this->model_certificacion->verif_insumo_certificados($row['ins_id']);
+            $tipo_modificacion='<b style="color:blue">REG. POA</b>';
+            if($row['ins_tipo_modificacion']==1){
+              $tipo_modificacion='<b style="color:green">REG. REV. POA</b>';
+            }
+
+
+            $prog="'".$row['aper_programa']."'";
+            $nro++;
+            $tabla.='<tr>';
+                $tabla.='<td>'.$row['ins_id'].'</td>';
+                $tabla.='<td style="height:70px;">'."'".$row['dep_cod']."'".'</td>';
+                $tabla.='<td>'."'".$row['dist_cod']."'".'</td>';
+                $tabla.='<td>'.$prog.'</td>';
+                $tabla.='<td>'."'".$row['aper_proyecto']."'".'</td>';
+                $tabla.='<td>'."'".$row['aper_actividad']."'".'</td>';
+                $tabla.='<td>';
+                  if($tp_id==1){
+                    $tabla.=''.mb_convert_encoding($row['proyecto'], 'cp1252', 'UTF-8').'';
+                  }
+                  else{
+                    $tabla.=''.mb_convert_encoding($row['tipo'].' '.$row['actividad'].' - '.$row['abrev'], 'cp1252', 'UTF-8').'';
+                  }
+                $tabla.='</td>';
+              
+                  if($tp_id==4){
+                    $tabla.='<td>'."'".$row['serv_cod']."'".'</td>';
+                    $tabla.='<td>'.$row['tipo_subactividad'].' '.mb_convert_encoding(strtoupper($row['serv_descripcion']), 'cp1252', 'UTF-8').'</td>';
+                  }
+                
+                $tabla.='<td style="font-size: 15px;" bgcolor="#d9f5c9" align=center><b>'.$row['og_codigo'].'</b></td>';
+                $tabla.='<td style="font-size: 15px;" bgcolor="#d9f5c9" align=center><b>'.$row['or_codigo'].'</b></td>';
+                $tabla.='<td bgcolor="#d9f5c9">'.mb_convert_encoding(strtoupper($row['or_objetivo']), 'cp1252', 'UTF-8').'</td>';
+
+                $tabla.='<td bgcolor="#e4f3dc" align=center><b>'.$row['prod_cod'].'</b></td>';
+                $tabla.='<td style="font-family: Arial;" bgcolor="#e4f3dc">'.mb_convert_encoding(strtoupper($row['prod_producto']), 'cp1252', 'UTF-8').'</td>';
+                $tabla.='<td style="font-size: 15px;" bgcolor="#f4f5f3" align=center>'.$row['par_codigo'].'</td>';
+                $tabla.='<td bgcolor="#f4f5f3">'.mb_convert_encoding(strtoupper($row['ins_detalle']), 'cp1252', 'UTF-8').'</td>';
+                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_unidad_medida']).'</td>';
+                $tabla.='<td align="right" bgcolor="#f4f5f3">'.round($row['ins_cant_requerida'],2).'</td>';
+                $tabla.='<td align="right" bgcolor="#f4f5f3">'.round($row['ins_costo_unitario'],2).'</td>';
+                $tabla.='<td align="right" bgcolor="#f4f5f3">'.round($row['ins_costo_total'],2).'</td>';
+                $tabla.='<td style="font-size: 15px;" align="right" bgcolor="#c1f5ee"><b>'.round($row['ins_monto_certificado'],2).'</b></td>';
+                for ($i=1; $i <=12 ; $i++) { 
+                  $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.round($row['mes'.$i],2).'</td>';
+                }
+                $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>';
+                $tabla.='<td align="center">'.$tipo_modificacion.'</td>';
+                $tabla.='<td align="center">';
+                if(count($ins_certificado)!=0){
+                $tabla.='
+
+                  <center>
+                    <table>
+                      <tr>';
+                      foreach ($ins_certificado as $row){
+                        $tabla.='
+                        <b>'.$row['cpoa_codigo'].'</b><br>';
+                      }
+                  $tabla.='
+                      </tr>
+                    </table>
+                  </center>';
+              }
+                $tabla.='</td>';
             $tabla.='</tr>';
           }
 

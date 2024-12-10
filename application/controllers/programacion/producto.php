@@ -159,12 +159,13 @@ class Producto extends CI_Controller {
               $tabla.='
               <tr>
                 <td style="width: 4%; text-align: center;">';
-                  if($this->conf_poa_estado==2){
-                    $tabla.='<center><a href="'.site_url("").'/prog/list_requerimiento/'.$com_id.'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="30" HEIGHT="30"/></a></center>';
+                $tabla.='<center><a href="'.site_url("").'/prog/requerimiento/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="30" HEIGHT="30"/></a></center>';
+                  /*if($this->conf_poa_estado==2){
+                    $tabla.='<center><a href="'.site_url("").'/prog/list_requerimiento/'.$com_id.'" target="_blank" title="REQUERIMIENTOS DE LA UNIDAD RESPONSABLE (AJUSTE)" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="30" HEIGHT="30"/></a></center>';
                   }
                   else{
                     $tabla.='<center><a href="'.site_url("").'/prog/requerimiento/'.$rowp['prod_id'].'" target="_blank" title="REQUERIMIENTOS DE LA ACTIVIDAD" class="btn btn-default"><img src="'.base_url().'assets/ifinal/insumo.png" WIDTH="30" HEIGHT="30"/></a></center>';
-                  }
+                  }*/
                 $tabla.='
                 </td>
                 <td style="width: 4%; text-align: center; " >';

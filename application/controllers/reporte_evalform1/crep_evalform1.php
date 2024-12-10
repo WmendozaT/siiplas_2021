@@ -94,7 +94,6 @@ class Crep_evalform1 extends CI_Controller {
         </form>';
 
       $data['informacion_trimestral']=$tabla;
-    
       $this->load->view('admin/reportes_cns/repevaluacion_form1/rep_menu', $data);
 /*    $matriz=$this->matriz_cumplimiento_form1_institucional(0);
      for ($i=0; $i < count($this->model_objetivogestion->get_list_acp_institucional_alineados_a_form2()); $i++) { 

@@ -805,7 +805,7 @@ class Cptto_poa extends CI_Controller {
                           'aper_id' => $aper_id,
                           'da' => '0',
                           'ue' => '0',
-                          'aper_programa' => 72,
+                          'aper_programa' => 720,
                           'aper_proyecto' => $cod_sisin,
                           'aper_actividad' => '00',
                           'par_id' => $par_id,

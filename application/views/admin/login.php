@@ -113,12 +113,23 @@ h1 {
     <li><a href="<?php echo base_url(); ?>assets/video/plantilla3_migracion_form5_actividad.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS POR CADA ACTIVIDAD">3.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS <b>(POR ACTIVIDAD)</b></a></li>
     <li><a href="<?php echo base_url(); ?>assets/video/plantilla4_migracion_form5_global.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS DE MANERA GLOBAL">4.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS <b>(GLOBAL)</b></a></li>
   </ul> -->
+  <center><h1>FORMULARIOS ANTE PROYECTO POA 2025</h1></center>
+  <ul class="menu">
+    <li><a href="<?php echo base_url(); ?>assets/video/FORMULARIOS APROY2025/FORM_POA_N°3_PROBLEMAS Y CAUSAS.xlsx" download  title="FORMULARIO 3 "><b>1.- </b>FORMULARIO N° 3 - (Analisis Prob. y Causas)</a></li>
+    <li><a href="<?php echo base_url(); ?>assets/video/FORMULARIOS APROY2025/FORM_POA_N°4_ACTIVIDADES.xlsx" download  title="FORMULARIO 4 ACTIVIDADES"><b>2.- </b>FORMULARIO N° 4 - (Actividades)</a></li>
+    <li><a href="<?php echo base_url(); ?>assets/video/FORMULARIOS APROY2025/FORM_POA_N°5_PROG FISICO FINANCIERA.xlsx" download  title="FORMULARIO 5 REQUERIMIENTOS"><b>3.- </b>FORMULARIO N° 5 - (Requerimientos)</a></li>
+  </ul>
+
   <center><h1>FORMULARIOS EDICI&Oacute;N POA 2024</h1></center>
   <ul class="menu">
     <li><a href="<?php echo base_url(); ?>assets/video/FORM_SOL_POA_5_2024.xlsx" download  title="FORMULARIO DE CERTIFICACIÓN POA"><b>1.- </b>FORMATO DE SOLICITUD DE CERTIFICACI&Oacute;N POA</a></li>
     <li><a href="<?php echo base_url(); ?>assets/video/FORM_MOD_4_Y_5_2024.xlsx" download  title="FORMULARIO DE MODIFICACION POA - ACTIVIDADES Y REQUERIMIENTOS"><b>2.- </b>FORMATO DE SOLICITUD DE MODIFICACI&Oacute;N POA</a></li>
     <li><a href="<?php echo base_url(); ?>assets/video/FORM_JUST_EDICION_CPOAS.xlsx" download  title="FORMULARIO DE MODIFICACION DE CERTIFICACION POA"><b>3.- </b>FORMATO DE SOLICITUD DE MODIFICACI&Oacute;N DE CERTIFICACION POA</a></li>
     <li><a href="<?php echo base_url(); ?>assets/video/FORM_JUST_SALDOS_CPOAS.xlsx" download  title="FORMULARIO DE REVERSION DE SALDOS"><b>4.- </b>FORMATO DE SOLICITUD DE REVERSIÓN DE SALDOS</a></li>
+  </ul>
+  <center><h1>RESOLUCIONES DE DIRECTORIO </h1></center>
+  <ul class="menu">
+    <li><a href="<?php echo base_url(); ?>assets/video/Resoluciones_directorio.xlsx" download  title="RESOLUCIONES DE DIRECTORIO">+ MATRIZ SEGUIMIENTO A RESOLUCI&Oacute;N DE DIRECTORIO</a></li>
   </ul>
 </div>
 
@@ -131,7 +142,7 @@ h1 {
   <div class="logo-image">
   <img src="<?php echo base_url(); ?>assets/login/img/caja.png" alt="Logo" title="Logo" style="width:30%; height:30%;">
   </div>
-  <h1 class="display1">SIIPLAS V2.0</h1>
+  <h1 class="display1"><b>SIIPLAS V2.0</b></h1>
 
     <?php
     if($this->session->flashdata('danger')){ ?>
@@ -145,7 +156,7 @@ h1 {
     ?>
 
     <!-- <center><font color="blue"><b>(POA 2020 - VERI&Oacute;N BETA)</b></font></center> -->
-  <p class="subhead"><b>SISTEMA DE PLANIFICACI&Oacute;N DE SALUD</b></p>
+  <p class="subhead"><b>SISTEMA DE PLANIFICACI&Oacute;N Y SEGUIMIENTO POA</b></p>
     <form role="form" action="<?php echo base_url(); ?>index.php/admin/validate" method="post"  id="form" class="login-form">
       <input type="hidden" name="tp" id="tp" value="0">
       <div id="form-login-username" class="form-group">      
@@ -191,11 +202,10 @@ h1 {
       </div>
       </div>
     </form>
-<!--  <a data-modals href="https://ens.minsalud.gob.bo/images/comunicados/Comunicado_oct_23.pdf" title="Comunicado Octubre 2023 Escuela Nacional de Salud" data-modals-height="100%" data-modals-title="Comunicado Octubre 2023 Escuela Nacional de Salud" data-modals-width="100%"><img src="/images/permiso.jpg" alt="permiso.jpg" width="1654" height="2338" /></p></a> -->
+ 
   </div>
-  Developer: Wilmer Mendoza Trujillo
 </div>
-
+<div style="font-size:7px;color: white;" title="Developer: Wilmer Mendoza Trujillo">Developer: Wilmer Mendoza Trujillo</div>
 </div>
   <script src='<?php echo base_url(); ?>assets/login/js/jquery.min.js'></script>
   <script src='<?php echo base_url(); ?>assets/login/js/gubja.js'></script>

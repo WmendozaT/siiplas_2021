@@ -379,6 +379,138 @@ class Cprog_insumo extends CI_Controller{
                       $unitario = intval(trim($datos[5])); //// Costo Unitario
                       
                       $p_total=($cantidad*$unitario);
+                      $total = floatval(trim($datos[6])); //// Costo Total
+
+                      $var=7; $sum_temp=0;
+                      for ($i=1; $i <=12 ; $i++) {
+                        $m[$i]=floatval(trim($datos[$var])); //// Mes i
+                        if($m[$i]==''){
+                          $m[$i]=0;
+                        }
+                        $var++;
+                        $sum_temp=$sum_temp+$m[$i];
+                      }
+
+                      $observacion = utf8_encode(trim($datos[19])); //// Observacion
+
+                      echo count($par_id).'--'.$cod_partida.'--'.round($sum_temp,2).'--'.round($total,2).'<br>';
+                      if(count($par_id)!=0 & $cod_partida!=0 & round($sum_temp,2)==round($total,2)){
+                        $nro++;
+                        echo strtoupper($detalle).'<br>';
+                        /*-------- INSERTAR DATOS REQUERIMIENTO ---------*/
+                        //$query=$this->db->query('set datestyle to DMY');
+                 /*       $data_to_store = array( 
+                        'ins_codigo' => $this->session->userdata("name").'/REQ/'.$this->gestion, /// Codigo Insumo
+                        'ins_fecha_requerimiento' => date('d/m/Y'), /// Fecha de Requerimiento
+                        'ins_detalle' => strtoupper($detalle), /// Insumo Detalle
+                        'ins_cant_requerida' => round($cantidad,0), /// Cantidad Requerida
+                        'ins_costo_unitario' => $unitario, /// Costo Unitario
+                        'ins_costo_total' => $total, /// Costo Total
+                        'ins_unidad_medida' => $unidad, /// Unidad de Medida
+                        'ins_gestion' => $this->gestion, /// Insumo gestion
+                        'par_id' => $par_id[0]['par_id'], /// Partidas
+                        'ins_tipo' => 1, /// Ins Tipo
+                        'ins_observacion' => strtoupper($observacion), /// Observacion
+                        'fun_id' => $this->fun_id, /// Funcionario
+                        'aper_id' => $proyecto[0]['aper_id'], /// aper id
+                        'com_id' => $producto[0]['com_id'], /// com id 
+                        'form4_cod' => $producto[0]['prod_cod'], /// aper id
+                        'num_ip' => $this->input->ip_address(), 
+                        'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                        );
+                        $this->db->insert('insumos', $data_to_store); ///// Guardar en Tabla Insumos 
+                        $ins_id=$this->db->insert_id();
+
+                       
+                          $data_to_store2 = array( ///// Tabla InsumoProducto
+                            'prod_id' => $prod_id, /// prod id
+                            'ins_id' => $ins_id, /// ins_id
+                          );
+                          $this->db->insert('_insumoproducto', $data_to_store2);
+                      
+
+                      
+                        for ($p=1; $p <=12 ; $p++) { 
+                          if($m[$p]!=0 & is_numeric($unitario)){
+                            $data_to_store4 = array(
+                              'ins_id' => $ins_id, /// Id Insumo
+                              'mes_id' => $p, /// Mes 
+                              'ipm_fis' => $m[$p], /// Valor mes
+                              'g_id' => $this->gestion, /// Gestion
+                            );
+                            $this->db->insert('temporalidad_prog_insumo', $data_to_store4);
+                          }
+                        }*/
+
+                      }
+                      else{
+                       echo "no --------".strtoupper($detalle).'<br>';
+                      }
+                    }
+                  }
+                  $i++;
+                }
+
+                $this->session->set_flashdata('success','SE REGISTRARON '.$nro.' REQUERIMIENTOS');
+                redirect('prog/requerimiento/'.$prod_id);
+            /*--------------------------------------------*/
+          }
+          else {
+            $this->session->set_flashdata('danger','ERROR');
+            redirect('prog/requerimiento/'.$prod_id);
+          } 
+
+          /*----------------------------------------------------------------------*/
+      }
+      else{
+        show_404();
+      }
+    }
+
+
+
+
+
+function importar_requerimientos_a_una_actividad2(){
+      if ($this->input->post()) {
+          $post = $this->input->post();
+          $prod_id = $this->security->xss_clean($post['prod_id']); /// prod id
+          $producto = $this->model_producto->get_producto_id($prod_id); ///// DATOS DEL PRODUCTO 
+          $componente = $this->model_componente->get_componente($producto[0]['com_id'],$this->gestion);
+          $proyecto = $this->model_proyecto->get_id_proyecto($componente[0]['proy_id']);
+                   
+          $tipo = $_FILES['archivo_csv']['type'];
+          $tamanio = $_FILES['archivo_csv']['size'];
+          $archivotmp = $_FILES['archivo_csv']['tmp_name'];
+
+          $filename = $_FILES["archivo_csv"]["name"];
+          $file_basename = substr($filename, 0, strripos($filename, '.'));
+          $file_ext = substr($filename, strripos($filename, '.'));
+          $allowed_file_types = array('.csv');
+
+          /*----------------------------------------------------------------------*/
+          $nro_ok=0; $nro_ncumple=0; $nro_npartida=0; $suma_monto=0;
+          if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
+              /*------------------- Migrando ---------------*/
+              $lineas = file($archivotmp);
+              $i=0;
+              $nro=0;
+              //Recorremos el bucle para leer línea por línea
+              foreach ($lineas as $linea_num => $linea){ 
+                if($i != 0){
+                    $datos = explode(";",$linea);
+                    
+                    if(count($datos)==20){
+                      $prod_cod = intval(trim($datos[0])); //// Codigo Actividad
+                      $cod_partida = intval(trim($datos[1])); //// Codigo partida
+                      $par_id = $this->model_insumo->get_partida_codigo($cod_partida); //// DATOS DE LA FASE ACTIVA
+
+                      $detalle = strval(utf8_encode(trim($datos[2]))); //// descripcion form5
+                      $unidad = strval(utf8_encode(trim($datos[3]))); //// Unidad
+                      $cantidad = intval(trim($datos[4])); //// Cantidad
+                      $unitario = intval(trim($datos[5])); //// Costo Unitario
+                      
+                      $p_total=($cantidad*$unitario);
                       $total = intval(trim($datos[6])); //// Costo Total
 
                       $var=7; $sum_temp=0;
@@ -462,9 +594,6 @@ class Cprog_insumo extends CI_Controller{
         show_404();
       }
     }
-
-
-
 
     /*--- VISTA PREVIA DE FORM 4 (ACTIVIDADES - DATOS GENERALES) ---*/
     function vista_prev_actividades($matriz,$nro,$tp){

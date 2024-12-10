@@ -139,6 +139,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <?php echo $certificado; ?>
                 </section>
             </div>
             <!-- END MAIN CONTENT -->

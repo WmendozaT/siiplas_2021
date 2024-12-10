@@ -9,6 +9,7 @@ class Crep_ogestion extends CI_Controller {
       $this->load->model('mestrategico/model_mestrategico');
       $this->load->model('mestrategico/model_objetivogestion');
       $this->load->model('mestrategico/model_objetivoregion');
+      $this->load->model('mantenimiento/model_configuracion');
       $this->load->model('menu_modelo');
       $this->load->model('Users_model','',true);
       $this->pcion = $this->session->userData('pcion');
@@ -44,6 +45,28 @@ class Crep_ogestion extends CI_Controller {
       $data['menu']=$this->menu($mod);
       $data['resp']=$this->session->userdata('funcionario');
       $data['res_dep']=$this->tp_resp();
+      $configuracion=$this->model_configuracion->get_configuracion();
+      $lista_acp='';
+
+      if($configuracion[0]['ide']==$this->gestion){
+        $lista_acp.='
+          <div class="btn-group" >
+            <a class="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FORMULARIOS A.C.P. &nbsp;&nbsp;&nbsp;&nbsp;</a>
+            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" ><span class="caret"></span></a>
+            <ul class="dropdown-menu">';
+
+              for ($i=2021; $i <$this->gestion ; $i++) { 
+                $lista_acp.='
+                <li>
+                  <a href="javascript:abreVentana(\''.base_url().'CumplimientoACP/EVALUACION_ACP_'.$i.'.pdf\');" >CUMPLIMIENTO ACP / '.$i.'</a>
+                </li>';
+              }
+          $lista_acp.='
+            </ul>
+          </div>';
+      }
+
+      $data['lista_acp']=$lista_acp;      
       $data['contenido']='<iframe id="ipdf" width="100%"  height="900px;" src="'.base_url().'documentos/Form1_POA_'.$this->gestion.'.pdf"></iframe>';
 
       $this->load->view('admin/reportes_cns/programacion_pei/form_spo_01/ver_ogestion', $data);

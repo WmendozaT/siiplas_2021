@@ -123,11 +123,11 @@ class Certificacionpoa extends CI_Controller{
           $nro_cdep='0';
         }
 
-        if($this->gestion>2023){
-          $codigo='CPOA.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev']; /// 2024
+        if($this->gestion>2024){
+          $codigo='DNP.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'.'.$get_cpoa[0]['abrev']; /// 2025
         }
         else{
-          $codigo='CPOA.'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev'].'-'.$nro_cdep.''.$nro_cpoa; /// 2023
+          $codigo='CPOA.'.$nro_cdep.''.$nro_cpoa.'-'.$get_cpoa[0]['adm'].'-'.$get_cpoa[0]['abrev']; /// 2024
         }
 
         if(count($this->model_certificacion->get_codigo_certpoa($codigo))==0){

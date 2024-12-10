@@ -615,6 +615,7 @@ $route['proy_ver_fases/(:any)']='mantenimiento/cconf_pinversion/ver_fases/$1';//
 
 //--------------------------- MANTENIMIENTO AJUSTES AL SISTEMA ----------------------//
 $route['ediciones']='mantenimiento/cajustes/menu_ajustes';// Para los ajustes que se necesite
+$route['certificado/(:any)']='mantenimiento/cajustes/certificado/$1';// Certificado de Participacion
 //$route['rep_ediciones/(:any)']='mantenimiento/cediciones/rep_ediciones/$1';// Exportar PDF
 
 ///////////////////////////programacion//////////////////////

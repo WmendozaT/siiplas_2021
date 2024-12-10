@@ -114,6 +114,7 @@
                                 <div class="">
                                     <h1>RESPONSABLE : <?php echo $resp; ?> -> <small><?php echo $res_dep;?></small>
                                 </div>
+                                <?php echo $lista_acp; ?>
                             </section>
                         </article>
                     </div>
