@@ -73,24 +73,37 @@ class Cajustes extends CI_Controller {
 
     ////--------------------------
     public function certificado($ci){
-      $data['pie']='hola mundo1';
-      $data['rep']='hola mundo2';
-      $data['pie_rep']='hola mundo3';
-      $data['certificado']='
-            <page backtop="75mm" backbottom="30mm" backleft="5mm" backright="5mm" pagegroup="new">
-                <page_header>
-                    <br><div class="verde"></div>
-                  cabecera
-                </page_header>
-                <page_footer>
-                  
-                </page_footer>
-           cuerpo
+      $data['imagen_cns']=' '.getcwd().'
 
-            </page>';
+      <table class="page_header" border="0">
+          <tr>
+            <td style="width: 100%; text-align: left">
+              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+                <tr>
+                  <td style="width:100%; font-size: 38px;" align="center"><b></b></td>
+                </tr>
+                <tr>
+                  <td style="width:100%;  font-size: 20px;" align="center">DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+                </tr>
+                <tr>
+                  <td style="width:100%;" align="center"><br><br></td>
+                </tr>
+                <tr>
+                  <td style="width:100%;" align="center"><img src="'.getcwd().'/assets/ifinal/CnsLogo.JPG" alt="" style="width:65%;"></td>
+                </tr>
+                <tr>
+                  <td style="width:100%; font-size: 50px;" align="center"><b>PLAN OPERATIVO ANUAL</b></td>
+                </tr>
+                <tr>
+                  <td style="width:100%; font-size: 40px;" align="center">GESTI&Oacute;N '.$this->gestion.'</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>';
 
 
-      $this->load->view('admin/programacion/reportes/reporte_form4', $data);
+      $this->load->view('admin/programacion/reportes/certificados', $data);
 
     }
 
