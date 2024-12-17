@@ -618,6 +618,12 @@ $route['ediciones']='mantenimiento/cajustes/menu_ajustes';// Para los ajustes qu
 $route['certificado/(:any)']='mantenimiento/cajustes/certificado/$1';// Certificado de Participacion
 //$route['rep_ediciones/(:any)']='mantenimiento/cediciones/rep_ediciones/$1';// Exportar PDF
 
+
+//--------------------------- MANTENIMIENTO EVENTOS DNP ----------------------//
+$route['eventosDNP']='mantenimiento/ceventos_dnp/menu_eventos';// Listado de Eventos de Planificacion
+$route['participantes_eventosDNP/(:any)']='mantenimiento/ceventos_dnp/participantes/$1';// Listado de Participantes
+
+
 ///////////////////////////programacion//////////////////////
 //========================mision y vision=========================//
 //$route['mision'] = 'programacion/mision/vista_mision';

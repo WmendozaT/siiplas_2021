@@ -73,7 +73,7 @@ class Cajustes extends CI_Controller {
 
     ////--------------------------
     public function certificado($ci){
-      $data['imagen_cns']=' '.getcwd().'
+      $data['imagen_cns']=' <img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:150px; height:110px;"/>
 
       <table class="page_header" border="0">
           <tr>
