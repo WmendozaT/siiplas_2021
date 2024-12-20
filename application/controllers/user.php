@@ -942,6 +942,8 @@ class User extends CI_Controller{
         return md5($password);
     }
 
+
+
     function validate_credentials(){
         $this->load->model('Users_model');
         if(isset($_POST['user_name']) && isset($_POST['password']) && isset($_POST['dat_captcha']) && isset($_POST['tp'])){

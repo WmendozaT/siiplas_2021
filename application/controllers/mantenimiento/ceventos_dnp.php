@@ -1,11 +1,11 @@
 <?php
 class Ceventos_dnp extends CI_Controller {
-    public $rol = array('1' => '1');
+    //public $rol = array('1' => '1');
     public function __construct(){
         parent::__construct();
-        if($this->session->userdata('fun_id')!=null){
+       // if($this->session->userdata('fun_id')!=null){
             $this->load->model('Users_model','',true);
-            if($this->rolfun($this->rol)){ 
+          //  if($this->rolfun($this->rol)){ 
                 $this->load->library('pdf');
                 $this->load->library('pdf2');
                 $this->load->model('Users_model','',true);
@@ -13,27 +13,66 @@ class Ceventos_dnp extends CI_Controller {
                 $this->load->model('mantenimiento/model_configuracion');
                 $this->load->model('mantenimiento/model_estructura_org');
                 $this->load->model('mantenimiento/model_evento');
-              /*  $this->load->model('programacion/model_proyecto');
-                $this->load->model('programacion/model_producto');
-                $this->load->model('mestrategico/model_objetivogestion');
-                $this->load->model('reporte_eval/model_evalregional');
-                $this->load->model('reportes/mreporte_operaciones/mrep_operaciones');
-                $this->load->model('ejecucion/model_ejecucion');
-                $this->load->model('modificacion/model_modificacion');*/
                 $this->load->library("security");
                 $this->gestion = $this->session->userData('gestion');
                 $this->rol = $this->session->userData('rol');
                 $this->fun_id = $this->session->userData('fun_id');
                 $this->tmes = $this->session->userData('trimestre');
-            }
+            /*}
             else{
                 redirect('admin/dashboard');
-            }
-        }
+            }*/
+/*        }
         else{
                 redirect('/','refresh');
-        }
+        }*/
     }
+
+
+
+  public function valida_ingreso($even_id){
+
+    $get_evento=$this->model_evento->get_evento($even_id);
+
+   // $data['menu']=$this->menu_regional();
+    $data['menu']='
+    <article class="col-sm-12 col-md-12 col-lg-12">
+          <div class="widget-body">
+              <form name="form_msn" id="form_msn" method="post" action="'.site_url("").'/mantenimiento/cconfiguracion/update_conf" class="form-horizontal">
+                  <input type="hidden" name="even_id" id="even_id" value="'.$even_id.'">
+                  <fieldset>
+                      <legend>INGRESE CI '.$this->gestion.'</legend>
+                      
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">CI. :</label>
+                          <div class="col-md-10">
+                              <input class="form-control" type="text" name="ci" id="ci" value="" title="REGISTRE CEDULA DE IDENTIDAD" onkeypress="if (this.value.length < 8) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true">
+                          </div>
+                      </div>
+                  </fieldset>
+                  <div class="form-actions" align="right">
+                      <input type="button" value="VERIFICAR DATOS" id="btsubmit" class="btn btn-primary" onclick="valida_msn()" title="VERIFICAR DATOS">
+                  </div>
+              </form>
+          </div>
+      </article>
+
+    ';
+    $data['img2']='';
+    $data['img1']='<center><img src="'.base_url().'assets/ifinal/logo_CNS_header.png" class="img-responsive app-center" style="width:90px; height:120px;text-align:center"/></center>';
+
+
+    $this->load->view('admin/vista_certificados', $data);
+  }
+
+
+
+
+
+
+
+
+
 
     /*------ Listado de Eventos -------*/
     public function menu_eventos(){
@@ -129,7 +168,7 @@ class Ceventos_dnp extends CI_Controller {
             'tp_evento' => $this->input->post('even_tp'),
             'cod_evento' => strtoupper($this->input->post('cod_evento')),
             'titulo_evento' => strtoupper($this->input->post('evento')),
-            'fecha_evento' => strtoupper($this->input->post('fecha_even')),
+            'fecha_evento' => $this->input->post('fecha_even'),
             'g_id' => $this->gestion,
             'fecha_evento_impresion' => $this->input->post('even_fech_impresion'),
           );
@@ -159,7 +198,7 @@ class Ceventos_dnp extends CI_Controller {
 
 
 
-    /*---- UPDATE DATOS FORM 4 2025----*/
+    /*---- UPDATE DATOS DEL EVENTO----*/
     public function update_datos_evento(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();
@@ -167,7 +206,6 @@ class Ceventos_dnp extends CI_Controller {
         $nro = $this->security->xss_clean($post['nro']);
         $name_input = $this->security->xss_clean($post['name_input']);
         $detalle = $this->security->xss_clean($post['detalle']); /// input
-
 
           if($nro==1){ // cod even
             $campo='cod_evento';
@@ -214,8 +252,9 @@ class Ceventos_dnp extends CI_Controller {
     public function participantes($even_id){
       $data['menu']=$this->menu(9);
       $get_evento=$this->model_evento->get_evento($even_id);
-      $data['input_id']='<input class="form-control"  type="text" name="even_id" id="even_id" value="'.$even_id.'">';
+      $data['input_id']='<input class="form-control"  type="hidden" name="even_id" id="even_id" value="'.$even_id.'">';
       $lista_participantes=$this->model_evento->lista_participantes($even_id);
+      $data['tp_certificados']=$this->model_evento->tipo_cert();
       $data['eventos']='';
       $data['eventos']='
           '.$this->style().'
@@ -225,20 +264,30 @@ class Ceventos_dnp extends CI_Controller {
             }
           </style>
           <div class="row">
-              <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <article class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                   <section id="widget-grid" class="well">
                         <h1><b>EVENTO: </b>'.$get_evento[0]['cod_evento'].' - '.$get_evento[0]['titulo_evento'].'</h1>
                         <a href="#" data-toggle="modal" data-target="#modal_nuevo_form2" class="btn btn-default nuevo_form2" title="REGISTRAR PARTICIPANTE" >
                           <img src="'.base_url().'assets/Iconos/add.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>REGISTRAR PARTICIPANTE</b>
                         </a>
+                        <a href="'.site_url("").'/eventosDNP" class="btn btn-default " title="volver atras" >
+                          <img src="'.base_url().'assets/Iconos/arrow_left.png" WIDTH="20" HEIGHT="20"/>&nbsp;<b>VOLVER</b>
+                        </a>
                   </section>
+              </article>
+              <article class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <section id="widget-grid" class="well">
+                    <button type="button" class="btn btn-primary" style="width:100%;" data-toggle="modal" data-target="#exampleModalCenter">
+                        SUBIR PARTICIPANTES.CSV
+                    </button>
+                </section>
               </article>
           </div>
 
           <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <div class="well well-sm well-light">
                   <div class="row">
-                      <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                      <article class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                       <div class="jarviswidget jarviswidget-color-darken">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
@@ -250,10 +299,10 @@ class Ceventos_dnp extends CI_Controller {
                                     <table id="dt_basic" class="table table-bordered" style="width:100%;">
                                         <thead>
                                           <tr style="height:35px;" align="center">
-                                            <th style="width:1%;" align="center">#</th>
-                                            <th style="width:2%;" align="center">DEL</th>
-                                            <th style="width:2%;" align="center">CI</th>
-                                            <th style="width:5%;" title="TIPO"><center>TIPO DE CERTIFICADO</center></th>
+                                            <th style="width:3%;" align="center">ESTADO</th>
+                                            <th style="width:2%;" align="center">ELIMINAR</th>
+                                            <th style="width:8%;" align="center">CI</th>
+                                            <th style="width:6%;" title="TIPO"><center>TIPO DE CERTIFICADO</center></th>
                                             <th style="width:20%;" title="EVENTO"><center>NOMBRE COMPLETO</center></th>
                                             <th style="width:2%;" title="LISTADO"><center></center></th>
                                           </tr>
@@ -262,14 +311,51 @@ class Ceventos_dnp extends CI_Controller {
                                         $nro=0;
                                         foreach($lista_participantes as $rowp){
                                           $nro++;
+                                          $color_estado='';
+                                          if($rowp['estado']==3){
+                                            $color_estado='#fcd4c8';
+                                          }
+
                                           $data['eventos'].='
-                                          <tr>
-                                            <td>'.$nro.'</td>
-                                            <td></td>
-                                            <td>'.$rowp['ci'].'</td>
-                                            <td>'.$rowp['tp_cert'].'</td>
-                                            <td>'.$rowp['nombre_completo'].'</td>
-                                            <td></td>
+                                          <tr bgcolor='.$color_estado.'>
+                                            <td>
+                                              <select class="form-control" id="tp_estado'.$rowp['ci_id'].'" name="tp_estado'.$rowp['ci_id'].'" onchange="update_select_option(2,this.value,'.$rowp['ci_id'].');" style="width:100%; font-size:12px; color:blue; background-color: #fafcd7;" title="SELECCIONE ESTADO">';
+                                                if($rowp['estado']==1){ /// Habilitado
+                                                  $data['eventos'].='
+                                                    <option value="1" selected>SI</option>
+                                                    <option value="3">NO</option>';    
+                                                }
+                                                elseif($rowp['estado']==3){ /// Habilitado
+                                                  $data['eventos'].='
+                                                    <option value="1">SI</option>
+                                                    <option value="3" selected>NO</option>';    
+                                                }
+
+                                              $data['eventos'].='
+                                              </select>
+                                            </td>
+                                            <td>
+                                              <center><a name="del_par'.$rowp['ci_id'].'" id="del_par'.$rowp['ci_id'].'" onclick="delete_participante('.$rowp['ci_id'].');" class="btn btn-default" title="ELIMINAR ACTIVIDAD"><img src="' . base_url() . 'assets/ifinal/eliminar.png" WIDTH="30" HEIGHT="30"/></a></center>
+                                            </td>
+                                            <td><input type="number" class="form-control" onkeyup="update_participante(1,'.$rowp['ci_id'].',\'ci_par\');" style="width:100%; font-size:12px; color:blue; background-color: #fcfcc3;" name="ci_par'.$rowp['ci_id'].'" id="ci_par'.$rowp['ci_id'].'" title="CI" value="'.$rowp['ci'].'"></td>
+                                            <td>
+                                              <select class="form-control" id="tp_par'.$rowp['ci_id'].'" name="tp_par'.$rowp['ci_id'].'" onchange="update_select_option(1,this.value,'.$rowp['ci_id'].');" style="width:100%; font-size:12px; color:blue; background-color: #fafcd7;" title="SELECCIONE TIPO DE CERTIFICADO">
+                                                  <option value="">seleccione tipo de certificado ..</option>';
+                                                  foreach($data['tp_certificados'] as $row){
+                                                    if($rowp['tp_cert']==$row['tp_cert']){
+                                                      $data['eventos'].='<option value="'.$row['tp_cert'].'" selected>'.$row['tp_certificado'].'</option>';    
+                                                    }
+                                                    else{
+                                                      $data['eventos'].='<option value="'.$row['tp_cert'].'">'.$row['tp_certificado'].'</option>';    
+                                                    }
+                                                  }
+                                                $data['eventos'].='
+                                              </select>
+                                              </td>
+                                            <td><input type="text" class="form-control" onkeyup="update_participante(3,'.$rowp['ci_id'].',\'nombre_par\');" style="width:100%; font-size:11px; color:blue; background-color: #fcfcc3;" name="nombre_par'.$rowp['ci_id'].'" id="nombre_par'.$rowp['ci_id'].'" title="PARTICIPANTE" value="'.$rowp['nombre_completo'].'"></td>
+                                            <td>
+                                              <a class="btn btn-info" name="'.$rowp['ci_id'].'" id="'.$even_id.'" onclick="ver_certificado('.$rowp['ci_id'].','.$even_id.');">Ver Certificado</a>
+                                            </td>
                                           </tr>';
                                         }
                                       $data['eventos'].='
@@ -280,31 +366,30 @@ class Ceventos_dnp extends CI_Controller {
                       </div>
                     
                       </article>
-                      <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                      <div class="jarviswidget jarviswidget-color-darken">
-                        <header>
-                            <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
-                            <h2 class="font-md"><strong>CERTIFICADO</strong></h2>  
-                        </header>
-                          <div>
-                              <div class="widget-body no-padding">
-                                
-                              </div>
-                           
-                          </div>
-                         
-                      </div>
-                     
+                      <article class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                        <div class="jarviswidget jarviswidget-color-darken">
+                          <header>
+                              <span class="widget-icon"> <i class="fa fa-arrows-v"></i> </span>
+                              <h2 class="font-md"><strong>CERTIFICADO</strong></h2>  
+                          </header>
+                            <div>
+                                <div class="widget-body no-padding">
+                                  <div id="content1"></div>
+                                </div>
+                             
+                            </div>
+                        </div>
                       </article>
                   </div>
               </div>
           </article>';
 
+
       $this->load->view('admin/mantenimiento/eventosDNP/listado_eventos', $data);
     }
 
 
-  /*--------- VALIDA PARTICIPANTE -----------*/
+  /*--------- VALIDA REGISTRO PARTICIPANTE -----------*/
   public function valida_participante(){
     if ($this->input->server('REQUEST_METHOD') === 'POST'){
         $this->form_validation->set_rules('even_id', 'even_id', 'required|trim');
@@ -346,17 +431,311 @@ class Ceventos_dnp extends CI_Controller {
 
 
 
+/// --- MIGRAR ARCHIVO DE PARTICIPANTES
+ function importar_participantes(){
+    if ($this->input->post()) {
+        $post = $this->input->post();
+        $even_id = $this->security->xss_clean($post['even_id']);
+        $tipo = $_FILES['archivo']['type'];
+        $tamanio = $_FILES['archivo']['size'];
+        $archivotmp = $_FILES['archivo']['tmp_name'];
+
+        $filename = $_FILES["archivo"]["name"];
+        $file_basename = substr($filename, 0, strripos($filename, '.'));
+        $file_ext = substr($filename, strripos($filename, '.'));
+        $allowed_file_types = array('.csv');
+        if (in_array($file_ext, $allowed_file_types) && ($tamanio < 90000000)) {
+          $i=0; $part=0;
+          $lineas = file($archivotmp);
+
+          foreach ($lineas as $linea_num => $linea){ 
+            if($i != 0){ 
+              $datos = explode(";",$linea);
+
+                if(count($datos)==3){
+                  $ci = intval(trim($datos[0])); //// ci
+                  $nombre = trim($datos[1]); //// nombre
+                  $tp_cert = trim($datos[2]); //// tp certificado
+                  
+                  $get_participante=$this->model_evento->get_ci_participante($ci);
+                  
+                  if(count($get_participante)==0){ /// insert
+                   
+                      header('Content-Type: text/html; charset=utf-8');
+                      $data_to_store = array(
+                        'even_id'=>$even_id,
+                        'nombre_completo' => strtoupper(mb_convert_encoding($nombre, 'UTF-8')),
+                        'ci'=>$ci,
+                        'tp_cert'=>$tp_cert,
+                        'fun_id' => $this->fun_id,
+                        'num_ip' => $this->input->ip_address(), 
+                        'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                      );
+                      $this->db->insert('participantes', $data_to_store);
+                      $ci_id=$this->db->insert_id(); 
+                      $part++;
+                  }
+                }
+              }
+              $i++;
+            }
+
+            $this->session->set_flashdata('success','SE REGISTRARON '.$part.' PARTICIPANTES');
+            redirect(site_url("").'/participantes_eventosDNP/'.$even_id);
+        } 
+        elseif (empty($file_basename)) {
+          echo "<script>alert('SELECCIONE ARCHIVO .CSV')</script>";
+        } 
+        elseif ($filesize > 100000000) {
+          //redirect('');
+        } 
+        else {
+          $mensaje = "Sólo estos tipos de archivo se permiten para la carga: " . implode(', ', $allowed_file_types);
+          echo '<script>alert("' . $mensaje . '")</script>';
+        }
+
+    } else {
+        show_404();
+    }
+  }
+
+    /*---- UPDATE DATOS DEL PARTICIPANTE----*/
+    public function update_datos_participante(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $ci_id = $this->security->xss_clean($post['ci_id']);
+        $nro = $this->security->xss_clean($post['nro']);
+        $name_input = $this->security->xss_clean($post['name_input']);
+        $detalle = $this->security->xss_clean($post['detalle']); /// input
 
 
+          if($nro==1){ // ci
+            $campo='ci';
+          }
+          elseif($nro==3){ /// nombre completo
+            $campo='nombre_completo';
+          }
+
+          /////
+          $update_even = array(
+            $campo => $detalle,
+          );
+          $this->db->where('ci_id', $ci_id);
+          $this->db->update('participantes', $update_even);
+          ////
 
 
+        $result = array(
+          'respuesta' => 'correcto',
+          //'update_informacion'=>$informacion,
+        );
+
+        echo json_encode($result);
+      }else{
+        show_404();
+      }
+    }
+
+    /*---- UPDATE DATOS DE SELECCION----*/
+    public function update_tp(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $tp = $this->security->xss_clean($post['tp']);
+        $ci_id = $this->security->xss_clean($post['ci_id']);
+        $id = $this->security->xss_clean($post['id']);
+
+        //tp,id,ci_id
+        if($tp==1){ // tipo de certificado
+          $campo='tp_cert';
+        }
+        elseif($tp==2){/// estado del participante
+          $campo='estado';
+        }
+        
+        /////
+        $update_even = array(
+          $campo => $id,
+        );
+        $this->db->where('ci_id', $ci_id);
+        $this->db->update('participantes', $update_even);
+        ////
+
+        $result = array(
+          'respuesta' => 'correcto',
+        );
+
+        echo json_encode($result);
+      }else{
+        show_404();
+      }
+    }
 
 
+  /*------ ELIMINA PARTICIPANTE ------*/
+    function elimina_participante(){
+      if ($this->input->is_ajax_request() && $this->input->post()) {
+          $post = $this->input->post();
+          $ci_id = $this->security->xss_clean($post['ci_id']); /// ci id
+
+          /*------ delete participante -----*/
+          $this->db->where('ci_id', $ci_id);
+          $this->db->delete('participantes');
+
+          $participante=$this->model_evento->get_participante($ci_id);
+          if(count($participante)==0){
+            $result = array(
+              'respuesta' => 'correcto'
+            );
+          }
+          else{
+            $result = array(
+              'respuesta' => 'error'
+            );
+          }
+
+          echo json_encode($result);
+      } else {
+          echo 'DATOS ERRONEOS';
+      }
+    }
 
 
+    /*-------- GET CERTIFICADO ------------*/
+    public function get_certificado(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $ci_id = $this->security->xss_clean($post['ci_id']);
+        $even_id = $this->security->xss_clean($post['even_id']);
+        $get_participante=$this->model_evento->get_participante($ci_id);
+        $get_evento=$this->model_evento->get_evento($even_id);
+        $tabla='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/certificado/'.$ci_id.'"></iframe>';
+
+        $result = array(
+            'respuesta' => 'correcto',
+            'tabla'=>$tabla,
+          );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
 
 
+    ////--------------------------
+    public function certificado($ci_id){
+      $get_participante=$this->model_evento->get_participante($ci_id);
+      if(count($get_participante)!=0 & $get_participante[0]['estado']==1){
+          $data['pie_reporte']='CERT-DNP-'.$get_participante[0]['cod_evento'].'-'.$get_participante[0]['g_id'].'_'.$get_participante[0]['ci'].'';
+          $data['certificado']='';
+          $data['certificado'].='
+            <page backcolor="#004640" backleft="5mm" backright="5mm" backtop="5mm" backbottom="5mm" >
+            <table style="width: 99%;" border="0">
+              <tr>
+                  <td style="width: 20%; height: 98%; background: #004640;">
+                      <div style="width: 100%; height:35%;border:0px;text-align: center;">
+                          <img src="'.getcwd().'/assets/img_v1.1/logo_CNS_header.png" alt="Logo" title="Logo" style="width:80%; height:85%;">
+                      </div>
+                      <div style="width: 100%; height:35%;border:0px;text-align: center;">
+                          <!-- <img src="'.getcwd().'/assets/img_v1.1/dnp1.png" alt="Logo" title="Logo" style="width:102%; height:85%;"> -->
+                      </div>
+                      <div style="width: 100%; height:15%; text-align: center; color: white;">
+                          <b>DNP - '.$get_participante[0]['cod_evento'].' - '.$get_participante[0]['g_id'].'</b><br>
+                          <qrcode value="https://planificacion.cns.gob.bo/index.php/participantes_eventosDNP/'.$ci_id.'" ec="H" style="width: 40mm;"></qrcode><br>
+                          DNP@siiplas
+                      </div>
+                  </td>
+                  <td style="width: 80%; height: 98%; background: #FFFFFF; border: 0px;">
+                      <!--  Cabecera   -->
+                      <div style="width: 100%; height:15%;border:0px;">
+                          <div style="font-size: 38px;font-family: Arial; color: #015045;text-align:center;"><b>CAJA NACIONAL DE SALUD</b></div>
+                          <div style="font-size: 30px;font-family: Arial; text-align:center;"><b>OFICINA NACIONAL</b></div>
+                          <div style="font-size: 18px;font-family: Arial; text-align:center;">'.$get_participante[0]['organizador'].'</div>
+                      </div>
+                      <!--  End Cabecera   -->
+                      
+                      <!--  Cuerpo   -->
+                      <div style="width: 100%; height:45%;border:0px;">
+                          <table style="width: 100%; height:20%;border:0px;">
+                              <tr><td style="width: 31%; text-align:right;font-size: 17px;font-family: Arial;">Confiere el Presente:</td>
+                                  <td style="width: 69%;"></td>
+                              </tr>
+                          </table>
+                          <br>
+                          <div style="width: 100%; height:15%;border:0px; text-align: center;">
+                              <img src="'.getcwd().'/assets/img_v1.1/cert2.JPG" alt="Logo" title="Logo" style="width:70%; height:90%;">
+                          </div>
+                          <br>
 
+                          <table style="width: 100%; height:10%;border:0px;">
+                              <tr><td style="width: 14%; text-align:right;font-size: 18px;font-family: Arial;">A :</td>
+                                  <td style="width: 8%;"></td>
+                                  <td style="width: 73%;font-size: 21px;font-family: Arial;"><b>'.$get_participante[0]['nombre_completo'].'</b></td>
+                              </tr>
+                          </table>
+                          <br>
+                          <table style="width: 100%; height:10%;border:0px;" border="0">
+                              <tr><td style="width: 26%; text-align:right;font-size: 18px;font-family: Arial;">En calidad de :</td>
+                                  <td style="width: 15%;"></td>
+                                  <td style="width: 53%;font-size: 28px;font-family: Arial;"><b>'.$get_participante[0]['tp_certificado'].'</b></td>
+                              </tr>
+                          </table>
+                          <br>
+                          <table style="width: 100%; height:20%;text-align: justify;" border="0">
+                              <tr><td style="width: 10%;"></td>
+                                  <td style="width: 80%;font-size: 20px;font-family: Arial;">En el ciclo de '.$get_participante[0]['tp_evento'].' sobre: <b>"'.$get_participante[0]['titulo_evento'].'"</b></td>
+                                  <td style="width: 10%;"></td>
+                              </tr>
+                          </table>
+                          <br>
+                          <table style="width: 100%;" border="0">
+                              <tr><td style="width: 10%;height:10%;"></td>
+                                  <td style="width: 80%;font-size: 19px;font-family: Arial;text-align: justify;">'.$get_participante[0]['fecha_evento'].'</td>
+                                  <td style="width: 10%;"></td>
+                              </tr>
+                          </table>
+                          <br>
+                          <table style="width: 100%;" border="0">
+                              <tr><td style="width: 75%;"></td>
+                                  <td style="width: 25%;font-family: Arial;">'.$get_participante[0]['fecha_evento_impresion'].'</td>
+                              </tr>
+                          </table>
+                      </div>
+                      <!--  End Cuerpo   -->
+
+                      <!--  Pie   -->
+                      <div style=";width: 100%; height:25%;">
+                          <div align="center">
+                            <table style="width: 100%;" border="0">
+                              <tr>
+                                  <td style="width: 99%;">';
+                                    if($get_participante[0]['estado']==1){
+                                     $data['certificado'].='<img src="'.getcwd().'/assets/img_v1.1/firmv1.png" alt="Logo" title="Logo" style="width:100%; height:95%;">';
+                                    }
+                                  $data['certificado'].='
+                                  </td>
+                              </tr>
+                          </table>  
+                          </div>
+                          
+                      </div>
+                  </td>
+              </tr>
+          </table>
+      </page>';
+      }
+      else{
+        $data['pie_reporte']='';
+        $data['certificado']='
+            <page  backleft="5mm" backright="5mm" backtop="5mm" backbottom="5mm" >
+            Certificado no encontrado !!!
+            </page>';
+      }
+
+
+      $this->load->view('admin/programacion/reportes/certificados', $data);
+
+    }
 
   public function style(){
     $tabla='

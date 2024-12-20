@@ -4660,6 +4660,9 @@ create table eventosdnp(
   tp_cert integer DEFAULT 3,
   estado integer DEFAULT 1,
   fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
+  num_ip character varying(50),
+  nom_ip character varying(50),
+  fun_id integer DEFAULT 0,
   primary key(ci_id)
  );
 

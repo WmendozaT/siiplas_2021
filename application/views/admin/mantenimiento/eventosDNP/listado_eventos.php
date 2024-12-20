@@ -226,7 +226,43 @@
               </div>
           </div>
       </div>
-  </div>
+    </div>
+
+    <!-- subir listado de participantes --> 
+        <div class="row">
+            <div class="modal fade" id="exampleModalCenter" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog" id="csv">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+                        </div>
+                        <div class="modal-body">
+                            <h2><center>SUBIR ARCHIVO .CSV</center></h2>
+                        
+                            <div class="row">
+                                  <form action="<?php echo site_url().'/mantenimiento/ceventos_dnp/importar_participantes' ?>" method="post" enctype="multipart/form-data" id="form_subir_sigep" name="form_subir_sigep">
+                                    <?php echo $input_id; ?>
+                                    <div class="input-group">
+                                      <span class="input-group-btn">
+                                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file]').click();">Browse</span>
+                                        <input  id="archivo" accept=".csv" name="archivo" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file">
+                                        <input name="MAX_FILE_SIZE" type="hidden" value="20000" />
+                                      </span>
+                                      <span class="form-control"></span>
+                                    </div>
+                                    <hr>
+                                    <div >
+                                        <button type="button" name="subir_archivo" id="subir_archivo" class="btn btn-success" style="width:100%;">SUBIR ARCHIVO.CSV</button><br>
+                                        <center><img id="loads1" style="display: none" src="<?php echo base_url() ?>/assets/img/loading.gif" width="50" height="50"></center>
+                                    </div>
+                                  </form> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="page-footer">
             <div class="row">
                 <div class="col-xs-12 col-sm-6">
@@ -290,7 +326,7 @@
         <script src="<?php echo base_url(); ?>mis_js/eventos/eventos.js"></script> 
         <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
         <!-- Voice command : plugin -->
-       <script type="text/javascript">
+<!--        <script type="text/javascript">
         $(function () {
             $("#subir_archivo").on("click", function () {
                 var $valid = $("#form_subir_sigep").valid();
@@ -316,6 +352,6 @@
                 }
             });
         });
-        </script>
+        </script> -->
     </body>
 </html>

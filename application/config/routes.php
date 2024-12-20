@@ -5,6 +5,7 @@ $route['404_override'] = '';
 
 $route['admin/logout'] = 'user/logout';
 $route['admin/validate'] = 'user/validate_credentials';
+
 $route['admin/dashboard'] = 'user/dashboard_index';
 $route['admin/dm/(:any)'] = 'user/dashboard_menu/$1';
 $route['cambiar_session'] = 'user/cambiar_gestion';//cambiar contralador Administrador
@@ -615,14 +616,16 @@ $route['proy_ver_fases/(:any)']='mantenimiento/cconf_pinversion/ver_fases/$1';//
 
 //--------------------------- MANTENIMIENTO AJUSTES AL SISTEMA ----------------------//
 $route['ediciones']='mantenimiento/cajustes/menu_ajustes';// Para los ajustes que se necesite
-$route['certificado/(:any)']='mantenimiento/cajustes/certificado/$1';// Certificado de Participacion
+
 //$route['rep_ediciones/(:any)']='mantenimiento/cediciones/rep_ediciones/$1';// Exportar PDF
 
 
 //--------------------------- MANTENIMIENTO EVENTOS DNP ----------------------//
 $route['eventosDNP']='mantenimiento/ceventos_dnp/menu_eventos';// Listado de Eventos de Planificacion
 $route['participantes_eventosDNP/(:any)']='mantenimiento/ceventos_dnp/participantes/$1';// Listado de Participantes
+$route['certificado/(:any)']='mantenimiento/ceventos_dnp/certificado/$1';// Certificado de Participacion
 
+$route['consulta_eventosDNP/(:any)']='mantenimiento/ceventos_dnp/valida_ingreso/$1';// Certificado de Participacion
 
 ///////////////////////////programacion//////////////////////
 //========================mision y vision=========================//

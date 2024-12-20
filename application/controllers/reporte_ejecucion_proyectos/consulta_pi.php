@@ -13,10 +13,48 @@ class Consulta_pi extends CI_Controller {
       $this->load->model('programacion/model_componente');
       $this->load->model('mantenimiento/model_ptto_sigep');
       $this->load->model('mantenimiento/model_configuracion');
+      $this->load->model('mantenimiento/model_evento');
       //$this->gestion = $this->Users_model->obtener_gestion()[0]['ide'];
       $this->gestion = 2022;
       $this->mes = $this->mes_nombre();
       $this->entidad = $this->model_configuracion->get_configuracion()[0]['conf_nombre_entidad'];
+  }
+
+
+/*------- menu Cert -------*/
+  public function valida_ingreso($even_id){
+
+    $get_evento=$this->model_evento->get_evento($even_id);
+
+   // $data['menu']=$this->menu_regional();
+    $data['menu']='
+    <article class="col-sm-12 col-md-12 col-lg-12">
+          <div class="widget-body">
+              <form name="form_msn" id="form_msn" method="post" action="'.site_url("").'/mantenimiento/cconfiguracion/update_conf" class="form-horizontal">
+                  <input type="hidden" name="even_id" id="even_id" value="'.$even_id.'">
+                  <fieldset>
+                      <legend>INGRESE CI</legend>
+                      
+                      <div class="form-group">
+                          <label class="col-md-2 control-label">CI. :</label>
+                          <div class="col-md-10">
+                              <input class="form-control" type="text" name="ci" id="ci" value="" title="REGISTRE CEDULA DE IDENTIDAD" onkeypress="if (this.value.length < 8) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true">
+                          </div>
+                      </div>
+                  </fieldset>
+                  <div class="form-actions" align="right">
+                      <input type="button" value="VERIFICAR DATOS" id="btsubmit" class="btn btn-primary" onclick="valida_msn()" title="VERIFICAR DATOS">
+                  </div>
+              </form>
+          </div>
+      </article>
+
+    ';
+    $data['img2']='';
+    $data['img1']='<center><img src="'.base_url().'assets/ifinal/logo_CNS_header.png" class="img-responsive app-center" style="width:90px; height:120px;text-align:center"/></center>';
+
+
+    $this->load->view('admin/vista_certificados', $data);
   }
 
 

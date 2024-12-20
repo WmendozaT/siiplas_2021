@@ -30,10 +30,24 @@ class Model_evento extends CI_Model {
         return $query->result_array();
     }
 
+    /// get ID
     public function get_participante($id){
-        $sql = ' select *
-                 from participantes
-                 where ci_id='.$id.'';
+        $sql = ' select even.*,p.*,tp.*
+                 from participantes p
+                 Inner Join eventosdnp as even On even.even_id=p.even_id
+                 Inner Join tp_certificado as tp On tp.tp_cert=p.tp_cert
+                 where p.ci_id='.$id.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /// get CI
+    public function get_ci_participante($ci){
+        $sql = ' select even.*,p.*,tp.*
+                 from participantes p
+                 Inner Join eventosdnp as even On even.even_id=p.even_id
+                 Inner Join tp_certificado as tp On tp.tp_cert=p.tp_cert
+                 where p.ci='.$ci.'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -41,10 +55,21 @@ class Model_evento extends CI_Model {
 
     /// listado de participantes
     public function lista_participantes($even_id){
+        $sql = ' select even.*,p.*,tp.*
+                 from participantes p
+                 Inner Join eventosdnp as even On even.even_id=p.even_id
+                 Inner Join tp_certificado as tp On tp.tp_cert=p.tp_cert
+                 where p.even_id='.$even_id.'
+                 order by p.ci_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /// lista de certificados
+    public function tipo_cert(){
         $sql = '  select *
-                 from participantes
-                 where even_id='.$even_id.'
-                 order by ci_id asc';
+                 from tp_certificado
+                 order by tp_cert asc';
         $query = $this->db->query($sql);
         return $query->result_array();
     }

@@ -87,54 +87,9 @@ $(document).ready(function() {
 
 
 
-
-
-
-    //// ELIMINAR ACTIVIDAD 2025
-  function delete_form4(prod_id){
-    alertify.confirm("DESEA ELIMINAR ACTIVIDAD ?", function (a) {
-        if (a) { 
-        //  alert(prod_id)
-          var url = base+"index.php/programacion/producto/desactiva_producto";
-          
-          request = $.ajax({
-            url: url,
-            type: "POST",
-            dataType: "json",
-            data: "prod_id="+prod_id
-          });
-
-          request.done(function (response, textStatus, jqXHR) { 
-            if (response.respuesta == 'correcto') {
-                alertify.success("Se elimino correctamente ...");
-                window.location.reload(true);
-            } else {
-              alertify.danger("Error ...");
-            }
-          });
-            request.fail(function (jqXHR, textStatus, thrown) {
-              console.log("ERROR: " + textStatus);
-            });
-            request.always(function () {
-                //console.log("termino la ejecuicion de ajax");
-            });
-
-            e.preventDefault();
-
-        } else {
-            // user clicked "cancel"
-            alertify.error("CANCELADA");
-        }
-      });
-    return false;
-  }
-
-
-
-
-  //// Subir archivo de migracion form4 y 5
+  //// Subir archivo de participantes
   $(function () {
-    //SUBIR ARCHIVO
+    //SUBIR ARCHIVO participantes
     $("#subir_archivo").on("click", function () {
       var $valid = $("#form_subir_sigep").valid();
       if (!$valid) {
@@ -145,9 +100,9 @@ $(document).ready(function() {
           return false;
         }
 
-        alertify.confirm("REALMENTE DESEA SUBIR ESTE ARCHIVO?", function (a) {
+        alertify.confirm("SUBIR ARCHIVO ?", function (a) {
           if (a) {
-              document.getElementById("load").style.display = 'block';
+              document.getElementById("loads1").style.display = 'block';
               document.getElementById('subir_archivo').disabled = true;
               document.forms['form_subir_sigep'].submit();
           } else {
@@ -317,3 +272,177 @@ $(document).ready(function() {
           }
       });
     });
+
+
+    //// ACTUALIZAR DATOS DEL PARTICIPANTE
+    function update_participante(nro,ci_id,name_input){ /// 
+      // nro: 1 (ci)
+      // nro: 2 (nombre)
+      // nro: 3 (tipo de certificado)
+      informacion = document.getElementById(name_input+ci_id).value;
+
+      var url = base+"index.php/mantenimiento/ceventos_dnp/update_datos_participante";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "ci_id="+ci_id+"&nro="+nro+"&detalle="+informacion+"&name_input="+name_input
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+          $('#content1').fadeIn(1000).html('');
+          alertify.success("ok");
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
+    }
+
+
+    //// ACTUALIZAR tipo de Certificado
+    function update_select_option(tp,id,ci_id){ /// 
+      var url = base+"index.php/mantenimiento/ceventos_dnp/update_tp";
+      var request;
+      if (request) {
+          request.abort();
+      }
+      request = $.ajax({
+          url: url,
+          type: "POST",
+          dataType: 'json',
+          data: "ci_id="+ci_id+"&id="+id+"&tp="+tp
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+
+      if (response.respuesta == 'correcto') {
+        $('#content1').fadeIn(1000).html('');
+        window.location.reload(true);
+          alertify.success("Seleccion procesada correctamente ...");
+      }
+      else{
+          alertify.error("ERROR AL RECUPERAR INFORMACION");
+      }
+
+      });
+    }
+
+    //// ELIMINAR participante
+  function delete_participante(ci_id){
+    alertify.confirm("DESEA ELIMINAR PARTICIPANTE ?", function (a) {
+        if (a) { 
+        //  alert(prod_id)
+          var url = base+"index.php/mantenimiento/ceventos_dnp/elimina_participante";
+          
+          request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "json",
+            data: "ci_id="+ci_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) { 
+            if (response.respuesta == 'correcto') {
+                alertify.success("Eliminado correctamente ...");
+                window.location.reload(true);
+            } else {
+              alertify.danger("Error ...");
+            }
+          });
+            request.fail(function (jqXHR, textStatus, thrown) {
+              console.log("ERROR: " + textStatus);
+            });
+            request.always(function () {
+                //console.log("termino la ejecuicion de ajax");
+            });
+
+            e.preventDefault();
+
+        } else {
+            // user clicked "cancel"
+            alertify.error("CANCELADA");
+        }
+      });
+    return false;
+  }
+
+
+///----------- GENERA CERTIFICADO
+
+function ver_certificado(ci_id,even_id) {
+
+  $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Certificado</div>');
+    var url = base+"index.php/mantenimiento/ceventos_dnp/get_certificado";
+    var request;
+    if (request) {
+        request.abort();
+    }
+    request = $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: "ci_id="+ci_id+"&even_id="+even_id
+    });
+
+    request.done(function (response, textStatus, jqXHR) {
+
+    if (response.respuesta == 'correcto') {
+        $('#content1').fadeIn(1000).html(response.tabla);
+    }
+    else{
+        alertify.error("ERROR AL RECUPERAR DATOS");
+    }
+
+    });
+}
+
+
+
+/*  $(function () {
+    $(".enlace").on("click", function (e) {
+
+        ci_id = $(this).attr('name');
+        even_id = $(this).attr('id');
+        //alert(ci_id)
+        $('#content1').html('<div class="loading" align="center"><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Certificado</div>');
+        
+        var url = base+"index.php/mantenimiento/ceventos_dnp/get_certificado";
+        var request;
+        if (request) {
+            request.abort();
+        }
+        request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "ci_id="+ci_id+"&even_id="+even_id
+        });
+
+        request.done(function (response, textStatus, jqXHR) {
+
+        if (response.respuesta == 'correcto') {
+            $('#content1').fadeIn(1000).html(response.tabla);
+        }
+        else{
+            alertify.error("ERROR AL RECUPERAR DATOS");
+        }
+
+        });
+        request.fail(function (jqXHR, textStatus, thrown) {
+            console.log("ERROR: " + textStatus);
+        });
+        request.always(function () {
+            //console.log("termino la ejecuicion de ajax");
+        });
+        e.preventDefault();
+      
+    });
+});*/

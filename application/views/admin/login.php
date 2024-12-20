@@ -106,13 +106,11 @@ h1 {
 <body>
 <div id="sidebar" class="sidebar">
   <a href="#" class="boton-cerrar" onclick="ocultar()">&times;</a>
-<!--   <center><h1>ARCHIVOS DE MIGRACI&Oacute;N POA 2022</h1></center>
+  <center><h1>LINK CERTIFICADO</h1></center>
   <ul class="menu">
-    <li><a href="<?php echo base_url(); ?>assets/video/plantilla1_migracion_form4_unidad.xlsx" download  title="ARCHIVO DE MIGRACION - FORMULARIO N° 4 (POR UNIDAD RESPONSABLE)">1.- ARCHIVO DE MIGRACI&Oacute;N - FORMULARIO 4 <b>(POR UNIDAD RESPONSABLE)</b></a></li>
-    <li><a href="<?php echo base_url(); ?>assets/video/plantilla2_migracion_form4_general.xlsx" download  title="ARCHIVO DE MIGRACION - FORMULARIO N° 4 (GENERAL)">2.- ARCHIVO DE MIGRACI&Oacute;N - FORMULARIO 4 <b>(GLOBAL)</b></a></li>
-    <li><a href="<?php echo base_url(); ?>assets/video/plantilla3_migracion_form5_actividad.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS POR CADA ACTIVIDAD">3.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS <b>(POR ACTIVIDAD)</b></a></li>
-    <li><a href="<?php echo base_url(); ?>assets/video/plantilla4_migracion_form5_global.xlsx" download  title="ARCHIVO DE MIGRACION - REQUERIMIENTOS DE MANERA GLOBAL">4.- ARCHIVO DE MIGRACI&Oacute;N - REQUERIMIENTOS <b>(GLOBAL)</b></a></li>
-  </ul> -->
+    <li><a href="<?php echo site_url(""); ?>/consulta_eventosDNP/1"  title="EVENTO PLANIFICACION DNP-016/2024" target="_blank"><b>+ EVENTO DNP-016-2024</b></a></li>
+   
+  </ul>
   <center><h1>FORMULARIOS ANTE PROYECTO POA 2025</h1></center>
   <ul class="menu">
     <li><a href="<?php echo base_url(); ?>assets/video/FORMULARIOS APROY2025/FORM_POA_N°3_PROBLEMAS Y CAUSAS.xlsx" download  title="FORMULARIO 3 "><b>1.- </b>FORMULARIO N° 3 - (Analisis Prob. y Causas)</a></li>
@@ -127,10 +125,10 @@ h1 {
     <li><a href="<?php echo base_url(); ?>assets/video/FORM_JUST_EDICION_CPOAS.xlsx" download  title="FORMULARIO DE MODIFICACION DE CERTIFICACION POA"><b>3.- </b>FORMATO DE SOLICITUD DE MODIFICACI&Oacute;N DE CERTIFICACION POA</a></li>
     <li><a href="<?php echo base_url(); ?>assets/video/FORM_JUST_SALDOS_CPOAS.xlsx" download  title="FORMULARIO DE REVERSION DE SALDOS"><b>4.- </b>FORMATO DE SOLICITUD DE REVERSIÓN DE SALDOS</a></li>
   </ul>
-  <center><h1>RESOLUCIONES DE DIRECTORIO </h1></center>
+<!--   <center><h1>RESOLUCIONES DE DIRECTORIO </h1></center>
   <ul class="menu">
     <li><a href="<?php echo base_url(); ?>assets/video/Resoluciones_directorio.xlsx" download  title="RESOLUCIONES DE DIRECTORIO">+ MATRIZ SEGUIMIENTO A RESOLUCI&Oacute;N DE DIRECTORIO</a></li>
-  </ul>
+  </ul> -->
 </div>
 
 
@@ -140,7 +138,7 @@ h1 {
   <div class="container">
 <div id="login" class="signin-card">
   <div class="logo-image">
-  <img src="<?php echo base_url(); ?>assets/login/img/caja.png" alt="Logo" title="Logo" style="width:30%; height:30%;">
+  <img src="<?php echo base_url(); ?>/assets/img_v1.1/logo_CNS_header.png" alt="Logo" title="Logo" style="width:30%; height:30%;">
   </div>
   <h1 class="display1"><b>SIIPLAS V2.0</b></h1>
 

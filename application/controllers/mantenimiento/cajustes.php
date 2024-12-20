@@ -67,45 +67,11 @@ class Cajustes extends CI_Controller {
       $tabla.='</table>';
 
       echo $tabla;*/
-      $data['certificado']='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/certificado/1"></iframe>';
+      $data['certificado']='';
       $this->load->view('admin/mantenimiento/ajustes_siiplas/menu_ajustes', $data);
     }
 
-    ////--------------------------
-    public function certificado($ci){
-      $data['imagen_cns']=' <img src="'.getcwd().'/fotos/simagen.jpg" class="img-responsive" style="width:150px; height:110px;"/>
 
-      <table class="page_header" border="0">
-          <tr>
-            <td style="width: 100%; text-align: left">
-              <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                <tr>
-                  <td style="width:100%; font-size: 38px;" align="center"><b></b></td>
-                </tr>
-                <tr>
-                  <td style="width:100%;  font-size: 20px;" align="center">DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
-                </tr>
-                <tr>
-                  <td style="width:100%;" align="center"><br><br></td>
-                </tr>
-                <tr>
-                  <td style="width:100%;" align="center"><img src="'.getcwd().'/assets/ifinal/CnsLogo.JPG" alt="" style="width:65%;"></td>
-                </tr>
-                <tr>
-                  <td style="width:100%; font-size: 50px;" align="center"><b>PLAN OPERATIVO ANUAL</b></td>
-                </tr>
-                <tr>
-                  <td style="width:100%; font-size: 40px;" align="center">GESTI&Oacute;N '.$this->gestion.'</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>';
-
-
-      $this->load->view('admin/programacion/reportes/certificados', $data);
-
-    }
 
   /*---- AJUSTAR FORM 4 ALINEACIONES ----*/
   function importar_archivo(){
