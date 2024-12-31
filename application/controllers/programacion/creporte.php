@@ -382,11 +382,11 @@ class Creporte extends CI_Controller {
                         }*/
                     }
                     
-                   // $cabecera_f5=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$pr['com_id']);
-                   // $requerimientos=$this->programacionpoa->list_requerimientos_reporte($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']));
+                    $cabecera_f5=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],5,$proyecto,$pr['com_id']);
+                    $requerimientos=$this->programacionpoa->list_requerimientos_reporte($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']));
                     
-                   // $lista_partidas=$this->model_insumo->list_consolidado_partidas_componentes($pr['com_id']);
-                   // $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
+                    $lista_partidas=$this->model_insumo->list_consolidado_partidas_componentes($pr['com_id']);
+                    $partidas=$this->consolidado_partida_reporte($lista_partidas,$proyecto[0]['tp_id']);
 
                     $tabla.='
                     <page orientation="paysage" backtop="75mm" backbottom="35.5mm" backleft="5mm" backright="5mm" pagegroup="new">
@@ -399,7 +399,7 @@ class Creporte extends CI_Controller {
                         </page_footer>
                         '.$formulario_N4.'
                     </page>';
-/*                    if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
+                   if(count($this->model_insumo->list_requerimientos_operacion_procesos($pr['com_id']))!=0){
                         $tabla.='
                         <page backtop="75mm" backbottom="29mm" backleft="5mm" backright="5mm" pagegroup="new">
                             <page_header>
@@ -421,9 +421,9 @@ class Creporte extends CI_Controller {
                             </page_footer>
                             '.$partidas.'
                         </page>';
-                    }*/
+                    }
 
-/*                    $get_uniresp_progBolsa=$this->model_producto->verif_get_uni_resp_programaBolsa($pr['com_id']); // Verifica la Actividad de la Unidad Responsable del Programa Bolsa
+                    $get_uniresp_progBolsa=$this->model_producto->verif_get_uni_resp_programaBolsa($pr['com_id']); // Verifica la Actividad de la Unidad Responsable del Programa Bolsa
                     if(count($get_uniresp_progBolsa)!=0){
 
                         foreach($get_uniresp_progBolsa as $bolsa){
@@ -465,7 +465,7 @@ class Creporte extends CI_Controller {
                             '.$partidas.'
                         </page>';
                         }
-                    }*/
+                    }
                 }
             }
 
