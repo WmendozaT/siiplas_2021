@@ -31,37 +31,59 @@ class Ceventos_dnp extends CI_Controller {
 
 
   public function valida_ingreso($even_id){
-
+    $data['img2']='<center><img src="'.base_url().'assets/img_v1.1/dnp1.png" class="img-responsive app-center" style="width:150px; height:150px;text-align:center"/></center>';
+    $data['img1']='<center><img src="'.base_url().'assets/ifinal/logo_CNS_header.png" class="img-responsive app-center" style="width:95px; height:140px;text-align:center"/></center>';
     $get_evento=$this->model_evento->get_evento($even_id);
 
-   // $data['menu']=$this->menu_regional();
-    $data['menu']='
-    <article class="col-sm-12 col-md-12 col-lg-12">
-          <div class="widget-body">
-              <form name="form_msn" id="form_msn" method="post" action="'.site_url("").'/mantenimiento/cconfiguracion/update_conf" class="form-horizontal">
-                  <input type="hidden" name="even_id" id="even_id" value="'.$even_id.'">
-                  <fieldset>
-                      <legend>INGRESE CI '.$this->gestion.'</legend>
-                      
-                      <div class="form-group">
-                          <label class="col-md-2 control-label">CI. :</label>
-                          <div class="col-md-10">
-                              <input class="form-control" type="text" name="ci" id="ci" value="" title="REGISTRE CEDULA DE IDENTIDAD" onkeypress="if (this.value.length < 8) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true">
-                          </div>
-                      </div>
-                  </fieldset>
-                  <div class="form-actions" align="right">
-                      <input type="button" value="VERIFICAR DATOS" id="btsubmit" class="btn btn-primary" onclick="valida_msn()" title="VERIFICAR DATOS">
-                  </div>
-              </form>
-          </div>
-      </article>
-
-    ';
-    $data['img2']='';
-    $data['img1']='<center><img src="'.base_url().'assets/ifinal/logo_CNS_header.png" class="img-responsive app-center" style="width:90px; height:120px;text-align:center"/></center>';
-
-
+    $data['cuerpo']='Error !!';
+    if(count($get_evento)!=0){
+      $data['cuerpo']='
+      <div class="container">
+        <div class="barra-color">CERTIFICADO DE PARTICIPACIÓN</div>
+        <section class="section-content py-3">
+            <div class="row">
+            
+            <main class="col-lg-7">
+                <div class="well" style="background-color: #dcfae3;text-align: justify;">
+                    <b style="font-size: 25px;font-family: Arial;">INSTRUCCIONES!</b><br>
+                    Si formaste parte del ciclo de capacitación : <b>'.$get_evento[0]['titulo_evento'].'</b>, '.$get_evento[0]['fecha_evento'].', puedes generar tu Certificado de manera fácil con los siguientes pasos:
+                    <br><br>
+                    <ol>
+                        <li><b>Escribe los datos de tu Documento de Identidad</b></li>
+                        <li><b>Descarga o imprime tu Certificado</b></li>
+                    </ol>
+                </div>
+            </main>
+            <aside class="col-lg-5"> 
+                <nav class="sidebar card py-2 mb-4">
+                    <article class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="widget-body">
+                            <form name="form_ci" id="form_ci" method="post" class="form-horizontal">
+                              <input type="hidden" name="even_id" id="even_id" value="'.$even_id.'">
+                              <input type="hidden" name="base" value="'.base_url().'">
+                              <fieldset>
+                                  <legend>INGRESE NRO. DE CARNET '.$this->gestion.'</legend>
+                                  
+                                  <div class="form-group">
+                                      <label class="col-md-2 control-label">CI. :</label>
+                                      <div class="col-md-10">
+                                          <input class="form-control" type="text" name="ci" id="ci" value="" title="REGISTRE CEDULA DE IDENTIDAD" onkeypress="if (this.value.length < 8) { return numerosDecimales(event);}else{return false; }" onpaste="return false" required="true">
+                                      </div>
+                                  </div>
+                              </fieldset>
+                              <div class="form-actions" align="right">
+                                  <button type="button" name="verif_ci" id="verif_ci" class="btn btn-primary" style="background-color:#06601a">BUSCAR CERTIFICADO</button>
+                              </div>
+                            </form>
+                        </div>
+                    </article>
+                </nav>
+            </aside>
+            <div id="loading"></div>
+            </div>
+        </section>
+      </div>';
+    }
     $this->load->view('admin/vista_certificados', $data);
   }
 
@@ -69,8 +91,44 @@ class Ceventos_dnp extends CI_Controller {
 
 
 
+  /// --- get CI
+    public function get_ci(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $ci = $this->security->xss_clean($post['ci']);
+        $even_id = $this->security->xss_clean($post['even_id']);
+        $get_ci=$this->model_evento->get_ci_participante_habilitado($ci,$even_id);
 
+        //$get_participante=$this->model_evento->get_participante($ci_id);
+        
+        $tabla='<div class="alert alert-danger" role="alert">
+                <h2><b>NO ENCONTRADO !!</h2><br>
+                Si presenta problemas o tiene dudas con la certificación, puede comunicarse con el DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</b>
+              </div>';
+        if(count($get_ci)!=0){
+          
+          $update_participante = array(
+            'nro_impresion' => ($get_ci[0]['nro_impresion']+1),
+          );
+          $this->db->where('ci_id', $get_ci[0]['ci_id']);
+          $this->db->update('participantes', $update_participante);
 
+          $tabla='<iframe id="ipdf" width="100%"  height="1000px;" src="'.base_url().'index.php/certificado/'.$get_ci[0]['ci_id'].'"></iframe><br>
+          <div class="alert alert-success" role="alert">
+            Si presenta problemas o tiene dudas con la certificación, puede comunicarse con el DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</b>
+          </div>';
+        }
+
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
 
 
 
@@ -457,7 +515,7 @@ class Ceventos_dnp extends CI_Controller {
                   $nombre = trim($datos[1]); //// nombre
                   $tp_cert = trim($datos[2]); //// tp certificado
                   
-                  $get_participante=$this->model_evento->get_ci_participante($ci);
+                  $get_participante=$this->model_evento->get_ci_participante($ci,$even_id);
                   
                   if(count($get_participante)==0){ /// insert
                    
@@ -641,7 +699,7 @@ class Ceventos_dnp extends CI_Controller {
                       </div>
                       <div style="width: 100%; height:15%; text-align: center; color: white;">
                           <b>DNP - '.$get_participante[0]['cod_evento'].' - '.$get_participante[0]['g_id'].'</b><br>
-                          <qrcode value="https://planificacion.cns.gob.bo/index.php/participantes_eventosDNP/'.$ci_id.'" ec="H" style="width: 40mm;"></qrcode><br>
+                          <qrcode value="https://planificacion.cns.gob.bo/index.php/certificado/'.$ci_id.'" ec="H" style="width: 40mm;"></qrcode><br>
                           DNP@siiplas
                       </div>
                   </td>

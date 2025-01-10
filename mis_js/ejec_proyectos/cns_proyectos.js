@@ -119,6 +119,67 @@ function abreVentana(PDF){
   }
 
 
+/////---------verif ci--------
+
+    $("#verif_ci").on("click", function () {
+    var $validator = $("#form_ci").validate({
+        rules: {
+          ci: { //// Cite
+              required: true,
+          }
+        },
+        messages: {
+          ci: "<font color=red>REGISTRE CI</font>",                       
+        },
+        highlight: function (element) {
+          $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+        },
+        unhighlight: function (element) {
+          $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+        },
+        errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function (error, element) {
+          if (element.parent('.input-group').length) {
+              error.insertAfter(element.parent());
+          } else {
+              error.insertAfter(element);
+          }
+        }
+      });
+
+      var $valid = $("#form_ci").valid();
+      if (!$valid) {
+          $validator.focusInvalid();
+      } else {
+        even_id=$('[name="even_id"]').val();
+        ci=$('[name="ci"]').val();
+        $('#loading').html('<div class="loading" align="center"><img src="'+base+'/assets/img/loading.gif" alt="loading" /><br/>Buscando Certificado ...</div>');
+        var url = base+"index.php/mantenimiento/ceventos_dnp/get_ci";
+        var request;
+        if (request) {
+            request.abort();
+        }
+          request = $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: "ci="+ci+"&even_id="+even_id
+          });
+
+          request.done(function (response, textStatus, jqXHR) {
+
+          if (response.respuesta == 'correcto') {
+            $('#loading').fadeIn(1000).html(response.tabla);
+          }
+          else{
+            alertify.error("ERROR AL RECUPERAR INFORMACION");
+          }
+
+        });
+      }
+  });
+
 
 
        

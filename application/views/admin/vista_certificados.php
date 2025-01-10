@@ -11,16 +11,12 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"crossorigin="anonymous"></script>
 
-<!-- ======= Icons used for dropdown (you can use your own) ======== -->
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css"> -->
-
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/smartadmin-skins.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>   
 <link href="<?php echo base_url(); ?>assets/dashboard_pi/Content/css0d55.css" rel="stylesheet"/>
 <style type="text/css">
-
 .sidebar li .submenu{ 
     list-style: none; 
     margin: 0; 
@@ -35,11 +31,19 @@
 .sidebar .nav-link:hover {
     color: var(--bs-primary);
 }
-
+ .barra-color {
+            width: 100%;
+            height: 50px; /* Altura de la barra */
+            background-color: #06601a; /* Color de la barra */
+            text-align: center;
+            line-height: 50px; /* Centra el texto verticalmente */
+            color: white; /* Color del texto */
+            font-size: 20px; /* Tamaño del texto */
+        }
 </style>
 
 </head>
-<body class="bg-light" style="background-color: #FFFFFF; padding-top: 15px">
+<body class="bg-light" style="background-color: #000000; padding-top: 15px">
 
 <header class="section-header py-3">
 <div class="container">
@@ -53,11 +57,10 @@
         <div class="col-xs-12 col-md-6">
             <div class="app-row-center">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 app-Title">
-                    Departamento Nacional de Planificación - CNS
+                    <b>Caja Nacional de Salud</b><br>Dpto. Nal. de Planificación
                 </div>
             </div>
         </div>
-
         <div class="col-xs-12 col-md-3">
             <div class="app-row-center">
                 <?php echo $img2;?>
@@ -65,38 +68,23 @@
         </div>
     </div>
 </div>
+
 </header> <!-- section-header.// -->
 
-<div class="container">
+<?php echo $cuerpo ?>
 
-<section class="section-content py-3">
-    <div class="row">
-        <aside class="col-lg-5"> 
-    <!-- ============= COMPONENT ============== -->
-        <nav class="sidebar card py-2 mb-4">
-            <?php echo $menu;?>
-        </nav>
-    <!-- ============= COMPONENT END// ============== -->   
-    </aside>
-    <main class="col-lg-7">
-        <div class="well">
-            <div id="detalle_proyecto"></div>
-            <div id="reporte"></div>
-        </div>
-    </main>
-    </div>
-</section>
-
-   
-<script src="<?php echo base_url();?>/assets/js/libs/jquery-2.0.2.min.js"></script>
-
+<script>
+    if (!window.jQuery) {
+        document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-2.0.2.min.js"><\/script>');
+    }
+</script>
 <script>
     if (!window.jQuery.ui) {
         document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
-            }
+    }
 </script>
+<script src="<?php echo base_url();?>/assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
 <SCRIPT src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js" type="text/javascript"></SCRIPT>
 <script src="<?php echo base_url(); ?>mis_js/ejec_proyectos/cns_proyectos.js"></script> 
-
 </body>
 </html>

@@ -956,7 +956,7 @@ class Cptto_poa extends CI_Controller {
 
 
     /*--------- Subir Archivo SIgep Aprobado ----------*/
-    public function subir_archivo_aprobado($archivotmp,$tp_id){  
+    public function subir_archivo_aprobado2($archivotmp,$tp_id){  
       $i=0;
       $nro=0;
       $lineas = file($archivotmp);
@@ -1057,7 +1057,7 @@ class Cptto_poa extends CI_Controller {
      }
 
 
-    public function subir_archivo_aprobado2($archivotmp,$tp_id){  
+    public function subir_archivo_aprobado($archivotmp,$tp_id){  
       $i=0;
       $nro=0;
       $lineas = file($archivotmp);
@@ -1080,75 +1080,109 @@ class Cptto_poa extends CI_Controller {
                   if(strlen($da)==2 & strlen($ue)==2 & strlen($act)==3 & $importe!=0 & is_numeric($cod_part)){
                       $aper=$this->model_ptto_sigep->get_apertura($da,$ue,$prog,$proy,$act);
                       if(count($aper)!=0){
-                          $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
-                          $par_id=0;
-                          if(count($partida)!=0){
-                            $par_id=$partida[0]['par_id'];
-                          }
 
-                          $ptto=$this->model_ptto_sigep->get_ptto_sigep_aprobado($da,$ue,$prog,$proy,$act,$cod_part);
-                          if(count($ptto)!=0){
-                             /*------- Update Datos -------*/
-                              $query=$this->db->query('set datestyle to DMY');
-                              $update_ptto = array(
-                                'aper_id' => $aper[0]['aper_id'],
-                                'da' => $da,
-                                'ue' => $ue,
-                                'importe' => $importe,
-                                'fun_id' => $this->fun_id
-                              );
+                        $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                           $par_id=0;
+                           if(count($partida)!=0){
+                             $par_id=$partida[0]['par_id'];
+                           }
 
-                              $this->db->where('sp_id', $ptto[0]['sp_id']);
-                              $this->db->update('ptto_partidas_sigep_aprobado', $update_ptto);
-                             /*-----------------------------*/
-                             $nro++;
-                          }
-                          else{
-                             /*------- Guardando Datos --------*/
-                              $query=$this->db->query('set datestyle to DMY');
-                              $data_to_store = array( 
-                                  'aper_id' => $aper[0]['aper_id'],
-                                  'da' => $da,
-                                  'ue' => $ue,
-                                  'aper_programa' => $prog,
-                                  'aper_proyecto' => $proy,
-                                  'aper_actividad' => $act,
-                                  'par_id' => $par_id,
-                                  'partida' => $cod_part,
-                                  'importe' => $importe,
-                                  'g_id' => $this->gestion,
-                                  'fun_id' => $this->fun_id,
-                              );
-                              $this->db->insert('ptto_partidas_sigep_aprobado', $data_to_store);
-                              $sp_id=$this->db->insert_id();
-                              /*-------------------------------------------------------*/
-                          }
-                      $nro++;
+                           $ptto=$this->model_ptto_sigep->get_ptto_sigep_aprobado($da,$ue,$prog,$proy,$act,$cod_part);
+                           if(count($ptto)!=0){
+                            echo "INGRESA: ".$da."--".$ue."--".$prog."--".$importe."<br>";
+                              /*------- Update Datos -------*/
+                             /*  $query=$this->db->query('set datestyle to DMY');
+                               $update_ptto = array(
+                                 'aper_id' => $aper[0]['aper_id'],
+                                 'da' => $da,
+                                 'ue' => $ue,
+                                 'importe' => $importe,
+                                 'fun_id' => $this->fun_id
+                               );
+
+                               $this->db->where('sp_id', $ptto[0]['sp_id']);
+                               $this->db->update('ptto_partidas_sigep_aprobado', $update_ptto);*/
+                              /*-----------------------------*/
+                              $nro++;
+                              }
+                              else{
+                                echo "Sin presupuesto ".$da."--".$prog."<br>";
+                              }
+
                       }
                       else{
-                            $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
-                            $par_id=0;
-                            if(count($partida)!=0){
-                                $par_id=$partida[0]['par_id'];
-                            }
-                           /*-------------------- Guardando Datos ------------------*/
-                            $query=$this->db->query('set datestyle to DMY');
-                            $data_to_store = array( 
-                                'aper_id' => 0,
-                                'aper_programa' => $prog,
-                                'aper_proyecto' => $proy,
-                                'aper_actividad' => $act,
-                                'par_id' => $par_id,
-                                'partida' => $cod_part,
-                                'importe' => $importe,
-                                'g_id' => $this->gestion,
-                                'fun_id' => $this->fun_id,
-                            );
-                            $this->db->insert('ptto_partidas_sigep_aprobado', $data_to_store);
-                            $sp_id=$this->db->insert_id();
-                            /*-------------------------------------------------------*/ 
-                            $nro++;
-                        }
+                        echo "mal ".$da."--".$prog."<br>";
+                      }
+                      // if(count($aper)!=0){
+                      //     $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                      //     $par_id=0;
+                      //     if(count($partida)!=0){
+                      //       $par_id=$partida[0]['par_id'];
+                      //     }
+
+                      //     $ptto=$this->model_ptto_sigep->get_ptto_sigep_aprobado($da,$ue,$prog,$proy,$act,$cod_part);
+                      //     if(count($ptto)!=0){
+                      //        /*------- Update Datos -------*/
+                      //         $query=$this->db->query('set datestyle to DMY');
+                      //         $update_ptto = array(
+                      //           'aper_id' => $aper[0]['aper_id'],
+                      //           'da' => $da,
+                      //           'ue' => $ue,
+                      //           'importe' => $importe,
+                      //           'fun_id' => $this->fun_id
+                      //         );
+
+                      //         $this->db->where('sp_id', $ptto[0]['sp_id']);
+                      //         $this->db->update('ptto_partidas_sigep_aprobado', $update_ptto);
+                      //        /*-----------------------------*/
+                      //        $nro++;
+                      //     }
+                      //     else{
+                      //        /*------- Guardando Datos --------*/
+                      //         $query=$this->db->query('set datestyle to DMY');
+                      //         $data_to_store = array( 
+                      //             'aper_id' => $aper[0]['aper_id'],
+                      //             'da' => $da,
+                      //             'ue' => $ue,
+                      //             'aper_programa' => $prog,
+                      //             'aper_proyecto' => $proy,
+                      //             'aper_actividad' => $act,
+                      //             'par_id' => $par_id,
+                      //             'partida' => $cod_part,
+                      //             'importe' => $importe,
+                      //             'g_id' => $this->gestion,
+                      //             'fun_id' => $this->fun_id,
+                      //         );
+                      //         $this->db->insert('ptto_partidas_sigep_aprobado', $data_to_store);
+                      //         $sp_id=$this->db->insert_id();
+                      //         /*-------------------------------------------------------*/
+                      //     }
+                      // $nro++;
+                      // }
+                      // else{
+                      //       $partida = $this->model_insumo->get_partida_codigo($cod_part); //// DATOS DE LA PARTIDA
+                      //       $par_id=0;
+                      //       if(count($partida)!=0){
+                      //           $par_id=$partida[0]['par_id'];
+                      //       }
+                      //      /*-------------------- Guardando Datos ------------------*/
+                      //       $query=$this->db->query('set datestyle to DMY');
+                      //       $data_to_store = array( 
+                      //           'aper_id' => 0,
+                      //           'aper_programa' => $prog,
+                      //           'aper_proyecto' => $proy,
+                      //           'aper_actividad' => $act,
+                      //           'par_id' => $par_id,
+                      //           'partida' => $cod_part,
+                      //           'importe' => $importe,
+                      //           'g_id' => $this->gestion,
+                      //           'fun_id' => $this->fun_id,
+                      //       );
+                      //       $this->db->insert('ptto_partidas_sigep_aprobado', $data_to_store);
+                      //       $sp_id=$this->db->insert_id();
+                      //       /*-------------------------------------------------------*/ 
+                      //       $nro++;
+                      //   }
                   }
                 }
             }

@@ -41,13 +41,25 @@ class Model_evento extends CI_Model {
         return $query->result_array();
     }
 
-    /// get CI
-    public function get_ci_participante($ci){
+    /// get CI y EVENTO
+    public function get_ci_participante($ci,$even_id){
         $sql = ' select even.*,p.*,tp.*
                  from participantes p
                  Inner Join eventosdnp as even On even.even_id=p.even_id
                  Inner Join tp_certificado as tp On tp.tp_cert=p.tp_cert
-                 where p.ci='.$ci.'';
+                 where even.even_id='.$even_id.' and p.ci='.$ci.'';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /// get CI y EVENTO (para buscar Certificado)
+    public function get_ci_participante_habilitado($ci,$even_id){
+        $sql = ' select even.*,p.*,tp.*
+                 from participantes p
+                 Inner Join eventosdnp as even On even.even_id=p.even_id
+                 Inner Join tp_certificado as tp On tp.tp_cert=p.tp_cert
+                 where even.even_id='.$even_id.' and p.ci='.$ci.' and p.estado!=\'3\'';
         $query = $this->db->query($sql);
         return $query->result_array();
     }
