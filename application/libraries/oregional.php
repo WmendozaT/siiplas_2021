@@ -123,6 +123,14 @@ class Oregional extends CI_Controller{
                       }
                       $tabla.='        
                     </select>
+                    <br>
+                    <select class="form-control" class="form-control" onchange="doSelectAlert(this.value,'.$row_or['or_id'].','.$row['dep_id'].');"> title="SELECCIONE ACP">
+                      <option value="0">ACP</option>';
+                      foreach($lista_form1 as $row_acp){
+                        $tabla.='<option value="'.$row_acp['og_id'].'">'.$row_acp['og_codigo'].'.- '.$row_acp['og_objetivo'].'</option>';
+                      }
+                      $tabla.='        
+                    </select>
                   </td>
                   <td>';
                   if($this->dep_id==$row['dep_id'] || $this->fun_id==399 || $this->fun_id==401 || $this->fun_id==418){

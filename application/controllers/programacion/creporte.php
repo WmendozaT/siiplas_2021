@@ -317,7 +317,7 @@ class Creporte extends CI_Controller {
                     $data['operaciones']=$this->programacionpoa->rep_formulario_N4_v1($componente[0]['com_id'],$componente[0]['com_componente'],$proyecto); /// 2023
                 }*/
                // $data['operaciones']='Hola mundo';
-                $data['operaciones']=$this->programacionpoa->rep_formulario_N4_v1($componente[0]['com_id'],$componente[0]['com_componente'],$proyecto); /// 2023
+                $data['operaciones']=$this->programacionpoa->rep_formulario_N4_v2($componente[0]['com_id'],$componente[0]['com_componente'],$proyecto); /// 2023
             }
             $data['cabecera']=$this->programacionpoa->cabecera($proyecto[0]['tp_id'],4,$proyecto,$com_id);
             $data['pie']=$this->programacionpoa->pie_form($proyecto);

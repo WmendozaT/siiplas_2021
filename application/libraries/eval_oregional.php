@@ -563,7 +563,7 @@ class Eval_oregional extends CI_Controller{
               }
 
               $ejecucion=0;
-              if($suma_ejec!=0){
+              if($suma_ejec!=0 && $suma_prog!=0){
                 $ejecucion=round((($suma_ejec/$suma_prog)*$suma_total_prog[0]['pg_fis']),2);
               }
 

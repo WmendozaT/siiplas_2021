@@ -9,13 +9,22 @@ class Model_notificacion extends CI_Model{
         $this->dist_id = $this->session->userData('dist'); /// dist-> id de la distrital
         $this->dist_tp = $this->session->userData('dist_tp'); /// dist_tp->1 Regional, dist_tp->0 Distritales
         $this->tmes = $this->session->userData('trimestre');
+        $this->dep_id = $this->session->userData('dep_id');
     }
     
     /*------- LISTA DE REQUERIMIENTOS POR MES (Unidad Responsable) --------*/
     public function list_requerimiento_mes($proy_id,$com_id,$mes_id){
-        $sql = 'select *
+        if($this->dep_id!=10){
+            $sql = 'select *
+                from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
+                where com_id='.$com_id.' and estado_cert=\'0\'';
+        }
+        else{
+            $sql = 'select *
                 from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
                 where com_id='.$com_id.' and estado_cert=\'0\' and (par_codigo!=31110 and par_codigo!=22600)';
+        }
+        
 
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -23,9 +32,16 @@ class Model_notificacion extends CI_Model{
 
     /*------- LISTA DE REQUERIMIENTOS POR MES (Unidad Responsable) --------*/
     public function list_requerimiento_mes_unidad($proy_id,$mes_id){
-        $sql = 'select *
+        if($this->dep_id!=10){
+            $sql = 'select *
+                from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
+                where estado_cert=\'0\'';
+        }
+        else{
+            $sql = 'select *
                 from lista_seguimiento_requerimientos_mensual_unidad('.$proy_id.','.$mes_id.','.$this->gestion.')
                 where estado_cert=\'0\' and (par_codigo!=31110 and par_codigo!=22600)';
+        }
 
         $query = $this->db->query($sql);
         return $query->result_array();

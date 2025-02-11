@@ -546,12 +546,13 @@ class Seguimientopoa extends CI_Controller{
               <table class="table table-bordered" width="100%" align=center>
                 <thead>
                  <tr style="font-size: 7px;" align=center>
-                    <th style="width:1%;height:15px;">#</th>
-                    <th style="width:1%;">COD.<br>OPE.</th>
-                    <th style="width:1%;">COD.<br>ACT.</th> 
-                    <th style="width:7%;">DESCRIPCIÓN ACTIVIDAD</th>
-                    <th style="width:7%;">RESULTADO</th>
-                    <th style="width:7%;">INDICADOR</th>
+                    <th style="width:0.5%;height:15px;">#</th>
+                    <th style="width:0.5%;">COD.<br>OPE.</th>
+                    <th style="width:0.5%;">COD.<br>ACT.</th> 
+                    <th style="width:6%;">DESCRIPCIÓN ACTIVIDAD</th>
+                    <th style="width:6%;">RESULTADO</th>
+                    <th style="width:6%;">INDICADOR</th>
+                    <th style="width:6%;">FUENTE DE VERIFICACIÓN</th>
                     <th style="width:2%;">META</th>
                     <th style="width:2.5%;">ENE.</th>
                     <th style="width:2.5%;">FEB.</th>
@@ -578,12 +579,13 @@ class Seguimientopoa extends CI_Controller{
                     $nro++;
                     $tabla .='
                     <tr >
-                      <td style="width: 1%; text-align: center; height:50px;" title='.$rowp['prod_id'].'>'.$nro.'</td>
-                      <td style="width: 1%; text-align: center;"><b>'.$rowp['or_codigo'].'</b></td>
-                      <td style="width: 1%; text-align: center;"><b>'.$rowp['prod_cod'].'</b></td>
-                      <td style="width: 7%; text-align: left;">'.$rowp['prod_producto'].'</td>
-                      <td style="width: 7%; text-align: left;">'.$rowp['prod_resultado'].'</td>
-                      <td style="width: 7%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                      <td style="width: 0.5%; text-align: center; height:50px;" title='.$rowp['prod_id'].'>'.$nro.'</td>
+                      <td style="width: 0.5%; text-align: center; font-size:19px;"><b>'.$rowp['or_codigo'].'</b></td>
+                      <td style="width: 0.5%; text-align: center; font-size:19px;"><b>'.$rowp['prod_cod'].'</b></td>
+                      <td style="width: 6%; text-align: left;">'.$rowp['prod_producto'].'</td>
+                      <td style="width: 6%; text-align: left;">'.$rowp['prod_resultado'].'</td>
+                      <td style="width: 6%; text-align: left;">'.$rowp['prod_indicador'].'</td>
+                      <td style="width: 6%; text-align: left;">'.$rowp['prod_fuente_verificacion'].'</td>
                       <td style="width: 2%; text-align: right;">'.round($rowp['prod_meta'],2).''.$indi_id.'</td>';
                       
                       for ($i=1; $i <=12 ; $i++) { 
@@ -2112,9 +2114,10 @@ class Seguimientopoa extends CI_Controller{
                   <th style="width:2%;">EJEC. PENDIENTE</th>
                   <th style="width:3%;">PROG. MES '.$this->verif_mes[2].'</th>
                   <th style="width:5%;">EJEC. MES '.$this->verif_mes[2].'</th>
-                  <th style="width:8%;">MEDIO DE VERIFICACI&Oacute;N</th>
-                  <th style="width:8%;">PROBLEMAS PRESENTADOS</th>
-                  <th style="width:8%;">ACCIONES REALIZADOS</th>
+                  <th style="width:8%;">FUENTE DE VERIFICACIÓN POA</th>
+                  <th style="width:8%;"><b>MEDIO DE VERIFICACI&Oacute;N A EVALUAR</b></th>
+                  <th style="width:8%;"><b>PROBLEMAS PRESENTADOS</b></th>
+                  <th style="width:8%;"><b>ACCIONES REALIZADOS</b></th>
                   <th style="width:2%;"></th>
                   <th style="width:2%; font-size:9px;"></th>
                   <th style="width:3%;"></th>
@@ -2177,8 +2180,8 @@ class Seguimientopoa extends CI_Controller{
                     }
                     $tabla.='
                     </td>
-                    <td style="width:0.5%;font-size: 17px" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
-                    <td style="width:0.5%;font-size: 17px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
+                    <td style="width:0.5%;font-size: 20px" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
+                    <td style="width:0.5%;font-size: 20px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
                     <td bgcolor="#f6fbf4">'.$row['prod_producto'].'</td>
                     <td bgcolor="#f6fbf4">'.$row['prod_indicador'].'</td>
                     <td bgcolor="#f6fbf4"><b>'.$uresp.'</b></td>
@@ -2196,15 +2199,18 @@ class Seguimientopoa extends CI_Controller{
                         <input type="text" id=ejec'.$nro.' value="'.$mes_ejec.'" '.$background.' onkeyup="verif_valor('.($diferencia[1]+$diferencia[2]).',this.value,'.$row['prod_id'].','.$nro.','.$tp.','.$mes_id.');" title="'.($diferencia[1]+$diferencia[2]).'" onkeypress="if (this.value.length < 10) { return numerosDecimales(event);}else{return false; }" onpaste="return false">
                       </label>
                     </td>
+                    <td bgcolor="#f6fbf4">
+                      <label class="textarea">
+                       <b>'.$row['prod_fuente_verificacion'].'</b>
+                      </label>
+                    </td>
                     <td>
                       <label class="textarea">
-                        
                         <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN">'.$mverificacion.'</textarea>
                       </label>
                     </td>
                     <td>
                       <label class="textarea">
-                        
                         <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS">'.$prob_presentados.'</textarea>
                       </label>
                     </td>

@@ -58,7 +58,7 @@ class Rep_operaciones extends CI_Controller {
       $data['list']=$this->menu_nacional();
       $tp_id=4;
       $data['informacion_consolidado']='';
-      if($this->fun_id==399 || $this->fun_id==401){
+      if($this->fun_id==399 || $this->fun_id==401 || $this->fun_id==1422){
         $data['informacion_consolidado']='
         <div class="row">
         

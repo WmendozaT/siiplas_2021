@@ -907,6 +907,7 @@ class Genera_informacion extends CI_Controller{
                   <th style="width:4%;background-color: #eceaea;">P. DIC.</th>
                   <th style="width:10%;background-color: #eceaea;">OBSERVACION</th>
                   <th style="width:5%;background-color: #eceaea;">TIPO MOD.</th>
+                  <th style="width:5%;background-color: #eceaea;">RESPONSABLE POA NACIONAL</th>
                 </tr>
               </thead>
             <tbody>';
@@ -917,13 +918,46 @@ class Genera_informacion extends CI_Controller{
               $tipo_modificacion='<b style="color:green">REG. REV. POA</b>';
             }
 
+            $resp='';
+            if($row['dep_cod']==1){
+              $resp='LIC. JUAN JOSE TOVAR';
+            }
+            elseif($row['dep_cod']==2){
+              $resp='LIC. MARIA CRISTINA LIENDO';
+            }
+            elseif($row['dep_cod']==3){
+              $resp='DR. JUAN CARLOS SOLIZ';
+            }
+            elseif($row['dep_cod']==4){
+              $resp='SR. JESUS RAMOS ANGULO';
+            }
+            elseif($row['dep_cod']==5){
+              $resp='LIC. LUIS RIVAS MICHEL';
+            }
+            elseif($row['dep_cod']==6){
+              $resp='LIC. RITHA VIADURRE';
+            }
+            elseif($row['dep_cod']==7){
+              $resp='DRA. CARMEN MICHEL';
+            }
+            elseif($row['dep_cod']==8){
+              $resp='DR. RAMIRO CARRASCO';
+            }
+            elseif($row['dep_cod']==9){
+              $resp='WILMER MENDOZA';
+            }
+            elseif($row['dep_cod']==10){
+              $resp='GG: JUAN JOSE TOVAR - GAF: WILMER MENDOZA - GSS: DRA. CARMEN MICHEL';
+            }
+
+
 
             $prog="'".$row['aper_programa']."'";
             $nro++;
             $tabla.='<tr>';
                 $tabla.='<td>'.$row['ins_id'].'</td>';
-                $tabla.='<td style="height:70px;">'."'".$row['dep_cod']."'".'</td>';
-                $tabla.='<td>'."'".$row['dist_cod']."'".'</td>';
+                $tabla.='<td style="height:70px;"><b>'."'".$row['dep_cod']."'".' - '.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</b></td>';
+                $tabla.='<td><b>'."'".$row['dist_cod']."'".' - '.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</b></td>';
                 $tabla.='<td>'.$prog.'</td>';
                 $tabla.='<td>'."'".$row['aper_proyecto']."'".'</td>';
                 $tabla.='<td>'."'".$row['aper_actividad']."'".'</td>';
@@ -959,6 +993,7 @@ class Genera_informacion extends CI_Controller{
                 }
                 $tabla.='<td style="width:3%;" bgcolor="#f4f5f3">'.mb_convert_encoding(strtoupper($row['ins_observacion']), 'cp1252', 'UTF-8').'</td>';
                 $tabla.='<td align="center">'.$tipo_modificacion.'</td>';
+                $tabla.='<td align="center">'.$resp.'</td>';
                 
             $tabla.='</tr>';
           }

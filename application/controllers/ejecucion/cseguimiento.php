@@ -62,48 +62,6 @@ class Cseguimiento extends CI_Controller {
       $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
       $this->load->view('admin/evaluacion/seguimiento_poa/list_poas_aprobados', $data);
     
-/*$prod_id=82775;
-$mes=3;
-      $get_form4=$this->model_producto->get_producto_id($prod_id);
-      $diferencia[1]=0;$diferencia[2]=0;$diferencia[3]=0;
-      
-      $sum_prog=0;$sum_ejec=0;
-      $prog=$this->model_seguimientopoa->get_programado_ejecutado_al_mes(0,$prod_id,$mes-1); /// Programado
-      $ejec=$this->model_seguimientopoa->get_programado_ejecutado_al_mes(1,$prod_id,$mes-1); /// Ejecutado
-      
-      if(count($prog)!=0){
-        $sum_prog=$prog[0]['programado'];
-      }
-
-      if(count($ejec)!=0){
-        $sum_ejec=$ejec[0]['ejecutado'];
-      }
-
-
-      $prog=$this->model_seguimientopoa->get_programado_poa_mes($prod_id,$mes); /// Programado mes actual
-      $diferencia[2]=0;
-      if(count($prog)!=0){
-        $diferencia[2]=round($prog[0]['pg_fis'],2);
-      }
-
-      $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($prod_id,$mes); /// Ejecutado mes actual
-      $diferencia[3]=0;
-      if(count($ejec)!=0){
-        $diferencia[3]=round($ejec[0]['pejec_fis'],2);
-      }
-
-      // ---------
-      if($get_form4[0]['mt_id']==1 || $get_form4[0]['mt_id']==5){ // Meta Recurrente
-        $diferencia[1]=0; // no jala prog del mes anterior
-      }
-      elseif($get_form4[0]['mt_id']==3){ /// Meta Acumulativo
-        $diferencia[1]=($sum_prog-$sum_ejec); /// no ejecutado en el mes anterior
-      }
-      // ---------
-      echo $get_form4[0]['mt_id'].'---'.$mes.'<br>';
-      echo $sum_prog.'---'.$sum_ejec.'<br>';
-      echo $diferencia[1].'-'.$diferencia[2].'-'.$diferencia[3];*/
-
       /*$insumos=$this->model_insumo->lista_insumos(2021);
 
       $tabla='';
@@ -184,10 +142,9 @@ $mes=3;
         <thead>
           <tr style="height:35px;">
             <th style="width:1%;" bgcolor="#474544">#</th>
-            <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR">UNIDADES DEPENDIENTES</th>
-            <th style="width:8%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO MENSUAL</th>
-            <th style="width:3%;" bgcolor="#474544" title="EVALUACION POA">SUBIR NOTIFICACIONES</th>
-            <th style="width:3%;" bgcolor="#474544" title="EVALUACION POA">EVALUACION POA CONSOLIDADO</th>
+            <th style="width:5%;" bgcolor="#474544" title="SELECCIONAR">MIS UNIDADES</th>
+            <th style="width:10%;" bgcolor="#474544" title="SELECCIONAR REPORTE SEGUIMIENTO">REPORTE SEGUIMIENTO MENSUAL</th>
+            <th style="width:3%;" bgcolor="#474544" title="EVALUACION POA">EVALUACION POA</th>
             <th style="width:3%;" bgcolor="#474544" title="EJECUCION CERT. POA"></th>
             <th style="width:10%;" bgcolor="#474544" title="APERTURA PROGRAM&Aacute;TICA">CATEGORIA PROGRAM&Aacute;TICA '.$this->gestion.'</th>
             <th style="width:20%;" bgcolor="#474544" title="DESCRIPCI&Oacute;N">UNIDAD / ESTABLECIMIENTO DE SALUD</th>
@@ -208,7 +165,7 @@ $mes=3;
                 <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>
                 <td align=center bgcolor="#deebfb">
                   <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" style="font-size:10px;">
-                    <i class="glyphicon glyphicon-list"></i> <b>UNIDADES <br> OPERATIVAS</b>
+                    <i class="glyphicon glyphicon-list"></i> <b>UNIDADES OPERATIVAS</b>
                   </a>
                 </td>
                 <td align=center bgcolor="#deebfb">
@@ -229,7 +186,6 @@ $mes=3;
                     </ul>
                   </div>
                 </td>
-                <td align=center><a href="'.site_url("").'/seg/add_scaneado/'.$row['proy_id'].'" title="SUBIR ARCHIVO SCANNEADO" ><img src="'.base_url().'assets/img/subir.png" WIDTH="38" HEIGHT="38"/></a></td>
                 <td align=center bgcolor="#deebfb">
                   <a href="'.site_url("").'/eval/eval_unidad/'.$row['proy_id'].'" title="REPORTE DE EVALUACION POA POR UNIDAD" target="_blank" ><img src="'.base_url().'assets/img/ejecucion.png" WIDTH="35" HEIGHT="35"/></a>
                 </td>
@@ -250,7 +206,7 @@ $mes=3;
         $tabla.='
         </tbody>
           <tr>
-            <td colspan="13" style="height:50px;"></td>
+            <td colspan="10" style="height:50px;"></td>
           </tr>
       </table>';
       return $tabla;
@@ -959,7 +915,7 @@ $mes=3;
     $data['menu'] = $this->seguimientopoa->menu(4);
     //$data['base'] = $this->seguimientopoa->menu(4);
     $componente = $this->model_componente->get_componente($com_id,$this->gestion); ///// DATOS DEL COMPONENTE
-
+    if(count($componente)!=0){
       $s1=' <input type="hidden" name="mes_activo" value='.$this->verif_mes[1].'>';
       $s2='';
       $s4='';
@@ -1114,6 +1070,11 @@ $mes=3;
       </div>';
      
       $this->load->view('admin/evaluacion/seguimiento_poa/formulario_seguimiento', $data);
+    }
+    else{
+      redirect(site_url("").'/admin/dashboard');;
+    }
+      
   }
 
 
@@ -1367,6 +1328,8 @@ $mes=3;
         /// -----------------------------------------------------
         $data['evaluacion_form4']=$this->seguimientopoa->tabla_reporte_evaluacion_poa($com_id,$trm_id); /// Reporte Gasto Corriente, Proyecto de Inversion 2020
         //$data['ejecucion_ppto']=$this->seguimientopoa->ejecucion_presupuestaria_acumulado_total($com_id); /// Ejecucion ppto
+        
+        //echo $data['evaluacion_form4'];
 
         $this->load->view('admin/evaluacion/seguimiento_poa/reporte_evaluacion_trimestral', $data);
       }
@@ -1804,12 +1767,9 @@ $mes=3;
       if($data['proyecto'][0]['tp_id']==4){
         $data['principal']=$this->seguimientopoa->cuerpo_nota_notificacion($proy_id); /// Cuerpo Nota Principal
       }
-      
       $data['cuerpo']=$this->seguimientopoa->lista_subactividades_a_notificar($unidades_responsables); /// listado de unidades a notificar
       //echo $data['proyecto'][0]['dist_id'];
-      
-      //$this->load->view('admin/evaluacion/seguimiento_poa/reporte_notificacion_seguimiento', $data); 
-      echo $data['cuerpo'];
+      $this->load->view('admin/evaluacion/seguimiento_poa/reporte_notificacion_seguimiento', $data); 
     }
     else{
       echo "Error !!!";

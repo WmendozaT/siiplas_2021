@@ -84,13 +84,13 @@ class C_consultas extends CI_Controller {
                     <div class="col-md-8">
                       <select class="form-control input-lg" id="proy_id" name="proy_id" title="SELECCIONE GERENCIA DE AREA">
                         <option value="0">Seleccione Gerencia de Area</option>';
-                        if($this->gestion>2023){
+                        if($this->gestion>2024){
                           $data['formulario'].='
-                          <option value="3073">000000001 - HONORABLE DIRECTORIO</option>
-                          <option value="3071">000000002 - GERENCIA GENERAL</option>
-                          <option value="3072">000000003 - GERENCIA ADMINISTRATIVA FINANCIERA</option>
-                          <option value="3074">000000004 - GERENCIA DE SERVICIOS DE SALUD</option>
-                          <option value="3335">7300000010 - MEDICINA DEL TRABAJO</option>';
+                          <option value="3517">000000001 - HONORABLE DIRECTORIO</option>
+                          <option value="3516">000000002 - GERENCIA GENERAL</option>
+                          <option value="3515">000000003 - GERENCIA ADMINISTRATIVA FINANCIERA</option>
+                          <option value="3519">000000004 - GERENCIA DE SERVICIOS DE SALUD</option>
+                          <option value="3518">7300000010 - MEDICINA DEL TRABAJO</option>';
                         }
                         else{
                           $data['formulario'].='
