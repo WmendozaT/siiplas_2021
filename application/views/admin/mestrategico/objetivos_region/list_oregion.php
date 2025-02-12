@@ -109,7 +109,7 @@
 				</span>
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Acci&oacute;n de Corto Plazo</li><li>Operaciones</li>
+					<li>Acci&oacute;n de Corto Plazo</li><li>Operaciones - Formulario N° 2</li>
 				</ol>
 			</div>
 			<!-- MAIN CONTENT -->
@@ -229,6 +229,26 @@
 			          data:{select_og_id:select_og_id,or_id:or_id,dep_id:dep_id},
 			              success: function (data) {
 			              window.location.reload(true);
+			          }
+			      });
+			      } else {
+			          alertify.error("OPCI\u00D3N CANCELADA");
+			      }
+			    });
+			}
+
+			function doSelectPriori(select_og_id,or_id,dep_id) {
+	//			alert(select_og_id+' - '+or_id+' - '+dep_id)
+					alertify.confirm("DESEA CAMBIAR EL TIPO DE PRIORIZACIÓN ?", function (a) {
+			      if (a) {
+			      url = "<?php echo site_url().'/mestrategico/cobjetivo_regional/update_priorizar_form2';?>";
+			      $.ajax({
+			          type: "post",
+			          url: url,
+			          data:{select_og_id:select_og_id,or_id:or_id,dep_id:dep_id},
+			              success: function (data) {
+			              alertify.success("EXITO !!!");
+			              //window.location.reload(true);
 			          }
 			      });
 			      } else {

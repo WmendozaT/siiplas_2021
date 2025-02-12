@@ -59,7 +59,7 @@ class Cobjetivo_regional extends CI_Controller {
       $this->load->view('admin/mestrategico/objetivos_region/form_oregional', $data);
     }
 
-    /*------ CAMBIA ALINEACION A ACP 2023---------*/
+    /*------ CAMBIA ALINEACION A ACP 2024---------*/
     function cambia_alineacion_acp(){
       if($this->input->is_ajax_request() && $this->input->post()){
           $this->form_validation->set_rules('select_og_id', 'Objetivo Regional', 'required|trim');
@@ -76,6 +76,29 @@ class Cobjetivo_regional extends CI_Controller {
 
           $update_form2 = array(
             'pog_id' => $get_form1[0]['pog_id'],
+          );
+          $this->db->where('or_id', $or_id);
+          $this->db->update('objetivos_regionales', $update_form2);
+    
+      }else{
+          show_404();
+      }
+    }
+
+    /*------ CAMBIAR PRIORIZACION---------*/
+    function update_priorizar_form2(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+          $this->form_validation->set_rules('select_og_id', 'Objetivo Regional', 'required|trim');
+          $this->form_validation->set_message('required', 'El campo es es obligatorio');
+        
+          $post = $this->input->post();
+          $select_og_id= $this->security->xss_clean($post['select_og_id']); // priori
+          $or_id= $this->security->xss_clean($post['or_id']); /// or_id
+          $dep_id= $this->security->xss_clean($post['dep_id']); /// dep_id
+          
+
+          $update_form2 = array(
+            'or_priorizado' => $select_og_id,
           );
           $this->db->where('or_id', $or_id);
           $this->db->update('objetivos_regionales', $update_form2);

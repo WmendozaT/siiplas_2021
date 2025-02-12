@@ -219,7 +219,7 @@ class Eval_oregional extends CI_Controller{
                       $tp_meta='RECURRENTE TRIMESTRAL';
                     }
 
-                    $color='';$grafico='';
+                    $color=''; $titulo='';$grafico='';
                     $calificacion=$this->calificacion_trimestral_acumulado_x_oregional($row['or_id'],$this->tmes,$row['or_tp'],$row['tp_meta']);
                     
                     $boton_ajustar_apriorizados='
@@ -246,6 +246,11 @@ class Eval_oregional extends CI_Controller{
                     }
 
                     $nro_ope++;
+                    if($row['or_priorizado']==1){
+                      $titulo='OPERACION PRIORIZADO';
+                      $color='#e4f7f5';
+                    }
+
                     $tabla.='
                       <tr style="font-size: 10px;" bgcolor='.$color.'>
                         <td style="width:1%; height:10px;" align=center title='.$row['pog_id'].'>'.$nro_ope.'</td>

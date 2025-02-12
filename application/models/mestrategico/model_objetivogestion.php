@@ -227,7 +227,16 @@ class Model_objetivogestion extends CI_Model{
     /*=========== REPORTE OBJETIVO GESTION ===========*/
     /*---- lista Objetivo Regional,Gestion segun su regional ----*/
     public function get_list_ogestion_por_regional($dep_id){
-        if($this->gestion>2023){ /// Gestion 2024
+        if($this->gestion>2024){ /// 2025
+         $sql = 'select opge.*,oge.*,oe.*,oreg.*
+                from objetivo_gestion oge
+                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=oge.oe_id
+                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\' and oreg.or_priorizado=\'1\'
+                order by oge.og_codigo,oreg.or_codigo asc';
+        }
+        else{
             $sql = 'select opge.*,oge.*,oe.*,oreg.*
                 from objetivo_gestion oge
                 Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
@@ -236,19 +245,7 @@ class Model_objetivogestion extends CI_Model{
                 where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
                 order by oge.og_codigo,oreg.or_codigo asc';
         }
-        else{
-            $sql = 'select opge.*,oge.*,ae.*,oe.*,oreg.*
-                from objetivo_gestion oge
-                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
-                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
-
-                Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
-                Inner Join _objetivos_estrategicos as oe on oe.obj_id = ae.obj_id
-
-                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
-                order by oge.og_codigo,oreg.or_codigo asc';
-        }
-        
+      
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -256,13 +253,25 @@ class Model_objetivogestion extends CI_Model{
 
     /*---- Get Datos de Alineacion OR, OG, ACP ----*/
     public function get_alineacion_habilitado_oregional_a_form4($og_codigo,$or_codigo,$dep_id){
-        $sql = 'select opge.dep_id,ae.acc_codigo,oge.og_codigo,oreg.or_codigo,oreg.or_id,oreg.or_objetivo
+        if($this->gestion>2024){ /// 2025
+            $sql = 'select opge.dep_id,ae.acc_codigo,oge.og_codigo,oreg.or_codigo,oreg.or_id,oreg.or_objetivo
+                from objetivo_gestion oge
+                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+                Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
+                where opge.dep_id='.$dep_id.' and oge.og_codigo='.$og_codigo.' and oreg.or_codigo='.$or_codigo.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\' and oreg.or_priorizado=\'1\'
+                order by oge.og_codigo,oreg.or_codigo asc';
+        }
+        else{
+            $sql = 'select opge.dep_id,ae.acc_codigo,oge.og_codigo,oreg.or_codigo,oreg.or_id,oreg.or_objetivo
                 from objetivo_gestion oge
                 Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
                 Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
                 Inner Join _acciones_estrategicas as ae on ae.acc_id = oge.acc_id
                 where opge.dep_id='.$dep_id.' and oge.og_codigo='.$og_codigo.' and oreg.or_codigo='.$or_codigo.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
                 order by oge.og_codigo,oreg.or_codigo asc';
+        }
+        
         
         $query = $this->db->query($sql);
         return $query->result_array();
@@ -354,7 +363,18 @@ class Model_objetivogestion extends CI_Model{
     ////LISTA CONSOLIDADO OPERACIONES INSTITUCIONAL
     /*---- lista Form 2 Operaciones institucional ya alineados (total a la gestion)----*/
     public function get_list_ogestion_por_regional_institucional(){
-        $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
+        if($this->gestion>2024){ /// 2025
+            $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
+                from temp_trm_prog_objetivos_regionales temprog
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id 
+                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+                Inner Join objetivo_gestion as og on og.og_id = opge.og_id
+                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\' and oreg.or_priorizado=\'1\'
+                group by opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo
+                order by opge.g_id,og.og_codigo, oreg.or_codigo asc';
+        }
+        else{
+            $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
                 from temp_trm_prog_objetivos_regionales temprog
                 Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id 
                 Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
@@ -362,13 +382,27 @@ class Model_objetivogestion extends CI_Model{
                 where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
                 group by opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo
                 order by opge.g_id,og.og_codigo, oreg.or_codigo asc';
+        }
+
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }
 
     /*---- lista Form 2 Operaciones institucional ya alineados (total al trimestre)----*/
     public function get_list_ogestion_por_regional_institucional_al_trimestre($trimestre){
-        $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
+        if($this->gestion>2024){ /// 2025
+            $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
+                from temp_trm_prog_objetivos_regionales temprog
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
+                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+                Inner Join objetivo_gestion as og on og.og_id = opge.og_id
+                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and (temprog.trm_id>\'0\' and temprog.trm_id<='.$trimestre.') and oreg.or_meta!=\'0\' and oreg.or_priorizado=\'1\'
+                group by opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo
+                order by opge.g_id,og.og_codigo, oreg.or_codigo asc';
+        }
+        else{
+            $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
                 from temp_trm_prog_objetivos_regionales temprog
                 Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
                 Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
@@ -376,6 +410,8 @@ class Model_objetivogestion extends CI_Model{
                 where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and (temprog.trm_id>\'0\' and temprog.trm_id<='.$trimestre.') and oreg.or_meta!=\'0\'
                 group by opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo
                 order by opge.g_id,og.og_codigo, oreg.or_codigo asc';
+        }
+        
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -385,10 +421,19 @@ class Model_objetivogestion extends CI_Model{
     ////LISTA CONSOLIDADO ACP INSTITUCIONAL
     /*---- lista Form 1 Acciones de Corto Plazo institucional ya alineados a Operaciones para su evaluacion - Gestion ----*/
     public function get_list_acp_institucional_alineados_a_form2(){
-        $sql = 'select g_id,og_id,og_codigo,og_objetivo,og_producto,og_resultado,SUM(programado_total) programado_total
+        if($this->gestion>2024){ /// 2025
+            $sql = 'select g_id,og_id,og_codigo,og_objetivo,og_producto,og_resultado,SUM(programado_total) programado_total
+                from lista_form2_operaciones_alineados_a_form4_priorizados('.$this->gestion.')
+                group by g_id,og_id,og_codigo,og_objetivo,og_producto,og_resultado
+                order by og_codigo asc';
+        }
+        else{
+            $sql = 'select g_id,og_id,og_codigo,og_objetivo,og_producto,og_resultado,SUM(programado_total) programado_total
                 from lista_form2_operaciones_alineados_a_form4('.$this->gestion.')
                 group by g_id,og_id,og_codigo,og_objetivo,og_producto,og_resultado
                 order by og_codigo asc';
+        }
+
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -410,7 +455,18 @@ class Model_objetivogestion extends CI_Model{
 
     /*---- lista form 2 (operaciones) segun Objetivo de Gestion Institucional al Trimestre----*/
     public function get_list_form2_x_ogestion_trimestral($og_id,$trimestre){
-        $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
+        if($this->gestion>2024){ /// gestion 2025
+            $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
+                from temp_trm_prog_objetivos_regionales temprog
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
+                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+                Inner Join objetivo_gestion as og on og.og_id = opge.og_id
+                where og.og_id='.$og_id.' and oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and (temprog.trm_id>\'0\' and temprog.trm_id<='.$trimestre.') and oreg.or_meta!=\'0\' and oreg.or_priorizado=\'1\'
+                group by opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo
+                order by opge.g_id,og.og_codigo,oreg.or_codigo asc';
+        }
+        else{
+            $sql = 'select opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo,SUM(temprog.pg_fis) programado_total
                 from temp_trm_prog_objetivos_regionales temprog
                 Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
                 Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
@@ -418,6 +474,8 @@ class Model_objetivogestion extends CI_Model{
                 where og.og_id='.$og_id.' and oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and (temprog.trm_id>\'0\' and temprog.trm_id<='.$trimestre.') and oreg.or_meta!=\'0\'
                 group by opge.g_id,og.og_id,og.og_codigo,oreg.or_codigo
                 order by opge.g_id,og.og_codigo,oreg.or_codigo asc';
+        }
+
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -425,11 +483,21 @@ class Model_objetivogestion extends CI_Model{
 
     /*---- lista form 2 (operaciones) segun Objetivo de Gestion Institucional----*/
     public function get_list_form2_x_ogestion($og_id){
-        $sql = 'select og_id,og_codigo, or_codigo,SUM(programado_total) programado_total
+        if($this->gestion>2024){ /// gestion 2025
+            $sql = 'select og_id,og_codigo, or_codigo,SUM(programado_total) programado_total
+                from lista_form2_operaciones_alineados_a_form4_priorizados('.$this->gestion.')
+                where og_id='.$og_id.'
+                group by og_id,og_codigo, or_codigo
+                order by og_codigo, or_codigo asc';
+        }
+        else{
+            $sql = 'select og_id,og_codigo, or_codigo,SUM(programado_total) programado_total
                 from lista_form2_operaciones_alineados_a_form4('.$this->gestion.')
                 where og_id='.$og_id.'
                 group by og_id,og_codigo, or_codigo
                 order by og_codigo, or_codigo asc';
+        }
+
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -464,13 +532,25 @@ class Model_objetivogestion extends CI_Model{
 
     /*-- Get Suma total Ejecutado Alineado Institucional--*/
     public function get_suma_total_ejecutado_alineado_form1_institucional(){
-        $sql = 'select opge.g_id,SUM(temejec.ejec_fis) ejecutado
+        if($this->gestion>2024){ /// gestion 2025
+            $sql = 'select opge.g_id,SUM(temejec.ejec_fis) ejecutado
+                from temp_trm_ejec_objetivos_regionales temejec
+                Inner Join objetivos_regionales as oreg on oreg.or_id = temejec.or_id
+                Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
+                Inner Join objetivo_gestion as og on og.og_id = opge.og_id
+                where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\' and oreg.or_priorizado=\'1\'
+                group by opge.g_id';
+        }
+        else{
+            $sql = 'select opge.g_id,SUM(temejec.ejec_fis) ejecutado
                 from temp_trm_ejec_objetivos_regionales temejec
                 Inner Join objetivos_regionales as oreg on oreg.or_id = temejec.or_id
                 Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id
                 Inner Join objetivo_gestion as og on og.og_id = opge.og_id
                 where oreg.estado!=\'3\' and opge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
                 group by opge.g_id';
+        }
+        
 
         $query = $this->db->query($sql);
 

@@ -90,32 +90,34 @@ class Oregional extends CI_Controller{
               </a>
               <hr>';
               $oregional=$this->model_objetivoregion->list_oregional_regional($og_id,$row['dep_id']);
-              $nro=0;
-              foreach($oregional as $row_or){
-                $tabla.='
+              $tabla.='
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th style="width:5%;" bgcolor="#d2d2d2">#</th>
-                      <th style="width:3%;" bgcolor="#d2d2d2">MOD.</th>
-                      <th style="width:3%;" bgcolor="#d2d2d2">DEL.</th>
-                      <th style="width:5%;" bgcolor="#d2d2d2">COD. ACP..</th>
-                      <th style="width:5%;" bgcolor="#d2d2d2">COD. OPE.</th>
-                      <th style="width:12%;" bgcolor="#d2d2d2">OPERACIÓN '.$this->gestion.'</th>
-                      <th style="width:12%;" bgcolor="#d2d2d2">PRODUCTO</th>
-                      <th style="width:12%;" bgcolor="#d2d2d2">RESULTADO (LOGROS)</th>
-                      <th style="width:12%;" bgcolor="#d2d2d2">INDICADOR</th>
-                      <th style="width:5%;" bgcolor="#d2d2d2">LINEA BASE</th>
-                      <th style="width:5%;" bgcolor="#d2d2d2">META</th>
-                      <th style="width:12%;" bgcolor="#d2d2d2">MEDIO DE VERIFICACI&Oacute;N</th>
-                      <th style="width:12%;" bgcolor="#d2d2d2">OBSERVACIONES DETALLE DE DISTRIBUCI&Oacute;N</th>
+                      <th style="width:5%;">#</th>
+                      <th style="width:5%;">PRIORIDAD</th>
+                      <th style="width:3%;">MOD.</th>
+                      <th style="width:3%;">DEL.</th>
+                      <th style="width:3%;">COD. ACP..</th>
+                      <th style="width:3%;">COD. OPE.</th>
+                      <th style="width:12%;">OPERACIÓN '.$this->gestion.'</th>
+                      <th style="width:10%;">PRODUCTO</th>
+                      <th style="width:12%;">RESULTADO (LOGROS)</th>
+                      <th style="width:10%;">INDICADOR</th>
+                      <th style="width:5%;">LINEA BASE</th>
+                      <th style="width:5%;">META</th>
+                      <th style="width:12%;">MEDIO DE VERIFICACI&Oacute;N</th>
+                      <th style="width:12%;">OBSERVACIONES DETALLE DE DISTRIBUCI&Oacute;N</th>
                     </tr>
                   </thead>
                 <tbody>';
+              $nro=0;
+              foreach($oregional as $row_or){
+                
                 $nro++;
                 $tabla.='<tr>';
                   $tabla.='
-                  <td title="'.$row_or['or_id'].'"><b>'.$nro.'</b>
+                  <td title="'.$row_or['or_id'].'">
                     <select class="form-control" class="form-control" onchange="doSelectAlert(this.value,'.$row_or['or_id'].','.$row['dep_id'].');"> title="SELECCIONE ACP">
                       <option value="0">ACP</option>';
                       foreach($lista_form1 as $row_acp){
@@ -123,11 +125,16 @@ class Oregional extends CI_Controller{
                       }
                       $tabla.='        
                     </select>
-                    <br>
-                    <select class="form-control" class="form-control" onchange="doSelectAlert(this.value,'.$row_or['or_id'].','.$row['dep_id'].');"> title="SELECCIONE ACP">
-                      <option value="0">ACP</option>';
-                      foreach($lista_form1 as $row_acp){
-                        $tabla.='<option value="'.$row_acp['og_id'].'">'.$row_acp['og_codigo'].'.- '.$row_acp['og_objetivo'].'</option>';
+                  </td>
+                  <td>
+                    <select class="form-control" class="form-control" onchange="doSelectPriori(this.value,'.$row_or['or_id'].','.$row['dep_id'].');"> title="SELECCIONE TIPO DE PRIORIDAD">';
+                      if($row_or['or_priorizado']==0){
+                        $tabla.=' <option value="0" selected>NO</option>
+                                  <option value="1">SI</option>';
+                      }
+                      else{
+                        $tabla.=' <option value="0">NO</option>
+                                  <option value="1" selected>SI</option>';
                       }
                       $tabla.='        
                     </select>
@@ -154,39 +161,11 @@ class Oregional extends CI_Controller{
                   <td align=right><b>'.round($row_or['or_meta'],2).'</b></td>
                   <td>'.$row_or['or_verificacion'].'</td>
                   <td>'.$row_or['or_observacion'].'</td>';
-                $tabla.='</tr>
-                </tbody>
-                </table>';
-                /*$num=0;
-                $distritales=$this->model_proyecto->list_distritales($row['dep_id']);
-                foreach($distritales as $rowd){
-                  $niveles=$this->model_objetivoregion->list_niveles();
-                  $tabla.=
-                  '<table class="table table-bordered">
-                      <thead>
-                      <tr>
-                        <th colspan=4 bgcolor="#f5f5f5" title="'.$rowd['dist_id'].'">DISTRIBUCI&Oacute;N .- '.strtoupper($rowd['dist_distrital']).'</th>
-                      </tr>
-                      <tr>
-                        <th style="width:25%;" bgcolor="#f5f5f5">REGIONAL / DISTRITAL</th>
-                        <th style="width:25%;" bgcolor="#f5f5f5">PRIMER NIVEL</th>
-                        <th style="width:25%;" bgcolor="#f5f5f5">SEGUNDO NIVEL</th>
-                        <th style="width:25%;" bgcolor="#f5f5f5">TERCER NIVEL</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                        <tr>';
-                        foreach($niveles as $rown){
-                          $nivel=$this->model_objetivoregion->list_unidades_distrital_niveles($rowd['dist_id'],$rown['tn_id']);
-                          $tabla.='<td>'.$this->lista_unidades_distrital_nivel($nivel,$row_or['or_id']).'</td>';
-                        }
-                        $tabla.='
-                        </tr>
-                      </tbody>
-                    </table><hr>';
-                }*/
+                $tabla.='</tr>';
               }
               $tabla.='
+              </tbody>
+            </table>
           </div>
         </div>';
       }
