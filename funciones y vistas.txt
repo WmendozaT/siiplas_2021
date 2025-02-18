@@ -4673,3 +4673,25 @@ create table eventosdnp(
   fecha timestamp without time zone DEFAULT ('now'::text)::timestamp(0) with time zone,
   primary key(tp_cert)
  );
+
+
+-------
+
+PARA CONTROL DE REGISTRO DE SEGUIMIENTO POA 
+ create table registro_seguimientopoa(
+  reg_id serial NOT NULL,
+  fun_id integer,
+  ingreso_form integer DEFAULT 0,
+  ingreso_fecha timestamp,
+  impresion_form integer DEFAULT 0,
+  impresion_fecha timestamp,
+  mes integer,
+  gestion integer,
+  nro_act integer DEFAULT 0,
+  com_id numeric(18,0),
+  proy_id numeric(18,0),
+  num_ip character varying(50),
+  nom_ip character varying(50),
+  
+  primary key(reg_id)
+ );

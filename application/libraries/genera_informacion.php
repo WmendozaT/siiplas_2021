@@ -956,7 +956,7 @@ class Genera_informacion extends CI_Controller{
             $nro++;
             $tabla.='<tr>';
                 $tabla.='<td>'.$row['ins_id'].'</td>';
-                $tabla.='<td style="height:70px;"><b>'."'".$row['dep_cod']."'".' - '.mb_convert_encoding(strtoupper($row['proyecto']), 'cp1252', 'UTF-8').'</b></td>';
+                $tabla.='<td style="height:70px;"><b>'."'".$row['dep_cod']."'".' - '.mb_convert_encoding(strtoupper($row['dep_departamento']), 'cp1252', 'UTF-8').'</b></td>';
                 $tabla.='<td><b>'."'".$row['dist_cod']."'".' - '.mb_convert_encoding(strtoupper($row['dist_distrital']), 'cp1252', 'UTF-8').'</b></td>';
                 $tabla.='<td>'.$prog.'</td>';
                 $tabla.='<td>'."'".$row['aper_proyecto']."'".'</td>';

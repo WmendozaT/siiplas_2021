@@ -366,14 +366,14 @@ class crequerimiento extends CI_Controller{
                   $productos = $this->model_producto->list_prod($componente[0]['com_id']); // Lista de productos
                     $tabla .='<select class="form-control" onchange="doSelectAlert(event,this.value,'.$row['ins_id'].');">';
                       foreach($productos as $pr){
-                        if($pr['prod_ppto']==1){
+                   
                           if($pr['prod_id']==$row['prod_id']){
                             $tabla .="<option value=".$pr['prod_id']." selected>".$pr['prod_cod']."</option>";
                           }
                           else{
                             $tabla .="<option value=".$pr['prod_id'].">".$pr['prod_cod']."</option>"; 
                           } 
-                        }
+                     
                       }
                     $tabla.='</select>';
                   }

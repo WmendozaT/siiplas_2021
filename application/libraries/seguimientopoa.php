@@ -2034,7 +2034,9 @@ class Seguimientopoa extends CI_Controller{
               if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0){
 
               $tabla.='
+
               <section class="col col-3">
+               <b style="color:blue;"> MESES A EVALUAR: </b>
                 <select class="form-control" id="mes_id" name="mes_id" title="SELECCIONE MES A EVALUAR">
                   <option value="0" selected>Seleccione mes para Evaluacion POA ...</option>';
                 foreach($meses as $row){
@@ -2062,36 +2064,19 @@ class Seguimientopoa extends CI_Controller{
 
 
     /*--- LISTA DE FORMULARIO N 4 PROGRAMADOS AL MES ACTUAL 2021-2023 ---*/
-    function lista_operaciones_programados($com_id,$mes_id,$regresion){
-      $form4=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
+    function lista_operaciones_programados($com_id,$mes_id){
+      $form4=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE FORM 4
       $tabla='';
       $tabla.=' 
       <form class="smart-form" method="post">
+      <br>
       <input type="hidden" name="base" value="'.base_url().'">
           <div class="row">
             <section class="col col-3">
+              <b>BUSCADOR: </b>
               <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
             </section>
             '.$this->verif_btn_evaluacionpoa().''; /// Meses del trimestre
-/*            if($this->tp_adm==1){
-              $meses = $this->model_configuracion->get_mes();
-              $tabla.='
-              <section class="col col-3">
-                <select class="form-control" id="mes_id" name="mes_id" title="SELECCIONE MES">';
-                foreach($meses as $row){
-                  if($row['m_id']<=ltrim(date("m"), "0")){
-                    if($row['m_id']==$this->verif_mes[1]){ 
-                      $tabla.='<option value="'.$row['m_id'].'" selected>'.$row['m_descripcion'].'</option>';
-                    }
-                    else{ 
-                      $tabla.='<option value="'.$row['m_id'].'" >'.$row['m_descripcion'].'</option>';
-                    } 
-                  }                     
-                }
-               $tabla.='
-                </select>
-              </section>';
-            }*/
             $tabla.='
             <div id="loading" style="display:none;" style="width:20%;">
               <img src="'.base_url().'/assets/img/cargando-loading-039.gif" width="40%" height="30%">
@@ -2107,17 +2092,18 @@ class Seguimientopoa extends CI_Controller{
                   <th style="width:0.5%;"></th>
                   <th style="width:0.5%;"><b>COD. OPE.</b></th>
                   <th style="width:0.5%;"><b>COD. ACT.</b></th>
-                  <th style="width:13%;">ACTIVIDAD</th>
+                  <th style="width:10%;">ACTIVIDAD</th>
                   <th style="width:7%;">INDICADOR</th>
                   <th style="width:7%;">UNIDAD RESPONSABLE</th>
                   <th style="width:2%;">META TOTAL</th>
                   <th style="width:2%;">EJEC. PENDIENTE</th>
                   <th style="width:3%;">PROG. MES '.$this->verif_mes[2].'</th>
                   <th style="width:5%;">EJEC. MES '.$this->verif_mes[2].'</th>
-                  <th style="width:8%;">FUENTE DE VERIFICACIÓN POA</th>
-                  <th style="width:8%;"><b>MEDIO DE VERIFICACI&Oacute;N A EVALUAR</b></th>
-                  <th style="width:8%;"><b>PROBLEMAS PRESENTADOS</b></th>
-                  <th style="width:8%;"><b>ACCIONES REALIZADOS</b></th>
+                  <th style="width:6%;">FUENTE DE VERIFICACIÓN POA</th>
+                  <th style="width:2%;"></th>
+                  <th style="width:8%; background:#38393b;"><b style="color:white;">MEDIO DE VERIFICACI&Oacute;N A PRESENTAR EN EL SEGUIMIENTO / EVALUACION</b></th>
+                  <th style="width:8%; background:#38393b;"><b style="color:white;">PROBLEMAS PRESENTADOS</b><br><br></th>
+                  <th style="width:8%; background:#38393b;"><b style="color:white;">ACCIONES REALIZADOS</b><br><br></th>
                   <th style="width:2%;"></th>
                   <th style="width:2%; font-size:9px;"></th>
                   <th style="width:3%;"></th>
@@ -2130,7 +2116,7 @@ class Seguimientopoa extends CI_Controller{
                 if($row['indi_id']==2){
                   $indi_id='%';
                 }
-
+          
                 ///----------------
                 ///---------- unidad responsable
                 if($row['uni_resp']==0){
@@ -2142,7 +2128,7 @@ class Seguimientopoa extends CI_Controller{
                   $uresp='';
                   if(count($unidad)!=0){
                     $proy = $this->model_proyecto->get_datos_proyecto_unidad($unidad[0]['proy_id']);
-                    $uresp='<font size=1.5><b>'.strtoupper($proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion']).'</b></font>';
+                    $uresp='<font size=1.5px;><b>'.strtoupper($proy[0]['tipo'].' '.$proy[0]['act_descripcion'].' - '.$proy[0]['abrev'].' -> '.$unidad[0]['tipo_subactividad'].' '.$unidad[0]['serv_descripcion']).'</b></font>';
                   }
                 }
                 /// ------------------------------
@@ -2151,7 +2137,7 @@ class Seguimientopoa extends CI_Controller{
                 if($diferencia[1]!=0 || $diferencia[2]!=0){
                   $ejec=$this->model_seguimientopoa->get_seguimiento_poa_mes($row['prod_id'],$mes_id); // Ejecutado
                   $tp=0;$mes_ejec=0;$mverificacion='';$prob_presentados='';$acciones=''; 
-                  $btn_='<font color=red size=1px><b>REGISTRAR?</b></font>';
+                  $btn_='<font color=red size=1px><b>GUARDAR ?</b></font>';
                   $background='style="background:#fdeaeb;"';
 
                   if(count($ejec)!=0){
@@ -2180,10 +2166,10 @@ class Seguimientopoa extends CI_Controller{
                     }
                     $tabla.='
                     </td>
-                    <td style="width:0.5%;font-size: 20px" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
-                    <td style="width:0.5%;font-size: 20px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
-                    <td bgcolor="#f6fbf4">'.$row['prod_producto'].'</td>
-                    <td bgcolor="#f6fbf4">'.$row['prod_indicador'].'</td>
+                    <td style="width:0.5%;font-size: 25px" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
+                    <td style="width:0.5%;font-size: 25px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
+                    <td bgcolor="#f6fbf4" style="size:15px;"><b>'.$row['prod_producto'].'</b></td>
+                    <td bgcolor="#f6fbf4"><b>'.$row['prod_indicador'].'</b></td>
                     <td bgcolor="#f6fbf4"><b>'.$uresp.'</b></td>
                     <td align=right bgcolor="#f6fbf4" title="'.$row['mt_tipo'].' : '.$row['mt_descripcion'].'" style="font-size: 11.5px;"><b>'.round($row['prod_meta'],2).' '.$indi_id.'</b></td>
                     <td align=center bgcolor="#f7e1e2">';
@@ -2201,23 +2187,26 @@ class Seguimientopoa extends CI_Controller{
                     </td>
                     <td bgcolor="#f6fbf4">
                       <label class="textarea">
-                       <b>'.$row['prod_fuente_verificacion'].'</b>
+                       <b style="color:blue;">'.$row['prod_fuente_verificacion'].'</b>
+                      </label>
+                    </td>
+                    <td style="text-align:center;">
+                      <img src="'.base_url().'assets/ifinal/fl.png" style="width:50px; height:100px;" class="movimiento" />
+                    </td>
+                    <td>
+                      <label class="textarea">
+                        <textarea rows="3" style="border: 3px solid #43d308;" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN">'.$mverificacion.'</textarea>
                       </label>
                     </td>
                     <td>
                       <label class="textarea">
-                        <textarea rows="3" id=mv'.$nro.' title="MEDIO DE VERIFICACIÓN">'.$mverificacion.'</textarea>
-                      </label>
-                    </td>
-                    <td>
-                      <label class="textarea">
-                        <textarea rows="3" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS">'.$prob_presentados.'</textarea>
+                        <textarea rows="3" style="border: 3px solid #43d308;" id=obs'.$nro.' title="PROBLEMAS PRESENTADOS">'.$prob_presentados.'</textarea>
                       </label>
                     </td>
                     <td>
                       <label class="textarea">
                         
-                        <textarea rows="3" id=acc'.$nro.' title="ACCIONES REALIZADOS">'.$acciones.'</textarea>
+                        <textarea rows="3" style="border: 3px solid #43d308;" id=acc'.$nro.' title="ACCIONES REALIZADOS">'.$acciones.'</textarea>
                       </label>
                     </td>
                     <td align=center title="GUARDAR/MODIFICAR">
@@ -2772,8 +2761,8 @@ class Seguimientopoa extends CI_Controller{
     }
 
     /*---VERIFICANDO VALORES NO EJECUTADOS EN MESES ANTERIORES (FORMULARIO N 4)--*/
-    function verif_valor_no_ejecutado($prod_id,$mes,$indi_id){
-      $get_form4=$this->model_producto->get_producto_id($prod_id);
+    function verif_valor_no_ejecutado($prod_id,$mes,$mt_id){
+      //$get_form4=$this->model_producto->get_producto_id($prod_id);
       $diferencia[1]=0;$diferencia[2]=0;$diferencia[3]=0;
       
       $sum_prog=0;$sum_ejec=0;
@@ -2802,10 +2791,10 @@ class Seguimientopoa extends CI_Controller{
       }
 
       // ---------
-      if($get_form4[0]['mt_id']==1 || $get_form4[0]['mt_id']==5){ // Meta Recurrente
+      if($mt_id==1 || $mt_id==5){ // Meta Recurrente
         $diferencia[1]=0; // no jala prog del mes anterior
       }
-      elseif($get_form4[0]['mt_id']==3){ /// Meta Acumulativo
+      elseif($mt_id==3){ /// Meta Acumulativo
         $diferencia[1]=($sum_prog-$sum_ejec); /// no ejecutado en el mes anterior
       }
       // ---------

@@ -918,9 +918,13 @@ class Oregional extends CI_Controller{
         $meta='%';
       }
 
+      $color='';
+      if($row['or_priorizado']==1){
+        $color='#ebf1e7';
+      }
       $nro++;
       $tabla.='
-      <tr style="font-size: 6.5px;">
+      <tr style="font-size: 6.5px;" bgcolor='.$color.'>
         <td style="width:1%; height:18px;" align=center>'.$nro.'</td>
         <td style="width:2%; font-size: 8px;" align="center"><b>'.$row['obj_codigo'].'</b></td>
         <td style="width:2%; font-size: 8px;" align="center"><b>'.$row['og_codigo'].'</b></td>

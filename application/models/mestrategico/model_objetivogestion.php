@@ -225,26 +225,29 @@ class Model_objetivogestion extends CI_Model{
 
 
     /*=========== REPORTE OBJETIVO GESTION ===========*/
-    /*---- lista Objetivo Regional,Gestion segun su regional ----*/
+    /*---- lista Objetivo Regional,Gestion segun su regional (General)----*/
     public function get_list_ogestion_por_regional($dep_id){
-        if($this->gestion>2024){ /// 2025
          $sql = 'select opge.*,oge.*,oe.*,oreg.*
-                from objetivo_gestion oge
-                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
-                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
-                Inner Join _objetivos_estrategicos as oe On oe.obj_id=oge.oe_id
-                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\' and oreg.or_priorizado=\'1\'
-                order by oge.og_codigo,oreg.or_codigo asc';
-        }
-        else{
-            $sql = 'select opge.*,oge.*,oe.*,oreg.*
                 from objetivo_gestion oge
                 Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
                 Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
                 Inner Join _objetivos_estrategicos as oe On oe.obj_id=oge.oe_id
                 where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\'
                 order by oge.og_codigo,oreg.or_codigo asc';
-        }
+      
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /// ------- lista Objetivo Regional,Gestion segun su regional (PRIORIZADO) 2025
+    public function get_list_ogestion_por_regional_priorizado($dep_id){
+        $sql = 'select opge.*,oge.*,oe.*,oreg.*
+                from objetivo_gestion oge
+                Inner Join objetivo_programado_mensual as opge on opge.og_id = oge.og_id
+                Inner Join objetivos_regionales as oreg on oreg.pog_id = opge.pog_id
+                Inner Join _objetivos_estrategicos as oe On oe.obj_id=oge.oe_id
+                where opge.dep_id='.$dep_id.' and oge.g_id='.$this->gestion.' and oreg.or_meta!=\'0\' and oreg.or_priorizado=\'1\'
+                order by oge.og_codigo,oreg.or_codigo asc';
       
         $query = $this->db->query($sql);
         return $query->result_array();

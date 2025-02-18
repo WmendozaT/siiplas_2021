@@ -13,6 +13,17 @@ class Model_seguimientopoa extends CI_Model{
         $this->verif_mes=$this->session->userData('mes_actual');
     }
     
+
+    /*------- VERIFICANDO SI HUBO REGISTRO E IMPRESION DEL FORMULARIO  --------*/
+    public function verif_llenado_impresion_seguimientpoa($com_id,$m_id){
+        $sql = ' select *
+                 from registro_seguimientopoa
+                 where com_id='.$com_id.' and mes='.$m_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     /*-- LISTA DE REGIONALES CON SU META TOTAL  --*/
     public function get_meta_total_regionales(){
         $sql = 'select *

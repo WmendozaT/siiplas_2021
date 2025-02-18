@@ -170,7 +170,7 @@
                                     <div class="row align-items-center">
                                         <div class="col">
                                             <div class="form-floating mb-2">
-                                                <input tabindex="1" type="text" class="form-control form-input-bg" name="user_name" placeholder="USUARIO" minlength="5" maxlength="15" autocomplete="off">
+                                                <input tabindex="1" type="text" class="form-control form-input-bg" name="user_name" placeholder="USUARIO" minlength="5" maxlength="25" autocomplete="off">
                                                 <label for="user_name">USUARIO</label>
                                                 <div id="usu" class="text-danger text-start" style="visibility: hidden;">
                                                     Este campo es requerido

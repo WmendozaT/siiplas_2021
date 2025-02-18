@@ -113,6 +113,77 @@ function abreVentana(PDF){
 
 
 
+  //// funcion para generar el cuadro de Evaluacion POa (Seguimiento por las unidades)
+  function generar_cuadro_seguimiento_evalpoa_unidad(com_id,mes,trimestre){
+    $('#loading_evalpoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
+    /*$('#loading_evalpoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
+    $('#loading_evalpoa2').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');*/
+    
+    var url = base+"index.php/ejecucion/cseguimiento/get_cuadro_seguimientopoa";
+    var request;
+    if (request) {
+        request.abort();
+    }
+    request = $.ajax({
+      url: url,
+      type: "POST",
+      dataType: 'json',
+      data: "com_id="+com_id+"&mes_id="+mes+"&trm_id="+trimestre
+    });
+
+    request.done(function (response, textStatus, jqXHR) {
+        
+      if (response.respuesta == 'correcto') {
+        //alert(response.respuesta)
+        //document.getElementById('btn_generar').innerHTML = '';
+
+        //------ Seguimiento poa
+        /*document.getElementById('loading_evalpoa').innerHTML = '';
+        document.getElementById("cuerpo_segpoa").style.display = 'block';
+        document.getElementById('cabecera').innerHTML = response.cabecera1;
+        document.getElementById('tabla_componente_vista').innerHTML = response.tabla_vista;
+        document.getElementById('tabla_componente_impresion').innerHTML = response.tabla_impresion;*/
+        //graf_seguimiento_poa(response.matriz);
+        /// ---- end 
+
+        //------ Evaluacion POA
+        document.getElementById('loading_evalpoa').innerHTML = '';
+       
+        //document.getElementById("cuerpo_evalpoa").style.display = 'block';
+        //document.getElementById('cabecera2').innerHTML = response.cabecera2;
+        document.getElementById('tabla_regresion_vista').innerHTML = response.tabla_regresion;
+        document.getElementById('tabla_regresion_impresion').innerHTML = response.tabla_regresion_impresion;
+        graf_regresion_trimestral(response.matriz_regresion);
+
+/*        document.getElementById('tabla_pastel_vista').innerHTML = response.tabla_pastel_todo;
+        document.getElementById('tabla_pastel_impresion').innerHTML = response.tabla_pastel_todo_impresion;
+        graf_regresion_pastel(response.matriz_regresion,trimestre);*/
+
+        document.getElementById('tabla_regresion_total_vista').innerHTML = response.tabla_regresion_total;
+        document.getElementById('tabla_regresion_total_impresion').innerHTML = response.tabla_regresion_total_impresion;
+        graf_regresion_anual(response.matriz_gestion);
+        
+       /* document.getElementById('loading_evalpoa2').innerHTML = '';
+        document.getElementById("cuerpo_evalpoa2").style.display = 'block';
+        document.getElementById('cabecera3').innerHTML = response.cabecera3;
+        document.getElementById('tabla_regresion_total_vista').innerHTML = response.tabla_regresion_total;
+        document.getElementById('tabla_regresion_total_impresion').innerHTML = response.tabla_regresion_total_impresion;
+        graf_regresion_anual(response.matriz_gestion);*/
+        // ---- end
+
+
+        /// ---- lista de form completa
+        //document.getElementById('list_form4_temporalidad').innerHTML = response.form4_temporalidad;
+        ///------ end
+      }
+      else{
+          alertify.error("ERROR !!!");
+      }
+    }); 
+  }
+
+
+
     /// Grafico regresion por trimestre
     function graf_regresion_trimestral(matriz) {
       chart = new Highcharts.Chart({

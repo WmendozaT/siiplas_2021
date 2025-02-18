@@ -136,7 +136,7 @@ class Funcionario extends CI_Controller {
             /*$funcionarios=$this->model_funcionario->get_funcionarios_seguimiento_institucional($this->gestion);
             if(count($funcionarios)!=0){
                 foreach($funcionarios  as $row){
-                    $get_serv=$this->model_componente->get_servicio_siguiente_gestion($row['serv_id'],$row['dist_id'],2024);
+                    $get_serv=$this->model_componente->get_servicio_siguiente_gestion($row['serv_id'],$row['dist_id'],2025);
                     if(count($get_serv)!=0){
                         $update_resp = array(
                         'cm_id' => $get_serv[0]['com_id']
