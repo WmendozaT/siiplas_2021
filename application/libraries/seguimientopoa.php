@@ -455,7 +455,7 @@ class Seguimientopoa extends CI_Controller{
                     <th style="width:4%;">META ANUAL</th>
                     <th style="width:4%;">PROG. '.$verif_mes[2].'</th>
                     <th style="width:4%;">EJEC. '.$verif_mes[2].'</th>
-                    <th style="width:4%;">%CUMP.</th>
+                    <th style="width:4%;">(%)CUMPLIMIENTO</th>
                     <th style="width:15%;">FUENTE DE VERIFICACIÓN <br>(CUMPLIMIENTO)</th> 
                     <th style="width:13%;">PROBLEMAS PRESENTADOS</th>
                     <th style="width:13%;">ACCIONES REALIZADOS</th> 
@@ -710,14 +710,14 @@ class Seguimientopoa extends CI_Controller{
 
     $cumplimiento_mensual=0;
     if($meta_ejec==$meta_prog){
-      $tabla.='<h2 class="alert alert-success"><center>% CUMPLIMIENTO DE ACTIVIDAD AL MES '.$this->verif_mes[2].' : 100 %</center></h2>';
+      $tabla.='<h2 class="alert alert-success"><center>(%) CUMPLIMIENTO DE ACTIVIDAD AL MES '.$this->verif_mes[2].' : 100 %</center></h2>';
     }
     elseif($meta_ejec<$meta_prog & $meta_ejec!=0){
       $cumplimiento_mensual=round((($meta_ejec/$meta_prog)*100),2);
-      $tabla.='<h2 class="alert alert-warning"><center>% CUMPLIMIENTO DE ACTIVIDAD AL MES '.$this->verif_mes[2].' : '.$cumplimiento_mensual.' %</center></h2>';
+      $tabla.='<h2 class="alert alert-warning"><center>(%) CUMPLIMIENTO DE ACTIVIDAD AL MES '.$this->verif_mes[2].' : '.$cumplimiento_mensual.' %</center></h2>';
     }
     else{
-      $tabla.='<h2 class="alert alert-danger"><center>% CUMPLIMIENTO DE ACTIVIDAD AL MES '.$this->verif_mes[2].' : '.$cumplimiento_mensual.' %</center></h2>';
+      $tabla.='<h2 class="alert alert-danger"><center>(%) CUMPLIMIENTO DE ACTIVIDAD AL MES '.$this->verif_mes[2].' : '.$cumplimiento_mensual.' %</center></h2>';
     }
 
     return $tabla;
@@ -743,7 +743,7 @@ class Seguimientopoa extends CI_Controller{
                 <th style="width:3%;">META</th>
                 <th style="width:3.5%;">PROG. '.$this->verif_mes[2].'</th>
                 <th style="width:3.5%;">EJEC. '.$this->verif_mes[2].'</th>
-                <th style="width:3.5%;">%EFI. '.$this->verif_mes[2].'</th>
+                <th style="width:3.5%;">(%) CUMP. '.$this->verif_mes[2].'</th>
                 <th style="width:5%;"></th>
 
                 <th style="width:3.5%;">ENE.</th>
@@ -895,81 +895,6 @@ class Seguimientopoa extends CI_Controller{
           </table>';
       return $tabla;
   }
-
-
-   /*------- Ejecucion presupuestaria al total programado (Nuevo) --------*/
-/*    public function ejecucion_presupuestaria_acumulado_total($com_id){
-      $tabla='';
-      $monto_total=0;
-      $ppto_total=$this->model_componente->componente_ppto_total($com_id);
-      if (count($ppto_total)!=0) {
-        $monto_total=$ppto_total[0]['total_ppto'];
-      }
-
-      $monto_partida=0;
-      $suma_partida=$this->model_evaluacion->suma_grupo_partida_programado($com_id,10000); /// total partida 10000
-      if(count($suma_partida)!=0){
-        $monto_partida=$suma_partida[0]['suma_partida'];
-      }
-
-      $monto_certificado=0;
-      $suma_certificado=$this->model_evaluacion->suma_monto_certificado_servicio($com_id); // Ejecutado al trimestre
-      if(count($suma_certificado)!=0){
-        $monto_certificado=$suma_certificado[0]['ppto_certificado'];
-      }
-
-      $tabla.='
-        <div align=center>
-       
-        <table cellpadding="0" cellspacing="0" class="tabla" border=0.2 style="width:100%;" align=center>
-          <thead>
-          <tr>
-            <th style="width:10%; height:18px;"></th>';
-            for ($i=1; $i <=$this->tmes ; $i++) {
-              $trimestre=$this->model_evaluacion->get_trimestre($i);
-              $tabla.='<th style="width:12%;">'.$trimestre[0]['trm_descripcion'].'</th>';
-            }
-          
-        $tabla.='
-            <th style="width:10%;">TOTAL N° CERT. POA</th>
-            <th style="width:10%;">MONTO PROGRAMADO TOTAL</th>
-            <th style="width:10%;">MONTO EJECUTADO</th>
-            <th style="width:5%;">% EJECUTADO</th>
-          </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="width: 10%; font-size: 7px; text-align: left;height:13px;"><b>CERTIFICACIONES POA</b></td>';
-              $nro_total=0;
-              for ($i=1; $i <= $this->tmes; $i++) {
-                $nro=0;
-                $cert=$this->model_evaluacion->nro_certificaciones_trimestre($com_id,$i);
-                if(count($cert)!=0){
-                  $nro=$cert[0]['numero_certificaciones'];
-                  $nro_total=$nro_total+$nro;
-                }
-                
-                $tabla.='<td align=right><b>'.$nro.'</b></td>';
-              }
-          $tabla.='
-              <td align=right bgcolor="#d9f9f5"><b>'.$nro_total.'</b></td>
-              <td align=right bgcolor="#d9f9f5"><b>'.number_format($monto_total, 2, ',', '.').'</b></td>
-              <td align=right bgcolor="#d9f9f5"><b>'.number_format(($monto_partida+$monto_certificado), 2, ',', '.').'</b></td>';
-                if($monto_total!=0){
-                  $tabla.='<td align=right bgcolor="#d9f9f5"><b>'.(round(((($monto_partida+$monto_certificado)/$monto_total)*100),2)).' %</b></td>';
-                }
-                else{
-                  $tabla.='<td align=right bgcolor="#d9f9f5"><b>0 %</b></td>';
-                }
-              $tabla.='
-            </tr>
-          </tbody>
-        </table>
-        </div>';
-
-      return $tabla;
-    }*/
-
 
 
   /*---- VERIFICA OPERACION TRIMESTRAL -----*/
@@ -1168,7 +1093,7 @@ class Seguimientopoa extends CI_Controller{
       $tabla.='
         </tbody>
       </table><br>
-      <b><font color=blue size=1.5 >GRADO DE CUMPLIMIENTO DE ACT. AL MES DE '.$this->verif_mes[2].' : '.$matriz[4][$this->verif_mes[1]].'%</font></b>';
+      <b><font color=blue size=1.5 >(%) DE CUMPLIMIENTO DE ACT. AL MES DE '.$this->verif_mes[2].' : '.$matriz[4][$this->verif_mes[1]].'%</font></b>';
 
       return $tabla;
     }  
@@ -1347,16 +1272,16 @@ class Seguimientopoa extends CI_Controller{
     /// GRAFICOS DE EVALUACION POA 
  public function tabla_acumulada_evaluacion_servicio($regresion,$trm_id,$tp_graf,$tip_rep){
       $tabla='';
-      $tit[2]='<b>NRO. ACT. PROG.</b>';
-      $tit[3]='<b>NRO. ACT. CUMP.</b>';
-      $tit[4]='<b>NRO. ACT. EN PROC.</b>';
-      $tit[5]='<b>% CUMP.</b>';
-      $tit[6]='<b>% NO CUMP.</b>';
+      $tit[2]='<b>NRO. ACT. PROGRAMADAS</b>';
+      $tit[3]='<b>NRO. ACT. CUMPLIDAS</b>';
+      $tit[4]='<b>NRO. ACT. EN PROCESO</b>';
+      $tit[5]='<b>(%) CUMPLIMIENTO</b>';
+      $tit[6]='<b>(%) INCUMPLIMIENTO</b>';
 
-      $tit_total[2]='<b>NRO. ACT. PROG.</b>';
-      $tit_total[3]='<b>NRO. ACT. CUMP.</b>';
-      $tit_total[4]='<b>% ACT. PROG. AL TRIMESTRE</b>';
-      $tit_total[5]='<b>% ACT. CUMP. AL TRIMESTRE</b>';
+      $tit_total[2]='<b>NRO. ACT. PROGRAMADAS</b>';
+      $tit_total[3]='<b>NRO. ACT. CUMPLIDAS</b>';
+      $tit_total[4]='<b>(%) PROGRAMACION AL TRIMESTRE</b>';
+      $tit_total[5]='<b>(%) CUMPLIMIENTO AL TRIMESTRE</b>';
 
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
@@ -1372,14 +1297,14 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center>
-                <th>NRO. ACT. PROG.</th>
-                <th>ACT. EVAL.</th>
-                <th>ACT. CUMP.</th>
-                <th>ACT. NO CUMP.</th>
-                <th>% CUMP.</th>
-                <th>% NO CUMP.</th>
-                </tr>
-              </thead>
+                <th>ACT. PROGRAMADAS</th>
+                <th>ACT. EVALUADAS</th>
+                <th>ACT. CUMPLIDAS</th>
+                <th>ACT. NO CUMPLIDAS</th>
+                <th>(%) CUMPLIMIENTO POA</th>
+                <th>(%) INCUMPLIMIENTO</th>
+              </tr>
+            </thead>
             <tbody>
               <tr align=right>
                 <td><b>'.$regresion[2][$trm_id].'</b></td>
@@ -1462,13 +1387,13 @@ class Seguimientopoa extends CI_Controller{
         <table '.$tab.'>
           <thead>
               <tr align=center >
-                <th>NRO. ACT. PROG.</th>
-                <th>NRO. ACT. EVAL.</th>
-                <th>NRO. ACT. CUMP.</th>
-                <th>NRO. ACT. EN PROC.</th>
-                <th>NRO. ACT. NO CUMP.</th>
-                <th>% CUMP.</th>
-                <th>% NO CUMP.</th>
+                <th>ACT. PROGRAMADAS</th>
+                <th>ACT. EVALUADAS</th>
+                <th>ACT. CUMPLIDAS</th>
+                <th>ACT. EN PROCESO</th>
+                <th>ACT. NO CUMPLIDAS</th>
+                <th>(%) CUMPLIMIENTO</th>
+                <th>(%) INCUMPLIMIENTO</th>
               </tr>
               </thead>
             <tbody>
@@ -1777,16 +1702,16 @@ class Seguimientopoa extends CI_Controller{
       $titulo='ERROR EN LOS VALORES';
       
       if($this->gestion>2021){
-        if($eficacia<=50){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
-        if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
-        if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
-        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+        if($eficacia<=50){$tp='danger';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
+        if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
+        if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
+        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
       }
       else{ /// Gestiones Anteriores
-        if($eficacia<=75){$tp='danger';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
-        if($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
-        if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
-        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='NIVEL DE EFICACIA : '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+        if($eficacia<=75){$tp='danger';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
+        if($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
+        if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
+        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
       }
       
 
@@ -2089,23 +2014,23 @@ class Seguimientopoa extends CI_Controller{
           <table class="table table-bordered"width="100%" id="datos">
               <thead>                 
                 <tr>
-                  <th style="width:0.5%;"></th>
-                  <th style="width:0.5%;"><b>COD. OPE.</b></th>
-                  <th style="width:0.5%;"><b>COD. ACT.</b></th>
-                  <th style="width:10%;">ACTIVIDAD</th>
-                  <th style="width:7%;">INDICADOR</th>
-                  <th style="width:7%;">UNIDAD RESPONSABLE</th>
-                  <th style="width:2%;">META TOTAL</th>
-                  <th style="width:2%;">EJEC. PENDIENTE</th>
-                  <th style="width:3%;">PROG. MES '.$this->verif_mes[2].'</th>
-                  <th style="width:5%;">EJEC. MES '.$this->verif_mes[2].'</th>
-                  <th style="width:6%;">FUENTE DE VERIFICACIÓN POA</th>
+                  <th style="width:0.5%; font-size:11px;text-align:center;"></th>
+                  <th style="width:0.5%; font-size:11px;text-align:center;"><b>COD. OPE.</b></th>
+                  <th style="width:0.5%; font-size:11px;text-align:center;"><b>COD. ACT.</b></th>
+                  <th style="width:10%; font-size:11px;text-align:center;">ACTIVIDAD</th>
+                  <th style="width:7%; font-size:11px;text-align:center;">INDICADOR</th>
+                  <th style="width:7%; font-size:11px;text-align:center;">UNIDAD RESPONSABLE</th>
+                  <th style="width:2%; font-size:11px;text-align:center;">META TOTAL</th>
+                  <th style="width:2%; font-size:11px;text-align:center;">EJEC. PENDIENTE</th>
+                  <th style="width:3%; font-size:11px;text-align:center;">PROG. MES '.$this->verif_mes[2].'</th>
+                  <th style="width:5%; font-size:11px;text-align:center;">EJEC. MES '.$this->verif_mes[2].'</th>
+                  <th style="width:6%; font-size:11px;text-align:center;">FUENTE DE VERIFICACIÓN POA</th>
                   <th style="width:2%;"></th>
-                  <th style="width:8%; background:#38393b;"><b style="color:white;">MEDIO DE VERIFICACI&Oacute;N A PRESENTAR EN EL SEGUIMIENTO / EVALUACION</b></th>
-                  <th style="width:8%; background:#38393b;"><b style="color:white;">PROBLEMAS PRESENTADOS</b><br><br></th>
-                  <th style="width:8%; background:#38393b;"><b style="color:white;">ACCIONES REALIZADOS</b><br><br></th>
+                  <th style="width:8%; background:#38393b; font-size:11px;text-align:center;"><b style="color:white;">MEDIO DE VERIFICACI&Oacute;N A PRESENTAR EN EL SEGUIMIENTO / EVALUACION</b></th>
+                  <th style="width:8%; background:#38393b; font-size:11px;text-align:center;"><b style="color:white;">PROBLEMAS PRESENTADOS</b><br><br></th>
+                  <th style="width:8%; background:#38393b; font-size:11px;text-align:center;"><b style="color:white;">ACCIONES REALIZADOS</b><br><br></th>
                   <th style="width:2%;"></th>
-                  <th style="width:2%; font-size:9px;"></th>
+                  <th style="width:2%; font-size:11px;"></th>
                   <th style="width:3%;"></th>
                 </tr>
               </thead>
@@ -2157,7 +2082,7 @@ class Seguimientopoa extends CI_Controller{
                   $nro++;
                   $tabla.='
                   <tr>
-                    <td align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'">';
+                    <td align=center title="'.$row['prod_id'].'">';
                     if($row['prod_priori']==0){
                       $tabla.=$nro;
                     }
@@ -2166,12 +2091,12 @@ class Seguimientopoa extends CI_Controller{
                     }
                     $tabla.='
                     </td>
-                    <td style="width:0.5%;font-size: 25px" align=center bgcolor="#f6fbf4"><b>'.$row['or_codigo'].'</b></td>
-                    <td style="width:0.5%;font-size: 25px" align=center bgcolor="#f6fbf4" title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
-                    <td bgcolor="#f6fbf4" style="size:15px;"><b>'.$row['prod_producto'].'</b></td>
-                    <td bgcolor="#f6fbf4"><b>'.$row['prod_indicador'].'</b></td>
-                    <td bgcolor="#f6fbf4"><b>'.$uresp.'</b></td>
-                    <td align=right bgcolor="#f6fbf4" title="'.$row['mt_tipo'].' : '.$row['mt_descripcion'].'" style="font-size: 11.5px;"><b>'.round($row['prod_meta'],2).' '.$indi_id.'</b></td>
+                    <td style="width:0.5%;font-size: 20px;" align=center><b>'.$row['or_codigo'].'</b></td>
+                    <td style="width:0.5%;font-size: 20px;" align=center title="'.$row['prod_id'].'"><b>'.$row['prod_cod'].'</b></td>
+                    <td style="font-size:10.5px;"><b>'.$row['prod_producto'].'</b></td>
+                    <td style="font-size:10px;"><b>'.$row['prod_indicador'].'</b></td>
+                    <td style="font-size:10px;"><b>'.$uresp.'</b></td>
+                    <td style="font-size:11px;" align=right title="'.$row['mt_tipo'].' : '.$row['mt_descripcion'].'"><b>'.round($row['prod_meta'],2).' '.$indi_id.'</b></td>
                     <td align=center bgcolor="#f7e1e2">';
                     if($row['mt_id']==3){
                       $tabla.=$diferencia[1];
@@ -2187,7 +2112,7 @@ class Seguimientopoa extends CI_Controller{
                     </td>
                     <td bgcolor="#f6fbf4">
                       <label class="textarea">
-                       <b style="color:blue;">'.$row['prod_fuente_verificacion'].'</b>
+                       <b style="color:blue;font-size:11px;">'.$row['prod_fuente_verificacion'].'</b>
                       </label>
                     </td>
                     <td style="text-align:center;">

@@ -22,16 +22,6 @@
         <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
         <meta name="viewport" content="width=device-width">
         <style>
-            table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;
-            overflow-x: scroll;
-            }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
-            }
             #mdialTamanio{
               width: 45% !important;
             }
@@ -45,6 +35,17 @@
                 50% { left: 45%; }
                 100% { left: 0; }
             }
+
+            table {
+                width: 90%; /* Ajusta el ancho de la tabla */
+            }
+            th, td {
+                border: 5px solid #000;
+                padding: 10px;
+             
+                border-color: #1c7368;
+            }
+
     </style>
     </head>
     <body class="">

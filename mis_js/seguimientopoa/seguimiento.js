@@ -115,10 +115,9 @@ function abreVentana(PDF){
 
   //// funcion para generar el cuadro de Evaluacion POa (Seguimiento por las unidades)
   function generar_cuadro_seguimiento_evalpoa_unidad(com_id,mes,trimestre){
-    $('#loading_evalpoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
-    /*$('#loading_evalpoa').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');
-    $('#loading_evalpoa2').html('<center><img src="'+base+'/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Un momento por favor, Cargando Información </center>');*/
-    
+    $('#btn_generar').html('');
+    $('#loading_evalpoa').html('<center><img src="'+base+'/assets/img_v1.1/loading.gif" style="width:350px; height:350px;" alt="loading" /></center>');
+
     var url = base+"index.php/ejecucion/cseguimiento/get_cuadro_seguimientopoa";
     var request;
     if (request) {
@@ -134,47 +133,22 @@ function abreVentana(PDF){
     request.done(function (response, textStatus, jqXHR) {
         
       if (response.respuesta == 'correcto') {
-        //alert(response.respuesta)
-        //document.getElementById('btn_generar').innerHTML = '';
-
-        //------ Seguimiento poa
-        /*document.getElementById('loading_evalpoa').innerHTML = '';
-        document.getElementById("cuerpo_segpoa").style.display = 'block';
-        document.getElementById('cabecera').innerHTML = response.cabecera1;
-        document.getElementById('tabla_componente_vista').innerHTML = response.tabla_vista;
-        document.getElementById('tabla_componente_impresion').innerHTML = response.tabla_impresion;*/
-        //graf_seguimiento_poa(response.matriz);
-        /// ---- end 
+        document.getElementById('calificacion').innerHTML = response.calificacion;
+        document.getElementById('loading_evalpoa').innerHTML = '';
 
         //------ Evaluacion POA
-        document.getElementById('loading_evalpoa').innerHTML = '';
-       
-        //document.getElementById("cuerpo_evalpoa").style.display = 'block';
-        //document.getElementById('cabecera2').innerHTML = response.cabecera2;
+        document.getElementById("cuerpo_evalpoa").style.display = 'block';
+        document.getElementById('cabecera2').innerHTML = response.cabecera2;
         document.getElementById('tabla_regresion_vista').innerHTML = response.tabla_regresion;
         document.getElementById('tabla_regresion_impresion').innerHTML = response.tabla_regresion_impresion;
         graf_regresion_trimestral(response.matriz_regresion);
 
-/*        document.getElementById('tabla_pastel_vista').innerHTML = response.tabla_pastel_todo;
-        document.getElementById('tabla_pastel_impresion').innerHTML = response.tabla_pastel_todo_impresion;
-        graf_regresion_pastel(response.matriz_regresion,trimestre);*/
 
+        document.getElementById('cabecera3').innerHTML = response.cabecera3;
         document.getElementById('tabla_regresion_total_vista').innerHTML = response.tabla_regresion_total;
         document.getElementById('tabla_regresion_total_impresion').innerHTML = response.tabla_regresion_total_impresion;
         graf_regresion_anual(response.matriz_gestion);
         
-       /* document.getElementById('loading_evalpoa2').innerHTML = '';
-        document.getElementById("cuerpo_evalpoa2").style.display = 'block';
-        document.getElementById('cabecera3').innerHTML = response.cabecera3;
-        document.getElementById('tabla_regresion_total_vista').innerHTML = response.tabla_regresion_total;
-        document.getElementById('tabla_regresion_total_impresion').innerHTML = response.tabla_regresion_total_impresion;
-        graf_regresion_anual(response.matriz_gestion);*/
-        // ---- end
-
-
-        /// ---- lista de form completa
-        //document.getElementById('list_form4_temporalidad').innerHTML = response.form4_temporalidad;
-        ///------ end
       }
       else{
           alertify.error("ERROR !!!");
@@ -202,7 +176,7 @@ function abreVentana(PDF){
         categories: ['','I Trimestre','II Trimestre','III Trimestre','IV Trimestre'],
         // Pongo el título para el eje de las 'X'
         title: {
-          text: 'N° Actividades por Trimestre'
+          text: 'N° Actividades a Evaluar'
         }
       },
       yAxis: {
@@ -231,11 +205,11 @@ function abreVentana(PDF){
       // Doy los datos de la gráfica para dibujarlas
       series: [
           {
-            name: 'NRO ACT. PROGRAMADO EN EL TRIMESTRE',
+            name: 'NRO ACT. PROGRAMADO AL TRIMESTRE',
             data: [0,matriz[2][1],matriz[2][2],matriz[2][3],matriz[2][4]]
           },
           {
-            name: 'NRO ACT. CUMPLIDO EN EL TRIMESTRE',
+            name: 'NRO ACT. CUMPLIDAS AL TRIMESTRE',
             data: [0,matriz[3][1],matriz[3][2],matriz[3][3],matriz[3][4]]
           }
         ],
@@ -291,11 +265,11 @@ function abreVentana(PDF){
       // Doy los datos de la gráfica para dibujarlas
       series: [
           {
-            name: '% ACT. PROGRAMADAS EN EL TRIMESTRE',
+            name: '% ACT. PROGRAMADAS POR TRIMESTRE',
             data: [0,matriz[4][1],matriz[4][2],matriz[4][3],matriz[4][4]]
           },
           {
-            name: '% ACT. CUMPLIDAS EN EL TRIMESTRE',
+            name: '% ACT. CUMPLIDAS POR TRIMESTRE',
             data: [0,matriz[5][1],matriz[5][2],matriz[5][3],matriz[5][4]]
           }
         ],
@@ -460,6 +434,7 @@ function abreVentana(PDF){
 
     /// Funcion para guardar datos de seguimiento POA
     function guardar(prod_id,nro){
+      
       ejec=parseFloat($('[id="ejec'+nro+'"]').val());
       mverificacion=($('[id="mv'+nro+'"]').val());
       problemas=($('[id="obs'+nro+'"]').val());
@@ -490,6 +465,7 @@ function abreVentana(PDF){
               request.done(function (response, textStatus, jqXHR) {
 
               if (response.respuesta == 'correcto') {
+
                     document.getElementById("loading").style.display = 'none';
                     document.getElementById('ejec'+nro).value = response.ejecucion;
                     document.getElementById('mv'+nro).value = response.m_verificacion;
@@ -503,6 +479,11 @@ function abreVentana(PDF){
                       document.getElementById("ejec"+nro).style.backgroundColor = "#fdeaeb";
                     }
                     
+                    document.getElementById('calificacion').innerHTML = '';
+                    document.getElementById('cuerpo_evalpoa').style.display = 'none';
+                    //$('#btn_generar').style.display = 'block';
+                   // document.getElementById('btn_generar').style.display = 'block';
+
                     alertify.success("EL SEGUIMIENTO SE GUARDO CORRECTAMENTE ...");
               }
               else{
@@ -740,7 +721,7 @@ function abreVentana(PDF){
     }
 
 
-    document.querySelector("#btnImprimir_seguimiento").addEventListener("click", function() {
+/*    document.querySelector("#btnImprimir_seguimiento").addEventListener("click", function() {
       var grafico = document.querySelector("#Seguimiento");
 
       document.getElementById("cabecera").style.display = 'block';
@@ -758,7 +739,7 @@ function abreVentana(PDF){
       
       document.getElementById("tabla_componente_vista").style.display = 'block';
       document.getElementById("tabla_componente_impresion").style.display = 'none';
-    });
+    });*/
 
 
     document.querySelector("#btnImprimir_evaluacion_trimestre").addEventListener("click", function() {
@@ -781,7 +762,7 @@ function abreVentana(PDF){
     });
 
 
-    document.querySelector("#btnImprimir_evaluacion_pastel").addEventListener("click", function() {
+/*    document.querySelector("#btnImprimir_evaluacion_pastel").addEventListener("click", function() {
       var grafico = document.querySelector("#evaluacion_pastel");
       
       document.getElementById("cabecera2").style.display = 'block';
@@ -798,7 +779,7 @@ function abreVentana(PDF){
 
       document.getElementById("tabla_pastel_vista").style.display = 'block';
       document.getElementById("tabla_pastel_impresion").style.display = 'none';
-    });
+    });*/
 
 
 
