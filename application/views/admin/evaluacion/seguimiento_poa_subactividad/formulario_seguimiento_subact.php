@@ -45,8 +45,7 @@
              
                 border-color: #1c7368;
             }
-
-    </style>
+        </style>
     </head>
     <body class="">
         <header id="header">

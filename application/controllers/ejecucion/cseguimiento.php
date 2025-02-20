@@ -1899,7 +1899,7 @@ class Cseguimiento extends CI_Controller {
                           <img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="19"/>&nbsp; SALIR
                         </a>';
 
-        $data['form4_programados']=$this->seguimientopoa->lista_operaciones_programados($this->com_id,$this->verif_mes[1]); /// Lista de Operaciones programados en el mes
+        $data['form4_programados']=$this->seguimientopoa->lista_operaciones_programados($this->com_id,$this->verif_mes[1]); /// Lista de actividades programados en el mes y pendientes
         //$data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($this->com_id); /// Reporte Seguimiento (Mes vigente) POA
         $data['update_eval']=$this->seguimientopoa->button_update_sa($this->com_id); /// Boton Evaluacion POA
         $data['s2']='

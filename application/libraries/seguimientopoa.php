@@ -621,22 +621,22 @@ class Seguimientopoa extends CI_Controller{
               <div class="table-responsive">
               <table class="table table-bordered" width="100%" align=center>
                 <thead>
-                 <tr style="font-size: 7px;" align=center>
-                    <th style="width:1%;">COD.<br>ACT.</th> 
-                    <th style="width:7%;">DESCRIPCIÓN ACTIVIDAD</th>
-                    <th style="width:2%;">META</th>
-                    <th style="width:2.5%;">ENE.</th>
-                    <th style="width:2.5%;">FEB.</th>
-                    <th style="width:2.5%;">MAR.</th>
-                    <th style="width:2.5%;">ABR.</th>
-                    <th style="width:2.5%;">MAY.</th>
-                    <th style="width:2.5%;">JUN.</th>
-                    <th style="width:2.5%;">JUL.</th>
-                    <th style="width:2.5%;">AGO.</th>
-                    <th style="width:2.5%;">SEPT.</th>
-                    <th style="width:2.5%;">OCT.</th>
-                    <th style="width:2.5%;">NOV.</th>
-                    <th style="width:2.5%;">DIC.</th>
+                 <tr style="font-size: 11px;" align=center>
+                    <th style="width:1%;font-size: 10px;">COD.<br>ACT.</th> 
+                    <th style="width:7%;font-size: 10px;">DESCRIPCIÓN ACTIVIDAD</th>
+                    <th style="width:2%;font-size: 10px;">META</th>
+                    <th style="width:2.5%;font-size: 10px;">ENE.</th>
+                    <th style="width:2.5%;font-size: 10px;">FEB.</th>
+                    <th style="width:2.5%;font-size: 10px;">MAR.</th>
+                    <th style="width:2.5%;font-size: 10px;">ABR.</th>
+                    <th style="width:2.5%;font-size: 10px;">MAY.</th>
+                    <th style="width:2.5%;font-size: 10px;">JUN.</th>
+                    <th style="width:2.5%;font-size: 10px;">JUL.</th>
+                    <th style="width:2.5%;font-size: 10px;">AGO.</th>
+                    <th style="width:2.5%;font-size: 10px;">SEPT.</th>
+                    <th style="width:2.5%;font-size: 10px;">OCT.</th>
+                    <th style="width:2.5%;font-size: 10px;">NOV.</th>
+                    <th style="width:2.5%;font-size: 10px;">DIC.</th>
                 </tr>
                 </thead>
                 <tbody>';
@@ -662,8 +662,8 @@ class Seguimientopoa extends CI_Controller{
                         $tabla.='
                         <td style="width: 2.5%; text-align: center;font-size: 7px;" bgcolor='.$color.'>
                           <table class="table table-bordered" align=center>
-                            <tr><td style="width:50%;"><b>P:</b></td><td style="width:50%;">'.round($temp[1][$i],2).''.$indi_id.'</td></tr>
-                            <tr><td style="width:50%;"><b>E:</b></td><td style="width:50%;">'.round($temp[4][$i],2).''.$indi_id.'</td></tr>
+                            <tr style="font-size: 9.5px;"><td style="width:50%;"><b>P:</b></td><td style="width:50%;">'.round($temp[1][$i],2).''.$indi_id.'</td></tr>
+                            <tr style="font-size: 9.5px;"><td style="width:50%;"><b>E:</b></td><td style="width:50%;">'.round($temp[4][$i],2).''.$indi_id.'</td></tr>
                           </table>
                         </td>';
                       }

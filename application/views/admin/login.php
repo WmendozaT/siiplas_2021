@@ -163,15 +163,30 @@
 
                             <div id="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
                                 <form role="form" action="<?php echo base_url(); ?>index.php/admin/validate" method="post" id="form" class="login-form">
+                                    <input type="hidden" name="tp" id="tp" value="0">
                                     <div class="text-center">
                                         <img class="img-fluid" src="dnp1.png" alt="logoSiat" width="100px" height="auto">
                                     </div>
                                     <h5 class="text-center fw-bold my-4 titleBienvenido">Bienvenido/a!</h5>
+
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                        <div id="form-login-username" class="form-group">      
+                                            <input type="radio" name="radio-inline" id="radio0" checked="checked">
+                                            <i></i><b>Unidad Administrativa</b></label> &nbsp;&nbsp; 
+                                            <input type="radio" name="radio-inline" id="radio1">
+                                            <i></i><font color="#146f64"><b>Establecimiento de Salud</b></font></label>
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                    <input id="deviceId" class="dOt" name="deviceId">
+
                                     <div class="row align-items-center">
                                         <div class="col">
                                             <div class="form-floating mb-2">
-                                                <input tabindex="1" type="text" class="form-control form-input-bg" name="user_name" placeholder="USUARIO" minlength="5" maxlength="25" autocomplete="off">
-                                                <label for="user_name">USUARIO</label>
+                                                <input tabindex="1" type="text" class="form-control form-input-bg" name="user_name" placeholder="USUARIO" minlength="5" maxlength="15" autocomplete="off" style="text-transform:uppercase;" oninput="this.value = this.value.toUpperCase();">
+                                                <label for="user_name">CLAVE DE ACCESO</label>
                                                 <div id="usu" class="text-danger text-start" style="visibility: hidden;">
                                                     Este campo es requerido
                                                 </div>
@@ -187,7 +202,7 @@
                                     <div class="row align-items-center">
                                         <div class="col">
                                             <div class="form-floating mb-2">
-                                                <input tabindex="3" id="password" class="form-control form-input-bg" name="password" type="password" autocomplete="off" placeholder="Contraseña"/>
+                                                <input tabindex="3" id="password" class="form-control form-input-bg" name="password" type="password" autocomplete="off" placeholder="CONTRASEÑA" minlength="5" maxlength="15" style="text-transform:uppercase;" oninput="this.value = this.value.toUpperCase();"/>
                                                 <label for="password">PASSWORD</label>
                                                 <div id="pass" class="text-danger text-start" style="visibility: hidden;">
                                                     Este campo es requerido
@@ -201,11 +216,11 @@
 
                                     <div class="text-center py-3">
                                         <p class="caja" id="refreshs" style="text-align:center"><b><?php echo $cod_captcha;?></b></p>
-                                        <input type="hidden" name="captcha" id="captcha" value="<?php echo $captcha;?>">
+                                        <input type="hidden" name="captcha" id="captcha"  value="<?php echo $captcha;?>" style="text-transform:uppercase;" oninput="this.value = this.value.toUpperCase();">
                                     </div>
 
                                     <div class="mb-4">
-                                        <input tabindex="4" id="dat_captcha" name="dat_captcha" type="text" class="form-control form-input-bg text-center" placeholder="Ingrese el texto de la imagen" autofocus minlength="4" maxlength="4">
+                                        <input tabindex="4" id="dat_captcha" name="dat_captcha" type="text" class="form-control form-input-bg text-center" placeholder="Ingrese el texto de la imagen" autofocus minlength="4" maxlength="4" >
                                     </div>
 
                                     <div class="d-grid gap-2 mt-2">
@@ -228,6 +243,16 @@
 
 <script src='<?php echo base_url(); ?>assets/login/js/jquery.min.js'></script>
 <script>
+    $(function(){
+        $('#radio0').click(function(){
+          $('[name="tp"]').val(0);
+        });
+
+        $('#radio1').click(function(){
+          $('[name="tp"]').val(1);
+        });
+    })
+
     $(document).ready(function() {
         $('#form').on('submit', function(event) {
             event.preventDefault(); // Evitar el envío del formulario

@@ -795,15 +795,15 @@ class User extends CI_Controller{
                         </div>
                         </a>
                     </div>';
-        $vector[1]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+/*        $vector[1]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                         <a href="'.base_url().'index.php/solicitar_certpoa/'.$id.'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/icon11.jpg" style="margin-left:0px; width: 95px"/>
                             <h1 style="font-size: 11px;">SOLICITUD CERTIFICACIÓN POA</h1>
                         </div>
                         </a>
-                    </div>';
-        $vector[2]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+                    </div>';*/
+        $vector[1]='<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                         <a href="'.base_url().'index.php/reporte_segpoa/'.$id.'" id="myBtn3" onclick="evaluacion()"  class="jarvismetro-tile big-cubes bg-color-greenLight">
                         <div class="well1" align="center">
                             <img class="img-circle" src="'.base_url().'assets/img/impresora.png" style="margin-left:0px; width: 95px"/>
