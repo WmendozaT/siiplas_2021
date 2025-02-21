@@ -115,7 +115,7 @@ function abreVentana(PDF){
 
   //// funcion para generar el cuadro de Evaluacion POa (Seguimiento por las unidades)
   function generar_cuadro_seguimiento_evalpoa_unidad(com_id,mes,trimestre){
-    alert(com_id+'--'+mes+'--'+trimestre)
+    //alert(com_id+'--'+mes+'--'+trimestre)
     $('#btn_generar').html('');
     $('#loading_evalpoa').html('<center><img src="'+base+'/assets/img_v1.1/loading.gif" style="width:350px; height:350px;" alt="loading" /></center>');
 

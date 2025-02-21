@@ -42,7 +42,47 @@
                 padding: 10px;
                 border-color: #1c7368;
             }
-        </style>
+
+        /* Estilo del popup */
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 80%; /* Ajusta el ancho según sea necesario */
+            height: 80%; /* Ajusta la altura según sea necesario */
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .loading_rep {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            color: #007bff;
+        }
+        iframe {
+            width: 100%;
+            height: 90%; /* Ajusta la altura según sea necesario */
+            border: none;
+        }
+    </style>
     </head>
     <body class="">
         <header id="header">
@@ -90,7 +130,7 @@
                 <!-- widget grid -->
                 <section id="widget-grid" class="">
                     <div class="well">
-                       <?php echo $titulo.' '.$formularios_seguimiento.' '.$salir;?>
+                       <?php echo $titulo.' '.$formularios_seguimiento.' '.$formulario_seguimiento_mensual.' '.$salir;?>
                     </div>
                         <div class="row">
                             <?php echo $update_eval;?>
@@ -106,7 +146,7 @@
                                                 <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">FORMULARIO SEGUIMIENTO POA</span></a>
                                             </li>
                                             <li>
-                                                <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE SEGUIMIENTO POA (MENSUAL)</span></a>
+                                                <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO EVALUACIÓN POA</span></a>
                                             </li>
                                         </ul>
                                     </header>
@@ -151,7 +191,13 @@
             <!-- END MAIN CONTENT -->
         <!-- END PAGE FOOTER -->
 
-       
+       <div class="overlay" id="overlay" onclick="hidePopup()"></div>
+        <div class="popup" id="popup">
+            <h2>Reporte de Seguimiento POA</h2>
+            <div class="loading_rep" id="loading_rep"><?php echo $cargando; ?></div>
+            <iframe id="reportIframe" src="" onload="hideLoading()"></iframe>
+            <button onclick="hidePopup()">Cerrar</button>
+        </div>
     <!-- ========================= -->
         <div class="modal fade" id="modal_nuevo_ff2" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog" style="width:85%;">
@@ -188,9 +234,8 @@
                 </div>
             </div>
         </div>
+
      <!--  ==================== -->
-
-
         <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
         <script>
             if (!window.jQuery) {
@@ -244,5 +289,28 @@
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/seguimiento.js"></script>  -->
         <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento.js"></script> 
+        <script>
+            function showPopup() {
+                const com_id = '<?php echo $com_id; ?>'; // Asegúrate de que estas variables estén definidas
+                const mes = '<?php echo $this->verif_mes[1]; ?>'; // Asegúrate de que estas variables estén definidas
+                const reportUrl = "<?php echo site_url(""); ?>/seguimiento_poa/reporte_seguimientopoa_mensual/" + com_id + "/" + mes;
+
+                document.getElementById('reportIframe').src = reportUrl; // Establece la URL del iframe
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('popup').style.display = 'block';
+                document.getElementById('loading_rep').style.display = 'block'; // Muestra el loading
+            }
+
+            function hideLoading() {
+                document.getElementById('loading_rep').style.display = 'none'; // Oculta el loading
+            }
+
+            function hidePopup() {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('popup').style.display = 'none';
+                document.getElementById('reportIframe').src = ''; // Limpia el src del iframe al cerrar
+                hideLoading(); // Asegúrate de ocultar el loading al cerrar
+            }
+        </script>
     </body>
 </html>

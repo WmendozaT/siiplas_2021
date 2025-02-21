@@ -29,6 +29,18 @@
           }
         </script>
         <style>
+            #mdialTamanio{
+              width: 45% !important;
+            }
+            .movimiento {
+                position: relative;
+                animation: mover 5s linear infinite;
+            }
+            @keyframes mover {
+                0% { left: 0; }
+                50% { left: 45%; }
+                100% { left: 0; }
+            }
             table{font-size: 10px;
             width: 100%;
             max-width:1550px;
@@ -92,7 +104,7 @@
                     <div class="well">
                        <?php echo $cabecera_formulario;?>
                     </div>
-                                        <div class="row">
+                    <div class="row">
                         <article class="col-sm-12">
                             <!-- new widget -->
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
@@ -170,7 +182,12 @@
         <!-- END PAGE FOOTER -->
 
        
-
+<!--         <div class="overlay" id="overlay" onclick="hidePopup()"></div>
+        <div class="popup" id="popup">
+            <h2>Reporte de Seguimiento POA</h2>
+            <iframe id="reportIframe" src=""></iframe>
+            <button onclick="hidePopup()">Cerrar</button>
+        </div> -->
     <!-- ========================================================================================================= -->
         <div class="modal fade" id="modal_nuevo_ff2" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog" style="width:85%;">
@@ -262,6 +279,23 @@
         <!-- MAIN APP JS FILE -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/seguimiento.js"></script>  -->
-        <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento.js"></script> 
+        <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento.js"></script>
+<!--         <script>
+            function showPopup() {
+                const com_id = '<?php echo $com_id; ?>'; // Asegúrate de que estas variables estén definidas
+                const mes = '<?php echo $this->verif_mes[1]; ?>'; // Asegúrate de que estas variables estén definidas
+                const reportUrl = "<?php echo site_url(""); ?>/seguimiento_poa/reporte_seguimientopoa_mensual/" + com_id + "/" + mes;
+                
+                document.getElementById('reportIframe').src = reportUrl; // Establece la URL del iframe
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('popup').style.display = 'block';
+            }
+
+            function hidePopup() {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('popup').style.display = 'none';
+                document.getElementById('reportIframe').src = ''; // Limpia el src del iframe al cerrar
+            }
+        </script> -->
     </body>
 </html>

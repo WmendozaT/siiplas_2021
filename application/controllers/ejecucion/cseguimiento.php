@@ -1888,17 +1888,16 @@ class Cseguimiento extends CI_Controller {
         <h1 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
         <h1><small>UNIDAD RESPONSABLE : </small> '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h1>
         <h1><small>FORMULARIO DE SEGUIMIENTO POA : </small> <b>'.$this->verif_mes[2].' / '.$this->gestion.'</b></h1>';
-      
-       /* $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($this->com_id,$this->tmes); /// Tabla para el grafico al trimestre
 
-        $data['calificacion']='<hr>
-        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes],0).'</div></fieldset>';*/
-        
         $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($this->com_id);
+        $data['formulario_seguimiento_mensual']='
+        <a href="#" onclick="showPopup(); return false;" title="REPORTE DE SEGUIMIENTO" class="btn btn-default">
+          <img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="22" HEIGHT="22"/>&nbsp; <b>IMPRIMIR SEGUIMIENTO POA</b>';
         $data['salir']='<a href="'.site_url("").'/dashboar_seguimiento_poa" title="SALIR" class="btn btn-default">
                           <img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="19"/>&nbsp; SALIR
                         </a>';
 
+        $data['cargando']='<img src="'.base_url().'assets/img_v1.1/loading.gif" WIDTH="150" HEIGHT="150"/>';
         $data['form4_programados']=$this->seguimientopoa->lista_operaciones_programados($this->com_id,$this->verif_mes[1]); /// Lista de actividades programados en el mes y pendientes
         //$data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($this->com_id); /// Reporte Seguimiento (Mes vigente) POA
         $data['update_eval']=$this->seguimientopoa->button_update_sa($this->com_id); /// Boton Evaluacion POA
@@ -1969,7 +1968,8 @@ class Cseguimiento extends CI_Controller {
                 <div id="tabla_regresion_total_impresion" style="display: none"></div>
               </div>
             </div>';
-        $this->load->view('admin/evaluacion/seguimiento_poa_subactividad/formulario_seguimiento_subact', $data);
+        $this->load->view('admin/evaluacion/seguimiento_establecimiento/formulario_seguimiento_establecimiento', $data);
+        //$this->load->view('admin/evaluacion/seguimiento_poa_subactividad/formulario_seguimiento_subact', $data);
       }
       else{
         $this->session->sess_destroy();

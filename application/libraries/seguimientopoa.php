@@ -2000,7 +2000,7 @@ class Seguimientopoa extends CI_Controller{
             <section class="col col-3">
               <b>BUSCADOR: </b>
               <input id="searchTerm" type="text" onkeyup="doSearch()" class="form-control" placeholder="Buscador...."/>
-            </section>
+            </section>  
             '.$this->verif_btn_evaluacionpoa().''; /// Meses del trimestre
             $tabla.='
             <div id="loading" style="display:none;" style="width:20%;">

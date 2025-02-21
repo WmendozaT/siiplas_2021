@@ -86,13 +86,17 @@ class Cseguimiento_establecimiento extends CI_Controller {
 
       $data['update_eval']=$this->seguimientopoa->button_update_($com_id);
       $data['form4_programados']=$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1]); /// Lista de Operaciones programados en el mes
-      
       $data['formularios_seguimiento']=$this->seguimientopoa->formularios_mensual($com_id);
+      $data['formulario_seguimiento_mensual']='
+      <a href="#" onclick="showPopup(); return false;" title="REPORTE DE SEGUIMIENTO" class="btn btn-default">
+        <img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="22" HEIGHT="22"/>&nbsp; <b>IMPRIMIR SEGUIMIENTO POA</b>';
+
+      $data['cargando']='<img src="'.base_url().'assets/img_v1.1/loading.gif" WIDTH="150" HEIGHT="150"/>';
       $data['salir']='<a href="'.site_url("").'/dashboar_seguimiento_poa" title="SALIR" class="btn btn-default"><img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="19"/>&nbsp; SALIR</a>';
       
        $data['s2']='
         <div id="btn_generar">
-          <center><button type="button" onclick="generar_cuadro_seguimiento_evalpoa_unidad('.$this->com_id.','.$this->verif_mes[1].','.$this->tmes.');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE EVALUACIÓN POA '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' / '.$this->gestion.'</b></button></center>
+          <center><button type="button" onclick="generar_cuadro_seguimiento_evalpoa_unidad('.$com_id.','.$this->verif_mes[1].','.$this->tmes.');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE EVALUACIÓN POA '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' / '.$this->gestion.'</b></button></center>
         </div>
 
         <div id="loading_evalpoa"></div>
@@ -157,7 +161,6 @@ class Cseguimiento_establecimiento extends CI_Controller {
                 <div id="tabla_regresion_total_impresion" style="display: none"></div>
               </div>
             </div>';
-
 
       $this->load->view('admin/evaluacion/seguimiento_establecimiento/formulario_seguimiento_establecimiento', $data);
     }
