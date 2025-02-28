@@ -710,10 +710,12 @@ aper_id numeric,
 aper_proy_estado integer,
 pfec_id numeric,
 pfec_estado integer,
-aper_gestion integer) AS
+aper_gestion integer,
+dato_ingreso varchar,
+clave varchar) AS
 
 $$
-select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion
+select d.dep_id,d.dep_departamento,d.dep_cod as da,ds.dist_id,ds.dist_distrital,ds.dist_cod as ue,ds.abrev,apg.aper_programa as prog,apg.aper_proyecto as proy,apg.aper_actividad as act,p.proy_id,p.proy_estado,ua.act_descripcion as actividad,te.tipo,apg.aper_id,apg.aper_proy_estado,pfe.pfec_id,pfe.pfec_estado,apg.aper_gestion,ua.dato_ingreso,ua.clave
 from _proyectofaseetapacomponente pfe
 Inner Join aperturaprogramatica as apg On apg.aper_id=pfe.aper_id
 Inner Join _proyectos as p On p.proy_id=pfe.proy_id

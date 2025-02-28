@@ -275,7 +275,7 @@ class User extends CI_Controller{
                 $data['mensaje']=$this->mensaje_sistema();   
 
                 ///===================== CONF NOTIFICACION POA =========================
-                $dia_cambios = 5;
+                $dia_cambios = 27;
                 $hoy = date("j");
 
                 if ($this->gestion>2023 & ($hoy == $dia_cambios)) {
@@ -291,7 +291,7 @@ class User extends CI_Controller{
                     }
                 }
                 else{
-                    $data['seguimiento_poa']='';
+                    $data['seguimiento_poa']='&nbsp;<a data-toggle="modal" data-target="#modal_seguimiento" id="'.$this->dist_id.'" class="btn btn-primary seg_uni" title=""><img src="'.base_url().'assets/Iconos/application_cascade.png" width="20" height="20"/>&nbsp;<b style="font-size:10px">SEGUIMIENTO POA UNIDAD ORGANIZACIONAL</b></a><br><br>';
                 }
                 ///=================================================
             }
@@ -404,33 +404,32 @@ class User extends CI_Controller{
 
         
         $ddep = $this->model_proyecto->dep_dist($this->dist_id);
-        $nro_sol=count($this->model_certificacion->lista_solicitudes_cpoa_distrital($this->dist_id));
-        $solicitudes_cpoa='';
+        //$nro_sol=count($this->model_certificacion->lista_solicitudes_cpoa_distrital($this->dist_id));
+        /*$solicitudes_cpoa='';
         if($nro_sol!=0){
             $solicitudes_cpoa='<a href="'.site_url("").'/ejec/mis_solicitudes_certpoa" class="btn btn-primary" target="_blanck" title="LISTA DE SOLICITUDES POA"><img src="'.base_url().'assets/Iconos/email_attach.png" width="20" height="20"/>&nbsp;('.$nro_sol.') Solicitud(es) de Certificación POA</a>';
-        }
+        }*/
 
 
         $tit_requerimiento='';
         
         if(count($req)!=0){
-            $tit_requerimiento='y '.$req[0]['requerimientos'].' Requerimientos con un monto de Bs. '.number_format($req[0]['monto'], 2, ',', '.').' que deben ser <b>CERTIFICADOS</b>';
+            $tit_requerimiento='y '.$req[0]['requerimientos'].' Requerimientos con un monto de Bs. '.number_format($req[0]['monto'], 2, ',', '.').' que deben ser <b>EVALUADOS</b> y <b>CERTIFICADOS</b>';
         }
 
         
         $tabla.='
             <div class="alert alert-success" role="alert" title='.$this->dist_id.' style="text-align:justify">
-                <h4 class="alert-heading"><b>SEGUIMIENTO y SOLICITUD CERTIFICACIÓN POA '.$this->gestion.' !!</b></h4>
-                <p>Hola '.$this->session->userdata('funcionario').', la '.strtoupper($ddep[0]['dist_distrital']).' tiene programado en su POA '.$this->gestion.' para el mes de '.$this->verif_mes[2].' : '.$nro.' Actividades a ser <b>EJECUTADOS</b> '.$tit_requerimiento.',
-                las mismas se las deben realizar a traves del modulo de EVALUACI&Oacute;N y CERTIFICACI&Oacute;N POA. </p>
+                <h4 class="alert-heading"><b>PROCESO DE NOTIFICACIÓN POA '.$this->verif_mes[2].' / '.$this->gestion.' !!</b></h4>
+                <p>Hola '.$this->session->userdata('funcionario').', la '.strtoupper($ddep[0]['dist_distrital']).' tiene programado en su POA '.$this->gestion.' para el mes de '.$this->verif_mes[2].' : '.$nro.' Actividades </b> '.$tit_requerimiento.'. </p>
                 <hr>
                 <p class="mb-0">
-                    <a data-toggle="modal" data-target="#modal_form4_mes" id="'.$this->dist_id.'" class="btn btn-success form4_mes" title=""><img src="'.base_url().'assets/Iconos/application_cascade.png" width="20" height="20"/>&nbsp;<b style="font-size:12px">GASTO CORRIENTE</b></a>';
+                    <a data-toggle="modal" data-target="#modal_form4_mes" id="'.$this->dist_id.'" class="btn btn-success form4_mes" title=""><img src="'.base_url().'assets/Iconos/application_cascade.png" width="20" height="20"/>&nbsp;<b style="font-size:10px">NOTIFICACIÓN GASTO CORRIENTE</b></a>';
                     if(count($this->model_notificacion->list_requerimiento_pinversion_programado_al_mes_distrital($this->dist_id,$this->verif_mes[1]))!=0){
-                       $tabla.='&nbsp;<a data-toggle="modal" data-target="#modal_form5_pi_mes" id="'.$this->dist_id.'" class="btn btn-success pi_mes" title=""><img src="'.base_url().'assets/Iconos/application_cascade.png" width="20" height="20"/>&nbsp;<b style="font-size:12px">PROYECTOS DE INVERSIÓN</b></a>';
+                       $tabla.='&nbsp;<a data-toggle="modal" data-target="#modal_form5_pi_mes" id="'.$this->dist_id.'" class="btn btn-success pi_mes" title=""><img src="'.base_url().'assets/Iconos/application_cascade.png" width="20" height="20"/>&nbsp;<b style="font-size:10px">NOTIFICACIÓN PROY. INVERSIÓN</b></a>';
                     }
                     $tabla.='
-                    '.$solicitudes_cpoa.'
+                    
                 </p>
             </div>';
 

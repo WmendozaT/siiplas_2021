@@ -363,7 +363,7 @@ class Eval_oregional extends CI_Controller{
     public function get_temporalidad_objetivo_regional($or_id,$tp_rep,$tp_or,$tp_meta){
       /// tp_rep=0 normal
       /// tp_rep=1 Reporte
-      /// tp_or=1 (inversion), 0 (gasto corriente) 1
+      /// tp_or=1 (inversion), 0 (gasto corriente)
 
       $verif_temp=$this->model_objetivoregion->verif_temporalidad_oregional($or_id);
       $tabla='';
@@ -620,23 +620,24 @@ class Eval_oregional extends CI_Controller{
       $this->db->delete('temp_trm_ejec_objetivos_regionales');
 
 
-      $techo_ini_reg=$this->model_insumo->techo_ppto_inicial_inversion_regional($row['dep_id']); //// Techo inicial asignado aprobado por Gestion
+      $techo_ini_reg=$this->model_insumo->techo_ppto_inicial_inversion_regional($row['or_id']); //// Techo inicial asignado aprobado por Gestion
       if(count($techo_ini_reg)!=0){
           for ($i=1; $i <=4; $i++) {
           
-            $ppto_trimestre=$this->model_insumo->ppto_inicial_inversion_regional_trimestre($row['dep_id'],$i); /// Suma ppto asignado inicialmente
+            $ppto_trimestre=$this->model_insumo->ppto_inicial_inversion_regional_trimestre($row['or_id'],$i); /// Suma ppto asignado inicialmente
             /*----------------------------------------------------*/
-            $data_to_store2 = array( ///// Tabla temp prog oregional
-              'or_id' => $row['or_id'], /// or id
-              'trm_id' => $i, /// trimestre
-              'tp_id' => 1, /// inversion
-              'pg_fis' => round((($ppto_trimestre[0]['ppto_inicial_trimestre']/$techo_ini_reg[0]['techo_ppto_inicial'])*100),2), /// valor Programado %
-              'g_id' => $this->gestion, /// gestion                
-            );
-            $this->db->insert('temp_trm_prog_objetivos_regionales', $data_to_store2);
+            if(count($ppto_trimestre)!=0){
+              $data_to_store2 = array( ///// Tabla temp prog oregional
+                'or_id' => $row['or_id'], /// or id
+                'trm_id' => $i, /// trimestre
+                'tp_id' => 1, /// inversion
+                'pg_fis' => round((($ppto_trimestre[0]['ppto_inicial_trimestre']/$techo_ini_reg[0]['techo_ppto_inicial'])*100),2), /// valor Programado %
+                'g_id' => $this->gestion, /// gestion                
+              );
+              $this->db->insert('temp_trm_prog_objetivos_regionales', $data_to_store2);
+            }
 
-
-            $ppto_trimestre_ejec=$this->model_ptto_sigep->ppto_ejecutado_inversion_regional_trimestre($row['dep_id'],$i); /// Suma ppto ejecutado al trimestre
+            $ppto_trimestre_ejec=$this->model_ptto_sigep->ppto_ejecutado_inversion_regional_trimestre($row['or_id'],$i); /// Suma ppto ejecutado al trimestre
             /*----------------------------------------------------*/
             if(count($ppto_trimestre_ejec)!=0){
                 $data_to_store2 = array( ///// Tabla temp ejec oregional
@@ -1064,9 +1065,13 @@ class Eval_oregional extends CI_Controller{
       if($row['or_tp']==1){
         $por='%';
       }
-      $nro++;
+      $nro++; $bgcolor='';
+      if($row['or_priorizado']==1){
+        $bgcolor='#ecf7f5';
+      }
+
       $tabla.='
-      <tr style="font-size: 6.5px;">
+      <tr style="font-size: 6.5px;" bgcolor='.$bgcolor.'>
         <td style="width:0.9%; height:18px;" align=center>'.$nro.'</td>
         <td style="width:2.2%; font-size: 10px;" align="center"><b>'.$row['og_codigo'].'</b></td>
         <td style="width:2.2%; font-size: 10px;" align="center"><b>'.$row['or_codigo'].'</b></td>

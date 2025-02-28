@@ -16,6 +16,7 @@ class Cseguimiento extends CI_Controller {
         $this->load->model('mantenimiento/model_configuracion');
         $this->load->model('ejecucion/model_notificacion');
         $this->load->model('programacion/insumos/model_insumo');
+        //$this->load->model('mantenimiento/model_funcionario');
         $this->load->model('menu_modelo');
         $this->load->model('Users_model','',true);
         $this->load->library('security');
@@ -1688,6 +1689,115 @@ class Cseguimiento extends CI_Controller {
           show_404();
       }
     }
+
+
+    /*--- GET LISTA DE UNIDADES QUE HICIERON EL REGISTRO AL SEGUIMIENTO POA ----*/
+    public function get_unidades_seguimiento_poa_mensual(){
+      if($this->input->is_ajax_request() && $this->input->post()){
+        $post = $this->input->post();
+        $dist_id = $this->security->xss_clean($post['dist_id']);
+        $tabla=$this->listado_unidades($dist_id,0); /// normal
+        
+        $result = array(
+          'respuesta' => 'correcto',
+          'tabla'=>$tabla,
+        );
+          
+        echo json_encode($result);
+      }else{
+          show_404();
+      }
+    }
+
+
+    /*--- LISTA DE UNIDADES QUE HICIERON EL SEGUIMIENTO POA----*/
+    public function listado_unidades($dist_id,$tp_reporte){
+        /// tp_reporte:  0 normal, 1 reporte
+        $tabla='';
+        $unidades=$this->model_notificacion->lista_usuario_a_unidades($dist_id,0); /// parte administrativa
+        $salud=$this->model_notificacion->lista_usuario_a_unidades($dist_id,1); /// parte Salud
+        
+        $titulo='<b style="font-size:18px;text-align:center">SEGUIMIENTO POA MENSUAL A UNIDADES ORGANIZACIONALES CORRESPONDIENTES AL MES DE '.$this->verif_mes[2].' / '.$this->gestion.'</b>';
+        
+
+        $tabla.='
+        '.$titulo.'<br>
+        <table class="table table-bordered" border=1 style="width:100%;">
+          <thead>
+          <tr>
+            <th style="width:1%; text-align:center">#</th>
+            <th style="width:2%; text-align:center">APERTURA PROGRAMATICA</th>
+            <th style="width:5%; text-align:center">UNIDAD / ESTABLECIMIENTO</th>
+            <th style="width:5%; text-align:center">UNIDAD RESPONSABLE</th>
+            <th style="width:3%; text-align:center">USUARIO</th>
+            <th style="width:3%; text-align:center">INGRESO</th>
+            <th style="width:3%; text-align:center">REALIZO EL LLENADO DEL FORMULARIO?</th>
+            <th style="width:3%; text-align:center">REPORTE DE SEGUIMIENTO</th>
+          </tr>
+          </thead>
+          <tbody>';
+          $nro=0;
+          foreach ($unidades as $rowp) {
+            $nro++;
+            $get_registro=$this->model_notificacion->get_verif_registro_a_seguimiento($rowp['com_id'],$this->verif_mes[1]);
+            $fecha_ingreso='';$registro=''; $reporte='';
+            $color='';
+            if(count($get_registro)!=0){
+              $color='#eff5ed';
+              $fecha_ingreso=$get_registro[0]['ingreso_fecha'];
+              if($get_registro[0]['nro_act']==1){
+                $registro='SI';
+                $reporte='<center><a href="javascript:abreVentana(\''.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$rowp['com_id'].'/'.$get_registro[0]['mes'].'\');" title="IMPRESION SEGUIMIENTO" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="20" HEIGHT="20"/></a></center>';
+              }
+            }
+
+
+            $tabla.='
+            <tr bgcolor='.$color.'>
+              <td style="font-size:12px; text-align:center;"><b>'.$nro.'</b></td>
+              <td style="font-size:12px;"><b>'.$rowp['prog'].' '.$rowp['proy'].' '.$rowp['act'].'</b></td>
+              <td style="font-size:10.5px;">'.$rowp['tipo'].' '.$rowp['actividad'].' - '.$rowp['abrev'].'</td>
+              <td>'.$rowp['tipo_subactividad'].' '.$rowp['serv_descripcion'].'</td>
+              <td><b>'.$rowp['fun_usuario'].'</b></td>
+              <td>'.$fecha_ingreso.'</td>
+              <td style="font-size:15px; text-align:center;"><b>'.$registro.'</b></td>
+              <td style="font-size:15px; text-align:center;">'.$reporte.'</td>
+            </tr>';
+          }
+
+          foreach ($salud as $rowp) {
+            $nro++;
+            $get_registro=$this->model_notificacion->get_verif_registro_a_seguimiento($rowp['com_id'],$this->verif_mes[1]);
+            $color='';$fecha_ingreso='';$registro='';$reporte='';
+            if(count($get_registro)!=0){
+              $color='#eff5ed';
+              $fecha_ingreso=$get_registro[0]['ingreso_fecha'];
+              if($get_registro[0]['nro_act']==1){
+                $registro='SI';
+                $reporte='<center><a href="javascript:abreVentana(\''.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$rowp['com_id'].'/'.$get_registro[0]['mes'].'\');" title="IMPRESION SEGUIMIENTO" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="20" HEIGHT="20"/></a></center>';
+              }
+            }
+            $tabla.='
+            <tr bgcolor='.$color.'>
+              <td style="font-size:15px; text-align:center;"><b>'.$nro.'</b></td>
+              <td style="font-size:12px;">'.$rowp['prog'].' '.$rowp['proy'].' '.$rowp['act'].'</td>
+              <td style="font-size:10.5px;">'.$rowp['tipo'].' '.$rowp['actividad'].' - '.$rowp['abrev'].'</td>
+              <td>'.$rowp['com_componente'].'</td>
+              <td>'.$rowp['dato_ingreso'].'</td>
+              <td>'.$fecha_ingreso.'</td>
+              <td style="font-size:15px; text-align:center;"><b>'.$registro.'</b></td>
+              <td style="font-size:15px; text-align:center;">'.$reporte.'</td>
+            </tr>';
+          }
+          $tabla.='
+          </tbody>
+        </table>';
+
+        return $tabla;
+
+    }
+
+
 
 
     /*--- LISTA DE REQUERIMIENTOS A EJECUTAR EN EL MES - PROYECTOS DE INVERSION ----*/

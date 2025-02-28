@@ -52,8 +52,6 @@ class Cevaluacion_form2 extends CI_Controller {
       }
 
       $this->load->view('admin/evaluacion/evaluacion_form2/menu_regionales', $data);
-
-      
     }
 
 
@@ -113,7 +111,7 @@ class Cevaluacion_form2 extends CI_Controller {
 
 
 
-    /*---- FUNCION ACTUALIZA INFORMACION EVALUACION POA AL TRIMESTRE --------*/
+    /*---- FUNCION ACTUALIZA INFORMACION TEMPORALIDAD EVALUACION POA AL TRIMESTRE --------*/
     public function update_temporalidad_oregional(){
       if($this->input->is_ajax_request() && $this->input->post()){
         $post = $this->input->post();

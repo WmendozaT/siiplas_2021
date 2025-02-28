@@ -46,7 +46,7 @@
         function abreVentana(PDF){             
           var direccion;
           direccion = '' + PDF;
-          window.open(direccion, "CUADRO COMPARATIVO POA" , "width=800,height=700,scrollbars=NO") ; 
+          window.open(direccion, "IMPRESION" , "width=800,height=700,scrollbars=NO") ; 
         }
       </script>
       <style>
@@ -246,6 +246,20 @@
           </div>
         </div>
 
+        <!-- MODAL SEGUIMIENTO A UNIDADES -->
+        <div class="modal fade" id="modal_seguimiento" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document" id="mdialTamanio">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
+              </div>
+              <div class="modal-body" align="center">
+                <div id="seg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="modal fade" id="modal_nuevo_tr" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -354,6 +368,35 @@
             request.done(function (response, textStatus, jqXHR) { 
                 if (response.respuesta == 'correcto') {
                     $('#pinversion').html(response.tabla);
+                } else {
+                    alertify.error("ERROR AL RECUPERAR DATOS, PORFAVOR CONTACTESE CON EL ADMINISTRADOR"); 
+                }
+            });
+
+          });
+
+
+          //// Seguimiento POA a unidades
+          $(".seg_uni").on("click", function (e) {
+
+            dist_id = $(this).attr('id');
+
+            $('#seg').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando lista de Proyectos de Inversión a ejecutar este mes ...</div>');
+            var url = "<?php echo site_url("")?>/ejecucion/cseguimiento/get_unidades_seguimiento_poa_mensual";
+            var request;
+            if (request) {
+                request.abort();
+            }
+            request = $.ajax({
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                data: "dist_id="+dist_id
+            });
+
+            request.done(function (response, textStatus, jqXHR) { 
+                if (response.respuesta == 'correcto') {
+                    $('#seg').html(response.tabla);
                 } else {
                     alertify.error("ERROR AL RECUPERAR DATOS, PORFAVOR CONTACTESE CON EL ADMINISTRADOR"); 
                 }

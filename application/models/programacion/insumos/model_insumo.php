@@ -256,7 +256,22 @@ class Model_insumo extends CI_Model{
 
 
     // ------ Techo presupuestario inicial Imversion X REGIONAL
-    public function techo_ppto_inicial_inversion_regional($dep_id){
+    public function techo_ppto_inicial_inversion_regional($or_id){
+        $sql = '
+        select pr.or_id,SUM(temp.temp_fis) techo_ppto_inicial
+        from _productos pr
+        Inner Join _componentes as c On c.com_id=pr.com_id
+        Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as proy On proy.pfec_id=c.pfec_id
+        Inner Join temporalidad_inicial_total_insumo as temp On temp.aper_id=proy.aper_id
+        where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\'
+        group by pr.or_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    //// Anterior 2024 Borrar
+/*    public function techo_ppto_inicial_inversion_regional($dep_id){
         $sql = '
             select pi.dep_id,SUM(temp.temp_fis) techo_ppto_inicial
             from temporalidad_inicial_total_insumo temp
@@ -267,10 +282,26 @@ class Model_insumo extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
+
 
     // ------ presupuestario inicial Inversion X REGIONAL al Trimestre
-    public function ppto_inicial_inversion_regional_trimestre($dep_id,$i){
+    public function ppto_inicial_inversion_regional_trimestre($or_id,$i){
+        $sql = '
+        select pr.or_id,SUM(temp.temp_fis) ppto_inicial_trimestre
+        from _productos pr
+        Inner Join _componentes as c On c.com_id=pr.com_id
+        Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as proy On proy.pfec_id=c.pfec_id
+        Inner Join temporalidad_inicial_total_insumo as temp On temp.aper_id=proy.aper_id
+        where pr.or_id='.$or_id.' and (temp.mes_id>\'0\' and temp.mes_id<='.($i*3).') and pr.estado!=\'3\' and pr.prod_priori=\'1\'
+        group by pr.or_id';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+/*    //// a borrar 2024
+        public function ppto_inicial_inversion_regional_trimestre($dep_id,$i){
         $sql = '
             select pi.dep_id,SUM(temp.temp_fis) ppto_inicial_trimestre
             from temporalidad_inicial_total_insumo temp
@@ -281,9 +312,7 @@ class Model_insumo extends CI_Model{
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
-
-
+    }*/
 
 
     ///================================================

@@ -285,8 +285,8 @@ $(document).ready(function() {
 
     /// TIPO DE META
       $(document).ready(function () {
-        $("#tp_meta").change(function () {   
-        //alert('hola')         
+        $("#tp_met").change(function () {   
+       // alert('hola')         
           var tp_met = $(this).val();
 
             if(tp_met==1){ /// recurrente
@@ -1082,7 +1082,7 @@ $(document).ready(function() {
 
     /// Tipo de indicador (Modificacion POA)
     $(document).ready(function () {
-      $("#mtipo_i").change(function () {            
+      $("#mtipo_i").change(function () {          
         var tp_id = $(this).val();
        
           if(tp_id==2){

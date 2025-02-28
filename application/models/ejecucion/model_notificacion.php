@@ -136,4 +136,44 @@ class Model_notificacion extends CI_Model{
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+
+
+    /*------- LISTA DE USUARIOS APERTURADOS --------*/
+    public function lista_usuario_a_unidades($dist_id,$tp){
+        // tp: 0 Administrativo, 1 Establecimientos
+        if($tp==0){
+            $sql = 'select *
+                from vlist_funcionario f
+                Inner Join _componentes as c On c.com_id=f.cm_id
+                Inner Join servicios_actividad as sa On sa.serv_id=c.serv_id
+                Inner Join tipo_subactividad as tpsa On tpsa.tp_sact=c.tp_sact
+                Inner Join lista_poa_gastocorriente_nacional('.$this->gestion.') as proy On c.pfec_id=proy.pfec_id
+                where proy.dist_id='.$dist_id.'';
+        }
+        else{
+             $sql = '
+                select *
+                from lista_poa_gastocorriente_distrital('.$dist_id.','.$this->gestion.') proy
+                Inner Join _componentes as c On c.pfec_id=proy.pfec_id
+                where proy.tipo!=\'""\'';
+        }
+
+        
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*------- GET VERIFICANDO SI LA UNIDAD REALIZO EL SEGUIMIENTO --------*/
+    public function get_verif_registro_a_seguimiento($com_id,$mes_id){
+        $sql = 'select *
+                from registro_seguimientopoa seg
+                Inner Join mes as m On seg.mes=m.m_id
+                where com_id='.$com_id.' and seg.mes='.$mes_id.'';
+
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 }

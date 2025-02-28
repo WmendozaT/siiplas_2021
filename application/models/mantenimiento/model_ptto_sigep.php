@@ -558,6 +558,23 @@ class Model_ptto_sigep extends CI_Model{
 
 
     /*----- EJECUCION DE PRESUPUESTO AL TRIMESTRE X REGIONAL PINVERSION(vigente)-----*/
+    public function ppto_ejecutado_inversion_regional_trimestre($or_id,$i){
+        $sql = '
+        select pr.or_id,SUM(ppto_ejec) ppto_ejec_trimestre
+        from _productos pr
+        Inner Join _componentes as c On c.com_id=pr.com_id
+        Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as proy On proy.pfec_id=c.pfec_id
+        Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=proy.aper_id
+        Inner Join ejecucion_financiera_sigep as ppto_ejec On ppto_ejec.sp_id=partidas_asig.sp_id
+        where pr.or_id='.$or_id.' and (ppto_ejec.m_id>\'0\' and ppto_ejec.m_id<='.($i*3).') and pr.estado!=\'3\' and pr.prod_priori=\'1\'
+        group by pr.or_id';
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /* para borrar 2024
     public function ppto_ejecutado_inversion_regional_trimestre($dep_id,$i){
         $sql = '
             select p.dep_id,SUM(ppto_ejec) ppto_ejec_trimestre
@@ -569,7 +586,7 @@ class Model_ptto_sigep extends CI_Model{
     
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
 
     /*----- EJECUCION DE PRESUPUESTO TOTAL X DISTRITAL PINVERSION(vigente)-----*/
