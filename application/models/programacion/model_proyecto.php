@@ -10,6 +10,16 @@ class Model_proyecto extends CI_Model{
         $this->dist_tp = $this->session->userData('dist_tp');
     }
     
+    public function lista_distritales(){
+        $sql = '
+            select *
+            from _distritales
+            where dist_id!=\'0\' and dist_estado!=\'0\'
+            order by dist_id asc';
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     public function mes_id($mes_id){
         $sql = 'select *
                 from mes ms

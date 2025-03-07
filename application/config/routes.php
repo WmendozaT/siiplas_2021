@@ -28,6 +28,8 @@ $route['mision'] = 'user/mision';
 //$route['vision'] = 'programacion/vision/vista_vision';
 
 
+$route['seguimiento_a_unidades/(:any)'] = 'ejecucion/cseguimiento/imprime_seguimiento_a_unidades/$1';
+
 /* MARCO ESTRATEGICO */
 /*--------------------------------------- Objetivos Estrategicos ----------------------------------------------*/
 $route['me/objetivos_estrategicos'] = 'mestrategico/cobjetivos_estrategico/objetivos_estrategicos';	//// Lista Objetivos Estrategicos

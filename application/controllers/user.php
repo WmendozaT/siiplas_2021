@@ -234,7 +234,36 @@ class User extends CI_Controller{
             $data['gestiones']=$this->list_gestiones();
             $data['list_trimestre']=$this->list_trimestre();
             $rol=$this->model_funcionario->get_rol($this->fun_id);
+            $distritales=$this->model_proyecto->lista_distritales();
             
+            $tabla='';
+            $tabla.='
+            <div class="modal fade" id="modal_seguimiento_nacional" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <form id="form_seg" name="form_seg" class="form-horizontal" method="post">
+                        <h3 class="alert alert-info"><center>SEGUIMIENTO POA - '.$this->verif_mes[2].' / '.$this->gestion.'</center></h3>   
+                        <fieldset>
+                          <div class="form-group">
+                            <div class="col-md-12">
+                              <select name="seg_reg" id="seg_reg" class="form-control" required>
+                                <option value="0">seleccionar Distrital...</option>';
+                                foreach($distritales as $row){
+                                    $tabla.='<option value="'.$row['dist_id'].'">'.strtoupper($row['dist_distrital']).'</option>';
+                                }
+                            $tabla.='
+                              </select>
+                            </div>
+                          </div>
+                        </fieldset>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>';
+            $data['select_distrital']=$tabla;
+
             $data['mensaje']='';
             $data['seguimiento_poa']='';
             $data['popup_saldos']='';
@@ -275,10 +304,10 @@ class User extends CI_Controller{
                 $data['mensaje']=$this->mensaje_sistema();   
 
                 ///===================== CONF NOTIFICACION POA =========================
-                $dia_cambios = 27;
+                $dia_cambios = 6;
                 $hoy = date("j");
 
-                if ($this->gestion>2023 & ($hoy == $dia_cambios)) {
+                if ($this->gestion>2024 & ($hoy == $dia_cambios)) {
                    if($this->dep_id==2){ //// Exclusivo para la Regional LA paz
                         $nro_poa=count($this->model_seguimientopoa->get_seguimiento_poa_mes_regional($this->dep_id,$this->verif_mes[1],$this->gestion));;
                     }
@@ -291,7 +320,7 @@ class User extends CI_Controller{
                     }
                 }
                 else{
-                    $data['seguimiento_poa']='&nbsp;<a data-toggle="modal" data-target="#modal_seguimiento" id="'.$this->dist_id.'" class="btn btn-primary seg_uni" title=""><img src="'.base_url().'assets/Iconos/application_cascade.png" width="20" height="20"/>&nbsp;<b style="font-size:10px">SEGUIMIENTO POA UNIDAD ORGANIZACIONAL</b></a><br><br>';
+                    $data['seguimiento_poa']='';
                 }
                 ///=================================================
             }

@@ -1710,27 +1710,149 @@ class Cseguimiento extends CI_Controller {
     }
 
 
+    /*--- GET LISTA DE UNIDADES QUE HICIERON EL REGISTRO AL SEGUIMIENTO POA NACIONAL ----*/
+    public function get_unidades_seguimiento_poa_mensual_nacional(){
+      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+          $dist_id = $_POST['value'];
+          $tabla=$this->listado_unidades($dist_id,0);
+          $reporte='
+          <a href="javascript:abreVentana2(\''.site_url("").'/seguimiento_a_unidades/'.$dist_id.'\');" title="REPORTE" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="20"/></a>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>';
+          // Ejemplo de respuesta
+          $response = [
+            'status' => 'success',
+            //'message' => 'Has seleccionado el valor: ' . htmlspecialchars($value)
+            'message' => $tabla,
+            'button' => $reporte
+          ];
+          
+          // Devuelve la respuesta en formato JSON
+          echo json_encode($response);
+      }
+    }
+
+
+    /*-----IMPRIME LISTADO DE UNIDADES A SEGUIMIENTO POA -----*/
+    public function imprime_seguimiento_a_unidades($dist_id){
+      $tabla='<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impresión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        @media print {
+            #cabecera {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 80px; /* Altura de la cabecera */
+                background: #f1f1f1;
+                text-align: center;
+                line-height: 80px; /* Centrar verticalmente */
+                border-bottom: 2px solid #000; /* Borde más grueso */
+                z-index: 1000; /* Asegura que la cabecera esté encima */
+            }
+            #contenido {
+                margin-top: 100px; /* Espacio para la cabecera */
+                margin-bottom: 60px; /* Espacio para el pie de página */
+                page-break-after: auto; /* Permitir salto de página después del contenido */
+            }
+            #pie {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 10px;
+                background: #f1f1f1;
+                text-align: center;
+                line-height: 50px;
+                border-top: 1px solid #000;
+                z-index: 1000; /* Asegura que el pie de página esté encima */
+            }
+            h1 {
+                margin: 0; /* Eliminar márgenes del h1 */
+                font-size: 24px; /* Aumentar tamaño de fuente */
+            }
+            #tabla-container {
+                width: 100%; /* Asegura que el contenedor ocupe el 100% del ancho */
+                overflow: hidden; /* Evitar desplazamiento */
+                page-break-inside: auto; /* Permite que la tabla se divida en páginas */
+            }
+            table {
+                width: 100%; /* Asegura que la tabla ocupe el 100% del ancho */
+                border-collapse: collapse; /* Colapsar bordes */
+                page-break-inside: auto; /* Permite que la tabla se divida en páginas */
+                font-size: 10px; /* Aumentar tamaño de fuente */
+            }
+            thead {
+                display: table-header-group; /* Mantiene los encabezados en cada página */
+            }
+            th, td {
+                border: 1px solid #000;
+                padding: 8px; /* Espaciado interno */
+                text-align: center; /* Centrar texto */
+            }
+            th {
+                background-color: #eaeaea; /* Color de fondo de cabecera */
+                font-weight: bold; /* Negrita para los encabezados */
+            }
+            tr {
+                page-break-inside: avoid; /* Evita que las filas se dividan entre páginas */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="cabecera">
+        <h1>Informe de Actividades</h1>
+    </div>
+    <div id="contenido">
+        <h1>Contenido Principal</h1>
+        <p>Este es el contenido que se imprimirá desde:</p>
+        <br>
+        <div id="tabla-container">
+            '.$this->listado_unidades($dist_id,0).'
+        </div>
+    </div>
+    <div id="pie">
+        Pie de Página del Documento
+    </div>
+</body>
+</html>';
+
+echo $tabla;
+       //$this->listado_unidades($dist_id,0);
+    }
+
+
     /*--- LISTA DE UNIDADES QUE HICIERON EL SEGUIMIENTO POA----*/
     public function listado_unidades($dist_id,$tp_reporte){
         /// tp_reporte:  0 normal, 1 reporte
         $tabla='';
+        $get_distrital=$this->model_proyecto->dep_dist($dist_id);
         $unidades=$this->model_notificacion->lista_usuario_a_unidades($dist_id,0); /// parte administrativa
         $salud=$this->model_notificacion->lista_usuario_a_unidades($dist_id,1); /// parte Salud
         
-        $titulo='<b style="font-size:18px;text-align:center">SEGUIMIENTO POA MENSUAL A UNIDADES ORGANIZACIONALES CORRESPONDIENTES AL MES DE '.$this->verif_mes[2].' / '.$this->gestion.'</b>';
+        $titulo='<div class="alert alert-info">SEGUIMIENTO POA MENSUAL <b>'.strtoupper($get_distrital[0]['dist_distrital']).' AL MES DE '.$this->verif_mes[2].' / '.$this->gestion.'</b></div>';
         
-
         $tabla.='
-        '.$titulo.'<br>
+        '.$titulo.'
         <table class="table table-bordered" border=1 style="width:100%;">
           <thead>
           <tr>
             <th style="width:1%; text-align:center">#</th>
-            <th style="width:2%; text-align:center">APERTURA PROGRAMATICA</th>
+            <th style="width:2%; text-align:center">APERTURA PROGRAMÁTICA</th>
             <th style="width:5%; text-align:center">UNIDAD / ESTABLECIMIENTO</th>
             <th style="width:5%; text-align:center">UNIDAD RESPONSABLE</th>
             <th style="width:3%; text-align:center">USUARIO</th>
-            <th style="width:3%; text-align:center">INGRESO</th>
+            <th style="width:3%; text-align:center">FECHA DE INGRESO</th>
             <th style="width:3%; text-align:center">REALIZO EL LLENADO DEL FORMULARIO?</th>
             <th style="width:3%; text-align:center">REPORTE DE SEGUIMIENTO</th>
           </tr>
@@ -1750,7 +1872,6 @@ class Cseguimiento extends CI_Controller {
                 $reporte='<center><a href="javascript:abreVentana(\''.site_url("").'/seguimiento_poa/reporte_seguimientopoa_mensual/'.$rowp['com_id'].'/'.$get_registro[0]['mes'].'\');" title="IMPRESION SEGUIMIENTO" class="btn btn-default"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="20" HEIGHT="20"/></a></center>';
               }
             }
-
 
             $tabla.='
             <tr bgcolor='.$color.'>
@@ -1779,11 +1900,11 @@ class Cseguimiento extends CI_Controller {
             }
             $tabla.='
             <tr bgcolor='.$color.'>
-              <td style="font-size:15px; text-align:center;"><b>'.$nro.'</b></td>
-              <td style="font-size:12px;">'.$rowp['prog'].' '.$rowp['proy'].' '.$rowp['act'].'</td>
+              <td style="font-size:12px; text-align:center;"><b>'.$nro.'</b></td>
+              <td style="font-size:12px;"><b>'.$rowp['prog'].' '.$rowp['proy'].' '.$rowp['act'].'</b></td>
               <td style="font-size:10.5px;">'.$rowp['tipo'].' '.$rowp['actividad'].' - '.$rowp['abrev'].'</td>
               <td>'.$rowp['com_componente'].'</td>
-              <td>'.$rowp['dato_ingreso'].'</td>
+              <td><b>'.$rowp['dato_ingreso'].'</b></td>
               <td>'.$fecha_ingreso.'</td>
               <td style="font-size:15px; text-align:center;"><b>'.$registro.'</b></td>
               <td style="font-size:15px; text-align:center;">'.$reporte.'</td>

@@ -48,13 +48,35 @@
           direccion = '' + PDF;
           window.open(direccion, "IMPRESION" , "width=800,height=700,scrollbars=NO") ; 
         }
+
+        function abreVentana2(PDF) {
+    var direccion = '' + PDF;
+    var ventana = window.open(direccion, "IMPRESION", "width=800,height=700,scrollbars=NO");
+
+    // Esperar a que la ventana se cargue completamente
+    ventana.onload = function() {
+        ventana.print(); // Imprimir automáticamente
+
+        // Cerrar la ventana después de un breve retraso
+        setTimeout(function() {
+            ventana.close(); // Cerrar la ventana
+        }, 2000); // Ajusta el tiempo según sea necesario
+    };
+}
+
+/*        function abreVentana2(PDF) {
+    var direccion = '' + PDF;
+    var ventana = window.open("", "IMPRESION", "width=800,height=700,scrollbars=NO");
+
+
+}*/
       </script>
       <style>
         #mdialTamanio{
           width: 80% !important;
         }
         #mdialTamanio_saldos{
-          width: 60% !important;
+          width: 65% !important;
         }
         table{
           font-size: 10px;
@@ -91,7 +113,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
+            <li class="active"><a href="#"><b>Home</b></a></li>
             <?php
               if($this->session->userdata('tp_adm')==1 || $this->session->userdata('rol_id')!=10){ ?>
                 <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" title="CAMBIAR GESTI&Oacute;N">Gesti&oacute;n</a></li>
@@ -102,7 +124,18 @@
                 <li><a href="#" data-toggle="modal" data-target="#modal_nuevo_tr" title="CAMBIAR TRIMESTRE">Trimestre</a></li>
                 <?php
               }
+
+              if($this->session->userdata('tp_adm')==1){ ?>
+                <li><a href="#" data-toggle="modal" data-target="#modal_seguimiento_nacional" title="SEGUIMIENTO POA NACIONAL" class="seg_uni"><b>Seguimiento POA NACIONAL</b></a></li>
+                <?php
+              }
+              else{?>
+                <li><a href="#" data-toggle="modal" data-target="#modal_seguimiento" id="<?php echo $dist_id; ?>" title="SEGUIMIENTO POA" class="seg_uni"><b>Seguimiento POA</b></a></li>
+                <?php
+              }
+
             ?>
+            
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Descarga de Archivos / Documentos">Descargas <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -132,8 +165,7 @@
 
     <div class="container">
 
-
-      <!-- Main component for a primary marketing message or call to action -->
+    <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
         <div class="row box-green1">
         <div class="col-md-8">
@@ -248,7 +280,7 @@
 
         <!-- MODAL SEGUIMIENTO A UNIDADES -->
         <div class="modal fade" id="modal_seguimiento" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document" id="mdialTamanio">
+          <div class="modal-dialog modal-lg" role="document" id="mdialTamanio_saldos">
             <div class="modal-content">
               <div class="modal-header">
                 <button class="close" data-dismiss="modal" id="amcl" title="SALIR"><span aria-hidden="true">&times; <b>Salir Formulario</b></span></button>
@@ -290,6 +322,23 @@
             </div>
           </div>
         </div>
+
+        <!--   SEGUIMIENTO A UNIDADES / ESTABLECIMIENTOS POR REGIONAL -->
+        <?php echo $select_distrital; ?>
+
+      <!-- Modal listado de Unidades para el seguimiento a Nivel Nacional -->
+      <div class="modal fade" id="modal_respuesta" tabindex="-1" role="dialog" aria-labelledby="respuestaModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document" id="mdialTamanio_saldos"> <!-- Modal grande -->
+              <div class="modal-content">
+                  <div class="modal-body">
+                      <div id="responsee"></div> <!-- Div para mostrar la respuesta -->
+                  </div>
+                  <div class="modal-footer">
+                      <div id="botones"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
 
     <!--  MODAL DE ALERTA DE SALDOS     -->
     <?php echo $popup_saldos; ?>
@@ -376,9 +425,8 @@
           });
 
 
-          //// Seguimiento POA a unidades
+          //// Seguimiento POA a unidades por responsable poa Regional
           $(".seg_uni").on("click", function (e) {
-
             dist_id = $(this).attr('id');
 
             $('#seg').html('<div class="loading" align="center"><img src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" alt="loading" /><br/>Cargando lista de Proyectos de Inversión a ejecutar este mes ...</div>');
@@ -405,6 +453,38 @@
           });
         });
       </script>
+
+    <!-- Seguimiento POA a Unidades Nacional -->
+    <script>
+    $(document).ready(function() {
+        $('#seg_reg').change(function() {
+            var selectedValue = $(this).val(); // Obtener el valor seleccionado
+            if (selectedValue !== "0") { // Verifica si se ha seleccionado una opción válida
+                $.ajax({
+                    url: '<?php echo site_url("")?>/ejecucion/cseguimiento/get_unidades_seguimiento_poa_mensual_nacional', // Cambia esto a la ruta de tu script PHP
+                    type: 'POST',
+                    data: { value: selectedValue },
+                    dataType: 'json', // Esperar una respuesta en formato JSON
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            //alert(response.message)
+                            $('#responsee').html(response.message);
+                            $('#botones').html(response.button);
+                            //$('#responsee').text(response.message).show(); // Mostrar el mensaje en el modal
+                        } else {
+                            $('#response').text("Error en la respuesta.").show(); // Mensaje de error
+                        }
+                        $('#modal_respuesta').modal('show'); // Muestra el modal
+                    },
+                    error: function() {
+                        $('#response').text("Error al procesar la solicitud.").show(); // Mensaje de error
+                        $('#modal_respuesta').modal('show'); // Muestra el modal
+                    }
+                });
+            }
+        });
+    });
+    </script>
 
     <script type="text/javascript">
       $(function () {
