@@ -550,6 +550,7 @@ $(document).ready(function() {
     /// GUARDAR NUEVO FORMULARIO N4 2025
     $(function () {
         $("#subir_ope").on("click", function () {
+
           var $validator = $("#form_nuevo").validate({
               rules: {
                 com_id: {
@@ -611,6 +612,7 @@ $(document).ready(function() {
           if (!$valid) {
               $validator.focusInvalid();
           } else {
+
             //alert(document.form_nuevo.or_id.value)
             if(document.form_nuevo.tipo_i.value==1){
               meta = parseFloat($('[name="meta"]').val());
@@ -622,13 +624,13 @@ $(document).ready(function() {
               }
             } 
             else{
-              if(document.form_nuevo.tp_meta.value==0){
+              if(document.form_nuevo.tp_met.value==0){
                 alertify.error("SELECCIONE TIPO DE META") 
                   document.form_nuevo.resultado.focus() 
                   return 0; 
               }
               if(document.form_nuevo.tipo_i.value==2){
-                if(document.form_nuevo.tp_meta.value==3){
+                if(document.form_nuevo.tp_met.value==3){
                   meta = parseFloat($('[name="meta"]').val());
                   total = parseFloat($('[name="total"]').val());
                   if(parseFloat(meta)!=parseFloat(total)){

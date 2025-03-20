@@ -272,12 +272,12 @@ class Crep_actprog extends CI_Controller {
               <table '.$style.'>
                 <thead>
                   <tr>
-                    <th style="height:20px; font-size: 10px;" colspan=3>ALINEACI&Oacute;N DE ACTIVIDADES POR A.C.P.</th>
+                    <th style="height:20px; font-size: 10px;" colspan=2>ALINEACI&Oacute;N DE ACTIVIDADES POR A.C.P.</th>
                   </tr>
                   <tr>
                     <th style="width:70%;height:20px;font-size: 10px;" align=center>ACCION DE CORTO PLAZO '.$this->gestion.'</th>
                     <th style="width:8%;font-size: 10px;" align=center>NRO DE ACT.</th>
-                    <th style="width:8%;font-size: 10px;" align=center>PPTO. '.$this->gestion.'</th>
+                
                   </tr>
                 </thead>
               <tbody>';
@@ -295,7 +295,7 @@ class Crep_actprog extends CI_Controller {
                   }
                   $tabla.='
                   <td style="width:8%; text-align:right; font-size:10px;"><b>'.$row['actividades'].'</b></td>
-                  <td style="width:8%; text-align:right; font-size:10px;"><b></b></td>
+                
                 </tr>';
               }
         $tabla.='
@@ -303,7 +303,7 @@ class Crep_actprog extends CI_Controller {
                 <tr>
                   <td style="height:14px; font-size:10px;"> TOTAL </td>
                   <td style="text-align:right; font-size:10px;"><b>'.$sum.'</b></td>
-                  <td style="text-align:right; font-size:10px;"></td>
+              
                 </tr>
             </table>';
       return $tabla;

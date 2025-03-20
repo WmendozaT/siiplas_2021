@@ -82,7 +82,7 @@ class Crep_evalunidad extends CI_Controller {
         /*--- Regresion lineal trimestral ---*/
         $data['cabecera2']=$this->cabecera_seguimiento($data['proyecto'],2);
         $data['tabla']=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
-        $data['tabla_regresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,1); /// Tabla que muestra el acumulado por trimestres Regresion
+        $data['tabla_regresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,1); /// Tabla que muestra el acumulado al trimestres Regresion
         $data['tabla_regresion_impresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
 
         /*--- grafico Pastel trimestral ---*/

@@ -69,7 +69,7 @@ function abreVentana_eficiencia(PDF){
     var ventana = window.open('Evaluacion FORMULARIO N° 1 ', 'PRINT', 'height=800,width=1000');
     ventana.document.write('<html><head><title>EVALUACION ACCIONES DE CORTO PLAZO INSTITUCIONAL - FORM. N° 1</title>');
     ventana.document.write('</head><body>');
-    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+    //ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
     //ventana.document.write(cabecera.innerHTML);
     ventana.document.write('<hr>');
     ventana.document.write(grafico.innerHTML);

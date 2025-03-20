@@ -1042,19 +1042,21 @@ class Eval_oregional extends CI_Controller{
       <thead>
         <tr style="font-size: 6.7px;" bgcolor="#eceaea" align=center>
           <th style="width:0.9%;height:20px;">#</th>
-          <th style="width:2.2%;"><b>COD. ACP.</b></th>
-          <th style="width:2.2%;"><b>COD. OPE.</b></th>
-          <th style="width:12.5%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
-          <th style="width:12.5%;">PRODUCTO</th>
-          <th style="width:12.5%;">RESULTADO</th>
+          <th style="width:2.1%;"><b>COD. ACP.</b></th>
+          <th style="width:2.1%;"><b>COD. OPE.</b></th>
+          <th style="width:12%;">OPERACI&Oacute;N REGIONAL '.$this->gestion.'</th>
+          <th style="width:12%;">PRODUCTO</th>
+          <th style="width:12%;">RESULTADO</th>
           <th style="width:12%;">INDICADOR</th>
           <th style="width:4%;">META</th>
-          <th style="width:5.5%;">I TRIM.</th>
-          <th style="width:5.5%;">II. TRIM.</th>
-          <th style="width:5.5%;">III. TRIM.</th>
-          <th style="width:5.5%;">IV. TRIM.</th>
-          <th style="width:5.5%;">% CUMP. <br>GESTIÓN '.$this->gestion.'</th>
-          <th style="width:10%;">MEDIO DE VERIFICACI&Oacute;N</th>
+          <th style="width:5.2%;">I TRIM.</th>
+          <th style="width:5.2%;">II. TRIM.</th>
+          <th style="width:5.2%;">III. TRIM.</th>
+          <th style="width:5.2%;">IV. TRIM.</th>
+          <th style="width:4%;"></th>
+          <th style="width:4%;">% CUMP.<br>TRIM.</th>
+          <th style="width:4%;">% CUMP.<br>'.$this->gestion.'</th>
+          <th style="width:8%;">MEDIO DE VERIFICACI&Oacute;N</th>
         </tr>
       </thead>
       <tbody>';
@@ -1070,22 +1072,56 @@ class Eval_oregional extends CI_Controller{
         $bgcolor='#ecf7f5';
       }
 
+      $semaforo='<img src="'.getcwd().'/assets/ifinal/rojo1.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
+      if($calificacion[3]>50 & $calificacion[3]<=80){
+        $semaforo='<img src="'.getcwd().'/assets/ifinal/amarillo.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
+      }
+      elseif($calificacion[3]>80 & $calificacion[3]<=100){
+        $semaforo='<img src="'.getcwd().'/assets/ifinal/verde.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
+      }
+
       $tabla.='
       <tr style="font-size: 6.5px;" bgcolor='.$bgcolor.'>
         <td style="width:0.9%; height:18px;" align=center>'.$nro.'</td>
         <td style="width:2.2%; font-size: 10px;" align="center"><b>'.$row['og_codigo'].'</b></td>
         <td style="width:2.2%; font-size: 10px;" align="center"><b>'.$row['or_codigo'].'</b></td>
-        <td style="width:12.5%;">'.$row['or_objetivo'].'</td>
-        <td style="width:12.5%;">'.$row['or_producto'].'</td>
-        <td style="width:12.5%;">'.$row['or_resultado'].'</td>
+        <td style="width:12%;">'.$row['or_objetivo'].'</td>
+        <td style="width:12%;">'.$row['or_producto'].'</td>
+        <td style="width:12%;">'.$row['or_resultado'].'</td>
         <td style="width:12%;">'.$row['or_indicador'].'</td>
-        <td style="width:4%; font-size: 8px;" align=center><b>'.round($row['or_meta'],2).''.$por.'</b></td>
+        <td style="width:4%; font-size: 9px;" align=center><b>'.round($row['or_meta'],2).''.$por.'</b></td>
         '.$this->get_temporalidad_objetivo_regional($row['or_id'],1,$row['or_tp'],$row['tp_meta']).'
+        <td style="width:4%; text-align:center">'.$semaforo.'</td>
+        <td style="font-family:Arial;font-size: 11px;" align=right><b>'.$calificacion[3].'%</b></td>
         <td style="font-family:Arial;font-size: 11px;" align=right><b>'.$calificacion[4].'%</b></td>
-        <td style="width:10%;">'.$row['or_verificacion'].'</td>
+        <td style="width:8%;">'.$row['or_verificacion'].'</td>
       </tr>';
     }
     $tabla.='
+      </tbody>
+    </table>
+    <br>
+
+    <table cellpadding="0" cellspacing="0" class="tabla" border=0 style="width:90%;" align=left>
+      <tbody>
+        <tr>
+          <td colspan=2><hr></td>
+        </tr>
+        <tr>
+          <td style="width:10%; height:12px;" align=center><img src="'.getcwd().'/assets/ifinal/rojo1.JPG" class="img-responsive" style="width:20%; height:80%;" align=center /></td>
+          <td style="width:30%;">CUMPLIMIENTO TRIMESTRAL ACUMULADO:<b> Entre 0% y 50%</b></td>
+        </tr>
+        <tr>
+          <td style="width:10%; height:12px;" align=center><img src="'.getcwd().'/assets/ifinal/amarillo.JPG" class="img-responsive" style="width:20%; height:80%;" align=center /></td>
+          <td>CUMPLIMIENTO TRIMESTRAL ACUMULADO:<b> Entre 50% y 80%</b></td>
+        </tr>
+        <tr>
+          <td style="width:10%; height:12px;" align=center><img src="'.getcwd().'/assets/ifinal/verde.JPG" class="img-responsive" style="width:20%; height:80%;" align=center /></td>
+          <td>CUMPLIMIENTO TRIMESTRAL ACUMULADO:<b> Entre 81% y 100%</b></td>
+        </tr>
+        <tr>
+          <td colspan=2><hr></td>
+        </tr>
       </tbody>
     </table>';
 
@@ -1158,7 +1194,7 @@ class Eval_oregional extends CI_Controller{
   public function pie_form2($regional){ 
     $tabla='';
     $tabla.='
-    <hr>
+  
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:97.5%;" align="center">
           <tr>
             <td style="width: 33.3%;">
@@ -1230,7 +1266,7 @@ class Eval_oregional extends CI_Controller{
   public function pie_form4_priorizados(){ 
     $tabla='';
     $tabla.='
-    <hr>
+  
       <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:97.5%;" align="center">
           <tr>
             <td style="width: 33%; height:18px;text-align: left">

@@ -1734,101 +1734,73 @@ class Cseguimiento extends CI_Controller {
 
     /*-----IMPRIME LISTADO DE UNIDADES A SEGUIMIENTO POA -----*/
     public function imprime_seguimiento_a_unidades($dist_id){
-      $tabla='<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impresión</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        @media print {
-            #cabecera {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 80px; /* Altura de la cabecera */
-                background: #f1f1f1;
-                text-align: center;
-                line-height: 80px; /* Centrar verticalmente */
-                border-bottom: 2px solid #000; /* Borde más grueso */
-                z-index: 1000; /* Asegura que la cabecera esté encima */
+    $get_distrital=$this->model_proyecto->dep_dist($dist_id);
+    $tabla='
+    <!DOCTYPE html>
+    <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Seguimiento POA a Unidades Operativas '.strtoupper($get_distrital[0]['dist_distrital']).'</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
             }
-            #contenido {
-                margin-top: 100px; /* Espacio para la cabecera */
-                margin-bottom: 60px; /* Espacio para el pie de página */
-                page-break-after: auto; /* Permitir salto de página después del contenido */
-            }
-            #pie {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 10px;
-                background: #f1f1f1;
-                text-align: center;
-                line-height: 50px;
-                border-top: 1px solid #000;
-                z-index: 1000; /* Asegura que el pie de página esté encima */
-            }
-            h1 {
-                margin: 0; /* Eliminar márgenes del h1 */
-                font-size: 24px; /* Aumentar tamaño de fuente */
-            }
-            #tabla-container {
-                width: 100%; /* Asegura que el contenedor ocupe el 100% del ancho */
-                overflow: hidden; /* Evitar desplazamiento */
-                page-break-inside: auto; /* Permite que la tabla se divida en páginas */
-            }
-            table {
-                width: 100%; /* Asegura que la tabla ocupe el 100% del ancho */
-                border-collapse: collapse; /* Colapsar bordes */
-                page-break-inside: auto; /* Permite que la tabla se divida en páginas */
-                font-size: 10px; /* Aumentar tamaño de fuente */
-            }
-            thead {
-                display: table-header-group; /* Mantiene los encabezados en cada página */
-            }
-            th, td {
-                border: 1px solid #000;
-                padding: 8px; /* Espaciado interno */
-                text-align: center; /* Centrar texto */
-            }
-            th {
-                background-color: #eaeaea; /* Color de fondo de cabecera */
-                font-weight: bold; /* Negrita para los encabezados */
-            }
-            tr {
-                page-break-inside: avoid; /* Evita que las filas se dividan entre páginas */
-            }
-        }
-    </style>
-</head>
-<body>
-    <div id="cabecera">
-        <h1>Informe de Actividades</h1>
-    </div>
-    <div id="contenido">
-        <h1>Contenido Principal</h1>
-        <p>Este es el contenido que se imprimirá desde:</p>
-        <br>
-        <div id="tabla-container">
-            '.$this->listado_unidades($dist_id,0).'
-        </div>
-    </div>
-    <div id="pie">
-        Pie de Página del Documento
-    </div>
-</body>
-</html>';
+            @media print {
 
-echo $tabla;
-       //$this->listado_unidades($dist_id,0);
+                #contenido {
+                    margin-top: 5px; /* Espacio para la cabecera */
+                    margin-bottom: 60px; /* Espacio para el pie de página */
+                    page-break-after: auto; /* Permitir salto de página después del contenido */
+                }
+                h1 {
+                    margin: 0; /* Eliminar márgenes del h1 */
+                    font-size: 24px; /* Aumentar tamaño de fuente */
+                }
+                #tabla-container {
+                    width: 100%; /* Asegura que el contenedor ocupe el 100% del ancho */
+                    overflow: hidden; /* Evitar desplazamiento */
+                    page-break-inside: auto; /* Permite que la tabla se divida en páginas */
+                }
+                table {
+                    width: 100%; /* Asegura que la tabla ocupe el 100% del ancho */
+                    border-collapse: collapse; /* Colapsar bordes */
+                    page-break-inside: auto; /* Permite que la tabla se divida en páginas */
+                    font-size: 10px; /* Aumentar tamaño de fuente */
+                }
+                thead {
+                    display: table-header-group; /* Mantiene los encabezados en cada página */
+                }
+                th, td {
+                    border: 1px solid #000;
+                    padding: 8px; /* Espaciado interno */
+                    text-align: center; /* Centrar texto */
+                }
+                th {
+                    background-color: #eaeaea; /* Color de fondo de cabecera */
+                    font-weight: bold; /* Negrita para los encabezados */
+                }
+                tr {
+                    page-break-inside: avoid; /* Evita que las filas se dividan entre páginas */
+                }
+            }
+          </style>
+      </head>
+      <body>
+          <div id="contenido">
+              <h1>SEGUIMIENTO POA A UNIDADES OPERATIVAS</h1>
+              <p>Seguimiento a Unidades Operativas de la '.strtoupper($get_distrital[0]['dist_distrital']).' en el registro POA Mensual <b>'.$this->verif_mes[2].'/'.$this->gestion.'</b></p>
+              
+              <div id="tabla-container">
+                  '.$this->listado_unidades($dist_id,1).'
+              </div>
+          </div>
+      </body>
+    </html>';
+
+    echo $tabla;
     }
 
 
@@ -1840,7 +1812,10 @@ echo $tabla;
         $unidades=$this->model_notificacion->lista_usuario_a_unidades($dist_id,0); /// parte administrativa
         $salud=$this->model_notificacion->lista_usuario_a_unidades($dist_id,1); /// parte Salud
         
-        $titulo='<div class="alert alert-info">SEGUIMIENTO POA MENSUAL <b>'.strtoupper($get_distrital[0]['dist_distrital']).' AL MES DE '.$this->verif_mes[2].' / '.$this->gestion.'</b></div>';
+        $titulo='';
+        if($tp_reporte==0){
+          $titulo='<div class="alert alert-info">SEGUIMIENTO POA MENSUAL <b>'.strtoupper($get_distrital[0]['dist_distrital']).' AL MES DE '.$this->verif_mes[2].' / '.$this->gestion.'</b></div>';
+        }
         
         $tabla.='
         '.$titulo.'
@@ -1853,8 +1828,11 @@ echo $tabla;
             <th style="width:5%; text-align:center">UNIDAD RESPONSABLE</th>
             <th style="width:3%; text-align:center">USUARIO</th>
             <th style="width:3%; text-align:center">FECHA DE INGRESO</th>
-            <th style="width:3%; text-align:center">REALIZO EL LLENADO DEL FORMULARIO?</th>
-            <th style="width:3%; text-align:center">REPORTE DE SEGUIMIENTO</th>
+            <th style="width:3%; text-align:center">REALIZO EL LLENADO DEL FORMULARIO?</th>';
+            if($tp_reporte==0){
+              $tabla.='<th style="width:3%; text-align:center">REPORTE DE SEGUIMIENTO</th>';
+            }
+            $tabla.='
           </tr>
           </thead>
           <tbody>';
@@ -1881,8 +1859,11 @@ echo $tabla;
               <td>'.$rowp['tipo_subactividad'].' '.$rowp['serv_descripcion'].'</td>
               <td><b>'.$rowp['fun_usuario'].'</b></td>
               <td>'.$fecha_ingreso.'</td>
-              <td style="font-size:15px; text-align:center;"><b>'.$registro.'</b></td>
-              <td style="font-size:15px; text-align:center;">'.$reporte.'</td>
+              <td style="font-size:15px; text-align:center;"><b>'.$registro.'</b></td>';
+              if($tp_reporte==0){
+                $tabla.='<td style="font-size:15px; text-align:center;">'.$reporte.'</td>';
+              }
+              $tabla.='
             </tr>';
           }
 
@@ -1906,8 +1887,11 @@ echo $tabla;
               <td>'.$rowp['com_componente'].'</td>
               <td><b>'.$rowp['dato_ingreso'].'</b></td>
               <td>'.$fecha_ingreso.'</td>
-              <td style="font-size:15px; text-align:center;"><b>'.$registro.'</b></td>
-              <td style="font-size:15px; text-align:center;">'.$reporte.'</td>
+              <td style="font-size:15px; text-align:center;"><b>'.$registro.'</b></td>';
+              if($tp_reporte==0){
+                $tabla.='<td style="font-size:15px; text-align:center;">'.$reporte.'</td>';
+              }
+              $tabla.='
             </tr>';
           }
           $tabla.='

@@ -287,7 +287,7 @@ class Crep_evalform2 extends CI_Controller {
                     <div id="calificacion_trimestral">'.$calificacion_trimestral.'</div>
                     <div class="rows" align=center>
                       <div id="graf_detalle1">
-                        <div id="grafico_trimestral" style="width: 900px; height: 770px; margin: 2 auto"></div>
+                        <div id="grafico_trimestral" style="width: 900px; height: 850px; margin: 2 auto"></div>
                       </div> 
                     </div>
                   </article>
@@ -295,7 +295,7 @@ class Crep_evalform2 extends CI_Controller {
                     <div id="calificacion">'.$calificacion_anual.'</div>
                     <div class="rows" align=center>
                       <div id="graf_detalle1">
-                        <div id="grafico1" style="width: 900px; height: 770px; margin: 2 auto"></div>
+                        <div id="grafico1" style="width: 900px; height: 850px; margin: 2 auto"></div>
                       </div> 
                     </div>
 

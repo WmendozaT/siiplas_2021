@@ -14,7 +14,7 @@
 <div id="Seguimiento">
   <?php echo $calificacion;?>
   <hr>
-    <div id="container" style="width: 1000px; height: 680px; margin: 0 auto"></div></div>
+    <div id="container" style="width: 1000px; height: 900px; margin: 0 auto"></div></div>
 
 </div>
 <div align="right">

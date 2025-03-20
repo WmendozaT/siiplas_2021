@@ -50,26 +50,19 @@
         }
 
         function abreVentana2(PDF) {
-    var direccion = '' + PDF;
-    var ventana = window.open(direccion, "IMPRESION", "width=800,height=700,scrollbars=NO");
+          var direccion = '' + PDF;
+          var ventana = window.open(direccion, "IMPRESION", "width=800,height=700,scrollbars=NO");
 
-    // Esperar a que la ventana se cargue completamente
-    ventana.onload = function() {
-        ventana.print(); // Imprimir automáticamente
+          // Esperar a que la ventana se cargue completamente
+            ventana.onload = function() {
+              ventana.print(); // Imprimir automáticamente
 
-        // Cerrar la ventana después de un breve retraso
-        setTimeout(function() {
-            ventana.close(); // Cerrar la ventana
-        }, 2000); // Ajusta el tiempo según sea necesario
-    };
-}
-
-/*        function abreVentana2(PDF) {
-    var direccion = '' + PDF;
-    var ventana = window.open("", "IMPRESION", "width=800,height=700,scrollbars=NO");
-
-
-}*/
+              // Cerrar la ventana después de un breve retraso
+              setTimeout(function() {
+                  ventana.close(); // Cerrar la ventana
+              }, 2000); // Ajusta el tiempo según sea necesario
+          };
+      }
       </script>
       <style>
         #mdialTamanio{
@@ -143,10 +136,10 @@
                 <li><a href="<?php echo base_url(); ?>assets/video/FORM_POA_N°5_PROG FISICO FINANCIERA.xlsx" style="cursor: pointer;" download><b>Descargar Formulario N°5 POA <?php echo $this->session->userdata("gestion");?> (Requerimientos)</b></a></li> -->
                 <li><a href="<?php echo base_url(); ?>assets/video/PLANTILLA_MIGRACION_FORM5.xlsx" style="cursor: pointer;" download><b>Descargar Plantilla para migrar Requerimientos</b></a></li>
                 <li class="divider"></li>
-                <li><a href="<?php echo base_url(); ?>assets/video/FORM_MOD_4_Y_5_2024.xlsx" style="cursor: pointer;" download>Descargar Formulario de Modificacion POA <?php echo $this->session->userdata("gestion");?></a></li>
-                <li><a href="<?php echo base_url(); ?>assets/video/FORM_SOL_POA_5_2024.xlsx" style="cursor: pointer;" download>Descargar Formulario de Certificacion POA <?php echo $this->session->userdata("gestion");?></a></li>
-                <li><a href="<?php echo base_url(); ?>assets/video/FORM_JUST_EDICION_CPOAS.docx" style="cursor: pointer;" download>Descargar Formulario de Edicion de Cert. POA <?php echo $this->session->userdata("gestion");?></a></li>
-                <li><a href="<?php echo base_url(); ?>assets/video/FORM_JUST_SALDOS_CPOAS.docx" style="cursor: pointer;" download>Descargar Formulario de Reversion de Saldos POA <?php echo $this->session->userdata("gestion");?></a></li>
+                <li><a href="<?php echo base_url(); ?>assets/video/FORM_MOD_4_Y_5_2025.xlsx" style="cursor: pointer;" download>Descargar Formulario de Modificacion POA <?php echo $this->session->userdata("gestion");?></a></li>
+                <li><a href="<?php echo base_url(); ?>assets/video/FORM_SOL_POA_5_2025.xlsx" style="cursor: pointer;" download>Descargar Formulario de Certificacion POA <?php echo $this->session->userdata("gestion");?></a></li>
+                <li><a href="<?php echo base_url(); ?>assets/video/FORM_JUST_EDICION_CPOAS_2025.docx" style="cursor: pointer;" download>Descargar Formulario de Edicion de Cert. POA <?php echo $this->session->userdata("gestion");?></a></li>
+                <li><a href="<?php echo base_url(); ?>assets/video/FORM_JUST_SALDOS_CPOAS_2025.docx" style="cursor: pointer;" download>Descargar Formulario de Reversion de Saldos POA <?php echo $this->session->userdata("gestion");?></a></li>
                 
                <!--  <li class="divider"></li>
                 <li class="dropdown-header">Archivos/Tutoriales</li>

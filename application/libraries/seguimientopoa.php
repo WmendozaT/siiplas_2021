@@ -209,8 +209,8 @@ class Seguimientopoa extends CI_Controller{
 
 
     //// Cabecera Evaluacion Trimestral
-    public function cabecera_evaluacion_trimestral($componente,$proyecto,$trimestre){
-      $trimestre=$this->model_evaluacion->get_trimestre($trimestre);
+    public function cabecera_evaluacion_trimestral($componente,$proyecto,$trm_id){
+      $trimestre=$this->model_evaluacion->get_trimestre($trm_id);
       $matriz=$this->tabla_regresion_lineal_servicio($componente[0]['com_id'],$this->tmes); /// Tabla para el grafico al trimestre
       $tabla='';
       $tabla.='
@@ -242,7 +242,7 @@ class Seguimientopoa extends CI_Controller{
                             <td style="height: 3%;"><b>EVALUACI&Oacute;N POA '.$this->gestion.'</b> - '.$trimestre[0]['trm_descripcion'].'</td>
                         </tr>
                         <tr style="font-size: 13px;font-family: Arial;">
-                            <td style="height: 1%;">'.$this->calificacion_eficacia($matriz[5][$this->tmes],1).'</td>
+                            <td style="height: 1%;">'.$this->calificacion_eficacia($matriz[5][$trm_id],1).'</td>
                         </tr>
                     </table>
                 </td>
