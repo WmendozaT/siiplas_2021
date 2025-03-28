@@ -426,7 +426,7 @@ class Genera_informacion extends CI_Controller{
       else{
         if($dist_id==0){
           $regional=$this->model_proyecto->get_departamento($dep_id);
-          $operaciones=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de distritales
+          $operaciones=$this->mrep_operaciones->consolidado_operaciones_regionales($dep_id,$tp_id); /// Actividades a Nivel de Regional
           $tit='CONSOLIDADO '.strtoupper($regional[0]['dep_departamento']);
         }
         else{
@@ -468,7 +468,7 @@ class Genera_informacion extends CI_Controller{
               <th style="width:25%;">DESCRIPCION ACTIVIDAD</th>
               <th style="width:15%;">RESULTADO</th>
               <th style="width:15%;">INDICADOR</th>
-              <th style="width:5%;">LINEA BASE</th>
+              <th style="width:5%;">RESPONSABLE</th>
               <th style="width:5%;">META</th>
               <th style="width:15%;">MEDIO DE VERIFICACIÓN</th>
               <th style="width:4%;">P. ENE.</th>
@@ -534,7 +534,7 @@ class Genera_informacion extends CI_Controller{
                 $tabla.='<td>'.$row['prod_producto'].'</td>';
                 $tabla.='<td>'.$row['prod_resultado'].'</td>';
                 $tabla.='<td>'.$row['prod_indicador'].'</td>';
-                $tabla.='<td>'.$row['prod_linea_base'].'</td>';
+                $tabla.='<td>'.$row['prod_unidades'].'</td>';
                 $tabla.='<td>'.$row['prod_meta'].'</td>';
                 $tabla.='<td>'.$row['prod_fuente_verificacion'].'</td>';
                 if(count($programado)!=0){

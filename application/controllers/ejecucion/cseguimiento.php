@@ -166,7 +166,7 @@ class Cseguimiento extends CI_Controller {
                 <td align=center title='.$row['proy_id'].'><b>'.$nro.'</b></td>
                 <td align=center bgcolor="#deebfb">
                   <a href="#" data-toggle="modal" data-target="#modal_nuevo_ff" class="btn btn-primary enlace" name="'.$row['proy_id'].'" id=" '.$row['tipo'].' '.strtoupper($row['proy_nombre']).' - '.$row['abrev'].'" style="font-size:10px;">
-                    <i class="glyphicon glyphicon-list"></i> <b>UNIDADES OPERATIVAS</b>
+                    <i class="glyphicon glyphicon-list"></i> <b>UNIDADES RESPONSABLES</b>
                   </a>
                 </td>
                 <td align=center bgcolor="#deebfb">
@@ -342,10 +342,7 @@ class Cseguimiento extends CI_Controller {
                       </a>';
                     }
                     else{
-                      $tabla.='
-                      <a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$rowc['com_id'].'" id="myBtn'.$rowc['com_id'].'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">
-                      '.$this->btn_seguimiento_evaluacion_poa().'
-                      </a>';
+                      $tabla.='<center>'.$this->btn_seguimiento_evaluacion_poa($rowc['com_id']).'</center>';
                     }
                     
                   $tabla.='
@@ -750,9 +747,10 @@ class Cseguimiento extends CI_Controller {
 
 
   /*----  Boton de Seguimiento / Evaluacion POA ----*/
-  public function btn_seguimiento_evaluacion_poa(){
+  public function btn_seguimiento_evaluacion_poa($com_id){
     $tabla='';
-    $tabla='REALIZAR SEGUIMIENTO POA';
+    //$tabla='REALIZAR SEGUIMIENTO POA';
+    $tabla='<a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$com_id.'" id="myBtn'.$com_id.'" class="btn btn-primary" title="REALIZAR SEGUIMIENTO">REALIZAR SEGUIMIENTO POA</a>';
     $dia_actual=ltrim(date("d"), "0");
     $mes_actual=ltrim(date("m"), "0");
 
@@ -767,8 +765,8 @@ class Cseguimiento extends CI_Controller {
 
         if (($date_actual >= $date_inicio) && ($date_actual <= $date_final)){
           if(count($this->model_configuracion->get_responsables_evaluacion($this->fun_id))!=0){
+            $tabla='<a href="'.site_url("").'/seg/formulario_seguimiento_poa/'.$com_id.'" id="myBtn'.$com_id.'" class="btn btn-success"  style="background:#356e35;" title="REALIZAR EVALUACIÓN POA "><i class="fa fa-gear fa-2x fa-spin"></i>&nbsp;&nbsp;REALIZAR EVALUACIÓN POA</a>';
 
-            $tabla='REALIZAR EVALUACI&Oacute;N POA';
           }
         }
     }

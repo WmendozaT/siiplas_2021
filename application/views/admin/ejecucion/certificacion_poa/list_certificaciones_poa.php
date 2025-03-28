@@ -216,42 +216,42 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
 
-                  <div class="modal-body">
-                    <form action="<?php echo site_url().'/ejecucion/cert_poa/valida_eliminacion_certpoa'?>" id="form_delete" name="form_delete" class="form-horizontal" method="post">
-                        <input type="hidden" name="cpoa_id" id="cpoa_id">
-                        <input type="hidden" name="tp" id="tp" value="3">
-                        <div id="titulo_del"></div>
-                        <fieldset>
-                            <div class="form-group">
-                                <div id="titulo_del2"></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">NRO. CITE</label>
-                                <div class="col-md-10">
-                                    <input type="text" class="form-control" name="cite" id="cite" placeholder="XXX-XXXX" title="Registre Cite">
+                    <div class="modal-body">
+                        <form action="<?php echo site_url().'/ejecucion/cert_poa/valida_eliminacion_certpoa'?>" id="form_delete" name="form_delete" class="form-horizontal" method="post">
+                            <input type="hidden" name="cpoa_id" id="cpoa_id">
+                            <input type="hidden" name="tp" id="tp" value="3">
+                            <div id="titulo_del"></div>
+                            <fieldset>
+                                <div class="form-group">
+                                    <div id="titulo_del2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">NRO. CITE</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" name="cite" id="cite" placeholder="XXX-XXXX" title="Registre Cite">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">JUSTIFICACI&Oacute;N</label>
+                                    <div class="col-md-10">
+                                        <textarea class="form-control" name="justificacion" id="justificacion" placeholder="Justificaci&oacute;n" rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div id="but_del" style="display: block;">
+                                        <button class="btn btn-default" data-dismiss="modal" id="mcl" title="CANCELAR">CANCELAR</button>
+                                        <button type="button" name="delete" id="delete" class="btn btn-info" >ELIMINAR CERTIFICACI&Oacute;N</button>
+                                    </div>
+                                </div>
+                                <div id="load_del" style="display: none" align="center">
+                                    <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>ELIMINANDO CERTIFICADO .....</b>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">JUSTIFICACI&Oacute;N</label>
-                                <div class="col-md-10">
-                                    <textarea class="form-control" name="justificacion" id="justificacion" placeholder="Justificaci&oacute;n" rows="4"></textarea>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <div class="form-actions">
-                            <div class="row">
-                                <div id="but_del" style="display: block;">
-                                    <button class="btn btn-default" data-dismiss="modal" id="mcl" title="CANCELAR">CANCELAR</button>
-                                    <button type="button" name="delete" id="delete" class="btn btn-info" >ELIMINAR CERTIFICACI&Oacute;N</button>
-                                </div>
-                            </div>
-                            <div id="load_del" style="display: none" align="center">
-                                <br><img  src="<?php echo base_url() ?>/assets/img_v1.1/preloader.gif" width="100"><br><b>ELIMINANDO CERTIFICADO .....</b>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-              </div>
             </div>
         </div>
         <!-- =============================== -->
