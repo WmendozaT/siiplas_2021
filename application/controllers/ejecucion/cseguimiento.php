@@ -62,7 +62,9 @@ class Cseguimiento extends CI_Controller {
       
       $data['titulo']=$this->seguimientopoa->aviso_seguimiento_evaluacion_poa();
       $this->load->view('admin/evaluacion/seguimiento_poa/list_poas_aprobados', $data);
-    
+
+      //$this->seguimientopoa->update_evaluacion_operaciones(7789);
+
       /*$insumos=$this->model_insumo->lista_insumos(2021);
 
       $tabla='';
@@ -506,7 +508,7 @@ class Cseguimiento extends CI_Controller {
 
 
   /*---- CABECERA REPORTE OPERACIONES POR REGIONALES (GRAFICO)----*/
-  function cabecera_reporte_grafico($titulo){
+/*  function cabecera_reporte_grafico($titulo){
     $tabla='';
 
     $tabla.='
@@ -545,7 +547,7 @@ class Cseguimiento extends CI_Controller {
       </table>';
 
     return $tabla;
-  }
+  }*/
 
 
 
@@ -907,9 +909,7 @@ class Cseguimiento extends CI_Controller {
   }
 
 
-
-
-  //// FORMULARIO DE SEGUIMIENTO GASTO CORRIENTE
+  //// FORMULARIO DE SEGUIMIENTO Y EVALUACION GASTO CORRIENTE
   public function formulario_segpoa_gasto_corriente($com_id){
     $data['menu'] = $this->seguimientopoa->menu(4);
     //$data['base'] = $this->seguimientopoa->menu(4);
@@ -922,146 +922,85 @@ class Cseguimiento extends CI_Controller {
       $data['cabecera_formulario']=$this->seguimientopoa->cabecera_formulario($componente);
       $data['tabla']=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id,$this->tmes); /// Tabla para el grafico al trimestre
       $data['calificacion']='
-        <hr>
-        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes],0).'</div></fieldset>';
+        <div id="calificacion" style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes],0).'</div>';
       
       $s1.='
       <div class="row">
-        <div style="font-size: 13pt;font-family:Verdana;"><b>FORMULARIO DE SEGUIMIENTO POA - '.$this->verif_mes[2].' '.$this->gestion.'</b></div>
-        <hr>
-            <div align="right">
-              '.$this->seguimientopoa->button_rep_seguimientopoa($com_id).'
-              '.$this->seguimientopoa->button_rep_evaluacion($com_id).'
-            </div>
+        <div style="font-size: 15px;font-family:Verdana;"><b>FORMULARIO DE SEGUIMIENTO POA - '.$this->verif_mes[2].' '.$this->gestion.'</b></div>
+      
+          <div align="right">
+            '.$this->seguimientopoa->button_rep_seguimientopoa($com_id).'
+            '.$this->seguimientopoa->button_rep_evaluacion($com_id).'
+          </div>
         <div class="jarviswidget jarviswidget-color-darken" >
-          '.$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1],$data['tabla']).'
+          '.$this->seguimientopoa->lista_operaciones_programados($com_id,$this->verif_mes[1]).' 
         </div>
       </div>';
 
       $data['s1']=$s1;
+
       $data['update_eval']=$this->seguimientopoa->button_update_($com_id); /// para actualizar la Evaluacion POA
 
       $data['s2']='
-      <div class="row" id="btn_generar">
-        <center><button type="button" onclick="generar_cuadro_seguimiento_evalpoa('.$com_id.','.$this->verif_mes[1].','.$this->tmes.');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE SEGUIMIENTO Y EVALUACIÓN POA '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' / '.$this->gestion.'</b></button></center>
-      </div>
-
-      <div id="loading_sepoa"></div>
-
-      <div class="well" id="cuerpo_segpoa" style="display:none">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
+        <div class="row" id="btn_generarr">
+        <center><button type="button" onclick="generar_cuadro_seguimiento_evalpoa('.$com_id.','.$this->verif_mes[1].','.$this->tmes.');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE EVALUACIÓN POA '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' / '.$this->gestion.'</b></button></center>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-            <div id="cabecera" style="display: none"></div>
-            <hr>
-            <table>
-                <tr>
-                    <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE SEGUIMIENTO POA AL MES DE '.$this->verif_mes[2].' / '.$this->gestion.'</b></td>
-                </tr>
-            </table>
-            <hr>
-                <div id="Seguimiento">
-                    <div id="container" style="width: 700px; height: 400px; margin: 0 auto" align="center"></div>
-                </div>
-            <hr>
-                <div class="table-responsive" id="tabla_componente_vista"></div>
-                <div id="tabla_componente_impresion" style="display: none"></div>
-            <hr>
-            <div align="right">
-                <button id="btnImprimir_seguimiento" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="17" HEIGHT="17"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE SEGUIMIENTO MENSUAL POA</b></button>
+
+        <div id="cabecera" style="display: none">
+          '.$this->seguimientopoa->cabecera_grafico($componente).'
+        </div>
+
+
+        <div id="loading_evalpoa"></div>
+        <div id="cuerpo_evalpoa" style="display: none">
+          
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                <center>
+                <table>
+                  <tr>
+                    <td>
+                      <div id="regresion" style="width: 710px; height: 400px; margin: 0 auto"></div>
+                      <div class="table-responsive" id="tabla_regresion_impresion">
+                    </td>
+                  </tr>
+                </table>
+                </center>
+              </div>
+
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                <center>
+                <table>
+                  <tr>
+                    <td>
+                      <div id="pastel_todos" style="width: 620px; height: 420px; margin: 0 auto"></div>
+                      <div class="table-responsive" id="tabla_pastel_vista">
+                    </td>
+                  </tr>
+                </table>
+                </center>
+              </div>
+
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                <center>
+                <table>
+                  <tr>
+                    <td>
+                        <div id="regresion_gestion" style="width: 710px; height: 400px; margin: 0 auto"></div>
+                        <div class="table-responsive" id="tabla_regresion_total_impresion"></div>
+                    </td>
+                  </tr>
+                </table>
+                </center>
+              </div>
+
             </div>
-        </div>
-      </div>';
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <hr><center><button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/> <b>IMPRIMIR / GUARDAR</b></button></center><hr>
+              </div>
+        </div>';
 
       $data['s3']='
-      <div class="well">
-        <div id="loading_evalpoa"></div>
-
-        <div class="row" id="cuerpo_evalpoa" style="display:none">
-            <div class="well">
-              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                  <div id="cabecera2" style="display: none"></div>
-                  <hr>
-                  <table>
-                      <tr>
-                          <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE AVANCE EVALUACI&Oacute;N POA AL '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' DE '.$this->gestion.'</b></td>
-                      </tr>
-                  </table>
-                  <hr>
-                  <div id="evaluacion_trimestre">
-                      <div id="regresion" style="width: 600px; height: 390px; margin: 0 auto"></div>
-                  </div>
-                  <hr>
-                  <div class="table-responsive" id="tabla_regresion_vista">
-              
-                  </div>
-                  <div id="tabla_regresion_impresion" style="display: none">
-                      
-                  </div>
-                  <hr>
-                  <div align="right">
-                      <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="16" HEIGHT="16"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</b></button>
-                  </div>
-              </div>
-
-              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                  <div id="cabecera2" style="display: none"></div>
-                  <hr>
-                  <table>
-                      <tr>
-                          <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DETALLE EVALUACI&Oacute;N POA AL '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' DE '.$this->gestion.'></b></td>
-                      </tr>
-                  </table>
-                  <hr>
-                  <div id="evaluacion_pastel">
-                      <div id="pastel_todos" style="width: 600px; height: 420px; margin: 0 auto"></div>
-                  </div>
-                  <hr>
-                  <div class="table-responsive" id="tabla_pastel_vista">
-                     
-                  </div>
-                  <div id="tabla_pastel_impresion" style="display: none">
-                    
-                  </div>
-                  <hr>
-                  <div align="right">
-                      <button id="btnImprimir_evaluacion_pastel" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="16" HEIGHT="16"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</b></button>
-                  </div>
-              </div>
-          </div>
-         </div>
-      </div>';
-
-      $data['s4']='
-      <div class="well">
-        <div id="loading_evalpoa2"></div>
-        <div class="row" id="cuerpo_evalpoa2" style="display:none">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2">
-          </div>
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-              <div id="cabecera3" style="display: none"></div>
-              <hr>
-              <table>
-                  <tr>
-                      <td style="font-size: 13pt;font-family:Verdana;"><b>CUADRO DE EVALUACI&Oacute;N POA - GESTIÓN '.$this->gestion.'</b></td>
-                  </tr>
-              </table>
-              <hr>
-              <div id="evaluacion_gestion">
-                <div id="regresion_gestion" style="width: 700px; height: 400px; margin: 0 auto"></div>
-              </div>
-              <hr>
-              <div class="table-responsive" id="tabla_regresion_total_vista"></div>
-              <div id="tabla_regresion_total_impresion" style="display: none"></div>
-            <hr>
-              <div align="right">
-                  <button id="btnImprimir_evaluacion_gestion" class="btn btn-default"><img src="<?php echo base_url() ?>assets/Iconos/printer.png" WIDTH="16" HEIGHT="16"/><b>&nbsp;&nbsp;IMPRIMIR CUADRO DE EVALUACI&Oacute;N POA (GESTIÓN)</b></button>
-              </div>
-          </div>
-        </div>
-       </div>';
-
-      $data['s5']='
       <div class="well">
         <div style="font-size: 13pt;font-family:Verdana;"><b>MIS ACTIVIDADES '.$componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion'].' - '.$this->gestion.'</b></div>
           <hr>
@@ -1083,7 +1022,7 @@ class Cseguimiento extends CI_Controller {
 
 
 
-  /*------ GET CUADRO DE SEGUIMIENTO POA MENSUAL-----*/
+  /*------ GET CUADRO DE SEGUIMIENTO POA MENSUAL (unidad responsable)-----*/
   public function get_cuadro_seguimientopoa(){
     if($this->input->is_ajax_request() && $this->input->post()){
       $post = $this->input->post();
@@ -1094,42 +1033,35 @@ class Cseguimiento extends CI_Controller {
       $fase=$this->model_faseetapa->get_fase($componente[0]['pfec_id']);
       $proyecto = $this->model_proyecto->get_datos_proyecto_unidad($fase[0]['proy_id']);
 
-      $matriz_temporalidad_subactividad=$this->seguimientopoa->temporalizacion_x_componente($com_id); /// matriz seguimiento
+      $this->seguimientopoa->update_evaluacion_operaciones($com_id);
       $matriz_regresion=$this->seguimientopoa->tabla_regresion_lineal_servicio($com_id,$trm_id); /// matriz regresion
       $matriz_gestion=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($com_id); /// Matriz para el grafico Total Gestion
-
-      $this->seguimientopoa->update_evaluacion_operaciones($com_id);
-
+      
+      
 
       $calificacion='
-      <fieldset><div style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($matriz_regresion[5][$trm_id],0).'</div></fieldset>';
+      <div style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($matriz_regresion[5][$trm_id],0).'</div>';
 
 
       $result = array(
         'respuesta' => 'correcto',
         
         //// s2
-        'matriz' => $matriz_temporalidad_subactividad,
-        'cabecera1' => $this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($proyecto[0]['act_id']),$componente,1,$trm_id),
+       /* 'matriz' => $matriz_temporalidad_subactividad,
         'tabla_vista' => $this->seguimientopoa->tabla_temporalidad_componente($matriz_temporalidad_subactividad,1),
-        'tabla_impresion' => $this->seguimientopoa->tabla_temporalidad_componente($matriz_temporalidad_subactividad,0),
+        'tabla_impresion' => $this->seguimientopoa->tabla_temporalidad_componente($matriz_temporalidad_subactividad,0),*/
 
-        //// s3
+        //// s2
         'matriz_regresion' => $matriz_regresion,
-        'cabecera2' => $this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($proyecto[0]['act_id']),$componente,2,$trm_id),
-        'tabla_regresion' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$trm_id,2,1), /// Tabla que muestra el acumulado por trimestres Regresion Vista
         'tabla_regresion_impresion' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$trm_id,2,0), /// Tabla que muestra el acumulado por trimestres Regresion Vista
 
         'tabla_pastel_todo' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$trm_id,4,1), /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
         'tabla_pastel_todo_impresion' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$trm_id,4,0), /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
 
-        /// s4
         'matriz_gestion' => $matriz_gestion,
-        'cabecera3' => $this->seguimientopoa->cabecera_seguimiento($this->model_seguimientopoa->get_unidad_programado_gestion($proyecto[0]['act_id']),$componente,3,$trm_id),
-        'tabla_regresion_total' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_gestion,$trm_id,3,1), /// Tabla que muestra el acumulado Gestion Vista
         'tabla_regresion_total_impresion' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_gestion,$trm_id,3,0), /// Tabla que muestra el acumulado Gestion Vista
 
-
+        /// s3
         'form4_temporalidad' => $this->seguimientopoa->temporalidad_operacion($com_id),
         'calificacion' => $calificacion,
       );
@@ -1223,13 +1155,34 @@ class Cseguimiento extends CI_Controller {
 
             //// --------------------
             $registro=$this->model_seguimientopoa->verif_llenado_impresion_seguimientpoa($producto[0]['com_id'],$this->verif_mes[1]);
-            if($registro[0]['nro_act']==0){
-              $update_seg= array(
-              'nro_act' => ($registro[0]['nro_act']+1)
-              );
-              $this->db->where('reg_id', $registro[0]['reg_id']);
-              $this->db->update('registro_seguimientopoa', $this->security->xss_clean($update_seg));
+            if(count($registro)!=0){
+              if($registro[0]['nro_act']==0){
+                $update_seg= array(
+                'nro_act' => ($registro[0]['nro_act']+1)
+                );
+                $this->db->where('reg_id', $registro[0]['reg_id']);
+                $this->db->update('registro_seguimientopoa', $this->security->xss_clean($update_seg));
+              }
             }
+            else{
+              $data_to_store3 = array(
+                'fun_id' => $this->fun_id,
+                'proy_id' => $producto[0]['proy_id'],
+                'com_id' => $producto[0]['com_id'],
+                'ingreso_form' => 1,
+                'ingreso_fecha' => date('d/m/Y h:i:s'),
+                'impresion_form' => 0,
+                'impresion_fecha' => date('d/m/Y h:i:s'),
+                'mes' => $this->verif_mes[1],
+                'gestion' => $this->gestion,
+                'num_ip' => $this->input->ip_address(), 
+                'nro_act'=> 1,
+                'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                );
+              $this->db->insert('registro_seguimientopoa', $data_to_store3);
+              $reg_id=$this->db->insert_id();
+            }
+            
             //// -------------------
         }
         else{
@@ -1248,6 +1201,16 @@ class Cseguimiento extends CI_Controller {
         
         $diferencia=$this->seguimientopoa->verif_valor_no_ejecutado($prod_id,$this->verif_mes[1],$producto[0]['mt_id']);
 
+        /// ACTUALIZANDO CUADROS DE EVALUACION
+        $matriz_regresion=$this->seguimientopoa->tabla_regresion_lineal_servicio($producto[0]['com_id'],$this->tmes); /// matriz regresion
+        $matriz_gestion=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($producto[0]['com_id']); /// Matriz para el grafico Total Gestion
+
+        $this->seguimientopoa->update_evaluacion_operaciones($producto[0]['com_id']);
+        
+
+        $calificacion='
+        <fieldset><div style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($matriz_regresion[5][$this->tmes],0).'</div></fieldset>';
+
         $result = array(
           'respuesta' => 'correcto',
           'prod_id' => $prod_id,
@@ -1257,6 +1220,23 @@ class Cseguimiento extends CI_Controller {
           'observacion' => strtoupper($obs),
           'acciones' => strtoupper($acc),
           'calif' => $this->seguimientopoa->calificacion_form4($prod_id,$diferencia),
+          'calificacion' => $calificacion,
+          'trm_id' => $this->tmes,
+
+          /// regresion trimestral
+          'matriz_regresion' => $matriz_regresion,
+          'tabla_regresion_impresion' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$this->tmes,2,0), /// Tabla que muestra el acumulado por trimestres Regresion Vista
+        
+          /// pastel
+          'tabla_pastel_todo' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$this->tmes,4,1), /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
+          'tabla_pastel_todo_impresion' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$this->tmes,4,0), /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
+        
+          /// regresion gestion
+          'matriz_gestion' => $matriz_gestion,
+          'tabla_regresion_total_impresion' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_gestion,$this->tmes,3,0), /// Tabla que muestra el acumulado Gestion Vista
+        
+          /// s3
+          'form4_temporalidad' => $this->seguimientopoa->temporalidad_operacion($producto[0]['com_id']),
         );
 
       echo json_encode($result);
@@ -1287,10 +1267,24 @@ class Cseguimiento extends CI_Controller {
         $this->db->where('m_id', $mes_id);
         $this->db->delete('prod_no_ejecutado_mensual');
 
-        $this->seguimientopoa->update_evaluacion_operaciones($producto[0]['com_id']);
+        $this->db->where('prod_id', $prod_id);
+        $this->db->where('trm_id',$this->tmes );
+        $this->db->delete('_productos_trimestral');
+
+        /// ACTUALIZANDO CUADROS DE EVALUACION
+        //$matriz_regresion=$this->seguimientopoa->tabla_regresion_lineal_servicio($producto[0]['com_id'],$this->tmes); /// matriz regresion
+        //$this->seguimientopoa->update_evaluacion_operaciones($producto[0]['com_id']);
+        
+        //$matriz_gestion=$this->seguimientopoa->tabla_regresion_lineal_servicio_total($producto[0]['com_id']); /// Matriz para el grafico Total Gestion
+
+
+        /*$calificacion='
+        <fieldset><div style="font-family: Arial;font-size: 10%;">'.$this->seguimientopoa->calificacion_eficacia($matriz_regresion[5][$this->tmes],0).'</div></fieldset>';
+*/
 
         $result = array(
-          'respuesta' => 'correcto'
+          'respuesta' => 'correcto',
+        //  'calificacion' => $calificacion,
         );
 
         echo json_encode($result);
@@ -2051,10 +2045,9 @@ class Cseguimiento extends CI_Controller {
 
 
 
-    /*------ Formulario Unidad Responsable -----*/
+    /*------ FORMULARIO SEGUIMIENTO POA (UNIDAD ADMINISTRATIVA)-----*/
     public function formulario_subactividad(){
       $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
-      //$data['menu'] = $this->seguimientopoa->menu_segpoa($this->com_id,1);
       $data['componente']=$this->model_componente->get_componente($this->com_id,$this->gestion);
 
       if(count($data['componente'])!=0){
@@ -2096,8 +2089,7 @@ class Cseguimiento extends CI_Controller {
 
         $this->seguimientopoa->update_evaluacion_operaciones($this->com_id); /// Update datos de Evaluacion
         $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($data['componente'][0]['proy_id']); /// PROYECTO
-        $data['titulo']=
-        '
+        $data['titulo']='
         <h1 title='.$data['proyecto'][0]['aper_id'].'><small>'.$data['proyecto'][0]['tipo_adm'].' : </small>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['proy_nombre'].' - '.$data['proyecto'][0]['abrev'].'</h1>
         <h1><small>UNIDAD RESPONSABLE : </small> '.$data['componente'][0]['serv_cod'].' '.$data['componente'][0]['tipo_subactividad'].' '.$data['componente'][0]['serv_descripcion'].'</h1>
         <h1><small>FORMULARIO DE SEGUIMIENTO POA : </small> <b>'.$this->verif_mes[2].' / '.$this->gestion.'</b></h1>';
@@ -2113,74 +2105,63 @@ class Cseguimiento extends CI_Controller {
         $data['cargando']='<img src="'.base_url().'assets/img_v1.1/loading.gif" WIDTH="150" HEIGHT="150"/>';
         $data['form4_programados']=$this->seguimientopoa->lista_operaciones_programados($this->com_id,$this->verif_mes[1]); /// Lista de actividades programados en el mes y pendientes
         //$data['boton_reporte_seguimiento_poa']=$this->seguimientopoa->button_rep_seguimientopoa($this->com_id); /// Reporte Seguimiento (Mes vigente) POA
-        $data['update_eval']=$this->seguimientopoa->button_update_sa($this->com_id); /// Boton Evaluacion POA
+        //$data['update_eval']=$this->seguimientopoa->button_update_sa($this->com_id); /// Boton Evaluacion POA
         $data['s2']='
-        <div id="btn_generar">
-          <center><button type="button" onclick="generar_cuadro_seguimiento_evalpoa_unidad('.$this->com_id.','.$this->verif_mes[1].','.$this->tmes.');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE EVALUACIÓN POA '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' / '.$this->gestion.'</b></button></center>
+        <div id="btn_generarr">
+          <center><button type="button" onclick="generar_cuadro_seguimiento_evalpoa_unidad('.$this->com_id.','.$this->verif_mes[1].','.$this->tmes.');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>CUADRO DE EVALUACIÓN POA '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' / '.$this->gestion.'</b></button></center>
         </div>
 
+        <div id="cabecera" style="display: none">
+          '.$this->seguimientopoa->cabecera_grafico($data['componente']).'
+        </div>
         <div id="loading_evalpoa"></div>
 
-            <div id="cuerpo_evalpoa" style="display: none">
-              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <div id="cabecera2" style="display: none"></div>
+          <div id="cuerpo_evalpoa" style="display: none">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                   <center>
                   <table>
                     <tr>
-                      <th>
-                        <center><b style="font-size: 13pt;font-family:Verdana; color: #11574e">CUADRO EVALUACI&Oacute;N POA ACUMULADO AL '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' / '.$this->gestion.'</b></center>
-                        <div align="right">
-                          <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
-                        </div>
-                      </th>
-                    </tr>
-                    <tr>
                       <td>
-                        <div id="evaluacion_trimestre">
-                            <div id="regresion" style="width: 650px; height: 390px; margin: 0 auto"></div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="table-responsive" id="tabla_regresion_vista">
+                        <div id="regresion" style="width: 710px; height: 400px; margin: 0 auto"></div>
+                        <div class="table-responsive" id="tabla_regresion_impresion">
                       </td>
                     </tr>
                   </table>
                   </center>
-                  <div id="tabla_regresion_impresion" style="display: none"></div>
-              </div>
+                </div>
 
-
-              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <div id="cabecera3" style="display: none"></div>
-                <center>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                  <center>
                   <table>
                     <tr>
-                      <th>
-                        <center><b style="font-size: 13pt;font-family:Verdana; color: #11574e"><b>CUADRO DE EVALUACI&Oacute;N POA - GESTIÓN '.$this->gestion.'</b></center>
-                        <div align="right">
-                          <button id="btnImprimir_evaluacion_gestion" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
-                        </div>
-                      </th>
-                    </tr>
-                    <tr>
                       <td>
-                        <div id="evaluacion_gestion">
-                          <div id="regresion_gestion" style="width: 700px; height: 400px; margin: 0 auto"></div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="table-responsive" id="tabla_regresion_total_vista"></div>
+                        <div id="pastel_todos" style="width: 620px; height: 420px; margin: 0 auto"></div>
+                        <div class="table-responsive" id="tabla_pastel_vista">
                       </td>
                     </tr>
                   </table>
-                </center>
-                <div id="tabla_regresion_total_impresion" style="display: none"></div>
-              </div>
-            </div>';
+                  </center>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                  <center>
+                  <table>
+                    <tr>
+                      <td>
+                          <div id="regresion_gestion" style="width: 710px; height: 400px; margin: 0 auto"></div>
+                          <div class="table-responsive" id="tabla_regresion_total_impresion"></div>
+                      </td>
+                    </tr>
+                  </table>
+                  </center>
+                </div>
+
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <hr><center><button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/> <b>IMPRIMIR / GUARDAR</b></button></center><hr>
+            </div> 
+          </div>';
         $this->load->view('admin/evaluacion/seguimiento_establecimiento/formulario_seguimiento_establecimiento', $data);
         //$this->load->view('admin/evaluacion/seguimiento_poa_subactividad/formulario_seguimiento_subact', $data);
       }
@@ -2200,12 +2181,31 @@ class Cseguimiento extends CI_Controller {
 
         ///----------------
         $registro=$this->model_seguimientopoa->verif_llenado_impresion_seguimientpoa($com_id,$mes_id);
-        $update_seg= array(
-        'impresion_form' => ($registro[0]['impresion_form']+1),
-        'impresion_fecha' => date("d/m/Y H:i:s")
-        );
-        $this->db->where('reg_id', $registro[0]['reg_id']);
-        $this->db->update('registro_seguimientopoa', $this->security->xss_clean($update_seg));
+        if(count($registro)!=0){
+          $update_seg= array(
+          'impresion_form' => ($registro[0]['impresion_form']+1),
+          'impresion_fecha' => date("d/m/Y H:i:s")
+          );
+          $this->db->where('reg_id', $registro[0]['reg_id']);
+          $this->db->update('registro_seguimientopoa', $this->security->xss_clean($update_seg));
+        }
+        else{
+          $data_to_store3 = array(
+            'fun_id' => $this->fun_id,
+            'proy_id' => $data['componente'][0]['proy_id'],
+            'com_id' => $data['componente'][0]['com_id'],
+            'ingreso_form' => 1,
+            'ingreso_fecha' => date('d/m/Y h:i:s'),
+            'impresion_form' => 0,
+            'impresion_fecha' => date('d/m/Y h:i:s'),
+            'mes' => $mes_id,
+            'gestion' => $this->gestion,
+            'num_ip' => $this->input->ip_address(), 
+            'nom_ip' => gethostbyaddr($_SERVER['REMOTE_ADDR']),
+            );
+            $this->db->insert('registro_seguimientopoa', $data_to_store3);
+            $reg_id=$this->db->insert_id();
+        }
         /// ---------------
 
         $data['verif_mes']=$this->seguimientopoa->update_mes_gestion($mes_id);

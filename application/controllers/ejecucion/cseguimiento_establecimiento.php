@@ -33,7 +33,7 @@ class Cseguimiento_establecimiento extends CI_Controller {
     }
 
 
-  /*----- FORMULARIO SEGUIMIENTO POA ESTABLECIMIENTOS ------*/
+  /*----- FORMULARIO SEGUIMIENTO POA (ESTABLECIMIENTOS) ------*/
   public function formulario_establecimiento(){
     $com_id=$this->establecimiento[0]['com_id'];
     $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
@@ -95,72 +95,60 @@ class Cseguimiento_establecimiento extends CI_Controller {
       $data['salir']='<a href="'.site_url("").'/dashboar_seguimiento_poa" title="SALIR" class="btn btn-default"><img src="'.base_url().'assets/Iconos/arrow_turn_left.png" WIDTH="20" HEIGHT="19"/>&nbsp; SALIR</a>';
       
        $data['s2']='
-        <div id="btn_generar">
+        <div id="btn_generarr">
           <center><button type="button" onclick="generar_cuadro_seguimiento_evalpoa_unidad('.$com_id.','.$this->verif_mes[1].','.$this->tmes.');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE EVALUACIÓN POA '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' / '.$this->gestion.'</b></button></center>
         </div>
-
+        <div id="cabecera" style="display: none">
+          '.$this->seguimientopoa->cabecera_grafico($data['componente']).'
+        </div>
         <div id="loading_evalpoa"></div>
-
-            <div id="cuerpo_evalpoa" style="display: none">
-              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <div id="cabecera2" style="display: none"></div>
+            
+          <div id="cuerpo_evalpoa" style="display: none">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                   <center>
                   <table>
                     <tr>
-                      <th>
-                        <center><b style="font-size: 13pt;font-family:Verdana; color: #11574e">CUADRO EVALUACI&Oacute;N POA ACUMULADO AL '.$this->model_evaluacion->trimestre()[0]['trm_descripcion'].' / '.$this->gestion.'</b></center>
-                        <div align="right">
-                          <button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
-                        </div>
-                      </th>
-                    </tr>
-                    <tr>
                       <td>
-                        <div id="evaluacion_trimestre">
-                            <div id="regresion" style="width: 650px; height: 390px; margin: 0 auto"></div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="table-responsive" id="tabla_regresion_vista">
+                        <div id="regresion" style="width: 710px; height: 400px; margin: 0 auto"></div>
+                        <div class="table-responsive" id="tabla_regresion_impresion">
                       </td>
                     </tr>
                   </table>
                   </center>
-                  <div id="tabla_regresion_impresion" style="display: none"></div>
-              </div>
+                </div>
 
-
-              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <div id="cabecera3" style="display: none"></div>
-                <center>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                  <center>
                   <table>
                     <tr>
-                      <th>
-                        <center><b style="font-size: 13pt;font-family:Verdana; color: #11574e"><b>CUADRO DE EVALUACI&Oacute;N POA - GESTIÓN '.$this->gestion.'</b></center>
-                        <div align="right">
-                          <button id="btnImprimir_evaluacion_gestion" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></button>
-                        </div>
-                      </th>
-                    </tr>
-                    <tr>
                       <td>
-                        <div id="evaluacion_gestion">
-                          <div id="regresion_gestion" style="width: 700px; height: 400px; margin: 0 auto"></div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="table-responsive" id="tabla_regresion_total_vista"></div>
+                        <div id="pastel_todos" style="width: 620px; height: 420px; margin: 0 auto"></div>
+                        <div class="table-responsive" id="tabla_pastel_vista">
                       </td>
                     </tr>
                   </table>
-                </center>
-                <div id="tabla_regresion_total_impresion" style="display: none"></div>
-              </div>
-            </div>';
+                  </center>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                  <center>
+                  <table>
+                    <tr>
+                      <td>
+                          <div id="regresion_gestion" style="width: 710px; height: 400px; margin: 0 auto"></div>
+                          <div class="table-responsive" id="tabla_regresion_total_impresion"></div>
+                      </td>
+                    </tr>
+                  </table>
+                  </center>
+                </div>
+
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <hr><center><button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/> <b>IMPRIMIR / GUARDAR</b></button></center><hr>
+            </div> 
+          </div>';
 
       $this->load->view('admin/evaluacion/seguimiento_establecimiento/formulario_seguimiento_establecimiento', $data);
     }

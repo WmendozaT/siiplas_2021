@@ -1072,14 +1072,19 @@ class Eval_oregional extends CI_Controller{
         $bgcolor='#ecf7f5';
       }
 
-      $semaforo='<img src="'.getcwd().'/assets/ifinal/rojo1.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
-      if($calificacion[3]>50 & $calificacion[3]<=80){
-        $semaforo='<img src="'.getcwd().'/assets/ifinal/amarillo.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
+      if($calificacion[1]==0){
+        $semaforo='<img src="'.getcwd().'/assets/ifinal/blanco.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
       }
-      elseif($calificacion[3]>80 & $calificacion[3]<=100){
-        $semaforo='<img src="'.getcwd().'/assets/ifinal/verde.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
+      else{
+        $semaforo='<img src="'.getcwd().'/assets/ifinal/rojo1.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
+        if($calificacion[3]>50 & $calificacion[3]<=80){
+          $semaforo='<img src="'.getcwd().'/assets/ifinal/amarillo.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
+        }
+        elseif($calificacion[3]>80 & $calificacion[3]<=100){
+          $semaforo='<img src="'.getcwd().'/assets/ifinal/verde.JPG" class="img-responsive" style="width:70%; height:3.5%;" align=center />';
+        }
       }
-
+      
       $tabla.='
       <tr style="font-size: 6.5px;" bgcolor='.$bgcolor.'>
         <td style="width:0.9%; height:18px;" align=center>'.$nro.'</td>
@@ -1102,22 +1107,29 @@ class Eval_oregional extends CI_Controller{
     </table>
     <br>
 
-    <table cellpadding="0" cellspacing="0" class="tabla" border=0 style="width:90%;" align=left>
+    <table cellpadding="0" cellspacing="0" class="tabla" border=0 style="width:50%;" align=left>
       <tbody>
+        <tr>
+          <td colspan=2>CUMPLIMIENTO TRIMESTRAL ACUMULADO</td>
+        </tr>
         <tr>
           <td colspan=2><hr></td>
         </tr>
         <tr>
+          <td style="width:10%; height:12px;" align=center><img src="'.getcwd().'/assets/ifinal/blanco.JPG" class="img-responsive" style="width:20%; height:80%;" align=center /></td>
+          <td style="width:30%;">BLANCO:<b> Sin programación al Trimestre</b></td>
+        </tr>
+        <tr>
           <td style="width:10%; height:12px;" align=center><img src="'.getcwd().'/assets/ifinal/rojo1.JPG" class="img-responsive" style="width:20%; height:80%;" align=center /></td>
-          <td style="width:30%;">CUMPLIMIENTO TRIMESTRAL ACUMULADO:<b> Entre 0% y 50%</b></td>
+          <td style="width:30%;">ROJO:<b> Entre 0% y 50%</b></td>
         </tr>
         <tr>
           <td style="width:10%; height:12px;" align=center><img src="'.getcwd().'/assets/ifinal/amarillo.JPG" class="img-responsive" style="width:20%; height:80%;" align=center /></td>
-          <td>CUMPLIMIENTO TRIMESTRAL ACUMULADO:<b> Entre 50% y 80%</b></td>
+          <td>AMARILLO:<b> Entre 51% y 80%</b></td>
         </tr>
         <tr>
           <td style="width:10%; height:12px;" align=center><img src="'.getcwd().'/assets/ifinal/verde.JPG" class="img-responsive" style="width:20%; height:80%;" align=center /></td>
-          <td>CUMPLIMIENTO TRIMESTRAL ACUMULADO:<b> Entre 81% y 100%</b></td>
+          <td>VERDE:<b> Entre 81% y 100%</b></td>
         </tr>
         <tr>
           <td colspan=2><hr></td>

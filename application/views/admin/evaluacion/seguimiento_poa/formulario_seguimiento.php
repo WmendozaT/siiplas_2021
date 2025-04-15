@@ -41,15 +41,13 @@
                 50% { left: 45%; }
                 100% { left: 0; }
             }
-            table{font-size: 10px;
-            width: 100%;
-            max-width:1550px;
-            overflow-x: scroll;
+            table {
+                width: 100%; /* Ajusta el ancho de la tabla */
             }
-            th{
-              padding: 1.4px;
-              text-align: center;
-              font-size: 10px;
+            th, td {
+                border: 2px solid #000;
+                padding: 2px;
+                border-color: #1c7368;
             }
             #mdialTamanio{
               width: 45% !important;
@@ -105,6 +103,7 @@
                        <?php echo $cabecera_formulario;?>
                     </div>
                     <div class="row">
+                        
                         <article class="col-sm-12">
                             <!-- new widget -->
                             <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
@@ -114,19 +113,13 @@
 
                                     <ul class="nav nav-tabs pull-right in" id="myTab">
                                         <li class="active">
-                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">FORMULARIO SEGUIMIENTO POA</span></a>
+                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>FORMULARIO POA</b></span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE SEGUIMIENTO POA (MENSUAL)</span></a>
+                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</span></a>
                                         </li>
                                         <li>
-                                            <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (TRIMESTRAL)</span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s5"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">CUADRO DE EVALUACI&Oacute;N POA (GESTI&Oacute;N)</span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">MIS ACTIVIDADES (CONSOLIDADO)</span></a>
+                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">MIS ACTIVIDADES (CONSOLIDADO)</span></a>
                                         </li>
                                     </ul>
                                 </header>
@@ -141,29 +134,21 @@
                                     <div class="widget-body">
                                         <!-- content -->
                                         <div id="myTabContent" class="tab-content">
+                                            <hr>
                                             <?php echo $calificacion;?>
+
                                             <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
                                                <?php echo $s1;?>
                                             </div>
                                             <!-- end s1 tab pane -->
 
-                                            <div class="tab-pane fade" id="s3" title="CUADRO DE SEGUIMIENTO POA">
+                                            <div class="tab-pane fade" id="s2" title="CUADRO DE EVALUACIÓN POA">
                                                 <?php echo $s2;?>
-                                            </div>
-                                            <!-- end s3 tab pane -->
-
-                                            <div class="tab-pane fade" id="s4" title="CUADRO DE EVALUACIÓN POA">
-                                                <?php echo $s3;?>
                                             </div>
                                             <!-- end s4 tab pane -->
 
-                                            <div class="tab-pane fade" id="s5" title="CUADRO DE EVALUACIÓN POA GESTIÓN">
-                                                <?php echo $s4;?>
-                                            </div>
-                                            <!-- end s5 tab pane -->
-
-                                            <div class="tab-pane fade" id="s2" title="CUADRO DE SEGUIMIENTO POA">
-                                                <?php echo $s5;?>
+                                            <div class="tab-pane fade" id="s3" title="CUADRO DE SEGUIMIENTO POA">
+                                                <?php echo $s3;?>
                                             </div>
                                             <!-- end s2 tab pane -->
                                         </div>
@@ -245,9 +230,9 @@
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/mis_js/validacion_form.js"></script>
 
-        <script src="<?php echo base_url(); ?>assets/captura/html2canvas.min.js"></script>
+<!--         <script src="<?php echo base_url(); ?>assets/captura/html2canvas.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/captura/canvasjs.min.js"></script>
-        <script src="<?php echo base_url(); ?>assets/captura/jsPdf.debug.js"></script>
+        <script src="<?php echo base_url(); ?>assets/captura/jsPdf.debug.js"></script> -->
 
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
         <script src="<?php echo base_url(); ?>assets/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> 
@@ -280,22 +265,6 @@
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
         <!-- <script src="<?php echo base_url(); ?>assets/dashboard_seguimiento/seguimiento.js"></script>  -->
         <script src="<?php echo base_url(); ?>mis_js/seguimientopoa/seguimiento.js"></script>
-<!--         <script>
-            function showPopup() {
-                const com_id = '<?php echo $com_id; ?>'; // Asegúrate de que estas variables estén definidas
-                const mes = '<?php echo $this->verif_mes[1]; ?>'; // Asegúrate de que estas variables estén definidas
-                const reportUrl = "<?php echo site_url(""); ?>/seguimiento_poa/reporte_seguimientopoa_mensual/" + com_id + "/" + mes;
-                
-                document.getElementById('reportIframe').src = reportUrl; // Establece la URL del iframe
-                document.getElementById('overlay').style.display = 'block';
-                document.getElementById('popup').style.display = 'block';
-            }
 
-            function hidePopup() {
-                document.getElementById('overlay').style.display = 'none';
-                document.getElementById('popup').style.display = 'none';
-                document.getElementById('reportIframe').src = ''; // Limpia el src del iframe al cerrar
-            }
-        </script> -->
     </body>
 </html>

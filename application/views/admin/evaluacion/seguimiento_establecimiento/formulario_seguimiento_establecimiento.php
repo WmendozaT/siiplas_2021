@@ -35,11 +35,11 @@
                 100% { left: 0; }
             }
             table {
-                width: 90%; /* Ajusta el ancho de la tabla */
+                width: 100%; /* Ajusta el ancho de la tabla */
             }
             th, td {
-                border: 5px solid #000;
-                padding: 10px;
+                border: 2px solid #000;
+                padding: 2px;
                 border-color: #1c7368;
             }
 
@@ -133,7 +133,7 @@
                        <?php echo $titulo.' '.$formularios_seguimiento.' '.$formulario_seguimiento_mensual.' '.$salir;?>
                     </div>
                         <div class="row">
-                            <?php echo $update_eval;?>
+                           <!--  <?php echo $update_eval;?> -->
                             <article class="col-sm-12">
                                 <!-- new widget -->
                                 <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
@@ -163,11 +163,7 @@
                                             <div id="myTabContent" class="tab-content">
                                                 <div id="calificacion"></div>
                                                 <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
-                                                   <div class="row">
-                                                        <div class="jarviswidget jarviswidget-color-darken" >
-                                                          <?php echo $form4_programados;?>
-                                                        </div>
-                                                   </div>
+                                                    <?php echo $form4_programados;?>
                                                 </div>
                                                 <!-- end s1 tab pane -->
 

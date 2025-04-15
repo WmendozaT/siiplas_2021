@@ -55,9 +55,67 @@ class Seguimientopoa extends CI_Controller{
       return $tabla;
     }
 
+    /// Cabecera Reporte GRAFICOS 2025
+    public function cabecera_grafico($componente){
+      $trimestre=$this->model_evaluacion->trimestre();
+      $tabla='';
+      $tabla.=' 
+      <table style="width:100%;">
+        <tr>
+          <td>
+            <img src="'.base_url('assets/ifinal/cnslogo.png').'" style="width:70px;height:80px;" >
+          </td>
+          <td>
+          <b>PROGRAMA : </b>'.ucwords($componente[0]['aper_programa'].''.$componente[0]['aper_proyecto'].''.$componente[0]['aper_actividad'].' - '.$componente[0]['tipo'].' '.$componente[0]['proy_nombre'].' - '.$componente[0]['abrev']).'
+          <br>
+          <b>UNIDAD RESPONSABLE : </b>'.ucwords($componente[0]['serv_cod'].' '.$componente[0]['tipo_subactividad'].' '.$componente[0]['serv_descripcion']).'
+          <br>
+          <b>TRIMESTRE : </b>'.ucwords($trimestre[0]['trm_descripcion']).' / '.$this->gestion.'
+          </td>
+        </tr>
+      </table>';
+          
+      return $tabla;
+    }
+
+/*    public function cabecera($componente){
+      $tabla='';
+      $tabla.=' 
+        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
+          <tr>
+            <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b>'.$this->session->userdata('entidad').'</b></td>
+          </tr>
+          <tr style="font-size: 8pt;">
+            <td style="width:10%; height: 1.2%;"><b>DIR. ADM.</b></td>
+            <td style="width:90%;">: '.$proyecto[0]['dep_cod'].' '.strtoupper($proyecto[0]['dep_departamento']).'</td>
+          </tr>
+          <tr style="font-size: 8pt;">
+            <td style="width:10%; height: 1.2%;"><b>UNI. EJEC.</b></td>
+            <td style="width:90%;">: '.$proyecto[0]['dist_cod'].' '.strtoupper($proyecto[0]['dist_distrital']).'</td>
+          </tr>
+          <tr style="font-size: 8pt;">';
+            if($proyecto[0]['tp_id']==1){ /// Proyecto de Inversion
+                $tabla.='
+                <td style="width:10%;"><b>PROY. INV.</b></td>
+                <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'].'</td>';
+            }
+            else{ /// Gasto Corriente
+                $tabla.='
+                <td style="width:10%;"><b>PROGRAMA</b></td>
+                <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td>';
+            }
+          $tabla.='
+          </tr>
+          <tr style="font-size: 8pt;">
+              <td style="height: 1.2%; width:10%;"><b>UNI. RESP.</b></td>
+              <td style="width:90%;">: '.strtoupper($componente[0]['serv_cod']).' '.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_descripcion']).'</td>
+          </tr>
+        </table>';
+      return $tabla;
+    }*/
 
 
-    /// Cabecera Reporte de Seguimiento POA Mensual 2021
+    /// Cabecera Reporte PDF de Seguimiento POA Mensual 2025
     public function cabecera($componente,$proyecto){
       $tabla='';
       $tabla.=' 
@@ -95,7 +153,7 @@ class Seguimientopoa extends CI_Controller{
     }
 
       /*------- CABECERA REPORTE SEGUIMIENTO POA (GRAFICO)------*/
-    function cabecera_seguimiento($establecimiento,$subactividad,$tipo_titulo,$trm_id){
+/*    function cabecera_seguimiento($establecimiento,$subactividad,$tipo_titulo,$trm_id){
       $fase=$this->model_faseetapa->get_fase($subactividad[0]['pfec_id']);
       $proyecto=$this->model_proyecto->get_id_proyecto($fase[0]['proy_id']);
       $trimestre=$this->model_evaluacion->get_trimestre($trm_id);
@@ -205,7 +263,7 @@ class Seguimientopoa extends CI_Controller{
         </table>';
 
       return $tabla;
-    }
+    }*/
 
 
     //// Cabecera Evaluacion Trimestral
@@ -531,7 +589,7 @@ class Seguimientopoa extends CI_Controller{
       return $tabla;
     }
 
-  /// Temporalidad de todas las operaciones de la Subactividad 2021 (Vista)
+  /// Temporalidad de todas las operaciones de la Subactividad 2025 (Vista)
   public function temporalidad_operacion($com_id){
     $tabla='';
     $operaciones=$this->model_producto->list_operaciones_subactividad($com_id);
@@ -545,7 +603,7 @@ class Seguimientopoa extends CI_Controller{
               <div class="table-responsive">
               <table class="table table-bordered" width="100%" align=center>
                 <thead>
-                 <tr style="font-size: 7px;" align=center>
+                 <tr style="font-size: 10px;" align=center>
                     <th style="width:0.5%;height:15px;">#</th>
                     <th style="width:0.5%;">COD.<br>OPE.</th>
                     <th style="width:0.5%;">COD.<br>ACT.</th> 
@@ -578,7 +636,7 @@ class Seguimientopoa extends CI_Controller{
                     $temp=$this->temporalizacion_productos($rowp['prod_id']);
                     $nro++;
                     $tabla .='
-                    <tr >
+                    <tr style="font-size: 10px;">
                       <td style="width: 0.5%; text-align: center; height:50px;" title='.$rowp['prod_id'].'>'.$nro.'</td>
                       <td style="width: 0.5%; text-align: center; font-size:19px;"><b>'.$rowp['or_codigo'].'</b></td>
                       <td style="width: 0.5%; text-align: center; font-size:19px;"><b>'.$rowp['prod_cod'].'</b></td>
@@ -595,10 +653,10 @@ class Seguimientopoa extends CI_Controller{
                         }
 
                         $tabla.='
-                        <td style="width: 2.5%; text-align: center;font-size: 7px;" bgcolor='.$color.'>
-                          <table class="table table-bordered" align=center>
-                            <tr><td style="width:50%;"><b>P:</b></td><td style="width:50%;">'.round($temp[1][$i],2).''.$indi_id.'</td></tr>
-                            <tr><td style="width:50%;"><b>E:</b></td><td style="width:50%;">'.round($temp[4][$i],2).''.$indi_id.'</td></tr>
+                        <td style="width: 2.5%; text-align: center;" bgcolor='.$color.'>
+                          <table class="table table-bordered" style="font-size: 9px;" align=center>
+                            <tr><td style="width:50%; font-size: 9.5px;"><b>P:</b></td><td style="width:50%;font-size: 9.5px;">'.round($temp[1][$i],2).''.$indi_id.'</td></tr>
+                            <tr><td style="width:50%; font-size: 9.5px;"><b>E:</b></td><td style="width:50%;font-size: 9.5px;">'.round($temp[4][$i],2).''.$indi_id.'</td></tr>
                           </table>
                         </td>';
                       }
@@ -1274,7 +1332,7 @@ class Seguimientopoa extends CI_Controller{
       $tabla='';
       $tit[2]='<b>NRO. ACT. PROGRAMADAS</b>';
       $tit[3]='<b>NRO. ACT. CUMPLIDAS</b>';
-      $tit[4]='<b>NRO. ACT. EN PROCESO</b>';
+      $tit[4]='<b>NRO. ACT. NO CUMPLIDAS</b>';
       $tit[5]='<b>(%) CUMPLIMIENTO</b>';
       $tit[6]='<b>(%) INCUMPLIMIENTO</b>';
 
@@ -1283,26 +1341,51 @@ class Seguimientopoa extends CI_Controller{
       $tit_total[4]='<b>(%) PROGRAMACION AL TRIMESTRE</b>';
       $tit_total[5]='<b>(%) CUMPLIMIENTO AL TRIMESTRE</b>';
 
+      $tabla.='
+        <style>
+          .tabla-impresion {
+            width: 95%;
+            margin: 0 auto;
+            font-size: 9pt;
+            border-collapse: collapse;
+            page-break-inside: avoid;
+            
+            th {
+              background: #11574e;
+              color: black;
+              padding: 10px;
+              position: sticky;
+              top: 0;
+            }
+            
+            td {
+              padding: 8px;
+              border: 1px solid #e0e0e0;
+            }
+          }
+        </style>';
+
       if($tip_rep==1){ /// Normal
         $tab='class="table table-bordered" align=center style="width:100%;"';
       } 
       else{ /// Impresion
-        $tab='class="change_order_items" border=1 style="width:100%;"';
+        $tab='class="tabla-impresion" border=1 style="width:100%;"';
       }
 
-
+      
 
       if($tp_graf==1){ // pastel : Programado-Cumplido
-        $tabla.='
+/*        $tabla.='
+        <br>
         <table '.$tab.'>
           <thead>
               <tr align=center>
-                <th>ACT. PROGRAMADAS</th>
-                <th>ACT. EVALUADAS</th>
-                <th>ACT. CUMPLIDAS</th>
-                <th>ACT. NO CUMPLIDAS</th>
-                <th>(%) CUMPLIMIENTO POA</th>
-                <th>(%) INCUMPLIMIENTO</th>
+                <th><b>ACT. PROGRAMADAS</b></th>
+                <th><b>ACT. EVALUADAS</b></th>
+                <th><b>ACT. CUMPLIDAS</b></th>
+                <th><b>ACT. NO CUMPLIDAS</b></th>
+                <th><b>(%) CUMPLIMIENTO POA</b></th>
+                <th><b>(%) INCUMPLIMIENTO</b></th>
               </tr>
             </thead>
             <tbody>
@@ -1315,20 +1398,22 @@ class Seguimientopoa extends CI_Controller{
                 <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$trm_id].'%</b></button></td>
               </tr>
             </tbody>
-        </table>';
+        </table>';*/
       }
       elseif($tp_graf==2){ /// Regresion Acumulado al Trimestre
         $tabla.='
+        <br><br>
+        <b>DETALLE : </b><br>
         <table '.$tab.'>
-          <thead>
-              <tr >
+            <thead>
+              <tr>
                 <th></th>';
                 for ($i=1; $i <=$trm_id; $i++) { 
                   $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
                 }
               $tabla.='
               </tr>
-              </thead>
+            </thead>
             <tbody>';
               $color=''; $por='';
               for ($i=2; $i <=6; $i++) {
@@ -1353,6 +1438,7 @@ class Seguimientopoa extends CI_Controller{
       }
       elseif($tp_graf==3){ /// Regresion Gestion
         $tabla.='
+        <br><br>
         <h4><b>'.$regresion[5][$trm_id].'%</b> CUMPLIMIENTO DE '.$regresion[1][$trm_id].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
         <table '.$tab.'>
           <thead>
@@ -1384,30 +1470,17 @@ class Seguimientopoa extends CI_Controller{
       }
       else{
         $tabla.='
-        <table '.$tab.'>
-          <thead>
-              <tr align=center >
-                <th>ACT. PROGRAMADAS</th>
-                <th>ACT. EVALUADAS</th>
-                <th>ACT. CUMPLIDAS</th>
-                <th>ACT. EN PROCESO</th>
-                <th>ACT. NO CUMPLIDAS</th>
-                <th>(%) CUMPLIMIENTO</th>
-                <th>(%) INCUMPLIMIENTO</th>
-              </tr>
-              </thead>
-            <tbody>
-              <tr align=right>
-                <td><b>'.$regresion[2][$trm_id].'</b></td>
-                <td><b>'.$regresion[2][$trm_id].'</b></td>
-                <td><b>'.$regresion[3][$trm_id].'</b></td>
-                <td><b>'.$regresion[7][$trm_id].'</b></td>
-                <td><b>'.($regresion[2][$trm_id]-($regresion[7][$trm_id]+$regresion[3][$trm_id])).'</b></td>
-                <td><b>'.$regresion[5][$trm_id].'%</b></td>
-                <td><b>'.$regresion[6][$trm_id].'%</b></td>
-              </tr>
-            </tbody>
-        </table>';
+        <br><br>
+        <b>DETALLE : </b><br>
+          <ul>
+            <li> Actividades Programadas:&nbsp;&nbsp;<b>'.$regresion[2][$trm_id].'</b></li>
+            <li> Actividades Evaluadas:&nbsp;&nbsp;<b>'.$regresion[2][$trm_id].'</b></li>
+            <li> Actividades Cumplidas:&nbsp;&nbsp;<b>'.$regresion[3][$trm_id].'</b></li>
+            <li> Actividades en Proceso:&nbsp;&nbsp;<b>'.$regresion[7][$trm_id].'</b></li>
+            <li> Actividades <b>NO </b>Cumplidas:&nbsp;&nbsp;<b>'.($regresion[2][$trm_id]-($regresion[7][$trm_id]+$regresion[3][$trm_id])).'</b></li>
+            <li> <b>(%) DE CUMPLIMIENTO AL POA:&nbsp;&nbsp;'.$regresion[5][$trm_id].'%</b></li>
+            <li> <b>(%) DE INCUMPLIMIENTO AL POA:&nbsp;&nbsp;'.$regresion[6][$trm_id].'%</b></li>
+          </ul>';
       }
 
       return $tabla;
@@ -1531,8 +1604,7 @@ class Seguimientopoa extends CI_Controller{
 
 
 
-
-  /*---- FUNCION PARA ACTUALIZAR EVALUACION POA POR SERVICIO ----*/
+  /*---- FUNCION PARA ACTUALIZAR EVALUACION POA POR UNIDAD RESPONSABLE ----*/
     public function update_evaluacion_operaciones($com_id){
       $operaciones=$this->model_producto->list_operaciones_subactividad($com_id); /// lISTA DE OPERACIONES
 
@@ -1547,7 +1619,7 @@ class Seguimientopoa extends CI_Controller{
           if($temporalidad[1]==$temporalidad[2]){ /// Cumplido
             $this->insertando_datos($row['prod_id'],$this->tmes,1,1,'Trimestre Cumplido');
           }
-          elseif($temporalidad[1]>$temporalidad[2]){ /// En proceso
+          elseif(($temporalidad[2]!=0) && ($temporalidad[1]>$temporalidad[2])){ /// En proceso
             $this->insertando_datos($row['prod_id'],$this->tmes,2,0,'');
           }
 
@@ -1702,16 +1774,16 @@ class Seguimientopoa extends CI_Controller{
       $titulo='ERROR EN LOS VALORES';
       
       if($this->gestion>2021){
-        if($eficacia<=50){$tp='danger';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
-        if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
-        if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
-        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+        if($eficacia<=50){$tp='danger';$titulo='CUMPLIMIENTO ACUMULADO TRIMESTRAL: '.$eficacia.'% -> INSATISFACTORIO (0% - 50%)';} /// Insatisfactorio - Rojo
+        if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='CUMPLIMIENTO ACUMULADO TRIMESTRAL: '.$eficacia.'% -> REGULAR (51% - 75%)';} /// Regular - Amarillo
+        if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO ACUMULADO TRIMESTRAL: '.$eficacia.'% -> BUENO (76% - 99%)';} /// Bueno - Azul
+        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO ACUMULADO TRIMESTRAL: '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
       }
       else{ /// Gestiones Anteriores
-        if($eficacia<=75){$tp='danger';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
-        if($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
-        if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
-        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO ALCANZADO: '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
+        if($eficacia<=75){$tp='danger';$titulo='CUMPLIMIENTO ACUMULADO TRIMESTRAL: '.$eficacia.'% -> INSATISFACTORIO (0% - 75%)';} /// Insatisfactorio - Rojo
+        if($eficacia > 75 & $eficacia <= 90){$tp='warning';$titulo='CUMPLIMIENTO ACUMULADO TRIMESTRAL: '.$eficacia.'% -> REGULAR (75% - 90%)';} /// Regular - Amarillo
+        if($eficacia > 90 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO ACUMULADO TRIMESTRAL: '.$eficacia.'% -> BUENO (90% - 99%)';} /// Bueno - Azul
+        if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO ACUMULADO TRIMESTRAL: '.$eficacia.'% -> OPTIMO (100%)';} /// Optimo - verde
       }
       
 

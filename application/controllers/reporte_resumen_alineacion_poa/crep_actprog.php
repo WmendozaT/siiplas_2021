@@ -79,7 +79,6 @@ class Crep_actprog extends CI_Controller {
                     <th style="width:10%;font-size:10px;" align=center>PROGRAMA</th>
                     <th style="width:15%;font-size:10px;" align=center>DESCRIPCI&Oacute;N</th>
                     <th style="width:5%;font-size:10px;" align=center>NRO DE ACT.</th>
-                    <th style="width:5%;font-size:10px;" align=center>PPTO. '.$this->gestion.'</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -87,7 +86,7 @@ class Crep_actprog extends CI_Controller {
               foreach($act_programa as $row){
                 $nro++;
                 $sum=$sum+$row['actividades'];
-                $sum_ppto=$sum_ppto+$row['ppto'];
+                //$sum_ppto=$sum_ppto+$row['ppto'];
                 $tabla.='
                 <tr>
                   <td style="height:14px;text-align:center;font-size:8px;">'.$nro.'</td>
@@ -100,12 +99,12 @@ class Crep_actprog extends CI_Controller {
                   }
                   $tabla.='
                   <td style="font-size:11px; text-align:right;"><b>'.$row['actividades'].'</b></td>';
-                  if($tp_rep==2){ /// excel
+/*                  if($tp_rep==2){ /// excel
                     $tabla.='<td style="font-size:11px; text-align:right;"><b>'.$row['ppto'].'</b></td>';
                   }
                   else{
                     $tabla.='<td style="font-size:11px; text-align:right;"><b>'.number_format($row['ppto'], 2, ',', '.').'</b></td>';
-                  }
+                  }*/
                   $tabla.='
                   
                 </tr>';
@@ -115,12 +114,12 @@ class Crep_actprog extends CI_Controller {
                 <tr>
                   <td colspan=3 style="height:14px; font-size:10px;"> TOTAL </td>
                   <td style="font-size:11px; text-align:right;"><b>'.$sum.'</b></td>';
-                  if($tp_rep==2){ /// excel
+/*                  if($tp_rep==2){ /// excel
                     $tabla.='<td style="font-size:11px; text-align:right;"><b>'.$sum_ppto.'</b></td>';
                   }
                   else{
                     $tabla.='<td style="font-size:11px; text-align:right;"><b>'.number_format($sum_ppto, 2, ',', '.').'</b></td>';
-                  }
+                  }*/
                   $tabla.='
                   
                 </tr>
@@ -151,7 +150,6 @@ class Crep_actprog extends CI_Controller {
                     <th style="width:7%;font-size:10px;" align=center>PROGRAMA</th>
                     <th style="width:15%;font-size:9px;" align=center>DESCRIPCI&Oacute;N</th>
                     <th style="width:5%;font-size:9px;" align=center>NRO DE ACT.</th>
-                    <th style="width:5%;font-size:9px;" align=center>PPTO. '.$this->gestion.'</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -159,7 +157,7 @@ class Crep_actprog extends CI_Controller {
               foreach($act_programa as $row){
                 $nro++;
                 $sum=$sum+$row['actividades'];
-                $sum_ppto=$sum_ppto+$row['ppto'];
+                //$sum_ppto=$sum_ppto+$row['ppto'];
                 $tabla.='
                 <tr>
                   <td style="height:14px;text-align:center;font-size:8px;">'.$nro.'</td>
@@ -172,12 +170,7 @@ class Crep_actprog extends CI_Controller {
                   }
                   $tabla.='
                   <td style="font-size:11px; text-align:right;"><b>'.$row['actividades'].'</b></td>';
-                  if($tp_rep==2){ /// excel
-                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.$row['ppto'].'</b></td>';
-                  }
-                  else{
-                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.number_format($row['ppto'], 2, ',', '.').'</b></td>';
-                  }
+                 
                   $tabla.='
                   
                 </tr>';
@@ -187,12 +180,6 @@ class Crep_actprog extends CI_Controller {
                 <tr>
                   <td colspan=3 style="height:14px; font-size:10px;"> TOTAL </td>
                   <td style="font-size:11px; text-align:right;"><b>'.$sum.'</b></td>';
-                  if($tp_rep==2){ /// excel
-                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.$sum_ppto.'</b></td>';
-                  }
-                  else{
-                    $tabla.='<td style="font-size:11px; text-align:right;"><b>'.number_format($sum_ppto, 2, ',', '.').'</b></td>';
-                  }
                   $tabla.='
                   
                 </tr>
@@ -223,7 +210,6 @@ class Crep_actprog extends CI_Controller {
                   <tr>
                     <th style="width:70%;height:20px;font-size:10px;" align=center>ACCION DE CORTO PLAZO '.$this->gestion.'</th>
                     <th style="width:5%;font-size:10px;" align=center>NRO DE ACT.</th>
-                    <th style="width:5%;font-size:10px;" align=center>PPTO. '.$this->gestion.'</th>
                   </tr>
                 </thead>
               <tbody>';
@@ -241,7 +227,6 @@ class Crep_actprog extends CI_Controller {
                   }
                   $tabla.='
                   <td style="width:7%; text-align:right; font-size:11px;"><b>'.$row['actividades'].'</b></td>
-                  <td style="width:7%; text-align:right; font-size:11px;"><b></b></td>
                 </tr>';
               }
         $tabla.='
@@ -249,7 +234,6 @@ class Crep_actprog extends CI_Controller {
                 <tr>
                   <td style="height:14px; font-size:10px;"> TOTAL </td>
                   <td style="text-align:right; font-size:10px;"><b>'.$sum.'</b></td>
-                  <td style="text-align:right; font-size:10px;"></td>
                 </tr>
             </table>';
       return $tabla;

@@ -67,59 +67,72 @@ class Crep_evalunidad extends CI_Controller {
         $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
         
         /*------ titulo ------*/
-        $data['titulo']=
-          '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROGRAMA : </small><b>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</b></h1>
+        $data['titulo']='';
+        $data['titulo'].='
+          <h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROGRAMA : </small><b>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</b></h1>
           <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>';
 
         if($data['proyecto'][0]['tp_id']==1){
-          $data['titulo']=
-          '<h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROYECTO : </small><b>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' 000 - '.$data['proyecto'][0]['proy_nombre'].'</b></h1>
+          $data['titulo'].='
+          <h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROYECTO : </small><b>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' 000 - '.$data['proyecto'][0]['proy_nombre'].'</b></h1>
           <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>';
         }
+        $data['titulo'].='<input name="base" type="hidden" value="'.base_url().'">';
         /*-------------------*/
         
 
         /*--- Regresion lineal trimestral ---*/
-        $data['cabecera2']=$this->cabecera_seguimiento($data['proyecto'],2);
-        $data['tabla']=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
-        $data['tabla_regresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,1); /// Tabla que muestra el acumulado al trimestres Regresion
-        $data['tabla_regresion_impresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],2,0); /// Tabla que muestra el acumulado por trimestres Regresion Impresion
+        $matriz=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
 
+        $titulo = [];
+        for ($i = 0; $i <= $this->tmes; $i++) {$titulo[] = $matriz[1][$i];}
+        $programacion = [];
+        for ($i = 1; $i <= $this->tmes; $i++) {$programacion[] = (int)$matriz[2][$i];}
+        $ejecucion = [];
+        for ($i = 1; $i <= $this->tmes; $i++) { $ejecucion[] = (int)$matriz[3][$i];}
+
+
+        $tabla_regresion=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz,$this->tmes,2,0); /// Tabla que muestra el acumulado al trimestres Regresion
+        
         /*--- grafico Pastel trimestral ---*/
-        $data['tabla_pastel_todo']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
-        $data['tabla_pastel_todo_impresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],4,0); /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
+        //$data['tabla_pastel_todo']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
 
         /*--- Regresion lineal Gestion */
-        $data['cabecera3']=$this->cabecera_seguimiento($data['proyecto'],3);
-        $data['tabla_gestion']=$this->tabla_regresion_lineal_unidad_total($proy_id); /// Matriz para el grafico Total Gestion
-        $data['tabla_regresion_total']=$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
-        $data['tabla_regresion_total_impresion']=$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,0); /// Tabla que muestra el acumulado Gestion Impresion
+        //$data['tabla_gestion']=$this->tabla_regresion_lineal_unidad_total($proy_id); /// Matriz para el grafico Total Gestion
+        //$data['tabla_regresion_total']=$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
 
-        $data['calificacion']='<div id="eficacia">'.$this->seguimientopoa->calificacion_eficacia($data['tabla'][5][$this->tmes],0).'</div><div id="efi"></div>'; /// calificacion
+        $data['calificacion']='<div id="calificacion">'.$this->seguimientopoa->calificacion_eficacia($matriz[5][$this->tmes],0).'</div><div id="efi"></div>'; /// calificacion
 
         /// SERVICIOS
-        $data['mis_servicios']=$this->mis_servicios(1,$proy_id); /// Lista de Unidades Responsables
-        $data['economia']=$this->economia($data['proyecto']); /// Economia
-        //$data['eficiencia']=$this->eficiencia($data['tabla'][5][$this->tmes],$data['economia'][3]); /// Eficiencia
-        $data['matriz']=$this->matriz_eficacia_unidad($proy_id);
+        $data['mis_unidades']=$this->mis_servicios(1,$proy_id); /// Lista de Unidades Responsables
+        $data['matriz']=$this->matriz_eficacia_unidad($proy_id); /// matriz para parametros de cumplimiento
         $data['parametro_eficacia']=$this->parametros_eficacia_unidad($data['matriz'],$proy_id,1); /// Parametro de Eficacia
 
-        $data['boton_reporte_indicadores']='
-                <a href="javascript:abreVentana(\''.site_url("").'/rep_eficacia_unidad/'.$proy_id.'\');" class="btn btn-default" title="IMPRIMIR EVALUACIÓN POA">
-                  <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="20" HEIGHT="20"/>&nbsp;&nbsp;<b>IMPRIMIR EVALUACI&Oacute;N PLAN OPERATIVO ANUAL POA</b>
-                </a>'; /// Reporte Evaluacion (Trimestre vigente) POA
 
-        $data['no_cumplido']=0;
-        $data['en_proceso']=0;
+      $data['s1']=' 
+      '.$this->grafico_cumplimiento_poa($titulo,$programacion,$ejecucion,0).'
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+              <div class="row" style="align:center">
+                <div id="regresion" style="width: 650px; height: 420px; margin: 0 auto"></div>
+                <div id="tabla_regresion_impresion">'.$tabla_regresion.'</div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+              <div class="well">
+                <div id="regresion2" style="width: 650px; height: 420px; margin: 0 auto"></div>
+                <div id="tabla_regresion_impresion">'.$tabla_regresion.'</div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+              <div class="well">
+                <div id="regresion3" style="width: 650px; height: 420px; margin: 0 auto"></div>
+                <div id="tabla_regresion_impresion">'.$tabla_regresion.'</div>
+              </div>
+            </div>
+      </div>';
 
-        if($data['tabla'][2][$this->session->userData('trimestre')]!=0){
-          $data['no_cumplido']=(100-($data['tabla'][5][$this->session->userData('trimestre')]+round((($data['tabla'][7][$this->session->userData('trimestre')]/$data['tabla'][2][$this->session->userData('trimestre')])*100),2)));
-          $data['en_proceso']=round((($data['tabla'][7][$this->session->userData('trimestre')]/$data['tabla'][2][$this->session->userData('trimestre')])*100),2);
-        }
-
-         $data['base']='
-        <input name="base" type="hidden" value="'.base_url().'">';
-
+        $data['s2']=$data['mis_unidades'].'<br>'.$data['parametro_eficacia'];
 
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_unidad', $data);
       }
@@ -127,6 +140,364 @@ class Crep_evalunidad extends CI_Controller {
         redirect('eval/mis_operaciones');
       }
     }
+
+
+    /// grafico Pastel Cumplimiento POA
+    public function grafico_cumplimiento_poa_pastel($titulo,$prog,$ejec,$tp){
+      $tabla='      
+      <script  src="'.base_url().'assets/js/libs/jquery-2.0.2.min.js"></script>
+      <script  src="'.base_url().'assets/js/libs/jquery-ui-1.10.3.min.js"></script>
+      <script  src="'.base_url().'assets/highcharts/js/highcharts.js"></script>
+      <script>
+      $(function() {
+
+      Highcharts.chart("pastel_todos", {
+        chart: {
+          type: "pie",
+          options3d: {
+              enabled: true,
+              alpha: 45,
+              beta: 0
+          }
+        },
+        title: {
+            text: "HOLA MUNDO"
+        },
+        tooltip: {
+            pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>"
+        },
+        plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: "pointer",
+              depth: 35,
+              dataLabels: {
+                  enabled: true,
+                  format: "{point.name}"
+              }
+          }
+        },
+        series: [{
+          type: "pie",
+          name: "Actividades",
+          data: [
+              {
+                name: "NO CUMPLIDO : "+Math.round(100-(matriz[5][trimestre]+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)))+" %",
+                y: matriz[6][trimestre],
+                color: "#f98178",
+              },
+
+              {
+                name: "CUMPLIMIENTO PARCIAL : "+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)+" %",
+                y: Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100),
+                color: "#f5eea3",
+              },
+
+              {
+                name: "CUMPLIDO : "+matriz[5][trimestre]+" %",
+                y: matriz[5][trimestre],
+                color: "#2CC8DC",
+                sliced: true,
+                selected: true
+              }
+          ]
+        }]
+      });
+
+
+
+
+
+      Highcharts.chart("regresion", {
+          chart: {
+              type: "line",
+               backgroundColor: "#f0f0f0",
+              spacing: [40, 20, 15, 45],
+              style: {
+              fontFamily: "Segoe UI, Arial, sans-serif"
+            }
+          },
+          title: {
+              text: "CUMPLIMIENTO DE ACTIVIDADES AL TRIMESTRE",
+              align: "center",
+            style: {
+              color: "#1e293b",
+              fontSize: "18px",
+              fontWeight: 600
+            },
+            margin: 30
+          },
+          xAxis: {
+              categories: '.json_encode($titulo).',
+              title: {
+              text: "Periodos de Evaluación",
+              style: {
+                color: "#475569",
+                fontSize: "12px"
+              }
+            },
+            gridLineWidth: 1,
+            gridLineColor: "#f1f5f9",
+            labels: {
+              style: {
+                color: "#64748b",
+                fontWeight: 500
+              }
+            }
+          },
+          yAxis: {
+              title: {
+              text: "Nro de Actividades",
+              style: {
+                color: "#475569",
+                fontSize: "12px"
+              }
+            },
+            labels: {
+              style: {
+                color: "#64748b"
+              }
+            },
+            gridLineColor: "#f8fafc"
+          },
+          tooltip: {
+            useHTML: true,
+            backgroundColor: "#ffffff",
+            borderWidth: 0,
+            shadow: {
+              color: "rgba(0,0,0,0.08)",
+              width: 3,
+              offsetX: 2,
+              offsetY: 2
+            },
+          },
+          plotOptions: {
+            line: {
+              dataLabels: {
+                enabled: true,
+                style: {
+                  color: "#1e293b",
+                  fontSize: "12px",
+                  textOutline: "none"
+                },
+                formatter: function() {
+                  return this.y + (this.y > 0 ? " act." : "");
+                }
+              },
+              marker: {
+                symbol: "circle",
+                radius: 6,
+                fillColor: "#ffffff",
+                lineWidth: 2
+              },
+              animation: {
+                duration: 800
+              }
+            }
+          },
+          series: [{
+              name: "NRO. ACT. PROGRAMADO AL TRIMESTRE",
+              data: [0,'.json_encode($prog).'],
+               color: "#3b82f6",
+            marker: {
+              lineColor: "#3b82f6"
+            },
+            lineWidth: 3
+          }, {
+              name: "NRO. ACT. CUMPLIDAS AL TRIMESTRE",
+              data: [0,'.json_encode($ejec).'],
+               color: "#10b981",
+            marker: {
+              lineColor: "#10b981"
+            },
+            lineWidth: 3
+          }],
+          legend: {
+            align: "right",
+            verticalAlign: "top",
+            itemStyle: {
+              color: "#475569",
+              fontWeight: 500
+            },
+            itemMarginBottom: 15
+          },
+          credits: {
+            enabled: false
+          },
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 768
+              },
+              chartOptions: {
+                title: {
+                  style: { fontSize: "18px" }
+                },
+                dataLabels: {
+                  style: { fontSize: "10px" }
+                }
+              }
+            }]
+          }
+      });
+
+      });
+      </script>';
+
+      return $tabla;
+    }
+
+    /// grafico Regresion Cumplimiento POA
+    public function grafico_cumplimiento_poa($titulo,$prog,$ejec,$tp){
+      $tabla='      
+      <script  src="'.base_url().'assets/js/libs/jquery-2.0.2.min.js"></script>
+      <script  src="'.base_url().'assets/js/libs/jquery-ui-1.10.3.min.js"></script>
+      <script  src="'.base_url().'assets/highcharts/js/highcharts.js"></script>
+      <script>
+      $(function() {
+
+      Highcharts.chart("regresion", {
+          chart: {
+              type: "line",
+               backgroundColor: "#f0f0f0",
+              spacing: [40, 20, 15, 45],
+              style: {
+              fontFamily: "Segoe UI, Arial, sans-serif"
+            }
+          },
+          title: {
+              text: "CUMPLIMIENTO DE ACTIVIDADES AL TRIMESTRE",
+              align: "center",
+            style: {
+              color: "#1e293b",
+              fontSize: "18px",
+              fontWeight: 600
+            },
+            margin: 30
+          },
+          xAxis: {
+              categories: '.json_encode($titulo).',
+              title: {
+              text: "Periodos de Evaluación",
+              style: {
+                color: "#475569",
+                fontSize: "12px"
+              }
+            },
+            gridLineWidth: 1,
+            gridLineColor: "#f1f5f9",
+            labels: {
+              style: {
+                color: "#64748b",
+                fontWeight: 500
+              }
+            }
+          },
+          yAxis: {
+              title: {
+              text: "Nro de Actividades",
+              style: {
+                color: "#475569",
+                fontSize: "12px"
+              }
+            },
+            labels: {
+              style: {
+                color: "#64748b"
+              }
+            },
+            gridLineColor: "#f8fafc"
+          },
+          tooltip: {
+            useHTML: true,
+            backgroundColor: "#ffffff",
+            borderWidth: 0,
+            shadow: {
+              color: "rgba(0,0,0,0.08)",
+              width: 3,
+              offsetX: 2,
+              offsetY: 2
+            },
+          },
+          plotOptions: {
+            line: {
+              dataLabels: {
+                enabled: true,
+                style: {
+                  color: "#1e293b",
+                  fontSize: "12px",
+                  textOutline: "none"
+                },
+                formatter: function() {
+                  return this.y + (this.y > 0 ? " act." : "");
+                }
+              },
+              marker: {
+                symbol: "circle",
+                radius: 6,
+                fillColor: "#ffffff",
+                lineWidth: 2
+              },
+              animation: {
+                duration: 800
+              }
+            }
+          },
+          series: [{
+              name: "NRO. ACT. PROGRAMADO AL TRIMESTRE",
+              data: [0,'.json_encode($prog).'],
+               color: "#3b82f6",
+            marker: {
+              lineColor: "#3b82f6"
+            },
+            lineWidth: 3
+          }, {
+              name: "NRO. ACT. CUMPLIDAS AL TRIMESTRE",
+              data: [0,'.json_encode($ejec).'],
+               color: "#10b981",
+            marker: {
+              lineColor: "#10b981"
+            },
+            lineWidth: 3
+          }],
+          legend: {
+            align: "right",
+            verticalAlign: "top",
+            itemStyle: {
+              color: "#475569",
+              fontWeight: 500
+            },
+            itemMarginBottom: 15
+          },
+          credits: {
+            enabled: false
+          },
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 768
+              },
+              chartOptions: {
+                title: {
+                  style: { fontSize: "18px" }
+                },
+                dataLabels: {
+                  style: { fontSize: "10px" }
+                }
+              }
+            }]
+          }
+      });
+
+      });
+      </script>';
+
+      return $tabla;
+    }
+
+
+
+
 
 
     /*--- REPORTE EVALUACION POR UNIDAD 2021---*/
@@ -205,7 +576,7 @@ class Crep_evalunidad extends CI_Controller {
     }
 
     /*------- CABECERA REPORTE SEGUIMIENTO POA (GRAFICO)------*/
-    function cabecera_seguimiento($proyecto,$tipo_titulo){
+/*    function cabecera_seguimiento($proyecto,$tipo_titulo){
       $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
       /// tipo_titulo 1 : Seguimiento Mensual
       /// tipo_titulo 2 : Evaluacion por Trimestre
@@ -269,7 +640,7 @@ class Crep_evalunidad extends CI_Controller {
         </table>';
 
       return $tabla;
-    }
+    }*/
 
       
 
@@ -645,7 +1016,7 @@ class Crep_evalunidad extends CI_Controller {
 
 
     /*------ TABLA ACUMULADA EVALUACIÓN 2020 -------*/
-    public function tabla_acumulada_evaluacion_unidad($regresion,$tp_graf,$tip_rep){
+   /* public function tabla_acumulada_evaluacion_unidad($regresion,$tp_graf,$tip_rep){
       $tabla='';
       $tit[2]='<b>NRO. ACT. PROG.</b>';
       $tit[3]='<b>NRO. ACT. CUMP.</b>';
@@ -786,7 +1157,7 @@ class Crep_evalunidad extends CI_Controller {
       }
 
       return $tabla;
-    }
+    }*/
 
     /*--- REGRESIÓN LINEAL PORCENTAJE PROGRAMADO A LA GESTIÓN ---*/
     public function tabla_regresion_lineal_unidad_total($proy_id){
@@ -862,6 +1233,7 @@ class Crep_evalunidad extends CI_Controller {
 
     return $tr;
     }
+
 
     /*------ OBTIENE DATOS DE EVALUACIÓN 2020 -------*/
     public function obtiene_datos_evaluacíon($proy_id,$trimestre,$tipo_evaluacion){

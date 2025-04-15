@@ -510,7 +510,7 @@ function abreVentana(PDF){
 
 
       //// Seguimiento POA
-      function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
+/*      function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
 
       var ventana = window.open('Seguimiento Evaluacion POA ', 'PRINT', 'height=800,width=1000');
       ventana.document.write('<html><head><title>SEGUIMIENTO POA</title>');
@@ -593,4 +593,4 @@ function abreVentana(PDF){
 
       document.getElementById("tabla_pastel_vista").style.display = 'block';
       document.getElementById("tabla_pastel_impresion").style.display = 'none';
-    });
+    });*/
