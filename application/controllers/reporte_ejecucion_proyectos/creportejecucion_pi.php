@@ -500,7 +500,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
                     
                     <div class="col-sm-12">
                       <div>
-                        <div id="distribucion_ppto_ejecutado_inicial" style="width: 1050px; height: 650px; margin: 0 auto" align="center"></div>
+                        <div id="distribucion_ppto_ejecutado_inicial" style="width: 1250px; height: 650px; margin: 0 auto" align="center"></div>
                         <div style="display: none"><div id="distribucion_ppto_ejecutado_inicial_impresion"  style="width: 700px; height: 350px; margin: 0 auto"></div></div>
                       </div>
                     </div>

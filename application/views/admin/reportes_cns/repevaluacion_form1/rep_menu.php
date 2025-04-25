@@ -93,13 +93,9 @@
             <!-- MAIN CONTENT -->
                 <div id="content">
                     <div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
-                    <header>
-                      <div id="cabecera" style="display: none"></div>
-                    </header>
                     <div>
                         <h2>CUADRO DE EVALUACIÓN - FORM 1 (A.C.P.) INSTITUCIONAL</h2>
                           <?php echo $informacion_trimestral;?>
-                          <div align="right"><button onClick="imprimir_grafico()" >IMPRIMIR CUADRO</button><br><br></div>
                         </div>
                     </div>
                 </div>
@@ -125,9 +121,7 @@
                 document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
             }
         </script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/modules/exporting.js"></script>
+
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/session_time/jquery-idletimer.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
@@ -152,170 +146,5 @@
         <script src="<?php echo base_url(); ?>mis_js/seguimientoacp/evaluacionacp.js"></script>
         <!-- browser msie issue fix -->
         <script src="<?php echo base_url(); ?>assets/js/app.min.js"></script>
-
-        <script type="text/javascript">
-        Highcharts.chart('grafico_trimestral', {
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: '<b>EVALUACIÓN A.C.P. INSTITUCIONAL</b>'
-            },
-            subtitle: {
-                text: '<b>CUMPLIMIENTO DE ACCIONES DE CORTO PLAZO AL <?php echo $trimestre[0]['trm_descripcion'].' / '.$this->session->userData('gestion');?></b>'
-            },
-            xAxis: {
-              categories: [
-                <?php 
-                  for ($i=0; $i <$nro ; $i++){ 
-                    ?>
-                      '<?php echo $matriz_trimestral[$i][1];?> ',
-                    <?php
-                  } 
-                ?>
-              ],
-              title: {
-                  text: null
-              }
-            },
-            yAxis: {
-              min: 0,
-              title: {
-                  text: 'CUMPLIMIENTO (%)',
-                  align: 'high'
-              },
-              labels: {
-                  overflow: 'Acciones de Corto Plazo Institucional'
-              }
-            },
-            tooltip: {
-                valueSuffix: '%'
-            },
-            plotOptions: {
-              bar: {
-                  dataLabels: {
-                    enabled: true
-                  }
-              }
-            },
-
-            credits: {
-                enabled: false
-            },
-
-            plotOptions: {
-                series: {
-                    borderWidth: 0,
-                    dataLabels: {
-                        enabled: true,
-                        format: '{point.y:.1f}%'
-                    }
-                },
-                column: {
-                    borderRadius: '55%'
-                }
-            },
-
-            series: [{
-              name: 'CUMPLIMIENTO %',
-              color: '#66efdc',
-              data: [
-                <?php 
-                  for ($i=0; $i <$nro ; $i++){ 
-                    ?>
-                      <?php echo $matriz_trimestral[$i][3];?>,
-                    <?php
-                  } 
-                ?>
-              ]
-            }]
-        });
-
-        Highcharts.chart('grafico_gestion', {
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: '<b>EVALUACIÓN A.C.P. INSTITUCIONAL</b>'
-            },
-            subtitle: {
-                text: '<b>CUMPLIMIENTO DE ACCIONES DE CORTO PLAZO - GESTIÓN <?php echo $this->session->userData('gestion');?></b>'
-            },
-            xAxis: {
-              categories: [
-                <?php 
-                  for ($i=0; $i <$nro ; $i++){ 
-                    ?>
-                      '<?php echo $matriz_gestion[$i][1];?> ',
-                    <?php
-                  } 
-                ?>
-              ],
-              title: {
-                  text: null
-              }
-            },
-            yAxis: {
-              min: 0,
-              title: {
-                  text: 'CUMPLIMIENTO (%)',
-                  align: 'high'
-              },
-              labels: {
-                  overflow: 'Acciones de Corto Plazo Institucional'
-              }
-            },
-            tooltip: {
-                valueSuffix: '%'
-            },
-            plotOptions: {
-              bar: {
-                  dataLabels: {
-                    enabled: true
-                  }
-              }
-            },
-
-            credits: {
-                enabled: false
-            },
-
-            plotOptions: {
-                series: {
-                    borderWidth: 0,
-                    dataLabels: {
-                        enabled: true,
-                        format: '{point.y:.1f}%'
-                    }
-                },
-                column: {
-                    borderRadius: '55%'
-                }
-            },
-
-            series: [{
-              name: 'CUMPLIMIENTO %',
-              color: '#296860',
-              data: [
-                <?php 
-                  for ($i=0; $i <$nro ; $i++){ 
-                    ?>
-                      <?php echo $matriz_gestion[$i][3];?>,
-                    <?php
-                  } 
-                ?>
-              ]
-            }]
-        });
-        </script>
-        <script type="text/javascript">
-            // DO NOT REMOVE : GLOBAL FUNCTIONS!
-            $(document).ready(function() {
-                pageSetUp();
-                $("#menu").menu();
-                $('.ui-dialog :button').blur();
-                $('#tabs').tabs();
-            })
-        </script>
     </body>
 </html>

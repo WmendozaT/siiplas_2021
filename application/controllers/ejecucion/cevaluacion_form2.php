@@ -17,6 +17,7 @@ class Cevaluacion_form2 extends CI_Controller {
         $this->load->model('mestrategico/model_objetivoregion');
         $this->load->model('mantenimiento/model_ptto_sigep');
         $this->load->model('programacion/insumos/model_insumo');
+        $this->load->model('mantenimiento/model_ptto_sigep');
         $this->load->model('menu_modelo');
         $this->load->model('Users_model','',true);
         $this->load->library('security');
@@ -27,6 +28,7 @@ class Cevaluacion_form2 extends CI_Controller {
         $this->dist = $this->session->userData('dist');
         $this->dist_tp = $this->session->userData('dist_tp');
         $this->tmes = $this->session->userData('trimestre');
+        $this->verif_mes=$this->session->userData('mes_actual');
         $this->fun_id = $this->session->userData('fun_id');
         $this->tp_adm = $this->session->userData('tp_adm');
         $this->conf_estado = $this->session->userData('conf_estado'); /// conf estado Gestion (1: activo, 0: no activo)
@@ -118,7 +120,9 @@ class Cevaluacion_form2 extends CI_Controller {
         $dep_id = $this->security->xss_clean($post['dep_id']);
         $departamento=$this->model_proyecto->get_departamento($dep_id);
 
+        /// actualizando temporalidad
         $this->eval_oregional->create_temporalidad_oregional($dep_id); /// creando la temporalidad de los Objetivos REgioanles
+
 
           $result = array(
             'respuesta' => 'correcto',

@@ -425,9 +425,9 @@ class Model_objetivogestion extends CI_Model{
     /*---- lista Form 1 Acciones de Corto Plazo institucional ya alineados a Operaciones para su evaluacion - Gestion ----*/
     public function get_list_acp_institucional_alineados_a_form2(){
         if($this->gestion>2024){ /// 2025
-            $sql = 'select g_id,og_id,og_codigo,og_objetivo,og_producto,og_resultado,SUM(programado_total) programado_total
+            $sql = 'select g_id,og_id,og_codigo,og_objetivo,og_indicador,og_producto,og_resultado,SUM(programado_total) programado_total
                 from lista_form2_operaciones_alineados_a_form4_priorizados('.$this->gestion.')
-                group by g_id,og_id,og_codigo,og_objetivo,og_producto,og_resultado
+                group by g_id,og_id,og_codigo,og_objetivo,og_indicador,og_producto,og_resultado
                 order by og_codigo asc';
         }
         else{

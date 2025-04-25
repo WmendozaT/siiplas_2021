@@ -55,7 +55,7 @@ class Seguimientopoa extends CI_Controller{
       return $tabla;
     }
 
-    /// Cabecera Reporte GRAFICOS 2025
+    /// Cabecera Reporte GRAFICOS 2025 unidad Responsable
     public function cabecera_grafico($componente){
       $trimestre=$this->model_evaluacion->trimestre();
       $tabla='';
@@ -78,42 +78,27 @@ class Seguimientopoa extends CI_Controller{
       return $tabla;
     }
 
-/*    public function cabecera($componente){
+
+    /// Cabecera Reporte GRAFICOS 2025 por unidad Programatica
+    public function cabecera_grafico_programa($proyecto){
+      $trimestre=$this->model_evaluacion->trimestre();
       $tabla='';
       $tabla.=' 
-        <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;" align="center">
-          <tr>
-            <td colspan="2" style="width:100%; height: 1.2%; font-size: 14pt;"><b>'.$this->session->userdata('entidad').'</b></td>
-          </tr>
-          <tr style="font-size: 8pt;">
-            <td style="width:10%; height: 1.2%;"><b>DIR. ADM.</b></td>
-            <td style="width:90%;">: '.$proyecto[0]['dep_cod'].' '.strtoupper($proyecto[0]['dep_departamento']).'</td>
-          </tr>
-          <tr style="font-size: 8pt;">
-            <td style="width:10%; height: 1.2%;"><b>UNI. EJEC.</b></td>
-            <td style="width:90%;">: '.$proyecto[0]['dist_cod'].' '.strtoupper($proyecto[0]['dist_distrital']).'</td>
-          </tr>
-          <tr style="font-size: 8pt;">';
-            if($proyecto[0]['tp_id']==1){ /// Proyecto de Inversion
-                $tabla.='
-                <td style="width:10%;"><b>PROY. INV.</b></td>
-                <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['proy_sisin'].' 000 - '.$proyecto[0]['proy_nombre'].'</td>';
-            }
-            else{ /// Gasto Corriente
-                $tabla.='
-                <td style="width:10%;"><b>PROGRAMA</b></td>
-                <td style="width:90%;">: '.$proyecto[0]['aper_programa'].' '.$proyecto[0]['aper_proyecto'].' '.$proyecto[0]['aper_actividad'].' - '.strtoupper($proyecto[0]['act_descripcion']).' '.$proyecto[0]['abrev'].'</td>';
-            }
-          $tabla.='
-          </tr>
-          <tr style="font-size: 8pt;">
-              <td style="height: 1.2%; width:10%;"><b>UNI. RESP.</b></td>
-              <td style="width:90%;">: '.strtoupper($componente[0]['serv_cod']).' '.strtoupper($componente[0]['tipo_subactividad']).' '.strtoupper($componente[0]['serv_descripcion']).'</td>
-          </tr>
-        </table>';
+      <table style="width:100%;">
+        <tr>
+          <td>
+            <img src="'.base_url('assets/ifinal/cnslogo.png').'" style="width:70px;height:80px;" >
+          </td>
+          <td>
+          <b>PROGRAMA : </b>'.ucwords($proyecto[0]['aper_programa'].''.$proyecto[0]['aper_proyecto'].''.$proyecto[0]['aper_actividad'].' - '.$proyecto[0]['tipo'].' '.$proyecto[0]['proy_nombre'].' - '.$proyecto[0]['abrev']).'
+          <br>
+          <b>TRIMESTRE : </b>'.ucwords($trimestre[0]['trm_descripcion']).' / '.$this->gestion.'
+          </td>
+        </tr>
+      </table>';
+          
       return $tabla;
-    }*/
-
+    }
 
     /// Cabecera Reporte PDF de Seguimiento POA Mensual 2025
     public function cabecera($componente,$proyecto){
@@ -1236,6 +1221,9 @@ class Seguimientopoa extends CI_Controller{
         $tr[6][$i]=(100-$tr[5][$i]);
         $proceso=$this->obtiene_datos_evaluacíon($com_id,$i,2);
         $tr[7][$i]=$proceso[2]; /// En Proceso
+        if($tr[2][$i]!=0){
+          $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %
+        }
       }
 
     return $tr;

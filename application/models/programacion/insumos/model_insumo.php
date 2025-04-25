@@ -145,7 +145,7 @@ class Model_insumo extends CI_Model{
     }
 
     ///================= TEMPORALIDAD INSUMO
-    // ------ lista Temporalidad Insumo por UNIDAD / PROYECTO
+    // ------ lista Temporalidad Insumo (ppto actual) por UNIDAD / PROYECTO
     public function list_temporalidad_programado_unidad($aper_id){
         $sql = '
             select *
@@ -156,7 +156,7 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    // ------ Temporalidad formulario 5  DISTRITAL
+    // ------ Temporalidad formulario 5 (ppto actual) DISTRITAL
     public function temporalidad_programado_form5_distrital($dist_id){
         $sql = '
             select pi.dist_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
@@ -170,7 +170,7 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    // ------ Temporalidad formulario 5  REGIONAL
+    // ------ Temporalidad formulario 5 (ppto actual) REGIONAL
     public function temporalidad_programado_form5_regional($dep_id){
         $sql = '
             select pi.dep_id,SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
@@ -184,7 +184,7 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    // ------ Temporalidad formulario 5  REGIONAL INSTITUCIONAL
+    // ------ Temporalidad formulario 5 (ppto actual) REGIONAL INSTITUCIONAL
     public function temporalidad_programado_form5_institucional(){
         $sql = '
             select SUM(temp.programado_total) programado_total,SUM(mes1) mes1,SUM(mes2) mes2,SUM(mes3) mes3,SUM(mes4) mes4,SUM(mes5) mes5,SUM(mes6) mes6,SUM(mes7) mes7,SUM(mes8) mes8,SUM(mes9) mes9,SUM(mes10) mes10,SUM(mes11) mes11,SUM(mes12) mes12
@@ -255,7 +255,7 @@ class Model_insumo extends CI_Model{
     }
 
 
-    // ------ Techo presupuestario inicial Imversion X REGIONAL
+    // ------ Techo presupuestario (ppto inicial) Inversion X REGIONAL
     public function techo_ppto_inicial_inversion_regional($or_id){
         $sql = '
         select pr.or_id,SUM(temp.temp_fis) techo_ppto_inicial
@@ -270,22 +270,26 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-    //// Anterior 2024 Borrar
-/*    public function techo_ppto_inicial_inversion_regional($dep_id){
+    // ------ Techo presupuestario (ppto actual) Inversion X REGIONAL
+    public function techo_ppto_actual_inversion_regional($or_id){
         $sql = '
-            select pi.dep_id,SUM(temp.temp_fis) techo_ppto_inicial
-            from temporalidad_inicial_total_insumo temp
-            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
-            where pi.dep_id='.$dep_id.'
-            group by pi.dep_id
-            order by pi.dep_id asc';
+        select pr.or_id,SUM(temp.ipm_fis) techo_ppto_actual
+        from _productos pr
+        Inner Join _componentes as c On c.com_id=pr.com_id
+        Inner Join _insumoproducto as insp On insp.prod_id=pr.prod_id
+        Inner Join temporalidad_prog_insumo as temp On temp.ins_id=insp.ins_id
+        Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as proy On proy.pfec_id=c.pfec_id
+        where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\'
+        group by pr.or_id';
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
 
-    // ------ presupuestario inicial Inversion X REGIONAL al Trimestre
+
+
+    // ------ Ppto (inicial) Inversion X REGIONAL al Trimestre
     public function ppto_inicial_inversion_regional_trimestre($or_id,$i){
         $sql = '
         select pr.or_id,SUM(temp.temp_fis) ppto_inicial_trimestre
@@ -300,19 +304,21 @@ class Model_insumo extends CI_Model{
         return $query->result_array();
     }
 
-/*    //// a borrar 2024
-        public function ppto_inicial_inversion_regional_trimestre($dep_id,$i){
+    // ------ Ppto (Actual) Inversion X REGIONAL al Trimestre
+    public function ppto_actual_inversion_regional_trimestre($or_id,$i){
         $sql = '
-            select pi.dep_id,SUM(temp.temp_fis) ppto_inicial_trimestre
-            from temporalidad_inicial_total_insumo temp
-            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as pi On pi.aper_id=temp.aper_id
-            where pi.dep_id='.$dep_id.' and (temp.mes_id>\'0\' and temp.mes_id<='.($i*3).')
-            group by pi.dep_id
-            order by pi.dep_id asc';
+        select pr.or_id,SUM(temp.ipm_fis) ppto_actual_trimestre
+        from _productos pr
+        Inner Join _componentes as c On c.com_id=pr.com_id
+        Inner Join _insumoproducto as insp On insp.prod_id=pr.prod_id
+        Inner Join temporalidad_prog_insumo as temp On temp.ins_id=insp.ins_id
+        Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as proy On proy.pfec_id=c.pfec_id
+        where pr.or_id='.$or_id.' and (temp.mes_id>\'0\' and temp.mes_id<='.($i*3).') and pr.estado!=\'3\' and pr.prod_priori=\'1\'
+        group by pr.or_id';
 
         $query = $this->db->query($sql);
         return $query->result_array();
-    }*/
+    }
 
 
     ///================================================
@@ -371,8 +377,7 @@ class Model_insumo extends CI_Model{
 
     // lista de requerimientos alineados a la operacion y a la subactividad
     function list_requerimientos_operacion_procesos($com_id){
-        if($this->gestion>2021){
-            $sql = 'select 
+        $sql = 'select 
                 c.com_id,
                 c.pfec_id,
                 i.form4_cod as prod_cod,
@@ -395,17 +400,6 @@ class Model_insumo extends CI_Model{
                 Inner Join partidas as par On par.par_id=i.par_id
                 where c.com_id='.$com_id.' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.' 
                 order by i.form4_cod,par.par_codigo,i.ins_id asc';
-        }
-        else{
-            $sql = 'select *
-                from _componentes c
-                Inner Join _productos as p On c.com_id=p.com_id
-                Inner Join _insumoproducto as ip On ip.prod_id=p.prod_id
-                Inner Join insumos as i On i.ins_id=ip.ins_id
-                Inner Join partidas as par On par.par_id=i.par_id
-                where c.com_id='.$com_id.' and p.estado!=\'3\' and i.ins_estado!=\'3\' and i.aper_id!=\'0\' and i.ins_gestion='.$this->gestion.'
-                order by p.prod_cod,par.par_codigo,i.ins_id asc';
-        }
 
         $query = $this->db->query($sql);
         return $query->result_array();

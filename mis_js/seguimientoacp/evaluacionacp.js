@@ -50,39 +50,96 @@ function abreVentana_eficiencia(PDF){
   }
 
 
+/// Boton de Impresion Cuadros de Evaluacion Institucional 2025
+document.getElementById('btnImprimir_grafico_acp').addEventListener('click', function() {
+  const plantillaPagina = (contenido, numeroPagina) => `
+    <div class="pagina">
+      ${contenido}
+      <footer class="pie-pagina">
+        <div class="marcas-agua">
+          <span class="pagina-numero">Página ${numeroPagina} de 1</span>
+          <span class="fecha-generacion">${new Date().toLocaleDateString('es-ES', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}</span>
+        </div>
+      </footer>
+    </div>
+  `;
 
+  const ventanaImpresa = window.open('', '_blank');
+  ventanaImpresa.document.write(`
+    <html>
+      <head>
+        <title>DEPARTAMENTO NACIONAL DE PLANIFICACION / SIIPLAS</title>
+        <style>
+          @page {
+            size: A4 portrait;
+            margin: 1cm 0.8cm;
+            @top { content: element(cabecera-pagina); }
+            @bottom { content: element(pie-pagina); }
+          }
 
-  //// imprimir ACP (Institucional)
-  function imprimir_grafico() {
-    var grafico = document.querySelector("#grafico_gestion");
-    document.getElementById("cabecera").style.display = 'block';
-    var cabecera = document.querySelector("#cabecera");
-    var calificacion = document.querySelector("#calificacion");
-    document.getElementById("tabla_impresion_detalle").style.display = 'block';
-    var tabla = document.querySelector("#tabla_impresion_detalle");
-    imprimirevaluacionform1(grafico,cabecera,calificacion,tabla);
-    document.getElementById("cabecera").style.display = 'none';
-    document.getElementById("tabla_impresion_detalle").style.display = 'none';
-  }
+          .pagina {
+            page-break-after: always;
+            position: relative;
+            height: calc(297mm - 5cm);
+          }
 
-  function imprimirevaluacionform1(grafico,cabecera,calificacion,tabla) {
-    var ventana = window.open('Evaluacion FORMULARIO N° 1 ', 'PRINT', 'height=800,width=1000');
-    ventana.document.write('<html><head><title>EVALUACION ACCIONES DE CORTO PLAZO INSTITUCIONAL - FORM. N° 1</title>');
-    ventana.document.write('</head><body>');
-    //ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
-    //ventana.document.write(cabecera.innerHTML);
-    ventana.document.write('<hr>');
-    ventana.document.write(grafico.innerHTML);
-    ventana.document.write('<hr>');
-    ventana.document.write(calificacion.innerHTML);
-    ventana.document.write('<hr>');
-    ventana.document.write(tabla.innerHTML);
-    ventana.document.write('</body></html>');
-    ventana.document.close();
-    ventana.focus();
-    ventana.onload = function() {
-      ventana.print();
-      ventana.close();
-    };
-    return true;
-  }
+          .pie-pagina {
+            position: running(pie-pagina);
+            height: 2cm;
+          }
+
+          .membrete {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 10px;
+          }
+
+          .linea-separadora {
+            border: 1px solid #11574e;
+            margin: 8px 0;
+          }
+
+          .marcas-agua {
+            display: flex;
+            justify-content: space-between;
+            font-size: 8pt;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 3px;
+          }
+
+          .grafico-impresion {
+            width: 100%!important;
+            height: 380px!important;
+            margin: 15px 0;
+            page-break-inside: avoid;
+          }
+          }
+        </style>
+      </head>
+      <body>
+        ${plantillaPagina(`
+          ${document.getElementById('calificacion_trimestre').outerHTML}
+          ${document.getElementById('cumplimiento_trimestral').outerHTML}
+          ${document.getElementById('calificacion_gestion').outerHTML}
+          ${document.getElementById('cumplimiento_gestion').outerHTML}
+        `, 1)}
+      </body>
+    </html>
+  `);
+
+  ventanaImpresa.document.close();
+  setTimeout(() => {
+    ventanaImpresa.print();
+    ventanaImpresa.close();
+  }, 1000);
+});
+

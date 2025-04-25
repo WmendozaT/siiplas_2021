@@ -28,46 +28,46 @@ class Eval_acp extends CI_Controller{
     }
 
   //// Cabecera Reporte Grafico Form 1
-  function cabecera_reporte_grafico(){
-    $tabla='';
+  // function cabecera_reporte_grafico(){
+  //   $tabla='';
 
-    $tabla.='
-      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-        <tr style="border: solid 0px;">              
-            <td style="width:70%;height: 2%">
-                <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-                    <tr style="font-size: 15px;font-family: Arial;">
-                        <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
-                    </tr>
-                    <tr>
-                        <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
-                    </tr>
-                </table>
-            </td>
-            <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
-              '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </td>
-        </tr>
-      </table>
-      <hr>
-      <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
-          <tr style="border: solid 0px black; text-align: center;">
-              <td style="width:10%; text-align:center;">
-              </td>
-              <td style="width:80%; height: 5%">
-                <table align="center" border="0" style="width:100%;">
-                  <tr style="font-size: 23px;font-family: Arial;">
-                    <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
-                  </tr>
-                </table>
-              </td>
-              <td style="width:10%; text-align:center;">
-              </td>
-          </tr>
-      </table>';
+  //   $tabla.='
+  //     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+  //       <tr style="border: solid 0px;">              
+  //           <td style="width:70%;height: 2%">
+  //               <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+  //                   <tr style="font-size: 15px;font-family: Arial;">
+  //                       <td style="width:45%;height: 20%;">&nbsp;&nbsp;<b>'.$this->session->userData('entidad').'</b></td>
+  //                   </tr>
+  //                   <tr>
+  //                       <td style="width:50%;height: 20%;font-size: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEPARTAMENTO NACIONAL DE PLANIFICACIÓN</td>
+  //                   </tr>
+  //               </table>
+  //           </td>
+  //           <td style="width:30%; height: 2%; font-size: 8px;text-align:right;">
+  //             '.date("d").' de '.$this->mes[ltrim(date("m"), "0")]. " de " . date("Y").'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  //           </td>
+  //       </tr>
+  //     </table>
+  //     <hr>
+  //     <table border="0" cellpadding="0" cellspacing="0" class="tabla" style="width:100%;">
+  //         <tr style="border: solid 0px black; text-align: center;">
+  //             <td style="width:10%; text-align:center;">
+  //             </td>
+  //             <td style="width:80%; height: 5%">
+  //               <table align="center" border="0" style="width:100%;">
+  //                 <tr style="font-size: 23px;font-family: Arial;">
+  //                   <td style="height: 32%; text-align:center"><b>PLAN OPERATIVO ANUAL - GESTI&Oacute;N '.$this->gestion.'</b></td>
+  //                 </tr>
+  //               </table>
+  //             </td>
+  //             <td style="width:10%; text-align:center;">
+  //             </td>
+  //         </tr>
+  //     </table>';
 
-    return $tabla;
-  }
+  //   return $tabla;
+  // }
 
 
     /*------- TITULO FORM 1 --------*/

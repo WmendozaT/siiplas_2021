@@ -1229,7 +1229,7 @@ class Cseguimiento extends CI_Controller {
         
           /// pastel
           'tabla_pastel_todo' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$this->tmes,4,1), /// Tabla que muestra el acumulado por trimestres Pastel todo Vista
-          'tabla_pastel_todo_impresion' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$this->tmes,4,0), /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
+          //'tabla_pastel_todo_impresion' => $this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_regresion,$this->tmes,4,0), /// Tabla que muestra el acumulado por trimestres Pastel todo Impresion
         
           /// regresion gestion
           'matriz_gestion' => $matriz_gestion,

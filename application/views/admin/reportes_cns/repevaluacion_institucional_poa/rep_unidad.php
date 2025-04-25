@@ -17,20 +17,6 @@
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
         <!--estiloh-->
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
-        
-        <style>
-            table {
-                width: 85%; /* Ajusta el ancho de la tabla */
-            }
-            th, td {
-                border: 2px solid #000;
-                padding: 2px;
-                border-color: #1c7368;
-            }
-            #mdialTamanio{
-              width: 45% !important;
-            }
-        </style>
     </head>
     <body class="">
         <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -187,9 +173,6 @@
                 document.write('<script src="<?php echo base_url();?>/assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
             }
         </script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts.js"></script>
-        <script src="<?php echo base_url(); ?>assets/highcharts/js/highcharts-3d.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script> 
         <!-- IMPORTANT: APP CONFIG -->
         <script src="<?php echo base_url(); ?>assets/js/app.config.js"></script>
         <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->

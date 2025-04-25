@@ -56,7 +56,7 @@ class Crep_evalunidad extends CI_Controller {
 
     // Modulo Evaluacion POA - Gasto Corriente
     public function evaluacion_unidad_gcorriente($proy_id){
-      $data['proyecto'] = $this->model_proyecto->get_id_proyecto($proy_id);
+      $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
       if(count($data['proyecto'])!=0){
         $data['menu']=$this->menu(4); //// genera menu  
         $data['tmes']=$this->model_evaluacion->trimestre(); /// Datos del Trimestre
@@ -64,26 +64,20 @@ class Crep_evalunidad extends CI_Controller {
         $data['tit_menu']='EVALUACI&oacute;N POA';
         $data['tit']='<li>Evaluaci&oacute;n POA</li><li>formulario N° 4</li>';
         
-        $data['proyecto'] = $this->model_proyecto->get_datos_proyecto_unidad($proy_id);
-        
         /*------ titulo ------*/
         $data['titulo']='';
         $data['titulo'].='
           <h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROGRAMA : </small><b>'.$data['proyecto'][0]['aper_programa'].''.$data['proyecto'][0]['aper_proyecto'].''.$data['proyecto'][0]['aper_actividad'].' - '.$data['proyecto'][0]['tipo'].' '.$data['proyecto'][0]['act_descripcion'].' - '.$data['proyecto'][0]['abrev'].'</b></h1>
-          <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>';
-
-        if($data['proyecto'][0]['tp_id']==1){
-          $data['titulo'].='
-          <h1 title='.$data['proyecto'][0]['aper_id'].'><small>PROYECTO : </small><b>'.$data['proyecto'][0]['aper_programa'].' '.$data['proyecto'][0]['proy_sisin'].' 000 - '.$data['proyecto'][0]['proy_nombre'].'</b></h1>
-          <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>';
-        }
-        $data['titulo'].='<input name="base" type="hidden" value="'.base_url().'">';
+          <h2><b>EVALUACI&Oacute;N POA AL '.$data['tmes'][0]['trm_descripcion'].'</b></h2>
+          <input name="base" type="hidden" value="'.base_url().'">';
         /*-------------------*/
         
 
         /*--- Regresion lineal trimestral ---*/
         $matriz=$this->tabla_regresion_lineal_unidad($proy_id); /// Tabla para el grafico al trimestre
+        $matriz_gestion=$this->tabla_regresion_lineal_unidad_total($proy_id); /// Matriz para el grafico Total Gestion
 
+        //// ----------------------------------------------------------------
         $titulo = [];
         for ($i = 0; $i <= $this->tmes; $i++) {$titulo[] = $matriz[1][$i];}
         $programacion = [];
@@ -91,27 +85,31 @@ class Crep_evalunidad extends CI_Controller {
         $ejecucion = [];
         for ($i = 1; $i <= $this->tmes; $i++) { $ejecucion[] = (int)$matriz[3][$i];}
 
-
+        /// Tabla Seguimiento acumulado
         $tabla_regresion=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz,$this->tmes,2,0); /// Tabla que muestra el acumulado al trimestres Regresion
-        
-        /*--- grafico Pastel trimestral ---*/
-        //$data['tabla_pastel_todo']=$this->tabla_acumulada_evaluacion_unidad($data['tabla'],4,1); /// Tabla que muestra el acumulado por trimestres Pastel todo
+        $tabla_pastel=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz,$this->tmes,4,1); /// Tabla Torta
+        $tabla_regresion_gestion=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz_gestion,$this->tmes,3,0); /// Tabla que muestra el cumplimiento Anual
 
-        /*--- Regresion lineal Gestion */
-        //$data['tabla_gestion']=$this->tabla_regresion_lineal_unidad_total($proy_id); /// Matriz para el grafico Total Gestion
-        //$data['tabla_regresion_total']=$this->tabla_acumulada_evaluacion_unidad($data['tabla_gestion'],3,1); /// Tabla que muestra el acumulado Gestion Vista
 
         $data['calificacion']='<div id="calificacion">'.$this->seguimientopoa->calificacion_eficacia($matriz[5][$this->tmes],0).'</div><div id="efi"></div>'; /// calificacion
 
         /// SERVICIOS
-        $data['mis_unidades']=$this->mis_servicios(1,$proy_id); /// Lista de Unidades Responsables
-        $data['matriz']=$this->matriz_eficacia_unidad($proy_id); /// matriz para parametros de cumplimiento
-        $data['parametro_eficacia']=$this->parametros_eficacia_unidad($data['matriz'],$proy_id,1); /// Parametro de Eficacia
+        $mis_unidades=$this->mis_servicios(1,$proy_id); /// Lista de Unidades Responsables
+        $matriz_parametros=$this->matriz_eficacia_unidad($proy_id); /// matriz para parametros de cumplimiento
+        $parametro_eficacia=$this->parametros_eficacia_unidad($matriz_parametros); /// cuadro Parametro de Eficacia
 
 
       $data['s1']=' 
       '.$this->grafico_cumplimiento_poa($titulo,$programacion,$ejecucion,0).'
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+      '.$this->grafico_cumplimiento_poa_pastel($matriz).'
+      '.$this->grafico_cumplimiento_poa_anual($matriz_gestion).'
+      '.$this->grafico_cumplimiento_poa_pastel_parametros($matriz_parametros).'
+
+        <div id="cabecera" style="display: none">
+          '.$this->seguimientopoa->cabecera_grafico_programa($data['proyecto']).'
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
               <div class="row" style="align:center">
                 <div id="regresion" style="width: 650px; height: 420px; margin: 0 auto"></div>
@@ -119,20 +117,37 @@ class Crep_evalunidad extends CI_Controller {
               </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-              <div class="well">
-                <div id="regresion2" style="width: 650px; height: 420px; margin: 0 auto"></div>
-                <div id="tabla_regresion_impresion">'.$tabla_regresion.'</div>
+              <div class="row" style="align:center">
+                <div id="pastel_todos" style="width: 600px; height: 420px; margin: 0 auto"></div>
+                <div id="tabla_pastel_vista">'.$tabla_pastel.'</div>
               </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-              <div class="well">
-                <div id="regresion3" style="width: 650px; height: 420px; margin: 0 auto"></div>
-                <div id="tabla_regresion_impresion">'.$tabla_regresion.'</div>
+              <div class="row" style="align:center">
+                <div id="regresion_gestion" style="width: 650px; height: 420px; margin: 0 auto"></div>
+                <div id="tabla_regresion_total_impresion">'.$tabla_regresion_gestion.'</div>
               </div>
             </div>
-      </div>';
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
+          <div class="row" style="align:center">
+            <hr><center><button id="btnImprimir_evaluacion_trimestre" class="btn btn-default"><img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/> <b>IMPRIMIR / GUARDAR</b></button></center><hr>
+          </div>
+        </div>';
 
-        $data['s2']=$data['mis_unidades'].'<br>'.$data['parametro_eficacia'];
+        $data['s2']='
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+          <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+            <div class="row" style="align:center">
+            '.$parametro_eficacia.'
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+            <div class="row" style="align:center">
+            '.$mis_unidades.'
+            </div>
+          </div>
+        </div>';
 
         $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_unidad', $data);
       }
@@ -142,8 +157,132 @@ class Crep_evalunidad extends CI_Controller {
     }
 
 
-    /// grafico Pastel Cumplimiento POA
-    public function grafico_cumplimiento_poa_pastel($titulo,$prog,$ejec,$tp){
+ /// grafico PARAMETROS DE CUMPLIMIENTO PASTEL
+    public function grafico_cumplimiento_poa_pastel_parametros($matriz){
+      $tabla='      
+      <script  src="'.base_url().'assets/js/libs/jquery-2.0.2.min.js"></script>
+      <script  src="'.base_url().'assets/js/libs/jquery-ui-1.10.3.min.js"></script>
+      <script  src="'.base_url().'assets/highcharts/js/highcharts.js"></script>
+      <script>
+      $(function() {
+      Highcharts.chart("parametro_efi", {
+        chart: {
+          type: "pie",
+          backgroundColor: "#f0f0f0", // Fondo plomo claro
+          spacing: [30, 10, 15, 10], // Espaciado superior aumentado
+          options3d: { enabled: true } // Deshabilitar 3D
+        },
+        title: {
+            text: "PARAMETRO DE EFICACIA",
+            align: "center",
+            verticalAlign: "top",
+            margin: 10,
+            style: {
+              color: "#333333",
+              fontSize: "24px",
+              fontWeight: "600",
+              fontFamily: "Arial, sans-serif",
+              textTransform: "uppercase"
+            },
+            y: 10 // Posición vertical ajustada
+        },
+        tooltip: {
+          useHTML: true,
+          backgroundColor: "#ffffff",
+          borderWidth: 0,
+          borderRadius: 8,
+          shadow: {
+            color: "rgba(0,0,0,0.1)",
+            width: 5,
+            offsetX: 2,
+            offsetY: 2
+          },
+        },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: "pointer",
+            innerSize: "39%", // Efecto donut moderno
+            dataLabels: {
+              enabled: true,
+              format: "<b>{point.name}</b>",
+              style: {
+                color: "#2d3748",
+                fontSize: "12px",
+                fontWeight: "500",
+                textOutline: "none"
+              },
+              distance: 20,
+              connectorWidth: 1,
+              connectorColor: "#cbd5e0"
+            },
+            borderWidth: 2,
+            borderColor: "#ffffff" // Borde blanco entre secciones
+          }
+        },
+        series: [{
+          type: "pie",
+          name: "Unidades",
+          data: [
+              {
+                name: "INSATISFACTORIO : '.$matriz[1][3].' %",
+                y: '.$matriz[1][3].',
+                color: "#ef4444", // Rojo mejorado
+                className: "slice-emergencia"
+              },
+
+              {
+                name: "REGULAR : '.$matriz[2][3].' %",
+                y: '.$matriz[2][3].',
+                color: "#f59e0b",
+              },
+
+              {
+                name: "BUENO : '.$matriz[3][3].' %",
+                y: '.$matriz[3][3].',
+                color: "#10b981",
+              },
+
+              {
+                name: "OPTIMO : '.$matriz[4][3].' %",
+                y: '.$matriz[4][3].',
+                color: "#4caf50",
+                sliced: true,
+                selected: true
+              }
+          ]
+        }],
+            responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 600
+              },
+              chartOptions: {
+                title: {
+                  style: { fontSize: "18px" },
+                  margin: 20,
+                  y: 10
+                },
+                plotOptions: {
+                  pie: {
+                    dataLabels: {
+                      distance: 15,
+                      style: { fontSize: "10px" }
+                    }
+                  }
+                }
+              }
+            }]
+          }
+      });
+      });
+      </script>';
+
+      return $tabla;
+    }
+
+/// grafico Regresion ANUAL Cumplimiento POA
+    public function grafico_cumplimiento_poa_anual($matriz_gestion){
       $tabla='      
       <script  src="'.base_url().'assets/js/libs/jquery-2.0.2.min.js"></script>
       <script  src="'.base_url().'assets/js/libs/jquery-ui-1.10.3.min.js"></script>
@@ -151,64 +290,7 @@ class Crep_evalunidad extends CI_Controller {
       <script>
       $(function() {
 
-      Highcharts.chart("pastel_todos", {
-        chart: {
-          type: "pie",
-          options3d: {
-              enabled: true,
-              alpha: 45,
-              beta: 0
-          }
-        },
-        title: {
-            text: "HOLA MUNDO"
-        },
-        tooltip: {
-            pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>"
-        },
-        plotOptions: {
-          pie: {
-              allowPointSelect: true,
-              cursor: "pointer",
-              depth: 35,
-              dataLabels: {
-                  enabled: true,
-                  format: "{point.name}"
-              }
-          }
-        },
-        series: [{
-          type: "pie",
-          name: "Actividades",
-          data: [
-              {
-                name: "NO CUMPLIDO : "+Math.round(100-(matriz[5][trimestre]+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)))+" %",
-                y: matriz[6][trimestre],
-                color: "#f98178",
-              },
-
-              {
-                name: "CUMPLIMIENTO PARCIAL : "+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)+" %",
-                y: Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100),
-                color: "#f5eea3",
-              },
-
-              {
-                name: "CUMPLIDO : "+matriz[5][trimestre]+" %",
-                y: matriz[5][trimestre],
-                color: "#2CC8DC",
-                sliced: true,
-                selected: true
-              }
-          ]
-        }]
-      });
-
-
-
-
-
-      Highcharts.chart("regresion", {
+      Highcharts.chart("regresion_gestion", {
           chart: {
               type: "line",
                backgroundColor: "#f0f0f0",
@@ -218,7 +300,7 @@ class Crep_evalunidad extends CI_Controller {
             }
           },
           title: {
-              text: "CUMPLIMIENTO DE ACTIVIDADES AL TRIMESTRE",
+              text: "CUMPLIMIENTO AL POA - GESTION '.$this->gestion.'",
               align: "center",
             style: {
               color: "#1e293b",
@@ -228,9 +310,9 @@ class Crep_evalunidad extends CI_Controller {
             margin: 30
           },
           xAxis: {
-              categories: '.json_encode($titulo).',
+              categories: ["","I TRIMESTRE","II TRIMESTRE","III TRIMESTRE","IV TRIMESTRE"],
               title: {
-              text: "Periodos de Evaluación",
+              text: "(%) CUMPLIMIENTO DE ACTIVIDADES TRIMESTRAL RESPECTO A LA GESTION",
               style: {
                 color: "#475569",
                 fontSize: "12px"
@@ -247,25 +329,26 @@ class Crep_evalunidad extends CI_Controller {
           },
           yAxis: {
               title: {
-              text: "Nro de Actividades",
+              text: "(%) de cumplimiento a alcanzar",
               style: {
                 color: "#475569",
                 fontSize: "12px"
               }
             },
             labels: {
+              format: "{value}%",  // Agregar símbolo %
               style: {
                 color: "#64748b"
               }
             },
-            gridLineColor: "#f8fafc"
+            gridLineColor: "#f1f5f9"
           },
           tooltip: {
             useHTML: true,
             backgroundColor: "#ffffff",
             borderWidth: 0,
             shadow: {
-              color: "rgba(0,0,0,0.08)",
+              color: "rgba(0,0,0,0.1)",
               width: 3,
               offsetX: 2,
               offsetY: 2
@@ -275,37 +358,38 @@ class Crep_evalunidad extends CI_Controller {
             line: {
               dataLabels: {
                 enabled: true,
+                format: "{y}%",  // Agregar símbolo %
                 style: {
                   color: "#1e293b",
                   fontSize: "12px",
                   textOutline: "none"
                 },
-                formatter: function() {
-                  return this.y + (this.y > 0 ? " act." : "");
-                }
+                align: "center",
+                y: -10  // Posición vertical
               },
               marker: {
                 symbol: "circle",
                 radius: 6,
                 fillColor: "#ffffff",
-                lineWidth: 2
+                lineWidth: 2,
+                lineColor: null  // Hereda color de serie
               },
               animation: {
-                duration: 800
+                duration: 1000
               }
             }
           },
           series: [{
-              name: "NRO. ACT. PROGRAMADO AL TRIMESTRE",
-              data: [0,'.json_encode($prog).'],
+              name: "(%) PROGRAMACIÓN AL TRIMESTRE",
+              data: [0,'.$matriz_gestion[4][1].','.$matriz_gestion[4][2].','.$matriz_gestion[4][3].','.$matriz_gestion[4][4].'],
                color: "#3b82f6",
             marker: {
               lineColor: "#3b82f6"
             },
             lineWidth: 3
           }, {
-              name: "NRO. ACT. CUMPLIDAS AL TRIMESTRE",
-              data: [0,'.json_encode($ejec).'],
+              name: "(%) CUMPLIMIENTO AL TRIMESTRE",
+              data: [0,'.$matriz_gestion[5][1].','.$matriz_gestion[5][2].','.$matriz_gestion[5][3].','.$matriz_gestion[5][4].'],
                color: "#10b981",
             marker: {
               lineColor: "#10b981"
@@ -341,6 +425,125 @@ class Crep_evalunidad extends CI_Controller {
           }
       });
 
+      });
+      </script>';
+
+      return $tabla;
+    }
+
+
+    /// grafico Cumplimiento POA PASTEL
+    public function grafico_cumplimiento_poa_pastel($matriz){
+      $tabla='      
+      <script  src="'.base_url().'assets/js/libs/jquery-2.0.2.min.js"></script>
+      <script  src="'.base_url().'assets/js/libs/jquery-ui-1.10.3.min.js"></script>
+      <script  src="'.base_url().'assets/highcharts/js/highcharts.js"></script>
+      <script>
+      $(function() {
+      Highcharts.chart("pastel_todos", {
+        chart: {
+          type: "pie",
+          backgroundColor: "#f0f0f0", // Fondo plomo claro
+          spacing: [30, 10, 15, 10], // Espaciado superior aumentado
+          options3d: { enabled: true } // Deshabilitar 3D
+        },
+        title: {
+            text: "DETALLE CUMPLIMIENTO POA (Trimestre)",
+            align: "center",
+            verticalAlign: "top",
+            margin: 10,
+            style: {
+              color: "#333333",
+              fontSize: "24px",
+              fontWeight: "600",
+              fontFamily: "Arial, sans-serif",
+              textTransform: "uppercase"
+            },
+            y: 10 // Posición vertical ajustada
+        },
+        tooltip: {
+          useHTML: true,
+          backgroundColor: "#ffffff",
+          borderWidth: 0,
+          borderRadius: 8,
+          shadow: {
+            color: "rgba(0,0,0,0.1)",
+            width: 5,
+            offsetX: 2,
+            offsetY: 2
+          },
+        },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: "pointer",
+            innerSize: "39%", // Efecto donut moderno
+            dataLabels: {
+              enabled: true,
+              format: "<b>{point.name}</b>",
+              style: {
+                color: "#2d3748",
+                fontSize: "12px",
+                fontWeight: "500",
+                textOutline: "none"
+              },
+              distance: 20,
+              connectorWidth: 1,
+              connectorColor: "#cbd5e0"
+            },
+            borderWidth: 2,
+            borderColor: "#ffffff" // Borde blanco entre secciones
+          }
+        },
+        series: [{
+          type: "pie",
+          name: "Actividades",
+          data: [
+              {
+                name: "NO CUMPLIDO : '.(100-$matriz[5][$this->tmes]-$matriz[8][$this->tmes]).' %",
+                y: '.(100-$matriz[5][$this->tmes]-$matriz[8][$this->tmes]).',
+                color: "#ef4444", // Rojo mejorado
+                className: "slice-emergencia"
+              },
+
+              {
+                name: "EN PROCESO : '.$matriz[8][$this->tmes].' %",
+                y: '.$matriz[8][$this->tmes].',
+                color: "#f59e0b",
+              },
+
+              {
+                name: "CUMPLIDO : '.$matriz[5][$this->tmes].' %",
+                y: '.$matriz[5][$this->tmes].',
+                color: "#10b981",
+                sliced: true,
+                selected: true
+              }
+          ]
+        }],
+            responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 600
+              },
+              chartOptions: {
+                title: {
+                  style: { fontSize: "18px" },
+                  margin: 20,
+                  y: 10
+                },
+                plotOptions: {
+                  pie: {
+                    dataLabels: {
+                      distance: 15,
+                      style: { fontSize: "10px" }
+                    }
+                  }
+                }
+              }
+            }]
+          }
+      });
       });
       </script>';
 
@@ -751,19 +954,10 @@ class Crep_evalunidad extends CI_Controller {
       foreach($componentes as $rowc){
         $eval=$this->tabla_regresion_lineal_servicio($rowc['com_id']);
         $eficacia=$eval[5][$this->tmes];
-        if($this->gestion>2021){
           if($eficacia<=50){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
           if($eficacia > 50 & $eficacia <= 75){$par[2][2]++;} /// Regular - Amarillo (2)
           if($eficacia > 75 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
           if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
-        }
-        else{ /// Gestiones Anteriores
-          if($eficacia<=75){$par[1][2]++;} /// Insatisfactorio - Rojo (1)
-          if($eficacia > 75 & $eficacia <= 90){$par[2][2]++;} /// Regular - Amarillo (2)
-          if($eficacia > 90 & $eficacia <= 99){$par[3][2]++;} /// Bueno - Azul (3)
-          if($eficacia > 99 & $eficacia <= 100){$par[4][2]++;} /// Optimo - verde (4)
-        }
-        
       }
 
       for ($i=1; $i <=4 ; $i++) { 
@@ -774,74 +968,50 @@ class Crep_evalunidad extends CI_Controller {
     }
 
     /*----- Parametros de Eficacia Concolidado por Unidad -----*/
-    public function parametros_eficacia_unidad($matriz,$proy_id,$tp_rep){
-      $insatisfactorio='0% a 75%';
-      $regular='75% a 90%';
-      $bueno='90% a 99%';
+    public function parametros_eficacia_unidad($matriz){
+      $insatisfactorio='0% a 50%';
+      $regular='51% a 75%';
+      $bueno='76% a 99%';
 
-      if($this->gestion>2021){
-        $insatisfactorio='0% a 50%';
-        $regular='51% a 75%';
-        $bueno='76% a 99%';
-      }
-
-      if($tp_rep==1){ //// Normal
-        $class='class="table table-bordered" align=center style="width:60%;"';
-        $div='<div id="parametro_efi" style="width: 600px; height: 400px; margin: 0 auto"></div>';
-
-      }
-      else{ /// Impresion
-        $class='class="change_order_items" border=1 align=center style="width:100%;"';
-        $div='<div id="parametro_efi_print" style="width: 650px; height: 330px; margin: 0 auto"></div>';
-      }
-     // $nro=$matriz;
       $tabla='';
-      $tabla .='<table '.$class.'>
-                  <tr>
-                    <td>
-                      '.$div.'
-                    </td>
-                  </tr>
-                  <tr>
-                  <td>
-                      <table '.$class.'>
-                        <thead>
-                          <tr>
-                            <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
-                            <th style="width: 33%"><center><b>PARAMETRO</b></center></th>
-                            <th style="width: 33%"><center><b>NRO DE UNIDADES</b></center></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>INSATISFACTORIO</td>
-                            <td>'.$insatisfactorio.'</td>
-                            <td align="center" ><a class="btn btn-danger" style="width: 100%" title="'.$matriz[1][2].' Unidades/Proyectos">'.$matriz[1][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>REGULAR</td>
-                            <td>'.$regular.'</td>
-                            <td align="center" ><a class="btn btn-warning" style="width: 100%" align="center" title="'.$matriz[2][2].' Unidades/Proyectos">'.$matriz[2][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>BUENO</td>
-                            <td>'.$bueno.'</td>
-                            <td align="center" ><a class="btn btn-info" style="width: 100%" align="center" title="'.$matriz[3][2].' Unidades/Proyectos">'.$matriz[3][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td>OPTIMO </td>
-                            <td>100%</td>
-                            <td align="center" ><a class="btn btn-success" style="width: 100%" align="center" title="'.$matriz[4][2].' Unidades/Proyectos">'.$matriz[4][2].'</a></td>
-                          </tr>
-                          <tr>
-                            <td colspan=2 align="center"><b>TOTAL SERVICIOS : </b></td>
-                            <td align="center"><b>'.($matriz[1][2]+$matriz[2][2]+$matriz[3][2]+$matriz[4][2]).'</b></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </table>';
+      $tabla .='
+            <div id="parametro_efi" style="width: 600px; height: 400px; margin: 0 auto"></div>
+            <hr>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="width: 33%"><center><b>TIPO DE CALIFICACI&Oacute;N</b></center></th>
+                  <th style="width: 33%"><center><b>PARAMETRO</b></center></th>
+                  <th style="width: 33%"><center><b>NRO DE UNIDADES</b></center></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>INSATISFACTORIO</td>
+                  <td>'.$insatisfactorio.'</td>
+                  <td align="center" ><a class="btn btn-danger" style="width: 100%" title="'.$matriz[1][2].' Unidades/Proyectos">'.$matriz[1][2].'</a></td>
+                </tr>
+                <tr>
+                  <td>REGULAR</td>
+                  <td>'.$regular.'</td>
+                  <td align="center" ><a class="btn btn-warning" style="width: 100%" align="center" title="'.$matriz[2][2].' Unidades/Proyectos">'.$matriz[2][2].'</a></td>
+                </tr>
+                <tr>
+                  <td>BUENO</td>
+                  <td>'.$bueno.'</td>
+                  <td align="center" ><a class="btn btn-info" style="width: 100%" align="center" title="'.$matriz[3][2].' Unidades/Proyectos">'.$matriz[3][2].'</a></td>
+                </tr>
+                <tr>
+                  <td>OPTIMO </td>
+                  <td>100%</td>
+                  <td align="center" ><a class="btn btn-success" style="width: 100%" align="center" title="'.$matriz[4][2].' Unidades/Proyectos">'.$matriz[4][2].'</a></td>
+                </tr>
+                <tr>
+                  <td colspan=2 align="center"><b>TOTAL UNIDADES : </b></td>
+                  <td align="center"><b>'.($matriz[1][2]+$matriz[2][2]+$matriz[3][2]+$matriz[4][2]).'</b></td>
+                </tr>
+              </tbody>
+            </table>';
 
       return $tabla;
     }
@@ -1015,150 +1185,6 @@ class Crep_evalunidad extends CI_Controller {
     }
 
 
-    /*------ TABLA ACUMULADA EVALUACIÓN 2020 -------*/
-   /* public function tabla_acumulada_evaluacion_unidad($regresion,$tp_graf,$tip_rep){
-      $tabla='';
-      $tit[2]='<b>NRO. ACT. PROG.</b>';
-      $tit[3]='<b>NRO. ACT. CUMP.</b>';
-      $tit[4]='<b>NRO. ACT. NO CUMP.</b>';
-      $tit[5]='<b>% CUMP.</b>';
-      $tit[6]='<b>% NO CUMP.</b>';
-
-      $tit_total[2]='<b>NRO. ACT. PROG.</b>';
-      $tit_total[3]='<b>NRO. ACT. CUMP.</b>';
-      $tit_total[4]='<b>% ACT. PROG.</b>';
-      $tit_total[5]='<b>% ACT. CUMP.</b>';
-
-      if($tip_rep==1){ /// Normal
-        $tab='class="table table-bordered" align=center style="width:100%;"';
-        $color='#e9edec';
-      } 
-      else{ /// Impresion
-        $tab='class="change_order_items" border=1 align=center style="width:100%;"';
-        $color='#e9edec';
-      }
-
-      if($tp_graf==1){ // pastel : Programado-Cumplido
-        $tabla.='
-        <table '.$tab.'>
-          <thead>
-              <tr align=center bgcolor='.$color.' style="font-family: Arial;">
-                <th>NRO. ACT. PROG.</th>
-                <th>ACT. EVAL.</th>
-                <th>ACT. CUMP./th>
-                <th>ACT. NO CUMP.</th>
-                <th>% CUMP.</th>
-                <th>% NO CUMP.</th>
-              </tr>
-              </thead>
-            <tbody>
-              <tr align=right >
-                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.$regresion[3][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.$regresion[4][$this->tmes].'</b></td>
-                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
-                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
-              </tr>
-            </tbody>
-        </table>';
-      }
-      elseif($tp_graf==2){ /// Regresion Acumulado al Trimestre
-        $tabla.='
-        <table '.$tab.'>
-          <thead>
-              <tr bgcolor='.$color.'>
-                <th></th>';
-                for ($i=1; $i <=$this->tmes; $i++) { 
-                  $tabla.='<th align=center style="font-family: Arial;"><b>'.$regresion[1][$i].'</b></th>';
-                }
-              $tabla.='
-              </tr>
-            </thead>
-            <tbody>';
-              $color=''; $por='';
-              for ($i=2; $i <=6; $i++) {
-                if($i==5){
-                  $por='%';
-                  $color='#9de9f3';
-                }
-                elseif ($i==6) {
-                  $por='%';
-                  $color='#f7d3d0';
-                }
-                $tabla.='<tr bgcolor='.$color.'>
-                  <td style="font-family: Arial;">'.$tit[$i].'</td>';
-                  for ($j=1; $j <=$this->tmes; $j++) { 
-                    $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
-                  }
-                $tabla.='</tr>';
-              }
-            $tabla.='
-            </tbody>
-        </table>';
-      }
-      elseif($tp_graf==3){ /// Regresion Gestion
-        $tabla.='
-        <h4><b>'.$regresion[5][$this->tmes].'%</b> CUMPLIMIENTO DE '.$regresion[1][$this->tmes].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
-        <table '.$tab.'>
-          <thead>
-              <tr bgcolor='.$color.' >
-                <th></th>';
-                for ($i=1; $i <=4; $i++) { 
-                  $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
-                }
-              $tabla.='
-              </tr>
-              </thead>
-            <tbody>';
-              $color=''; $por='';
-              for ($i=2; $i <=5; $i++) {
-                if($i==4 || $i==5){
-                  $por='%';
-                  $color='#9de9f3';
-                }
-                $tabla.='<tr bgcolor='.$color.' >
-                  <td>'.$tit_total[$i].'</td>';
-                  for ($j=1; $j <=4; $j++) { 
-                    $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
-                  }
-                $tabla.='</tr>';
-              }
-            $tabla.='
-            </tbody>
-        </table>';
-      }
-      else{
-        $tabla.='
-        <table '.$tab.'>
-            <thead>
-              <tr align=center style="font-family: Arial;" >
-                <th>NRO. ACT. PROG.</th>
-                <th>NRO. ACT. EVAL.</th>
-                <th>NRO. ACT. CUMP.</th>
-                <th>NRO. ACT. EN PROC.</th>
-                <th>NRO. ACT. NO CUMP.</th>
-                <th>% CUMP.</th>
-                <th>% NO CUMP.</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr align=right >
-                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.$regresion[2][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.$regresion[3][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.$regresion[7][$this->tmes].'</b></td>
-                <td style="font-family: Arial;"><b>'.($regresion[2][$this->tmes]-($regresion[7][$this->tmes]+$regresion[3][$this->tmes])).'</b></td>
-                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$this->tmes].'%</b></button></td>
-                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$this->tmes].'%</b></button></td>
-              </tr>
-            </tbody>
-        </table>';
-      }
-
-      return $tabla;
-    }*/
-
     /*--- REGRESIÓN LINEAL PORCENTAJE PROGRAMADO A LA GESTIÓN ---*/
     public function tabla_regresion_lineal_unidad_total($proy_id){
       $m[0]='';
@@ -1209,8 +1235,9 @@ class Crep_evalunidad extends CI_Controller {
         $tr[2][$i]=0; /// Prog
         $tr[3][$i]=0; /// cumplidas
         $tr[4][$i]=0; /// no cumplidas
-        $tr[5][$i]=0; /// eficacia %
-        $tr[6][$i]=0; /// no eficacia %
+
+        $tr[5][$i]=0; /// cumplimiento %
+        $tr[6][$i]=0; /// no cumplimiento %
         $tr[7][$i]=0; /// en proceso
         $tr[8][$i]=0; /// en proceso %
       }
@@ -1221,10 +1248,10 @@ class Crep_evalunidad extends CI_Controller {
         $tr[3][$i]=$valor[2]; /// cumplidas
         $tr[4][$i]=($valor[1]-$valor[2]); /// no cumplidas
         if($tr[2][$i]!=0){
-          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// eficacia
+          $tr[5][$i]=round((($tr[3][$i]/$tr[2][$i])*100),2); /// cumplimiento %
         }
-        $tr[6][$i]=(100-$tr[5][$i]);
-        $proceso=$this->obtiene_datos_evaluacíon($proy_id,$i,2);
+        $tr[6][$i]=(100-$tr[5][$i]); /// No cumplidas %
+        $proceso=$this->obtiene_datos_evaluacíon($proy_id,$i,2); 
         $tr[7][$i]=$proceso[2]; /// En Proceso
         if($tr[2][$i]!=0){
           $tr[8][$i]=round(($tr[7][$i]/$tr[2][$i])*100,2); // En proceso %

@@ -753,15 +753,16 @@ class ejecucion_finpi extends CI_Controller{
               <th style="width:3%; font-size: 10px; text-align:center"><b>PPTO. MOD. '.$this->gestion.'</b></th>
               <th style="width:3%; font-size: 10px; text-align:center"><b>PPTO. VIGENTE '.$this->gestion.'</b></th>
               <th style="width:3%; font-size: 10px; text-align:center"><b>PPTO. EJECUTADO '.$this->gestion.'</b></th>
-              <th style="width:3%; font-size: 10px; text-align:center"><b>EJEC. FIS. PROY.</b></th>
-              <th style="width:3%; font-size: 10px; text-align:center"><b>EJEC. FIN. PROY.</b></th>
+              <th style="width:3%; font-size: 10px; text-align:center"><b>(%) EJECUTADO '.$this->gestion.'</b></th>
+              <th style="width:3%; font-size: 10px; text-align:center"><b>EJEC. FIS. TOTAL</b></th>
+              <th style="width:3%; font-size: 10px; text-align:center"><b>EJEC. FIN. TOTAL</b></th>
             </tr>
           </thead>
           <tbody>';
             $nro=0;
             foreach($proyectos as $row){
               $ejec_fin=$this->avance_financiero_pi($row['aper_id'],$row['proy_ppto_total']); /// Ejecucion Presupuestaria PI
-              $fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
+              //$fase = $this->model_faseetapa->get_id_fase($row['proy_id']);
               $modificacion_partida=$this->detalle_modificacion_ppto_x_proyecto($row['aper_id']);
 
               $nro++;
@@ -783,6 +784,7 @@ class ejecucion_finpi extends CI_Controller{
                 <td style="font-size: 11px;font-family: Arial;" align=right>'.number_format($modificacion_partida[2], 2, ',', '.').'</td>
                 <td style="font-size: 11px;font-family: Arial;" align=right>'.number_format($modificacion_partida[3], 2, ',', '.').'</td>
                 <td style="font-size: 11px;font-family: Arial;" align=right>'.number_format($ejec_fin[1], 2, ',', '.').'</td>
+                <td style="font-size: 20px;font-family: Arial; color:green" align=right><b>'.round(($ejec_fin[1]/$modificacion_partida[3])*100,2).' %</b></td>
                 <td style="font-size: 11px;font-family: Arial;" align=right><b>'.round($row['avance_fisico'],2).' %</b></td>
                 <td style="font-size: 11px;font-family: Arial;" align=right><b>'.round($row['avance_financiero'],2).' %</b></td>
               </tr>';
@@ -816,11 +818,12 @@ class ejecucion_finpi extends CI_Controller{
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td align=center><b>'.$partida['partida'].'</b></td>
+                  <td style="font-size: 14px;font-family: Arial;" align=center><b>'.$partida['partida'].'</b></td>
                   <td style="font-size: 11px;font-family: Arial;" align=right>'.number_format($monto_partida[1], 2, ',', '.').'</td>
                   <td style="font-size: 11px;font-family: Arial;" align=right>'.number_format($monto_partida[2], 2, ',', '.').'</td>
                   <td style="font-size: 11px;font-family: Arial;" align=right>'.number_format($monto_partida[3], 2, ',', '.').'</td>
                   <td style="font-size: 11px;font-family: Arial;" align=right><b>Bs. '.number_format($monto_ejecutado, 2, ',', '.').'</b></td>
+                  <td style="font-size: 14px;font-family: Arial; color:blue" align=right><b>'.round(($monto_ejecutado/$monto_partida[3])*100,2).' %</b></td>
                   <td></td>
                   <td style="font-size: 11px;font-family: Arial;" align=right><b>'.$porcentaje_avance_fin.' %</b></td>
                 </tr>';

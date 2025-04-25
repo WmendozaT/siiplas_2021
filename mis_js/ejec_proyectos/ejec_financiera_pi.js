@@ -491,7 +491,7 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
     tooltip: {
       enabled: true,
       formatter: function() {
-        return '<b>'+ this.series.name +'</b><br/>'+
+        return ''+ this.series.name +'<br/>'+
           this.x +': '+ this.y +' '+this.series.name;
       }
     },
@@ -508,39 +508,15 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
     series: [
         {
           name: 'PPTO. PROGRAMADO INICIAL',
-          data: programado_inicial,
-          marker: {
-            lineWidth: 5,
-            lineColor: Highcharts.getOptions().colors[0],
-            fillColor: 'blue',
-          },
-          dataLabels: {
-            color: 'blue'
-          }
+          data: programado_inicial
         },
         {
           name: 'PPTO. PROGRAMADO AJUSTADO',
-          data: programado,
-          marker: {
-            lineWidth: 5,
-            lineColor: Highcharts.getOptions().colors[1],
-            fillColor: 'black',
-          },
-          dataLabels: {
-            color: 'black'
-          }
+          data: programado
         },
         {
           name: 'PPTO. EJECUTADO',
-          data: ejecutado,
-          marker: {
-            lineWidth: 5,
-            lineColor: Highcharts.getOptions().colors[7],
-            fillColor: 'green',
-          },
-          dataLabels: {
-            color: 'green'
-          }
+          data: ejecutado
         }
       ],
       
@@ -814,7 +790,7 @@ function cuadro_grafico_distribucion_proyectos(grafico,matriz,nro){
 
     tooltip: {
       headerFormat: '<span style="font-size:16px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b><br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: {point.y:.2f}%<br/>'
     },
 
     series: [
@@ -863,7 +839,7 @@ function cuadro_grafico_distribucion_presupuesto_asignado(grafico,matriz,nro){
 
     tooltip: {
       headerFormat: '<span style="font-size:16px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> asignado<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: {point.y:.2f}% asignado<br/>'
     },
 
     series: [
@@ -1368,7 +1344,7 @@ function cuadro_grafico_ppto_ejec_meses(matriz,titulo){
   tooltip: {
     enabled: true,
     formatter: function() {
-      return '<b>'+ this.series.name +'</b><br/>'+
+      return ''+ this.series.name +'<br/>'+
         this.x +': '+ this.y +' '+this.series.name;
     }
   },
@@ -1535,7 +1511,7 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo,su
 
       tooltip: {
         headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: {point.y:.2f}% of total<br/>'
       },
 
       series: [

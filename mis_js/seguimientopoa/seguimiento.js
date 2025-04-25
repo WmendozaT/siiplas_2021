@@ -713,14 +713,15 @@ function graf_regresion_pastel(matriz,trimestre) {
       name: 'Actividades',
       data: [
         {
-          name: 'NO CUMPLIDO : '+Math.round(100-(matriz[5][trimestre]+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)))+' %',
-          y: matriz[6][trimestre],
+          //name: 'NO CUMPLIDO : '+Math.round(100-(matriz[5][trimestre]+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)))+' %',
+          name: 'NO CUMPLIDO : '+(100-matriz[5][trimestre]-matriz[8][trimestre])+' %',
+          y: (100-matriz[5][trimestre]-matriz[8][trimestre]),
           color: '#ef4444', // Rojo mejorado
           className: 'slice-emergencia'
         },
         {
-          name: 'EN PROCESO : '+Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100)+' %',
-          y: Math.round((matriz[7][trimestre]/matriz[2][trimestre])*100),
+          name: 'EN PROCESO : '+matriz[8][trimestre]+' %',
+          y: matriz[8][trimestre],
           color: '#f59e0b' // Ámbar más profesional
         },
         {

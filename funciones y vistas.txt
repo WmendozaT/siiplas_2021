@@ -4437,6 +4437,7 @@ g_id integer,
 og_id integer,
 og_codigo integer,
 og_objetivo varchar,
+og_indicador varchar,
 og_producto varchar,
 og_resultado varchar,
 
@@ -4446,7 +4447,7 @@ or_objetivo varchar,
 programado_total numeric) AS
 
 $$
-select opge.g_id,og.og_id,og.og_codigo,og.og_objetivo,og.og_producto,og.og_resultado,oreg.or_id,oreg.or_codigo,oreg.or_objetivo,SUM(temprog.pg_fis) programado_total
+select opge.g_id,og.og_id,og.og_codigo,og.og_objetivo,og.og_indicador,og.og_producto,og.og_resultado,oreg.or_id,oreg.or_codigo,oreg.or_objetivo,SUM(temprog.pg_fis) programado_total
 from temp_trm_prog_objetivos_regionales temprog
 Inner Join objetivos_regionales as oreg on oreg.or_id = temprog.or_id
 Inner Join objetivo_programado_mensual as opge on opge.pog_id = oreg.pog_id

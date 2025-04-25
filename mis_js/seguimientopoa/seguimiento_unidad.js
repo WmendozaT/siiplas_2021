@@ -232,49 +232,49 @@ function abreVentana(PDF){
     }
 
   /// IMPRESION DE GRAFICOS CONSOLIDADO DE FORM 4 Y 5
-  function imprimir_form5() {
-    var cabecera = document.querySelector("#cabecera_ejec");
-    var grafico = document.querySelector("#grafico_form5");
-    document.getElementById("cabecera_ejec").style.display = 'block';
-    var cabecera = document.querySelector("#cabecera_ejec");
-    document.getElementById("tabla_impresion_form5").style.display = 'block';
-    var tabla = document.querySelector("#tabla_impresion_form5");
-    imprimirGrafico(grafico,cabecera,tabla);
-    document.getElementById("cabecera_ejec").style.display = 'none';
-    document.getElementById("tabla_impresion_form5").style.display = 'none';
-  }
+  // function imprimir_form5() {
+  //   var cabecera = document.querySelector("#cabecera_ejec");
+  //   var grafico = document.querySelector("#grafico_form5");
+  //   document.getElementById("cabecera_ejec").style.display = 'block';
+  //   var cabecera = document.querySelector("#cabecera_ejec");
+  //   document.getElementById("tabla_impresion_form5").style.display = 'block';
+  //   var tabla = document.querySelector("#tabla_impresion_form5");
+  //   imprimirGrafico(grafico,cabecera,tabla);
+  //   document.getElementById("cabecera_ejec").style.display = 'none';
+  //   document.getElementById("tabla_impresion_form5").style.display = 'none';
+  // }
 
-  function imprimir_form4() {
-    var cabecera = document.querySelector("#cabecera_ejec");
-    var grafico = document.querySelector("#grafico_form4");
-    document.getElementById("cabecera_ejec").style.display = 'block';
-    var cabecera = document.querySelector("#cabecera_ejec");
-    document.getElementById("tabla_impresion_form4").style.display = 'block';
-    var tabla = document.querySelector("#tabla_impresion_form4");
-    imprimirGrafico(grafico,cabecera,tabla);
-    document.getElementById("cabecera_ejec").style.display = 'none';
-    document.getElementById("tabla_impresion_form4").style.display = 'none';
-  }
+  // function imprimir_form4() {
+  //   var cabecera = document.querySelector("#cabecera_ejec");
+  //   var grafico = document.querySelector("#grafico_form4");
+  //   document.getElementById("cabecera_ejec").style.display = 'block';
+  //   var cabecera = document.querySelector("#cabecera_ejec");
+  //   document.getElementById("tabla_impresion_form4").style.display = 'block';
+  //   var tabla = document.querySelector("#tabla_impresion_form4");
+  //   imprimirGrafico(grafico,cabecera,tabla);
+  //   document.getElementById("cabecera_ejec").style.display = 'none';
+  //   document.getElementById("tabla_impresion_form4").style.display = 'none';
+  // }
 
-  function imprimirGrafico(grafico,cabecera,tabla) {
-    var ventana = window.open('Ejecucion Presupuestaria ', 'PRINT', 'height=800,width=1000');
-    ventana.document.write('<html><head><title>EJECUCIÓN POA FORM. N° 4 y FORM. N° 5</title>');
-    ventana.document.write('</head><body>');
-    ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
-    ventana.document.write(cabecera.innerHTML);
-    ventana.document.write('<hr>');
-    ventana.document.write(grafico.innerHTML);
-    ventana.document.write('<hr>');
-    ventana.document.write(tabla.innerHTML);
-    ventana.document.write('</body></html>');
-    ventana.document.close();
-    ventana.focus();
-    ventana.onload = function() {
-      ventana.print();
-      ventana.close();
-    };
-    return true;
-  }
+  // function imprimirGrafico(grafico,cabecera,tabla) {
+  //   var ventana = window.open('Ejecucion Presupuestaria ', 'PRINT', 'height=800,width=1000');
+  //   ventana.document.write('<html><head><title>EJECUCIÓN POA FORM. N° 4 y FORM. N° 5</title>');
+  //   ventana.document.write('</head><body>');
+  //   ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+  //   ventana.document.write(cabecera.innerHTML);
+  //   ventana.document.write('<hr>');
+  //   ventana.document.write(grafico.innerHTML);
+  //   ventana.document.write('<hr>');
+  //   ventana.document.write(tabla.innerHTML);
+  //   ventana.document.write('</body></html>');
+  //   ventana.document.close();
+  //   ventana.focus();
+  //   ventana.onload = function() {
+  //     ventana.print();
+  //     ventana.close();
+  //   };
+  //   return true;
+  // }
 
 ///// =================================================================
 
@@ -506,91 +506,138 @@ function abreVentana(PDF){
   })
 
 
-////============= ENS PASTEL
+////============= END PASTEL
 
+//// EVALUACION POA
+/// Boton de Impresion Cuadros de Evaluacion 2025
+document.getElementById('btnImprimir_evaluacion_trimestre').addEventListener('click', function() {
+  //alert('hola mundo')
+  const plantillaPagina = (contenido, numeroPagina, calificacion) => `
+    <div class="pagina">
+      <header class="cabecera-pagina">
+      <div class="membrete">
+        
+        <div class="datos-institucion">
+          <h2>${document.getElementById('cabecera').outerHTML}</h2>
+        </div>
 
-      //// Seguimiento POA
-/*      function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
+      </div>
+      <hr class="linea-separadora">
+    ${calificacion}
+    </header>
 
-      var ventana = window.open('Seguimiento Evaluacion POA ', 'PRINT', 'height=800,width=1000');
-      ventana.document.write('<html><head><title>SEGUIMIENTO POA</title>');
-      ventana.document.write('</head><body>');
-      ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
-      ventana.document.write('<hr>');
-      ventana.document.write(cabecera.innerHTML);
-      ventana.document.write('<hr>');
-      ventana.document.write(eficacia.innerHTML);
-      ventana.document.write(grafico.innerHTML);
-      ventana.document.write('<hr>');
-      ventana.document.write(tabla.innerHTML);
-      ventana.document.write('</body></html>');
-      ventana.document.close();
-      ventana.focus();
-      ventana.onload = function() {
-        ventana.print();
-        ventana.close();
-      };
-      return true;
-    }
+      ${contenido}
 
+      <footer class="pie-pagina">
+        <div class="marcas-agua">
+          <span class="pagina-numero">Página ${numeroPagina} de 3</span>
+          <span class="fecha-generacion">${new Date().toLocaleDateString('es-ES', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}</span>
+        </div>
+      </footer>
+    </div>
+  `;
 
-    document.querySelector("#btnImprimir_evaluacion_trimestre").addEventListener("click", function() {
-      var grafico = document.querySelector("#evaluacion_trimestre");
-      
-      document.getElementById("cabecera2").style.display = 'block';
-      var cabecera = document.querySelector("#cabecera2");
+  const ventanaImpresa = window.open('', '_blank');
+  ventanaImpresa.document.write(`
+    <html>
+      <head>
+        <title>DEPARTAMENTO NACIONAL DE PLANIFICACION / SIIPLAS</title>
+        <style>
+          @page {
+            size: A4 portrait;
+            margin: 1cm 0.8cm;
+            @top { content: element(cabecera-pagina); }
+            @bottom { content: element(pie-pagina); }
+          }
+          #cabecera {
+            display: block !important;
+            margin: 0 0 12px 0;
+            font-size: 10pt !important;
+            color: #000000 !important;
+            border: none !important;
+          }
 
-      var eficacia = document.querySelector("#eficacia");
-      
-      document.getElementById("tabla_regresion_impresion").style.display = 'block';
-      document.getElementById("tabla_regresion_vista").style.display = 'none';
-      var tabla = document.querySelector("#tabla_regresion_impresion");
+          /* Optimización tipográfica */
+          .datos-institucion h2 {
+            font-size: 15pt !important;
+            margin: 3px 0 3px 0;
+            color: #000000 !important;
+          }
+          .pagina {
+            page-break-after: always;
+            position: relative;
+            height: calc(297mm - 5cm);
+          }
 
-      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
-      document.getElementById("cabecera2").style.display = 'none';
+          .cabecera-pagina {
+            position: running(cabecera-pagina);
+            margin-bottom: 1cm;
+          }
 
-      document.getElementById("tabla_regresion_vista").style.display = 'block';
-      document.getElementById("tabla_regresion_impresion").style.display = 'none';
-    });
+          .pie-pagina {
+            position: running(pie-pagina);
+            height: 2cm;
+          }
 
+          .membrete {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 5px;
+          }
 
+          .linea-separadora {
+            border: 1px solid #11574e;
+            margin: 8px 0;
+          }
 
-    document.querySelector("#btnImprimir_evaluacion_gestion").addEventListener("click", function() {
-      var grafico = document.querySelector("#evaluacion_gestion");
-      
-      document.getElementById("cabecera3").style.display = 'block';
-      var cabecera = document.querySelector("#cabecera3");
-      
-      var eficacia = document.querySelector("#efi");
+          .marcas-agua {
+            display: flex;
+            justify-content: space-between;
+            font-size: 8pt;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 3px;
+          }
 
-      document.getElementById("tabla_regresion_total_impresion").style.display = 'block';
-      document.getElementById("tabla_regresion_total_vista").style.display = 'none';
-      var tabla = document.querySelector("#tabla_regresion_total_impresion");
+          .grafico-impresion {
+            width: 100%!important;
+            height: 380px!important;
+            margin: 15px 0;
+            page-break-inside: avoid;
+          }
+          }
+        </style>
+      </head>
+      <body>
+        ${plantillaPagina(`
+          ${document.getElementById('regresion').outerHTML}
+          ${document.getElementById('tabla_regresion_impresion').outerHTML}
+        `, 1, `${document.getElementById('calificacion').outerHTML}`)}
 
-      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
-      document.getElementById("cabecera3").style.display = 'none';
+        ${plantillaPagina(`
+          ${document.getElementById('pastel_todos').outerHTML}
+          ${document.getElementById('tabla_pastel_vista').outerHTML}
+        `, 2, `${document.getElementById('calificacion').outerHTML}`)}
 
-      document.getElementById("tabla_regresion_total_vista").style.display = 'block';
-      document.getElementById("tabla_regresion_total_impresion").style.display = 'none';
-    });
+        ${plantillaPagina(`
+          ${document.getElementById('regresion_gestion').outerHTML}
+          ${document.getElementById('tabla_regresion_total_impresion').outerHTML}
+        `, 3, '')}
+      </body>
+    </html>
+  `);
 
-
-
-    document.querySelector("#btnImprimir_evaluacion_pastel").addEventListener("click", function() {
-      var grafico = document.querySelector("#evaluacion_pastel");
-      
-      document.getElementById("cabecera2").style.display = 'block';
-      var cabecera = document.querySelector("#cabecera2");
-      
-      var eficacia = document.querySelector("#eficacia");
-
-      document.getElementById("tabla_pastel_impresion").style.display = 'block';
-      document.getElementById("tabla_pastel_vista").style.display = 'none';
-      var tabla = document.querySelector("#tabla_pastel_impresion");
-
-      imprimirSeguimiento(grafico,cabecera,eficacia,tabla);
-      document.getElementById("cabecera2").style.display = 'none';
-
-      document.getElementById("tabla_pastel_vista").style.display = 'block';
-      document.getElementById("tabla_pastel_impresion").style.display = 'none';
-    });*/
+  ventanaImpresa.document.close();
+  setTimeout(() => {
+    ventanaImpresa.print();
+    ventanaImpresa.close();
+  }, 1000);
+});
