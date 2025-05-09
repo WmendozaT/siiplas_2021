@@ -560,6 +560,27 @@ class Model_ptto_sigep extends CI_Model{
     /*----- EJECUCION DE PRESUPUESTO AL TRIMESTRE X REGIONAL PINVERSION(vigente)-----*/
     public function ppto_ejecutado_inversion_regional_trimestre($or_id,$i){
         $sql = '
+         select ppto_poa.or_id,SUM(ppto_ejec) ppto_ejec_trimestre
+        from ptto_partidas_sigep ppto_asig
+        Inner Join (
+
+            select proy.aper_id,pr.or_id,ins.par_id,SUM(ins.ins_costo_total) total_poa
+            from _productos pr
+            Inner Join _componentes as c On c.com_id=pr.com_id
+            Inner Join _insumoproducto as insp On insp.prod_id=pr.prod_id
+            Inner Join insumos as ins On ins.ins_id=insp.ins_id
+            Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as proy On proy.pfec_id=c.pfec_id
+            where pr.or_id='.$or_id.' and pr.estado!=\'3\' and pr.prod_priori=\'1\'
+            group by proy.aper_id,pr.or_id,ins.par_id
+        
+        ) as ppto_poa On ppto_asig.aper_id=ppto_poa.aper_id and ppto_asig.par_id=ppto_poa.par_id
+
+        Inner Join ejecucion_financiera_sigep as ppto_ejec On ppto_ejec.sp_id=ppto_asig.sp_id
+        where (ppto_ejec.m_id>\'0\' and ppto_ejec.m_id<='.($i*3).')
+        group by ppto_poa.or_id';
+
+
+        /*$sql = '
         select pr.or_id,SUM(ppto_ejec) ppto_ejec_trimestre
         from _productos pr
         Inner Join _componentes as c On c.com_id=pr.com_id
@@ -567,7 +588,7 @@ class Model_ptto_sigep extends CI_Model{
         Inner Join ptto_partidas_sigep as partidas_asig On partidas_asig.aper_id=proy.aper_id
         Inner Join ejecucion_financiera_sigep as ppto_ejec On ppto_ejec.sp_id=partidas_asig.sp_id
         where pr.or_id='.$or_id.' and (ppto_ejec.m_id>\'0\' and ppto_ejec.m_id<='.($i*3).') and pr.estado!=\'3\' and pr.prod_priori=\'1\'
-        group by pr.or_id';
+        group by pr.or_id';*/
     
         $query = $this->db->query($sql);
         return $query->result_array();
