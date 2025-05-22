@@ -16,6 +16,7 @@ class Creportejecucion_pi extends CI_Controller {
           $this->load->model('programacion/model_componente');
           $this->load->model('mantenimiento/model_ptto_sigep');
           $this->load->model('programacion/insumos/model_insumo');
+          $this->load->model('ejecucion/model_evaluacion');
           $this->pcion = $this->session->userData('pcion');
           $this->gestion = $this->session->userData('gestion');
           $this->adm = $this->session->userData('adm');
@@ -45,12 +46,15 @@ class Creportejecucion_pi extends CI_Controller {
 public function menu_pi(){
   $data['menu']=$this->menu(7);
   $data['list']=$this->menu_nacional();
+  $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
 
   $tabla='
     <input name="base" type="hidden" value="'.base_url().'">
     <input name="mes" type="hidden" value="'.$this->verif_mes[1].'">
     <input name="descripcion_mes" type="hidden" value="'.$this->verif_mes[2].'">
     <input name="gestion" type="hidden" value="'.$this->gestion.'">
+    <input name="trimestre" type="hidden" value="'.($this->tmes*3).'">
+    <input name="trm_descripcion" type="hidden" value="'.$trimestre[0]['trm_descripcion'].'">
     <div id="update_eval">
       <div class="jumbotron">
         <h1>Seguimiento a Proyectos de Inversión '.$this->gestion.'</h1>
@@ -69,7 +73,7 @@ public function menu_pi(){
   $tabla='';
   $regionales=$this->model_proyecto->list_departamentos();
 
-      $tabla.='
+    $tabla.='
     <article class="col-sm-12">
       <div class="well">
         <form class="smart-form">
@@ -160,7 +164,8 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
     $post = $this->input->post();
     $dep_id = $this->security->xss_clean($post['dep_id']);
     $regional=$this->model_proyecto->get_departamento($dep_id);
-    $calificacion=$this->ejecucion_finpi->calificacion_pi_regional_institucional($dep_id); /// % CUMPLIMIENTO
+    $calificacion_trimestre=$this->ejecucion_finpi->cumplimiento_trimestre($dep_id,0); /// % CUMPLIMIENTO TRIMESTRAL
+    $calificacion_gestion=$this->ejecucion_finpi->cumplimiento_gestion($dep_id,0); /// % CUMPLIMIENTO GESTION
 
     if($dep_id==0){ /// INSTITUCIONAL
       $nro_reg=count($this->model_ptto_sigep->list_regionales());
@@ -174,7 +179,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
       $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_institucional(); /// Ppto Ejecutado sigep
 
       $matriz=$this->ejecucion_finpi->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
-      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
+      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz,0); /// tabla vista
       $cuadro_consolidado_impresion=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
 
 
@@ -240,13 +245,20 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
                 </ul>
 
                 <div id="myTabContent1" class="tab-content padding-10">
-                  <div id="efi">'.$calificacion.'</div>
+                  <div class="row">
+                    <article class="col-sm-12 col-md-12 col-lg-6">
+                      <div id="efi">'.$calificacion_trimestre.'</div>
+                    </article>
+                    <article class="col-sm-12 col-md-12 col-lg-6">
+                      <div id="efi2">'.$calificacion_gestion.'</div>
+                    </article>
+                  </div>
                   <div class="tab-pane fade in active" id="s1">
                     <div class="row">
                       
                       <div class="col-sm-12">
                         <div>
-                          <div id="distribucion_ppto_ejecutado_inicial" style="width: 950px; height: 500px; margin: 0 auto" align="center"></div>
+                          <div id="distribucion_ppto_ejecutado_inicial" style="width: 1250px; height: 650px; margin: 0 auto" align="center"></div>
                           <div style="display: none"><div id="distribucion_ppto_ejecutado_inicial_impresion"  style="width: 700px; height: 350px; margin: 0 auto"></div></div>
                         </div>
                       </div>
@@ -394,6 +406,10 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
       </div>';
 
 
+
+
+
+
       $result = array(
         'respuesta' => 'correcto',
         'mes' => $this->verif_mes[2].'/'.$this->gestion,
@@ -426,7 +442,7 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
       $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_regional($dep_id); /// Ppto Ejecutado sigep
 
       $matriz=$this->ejecucion_finpi->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
-      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
+      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz,0); /// tabla vista
       $cuadro_consolidado_impresion=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
 
 
@@ -494,7 +510,14 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
                 </ul>
 
                 <div id="myTabContent1" class="tab-content padding-10">
-                <div id="efi">'.$calificacion.'</div>
+                  <div class="row">
+                    <article class="col-sm-12 col-md-12 col-lg-6">
+                      <div id="efi">'.$calificacion_trimestre.'</div>
+                    </article>
+                    <article class="col-sm-12 col-md-12 col-lg-6">
+                      <div id="efi2">'.$calificacion_gestion.'</div>
+                    </article>
+                  </div>
                 <div class="tab-pane fade in active" id="s1">
                   <div class="row">
                     
@@ -662,38 +685,26 @@ public function get_detalle_ejecucion_ppto_pi_regional_institucional(){
 
 
 
-  /*-- CALIFICACION EJECUCION POR PROYECTO --*/
-/*  public function calificacion_pi_regional_institucional($dep_id){
-    if($dep_id==0){ /// Institucional
-      $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_institucional_pi_aprobados(1); /// monto total asignado poa
-      $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep_institucional(); /// monto total ejecutado poa
-    }
-    else{ /// Regional
-      $regional=$this->model_proyecto->get_departamento($dep_id);
-      $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_regional_pi_aprobados($dep_id,1); /// monto total asignado poa
-      $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep_regional($dep_id); /// monto total ejecutado poa
-    }
-
-    $eficacia=0;
-    if(count($total_ppto_asignado)!=0 & count($total_ppto_ejecutado)!=0){
-      $eficacia=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['asignado']))*100,2);
+  /*-- CALIFICACION EJECUCION POR PROYECTO POR TRIMESTRE POR REGIONAL --*/
+  public function cumplimiento_trimestre_regional($proyecto,$tp){
+    //// Asig - Ejec (al trimestre)
+    $ppto_prog_trimestre=$this->model_ptto_sigep->ppto_poa_ejecutado_al_trimestre($proyecto[0]['aper_id'],$this->tmes,1); /// prog
+    $ppto_ejec_trimestre=$this->model_ptto_sigep->ppto_poa_ejecutado_al_trimestre($proyecto[0]['aper_id'],$this->tmes,2); /// ejec
+    $cumplimiento_trimestral=0;
+    $ppto_ejec=0;
+    if(count($ppto_ejec_trimestre)!=0){
+      $ppto_ejec=$ppto_ejec_trimestre[0]['monto'];
+      $cumplimiento_trimestral=round((($ppto_ejec/$ppto_prog_trimestre[0]['monto'])*100),2);
     }
 
-    $titulo='';
-    if($eficacia<=50){$tp='danger';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
-    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (REGULAR)';} /// Regular - Amarillo
-    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (BUENO))';} /// Bueno - Azul
-    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (OPTIMO)';} /// Optimo - verde
-
-    $tabla='
-      <hr>
-      <div class="alert alert-'.$tp.'" role="alert" align="center">
-        <h2><b>'.$titulo.'</b></h2>
-      </div>';
-
-    return $tabla;
-  }*/
-
+    if($tp==0){ //// vista
+      return $this->parametro_calificacion($cumplimiento_trimestral,1);
+    }
+    else{
+      return $cumplimiento_trimestral;
+    }
+    
+  }
 
 
 /*--- GET TABLA DATOS CONSOLIDADOS DE PROYETCOS DE INVERSION INSCRITOS CALSIFICADOS POR REGIONAL VISTA---*/

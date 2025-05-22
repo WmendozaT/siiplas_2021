@@ -747,8 +747,87 @@ class Model_ptto_sigep extends CI_Model{
     }
 ///////////////////////////////////////////////////////////
 
+    /*----- MONTO PRESUPUESTO PROGRAMADO Y EJECUTADO POR UNIDAD/PROYECTO AL TRIMESTRE (2025) VIGENTE-----*/
+    public function ppto_poa_ejecutado_al_trimestre($aper_id,$trimestre,$tp){
+        // tp 1 : PTTO PROGRAMADO AL TRIMESTRE
+        // tp 2 : PTTO EJECUTADO AL TRIMESTRE
+        if($tp==1){
+            $sql = 'select poa.aper_id,SUM(temp.ipm_fis) monto
+                    from lista_poa_pinversion_nacional('.$this->gestion.') poa
+                    Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                    Inner Join _productos as prod On prod.com_id=c.com_id
+                    Inner Join _insumoproducto as insp On insp.prod_id=prod.prod_id
+                    Inner Join temporalidad_prog_insumo as temp On temp.ins_id=insp.ins_id
+                    where poa.aper_id='.$aper_id.' and prod.estado!=\'3\' and (temp.mes_id>\'0\' and temp.mes_id<='.($trimestre*3).')
+                    group by poa.aper_id';
+        }
+        else{
+            $sql = 'select ppto.aper_id,SUM(ejec.ppto_ejec) monto
+                    from ptto_partidas_sigep ppto
+                    Inner Join ejecucion_financiera_sigep as ejec On ppto.sp_id=ejec.sp_id
+                    where ppto.aper_id='.$aper_id.' and (ejec.m_id>\'0\' and ejec.m_id<='.($trimestre*3).')
+                    group by ppto.aper_id';
+        }
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
-    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO POR UNIDAD/PROYECTO (2023) VIGENTE-----*/
+
+    /*----- MONTO PRESUPUESTO PROGRAMADO Y EJECUTADO POR REGIONAL AL TRIMESTRE (2025) VIGENTE-----*/
+    public function ppto_poa_ejecutado_al_trimestre_regional($dep_id,$trimestre,$tp){
+        // tp 1 : PTTO PROGRAMADO AL TRIMESTRE
+        // tp 2 : PTTO EJECUTADO AL TRIMESTRE
+        if($tp==1){
+            $sql = 'select poa.dep_id,SUM(temp.ipm_fis) monto
+                    from lista_poa_pinversion_nacional('.$this->gestion.') poa
+                    Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                    Inner Join _productos as prod On prod.com_id=c.com_id
+                    Inner Join _insumoproducto as insp On insp.prod_id=prod.prod_id
+                    Inner Join temporalidad_prog_insumo as temp On temp.ins_id=insp.ins_id
+                    where poa.dep_id='.$dep_id.' and prod.estado!=\'3\' and (temp.mes_id>\'0\' and temp.mes_id<='.($trimestre*3).')
+                    group by poa.dep_id';
+        }
+        else{
+            $sql = 'select poa.dep_id,SUM(ejec.ppto_ejec) monto
+                    from ptto_partidas_sigep ppto
+                    Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as poa On poa.aper_id=ppto.aper_id
+                    Inner Join ejecucion_financiera_sigep as ejec On ppto.sp_id=ejec.sp_id
+                    where poa.dep_id='.$dep_id.' and (ejec.m_id>\'0\' and ejec.m_id<='.($trimestre*3).')
+                    group by poa.dep_id';
+        }
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+
+    /*----- MONTO PRESUPUESTO PROGRAMADO Y EJECUTADO INSTITUCIONAL AL TRIMESTRE (2025) VIGENTE-----*/
+    public function ppto_poa_ejecutado_al_trimestre_institucional($trimestre,$tp){
+        // tp 1 : PTTO PROGRAMADO AL TRIMESTRE
+        // tp 2 : PTTO EJECUTADO AL TRIMESTRE
+        if($tp==1){
+            $sql = 'select SUM(temp.ipm_fis) monto
+                    from lista_poa_pinversion_nacional('.$this->gestion.') poa
+                    Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                    Inner Join _productos as prod On prod.com_id=c.com_id
+                    Inner Join _insumoproducto as insp On insp.prod_id=prod.prod_id
+                    Inner Join temporalidad_prog_insumo as temp On temp.ins_id=insp.ins_id
+                    where prod.estado!=\'3\' and (temp.mes_id>\'0\' and temp.mes_id<='.($trimestre*3).')';
+        }
+        else{
+            $sql = 'select SUM(ejec.ppto_ejec) monto
+                    from ptto_partidas_sigep ppto
+                    Inner Join lista_poa_pinversion_nacional('.$this->gestion.') as poa On poa.aper_id=ppto.aper_id
+                    Inner Join ejecucion_financiera_sigep as ejec On ppto.sp_id=ejec.sp_id
+                    where (ejec.m_id>\'0\' and ejec.m_id<='.($trimestre*3).')';
+        }
+    
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    /*----- MONTO PRESUPUESTO ASIGNADO Y PROGRAMADO POR UNIDAD/PROYECTO (2025) VIGENTE-----*/
     public function suma_ptto_accion($aper_id,$tp){
         // 1 : PTO ASIGNADO
         // 2 : PTO PROGRAMADO
@@ -831,6 +910,14 @@ class Model_ptto_sigep extends CI_Model{
                      and partidas_asig.estado!=\'3\'';
         }
         else{
+           /* $sql = 'select SUM(temp.ipm_fis) programado
+                    from lista_poa_pinversion_nacional('.$this->gestion.') poa
+                    Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                    Inner Join _productos as prod On prod.com_id=c.com_id
+                    Inner Join _insumoproducto as insp On insp.prod_id=prod.prod_id
+                    Inner Join temporalidad_prog_insumo as temp On temp.ins_id=insp.ins_id
+                    where prod.estado!=\'3\'';*/
+
             $sql = 'select SUM(i.ins_costo_total) as programado
                     FROM lista_poa_pinversion_nacional('.$this->gestion.') p
                     Inner Join insumos as i On i.aper_id=p.aper_id
@@ -859,6 +946,15 @@ class Model_ptto_sigep extends CI_Model{
                     Inner Join insumos as i On i.aper_id=p.aper_id
                     where p.dep_id='.$dep_id.' and i.ins_tipo_modificacion=\'0\'
                     group by p.dep_id';
+
+            /*$sql = 'select poa.dep_id,SUM(temp.ipm_fis) programado
+                    from lista_poa_pinversion_nacional('.$this->gestion.') poa
+                    Inner Join _componentes as c On c.pfec_id=poa.pfec_id
+                    Inner Join _productos as prod On prod.com_id=c.com_id
+                    Inner Join _insumoproducto as insp On insp.prod_id=prod.prod_id
+                    Inner Join temporalidad_prog_insumo as temp On temp.ins_id=insp.ins_id
+                    where poa.dep_id='.$dep_id.' and prod.estado!=\'3\' 
+                    group by poa.dep_id';*/
         }
     
         $query = $this->db->query($sql);

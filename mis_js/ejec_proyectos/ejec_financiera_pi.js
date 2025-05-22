@@ -3,7 +3,8 @@ com_id = $('[name="com_id"]').val();
 mes = $('[name="mes"]').val();
 descripcion_mes = $('[name="descripcion_mes"]').val();
 gestion = $('[name="gestion"]').val();
-
+trimestre = $('[name="trimestre"]').val();
+descripcion_trimestre = $('[name="trm_descripcion"]').val();
 
 function abreVentana(PDF){             
   var direccion;
@@ -476,6 +477,39 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
     // Pongo los datos en el eje de las 'X'
     xAxis: {
       categories: ['ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
+            plotLines: [{  // Línea vertical para mayo 2025 (índice 4)
+                color: '#17564e',
+                value: (trimestre-1),  // Posición en el array (0-based)
+                width: 3,
+                dashStyle: 'Dash',
+                label: {
+                    text: '',
+                    rotation: 0,
+                    align: 'right',
+                    y: 15,
+                    style: {
+                        color: '#17564e',
+                        fontWeight: 'bold',
+                        fontSize: '12px'
+                    }
+                }
+            }],
+            plotBands: [{  // Área sombreada
+                from: 0,
+                to: (trimestre - 1),
+                color: '#f5f9f8',  // Color semitransparente
+                label: {
+                    text: 'CUMPLIMIENTO INVERSIÓN AL '+descripcion_trimestre+'&nbsp;&nbsp;',
+                    align: 'left',
+                    verticalAlign: 'top',
+                    style: {
+                        color: '#17564e',
+                        fontSize: '10px',
+                        fontStyle: 'italic'
+                    }
+                }
+            }],
+
       // Pongo el título para el eje de las 'X'
       title: {
         text: ''
@@ -498,11 +532,20 @@ function guardar_pi(proy_id,tp,id_partida,mes_id,ejec_ppto_id,partida){
     // Doy opciones a la gráfica
     plotOptions: {
       line: {
-        dataLabels: {
-          enabled: true
-        },
-        enableMouseTracking: true
-      }
+            dataLabels: {
+                enabled: true,
+                style: {
+                    textOutline: 'none',  // Mejor legibilidad
+                    color: '#2c3e50',
+                    fontSize: '12px'
+                }
+            },
+            marker: {  // Puntos interactivos
+                radius: 8,
+                symbol: 'circle',
+                lineWidth: 3
+            }
+        }
     },
     // Doy los datos de la gráfica para dibujarlas
     series: [
@@ -1470,6 +1513,7 @@ function verif_valor(ejecutado,sp_id,mes_id,proy_id){
 
 //// grafico Barras Verticales 
 function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo,subtitulo,cumplimiento,detalle){
+
     Highcharts.chart(grafico, {
       chart: {
         type: 'column'
@@ -1488,7 +1532,41 @@ function cuadro_grafico_en_barras_verticales(grafico,detalle_ejecucion,titulo,su
         }
       },
       xAxis: {
-        type: 'category'
+        type: 'category',
+        plotLines: [{  // Línea vertical dinámica
+            color: '#17564e',
+            value: (trimestre-1),  // Mayo = índice 4 (0-based)
+            width: 3,
+            zIndex: 5,
+            dashStyle: 'Dash',
+            label: {
+                text: '',  // Etiqueta dinámica
+                rotation: 0,
+                align: 'right',
+                y: 25,
+                style: {
+                    color: '#17564e',
+                    fontWeight: 'bold',
+                    fontSize: '12px',
+                    textOutline: 'none'
+                }
+            }
+        }],
+        plotBands: [{  // Área sombreada
+                from: 0,
+                to: (trimestre - 1),
+                color: '#f5f9f8',  // Color semitransparente
+                label: {
+                    text: 'CUMPLIMIENTO INVERSIÓN AL '+descripcion_trimestre+'&nbsp;&nbsp;',
+                    align: 'left',
+                    verticalAlign: 'top',
+                    style: {
+                        color: '#17564e',
+                        fontSize: '10px',
+                        fontStyle: 'italic'
+                    }
+                }
+            }],
       },
       yAxis: {
         title: {

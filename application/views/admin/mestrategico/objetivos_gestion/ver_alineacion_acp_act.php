@@ -101,7 +101,6 @@
                             <div class="widget-body no-padding">
                               <div class="table-responsive">
                                 <table id="datatable_fixed_column" class="table table-bordered" width="100%">
-                                <!-- <table id="datatable_fixed_column" class="table table-bordered" width="100%"> -->
                                     <thead>
                                         <tr>
                                             <th></th>

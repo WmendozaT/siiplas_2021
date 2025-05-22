@@ -757,7 +757,7 @@ class Genera_informacion extends CI_Controller{
       $tabla='';
       $tabla.='
       <script src = "'.base_url().'mis_js/programacion/programacion/tablas.js"></script>';
-        $titulo='UNIDAD ADMINISTRATIVA / ESTABLECIMIENTO';
+        $titulo='GASTO CORRIENTE';
         if($tp_id==1){
           $titulo='PROYECTO DE INVERSI&Oacute;N';
         }
@@ -769,77 +769,137 @@ class Genera_informacion extends CI_Controller{
           <a href="'.site_url("").'/rep/exportar_requerimientos_distrital/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'" target=_blank class="btn btn-default" title="CONSOLIDADO REQUERIMIENTOS"><img src="'.base_url().'assets/Iconos/page_excel.png" WIDTH="20" HEIGHT="20"/>&nbsp;DESCARGAR CONSOLIDADO FORM. N° 5</a>&nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         <br>
+        <div class="table-toolbar mb-3">
+    <button class="btn btn-primary" onclick="imprimirFiltrados()">
+        <i class="fas fa-print"></i> Imprimir Registros Filtrados
+    </button>
+    <small class="text-muted ml-2">Mostrando '.count($requerimientos).' registros totales</small>
+</div>
+
+
+<BR>
         <div class="alert alert-warning">
           <a href="#" class="alert-link" align=center><center><b>CONSOLIDADO FORMULARIO N° 5 '.$this->gestion.' - '.$titulo_reporte.' ('.$titulo.')</b></center></a>
         </div>
-        <table id="dt_basic" class="table table-bordered" style="width:100%;" >
-          <thead>
-            <tr style="background-color: #66b2e8">
-              <th style="width:5%;">COD. DA.</th>
-              <th style="width:5%;">COD. UE.</th>
-              <th style="width:5%;">COD. PROG.</th>
-              <th style="width:5%;">COD. PROY.</th>
-              <th style="width:5%;">COD. ACT.</th>
-              <th style="width:15%;">'.$titulo.'</th>
-              <th style="width:5%;">COD. ACT.</th>
-              <th style="width:1%;"></th>
-              <th style="width:10%;">PARTIDA</th>
-              <th style="width:15%;">REQUERIMIENTO</th>
-              <th style="width:10%;">UNIDAD DE MEDIDA</th>
-              <th style="width:5%;">CANTIDAD</th>
-              <th style="width:5%;">PRECIO</th>
-              <th style="width:5%;">COSTO TOTAL</th>
-              <th style="width:5%;">MONTO CERTIFICADO</th>
-              <th style="width:5%;">OBSERVACI&Oacute;N</th>
-              <th style="width:5%;">TIPO MOD.</th>
-            </tr>
-          </thead>
-          <tbody id="bdi">';
-          $nro=0;
-          foreach ($requerimientos as $row){
-            $tipo_modificacion='<b style="color:blue">REG. POA</b>';
-            if($row['ins_tipo_modificacion']==1){
-              $tipo_modificacion='<b style="color:green">REG. REV. POA</b>';
-            }
-            $nro++;
-            $tabla.='<tr>';
-                $tabla.='<td style="height:50px;">'.$row['dep_cod'].'</td>';
-                $tabla.='<td>'.$row['dist_cod'].'</td>';
-                $tabla.='<td>'.$row['aper_programa'].'</td>';
-                $tabla.='<td>';
-                if($tp_id==1){
-                  $tabla.=''.$row['proy_sisin'].'';
+          <table id="datatable_fixed_column" class="table table-bordered" width="100%">
+            <thead>
+                  <tr>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="REGIONAL"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="COD. UNIDAD EJECUTORA"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="COD. PROG"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="COD. PROY."/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="COD. ACT."/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="GASTO CORRIENTE / INVERSION"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="COD. ACT."/>
+                    </th>
+                    <th></th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="PARTIDA"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="REQUERIMIENTO"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="UNIDAD MEDIDA"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="CANTIDAD"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="PRECIO UNITARIO"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="COSTO TOTAL"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="PPTO CERTIFICADO"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="OBSERVACION"/>
+                    </th>
+                    <th class="hasinput">
+                        <input type="text" class="form-control" placeholder="TIPO DE REGISTRO"/>
+                    </th>
+                  </tr>                          
+                  <tr style="background-color: #66b2e8">
+                    <th style="width:4%;">COD. DA.</th>
+                    <th style="width:4%;">COD. UE.</th>
+                    <th style="width:4%;">COD. PROG.</th>
+                    <th style="width:4%;">COD. PROY.</th>
+                    <th style="width:4%;">COD. ACT.</th>
+                    <th style="width:10%;">'.$titulo.'</th>
+                    <th style="width:5%;">COD. ACT.</th>
+                    <th style="width:1%;"></th>
+                    <th style="width:5%;">PARTIDA</th>
+                    <th style="width:20%;">REQUERIMIENTO</th>
+                    <th style="width:5%;">UNIDAD DE MEDIDA</th>
+                    <th style="width:5%;">CANTIDAD</th>
+                    <th style="width:5%;">PRECIO</th>
+                    <th style="width:5%;">COSTO TOTAL</th>
+                    <th style="width:5%;">PPTO. CERTIFICADO</th>
+                    <th style="width:10%;">OBSERVACI&Oacute;N</th>
+                    <th style="width:10%;">TIPO MOD.</th>
+                  </tr>
+            </thead>
+              <tbody id="bdi">';
+                $nro=0;
+                foreach ($requerimientos as $row){
+                  $tipo_modificacion='<b style="color:blue">REG. POA</b>';
+                  if($row['ins_tipo_modificacion']==1){
+                    $tipo_modificacion='<b style="color:green">REG. REV. POA</b>';
+                  }
+                  $nro++;
+                  $tabla.='<tr>';
+                      $tabla.='<td style="height:50px;">'.$row['dep_cod'].'</td>';
+                      $tabla.='<td>'.$row['dist_cod'].'</td>';
+                      $tabla.='<td>'.$row['aper_programa'].'</td>';
+                      $tabla.='<td>';
+                      if($tp_id==1){
+                        $tabla.=''.$row['proy_sisin'].'';
+                      }
+                      else{
+                        $tabla.=''.$row['aper_proyecto'].'';
+                      }
+                      $tabla.='</td>';
+                      $tabla.='<td>'.$row['aper_actividad'].'</td>';
+                      $tabla.='<td>';
+                        if($row['tp_id']==1){
+                          $tabla.=''.$row['proy_nombre'].'';
+                        }
+                        else{
+                          $tabla.=''.$row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'].'';
+                        }
+                      $tabla.='</td>';
+                      $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#e4f3dc"><b>'.$row['form4_cod'].'</b></td>';
+                      $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3">';
+                        if($row['ins_ejec_cpoa']==1){
+                          $tabla.='<a href="#" data-toggle="modal" data-target="#modal_getcpoas" class="btn btn-default" name="'.$row['ins_id'].'" onclick="ver_getcertpoa('.$row['ins_id'].');" title="VER MIS CERTIFICACIONES POA - '.$row['ins_id'].'"><img src="'.base_url().'assets/img/ifinal/doc.jpg" WIDTH="35" HEIGHT="35"/></a>';
+                        }
+                      $tabla.='</td>';
+                      $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3"><b>'.$row['par_codigo'].'</b></td>';
+                      $tabla.='<td bgcolor="#f4f5f3" title="'.$row['ins_id'].'">'.strtoupper($row['ins_detalle']).'</td>';
+                      $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_unidad_medida']).'</td>';
+                      $tabla.='<td bgcolor="#f4f5f3" align="right">'.round($row['ins_cant_requerida'],2).'</td>';
+                      $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
+                      $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
+                      $tabla.='<td style="font-size: 13px;" align="right" bgcolor="#c1f5ee"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
+                      $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_observacion']).'</td>';
+                      $tabla.='<td align="center">'.$tipo_modificacion.'</td>';
+                  $tabla.='</tr>';
                 }
-                else{
-                  $tabla.=''.$row['aper_proyecto'].'';
-                }
-                $tabla.='</td>';
-                $tabla.='<td>'.$row['aper_actividad'].'</td>';
-                $tabla.='<td>';
-                  if($row['tp_id']==1){
-                    $tabla.=''.$row['proy_nombre'].'';
-                  }
-                  else{
-                    $tabla.=''.$row['tipo'].' '.$row['proy_nombre'].' - '.$row['abrev'].'';
-                  }
-                $tabla.='</td>';
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#e4f3dc"><b>'.$row['form4_cod'].'</b></td>';
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3">';
-                  if($row['ins_ejec_cpoa']==1){
-                    $tabla.='<a href="#" data-toggle="modal" data-target="#modal_getcpoas" class="btn btn-default" name="'.$row['ins_id'].'" onclick="ver_getcertpoa('.$row['ins_id'].');" title="VER MIS CERTIFICACIONES POA - '.$row['ins_id'].'"><img src="'.base_url().'assets/img/ifinal/doc.jpg" WIDTH="35" HEIGHT="35"/></a>';
-                  }
-                $tabla.='</td>';
-                $tabla.='<td style="font-size: 15px;" align="center" bgcolor="#f4f5f3"><b>'.$row['par_codigo'].'</b></td>';
-                $tabla.='<td bgcolor="#f4f5f3" title="'.$row['ins_id'].'">'.strtoupper($row['ins_detalle']).'</td>';
-                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_unidad_medida']).'</td>';
-                $tabla.='<td bgcolor="#f4f5f3" align="right">'.round($row['ins_cant_requerida'],2).'</td>';
-                $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_unitario'], 2, ',', '.').'</td>';
-                $tabla.='<td bgcolor="#f4f5f3" align="right">'.number_format($row['ins_costo_total'], 2, ',', '.').'</td>';
-                $tabla.='<td style="font-size: 13px;" align="right" bgcolor="#c1f5ee"><b>'.number_format($row['ins_monto_certificado'], 2, ',', '.').'</b></td>';
-                $tabla.='<td bgcolor="#f4f5f3">'.strtoupper($row['ins_observacion']).'</td>';
-                $tabla.='<td align="center">'.$tipo_modificacion.'</td>';
-            $tabla.='</tr>';
-          }
           $tabla.='
           </tbody>
         </table>';

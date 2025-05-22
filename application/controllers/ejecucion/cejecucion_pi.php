@@ -16,6 +16,7 @@ class Cejecucion_pi extends CI_Controller {
           $this->load->model('programacion/model_componente');
           $this->load->model('mantenimiento/model_ptto_sigep');
           $this->load->model('programacion/insumos/model_insumo');
+          $this->load->model('ejecucion/model_evaluacion');
           $this->pcion = $this->session->userData('pcion');
           $this->gestion = $this->session->userData('gestion');
           $this->adm = $this->session->userData('adm');
@@ -65,32 +66,16 @@ class Cejecucion_pi extends CI_Controller {
           <a href="javascript:abreVentana(\''.site_url("").'/prog/reporte_form4_consolidado/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR REPORTE POA"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="18" HEIGHT="18"/>&nbsp;&nbsp;GENERAR POA '.$this->gestion.'</a>&nbsp;
           <a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="GENERAR FICHA TECNICA DE PROYECTO"><img src="'.base_url().'assets/Iconos/page_white_acrobat.png" WIDTH="18" HEIGHT="18"/>&nbsp;&nbsp;GENERAR FICHA TECNICA</a>&nbsp;';
           
-          /*$data['cabecera_formulario'].='
-          <br><br>
-          <select class="form-control" onchange="update_meses(this.value,'.$proyecto[0]['proy_id'].');" style="width:10%;">';
-            for ($i=1; $i <=$this->verif_mes[1]; $i++) { 
-              $mes=$this->model_proyecto->mes_id($i);
-              if($i==$this->verif_mes[1]){
-                $data['cabecera_formulario'].="<option value=".$i." selected>".$mes[0]['m_descripcion']."</option>";
-              }
-              else{
-                $data['cabecera_formulario'].="<option value=".$i.">".$mes[0]['m_descripcion']."</option>";
-              }
-
-            }
-
-          $data['cabecera_formulario'].='
-          </select>';*/
-          
-        $data['calificacion']=$this->calificacion_proyecto($proyecto);
+        $calificacion_trimestre=$this->cumplimiento_trimestre($proyecto,0);
+        $calificacion_gestion=$this->cumplimiento_gestion($proyecto,0);
         $data['reporte']='<a href="javascript:abreVentana(\''.site_url("").'/reporte_ficha_tecnica_pi/'.$proyecto[0]['proy_id'].'\');" class="btn btn-default" title="REPORTE FORM. 4"><img src="'.base_url().'assets/ifinal/requerimiento.png" WIDTH="25" HEIGHT="25"/><br><font size=1><b>FORM. N°4</b></font></a>';
-        $data['formulario_datos_generales']=$this->tabla_datos_generales($proyecto,$com_id); /// Datos Generales
-        $data['formulario_ejec_partidas']=$this->tabla_formulario_ejecucion_partidas($proyecto,$com_id); /// Ejecucion Financiera por Partidas
-        $data['formulario_contratos']='Contratos'; /// Contratos de la Obra
+        $formulario_datos_generales=$this->tabla_datos_generales($proyecto,$com_id); /// Datos Generales
+        $formulario_ejec_partidas=$this->tabla_formulario_ejecucion_partidas($proyecto,$com_id); /// Ejecucion Financiera por Partidas
+        //$formulario_contratos='Contratos'; /// Contratos de la Obra
 
-        $data['galeria']=$this->galeria_pi($proyecto); /// Galeria de fotos P inversion
+        $galeria=$this->galeria_pi($proyecto); /// Galeria de fotos P inversion
         
-        $data['cuadro_consolidado']='
+        $cuadro_consolidado='
         <div class="row" id="btn_generar">
           <center><button type="button" onclick="generar_cuadro_consolidado_ejecucion_pi('.$proyecto[0]['proy_id'].');" class="btn btn-default"><img src="'.base_url().'assets/ifinal/grafico4.png" WIDTH="100" HEIGHT="100"/><br><b>GENERAR CUADRO DE DE EJECUCIÓN POA</b></button></center>
         </div>
@@ -117,7 +102,6 @@ class Cejecucion_pi extends CI_Controller {
           </div>
         </div>
 
-        
         <div class="col-sm-12">
           <hr>
           <div class="table-responsive" id="cuadro_consolidado_vista"></div>
@@ -125,6 +109,82 @@ class Cejecucion_pi extends CI_Controller {
           <div id="cuadro_consolidado_impresion" style="display: none"></div>
         </div>';
         
+        $ppto_asignado=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1);
+        $ppto_programado=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],2);
+
+        if(count($ppto_programado)!=0 || ($ppto_asignado[0]['monto']==$ppto_programado[0]['monto']) ){
+            $data['cuerpo_seguimiento_poa']='
+            <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
+                <header>
+                    <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+                    <h2><b>EJECUCIÓN PROYECTOS DE INVERSIÓN </b></h2>
+
+                    <ul class="nav nav-tabs pull-right in" id="myTab">
+                        <li class="active">
+                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>DATOS DEL PROYECTO</b></span></a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>EJECUCIÓN FINANCIERA</b></span></a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>GALERIA</b></span></a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>CONSOLIDADO EJECUCIÓN FINANCIERA</b></span></a>
+                        </li>
+                    </ul>
+                </header>
+                        
+                <!-- widget div-->
+                <div class="no-padding">
+                    <div class="jarviswidget-editbox">
+                        test
+                    </div>
+                    <div class="widget-body">
+                        <!-- content -->
+                        <div id="myTabContent" class="tab-content">
+                            <div class="row">
+                              <article class="col-sm-12 col-md-12 col-lg-6">
+                                <div id="efi">'.$calificacion_trimestre.'</div>
+                              </article>
+                              <article class="col-sm-12 col-md-12 col-lg-6">
+                                <div id="efi2">'.$calificacion_gestion.'</div>
+                              </article>
+                            </div>
+
+                            <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
+                                '.$formulario_datos_generales.'
+                            </div>
+                            <!-- end s1 tab pane -->
+
+                            <div class="tab-pane fade" id="s2" title="CUADRO DE SEGUIMIENTO POA">
+                               '.$formulario_ejec_partidas.'
+                            </div>
+                            <!-- end s2 tab pane -->
+
+                            <div class="tab-pane fade" id="s3" title="GALERIA DE FOTOS">
+                               '.$galeria.'
+                            </div>
+                            <!-- end s2 tab pane -->
+
+                            <div class="tab-pane fade" id="s4" title="CUADRO CONSOLIDADO POA">
+                               '.$cuadro_consolidado.'
+                            </div>
+                            <!-- end s3 tab pane -->
+                        </div>
+                        <!-- end content -->
+                    </div>
+                </div>
+                <!-- end widget div -->
+            </div>';
+        }
+        else{
+          $data['cuerpo_seguimiento_poa']='
+          <div class="alert alert-'.$tp.'" role="alert" align="center">
+            <b><>
+          </div>';
+        }
+
         $this->load->view('admin/ejecucion_pi/formulario_pinversion', $data);
 
       }
@@ -155,7 +215,7 @@ class Cejecucion_pi extends CI_Controller {
 
       $matriz=$this->ejecucion_finpi->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
 
-      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
+      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz,0); /// tabla vista
       $cuadro_consolidado_impresion=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
 
       $result = array(
@@ -190,7 +250,7 @@ class Cejecucion_pi extends CI_Controller {
       $ppto_ejecutado_sigep=$this->model_ptto_sigep->get_ppto_ejecutado_institucional(); /// Ppto Ejecutado sigep
 
       $matriz=$this->ejecucion_finpi->matriz_consolidado_ejecucion_pinversion($ppto_programado_poa_inicial,$ppto_programado_poa,$ppto_ejecutado_sigep);
-      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz); /// tabla vista
+      $cuadro_consolidado=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion($matriz,0); /// tabla vista
       $cuadro_consolidado_impresion=$this->ejecucion_finpi->tabla_consolidado_ejecucion_pinversion_impresion($matriz); /// tabla impresion
 
       $tabla='<div class="row">
@@ -239,29 +299,76 @@ class Cejecucion_pi extends CI_Controller {
 
 
 
-  /*-- CALIFICACION EJECUCION POR PROYECTO --*/
-  public function calificacion_proyecto($proyecto){
-    $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1); /// monto total asignado poa
-    $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($proyecto[0]['aper_id']); /// monto total ejecutado poa
-    $eficacia=0;
+  /*-- CALIFICACION EJECUCION POR PROYECTO POR TRIMESTRE-*/
+  public function cumplimiento_trimestre($proyecto,$tp){
+    //// Asig - Ejec (al trimestre)
+    $ppto_prog_trimestre=$this->model_ptto_sigep->ppto_poa_ejecutado_al_trimestre($proyecto[0]['aper_id'],$this->tmes,1); /// prog
+    $ppto_ejec_trimestre=$this->model_ptto_sigep->ppto_poa_ejecutado_al_trimestre($proyecto[0]['aper_id'],$this->tmes,2); /// ejec
+    $cumplimiento_trimestral=0;
+    $ppto_ejec=0;
+    if(count($ppto_ejec_trimestre)!=0){
+      $ppto_ejec=$ppto_ejec_trimestre[0]['monto'];
+      $cumplimiento_trimestral=round((($ppto_ejec/$ppto_prog_trimestre[0]['monto'])*100),2);
+    }
+
+    if($tp==0){ //// vista
+      return $this->parametro_calificacion($cumplimiento_trimestral,1);
+    }
+    else{
+      return $cumplimiento_trimestral;
+    }
+    
+  }
+
+
+
+  /*-- CALIFICACION EJECUCION POR PROYECTO POR GESTION --*/
+  public function cumplimiento_gestion($proyecto,$tp){
+    //// Asig - Ejec (a Gestion)
+    $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_accion($proyecto[0]['aper_id'],1); /// monto total asignado (sigep) poa GESTION
+    $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep($proyecto[0]['aper_id']); /// monto total ejecutado poa GESTION
+    $cumplimiento_trimestral=0;
     if(count($total_ppto_asignado)!=0 & count($total_ppto_ejecutado)!=0){
-      $eficacia=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['monto']))*100,2);
+      $cumplimiento_trimestral=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['monto']))*100,2);
+    }
+
+    if($tp==0){ /// vista
+      return $this->parametro_calificacion($cumplimiento_trimestral,2);
+    }
+    else{
+      return $cumplimiento_trimestral;
+    }
+    
+  }
+
+
+
+  public function parametro_calificacion($cumplimiento,$tipo){
+    $trimestre=$this->model_evaluacion->get_trimestre($this->tmes);
+    // tp 1 : trimestral
+    // tp 2 : gestion
+    $det=' al '.$trimestre[0]['trm_descripcion'].' / '.$this->gestion;
+    if($tipo==2){
+      $det=' GESTIÓN '.$this->gestion;
     }
 
     $titulo='';
-    if($eficacia<=50){$tp='danger';$titulo='EJECUCIÓN FINANCIERA '.$this->gestion.': '.$eficacia.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
-    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='EJECUCIÓN FINANCIERA '.$this->gestion.': '.$eficacia.'% (REGULAR)';} /// Regular - Amarillo
-    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='EJECUCIÓN FINANCIERA '.$this->gestion.': '.$eficacia.'% (BUENO))';} /// Bueno - Azul
-    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='EJECUCIÓN FINANCIERA '.$this->gestion.': '.$eficacia.'% (OPTIMO)';} /// Optimo - verde
+    if($cumplimiento<=50){$tp='danger';$titulo=$cumplimiento.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
+    if($cumplimiento > 50 & $cumplimiento <= 75){$tp='warning';$titulo=$cumplimiento.'% (REGULAR)';} /// Regular - Amarillo
+    if($cumplimiento > 75 & $cumplimiento <= 99){$tp='info';$titulo=$cumplimiento.'% (BUENO))';} /// Bueno - Azul
+    if($cumplimiento > 99 & $cumplimiento <= 101){$tp='success';$titulo=$cumplimiento.'% (OPTIMO)';} /// Optimo - verde
 
     $tabla='
       <hr>
       <div class="alert alert-'.$tp.'" role="alert" align="center">
-        <h2><b>'.$titulo.'</b></h2>
+        EJECUCIÓN FINANCIERA'.$det.'<br><div style="font-size:28px;"><b>'.$titulo.'</b></div>
       </div>';
 
     return $tabla;
   }
+
+
+
 
   /*-- FORMULARIO DATOS GENERALES DEL PROYECTO --*/
   public function tabla_datos_generales($proyecto,$com_id){
@@ -1957,14 +2064,15 @@ public function get_tp_reporte(){
 
     ///---------
     $proyecto = $this->model_proyecto->get_proyecto_inversion($proy_id); // get proyecto
-    $cumplimiento=$this->ejecucion_finpi->cumplimiento_pi($proyecto); // cumplimiento ppto gestion
-    $parametro_cumplimiento=$this->calificacion_proyecto($proyecto);
+    $cumplimiento_gestion=$this->ejecucion_finpi->cumplimiento_pi($proyecto); // cumplimiento ppto gestion
+    $cumplimiento_trimestre=$this->cumplimiento_trimestre($proyecto,1);
     ///---------
 
     $data['cabecera']=$this->ejecucion_finpi->cabecera_ficha_tecnica($titulo_reporte);
     $data['pie']=$this->ejecucion_finpi->pie_ficha_tecnica();
-    $data['datos_proyecto']=$this->ejecucion_finpi->datos_proyecto_inversion($proyecto,$cumplimiento); /// Datos Tecnicos
-    $data['detalle_ejecucion']=$this->ejecucion_finpi->detalle_ejecucion_presupuestaria_pi($proyecto,$parametro_cumplimiento); /// Detalle Ejecucion
+    $data['datos_proyecto']=$this->ejecucion_finpi->datos_proyecto_inversion($proyecto,$cumplimiento_gestion,$cumplimiento_trimestre); /// Datos Tecnicos
+    $data['detalle_ejecucion']=$this->ejecucion_finpi->detalle_ejecucion_presupuestaria_pi($proyecto); /// Detalle Ejecucion
+    $data['consolidado_gestion']=$this->ejecucion_finpi->consolidado_poa_inversion($proyecto); /// Detalle Ejecucion
 
     $this->load->view('admin/ejecucion_pi/reporte_ficha_tecnica_pi', $data);
   }

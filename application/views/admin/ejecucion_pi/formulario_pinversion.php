@@ -135,73 +135,8 @@
                     <div class="row">
                         <article class="col-sm-12">
                             <!-- new widget -->
-                            <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
-                                <header>
-                                    <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                                    <h2><b>EJECUCIÓN PROYECTOS DE INVERSIÓN </b></h2>
-
-                                    <ul class="nav nav-tabs pull-right in" id="myTab">
-                                        <li class="active">
-                                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>DATOS DEL PROYECTO</b></span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s5"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>CONTRATOS DE OBRA</b></span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s2"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>EJECUCIÓN FINANCIERA</b></span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s3"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>GALERIA</b></span></a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#s4"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet"><b>CONSOLIDADO EJECUCIÓN FINANCIERA</b></span></a>
-                                        </li>
-                                    </ul>
-                                </header>
-
-                                <!-- widget div-->
-                                <div class="no-padding">
-                                    <!-- widget edit box -->
-                                    <div class="jarviswidget-editbox">
-                                        test
-                                    </div>
-                                    <!-- end widget edit box -->
-                                    <div class="widget-body">
-                                        <!-- content -->
-                                        <div id="myTabContent" class="tab-content">
-                                            <div id="efi"><?php echo $calificacion;?></div>
-                                            <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1" title="SEGUIMIENTO POA">
-                                                <?php echo $formulario_datos_generales; ?>
-                                            </div>
-                                            <!-- end s1 tab pane -->
-
-                                            <div class="tab-pane fade" id="s5" title="CUADRO DE CONTRATOS">
-                                               <?php echo $formulario_contratos;?>
-                                            </div>
-                                            <!-- end s3 tab pane -->
-
-                                            <div class="tab-pane fade" id="s2" title="CUADRO DE SEGUIMIENTO POA">
-                                               <?php echo $formulario_ejec_partidas;?>
-                                            </div>
-                                            <!-- end s2 tab pane -->
-
-                                            <div class="tab-pane fade" id="s3" title="GALERIA DE FOTOS">
-                                               <?php echo $galeria;?>
-                                            </div>
-                                            <!-- end s2 tab pane -->
-
-                                            <div class="tab-pane fade" id="s4" title="CUADRO CONSOLIDADO POA">
-                                               <?php echo $cuadro_consolidado ?>
-                                            </div>
-                                            <!-- end s3 tab pane -->
-                                        </div>
-                                        <!-- end content -->
-                                    </div>
-                                </div>
-                                <!-- end widget div -->
-                            </div>
+                            <?php echo $cuerpo_seguimiento_poa;?>
                             <!-- end widget -->
-                            
                         </article>
                     </div>
                 </section>

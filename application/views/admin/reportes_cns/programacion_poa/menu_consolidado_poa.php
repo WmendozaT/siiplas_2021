@@ -259,5 +259,53 @@
         <script src = "<?php echo base_url(); ?>mis_js/programacion/programacion/tablas.js"></script>
         <script src = "<?php echo base_url(); ?>mis_js/reportes/rep_resumen_poa.js"></script>
 
+<script>
+function imprimirFiltrados() {
+    const tablaOriginal = document.getElementById('datatable_fixed_column');
+    const filasVisibles = Array.from(tablaOriginal.querySelectorAll('#bdi tr'))
+        .filter(tr => tr.style.display !== 'none');
+    
+    // Clonar tabla para impresión
+    const tablaPrint = tablaOriginal.cloneNode(true);
+    
+    // Configuración de estilos para impresión
+    const printStyles = `
+        <style>
+            @media print {
+                body { font-size: 11pt; padding: 20px; }
+                .table { border-collapse: collapse; width: 100%; }
+                .table th, .table td { border: 1px solid #ddd; padding: 8px; }
+                .hasinput, .btn { display: none; }
+                .bgcolor-special { background-color: #e0f0ff !important; }
+            }
+        </style>
+    `;
+    
+    // Construir contenido
+    const contenido = `
+        <h3>Reporte Filtrado - ${new Date().toLocaleDateString('es-PE')}</h3>
+        ${printStyles}
+        ${tablaPrint.outerHTML}
+    `;
+    
+    // Ventana de impresión
+    const ventana = window.open('', '_blank');
+    ventana.document.write(`
+        <html>
+            <head>
+                <title>Reporte Filtrado ${new Date().toLocaleDateString()}</title>
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+            </head>
+            <body>
+                ${contenido}
+                <script>
+                    window.onafterprint = function() { window.close(); }
+                    window.print();
+                <\/script>
+            </body>
+        </html>
+    `);
+}
+</script>
     </body>
 </html>

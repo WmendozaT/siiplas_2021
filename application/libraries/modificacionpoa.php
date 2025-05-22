@@ -1729,7 +1729,7 @@ class Modificacionpoa extends CI_Controller{
 
                     $nro++;
                     $tabla.='<tr class="modo1">
-                      <td style="width: 1%;height:11px; text-align: center;font-size: 6px;">'.$nro.'</td>
+                      <td style="width: 1%;height:11px; text-align: center;font-size: 6px;" title='.$row['ins_id'].'>'.$nro.'</td>
                       <td style="width: 2.1%; text-align: center;font-size: 12px;"><b>'.$item_mod[0]['prod_cod'].'</b></td>
                       <td style="width: 3.8%; text-align: center;">'.$item_mod[0]['par_codigo'].'</td>
                       <td style="width: 16%; text-align: left;">'.$item_mod[0]['ins_detalle'].'</td>

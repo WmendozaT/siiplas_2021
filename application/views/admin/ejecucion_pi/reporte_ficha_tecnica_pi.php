@@ -25,16 +25,16 @@ ob_start();
     </page_footer>
     <?php echo $datos_proyecto;?>
 </page>
-<page backtop="32mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
+<page orientation="paysage" backtop="32mm" backbottom="10mm" backleft="5mm" backright="5mm" pagegroup="new">
     <page_header>
         <br><div class="verde"></div>
-        <?php echo $cabecera; ?>         
+        <?php echo $cabecera; ?>
     </page_header>
     
     <page_footer>
         <?php echo $pie;?>
     </page_footer>
-    <?php echo $detalle_ejecucion;?>
+    <?php echo $detalle_ejecucion.' '.$consolidado_gestion;?>
 </page>
 
 <?php
