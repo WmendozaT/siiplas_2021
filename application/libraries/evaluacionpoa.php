@@ -171,7 +171,164 @@ class Evaluacionpoa extends CI_Controller{
   }
 
     /*--- TABLA ACUMULADA EVALUACIÓN 2020 - REGIONAL, DISTRITAL ---*/
-    public function tabla_acumulada_evaluacion_regional_distrital($regresion,$tp_graf,$tip_rep){
+    public function tabla_acumulada_evaluacion_regional_distrital($regresion,$trm_id,$tp_graf,$tip_rep){
+      $tabla='';
+      $tit[2]='<b>NRO. ACT. PROGRAMADAS</b>';
+      $tit[3]='<b>NRO. ACT. CUMPLIDAS</b>';
+      $tit[4]='<b>NRO. ACT. NO CUMPLIDAS</b>';
+      $tit[5]='<b>(%) CUMPLIMIENTO</b>';
+      $tit[6]='<b>(%) INCUMPLIMIENTO</b>';
+
+      $tit_total[2]='<b>NRO. ACT. PROGRAMADAS</b>';
+      $tit_total[3]='<b>NRO. ACT. CUMPLIDAS</b>';
+      $tit_total[4]='<b>(%) PROGRAMACION AL TRIMESTRE</b>';
+      $tit_total[5]='<b>(%) CUMPLIMIENTO AL TRIMESTRE</b>';
+
+      $tabla.='
+        <style>
+          .tabla-impresion {
+            width: 95%;
+            margin: 0 auto;
+            font-size: 9pt;
+            border-collapse: collapse;
+            page-break-inside: avoid;
+            
+            th {
+              background: #11574e;
+              color: black;
+              padding: 10px;
+              position: sticky;
+              top: 0;
+            }
+            
+            td {
+              padding: 8px;
+              border: 1px solid #e0e0e0;
+            }
+          }
+        </style>';
+
+      if($tip_rep==1){ /// Normal
+        $tab='class="table table-bordered" align=center style="width:100%;"';
+      } 
+      else{ /// Impresion
+        $tab='class="tabla-impresion" border=1 style="width:100%;"';
+      }
+
+      
+
+      if($tp_graf==1){ // pastel : Programado-Cumplido
+/*        $tabla.='
+        <br>
+        <table '.$tab.'>
+          <thead>
+              <tr align=center>
+                <th><b>ACT. PROGRAMADAS</b></th>
+                <th><b>ACT. EVALUADAS</b></th>
+                <th><b>ACT. CUMPLIDAS</b></th>
+                <th><b>ACT. NO CUMPLIDAS</b></th>
+                <th><b>(%) CUMPLIMIENTO POA</b></th>
+                <th><b>(%) INCUMPLIMIENTO</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr align=right>
+                <td><b>'.$regresion[2][$trm_id].'</b></td>
+                <td><b>'.$regresion[2][$trm_id].'</b></td>
+                <td><b>'.$regresion[3][$trm_id].'</b></td>
+                <td><b>'.$regresion[4][$trm_id].'</b></td>
+                <td><button type="button" style="width:100%;" class="btn btn-info"><b>'.$regresion[5][$trm_id].'%</b></button></td>
+                <td><button type="button" style="width:100%;" class="btn btn-danger"><b>'.$regresion[6][$trm_id].'%</b></button></td>
+              </tr>
+            </tbody>
+        </table>';*/
+      }
+      elseif($tp_graf==2){ /// Regresion Acumulado al Trimestre
+        $tabla.='
+        <br><br>
+        <b>DETALLE : </b><br>
+        <table '.$tab.'>
+            <thead>
+              <tr>
+                <th></th>';
+                for ($i=1; $i <=$trm_id; $i++) { 
+                  $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
+                }
+              $tabla.='
+              </tr>
+            </thead>
+            <tbody>';
+              $color=''; $por='';
+              for ($i=2; $i <=6; $i++) {
+                if($i==5){
+                  $por='%';
+                  $color='#9de9f3';
+                }
+                elseif ($i==6) {
+                  $por='%';
+                  $color='#f7d3d0';
+                }
+                $tabla.='<tr bgcolor='.$color.' >
+                  <td>'.$tit[$i].'</td>';
+                  for ($j=1; $j <=$trm_id; $j++) { 
+                    $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
+                  }
+                $tabla.='</tr>';
+              }
+            $tabla.='
+            </tbody>
+        </table>';
+      }
+      elseif($tp_graf==3){ /// Regresion Gestion
+        $tabla.='
+        <br><br>
+        <h4><b>'.$regresion[5][$trm_id].'%</b> CUMPLIMIENTO DE '.$regresion[1][$trm_id].' CON RESPECTO A LA GESTIÓN '.$this->gestion.'</h4>
+        <table '.$tab.'>
+          <thead>
+              <tr>
+                <th></th>';
+                for ($i=1; $i <=4; $i++) { 
+                  $tabla.='<th align=center><b>'.$regresion[1][$i].'</b></th>';
+                }
+              $tabla.='
+              </tr>
+              </thead>
+            <tbody>';
+              $color=''; $por='';
+              for ($i=2; $i <=5; $i++) {
+                if($i==4 || $i==5){
+                  $por='%';
+                  $color='#9de9f3';
+                }
+                $tabla.='<tr bgcolor='.$color.'>
+                  <td>'.$tit_total[$i].'</td>';
+                  for ($j=1; $j <=4; $j++) { 
+                    $tabla.='<td align=right><b>'.$regresion[$i][$j].''.$por.'</b></td>';
+                  }
+                $tabla.='</tr>';
+              }
+            $tabla.='
+            </tbody>
+        </table>';
+      }
+      else{
+        $tabla.='
+        <br><br>
+        <b>DETALLE : </b><br>
+          <ul>
+            <li> Actividades Programadas:&nbsp;&nbsp;<b>'.$regresion[2][$trm_id].'</b></li>
+            <li> Actividades Evaluadas:&nbsp;&nbsp;<b>'.$regresion[2][$trm_id].'</b></li>
+            <li> Actividades Cumplidas:&nbsp;&nbsp;<b>'.$regresion[3][$trm_id].'</b></li>
+            <li> Actividades en Proceso:&nbsp;&nbsp;<b>'.$regresion[7][$trm_id].'</b></li>
+            <li> Actividades <b>NO </b>Cumplidas:&nbsp;&nbsp;<b>'.($regresion[2][$trm_id]-($regresion[7][$trm_id]+$regresion[3][$trm_id])).'</b></li>
+            <li> <b>(%) DE CUMPLIMIENTO AL POA:&nbsp;&nbsp;'.$regresion[5][$trm_id].'%</b></li>
+            <li> <b>(%) DE INCUMPLIMIENTO AL POA:&nbsp;&nbsp;'.$regresion[6][$trm_id].'%</b></li>
+          </ul>';
+      }
+
+      return $tabla;
+    }
+/*    public function tabla_acumulada_evaluacion_regional_distrital($regresion,$tp_graf,$tip_rep){
       $tabla='';
 
       $tit[2]='<b>NRO. ACT. PROG.</b>';
@@ -313,7 +470,7 @@ class Evaluacionpoa extends CI_Controller{
       }
 
       return $tabla;
-    }
+    }*/
 
 
 

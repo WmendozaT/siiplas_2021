@@ -81,9 +81,10 @@ class Crep_evalunidad extends CI_Controller {
         $titulo = [];
         for ($i = 0; $i <= $this->tmes; $i++) {$titulo[] = $matriz[1][$i];}
         $programacion = [];
-        for ($i = 1; $i <= $this->tmes; $i++) {$programacion[] = (int)$matriz[2][$i];}
+        for ($i = 0; $i <= $this->tmes; $i++) {$programacion[] = (int)$matriz[2][$i];}
         $ejecucion = [];
-        for ($i = 1; $i <= $this->tmes; $i++) { $ejecucion[] = (int)$matriz[3][$i];}
+        for ($i = 0; $i <= $this->tmes; $i++) { $ejecucion[] = (int)$matriz[3][$i];}
+
 
         /// Tabla Seguimiento acumulado
         $tabla_regresion=$this->seguimientopoa->tabla_acumulada_evaluacion_servicio($matriz,$this->tmes,2,0); /// Tabla que muestra el acumulado al trimestres Regresion
@@ -648,7 +649,7 @@ class Crep_evalunidad extends CI_Controller {
           },
           series: [{
               name: "NRO. ACT. PROGRAMADO AL TRIMESTRE",
-              data: [0,'.json_encode($prog).'],
+              data: '.json_encode($prog).',
                color: "#3b82f6",
             marker: {
               lineColor: "#3b82f6"
@@ -656,7 +657,7 @@ class Crep_evalunidad extends CI_Controller {
             lineWidth: 3
           }, {
               name: "NRO. ACT. CUMPLIDAS AL TRIMESTRE",
-              data: [0,'.json_encode($ejec).'],
+              data: '.json_encode($ejec).',
                color: "#10b981",
             marker: {
               lineColor: "#10b981"

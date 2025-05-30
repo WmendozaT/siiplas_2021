@@ -1,4 +1,4 @@
-base = $('[name="base"]').val();
+/*base = $('[name="base"]').val();
 tab2 = $('[name="tabla2"]').val();
 tab3 = $('[name="tabla3"]').val();
 tab4 = $('[name="tabla4"]').val();
@@ -6,7 +6,7 @@ tab5 = $('[name="tabla5"]').val();
 tab6 = $('[name="tabla6"]').val();
 tab7 = $('[name="tabla7"]').val();
 tab8 = $('[name="tabla8"]').val();
-titulo_evaluacion = $('[name="tit"]').val();
+titulo_evaluacion = $('[name="tit"]').val();*/
 
 function abreVentana_eficiencia(PDF){             
   var direccion;
@@ -428,74 +428,74 @@ function abreVentana_eficiencia(PDF){
 
 
     /// Grafico regresion por trimestre
-    function graf_regresion_trimestral_temporalidad_prog_ejec(grafico,matriz,titulo,subtitulo,tit_laterales) {
-      let programado=[];
-      for (var i = 0; i <=12; i++) {
-        programado[i]= matriz[5][i];
-      }
+    // function graf_regresion_trimestral_temporalidad_prog_ejec(grafico,matriz,titulo,subtitulo,tit_laterales) {
+    //   let programado=[];
+    //   for (var i = 0; i <=12; i++) {
+    //     programado[i]= matriz[5][i];
+    //   }
 
-      let ejecutado=[];
-      for (var i = 0; i <=12; i++) {
-        ejecutado[i]= matriz[6][i];
-      }
+    //   let ejecutado=[];
+    //   for (var i = 0; i <=12; i++) {
+    //     ejecutado[i]= matriz[6][i];
+    //   }
 
-      ///----
-      chart = new Highcharts.Chart({
-      chart: {
-        renderTo: grafico,  // Le doy el nombre a la gráfica
-        defaultSeriesType: 'line' // Pongo que tipo de gráfica es
-      },
-      title: {
-        text: titulo  // Titulo (Opcional)
-      },
-      subtitle: {
-        text: '<b>'+subtitulo+'</b>'   // Subtitulo (Opcional)
-      },
-      // Pongo los datos en el eje de las 'X'
-      xAxis: {
-        categories: ['','ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
-        // Pongo el título para el eje de las 'X'
-        title: {
-          text: tit_laterales
-        }
-      },
-      yAxis: {
-        // Pongo el título para el eje de las 'Y'
-        title: {
-          text: ''
-        }
-      },
-      // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
-      tooltip: {
-        enabled: true,
-        formatter: function() {
-          return '<b>'+ this.series.name +'</b><br/>'+
-            this.x +': '+ this.y +' '+this.series.name;
-        }
-      },
-      // Doy opciones a la gráfica
-      plotOptions: {
-        line: {
-          dataLabels: {
-            enabled: true
-          },
-          enableMouseTracking: true
-        }
-      },
-      // Doy los datos de la gráfica para dibujarlas
-      series: [
-          {
-            name: '% PROG. ACUMULADO',
-            data: programado
-          },
-          {
-            name: '% EJEC. ACUMULADO',
-            data: ejecutado
-          }
-        ],
+    //   ///----
+    //   chart = new Highcharts.Chart({
+    //   chart: {
+    //     renderTo: grafico,  // Le doy el nombre a la gráfica
+    //     defaultSeriesType: 'line' // Pongo que tipo de gráfica es
+    //   },
+    //   title: {
+    //     text: titulo  // Titulo (Opcional)
+    //   },
+    //   subtitle: {
+    //     text: '<b>'+subtitulo+'</b>'   // Subtitulo (Opcional)
+    //   },
+    //   // Pongo los datos en el eje de las 'X'
+    //   xAxis: {
+    //     categories: ['','ENE.','FEB.','MAR.','ABR.','MAY.','JUN.','JUL.','AGO.','SEPT.','OCT.','NOV.','DIC.'],
+    //     // Pongo el título para el eje de las 'X'
+    //     title: {
+    //       text: tit_laterales
+    //     }
+    //   },
+    //   yAxis: {
+    //     // Pongo el título para el eje de las 'Y'
+    //     title: {
+    //       text: ''
+    //     }
+    //   },
+    //   // Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+    //   tooltip: {
+    //     enabled: true,
+    //     formatter: function() {
+    //       return '<b>'+ this.series.name +'</b><br/>'+
+    //         this.x +': '+ this.y +' '+this.series.name;
+    //     }
+    //   },
+    //   // Doy opciones a la gráfica
+    //   plotOptions: {
+    //     line: {
+    //       dataLabels: {
+    //         enabled: true
+    //       },
+    //       enableMouseTracking: true
+    //     }
+    //   },
+    //   // Doy los datos de la gráfica para dibujarlas
+    //   series: [
+    //       {
+    //         name: '% PROG. ACUMULADO',
+    //         data: programado
+    //       },
+    //       {
+    //         name: '% EJEC. ACUMULADO',
+    //         data: ejecutado
+    //       }
+    //     ],
         
-      });
-    }
+    //   });
+    // }
 
 
   /// IMPRESION DE GRAFICOS CONSOLIDADO DE FORM 4 Y 5
@@ -572,38 +572,38 @@ function abreVentana_eficiencia(PDF){
 
     ////// AREA DE IMPRESION 
       //// Evaluacion POA
-      function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
-      var ventana = window.open('Evaluacion POA ', 'PRINT', 'height=800,width=1000');
-      ventana.document.write('<html><head><title>EVALUACIÓN POA</title>');
-      //ventana.document.write('<link rel="stylesheet" href="assets/print_static.css">');
-      ventana.document.write('</head><body>');
-     // ventana.document.write('<style type="text/css" media="print">div.page { writing-mode: tb-rl;height: 100%;margin: 100% 100%;}</style>');
-      //ventana.document.write('<style type="text/css">@media print{body{writing-mode: rl;}}.verde{ width:100%; height:5px; background-color:#1c7368;}.blanco{ width:100%; height:5px; background-color:#F1F2F1;}</style>');
-      ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
-     // ventana.document.write('<div class="page">');
-      ventana.document.write('<hr>');
-      ventana.document.write(cabecera.innerHTML);
-      ventana.document.write('<hr>');
-      ventana.document.write(eficacia.innerHTML);
-      ventana.document.write(grafico.innerHTML);
-      ventana.document.write('<hr>');
-      ventana.document.write(tabla.innerHTML);
-/*      ventana.document.write("<p>");
-      ventana.document.write("<div style='font-size: 10px;'>[Copyright]:Departamento Nacional de Planificación - Sistema de Planificación de Salud SIIPLAS V.2</div>");
-      ventana.document.write("<\/p>");*/
-     // ventana.document.write('</div>');
-      ventana.document.write('</body></html>');
-      ventana.document.close();
-      ventana.focus();
-      ventana.onload = function() {
-        ventana.print();
-        ventana.close();
-      };
-      return true;
-    }
+//       function imprimirSeguimiento(grafico,cabecera,eficacia,tabla) {
+//       var ventana = window.open('Evaluacion POA ', 'PRINT', 'height=800,width=1000');
+//       ventana.document.write('<html><head><title>EVALUACIÓN POA</title>');
+//       //ventana.document.write('<link rel="stylesheet" href="assets/print_static.css">');
+//       ventana.document.write('</head><body>');
+//      // ventana.document.write('<style type="text/css" media="print">div.page { writing-mode: tb-rl;height: 100%;margin: 100% 100%;}</style>');
+//       //ventana.document.write('<style type="text/css">@media print{body{writing-mode: rl;}}.verde{ width:100%; height:5px; background-color:#1c7368;}.blanco{ width:100%; height:5px; background-color:#F1F2F1;}</style>');
+//       ventana.document.write('<style type="text/css">table.change_order_items { font-size: 6.5pt;width: 100%;border-collapse: collapse;margin-top: 2.5em;margin-bottom: 2.5em;}table.change_order_items>tbody { border: 0.5px solid black;} table.change_order_items>tbody>tr>th { border-bottom: 1px solid black;}</style>');
+//      // ventana.document.write('<div class="page">');
+//       ventana.document.write('<hr>');
+//       ventana.document.write(cabecera.innerHTML);
+//       ventana.document.write('<hr>');
+//       ventana.document.write(eficacia.innerHTML);
+//       ventana.document.write(grafico.innerHTML);
+//       ventana.document.write('<hr>');
+//       ventana.document.write(tabla.innerHTML);
+// /*      ventana.document.write("<p>");
+//       ventana.document.write("<div style='font-size: 10px;'>[Copyright]:Departamento Nacional de Planificación - Sistema de Planificación de Salud SIIPLAS V.2</div>");
+//       ventana.document.write("<\/p>");*/
+//      // ventana.document.write('</div>');
+//       ventana.document.write('</body></html>');
+//       ventana.document.close();
+//       ventana.focus();
+//       ventana.onload = function() {
+//         ventana.print();
+//         ventana.close();
+//       };
+//       return true;
+//     }
 
     /// Impresion grafico 1 (Regresion al trimestre)
-    document.querySelector("#btnImprimir_evaluacion_trimestre").addEventListener("click", function() {
+/*    document.querySelector("#btnImprimir_evaluacion_trimestre").addEventListener("click", function() {
       var grafico = document.querySelector("#evaluacion_trimestre");
       
       document.getElementById("cabecera").style.display = 'block';
@@ -620,11 +620,11 @@ function abreVentana_eficiencia(PDF){
 
       document.getElementById("tabla_regresion_vista").style.display = 'block';
       document.getElementById("tabla_regresion_impresion").style.display = 'none';
-    });
+    });*/
 
 
     /// Impresion grafico 2 (Pastel al trimestre)
-    document.querySelector("#btnImprimir_evaluacion_pastel").addEventListener("click", function() {
+/*    document.querySelector("#btnImprimir_evaluacion_pastel").addEventListener("click", function() {
       var grafico = document.querySelector("#evaluacion_pastel");
       
       document.getElementById("cabecera1").style.display = 'block';
@@ -642,13 +642,13 @@ function abreVentana_eficiencia(PDF){
       document.getElementById("tabla_pastel_vista").style.display = 'block';
       document.getElementById("tabla_pastel_impresion").style.display = 'none';
       document.getElementById("pastel_canvas").style.display = 'block';
-    });
+    });*/
 
 
 
 
     /// Impresion grafico 3 (Regresion Total)
-    document.querySelector("#btnImprimir_evaluacion_gestion").addEventListener("click", function() {
+/*    document.querySelector("#btnImprimir_evaluacion_gestion").addEventListener("click", function() {
       var grafico = document.querySelector("#evaluacion_gestion");
       
       document.getElementById("cabecera2").style.display = 'block';
@@ -665,7 +665,7 @@ function abreVentana_eficiencia(PDF){
 
       document.getElementById("tabla_regresion_total_vista").style.display = 'block';
       document.getElementById("tabla_regresion_total_impresion").style.display = 'none';
-    });
+    });*/
 
 
 
@@ -673,7 +673,7 @@ function abreVentana_eficiencia(PDF){
 
 
 
-      //// ----CAPTURA GRAFICOS CANVAS
+      //// ----CAPTURA PANTALLA GRAFICOS CANVAS
       var downPdf = document.getElementById("btnregresion");
 
       downPdf.onclick = function() {
@@ -717,7 +717,7 @@ function abreVentana_eficiencia(PDF){
 
     ///// =============== GRAFICO PASTEL HIGTHCARS Y CANVAS
 
-    $(document).ready(function() {  
+/*    $(document).ready(function() {  
      Highcharts.chart('pastel_todosprint', {
       chart: {
           type: 'pie',
@@ -770,6 +770,6 @@ function abreVentana_eficiencia(PDF){
           ]
       }]
     });
-  });
+  });*/
 ////============= ENS PASTEL
 
