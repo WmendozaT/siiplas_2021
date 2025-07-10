@@ -1249,27 +1249,30 @@ class Genera_informacion extends CI_Controller{
                 $color='#dcf7f3';
               }
 
-              $tabla .='<tr bgcolor='.$color.'>';
-                $tabla .='<td title='.$row['cpoa_id'].'>'.$nro.'</td>';
-                $tabla .='<td>'.$codigo.'</td>';
-                $tabla .='<td>'.date('d-m-Y',strtotime($row['cpoa_fecha'])).'</td>';
-                $tabla .='<td>'.strtoupper($row['dist_distrital']).'</td>';
-                $tabla .='<td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</td>';
-                $tabla .='<td>';
-                  if($row['tp_id']==1){
-                    $tabla.=$row['proy_nombre'];
+              if($row['cpoa_estado']==1){
+                $tabla .='<tr bgcolor='.$color.'>';
+                  $tabla .='<td title='.$row['cpoa_id'].'>'.$nro.'</td>';
+                  $tabla .='<td>'.$codigo.'</td>';
+                  $tabla .='<td>'.date('d-m-Y',strtotime($row['cpoa_fecha'])).'</td>';
+                  $tabla .='<td>'.strtoupper($row['dist_distrital']).'</td>';
+                  $tabla .='<td>'.$row['aper_programa'].' '.$row['aper_proyecto'].' '.$row['aper_actividad'].'</td>';
+                  $tabla .='<td>';
+                    if($row['tp_id']==1){
+                      $tabla.=$row['proy_nombre'];
+                    }
+                    else{
+                      $tabla.=$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'];
+                    }
+                  $tabla .='</td>';
+                  $tabla .='<td>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>';
+                  if($tp_id==1){
+                    $tabla .='<td>'.$row['com_componente'].'</td>';
                   }
-                  else{
-                    $tabla.=$row['tipo'].' '.$row['act_descripcion'].' '.$row['abrev'];
-                  }
-                $tabla .='</td>';
-                $tabla .='<td>'.$row['serv_cod'].' '.$row['tipo_subactividad'].' '.$row['serv_descripcion'].'</td>';
-                if($tp_id==1){
-                  $tabla .='<td>'.$row['com_componente'].'</td>';
-                }
-                $tabla .='<td align=center><b>'.$row['cpoa_gestion'].'</b></td>';
-                $tabla .='<td align=center><a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="40" HEIGHT="40"/></a></td>';
-              $tabla .='</tr>';
+                  $tabla .='<td align=center><b>'.$row['cpoa_gestion'].'</b></td>';
+                  $tabla .='<td align=center><a href="javascript:abreVentana(\''. site_url("").'/cert/rep_cert_poa/'.$row['cpoa_id'].'\');" title="CERTIFICADO POA APROBADO"><img src="'.base_url().'assets/ifinal/pdf.png" WIDTH="40" HEIGHT="40"/></a></td>';
+                $tabla .='</tr>';
+              }
+              
             }
             
             $tabla.='

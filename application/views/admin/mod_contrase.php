@@ -7,132 +7,173 @@
         <meta name="author" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         
-        <!-- #CSS Links -->
-        <!-- Basic Styles -->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url()?>assets/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url()?>assets/css/font-awesome.min.css">
-
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css">
         <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url()?>assets/css/smartadmin-production.min.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url()?>assets/css/smartadmin-skins.min.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/smartadmin-production.min.css"> 
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/smartadmin-skins.min.css">
         <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url()?>assets/css/demo.min.css">
-
-        <!-- page related CSS -->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url()?>assets/css/lockscreen.min.css">
-        
-        <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        
-        <!-- Startup image for web apps -->
-        <link rel="apple-touch-startup-image" href="<?php echo base_url()?>assets/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
-        <link rel="apple-touch-startup-image" href="<?php echo base_url()?>assets/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
-        <link rel="apple-touch-startup-image" href="<?php echo base_url()?>assets/img/splash/iphone.png" media="screen and (max-device-width: 320px)">
-
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
+        <!--estiloh-->
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
     </head>
-    
     <body>
 
-        <style type="text/css">
-          #preloader_1{
-    position:relative;
-}
-#preloader_1 span{
-    display:block;
-    bottom:0px;
-    width: 9px;
-    height: 5px;
-    background:#9b59b6;
-    position:absolute;
-    animation: preloader_1 1.5s  infinite ease-in-out;
-}
- 
-#preloader_1 span:nth-child(2){
-left:11px;
-animation-delay: .2s;
- 
-}
-#preloader_1 span:nth-child(3){
-left:22px;
-animation-delay: .4s;
-}
-#preloader_1 span:nth-child(4){
-left:33px;
-animation-delay: .6s;
-}
-#preloader_1 span:nth-child(5){
-left:44px;
-animation-delay: .8s;
-}
-@keyframes preloader_1 {
-    0% {height:5px;transform:translateY(0px);background:#9b59b6;}
-    25% {height:30px;transform:translateY(15px);background:#3498db;}
-    50% {height:5px;transform:translateY(0px);background:#9b59b6;}
-    100% {height:5px;transform:translateY(0px);background:#9b59b6;}
-}
-        </style>
         <div id="main" role="main">
-            <!-- MAIN CONTENT -->
-            <form class="lockscreen animated flipInY" action="<?php echo base_url(); ?>index.php/admin/mods_contras" method="post">
-                <div class="logo">
-                    <h1 class="semi-bold"><img src="<?php echo base_url()?>assets/img/logo-o.png" alt=""/> SIIPLAS V1.0</h1>
-                </div>
-                <div><br><br>
-                    <img src="<?php echo base_url()?>assets/img/avatars/seguridad.png" alt="" width="120" height="140" />
-                    <div>
-                        <h1>   
-                            <i class="fa fa-user fa-3x text-muted air air-top-right hidden-mobile"></i>
-                            <?php echo ''.$this->session->userdata("funcionario");?>
-                            <small>
-                                <i class="fa fa-lock text-muted"></i> 
-                                <p>&nbsp;Modificar Contraseña del usuario:</p> 
-                                <center>
-                                    <?php echo $this->session->userdata("usuario");?>
-                                </center>
-                            </small>
-                        </h1>
-                        <div class="input-group">
-                            <section>
-                                <label class="label" style="color:black;">Contraseña Actual</label>
-                                <input type="password" name="apassword" id="apassword" placeholder="Contraseña Actual" class="form-control" required>
-                            </section>
-                            <section>
-                                <label class="label" style="color:black;">Nueva Contraseña</label>
-                                <input type="password" name="password" id="password" placeholder="Contraseña Actual" class="form-control" required>
-                            </section>
-                            <input class="form-control" name="fun_id" id="fun_id" type="hidden" placeholder="ID" value="<?php echo $this->session->userdata("fun_id");?>">
-                            <button type="submit" class="btn btn-primary">Modificar </button>
-                        </div>
-                        <p class="no-margin margin-top-5">
-                            Para regresar <a href="<?php echo base_url();?>index.php/admin/dashboard">Haga clic aqui</a>
-                        </p>
-                    </div>
-                </div>
-                <p class="font-xs margin-top-5">
-                   SIIPLAS © <?php echo $this->session->userdata('gestion');?>
-                    <div id="preloader_1">
-                        <span style="color: #000;"></span>
-                        <span style="color: #000;"></span>
-                        <span style="color: #000;"></span>
-                        <span style="color: #000;"></span>
-                        <span style="color: #000;"></span>
-                    </div>
-                </p>
-            </form>
-        </div>
-        <!--================================================== -->
-        <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
-        <script src="<?php echo base_url()?>assets/js/plugin/pace/pace.min.js"></script>
-        <!-- BOOTSTRAP JS -->       
-        <script src="<?php echo base_url()?>assets/js/bootstrap/bootstrap.min.js"></script>
-        <!-- JQUERY VALIDATE -->
-        <script src="<?php echo base_url()?>assets/js/plugin/jquery-validate/jquery.validate.min.js"></script>
-        <!-- JQUERY MASKED INPUT -->
-        <script src="<?php echo base_url()?>assets/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-        <!-- MAIN APP JS FILE -->
-        <script src="<?php echo base_url()?>assets/js/app.min.js"></script>
-        
+            <?php echo $formulario; ?>
 
+        </div>
     </body>
+    <script>
+            if (!window.jQuery) {
+                document.write('<script src="<?php echo base_url(); ?>assets/js/libs/jquery-2.0.2.min.js"><\/script>');
+            }
+        </script>
+        <script>
+            if (!window.jQuery.ui) {
+                document.write('<script src="<?php echo base_url(); ?>assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+            }
+        </script>
+   <script>
+        function togglePassword(fieldId) {
+
+            const passwordInput = document.getElementById(fieldId);
+            let toggleIconId;
+            
+            // Determinar el ID del icono basado en el campo
+            switch(fieldId) {
+                case 'password_anterior':
+                    toggleIconId = 'toggleIcon1';
+                    break;
+                case 'password':
+                    toggleIconId = 'toggleIcon2';
+                    break;
+                case 'password_confirm':
+                    toggleIconId = 'toggleIcon3';
+                    break;
+                default:
+                    toggleIconId = 'toggleIcon1';
+            }
+            
+            const toggleIcon = document.getElementById(toggleIconId);
+            
+            if (passwordInput && toggleIcon) {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.textContent = '🙈';
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.textContent = '👁️';
+                }
+            }
+        }
+
+        function checkPasswordRequirements(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[^A-Za-z0-9]/.test(password)
+            };
+
+            // Actualizar visualización de requisitos
+            updateRequirement('lengthReq', requirements.length, '✓ Al menos 8 caracteres', '✗ Al menos 8 caracteres');
+            updateRequirement('uppercaseReq', requirements.uppercase, '✓ Al menos una letra mayúscula', '✗ Al menos una letra mayúscula');
+            updateRequirement('lowercaseReq', requirements.lowercase, '✓ Al menos una letra minúscula', '✗ Al menos una letra minúscula');
+            updateRequirement('numberReq', requirements.number, '✓ Al menos un número', '✗ Al menos un número');
+            updateRequirement('specialReq', requirements.special, '✓ Al menos un carácter especial', '✗ Al menos un carácter especial');
+
+            return Object.values(requirements).every(req => req);
+        }
+
+        function updateRequirement(elementId, isValid, validText, invalidText) {
+            const element = document.getElementById(elementId);
+            element.className = isValid ? 'requirement valid' : 'requirement invalid';
+            element.textContent = isValid ? validText : invalidText;
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('password_confirm').value;
+            const isMatch = password === confirmPassword && password.length > 0;
+            
+            updateRequirement('matchReq', isMatch, '✓ Las contraseñas coinciden', '✗ Las contraseñas coinciden');
+            return isMatch;
+        }
+
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            const passwordValid = checkPasswordRequirements(password);
+            const passwordsMatch = checkPasswordMatch();
+            const currentPassword = document.getElementById('password_anterior').value;
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const isFormValid = passwordValid && passwordsMatch && currentPassword.length > 0;
+            
+            submitBtn.disabled = !isFormValid;
+            
+            if (isFormValid) {
+                submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                submitBtn.style.cursor = 'pointer';
+            } else {
+                submitBtn.style.background = '#ccc';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Event listeners
+        document.getElementById('password').addEventListener('input', validateForm);
+        document.getElementById('password_confirm').addEventListener('input', validateForm);
+        document.getElementById('password_anterior').addEventListener('input', validateForm);
+
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('password_anterior').value;
+            const newPassword = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('password_confirm').value;
+            
+            // Validaciones finales
+            if (!checkPasswordRequirements(newPassword)) {
+                showMessage('La nueva contraseña no cumple con todos los requisitos.', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showMessage('Las contraseñas no coinciden.', 'error');
+                return;
+            }
+            
+            if (currentPassword === newPassword) {
+                showMessage('La nueva contraseña debe ser diferente a la actual.', 'error');
+                return;
+            }
+            
+            // Simulación de envío exitoso
+            showMessage('¡Contraseña cambiada exitosamente!', 'success');
+            
+            // Limpiar formulario después de éxito
+            setTimeout(() => {
+                document.getElementById('passwordForm').reset();
+                validateForm();
+            }, 2000);
+        });
+
+        // Inicializar validación
+        validateForm();
+    </script>
 </html>

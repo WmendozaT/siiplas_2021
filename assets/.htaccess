@@ -1,2 +1,11 @@
-Options All -Indexes
-#ErrorDocument 403 /404.html
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Bloquear acceso específico a phpinfo.php en la carpeta siiplas_2021
+    RewriteRule ^SIIPLAS2021/siiplas_2021/phpinfo\.php$ - [F,L]
+    
+    # Reglas existentes de CodeIgniter
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /siipp/index.php/$1 [L]
+</IfModule>

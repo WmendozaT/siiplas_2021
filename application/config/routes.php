@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $route['default_controller'] = "user";
-$route['404_override'] = '';
+$route['404_override'] = 'user/vaca_404';
 
 $route['admin/logout'] = 'user/logout';
 $route['admin/validate'] = 'user/validate_credentials';

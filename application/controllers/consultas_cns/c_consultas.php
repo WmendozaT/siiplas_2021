@@ -167,8 +167,8 @@ class C_consultas extends CI_Controller {
         $salida="";
           $salida.= "<option value='0'>Seleccione tipo Reporte....</option>";
           $salida.= "<option value='1'>1.- CONSOLIDADO POA SEGUN TIPO DE GASTO</option>";
-          //$salida.= "<option value='2'>2.- CONSOLIDADO FORMULARIO 4 (ACTIVIDADES)</option>";
-          //$salida.= "<option value='3'>3.- CONSOLIDADO FORMULARIO 5 (REQUERIMEINTOS)</option>";
+          $salida.= "<option value='2'>2.- CONSOLIDADO FORMULARIO 4 (ACTIVIDADES)</option>";
+          $salida.= "<option value='3'>3.- CONSOLIDADO FORMULARIO 5 (REQUERIMEINTOS)</option>";
           $salida.= "<option value='4'>4.- LISTA DE CERTIFICACIONES POA</option>";
           $salida.= "<option value='5'>5.- CUADRO DE EVALUACION POA REGIONAL</option>";
 

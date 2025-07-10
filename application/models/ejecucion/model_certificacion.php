@@ -740,7 +740,7 @@ class Model_certificacion extends CI_Model{
 
     /*----- MODULO EVALUACION POA 2020 - UNIDAD ----*/
     /*----- Suma grupo de Partida por defecto - Gasto Corriente ----*/
-    public function suma_grupo_partida_programado($aper_id,$grupo_partida){
+/*    public function suma_grupo_partida_programado($aper_id,$grupo_partida){
         $trimestre=0;
         if($this->tmes==1){
             $trimestre=3;
@@ -764,10 +764,10 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
     /*----- Suma monto certificado por unidad al trimestre vigente - Gasto Corriente ----*/
-    public function suma_monto_certificado_unidad($proy_id){
+/*    public function suma_monto_certificado_unidad($proy_id){
         $trimestre=0;
         if($this->tmes==1){
             $trimestre=3;
@@ -796,10 +796,10 @@ class Model_certificacion extends CI_Model{
                 group by cpoa.proy_id';
         $query = $this->db->query($sql);
         return $query->result_array();
-    }
+    }*/
 
     /*----- Presupuesto total asignado por trimestre por unidad----*/
-    public function monto_total_programado_trimestre($aper_id){
+/*    public function monto_total_programado_trimestre($aper_id){
         $trimestre=0;
         if($this->tmes==1){
             $trimestre=3;
@@ -822,11 +822,11 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
     /*----- MODULO EVALUACION POA 2020 - NACIONAL ----*/
     /*----- Suma grupo de Partida - Gasto Corriente,Proyecto de Inversion ----*/
-    public function suma_grupo_partida_programado_institucional($tp_id,$grupo_partida){
+/*    public function suma_grupo_partida_programado_institucional($tp_id,$grupo_partida){
         $trimestre=0;
         if($this->tmes==1){
             $trimestre=3;
@@ -872,11 +872,11 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
     /*----- MODULO EVALUACION POA 2020 - REGIONAL ----*/
     /*----- Suma grupo de Partida - Gasto Corriente,Proyecto de Inversion ----*/
-    public function suma_grupo_partida_programado_por_regional($tp_id,$dep_id,$grupo_partida){
+/*    public function suma_grupo_partida_programado_por_regional($tp_id,$dep_id,$grupo_partida){
         $trimestre=0;
         if($this->tmes==1){
             $trimestre=3;
@@ -925,11 +925,11 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
     /*----- MODULO EVALUACION POA 2020 - DISTRITAL, al trimestre ----*/
     /*----- Suma grupo de Partida - Gasto Corriente,Proyecto de Inversion ----*/
-    public function suma_grupo_partida_programado_por_distrital($tp_id,$dist_id,$grupo_partida){
+/*    public function suma_grupo_partida_programado_por_distrital($tp_id,$dist_id,$grupo_partida){
         $trimestre=0;
         if($this->tmes==1){
             $trimestre=3;
@@ -979,11 +979,11 @@ class Model_certificacion extends CI_Model{
 
         return $query->result_array();
     }
-
+*/
 
     ///// MONTO CERTIFICADO INSITUTCIONAL, REGIONAL, DISTRITAL, UNIDAD
     /*----- Suma monto certificado por unidad - Gasto Corriente ----*/
-    public function suma_monto_certificado_institucional($tp_id){
+/*    public function suma_monto_certificado_institucional($tp_id){
         $trimestre=0;
         if($this->tmes==1){
             $trimestre=3;
@@ -1043,11 +1043,11 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
 
     /*----- Suma monto certificado por unidad - Gasto Corriente al trimestre ----*/
-    public function suma_monto_certificado_por_regional($tp_id,$dep_id){
+/*    public function suma_monto_certificado_por_regional($tp_id,$dep_id){
         $trimestre=0;
         if($this->tmes==1){
             $trimestre=3;
@@ -1104,10 +1104,10 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
     /*----- Suma monto certificado por unidad - Gasto Corriente, al trimestre vigente ----*/
-    public function suma_monto_certificado_por_distrital($tp_id,$dist_id){
+/*    public function suma_monto_certificado_por_distrital($tp_id,$dist_id){
         $trimestre=0;
         if($this->tmes==1){
             $trimestre=3;
@@ -1164,13 +1164,13 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
 
 
 ////=========================== PARA PODER CORREGIR
     /*----- LISTA DE REQUERIMIENTOS ----*/
-    public function list_requerimientos($dep_id){
+/*    public function list_requerimientos($dep_id){
         $sql = '
             select p.*,i.*
             from insumos i
@@ -1182,7 +1182,7 @@ class Model_certificacion extends CI_Model{
         $query = $this->db->query($sql);
 
         return $query->result_array();
-    }
+    }*/
 
     /*----- VERIFICA SI UN REQUERIMIENTO ESTA CERTIFICADO ----*/
     public function verif_insumo_certificados($ins_id){

@@ -702,8 +702,263 @@ class Funcionario extends CI_Controller {
         redirect('admin/mnt/list_usu');
     }
     
+    /// new contraseña
     function nueva_contra(){
-        $this->load->view('admin/mod_contrase');
+        $responsable=$this->model_funcionario->get_funcionario($this->fun_id); /// Get Usuario
+        $data['formulario']='';
+        $data['formulario'].='
+        <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+
+  .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-title {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 50px 15px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-password:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            transform: scale(1.1);
+        }
+
+        .form-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-button:active {
+            transform: translateY(0);
+        }
+
+        .password-requirements {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .password-requirements h4 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+        }
+
+        .requirement.invalid {
+            color: #ff6b6b;
+        }
+
+        .requirement.valid {
+            color: #6bcf7f;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.success {
+            background: rgba(107, 207, 127, 0.1);
+            border: 1px solid #6bcf7f;
+            color: #4a9960;
+        }
+
+        .message.error {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid #ff6b6b;
+            color: #d63447;
+        }
+
+        .form-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-button:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+
+
+
+<div class="form-container">
+        <h2 class="form-title">Cambiar Contraseña</h2>
+        <form id="passwordForm">
+            <div class="form-group">
+                <label for="password_anterior" class="form-label">Contraseña Actual:</label>
+                <div class="password-container">
+                    <input type="password" name="password_anterior" id="password_anterior" 
+                           placeholder="Contraseña Anterior" class="form-input" 
+                           required autocomplete="current-password">
+                    <button type="button" class="toggle-password" onclick="togglePassword(\'password_anterior\')">
+                        <span id="toggleIcon1">👁️</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label" style="color:blue;">Contraseña Nueva (*):</label>
+                <div class="password-container">
+                    <input type="password" name="password" id="password" 
+                           placeholder="Contraseña Nueva" class="form-input" 
+                           required autocomplete="new-password">
+                    <button type="button" class="toggle-password" onclick="togglePassword(\'password\')">
+                        <span id="toggleIcon2">👁️</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirm" class="form-label" style="color:blue;">Confirmar Contraseña Nueva (*):</label>
+                <div class="password-container">
+                    <input type="password" name="password_confirm" id="password_confirm" 
+                           placeholder="Confirmar Contraseña Nueva" class="form-input" 
+                           required autocomplete="new-password">
+                    <button type="button" class="toggle-password" onclick="togglePassword(\'password_confirm\')">
+                        <span id="toggleIcon3">👁️</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="password-requirements">
+                <h4>Requisitos de contraseña Nueva:</h4>
+                <div id="lengthReq" class="requirement invalid">✗ Al menos 8 caracteres</div>
+                <div id="uppercaseReq" class="requirement invalid">✗ Al menos una letra mayúscula</div>
+                <div id="lowercaseReq" class="requirement invalid">✗ Al menos una letra minúscula</div>
+                <div id="numberReq" class="requirement invalid">✗ Al menos un número</div>
+                <div id="specialReq" class="requirement invalid">✗ Al menos un carácter especial</div>
+                <div id="matchReq" class="requirement invalid">✗ Las contraseñas coinciden</div>
+            </div>
+            
+            <button type="submit" class="form-button" id="submitBtn" disabled>Cambiar Contraseña</button>
+            
+            <div id="message" class="message" style="display: none;"></div>
+        </form>
+    </div>
+          ';
+
+        $this->load->view('admin/mod_contrase', $data);
     }
 
     function mod_cont(){

@@ -114,6 +114,38 @@ class ejecucion_finpi extends CI_Controller{
   }
 
 
+ ///// CALIFICACION INSTITUCIONAL (REVISAR)
+  public function calificacion_pi_regional_institucional($dep_id){
+    if($dep_id==0){ /// Institucional
+      $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_institucional_pi_aprobados(1); /// monto total asignado poa
+      $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep_institucional(); /// monto total ejecutado poa
+    }
+    else{ /// Regional
+      $regional=$this->model_proyecto->get_departamento($dep_id);
+      $total_ppto_asignado=$this->model_ptto_sigep->suma_ptto_regional_pi_aprobados($dep_id,1); /// monto total asignado poa
+      $total_ppto_ejecutado=$this->model_ptto_sigep->suma_monto_ejecutado_total_ppto_sigep_regional($dep_id); /// monto total ejecutado poa
+    }
+
+    $eficacia=0;
+    if(count($total_ppto_asignado)!=0 & count($total_ppto_ejecutado)!=0){
+      $eficacia=round((($total_ppto_ejecutado[0]['ejecutado_total']/$total_ppto_asignado[0]['asignado']))*100,2);
+    }
+
+    $titulo='';
+    if($eficacia<=50){$tp='danger';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (INSATISFACTORIO)';} /// Insatisfactorio - Rojo
+    if($eficacia > 50 & $eficacia <= 75){$tp='warning';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (REGULAR)';} /// Regular - Amarillo
+    if($eficacia > 75 & $eficacia <= 99){$tp='info';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (BUENO))';} /// Bueno - Azul
+    if($eficacia > 99 & $eficacia <= 101){$tp='success';$titulo='CUMPLIMIENTO TOTAL : '.$eficacia.'% (OPTIMO)';} /// Optimo - verde
+
+    $tabla='
+     
+      <div class="alert alert-'.$tp.'" role="alert" align="center">
+        <h2><b>'.$titulo.'</b></h2>
+      </div>';
+
+    return $tabla;
+  }
+
   /*------- TITULO --------*/
   public function formulario(){
     $regional=$this->model_proyecto->get_departamento($this->dep_id);

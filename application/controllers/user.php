@@ -39,6 +39,11 @@ class User extends CI_Controller{
         //$this->load->library('genera_informacion');
     }
 
+    public function vaca_404()
+    {
+        $this->load->view('rewriten_404');
+    }
+    
     /*----------- Lista de Gestiones Disponibles ---------*/
     public function list_gestiones(){
         $listar_gestion= $this->model_configuracion->lista_gestion();

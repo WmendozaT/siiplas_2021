@@ -63,6 +63,9 @@ class Crep_evalinstitucional extends CI_Controller {
       $data['titulo_modulo']=$tabla;
 
       $this->load->view('admin/reportes_cns/repevaluacion_institucional_poa/rep_menu', $data);
+
+      //$matriz=$this->evaluacionpoa->matriz_eficacia_regional(2);
+
     }
 
 
@@ -164,17 +167,9 @@ class Crep_evalinstitucional extends CI_Controller {
               <a href="javascript:abreVentana_eficiencia(\''.site_url("").'/rep_indicadores_programa/'.$dep_id.'/'.$dist_id.'/'.$tp_id.'\');" class="btn btn-default" title="IMPRIMIR CUADRO DE PARAMETROS POR PROGRAMAS">
               <img src="'.base_url().'assets/Iconos/printer.png" WIDTH="25" HEIGHT="25"/></a>';
 
-         $data['base']='
-        
-
-
-        <input name="tit" type="hidden" value="'.$tit.'">
-        <input name="dep_id" type="hidden" value="'.$dep_id.'">
-        <input name="dist_id" type="hidden" value="'.$dist_id.'">
-        <input name="tp_id" type="hidden" value="'.$tp_id.'">';
         $calificacion=$this->evaluacionpoa->calificacion_eficacia($matriz[5][$this->tmes]); /// calificacion
-        $matriz_parametros=$this->evaluacionpoa->parametros_eficacia($matriz_parametros,1); /// parametros de cumplimiento
-
+        $parametro_eficacia=$this->evaluacionpoa->parametros_eficacia($matriz_parametros); /// parametros de cumplimiento
+        $mis_unidades='';
 
         $titulo = [];
         for ($i = 0; $i <= $this->tmes; $i++) {$titulo[] = $matriz[1][$i];}
@@ -202,7 +197,12 @@ class Crep_evalinstitucional extends CI_Controller {
                         <!-- end widget edit box -->
                         <!-- widget content -->
                         <div class="widget-body">
-                            <p><input name="base" type="hidden" value="'.base_url().'"></p>
+                            <p><input name="base" type="hidden" value="'.base_url().'">
+                            <input name="tit" type="hidden" value="'.$tit.'">
+                            <input name="dep_id" type="hidden" value="'.$dep_id.'">
+                            <input name="dist_id" type="hidden" value="'.$dist_id.'">
+                            <input name="tp_id" type="hidden" value="'.$tp_id.'">
+                            </p>
                             <hr class="simple">
                             <ul id="myTab1" class="nav nav-tabs bordered">
                                 <li class="active">
@@ -235,9 +235,9 @@ class Crep_evalinstitucional extends CI_Controller {
                                 <div class="tab-pane fade in active" id="s1">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                               <div class="row" style="align:center">
-                                                <div id="regresion" style="width: 700px; height: 420px; margin: 0 auto"></div>
+                                                <div id="regresion" style="width: 650px; height: 420px; margin: 0 auto"></div>
                                                 <div id="tabla_regresion_impresion">'.$tabla_regresion.'</div>
                                               </div>
                                             </div>
@@ -247,9 +247,9 @@ class Crep_evalinstitucional extends CI_Controller {
                                                 <div id="tabla_pastel_vista">'.$tabla_pastel.'</div>
                                               </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                               <div class="row" style="align:center">
-                                                <div id="regresion_gestion" style="width: 700px; height: 420px; margin: 0 auto"></div>
+                                                <div id="regresion_gestion" style="width: 650px; height: 420px; margin: 0 auto"></div>
                                                 <div id="tabla_regresion_total_impresion">'.$tabla_regresion_gestion.'</div>
                                               </div>
                                             </div>
@@ -265,17 +265,23 @@ class Crep_evalinstitucional extends CI_Controller {
 
                                <div class="tab-pane fade" id="s3">
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
-                                          <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
                                             <div class="row" style="align:center">
                                             '.$parametro_eficacia.'
                                             </div>
-                                          </div>
-                                          <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
-                                            <div class="row" style="align:center">
-                                            '.$mis_unidades.'
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
+                                            <div align="left" id="boton_eficacia">
+                                                <a href="#" class="btn btn-default eficacia_unidad" title="CUADRO DE CUMPLIMIENTO POR UNIDAD" style="width:40%;"> <img src="'.base_url().'assets/Iconos/application.png" WIDTH="20" HEIGHT="20"/>&nbsp;GENERAR LISTA DE UNIDADES</a>
+                                             </div>
+                            
+                                            <div class="row">
+                                              <div id="lista"></div>
                                             </div>
-                                          </div>
+
+                                            <div align="right" id="print_eficacia" style="display: none">
+                                             boton
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

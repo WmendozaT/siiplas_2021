@@ -1,5 +1,5 @@
-/*base = $('[name="base"]').val();
-tab2 = $('[name="tabla2"]').val();
+base = $('[name="base"]').val();
+/*tab2 = $('[name="tabla2"]').val();
 tab3 = $('[name="tabla3"]').val();
 tab4 = $('[name="tabla4"]').val();
 tab5 = $('[name="tabla5"]').val();
@@ -244,8 +244,8 @@ function abreVentana_eficiencia(PDF){
       }
     }
 
-    /// 2021
-    /*---- CUADRO DE CUMPLIMIENTO POR UNIDAD-REGIONAL ----*/
+    /// 2025
+    /*---- lista de unidades para el CUADRO DE PARAMETROS DE CUMPLIMIENTO POR UNIDAD-REGIONAL ----*/
     $(function () {
         $(".eficacia_unidad").on("click", function (e) {
             dep_id=$('[name="dep_id"]').val();
@@ -674,7 +674,7 @@ function abreVentana_eficiencia(PDF){
 
 
       //// ----CAPTURA PANTALLA GRAFICOS CANVAS
-      var downPdf = document.getElementById("btnregresion");
+/*      var downPdf = document.getElementById("btnregresion");
 
       downPdf.onclick = function() {
         html2canvas(document.body, {
@@ -713,7 +713,7 @@ function abreVentana_eficiencia(PDF){
             pdf.save(titulo_evaluacion+'_AVANCE_POA_EVALUACION_TRIMESTRE.pdf');
           }
         })
-      }
+      }*/
 
     ///// =============== GRAFICO PASTEL HIGTHCARS Y CANVAS
 
