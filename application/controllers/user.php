@@ -981,7 +981,7 @@ class User extends CI_Controller{
 
         $this->load->model('Users_model');
         if(isset($_POST['user_name']) && isset($_POST['password']) && isset($_POST['dat_captcha'])){
-            if($this->input->post('user_name') && preg_match('/^[a-zA-Z0-9_.\/]*$/i', $this->input->post('password')) && preg_match('/^[A-Z0-9\/]*$/i', $this->input->post('dat_captcha'))){
+            if($this->input->post('user_name') && preg_match('/^[a-zA-Z0-9!@+,:?_.^\/\*&%$]*$/i', $this->input->post('password')) && preg_match('/^[A-Z0-9\/]*$/i', $this->input->post('dat_captcha'))){
                 
                 if(md5($this->input->post('dat_captcha'))==$this->input->post('captcha')){
                     $user_name = $this->security->sanitize_filename(strtoupper(htmlspecialchars($this->input->post('user_name'))), TRUE) ;

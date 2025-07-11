@@ -6,18 +6,9 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css">
-        <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/smartadmin-production.min.css"> 
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/smartadmin-skins.min.css">
-        <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/demo.min.css">
-        <!--estiloh-->
-        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.core.css" />
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/themes_alerta/alertify.default.css" id="toggleCSS" />
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>assets/css/estilosh.css">
     </head>
     <body>
 
@@ -36,6 +27,7 @@
                 document.write('<script src="<?php echo base_url(); ?>assets/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
             }
         </script>
+        <script src="<?php echo base_url(); ?>assets/lib_alerta/alertify.min.js"></script>
    <script>
         function togglePassword(fieldId) {
 
@@ -76,7 +68,7 @@
                 uppercase: /[A-Z]/.test(password),
                 lowercase: /[a-z]/.test(password),
                 number: /[0-9]/.test(password),
-                special: /[^A-Za-z0-9]/.test(password)
+                special: /[!@+,:?_.^\/\*&%$]/.test(password) 
             };
 
             // Actualizar visualización de requisitos
@@ -84,7 +76,7 @@
             updateRequirement('uppercaseReq', requirements.uppercase, '✓ Al menos una letra mayúscula', '✗ Al menos una letra mayúscula');
             updateRequirement('lowercaseReq', requirements.lowercase, '✓ Al menos una letra minúscula', '✗ Al menos una letra minúscula');
             updateRequirement('numberReq', requirements.number, '✓ Al menos un número', '✗ Al menos un número');
-            updateRequirement('specialReq', requirements.special, '✓ Al menos un carácter especial', '✗ Al menos un carácter especial');
+            updateRequirement('specialReq', requirements.special, '✓ Al menos un carácter especial', '✗ Al menos un carácter especial !@+,:?_.^\/\*&%$');
 
             return Object.values(requirements).every(req => req);
         }
@@ -116,7 +108,7 @@
             submitBtn.disabled = !isFormValid;
             
             if (isFormValid) {
-                submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                submitBtn.style.background = 'green';
                 submitBtn.style.cursor = 'pointer';
             } else {
                 submitBtn.style.background = '#ccc';
@@ -163,14 +155,28 @@
                 return;
             }
             
-            // Simulación de envío exitoso
+            
+            alertify.confirm("CONFIRMAR CONTRASEÑA ?", function (a) {
+                if (a) {
+                  //============= GUARDAR DESPUES DE LA VALIDACION ===============
+                  passwordForm.submit();
+                  document.getElementById("submitBtn").value = "SUBIENDO ARCHIVO...";
+                  document.getElementById("submitBtn").disabled = true;
+                  return true; 
+                } else {
+                  alertify.error("OPCI\u00D3N CANCELADA");
+                }
+            });
+
+
+/*            // Simulación de envío exitoso
             showMessage('¡Contraseña cambiada exitosamente!', 'success');
             
             // Limpiar formulario después de éxito
             setTimeout(() => {
                 document.getElementById('passwordForm').reset();
                 validateForm();
-            }, 2000);
+            }, 2000);*/
         });
 
         // Inicializar validación

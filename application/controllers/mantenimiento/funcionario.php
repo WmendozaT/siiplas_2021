@@ -712,43 +712,53 @@ class Funcionario extends CI_Controller {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+
         }
 
-
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #1c7368;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
 
   .form-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             padding: 40px;
             width: 100%;
-            max-width: 400px;
+            max-width: 600px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .form-title {
             text-align: center;
             color: #333;
-            font-size: 28px;
+            font-size: 20px;
             font-weight: 600;
             margin-bottom: 30px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #03312b;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 7px;
             color: #555;
-            font-weight: 500;
-            font-size: 14px;
+            font-weight: 400;
+            font-size: 12px;
+            text-align:left;
         }
 
         .password-container {
@@ -832,7 +842,7 @@ class Funcionario extends CI_Controller {
             margin-bottom: 15px;
             color: #333;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .requirement {
@@ -903,14 +913,15 @@ class Funcionario extends CI_Controller {
 
 
 <div class="form-container">
-        <h2 class="form-title">Cambiar Contraseña</h2>
-        <form id="passwordForm">
+        <h2 class="form-title">CAMBIAR CREDENCIALES DE ACCESO</h2>
+        <form id="passwordForm" action="'.site_url().'/mantenimiento/funcionario/update_password" method="post">
             <div class="form-group">
                 <label for="password_anterior" class="form-label">Contraseña Actual:</label>
                 <div class="password-container">
-                    <input type="password" name="password_anterior" id="password_anterior" 
+                    <input type="hidden" name="pass" value="'.$this->encrypt->decode($responsable[0]['fun_password']).'">
+                    <input type="password" name="password_anterior" id="password_anterior" value="'.$this->encrypt->decode($responsable[0]['fun_password']).'"
                            placeholder="Contraseña Anterior" class="form-input" 
-                           required autocomplete="current-password">
+                           required autocomplete="current-password" disabled="true">
                     <button type="button" class="toggle-password" onclick="togglePassword(\'password_anterior\')">
                         <span id="toggleIcon1">👁️</span>
                     </button>
@@ -947,19 +958,73 @@ class Funcionario extends CI_Controller {
                 <div id="uppercaseReq" class="requirement invalid">✗ Al menos una letra mayúscula</div>
                 <div id="lowercaseReq" class="requirement invalid">✗ Al menos una letra minúscula</div>
                 <div id="numberReq" class="requirement invalid">✗ Al menos un número</div>
-                <div id="specialReq" class="requirement invalid">✗ Al menos un carácter especial</div>
+                <div id="specialReq" class="requirement invalid">✗ Al menos un carácter especia</div>
                 <div id="matchReq" class="requirement invalid">✗ Las contraseñas coinciden</div>
             </div>
-            
+            <br>
             <button type="submit" class="form-button" id="submitBtn" disabled>Cambiar Contraseña</button>
             
             <div id="message" class="message" style="display: none;"></div>
         </form>
-    </div>
-          ';
+    </div>';
 
         $this->load->view('admin/mod_contrase', $data);
     }
+
+    /*---- Valida Modificacion de Contraseñas ----*/
+    function update_password(){ 
+      if ($this->input->server('REQUEST_METHOD') === 'POST'){
+        $this->form_validation->set_rules('pass', 'password_anterior', 'required|trim');
+        $this->form_validation->set_rules('password', 'password', 'required|trim');
+        $this->form_validation->set_rules('password_confirm', 'password_confirm', 'required|trim');
+
+        if ($this->form_validation->run()) {
+            echo "hola mundo";
+        }
+        else{
+            echo "Error!!!";
+        }
+        
+          // $this->form_validation->set_rules('id', 'Id Actividad', 'required|trim');
+
+          // if ($this->form_validation->run()) {
+          //   $filename = $_FILES["file1"]["name"]; ////// datos del archivo 
+          //   $file_basename = substr($filename, 0, strripos($filename, '.')); ///// nombre del archivo
+          //   $file_ext = substr($filename, strripos($filename, '.')); ///// Extension del archivo
+          //   $filesize = $_FILES["file1"]["size"]; //// Tamaño del archivo
+
+          //   $unidad= $this->model_estructura_org->get_actividad($this->input->post('id')); // Datos de la Unidad
+
+          //   if($filename!='' & $filesize!=0){
+          //     $newfilename = ''.$this->input->post('id').'-'.substr(md5(uniqid(rand())),0,5).$file_ext;
+          //     /*--------------------------------------------------*/
+          //     $update_dato= array(
+          //       'img' => $newfilename,
+          //       'fun_id' => $this->fun_id,
+          //     );
+          //     $this->db->where('act_id', $unidad[0]['act_id']);
+          //     $this->db->update('unidad_actividad', $update_dato);
+          //     /*--------------------------------------------------*/
+              
+          //     move_uploaded_file($_FILES["file1"]["tmp_name"],"fotos/" . $newfilename); // Guardando la foto
+
+          //     $this->session->set_flashdata('success','SE GUARDO CORRECTAMENTE LA FOTO DEL ESTABLECIMIENTO');
+          //     redirect(site_url("").'/prog/datos_unidad/'.$this->input->post('id').'#tabs-f');
+          //   }
+          //   else{
+          //     $this->session->set_flashdata('danger','ERROR AL GUARDAR ARCHIVO');
+          //     redirect(site_url("").'/prog/datos_unidad/'.$this->input->post('id').'#tabs-f');
+          //   }
+
+          // }
+          // else{
+          //   $this->session->set_flashdata('danger','ERROR !!!! ');
+          //   redirect(site_url("").'/prog/datos_unidad/'.$this->input->post('id').'#tabs-f');
+          // }
+             
+        }
+    }
+
 
     function mod_cont(){
         $fun_id = $this->input->post('fun_id');
